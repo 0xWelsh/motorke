@@ -1,0 +1,66 @@
+// src/app/api/admin/cars/[id]/route.js  — PUT (update)
+import { db } from "@/lib/db";
+import { getSessionFromRequest } from "@/lib/auth";
+import { NextResponse } from "next/server";
+
+export async function PUT(request, { params }) {
+  const session = await getSessionFromRequest();
+  if (!session || session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
+  }
+
+  try {
+    const body = await request.json();
+    const {
+      make, model, variant, year, price, mileage,
+      fuelType, transmission, bodyType, engineCC, driveType,
+      color, seats, description, features, images,
+      negotiable, dutyPaid, imported, featured, dealerId,
+    } = body;
+
+    // Update car fields
+    await db.car.update({
+      where: { id: params.id },
+      data: {
+        dealerId,
+        make:         make.trim(),
+        model:        model.trim(),
+        variant:      variant?.trim() || null,
+        year:         parseInt(year),
+        price:        parseInt(price),
+        mileage:      mileage ? parseInt(mileage) : null,
+        fuelType,
+        transmission,
+        bodyType,
+        engineCC:     engineCC ? parseInt(engineCC) : null,
+        driveType,
+        color:        color?.trim() || null,
+        seats:        seats ? parseInt(seats) : null,
+        description:  description?.trim() || null,
+        features:     Array.isArray(features) ? features : [],
+        negotiable:   Boolean(negotiable),
+        dutyPaid:     Boolean(dutyPaid),
+        imported:     Boolean(imported),
+        featured:     Boolean(featured),
+      },
+    });
+
+    // Replace images if provided
+    if (images && images.length > 0) {
+      await db.carImage.deleteMany({ where: { carId: params.id } });
+      await db.carImage.createMany({
+        data: images.map((img, i) => ({
+          carId:     params.id,
+          url:       img.url,
+          isPrimary: img.isPrimary || i === 0,
+          order:     i,
+        })),
+      });
+    }
+
+    return NextResponse.json({ success: true, redirectTo: "/admin/cars" });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
