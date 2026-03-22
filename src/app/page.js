@@ -10,7 +10,7 @@ async function getData() {
     const [featured, newArrivals, dealers, totalCars, totalDealers] = await Promise.all([
       db.car.findMany({
         where: { available: true, featured: true },
-        include: { images: { where: { isPrimary: true }, take: 1 }, dealer: { select: { name: true, location: true, verified: true, lat: true, lng: true } } },
+        include: { images: { where: { isPrimary: true }, take: 1 }, dealer: { select: { name: true, location: true, verified: true } } },
         take: 6, orderBy: { createdAt: "desc" },
       }),
       db.car.findMany({
@@ -32,68 +32,75 @@ async function getData() {
   }
 }
 
-const TRENDING = ["Toyota Hilux", "Toyota Prado", "Subaru Forester", "Mazda CX-5", "Toyota Harrier", "Toyota Fielder"];
-const PRICE_RANGES = [
-  { label: "Under KSh 1M",   min: 0,       max: 1000000  },
-  { label: "1M – 2M",        min: 1000000, max: 2000000  },
-  { label: "2M – 4M",        min: 2000000, max: 4000000  },
-  { label: "4M – 7M",        min: 4000000, max: 7000000  },
-  { label: "Above KSh 7M",   min: 7000000, max: 99000000 },
-];
-const COUNTIES = ["Nairobi","Mombasa","Nakuru","Kisumu","Uasin Gishu","Kiambu","Machakos","Meru"];
+// Real car photos per category from Unsplash
 const BODY_TYPES = [
-  { type: "SUV",       emoji: "🚙", label: "SUVs"        },
-  { type: "SEDAN",     emoji: "🚗", label: "Sedans"      },
-  { type: "PICKUP",    emoji: "🛻", label: "Pickups"     },
-  { type: "HATCHBACK", emoji: "🚘", label: "Hatchbacks"  },
-  { type: "WAGON",     emoji: "🚐", label: "Wagons"      },
+  { type: "SUV",       label: "SUVs",       img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Paris_Motor_Show_2018%2C_Paris_%281Y7A2057%29.jpg/640px-Paris_Motor_Show_2018%2C_Paris_%281Y7A2057%29.jpg" },
+  { type: "PICKUP",    label: "Pickups",    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Toyota_Hilux_2.4_Xtra_cab_4_WD_-_Flickr_-_Joost_J._Bakker_IJmuiden.jpg/640px-Toyota_Hilux_2.4_Xtra_cab_4_WD_-_Flickr_-_Joost_J._Bakker_IJmuiden.jpg" },
+  { type: "SEDAN",     label: "Sedans",     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Toyota_Corolla_E180_sedan_2_China_2016-04-01.jpg/640px-Toyota_Corolla_E180_sedan_2_China_2016-04-01.jpg" },
+  { type: "HATCHBACK", label: "Hatchbacks", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Infiniti_Q30_rear.jpg/640px-Infiniti_Q30_rear.jpg" },
+  { type: "WAGON",     label: "Wagons",     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Lancia_Kappa_Station_Wagon_1Y7A6135.jpg/640px-Lancia_Kappa_Station_Wagon_1Y7A6135.jpg" },
 ];
+
+const PRICE_RANGES = [
+  { label: "Under KSh 1M",  min: 0,       max: 1000000,  sub: "Entry level"   },
+  { label: "1M – 2M",       min: 1000000, max: 2000000,  sub: "Most popular"  },
+  { label: "2M – 4M",       min: 2000000, max: 4000000,  sub: "Mid range"     },
+  { label: "4M – 7M",       min: 4000000, max: 7000000,  sub: "Premium"       },
+  { label: "Above KSh 7M",  min: 7000000, max: 99000000, sub: "Luxury"        },
+];
+
+const COUNTIES = [
+  { name: "Nairobi",     img: "https://images.unsplash.com/photo-1611348586840-ea9872a69fd4?w=200&q=80" },
+  { name: "Mombasa",     img: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=200&q=80" },
+  { name: "Nakuru",      img: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=200&q=80" },
+  { name: "Kisumu",      img: "https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?w=200&q=80" },
+  { name: "Eldoret",     img: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=200&q=80" },
+  { name: "Kiambu",      img: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=200&q=80" },
+  { name: "Machakos",    img: "https://images.unsplash.com/photo-1504198453885-2f6e0c7f1c07?w=200&q=80" },
+  { name: "Meru",        img: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=200&q=80" },
+];
+
+const TRENDING = ["Toyota Hilux", "Toyota Prado", "Subaru Forester", "Mazda CX-5", "Toyota Harrier", "Toyota Fielder"];
 
 export default async function HomePage() {
   const { featured, newArrivals, dealers, totalCars, totalDealers } = await getData();
 
   return (
-    <div style={{ background: "#F5F5F5" }}>
+    <div style={{ background: "#F7F8FA" }}>
       <style>{`
-        .mk-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.09); }
-        .mk-card { transition: transform 0.18s, box-shadow 0.18s; }
-        .mk-pill:hover { background: #fff0eb !important; color: #E8490F !important; border-color: #E8490F !important; }
-        .mk-type:hover { border-color: #E8490F !important; background: #fff0eb !important; }
-        .mk-range:hover { border-color: #0A2640 !important; background: #e8eef4 !important; }
-        .mk-county:hover { background: #0A2640 !important; color: white !important; }
-        .mk-trend:hover { background: #fff0eb !important; color: #E8490F !important; }
+        .mk-card { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+        .mk-card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,0.1); }
+        .mk-body:hover .mk-body-img { transform: scale(1.06); }
+        .mk-body-img { transition: transform 0.35s ease; }
+        .mk-county:hover { border-color: #F59E0B !important; }
+        .mk-county:hover .mk-county-overlay { opacity: 1 !important; }
+        .mk-range:hover { background: #1C1C1E !important; color: white !important; border-color: #1C1C1E !important; }
+        .mk-trend:hover { background: #FEF3C7 !important; color: #1C1C1E !important; border-color: #F59E0B !important; }
+        .mk-dealer:hover { border-color: #F59E0B !important; box-shadow: 0 4px 20px rgba(245,158,11,0.12); }
       `}</style>
 
-      {/* ── HERO ── */}
-      <section style={{ position: "relative", overflow: "hidden", minHeight: "88vh", display: "flex", alignItems: "center" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1800&q=80')", backgroundSize: "cover", backgroundPosition: "center 55%", filter: "brightness(0.28)", zIndex: 0 }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(10,38,64,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)", zIndex: 1 }} />
-
-        <div style={{ position: "relative", zIndex: 2, width: "100%", maxWidth: 900, margin: "0 auto", padding: "5rem 1.5rem 7rem" }}>
-          {/* Badge */}
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.12)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 99, padding: "6px 16px", fontSize: 13, color: "white", marginBottom: 28 }}>
-            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#4ade80", display: "inline-block" }} />
-            {totalCars} cars · {totalDealers} dealers across Kenya
+      {/* ── HERO ─────────────────────────────────────────────── */}
+      <section style={{ position: "relative", overflow: "hidden", minHeight: "90vh", display: "flex", alignItems: "center" }}>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=85')", backgroundSize: "cover", backgroundPosition: "center 55%", filter: "brightness(0.22)", zIndex: 0 }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(28,28,30,0.95) 0%, rgba(28,28,30,0.5) 50%, transparent 100%)", zIndex: 1 }} />
+        <div style={{ position: "relative", zIndex: 2, width: "100%", maxWidth: 820, margin: "0 auto", padding: "6rem 1.5rem 8rem" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(245,158,11,0.12)", border: "1px solid rgba(245,158,11,0.25)", borderRadius: 99, padding: "6px 16px", fontSize: 12, color: "#F59E0B", marginBottom: 28, fontWeight: 600, letterSpacing: "0.02em" }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", display: "inline-block" }} />
+            {totalCars} cars listed · {totalDealers} dealerships
           </div>
-
-          <h1 style={{ fontWeight: 800, fontSize: "clamp(2rem,5.5vw,4rem)", lineHeight: 1.1, color: "white", marginBottom: 16 }}>
+          <h1 style={{ fontWeight: 800, fontSize: "clamp(2.2rem, 5vw, 4rem)", lineHeight: 1.05, color: "white", marginBottom: 18, letterSpacing: "-0.02em" }}>
             Find your perfect car.<br />
-            <span style={{ color: "#E8490F" }}>Compare every dealer.</span>
+            <span style={{ color: "#F59E0B" }}>Compare every dealer.</span>
           </h1>
-
-          <p style={{ fontSize: 16, color: "rgba(255,255,255,0.7)", maxWidth: 480, marginBottom: 36, lineHeight: 1.6 }}>
-            Kenya's first platform to compare cars across multiple dealerships — search, compare prices, and contact dealers in one place.
+          <p style={{ fontSize: 16, color: "rgba(255,255,255,0.55)", maxWidth: 460, marginBottom: 40, lineHeight: 1.7 }}>
+            Kenya's first platform to compare cars across multiple dealerships — search, compare prices, contact dealers.
           </p>
-
-          {/* Search with location */}
           <LocationSearch />
-
-          {/* Trending searches */}
-          <div style={{ marginTop: 20 }}>
-            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", marginRight: 10 }}>Trending:</span>
+          <div style={{ marginTop: 22, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 6 }}>
+            <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginRight: 4 }}>Trending</span>
             {TRENDING.map(t => (
               <a key={t} href={`/cars?search=${encodeURIComponent(t)}`} className="mk-trend"
-                style={{ display: "inline-block", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(6px)", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.75)", borderRadius: 99, padding: "4px 14px", fontSize: 12, fontWeight: 500, textDecoration: "none", marginRight: 6, marginBottom: 6, transition: "all 0.15s" }}>
+                style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.65)", borderRadius: 99, padding: "5px 14px", fontSize: 12, fontWeight: 500, textDecoration: "none", transition: "all 0.15s" }}>
                 {t}
               </a>
             ))}
@@ -101,141 +108,151 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── STATS STRIP ── */}
-      <section style={{ background: "#0A2640" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "1.5rem 1.5rem", display: "grid", gridTemplateColumns: "repeat(4,1fr)", textAlign: "center", gap: 8 }}>
+      {/* ── STATS BAR ────────────────────────────────────────── */}
+      <section style={{ background: "#1C1C1E" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4,1fr)", textAlign: "center" }}>
           {[
-            { v: `${totalCars}+`,   l: "Cars available"   },
+            { v: `${totalCars}+`, l: "Cars listed"         },
             { v: `${totalDealers}`, l: "Verified dealers"  },
-            { v: "5",               l: "Counties covered"  },
-            { v: "Free",            l: "Always free for buyers" },
+            { v: "5",             l: "Counties"            },
+            { v: "Free",          l: "For buyers"          },
           ].map(({ v, l }) => (
-            <div key={l}>
-              <p style={{ fontWeight: 800, fontSize: "1.5rem", color: "#E8490F" }}>{v}</p>
-              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", marginTop: 3 }}>{l}</p>
+            <div key={l} style={{ padding: "20px 16px", borderRight: "1px solid rgba(255,255,255,0.05)" }}>
+              <p style={{ fontWeight: 800, fontSize: "1.6rem", color: "#F59E0B", lineHeight: 1 }}>{v}</p>
+              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginTop: 5, fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.05em" }}>{l}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── PRICE RANGES ── */}
-      <section style={{ background: "#fff", borderBottom: "1px solid #E2E2E2" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "2rem 1.5rem" }}>
-          <h2 style={{ fontWeight: 700, fontSize: "1rem", color: "#0A2640", marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.05em", fontSize: 12 }}>Shop by budget</h2>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            {PRICE_RANGES.map(({ label, min, max }) => (
-              <a key={label} href={`/cars?minPrice=${min}&maxPrice=${max}`} className="mk-range"
-                style={{ border: "1.5px solid #E2E2E2", borderRadius: 10, padding: "10px 20px", fontSize: 13, fontWeight: 600, color: "#0A2640", textDecoration: "none", background: "#fff", transition: "all 0.15s", whiteSpace: "nowrap" }}>
-                {label}
-              </a>
-            ))}
+      {/* ── BROWSE BY BODY TYPE ──────────────────────────────── */}
+      <section style={{ maxWidth: 1100, margin: "0 auto", padding: "3.5rem 1.5rem 0" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 20 }}>
+          <div>
+            <p style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Browse by type</p>
+            <h2 style={{ fontWeight: 800, fontSize: "1.4rem", color: "#1C1C1E", letterSpacing: "-0.01em" }}>What are you looking for?</h2>
           </div>
         </div>
-      </section>
-
-      {/* ── BROWSE BY TYPE ── */}
-      <section style={{ background: "#fff", borderBottom: "1px solid #E2E2E2" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "1.5rem 1.5rem" }}>
-          <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 4 }}>
-            {BODY_TYPES.map(({ type, emoji, label }) => (
-              <a key={type} href={`/cars?bodyType=${type}`} className="mk-type"
-                style={{ display: "flex", alignItems: "center", gap: 8, background: "#F5F5F5", border: "1.5px solid #E2E2E2", borderRadius: 99, padding: "8px 18px", textDecoration: "none", whiteSpace: "nowrap", transition: "all 0.15s", flexShrink: 0 }}>
-                <span style={{ fontSize: 18 }}>{emoji}</span>
-                <span style={{ fontSize: 13, fontWeight: 600, color: "#1A1A1A" }}>{label}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── NEW ARRIVALS ── */}
-      {newArrivals.length > 0 && (
-        <section style={{ maxWidth: 1100, margin: "0 auto", padding: "3rem 1.5rem 0" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-            <div>
-              <h2 style={{ fontWeight: 800, fontSize: "1.3rem", color: "#0A2640" }}>New this week</h2>
-              <p style={{ fontSize: 13, color: "#666", marginTop: 3 }}>Just listed in the last 7 days</p>
-            </div>
-            <a href="/cars?sort=newest" style={{ fontSize: 13, fontWeight: 600, color: "#E8490F", textDecoration: "none" }}>View all →</a>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: 16 }}>
-            {newArrivals.map(car => <CarCard key={car.id} car={car} badge="New" badgeColor="#0A2640" />)}
-          </div>
-        </section>
-      )}
-
-      {/* ── FEATURED CARS ── */}
-      {featured.length > 0 && (
-        <section style={{ maxWidth: 1100, margin: "0 auto", padding: "3rem 1.5rem 0" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-            <div>
-              <h2 style={{ fontWeight: 800, fontSize: "1.3rem", color: "#0A2640" }}>Featured cars</h2>
-              <p style={{ fontSize: 13, color: "#666", marginTop: 3 }}>Hand-picked from verified dealerships</p>
-            </div>
-            <a href="/cars" style={{ fontSize: 13, fontWeight: 600, color: "#E8490F", textDecoration: "none" }}>View all →</a>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: 16 }}>
-            {featured.map(car => <CarCard key={car.id} car={car} badge="Featured" badgeColor="#E8490F" />)}
-          </div>
-        </section>
-      )}
-
-      {/* ── BROWSE BY COUNTY ── */}
-      <section style={{ maxWidth: 1100, margin: "3rem auto 0", padding: "0 1.5rem" }}>
-        <h2 style={{ fontWeight: 800, fontSize: "1.3rem", color: "#0A2640", marginBottom: 16 }}>Find cars near you</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(120px,1fr))", gap: 10 }}>
-          {COUNTIES.map(county => (
-            <a key={county} href={`/cars?county=${encodeURIComponent(county)}`} className="mk-county"
-              style={{ background: "#fff", border: "1.5px solid #E2E2E2", borderRadius: 10, padding: "12px 10px", textAlign: "center", textDecoration: "none", fontSize: 13, fontWeight: 600, color: "#0A2640", transition: "all 0.15s" }}>
-              📍 {county}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12 }}>
+          {BODY_TYPES.map(({ type, label, sub, img }) => (
+            <a key={type} href={`/cars?bodyType=${type}`} className="mk-body mk-card"
+              style={{ textDecoration: "none", borderRadius: 14, overflow: "hidden", background: "#fff", border: "1.5px solid #E4E4E7", display: "block" }}>
+              <div style={{ aspectRatio: "4/3", overflow: "hidden", background: "#f0ede8" }}>
+                <img src={img} alt={label} className="mk-body-img" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
+              <div style={{ padding: "12px 14px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <p style={{ fontWeight: 700, fontSize: 14, color: "#1C1C1E" }}>{label}</p>
+                <span style={{ fontSize: 11, color: "#F59E0B", fontWeight: 600 }}>View all →</span>
+              </div>
             </a>
           ))}
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ── */}
-      <section style={{ background: "#0A2640", margin: "3rem 0 0" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "3.5rem 1.5rem" }}>
-          <h2 style={{ fontWeight: 800, fontSize: "1.5rem", color: "white", textAlign: "center", marginBottom: 8 }}>How Motorke works</h2>
-          <p style={{ color: "rgba(255,255,255,0.55)", textAlign: "center", fontSize: 14, marginBottom: 40 }}>Find your next car in 3 simple steps</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(220px,1fr))", gap: 24 }}>
+      {/* ── BUDGET ───────────────────────────────────────────── */}
+      <section style={{ maxWidth: 1100, margin: "3rem auto 0", padding: "0 1.5rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 20 }}>
+          <div>
+            <p style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Shop by budget</p>
+            <h2 style={{ fontWeight: 800, fontSize: "1.4rem", color: "#1C1C1E", letterSpacing: "-0.01em" }}>Find your price range</h2>
+          </div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10 }}>
+          {PRICE_RANGES.map(({ label, sub, min, max }) => (
+            <a key={label} href={`/cars?minPrice=${min}&maxPrice=${max}`} className="mk-range"
+              style={{ border: "1.5px solid #E4E4E7", borderRadius: 12, padding: "16px 16px", fontSize: 14, fontWeight: 700, color: "#1C1C1E", textDecoration: "none", background: "#fff", transition: "all 0.18s", display: "block" }}>
+              <p style={{ fontWeight: 800, fontSize: 14, color: "#1C1C1E", marginBottom: 4 }}>{label}</p>
+              <p style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 500 }}>{sub}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* ── NEW ARRIVALS ─────────────────────────────────────── */}
+      {newArrivals.length > 0 && (
+        <section style={{ maxWidth: 1100, margin: "3rem auto 0", padding: "0 1.5rem" }}>
+          <SectionHeader title="New this week" sub="Just listed in the last 7 days" href="/cars?sort=newest" linkLabel="View all" />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: 16 }}>
+            {newArrivals.map(car => <CarCard key={car.id} car={car} badge="New" />)}
+          </div>
+        </section>
+      )}
+
+      {/* ── FEATURED CARS ────────────────────────────────────── */}
+      {featured.length > 0 && (
+        <section style={{ maxWidth: 1100, margin: "3rem auto 0", padding: "0 1.5rem" }}>
+          <SectionHeader title="Featured cars" sub="Hand-picked from verified dealerships" href="/cars" linkLabel="View all" />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: 16 }}>
+            {featured.map(car => <CarCard key={car.id} car={car} badge="Featured" badgeBg="#F59E0B" badgeColor="#1C1C1E" />)}
+          </div>
+        </section>
+      )}
+
+      {/* ── FIND NEAR YOU ────────────────────────────────────── */}
+      <section style={{ maxWidth: 1100, margin: "3rem auto 0", padding: "0 1.5rem" }}>
+        <div style={{ marginBottom: 20 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Browse by location</p>
+          <h2 style={{ fontWeight: 800, fontSize: "1.4rem", color: "#1C1C1E", letterSpacing: "-0.01em" }}>Find cars near you</h2>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+          {COUNTIES.map(({ name, img }) => (
+            <a key={name} href={`/cars?county=${encodeURIComponent(name)}`} className="mk-county"
+              style={{ position: "relative", borderRadius: 12, overflow: "hidden", aspectRatio: "3/2", display: "block", border: "2px solid transparent", textDecoration: "none", transition: "all 0.2s" }}>
+              <img src={img} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 60%)" }} />
+              <div className="mk-county-overlay" style={{ position: "absolute", inset: 0, background: "rgba(245,158,11,0.15)", opacity: 0, transition: "opacity 0.2s" }} />
+              <p style={{ position: "absolute", bottom: 10, left: 12, color: "white", fontWeight: 700, fontSize: 14 }}>{name}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* ── HOW IT WORKS ─────────────────────────────────────── */}
+      <section style={{ background: "#1C1C1E", margin: "3.5rem 0 0" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "4rem 1.5rem" }}>
+          <div style={{ textAlign: "center", marginBottom: 44 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, color: "rgba(245,158,11,0.6)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Simple process</p>
+            <h2 style={{ fontWeight: 800, fontSize: "1.8rem", color: "white", letterSpacing: "-0.02em" }}>How Motorke works</h2>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 2 }}>
             {[
-              { step: "1", icon: "🔍", title: "Search & filter", desc: "Search by make, model, price range or location across all dealerships at once." },
-              { step: "2", icon: "⚖️", title: "Compare dealers", desc: "See the same car from multiple dealers side by side. Compare prices, mileage and specs." },
-              { step: "3", icon: "💬", title: "Contact directly", desc: "Message dealers instantly on WhatsApp or by phone — no middlemen, no signup fees." },
-            ].map(({ step, icon, title, desc }) => (
-              <div key={step} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, padding: 24 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#E8490F", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14, flexShrink: 0 }}>{step}</div>
-                  <span style={{ fontSize: 24 }}>{icon}</span>
+              { num: "01", title: "Search & filter",  desc: "Search by make, model, budget or location across every dealership at once. Filter results to find exactly what you need.",     img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500&q=80" },
+              { num: "02", title: "Compare dealers",  desc: "See the same car from multiple dealers side by side. Compare prices, mileage and specs instantly before you decide.",        img: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=500&q=80" },
+              { num: "03", title: "Contact directly", desc: "Message any dealer instantly on WhatsApp or by phone. No middlemen, no signup fees — just you and the dealer.",             img: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=500&q=80" },
+            ].map(({ num, title, desc, img }, i) => (
+              <div key={num} style={{ position: "relative", overflow: "hidden", borderRadius: i === 0 ? "14px 0 0 14px" : i === 2 ? "0 14px 14px 0" : 0 }}>
+                <img src={img} alt={title} style={{ width: "100%", height: 200, objectFit: "cover", filter: "brightness(0.35)" }} />
+                <div style={{ position: "absolute", inset: 0, padding: "24px" }}>
+                  <p style={{ fontSize: 11, fontWeight: 800, color: "#F59E0B", letterSpacing: "0.08em", marginBottom: 10 }}>STEP {num}</p>
+                  <h3 style={{ fontWeight: 800, fontSize: "1.05rem", color: "white", marginBottom: 10 }}>{title}</h3>
+                  <p style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", lineHeight: 1.65 }}>{desc}</p>
                 </div>
-                <h3 style={{ fontWeight: 700, fontSize: "1rem", color: "white", marginBottom: 8 }}>{title}</h3>
-                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── DEALERS ── */}
+      {/* ── TOP DEALERSHIPS ──────────────────────────────────── */}
       {dealers.length > 0 && (
-        <section style={{ maxWidth: 1100, margin: "0 auto", padding: "3rem 1.5rem 0" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-            <h2 style={{ fontWeight: 800, fontSize: "1.3rem", color: "#0A2640" }}>Top dealerships</h2>
-            <a href="/dealers" style={{ fontSize: 13, fontWeight: 600, color: "#E8490F", textDecoration: "none" }}>All dealers →</a>
-          </div>
+        <section style={{ maxWidth: 1100, margin: "0 auto", padding: "3.5rem 1.5rem 0" }}>
+          <SectionHeader title="Top dealerships" sub="Verified dealers across Kenya" href="/dealers" linkLabel="All dealers" />
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: 12 }}>
             {dealers.map(d => (
-              <a key={d.id} href={`/dealers/${d.slug}`} className="mk-card"
-                style={{ background: "#fff", border: "1.5px solid #E2E2E2", borderRadius: 12, padding: 16, textDecoration: "none", display: "flex", alignItems: "center", gap: 14 }}>
-                <div style={{ width: 46, height: 46, borderRadius: 12, background: "#e8eef4", color: "#0A2640", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 20, flexShrink: 0 }}>{d.name[0]}</div>
+              <a key={d.id} href={`/dealers/${d.slug}`} className="mk-card mk-dealer"
+                style={{ background: "#fff", border: "1.5px solid #E4E4E7", borderRadius: 12, padding: "18px 18px", textDecoration: "none", display: "flex", alignItems: "center", gap: 14, transition: "all 0.18s" }}>
+                <div style={{ width: 48, height: 48, borderRadius: 12, background: "#FEF3C7", color: "#1C1C1E", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 20, flexShrink: 0 }}>
+                  {d.name[0]}
+                </div>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                    <p style={{ fontWeight: 700, fontSize: 14, color: "#1A1A1A" }}>{d.name}</p>
-                    {d.verified && <span style={{ fontSize: 9, background: "#f0fdf4", color: "#16a34a", border: "1px solid #bbf7d0", borderRadius: 99, padding: "1px 7px" }}>✓</span>}
+                  <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                    <p style={{ fontWeight: 700, fontSize: 14, color: "#1C1C1E", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{d.name}</p>
+                    {d.verified && (
+                      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="6.5" fill="#10B981"/><path d="M3.5 6.5L5.5 8.5L9.5 4.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    )}
                   </div>
-                  <p style={{ fontSize: 12, color: "#666", marginTop: 2 }}>{d.location}</p>
-                  <p style={{ fontSize: 12, color: "#E8490F", fontWeight: 600, marginTop: 4 }}>{d._count.cars} cars</p>
+                  <p style={{ fontSize: 12, color: "#9CA3AF", marginTop: 2 }}>{d.location}</p>
+                  <p style={{ fontSize: 12, color: "#F59E0B", fontWeight: 700, marginTop: 5 }}>{d._count.cars} cars available</p>
                 </div>
               </a>
             ))}
@@ -243,100 +260,133 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ── TESTIMONIALS ── */}
-      <section style={{ maxWidth: 1100, margin: "3rem auto 0", padding: "0 1.5rem" }}>
-        <h2 style={{ fontWeight: 800, fontSize: "1.3rem", color: "#0A2640", marginBottom: 20, textAlign: "center" }}>What buyers say</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: 16 }}>
+      {/* ── TESTIMONIALS ─────────────────────────────────────── */}
+      <section style={{ maxWidth: 1100, margin: "3.5rem auto 0", padding: "0 1.5rem" }}>
+        <SectionHeader title="What buyers say" sub="Real stories from real Kenyan buyers" />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
           {[
-            { name: "James M.", county: "Nairobi", text: "Found my Toyota Hilux in 2 days. Compared 3 dealers and saved over KSh 200,000 by choosing the right one.", car: "2020 Toyota Hilux" },
-            { name: "Aisha K.", county: "Mombasa", text: "The WhatsApp button made it so easy. I contacted 2 dealers and got the Harrier I wanted the same week.", car: "2019 Toyota Harrier" },
-            { name: "Peter O.", county: "Nakuru", text: "Duty calculator was incredibly useful — I knew exactly what I'd pay before even contacting the dealer.", car: "2018 Mazda CX-5" },
-          ].map(({ name, county, text, car }) => (
-            <div key={name} style={{ background: "#fff", border: "1.5px solid #E2E2E2", borderRadius: 14, padding: 22 }}>
-              <div style={{ display: "flex", gap: 3, marginBottom: 14 }}>
-                {[1,2,3,4,5].map(s => <span key={s} style={{ color: "#E8490F", fontSize: 14 }}>★</span>)}
+            { name: "James M.", county: "Nairobi",  text: "Found my Toyota Hilux in 2 days. Compared 3 dealers and saved over KSh 200,000 by choosing the right one.",        car: "2020 Toyota Hilux",   avatar: "JM" },
+            { name: "Aisha K.", county: "Mombasa",  text: "The WhatsApp button made it so easy. I contacted 2 dealers and had the Harrier I wanted the same week.",          car: "2019 Toyota Harrier", avatar: "AK" },
+            { name: "Peter O.", county: "Nakuru",   text: "The duty calculator was incredibly useful. I knew exactly what I'd pay before I even contacted the dealer.",       car: "2018 Mazda CX-5",    avatar: "PO" },
+          ].map(({ name, county, text, car, avatar }) => (
+            <div key={name} style={{ background: "#fff", border: "1.5px solid #E4E4E7", borderRadius: 14, padding: "24px" }}>
+              {/* Stars */}
+              <div style={{ display: "flex", gap: 3, marginBottom: 16 }}>
+                {[1,2,3,4,5].map(s => (
+                  <svg key={s} width="14" height="14" viewBox="0 0 14 14" fill="#F59E0B"><path d="M7 1l1.5 4H13L9.5 8l1.5 4L7 10 3.5 12 5 8 1.5 5H5.5z"/></svg>
+                ))}
               </div>
-              <p style={{ fontSize: 14, color: "#333", lineHeight: 1.6, marginBottom: 16 }}>"{text}"</p>
-              <div style={{ borderTop: "1px solid #F5F5F5", paddingTop: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
-                  <p style={{ fontWeight: 700, fontSize: 13, color: "#1A1A1A" }}>{name}</p>
-                  <p style={{ fontSize: 11, color: "#999", marginTop: 2 }}>📍 {county}</p>
+              <p style={{ fontSize: 14, color: "#374151", lineHeight: 1.7, marginBottom: 20 }}>"{text}"</p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 16, borderTop: "1px solid #F7F8FA" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#1C1C1E", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 12 }}>
+                    {avatar}
+                  </div>
+                  <div>
+                    <p style={{ fontWeight: 700, fontSize: 13, color: "#1C1C1E" }}>{name}</p>
+                    <p style={{ fontSize: 11, color: "#9CA3AF" }}>{county}</p>
+                  </div>
                 </div>
-                <span style={{ fontSize: 11, background: "#e8eef4", color: "#0A2640", borderRadius: 99, padding: "3px 10px", fontWeight: 600 }}>{car}</span>
+                <span style={{ fontSize: 11, background: "#FEF3C7", color: "#1C1C1E", borderRadius: 99, padding: "3px 10px", fontWeight: 600, whiteSpace: "nowrap" }}>{car}</span>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── WHY MOTORKE ── */}
-      <section style={{ background: "#fff", margin: "3rem 0 0", borderTop: "1px solid #E2E2E2" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "3rem 1.5rem" }}>
-          <h2 style={{ fontWeight: 800, fontSize: "1.3rem", color: "#0A2640", marginBottom: 28, textAlign: "center" }}>Why use Motorke?</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 20 }}>
+      {/* ── WHY MOTORKE ──────────────────────────────────────── */}
+      <section style={{ background: "#fff", margin: "3.5rem 0 0", borderTop: "1px solid #E4E4E7" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "3.5rem 1.5rem" }}>
+          <h2 style={{ fontWeight: 800, fontSize: "1.4rem", color: "#1C1C1E", marginBottom: 32, textAlign: "center", letterSpacing: "-0.01em" }}>Why use Motorke?</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 1, background: "#E4E4E7", borderRadius: 14, overflow: "hidden" }}>
             {[
-              { icon: "⚖️", title: "Compare prices",    desc: "See the same car across multiple dealers. Never overpay again." },
-              { icon: "✅", title: "Verified dealers",  desc: "Every dealer is verified before listing. Real cars, real people." },
-              { icon: "💬", title: "WhatsApp direct",   desc: "One tap to contact any dealer on WhatsApp. No middlemen." },
-              { icon: "🧾", title: "Duty calculator",   desc: "Estimate full import costs before you commit to any purchase." },
-            ].map(({ icon, title, desc }) => (
-              <div key={title} style={{ textAlign: "center", padding: "20px 16px" }}>
-                <div style={{ fontSize: 32, marginBottom: 12 }}>{icon}</div>
-                <h3 style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0A2640", marginBottom: 8 }}>{title}</h3>
-                <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6 }}>{desc}</p>
+              { title: "Compare prices",   desc: "See the same car across multiple dealers. Never overpay again.", icon: "⚖" },
+              { title: "Verified dealers", desc: "Every dealer verified before listing. Real cars, real people.",  icon: "✓" },
+              { title: "WhatsApp direct",  desc: "One tap to contact any dealer. No forms, no middlemen.",        icon: "↗" },
+              { title: "Duty calculator",  desc: "Estimate full import costs before you commit.",                  icon: "=" },
+            ].map(({ title, desc, icon }) => (
+              <div key={title} style={{ background: "#fff", padding: "28px 24px", textAlign: "center" }}>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: "#FEF3C7", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", fontWeight: 800, fontSize: 18, color: "#1C1C1E" }}>
+                  {icon}
+                </div>
+                <h3 style={{ fontWeight: 700, fontSize: "0.95rem", color: "#1C1C1E", marginBottom: 8 }}>{title}</h3>
+                <p style={{ fontSize: 13, color: "#6B7280", lineHeight: 1.6 }}>{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA BANNER ── */}
-      <section style={{ background: "linear-gradient(135deg, #0A2640 0%, #0d3358 100%)", padding: "3.5rem 1.5rem", textAlign: "center" }}>
-        <h2 style={{ fontWeight: 800, fontSize: "1.6rem", color: "white", marginBottom: 10 }}>Are you a dealership?</h2>
-        <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 15, marginBottom: 28, maxWidth: 400, margin: "0 auto 28px" }}>
-          List your cars on Motorke and reach thousands of buyers across Kenya. It's free to get started.
-        </p>
-        <a href="/login" style={{ background: "#E8490F", color: "white", fontWeight: 700, fontSize: 14, padding: "13px 36px", borderRadius: 99, textDecoration: "none", display: "inline-block" }}>
-          List your cars free →
-        </a>
+      {/* ── DEALER CTA ───────────────────────────────────────── */}
+      <section style={{ position: "relative", overflow: "hidden", margin: "0" }}>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "url('https://images.unsplash.com/photo-1567818735868-e71b99932e29?w=1600&q=80')", backgroundSize: "cover", backgroundPosition: "center", filter: "brightness(0.2)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(28,28,30,0.97) 0%, rgba(28,28,30,0.7) 100%)" }} />
+        <div style={{ position: "relative", zIndex: 1, maxWidth: 600, margin: "0 auto", padding: "5rem 1.5rem", textAlign: "center" }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: "rgba(245,158,11,0.7)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>For dealerships</p>
+          <h2 style={{ fontWeight: 800, fontSize: "2rem", color: "white", marginBottom: 14, letterSpacing: "-0.02em" }}>Grow your sales on Motorke</h2>
+          <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 15, marginBottom: 36, lineHeight: 1.7 }}>
+            Reach thousands of buyers across Kenya. List your cars, manage enquiries, and grow your dealership — all in one place.
+          </p>
+          <a href="/login" style={{ background: "#F59E0B", color: "#1C1C1E", fontWeight: 800, fontSize: 14, padding: "14px 40px", borderRadius: 99, textDecoration: "none", display: "inline-block", letterSpacing: "0.01em" }}>
+            List your cars free →
+          </a>
+        </div>
       </section>
     </div>
   );
 }
 
-function CarCard({ car, badge, badgeColor }) {
+// ── Reusable section header ────────────────────────────────────
+function SectionHeader({ title, sub, href, linkLabel }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 20 }}>
+      <div>
+        <p style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>{sub}</p>
+        <h2 style={{ fontWeight: 800, fontSize: "1.4rem", color: "#1C1C1E", letterSpacing: "-0.01em" }}>{title}</h2>
+      </div>
+      {href && (
+        <a href={href} style={{ fontSize: 13, fontWeight: 600, color: "#F59E0B", textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
+          {linkLabel} →
+        </a>
+      )}
+    </div>
+  );
+}
+
+// ── Car card ───────────────────────────────────────────────────
+function CarCard({ car, badge, badgeBg = "#1C1C1E", badgeColor = "white" }) {
   const img   = car.images[0]?.url;
   const title = `${car.year} ${car.make} ${car.model}`;
   return (
     <a href={`/cars/${car.id}`} className="mk-card"
-      style={{ background: "#fff", border: "1.5px solid #E2E2E2", borderRadius: 12, overflow: "hidden", textDecoration: "none", display: "block" }}>
-      <div style={{ position: "relative", aspectRatio: "16/10", background: "#f0ede8", overflow: "hidden" }}>
+      style={{ background: "#fff", border: "1.5px solid #E4E4E7", borderRadius: 12, overflow: "hidden", textDecoration: "none", display: "block" }}>
+      <div style={{ position: "relative", aspectRatio: "16/10", background: "#F7F8FA", overflow: "hidden" }}>
         {img
           ? <img src={img} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", fontSize: 40 }}>🚗</div>
+          : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", flexDirection: "column", gap: 8 }}>
+              <svg width="52" height="38" viewBox="0 0 52 38" fill="none"><rect x="4" y="16" width="44" height="16" rx="3" fill="#E4E4E7"/><path d="M10 16 L15 6 L37 6 L42 16Z" fill="#E4E4E7"/><circle cx="13" cy="32" r="5" fill="#D1D1D6"/><circle cx="39" cy="32" r="5" fill="#D1D1D6"/></svg>
+              <p style={{ fontSize: 11, color: "#9CA3AF" }}>No photo yet</p>
+            </div>
         }
         {badge && (
-          <span style={{ position: "absolute", top: 10, left: 10, background: badgeColor, color: "white", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 99, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+          <span style={{ position: "absolute", top: 10, left: 10, background: badgeBg, color: badgeColor, fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 99, textTransform: "uppercase", letterSpacing: "0.04em" }}>
             {badge}
           </span>
         )}
-        <span style={{ position: "absolute", top: 10, right: 10, background: "rgba(255,255,255,0.92)", color: "#555", fontSize: 10, fontWeight: 600, padding: "3px 10px", borderRadius: 99 }}>
-          {BODY_TYPE_LABELS[car.bodyType] || car.bodyType}
-        </span>
       </div>
       <div style={{ padding: "14px 16px" }}>
-        <p style={{ fontWeight: 700, fontSize: 15, color: "#1A1A1A" }}>{title}</p>
-        {car.variant && <p style={{ fontSize: 12, color: "#999", marginTop: 2 }}>{car.variant}</p>}
+        <p style={{ fontWeight: 700, fontSize: 15, color: "#1C1C1E", letterSpacing: "-0.01em" }}>{title}</p>
+        {car.variant && <p style={{ fontSize: 12, color: "#9CA3AF", marginTop: 2 }}>{car.variant}</p>}
         <div style={{ display: "flex", gap: 5, marginTop: 8, flexWrap: "wrap" }}>
           {[car.transmission, car.fuelType, car.mileage ? formatMileage(car.mileage) : null].filter(Boolean).map(tag => (
-            <span key={tag} style={{ fontSize: 11, background: "#F5F5F5", color: "#666", borderRadius: 5, padding: "2px 7px" }}>{tag}</span>
+            <span key={tag} style={{ fontSize: 11, background: "#F7F8FA", color: "#6B7280", borderRadius: 5, padding: "2px 8px", border: "1px solid #E4E4E7" }}>{tag}</span>
           ))}
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 12 }}>
-          <p style={{ fontWeight: 800, fontSize: 16, color: "#E8490F" }}>{formatPrice(car.price)}</p>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 14, paddingTop: 12, borderTop: "1px solid #F7F8FA" }}>
+          <p style={{ fontWeight: 800, fontSize: 17, color: "#F59E0B", letterSpacing: "-0.01em" }}>{formatPrice(car.price)}</p>
           <div style={{ textAlign: "right" }}>
-            <p style={{ fontSize: 11, color: "#666" }}>{car.dealer?.name}</p>
-            <p style={{ fontSize: 10, color: "#999" }}>{car.dealer?.location}</p>
+            <p style={{ fontSize: 11, color: "#6B7280", fontWeight: 500 }}>{car.dealer?.name}</p>
+            <p style={{ fontSize: 10, color: "#9CA3AF" }}>{car.dealer?.location}</p>
           </div>
         </div>
       </div>

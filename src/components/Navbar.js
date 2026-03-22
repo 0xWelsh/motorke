@@ -48,8 +48,8 @@ export default function Navbar({ user }) {
 
           {/* Logo */}
           <a href="/" style={{ textDecoration: "none", flexShrink: 0, display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{ fontWeight: 800, fontSize: 20, color: "#0A2640", letterSpacing: "-0.5px" }}>
-              Motor<span style={{ color: "#E8490F" }}>ke</span>
+            <span style={{ fontWeight: 800, fontSize: 20, color: "#111827", letterSpacing: "-0.5px" }}>
+              Motor<span style={{ color: "#1D4ED8" }}>ke</span>
             </span>
           </a>
 
@@ -65,12 +65,12 @@ export default function Navbar({ user }) {
                 fontSize: 13, fontFamily: "inherit", outline: "none", color: "#1A1A1A",
                 transition: "border-color 0.15s",
               }}
-              onFocus={e => e.target.style.borderColor = "#E8490F"}
+              onFocus={e => e.target.style.borderColor = "#1D4ED8"}
               onBlur={e => e.target.style.borderColor = "#E2E2E2"}
             />
             <button type="submit" style={{
               position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)",
-              background: "#E8490F", border: "none", borderRadius: "50%",
+              background: "#16A34A", border: "none", borderRadius: "50%",
               width: 28, height: 28, cursor: "pointer", color: "white",
               display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13,
             }}>
@@ -85,7 +85,7 @@ export default function Navbar({ user }) {
                 textDecoration: "none", color: "#444", fontSize: 13, fontWeight: 500,
                 padding: "6px 10px", borderRadius: 7, transition: "all 0.15s", whiteSpace: "nowrap",
               }}
-              onMouseEnter={e => { e.target.style.background = "#F5F5F5"; e.target.style.color = "#0A2640"; }}
+              onMouseEnter={e => { e.target.style.background = "#F5F5F5"; e.target.style.color = "#111827"; }}
               onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.color = "#444"; }}>
                 {label}
               </a>
@@ -102,7 +102,7 @@ export default function Navbar({ user }) {
                   borderRadius: 99, padding: "5px 12px 5px 6px",
                   cursor: "pointer", fontSize: 13, fontWeight: 600, fontFamily: "inherit",
                 }}>
-                  <div style={{ width: 26, height: 26, borderRadius: "50%", background: "#E8490F", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 12 }}>
+                  <div style={{ width: 26, height: 26, borderRadius: "50%", background: "#1D4ED8", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 12 }}>
                     {user.name?.[0]?.toUpperCase()}
                   </div>
                   {user.name?.split(" ")[0]}
@@ -116,7 +116,7 @@ export default function Navbar({ user }) {
                     <MenuItem href="/saved"   label="Saved cars" />
                     <div style={{ borderTop: "1px solid #E2E2E2" }} />
                     <form action="/api/auth/logout" method="POST">
-                      <button type="submit" style={{ width: "100%", textAlign: "left", padding: "10px 16px", fontSize: 13, fontWeight: 500, color: "#E8490F", background: "none", border: "none", cursor: "pointer", fontFamily: "inherit" }}>
+                      <button type="submit" style={{ width: "100%", textAlign: "left", padding: "10px 16px", fontSize: 13, fontWeight: 500, color: "#1D4ED8", background: "none", border: "none", cursor: "pointer", fontFamily: "inherit" }}>
                         Sign out
                       </button>
                     </form>
@@ -125,10 +125,10 @@ export default function Navbar({ user }) {
               </div>
             ) : (
               <>
-                <a href="/login" style={{ textDecoration: "none", color: "#0A2640", fontSize: 13, fontWeight: 600, padding: "7px 14px", border: "1.5px solid #E2E2E2", borderRadius: 8 }}>
+                <a href="/login" style={{ textDecoration: "none", color: "#111827", fontSize: 13, fontWeight: 600, padding: "7px 14px", border: "1.5px solid #E2E2E2", borderRadius: 8 }}>
                   Sign in
                 </a>
-                <a href="/signup" style={{ textDecoration: "none", background: "#E8490F", color: "white", fontSize: 13, fontWeight: 600, padding: "7px 16px", borderRadius: 8 }}>
+                <a href="/signup" style={{ textDecoration: "none", background: "#16A34A", color: "#1C1C1E", fontSize: 13, fontWeight: 600, padding: "7px 16px", borderRadius: 8 }}>
                   Sign up
                 </a>
               </>
@@ -150,20 +150,20 @@ export default function Navbar({ user }) {
           <form onSubmit={handleSearch} style={{ display: "flex", gap: 8, marginBottom: 12 }}>
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search cars…"
               style={{ flex: 1, background: "#F5F5F5", border: "1.5px solid #E2E2E2", borderRadius: 8, padding: "9px 14px", fontSize: 14, fontFamily: "inherit", outline: "none" }} />
-            <button type="submit" style={{ background: "#E8490F", color: "white", border: "none", borderRadius: 8, padding: "9px 16px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit", fontSize: 13 }}>Search</button>
+            <button type="submit" style={{ background: "#1D4ED8", color: "white", border: "none", borderRadius: 8, padding: "9px 16px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit", fontSize: 13 }}>Search</button>
           </form>
           {links.map(({ href, label }) => (
             <a key={href} href={href} onClick={() => setOpen(false)} style={{ display: "block", padding: "11px 8px", color: "#333", fontSize: 14, fontWeight: 500, textDecoration: "none", borderBottom: "1px solid #F5F5F5" }}>{label}</a>
           ))}
           {!user && (
             <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
-              <a href="/login"  style={{ flex: 1, textAlign: "center", padding: "10px", border: "1.5px solid #E2E2E2", borderRadius: 8, color: "#0A2640", textDecoration: "none", fontWeight: 600, fontSize: 13 }}>Sign in</a>
-              <a href="/signup" style={{ flex: 1, textAlign: "center", padding: "10px", background: "#E8490F", borderRadius: 8, color: "white", textDecoration: "none", fontWeight: 600, fontSize: 13 }}>Sign up</a>
+              <a href="/login"  style={{ flex: 1, textAlign: "center", padding: "10px", border: "1.5px solid #E2E2E2", borderRadius: 8, color: "#111827", textDecoration: "none", fontWeight: 600, fontSize: 13 }}>Sign in</a>
+              <a href="/signup" style={{ flex: 1, textAlign: "center", padding: "10px", background: "#16A34A", borderRadius: 8, color: "white", textDecoration: "none", fontWeight: 600, fontSize: 13 }}>Sign up</a>
             </div>
           )}
           {user && (
             <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
-              <a href="/account" style={{ flex: 1, textAlign: "center", padding: "10px", border: "1.5px solid #E2E2E2", borderRadius: 8, color: "#0A2640", textDecoration: "none", fontWeight: 600, fontSize: 13 }}>My account</a>
+              <a href="/account" style={{ flex: 1, textAlign: "center", padding: "10px", border: "1.5px solid #E2E2E2", borderRadius: 8, color: "#111827", textDecoration: "none", fontWeight: 600, fontSize: 13 }}>My account</a>
               <form action="/api/auth/logout" method="POST" style={{ flex: 1 }}>
                 <button type="submit" style={{ width: "100%", padding: "10px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, color: "#dc2626", fontWeight: 600, fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>Sign out</button>
               </form>

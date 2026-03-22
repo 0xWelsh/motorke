@@ -81,7 +81,7 @@ export default async function CarsPage({ searchParams }) {
 
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontWeight: 800, fontSize: "1.6rem", color: "#0A2640" }}>
+        <h1 style={{ fontWeight: 800, fontSize: "1.6rem", color: "#111827" }}>
           {search ? `Results for "${search}"` : county ? `Cars in ${county}` : "Browse all cars"}
         </h1>
         <p style={{ color: "#666", fontSize: 14, marginTop: 4 }}>
@@ -132,12 +132,12 @@ export default async function CarsPage({ searchParams }) {
         {userLat && <input type="hidden" name="lat" value={userLat} />}
         {userLng && <input type="hidden" name="lng" value={userLng} />}
 
-        <button type="submit" style={{ background: "#0A2640", color: "white", border: "none", borderRadius: 10, padding: "9px 20px", fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>
+        <button type="submit" style={{ background: "#111827", color: "white", border: "none", borderRadius: 10, padding: "9px 20px", fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>
           Filter
         </button>
 
         {hasFilters && (
-          <a href="/cars" style={{ display: "flex", alignItems: "center", fontSize: 13, color: "#E8490F", textDecoration: "none", padding: "9px 4px", fontWeight: 500 }}>
+          <a href="/cars" style={{ display: "flex", alignItems: "center", fontSize: 13, color: "#1D4ED8", textDecoration: "none", padding: "9px 4px", fontWeight: 500 }}>
             Clear all ×
           </a>
         )}
@@ -148,7 +148,7 @@ export default async function CarsPage({ searchParams }) {
         <div style={{ background: "#fff", border: "1px solid #E2E2E2", borderRadius: 16, padding: 48, textAlign: "center" }}>
           <p style={{ fontSize: 40, marginBottom: 16 }}>🔍</p>
           <p style={{ fontWeight: 700, fontSize: "1.1rem", color: "#1A1A1A", marginBottom: 8 }}>No cars match your filters</p>
-          <a href="/cars" style={{ color: "#E8490F", textDecoration: "none", fontSize: 14, fontWeight: 600 }}>Clear all filters →</a>
+          <a href="/cars" style={{ color: "#1D4ED8", textDecoration: "none", fontSize: 14, fontWeight: 600 }}>Clear all filters →</a>
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: 18 }}>
@@ -167,7 +167,7 @@ export default async function CarsPage({ searchParams }) {
                       : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", fontSize: 40 }}>🚗</div>
                     }
                     {car.featured && (
-                      <span style={{ position: "absolute", top: 10, left: 10, background: "#E8490F", color: "white", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 99, textTransform: "uppercase" }}>Featured</span>
+                      <span style={{ position: "absolute", top: 10, left: 10, background: "#1D4ED8", color: "white", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 99, textTransform: "uppercase" }}>Featured</span>
                     )}
                     {dist !== null && (
                       <span style={{ position: "absolute", top: 10, right: 10, background: "rgba(10,38,64,0.85)", color: "white", fontSize: 10, fontWeight: 600, padding: "3px 10px", borderRadius: 99 }}>
@@ -184,7 +184,7 @@ export default async function CarsPage({ searchParams }) {
                       ))}
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 12 }}>
-                      <p style={{ fontWeight: 800, fontSize: 16, color: "#E8490F" }}>{formatPrice(car.price)}</p>
+                      <p style={{ fontWeight: 800, fontSize: 16, color: "#1D4ED8" }}>{formatPrice(car.price)}</p>
                       <div style={{ textAlign: "right" }}>
                         <p style={{ fontSize: 11, color: "#555", fontWeight: 500 }}>{car.dealer?.name}</p>
                         <p style={{ fontSize: 10, color: "#999" }}>{car.dealer?.location}</p>
@@ -213,7 +213,7 @@ export default async function CarsPage({ searchParams }) {
                 width: 38, height: 38, borderRadius: 10,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontSize: 13, fontWeight: 600, textDecoration: "none",
-                background: p === page ? "#E8490F" : "#fff",
+                background: p === page ? "#1D4ED8" : "#fff",
                 color:      p === page ? "white"   : "#555",
                 border:     p === page ? "none"    : "1.5px solid #E2E2E2",
               }}>
