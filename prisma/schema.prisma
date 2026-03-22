@@ -1,7 +1,3 @@
-// prisma/schema.prisma
-// Run: npx prisma migrate dev --name add-auth
-// Then: node prisma/seed.js
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,21 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ── User (admin + dealer accounts) ───────────────────────────
 model User {
-  id           String    @id @default(cuid())
-  email        String    @unique
+  id           String     @id @default(cuid())
+  email        String     @unique
   passwordHash String
-  role         UserRole  @default(DEALER)
+  role         UserRole   @default(BUYER)
   name         String
-  dealerId     String?   // null for ADMIN role
-  dealer       Dealer?   @relation(fields: [dealerId], references: [id])
-  active       Boolean   @default(true)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
+  dealerId     String?
+  dealer       Dealer?    @relation(fields: [dealerId], references: [id])
+  active       Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
   sessions     Session[]
-
+  savedCars    SavedCar[]
   @@map("users")
 }
 
@@ -36,16 +30,26 @@ model Session {
   token     String   @unique @default(cuid())
   expiresAt DateTime
   createdAt DateTime @default(now())
-
   @@map("sessions")
+}
+
+model SavedCar {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  carId     String
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  @@unique([userId, carId])
+  @@map("saved_cars")
 }
 
 enum UserRole {
   ADMIN
   DEALER
+  BUYER
 }
 
-// ── Dealership ────────────────────────────────────────────────
 model Dealer {
   id          String   @id @default(cuid())
   name        String
@@ -56,7 +60,7 @@ model Dealer {
   whatsapp    String?
   email       String?
   website     String?
-  location    String   // e.g. "Westlands, Nairobi"
+  location    String
   county      String   @default("Nairobi")
   address     String?
   lat         Float?
@@ -65,62 +69,45 @@ model Dealer {
   featured    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
   cars        Car[]
   leads       Lead[]
   users       User[]
-
   @@map("dealers")
 }
 
-// ── Car listing ───────────────────────────────────────────────
 model Car {
-  id              String      @id @default(cuid())
-  dealerId        String
-  dealer          Dealer      @relation(fields: [dealerId], references: [id])
-
-  // identity
-  make            String      // Toyota
-  model           String      // Hilux
-  variant         String?     // Double Cab 4x4
-  year            Int
-  condition       Condition   @default(USED)
-
-  // pricing (KES)
-  price           Int
-  negotiable      Boolean     @default(true)
-
-  // specs
-  mileage         Int?        // km
-  fuelType        FuelType    @default(PETROL)
-  transmission    Transmission @default(AUTOMATIC)
-  driveType       DriveType   @default(RHD)
-  engineCC        Int?        // 2400
-  bodyType        BodyType    @default(SEDAN)
-  color           String?
-  doors           Int?        @default(4)
-  seats           Int?        @default(5)
-
-  // import info (common in Kenya)
-  imported        Boolean     @default(true)
-  importCountry   String?     @default("Japan")
-  dutyPaid        Boolean     @default(true)
-
-  // content
-  description     String?
-  features        String[]    // ["Sunroof", "Leather seats", "Reverse camera"]
-  images          CarImage[]
-
-  // status
-  available       Boolean     @default(true)
-  featured        Boolean     @default(false)
-  views           Int         @default(0)
-
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-
-  leads           Lead[]
-
+  id            String       @id @default(cuid())
+  dealerId      String
+  dealer        Dealer       @relation(fields: [dealerId], references: [id])
+  make          String
+  model         String
+  variant       String?
+  year          Int
+  condition     Condition    @default(USED)
+  price         Int
+  negotiable    Boolean      @default(true)
+  mileage       Int?
+  fuelType      FuelType     @default(PETROL)
+  transmission  Transmission @default(AUTOMATIC)
+  driveType     DriveType    @default(RHD)
+  engineCC      Int?
+  bodyType      BodyType     @default(SEDAN)
+  color         String?
+  doors         Int?         @default(4)
+  seats         Int?         @default(5)
+  imported      Boolean      @default(true)
+  importCountry String?      @default("Japan")
+  dutyPaid      Boolean      @default(true)
+  description   String?
+  features      String[]
+  images        CarImage[]
+  available     Boolean      @default(true)
+  featured      Boolean      @default(false)
+  views         Int          @default(0)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  leads         Lead[]
+  savedBy       SavedCar[]
   @@map("cars")
   @@index([make, model])
   @@index([dealerId])
@@ -129,37 +116,31 @@ model Car {
 }
 
 model CarImage {
-  id        String   @id @default(cuid())
+  id        String  @id @default(cuid())
   carId     String
-  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  car       Car     @relation(fields: [carId], references: [id], onDelete: Cascade)
   url       String
   alt       String?
-  isPrimary Boolean  @default(false)
-  order     Int      @default(0)
-
+  isPrimary Boolean @default(false)
+  order     Int     @default(0)
   @@map("car_images")
 }
 
-// ── Lead / enquiry ────────────────────────────────────────────
 model Lead {
   id        String   @id @default(cuid())
   carId     String
   car       Car      @relation(fields: [carId], references: [id])
   dealerId  String
   dealer    Dealer   @relation(fields: [dealerId], references: [id])
-
   name      String
   phone     String
   email     String?
   message   String?
-  channel   String   @default("web")  // web | whatsapp
-
+  channel   String   @default("web")
   createdAt DateTime @default(now())
-
   @@map("leads")
 }
 
-// ── Enums ─────────────────────────────────────────────────────
 enum Condition {
   NEW
   USED

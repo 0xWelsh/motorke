@@ -1,18 +1,21 @@
 // src/app/dealers/[slug]/page.js
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
-import { formatPrice, formatMileage, BODY_TYPE_LABELS } from "@/lib/utils";
+import { formatPrice, formatMileage } from "@/lib/utils";
 import Link from "next/link";
 
 export async function generateMetadata({ params }) {
-  const dealer = await db.dealer.findUnique({ where: { slug: params.slug } });
+  const { slug } = await params;
+  const dealer = await db.dealer.findUnique({ where: { slug } });
   if (!dealer) return {};
   return { title: `${dealer.name} — Motorke Kenya` };
 }
 
 export default async function DealerPage({ params }) {
+  const { slug } = await params;
+
   const dealer = await db.dealer.findUnique({
-    where:   { slug: params.slug },
+    where:   { slug },
     include: {
       cars: {
         where:   { available: true },
@@ -24,97 +27,80 @@ export default async function DealerPage({ params }) {
 
   if (!dealer) notFound();
 
-  const totalCars = dealer.cars.length;
-  const makes     = [...new Set(dealer.cars.map((c) => c.make))];
+  const makes = [...new Set(dealer.cars.map((c) => c.make))];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      {/* Header */}
-      <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-8 mb-8">
-        <div className="flex flex-wrap items-start gap-6">
-          <div className="w-20 h-20 rounded-2xl bg-[#f97316]/20 flex items-center justify-center text-[#f97316] font-black text-3xl flex-shrink-0">
+    <div style={{ maxWidth: 1280, margin: "0 auto", padding: "2rem 1rem 4rem" }}>
+
+      {/* Dealer header */}
+      <div style={{ background: "#fff", border: "1px solid #E2E2E2", borderRadius: 16, padding: "28px 32px", marginBottom: 28 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start", gap: 20 }}>
+          <div style={{ width: 72, height: 72, borderRadius: 16, background: "#fff3e8", color: "#E8490F", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 28, flexShrink: 0 }}>
             {dealer.name[0]}
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-wrap items-center gap-3 mb-2">
-              <h1 className="text-3xl font-black">{dealer.name}</h1>
+          <div style={{ flex: 1, minWidth: 200 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 6 }}>
+              <h1 style={{ fontWeight: 800, fontSize: "1.6rem", color: "#1A1A1A" }}>{dealer.name}</h1>
               {dealer.verified && (
-                <span className="text-xs bg-green-500/20 text-green-400 border border-green-500/30 rounded-full px-3 py-1">✓ Verified dealer</span>
+                <span style={{ fontSize: 11, background: "#f0fdf4", color: "#16a34a", border: "1px solid #bbf7d0", borderRadius: 99, padding: "3px 10px", fontWeight: 600 }}>✓ Verified</span>
               )}
             </div>
-            <p className="text-white/50 mb-1">📍 {dealer.address || dealer.location}</p>
-            {dealer.description && <p className="text-white/60 text-sm mt-2 max-w-2xl">{dealer.description}</p>}
-
-            <div className="flex flex-wrap gap-4 mt-4 text-sm">
-              {dealer.phone && (
-                <a href={`tel:${dealer.phone}`} className="flex items-center gap-1.5 text-white/60 hover:text-white transition-colors">
-                  📞 {dealer.phone}
-                </a>
-              )}
-              {dealer.email && (
-                <a href={`mailto:${dealer.email}`} className="flex items-center gap-1.5 text-white/60 hover:text-white transition-colors">
-                  ✉️ {dealer.email}
-                </a>
-              )}
-              {dealer.whatsapp && (
-                <a href={`https://wa.me/${dealer.whatsapp}`} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30 px-3 py-1 rounded-full hover:bg-[#25D366]/30 transition-colors text-xs font-semibold">
-                  💬 WhatsApp
-                </a>
-              )}
+            <p style={{ color: "#666", fontSize: 14, marginBottom: 8 }}>📍 {dealer.address || dealer.location}</p>
+            {dealer.description && <p style={{ color: "#555", fontSize: 14, lineHeight: 1.6, maxWidth: 600 }}>{dealer.description}</p>}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 14 }}>
+              {dealer.phone && <a href={`tel:${dealer.phone}`} style={{ fontSize: 13, border: "1px solid #E2E2E2", borderRadius: 8, padding: "6px 14px", color: "#444", textDecoration: "none", fontWeight: 500 }}>📞 {dealer.phone}</a>}
+              {dealer.whatsapp && <a href={`https://wa.me/${dealer.whatsapp}`} target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, background: "#dcfce7", border: "1px solid #bbf7d0", borderRadius: 8, padding: "6px 14px", color: "#16a34a", textDecoration: "none", fontWeight: 600 }}>💬 WhatsApp</a>}
+              {dealer.email && <a href={`mailto:${dealer.email}`} style={{ fontSize: 13, border: "1px solid #E2E2E2", borderRadius: 8, padding: "6px 14px", color: "#444", textDecoration: "none" }}>✉️ {dealer.email}</a>}
             </div>
           </div>
-
-          {/* Stats */}
-          <div className="flex gap-4 text-center">
-            <div className="bg-white/5 rounded-xl p-4 min-w-[80px]">
-              <p className="text-2xl font-black text-[#f97316]">{totalCars}</p>
-              <p className="text-[10px] text-white/40 mt-1">Cars</p>
-            </div>
-            <div className="bg-white/5 rounded-xl p-4 min-w-[80px]">
-              <p className="text-2xl font-black text-[#f97316]">{makes.length}</p>
-              <p className="text-[10px] text-white/40 mt-1">Makes</p>
-            </div>
+          <div style={{ display: "flex", gap: 12 }}>
+            {[{ v: dealer.cars.length, l: "Cars" }, { v: makes.length, l: "Makes" }].map(({ v, l }) => (
+              <div key={l} style={{ textAlign: "center", background: "#F5F5F5", borderRadius: 12, padding: "12px 20px", minWidth: 72 }}>
+                <p style={{ fontWeight: 800, fontSize: "1.4rem", color: "#E8490F" }}>{v}</p>
+                <p style={{ fontSize: 11, color: "#666", marginTop: 2 }}>{l}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Makes */}
+      {/* Makes pills */}
       {makes.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-8">
-          {makes.map((make) => (
-            <span key={make} className="text-xs bg-white/5 border border-white/10 text-white/50 rounded-full px-3 py-1">{make}</span>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 24 }}>
+          {makes.map(make => (
+            <span key={make} style={{ fontSize: 12, background: "#fff", border: "1px solid #E2E2E2", borderRadius: 99, padding: "4px 14px", color: "#555", fontWeight: 500 }}>{make}</span>
           ))}
         </div>
       )}
 
-      {/* Car grid */}
-      <h2 className="text-xl font-black mb-5">Available inventory</h2>
+      {/* Cars grid */}
+      <h2 style={{ fontWeight: 800, fontSize: "1.2rem", color: "#1A1A1A", marginBottom: 16 }}>Available inventory</h2>
+
       {dealer.cars.length === 0 ? (
-        <p className="text-white/30 text-center py-20">No cars listed yet</p>
+        <div style={{ background: "#fff", border: "1px solid #E2E2E2", borderRadius: 16, padding: 48, textAlign: "center", color: "#999" }}>
+          <p style={{ fontSize: 40, marginBottom: 12 }}>🚗</p>
+          <p style={{ fontWeight: 600 }}>No cars listed yet</p>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: 20 }}>
           {dealer.cars.map((car) => {
             const img   = car.images[0]?.url;
             const title = `${car.year} ${car.make} ${car.model}`;
             return (
               <Link key={car.id} href={`/cars/${car.id}`}
-                className="card-hover block bg-[#1a1a1a] border border-white/10 hover:border-[#f97316]/30 rounded-2xl overflow-hidden transition-all">
-                <div className="relative aspect-[16/10] bg-white/5">
+                style={{ background: "#fff", border: "1px solid #E2E2E2", borderRadius: 12, overflow: "hidden", textDecoration: "none", display: "block", transition: "transform 0.2s, box-shadow 0.2s" }}>
+                <div style={{ aspectRatio: "16/10", background: "#f0ede8", overflow: "hidden" }}>
                   {img
-                    ? <img src={img} alt={title} className="w-full h-full object-cover" />
-                    : <div className="flex items-center justify-center h-full text-3xl">🚗</div>
+                    ? <img src={img} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", fontSize: 40 }}>🚗</div>
                   }
-                  {car.featured && (
-                    <span className="absolute top-2 left-2 text-[9px] font-bold bg-[#f97316] text-white px-2 py-0.5 rounded-full uppercase">Featured</span>
-                  )}
                 </div>
-                <div className="p-4">
-                  <p className="font-bold text-sm">{title}</p>
-                  {car.variant && <p className="text-xs text-white/40 mt-0.5 truncate">{car.variant}</p>}
-                  <div className="flex justify-between items-center mt-3">
-                    <p className="text-[#f97316] font-black">{formatPrice(car.price)}</p>
-                    <p className="text-xs text-white/30">{formatMileage(car.mileage)}</p>
+                <div style={{ padding: "14px 16px" }}>
+                  <p style={{ fontWeight: 700, fontSize: 15, color: "#1A1A1A" }}>{title}</p>
+                  {car.variant && <p style={{ fontSize: 12, color: "#999", marginTop: 2 }}>{car.variant}</p>}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+                    <p style={{ fontWeight: 800, fontSize: 16, color: "#E8490F" }}>{formatPrice(car.price)}</p>
+                    {car.mileage && <p style={{ fontSize: 12, color: "#999" }}>{formatMileage(car.mileage)}</p>}
                   </div>
                 </div>
               </Link>

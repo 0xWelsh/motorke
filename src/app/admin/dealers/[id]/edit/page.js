@@ -1,5 +1,6 @@
 // src/app/admin/dealers/[id]/edit/page.js
 import { requireAdmin } from "@/lib/auth";
+import DeleteButton from "@/components/DeleteButton";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 
@@ -11,13 +12,15 @@ const COUNTIES = [
 ];
 
 export default async function AdminEditDealerPage({ params, searchParams }) {
+  const { id } = await params;
+  const sp = await searchParams;
   await requireAdmin();
 
-  const dealer = await db.dealer.findUnique({ where: { id: params.id } });
+  const dealer = await db.dealer.findUnique({ where: { id: id } });
   if (!dealer) notFound();
 
-  const saved  = searchParams.saved;
-  const error  = searchParams.error;
+  const saved  = sp.saved;
+  const error  = sp.error;
 
   const inputCls  = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
   const selectCls = "w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
@@ -121,13 +124,7 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
         <p className="text-xs text-white/30 mb-4">
           Deleting a dealership removes all their listings and portal accounts permanently.
         </p>
-        <form action={`/api/admin/dealers/${dealer.id}/delete`} method="POST"
-          onSubmit="return confirm('Delete this dealership and ALL their cars? This cannot be undone.')">
-          <button type="submit"
-            className="text-xs text-red-400 border border-red-500/30 hover:bg-red-500/10 rounded-lg px-4 py-2 transition-colors">
-            Delete dealership
-          </button>
-        </form>
+        <DeleteButton action={`/api/admin/dealers/${dealer.id}/delete`} message="Delete this dealership and ALL their cars? Cannot be undone." label="Delete" />
       </div>
     </div>
   );

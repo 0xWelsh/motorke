@@ -1,5 +1,6 @@
 // src/app/admin/cars/[id]/edit/page.js
 import { requireAdmin } from "@/lib/auth";
+import DeleteButton from "@/components/DeleteButton";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import CarForm from "@/components/CarForm";
@@ -41,18 +42,7 @@ export default async function AdminEditCarPage({ params }) {
         <p className="text-xs text-white/30 mb-4">
           Permanently deletes this listing, all its photos, and all buyer enquiries. Cannot be undone.
         </p>
-        <form
-          action={`/api/admin/cars/${car.id}/delete`}
-          method="POST"
-          onSubmit="return confirm('Delete this car listing permanently?')"
-        >
-          <button
-            type="submit"
-            className="text-xs text-red-400 border border-red-500/30 hover:bg-red-500/10 rounded-lg px-4 py-2 transition-colors"
-          >
-            Delete listing
-          </button>
-        </form>
+        <DeleteButton action={`/api/admin/cars/${car.id}/delete`} message="Delete this listing permanently?" label="Delete listing" />
       </div>
     </div>
   );

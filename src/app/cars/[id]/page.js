@@ -1,20 +1,24 @@
 // src/app/cars/[id]/page.js
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
+import { getSession } from "@/lib/auth";
 import { formatPrice, formatMileage, estimateDuty,
          BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/utils";
 import EnquiryForm from "@/components/EnquiryForm";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
+import { SaveButton, TrackRecentView } from "@/components/CarActions";
+import RecentlyViewed from "@/components/RecentlyViewed";
 import Link from "next/link";
 
 export async function generateMetadata({ params }) {
-  const car = await db.car.findUnique({ where: { id: params.id } });
+  const { id } = await params;
+  const car = await db.car.findUnique({ where: { id: id } });
   if (!car) return {};
   return { title: `${car.year} ${car.make} ${car.model} — Motorke Kenya` };
 }
 
-export default async function CarDetailPage({ params }) {
+export default async function CarDetailPage({ params: paramsPromise }) {
   const [carData] = await Promise.all([
     db.car.findUnique({
       where:   { id: params.id },
@@ -26,6 +30,14 @@ export default async function CarDetailPage({ params }) {
   ]);
 
   if (!carData) notFound();
+
+  const session   = await getSession();
+  const userId    = session?.userId || null;
+  const isLoggedIn = !!userId;
+  const savedCar  = userId ? await db.savedCar.findUnique({
+    where: { userId_carId: { userId, carId: params.id } },
+  }).catch(() => null) : null;
+  const isSaved = !!savedCar;
 
   const { car, dealer } = { car: carData, dealer: carData.dealer };
 
@@ -90,8 +102,12 @@ export default async function CarDetailPage({ params }) {
             </div>
           </div>
 
-          {/* Share */}
-          <ShareButtons title={title} price={formatPrice(car.price)} />
+          {/* Share + Save */}
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <ShareButtons title={title} price={formatPrice(car.price)} />
+            <SaveButton carId={car.id} initialSaved={isSaved} isLoggedIn={isLoggedIn} />
+          </div>
+          <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
 
           {/* Feature badges */}
           {car.features?.length > 0 && (

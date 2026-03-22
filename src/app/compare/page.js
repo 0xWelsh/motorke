@@ -6,7 +6,8 @@ import Link from "next/link";
 export const metadata = { title: "Compare Cars — Motorke Kenya" };
 
 export default async function ComparePage({ searchParams }) {
-  const ids = [searchParams.a, searchParams.b, searchParams.c].filter(Boolean);
+  const sp = await searchParams;
+  const ids = [sp.a, sp.b, sp.c].filter(Boolean);
 
   const cars = ids.length > 0
     ? await db.car.findMany({

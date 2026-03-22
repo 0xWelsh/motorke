@@ -1,6 +1,7 @@
 // src/app/admin/users/page.js
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
+import Link from "next/link";
 
 export const metadata = { title: "Users — Admin" };
 
@@ -12,84 +13,78 @@ export default async function AdminUsersPage() {
     orderBy: { createdAt: "desc" },
   });
 
+  const s = { background: "#fff", border: "1px solid #E2E2E2", borderRadius: 14 };
+  const roleColors = {
+    ADMIN:  { bg: "#f3e8ff", color: "#7c3aed", border: "#d8b4fe" },
+    DEALER: { bg: "#e8eef4", color: "#0A2640", border: "#c5d5e8" },
+    BUYER:  { bg: "#f0fdf4", color: "#16a34a", border: "#bbf7d0" },
+  };
+
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-black">
-          Portal users <span className="text-white/30 text-xl font-normal">({users.length})</span>
+    <div style={{ padding: "28px 32px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <h1 style={{ fontWeight: 800, fontSize: "1.5rem", color: "#0A2640" }}>
+          Users <span style={{ fontWeight: 400, fontSize: "1rem", color: "#999" }}>({users.length})</span>
         </h1>
-        <a href="/admin/users/new"
-          className="bg-[#f97316] hover:bg-[#ea6c0b] text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-colors">
-          + Create user
-        </a>
+        <Link href="/admin/users/new" style={{ background: "#E8490F", color: "white", textDecoration: "none", borderRadius: 10, padding: "9px 18px", fontWeight: 700, fontSize: 13 }}>+ Create user</Link>
       </div>
 
-      <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl overflow-hidden">
-        <table className="w-full">
+      <div style={{ ...s, overflow: "hidden" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
           <thead>
-            <tr className="border-b border-white/10">
-              <th className="text-left text-xs text-white/40 uppercase tracking-wider px-5 py-4">User</th>
-              <th className="text-left text-xs text-white/40 uppercase tracking-wider px-4 py-4">Role</th>
-              <th className="text-left text-xs text-white/40 uppercase tracking-wider px-4 py-4">Dealership</th>
-              <th className="text-left text-xs text-white/40 uppercase tracking-wider px-4 py-4">Status</th>
-              <th className="text-left text-xs text-white/40 uppercase tracking-wider px-4 py-4">Joined</th>
-              <th className="text-left text-xs text-white/40 uppercase tracking-wider px-4 py-4">Actions</th>
+            <tr style={{ background: "#F5F5F5", borderBottom: "1px solid #E2E2E2" }}>
+              {["User", "Role", "Dealership", "Status", "Joined", "Actions"].map(h => (
+                <th key={h} style={{ padding: "11px 16px", textAlign: "left", fontWeight: 600, color: "#555" }}>{h}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
-              <tr key={user.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                <td className="px-5 py-4">
-                  <div>
-                    <p className="text-sm font-semibold">{user.name}</p>
-                    <p className="text-xs text-white/30">{user.email}</p>
-                  </div>
-                </td>
-                <td className="px-4 py-4">
-                  <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                    user.role === "ADMIN"
-                      ? "bg-purple-500/15 text-purple-400 border border-purple-500/20"
-                      : "bg-blue-500/15 text-blue-400 border border-blue-500/20"
-                  }`}>
-                    {user.role}
-                  </span>
-                </td>
-                <td className="px-4 py-4 text-sm text-white/50">
-                  {user.dealer?.name || <span className="text-white/20">—</span>}
-                </td>
-                <td className="px-4 py-4">
-                  <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                    user.active
-                      ? "bg-green-500/15 text-green-400 border border-green-500/20"
-                      : "bg-red-500/15 text-red-400 border border-red-500/20"
-                  }`}>
-                    {user.active ? "Active" : "Suspended"}
-                  </span>
-                </td>
-                <td className="px-4 py-4 text-xs text-white/30">
-                  {new Date(user.createdAt).toLocaleDateString("en-KE")}
-                </td>
-                <td className="px-4 py-4">
-                  <div className="flex gap-2">
-                    <a href={`/admin/users/${user.id}/edit`}
-                      className="text-xs text-white/40 hover:text-white border border-white/10 hover:border-white/20 rounded-lg px-3 py-1.5 transition-all">
-                      Edit
-                    </a>
-                    <form action={`/api/admin/users/${user.id}/toggle`} method="POST">
-                      <button type="submit"
-                        className="text-xs text-white/40 hover:text-white border border-white/10 hover:border-white/20 rounded-lg px-3 py-1.5 transition-all">
-                        {user.active ? "Suspend" : "Activate"}
-                      </button>
-                    </form>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {users.map((user, i) => {
+              const rc = roleColors[user.role] || roleColors.BUYER;
+              return (
+                <tr key={user.id} style={{ borderBottom: i < users.length - 1 ? "1px solid #F5F5F5" : "none" }}>
+                  <td style={{ padding: "12px 16px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#E8490F", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 13, flexShrink: 0 }}>
+                        {user.name?.[0]?.toUpperCase()}
+                      </div>
+                      <div>
+                        <p style={{ fontWeight: 600, color: "#1A1A1A" }}>{user.name}</p>
+                        <p style={{ fontSize: 11, color: "#999" }}>{user.email}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td style={{ padding: "12px 16px" }}>
+                    <span style={{ fontSize: 11, borderRadius: 99, padding: "3px 10px", fontWeight: 600, background: rc.bg, color: rc.color, border: `1px solid ${rc.border}` }}>
+                      {user.role}
+                    </span>
+                  </td>
+                  <td style={{ padding: "12px 16px", color: "#555" }}>{user.dealer?.name || <span style={{ color: "#bbb" }}>—</span>}</td>
+                  <td style={{ padding: "12px 16px" }}>
+                    <span style={{ fontSize: 11, borderRadius: 99, padding: "3px 10px", fontWeight: 600, background: user.active ? "#dcfce7" : "#fef2f2", color: user.active ? "#16a34a" : "#dc2626" }}>
+                      {user.active ? "Active" : "Suspended"}
+                    </span>
+                  </td>
+                  <td style={{ padding: "12px 16px", color: "#999", fontSize: 12 }}>
+                    {new Date(user.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" })}
+                  </td>
+                  <td style={{ padding: "12px 16px" }}>
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <a href={`/admin/users/${user.id}/edit`} style={{ fontSize: 12, border: "1px solid #E2E2E2", borderRadius: 7, padding: "4px 10px", color: "#444", textDecoration: "none" }}>Edit</a>
+                      <form action={`/api/admin/users/${user.id}/toggle`} method="POST" style={{ display: "inline" }}>
+                        <button type="submit" style={{ fontSize: 12, border: `1px solid ${user.active ? "#fecaca" : "#bbf7d0"}`, borderRadius: 7, padding: "4px 10px", color: user.active ? "#dc2626" : "#16a34a", background: user.active ? "#fef2f2" : "#f0fdf4", cursor: "pointer", fontFamily: "inherit" }}>
+                          {user.active ? "Suspend" : "Activate"}
+                        </button>
+                      </form>
+                      <a href={`/admin/users/${user.id}/reset-password`} style={{ fontSize: 12, border: "1px solid #E2E2E2", borderRadius: 7, padding: "4px 10px", color: "#0A2640", textDecoration: "none" }}>Reset pw</a>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
-        {users.length === 0 && (
-          <div className="text-center py-16 text-white/30">No users yet</div>
-        )}
+        {users.length === 0 && <div style={{ textAlign: "center", padding: 40, color: "#bbb" }}>No users yet</div>}
       </div>
     </div>
   );

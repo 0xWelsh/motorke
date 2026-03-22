@@ -4,13 +4,14 @@ import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
 export async function PUT(request, { params }) {
+  const { id } = await params;
   const session = await getSessionFromRequest();
   if (!session || session.user.role !== "DEALER") {
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
 
   // Verify this car belongs to the dealer
-  const existing = await db.car.findUnique({ where: { id: params.id } });
+  const existing = await db.car.findUnique({ where: { id: id } });
   if (!existing || existing.dealerId !== session.user.dealerId) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -25,7 +26,7 @@ export async function PUT(request, { params }) {
     } = body;
 
     await db.car.update({
-      where: { id: params.id },
+      where: { id: id },
       data: {
         make:         make.trim(),
         model:        model.trim(),
@@ -51,10 +52,10 @@ export async function PUT(request, { params }) {
 
     // Replace images if new ones provided
     if (images && images.length > 0) {
-      await db.carImage.deleteMany({ where: { carId: params.id } });
+      await db.carImage.deleteMany({ where: { carId: id } });
       await db.carImage.createMany({
         data: images.map((img, i) => ({
-          carId:     params.id,
+          carId:     id,
           url:       img.url,
           isPrimary: img.isPrimary || i === 0,
           order:     i,

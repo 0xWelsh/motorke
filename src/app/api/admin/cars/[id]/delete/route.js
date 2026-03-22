@@ -5,13 +5,14 @@ import { deleteImage } from "@/lib/storage";
 import { NextResponse } from "next/server";
 
 export async function POST(request, { params }) {
+  const { id } = await params;
   const session = await getSessionFromRequest();
   if (!session) {
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
 
   const car = await db.car.findUnique({
-    where:   { id: params.id },
+    where:   { id: id },
     include: { images: true },
   });
 
@@ -30,9 +31,9 @@ export async function POST(request, { params }) {
   }
 
   // Delete from DB (cascade removes images + leads)
-  await db.lead.deleteMany({ where: { carId: params.id } });
-  await db.carImage.deleteMany({ where: { carId: params.id } });
-  await db.car.delete({ where: { id: params.id } });
+  await db.lead.deleteMany({ where: { carId: id } });
+  await db.carImage.deleteMany({ where: { carId: id } });
+  await db.car.delete({ where: { id: id } });
 
   // Redirect back to the right list
   const dest = session.user.role === "ADMIN" ? "/admin/cars" : "/portal";

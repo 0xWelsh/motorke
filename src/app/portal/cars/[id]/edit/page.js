@@ -1,5 +1,6 @@
 // src/app/portal/cars/[id]/edit/page.js
 import { requireDealer } from "@/lib/auth";
+import DeleteButton from "@/components/DeleteButton";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import CarForm from "@/components/CarForm";
@@ -7,10 +8,11 @@ import CarForm from "@/components/CarForm";
 export const metadata = { title: "Edit Car — Motorke Portal" };
 
 export default async function PortalEditCarPage({ params }) {
+  const { id } = await params;
   const user = await requireDealer();
 
   const car = await db.car.findUnique({
-    where:   { id: params.id },
+    where:   { id: id },
     include: { images: { orderBy: { order: "asc" } } },
   });
 
@@ -42,18 +44,7 @@ export default async function PortalEditCarPage({ params }) {
         <p className="text-xs text-white/30 mb-4">
           Permanently removes this car and all enquiries. Cannot be undone.
         </p>
-        <form
-          action={`/api/admin/cars/${car.id}/delete`}
-          method="POST"
-          onSubmit="return confirm('Delete this listing permanently?')"
-        >
-          <button
-            type="submit"
-            className="text-xs text-red-400 border border-red-500/30 hover:bg-red-500/10 rounded-lg px-4 py-2 transition-colors"
-          >
-            Delete listing
-          </button>
-        </form>
+        <DeleteButton action={`/api/admin/cars/${car.id}/delete`} message="Delete this car permanently?" />
       </div>
     </div>
   );

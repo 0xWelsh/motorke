@@ -4,6 +4,7 @@ import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
 export async function POST(request, { params }) {
+  const { id } = await params;
   const session = await getSessionFromRequest();
   if (!session || session.user.role !== "ADMIN") {
     return NextResponse.redirect(new URL("/login", request.url));
@@ -18,26 +19,26 @@ export async function POST(request, { params }) {
   try {
     // Check email uniqueness (excluding self)
     const existing = await db.user.findFirst({
-      where: { email, id: { not: params.id } },
+      where: { email, id: { not: id } },
     });
     if (existing) {
       return NextResponse.redirect(
-        new URL(`/admin/users/${params.id}/edit?error=exists`, request.url)
+        new URL(`/admin/users/${id}/edit?error=exists`, request.url)
       );
     }
 
     await db.user.update({
-      where: { id: params.id },
+      where: { id: id },
       data:  { name, email, role, dealerId: dealerId || null },
     });
 
     return NextResponse.redirect(
-      new URL(`/admin/users/${params.id}/edit?saved=1`, request.url)
+      new URL(`/admin/users/${id}/edit?saved=1`, request.url)
     );
   } catch (err) {
     console.error(err);
     return NextResponse.redirect(
-      new URL(`/admin/users/${params.id}/edit?error=unknown`, request.url)
+      new URL(`/admin/users/${id}/edit?error=unknown`, request.url)
     );
   }
 }

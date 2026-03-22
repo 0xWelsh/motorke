@@ -3,8 +3,9 @@ import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function GET(request, { params }) {
+  const { id } = await params;
   const car = await db.car.findUnique({
-    where: { id: params.id },
+    where: { id: id },
     include: {
       images: { orderBy: { order: "asc" } },
       dealer: true,
@@ -17,7 +18,7 @@ export async function GET(request, { params }) {
 
   // Increment view count (fire and forget)
   db.car.update({
-    where: { id: params.id },
+    where: { id: id },
     data:  { views: { increment: 1 } },
   }).catch(() => {});
 

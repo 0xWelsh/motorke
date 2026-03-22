@@ -1,6 +1,8 @@
 // src/app/admin/dealers/page.js
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
+import Link from "next/link";
+import DeleteButton from "@/components/DeleteButton";
 
 export const metadata = { title: "Dealerships — Admin" };
 
@@ -8,76 +10,75 @@ export default async function AdminDealersPage() {
   await requireAdmin();
 
   const dealers = await db.dealer.findMany({
-    include: {
-      _count: { select: { cars: true, users: true } },
-    },
+    include: { _count: { select: { cars: true, users: true, leads: true } } },
     orderBy: { createdAt: "desc" },
   });
 
+  const s = { background: "#fff", border: "1px solid #E2E2E2", borderRadius: 14 };
+
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-black">
-          Dealerships <span className="text-white/30 text-xl font-normal">({dealers.length})</span>
+    <div style={{ padding: "28px 32px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <h1 style={{ fontWeight: 800, fontSize: "1.5rem", color: "#0A2640" }}>
+          Dealerships <span style={{ fontWeight: 400, fontSize: "1rem", color: "#999" }}>({dealers.length})</span>
         </h1>
-        <a href="/admin/dealers/new"
-          className="bg-[#f97316] hover:bg-[#ea6c0b] text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-colors">
-          + Add dealership
-        </a>
+        <Link href="/admin/dealers/new" style={{ background: "#E8490F", color: "white", textDecoration: "none", borderRadius: 10, padding: "9px 18px", fontWeight: 700, fontSize: 13 }}>+ Add dealership</Link>
       </div>
 
-      <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl overflow-hidden">
-        <table className="w-full">
+      <div style={{ ...s, overflow: "hidden" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
           <thead>
-            <tr className="border-b border-white/10">
-              <th className="text-left text-xs text-white/40 uppercase tracking-wider px-5 py-4">Dealership</th>
-              <th className="text-left text-xs text-white/40 uppercase tracking-wider px-4 py-4 hidden sm:table-cell">County</th>
-              <th className="text-left text-xs text-white/40 uppercase tracking-wider px-4 py-4">Cars</th>
-              <th className="text-left text-xs text-white/40 uppercase tracking-wider px-4 py-4 hidden md:table-cell">Users</th>
-              <th className="text-left text-xs text-white/40 uppercase tracking-wider px-4 py-4">Status</th>
-              <th className="text-left text-xs text-white/40 uppercase tracking-wider px-4 py-4">Actions</th>
+            <tr style={{ background: "#F5F5F5", borderBottom: "1px solid #E2E2E2" }}>
+              {["Dealership", "County", "Cars", "Users", "Leads", "Status", "Actions"].map(h => (
+                <th key={h} style={{ padding: "11px 16px", textAlign: "left", fontWeight: 600, color: "#555" }}>{h}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {dealers.map((dealer) => (
-              <tr key={dealer.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                <td className="px-5 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-[#f97316]/20 flex items-center justify-center text-[#f97316] font-black flex-shrink-0">
+            {dealers.map((dealer, i) => (
+              <tr key={dealer.id} style={{ borderBottom: i < dealers.length - 1 ? "1px solid #F5F5F5" : "none" }}>
+                <td style={{ padding: "12px 16px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 9, background: "#e8eef4", color: "#0A2640", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 16, flexShrink: 0 }}>
                       {dealer.name[0]}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold">{dealer.name}</p>
-                      <p className="text-xs text-white/30">{dealer.location}</p>
+                      <p style={{ fontWeight: 600, color: "#1A1A1A" }}>{dealer.name}</p>
+                      <p style={{ fontSize: 11, color: "#999" }}>{dealer.location}</p>
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-4 text-sm text-white/50 hidden sm:table-cell">{dealer.county}</td>
-                <td className="px-4 py-4 text-sm font-semibold text-[#f97316]">{dealer._count.cars}</td>
-                <td className="px-4 py-4 text-sm text-white/50 hidden md:table-cell">{dealer._count.users}</td>
-                <td className="px-4 py-4">
-                  <div className="flex gap-1.5">
-                    {dealer.verified && (
-                      <span className="text-[10px] bg-green-500/15 text-green-400 border border-green-500/20 rounded-full px-2 py-0.5">✓ Verified</span>
-                    )}
-                    {dealer.featured && (
-                      <span className="text-[10px] bg-[#f97316]/15 text-[#f97316] border border-[#f97316]/20 rounded-full px-2 py-0.5">⭐ Featured</span>
-                    )}
-                    {!dealer.verified && !dealer.featured && (
-                      <span className="text-[10px] text-white/20">Basic</span>
-                    )}
+                <td style={{ padding: "12px 16px", color: "#555" }}>{dealer.county}</td>
+                <td style={{ padding: "12px 16px", fontWeight: 700, color: "#E8490F" }}>{dealer._count.cars}</td>
+                <td style={{ padding: "12px 16px", color: "#555" }}>{dealer._count.users}</td>
+                <td style={{ padding: "12px 16px", color: "#555" }}>{dealer._count.leads}</td>
+                <td style={{ padding: "12px 16px" }}>
+                  <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                    {dealer.verified && <span style={{ fontSize: 10, background: "#dcfce7", color: "#16a34a", border: "1px solid #bbf7d0", borderRadius: 99, padding: "2px 8px", fontWeight: 600 }}>✓ Verified</span>}
+                    {dealer.featured && <span style={{ fontSize: 10, background: "#fff3e8", color: "#E8490F", border: "1px solid #ffd0b0", borderRadius: 99, padding: "2px 8px", fontWeight: 600 }}>⭐ Featured</span>}
+                    {!dealer.verified && !dealer.featured && <span style={{ fontSize: 10, color: "#999" }}>Basic</span>}
                   </div>
                 </td>
-                <td className="px-4 py-4">
-                  <div className="flex gap-2">
-                    <a href={`/admin/dealers/${dealer.id}/edit`}
-                      className="text-xs text-white/40 hover:text-white border border-white/10 hover:border-white/20 rounded-lg px-3 py-1.5 transition-all">
-                      Edit
-                    </a>
-                    <a href={`/dealers/${dealer.slug}`} target="_blank"
-                      className="text-xs text-[#f97316]/60 hover:text-[#f97316] border border-[#f97316]/20 rounded-lg px-3 py-1.5 transition-all">
-                      View ↗
-                    </a>
+                <td style={{ padding: "12px 16px" }}>
+                  <div style={{ display: "flex", gap: 6 }}>
+                    <a href={`/admin/dealers/${dealer.id}/edit`} style={{ fontSize: 12, border: "1px solid #E2E2E2", borderRadius: 7, padding: "4px 10px", color: "#444", textDecoration: "none" }}>Edit</a>
+                    {/* Toggle verified */}
+                    <form action={`/api/admin/dealers/${dealer.id}/toggle-verified`} method="POST" style={{ display: "inline" }}>
+                      <button type="submit" style={{ fontSize: 12, border: `1px solid ${dealer.verified ? "#E2E2E2" : "#bbf7d0"}`, borderRadius: 7, padding: "4px 10px", color: dealer.verified ? "#666" : "#16a34a", background: dealer.verified ? "#fff" : "#f0fdf4", cursor: "pointer", fontFamily: "inherit" }}>
+                        {dealer.verified ? "Unverify" : "Verify ✓"}
+                      </button>
+                    </form>
+                    {/* Toggle featured */}
+                    <form action={`/api/admin/dealers/${dealer.id}/toggle-featured`} method="POST" style={{ display: "inline" }}>
+                      <button type="submit" style={{ fontSize: 12, border: `1px solid ${dealer.featured ? "#E2E2E2" : "#ffd0b0"}`, borderRadius: 7, padding: "4px 10px", color: dealer.featured ? "#666" : "#E8490F", background: dealer.featured ? "#fff" : "#fff3e8", cursor: "pointer", fontFamily: "inherit" }}>
+                        {dealer.featured ? "Unfeature" : "⭐ Feature"}
+                      </button>
+                    </form>
+                    <a href={`/dealers/${dealer.slug}`} target="_blank" style={{ fontSize: 12, border: "1px solid #E2E2E2", borderRadius: 7, padding: "4px 10px", color: "#0A2640", textDecoration: "none" }}>View ↗</a>
+                    {/* Delete — only if no cars */}
+                    {dealer._count.cars === 0 && (
+                      <DeleteButton action={`/api/admin/dealers/${dealer.id}/delete`} message="Delete this dealership and ALL their cars? Cannot be undone." label="Delete" />
+                    )}
                   </div>
                 </td>
               </tr>
@@ -85,7 +86,7 @@ export default async function AdminDealersPage() {
           </tbody>
         </table>
         {dealers.length === 0 && (
-          <div className="text-center py-16 text-white/30">No dealerships yet</div>
+          <div style={{ textAlign: "center", padding: 40, color: "#bbb" }}>No dealerships yet</div>
         )}
       </div>
     </div>

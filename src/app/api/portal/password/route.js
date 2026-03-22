@@ -9,29 +9,31 @@ export async function POST(request) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const formData    = await request.formData();
-  const current     = formData.get("current")?.toString();
-  const newPassword = formData.get("newPassword")?.toString();
-  const confirm     = formData.get("confirm")?.toString();
-
-  const redirectBase = session.user.role === "DEALER" ? "/portal/profile" : "/admin";
+  const contentType = request.headers.get("content-type") || "";
+  let current, newPassword, confirm;
+  if (contentType.includes("application/json")) {
+    const body = await request.json();
+    current = body.current; newPassword = body.newPassword; confirm = body.confirm;
+  } else {
+    const fd = await request.formData();
+    current = fd.get("current")?.toString();
+    newPassword = fd.get("newPassword")?.toString();
+    confirm = fd.get("confirm")?.toString();
+  }
 
   if (!current || !newPassword || !confirm) {
-    return NextResponse.redirect(new URL(`${redirectBase}?pwError=missing`, request.url));
+    return NextResponse.json({ error: "missing" }, { status: 400 });
   }
-
   if (newPassword !== confirm) {
-    return NextResponse.redirect(new URL(`${redirectBase}?pwError=mismatch`, request.url));
+    return NextResponse.json({ error: "mismatch" }, { status: 400 });
   }
-
   if (newPassword.length < 8) {
-    return NextResponse.redirect(new URL(`${redirectBase}?pwError=short`, request.url));
+    return NextResponse.json({ error: "short" }, { status: 400 });
   }
 
   const user = await db.user.findUnique({ where: { id: session.userId } });
-
   if (!verifyPassword(current, user.passwordHash)) {
-    return NextResponse.redirect(new URL(`${redirectBase}?pwError=wrong`, request.url));
+    return NextResponse.json({ error: "wrong" }, { status: 400 });
   }
 
   await db.user.update({
@@ -39,5 +41,5 @@ export async function POST(request) {
     data:  { passwordHash: hashPassword(newPassword) },
   });
 
-  return NextResponse.redirect(new URL(`${redirectBase}?pwSaved=1`, request.url));
+  return NextResponse.json({ success: true });
 }

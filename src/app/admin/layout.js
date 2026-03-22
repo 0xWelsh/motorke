@@ -7,7 +7,7 @@ export default async function AdminLayout({ children }) {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="w-60 bg-[#111] border-r border-white/10 flex flex-col flex-shrink-0">
+      <aside className="w-60 flex flex-col flex-shrink-0" style={{ background: "#0A2640", borderRight: "1px solid rgba(255,255,255,0.1)" }}>
         <div className="p-5 border-b border-white/10">
           <a href="/" className="text-xl font-black">
             Motor<span className="text-[#f97316]">ke</span>
@@ -18,9 +18,10 @@ export default async function AdminLayout({ children }) {
         <nav className="flex-1 p-4 space-y-1">
           {[
             { href: "/admin",            label: "Dashboard",    icon: "▦" },
-            { href: "/admin/dealers",    label: "Dealerships",  icon: "🏢" },
             { href: "/admin/cars",       label: "All cars",     icon: "🚗" },
             { href: "/admin/cars/new",   label: "Add car",      icon: "+" },
+            { href: "/admin/cars/bulk",  label: "Bulk upload",  icon: "⬆" },
+            { href: "/admin/dealers",    label: "Dealerships",  icon: "🏢" },
             { href: "/admin/users",      label: "Users",        icon: "👤" },
             { href: "/admin/leads",      label: "Enquiries",    icon: "📩" },
           ].map(({ href, label, icon }) => (
