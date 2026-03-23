@@ -51,27 +51,28 @@ enum UserRole {
 }
 
 model Dealer {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String?
-  logoUrl     String?
-  phone       String
-  whatsapp    String?
-  email       String?
-  website     String?
-  location    String
-  county      String   @default("Nairobi")
-  address     String?
-  lat         Float?
-  lng         Float?
-  verified    Boolean  @default(false)
-  featured    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  cars        Car[]
-  leads       Lead[]
-  users       User[]
+  id           String        @id @default(cuid())
+  name         String
+  slug         String        @unique
+  description  String?
+  logoUrl      String?
+  phone        String
+  whatsapp     String?
+  email        String?
+  website      String?
+  location     String
+  county       String        @default("Nairobi")
+  address      String?
+  lat          Float?
+  lng          Float?
+  verified     Boolean       @default(false)
+  featured     Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  cars         Car[]
+  leads        Lead[]
+  users        User[]
+  subscription Subscription?
   @@map("dealers")
 }
 
@@ -100,14 +101,15 @@ model Car {
   dutyPaid      Boolean      @default(true)
   description   String?
   features      String[]
-  images        CarImage[]
   available     Boolean      @default(true)
   featured      Boolean      @default(false)
   views         Int          @default(0)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
+  images        CarImage[]
   leads         Lead[]
   savedBy       SavedCar[]
+  carViews      CarView[]
   @@map("cars")
   @@index([make, model])
   @@index([dealerId])
@@ -127,18 +129,68 @@ model CarImage {
 }
 
 model Lead {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   carId     String
-  car       Car      @relation(fields: [carId], references: [id])
+  car       Car        @relation(fields: [carId], references: [id])
   dealerId  String
-  dealer    Dealer   @relation(fields: [dealerId], references: [id])
+  dealer    Dealer     @relation(fields: [dealerId], references: [id])
   name      String
   phone     String
   email     String?
   message   String?
-  channel   String   @default("web")
-  createdAt DateTime @default(now())
+  channel   String     @default("web")
+  status    LeadStatus @default(NEW)
+  createdAt DateTime   @default(now())
+  notes     LeadNote[]
   @@map("leads")
+}
+
+model LeadNote {
+  id        String     @id @default(cuid())
+  leadId    String
+  lead      Lead       @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  status    LeadStatus @default(NEW)
+  note      String?
+  createdAt DateTime   @default(now())
+  @@map("lead_notes")
+}
+
+model CarView {
+  id       String   @id @default(cuid())
+  carId    String
+  car      Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  viewedAt DateTime @default(now())
+  source   String?
+  @@map("car_views")
+}
+
+model Subscription {
+  id        String             @id @default(cuid())
+  dealerId  String             @unique
+  dealer    Dealer             @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+  plan      SubscriptionPlan   @default(FREE)
+  status    SubscriptionStatus @default(ACTIVE)
+  startDate DateTime           @default(now())
+  endDate   DateTime?
+  mpesaRef  String?
+  stripeId  String?
+  amount    Int?
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  payments  Payment[]
+  @@map("subscriptions")
+}
+
+model Payment {
+  id             String        @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription  @relation(fields: [subscriptionId], references: [id])
+  amount         Int
+  method         PaymentMethod
+  reference      String?
+  status         PaymentStatus @default(PENDING)
+  createdAt      DateTime      @default(now())
+  @@map("payments")
 }
 
 enum Condition {
@@ -181,4 +233,38 @@ enum BodyType {
   CONVERTIBLE
   BUS
   TRUCK
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  INTERESTED
+  NEGOTIATING
+  SOLD
+  DEAD
+}
+
+enum SubscriptionPlan {
+  FREE
+  PRO
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  TRIAL
+}
+
+enum PaymentMethod {
+  MPESA
+  CARD
+  MANUAL
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
 }

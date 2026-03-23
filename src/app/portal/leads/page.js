@@ -27,7 +27,7 @@ export default async function PortalLeadsPage({ searchParams }) {
   const leads = await db.lead.findMany({
     where,
     include: {
-      car:   { select: { id: true, make: true, model: true, year: true, price: true, available: true }, include: { images: { where: { isPrimary: true }, take: 1 } } },
+      car:   { include: { images: { where: { isPrimary: true }, take: 1 } } },
       notes: { orderBy: { createdAt: "desc" }, take: 1 },
     },
     orderBy: { createdAt: "desc" },
