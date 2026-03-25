@@ -90,14 +90,14 @@ export async function requireAuth() {
 /** Use in Server Components — redirects if not admin */
 export async function requireAdmin() {
   const user = await requireAuth();
-  if (user.role !== "ADMIN") redirect("/portal");
+  if (user.role !== "ADMIN") redirect("/");
   return user;
 }
 
 /** Use in Server Components — redirects if not dealer */
 export async function requireDealer() {
   const user = await requireAuth();
-  if (user.role !== "DEALER") redirect("/admin");
+  if (user.role !== "DEALER") redirect("/");
   return user;
 }
 

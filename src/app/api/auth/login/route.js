@@ -26,7 +26,10 @@ export async function POST(request) {
     await createSession(user.id);
 
     // Redirect based on role
-    const dest = user.role === "ADMIN" ? "/admin" : "/portal";
+    let dest = "/";
+    if (user.role === "ADMIN")  dest = "/admin";
+    if (user.role === "DEALER") dest = "/portal";
+    
     return NextResponse.redirect(new URL(dest, request.url));
   } catch (err) {
     console.error("Login error:", err);

@@ -18,10 +18,11 @@ export async function generateMetadata({ params }) {
   return { title: `${car.year} ${car.make} ${car.model} — Motorke Kenya` };
 }
 
-export default async function CarDetailPage({ params: paramsPromise }) {
+export default async function CarDetailPage({ params }) {
+  const { id } = await params;
   const [carData] = await Promise.all([
     db.car.findUnique({
-      where:   { id: params.id },
+      where:   { id: id },
       include: {
         images: { orderBy: { order: "asc" } },
         dealer: true,
@@ -35,7 +36,7 @@ export default async function CarDetailPage({ params: paramsPromise }) {
   const userId    = session?.userId || null;
   const isLoggedIn = !!userId;
   const savedCar  = userId ? await db.savedCar.findUnique({
-    where: { userId_carId: { userId, carId: params.id } },
+    where: { userId_carId: { userId, carId: id } },
   }).catch(() => null) : null;
   const isSaved = !!savedCar;
 

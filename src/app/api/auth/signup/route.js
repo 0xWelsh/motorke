@@ -1,6 +1,7 @@
 // src/app/api/auth/signup/route.js
 import { db } from "@/lib/db";
 import { hashPassword, createSession } from "@/lib/auth";
+import { createVerificationToken, sendVerificationEmail } from "@/lib/mail";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
@@ -37,6 +38,10 @@ export async function POST(request) {
         active: true,
       },
     });
+
+    // ── Email Verification Setup ─────────────────────────────
+    const { token } = await createVerificationToken(email);
+    await sendVerificationEmail(email, name, token);
 
     await createSession(user.id);
     return NextResponse.redirect(new URL("/", request.url));

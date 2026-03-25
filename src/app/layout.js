@@ -28,7 +28,7 @@ export default async function RootLayout({ children }) {
           <CompareBar />
         </ModalProvider>
         <footer style={{ borderTop: "1px solid #E2E2E2", marginTop: "5rem", padding: "3rem 1.5rem", background: "#111827" }}>
-          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, textAlign: "center", marginBottom: 12 }}>© {new Date().getFullYear()} Motorke Kenya · Connecting Kenyan car buyers with trusted dealers</p>
+          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, textAlign: "center", marginBottom: 12 }}>© <span suppressHydrationWarning>{new Date().getFullYear()}</span> Motorke Kenya · Connecting Kenyan car buyers with trusted dealers</p>
           <div style={{ display: "flex", justifyContent: "center", gap: 24 }}>
             {[["Browse cars", "/cars"], ["Dealers", "/dealers"], ["Compare", "/compare"], ["Duty calc", "/duty"]].map(([label, href]) => (
               <a key={href} href={href} style={{ color: "rgba(255,255,255,0.4)", textDecoration: "none", fontSize: 13 }}>{label}</a>

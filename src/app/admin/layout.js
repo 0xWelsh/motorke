@@ -12,16 +12,19 @@ import {
   LogOut,
   ChevronRight,
   ExternalLink,
-  ShieldAlert
+  ShieldAlert,
+  Settings,
+  Bell,
+  Search
 } from "lucide-react";
 import { clsx } from "clsx";
 
 const links = [
-  { href: "/admin",           label: "Overview",   Icon: LayoutDashboard },
-  { href: "/admin/cars",      label: "Inventory",  Icon: Car             },
-  { href: "/admin/dealers",   label: "Dealers",    Icon: Building2       },
-  { href: "/admin/users",     label: "Users",      Icon: Users           },
-  { href: "/admin/leads",     label: "Enquiries",  Icon: MessageSquare   },
+  { href: "/admin",           label: "Dashboard",   Icon: LayoutDashboard },
+  { href: "/admin/cars",      label: "Inventory",   Icon: Car             },
+  { href: "/admin/dealers",   label: "Dealers",      Icon: Building2       },
+  { href: "/admin/users",     label: "Users",       Icon: Users           },
+  { href: "/admin/leads",     label: "Enquiries",   Icon: MessageSquare   },
 ];
 
 const quickActions = [
@@ -34,17 +37,17 @@ function NavLink({ href, label, Icon, active }) {
     <Link 
       href={href} 
       className={clsx(
-        "flex items-center justify-between group px-4 py-3 rounded-2xl transition-all duration-200",
+        "flex items-center justify-between group px-4 py-3 rounded-2xl transition-all duration-300",
         active 
-          ? "bg-amber-500 text-black shadow-lg shadow-amber-500/20" 
-          : "text-slate-400 hover:text-white hover:bg-white/5"
+          ? "bg-white text-slate-900 shadow-xl shadow-black/20" 
+          : "text-slate-500 hover:text-white hover:bg-white/5"
       )}
     >
       <div className="flex items-center gap-3">
-        <Icon size={18} className={clsx("transition-transform", !active && "group-hover:scale-110")} />
-        <span className="text-sm font-bold tracking-tight">{label}</span>
+        <Icon size={18} className={clsx("transition-transform duration-500", !active && "group-hover:scale-110 group-hover:text-orange-500")} />
+        <span className="text-[13px] font-black uppercase tracking-widest">{label}</span>
       </div>
-      {active && <ChevronRight size={14} className="opacity-50" />}
+      {active && <div className="w-1.5 h-1.5 rounded-full bg-orange-600 shadow-[0_0_12px_rgba(234,88,12,0.8)]" />}
     </Link>
   );
 }
@@ -53,37 +56,40 @@ export default function AdminLayout({ children }) {
   const path = usePathname();
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-white">
       {/* Sidebar */}
-      <aside className="w-72 bg-slate-950 flex flex-col shrink-0 sticky top-0 h-screen border-r border-white/5 shadow-2xl z-50">
+      <aside className="w-80 bg-slate-950 flex flex-col shrink-0 sticky top-0 h-screen z-50 overflow-hidden">
+        {/* Abstract Glow */}
+        <div className="absolute top-0 left-0 w-64 h-64 bg-orange-600/10 blur-[100px] -ml-32 -mt-32 pointer-events-none" />
+        
         {/* Branding */}
-        <div className="p-8">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform">
-              <span className="text-black font-black text-xl">M</span>
+        <div className="p-10 relative z-10">
+          <Link href="/" className="flex items-center gap-4 group">
+            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center group-hover:bg-orange-600 transition-all duration-500 shadow-2xl shadow-black">
+              <span className="text-slate-900 group-hover:text-white font-black text-2xl tracking-tighter transition-colors">M</span>
             </div>
             <div>
               <span className="text-xl font-black text-white tracking-tighter block leading-none">
-                Motor<span className="text-amber-500">ke</span>
+                Motor<span className="text-slate-400 group-hover:text-orange-600 transition-colors">ke</span>
               </span>
-              <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest mt-1 block">
-                System Admin
+              <span className="text-[9px] font-black text-orange-600 uppercase tracking-[0.3em] mt-2 block">
+                Standard Admin
               </span>
             </div>
           </Link>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
-          <div className="px-4 mb-4">
-             <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Platform Management</p>
+        <nav className="flex-1 px-6 py-4 space-y-2 overflow-y-auto relative z-10 custom-scrollbar">
+          <div className="px-4 mb-6">
+             <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.25em]">Main Systems</p>
           </div>
           {links.map(({ href, label, Icon }) => (
             <NavLink key={href} href={href} label={label} Icon={Icon} active={path === href} />
           ))}
           
-          <div className="px-4 mb-4 mt-8">
-             <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Quick Operations</p>
+          <div className="px-4 mb-6 mt-12">
+             <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.25em]">Quick Operations</p>
           </div>
           {quickActions.map(({ href, label, Icon }) => (
             <NavLink key={href} href={href} label={label} Icon={Icon} active={path === href} />
@@ -91,14 +97,14 @@ export default function AdminLayout({ children }) {
         </nav>
 
         {/* User / Footer */}
-        <div className="p-4 border-t border-white/5 bg-black/20">
+        <div className="p-8 border-t border-white/5 bg-black/20 relative z-10">
           <div className="space-y-1">
-            <Link href="/" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-white text-xs font-bold rounded-xl transition-colors">
-              <ExternalLink size={14} /> Live Website
+            <Link href="/" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-white text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all">
+              <ExternalLink size={14} /> Live Showcase
             </Link>
             <form action="/api/auth/logout" method="POST">
-              <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 text-slate-500 hover:text-rose-400 text-xs font-bold rounded-xl transition-colors">
-                <LogOut size={14} /> Sign Out
+              <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 text-slate-500 hover:text-rose-500 text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all">
+                <LogOut size={14} /> Terminate
               </button>
             </form>
           </div>
@@ -106,29 +112,44 @@ export default function AdminLayout({ children }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-x-hidden relative">
+      <main className="flex-1 overflow-x-hidden relative flex flex-col">
         {/* Modern Top Header */}
-        <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200 px-10 py-4 flex items-center justify-between">
-           <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
-              <span>Admin</span>
-              <ChevronRight size={12} />
+        <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-2xl border-b border-slate-100 px-12 py-5 flex items-center justify-between">
+           <div className="flex items-center gap-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+              <span className="hover:text-slate-900 transition-colors cursor-default">System</span>
+              <ChevronRight size={10} className="text-slate-200" />
               <span className="text-slate-900">{links.find(l => l.href === path)?.label || "Dashboard"}</span>
            </div>
            
-           <div className="flex items-center gap-4">
-              <div className="hidden md:flex flex-col items-end">
-                <p className="text-xs font-black text-slate-900 leading-none">Super Administrator</p>
-                <p className="text-[10px] font-bold text-rose-500 mt-1 flex items-center gap-1 uppercase tracking-tighter">
-                   <ShieldAlert size={10} /> Full Access
-                </p>
+           <div className="flex items-center gap-8">
+              <div className="hidden sm:flex items-center gap-6 pr-6 border-r border-slate-100">
+                 <button className="text-slate-400 hover:text-slate-900 transition-colors">
+                    <Search size={18} />
+                 </button>
+                 <button className="text-slate-400 hover:text-slate-900 transition-colors relative">
+                    <Bell size={18} />
+                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-orange-600 rounded-full border-2 border-white" />
+                 </button>
+                 <button className="text-slate-400 hover:text-slate-900 transition-colors">
+                    <Settings size={18} />
+                 </button>
               </div>
-              <div className="w-10 h-10 rounded-2xl bg-slate-900 text-amber-500 flex items-center justify-center font-black">
-                A
+
+              <div className="flex items-center gap-4 group cursor-default">
+                <div className="hidden md:flex flex-col items-end">
+                  <p className="text-[11px] font-black text-slate-900 leading-none uppercase tracking-widest">Admin Standard</p>
+                  <p className="text-[9px] font-black text-orange-600 mt-1 flex items-center gap-1 uppercase tracking-widest">
+                     <ShieldAlert size={10} /> Full Privilege
+                  </p>
+                </div>
+                <div className="w-11 h-11 rounded-2xl bg-slate-950 text-white flex items-center justify-center font-black text-sm shadow-xl shadow-slate-200 group-hover:bg-orange-600 transition-colors duration-500">
+                  AD
+                </div>
               </div>
            </div>
         </header>
 
-        <div className="p-10">
+        <div className="p-12 max-w-7xl">
           {children}
         </div>
       </main>

@@ -2,11 +2,21 @@
 import { db } from "@/lib/db";
 import { formatPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS } from "@/lib/utils";
 import Link from "next/link";
-import { CompareButton } from "@/components/CompareSelector";
+import { 
+  Search, 
+  MapPin, 
+  Filter, 
+  ChevronRight, 
+  X, 
+  ArrowUpDown,
+  ShieldCheck,
+  Zap,
+  Fuel,
+  Settings2
+} from "lucide-react";
 
-export const metadata = { title: "Browse Cars — Motorke Kenya" };
+export const metadata = { title: "Inventory — Motorke Standard" };
 
-// Haversine distance in km between two lat/lng points
 function distance(lat1, lng1, lat2, lng2) {
   if (!lat1 || !lat2) return 9999;
   const R = 6371;
@@ -16,7 +26,7 @@ function distance(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-const COUNTIES = ["Nairobi","Mombasa","Nakuru","Kisumu","Uasin Gishu","Kiambu","Machakos","Meru","Eldoret"];
+const COUNTIES = ["Nairobi","Mombasa","Nakuru","Kisumu","Uasin Gishu","Kiambu","Machakos","Meru"];
 
 export default async function CarsPage({ searchParams }) {
   const sp       = await searchParams;
@@ -58,10 +68,15 @@ export default async function CarsPage({ searchParams }) {
       take:  limit,
     }),
     db.car.count({ where }),
-    db.car.findMany({ where: { available: true }, distinct: ["make"], select: { make: true }, orderBy: { make: "asc" } }),
+    // Always fetch all distinct makes alphabetically, regardless of other filters
+    db.car.findMany({ 
+      where: { available: true }, 
+      distinct: ["make"], 
+      select: { make: true }, 
+      orderBy: { make: "asc" } 
+    }),
   ]);
 
-  // Sort by distance if user location provided
   const sortedCars = userLat && userLng
     ? [...cars].sort((a, b) => {
         const da = distance(userLat, userLng, a.dealer?.lat, a.dealer?.lng);
@@ -73,155 +88,201 @@ export default async function CarsPage({ searchParams }) {
   const pages = Math.ceil(total / limit);
   const hasFilters = search || make || bodyType || fuelType || county || minPrice || maxPrice;
 
-  const inputCls = { background: "#fff", border: "1.5px solid #E2E2E2", borderRadius: 10, padding: "9px 14px", fontSize: 13, fontFamily: "inherit", outline: "none", color: "#1A1A1A" };
-  const selectCls = { background: "#fff", border: "1.5px solid #E2E2E2", borderRadius: 10, padding: "9px 14px", fontSize: 13, fontFamily: "inherit", outline: "none", color: "#1A1A1A" };
-
   return (
-    <div style={{ maxWidth: 1300, margin: "0 auto", padding: "2rem 1.5rem 4rem" }}>
+    <div className="bg-white min-h-screen">
+      {/* ── MINIMAL FILTER BAR ── */}
+      <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-100 py-4 shadow-sm">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <form method="GET" className="flex flex-wrap items-center gap-3">
+            <div className="relative flex-1 min-w-[240px] group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-slate-900 transition-colors" />
+              <input 
+                name="search" 
+                defaultValue={search} 
+                placeholder="Search inventory..." 
+                className="w-full bg-slate-50 border border-slate-100 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold text-slate-900 outline-none focus:bg-white focus:border-slate-900 transition-all"
+              />
+            </div>
 
-      {/* Header */}
-      <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontWeight: 800, fontSize: "1.6rem", color: "#111827" }}>
-          {search ? `Results for "${search}"` : county ? `Cars in ${county}` : "Browse all cars"}
-        </h1>
-        <p style={{ color: "#666", fontSize: 14, marginTop: 4 }}>
-          {total} car{total !== 1 ? "s" : ""} available
-          {userLat && " · Sorted by distance from you"}
-        </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <select name="make" defaultValue={make} className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-500 outline-none focus:border-slate-900 transition-all cursor-pointer">
+                <option value="">All Makes</option>
+                {allMakes.map(m => <option key={m.make} value={m.make}>{m.make}</option>)}
+              </select>
+
+              <select name="bodyType" defaultValue={bodyType} className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-500 outline-none focus:border-slate-900 transition-all cursor-pointer">
+                <option value="">All Types</option>
+                {Object.entries(BODY_TYPE_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+              </select>
+
+              <select name="county" defaultValue={county} className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-500 outline-none focus:border-slate-900 transition-all cursor-pointer">
+                <option value="">All Counties</option>
+                {COUNTIES.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+
+              <button type="submit" className="bg-slate-900 hover:bg-orange-600 text-white p-2.5 rounded-xl transition-all">
+                <Filter className="w-4 h-4" />
+              </button>
+
+              {hasFilters && (
+                <Link href="/cars" className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-xl transition-all">
+                  <X className="w-4 h-4" />
+                </Link>
+              )}
+            </div>
+          </form>
+        </div>
       </div>
 
-      {/* Filters */}
-      <form method="GET" style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 28, padding: "16px 20px", background: "#fff", borderRadius: 14, border: "1px solid #E2E2E2" }}>
-        <input name="search" defaultValue={search} placeholder="Search make or model…" style={{ ...inputCls, minWidth: 180 }} />
+      <div className="container mx-auto px-6 py-12 max-w-7xl">
+        {/* ── RESULTS HEADER ── */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Live Inventory</span>
+            </div>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tight">
+              {search ? `Results for "${search}"` : county ? `Verified in ${county}` : "All Showcases"}
+            </h1>
+            <p className="text-slate-500 font-medium mt-1">
+              Displaying {total} premium automotive units.
+            </p>
+          </div>
+          
+          <div className="flex items-center gap-6">
+            <div className="text-right">
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">Market View</p>
+              <p className="text-xs font-black text-slate-900">Nairobi Standard Time</p>
+            </div>
+            <button className="flex items-center gap-2 bg-slate-50 border border-slate-100 px-5 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest text-slate-600 hover:text-slate-900 transition-all">
+               <ArrowUpDown className="w-3 h-3" /> Sort: Relevance
+            </button>
+          </div>
+        </div>
 
-        <select name="make" defaultValue={make} style={selectCls}>
-          <option value="">All makes</option>
-          {allMakes.map(m => <option key={m.make} value={m.make}>{m.make}</option>)}
-        </select>
-
-        <select name="bodyType" defaultValue={bodyType} style={selectCls}>
-          <option value="">All types</option>
-          {Object.entries(BODY_TYPE_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-        </select>
-
-        <select name="fuelType" defaultValue={fuelType} style={selectCls}>
-          <option value="">All fuels</option>
-          {Object.entries(FUEL_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-        </select>
-
-        <select name="county" defaultValue={county} style={selectCls}>
-          <option value="">All counties</option>
-          {COUNTIES.map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
-
-        <select name="minPrice" defaultValue={sp.minPrice || ""} style={selectCls}>
-          <option value="">Min price</option>
-          {[500000,1000000,2000000,3000000,5000000].map(p => (
-            <option key={p} value={p}>KSh {(p/1000000).toFixed(1)}M</option>
-          ))}
-        </select>
-
-        <select name="maxPrice" defaultValue={sp.maxPrice || ""} style={selectCls}>
-          <option value="">Max price</option>
-          {[1000000,2000000,3000000,5000000,8000000,15000000].map(p => (
-            <option key={p} value={p}>KSh {(p/1000000).toFixed(1)}M</option>
-          ))}
-        </select>
-
-        {/* Pass lat/lng through if set */}
-        {userLat && <input type="hidden" name="lat" value={userLat} />}
-        {userLng && <input type="hidden" name="lng" value={userLng} />}
-
-        <button type="submit" style={{ background: "#111827", color: "white", border: "none", borderRadius: 10, padding: "9px 20px", fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>
-          Filter
-        </button>
-
-        {hasFilters && (
-          <a href="/cars" style={{ display: "flex", alignItems: "center", fontSize: 13, color: "#1D4ED8", textDecoration: "none", padding: "9px 4px", fontWeight: 500 }}>
-            Clear all ×
-          </a>
+        {/* ── CAR GRID ── */}
+        {sortedCars.length === 0 ? (
+          <div className="py-32 text-center border-2 border-dashed border-slate-100 rounded-[3rem]">
+            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+               <Search className="w-8 h-8 text-slate-200" />
+            </div>
+            <h2 className="text-xl font-black text-slate-900 mb-2">No matching units found.</h2>
+            <p className="text-slate-400 font-medium mb-8">Try adjusting your filters or search terms.</p>
+            <Link href="/cars" className="inline-flex items-center gap-2 bg-slate-900 text-white px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest">
+              Reset Filters
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {sortedCars.map((car) => (
+              <InventoryCard key={car.id} car={car} userLat={userLat} userLng={userLng} />
+            ))}
+          </div>
         )}
-      </form>
 
-      {/* Results */}
-      {sortedCars.length === 0 ? (
-        <div style={{ background: "#fff", border: "1px solid #E2E2E2", borderRadius: 16, padding: 48, textAlign: "center" }}>
-          <p style={{ fontSize: 40, marginBottom: 16 }}>🔍</p>
-          <p style={{ fontWeight: 700, fontSize: "1.1rem", color: "#1A1A1A", marginBottom: 8 }}>No cars match your filters</p>
-          <a href="/cars" style={{ color: "#1D4ED8", textDecoration: "none", fontSize: 14, fontWeight: 600 }}>Clear all filters →</a>
-        </div>
-      ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: 18 }}>
-          {sortedCars.map((car) => {
-            const img   = car.images[0]?.url;
-            const title = `${car.year} ${car.make} ${car.model}`;
-            const dist  = userLat && car.dealer?.lat ? Math.round(distance(userLat, userLng, car.dealer.lat, car.dealer.lng)) : null;
-
-            return (
-              <div key={car.id} className="mk-car-card" style={{ background: "#fff", border: "1.5px solid #E2E2E2", borderRadius: 12, overflow: "hidden" }}>
-
-                <Link href={`/cars/${car.id}`} style={{ textDecoration: "none", display: "block" }}>
-                  <div style={{ position: "relative", aspectRatio: "16/10", background: "#f0ede8", overflow: "hidden" }}>
-                    {img
-                      ? <img src={img} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", fontSize: 40 }}>🚗</div>
-                    }
-                    {car.featured && (
-                      <span style={{ position: "absolute", top: 10, left: 10, background: "#1D4ED8", color: "white", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 99, textTransform: "uppercase" }}>Featured</span>
-                    )}
-                    {dist !== null && (
-                      <span style={{ position: "absolute", top: 10, right: 10, background: "rgba(10,38,64,0.85)", color: "white", fontSize: 10, fontWeight: 600, padding: "3px 10px", borderRadius: 99 }}>
-                        📍 {dist} km
-                      </span>
-                    )}
-                  </div>
-                  <div style={{ padding: "14px 16px" }}>
-                    <p style={{ fontWeight: 700, fontSize: 15, color: "#1A1A1A" }}>{title}</p>
-                    {car.variant && <p style={{ fontSize: 12, color: "#999", marginTop: 2 }}>{car.variant}</p>}
-                    <div style={{ display: "flex", gap: 5, marginTop: 8, flexWrap: "wrap" }}>
-                      {[car.transmission, FUEL_LABELS[car.fuelType], car.mileage ? formatMileage(car.mileage) : null].filter(Boolean).map(tag => (
-                        <span key={tag} style={{ fontSize: 11, background: "#F5F5F5", color: "#666", borderRadius: 5, padding: "2px 7px" }}>{tag}</span>
-                      ))}
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 12 }}>
-                      <p style={{ fontWeight: 800, fontSize: 16, color: "#1D4ED8" }}>{formatPrice(car.price)}</p>
-                      <div style={{ textAlign: "right" }}>
-                        <p style={{ fontSize: 11, color: "#555", fontWeight: 500 }}>{car.dealer?.name}</p>
-                        <p style={{ fontSize: 10, color: "#999" }}>{car.dealer?.location}</p>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-
-                {/* Compare button outside the Link */}
-                <div style={{ padding: "0 16px 14px", borderTop: "1px solid #F5F5F5", paddingTop: 10 }}>
-                  <CompareButton carId={car.id} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Pagination */}
-      {pages > 1 && (
-        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 36 }}>
-          {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
-            <a key={p}
-              href={`/cars?page=${p}&search=${search}&make=${make}&bodyType=${bodyType}&fuelType=${fuelType}&county=${county}`}
-              style={{
-                width: 38, height: 38, borderRadius: 10,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 13, fontWeight: 600, textDecoration: "none",
-                background: p === page ? "#1D4ED8" : "#fff",
-                color:      p === page ? "white"   : "#555",
-                border:     p === page ? "none"    : "1.5px solid #E2E2E2",
-              }}>
-              {p}
-            </a>
-          ))}
-        </div>
-      )}
+        {/* ── PAGINATION ── */}
+        {pages > 1 && (
+          <div className="flex justify-center items-center gap-2 mt-24">
+            {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
+              <Link key={p}
+                href={`/cars?page=${p}&search=${search}&make=${make}&bodyType=${bodyType}&fuelType=${fuelType}&county=${county}`}
+                className={`w-10 h-10 rounded-xl flex items-center justify-center text-[11px] font-black transition-all ${
+                  p === page ? "bg-slate-900 text-white shadow-xl shadow-slate-200" : "bg-white border border-slate-100 text-slate-400 hover:border-slate-900 hover:text-slate-900"
+                }`}
+              >
+                {p.toString().padStart(2, '0')}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
+  );
+}
+
+function InventoryCard({ car, userLat, userLng }) {
+  const img   = car.images[0]?.url;
+  const title = `${car.year} ${car.make} ${car.model}`;
+  const dist  = userLat && car.dealer?.lat ? Math.round(distance(userLat, userLng, car.dealer.lat, car.dealer.lng)) : null;
+
+  return (
+    <Link href={`/cars/${car.id}`} className="group block">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-slate-50 mb-6 shadow-sm group-hover:shadow-2xl transition-all duration-700">
+        {img ? (
+          <img 
+            src={img} 
+            alt={title} 
+            className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-[1.5s]" 
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-slate-200 uppercase font-black text-[10px] tracking-[0.2em]">Pending Imagery</div>
+        )}
+        
+        {/* Top Badges */}
+        <div className="absolute top-5 left-5 right-5 flex justify-between items-start pointer-events-none">
+          <div className="flex flex-col gap-2">
+            {car.featured && (
+              <span className="bg-slate-900/90 backdrop-blur-md text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg border border-white/10">
+                Premium
+              </span>
+            )}
+            <span className="bg-white/90 backdrop-blur-md text-slate-900 text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg border border-slate-100">
+              {car.year}
+            </span>
+          </div>
+          {dist !== null && (
+            <span className="bg-orange-600/90 backdrop-blur-md text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+               {dist}km Away
+            </span>
+          )}
+        </div>
+
+        {/* Bottom Overlay Info */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="absolute bottom-8 left-8 right-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700">
+           <p className="text-[10px] font-black text-orange-400 uppercase tracking-widest mb-1">View Full Details</p>
+           <div className="h-px w-full bg-white/20" />
+        </div>
+      </div>
+
+      <div className="px-2">
+        <div className="flex items-start justify-between mb-3 gap-4">
+          <div>
+            <h3 className="font-black text-slate-900 text-lg leading-tight group-hover:text-orange-600 transition-colors truncate mb-1">{title}</h3>
+            <div className="flex items-center gap-2">
+               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{car.variant || "Standard Edition"}</p>
+               {car.dealer?.verified && <ShieldCheck className="w-3 h-3 text-emerald-500" />}
+            </div>
+          </div>
+          <p className="text-xl font-black text-slate-900 shrink-0">{formatPrice(car.price)}</p>
+        </div>
+
+        <div className="grid grid-cols-3 gap-px bg-slate-100 border border-slate-100 rounded-xl overflow-hidden mb-4">
+          <div className="bg-white py-2.5 flex flex-col items-center">
+             <Settings2 className="w-3 h-3 text-slate-300 mb-1" />
+             <span className="text-[9px] font-black text-slate-500 uppercase tracking-tighter">{car.transmission?.charAt(0)}T</span>
+          </div>
+          <div className="bg-white py-2.5 flex flex-col items-center">
+             <Zap className="w-3 h-3 text-slate-300 mb-1" />
+             <span className="text-[9px] font-black text-slate-500 uppercase tracking-tighter">{car.mileage ? Math.round(car.mileage/1000) + 'k' : '—'}</span>
+          </div>
+          <div className="bg-white py-2.5 flex flex-col items-center">
+             <Fuel className="w-3 h-3 text-slate-300 mb-1" />
+             <span className="text-[9px] font-black text-slate-500 uppercase tracking-tighter">{car.fuelType?.charAt(0)}L</span>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between pt-4 border-t border-slate-50">
+           <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg bg-slate-100 flex items-center justify-center text-[10px] font-black text-slate-400 uppercase">
+                 {car.dealer?.name[0]}
+              </div>
+              <p className="text-[10px] font-black text-slate-900 uppercase tracking-tighter">{car.dealer?.name}</p>
+           </div>
+           <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-orange-600 group-hover:translate-x-1 transition-all" />
+        </div>
+      </div>
+    </Link>
   );
 }

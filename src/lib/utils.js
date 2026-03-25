@@ -24,18 +24,24 @@ export function estimateDuty(price, year) {
   return Math.round(importDuty + exciseDuty + vat + rdl);
 }
 
-/** Body type → human label */
+/** Body type → human label (Expanded for precision) */
 export const BODY_TYPE_LABELS = {
-  SEDAN:      "Sedan",
-  SUV:        "SUV",
-  HATCHBACK:  "Hatchback",
-  PICKUP:     "Pickup",
-  VAN:        "Van",
-  WAGON:      "Wagon/Estate",
-  COUPE:      "Coupe",
-  CONVERTIBLE:"Convertible",
-  BUS:        "Bus/Matatu",
-  TRUCK:      "Truck",
+  SEDAN:          "Sedan",
+  SUV_COMPACT:    "Compact SUV / Crossover",
+  SUV_FULL:       "Full-size SUV / 4x4",
+  HATCHBACK:      "Hatchback",
+  PICKUP_SINGLE:  "Pickup (Single Cab)",
+  PICKUP_DOUBLE:  "Pickup (Double Cab)",
+  VAN_PASSENGER:  "Passenger Van / Matatu",
+  VAN_CARGO:      "Cargo Van",
+  WAGON:          "Wagon / Estate",
+  COUPE:          "Coupe",
+  CONVERTIBLE:    "Convertible",
+  BUS:            "Bus / Coach",
+  TRUCK_LIGHT:    "Light Truck / Canter",
+  TRUCK_HEAVY:    "Heavy Truck / Prime Mover",
+  MINIVAN:        "Minivan / MPV",
+  MOTORCYCLE:     "Motorcycle",
 };
 
 export const FUEL_LABELS = {

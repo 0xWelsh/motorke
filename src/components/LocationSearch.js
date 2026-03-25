@@ -1,14 +1,13 @@
 "use client";
 // src/components/LocationSearch.js
-// Hero search bar with optional location detection
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Search, MapPin, Loader2, X } from "lucide-react";
 
 export default function LocationSearch() {
-  const [search,   setSearch]   = useState("");
+  const [search, setSearch] = useState("");
   const [locating, setLocating] = useState(false);
-  const [location, setLocation] = useState(null); // { lat, lng, label }
+  const [location, setLocation] = useState(null);
   const router = useRouter();
 
   function detectLocation() {
@@ -28,52 +27,69 @@ export default function LocationSearch() {
     e.preventDefault();
     const params = new URLSearchParams();
     if (search.trim()) params.set("search", search.trim());
-    if (location)      { params.set("lat", location.lat); params.set("lng", location.lng); }
+    if (location) {
+      params.set("lat", location.lat);
+      params.set("lng", location.lng);
+    }
     router.push(`/cars?${params.toString()}`);
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit} style={{
-        display: "flex", gap: 8, background: "rgba(255,255,255,0.97)",
-        borderRadius: 14, padding: 8, maxWidth: 580,
-        boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
-      }}>
-        <input
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Search by make, model or keyword…"
-          style={{ flex: 1, background: "transparent", border: "none", outline: "none", padding: "10px 14px", fontSize: 15, color: "#1A1A1A", fontFamily: "inherit" }}
-        />
+    <div className="w-full max-w-2xl">
+      <form 
+        onSubmit={handleSubmit} 
+        className="flex items-center bg-white border border-slate-200 rounded-2xl p-2 shadow-sm focus-within:border-slate-900 transition-all duration-300"
+      >
+        <div className="flex-1 flex items-center px-4 gap-3">
+          <Search className="w-5 h-5 text-slate-400 shrink-0" />
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search by make, model or keyword…"
+            className="w-full bg-transparent border-none outline-none py-3 text-base text-slate-900 placeholder:text-slate-400 font-medium"
+          />
+        </div>
+
+        <div className="h-8 w-px bg-slate-100 mx-2 hidden sm:block" />
+
         <button
           type="button"
           onClick={detectLocation}
+          className={`p-3 rounded-xl transition-all duration-200 flex items-center gap-2 group ${
+            location ? "bg-orange-50 text-orange-600" : "bg-transparent text-slate-400 hover:text-slate-900"
+          }`}
           title="Use my location"
-          style={{
-            background: location ? "#e8eef4" : "transparent",
-            border: "none", borderRadius: 10, padding: "10px 12px",
-            cursor: "pointer", fontSize: 18, flexShrink: 0,
-            transition: "background 0.15s",
-          }}
         >
-          {locating ? "⏳" : location ? "📍" : "🔍"}
+          {locating ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            <MapPin className="w-5 h-5 group-hover:scale-110 transition-transform" />
+          )}
+          {location && <span className="text-xs font-bold hidden sm:block">Near Me</span>}
         </button>
-        <button type="submit" style={{
-          background: "#E8490F", color: "white", border: "none",
-          borderRadius: 10, padding: "10px 24px", fontWeight: 700,
-          fontSize: 14, cursor: "pointer", fontFamily: "inherit",
-          flexShrink: 0,
-        }}>
+
+        <button 
+          type="submit" 
+          className="bg-slate-900 hover:bg-orange-600 text-white px-8 py-3 rounded-xl font-black text-sm transition-all duration-300 ml-2"
+        >
           Search
         </button>
       </form>
 
       {location && (
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 10 }}>
-          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 99, padding: "3px 12px" }}>
-            📍 Searching near your location
-          </span>
-          <button onClick={() => setLocation(null)} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.4)", fontSize: 12 }}>✕ Clear</button>
+        <div className="flex items-center gap-3 mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full border border-slate-200">
+            <MapPin className="w-3 h-3 text-slate-500" />
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+              Searching near you
+            </span>
+            <button 
+              onClick={() => setLocation(null)} 
+              className="hover:text-red-500 transition-colors ml-1"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
         </div>
       )}
     </div>

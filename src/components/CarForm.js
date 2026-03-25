@@ -7,13 +7,20 @@
 import { useState } from "react";
 import { BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/utils";
 
-const MAKES = ["Toyota","Subaru","Mazda","Mitsubishi","Nissan","Honda","Isuzu","Land Rover","Mercedes-Benz","BMW","Volkswagen","Hyundai","Kia","Suzuki","Other"];
-const DRIVE_TYPES = ["RHD","LHD","AWD","FWD","RWD","FOURWD"];
+const MAKES = [
+  "Toyota", "Subaru", "Mazda", "Nissan", "Mitsubishi", "Honda", "Isuzu", 
+  "Suzuki", "Hino", "Fuso", "Isuzu Truck", "Tata", "Mercedes-Benz", 
+  "BMW", "Audi", "Volkswagen", "Land Rover", "Range Rover", "Lexus", 
+  "Jeep", "Ford", "Chevrolet", "Hyundai", "Kia", "Peugeot", "Renault", 
+  "Volvo", "Scania", "MAN", "Beiben", "Sinotruk", "Other"
+];
+const DRIVE_TYPES = ["RHD (Right Hand Drive)", "LHD (Left Hand Drive)", "AWD (All Wheel Drive)", "FWD (Front Wheel Drive)", "RWD (Rear Wheel Drive)", "4WD (Four Wheel Drive)"];
+const CONDITIONS = ["Foreign Used", "Locally Used", "Brand New"];
 
 export default function CarForm({ dealers = [], car = null, action, method = "POST" }) {
   const isEdit = !!car;
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 25 }, (_, i) => currentYear - i);
+  const years = Array.from({ length: 40 }, (_, i) => currentYear - i); // Expanded year range
 
   const [uploading, setUploading]   = useState(false);
   const [images, setImages]         = useState(
