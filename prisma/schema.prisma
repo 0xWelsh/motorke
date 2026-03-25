@@ -49,11 +49,10 @@ enum UserRole {
   DEALER
   BUYER
 }
-
 model Dealer {
-  id           String        @id @default(cuid())
+  id           String         @id @default(cuid())
   name         String
-  slug         String        @unique
+  slug         String         @unique
   description  String?
   logoUrl      String?
   phone        String
@@ -61,26 +60,48 @@ model Dealer {
   email        String?
   website      String?
   location     String
-  county       String        @default("Nairobi")
+  county       String         @default("Nairobi")
   address      String?
   lat          Float?
   lng          Float?
-  verified     Boolean       @default(false)
-  featured     Boolean       @default(false)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  verified     Boolean        @default(false)
+  featured     Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
   cars         Car[]
+  branches     DealerBranch[]
   leads        Lead[]
   users        User[]
   subscription Subscription?
   @@map("dealers")
 }
 
+model DealerBranch {
+  id        String   @id @default(cuid())
+  dealerId  String
+  dealer    Dealer   @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+  name      String   // e.g. "Mombasa Road Branch"
+  location  String
+  county    String   @default("Nairobi")
+  address   String?
+  lat       Float?
+  lng       Float?
+  phone     String?
+  whatsapp  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  cars      Car[]
+  @@map("dealer_branches")
+}
+
 model Car {
-  id            String       @id @default(cuid())
+  id            String        @id @default(cuid())
   dealerId      String
-  dealer        Dealer       @relation(fields: [dealerId], references: [id])
+  dealer        Dealer        @relation(fields: [dealerId], references: [id])
+  branchId      String?
+  branch        DealerBranch? @relation(fields: [branchId], references: [id])
   make          String
+...
   model         String
   variant       String?
   year          Int

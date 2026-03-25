@@ -3,8 +3,23 @@ import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
 import Link from "next/link";
+import { 
+  Car, 
+  Building2, 
+  MessageSquare, 
+  Users, 
+  TrendingUp, 
+  Plus, 
+  Upload, 
+  UserPlus, 
+  ChevronRight,
+  Eye,
+  Smartphone,
+  Globe,
+  ArrowUpRight
+} from "lucide-react";
 
-export const metadata = { title: "Admin Dashboard — Motorke" };
+export const metadata = { title: "Admin Dashboard — Motorke System" };
 
 export default async function AdminDashboard() {
   await requireAdmin();
@@ -49,149 +64,168 @@ export default async function AdminDashboard() {
   const dealerNames = await db.dealer.findMany({ where: { id: { in: dealerIds } }, select: { id: true, name: true } });
   const dealerMap   = Object.fromEntries(dealerNames.map(d => [d.id, d.name]));
 
-  const s = { background: "#fff", border: "1px solid #E2E2E2", borderRadius: 14, padding: "20px 24px" };
-
   return (
-    <div style={{ padding: "28px 32px", maxWidth: 1200 }}>
-      <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontWeight: 800, fontSize: "1.6rem", color: "#0A2640" }}>Dashboard</h1>
-        <p style={{ color: "#666", fontSize: 14, marginTop: 4 }}>Overview of Motorke activity</p>
+    <div className="animate-in fade-in duration-700">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+        <div>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-rose-600 mb-2 block">System Intelligence</span>
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Platform Overview</h1>
+        </div>
+        
+        <div className="flex items-center gap-3">
+           {/* Quick Action Pills */}
+           <Link href="/admin/cars/new" className="bg-slate-900 text-white px-6 py-3 rounded-2xl text-xs font-black flex items-center gap-2 hover:bg-slate-800 transition-all shadow-xl shadow-slate-900/10">
+             <Plus size={16} /> New listing
+           </Link>
+           <Link href="/admin/dealers/new" className="bg-white border border-slate-200 text-slate-900 px-6 py-3 rounded-2xl text-xs font-black flex items-center gap-2 hover:bg-slate-50 transition-all shadow-sm">
+             <Building2 size={16} /> Add Dealer
+           </Link>
+        </div>
       </div>
 
       {/* ── STAT CARDS ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))", gap: 14, marginBottom: 28 }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         {[
-          { label: "Live listings",    value: totalCars,       sub: `+${carsThisWeek} this week`,  color: "#E8490F" },
-          { label: "Dealerships",      value: totalDealers,    sub: "registered",                   color: "#0A2640" },
-          { label: "Buyer enquiries",  value: totalLeads,      sub: `+${leadsThisWeek} this week`,  color: "#16a34a" },
-          { label: "Buyer accounts",   value: totalUsers,      sub: "registered buyers",            color: "#7c3aed" },
-          { label: "Enquiries (month)",value: leadsThisMonth,  sub: "last 30 days",                 color: "#0891b2" },
-          { label: "WhatsApp leads",   value: whatsappLeads,   sub: `${webLeads} via web form`,     color: "#25D366" },
-        ].map(({ label, value, sub, color }) => (
-          <div key={label} style={s}>
-            <p style={{ fontSize: 12, color: "#999", marginBottom: 8, fontWeight: 500 }}>{label}</p>
-            <p style={{ fontSize: "1.8rem", fontWeight: 800, color, lineHeight: 1 }}>{value}</p>
-            <p style={{ fontSize: 11, color: "#bbb", marginTop: 6 }}>{sub}</p>
+          { label: "Live Inventory", value: totalCars, sub: `+${carsThisWeek} this week`, icon: <Car />, color: "text-amber-500", bg: "bg-amber-50" },
+          { label: "Verified Dealers", value: totalDealers, sub: "Partner Dealerships", icon: <Building2 />, color: "text-blue-500", bg: "bg-blue-50" },
+          { label: "Buyer Enquiries", value: totalLeads, sub: `+${leadsThisWeek} this week`, icon: <MessageSquare />, color: "text-emerald-500", bg: "bg-emerald-50" },
+          { label: "Market Reach", value: totalUsers, sub: "Registered Buyers", icon: <Users />, color: "text-indigo-500", bg: "bg-indigo-50" },
+        ].map((stat, idx) => (
+          <div key={idx} className="bg-white border border-slate-200 p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-300 group">
+             <div className="flex items-center justify-between mb-6">
+               <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                 {stat.icon}
+               </div>
+               <ArrowUpRight size={20} className="text-slate-200 group-hover:text-amber-500 transition-colors" />
+             </div>
+             <p className="text-4xl font-black text-slate-900 mb-1">{stat.value.toLocaleString()}</p>
+             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">{stat.label}</p>
+             <div className="pt-4 border-t border-slate-50 flex items-center gap-2">
+                <TrendingUp size={12} className="text-emerald-500" />
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">{stat.sub}</span>
+             </div>
           </div>
         ))}
       </div>
 
-      {/* ── QUICK ACTIONS ── */}
-      <div style={{ display: "flex", gap: 10, marginBottom: 28, flexWrap: "wrap" }}>
-        {[
-          { href: "/admin/cars/new",       label: "+ Add car",          bg: "#E8490F", color: "white" },
-          { href: "/admin/cars/bulk",      label: "⬆ Bulk CSV upload",  bg: "#0A2640", color: "white" },
-          { href: "/admin/dealers/new",    label: "+ Add dealership",   bg: "#fff",    color: "#0A2640", border: "1.5px solid #E2E2E2" },
-          { href: "/admin/users/new",      label: "+ Create user",      bg: "#fff",    color: "#0A2640", border: "1.5px solid #E2E2E2" },
-        ].map(({ href, label, bg, color, border }) => (
-          <Link key={href} href={href} style={{ background: bg, color, border: border || "none", borderRadius: 10, padding: "10px 20px", fontWeight: 700, fontSize: 13, textDecoration: "none", display: "inline-block" }}>
-            {label}
-          </Link>
-        ))}
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginBottom: 18 }}>
-
-        {/* ── TOP CARS BY VIEWS ── */}
-        <div style={s}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <h2 style={{ fontWeight: 700, fontSize: "1rem", color: "#0A2640" }}>Most viewed cars</h2>
-            <Link href="/admin/cars" style={{ fontSize: 12, color: "#E8490F", textDecoration: "none" }}>View all →</Link>
-          </div>
-          {topCars.length === 0 ? (
-            <p style={{ color: "#bbb", fontSize: 13, textAlign: "center", padding: "24px 0" }}>No cars yet — add your first listing</p>
-          ) : topCars.map((car, i) => (
-            <div key={car.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderBottom: i < topCars.length - 1 ? "1px solid #F5F5F5" : "none" }}>
-              <div style={{ width: 44, height: 33, borderRadius: 6, background: "#f0ede8", overflow: "hidden", flexShrink: 0 }}>
-                {car.images[0] ? <img src={car.images[0].url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", fontSize: 16 }}>🚗</div>}
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontWeight: 600, fontSize: 13, color: "#1A1A1A" }}>{car.year} {car.make} {car.model}</p>
-                <p style={{ fontSize: 11, color: "#999" }}>{car.dealer?.name}</p>
-              </div>
-              <div style={{ textAlign: "right", flexShrink: 0 }}>
-                <p style={{ fontWeight: 700, fontSize: 13, color: "#E8490F" }}>{formatPrice(car.price)}</p>
-                <p style={{ fontSize: 11, color: "#999" }}>{car.views} views</p>
-              </div>
+      {/* ── CHANNEL & GROWTH ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+         <div className="col-span-1 bg-slate-950 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 blur-[60px] rounded-full" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-amber-500 mb-6 block">Conversion Channels</span>
+            <div className="space-y-8">
+               <div>
+                  <div className="flex items-center justify-between mb-3">
+                     <p className="text-sm font-bold flex items-center gap-2"><Smartphone size={16} className="text-emerald-500" /> WhatsApp</p>
+                     <p className="text-xl font-black text-emerald-500">{whatsappLeads}</p>
+                  </div>
+                  <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                     <div className="h-full bg-emerald-500" style={{ width: `${(whatsappLeads/totalLeads)*100}%` }} />
+                  </div>
+               </div>
+               <div>
+                  <div className="flex items-center justify-between mb-3">
+                     <p className="text-sm font-bold flex items-center gap-2"><Globe size={16} className="text-blue-500" /> Web Forms</p>
+                     <p className="text-xl font-black text-blue-500">{webLeads}</p>
+                  </div>
+                  <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                     <div className="h-full bg-blue-500" style={{ width: `${(webLeads/totalLeads)*100}%` }} />
+                  </div>
+               </div>
             </div>
-          ))}
+            <p className="text-[10px] font-bold text-slate-500 mt-10 leading-relaxed uppercase tracking-tighter">
+               Total {totalLeads} enquiries captured in system
+            </p>
+         </div>
+
+         {/* Enquiries by Dealer Table */}
+         <div className="col-span-2 bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-sm">
+            <div className="flex items-center justify-between mb-8">
+               <h3 className="text-lg font-black text-slate-900 tracking-tight">Performance by Dealer</h3>
+               <Link href="/admin/dealers" className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-amber-600 transition-colors">Full Report</Link>
+            </div>
+            <div className="space-y-6">
+               {leadsByDealer.map(({ dealerId, _count }, i) => {
+                  const name  = dealerMap[dealerId] || "Unknown";
+                  const pct   = Math.round((_count.id / leadsByDealer[0]._count.id) * 100);
+                  return (
+                    <div key={dealerId} className="group">
+                       <div className="flex items-center justify-between mb-2">
+                          <p className="text-sm font-black text-slate-700">{name}</p>
+                          <p className="text-sm font-black text-slate-900">{_count.id} <span className="text-[10px] text-slate-300 font-bold uppercase ml-1">leads</span></p>
+                       </div>
+                       <div className="h-1.5 bg-slate-50 rounded-full overflow-hidden">
+                          <div className="h-full bg-amber-500 transition-all duration-1000" style={{ width: `${pct}%` }} />
+                       </div>
+                    </div>
+                  );
+               })}
+            </div>
+         </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+        {/* ── TOP CARS BY VIEWS ── */}
+        <div className="bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-sm">
+          <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <h2 className="text-lg font-black text-slate-900 tracking-tight">Trending Vehicles</h2>
+            <Link href="/admin/cars" className="text-[10px] font-black uppercase tracking-widest text-slate-400">View All</Link>
+          </div>
+          <div className="p-4 space-y-2">
+            {topCars.map((car) => (
+              <div key={car.id} className="flex items-center gap-4 p-4 hover:bg-slate-50 rounded-[1.5rem] transition-colors group">
+                <div className="w-16 h-12 rounded-xl bg-slate-100 overflow-hidden ring-1 ring-slate-200 shrink-0">
+                  {car.images[0] ? <img src={car.images[0].url} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" /> : <div className="flex items-center justify-center h-full text-slate-300 font-black italic text-[10px]">NA</div>}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-black text-slate-900 truncate tracking-tight">{car.year} {car.make} {car.model}</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter truncate">{car.dealer?.name}</p>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="text-sm font-black text-amber-600 leading-none mb-1">{formatPrice(car.price)}</p>
+                  <p className="text-[10px] font-bold text-slate-300 uppercase tracking-tighter flex items-center justify-end gap-1">
+                    <Eye size={10} /> {car.views}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* ── RECENT ENQUIRIES ── */}
-        <div style={s}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <h2 style={{ fontWeight: 700, fontSize: "1rem", color: "#0A2640" }}>Recent enquiries</h2>
-            <Link href="/admin/leads" style={{ fontSize: 12, color: "#E8490F", textDecoration: "none" }}>View all →</Link>
+        <div className="bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-sm">
+          <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <h2 className="text-lg font-black text-slate-900 tracking-tight">Recent Enquiries</h2>
+            <Link href="/admin/leads" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Manage Leads</Link>
           </div>
-          {recentLeads.length === 0 ? (
-            <p style={{ color: "#bbb", fontSize: 13, textAlign: "center", padding: "24px 0" }}>No enquiries yet</p>
-          ) : recentLeads.map((lead, i) => (
-            <div key={lead.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: i < recentLeads.length - 1 ? "1px solid #F5F5F5" : "none" }}>
-              <div>
-                <p style={{ fontWeight: 600, fontSize: 13, color: "#1A1A1A" }}>{lead.name}</p>
-                <p style={{ fontSize: 11, color: "#999" }}>{lead.car.year} {lead.car.make} {lead.car.model} · {lead.dealer.name}</p>
-              </div>
-              <div style={{ textAlign: "right" }}>
-                <span style={{ fontSize: 10, borderRadius: 99, padding: "2px 8px", fontWeight: 600, background: lead.channel === "whatsapp" ? "#dcfce7" : "#f0f0f0", color: lead.channel === "whatsapp" ? "#16a34a" : "#666" }}>
-                  {lead.channel === "whatsapp" ? "WhatsApp" : "Web"}
-                </span>
-                <p style={{ fontSize: 10, color: "#bbb", marginTop: 3 }}>{new Date(lead.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short" })}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
-
-        {/* ── ENQUIRIES BY DEALER ── */}
-        <div style={s}>
-          <h2 style={{ fontWeight: 700, fontSize: "1rem", color: "#0A2640", marginBottom: 16 }}>Enquiries by dealer</h2>
-          {leadsByDealer.length === 0 ? (
-            <p style={{ color: "#bbb", fontSize: 13, textAlign: "center", padding: "24px 0" }}>No enquiries yet</p>
-          ) : leadsByDealer.map(({ dealerId, _count }, i) => {
-            const name  = dealerMap[dealerId] || "Unknown";
-            const total = leadsByDealer.reduce((s, l) => s + l._count.id, 0);
-            const pct   = total ? Math.round((_count.id / total) * 100) : 0;
-            return (
-              <div key={dealerId} style={{ marginBottom: 14 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-                  <p style={{ fontSize: 13, fontWeight: 500, color: "#333" }}>{name}</p>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: "#0A2640" }}>{_count.id}</p>
+          <div className="p-4 space-y-2">
+            {recentLeads.map((lead) => (
+              <div key={lead.id} className="flex items-center justify-between p-4 hover:bg-slate-50 rounded-[1.5rem] transition-colors group">
+                <div className="flex items-center gap-4">
+                   <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center font-black text-amber-500">
+                      {lead.name[0]}
+                   </div>
+                   <div>
+                      <p className="text-sm font-black text-slate-900 tracking-tight">{lead.name}</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter truncate max-w-[150px]">
+                        {lead.car.year} {lead.car.make} {lead.car.model}
+                      </p>
+                   </div>
                 </div>
-                <div style={{ height: 6, background: "#F5F5F5", borderRadius: 3, overflow: "hidden" }}>
-                  <div style={{ height: "100%", width: `${pct}%`, background: "#E8490F", borderRadius: 3, transition: "width 0.5s" }} />
+                <div className="text-right">
+                  <span className={`inline-flex items-center gap-1 text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-wider mb-1 ${
+                    lead.channel === "whatsapp" ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-500"
+                  }`}>
+                    {lead.channel === "whatsapp" ? <Smartphone size={10} /> : <Globe size={10} />}
+                    {lead.channel}
+                  </span>
+                  <p className="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">
+                    {new Date(lead.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short" })}
+                  </p>
                 </div>
               </div>
-            );
-          })}
-        </div>
-
-        {/* ── RECENTLY ADDED CARS ── */}
-        <div style={s}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <h2 style={{ fontWeight: 700, fontSize: "1rem", color: "#0A2640" }}>Recently added</h2>
-            <Link href="/admin/cars/new" style={{ fontSize: 12, color: "#E8490F", textDecoration: "none" }}>+ Add car →</Link>
+            ))}
           </div>
-          {recentCars.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "24px 0" }}>
-              <p style={{ color: "#bbb", fontSize: 13, marginBottom: 12 }}>No cars listed yet</p>
-              <Link href="/admin/cars/new" style={{ background: "#E8490F", color: "white", borderRadius: 8, padding: "8px 18px", textDecoration: "none", fontSize: 13, fontWeight: 700 }}>Add your first car</Link>
-            </div>
-          ) : recentCars.map((car, i) => (
-            <div key={car.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: i < recentCars.length - 1 ? "1px solid #F5F5F5" : "none" }}>
-              <div>
-                <p style={{ fontWeight: 600, fontSize: 13, color: "#1A1A1A" }}>{car.year} {car.make} {car.model}</p>
-                <p style={{ fontSize: 11, color: "#999" }}>{car.dealer?.name}</p>
-              </div>
-              <div style={{ textAlign: "right" }}>
-                <p style={{ fontWeight: 700, fontSize: 13, color: "#E8490F" }}>{formatPrice(car.price)}</p>
-                <span style={{ fontSize: 10, borderRadius: 99, padding: "2px 8px", background: car.available ? "#dcfce7" : "#f0f0f0", color: car.available ? "#16a34a" : "#999" }}>
-                  {car.available ? "Live" : "Hidden"}
-                </span>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </div>

@@ -2,8 +2,21 @@
 import { requireDealer } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { formatPrice, formatMileage } from "@/lib/utils";
+import Link from "next/link";
+import { 
+  Plus, 
+  Car, 
+  EyeOff, 
+  MessageSquare, 
+  ArrowUpRight, 
+  CheckCircle2, 
+  MoreVertical,
+  Edit3,
+  ExternalLink,
+  Eye
+} from "lucide-react";
 
-export const metadata = { title: "My Listings — Motorke Portal" };
+export const metadata = { title: "Dashboard — Motorke Dealer Portal" };
 
 export default async function PortalPage() {
   const user = await requireDealer();
@@ -21,111 +34,131 @@ export default async function PortalPage() {
   const hidden = cars.filter((c) => !c.available).length;
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-8">
+    <div className="animate-in fade-in duration-700">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
         <div>
-          <h1 className="text-3xl font-black">My listings</h1>
-          <p className="text-white/40 text-sm mt-1">{user.dealer?.name}</p>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-600 mb-2 block">Enterprise Overview</span>
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Welcome, {user.dealer?.name}</h1>
         </div>
-        <a href="/portal/cars/new"
-          className="bg-[#f97316] hover:bg-[#ea6c0b] text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-colors">
-          + Add car
-        </a>
+        <Link href="/portal/cars/new"
+          className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-black px-8 py-4 rounded-2xl transition-all shadow-xl shadow-slate-900/10 hover:scale-105 active:scale-95">
+          <Plus size={18} /> Add New Listing
+        </Link>
       </div>
 
-      {/* Stats strip */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {[
-          { label: "Live",      value: live,   color: "text-green-400"  },
-          { label: "Hidden",    value: hidden, color: "text-white/30"   },
-          { label: "Enquiries", value: leads,  color: "text-[#f97316]"  },
-        ].map(({ label, value, color }) => (
-          <div key={label} className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-4 text-center">
-            <p className={`text-2xl font-black ${color}`}>{value}</p>
-            <p className="text-xs text-white/40 mt-1">{label}</p>
+          { label: "Live Inventory", value: live,   icon: <CheckCircle2 className="text-emerald-500" />, sub: "Currently visible to buyers" },
+          { label: "Hidden Items",   value: hidden, icon: <EyeOff className="text-slate-400" />, sub: "Drafts or sold out items" },
+          { label: "Total Inquiries", value: leads,  icon: <MessageSquare className="text-amber-500" />, sub: "Potential buyer messages" },
+        ].map((stat, i) => (
+          <div key={i} className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm hover:shadow-xl transition-all duration-300 group">
+            <div className="flex items-center justify-between mb-6">
+              <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                {stat.icon}
+              </div>
+              <ArrowUpRight className="text-slate-200 group-hover:text-amber-500 transition-colors" size={20} />
+            </div>
+            <p className="text-4xl font-black text-slate-900 mb-2">{stat.value}</p>
+            <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">{stat.label}</p>
+            <p className="text-[10px] font-bold text-slate-300">{stat.sub}</p>
           </div>
         ))}
       </div>
 
-      {/* Car list */}
-      {cars.length === 0 ? (
-        <div className="text-center py-24 border-2 border-dashed border-white/10 rounded-2xl">
-          <p className="text-5xl mb-4">🚗</p>
-          <p className="text-lg font-bold mb-2">No listings yet</p>
-          <p className="text-white/40 text-sm mb-6">Add your first car to start appearing on Motorke</p>
-          <a href="/portal/cars/new"
-            className="bg-[#f97316] hover:bg-[#ea6c0b] text-white font-bold px-6 py-3 rounded-xl transition-colors">
-            Add your first car
-          </a>
+      {/* Main Content Area */}
+      <div className="bg-white border border-slate-200 rounded-[2.5rem] shadow-sm overflow-hidden">
+        <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <h2 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
+            <Car size={20} className="text-amber-600" /> Recent Inventory
+          </h2>
+          <Link href="/portal/inventory" className="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-amber-600 transition-colors">
+            Manage All
+          </Link>
         </div>
-      ) : (
-        <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-white/10">
-                <th className="text-left text-xs text-white/40 uppercase tracking-wider px-5 py-4">Car</th>
-                <th className="text-left text-xs text-white/40 uppercase tracking-wider px-4 py-4 hidden sm:table-cell">Price</th>
-                <th className="text-left text-xs text-white/40 uppercase tracking-wider px-4 py-4 hidden md:table-cell">Mileage</th>
-                <th className="text-left text-xs text-white/40 uppercase tracking-wider px-4 py-4">Status</th>
-                <th className="text-left text-xs text-white/40 uppercase tracking-wider px-4 py-4">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cars.map((car) => (
-                <tr key={car.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                  <td className="px-5 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-9 rounded-lg bg-white/5 overflow-hidden flex-shrink-0">
-                        {car.images[0]
-                          ? <img src={car.images[0].url} alt="" className="w-full h-full object-cover" />
-                          : <div className="flex items-center justify-center h-full">🚗</div>
-                        }
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold">{car.year} {car.make} {car.model}</p>
-                        {car.variant && <p className="text-xs text-white/30">{car.variant}</p>}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-4 text-sm font-bold text-[#f97316] hidden sm:table-cell">
-                    {formatPrice(car.price)}
-                  </td>
-                  <td className="px-4 py-4 text-sm text-white/40 hidden md:table-cell">
-                    {formatMileage(car.mileage)}
-                  </td>
-                  <td className="px-4 py-4">
-                    <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                      car.available
-                        ? "bg-green-500/15 text-green-400 border border-green-500/20"
-                        : "bg-white/5 text-white/30 border border-white/10"
-                    }`}>
-                      {car.available ? "Live" : "Hidden"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-4">
-                    <div className="flex items-center gap-2">
-                      <a href={`/portal/cars/${car.id}/edit`}
-                        className="text-xs text-white/40 hover:text-white border border-white/10 hover:border-white/20 rounded-lg px-3 py-1.5 transition-all">
-                        Edit
-                      </a>
-                      <form action={`/api/admin/cars/${car.id}/toggle`} method="POST">
-                        <button type="submit"
-                          className="text-xs text-white/40 hover:text-white border border-white/10 hover:border-white/20 rounded-lg px-3 py-1.5 transition-all">
-                          {car.available ? "Hide" : "Show"}
-                        </button>
-                      </form>
-                      <a href={`/cars/${car.id}`} target="_blank"
-                        className="text-xs text-[#f97316]/60 hover:text-[#f97316] border border-[#f97316]/20 rounded-lg px-3 py-1.5 transition-all">
-                        View ↗
-                      </a>
-                    </div>
-                  </td>
+
+        {cars.length === 0 ? (
+          <div className="text-center py-32 px-10">
+            <div className="w-20 h-20 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6">
+              <Car className="text-slate-200" size={40} />
+            </div>
+            <h3 className="text-xl font-black text-slate-900 mb-2">No cars listed yet</h3>
+            <p className="text-slate-400 text-sm max-w-xs mx-auto mb-8 font-medium">
+              Your inventory is currently empty. Start reaching thousands of buyers by adding your first vehicle.
+            </p>
+            <Link href="/portal/cars/new"
+              className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-black font-black px-10 py-4 rounded-2xl transition-all shadow-xl shadow-amber-500/10">
+              Add Your First Car
+            </Link>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-slate-50/50">
+                  <th className="text-left text-[10px] font-black text-slate-400 uppercase tracking-widest px-8 py-5">Vehicle Details</th>
+                  <th className="text-left text-[10px] font-black text-slate-400 uppercase tracking-widest px-6 py-5 hidden sm:table-cell">Price / Market</th>
+                  <th className="text-left text-[10px] font-black text-slate-400 uppercase tracking-widest px-6 py-5">Status</th>
+                  <th className="text-right text-[10px] font-black text-slate-400 uppercase tracking-widest px-8 py-5">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody className="divide-y divide-slate-50">
+                {cars.map((car) => (
+                  <tr key={car.id} className="hover:bg-slate-50/50 transition-colors group">
+                    <td className="px-8 py-5">
+                      <div className="flex items-center gap-4">
+                        <div className="w-16 h-12 rounded-xl bg-slate-100 overflow-hidden ring-1 ring-slate-200 shrink-0">
+                          {car.images[0]
+                            ? <img src={car.images[0].url} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                            : <div className="flex items-center justify-center h-full text-slate-300 italic text-[10px] font-black">NA</div>
+                          }
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-black text-slate-900 truncate tracking-tight">{car.year} {car.make} {car.model}</p>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter truncate">{car.variant || "Standard Edition"}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-5 hidden sm:table-cell">
+                      <p className="text-sm font-black text-slate-900">{formatPrice(car.price)}</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{formatMileage(car.mileage)} · {car.fuelType}</p>
+                    </td>
+                    <td className="px-6 py-5">
+                      <span className={`inline-flex items-center gap-1.5 text-[10px] font-black px-3 py-1.5 rounded-lg uppercase tracking-wider ${
+                        car.available
+                          ? "bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100"
+                          : "bg-slate-100 text-slate-500"
+                      }`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${car.available ? "bg-emerald-500 animate-pulse" : "bg-slate-400"}`} />
+                        {car.available ? "Live" : "Draft"}
+                      </span>
+                    </td>
+                    <td className="px-8 py-5 text-right">
+                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Link href={`/portal/cars/${car.id}/edit`}
+                          className="p-2 text-slate-400 hover:text-slate-900 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-all shadow-sm">
+                          <Edit3 size={16} />
+                        </Link>
+                        <Link href={`/cars/${car.id}`} target="_blank"
+                          className="p-2 text-slate-400 hover:text-amber-600 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-all shadow-sm">
+                          <ExternalLink size={16} />
+                        </Link>
+                        <form action={`/api/admin/cars/${car.id}/toggle`} method="POST">
+                          <button type="submit"
+                            className="p-2 text-slate-400 hover:text-slate-900 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-all shadow-sm">
+                            {car.available ? <EyeOff size={16} /> : <Eye size={16} />}
+                          </button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

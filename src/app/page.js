@@ -1,8 +1,23 @@
 // src/app/page.js
 import { db } from "@/lib/db";
-import { formatPrice, formatMileage, BODY_TYPE_LABELS } from "@/lib/utils";
+import { formatPrice, formatMileage } from "@/lib/utils";
 import Link from "next/link";
 import LocationSearch from "@/components/LocationSearch";
+import { 
+  ChevronRight, 
+  CheckCircle2, 
+  ShieldCheck, 
+  MessageSquare, 
+  Calculator, 
+  Search, 
+  ArrowRight,
+  Star,
+  Fuel,
+  Settings,
+  Gauge,
+  MapPin,
+  TrendingUp
+} from "lucide-react";
 
 async function getData() {
   try {
@@ -10,7 +25,7 @@ async function getData() {
     const [featured, newArrivals, dealers, totalCars, totalDealers] = await Promise.all([
       db.car.findMany({
         where: { available: true, featured: true },
-        include: { images: { where: { isPrimary: true }, take: 1 }, dealer: { select: { name: true, location: true, verified: true } } },
+        include: { images: { where: { isPrimary: true }, take: 1 }, dealer: { select: { name: true, location: true, verified: true, slug: true } } },
         take: 6, orderBy: { createdAt: "desc" },
       }),
       db.car.findMany({
@@ -32,7 +47,6 @@ async function getData() {
   }
 }
 
-// Real car photos per category from Unsplash
 const BODY_TYPES = [
   { type: "SUV",       label: "SUVs",       img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Paris_Motor_Show_2018%2C_Paris_%281Y7A2057%29.jpg/640px-Paris_Motor_Show_2018%2C_Paris_%281Y7A2057%29.jpg" },
   { type: "PICKUP",    label: "Pickups",    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Toyota_Hilux_2.4_Xtra_cab_4_WD_-_Flickr_-_Joost_J._Bakker_IJmuiden.jpg/640px-Toyota_Hilux_2.4_Xtra_cab_4_WD_-_Flickr_-_Joost_J._Bakker_IJmuiden.jpg" },
@@ -42,354 +56,360 @@ const BODY_TYPES = [
 ];
 
 const PRICE_RANGES = [
-  { label: "Under KSh 1M",  min: 0,       max: 1000000,  sub: "Entry level"   },
-  { label: "1M – 2M",       min: 1000000, max: 2000000,  sub: "Most popular"  },
-  { label: "2M – 4M",       min: 2000000, max: 4000000,  sub: "Mid range"     },
-  { label: "4M – 7M",       min: 4000000, max: 7000000,  sub: "Premium"       },
-  { label: "Above KSh 7M",  min: 7000000, max: 99000000, sub: "Luxury"        },
+  { label: "Under 1M",  min: 0,       max: 1000000,  sub: "Entry level"   },
+  { label: "1M – 2M",   min: 1000000, max: 2000000,  sub: "Most popular"  },
+  { label: "2M – 4M",   min: 2000000, max: 4000000,  sub: "Mid range"     },
+  { label: "4M – 7M",   min: 4000000, max: 7000000,  sub: "Premium"       },
+  { label: "Above 7M",  min: 7000000, max: 99000000, sub: "Luxury"        },
 ];
 
 const COUNTIES = [
-  { name: "Nairobi",     img: "https://images.unsplash.com/photo-1611348586840-ea9872a69fd4?w=200&q=80" },
-  { name: "Mombasa",     img: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=200&q=80" },
-  { name: "Nakuru",      img: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=200&q=80" },
-  { name: "Kisumu",      img: "https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?w=200&q=80" },
-  { name: "Eldoret",     img: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=200&q=80" },
-  { name: "Kiambu",      img: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=200&q=80" },
-  { name: "Machakos",    img: "https://images.unsplash.com/photo-1504198453885-2f6e0c7f1c07?w=200&q=80" },
-  { name: "Meru",        img: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=200&q=80" },
+  { name: "Nairobi",     img: "https://images.unsplash.com/photo-1581467655410-0c2bf55d9d6c?w=600&q=80" },
+  { name: "Mombasa",     img: "https://images.unsplash.com/photo-1590159068301-443b772c7304?w=600&q=80" },
+  { name: "Nakuru",      img: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=600&q=80" },
+  { name: "Kisumu",      img: "https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?w=600&q=80" },
 ];
 
-const TRENDING = ["Toyota Hilux", "Toyota Prado", "Subaru Forester", "Mazda CX-5", "Toyota Harrier", "Toyota Fielder"];
+const TRENDING = ["Toyota Hilux", "Toyota Prado", "Subaru Forester", "Mazda CX-5"];
 
 export default async function HomePage() {
   const { featured, newArrivals, dealers, totalCars, totalDealers } = await getData();
 
   return (
-    <div style={{ background: "#F7F8FA" }}>
-      <style>{`
-        .mk-card { transition: transform 0.18s ease, box-shadow 0.18s ease; }
-        .mk-card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,0.1); }
-        .mk-body:hover .mk-body-img { transform: scale(1.06); }
-        .mk-body-img { transition: transform 0.35s ease; }
-        .mk-county:hover { border-color: #F59E0B !important; }
-        .mk-county:hover .mk-county-overlay { opacity: 1 !important; }
-        .mk-range:hover { background: #1C1C1E !important; color: white !important; border-color: #1C1C1E !important; }
-        .mk-trend:hover { background: #FEF3C7 !important; color: #1C1C1E !important; border-color: #F59E0B !important; }
-        .mk-dealer:hover { border-color: #F59E0B !important; box-shadow: 0 4px 20px rgba(245,158,11,0.12); }
-      `}</style>
+    <div className="bg-slate-50 min-h-screen pb-20">
+      {/* ── HERO ── */}
+      <section className="relative min-h-[85vh] flex items-center overflow-hidden">
+        {/* Cinematic Background */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=85" 
+            className="w-full h-full object-cover brightness-[0.2]" 
+            alt="Hero Background"
+          />
+          <div className="absolute inset-0 bg-gradient-to-tr from-black via-black/60 to-transparent" />
+        </div>
 
-      {/* ── HERO ─────────────────────────────────────────────── */}
-      <section style={{ position: "relative", overflow: "hidden", minHeight: "90vh", display: "flex", alignItems: "center" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1920&q=85')", backgroundSize: "cover", backgroundPosition: "center 55%", filter: "brightness(0.22)", zIndex: 0 }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(28,28,30,0.95) 0%, rgba(28,28,30,0.5) 50%, transparent 100%)", zIndex: 1 }} />
-        <div style={{ position: "relative", zIndex: 2, width: "100%", maxWidth: 820, margin: "0 auto", padding: "6rem 1.5rem 8rem" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(245,158,11,0.12)", border: "1px solid rgba(245,158,11,0.25)", borderRadius: 99, padding: "6px 16px", fontSize: 12, color: "#F59E0B", marginBottom: 28, fontWeight: 600, letterSpacing: "0.02em" }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", display: "inline-block" }} />
-            {totalCars} cars listed · {totalDealers} dealerships
+        <div className="container mx-auto px-6 relative z-10 max-w-6xl">
+          <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 backdrop-blur-md rounded-full px-4 py-2 text-xs font-bold text-amber-500 mb-8 animate-in fade-in slide-in-from-top-4 duration-700">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            {totalCars.toLocaleString()} CARS LISTED · {totalDealers} TRUSTED DEALERSHIPS
           </div>
-          <h1 style={{ fontWeight: 800, fontSize: "clamp(2.2rem, 5vw, 4rem)", lineHeight: 1.05, color: "white", marginBottom: 18, letterSpacing: "-0.02em" }}>
-            Find your perfect car.<br />
-            <span style={{ color: "#F59E0B" }}>Compare every dealer.</span>
+
+          <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-[1.1] tracking-tight mb-6 animate-in fade-in slide-in-from-left-6 duration-1000">
+            Find your perfect car. <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">
+              Compare every dealer.
+            </span>
           </h1>
-          <p style={{ fontSize: 16, color: "rgba(255,255,255,0.55)", maxWidth: 460, marginBottom: 40, lineHeight: 1.7 }}>
-            Kenya's first platform to compare cars across multiple dealerships — search, compare prices, contact dealers.
+          
+          <p className="text-lg text-slate-400 max-w-xl mb-10 leading-relaxed">
+            Kenya&apos;s most sophisticated marketplace to compare cars across multiple 
+            dealerships instantly. Search smarter, buy better.
           </p>
-          <LocationSearch />
-          <div style={{ marginTop: 22, display: "flex", flexWrap: "wrap", alignItems: "center", gap: 6 }}>
-            <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginRight: 4 }}>Trending</span>
+
+          <div className="max-w-2xl bg-white/5 backdrop-blur-xl border border-white/10 p-2 rounded-2xl shadow-2xl mb-8">
+            <LocationSearch />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
+              <TrendingUp className="w-3 h-3 text-amber-500" /> Trending:
+            </span>
             {TRENDING.map(t => (
-              <a key={t} href={`/cars?search=${encodeURIComponent(t)}`} className="mk-trend"
-                style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.65)", borderRadius: 99, padding: "5px 14px", fontSize: 12, fontWeight: 500, textDecoration: "none", transition: "all 0.15s" }}>
+              <Link key={t} href={`/cars?search=${encodeURIComponent(t)}`} 
+                className="bg-white/5 hover:bg-amber-500 hover:text-black border border-white/10 px-4 py-1.5 rounded-full text-xs font-semibold text-slate-300 transition-all duration-300">
                 {t}
-              </a>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── STATS BAR ────────────────────────────────────────── */}
-      <section style={{ background: "#1C1C1E" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4,1fr)", textAlign: "center" }}>
+      {/* ── STATS BAR ── */}
+      <div className="container mx-auto px-6 -mt-16 relative z-20">
+        <div className="grid grid-cols-2 md:grid-cols-4 bg-slate-900 border border-white/10 rounded-2xl shadow-2xl overflow-hidden divide-x divide-white/5">
           {[
-            { v: `${totalCars}+`, l: "Cars listed"         },
-            { v: `${totalDealers}`, l: "Verified dealers"  },
-            { v: "5",             l: "Counties"            },
-            { v: "Free",          l: "For buyers"          },
-          ].map(({ v, l }) => (
-            <div key={l} style={{ padding: "20px 16px", borderRight: "1px solid rgba(255,255,255,0.05)" }}>
-              <p style={{ fontWeight: 800, fontSize: "1.6rem", color: "#F59E0B", lineHeight: 1 }}>{v}</p>
-              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", marginTop: 5, fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.05em" }}>{l}</p>
+            { v: `${totalCars}+`, l: "Listings", i: <Search className="w-5 h-5" /> },
+            { v: totalDealers, l: "Verified Dealers", i: <ShieldCheck className="w-5 h-5" /> },
+            { v: "47", l: "Counties", i: <MapPin className="w-5 h-5" /> },
+            { v: "Free", l: "For Buyers", i: <CheckCircle2 className="w-5 h-5" /> },
+          ].map((s, idx) => (
+            <div key={idx} className="p-8 text-center hover:bg-white/5 transition-colors group">
+              <div className="flex justify-center mb-3 text-amber-500 group-hover:scale-110 transition-transform">
+                {s.i}
+              </div>
+              <p className="text-3xl font-black text-white mb-1">{s.v}</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{s.l}</p>
             </div>
           ))}
         </div>
-      </section>
+      </div>
 
-      {/* ── BROWSE BY BODY TYPE ──────────────────────────────── */}
-      <section style={{ maxWidth: 1100, margin: "0 auto", padding: "3.5rem 1.5rem 0" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 20 }}>
+      {/* ── BROWSE BY BODY TYPE ── */}
+      <section className="container mx-auto px-6 pt-24 max-w-6xl">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div>
-            <p style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Browse by type</p>
-            <h2 style={{ fontWeight: 800, fontSize: "1.4rem", color: "#1C1C1E", letterSpacing: "-0.01em" }}>What are you looking for?</h2>
+            <span className="text-[10px] font-black uppercase tracking-widest text-amber-600 mb-2 block">Curation</span>
+            <h2 className="text-3xl font-black text-slate-900 tracking-tight">Browse by Category</h2>
           </div>
+          <Link href="/cars" className="group flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-amber-600 transition-colors">
+            View all types <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12 }}>
-          {BODY_TYPES.map(({ type, label, sub, img }) => (
-            <a key={type} href={`/cars?bodyType=${type}`} className="mk-body mk-card"
-              style={{ textDecoration: "none", borderRadius: 14, overflow: "hidden", background: "#fff", border: "1.5px solid #E4E4E7", display: "block" }}>
-              <div style={{ aspectRatio: "4/3", overflow: "hidden", background: "#f0ede8" }}>
-                <img src={img} alt={label} className="mk-body-img" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+          {BODY_TYPES.map((b) => (
+            <Link key={b.type} href={`/cars?bodyType=${b.type}`} 
+              className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-white border border-slate-200 hover:border-amber-500 transition-all duration-300">
+              <img src={b.img} alt={b.label} className="absolute inset-0 w-full h-full object-cover brightness-[0.8] group-hover:scale-110 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6">
+                <p className="text-lg font-black text-white">{b.label}</p>
+                <div className="h-0.5 w-0 group-hover:w-full bg-amber-500 transition-all duration-300 mt-2" />
               </div>
-              <div style={{ padding: "12px 14px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <p style={{ fontWeight: 700, fontSize: 14, color: "#1C1C1E" }}>{label}</p>
-                <span style={{ fontSize: 11, color: "#F59E0B", fontWeight: 600 }}>View all →</span>
-              </div>
-            </a>
+            </Link>
           ))}
         </div>
       </section>
 
-      {/* ── BUDGET ───────────────────────────────────────────── */}
-      <section style={{ maxWidth: 1100, margin: "3rem auto 0", padding: "0 1.5rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 20 }}>
-          <div>
-            <p style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Shop by budget</p>
-            <h2 style={{ fontWeight: 800, fontSize: "1.4rem", color: "#1C1C1E", letterSpacing: "-0.01em" }}>Find your price range</h2>
+      {/* ── BUDGET ── */}
+      <section className="container mx-auto px-6 pt-24 max-w-6xl">
+        <div className="bg-slate-900 rounded-[2rem] p-10 md:p-16 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 blur-[100px] rounded-full" />
+          
+          <div className="relative z-10 mb-12">
+            <span className="text-[10px] font-black uppercase tracking-widest text-amber-500 mb-2 block">Budgeting</span>
+            <h2 className="text-3xl font-black text-white tracking-tight">Shop by Price Range</h2>
           </div>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10 }}>
-          {PRICE_RANGES.map(({ label, sub, min, max }) => (
-            <a key={label} href={`/cars?minPrice=${min}&maxPrice=${max}`} className="mk-range"
-              style={{ border: "1.5px solid #E4E4E7", borderRadius: 12, padding: "16px 16px", fontSize: 14, fontWeight: 700, color: "#1C1C1E", textDecoration: "none", background: "#fff", transition: "all 0.18s", display: "block" }}>
-              <p style={{ fontWeight: 800, fontSize: 14, color: "#1C1C1E", marginBottom: 4 }}>{label}</p>
-              <p style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 500 }}>{sub}</p>
-            </a>
-          ))}
+
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 relative z-10">
+            {PRICE_RANGES.map((r) => (
+              <Link key={r.label} href={`/cars?minPrice=${r.min}&maxPrice=${r.max}`} 
+                className="bg-white/5 border border-white/10 hover:border-amber-500 hover:bg-amber-500 group p-6 rounded-2xl transition-all duration-300">
+                <p className="text-lg font-black text-white group-hover:text-black mb-1">{r.label}</p>
+                <p className="text-xs font-bold text-slate-500 group-hover:text-black/60 uppercase">{r.sub}</p>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ── NEW ARRIVALS ─────────────────────────────────────── */}
-      {newArrivals.length > 0 && (
-        <section style={{ maxWidth: 1100, margin: "3rem auto 0", padding: "0 1.5rem" }}>
-          <SectionHeader title="New this week" sub="Just listed in the last 7 days" href="/cars?sort=newest" linkLabel="View all" />
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: 16 }}>
-            {newArrivals.map(car => <CarCard key={car.id} car={car} badge="New" />)}
-          </div>
-        </section>
-      )}
-
-      {/* ── FEATURED CARS ────────────────────────────────────── */}
+      {/* ── FEATURED CARS ── */}
       {featured.length > 0 && (
-        <section style={{ maxWidth: 1100, margin: "3rem auto 0", padding: "0 1.5rem" }}>
-          <SectionHeader title="Featured cars" sub="Hand-picked from verified dealerships" href="/cars" linkLabel="View all" />
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: 16 }}>
-            {featured.map(car => <CarCard key={car.id} car={car} badge="Featured" badgeBg="#F59E0B" badgeColor="#1C1C1E" />)}
+        <section className="container mx-auto px-6 pt-24 max-w-6xl">
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-amber-600 mb-2 block">Premium Listings</span>
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight">Featured Collection</h2>
+            </div>
+            <Link href="/cars" className="group flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-amber-600">
+              Explore More <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {featured.map(car => <CarCard key={car.id} car={car} badge="Featured" isFeatured />)}
           </div>
         </section>
       )}
 
-      {/* ── FIND NEAR YOU ────────────────────────────────────── */}
-      <section style={{ maxWidth: 1100, margin: "3rem auto 0", padding: "0 1.5rem" }}>
-        <div style={{ marginBottom: 20 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Browse by location</p>
-          <h2 style={{ fontWeight: 800, fontSize: "1.4rem", color: "#1C1C1E", letterSpacing: "-0.01em" }}>Find cars near you</h2>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
-          {COUNTIES.map(({ name, img }) => (
-            <a key={name} href={`/cars?county=${encodeURIComponent(name)}`} className="mk-county"
-              style={{ position: "relative", borderRadius: 12, overflow: "hidden", aspectRatio: "3/2", display: "block", border: "2px solid transparent", textDecoration: "none", transition: "all 0.2s" }}>
-              <img src={img} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 60%)" }} />
-              <div className="mk-county-overlay" style={{ position: "absolute", inset: 0, background: "rgba(245,158,11,0.15)", opacity: 0, transition: "opacity 0.2s" }} />
-              <p style={{ position: "absolute", bottom: 10, left: 12, color: "white", fontWeight: 700, fontSize: 14 }}>{name}</p>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      {/* ── HOW IT WORKS ─────────────────────────────────────── */}
-      <section style={{ background: "#1C1C1E", margin: "3.5rem 0 0" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "4rem 1.5rem" }}>
-          <div style={{ textAlign: "center", marginBottom: 44 }}>
-            <p style={{ fontSize: 11, fontWeight: 700, color: "rgba(245,158,11,0.6)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>Simple process</p>
-            <h2 style={{ fontWeight: 800, fontSize: "1.8rem", color: "white", letterSpacing: "-0.02em" }}>How Motorke works</h2>
+      {/* ── NEW ARRIVALS ── */}
+      {newArrivals.length > 0 && (
+        <section className="container mx-auto px-6 pt-24 max-w-6xl">
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-amber-600 mb-2 block">Just Added</span>
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight">New Arrivals</h2>
+            </div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 2 }}>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {newArrivals.map(car => <CarCard key={car.id} car={car} />)}
+          </div>
+        </section>
+      )}
+
+      {/* ── HOW IT WORKS ── */}
+      <section className="bg-slate-900 mt-32 py-32 overflow-hidden relative">
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-amber-500/5 blur-[120px] rounded-full" />
+        <div className="container mx-auto px-6 max-w-6xl relative z-10">
+          <div className="text-center mb-20">
+            <span className="text-[10px] font-black uppercase tracking-widest text-amber-500 mb-4 block">The Experience</span>
+            <h2 className="text-4xl font-black text-white tracking-tight">How Motorke Works</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
             {[
-              { num: "01", title: "Search & filter",  desc: "Search by make, model, budget or location across every dealership at once. Filter results to find exactly what you need.",     img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500&q=80" },
-              { num: "02", title: "Compare dealers",  desc: "See the same car from multiple dealers side by side. Compare prices, mileage and specs instantly before you decide.",        img: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=500&q=80" },
-              { num: "03", title: "Contact directly", desc: "Message any dealer instantly on WhatsApp or by phone. No middlemen, no signup fees — just you and the dealer.",             img: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=500&q=80" },
-            ].map(({ num, title, desc, img }, i) => (
-              <div key={num} style={{ position: "relative", overflow: "hidden", borderRadius: i === 0 ? "14px 0 0 14px" : i === 2 ? "0 14px 14px 0" : 0 }}>
-                <img src={img} alt={title} style={{ width: "100%", height: 200, objectFit: "cover", filter: "brightness(0.35)" }} />
-                <div style={{ position: "absolute", inset: 0, padding: "24px" }}>
-                  <p style={{ fontSize: 11, fontWeight: 800, color: "#F59E0B", letterSpacing: "0.08em", marginBottom: 10 }}>STEP {num}</p>
-                  <h3 style={{ fontWeight: 800, fontSize: "1.05rem", color: "white", marginBottom: 10 }}>{title}</h3>
-                  <p style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", lineHeight: 1.65 }}>{desc}</p>
+              { i: <Search />, t: "Search & Filter", d: "Scan thousands of listings from across Kenya in one place. Filter by mileage, price, or dealer reputation.", n: "01" },
+              { i: <Settings />, t: "Compare Specs", d: "Use our intelligent comparison engine to see technical specs and features side-by-side.", n: "02" },
+              { i: <MessageSquare />, t: "Contact Directly", d: "Instantly chat via WhatsApp or call verified dealers. No middlemen, no hidden fees.", n: "03" },
+            ].map((step, idx) => (
+              <div key={idx} className="relative group text-center">
+                <div className="text-8xl font-black text-white/5 absolute -top-10 left-1/2 -translate-x-1/2 group-hover:text-amber-500/10 transition-colors">
+                  {step.n}
                 </div>
+                <div className="w-16 h-16 bg-amber-500 text-black rounded-2xl flex items-center justify-center mx-auto mb-8 rotate-3 group-hover:rotate-0 transition-transform">
+                  {step.i}
+                </div>
+                <h3 className="text-xl font-black text-white mb-4">{step.t}</h3>
+                <p className="text-slate-500 leading-relaxed text-sm px-4">{step.d}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── TOP DEALERSHIPS ──────────────────────────────────── */}
+      {/* ── TOP DEALERSHIPS ── */}
       {dealers.length > 0 && (
-        <section style={{ maxWidth: 1100, margin: "0 auto", padding: "3.5rem 1.5rem 0" }}>
-          <SectionHeader title="Top dealerships" sub="Verified dealers across Kenya" href="/dealers" linkLabel="All dealers" />
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: 12 }}>
+        <section className="container mx-auto px-6 pt-32 max-w-6xl">
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-amber-600 mb-2 block">Partners</span>
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight">Verified Dealerships</h2>
+            </div>
+            <Link href="/dealers" className="group flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-amber-600">
+              Browse all <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {dealers.map(d => (
-              <a key={d.id} href={`/dealers/${d.slug}`} className="mk-card mk-dealer"
-                style={{ background: "#fff", border: "1.5px solid #E4E4E7", borderRadius: 12, padding: "18px 18px", textDecoration: "none", display: "flex", alignItems: "center", gap: 14, transition: "all 0.18s" }}>
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: "#FEF3C7", color: "#1C1C1E", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 20, flexShrink: 0 }}>
+              <Link key={d.id} href={`/dealers/${d.slug}`} 
+                className="bg-white border border-slate-200 p-8 rounded-[2rem] hover:border-amber-500 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                <div className="w-16 h-16 bg-slate-900 text-amber-500 rounded-2xl flex items-center justify-center text-2xl font-black mb-6 group-hover:scale-110 transition-transform">
                   {d.name[0]}
                 </div>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                    <p style={{ fontWeight: 700, fontSize: 14, color: "#1C1C1E", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{d.name}</p>
-                    {d.verified && (
-                      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="6.5" fill="#10B981"/><path d="M3.5 6.5L5.5 8.5L9.5 4.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                    )}
-                  </div>
-                  <p style={{ fontSize: 12, color: "#9CA3AF", marginTop: 2 }}>{d.location}</p>
-                  <p style={{ fontSize: 12, color: "#F59E0B", fontWeight: 700, marginTop: 5 }}>{d._count.cars} cars available</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="font-black text-slate-900 line-clamp-1">{d.name}</h3>
+                  {d.verified && <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />}
                 </div>
-              </a>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">{d.location}</p>
+                <div className="pt-6 border-t border-slate-50 flex items-center justify-between">
+                  <span className="text-xs font-black text-amber-600">{d._count.cars} CARS</span>
+                  <span className="text-[10px] font-black text-slate-300 uppercase">View Portal</span>
+                </div>
+              </Link>
             ))}
           </div>
         </section>
       )}
 
-      {/* ── TESTIMONIALS ─────────────────────────────────────── */}
-      <section style={{ maxWidth: 1100, margin: "3.5rem auto 0", padding: "0 1.5rem" }}>
-        <SectionHeader title="What buyers say" sub="Real stories from real Kenyan buyers" />
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
+      {/* ── TESTIMONIALS ── */}
+      <section className="container mx-auto px-6 pt-32 pb-12 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { name: "James M.", county: "Nairobi",  text: "Found my Toyota Hilux in 2 days. Compared 3 dealers and saved over KSh 200,000 by choosing the right one.",        car: "2020 Toyota Hilux",   avatar: "JM" },
-            { name: "Aisha K.", county: "Mombasa",  text: "The WhatsApp button made it so easy. I contacted 2 dealers and had the Harrier I wanted the same week.",          car: "2019 Toyota Harrier", avatar: "AK" },
-            { name: "Peter O.", county: "Nakuru",   text: "The duty calculator was incredibly useful. I knew exactly what I'd pay before I even contacted the dealer.",       car: "2018 Mazda CX-5",    avatar: "PO" },
-          ].map(({ name, county, text, car, avatar }) => (
-            <div key={name} style={{ background: "#fff", border: "1.5px solid #E4E4E7", borderRadius: 14, padding: "24px" }}>
-              {/* Stars */}
-              <div style={{ display: "flex", gap: 3, marginBottom: 16 }}>
-                {[1,2,3,4,5].map(s => (
-                  <svg key={s} width="14" height="14" viewBox="0 0 14 14" fill="#F59E0B"><path d="M7 1l1.5 4H13L9.5 8l1.5 4L7 10 3.5 12 5 8 1.5 5H5.5z"/></svg>
-                ))}
+            { n: "James M.", c: "Nairobi", t: "Compared 3 dealers and saved KSh 200k. The comparison engine is a game changer.", v: "PO" },
+            { n: "Aisha K.", c: "Mombasa", t: "Direct WhatsApp contact with verified dealers made it stress-free. Highly recommended.", v: "AK" },
+            { n: "Peter O.", c: "Nakuru", t: "The duty calculator helped me budget for my import precisely. No surprises!", v: "JM" },
+          ].map((test, i) => (
+            <div key={i} className="bg-white border border-slate-200 p-10 rounded-[2rem] shadow-sm">
+              <div className="flex gap-1 mb-6">
+                {[1,2,3,4,5].map(s => <Star key={s} className="w-3 h-3 fill-amber-500 text-amber-500" />)}
               </div>
-              <p style={{ fontSize: 14, color: "#374151", lineHeight: 1.7, marginBottom: 20 }}>"{text}"</p>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 16, borderTop: "1px solid #F7F8FA" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#1C1C1E", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 12 }}>
-                    {avatar}
-                  </div>
-                  <div>
-                    <p style={{ fontWeight: 700, fontSize: 13, color: "#1C1C1E" }}>{name}</p>
-                    <p style={{ fontSize: 11, color: "#9CA3AF" }}>{county}</p>
-                  </div>
+              <p className="text-slate-600 leading-relaxed italic mb-8 italic">“{test.t}”</p>
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center font-bold text-slate-400">
+                  {test.v}
                 </div>
-                <span style={{ fontSize: 11, background: "#FEF3C7", color: "#1C1C1E", borderRadius: 99, padding: "3px 10px", fontWeight: 600, whiteSpace: "nowrap" }}>{car}</span>
+                <div>
+                  <p className="font-black text-sm text-slate-900">{test.n}</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase">{test.c}</p>
+                </div>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── WHY MOTORKE ──────────────────────────────────────── */}
-      <section style={{ background: "#fff", margin: "3.5rem 0 0", borderTop: "1px solid #E4E4E7" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "3.5rem 1.5rem" }}>
-          <h2 style={{ fontWeight: 800, fontSize: "1.4rem", color: "#1C1C1E", marginBottom: 32, textAlign: "center", letterSpacing: "-0.01em" }}>Why use Motorke?</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 1, background: "#E4E4E7", borderRadius: 14, overflow: "hidden" }}>
-            {[
-              { title: "Compare prices",   desc: "See the same car across multiple dealers. Never overpay again.", icon: "⚖" },
-              { title: "Verified dealers", desc: "Every dealer verified before listing. Real cars, real people.",  icon: "✓" },
-              { title: "WhatsApp direct",  desc: "One tap to contact any dealer. No forms, no middlemen.",        icon: "↗" },
-              { title: "Duty calculator",  desc: "Estimate full import costs before you commit.",                  icon: "=" },
-            ].map(({ title, desc, icon }) => (
-              <div key={title} style={{ background: "#fff", padding: "28px 24px", textAlign: "center" }}>
-                <div style={{ width: 44, height: 44, borderRadius: 12, background: "#FEF3C7", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", fontWeight: 800, fontSize: 18, color: "#1C1C1E" }}>
-                  {icon}
-                </div>
-                <h3 style={{ fontWeight: 700, fontSize: "0.95rem", color: "#1C1C1E", marginBottom: 8 }}>{title}</h3>
-                <p style={{ fontSize: 13, color: "#6B7280", lineHeight: 1.6 }}>{desc}</p>
-              </div>
-            ))}
+      {/* ── DEALER CTA ── */}
+      <section className="container mx-auto px-6 pt-32">
+        <div className="bg-slate-900 rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden">
+          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-amber-500/10 blur-[150px] rounded-full" />
+          <div className="relative z-10 max-w-2xl mx-auto">
+            <span className="text-[10px] font-black uppercase tracking-widest text-amber-500 mb-6 block">Business</span>
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-8 tracking-tight leading-tight">Sell faster on Kenya&apos;s premium platform.</h2>
+            <p className="text-slate-400 mb-12 text-lg leading-relaxed">
+              Reach verified buyers, manage your listings with ease, and grow your dealership footprint.
+            </p>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+              <Link href="/signup" className="w-full md:w-auto bg-amber-500 hover:bg-amber-400 text-black font-black px-12 py-5 rounded-2xl transition-all hover:scale-105">
+                Join as Dealer
+              </Link>
+              <Link href="/login" className="text-white font-bold hover:text-amber-500 flex items-center gap-2">
+                Already a member? Sign in <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
-
-      {/* ── DEALER CTA ───────────────────────────────────────── */}
-      <section style={{ position: "relative", overflow: "hidden", margin: "0" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "url('https://images.unsplash.com/photo-1567818735868-e71b99932e29?w=1600&q=80')", backgroundSize: "cover", backgroundPosition: "center", filter: "brightness(0.2)" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(28,28,30,0.97) 0%, rgba(28,28,30,0.7) 100%)" }} />
-        <div style={{ position: "relative", zIndex: 1, maxWidth: 600, margin: "0 auto", padding: "5rem 1.5rem", textAlign: "center" }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: "rgba(245,158,11,0.7)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>For dealerships</p>
-          <h2 style={{ fontWeight: 800, fontSize: "2rem", color: "white", marginBottom: 14, letterSpacing: "-0.02em" }}>Grow your sales on Motorke</h2>
-          <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 15, marginBottom: 36, lineHeight: 1.7 }}>
-            Reach thousands of buyers across Kenya. List your cars, manage enquiries, and grow your dealership — all in one place.
-          </p>
-          <a href="/login" style={{ background: "#F59E0B", color: "#1C1C1E", fontWeight: 800, fontSize: 14, padding: "14px 40px", borderRadius: 99, textDecoration: "none", display: "inline-block", letterSpacing: "0.01em" }}>
-            List your cars free →
-          </a>
-        </div>
-      </section>
     </div>
   );
 }
 
-// ── Reusable section header ────────────────────────────────────
-function SectionHeader({ title, sub, href, linkLabel }) {
-  return (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 20 }}>
-      <div>
-        <p style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>{sub}</p>
-        <h2 style={{ fontWeight: 800, fontSize: "1.4rem", color: "#1C1C1E", letterSpacing: "-0.01em" }}>{title}</h2>
-      </div>
-      {href && (
-        <a href={href} style={{ fontSize: 13, fontWeight: 600, color: "#F59E0B", textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
-          {linkLabel} →
-        </a>
-      )}
-    </div>
-  );
-}
-
-// ── Car card ───────────────────────────────────────────────────
-function CarCard({ car, badge, badgeBg = "#1C1C1E", badgeColor = "white" }) {
-  const img   = car.images[0]?.url;
+function CarCard({ car, badge, isFeatured }) {
+  const img = car.images[0]?.url;
   const title = `${car.year} ${car.make} ${car.model}`;
+  
   return (
-    <a href={`/cars/${car.id}`} className="mk-card"
-      style={{ background: "#fff", border: "1.5px solid #E4E4E7", borderRadius: 12, overflow: "hidden", textDecoration: "none", display: "block" }}>
-      <div style={{ position: "relative", aspectRatio: "16/10", background: "#F7F8FA", overflow: "hidden" }}>
-        {img
-          ? <img src={img} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", flexDirection: "column", gap: 8 }}>
-              <svg width="52" height="38" viewBox="0 0 52 38" fill="none"><rect x="4" y="16" width="44" height="16" rx="3" fill="#E4E4E7"/><path d="M10 16 L15 6 L37 6 L42 16Z" fill="#E4E4E7"/><circle cx="13" cy="32" r="5" fill="#D1D1D6"/><circle cx="39" cy="32" r="5" fill="#D1D1D6"/></svg>
-              <p style={{ fontSize: 11, color: "#9CA3AF" }}>No photo yet</p>
-            </div>
-        }
-        {badge && (
-          <span style={{ position: "absolute", top: 10, left: 10, background: badgeBg, color: badgeColor, fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 99, textTransform: "uppercase", letterSpacing: "0.04em" }}>
-            {badge}
-          </span>
+    <Link href={`/cars/${car.id}`} className="group block bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-2xl hover:border-amber-500 transition-all duration-300">
+      <div className="relative aspect-[3/2] overflow-hidden bg-slate-100">
+        {img ? (
+          <img 
+            src={img} 
+            alt={title} 
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-slate-50 text-slate-300 italic text-xs uppercase font-black">
+            No Photo Available
+          </div>
         )}
-      </div>
-      <div style={{ padding: "14px 16px" }}>
-        <p style={{ fontWeight: 700, fontSize: 15, color: "#1C1C1E", letterSpacing: "-0.01em" }}>{title}</p>
-        {car.variant && <p style={{ fontSize: 12, color: "#9CA3AF", marginTop: 2 }}>{car.variant}</p>}
-        <div style={{ display: "flex", gap: 5, marginTop: 8, flexWrap: "wrap" }}>
-          {[car.transmission, car.fuelType, car.mileage ? formatMileage(car.mileage) : null].filter(Boolean).map(tag => (
-            <span key={tag} style={{ fontSize: 11, background: "#F7F8FA", color: "#6B7280", borderRadius: 5, padding: "2px 8px", border: "1px solid #E4E4E7" }}>{tag}</span>
-          ))}
+        
+        <div className="absolute top-4 left-4 flex flex-col gap-2">
+          <span className="bg-black/80 backdrop-blur-md text-white text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-wider">
+            {car.year}
+          </span>
+          {badge && (
+            <span className="bg-amber-500 text-black text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-wider shadow-lg">
+              {badge}
+            </span>
+          )}
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginTop: 14, paddingTop: 12, borderTop: "1px solid #F7F8FA" }}>
-          <p style={{ fontWeight: 800, fontSize: 17, color: "#F59E0B", letterSpacing: "-0.01em" }}>{formatPrice(car.price)}</p>
-          <div style={{ textAlign: "right" }}>
-            <p style={{ fontSize: 11, color: "#6B7280", fontWeight: 500 }}>{car.dealer?.name}</p>
-            <p style={{ fontSize: 10, color: "#9CA3AF" }}>{car.dealer?.location}</p>
+
+        <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur shadow-xl px-3 py-1 rounded-lg">
+           <p className="text-lg font-black text-slate-900">{formatPrice(car.price)}</p>
+        </div>
+      </div>
+
+      <div className="p-6">
+        <h3 className="font-black text-slate-900 group-hover:text-amber-600 transition-colors mb-1 truncate">{title}</h3>
+        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">{car.variant || "Standard Edition"}</p>
+
+        <div className="grid grid-cols-3 gap-2 py-4 border-y border-slate-50 mb-6">
+          <div className="text-center">
+            <Gauge className="w-3 h-3 text-slate-300 mx-auto mb-1" />
+            <p className="text-[10px] font-black text-slate-900">{car.mileage ? Math.round(car.mileage/1000) + 'k' : '—'}</p>
+          </div>
+          <div className="text-center border-x border-slate-100 px-2">
+            <Settings className="w-3 h-3 text-slate-300 mx-auto mb-1" />
+            <p className="text-[10px] font-black text-slate-900 uppercase">{car.transmission?.charAt(0)}</p>
+          </div>
+          <div className="text-center">
+            <Fuel className="w-3 h-3 text-slate-300 mx-auto mb-1" />
+            <p className="text-[10px] font-black text-slate-900 uppercase truncate px-1">{car.fuelType?.split(' ')[0]}</p>
           </div>
         </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-6 h-6 rounded-full bg-slate-900 text-amber-500 flex items-center justify-center text-[10px] font-black">
+              {car.dealer?.name?.[0]}
+            </div>
+            <p className="text-[10px] font-bold text-slate-500 truncate">{car.dealer?.name}</p>
+          </div>
+          <span className="text-[10px] font-black text-amber-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+            VIEW <ChevronRight className="w-3 h-3" />
+          </span>
+        </div>
       </div>
-    </a>
+    </Link>
   );
 }

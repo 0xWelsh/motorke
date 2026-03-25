@@ -1,31 +1,48 @@
 "use client";
-// src/app/portal/layout.js
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Car, Plus, MessageSquare, BarChart2, Package, CreditCard, Settings, LogOut } from "lucide-react";
+import Link from "next/link";
+import { 
+  LayoutDashboard, 
+  Car, 
+  Plus, 
+  MessageSquare, 
+  BarChart2, 
+  Package, 
+  CreditCard, 
+  Settings, 
+  LogOut,
+  ChevronRight,
+  ExternalLink,
+  ShieldCheck
+} from "lucide-react";
+import { clsx } from "clsx";
 
 const links = [
-  { href: "/portal",           label: "Dashboard", Icon: LayoutDashboard },
-  { href: "/portal/inventory", label: "Inventory", Icon: Package         },
-  { href: "/portal/cars/new",  label: "Add car",   Icon: Plus            },
-  { href: "/portal/leads",     label: "Leads",     Icon: MessageSquare   },
-  { href: "/portal/analytics", label: "Analytics", Icon: BarChart2       },
-  { href: "/portal/billing",   label: "Billing",   Icon: CreditCard      },
-  { href: "/portal/profile",   label: "Settings",  Icon: Settings        },
+  { href: "/portal",           label: "Overview",   Icon: LayoutDashboard },
+  { href: "/portal/inventory", label: "Inventory",  Icon: Package         },
+  { href: "/portal/leads",     label: "Inquiries",  Icon: MessageSquare   },
+  { href: "/portal/analytics", label: "Performance", Icon: BarChart2       },
+  { href: "/portal/billing",   label: "Subscription", Icon: CreditCard      },
+  { href: "/portal/profile",   label: "Settings",   Icon: Settings        },
 ];
 
 function NavLink({ href, label, Icon, active }) {
   return (
-    <a href={href} style={{
-      display: "flex", alignItems: "center", gap: 10,
-      padding: "9px 12px", borderRadius: 9, marginBottom: 2,
-      textDecoration: "none", fontSize: 13, fontWeight: 500,
-      transition: "all 0.15s",
-      background: active ? "rgba(245,158,11,0.15)" : "transparent",
-      color:      active ? "#F59E0B" : "rgba(255,255,255,0.55)",
-    }}>
-      <Icon size={15} />
-      {label}
-    </a>
+    <Link 
+      href={href} 
+      className={clsx(
+        "flex items-center justify-between group px-4 py-3 rounded-2xl transition-all duration-200",
+        active 
+          ? "bg-amber-500 text-black shadow-lg shadow-amber-500/20" 
+          : "text-slate-400 hover:text-white hover:bg-white/5"
+      )}
+    >
+      <div className="flex items-center gap-3">
+        <Icon size={18} className={clsx("transition-transform", !active && "group-hover:scale-110")} />
+        <span className="text-sm font-bold tracking-tight">{label}</span>
+      </div>
+      {active && <ChevronRight size={14} className="opacity-50" />}
+    </Link>
   );
 }
 
@@ -33,37 +50,90 @@ export default function PortalLayout({ children }) {
   const path = usePathname();
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#F7F8FA" }}>
-      <aside style={{ width: 220, background: "#1C1C1E", display: "flex", flexDirection: "column", flexShrink: 0, position: "sticky", top: 0, height: "100vh" }}>
-        <div style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-          <a href="/" style={{ textDecoration: "none" }}>
-            <span style={{ fontWeight: 800, fontSize: 18, color: "white" }}>
-              Motor<span style={{ color: "#F59E0B" }}>ke</span>
-            </span>
-          </a>
-          <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 3, fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            Dealer Portal
-          </p>
+    <div className="flex min-h-screen bg-slate-50">
+      {/* Sidebar */}
+      <aside className="w-72 bg-slate-950 flex flex-col shrink-0 sticky top-0 h-screen border-r border-white/5 shadow-2xl z-50">
+        {/* Branding */}
+        <div className="p-8">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform">
+              <span className="text-black font-black text-xl">M</span>
+            </div>
+            <div>
+              <span className="text-xl font-black text-white tracking-tighter block leading-none">
+                Motor<span className="text-amber-500">ke</span>
+              </span>
+              <span className="text-[10px] font-black text-amber-500/60 uppercase tracking-widest mt-1 block">
+                Dealer Portal
+              </span>
+            </div>
+          </Link>
         </div>
 
-        <nav style={{ flex: 1, padding: "12px 10px", overflowY: "auto" }}>
-          {links.map(({ href, label, Icon }) => (
+        {/* Navigation */}
+        <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
+          <div className="px-4 mb-4">
+             <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Management</p>
+          </div>
+          {links.slice(0, 3).map(({ href, label, Icon }) => (
+            <NavLink key={href} href={href} label={label} Icon={Icon} active={path === href} />
+          ))}
+          
+          <div className="px-4 mb-4 mt-8">
+             <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Growth & Billing</p>
+          </div>
+          {links.slice(3).map(({ href, label, Icon }) => (
             <NavLink key={href} href={href} label={label} Icon={Icon} active={path === href} />
           ))}
         </nav>
 
-        <div style={{ padding: "12px 10px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-          <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: 9, textDecoration: "none", color: "rgba(255,255,255,0.35)", fontSize: 13, marginBottom: 4 }}>
-            <Car size={14} /> View site
-          </a>
-          <form action="/api/auth/logout" method="POST">
-            <button type="submit" style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: 9, background: "none", border: "none", color: "rgba(255,255,255,0.35)", fontSize: 13, cursor: "pointer", fontFamily: "inherit", width: "100%" }}>
-              <LogOut size={14} /> Sign out
-            </button>
-          </form>
+        {/* User / Footer */}
+        <div className="p-4 border-t border-white/5 bg-black/20">
+          <Link href="/portal/cars/new" 
+            className="flex items-center justify-center gap-2 w-full bg-amber-500 hover:bg-amber-400 text-black font-black py-4 rounded-2xl mb-4 transition-all hover:scale-[1.02] shadow-xl shadow-amber-500/10">
+            <Plus size={18} /> Add New Vehicle
+          </Link>
+          
+          <div className="space-y-1">
+            <Link href="/" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-white text-xs font-bold rounded-xl transition-colors">
+              <ExternalLink size={14} /> Main Website
+            </Link>
+            <form action="/api/auth/logout" method="POST">
+              <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 text-slate-500 hover:text-rose-400 text-xs font-bold rounded-xl transition-colors">
+                <LogOut size={14} /> Log Out
+              </button>
+            </form>
+          </div>
         </div>
       </aside>
-      <main style={{ flex: 1, overflowX: "hidden" }}>{children}</main>
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-x-hidden relative">
+        {/* Modern Top Header / Breadcrumb */}
+        <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200 px-10 py-4 flex items-center justify-between">
+           <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+              <span>Portal</span>
+              <ChevronRight size={12} />
+              <span className="text-slate-900">{links.find(l => l.href === path)?.label || "Dashboard"}</span>
+           </div>
+           
+           <div className="flex items-center gap-4">
+              <div className="hidden md:flex flex-col items-end">
+                <p className="text-xs font-black text-slate-900 leading-none">Verified Dealer</p>
+                <p className="text-[10px] font-bold text-emerald-500 mt-1 flex items-center gap-1 uppercase tracking-tighter">
+                   <ShieldCheck size={10} /> Active Plan
+                </p>
+              </div>
+              <div className="w-10 h-10 rounded-2xl bg-slate-900 text-amber-500 flex items-center justify-center font-black">
+                D
+              </div>
+           </div>
+        </header>
+
+        <div className="p-10">
+          {children}
+        </div>
+      </main>
     </div>
   );
 }
