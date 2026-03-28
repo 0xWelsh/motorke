@@ -104,31 +104,57 @@ export default async function HomePage() {
         </div>
 
         <div className="container mx-auto px-6 relative z-10 max-w-6xl">
-          <div className="max-w-3xl">
+          <div className="max-w-4xl">
+            
+            {/* Live Inventory Badge */}
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-8 shadow-2xl">
+              <div className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70">
+                Live: <span className="text-white">{totalCars.toLocaleString()}</span> Verified Units Available
+              </span>
+            </div>
+
+            {/* Main Premium Typography */}
             <h1 className="text-6xl md:text-8xl font-black text-white leading-[0.95] tracking-tighter mb-8">
-              The <br />
-              <span className="text-orange-600 drop-shadow-[0_0_30px_rgba(234,88,12,0.4)]">Standard.</span>
+              The Premium <br />
+              <span className="text-orange-600 drop-shadow-[0_0_30px_rgba(234,88,12,0.4)]">Collection.</span>
             </h1>
-            <p className="text-xl text-white/50 max-w-lg mb-12 leading-relaxed font-medium">
-              Kenya&apos;s most refined automotive marketplace. <br />
-              Verified units, direct dealer access.
+            
+            <p className="text-xl text-white/50 max-w-xl mb-12 leading-relaxed font-medium">
+              Kenya&apos;s most refined automotive gallery. <br />
+              Secure verified luxury and utility units directly from premium dealerships.
             </p>
+            
             <div className="w-full max-w-2xl mb-12">
               <LocationSearch />
               
-              <div className="flex flex-wrap items-center gap-4 mt-8">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Trending Now</span>
-                <div className="flex gap-2">
-                  {TRENDING.map(t => (
-                    <Link key={t} href={`/cars?search=${encodeURIComponent(t)}`} 
-                      className="text-[11px] font-black text-white/50 hover:text-orange-500 transition-colors border-b border-transparent hover:border-orange-600 pb-0.5">
-                      {t}
-                    </Link>
-                  ))}
-                </div>
+              {/* Sleek Quick Filters */}
+              <div className="flex flex-wrap items-center gap-3 mt-8">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 mr-2">Quick Access</span>
+                {["SUVs", "Luxury Sedans", "Performance"].map(t => (
+                  <Link key={t} href={`/cars?search=${encodeURIComponent(t)}`} 
+                    className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/60 hover:text-white hover:bg-orange-600 hover:border-orange-500 transition-all shadow-sm">
+                    {t}
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Vanguard Dealer Trust Banner */}
+        <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-[#0a0a0a] to-transparent pt-24 pb-8 z-20 pointer-events-none">
+           <div className="container mx-auto px-6 max-w-6xl flex justify-center md:justify-end">
+              <div className="inline-flex items-center gap-3 px-6 py-3 rounded-[2rem] bg-black/40 backdrop-blur-xl border border-white/5 shadow-2xl">
+                 <ShieldCheck className="w-4 h-4 text-orange-500" />
+                 <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/50">
+                    Curated from <strong className="text-white">{totalDealers}</strong> Vanguard Dealerships across Kenya
+                 </span>
+              </div>
+           </div>
         </div>
       </section>
 

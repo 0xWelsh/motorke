@@ -13,11 +13,12 @@ import {
   Upload, 
   Trash2, 
   Eye, 
-  Edit3, 
-  ToggleLeft, 
+  Edit3,
+  ToggleLeft,
   ToggleRight,
   ExternalLink,
-  Car
+  Car,
+  Activity
 } from "lucide-react";
 
 export const metadata = { title: "Inventory Management — Motorke Standard" };
@@ -41,7 +42,7 @@ export default async function AdminCarsPage({ searchParams }) {
     ...(status === "hidden" && { available: false }),
   };
 
-  const [cars, total, dealers] = await Promise.all([
+  const [cars, total, dealers, liveCount, hiddenCount, viewsAgg] = await Promise.all([
     db.car.findMany({
       where,
       include: {
@@ -55,8 +56,12 @@ export default async function AdminCarsPage({ searchParams }) {
     }),
     db.car.count({ where }),
     db.dealer.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    db.car.count({ where: { ...where, available: true } }),
+    db.car.count({ where: { ...where, available: false } }),
+    db.car.aggregate({ where, _sum: { views: true } })
   ]);
 
+  const totalViews = viewsAgg._sum.views || 0;
   const pages = Math.ceil(total / limit);
 
   return (
@@ -78,36 +83,55 @@ export default async function AdminCarsPage({ searchParams }) {
             <Upload size={14} /> Bulk
           </Link>
           <ClearAllButton />
-          <Link href="/admin/cars/new" className="bg-white/10 border border-white/10 text-pureWhite px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-orange-600 hover:border-orange-500 transition-all shadow-xl">
+          <Link href="/admin/cars/new" className="bg-white/10 border border-white/10 text-pureWhite px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-orange-600 hover:text-white hover:border-orange-500 transition-all shadow-xl">
             <Plus size={14} /> Add Listing
           </Link>
         </div>
       </div>
 
+      {/* ── METRICS BANNER ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 group">
+         {[
+            { l: "Live Display", v: liveCount, i: <ToggleRight size={18} className="text-emerald-500" /> },
+            { l: "Hidden / Drafts", v: hiddenCount, i: <ToggleLeft size={18} className="text-white/40" /> },
+            { l: "Platform Reach", v: totalViews.toLocaleString(), i: <Eye size={18} className="text-orange-500" /> }
+         ].map((m, idx) => (
+            <div key={idx} className="bg-surface border border-white/5 rounded-[2rem] p-6 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+               <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">{m.l}</p>
+                  <p className="text-2xl font-black text-white leading-none">{m.v}</p>
+               </div>
+               <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
+                  {m.i}
+               </div>
+            </div>
+         ))}
+      </div>
+
       {/* ── FILTERS ── */}
-      <form method="GET" className="flex flex-wrap items-center gap-3 mb-8 bg-white/5 p-4 rounded-[2rem] border border-white/10">
-        <div className="relative flex-1 min-w-[200px] group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 group-focus-within:text-white transition-colors" />
+      <form method="GET" className="flex flex-wrap items-center gap-3 mb-8 bg-surface border border-white/5 p-4 rounded-[2rem] shadow-sm">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 transition-colors" />
           <input 
             name="search" 
             defaultValue={search} 
             placeholder="Search make or model..." 
-            className="w-full bg-surface border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold text-white outline-none focus:border-white/30 transition-all placeholder:text-white/30"
+            className="w-full bg-white/5 border border-transparent rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold text-white outline-none focus:border-orange-500/30 transition-all placeholder:text-white/40"
           />
         </div>
 
-        <select name="dealerId" defaultValue={dealerId} className="bg-surface border border-white/10 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:border-white/30 transition-all cursor-pointer">
+        <select name="dealerId" defaultValue={dealerId} className="bg-white/5 border border-transparent rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:border-orange-500/30 transition-all cursor-pointer">
           <option value="">All Dealers</option>
           {dealers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
         </select>
 
-        <select name="status" defaultValue={status} className="bg-surface border border-white/10 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:border-white/30 transition-all cursor-pointer">
+        <select name="status" defaultValue={status} className="bg-white/5 border border-transparent rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:border-orange-500/30 transition-all cursor-pointer">
           <option value="">All Status</option>
           <option value="live">Live Only</option>
           <option value="hidden">Hidden Only</option>
         </select>
 
-        <button type="submit" className="bg-white/10 border border-white/10 hover:bg-orange-600 hover:border-orange-500 text-pureWhite p-2.5 rounded-xl transition-all shadow-sm">
+        <button type="submit" className="bg-white/10 hover:bg-orange-600 text-pureWhite hover:text-white p-2.5 rounded-xl transition-all shadow-sm">
           <Filter size={16} />
         </button>
 
@@ -122,22 +146,22 @@ export default async function AdminCarsPage({ searchParams }) {
       <div className="bg-surface border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-white/10">
+            <tr className="border-b border-border-light bg-white/[0.02]">
               {["Car Details", "Dealer Hub", "Investment", "Engagement", "Status", ""].map((h) => (
                 <th key={h} className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">{h}</th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-border-light">
             {cars.map((car) => (
               <tr key={car.id} className="group hover:bg-white/5 transition-colors">
                 <td className="px-8 py-5">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-12 rounded-xl bg-white/5 overflow-hidden ring-1 ring-white/10 shrink-0">
+                     <div className="w-16 h-12 rounded-xl bg-white/5 overflow-hidden shrink-0">
                       {car.images[0] ? (
                         <img src={car.images[0].url} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
                       ) : (
-                        <div className="flex items-center justify-center h-full text-white/30"><Car size={16} /></div>
+                        <div className="flex items-center justify-center h-full text-black/20 dark:text-white/30"><Car size={16} /></div>
                       )}
                     </div>
                     <div>
@@ -147,7 +171,7 @@ export default async function AdminCarsPage({ searchParams }) {
                   </div>
                 </td>
                 <td className="px-8 py-5">
-                   <p className="text-xs font-black text-white/60 uppercase tracking-tighter">{car.dealer.name}</p>
+                   <p className="text-xs font-black text-white/40 uppercase tracking-tighter">{car.dealer.name}</p>
                 </td>
                 <td className="px-8 py-5">
                    <p className="text-sm font-black text-white">{formatPrice(car.price)}</p>
@@ -156,24 +180,29 @@ export default async function AdminCarsPage({ searchParams }) {
                    <div className="flex items-center gap-4">
                       <div className="text-center">
                          <p className="text-[10px] font-black text-white">{car.views}</p>
-                         <p className="text-[8px] font-black text-white/30 uppercase">Views</p>
+                         <p className="text-[8px] font-black text-white/40 uppercase">Views</p>
                       </div>
                       <div className="text-center">
                          <p className="text-[10px] font-black text-white">{car._count.leads}</p>
-                         <p className="text-[8px] font-black text-white/30 uppercase">Leads</p>
+                         <p className="text-[8px] font-black text-white/40 uppercase">Leads</p>
                       </div>
                    </div>
                 </td>
                 <td className="px-8 py-5">
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${
-                    car.available ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-white/5 text-white/40 border-white/10"
-                  }`}>
-                    <div className={`w-1 h-1 rounded-full ${car.available ? "bg-emerald-500" : "bg-white/30"}`} />
-                    {car.available ? "Live" : "Hidden"}
-                  </span>
+                  <div className="flex flex-col gap-1 items-start">
+                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${
+                       car.available ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-black/5 text-white/40 border-black/10 dark:bg-white/5 dark:text-white/40 dark:border-white/10"
+                     }`}>
+                       <div className={`w-1 h-1 rounded-full ${car.available ? "bg-emerald-500" : "bg-white/30"}`} />
+                       {car.available ? "Live" : "Hidden"}
+                     </span>
+                     <span className="text-[8px] font-black uppercase tracking-widest text-white/40 ml-1">
+                        Listed {new Date(car.createdAt).toLocaleDateString("en-KE", { month: "short", day: "numeric" })}
+                     </span>
+                  </div>
                 </td>
                 <td className="px-8 py-5 text-right">
-                  <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                     <Link href={`/admin/cars/${car.id}/edit`} className="p-2 text-white/40 hover:text-white transition-colors" title="Edit">
                       <Edit3 size={16} />
                     </Link>

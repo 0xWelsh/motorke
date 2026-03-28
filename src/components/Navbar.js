@@ -14,12 +14,9 @@ import {
   Store,
   PlusCircle,
   ShieldCheck,
-  Compass,
-  Sun,
-  Moon
+  Compass
 } from "lucide-react";
 import { clsx } from "clsx";
-import { useTheme } from "next-themes";
 
 export default function Navbar({ user }) {
   const [open,      setOpen]      = useState(false);
@@ -100,7 +97,6 @@ export default function Navbar({ user }) {
 
           {/* USER ACTIONS */}
           <div className="hidden lg:flex items-center gap-6">
-            <ThemeToggle />
             {user ? (
               <div className="relative" ref={menuRef}>
                 <button 
@@ -162,7 +158,6 @@ export default function Navbar({ user }) {
 
           {/* MOBILE TOGGLE */}
           <div className="lg:hidden flex items-center gap-3">
-            <ThemeToggle />
             <button 
               onClick={() => setOpen(!open)} 
               className="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/10 text-white rounded-2xl hover:bg-white/10 transition-colors"
@@ -224,24 +219,5 @@ function MenuDropdownItem({ href, label, icon }) {
       <span className="text-white/20">{icon}</span>
       {label}
     </Link>
-  );
-}
-
-function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
-
-  if (!mounted) return <div className="w-10 h-10" />;
-
-  return (
-    <button
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="w-10 h-10 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10 transition-colors shrink-0"
-      aria-label="Toggle Dark Mode"
-    >
-      {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-    </button>
   );
 }

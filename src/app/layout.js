@@ -5,8 +5,6 @@ import { CompareBar } from "@/components/CompareSelector";
 import { ModalProvider } from "@/components/Modal";
 import { getSession } from "@/lib/auth";
 
-import { ThemeProvider } from "@/components/ThemeProvider";
-
 export const metadata = {
   title: "Motorke — Find Your Car in Kenya",
   description: "Compare cars from top dealerships across Kenya.",
@@ -22,9 +20,8 @@ export default async function RootLayout({ children }) {
   } : null;
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body className="bg-background text-pureWhite min-h-screen antialiased selection:bg-orange-600/30 selection:text-orange-200 flex flex-col">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Navbar user={user} />
           <ModalProvider>
             <main className="flex-1">{children}</main>
@@ -51,7 +48,6 @@ export default async function RootLayout({ children }) {
             </div>
           </div>
         </footer>
-        </ThemeProvider>
       </body>
     </html>
   );
