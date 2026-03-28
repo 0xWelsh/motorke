@@ -49,29 +49,29 @@ export default function ClientRecentSection() {
   if (loading || (recent.length === 0 && recommended.length === 0)) return null;
 
   return (
-    <section className="bg-slate-50 border-b border-slate-100 py-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+    <section className="bg-surface border-b border-white/5 py-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
       <div className="container mx-auto px-6 max-w-6xl">
         
         {/* PERSONALIZED HEADER */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-white border border-slate-200 rounded-2xl flex items-center justify-center shadow-sm">
+            <div className="w-14 h-14 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center shadow-2xl">
               {user ? (
-                <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center text-orange-600 font-bold">
+                <div className="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center text-pureWhite font-bold">
                   {user.name.charAt(0)}
                 </div>
               ) : (
-                <Clock className="w-6 h-6 text-slate-400" />
+                <Clock className="w-6 h-6 text-white/40" />
               )}
             </div>
             <div>
-              <h2 className="text-3xl font-black text-slate-900 tracking-tight">
+              <h2 className="text-3xl font-black text-white tracking-tight">
                 {user ? `Welcome back, ${user.name.split(' ')[0]}!` : "Welcome back!"}
               </h2>
-              <p className="text-slate-500 text-sm font-medium">Picking up where you left off...</p>
+              <p className="text-white/50 text-sm font-medium">Picking up where you left off...</p>
             </div>
           </div>
-          <Link href="/account/saved" className="bg-white border border-slate-200 px-6 py-3 rounded-xl text-sm font-bold text-slate-600 hover:border-slate-900 hover:text-slate-900 transition-all shadow-sm flex items-center gap-2">
+          <Link href="/account/saved" className="bg-white/5 border border-white/10 px-6 py-3 rounded-xl text-sm font-bold text-white/70 hover:border-white/20 hover:text-white transition-all shadow-sm flex items-center gap-2">
             My Saved Collection <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
@@ -80,8 +80,8 @@ export default function ClientRecentSection() {
         {recent.length > 0 && (
           <div className="mb-16">
             <div className="flex items-center gap-2 mb-6">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Recently Viewed</span>
-              <div className="h-px flex-1 bg-slate-200" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Recently Viewed</span>
+              <div className="h-px flex-1 bg-white/5" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {recent.map((car) => (
@@ -97,9 +97,9 @@ export default function ClientRecentSection() {
             <div className="flex items-center gap-3 mb-6">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-orange-500 fill-orange-500" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Recommended for You</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70">Recommended for You</span>
               </div>
-              <div className="h-px flex-1 bg-slate-200" />
+              <div className="h-px flex-1 bg-white/5" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {recommended.map((car) => (
@@ -120,18 +120,18 @@ export default function ClientRecentSection() {
 
 function CarMiniCard({ car }) {
   return (
-    <Link href={`/cars/${car.id}`} className="group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:border-orange-600 hover:shadow-2xl transition-all duration-500">
-      <div className="aspect-[16/10] overflow-hidden bg-slate-100 relative">
+    <Link href={`/cars/${car.id}`} className="group bg-background border border-white/10 rounded-2xl overflow-hidden hover:border-orange-500 hover:shadow-2xl transition-all duration-500">
+      <div className="aspect-[16/10] overflow-hidden bg-white/5 relative">
         {car.image ? (
           <img src={car.image} alt={car.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-300 text-[10px] font-black uppercase tracking-widest">No Image</div>
+          <div className="w-full h-full flex items-center justify-center text-white/30 text-[10px] font-black uppercase tracking-widest">No Image</div>
         )}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500" />
       </div>
       <div className="p-5">
-        <h3 className="font-bold text-slate-900 text-sm truncate group-hover:text-orange-600 transition-colors mb-1">{car.title}</h3>
-        <p className="text-orange-600 font-black text-base">{formatPrice(car.price)}</p>
+        <h3 className="font-bold text-white text-sm truncate group-hover:text-orange-500 transition-colors mb-1">{car.title}</h3>
+        <p className="text-orange-500 font-black text-base">{formatPrice(car.price)}</p>
       </div>
     </Link>
   );

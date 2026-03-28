@@ -41,12 +41,12 @@ export default function LocationSearch() {
         className="flex items-center bg-white border border-slate-200 rounded-2xl p-2 shadow-sm focus-within:border-slate-900 transition-all duration-300"
       >
         <div className="flex-1 flex items-center px-4 gap-3">
-          <Search className="w-5 h-5 text-slate-400 shrink-0" />
+          <Search className="w-5 h-5 dark:text-slate-400 text-slate-600 shrink-0" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search by make, model or keyword…"
-            className="w-full bg-transparent border-none outline-none py-3 text-base text-slate-900 placeholder:text-slate-400 font-medium"
+            className="w-full bg-transparent border-none outline-none py-3 text-base text-slate-900 placeholder:dark:text-slate-400 text-slate-600 font-medium"
           />
         </div>
 
@@ -56,7 +56,7 @@ export default function LocationSearch() {
           type="button"
           onClick={detectLocation}
           className={`p-3 rounded-xl transition-all duration-200 flex items-center gap-2 group ${
-            location ? "bg-orange-50 text-orange-600" : "bg-transparent text-slate-400 hover:text-slate-900"
+            location ? "bg-orange-50 text-orange-600" : "bg-transparent dark:text-slate-400 text-slate-600 hover:text-slate-900"
           }`}
           title="Use my location"
         >
@@ -70,7 +70,7 @@ export default function LocationSearch() {
 
         <button 
           type="submit" 
-          className="bg-slate-900 hover:bg-orange-600 text-white px-8 py-3 rounded-xl font-black text-sm transition-all duration-300 ml-2"
+          className="bg-slate-900 hover:bg-orange-600 text-pureWhite px-8 py-3 rounded-xl font-black text-sm transition-all duration-300 ml-2"
         >
           Search
         </button>
@@ -79,8 +79,8 @@ export default function LocationSearch() {
       {location && (
         <div className="flex items-center gap-3 mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
           <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full border border-slate-200">
-            <MapPin className="w-3 h-3 text-slate-500" />
-            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+            <MapPin className="w-3 h-3 dark:text-slate-500 text-slate-600" />
+            <span className="text-[10px] font-black dark:text-slate-500 text-slate-600 uppercase tracking-widest">
               Searching near you
             </span>
             <button 

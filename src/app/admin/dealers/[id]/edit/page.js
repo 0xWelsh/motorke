@@ -23,7 +23,7 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
   const error  = sp.error;
 
   const inputCls  = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
-  const selectCls = "w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
+  const selectCls = "w-full bg-surface border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
   const labelCls  = "block text-xs text-white/40 uppercase tracking-wider mb-2";
 
   return (

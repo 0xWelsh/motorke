@@ -49,7 +49,7 @@ export default async function AccountPage({ searchParams }) {
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-600 mb-2 block">Personal Dashboard</span>
             <h1 className="text-4xl font-black text-slate-900 tracking-tight">Digital Garage</h1>
           </div>
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+          <div className="flex items-center gap-2 text-xs font-bold dark:text-slate-400 text-slate-600 uppercase tracking-widest">
             <Calendar size={14} className="text-amber-500" />
             Member since {new Date(user.createdAt || Date.now()).getFullYear()}
           </div>
@@ -73,7 +73,7 @@ export default async function AccountPage({ searchParams }) {
                   <ShieldCheck size={12} /> Verified Buyer
                 </span>
               </div>
-              <p className="text-slate-500 font-medium mb-6">{user.email}</p>
+              <p className="dark:text-slate-500 text-slate-600 font-medium mb-6">{user.email}</p>
               
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
                 <div className="bg-slate-50 border border-slate-100 px-4 py-2 rounded-xl flex items-center gap-2">
@@ -88,7 +88,7 @@ export default async function AccountPage({ searchParams }) {
             </div>
 
             {/* Quick Link */}
-            <a href="/cars" className="shrink-0 bg-slate-900 text-white px-8 py-4 rounded-2xl text-xs font-black flex items-center gap-2 hover:bg-slate-800 transition-all hover:scale-105">
+            <a href="/cars" className="shrink-0 bg-slate-900 text-pureWhite px-8 py-4 rounded-2xl text-xs font-black flex items-center gap-2 hover:bg-slate-800 transition-all hover:scale-105">
               Browse Inventory <ArrowRight size={14} />
             </a>
           </div>

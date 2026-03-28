@@ -27,6 +27,7 @@ export default async function AdminNewUserPage({ searchParams }) {
           <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3 mb-5">
             {error === "exists"   && "A user with that email already exists."}
             {error === "mismatch" && "Passwords do not match."}
+            {error === "notallowed" && "You cannot create another Admin user."}
             {error === "unknown"  && "Something went wrong. Please try again."}
           </div>
         )}
@@ -54,16 +55,15 @@ export default async function AdminNewUserPage({ searchParams }) {
 
           <div>
             <label className={labelCls}>Role *</label>
-            <select name="role" className="w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50">
+            <select name="role" className="w-full bg-surface border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50">
               <option value="DEALER">Dealer</option>
-              <option value="ADMIN">Admin</option>
             </select>
           </div>
 
           <div>
-            <label className={labelCls}>Linked dealership <span className="normal-case text-white/20">(required for Dealer role)</span></label>
-            <select name="dealerId" className="w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50">
-              <option value="">None (Admin only)</option>
+            <label className={labelCls}>Linked dealership *</label>
+            <select name="dealerId" required className="w-full bg-surface border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50">
+              <option value="" disabled selected>Select a dealership</option>
               {dealers.map((d) => (
                 <option key={d.id} value={d.id}>{d.name} — {d.location}</option>
               ))}

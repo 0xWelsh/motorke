@@ -66,123 +66,123 @@ export default async function AdminCarsPage({ searchParams }) {
         <div>
           <div className="flex items-center gap-2 mb-2">
              <div className="w-2 h-2 rounded-full bg-orange-600" />
-             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Inventory Core</span>
+             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">Inventory Core</span>
           </div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-            Vehicle Showcases <span className="text-slate-300 font-medium ml-2">({total})</span>
+          <h1 className="text-3xl font-black text-white tracking-tight">
+            Vehicle Showcases <span className="text-white/30 font-medium ml-2">({total})</span>
           </h1>
         </div>
         
         <div className="flex items-center gap-3">
-          <Link href="/admin/cars/bulk" className="bg-slate-50 border border-slate-100 text-slate-900 px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-white transition-all shadow-sm">
+          <Link href="/admin/cars/bulk" className="bg-transparent border border-white/20 text-white px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-white/5 transition-all shadow-sm">
             <Upload size={14} /> Bulk
           </Link>
           <ClearAllButton />
-          <Link href="/admin/cars/new" className="bg-slate-950 text-white px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-orange-600 transition-all shadow-xl shadow-slate-200">
+          <Link href="/admin/cars/new" className="bg-white/10 border border-white/10 text-pureWhite px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-orange-600 hover:border-orange-500 transition-all shadow-xl">
             <Plus size={14} /> Add Listing
           </Link>
         </div>
       </div>
 
       {/* ── FILTERS ── */}
-      <form method="GET" className="flex flex-wrap items-center gap-3 mb-8 bg-slate-50/50 p-4 rounded-[2rem] border border-slate-100">
+      <form method="GET" className="flex flex-wrap items-center gap-3 mb-8 bg-white/5 p-4 rounded-[2rem] border border-white/10">
         <div className="relative flex-1 min-w-[200px] group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-slate-900 transition-colors" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 group-focus-within:text-white transition-colors" />
           <input 
             name="search" 
             defaultValue={search} 
             placeholder="Search make or model..." 
-            className="w-full bg-white border border-slate-100 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold text-slate-900 outline-none focus:border-slate-900 transition-all"
+            className="w-full bg-surface border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold text-white outline-none focus:border-white/30 transition-all placeholder:text-white/30"
           />
         </div>
 
-        <select name="dealerId" defaultValue={dealerId} className="bg-white border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-500 outline-none focus:border-slate-900 transition-all cursor-pointer">
+        <select name="dealerId" defaultValue={dealerId} className="bg-surface border border-white/10 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:border-white/30 transition-all cursor-pointer">
           <option value="">All Dealers</option>
           {dealers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
         </select>
 
-        <select name="status" defaultValue={status} className="bg-white border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-500 outline-none focus:border-slate-900 transition-all cursor-pointer">
+        <select name="status" defaultValue={status} className="bg-surface border border-white/10 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:border-white/30 transition-all cursor-pointer">
           <option value="">All Status</option>
           <option value="live">Live Only</option>
           <option value="hidden">Hidden Only</option>
         </select>
 
-        <button type="submit" className="bg-slate-900 hover:bg-orange-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-slate-200">
+        <button type="submit" className="bg-white/10 border border-white/10 hover:bg-orange-600 hover:border-orange-500 text-pureWhite p-2.5 rounded-xl transition-all shadow-sm">
           <Filter size={16} />
         </button>
 
         {(search || dealerId || status) && (
-          <Link href="/admin/cars" className="text-[10px] font-black uppercase tracking-widest text-orange-600 px-2">
+          <Link href="/admin/cars" className="text-[10px] font-black uppercase tracking-widest text-orange-500 hover:text-orange-400 px-2">
             Clear
           </Link>
         )}
       </form>
 
       {/* ── DATA TABLE ── */}
-      <div className="bg-white border border-slate-100 rounded-[2.5rem] overflow-hidden shadow-sm">
+      <div className="bg-surface border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-50/50 border-b border-slate-100">
+            <tr className="border-b border-white/10">
               {["Car Details", "Dealer Hub", "Investment", "Engagement", "Status", ""].map((h) => (
-                <th key={h} className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{h}</th>
+                <th key={h} className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">{h}</th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50">
+          <tbody className="divide-y divide-white/5">
             {cars.map((car) => (
-              <tr key={car.id} className="group hover:bg-slate-50/50 transition-colors">
+              <tr key={car.id} className="group hover:bg-white/5 transition-colors">
                 <td className="px-8 py-5">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-12 rounded-xl bg-slate-100 overflow-hidden ring-1 ring-slate-200 shrink-0">
+                    <div className="w-16 h-12 rounded-xl bg-white/5 overflow-hidden ring-1 ring-white/10 shrink-0">
                       {car.images[0] ? (
                         <img src={car.images[0].url} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
                       ) : (
-                        <div className="flex items-center justify-center h-full text-slate-300"><Car size={16} /></div>
+                        <div className="flex items-center justify-center h-full text-white/30"><Car size={16} /></div>
                       )}
                     </div>
                     <div>
-                      <p className="text-sm font-black text-slate-900 tracking-tight">{car.year} {car.make} {car.model}</p>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">{car.variant || "Standard"}</p>
+                      <p className="text-sm font-black text-white tracking-tight">{car.year} {car.make} {car.model}</p>
+                      <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mt-0.5">{car.variant || "Standard"}</p>
                     </div>
                   </div>
                 </td>
                 <td className="px-8 py-5">
-                   <p className="text-xs font-black text-slate-600 uppercase tracking-tighter">{car.dealer.name}</p>
+                   <p className="text-xs font-black text-white/60 uppercase tracking-tighter">{car.dealer.name}</p>
                 </td>
                 <td className="px-8 py-5">
-                   <p className="text-sm font-black text-slate-900">{formatPrice(car.price)}</p>
+                   <p className="text-sm font-black text-white">{formatPrice(car.price)}</p>
                 </td>
                 <td className="px-8 py-5">
                    <div className="flex items-center gap-4">
                       <div className="text-center">
-                         <p className="text-[10px] font-black text-slate-900">{car.views}</p>
-                         <p className="text-[8px] font-black text-slate-300 uppercase">Views</p>
+                         <p className="text-[10px] font-black text-white">{car.views}</p>
+                         <p className="text-[8px] font-black text-white/30 uppercase">Views</p>
                       </div>
                       <div className="text-center">
-                         <p className="text-[10px] font-black text-slate-900">{car._count.leads}</p>
-                         <p className="text-[8px] font-black text-slate-300 uppercase">Leads</p>
+                         <p className="text-[10px] font-black text-white">{car._count.leads}</p>
+                         <p className="text-[8px] font-black text-white/30 uppercase">Leads</p>
                       </div>
                    </div>
                 </td>
                 <td className="px-8 py-5">
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${
-                    car.available ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-400"
+                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${
+                    car.available ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-white/5 text-white/40 border-white/10"
                   }`}>
-                    <div className={`w-1 h-1 rounded-full ${car.available ? "bg-emerald-500" : "bg-slate-400"}`} />
+                    <div className={`w-1 h-1 rounded-full ${car.available ? "bg-emerald-500" : "bg-white/30"}`} />
                     {car.available ? "Live" : "Hidden"}
                   </span>
                 </td>
                 <td className="px-8 py-5 text-right">
                   <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Link href={`/admin/cars/${car.id}/edit`} className="p-2 text-slate-400 hover:text-slate-900 transition-colors" title="Edit">
+                    <Link href={`/admin/cars/${car.id}/edit`} className="p-2 text-white/40 hover:text-white transition-colors" title="Edit">
                       <Edit3 size={16} />
                     </Link>
                     <form action={`/api/admin/cars/${car.id}/toggle`} method="POST">
-                      <button type="submit" className="p-2 text-slate-400 hover:text-orange-600 transition-colors" title={car.available ? "Hide" : "Show"}>
+                      <button type="submit" className="p-2 text-white/40 hover:text-orange-500 transition-colors" title={car.available ? "Hide" : "Show"}>
                         {car.available ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
                       </button>
                     </form>
-                    <Link href={`/cars/${car.id}`} target="_blank" className="p-2 text-slate-400 hover:text-blue-600 transition-colors" title="View Live">
+                    <Link href={`/cars/${car.id}`} target="_blank" className="p-2 text-white/40 hover:text-blue-500 transition-colors" title="View Live">
                       <ExternalLink size={16} />
                     </Link>
                     <DeleteButton action={`/api/admin/cars/${car.id}/delete`} message="Permanently delete this listing?" />
@@ -195,8 +195,8 @@ export default async function AdminCarsPage({ searchParams }) {
         
         {cars.length === 0 && (
           <div className="py-20 text-center">
-            <Car size={40} className="mx-auto text-slate-100 mb-4" />
-            <p className="text-sm font-black text-slate-300 uppercase tracking-widest">No matching units found</p>
+            <Car size={40} className="mx-auto text-white/5 mb-4" />
+            <p className="text-sm font-black text-white/30 uppercase tracking-widest">No matching units found</p>
           </div>
         )}
       </div>
@@ -208,7 +208,7 @@ export default async function AdminCarsPage({ searchParams }) {
             <Link key={p}
               href={`/admin/cars?page=${p}&search=${search}&dealerId=${dealerId}&status=${status}`}
               className={`w-10 h-10 rounded-xl flex items-center justify-center text-[11px] font-black transition-all ${
-                p === page ? "bg-slate-900 text-white shadow-xl shadow-slate-200" : "bg-white border border-slate-100 text-slate-400 hover:border-slate-900 hover:text-slate-900"
+                p === page ? "bg-orange-600 text-white shadow-xl" : "bg-surface border border-white/10 text-white/40 hover:border-white/30 hover:text-white"
               }`}
             >
               {p.toString().padStart(2, '0')}

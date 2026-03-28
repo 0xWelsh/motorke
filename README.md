@@ -10,7 +10,7 @@ Full-stack Next.js 14 platform. Buyers search, filter, and compare cars. Dealers
 | Layer      | Tech                              |
 |------------|-----------------------------------|
 | Framework  | Next.js 14 (App Router)           |
-| Database   | PostgreSQL via Supabase            |
+| Database   | PostgreSQL via Supabase           |
 | ORM        | Prisma                            |
 | Auth       | Custom session auth (no libraries)|
 | Styling    | Tailwind CSS + Syne/Inter fonts   |

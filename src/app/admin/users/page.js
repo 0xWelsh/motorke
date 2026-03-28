@@ -26,9 +26,9 @@ export default async function AdminUsersPage() {
   });
 
   const roleStyles = {
-    ADMIN:  "bg-slate-950 text-white border-slate-950",
-    DEALER: "bg-orange-50 text-orange-600 border-orange-100",
-    BUYER:  "bg-slate-50 text-slate-500 border-slate-100",
+    ADMIN:  "bg-white/10 text-white border-white/20",
+    DEALER: "bg-orange-500/10 text-orange-500 border-orange-500/20",
+    BUYER:  "bg-white/5 text-white/50 border-white/10",
   };
 
   return (
@@ -38,39 +38,39 @@ export default async function AdminUsersPage() {
         <div>
           <div className="flex items-center gap-2 mb-2">
              <div className="w-2 h-2 rounded-full bg-orange-600" />
-             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Access Management</span>
+             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">Access Management</span>
           </div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-            System Identities <span className="text-slate-300 font-medium ml-2">({users.length})</span>
+          <h1 className="text-3xl font-black text-white tracking-tight">
+            System Identities <span className="text-white/30 font-medium ml-2">({users.length})</span>
           </h1>
         </div>
         
-        <Link href="/admin/users/new" className="bg-slate-950 text-white px-8 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-orange-600 transition-all shadow-2xl shadow-slate-200">
+        <Link href="/admin/users/new" className="bg-white/10 border border-white/10 text-pureWhite px-8 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-orange-600 hover:border-orange-500 transition-all shadow-xl">
           <UserPlus size={14} /> Create Identity
         </Link>
       </div>
 
       {/* ── DATA TABLE ── */}
-      <div className="bg-white border border-slate-100 rounded-[3rem] overflow-hidden shadow-sm">
+      <div className="bg-surface border border-white/5 rounded-[3rem] overflow-hidden shadow-2xl">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-slate-50/50 border-b border-slate-100">
+            <tr className="border-b border-white/10">
               {["User Profile", "Access Role", "Hub Association", "Status", "Joined On", ""].map((h) => (
-                <th key={h} className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{h}</th>
+                <th key={h} className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">{h}</th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50">
+          <tbody className="divide-y divide-white/5">
             {users.map((user) => (
-              <tr key={user.id} className="group hover:bg-slate-50/50 transition-colors">
+              <tr key={user.id} className="group hover:bg-white/5 transition-colors">
                 <td className="px-8 py-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-[1.25rem] bg-slate-100 text-slate-400 group-hover:bg-slate-950 group-hover:text-white flex items-center justify-center font-black text-lg transition-all duration-500 shadow-sm group-hover:shadow-xl group-hover:shadow-slate-200">
+                    <div className="w-12 h-12 rounded-[1.25rem] bg-white/5 border border-white/10 text-white/40 group-hover:bg-white/10 group-hover:text-white flex items-center justify-center font-black text-lg transition-all duration-500 shadow-sm">
                       {user.name[0]}
                     </div>
                     <div>
-                      <p className="text-sm font-black text-slate-900 tracking-tight">{user.name}</p>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">{user.email}</p>
+                      <p className="text-sm font-black text-white tracking-tight">{user.name}</p>
+                      <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mt-0.5">{user.email}</p>
                     </div>
                   </div>
                 </td>
@@ -83,34 +83,34 @@ export default async function AdminUsersPage() {
                    </span>
                 </td>
                 <td className="px-8 py-6">
-                   <p className="text-xs font-black text-slate-600 uppercase tracking-tighter truncate max-w-[150px]">
-                      {user.dealer?.name || <span className="text-slate-200">—</span>}
+                   <p className="text-xs font-black text-white/60 uppercase tracking-tighter truncate max-w-[150px]">
+                      {user.dealer?.name || <span className="text-white/20">—</span>}
                    </p>
                 </td>
                 <td className="px-8 py-6">
                   <span className={`inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest ${
-                    user.active ? "text-emerald-600" : "text-rose-500"
+                    user.active ? "text-emerald-500" : "text-rose-500"
                   }`}>
                     {user.active ? <CheckCircle2 size={12} /> : <Ban size={12} />}
                     {user.active ? "Active" : "Locked"}
                   </span>
                 </td>
-                <td className="px-8 py-6 text-[11px] font-black text-slate-400 uppercase tracking-tighter">
+                <td className="px-8 py-6 text-[11px] font-black text-white/40 uppercase tracking-tighter">
                    {new Date(user.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" })}
                 </td>
                 <td className="px-8 py-6 text-right">
                   <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <Link href={`/admin/users/${user.id}/edit`} className="p-2 text-slate-400 hover:text-slate-900 transition-colors" title="Edit Profile">
+                    <Link href={`/admin/users/${user.id}/edit`} className="p-2 text-white/40 hover:text-white transition-colors" title="Edit Profile">
                       <Edit3 size={16} />
                     </Link>
                     
                     <form action={`/api/admin/users/${user.id}/toggle`} method="POST">
-                      <button type="submit" className={`p-2 transition-colors ${user.active ? "text-rose-400 hover:text-rose-600" : "text-emerald-400 hover:text-emerald-600"}`} title={user.active ? "Lock Account" : "Unlock Account"}>
+                      <button type="submit" className={`p-2 transition-colors ${user.active ? "text-rose-500 hover:text-white/40" : "text-emerald-500 hover:text-white/40"}`} title={user.active ? "Lock Account" : "Unlock Account"}>
                         {user.active ? <Ban size={18} /> : <CheckCircle2 size={18} />}
                       </button>
                     </form>
 
-                    <Link href={`/admin/users/${user.id}/reset-password`} className="p-2 text-slate-400 hover:text-orange-600 transition-colors" title="Reset Security">
+                    <Link href={`/admin/users/${user.id}/reset-password`} className="p-2 text-white/40 hover:text-orange-500 transition-colors" title="Reset Security">
                       <RefreshCw size={16} />
                     </Link>
                   </div>
@@ -122,8 +122,8 @@ export default async function AdminUsersPage() {
         
         {users.length === 0 && (
           <div className="py-20 text-center">
-            <Users size={40} className="mx-auto text-slate-100 mb-4" />
-            <p className="text-sm font-black text-slate-300 uppercase tracking-widest">No profiles found</p>
+            <Users size={40} className="mx-auto text-white/5 mb-4" />
+            <p className="text-sm font-black text-white/30 uppercase tracking-widest">No profiles found</p>
           </div>
         )}
       </div>

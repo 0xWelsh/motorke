@@ -1,21 +1,28 @@
-// src/app/api/auth/login/route.js
 import { db } from "@/lib/db";
 import { verifyPassword, createSession } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+
+const loginSchema = z.object({
+  email: z.string().email().toLowerCase().trim(),
+  password: z.string().min(1),
+});
 
 export async function POST(request) {
   try {
     const formData = await request.formData();
-    const email    = formData.get("email")?.toString().toLowerCase().trim();
-    const password = formData.get("password")?.toString();
+    const rawData = Object.fromEntries(formData.entries());
+    const parsed = loginSchema.safeParse(rawData);
 
-    if (!email || !password) {
+    if (!parsed.success) {
       return NextResponse.redirect(new URL("/login?error=invalid", request.url));
     }
 
+    const { email, password } = parsed.data;
+
     const user = await db.user.findUnique({ where: { email } });
 
-    if (!user || !verifyPassword(password, user.passwordHash)) {
+    if (!user || !(await verifyPassword(password, user.passwordHash))) {
       return NextResponse.redirect(new URL("/login?error=invalid", request.url));
     }
 

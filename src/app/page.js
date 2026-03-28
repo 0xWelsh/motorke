@@ -94,22 +94,22 @@ export default async function HomePage() {
   const heroImage = HERO_IMAGES[Math.floor(Math.random() * HERO_IMAGES.length)];
 
   return (
-    <div className="bg-white min-h-screen pb-20">
+    <div className="bg-background min-h-screen pb-20">
       {/* ── IMMERSIVE HERO ── */}
       <section className="relative h-[85vh] min-h-[650px] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src={heroImage} className="w-full h-full object-cover" alt="Motorke" />
-          <div className="absolute inset-0 bg-white/20 backdrop-blur-[2px]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent" />
+          <img src={heroImage} className="w-full h-full object-cover opacity-60" alt="Motorke" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(234,88,12,0.15),transparent_50%)]" />
         </div>
 
         <div className="container mx-auto px-6 relative z-10 max-w-6xl">
           <div className="max-w-3xl">
-            <h1 className="text-6xl md:text-8xl font-black text-slate-900 leading-[0.95] tracking-tighter mb-8">
+            <h1 className="text-6xl md:text-8xl font-black text-white leading-[0.95] tracking-tighter mb-8">
               The <br />
-              <span className="text-orange-600">Standard.</span>
+              <span className="text-orange-600 drop-shadow-[0_0_30px_rgba(234,88,12,0.4)]">Standard.</span>
             </h1>
-            <p className="text-xl text-slate-600 max-w-lg mb-12 leading-relaxed font-medium">
+            <p className="text-xl text-white/50 max-w-lg mb-12 leading-relaxed font-medium">
               Kenya&apos;s most refined automotive marketplace. <br />
               Verified units, direct dealer access.
             </p>
@@ -117,11 +117,11 @@ export default async function HomePage() {
               <LocationSearch />
               
               <div className="flex flex-wrap items-center gap-4 mt-8">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Trending Now</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Trending Now</span>
                 <div className="flex gap-2">
                   {TRENDING.map(t => (
                     <Link key={t} href={`/cars?search=${encodeURIComponent(t)}`} 
-                      className="text-[11px] font-black text-slate-500 hover:text-orange-600 transition-colors border-b border-transparent hover:border-orange-600 pb-0.5">
+                      className="text-[11px] font-black text-white/50 hover:text-orange-500 transition-colors border-b border-transparent hover:border-orange-600 pb-0.5">
                       {t}
                     </Link>
                   ))}
@@ -136,28 +136,28 @@ export default async function HomePage() {
       <section className="container mx-auto px-6 py-32 max-w-6xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div>
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight">Browse by Value</h2>
-            <p className="text-slate-500 font-medium mt-1">Select an investment tier to explore verified inventory.</p>
+            <h2 className="text-3xl font-black text-white tracking-tight">Browse by Value</h2>
+            <p className="text-white/40 font-medium mt-1">Select an investment tier to explore verified inventory.</p>
           </div>
-          <div className="hidden md:block h-px flex-1 mx-12 bg-slate-100" />
+          <div className="hidden md:block h-px flex-1 mx-12 bg-white/10" />
           <div className="text-right">
-             <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Inventory Split</span>
+             <span className="text-[10px] font-black uppercase tracking-widest text-white/30">Inventory Split</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-px bg-slate-200 border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-px bg-white/5 border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
           {PRICE_RANGES.map((r, i) => (
             <Link key={r.label} href={`/cars?minPrice=${r.min}&maxPrice=${r.max}`} 
-              className="group bg-white hover:bg-slate-50 p-10 flex flex-col items-center text-center transition-all duration-300">
-              <div className="w-12 h-12 rounded-full border border-slate-100 flex items-center justify-center text-slate-300 group-hover:text-orange-600 group-hover:border-orange-100 transition-all mb-8">
+              className="group bg-[#0a0a0a] hover:bg-[#111111] p-10 flex flex-col items-center text-center transition-all duration-300">
+              <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/30 group-hover:text-orange-500 group-hover:border-orange-500/30 group-hover:shadow-[0_0_20px_rgba(234,88,12,0.2)] transition-all mb-8">
                 {r.icon}
               </div>
-              <p className="text-xl font-black text-slate-900 mb-1">{r.label}</p>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8">{r.sub}</p>
+              <p className="text-xl font-black text-white mb-1 group-hover:text-orange-500 transition-colors">{r.label}</p>
+              <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-8">{r.sub}</p>
               
-              <div className="mt-auto pt-6 border-t border-slate-50 w-full flex items-center justify-center gap-2">
-                <span className="text-[11px] font-black text-slate-900">{priceCounts[i]}</span>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Active Units</span>
+              <div className="mt-auto pt-6 border-t border-white/5 w-full flex items-center justify-center gap-2">
+                <span className="text-[11px] font-black text-white">{priceCounts[i]}</span>
+                <span className="text-[10px] font-bold text-white/30 uppercase tracking-tighter">Active Units</span>
               </div>
             </Link>
           ))}
@@ -168,11 +168,11 @@ export default async function HomePage() {
       <ClientRecentSection />
 
       {/* ── AUTO NEWS & INSIGHTS ── */}
-      <section className="container mx-auto px-6 py-32 max-w-6xl border-t border-slate-100">
+      <section className="container mx-auto px-6 py-32 max-w-6xl border-t border-white/5">
         <div className="flex items-center justify-between mb-16">
           <div className="flex items-center gap-4">
-            <Newspaper className="w-6 h-6 text-slate-900" />
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight">Market Intelligence</h2>
+            <Newspaper className="w-6 h-6 text-white" />
+            <h2 className="text-3xl font-black text-white tracking-tight">Market Intelligence</h2>
           </div>
           <Link href="/news" className="text-xs font-black uppercase tracking-widest text-orange-600 border-b-2 border-orange-600 pb-1">
             All Stories
@@ -201,15 +201,15 @@ export default async function HomePage() {
             }
           ].map((news, i) => (
             <Link key={i} href="#" className="group block">
-              <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-slate-100 mb-6">
-                <img src={news.img} alt={news.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+              <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 mb-6">
+                <img src={news.img} alt={news.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
               </div>
               <div className="flex items-center gap-3 mb-3">
-                <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">{news.tag}</span>
-                <span className="w-1 h-1 rounded-full bg-slate-300" />
-                <span className="text-[10px] font-bold text-slate-400 uppercase">{news.date}</span>
+                <span className="text-[10px] font-black text-white uppercase tracking-widest">{news.tag}</span>
+                <span className="w-1 h-1 rounded-full bg-white/20" />
+                <span className="text-[10px] font-bold text-white/40 uppercase">{news.date}</span>
               </div>
-              <h3 className="text-lg font-bold text-slate-900 leading-snug group-hover:text-orange-600 transition-colors">{news.title}</h3>
+              <h3 className="text-lg font-bold text-white leading-snug group-hover:text-orange-500 transition-colors">{news.title}</h3>
             </Link>
           ))}
         </div>
@@ -217,17 +217,18 @@ export default async function HomePage() {
 
       {/* ── FEATURED CARS ── */}
       {featured.length > 0 && (
-        <section className="container mx-auto px-6 py-32 max-w-6xl bg-slate-50/50 rounded-[3rem] border border-slate-100">
-          <div className="flex items-end justify-between mb-16 px-6">
+        <section className="container mx-auto px-6 py-32 max-w-6xl bg-[#0a0a0a] rounded-[3rem] border border-white/5 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-600/10 blur-[100px] rounded-full pointer-events-none" />
+          <div className="flex items-end justify-between mb-16 px-6 relative z-10">
             <div>
-              <h2 className="text-3xl font-black text-slate-900 tracking-tight">The Selection</h2>
-              <p className="text-slate-500 font-medium mt-1">Hand-picked premium inventory.</p>
+              <h2 className="text-3xl font-black text-white tracking-tight">The Selection</h2>
+              <p className="text-white/40 font-medium mt-1">Hand-picked premium inventory.</p>
             </div>
-            <Link href="/cars" className="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors">
+            <Link href="/cars" className="text-xs font-black uppercase tracking-widest text-white/30 hover:text-white transition-colors">
               Explore Collection
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 px-6 relative z-10">
             {featured.map(car => <CarCard key={car.id} car={car} />)}
           </div>
         </section>
@@ -237,8 +238,8 @@ export default async function HomePage() {
       {newArrivals.length > 0 && (
         <section className="container mx-auto px-6 py-32 max-w-6xl">
           <div className="flex items-end justify-between mb-16">
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight">Just Landed</h2>
-            <div className="h-px flex-1 mx-12 bg-slate-100" />
+            <h2 className="text-3xl font-black text-white tracking-tight">Just Landed</h2>
+            <div className="h-px flex-1 mx-12 bg-white/10" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {newArrivals.map(car => <CarCard key={car.id} car={car} />)}
@@ -248,19 +249,19 @@ export default async function HomePage() {
 
       {/* ── STATS BAR ── */}
       <div className="container mx-auto px-6 py-32">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-slate-100 border border-slate-100 rounded-3xl overflow-hidden shadow-sm">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/5 border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
           {[
             { v: `${totalCars}+`, l: "Active Units", i: <Car className="w-5 h-5" /> },
             { v: totalDealers, l: "Verified Hubs", i: <ShieldCheck className="w-5 h-5" /> },
             { v: "Live", l: "Comparison", i: <Flame className="w-5 h-5" /> },
             { v: "24/7", l: "Dealer Access", i: <Clock className="w-5 h-5" /> },
           ].map((s, idx) => (
-            <div key={idx} className="p-12 text-center bg-white group">
-              <div className="flex justify-center mb-6 text-slate-200 group-hover:text-orange-600 transition-colors">
+            <div key={idx} className="p-12 text-center bg-[#0a0a0a] group">
+              <div className="flex justify-center mb-6 text-white/20 group-hover:text-orange-500 group-hover:drop-shadow-[0_0_15px_rgba(234,88,12,0.5)] transition-all">
                 {s.i}
               </div>
-              <p className="text-4xl font-black text-slate-900 mb-2">{s.v}</p>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{s.l}</p>
+              <p className="text-4xl font-black text-white mb-2">{s.v}</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">{s.l}</p>
             </div>
           ))}
         </div>
@@ -274,25 +275,25 @@ function CarCard({ car }) {
   const title = `${car.year} ${car.make} ${car.model}`;
   
   return (
-    <Link href={`/cars/${car.id}`} className="group block">
-      <div className="relative aspect-[3/2] overflow-hidden rounded-2xl bg-slate-100 mb-6">
+    <Link href={`/cars/${car.id}`} className="card-hover block">
+      <div className="relative aspect-[3/2] overflow-hidden rounded-2xl bg-surface border border-white/5 mb-6">
         {img ? (
-          <img src={img} alt={title} className="w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+          <img src={img} alt={title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-300 text-[10px] font-bold uppercase tracking-widest">Image Pending</div>
+          <div className="w-full h-full flex items-center justify-center text-white/20 text-[10px] font-bold uppercase tracking-widest">Image Pending</div>
         )}
       </div>
 
       <div className="px-1">
         <div className="flex items-start justify-between mb-2 gap-4">
-          <h3 className="font-black text-slate-900 group-hover:text-orange-600 transition-colors text-lg leading-tight truncate">{title}</h3>
-          <p className="text-xl font-black text-slate-900 shrink-0">{formatPrice(car.price)}</p>
+          <h3 className="font-black text-white group-hover:text-orange-500 transition-colors text-lg leading-tight truncate">{title}</h3>
+          <p className="text-xl font-black text-white shrink-0">{formatPrice(car.price)}</p>
         </div>
-        <div className="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+        <div className="flex items-center gap-3 text-[10px] font-black text-white/40 uppercase tracking-widest">
            <span>{car.variant || "Standard"}</span>
-           <span className="w-1 h-1 rounded-full bg-slate-200" />
+           <span className="w-1 h-1 rounded-full bg-white/20" />
            <span>{car.mileage ? Math.round(car.mileage/1000) + 'k km' : '—'}</span>
-           <span className="w-1 h-1 rounded-full bg-slate-200" />
+           <span className="w-1 h-1 rounded-full bg-white/20" />
            <span>{car.fuelType?.split(' ')[0]}</span>
         </div>
       </div>

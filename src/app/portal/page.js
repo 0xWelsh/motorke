@@ -41,7 +41,7 @@ export default async function PortalPage() {
           <h1 className="text-4xl font-black text-slate-900 tracking-tight">Welcome, {user.dealer?.name}</h1>
         </div>
         <Link href="/portal/cars/new"
-          className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-black px-8 py-4 rounded-2xl transition-all shadow-xl shadow-slate-900/10 hover:scale-105 active:scale-95">
+          className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-pureWhite text-sm font-black px-8 py-4 rounded-2xl transition-all shadow-xl shadow-slate-900/10 hover:scale-105 active:scale-95">
           <Plus size={18} /> Add New Listing
         </Link>
       </div>
@@ -50,7 +50,7 @@ export default async function PortalPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {[
           { label: "Live Inventory", value: live,   icon: <CheckCircle2 className="text-emerald-500" />, sub: "Currently visible to buyers" },
-          { label: "Hidden Items",   value: hidden, icon: <EyeOff className="text-slate-400" />, sub: "Drafts or sold out items" },
+          { label: "Hidden Items",   value: hidden, icon: <EyeOff className="dark:text-slate-400 text-slate-600" />, sub: "Drafts or sold out items" },
           { label: "Total Inquiries", value: leads,  icon: <MessageSquare className="text-amber-500" />, sub: "Potential buyer messages" },
         ].map((stat, i) => (
           <div key={i} className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm hover:shadow-xl transition-all duration-300 group">
@@ -61,8 +61,8 @@ export default async function PortalPage() {
               <ArrowUpRight className="text-slate-200 group-hover:text-amber-500 transition-colors" size={20} />
             </div>
             <p className="text-4xl font-black text-slate-900 mb-2">{stat.value}</p>
-            <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">{stat.label}</p>
-            <p className="text-[10px] font-bold text-slate-300">{stat.sub}</p>
+            <p className="text-xs font-black uppercase tracking-widest dark:text-slate-400 text-slate-600 mb-1">{stat.label}</p>
+            <p className="text-[10px] font-bold dark:text-slate-300 text-slate-500">{stat.sub}</p>
           </div>
         ))}
       </div>
@@ -73,7 +73,7 @@ export default async function PortalPage() {
           <h2 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
             <Car size={20} className="text-amber-600" /> Recent Inventory
           </h2>
-          <Link href="/portal/inventory" className="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-amber-600 transition-colors">
+          <Link href="/portal/inventory" className="text-xs font-black uppercase tracking-widest dark:text-slate-400 text-slate-600 hover:text-amber-600 transition-colors">
             Manage All
           </Link>
         </div>
@@ -84,7 +84,7 @@ export default async function PortalPage() {
               <Car className="text-slate-200" size={40} />
             </div>
             <h3 className="text-xl font-black text-slate-900 mb-2">No cars listed yet</h3>
-            <p className="text-slate-400 text-sm max-w-xs mx-auto mb-8 font-medium">
+            <p className="dark:text-slate-400 text-slate-600 text-sm max-w-xs mx-auto mb-8 font-medium">
               Your inventory is currently empty. Start reaching thousands of buyers by adding your first vehicle.
             </p>
             <Link href="/portal/cars/new"
@@ -97,10 +97,10 @@ export default async function PortalPage() {
             <table className="w-full">
               <thead>
                 <tr className="bg-slate-50/50">
-                  <th className="text-left text-[10px] font-black text-slate-400 uppercase tracking-widest px-8 py-5">Vehicle Details</th>
-                  <th className="text-left text-[10px] font-black text-slate-400 uppercase tracking-widest px-6 py-5 hidden sm:table-cell">Price / Market</th>
-                  <th className="text-left text-[10px] font-black text-slate-400 uppercase tracking-widest px-6 py-5">Status</th>
-                  <th className="text-right text-[10px] font-black text-slate-400 uppercase tracking-widest px-8 py-5">Actions</th>
+                  <th className="text-left text-[10px] font-black dark:text-slate-400 text-slate-600 uppercase tracking-widest px-8 py-5">Vehicle Details</th>
+                  <th className="text-left text-[10px] font-black dark:text-slate-400 text-slate-600 uppercase tracking-widest px-6 py-5 hidden sm:table-cell">Price / Market</th>
+                  <th className="text-left text-[10px] font-black dark:text-slate-400 text-slate-600 uppercase tracking-widest px-6 py-5">Status</th>
+                  <th className="text-right text-[10px] font-black dark:text-slate-400 text-slate-600 uppercase tracking-widest px-8 py-5">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
@@ -111,24 +111,24 @@ export default async function PortalPage() {
                         <div className="w-16 h-12 rounded-xl bg-slate-100 overflow-hidden ring-1 ring-slate-200 shrink-0">
                           {car.images[0]
                             ? <img src={car.images[0].url} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                            : <div className="flex items-center justify-center h-full text-slate-300 italic text-[10px] font-black">NA</div>
+                            : <div className="flex items-center justify-center h-full dark:text-slate-300 text-slate-500 italic text-[10px] font-black">NA</div>
                           }
                         </div>
                         <div className="min-w-0">
                           <p className="text-sm font-black text-slate-900 truncate tracking-tight">{car.year} {car.make} {car.model}</p>
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter truncate">{car.variant || "Standard Edition"}</p>
+                          <p className="text-[10px] font-bold dark:text-slate-400 text-slate-600 uppercase tracking-tighter truncate">{car.variant || "Standard Edition"}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-5 hidden sm:table-cell">
                       <p className="text-sm font-black text-slate-900">{formatPrice(car.price)}</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{formatMileage(car.mileage)} · {car.fuelType}</p>
+                      <p className="text-[10px] font-bold dark:text-slate-400 text-slate-600 uppercase tracking-tighter">{formatMileage(car.mileage)} · {car.fuelType}</p>
                     </td>
                     <td className="px-6 py-5">
                       <span className={`inline-flex items-center gap-1.5 text-[10px] font-black px-3 py-1.5 rounded-lg uppercase tracking-wider ${
                         car.available
                           ? "bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100"
-                          : "bg-slate-100 text-slate-500"
+                          : "bg-slate-100 dark:text-slate-500 text-slate-600"
                       }`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${car.available ? "bg-emerald-500 animate-pulse" : "bg-slate-400"}`} />
                         {car.available ? "Live" : "Draft"}
@@ -137,16 +137,16 @@ export default async function PortalPage() {
                     <td className="px-8 py-5 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Link href={`/portal/cars/${car.id}/edit`}
-                          className="p-2 text-slate-400 hover:text-slate-900 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-all shadow-sm">
+                          className="p-2 dark:text-slate-400 text-slate-600 hover:text-slate-900 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-all shadow-sm">
                           <Edit3 size={16} />
                         </Link>
                         <Link href={`/cars/${car.id}`} target="_blank"
-                          className="p-2 text-slate-400 hover:text-amber-600 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-all shadow-sm">
+                          className="p-2 dark:text-slate-400 text-slate-600 hover:text-amber-600 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-all shadow-sm">
                           <ExternalLink size={16} />
                         </Link>
                         <form action={`/api/admin/cars/${car.id}/toggle`} method="POST">
                           <button type="submit"
-                            className="p-2 text-slate-400 hover:text-slate-900 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-all shadow-sm">
+                            className="p-2 dark:text-slate-400 text-slate-600 hover:text-slate-900 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-all shadow-sm">
                             {car.available ? <EyeOff size={16} /> : <Eye size={16} />}
                           </button>
                         </form>

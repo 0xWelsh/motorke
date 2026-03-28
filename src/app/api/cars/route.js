@@ -1,23 +1,37 @@
-// src/app/api/cars/route.js
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+
+const querySchema = z.object({
+  make: z.string().optional(),
+  bodyType: z.string().optional(),
+  fuelType: z.string().optional(),
+  transmission: z.string().optional(),
+  dealerId: z.string().optional(),
+  minPrice: z.coerce.number().positive().optional(),
+  maxPrice: z.coerce.number().positive().optional(),
+  minYear: z.coerce.number().positive().optional(),
+  maxYear: z.coerce.number().positive().optional(),
+  search: z.string().optional(),
+  featured: z.enum(["true", "false"]).optional(),
+  page: z.coerce.number().positive().optional().default(1),
+  limit: z.coerce.number().positive().max(100).optional().default(12),
+});
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
+  const rawParams = Object.fromEntries(searchParams.entries());
+  
+  const parsed = querySchema.safeParse(rawParams);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid parameters", details: parsed.error.issues }, { status: 400 });
+  }
 
-  const make         = searchParams.get("make");
-  const bodyType     = searchParams.get("bodyType");
-  const fuelType     = searchParams.get("fuelType");
-  const transmission = searchParams.get("transmission");
-  const dealerId     = searchParams.get("dealerId");
-  const minPrice     = searchParams.get("minPrice");
-  const maxPrice     = searchParams.get("maxPrice");
-  const minYear      = searchParams.get("minYear");
-  const maxYear      = searchParams.get("maxYear");
-  const search       = searchParams.get("search");
-  const featured     = searchParams.get("featured");
-  const page         = parseInt(searchParams.get("page") || "1");
-  const limit        = parseInt(searchParams.get("limit") || "12");
+  const {
+    make, bodyType, fuelType, transmission, dealerId,
+    minPrice, maxPrice, minYear, maxYear, search, featured,
+    page, limit
+  } = parsed.data;
 
   const where = {
     available: true,

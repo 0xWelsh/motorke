@@ -22,7 +22,7 @@ export default async function AdminEditUserPage({ params, searchParams }) {
   const error = searchParams.error;
 
   const inputCls  = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
-  const selectCls = "w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
+  const selectCls = "w-full bg-surface border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
   const labelCls  = "block text-xs text-white/40 uppercase tracking-wider mb-2";
 
   return (
@@ -44,7 +44,7 @@ export default async function AdminEditUserPage({ params, searchParams }) {
         )}
         {error && (
           <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3 mb-5">
-            {error === "exists" ? "That email is already in use." : "Something went wrong."}
+            {error === "exists" ? "That email is already in use." : error === "notallowed" ? "You cannot grant Admin rights." : "Something went wrong."}
           </div>
         )}
 
@@ -61,13 +61,14 @@ export default async function AdminEditUserPage({ params, searchParams }) {
             <label className={labelCls}>Role *</label>
             <select name="role" defaultValue={user.role} className={selectCls}>
               <option value="DEALER">Dealer</option>
-              <option value="ADMIN">Admin</option>
+              {user.role === "ADMIN" && <option value="ADMIN">Admin</option>}
             </select>
           </div>
           <div>
             <label className={labelCls}>Linked dealership</label>
             <select name="dealerId" defaultValue={user.dealerId || ""} className={selectCls}>
-              <option value="">None (Admin only)</option>
+              {user.role === "ADMIN" && <option value="">None (Admin only)</option>}
+              {user.role !== "ADMIN" && <option value="" disabled>Select a dealership</option>}
               {dealers.map((d) => (
                 <option key={d.id} value={d.id}>{d.name}</option>
               ))}

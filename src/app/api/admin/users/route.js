@@ -17,6 +17,10 @@ export async function POST(request) {
   const role      = formData.get("role")?.toString() || "DEALER";
   const dealerId  = formData.get("dealerId")?.toString() || null;
 
+  if (role === "ADMIN") {
+    return NextResponse.redirect(new URL("/admin/users/new?error=notallowed", request.url));
+  }
+
   if (password !== confirm) {
     return NextResponse.redirect(new URL("/admin/users/new?error=mismatch", request.url));
   }

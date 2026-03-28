@@ -10,24 +10,26 @@ import crypto from "crypto";
 const SESSION_COOKIE = "motorke_session";
 const SESSION_DAYS   = 30;
 
+import bcrypt from "bcrypt";
+
 // ── Password hashing ─────────────────────────────────────────
-export function hashPassword(password) {
-  const salt   = crypto.randomBytes(16).toString("hex");
-  const hash   = crypto
-    .pbkdf2Sync(password, salt, 100_000, 64, "sha512")
-    .toString("hex");
-  return `${salt}:${hash}`;
+export async function hashPassword(password) {
+  return await bcrypt.hash(password, 10);
 }
 
-export function verifyPassword(password, stored) {
-  const [salt, hash] = stored.split(":");
-  const attempt = crypto
-    .pbkdf2Sync(password, salt, 100_000, 64, "sha512")
-    .toString("hex");
-  return crypto.timingSafeEqual(
-    Buffer.from(hash,    "hex"),
-    Buffer.from(attempt, "hex")
-  );
+export async function verifyPassword(password, stored) {
+  // Backwards compatibility for early test accounts
+  if (stored.includes(":")) {
+    const [salt, hash] = stored.split(":");
+    const attempt = crypto
+      .pbkdf2Sync(password, salt, 100_000, 64, "sha512")
+      .toString("hex");
+    return crypto.timingSafeEqual(
+      Buffer.from(hash,    "hex"),
+      Buffer.from(attempt, "hex")
+    );
+  }
+  return await bcrypt.compare(password, stored);
 }
 
 // ── Session management ────────────────────────────────────────

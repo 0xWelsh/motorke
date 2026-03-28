@@ -1,7 +1,8 @@
 // src/middleware.js
 // Protects /admin and /portal at the edge before any page renders.
-// We only check cookie presence here — full session validation happens
-// inside each page via requireAdmin() / requireDealer().
+// NOTE: We only check cookie presence here for fast edge redirects.
+// The true security source-of-truth is the DB session validation inside
+// each page and API route via requireAdmin() / requireDealer().
 
 import { NextResponse } from "next/server";
 

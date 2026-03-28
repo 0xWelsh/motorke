@@ -27,23 +27,13 @@ export function SaveButton({ carId, initialSaved = false, isLoggedIn }) {
       onClick={toggle}
       disabled={loading}
       title={saved ? "Remove from saved" : "Save this car"}
-      style={{
-        display:        "flex",
-        alignItems:     "center",
-        gap:            6,
-        padding:        "10px 18px",
-        borderRadius:   10,
-        border:         saved ? "1.5px solid #E8490F" : "1.5px solid #E2E2E2",
-        background:     saved ? "#fff0eb" : "#fff",
-        color:          saved ? "#E8490F" : "#444",
-        fontWeight:     600,
-        fontSize:       14,
-        cursor:         loading ? "wait" : "pointer",
-        fontFamily:     "inherit",
-        transition:     "all 0.15s",
-      }}
+      className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-black text-sm transition-all duration-300 uppercase tracking-widest ${
+        saved 
+          ? "bg-orange-500/10 border border-orange-500 text-orange-500 shadow-[0_0_15px_rgba(234,88,12,0.2)]" 
+          : "bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white hover:border-white/20"
+      } ${loading ? "cursor-wait" : "cursor-pointer"}`}
     >
-      <span style={{ fontSize: 16 }}>{saved ? "❤️" : "🤍"}</span>
+      <span className="text-lg leading-none">{saved ? "❤️" : "🤍"}</span>
       {saved ? "Saved" : "Save car"}
     </button>
   );

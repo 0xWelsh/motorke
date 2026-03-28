@@ -39,8 +39,8 @@ function NavLink({ href, label, Icon, active }) {
       className={clsx(
         "flex items-center justify-between group px-4 py-3 rounded-2xl transition-all duration-300",
         active 
-          ? "bg-white text-slate-900 shadow-xl shadow-black/20" 
-          : "text-slate-500 hover:text-white hover:bg-white/5"
+          ? "bg-orange-600 text-white shadow-[0_0_15px_rgba(234,88,12,0.4)]" 
+          : "text-white/40 hover:text-white hover:bg-white/5"
       )}
     >
       <div className="flex items-center gap-3">
@@ -56,7 +56,7 @@ export default function AdminLayout({ children }) {
   const path = usePathname();
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
       <aside className="w-80 bg-slate-950 flex flex-col shrink-0 sticky top-0 h-screen z-50 overflow-hidden">
         {/* Abstract Glow */}
@@ -70,7 +70,7 @@ export default function AdminLayout({ children }) {
             </div>
             <div>
               <span className="text-xl font-black text-white tracking-tighter block leading-none">
-                Motor<span className="text-slate-400 group-hover:text-orange-600 transition-colors">ke</span>
+                Motor<span className="dark:text-slate-400 text-slate-600 group-hover:text-orange-600 transition-colors">ke</span>
               </span>
               <span className="text-[9px] font-black text-orange-600 uppercase tracking-[0.3em] mt-2 block">
                 Standard Admin
@@ -82,14 +82,14 @@ export default function AdminLayout({ children }) {
         {/* Navigation */}
         <nav className="flex-1 px-6 py-4 space-y-2 overflow-y-auto relative z-10 custom-scrollbar">
           <div className="px-4 mb-6">
-             <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.25em]">Main Systems</p>
+             <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.25em]">Main Systems</p>
           </div>
           {links.map(({ href, label, Icon }) => (
             <NavLink key={href} href={href} label={label} Icon={Icon} active={path === href} />
           ))}
           
           <div className="px-4 mb-6 mt-12">
-             <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.25em]">Quick Operations</p>
+             <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.25em]">Quick Operations</p>
           </div>
           {quickActions.map(({ href, label, Icon }) => (
             <NavLink key={href} href={href} label={label} Icon={Icon} active={path === href} />
@@ -99,11 +99,11 @@ export default function AdminLayout({ children }) {
         {/* User / Footer */}
         <div className="p-8 border-t border-white/5 bg-black/20 relative z-10">
           <div className="space-y-1">
-            <Link href="/" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-white text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all">
+            <Link href="/" className="flex items-center gap-3 px-4 py-3 dark:text-slate-500 text-slate-600 hover:text-white text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all">
               <ExternalLink size={14} /> Live Showcase
             </Link>
             <form action="/api/auth/logout" method="POST">
-              <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 text-slate-500 hover:text-rose-500 text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all">
+              <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 dark:text-slate-500 text-slate-600 hover:text-rose-500 text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all">
                 <LogOut size={14} /> Terminate
               </button>
             </form>
@@ -114,35 +114,35 @@ export default function AdminLayout({ children }) {
       {/* Main Content */}
       <main className="flex-1 overflow-x-hidden relative flex flex-col">
         {/* Modern Top Header */}
-        <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-2xl border-b border-slate-100 px-12 py-5 flex items-center justify-between">
-           <div className="flex items-center gap-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-              <span className="hover:text-slate-900 transition-colors cursor-default">System</span>
-              <ChevronRight size={10} className="text-slate-200" />
-              <span className="text-slate-900">{links.find(l => l.href === path)?.label || "Dashboard"}</span>
+        <header className="sticky top-0 z-40 bg-surface/80 backdrop-blur-2xl border-b border-white/5 px-12 py-5 flex items-center justify-between">
+           <div className="flex items-center gap-4 text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">
+              <span className="hover:text-white transition-colors cursor-default">System</span>
+              <ChevronRight size={10} className="text-white/20" />
+              <span className="text-white">{links.find(l => l.href === path)?.label || "Dashboard"}</span>
            </div>
            
            <div className="flex items-center gap-8">
-              <div className="hidden sm:flex items-center gap-6 pr-6 border-r border-slate-100">
-                 <button className="text-slate-400 hover:text-slate-900 transition-colors">
+              <div className="hidden sm:flex items-center gap-6 pr-6 border-r border-white/5">
+                 <button className="text-white/40 hover:text-white transition-colors">
                     <Search size={18} />
                  </button>
-                 <button className="text-slate-400 hover:text-slate-900 transition-colors relative">
+                 <button className="text-white/40 hover:text-white transition-colors relative">
                     <Bell size={18} />
-                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-orange-600 rounded-full border-2 border-white" />
+                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-orange-600 rounded-full border-2 border-white/10" />
                  </button>
-                 <button className="text-slate-400 hover:text-slate-900 transition-colors">
+                 <button className="text-white/40 hover:text-white transition-colors">
                     <Settings size={18} />
                  </button>
               </div>
 
               <div className="flex items-center gap-4 group cursor-default">
                 <div className="hidden md:flex flex-col items-end">
-                  <p className="text-[11px] font-black text-slate-900 leading-none uppercase tracking-widest">Admin Standard</p>
+                  <p className="text-[11px] font-black text-white leading-none uppercase tracking-widest">Admin Standard</p>
                   <p className="text-[9px] font-black text-orange-600 mt-1 flex items-center gap-1 uppercase tracking-widest">
                      <ShieldAlert size={10} /> Full Privilege
                   </p>
                 </div>
-                <div className="w-11 h-11 rounded-2xl bg-slate-950 text-white flex items-center justify-center font-black text-sm shadow-xl shadow-slate-200 group-hover:bg-orange-600 transition-colors duration-500">
+                <div className="w-11 h-11 rounded-2xl bg-white/10 text-pureWhite flex items-center justify-center font-black text-sm group-hover:bg-orange-600 transition-colors duration-500">
                   AD
                 </div>
               </div>

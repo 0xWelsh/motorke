@@ -57,13 +57,13 @@ export default function ImageGallery({ images, title }) {
           <>
             <button
               onClick={(e) => { e.stopPropagation(); prev(); }}
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 text-pureWhite rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm"
             >
               ‹
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); next(); }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 text-pureWhite rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm"
             >
               ›
             </button>
@@ -72,13 +72,13 @@ export default function ImageGallery({ images, title }) {
 
         {/* Counter badge */}
         {images.length > 1 && (
-          <span className="absolute bottom-3 right-3 text-xs bg-black/60 text-white/80 px-2.5 py-1 rounded-full backdrop-blur-sm">
+          <span className="absolute bottom-3 right-3 text-xs bg-black/60 text-pureWhite/80 px-2.5 py-1 rounded-full backdrop-blur-sm">
             {active + 1} / {images.length}
           </span>
         )}
 
         {/* Expand hint */}
-        <span className="absolute bottom-3 left-3 text-xs bg-black/50 text-white/50 px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+        <span className="absolute bottom-3 left-3 text-xs bg-black/50 text-pureWhite/50 px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
           Click to expand
         </span>
       </div>

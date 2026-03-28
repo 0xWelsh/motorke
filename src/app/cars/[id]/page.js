@@ -8,7 +8,6 @@ import EnquiryForm from "@/components/EnquiryForm";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
 import { SaveButton, TrackRecentView } from "@/components/CarActions";
-import RecentlyViewed from "@/components/RecentlyViewed";
 import Link from "next/link";
 
 export async function generateMetadata({ params }) {
@@ -98,7 +97,7 @@ export default async function CarDetailPage({ params }) {
               <p className="text-white/40 mt-1">{BODY_TYPE_LABELS[car.bodyType]} · {car.year} · {formatMileage(car.mileage)}</p>
             </div>
             <div className="text-right">
-              <p className="text-3xl font-black text-[#f97316]">{formatPrice(car.price)}</p>
+              <p className="text-3xl font-black text-orange-500">{formatPrice(car.price)}</p>
               {car.negotiable && <p className="text-xs text-white/40 mt-1">Negotiable</p>}
             </div>
           </div>
@@ -158,9 +157,9 @@ export default async function CarDetailPage({ params }) {
         {/* Right: dealer card + enquiry */}
         <div className="space-y-5">
           {/* Dealer card */}
-          <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-5">
+          <div className="bg-surface border border-white/5 shadow-2xl rounded-2xl p-5">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-[#f97316]/20 flex items-center justify-center text-[#f97316] font-black text-lg">
+              <div className="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-500 font-black text-lg">
                 {dealer.name[0]}
               </div>
               <div>
@@ -174,13 +173,13 @@ export default async function CarDetailPage({ params }) {
               </div>
             </div>
             <Link href={`/dealers/${dealer.slug}`}
-              className="block text-center text-xs text-[#f97316] border border-[#f97316]/30 rounded-xl py-2 hover:bg-[#f97316]/10 transition-colors">
+              className="block text-center text-xs text-orange-500 border border-orange-500/30 rounded-xl py-2 hover:bg-orange-500/10 transition-colors">
               View all cars from this dealer
             </Link>
           </div>
 
           {/* Enquiry form with WhatsApp */}
-          <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-5">
+          <div className="bg-surface border border-white/5 shadow-2xl rounded-2xl p-5">
             <h3 className="font-bold mb-4">Contact dealer</h3>
             <EnquiryForm
               carId={car.id}
@@ -191,10 +190,10 @@ export default async function CarDetailPage({ params }) {
           </div>
 
           {/* Compare CTA */}
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
+          <div className="bg-white/5 border border-white/5 rounded-2xl p-4 text-center">
             <p className="text-xs text-white/40 mb-2">Want to compare this car?</p>
             <Link href={`/compare?a=${car.id}`}
-              className="text-sm text-[#f97316] font-semibold hover:text-orange-400 transition-colors">
+              className="text-sm text-orange-500 font-semibold hover:text-orange-400 transition-colors">
               Add to comparison →
             </Link>
           </div>
@@ -210,14 +209,14 @@ export default async function CarDetailPage({ params }) {
               const img = c.images[0]?.url;
               return (
                 <Link key={c.id} href={`/cars/${c.id}`}
-                  className="card-hover block bg-[#1a1a1a] border border-white/10 hover:border-[#f97316]/30 rounded-2xl overflow-hidden transition-all">
+                  className="card-hover block bg-surface border border-white/5 hover:border-orange-500/30 rounded-2xl overflow-hidden transition-all">
                   <div className="aspect-[16/10] bg-white/5">
-                    {img ? <img src={img} alt={c.model} className="w-full h-full object-cover" /> : <div className="flex items-center justify-center h-full text-3xl">🚗</div>}
+                    {img ? <img src={img} alt={c.model} className="w-full h-full object-cover" /> : <div className="flex items-center justify-center h-full text-white/20 uppercase font-black text-[10px] tracking-widest">Pending Imagery</div>}
                   </div>
                   <div className="p-4">
                     <p className="font-bold text-sm">{c.year} {c.make} {c.model}</p>
                     <div className="flex justify-between items-center mt-2">
-                      <p className="text-[#f97316] font-black text-base">{formatPrice(c.price)}</p>
+                      <p className="text-orange-500 font-black text-base">{formatPrice(c.price)}</p>
                       <p className="text-[10px] text-white/30">{c.dealer?.name}</p>
                     </div>
                   </div>

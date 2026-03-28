@@ -58,7 +58,7 @@ function StatusCard({ icon, title, message, success }) {
             Motor<span className="text-orange-600">ke</span>
           </span>
           <div className="h-4 w-px bg-slate-200 mx-1" />
-          <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Standard</span>
+          <span className="text-[9px] font-black dark:text-slate-400 text-slate-600 uppercase tracking-[0.2em]">Standard</span>
         </div>
 
         <div className="bg-white border border-slate-100 rounded-[2.5rem] p-12 shadow-sm">
@@ -69,21 +69,21 @@ function StatusCard({ icon, title, message, success }) {
           </div>
           
           <h1 className="text-2xl font-black text-slate-900 tracking-tight mb-4">{title}</h1>
-          <p className="text-slate-500 text-sm font-medium leading-relaxed mb-10">
+          <p className="dark:text-slate-500 text-slate-600 text-sm font-medium leading-relaxed mb-10">
             {message}
           </p>
 
           <Link 
             href={success ? "/" : "/login"} 
-            className="inline-flex items-center gap-2 bg-slate-900 hover:bg-orange-600 text-white px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl shadow-slate-200"
+            className="inline-flex items-center gap-2 bg-slate-900 hover:bg-orange-600 text-pureWhite px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl shadow-slate-200"
           >
             {success ? "Go to Showcase" : "Back to Sign In"} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
         <div className="mt-12 flex items-center justify-center gap-2">
-           <ShieldCheck className="w-3 h-3 text-slate-300" />
-           <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Motorke Trust & Safety</span>
+           <ShieldCheck className="w-3 h-3 dark:text-slate-300 text-slate-500" />
+           <span className="text-[9px] font-black dark:text-slate-300 text-slate-500 uppercase tracking-widest">Motorke Trust & Safety</span>
         </div>
       </div>
     </div>

@@ -89,43 +89,43 @@ export default async function CarsPage({ searchParams }) {
   const hasFilters = search || make || bodyType || fuelType || county || minPrice || maxPrice;
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-background min-h-screen">
       {/* ── MINIMAL FILTER BAR ── */}
-      <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-100 py-4 shadow-sm">
+      <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-white/5 py-4 shadow-sm">
         <div className="container mx-auto px-6 max-w-7xl">
           <form method="GET" className="flex flex-wrap items-center gap-3">
             <div className="relative flex-1 min-w-[240px] group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-slate-900 transition-colors" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-white transition-colors" />
               <input 
                 name="search" 
                 defaultValue={search} 
                 placeholder="Search inventory..." 
-                className="w-full bg-slate-50 border border-slate-100 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold text-slate-900 outline-none focus:bg-white focus:border-slate-900 transition-all"
+                className="w-full bg-white/5 border border-white/5 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold text-white outline-none focus:bg-surface focus:border-white/20 transition-all placeholder:text-white/30"
               />
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <select name="make" defaultValue={make} className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-500 outline-none focus:border-slate-900 transition-all cursor-pointer">
+              <select name="make" defaultValue={make} className="bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:text-white focus:border-white/20 transition-all cursor-pointer">
                 <option value="">All Makes</option>
                 {allMakes.map(m => <option key={m.make} value={m.make}>{m.make}</option>)}
               </select>
 
-              <select name="bodyType" defaultValue={bodyType} className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-500 outline-none focus:border-slate-900 transition-all cursor-pointer">
+              <select name="bodyType" defaultValue={bodyType} className="bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:text-white focus:border-white/20 transition-all cursor-pointer">
                 <option value="">All Types</option>
                 {Object.entries(BODY_TYPE_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
               </select>
 
-              <select name="county" defaultValue={county} className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-slate-500 outline-none focus:border-slate-900 transition-all cursor-pointer">
+              <select name="county" defaultValue={county} className="bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:text-white focus:border-white/20 transition-all cursor-pointer">
                 <option value="">All Counties</option>
                 {COUNTIES.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
 
-              <button type="submit" className="bg-slate-900 hover:bg-orange-600 text-white p-2.5 rounded-xl transition-all">
+              <button type="submit" className="bg-white/10 hover:bg-orange-600 text-pureWhite p-2.5 rounded-xl transition-all">
                 <Filter className="w-4 h-4" />
               </button>
 
               {hasFilters && (
-                <Link href="/cars" className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-xl transition-all">
+                <Link href="/cars" className="p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all">
                   <X className="w-4 h-4" />
                 </Link>
               )}
@@ -140,22 +140,22 @@ export default async function CarsPage({ searchParams }) {
           <div>
             <div className="flex items-center gap-2 mb-2">
                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Live Inventory</span>
+               <span className="text-[10px] font-black uppercase tracking-widest text-white/30">Live Inventory</span>
             </div>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tight">
+            <h1 className="text-4xl font-black text-white tracking-tight">
               {search ? `Results for "${search}"` : county ? `Verified in ${county}` : "All Showcases"}
             </h1>
-            <p className="text-slate-500 font-medium mt-1">
+            <p className="text-white/50 font-medium mt-1">
               Displaying {total} premium automotive units.
             </p>
           </div>
           
           <div className="flex items-center gap-6">
             <div className="text-right">
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">Market View</p>
-              <p className="text-xs font-black text-slate-900">Nairobi Standard Time</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-white/30">Market View</p>
+              <p className="text-xs font-black text-white">Nairobi Standard Time</p>
             </div>
-            <button className="flex items-center gap-2 bg-slate-50 border border-slate-100 px-5 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest text-slate-600 hover:text-slate-900 transition-all">
+            <button className="flex items-center gap-2 bg-white/5 border border-white/10 px-5 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest text-white/50 hover:text-white transition-all">
                <ArrowUpDown className="w-3 h-3" /> Sort: Relevance
             </button>
           </div>
@@ -163,13 +163,13 @@ export default async function CarsPage({ searchParams }) {
 
         {/* ── CAR GRID ── */}
         {sortedCars.length === 0 ? (
-          <div className="py-32 text-center border-2 border-dashed border-slate-100 rounded-[3rem]">
-            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
-               <Search className="w-8 h-8 text-slate-200" />
+          <div className="py-32 text-center border-2 border-dashed border-white/10 rounded-[3rem]">
+            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+               <Search className="w-8 h-8 text-white/20" />
             </div>
-            <h2 className="text-xl font-black text-slate-900 mb-2">No matching units found.</h2>
-            <p className="text-slate-400 font-medium mb-8">Try adjusting your filters or search terms.</p>
-            <Link href="/cars" className="inline-flex items-center gap-2 bg-slate-900 text-white px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest">
+            <h2 className="text-xl font-black text-white mb-2">No matching units found.</h2>
+            <p className="text-white/40 font-medium mb-8">Try adjusting your filters or search terms.</p>
+            <Link href="/cars" className="inline-flex items-center gap-2 bg-white/10 text-white px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/20 transition-colors">
               Reset Filters
             </Link>
           </div>
@@ -188,7 +188,7 @@ export default async function CarsPage({ searchParams }) {
               <Link key={p}
                 href={`/cars?page=${p}&search=${search}&make=${make}&bodyType=${bodyType}&fuelType=${fuelType}&county=${county}`}
                 className={`w-10 h-10 rounded-xl flex items-center justify-center text-[11px] font-black transition-all ${
-                  p === page ? "bg-slate-900 text-white shadow-xl shadow-slate-200" : "bg-white border border-slate-100 text-slate-400 hover:border-slate-900 hover:text-slate-900"
+                  p === page ? "bg-orange-600 text-white shadow-[0_0_15px_rgba(234,88,12,0.4)]" : "bg-white/5 border border-transparent text-white/40 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 {p.toString().padStart(2, '0')}
@@ -207,8 +207,8 @@ function InventoryCard({ car, userLat, userLng }) {
   const dist  = userLat && car.dealer?.lat ? Math.round(distance(userLat, userLng, car.dealer.lat, car.dealer.lng)) : null;
 
   return (
-    <Link href={`/cars/${car.id}`} className="group block">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-slate-50 mb-6 shadow-sm group-hover:shadow-2xl transition-all duration-700">
+    <Link href={`/cars/${car.id}`} className="card-hover block">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-surface border border-white/5 mb-6 shadow-sm">
         {img ? (
           <img 
             src={img} 
@@ -216,23 +216,23 @@ function InventoryCard({ car, userLat, userLng }) {
             className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-[1.5s]" 
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-200 uppercase font-black text-[10px] tracking-[0.2em]">Pending Imagery</div>
+          <div className="w-full h-full flex items-center justify-center text-white/20 uppercase font-black text-[10px] tracking-[0.2em]">Pending Imagery</div>
         )}
         
         {/* Top Badges */}
         <div className="absolute top-5 left-5 right-5 flex justify-between items-start pointer-events-none">
           <div className="flex flex-col gap-2">
             {car.featured && (
-              <span className="bg-slate-900/90 backdrop-blur-md text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg border border-white/10">
+              <span className="bg-orange-600/90 backdrop-blur-md text-pureWhite text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg border border-orange-500 w-max">
                 Premium
               </span>
             )}
-            <span className="bg-white/90 backdrop-blur-md text-slate-900 text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg border border-slate-100">
+            <span className="bg-white/10 backdrop-blur-md text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg border border-white/10 w-max">
               {car.year}
             </span>
           </div>
           {dist !== null && (
-            <span className="bg-orange-600/90 backdrop-blur-md text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+            <span className="bg-surface/90 backdrop-blur-md text-orange-500 text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg border border-orange-500/20">
                {dist}km Away
             </span>
           )}
@@ -249,38 +249,38 @@ function InventoryCard({ car, userLat, userLng }) {
       <div className="px-2">
         <div className="flex items-start justify-between mb-3 gap-4">
           <div>
-            <h3 className="font-black text-slate-900 text-lg leading-tight group-hover:text-orange-600 transition-colors truncate mb-1">{title}</h3>
+            <h3 className="font-black text-white text-lg leading-tight group-hover:text-orange-500 transition-colors truncate mb-1">{title}</h3>
             <div className="flex items-center gap-2">
-               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{car.variant || "Standard Edition"}</p>
+               <p className="text-[10px] font-black text-white/40 uppercase tracking-widest">{car.variant || "Standard Edition"}</p>
                {car.dealer?.verified && <ShieldCheck className="w-3 h-3 text-emerald-500" />}
             </div>
           </div>
-          <p className="text-xl font-black text-slate-900 shrink-0">{formatPrice(car.price)}</p>
+          <p className="text-xl font-black text-white shrink-0">{formatPrice(car.price)}</p>
         </div>
 
-        <div className="grid grid-cols-3 gap-px bg-slate-100 border border-slate-100 rounded-xl overflow-hidden mb-4">
-          <div className="bg-white py-2.5 flex flex-col items-center">
-             <Settings2 className="w-3 h-3 text-slate-300 mb-1" />
-             <span className="text-[9px] font-black text-slate-500 uppercase tracking-tighter">{car.transmission?.charAt(0)}T</span>
+        <div className="grid grid-cols-3 gap-px bg-white/5 border border-white/5 rounded-xl overflow-hidden mb-4">
+          <div className="bg-background py-2.5 flex flex-col items-center">
+             <Settings2 className="w-3 h-3 text-white/30 mb-1" />
+             <span className="text-[9px] font-black text-white/50 uppercase tracking-tighter">{car.transmission?.charAt(0)}T</span>
           </div>
-          <div className="bg-white py-2.5 flex flex-col items-center">
-             <Zap className="w-3 h-3 text-slate-300 mb-1" />
-             <span className="text-[9px] font-black text-slate-500 uppercase tracking-tighter">{car.mileage ? Math.round(car.mileage/1000) + 'k' : '—'}</span>
+          <div className="bg-background py-2.5 flex flex-col items-center">
+             <Zap className="w-3 h-3 text-white/30 mb-1" />
+             <span className="text-[9px] font-black text-white/50 uppercase tracking-tighter">{car.mileage ? Math.round(car.mileage/1000) + 'k' : '—'}</span>
           </div>
-          <div className="bg-white py-2.5 flex flex-col items-center">
-             <Fuel className="w-3 h-3 text-slate-300 mb-1" />
-             <span className="text-[9px] font-black text-slate-500 uppercase tracking-tighter">{car.fuelType?.charAt(0)}L</span>
+          <div className="bg-background py-2.5 flex flex-col items-center">
+             <Fuel className="w-3 h-3 text-white/30 mb-1" />
+             <span className="text-[9px] font-black text-white/50 uppercase tracking-tighter">{car.fuelType?.charAt(0)}L</span>
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-slate-50">
+        <div className="flex items-center justify-between pt-4 border-t border-white/5">
            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-slate-100 flex items-center justify-center text-[10px] font-black text-slate-400 uppercase">
+              <div className="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center text-[10px] font-black text-white/50 uppercase">
                  {car.dealer?.name[0]}
               </div>
-              <p className="text-[10px] font-black text-slate-900 uppercase tracking-tighter">{car.dealer?.name}</p>
+              <p className="text-[10px] font-black text-white/70 uppercase tracking-tighter">{car.dealer?.name}</p>
            </div>
-           <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-orange-600 group-hover:translate-x-1 transition-all" />
+           <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
         </div>
       </div>
     </Link>
