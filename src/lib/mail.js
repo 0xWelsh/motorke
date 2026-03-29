@@ -1,69 +1,69 @@
 // src/lib/mail.js
-// Minimalist Resend integration for Motorske Standard
 import { db } from "@/lib/db";
-import crypto from "crypto";
+import nodemailer from "nodemailer";
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const DOMAIN = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+const SMTP_USER = process.env.SMTP_USER;
+const SMTP_PASS = process.env.SMTP_PASS?.replace(/\s+/g, '');
 
-/** Generate and save a secure verification token */
-export async function createVerificationToken(email) {
-  const token   = crypto.randomBytes(32).toString("hex");
-  const expires = new Date(Date.now() + 3600 * 1000); // 1 hour
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: { user: SMTP_USER, pass: SMTP_PASS },
+});
+
+export async function createEmailOTP(email) {
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const expires = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
 
   // Delete existing tokens for this email
   await db.verificationToken.deleteMany({ where: { identifier: email } });
 
-  return db.verificationToken.create({
-    data: { identifier: email, token, expires },
+  await db.verificationToken.create({
+    data: { identifier: email, token: otp, expires },
   });
+
+  return otp;
 }
 
-/** Send Verification Email (Resend) */
-export async function sendVerificationEmail(email, name, token) {
-  const confirmLink = `${DOMAIN}/verify?token=${token}`;
-
-  // If no API key, log the link (great for dev/testing)
-  if (!RESEND_API_KEY) {
-    console.log("------------------------------------------");
-    console.log(`VERIFICATION LINK FOR ${email}:`);
-    console.log(confirmLink);
-    console.log("------------------------------------------");
+export async function sendVerificationEmail(email, name, otp) {
+  if (!SMTP_USER || !SMTP_PASS) {
+    console.log("✉️ ======================================");
+    console.log(`✉️ MOCK EMAIL TO: ${email}`);
+    console.log(`✉️ CODE: ${otp}`);
+    console.log("✉️ ======================================");
     return { success: true, mocked: true };
   }
 
+  const htmlContent = `
+    <div style="font-family: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #1A1A1A;">
+      <div style="margin-bottom: 40px; text-align: center;">
+        <span style="font-weight: 800; font-size: 24px; text-transform: uppercase;">Motor<span style="color: #E8490F;">ke</span></span>
+        <p style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3em; color: #999; margin-top: 5px;">Standard</p>
+      </div>
+      <h1 style="font-size: 28px; font-weight: 800; margin-bottom: 20px;">Welcome, ${name.split(' ')[0]}.</h1>
+      <p style="font-size: 16px; color: #666; margin-bottom: 30px;">
+        Use the following 6-digit confirmation code to verify your email address.
+      </p>
+      <div style="background: #f4f4f5; padding: 30px; text-align: center; border-radius: 16px; margin-bottom: 30px;">
+         <span style="font-size: 42px; font-weight: 900; letter-spacing: 0.25em; color: #E8490F;">${otp}</span>
+      </div>
+      <p style="font-size: 12px; color: #999; margin-top: 40px;">
+        This code expires in 30 minutes. If you did not create a Motorske account, you can safely ignore this.
+      </p>
+    </div>
+  `;
+
   try {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: "Motorske <verify@motorske.ke>",
-        to: [email],
-        subject: "Verify your Motorske Standard Profile",
-        html: `
-          <div style="font-family: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #1A1A1A;">
-            <div style="margin-bottom: 40px; text-align: center;">
-              <span style="font-weight: 800; font-size: 24px; text-transform: uppercase; letter-spacing: -0.05em;">Motor<span style="color: #E8490F;">ke</span></span>
-              <p style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3em; color: #999; margin-top: 5px;">Standard</p>
-            </div>
-            <h1 style="font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 20px;">Welcome to the Standard, ${name.split(' ')[0]}.</h1>
-            <p style="font-size: 16px; color: #666; line-height: 1.6; margin-bottom: 30px;">
-              To protect the integrity of the Motorske marketplace, we require email verification for all active profiles.
-            </p>
-            <a href="${confirmLink}" style="display: inline-block; background: #1A1A1A; color: #FFFFFF; text-decoration: none; padding: 16px 32px; border-radius: 12px; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em;">Verify My Profile</a>
-            <p style="font-size: 12px; color: #999; margin-top: 40px; line-height: 1.6;">
-              This link will expire in 1 hour. If you didn't create a Motorske account, you can safely ignore this email.
-            </p>
-          </div>
-        `,
-      }),
+    await transporter.sendMail({
+      from: '"Motorske Standard" <noreply@motorske.com>',
+      to: email,
+      subject: "Your Motorske Verification Code",
+      html: htmlContent,
     });
-    return res.json();
+    return { success: true };
   } catch (error) {
-    console.error("Email send failed", error);
+    console.error("Nodemailer failed:", error);
     return { error };
   }
 }

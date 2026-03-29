@@ -207,17 +207,21 @@ export default async function CarDetailPage({ params }) {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {similar.map((c) => {
               const img = c.images[0]?.url;
+              const title = `${c.make} ${c.model}`;
               return (
                 <Link key={c.id} href={`/cars/${c.id}`}
-                  className="card-hover block bg-surface border border-white/5 hover:border-orange-500/30 rounded-2xl overflow-hidden transition-all">
-                  <div className="aspect-[16/10] bg-white/5">
-                    {img ? <img src={img} alt={c.model} className="w-full h-full object-cover" /> : <div className="flex items-center justify-center h-full text-white/20 uppercase font-black text-[10px] tracking-widest">Pending Imagery</div>}
+                  className="group block bg-surface border border-white/5 hover:border-orange-500/30 overflow-hidden transition-all duration-300">
+                  <div className="relative aspect-[16/10] bg-white/5 overflow-hidden">
+                    {img ? <img src={img} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" /> : <div className="flex items-center justify-center h-full text-white/20 text-[10px] font-bold uppercase tracking-widest">No Image</div>}
                   </div>
-                  <div className="p-4">
-                    <p className="font-bold text-sm">{c.year} {c.make} {c.model}</p>
-                    <div className="flex justify-between items-center mt-2">
-                      <p className="text-orange-500 font-black text-base">{formatPrice(c.price)}</p>
-                      <p className="text-[10px] text-white/30">{c.dealer?.name}</p>
+                  <div className="p-4 flex flex-col gap-2.5">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-[10px] font-black bg-white/10 text-orange-400 px-2 py-0.5 uppercase tracking-wider shrink-0">{c.year}</span>
+                      <h3 className="font-bold text-white text-sm leading-tight truncate group-hover:text-orange-500 transition-colors">{title}</h3>
+                    </div>
+                    <div className="flex items-center justify-between pt-2.5 border-t border-white/5">
+                      <p className="text-base font-black text-orange-500">{formatPrice(c.price)}</p>
+                      <span className="text-[10px] text-white/30">{c.dealer?.name}</span>
                     </div>
                   </div>
                 </Link>

@@ -1,6 +1,6 @@
 // src/app/cars/page.js
 import { db } from "@/lib/db";
-import { formatPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS } from "@/lib/utils";
+import { formatPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS, BADGE_OPTIONS } from "@/lib/utils";
 import Link from "next/link";
 import { 
   Search, 
@@ -9,10 +9,7 @@ import {
   ChevronRight, 
   X, 
   ArrowUpDown,
-  ShieldCheck,
-  Zap,
-  Fuel,
-  Settings2
+  ShieldCheck
 } from "lucide-react";
 
 export const metadata = { title: "Inventory — Motorke Standard" };
@@ -203,84 +200,83 @@ export default async function CarsPage({ searchParams }) {
 
 function InventoryCard({ car, userLat, userLng }) {
   const img   = car.images[0]?.url;
-  const title = `${car.year} ${car.make} ${car.model}`;
+  const title = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const dist  = userLat && car.dealer?.lat ? Math.round(distance(userLat, userLng, car.dealer.lat, car.dealer.lng)) : null;
 
-  return (
-    <Link href={`/cars/${car.id}`} className="card-hover block">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-surface border border-white/5 mb-6 shadow-sm">
-        {img ? (
-          <img 
-            src={img} 
-            alt={title} 
-            className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-[1.5s]" 
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-white/20 uppercase font-black text-[10px] tracking-[0.2em]">Pending Imagery</div>
-        )}
-        
-        {/* Top Badges */}
-        <div className="absolute top-5 left-5 right-5 flex justify-between items-start pointer-events-none">
-          <div className="flex flex-col gap-2">
-            {car.featured && (
-              <span className="bg-orange-600/90 backdrop-blur-md text-pureWhite text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg border border-orange-500 w-max">
-                Premium
-              </span>
-            )}
-            <span className="bg-white/10 backdrop-blur-md text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg border border-white/10 w-max">
-              {car.year}
-            </span>
-          </div>
-          {dist !== null && (
-            <span className="bg-surface/90 backdrop-blur-md text-orange-500 text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg border border-orange-500/20">
-               {dist}km Away
-            </span>
-          )}
-        </div>
+  const specs = [
+    car.fuelType && FUEL_LABELS[car.fuelType],
+    car.transmission === "AUTOMATIC" ? "Auto" : car.transmission === "MANUAL" ? "Manual" : car.transmission,
+    car.mileage ? `${Math.round(car.mileage / 1000)}k km` : null,
+    car.engineCC ? `${car.engineCC}cc` : null,
+    BODY_TYPE_LABELS[car.bodyType],
+  ].filter(Boolean);
 
-        {/* Bottom Overlay Info */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-        <div className="absolute bottom-8 left-8 right-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700">
-           <p className="text-[10px] font-black text-orange-400 uppercase tracking-widest mb-1">View Full Details</p>
-           <div className="h-px w-full bg-white/20" />
-        </div>
+  return (
+    <Link href={`/cars/${car.id}`} className="group block bg-surface border border-white/5 hover:border-orange-500/30 overflow-hidden transition-all duration-300">
+      {/* Landscape thumbnail — sharp corners */}
+      <div className="relative aspect-[16/10] bg-white/5 overflow-hidden">
+        {img ? (
+          <img src={img} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-white/20 text-[10px] font-bold uppercase tracking-widest">No Image</div>
+        )}
+        {car.featured && (
+          <span className="absolute top-3 right-3 bg-orange-600 text-pureWhite text-[9px] font-black px-2.5 py-1 uppercase tracking-widest">
+            Featured
+          </span>
+        )}
+        {dist !== null && (
+          <span className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-orange-400 text-[9px] font-bold px-2.5 py-1">
+            {dist}km away
+          </span>
+        )}
+        {/* Badges */}
+        {car.badges?.length > 0 && (
+          <div className="absolute bottom-3 left-3 flex flex-wrap gap-1">
+            {car.badges.map((b) => (
+              <span key={b} className={`text-[9px] font-bold px-2 py-0.5 border ${BADGE_OPTIONS[b]?.color || "bg-white/10 text-white/60 border-white/10"}`}>
+                {b}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
-      <div className="px-2">
-        <div className="flex items-start justify-between mb-3 gap-4">
-          <div>
-            <h3 className="font-black text-white text-lg leading-tight group-hover:text-orange-500 transition-colors truncate mb-1">{title}</h3>
-            <div className="flex items-center gap-2">
-               <p className="text-[10px] font-black text-white/40 uppercase tracking-widest">{car.variant || "Standard Edition"}</p>
-               {car.dealer?.verified && <ShieldCheck className="w-3 h-3 text-emerald-500" />}
-            </div>
-          </div>
-          <p className="text-xl font-black text-white shrink-0">{formatPrice(car.price)}</p>
+      {/* Content */}
+      <div className="p-4 flex flex-col gap-3">
+        {/* Year label + Car name */}
+        <div className="flex items-center gap-2.5">
+          <span className="text-[10px] font-black bg-white/10 text-orange-400 px-2 py-0.5 uppercase tracking-wider shrink-0">
+            {car.year}
+          </span>
+          <h3 className="font-bold text-white text-sm leading-tight truncate group-hover:text-orange-500 transition-colors">
+            {title}
+          </h3>
+          {car.dealer?.verified && <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />}
         </div>
 
-        <div className="grid grid-cols-3 gap-px bg-white/5 border border-white/5 rounded-xl overflow-hidden mb-4">
-          <div className="bg-background py-2.5 flex flex-col items-center">
-             <Settings2 className="w-3 h-3 text-white/30 mb-1" />
-             <span className="text-[9px] font-black text-white/50 uppercase tracking-tighter">{car.transmission?.charAt(0)}T</span>
-          </div>
-          <div className="bg-background py-2.5 flex flex-col items-center">
-             <Zap className="w-3 h-3 text-white/30 mb-1" />
-             <span className="text-[9px] font-black text-white/50 uppercase tracking-tighter">{car.mileage ? Math.round(car.mileage/1000) + 'k' : '—'}</span>
-          </div>
-          <div className="bg-background py-2.5 flex flex-col items-center">
-             <Fuel className="w-3 h-3 text-white/30 mb-1" />
-             <span className="text-[9px] font-black text-white/50 uppercase tracking-tighter">{car.fuelType?.charAt(0)}L</span>
-          </div>
+        {/* Description */}
+        {car.description && (
+          <p className="text-xs text-white/40 leading-relaxed line-clamp-2">
+            {car.description}
+          </p>
+        )}
+
+        {/* Spec tags */}
+        <div className="flex flex-wrap gap-1.5">
+          {specs.map((s) => (
+            <span key={s} className="text-[10px] font-semibold text-white/50 bg-white/5 border border-white/5 px-2 py-0.5">
+              {s}
+            </span>
+          ))}
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-white/5">
-           <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center text-[10px] font-black text-white/50 uppercase">
-                 {car.dealer?.name[0]}
-              </div>
-              <p className="text-[10px] font-black text-white/70 uppercase tracking-tighter">{car.dealer?.name}</p>
-           </div>
-           <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
+        {/* Price + View Offer */}
+        <div className="flex items-center justify-between pt-3 border-t border-white/5 mt-auto">
+          <p className="text-lg font-black text-orange-500">{formatPrice(car.price)}</p>
+          <span className="text-[10px] font-black uppercase tracking-widest text-white/30 group-hover:text-orange-500 transition-colors flex items-center gap-1">
+            View Offer <ChevronRight className="w-3 h-3" />
+          </span>
         </div>
       </div>
     </Link>

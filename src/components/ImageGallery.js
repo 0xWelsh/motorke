@@ -5,7 +5,8 @@
 import { useState, useEffect, useCallback } from "react";
 
 export default function ImageGallery({ images, title }) {
-  const [active, setActive]       = useState(0);
+  const primaryIdx = images.findIndex((img) => img.isPrimary);
+  const [active, setActive]       = useState(primaryIdx >= 0 ? primaryIdx : 0);
   const [lightbox, setLightbox]   = useState(false);
 
   const prev = useCallback(() =>

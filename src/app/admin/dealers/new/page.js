@@ -1,5 +1,6 @@
 // src/app/admin/dealers/new/page.js
 import { requireAdmin } from "@/lib/auth";
+import LocationPicker from "@/components/LocationPicker";
 
 export const metadata = { title: "Add Dealership — Admin" };
 
@@ -8,9 +9,10 @@ const COUNTIES = [
   "Kajiado","Muranga","Nyeri","Meru","Embu","Kilifi","Kwale","Laikipia","Other"
 ];
 
-export default async function AdminNewDealerPage({ searchParams }) {
+export default async function AdminNewDealerPage(props) {
+  const searchParams = await props.searchParams;
   await requireAdmin();
-  const error = searchParams.error;
+  const error = searchParams?.error;
 
   const inputCls  = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
   const selectCls = "w-full bg-surface border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
@@ -83,6 +85,10 @@ export default async function AdminNewDealerPage({ searchParams }) {
             <textarea name="description" rows={3}
               placeholder="Brief description shown on the dealer profile page..."
               className={`${inputCls} resize-none`} />
+          </div>
+
+          <div className="pt-2 border-t border-white/5">
+            <LocationPicker />
           </div>
 
           <div className="flex gap-6">

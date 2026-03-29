@@ -30,6 +30,13 @@ export async function POST(request) {
       return NextResponse.redirect(new URL("/login?error=inactive", request.url));
     }
 
+    if (!user.emailVerified) {
+      const { createEmailOTP, sendVerificationEmail } = await import("@/lib/mail");
+      const otp = await createEmailOTP(user.email);
+      await sendVerificationEmail(user.email, user.name, otp);
+      return NextResponse.redirect(new URL(`/verify?email=${encodeURIComponent(user.email)}`, request.url));
+    }
+
     await createSession(user.id);
 
     // Redirect based on role

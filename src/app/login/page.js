@@ -64,7 +64,7 @@ export default async function LoginPage({ searchParams }) {
                 name="email" 
                 type="email" 
                 required 
-                autoComplete="email" 
+                autoComplete="off" 
                 placeholder="name@example.com" 
                 className="w-full bg-white/5 border border-white/5 rounded-2xl px-5 py-4 text-sm font-medium text-white outline-none focus:border-white/20 focus:bg-surface transition-all placeholder:text-white/20"
               />
@@ -79,6 +79,7 @@ export default async function LoginPage({ searchParams }) {
                 name="password" 
                 type="password" 
                 required 
+                autoComplete="new-password"
                 placeholder="••••••••" 
                 className="w-full bg-white/5 border border-white/5 rounded-2xl px-5 py-4 text-sm font-medium text-white outline-none focus:border-white/20 focus:bg-surface transition-all placeholder:text-white/20"
               />

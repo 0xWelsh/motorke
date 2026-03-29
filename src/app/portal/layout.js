@@ -22,7 +22,7 @@ const links = [
   { href: "/portal/inventory", label: "Inventory",  Icon: Package         },
   { href: "/portal/leads",     label: "Inquiries",  Icon: MessageSquare   },
   { href: "/portal/analytics", label: "Performance", Icon: BarChart2       },
-  { href: "/portal/billing",   label: "Subscription", Icon: CreditCard      },
+  { href: "/portal/subscription",   label: "Subscription", Icon: CreditCard      },
   { href: "/portal/profile",   label: "Settings",   Icon: Settings        },
 ];
 

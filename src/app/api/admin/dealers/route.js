@@ -41,6 +41,8 @@ export async function POST(request) {
         county:      formData.get("county")?.toString()   || "Nairobi",
         location:    formData.get("location")?.toString().trim() || "",
         address:     formData.get("address")?.toString().trim()  || null,
+        lat:         formData.get("lat") ? parseFloat(formData.get("lat")) : null,
+        lng:         formData.get("lng") ? parseFloat(formData.get("lng")) : null,
         phone:       formData.get("phone")?.toString().trim()    || "",
         whatsapp:    formData.get("whatsapp")?.toString().trim() || null,
         email:       formData.get("email")?.toString().trim()    || null,

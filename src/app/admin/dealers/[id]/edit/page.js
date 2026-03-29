@@ -3,6 +3,9 @@ import { requireAdmin } from "@/lib/auth";
 import DeleteButton from "@/components/DeleteButton";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
+import LocationPicker from "@/components/LocationPicker";
+import AdminAvatarUpload from "@/components/AdminAvatarUpload";
+import { MapPin } from "lucide-react";
 
 export const metadata = { title: "Edit Dealership — Admin" };
 
@@ -16,7 +19,10 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
   const sp = await searchParams;
   await requireAdmin();
 
-  const dealer = await db.dealer.findUnique({ where: { id: id } });
+  const dealer = await db.dealer.findUnique({ 
+    where: { id: id },
+    include: { branches: true } 
+  });
   if (!dealer) notFound();
 
   const saved  = sp.saved;
@@ -30,7 +36,13 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
     <div className="p-8 max-w-2xl">
       <div className="mb-8">
         <a href="/admin/dealers" className="text-xs text-white/40 hover:text-white transition-colors">← Dealerships</a>
-        <h1 className="text-3xl font-black mt-2">{dealer.name}</h1>
+        <div className="flex items-center gap-5 mt-4">
+          <AdminAvatarUpload currentUrl={dealer.logoUrl} targetId={dealer.id} targetType="dealer" name={dealer.name} size="lg" />
+          <div>
+            <h1 className="text-3xl font-black">{dealer.name}</h1>
+            <p className="text-xs text-white/40 mt-1">Click the logo to upload or change it</p>
+          </div>
+        </div>
       </div>
 
       <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-7">
@@ -98,6 +110,10 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
               className={`${inputCls} resize-none`} />
           </div>
 
+          <div className="pt-2 border-t border-white/5">
+            <LocationPicker defaultLat={dealer.lat} defaultLng={dealer.lng} />
+          </div>
+
           <div className="flex gap-6">
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" name="verified" defaultChecked={dealer.verified}
@@ -116,6 +132,42 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
             Save changes
           </button>
         </form>
+      </div>
+
+      {/* Branch Management */}
+      <div className="mt-6 bg-[#1a1a1a] border border-white/10 rounded-2xl p-7">
+        <div className="flex items-center justify-between mb-6">
+           <div>
+             <h2 className="font-black text-white">Branch Locations</h2>
+             <p className="text-xs text-white/40 mt-1">Add additional map-pinned locations for this dealership.</p>
+           </div>
+           <a href={`/admin/dealers/${dealer.id}/branches/new`} className="px-4 py-2 bg-orange-600/10 hover:bg-orange-600 text-orange-500 hover:text-white border border-orange-500/20 hover:border-orange-500 rounded-xl text-[10px] font-black uppercase tracking-widest transition-colors">
+              + Add Branch
+           </a>
+        </div>
+        
+        {dealer.branches && dealer.branches.length > 0 ? (
+           <div className="space-y-3">
+             {dealer.branches.map(b => (
+               <div key={b.id} className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-xl">
+                 <div className="flex items-center gap-4">
+                   <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                     <MapPin size={16} />
+                   </div>
+                   <div>
+                     <p className="text-sm font-bold text-white">{b.name}</p>
+                     <p className="text-xs text-white/40 mt-0.5">{b.location}</p>
+                   </div>
+                 </div>
+                 <DeleteButton action={`/api/admin/dealers/${dealer.id}/branches/${b.id}/delete`} message="Remove this branch?" />
+               </div>
+             ))}
+           </div>
+        ) : (
+           <div className="py-8 text-center bg-white/[0.02] border border-white/5 rounded-xl border-dashed">
+             <p className="text-xs font-bold text-white/30 uppercase tracking-widest">No branches added</p>
+           </div>
+        )}
       </div>
 
       {/* Danger zone */}

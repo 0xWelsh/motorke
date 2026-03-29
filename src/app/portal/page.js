@@ -13,7 +13,8 @@ import {
   MoreVertical,
   Edit3,
   ExternalLink,
-  Eye
+  Eye,
+  ShieldCheck
 } from "lucide-react";
 
 export const metadata = { title: "Dashboard — Motorke Dealer Portal" };
@@ -35,6 +36,18 @@ export default async function PortalPage() {
 
   return (
     <div className="animate-in fade-in duration-700">
+      {user.dealer && !user.dealer.verified && (
+        <div className="mb-10 p-6 bg-amber-500/10 border border-amber-500/20 rounded-[2rem] flex items-start gap-4 shadow-sm shadow-amber-500/5">
+           <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-600 flex items-center justify-center shrink-0 mt-1">
+             <ShieldCheck size={16} />
+           </div>
+           <div>
+             <h3 className="text-sm font-black text-amber-500 tracking-tight mb-1">Account under review</h3>
+             <p className="text-xs font-bold text-slate-400">Your dealership is pending verification by our administrators. You can build out your profile and prepare your inventory, but your dealership will not be publicly visible until approved.</p>
+           </div>
+        </div>
+      )}
+      
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
         <div>
           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-600 mb-2 block">Enterprise Overview</span>

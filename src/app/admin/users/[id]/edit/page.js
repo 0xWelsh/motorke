@@ -2,11 +2,15 @@
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
+import DeleteButton from "@/components/DeleteButton";
+import AdminAvatarUpload from "@/components/AdminAvatarUpload";
 
 export const metadata = { title: "Edit User — Admin" };
 
-export default async function AdminEditUserPage({ params, searchParams }) {
+export default async function AdminEditUserPage(props) {
   await requireAdmin();
+  const params = await props.params;
+  const searchParams = await props.searchParams;
 
   const [user, dealers] = await Promise.all([
     db.user.findUnique({
@@ -18,8 +22,8 @@ export default async function AdminEditUserPage({ params, searchParams }) {
 
   if (!user) notFound();
 
-  const saved = searchParams.saved;
-  const error = searchParams.error;
+  const saved = searchParams?.saved;
+  const error = searchParams?.error;
 
   const inputCls  = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
   const selectCls = "w-full bg-surface border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
@@ -29,8 +33,14 @@ export default async function AdminEditUserPage({ params, searchParams }) {
     <div className="p-8 max-w-lg">
       <div className="mb-8">
         <a href="/admin/users" className="text-xs text-white/40 hover:text-white transition-colors">← Users</a>
-        <h1 className="text-3xl font-black mt-2">{user.name}</h1>
-        <p className="text-white/30 text-sm mt-1">{user.email}</p>
+        <div className="flex items-center gap-5 mt-4">
+          <AdminAvatarUpload currentUrl={user.avatarUrl} targetId={user.id} targetType="user" name={user.name} size="lg" />
+          <div>
+            <h1 className="text-3xl font-black">{user.name}</h1>
+            <p className="text-white/30 text-sm mt-1">{user.email}</p>
+            <p className="text-xs text-white/40 mt-1">Click the photo to upload or change it</p>
+          </div>
+        </div>
       </div>
 
       {/* Edit form */}
@@ -44,7 +54,11 @@ export default async function AdminEditUserPage({ params, searchParams }) {
         )}
         {error && (
           <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3 mb-5">
-            {error === "exists" ? "That email is already in use." : error === "notallowed" ? "You cannot grant Admin rights." : "Something went wrong."}
+            {error === "exists" ? "That email is already in use." : 
+             error === "notallowed" ? "You cannot grant Admin rights." : 
+             error === "self_delete" ? "You cannot delete your own account." : 
+             error === "delete_failed" ? "Failed to delete user." : 
+             "Something went wrong."}
           </div>
         )}
 
@@ -97,6 +111,15 @@ export default async function AdminEditUserPage({ params, searchParams }) {
             Reset password
           </button>
         </form>
+      </div>
+
+      {/* Danger zone */}
+      <div className="mt-6 bg-red-500/5 border border-red-500/20 rounded-2xl p-6">
+        <h3 className="font-bold text-red-400 mb-1">Danger zone</h3>
+        <p className="text-xs text-white/30 mb-4">
+          Deleting a user account permanently revokes their access. Connected data may be removed or unlinked.
+        </p>
+        <DeleteButton action={`/api/admin/users/${params.id}/delete`} message="Permanently delete this user profile? This cannot be undone." label="Delete User" />
       </div>
     </div>
   );

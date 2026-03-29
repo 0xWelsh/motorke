@@ -21,7 +21,7 @@ export async function PUT(request, { params }) {
     const {
       make, model, variant, year, price, mileage,
       fuelType, transmission, bodyType, engineCC, driveType,
-      color, seats, description, features, images,
+      color, seats, description, features, badges, images,
       negotiable, dutyPaid, imported,
     } = body;
 
@@ -43,6 +43,7 @@ export async function PUT(request, { params }) {
         seats:        seats ? parseInt(seats) : null,
         description:  description?.trim() || null,
         features:     Array.isArray(features) ? features : [],
+        badges:       Array.isArray(badges) ? badges : [],
         negotiable:   Boolean(negotiable),
         dutyPaid:     Boolean(dutyPaid),
         imported:     Boolean(imported),

@@ -19,13 +19,18 @@ import {
 
 export const metadata = { title: "Dealer Network — Motorke Standard Admin" };
 
-export default async function AdminDealersPage() {
+export default async function AdminDealersPage(props) {
+  const searchParams = typeof props.searchParams === "undefined" ? {} : props.searchParams;
   await requireAdmin();
 
-  const dealers = await db.dealer.findMany({
+  const isPending = searchParams?.filter === "pending";
+
+  const allDealers = await db.dealer.findMany({
     include: { _count: { select: { cars: true, users: true, leads: true } } },
     orderBy: { createdAt: "desc" },
   });
+
+  const dealers = isPending ? allDealers.filter((d) => !d.verified) : allDealers;
 
   const topStats = {
     units: dealers.reduce((acc, d) => acc + d._count.cars, 0),
@@ -49,7 +54,7 @@ export default async function AdminDealersPage() {
              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">Network Operations</span>
           </div>
           <h1 className="text-3xl font-black text-white tracking-tight">
-            Dealer Partners <span className="text-white/30 font-medium ml-2">({dealers.length})</span>
+            {isPending ? "Pending Approvals" : "Dealer Partners"} <span className="text-white/30 font-medium ml-2">({dealers.length})</span>
           </h1>
         </div>
         
@@ -146,14 +151,20 @@ export default async function AdminDealersPage() {
                   </div>
                 </td>
                 <td className="px-8 py-6 text-right">
-                  <div className="flex items-center justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <Link href={`/admin/dealers/${dealer.id}/edit`} className="p-2 text-white/40 hover:text-white transition-colors" title="Edit Hub">
-                      <Edit3 size={16} />
+                  <div className="flex items-center justify-end gap-3 transition-all duration-300">
+                    <Link href={`/admin/dealers/${dealer.id}/edit`} className="flex items-center gap-2 px-4 py-2 bg-orange-600/20 hover:bg-orange-600 text-orange-500 hover:text-white font-black text-[10px] uppercase tracking-widest rounded-xl transition-all border border-orange-500/20 hover:border-orange-500 shadow-lg" title="Manage Hub">
+                      <Edit3 size={14} /> Manage
                     </Link>
                     
                     <form action={`/api/admin/dealers/${dealer.id}/toggle-verified`} method="POST">
-                      <button type="submit" className={`p-2 transition-colors ${dealer.verified ? "text-emerald-500 hover:text-white/40" : "text-white/40 hover:text-emerald-600 dark:text-white/30 dark:hover:text-emerald-500"}`} title={dealer.verified ? "Unverify" : "Verify Dealer"}>
-                        <ShieldCheck size={18} />
+                      <button type="submit" 
+                        className={dealer.verified 
+                          ? "flex items-center justify-center p-2 text-emerald-500 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-xl transition-colors"
+                          : "flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-500 hover:text-white font-black text-[10px] uppercase tracking-widest border border-emerald-500/20 hover:border-emerald-500 rounded-xl transition-all shadow-lg"}
+                        title={dealer.verified ? "Verified Dealership" : "Approve Dealer"}
+                      >
+                        <ShieldCheck size={14} />
+                        {!dealer.verified && "Approve"}
                       </button>
                     </form>
 
@@ -167,9 +178,7 @@ export default async function AdminDealersPage() {
                       <ExternalLink size={16} />
                     </Link>
 
-                    {dealer._count.cars === 0 && (
-                      <DeleteButton action={`/api/admin/dealers/${dealer.id}/delete`} message="Permanently terminate this dealer profile?" />
-                    )}
+                    <DeleteButton action={`/api/admin/dealers/${dealer.id}/delete`} message="Permanently terminate this dealer profile and ALL associated cars/users?" label="Delete" />
                   </div>
                 </td>
               </tr>

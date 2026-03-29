@@ -1,14 +1,19 @@
 import { db } from "@/lib/db";
-import { hashPassword, createSession } from "@/lib/auth";
-import { createVerificationToken, sendVerificationEmail } from "@/lib/mail";
+import { hashPassword } from "@/lib/auth";
+import { createEmailOTP, sendVerificationEmail } from "@/lib/mail";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+
+const slugify = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
 const signupSchema = z.object({
   name: z.string().min(2).trim(),
   email: z.string().email().toLowerCase().trim(),
   password: z.string().min(8),
-  confirm: z.string()
+  confirm: z.string(),
+  role: z.enum(["BUYER", "DEALER"]).default("BUYER"),
+  dealerName: z.string().optional(),
+  phone: z.string().optional(),
 }).refine(data => data.password === data.confirm, {
   message: "Passwords don't match",
   path: ["confirm"]
@@ -16,19 +21,54 @@ const signupSchema = z.object({
 
 export async function POST(request) {
   try {
+    const wantsJson = request.headers.get("accept")?.includes("application/json");
+
     const formData = await request.formData();
     const rawData = Object.fromEntries(formData.entries());
     const parsed = signupSchema.safeParse(rawData);
     
     if (!parsed.success) {
+      if (wantsJson) return NextResponse.json({ error: "Please fill all required fields correctly." }, { status: 400 });
       return NextResponse.redirect(new URL("/signup?error=invalid", request.url));
     }
     
-    const { name, email, password } = parsed.data;
+    const { name, email, password, role, dealerName, phone } = parsed.data;
+
+    if (role === "DEALER" && (!dealerName || !phone)) {
+       if (wantsJson) return NextResponse.json({ error: "Missing required dealership details." }, { status: 400 });
+       return NextResponse.redirect(new URL("/signup?error=invalid", request.url));
+    }
 
     const existing = await db.user.findUnique({ where: { email } });
     if (existing) {
+      if (wantsJson) return NextResponse.json({ error: "An account with that email already exists." }, { status: 400 });
       return NextResponse.redirect(new URL("/signup?error=exists", request.url));
+    }
+
+    let parsedDealerId = null;
+
+    if (role === "DEALER") {
+      const slug = slugify(dealerName);
+      
+      const existingDealer = await db.dealer.findUnique({ where: { slug } });
+      const finalSlug = existingDealer ? `${slug}-${Date.now()}` : slug;
+
+      const newDealer = await db.dealer.create({
+         data: {
+           name: dealerName,
+           slug: finalSlug,
+           phone: phone,
+           county:   rawData.county?.toString() || "Nairobi",
+           location: rawData.location?.toString().trim() || "Headquarters",
+           address:  rawData.address?.toString().trim() || null,
+           whatsapp: rawData.whatsapp?.toString().trim() || null,
+           description: rawData.description?.toString().trim() || null,
+           lat:      rawData.lat ? parseFloat(rawData.lat) : null,
+           lng:      rawData.lng ? parseFloat(rawData.lng) : null,
+           verified: false,
+         }
+      });
+      parsedDealerId = newDealer.id;
     }
 
     const user = await db.user.create({
@@ -36,19 +76,24 @@ export async function POST(request) {
         name,
         email,
         passwordHash: await hashPassword(password),
-        role:   "BUYER",
+        role: role,
+        dealerId: parsedDealerId,
         active: true,
       },
     });
 
-    // ── Email Verification Setup ─────────────────────────────
-    const { token } = await createVerificationToken(email);
-    await sendVerificationEmail(email, name, token);
-
-    await createSession(user.id);
-    return NextResponse.redirect(new URL("/", request.url));
+    // ── OTP Verification Dispatch (Email Only) ─────────────────
+    const emailOtp = await createEmailOTP(email);
+    await sendVerificationEmail(email, name, emailOtp);
+    
+    // Redirect all users to the interactive Verification Portal first
+    const redirectUrl = `/verify?email=${encodeURIComponent(email)}`;
+    if (wantsJson) return NextResponse.json({ success: true, redirect: redirectUrl });
+    return NextResponse.redirect(new URL(redirectUrl, request.url));
   } catch (err) {
     console.error("Signup error:", err);
+    const wantsJson = request.headers.get("accept")?.includes("application/json");
+    if (wantsJson) return NextResponse.json({ error: "An unexpected error occurred. Please try again." }, { status: 500 });
     return NextResponse.redirect(new URL("/signup?error=unknown", request.url));
   }
 }

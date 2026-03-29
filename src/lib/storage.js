@@ -1,13 +1,48 @@
 // src/lib/storage.js
 // Supabase Storage for car images
-// Bucket name: "car-images" (create this in your Supabase dashboard)
-//
-// Dashboard → Storage → New bucket → name: "car-images" → Public: ON
+// Bucket is auto-created on first upload if it doesn't exist
 
 const SUPABASE_URL    = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON   = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const SERVICE_KEY     = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SERVICE_KEY     = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const BUCKET          = "car-images";
+
+let bucketReady = false;
+
+/**
+ * Ensure the storage bucket exists (runs once per server lifecycle).
+ */
+async function ensureBucket() {
+  if (bucketReady) return;
+
+  const headers = { "Authorization": `Bearer ${SERVICE_KEY}`, "Content-Type": "application/json" };
+
+  // Check if bucket exists
+  const check = await fetch(`${SUPABASE_URL}/storage/v1/bucket/${BUCKET}`, { headers });
+  if (check.ok) {
+    bucketReady = true;
+    return;
+  }
+
+  // Create public bucket
+  const create = await fetch(`${SUPABASE_URL}/storage/v1/bucket`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ id: BUCKET, name: BUCKET, public: true }),
+  });
+
+  if (!create.ok) {
+    const err = await create.text();
+    console.error("Bucket creation response:", err);
+    // If it already exists (race condition), that's fine
+    if (!err.includes("already exists")) {
+      throw new Error(`Failed to create bucket: ${err}`);
+    }
+  }
+
+  bucketReady = true;
+  console.log(`✓ Storage bucket "${BUCKET}" ready`);
+}
 
 /**
  * Upload a file buffer to Supabase Storage.
@@ -18,6 +53,8 @@ const BUCKET          = "car-images";
  * @param {string} mimeType   - e.g. "image/jpeg"
  */
 export async function uploadImage(buffer, filename, mimeType) {
+  await ensureBucket();
+
   const url = `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${filename}`;
 
   const res = await fetch(url, {

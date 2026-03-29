@@ -1,8 +1,9 @@
 // src/app/dealers/[slug]/page.js
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
-import { formatPrice, formatMileage } from "@/lib/utils";
+import { formatPrice, formatMileage, FUEL_LABELS, BADGE_OPTIONS } from "@/lib/utils";
 import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -81,31 +82,49 @@ export default async function DealerPage({ params }) {
           <p className="font-black text-white/40 text-xl tracking-tight">No showcases listed yet</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {dealer.cars.map((car) => {
             const img   = car.images[0]?.url;
-            const title = `${car.year} ${car.make} ${car.model}`;
+            const title = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
+            const specs = [
+              car.fuelType && FUEL_LABELS[car.fuelType],
+              car.transmission === "AUTOMATIC" ? "Auto" : car.transmission,
+              car.mileage ? `${Math.round(car.mileage / 1000)}k km` : null,
+            ].filter(Boolean);
+
             return (
-              <Link key={car.id} href={`/cars/${car.id}`} className="card-hover block group">
-                <div className="relative aspect-[4/5] bg-surface border border-white/5 rounded-[2rem] overflow-hidden mb-6 shadow-sm group-hover:shadow-2xl transition-all duration-700">
+              <Link key={car.id} href={`/cars/${car.id}`} className="group block bg-surface border border-white/5 hover:border-orange-500/30 overflow-hidden transition-all duration-300">
+                <div className="relative aspect-[16/10] bg-white/5 overflow-hidden">
                   {img ? (
-                    <img src={img} alt={title} className="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-[1.5s]" />
+                    <img src={img} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-white/20 uppercase font-black text-[10px] tracking-[0.2em]">Pending Imagery</div>
+                    <div className="w-full h-full flex items-center justify-center text-white/20 text-[10px] font-bold uppercase tracking-widest">No Image</div>
                   )}
-                  {/* Bottom Overlay Info */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <div className="absolute bottom-6 left-6 right-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-700">
-                     <p className="text-[10px] font-black text-orange-400 uppercase tracking-widest mb-1">View Details</p>
-                     <div className="h-px w-full bg-white/20" />
-                  </div>
+                  {car.badges?.length > 0 && (
+                    <div className="absolute bottom-3 left-3 flex flex-wrap gap-1">
+                      {car.badges.map((b) => (
+                        <span key={b} className={`text-[9px] font-bold px-2 py-0.5 border ${BADGE_OPTIONS[b]?.color || "bg-white/10 text-white/60 border-white/10"}`}>
+                          {b}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <div className="px-2">
-                  <p className="font-black text-white text-lg leading-tight group-hover:text-orange-500 transition-colors truncate mb-1">{title}</p>
-                  {car.variant && <p className="text-[10px] font-black text-white/40 uppercase tracking-widest truncate">{car.variant}</p>}
-                  <div className="flex justify-between items-center mt-3 border-t border-white/5 pt-3">
-                    <p className="font-black text-xl text-orange-500">{formatPrice(car.price)}</p>
-                    {car.mileage && <p className="text-[10px] text-white/40 font-black uppercase tracking-widest">{formatMileage(car.mileage).replace(' km', 'km')}</p>}
+                <div className="p-4 flex flex-col gap-2.5">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-[10px] font-black bg-white/10 text-orange-400 px-2 py-0.5 uppercase tracking-wider shrink-0">{car.year}</span>
+                    <h3 className="font-bold text-white text-sm leading-tight truncate group-hover:text-orange-500 transition-colors">{title}</h3>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {specs.map((s) => (
+                      <span key={s} className="text-[10px] font-semibold text-white/50 bg-white/5 border border-white/5 px-2 py-0.5">{s}</span>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-between pt-2.5 border-t border-white/5 mt-auto">
+                    <p className="text-base font-black text-orange-500">{formatPrice(car.price)}</p>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white/30 group-hover:text-orange-500 transition-colors flex items-center gap-1">
+                      View Offer <ChevronRight className="w-3 h-3" />
+                    </span>
                   </div>
                 </div>
               </Link>

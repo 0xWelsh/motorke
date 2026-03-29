@@ -13,9 +13,11 @@ import {
   ChevronRight,
   ExternalLink,
   ShieldAlert,
+  ShieldCheck,
   Settings,
   Bell,
-  Search
+  Search,
+  UserPlus
 } from "lucide-react";
 import { clsx } from "clsx";
 
@@ -23,6 +25,7 @@ const links = [
   { href: "/admin",           label: "Dashboard",   Icon: LayoutDashboard },
   { href: "/admin/cars",      label: "Inventory",   Icon: Car             },
   { href: "/admin/dealers",   label: "Dealers",      Icon: Building2       },
+  { href: "/admin/approvals", label: "Approvals",   Icon: ShieldCheck     },
   { href: "/admin/users",     label: "Users",       Icon: Users           },
   { href: "/admin/leads",     label: "Enquiries",   Icon: MessageSquare   },
 ];
@@ -30,6 +33,8 @@ const links = [
 const quickActions = [
   { href: "/admin/cars/new",  label: "Add Listing", Icon: Plus },
   { href: "/admin/cars/bulk", label: "Bulk Import", Icon: Upload },
+  { href: "/admin/dealers/new", label: "Add Dealer", Icon: Building2 },
+  { href: "/admin/users/new", label: "Add User", Icon: UserPlus },
 ];
 
 function NavLink({ href, label, Icon, active }) {
@@ -123,14 +128,14 @@ export default function AdminLayout({ children }) {
            
            <div className="flex items-center gap-8">
               <div className="hidden sm:flex items-center gap-6 pr-6 border-r border-white/5">
-                 <button className="text-white/40 hover:text-white transition-colors">
+                 <button onClick={() => alert("Global search is coming in Phase 2!")} className="text-white/40 hover:text-white transition-colors" title="Search">
                     <Search size={18} />
                  </button>
-                 <button className="text-white/40 hover:text-white transition-colors relative">
+                 <button onClick={() => alert("Notification center is coming in Phase 2!")} className="text-white/40 hover:text-white transition-colors relative" title="Notifications">
                     <Bell size={18} />
                     <span className="absolute -top-1 -right-1 w-2 h-2 bg-orange-600 rounded-full border-2 border-white/10" />
                  </button>
-                 <button className="text-white/40 hover:text-white transition-colors">
+                 <button onClick={() => alert("Dashboard settings are coming in Phase 2!")} className="text-white/40 hover:text-white transition-colors" title="Settings">
                     <Settings size={18} />
                  </button>
               </div>

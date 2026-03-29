@@ -5,7 +5,7 @@
 "use client";
 
 import { useState } from "react";
-import { BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/utils";
+import { BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, DRIVE_TYPE_LABELS, BADGE_OPTIONS } from "@/lib/utils";
 
 const MAKES = [
   "Toyota", "Subaru", "Mazda", "Nissan", "Mitsubishi", "Honda", "Isuzu", 
@@ -14,7 +14,7 @@ const MAKES = [
   "Jeep", "Ford", "Chevrolet", "Hyundai", "Kia", "Peugeot", "Renault", 
   "Volvo", "Scania", "MAN", "Beiben", "Sinotruk", "Other"
 ];
-const DRIVE_TYPES = ["RHD (Right Hand Drive)", "LHD (Left Hand Drive)", "AWD (All Wheel Drive)", "FWD (Front Wheel Drive)", "RWD (Rear Wheel Drive)", "4WD (Four Wheel Drive)"];
+
 const CONDITIONS = ["Foreign Used", "Locally Used", "Brand New"];
 
 export default function CarForm({ dealers = [], car = null, action, method = "POST" }) {
@@ -23,39 +23,62 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const years = Array.from({ length: 40 }, (_, i) => currentYear - i); // Expanded year range
 
   const [uploading, setUploading]   = useState(false);
+  const [uploadProgress, setUploadProgress] = useState({ done: 0, total: 0 });
   const [images, setImages]         = useState(
     car?.images?.map((img) => ({ url: img.url, isPrimary: img.isPrimary })) || []
   );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError]           = useState("");
+  const [badges, setBadges]         = useState(car?.badges || []);
 
-  // Handle image file selection → upload to Supabase via API
+  // Handle image file selection → upload to Supabase via API (parallel)
   async function handleImageChange(e) {
     const files = Array.from(e.target.files);
     if (!files.length) return;
     setUploading(true);
     setError("");
+    setUploadProgress({ done: 0, total: files.length });
 
-    try {
-      for (const file of files) {
+    // Upload all files in parallel
+    const results = await Promise.allSettled(
+      files.map(async (file) => {
         const formData = new FormData();
         formData.append("file", file);
 
         const res  = await fetch("/api/upload", { method: "POST", body: formData });
         const data = await res.json();
 
-        if (!res.ok) throw new Error(data.error || "Upload failed");
+        if (!res.ok) throw new Error(data.error || `Failed: ${file.name}`);
 
-        setImages((prev) => [
-          ...prev,
-          { url: data.url, isPrimary: prev.length === 0 },
-        ]);
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setUploading(false);
+        setUploadProgress((prev) => ({ ...prev, done: prev.done + 1 }));
+        return data.url;
+      })
+    );
+
+    // Collect successful uploads
+    const urls = results
+      .filter((r) => r.status === "fulfilled")
+      .map((r) => r.value);
+
+    // Collect failures
+    const failures = results
+      .filter((r) => r.status === "rejected")
+      .map((r) => r.reason.message);
+
+    setImages((prev) => {
+      const newImages = urls.map((url, i) => ({
+        url,
+        isPrimary: prev.length === 0 && i === 0,
+      }));
+      return [...prev, ...newImages];
+    });
+
+    if (failures.length > 0) {
+      setError(`${failures.length} upload(s) failed: ${failures.join(", ")}`);
     }
+
+    setUploading(false);
+    setUploadProgress({ done: 0, total: 0 });
   }
 
   function setPrimary(idx) {
@@ -94,6 +117,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     data.dutyPaid   = data.dutyPaid   === "on";
     data.imported   = data.imported   === "on";
     data.featured   = data.featured   === "on";
+    data.badges     = badges;
 
     try {
       const res = await fetch(action, {
@@ -216,7 +240,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         <div>
           <label className={labelCls}>Drive type</label>
           <select name="driveType" defaultValue={car?.driveType || "RHD"} className={selectCls}>
-            {DRIVE_TYPES.map((d) => <option key={d} value={d}>{d}</option>)}
+            {Object.entries(DRIVE_TYPE_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
           </select>
         </div>
         <div>
@@ -242,6 +266,34 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           className={inputCls} />
       </div>
 
+      {/* ── Badges ── */}
+      <div>
+        <label className={labelCls}>
+          Listing Badges <span className="normal-case text-white/20">(click to toggle)</span>
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(BADGE_OPTIONS).map(([name, { color }]) => {
+            const active = badges.includes(name);
+            return (
+              <button
+                key={name}
+                type="button"
+                onClick={() => setBadges((prev) =>
+                  active ? prev.filter((b) => b !== name) : [...prev, name]
+                )}
+                className={`text-xs font-semibold px-3 py-1.5 border transition-all ${
+                  active
+                    ? `${color} ring-1 ring-white/20`
+                    : "bg-white/5 text-white/30 border-white/10 hover:text-white/60"
+                }`}
+              >
+                {name}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* ── Description ── */}
       <div>
         <label className={labelCls}>Description</label>
@@ -261,13 +313,15 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           {uploading ? (
             <div className="text-center">
               <div className="w-8 h-8 border-2 border-[#f97316] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-              <p className="text-sm text-white/40">Uploading…</p>
+              <p className="text-sm text-white/40">
+                Uploading {uploadProgress.done} of {uploadProgress.total}…
+              </p>
             </div>
           ) : (
             <div className="text-center">
               <p className="text-3xl mb-2">📷</p>
-              <p className="text-sm text-white/50">Click to upload photos</p>
-              <p className="text-xs text-white/20 mt-1">JPG, PNG, WEBP · Multiple allowed</p>
+              <p className="text-sm text-white/50">Click or drag to bulk-upload photos</p>
+              <p className="text-xs text-white/20 mt-1">JPG, PNG, WEBP · Select as many as you want</p>
             </div>
           )}
         </label>

@@ -62,8 +62,8 @@ export default async function AdminNewUserPage({ searchParams }) {
 
           <div>
             <label className={labelCls}>Linked dealership *</label>
-            <select name="dealerId" required className="w-full bg-surface border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50">
-              <option value="" disabled selected>Select a dealership</option>
+            <select name="dealerId" required defaultValue="" className="w-full bg-surface border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50">
+              <option value="" disabled>Select a dealership</option>
               {dealers.map((d) => (
                 <option key={d.id} value={d.id}>{d.name} — {d.location}</option>
               ))}

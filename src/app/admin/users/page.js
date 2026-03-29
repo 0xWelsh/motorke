@@ -17,8 +17,10 @@ import {
 
 export const metadata = { title: "User Directory — Motorke Standard Admin" };
 
-export default async function AdminUsersPage() {
+export default async function AdminUsersPage(props) {
+  const searchParams = await props.searchParams;
   await requireAdmin();
+  const deleted = searchParams?.deleted;
 
   const users = await db.user.findMany({
     include: { dealer: { select: { name: true } } },
@@ -49,6 +51,12 @@ export default async function AdminUsersPage() {
           <UserPlus size={14} /> Create Identity
         </Link>
       </div>
+
+      {deleted && (
+        <div className="bg-green-500/10 border border-green-500/20 text-green-400 text-sm rounded-xl px-4 py-3 mb-8">
+          ✓ Profile deleted successfully
+        </div>
+      )}
 
       {/* ── DATA TABLE ── */}
       <div className="bg-surface border border-white/5 rounded-[3rem] overflow-hidden shadow-2xl">
@@ -99,9 +107,9 @@ export default async function AdminUsersPage() {
                    {new Date(user.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" })}
                 </td>
                 <td className="px-8 py-6 text-right">
-                  <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <Link href={`/admin/users/${user.id}/edit`} className="p-2 text-white/40 hover:text-white transition-colors" title="Edit Profile">
-                      <Edit3 size={16} />
+                  <div className="flex items-center justify-end gap-3 transition-all duration-300">
+                    <Link href={`/admin/users/${user.id}/edit`} className="flex items-center gap-2 px-4 py-2 bg-orange-600/20 hover:bg-orange-600 text-orange-500 hover:text-white font-black text-[10px] uppercase tracking-widest rounded-xl transition-all border border-orange-500/20 hover:border-orange-500 shadow-lg" title="Manage Profile">
+                      <Edit3 size={14} /> Manage
                     </Link>
                     
                     <form action={`/api/admin/users/${user.id}/toggle`} method="POST">
