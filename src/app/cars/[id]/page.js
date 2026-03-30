@@ -3,12 +3,13 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { formatPrice, formatMileage, estimateDuty,
-         BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/utils";
+         BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/utils";
 import EnquiryForm from "@/components/EnquiryForm";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
 import { SaveButton, TrackRecentView } from "@/components/CarActions";
 import Link from "next/link";
+import Image from "next/image";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -63,10 +64,17 @@ export default async function CarDetailPage({ params }) {
     { label: "Mileage",       value: formatMileage(car.mileage) },
     { label: "Fuel",          value: FUEL_LABELS[car.fuelType] },
     { label: "Transmission",  value: TRANSMISSION_LABELS[car.transmission] },
+    { label: "Drivetrain",    value: DRIVETRAIN_LABELS[car.drivetrain] || "N/A" },
+    { label: "Steering",      value: STEERING_LABELS[car.steering] || "N/A" },
     { label: "Body type",     value: BODY_TYPE_LABELS[car.bodyType] },
-    { label: "Engine",        value: car.engineCC ? `${car.engineCC}cc` : "N/A" },
-    { label: "Drive",         value: car.driveType },
+    { label: "Engine size",   value: car.engineCC ? `${car.engineCC}cc` : "N/A" },
+    { label: "Cylinders",     value: car.cylinders || "N/A" },
+    { label: "Horsepower",    value: car.horsepower ? `${car.horsepower} hp` : "N/A" },
+    { label: "Torque",        value: car.torque ? `${car.torque} Nm` : "N/A" },
+    { label: "Turbocharged",  value: car.turbo ? "Yes" : "No" },
     { label: "Seats",         value: car.seats || "N/A" },
+    { label: "Airbags",       value: car.airbags || "0" },
+    { label: "Sunroof",       value: car.sunroof ? "Yes" : "No" },
     { label: "Color",         value: car.color || "N/A" },
     { label: "Condition",     value: car.condition },
     { label: "Import country",value: car.importCountry || "N/A" },
@@ -212,7 +220,17 @@ export default async function CarDetailPage({ params }) {
                 <Link key={c.id} href={`/cars/${c.id}`}
                   className="group block bg-surface border border-white/5 hover:border-orange-500/30 overflow-hidden transition-all duration-300">
                   <div className="relative aspect-[16/10] bg-white/5 overflow-hidden">
-                    {img ? <img src={img} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" /> : <div className="flex items-center justify-center h-full text-white/20 text-[10px] font-bold uppercase tracking-widest">No Image</div>}
+                    {img ? (
+                      <Image 
+                        src={img} 
+                        alt={title} 
+                        fill 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-white/20 text-[10px] font-bold uppercase tracking-widest">No Image</div>
+                    )}
                   </div>
                   <div className="p-4 flex flex-col gap-2.5">
                     <div className="flex items-center gap-2.5">

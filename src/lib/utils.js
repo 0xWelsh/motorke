@@ -52,12 +52,15 @@ export const TRANSMISSION_LABELS = {
   CVT:       "CVT",
 };
 
-export const DRIVE_TYPE_LABELS = {
-  RHD:    "RHD (Right Hand Drive)",
-  LHD:    "LHD (Left Hand Drive)",
-  AWD:    "AWD (All Wheel Drive)",
+export const STEERING_LABELS = {
+  RHD: "RHD (Right Hand Drive)",
+  LHD: "LHD (Left Hand Drive)",
+};
+
+export const DRIVETRAIN_LABELS = {
   FWD:    "FWD (Front Wheel Drive)",
   RWD:    "RWD (Rear Wheel Drive)",
+  AWD:    "AWD (All Wheel Drive)",
   FOURWD: "4WD (Four Wheel Drive)",
 };
 

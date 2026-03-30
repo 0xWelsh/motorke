@@ -128,8 +128,15 @@ model Car {
   mileage       Int?
   fuelType      FuelType      @default(PETROL)
   transmission  Transmission  @default(AUTOMATIC)
-  driveType     DriveType     @default(RHD)
+  drivetrain    Drivetrain    @default(FWD)
+  steering      Steering      @default(RHD)
   engineCC      Int?
+  cylinders     Int?
+  horsepower    Int?
+  torque        Int?
+  turbo         Boolean       @default(false)
+  sunroof       Boolean       @default(false)
+  airbags       Int?          @default(0)
   bodyType      BodyType      @default(SEDAN)
   color         String?
   doors         Int?          @default(4)
@@ -259,13 +266,16 @@ enum Transmission {
   CVT
 }
 
-enum DriveType {
-  RHD
-  LHD
-  AWD
+enum Drivetrain {
   FWD
   RWD
+  AWD
   FOURWD
+}
+
+enum Steering {
+  RHD
+  LHD
 }
 
 enum BodyType {

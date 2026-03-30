@@ -3,6 +3,8 @@
 // Swipeable image gallery with lightbox for car detail page
 
 import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
+
 
 export default function ImageGallery({ images, title }) {
   const primaryIdx = images.findIndex((img) => img.isPrimary);
@@ -47,10 +49,13 @@ export default function ImageGallery({ images, title }) {
       {/* Main image */}
       <div className="relative aspect-[16/9] bg-white/5 rounded-2xl overflow-hidden group cursor-zoom-in"
         onClick={() => setLightbox(true)}>
-        <img
+        <Image
           src={current.url}
           alt={current.alt || title}
+          fill
+          priority
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+          sizes="(max-width: 1024px) 100vw, 66vw"
         />
 
         {/* Nav arrows on hover */}
@@ -95,12 +100,14 @@ export default function ImageGallery({ images, title }) {
                 i === active
                   ? "border-[#f97316] opacity-100"
                   : "border-transparent opacity-50 hover:opacity-80"
-              }`}
+              } relative`}
             >
-              <img
+              <Image
                 src={img.url}
                 alt={img.alt || `Photo ${i + 1}`}
+                fill
                 className="w-full h-full object-cover"
+                sizes="80px"
               />
             </button>
           ))}
@@ -127,12 +134,15 @@ export default function ImageGallery({ images, title }) {
           </span>
 
           {/* Image */}
-          <img
-            src={current.url}
-            alt={current.alt || title}
-            className="max-w-[90vw] max-h-[85vh] object-contain rounded-xl"
-            onClick={(e) => e.stopPropagation()}
-          />
+          <div className="relative w-[90vw] h-[85vh]">
+            <Image
+              src={current.url}
+              alt={current.alt || title}
+              fill
+              className="object-contain rounded-xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
 
           {/* Prev / Next */}
           {images.length > 1 && (

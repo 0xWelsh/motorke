@@ -24,9 +24,11 @@ import {
   Gem
 } from "lucide-react";
 import ClientRecentSection from "@/components/ClientRecentSection";
+import Image from "next/image";
+import { unstable_cache } from "next/cache";
 
-async function getData() {
-  try {
+const getCachedData = unstable_cache(
+  async () => {
     const week = new Date(); week.setDate(week.getDate() - 7);
     const [featured, newArrivals, dealers, totalCars, totalDealers, priceCounts] = await Promise.all([
       db.car.findMany({
@@ -55,10 +57,10 @@ async function getData() {
       ])
     ]);
     return { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts };
-  } catch {
-    return { featured: [], newArrivals: [], dealers: [], totalCars: 0, totalDealers: 0, priceCounts: [0,0,0,0,0] };
-  }
-}
+  },
+  ["homepage-data"],
+  { revalidate: 900, tags: ["homepage"] }
+);
 
 const BODY_TYPES = [
   { type: "SUV_FULL",      label: "Full-Size SUV",     img: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=400&q=80" },
@@ -90,7 +92,7 @@ const HERO_IMAGES = [
 const TRENDING = ["Toyota Hilux", "Toyota Prado", "Subaru Forester", "Mazda CX-5"];
 
 export default async function HomePage() {
-  const { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts } = await getData();
+  const { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts } = await getCachedData();
   const heroImage = HERO_IMAGES[Math.floor(Math.random() * HERO_IMAGES.length)];
 
   return (
@@ -98,7 +100,13 @@ export default async function HomePage() {
       {/* ── IMMERSIVE HERO ── */}
       <section className="relative h-[85vh] min-h-[650px] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src={heroImage} className="w-full h-full object-cover opacity-60" alt="Motorke" />
+          <Image 
+            src={heroImage} 
+            fill 
+            priority 
+            className="w-full h-full object-cover opacity-60" 
+            alt="Motorke" 
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(234,88,12,0.15),transparent_50%)]" />
         </div>
@@ -227,8 +235,13 @@ export default async function HomePage() {
             }
           ].map((news, i) => (
             <Link key={i} href="#" className="group block">
-              <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 mb-6">
-                <img src={news.img} alt={news.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
+              <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 mb-6 relative">
+                <Image 
+                  src={news.img} 
+                  alt={news.title} 
+                  fill 
+                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" 
+                />
               </div>
               <div className="flex items-center gap-3 mb-3">
                 <span className="text-[10px] font-black text-white uppercase tracking-widest">{news.tag}</span>
@@ -305,7 +318,13 @@ function CarCard({ car }) {
       {/* Landscape thumbnail — sharp corners */}
       <div className="relative aspect-[16/10] bg-white/5 overflow-hidden">
         {img ? (
-          <img src={img} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+          <Image 
+            src={img} 
+            alt={title} 
+            fill 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+          />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-white/20 text-[10px] font-bold uppercase tracking-widest">No Image</div>
         )}
@@ -338,6 +357,7 @@ function CarCard({ car }) {
             car.mileage ? `${Math.round(car.mileage / 1000)}k km` : null,
             car.fuelType?.split(' ')[0],
             car.transmission === "AUTOMATIC" ? "Auto" : car.transmission,
+            car.drivetrain,
           ].filter(Boolean).map((s) => (
             <span key={s} className="text-[10px] font-semibold text-white/50 bg-white/5 border border-white/5 px-2 py-0.5">
               {s}

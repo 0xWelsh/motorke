@@ -1,14 +1,22 @@
 "use client";
 // src/components/LocationSearch.js
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Search, MapPin, Loader2, X } from "lucide-react";
+import useDebouncedSearch from "@/hooks/useDebouncedSearch";
+import SearchSuggestions from "@/components/SearchSuggestions";
 
 export default function LocationSearch() {
   const [search, setSearch] = useState("");
   const [locating, setLocating] = useState(false);
   const [location, setLocation] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const router = useRouter();
+  const formRef = useRef(null);
+  
+  const { debouncedTerm } = useDebouncedSearch(search, 300);
 
   function detectLocation() {
     if (!navigator.geolocation) return;
@@ -34,9 +42,65 @@ export default function LocationSearch() {
     router.push(`/cars?${params.toString()}`);
   }
 
+  // Fetch suggestions when debounced term changes
+  useEffect(() => {
+    if (!debouncedTerm || debouncedTerm.length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    const fetchSuggestions = async () => {
+      try {
+        setLoadingSuggestions(true);
+        const response = await fetch(`/api/search/suggestions?query=${encodeURIComponent(debouncedTerm)}`);
+        const data = await response.json();
+        setSuggestions(data.suggestions || []);
+        setShowSuggestions(data.suggestions && data.suggestions.length > 0);
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+        setSuggestions([]);
+        setShowSuggestions(false);
+      } finally {
+        setLoadingSuggestions(false);
+      }
+    };
+
+    fetchSuggestions();
+  }, [debouncedTerm]);
+
+  // Handle click outside to close suggestions
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (formRef.current && !formRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  function handleSuggestionSelect(value) {
+    setSearch(value);
+    setShowSuggestions(false);
+    
+    // Auto-submit after selecting suggestion
+    const params = new URLSearchParams();
+    params.set("search", value);
+    if (location) {
+      params.set("lat", location.lat);
+      params.set("lng", location.lng);
+    }
+    router.push(`/cars?${params.toString()}`);
+  }
+
   return (
-    <div className="w-full max-w-2xl">
+    <div className="w-full max-w-2xl relative">
       <form 
+        ref={formRef}
         onSubmit={handleSubmit} 
         className="flex items-center bg-white border border-slate-200 rounded-2xl p-2 shadow-sm focus-within:border-slate-900 transition-all duration-300"
       >
@@ -45,6 +109,7 @@ export default function LocationSearch() {
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
+            onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
             placeholder="Search by make, model or keyword…"
             className="w-full bg-transparent border-none outline-none py-3 text-base text-slate-900 placeholder:dark:text-slate-400 text-slate-600 font-medium"
           />
@@ -75,6 +140,17 @@ export default function LocationSearch() {
           Search
         </button>
       </form>
+
+      {/* Search Suggestions Dropdown */}
+      {showSuggestions && (
+        <SearchSuggestions
+          suggestions={suggestions}
+          loading={loadingSuggestions}
+          onSelect={handleSuggestionSelect}
+          inputValue={search}
+          className="mt-2"
+        />
+      )}
 
       {location && (
         <div className="flex items-center gap-3 mt-4 animate-in fade-in slide-in-from-top-2 duration-300">

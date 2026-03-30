@@ -5,7 +5,7 @@
 "use client";
 
 import { useState } from "react";
-import { BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, DRIVE_TYPE_LABELS, BADGE_OPTIONS } from "@/lib/utils";
+import { BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS, BADGE_OPTIONS } from "@/lib/utils";
 
 const MAKES = [
   "Toyota", "Subaru", "Mazda", "Nissan", "Mitsubishi", "Honda", "Isuzu", 
@@ -112,11 +112,18 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     data.price     = parseInt(data.price);
     data.mileage   = data.mileage ? parseInt(data.mileage) : null;
     data.engineCC  = data.engineCC ? parseInt(data.engineCC) : null;
+    data.cylinders = data.cylinders ? parseInt(data.cylinders) : null;
+    data.horsepower= data.horsepower ? parseInt(data.horsepower) : null;
+    data.torque    = data.torque ? parseInt(data.torque) : null;
+    data.airbags   = data.airbags ? parseInt(data.airbags) : null;
     data.seats     = data.seats ? parseInt(data.seats) : null;
+    
     data.negotiable = data.negotiable === "on";
     data.dutyPaid   = data.dutyPaid   === "on";
     data.imported   = data.imported   === "on";
     data.featured   = data.featured   === "on";
+    data.turbo      = data.turbo      === "on";
+    data.sunroof    = data.sunroof    === "on";
     data.badges     = badges;
 
     try {
@@ -208,50 +215,112 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
       </div>
 
-      {/* ── Fuel / Transmission / Body ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div>
-          <label className={labelCls}>Fuel type *</label>
-          <select name="fuelType" defaultValue={car?.fuelType || "PETROL"} required className={selectCls}>
-            {Object.entries(FUEL_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-          </select>
-        </div>
-        <div>
-          <label className={labelCls}>Transmission *</label>
-          <select name="transmission" defaultValue={car?.transmission || "AUTOMATIC"} required className={selectCls}>
-            {Object.entries(TRANSMISSION_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-          </select>
-        </div>
-        <div>
-          <label className={labelCls}>Body type *</label>
-          <select name="bodyType" defaultValue={car?.bodyType || "SEDAN"} required className={selectCls}>
-            {Object.entries(BODY_TYPE_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-          </select>
+      {/* ── Engine & Performance ── */}
+      <div className="border-t border-white/5 pt-7">
+        <h3 className="text-sm font-black text-white/80 uppercase tracking-widest mb-6 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+          Engine & Performance
+        </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div>
+            <label className={labelCls}>Engine Size (cc)</label>
+            <input name="engineCC" type="number" defaultValue={car?.engineCC || ""}
+              placeholder="2000" className={inputCls} />
+          </div>
+          <div>
+            <label className={labelCls}>Cylinders</label>
+            <input name="cylinders" type="number" defaultValue={car?.cylinders || ""}
+              placeholder="4" className={inputCls} />
+          </div>
+          <div>
+            <label className={labelCls}>Horsepower (hp)</label>
+            <input name="horsepower" type="number" defaultValue={car?.horsepower || ""}
+              placeholder="180" className={inputCls} />
+          </div>
+          <div>
+            <label className={labelCls}>Torque (Nm)</label>
+            <input name="torque" type="number" defaultValue={car?.torque || ""}
+              placeholder="250" className={inputCls} />
+          </div>
+          <div>
+            <label className={labelCls}>Fuel Type *</label>
+            <select name="fuelType" defaultValue={car?.fuelType || "PETROL"} required className={selectCls}>
+              {Object.entries(FUEL_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className={labelCls}>Transmission *</label>
+            <select name="transmission" defaultValue={car?.transmission || "AUTOMATIC"} required className={selectCls}>
+              {Object.entries(TRANSMISSION_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+            </select>
+          </div>
+          <div className="flex items-end pb-3">
+             <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" name="turbo" defaultChecked={car?.turbo ?? false}
+                className="w-4 h-4 accent-[#f97316]" />
+              <span className="text-sm text-white/60">Turbocharged</span>
+            </label>
+          </div>
         </div>
       </div>
 
-      {/* ── Engine / Drive / Colour / Seats ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div>
-          <label className={labelCls}>Engine (cc)</label>
-          <input name="engineCC" type="number" defaultValue={car?.engineCC || ""}
-            placeholder="2000" className={inputCls} />
+      {/* ── Chassis & Exterior ── */}
+      <div className="border-t border-white/5 pt-7">
+        <h3 className="text-sm font-black text-white/80 uppercase tracking-widest mb-6 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+          Chassis & Exterior
+        </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div>
+            <label className={labelCls}>Body type *</label>
+            <select name="bodyType" defaultValue={car?.bodyType || "SEDAN"} required className={selectCls}>
+              {Object.entries(BODY_TYPE_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className={labelCls}>Drivetrain</label>
+            <select name="drivetrain" defaultValue={car?.drivetrain || "FWD"} className={selectCls}>
+              {Object.entries(DRIVETRAIN_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className={labelCls}>Steering</label>
+            <select name="steering" defaultValue={car?.steering || "RHD"} className={selectCls}>
+              {Object.entries(STEERING_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className={labelCls}>Colour</label>
+            <input name="color" defaultValue={car?.color || ""}
+              placeholder="Pearl White" className={inputCls} />
+          </div>
         </div>
-        <div>
-          <label className={labelCls}>Drive type</label>
-          <select name="driveType" defaultValue={car?.driveType || "RHD"} className={selectCls}>
-            {Object.entries(DRIVE_TYPE_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-          </select>
-        </div>
-        <div>
-          <label className={labelCls}>Colour</label>
-          <input name="color" defaultValue={car?.color || ""}
-            placeholder="Pearl White" className={inputCls} />
-        </div>
-        <div>
-          <label className={labelCls}>Seats</label>
-          <input name="seats" type="number" min="1" max="60" defaultValue={car?.seats || "5"}
-            className={inputCls} />
+      </div>
+
+      {/* ── Comfort & Safety ── */}
+      <div className="border-t border-white/5 pt-7">
+        <h3 className="text-sm font-black text-white/80 uppercase tracking-widest mb-6 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+          Comfort & Safety
+        </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div>
+            <label className={labelCls}>Seats</label>
+            <input name="seats" type="number" min="1" max="60" defaultValue={car?.seats || "5"}
+              className={inputCls} />
+          </div>
+          <div>
+            <label className={labelCls}>Airbags</label>
+            <input name="airbags" type="number" min="0" max="20" defaultValue={car?.airbags || "0"}
+              className={inputCls} />
+          </div>
+          <div className="flex items-end pb-3">
+             <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" name="sunroof" defaultChecked={car?.sunroof ?? false}
+                className="w-4 h-4 accent-[#f97316]" />
+              <span className="text-sm text-white/60">Sunroof</span>
+            </label>
+          </div>
         </div>
       </div>
 

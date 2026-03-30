@@ -17,14 +17,22 @@ import {
   Compass
 } from "lucide-react";
 import { clsx } from "clsx";
+import useDebouncedSearch from "@/hooks/useDebouncedSearch";
+import SearchSuggestions from "@/components/SearchSuggestions";
 
 export default function Navbar({ user }) {
   const [open,      setOpen]      = useState(false);
   const [userMenu,  setUserMenu]  = useState(false);
   const [search,    setSearch]    = useState("");
   const [scrolled,  setScrolled]  = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const menuRef = useRef(null);
+  const searchRef = useRef(null);
   const router  = useRouter();
+  
+  const { debouncedTerm } = useDebouncedSearch(search, 300);
 
   useEffect(() => {
     const s = () => setScrolled(window.scrollY > 10);
@@ -42,6 +50,53 @@ export default function Navbar({ user }) {
     e.preventDefault();
     if (search.trim()) router.push(`/cars?search=${encodeURIComponent(search.trim())}`);
     else router.push("/cars");
+  }
+
+  // Fetch suggestions when debounced term changes
+  useEffect(() => {
+    if (!debouncedTerm || debouncedTerm.length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    const fetchSuggestions = async () => {
+      try {
+        setLoadingSuggestions(true);
+        const response = await fetch(`/api/search/suggestions?query=${encodeURIComponent(debouncedTerm)}`);
+        const data = await response.json();
+        setSuggestions(data.suggestions || []);
+        setShowSuggestions(data.suggestions && data.suggestions.length > 0);
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+        setSuggestions([]);
+        setShowSuggestions(false);
+      } finally {
+        setLoadingSuggestions(false);
+      }
+    };
+
+    fetchSuggestions();
+  }, [debouncedTerm]);
+
+  // Handle click outside to close suggestions
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  function handleSuggestionSelect(value) {
+    setSearch(value);
+    setShowSuggestions(false);
+    router.push(`/cars?search=${encodeURIComponent(value)}`);
   }
 
   const links = [
@@ -85,15 +140,29 @@ export default function Navbar({ user }) {
           </div>
 
           {/* SEARCH: MINIMALIST INTEGRATION */}
-          <form onSubmit={handleSearch} className="hidden xl:flex flex-1 max-w-sm relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 group-focus-within:text-white transition-colors" />
-            <input
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Quick search..."
-              className="w-full bg-white/5 border border-transparent focus:border-white/20 focus:bg-white/10 rounded-2xl py-2.5 pl-11 pr-4 text-[13px] font-medium outline-none transition-all placeholder:text-white/20 text-white"
-            />
-          </form>
+          <div ref={searchRef} className="hidden xl:flex flex-1 max-w-sm relative group">
+            <form onSubmit={handleSearch} className="w-full">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 group-focus-within:text-white transition-colors" />
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
+                placeholder="Quick search..."
+                className="w-full bg-white/5 border border-transparent focus:border-white/20 focus:bg-white/10 rounded-2xl py-2.5 pl-11 pr-4 text-[13px] font-medium outline-none transition-all placeholder:text-white/20 text-white"
+              />
+            </form>
+            
+            {/* Search Suggestions Dropdown */}
+            {showSuggestions && (
+              <SearchSuggestions
+                suggestions={suggestions}
+                loading={loadingSuggestions}
+                onSelect={handleSuggestionSelect}
+                inputValue={search}
+                className="mt-2"
+              />
+            )}
+          </div>
 
           {/* USER ACTIONS */}
           <div className="hidden lg:flex items-center gap-6">

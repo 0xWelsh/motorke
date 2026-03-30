@@ -20,7 +20,8 @@ export async function PUT(request, { params }) {
     const body = await request.json();
     const {
       make, model, variant, year, price, mileage,
-      fuelType, transmission, bodyType, engineCC, driveType,
+      fuelType, transmission, bodyType, engineCC, drivetrain, steering,
+      cylinders, horsepower, torque, turbo, sunroof, airbags,
       color, seats, description, features, badges, images,
       negotiable, dutyPaid, imported,
     } = body;
@@ -38,7 +39,14 @@ export async function PUT(request, { params }) {
         transmission,
         bodyType,
         engineCC:     engineCC ? parseInt(engineCC) : null,
-        driveType,
+        cylinders:    cylinders ? parseInt(cylinders) : null,
+        horsepower:   horsepower ? parseInt(horsepower) : null,
+        torque:       torque ? parseInt(torque) : null,
+        drivetrain:   drivetrain || "FWD",
+        steering:     steering || "RHD",
+        turbo:        Boolean(turbo),
+        sunroof:      Boolean(sunroof),
+        airbags:      airbags ? parseInt(airbags) : 0,
         color:        color?.trim() || null,
         seats:        seats ? parseInt(seats) : null,
         description:  description?.trim() || null,

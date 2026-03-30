@@ -3,7 +3,6 @@ import { db } from "@/lib/db";
 import { formatPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS, BADGE_OPTIONS } from "@/lib/utils";
 import Link from "next/link";
 import { 
-  Search, 
   MapPin, 
   Filter, 
   ChevronRight, 
@@ -11,6 +10,9 @@ import {
   ArrowUpDown,
   ShieldCheck
 } from "lucide-react";
+import Image from "next/image";
+import CarsSearch from "@/components/CarsSearch";
+import { unstable_cache } from "next/cache";
 
 export const metadata = { title: "Inventory — Motorke Standard" };
 
@@ -53,6 +55,19 @@ export default async function CarsPage({ searchParams }) {
     ]}),
   };
 
+  const getAllMakes = unstable_cache(
+    async () => {
+      return db.car.findMany({ 
+        where: { available: true }, 
+        distinct: ["make"], 
+        select: { make: true }, 
+        orderBy: { make: "asc" } 
+      });
+    },
+    ["all-makes"],
+    { revalidate: 3600, tags: ["makes"] }
+  );
+  
   const [cars, total, allMakes] = await Promise.all([
     db.car.findMany({
       where,
@@ -65,13 +80,7 @@ export default async function CarsPage({ searchParams }) {
       take:  limit,
     }),
     db.car.count({ where }),
-    // Always fetch all distinct makes alphabetically, regardless of other filters
-    db.car.findMany({ 
-      where: { available: true }, 
-      distinct: ["make"], 
-      select: { make: true }, 
-      orderBy: { make: "asc" } 
-    }),
+    getAllMakes(),
   ]);
 
   const sortedCars = userLat && userLng
@@ -88,48 +97,16 @@ export default async function CarsPage({ searchParams }) {
   return (
     <div className="bg-background min-h-screen">
       {/* ── MINIMAL FILTER BAR ── */}
-      <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-white/5 py-4 shadow-sm">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <form method="GET" className="flex flex-wrap items-center gap-3">
-            <div className="relative flex-1 min-w-[240px] group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-white transition-colors" />
-              <input 
-                name="search" 
-                defaultValue={search} 
-                placeholder="Search inventory..." 
-                className="w-full bg-white/5 border border-white/5 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold text-white outline-none focus:bg-surface focus:border-white/20 transition-all placeholder:text-white/30"
-              />
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <select name="make" defaultValue={make} className="bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:text-white focus:border-white/20 transition-all cursor-pointer">
-                <option value="">All Makes</option>
-                {allMakes.map(m => <option key={m.make} value={m.make}>{m.make}</option>)}
-              </select>
-
-              <select name="bodyType" defaultValue={bodyType} className="bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:text-white focus:border-white/20 transition-all cursor-pointer">
-                <option value="">All Types</option>
-                {Object.entries(BODY_TYPE_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-              </select>
-
-              <select name="county" defaultValue={county} className="bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:text-white focus:border-white/20 transition-all cursor-pointer">
-                <option value="">All Counties</option>
-                {COUNTIES.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-
-              <button type="submit" className="bg-white/10 hover:bg-orange-600 text-pureWhite p-2.5 rounded-xl transition-all">
-                <Filter className="w-4 h-4" />
-              </button>
-
-              {hasFilters && (
-                <Link href="/cars" className="p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all">
-                  <X className="w-4 h-4" />
-                </Link>
-              )}
-            </div>
-          </form>
-        </div>
-      </div>
+      <CarsSearch
+        initialSearch={search}
+        initialMake={make}
+        initialBodyType={bodyType}
+        initialFuelType={fuelType}
+        initialCounty={county}
+        allMakes={allMakes}
+        bodyTypeLabels={BODY_TYPE_LABELS}
+        counties={COUNTIES}
+      />
 
       <div className="container mx-auto px-6 py-12 max-w-7xl">
         {/* ── RESULTS HEADER ── */}
@@ -208,6 +185,7 @@ function InventoryCard({ car, userLat, userLng }) {
     car.transmission === "AUTOMATIC" ? "Auto" : car.transmission === "MANUAL" ? "Manual" : car.transmission,
     car.mileage ? `${Math.round(car.mileage / 1000)}k km` : null,
     car.engineCC ? `${car.engineCC}cc` : null,
+    car.drivetrain,
     BODY_TYPE_LABELS[car.bodyType],
   ].filter(Boolean);
 
@@ -216,7 +194,13 @@ function InventoryCard({ car, userLat, userLng }) {
       {/* Landscape thumbnail — sharp corners */}
       <div className="relative aspect-[16/10] bg-white/5 overflow-hidden">
         {img ? (
-          <img src={img} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+          <Image 
+            src={img} 
+            alt={title} 
+            fill 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-white/20 text-[10px] font-bold uppercase tracking-widest">No Image</div>
         )}
