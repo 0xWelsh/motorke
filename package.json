@@ -7,14 +7,14 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma migrate deploy && next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
     "db:migrate": "prisma migrate dev",
     "db:seed": "node prisma/seed.js",
     "db:studio": "prisma studio",
-    "db:reset": "prisma migrate reset --force && npm run db:seed"
+    "db:reset": "prisma migrate reset --force && npm run db:seed",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -40,7 +40,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.0.1",
-    "eslint": "^10",
+    "eslint": "^9",
     "eslint-config-next": "^16.2.1",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
