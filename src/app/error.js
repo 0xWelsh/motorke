@@ -16,6 +16,16 @@ export default function GlobalError({ error, reset }) {
       <p className="text-white/40 text-sm mb-8 max-w-sm">
         An unexpected error occurred. This has been logged and we'll look into it.
       </p>
+      
+      {/* Debug Info (You can remove this once fixed) */}
+      <div className="mb-8 p-4 bg-red-950/30 border border-red-500/20 rounded-lg max-w-md w-full text-left">
+        <p className="text-red-400 text-xs font-mono break-all mb-2">
+          <strong>Error:</strong> {error?.message || "Unknown error"}
+        </p>
+        <p className="text-red-400/50 text-[10px] font-mono">
+          <strong>Digest:</strong> {error?.digest || "N/A"}
+        </p>
+      </div>
       <div className="flex gap-3">
         <button
           onClick={reset}
