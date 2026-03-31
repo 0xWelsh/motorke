@@ -1,4 +1,4 @@
-// src/middleware.js
+// src/proxy.js
 // Protects /admin and /portal at the edge before any page renders.
 // NOTE: We only check cookie presence here for fast edge redirects.
 // The true security source-of-truth is the DB session validation inside
@@ -8,7 +8,7 @@ import { NextResponse } from "next/server";
 
 const SESSION_COOKIE = "motorke_session";
 
-export function middleware(request) {
+export function proxy(request) {
   const { pathname } = request.nextUrl;
   const session = request.cookies.get(SESSION_COOKIE);
 
