@@ -1,4 +1,5 @@
 // src/app/dealers/[slug]/page.js
+export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { formatPrice, formatMileage, FUEL_LABELS, BADGE_OPTIONS } from "@/lib/utils";

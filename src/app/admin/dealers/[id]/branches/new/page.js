@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { requireAdmin } from "@/lib/auth";
 import LocationPicker from "@/components/LocationPicker";
 import { db } from "@/lib/db";

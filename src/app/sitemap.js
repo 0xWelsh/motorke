@@ -1,6 +1,7 @@
 // src/app/sitemap.js
 // Next.js generates /sitemap.xml automatically from this file
 
+export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 
 const BASE = process.env.NEXT_PUBLIC_APP_URL || "https://motorke.co.ke";

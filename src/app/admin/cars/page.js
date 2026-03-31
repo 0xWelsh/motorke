@@ -1,4 +1,5 @@
 // src/app/admin/cars/page.js
+export const dynamic = "force-dynamic";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";

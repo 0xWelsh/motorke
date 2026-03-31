@@ -1,4 +1,5 @@
 // src/app/api/cars/create/route.js
+export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 

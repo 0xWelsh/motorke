@@ -1,4 +1,5 @@
 // src/app/admin/cars/bulk/page.js
+export const dynamic = "force-dynamic";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import BulkUpload from "@/components/BulkUpload";

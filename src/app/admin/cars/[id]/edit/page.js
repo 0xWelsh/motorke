@@ -1,4 +1,5 @@
 // src/app/admin/cars/[id]/edit/page.js
+export const dynamic = "force-dynamic";
 import { requireAdmin } from "@/lib/auth";
 import DeleteButton from "@/components/DeleteButton";
 import { db } from "@/lib/db";

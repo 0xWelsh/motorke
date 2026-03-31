@@ -1,4 +1,5 @@
 // src/app/api/portal/cars/[id]/route.js  — PUT (dealer updates car)
+export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";

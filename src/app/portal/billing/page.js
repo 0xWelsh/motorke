@@ -1,4 +1,5 @@
 // src/app/portal/billing/page.js
+export const dynamic = "force-dynamic";
 import { requireDealer } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";

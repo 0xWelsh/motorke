@@ -1,4 +1,5 @@
 // src/app/cars/page.js
+export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { formatPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS, BADGE_OPTIONS } from "@/lib/utils";
 import Link from "next/link";

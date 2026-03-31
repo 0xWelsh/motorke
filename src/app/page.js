@@ -1,4 +1,5 @@
 // src/app/page.js
+export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { formatPrice, formatMileage, BADGE_OPTIONS } from "@/lib/utils";
 import Link from "next/link";

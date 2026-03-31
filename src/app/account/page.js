@@ -1,4 +1,5 @@
 // src/app/account/page.js
+export const dynamic = "force-dynamic";
 import { requireAuth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";

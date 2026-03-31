@@ -1,4 +1,5 @@
 // src/app/portal/analytics/page.js
+export const dynamic = "force-dynamic";
 import { requireDealer } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";

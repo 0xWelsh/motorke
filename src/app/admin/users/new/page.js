@@ -1,4 +1,5 @@
 // src/app/admin/users/new/page.js
+export const dynamic = "force-dynamic";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 

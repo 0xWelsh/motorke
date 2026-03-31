@@ -1,4 +1,5 @@
 // src/app/api/admin/cars/[id]/route.js  — PUT (update)
+export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";

@@ -1,4 +1,5 @@
 // src/app/compare/page.js
+export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { formatPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/utils";
 import Link from "next/link";

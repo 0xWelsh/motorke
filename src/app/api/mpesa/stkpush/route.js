@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { initiateSTKPush } from "@/lib/mpesa";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";

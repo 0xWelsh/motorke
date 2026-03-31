@@ -1,4 +1,5 @@
 // src/app/cars/[id]/page.js
+export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";

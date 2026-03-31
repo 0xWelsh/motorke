@@ -1,4 +1,5 @@
 // src/app/api/admin/cars/bulk/route.js
+export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";

@@ -1,4 +1,5 @@
 // src/app/api/portal/password/route.js
+export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest, verifyPassword, hashPassword } from "@/lib/auth";
 import { NextResponse } from "next/server";

@@ -1,4 +1,5 @@
 // src/app/portal/cars/[id]/edit/page.js
+export const dynamic = "force-dynamic";
 import { requireDealer } from "@/lib/auth";
 import DeleteButton from "@/components/DeleteButton";
 import { db } from "@/lib/db";

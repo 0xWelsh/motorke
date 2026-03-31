@@ -1,4 +1,5 @@
 // src/app/api/admin/users/[id]/route.js  — POST update user
+export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
