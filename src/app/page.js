@@ -93,6 +93,9 @@ const HERO_IMAGES = [
 const TRENDING = ["Toyota Hilux", "Toyota Prado", "Subaru Forester", "Mazda CX-5"];
 
 export default async function HomePage() {
+  // FORCED ERROR FOR DEBUGGING - Remove after seeing the error message on the website
+  throw new Error("DEBUG: If you see this, the error page is working perfectly.");
+  
   const { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts } = await getCachedData();
   const heroImage = HERO_IMAGES[Math.floor(Math.random() * HERO_IMAGES.length)];
 

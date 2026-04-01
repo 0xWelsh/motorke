@@ -20,7 +20,10 @@ export default function GlobalError({ error, reset }) {
       {/* Debug Info (You can remove this once fixed) */}
       <div className="mb-8 p-4 bg-red-950/30 border border-red-500/20 rounded-lg max-w-md w-full text-left">
         <p className="text-red-400 text-xs font-mono break-all mb-2">
-          <strong>Error:</strong> {error?.message || "Unknown error"}
+          <strong>Error Message:</strong> {error?.message || "Unknown error"}
+        </p>
+        <p className="text-red-400/50 text-[10px] font-mono whitespace-pre-wrap">
+          <strong>Details:</strong> {JSON.stringify(error, null, 2)}
         </p>
         <p className="text-red-400/50 text-[10px] font-mono">
           <strong>Digest:</strong> {error?.digest || "N/A"}
