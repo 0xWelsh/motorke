@@ -58,7 +58,7 @@ export default async function CarDetailPage({ params }) {
         take: 3,
       });
     },
-    ["similar-cars", carId],
+    ["similar-cars", id],
     { revalidate: 3600, tags: ["cars"] }
   );
   

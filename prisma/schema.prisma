@@ -170,9 +170,6 @@ model Car {
   @@map("cars")
 }
 
-  @@map("cars")
-}
-
 model CarImage {
   id        String  @id @default(cuid())
   carId     String
