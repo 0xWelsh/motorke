@@ -26,6 +26,7 @@ export async function PUT(request, { params }) {
       color, seats, description, features, badges, images,
       negotiable, dutyPaid, imported,
     } = body;
+    console.log("🏁 PORTAL UPDATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
     await db.car.update({
       where: { id: id },

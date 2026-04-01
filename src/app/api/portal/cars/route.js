@@ -35,6 +35,7 @@ async function createCarRecord(body) {
     color, seats, description, features, badges, images,
     negotiable, dutyPaid, imported, featured,
   } = body;
+  console.log("🏁 PORTAL CREATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
   return db.car.create({
     data: {
