@@ -31,7 +31,7 @@ import { unstable_cache } from "next/cache";
 const getCachedData = unstable_cache(
   async () => {
     const week = new Date(); week.setDate(week.getDate() - 7);
-    const [featured, newArrivals, dealers, totalCars, totalDealers, priceCounts, posts] = await Promise.all([
+    const [featured, newArrivals, dealers, totalCars, totalDealers, priceCounts, posts, trending] = await Promise.all([
       db.car.findMany({
         where: { available: true, featured: true },
         include: { images: { where: { isPrimary: true }, take: 1 }, dealer: { select: { name: true, location: true, verified: true, slug: true } } },
