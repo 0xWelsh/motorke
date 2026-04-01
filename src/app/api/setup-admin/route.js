@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { hashPassword } from "@/lib/auth";
 
 export async function GET() {
+  console.log("🏁 SETUP-ADMIN ROUTE HIT");
   try {
     const email = "11241welshmuhuri@gmail.com";
     const password = "Welsh@2006";
