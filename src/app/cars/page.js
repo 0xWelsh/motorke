@@ -9,7 +9,8 @@ import {
   ChevronRight, 
   X, 
   ArrowUpDown,
-  ShieldCheck
+  ShieldCheck,
+  Search
 } from "lucide-react";
 import Image from "next/image";
 import CarsSearch from "@/components/CarsSearch";
