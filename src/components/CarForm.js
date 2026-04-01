@@ -403,23 +403,24 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 img.isPrimary ? "border-[#f97316]" : "border-white/10"
               }`}>
                 <img src={img.url} alt="" className="w-full aspect-square object-cover" />
-                <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 p-1">
+                {img.isPrimary && (
+                  <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-[#f97316] text-white px-2 py-1 rounded-lg font-black text-[9px] uppercase tracking-tighter shadow-lg">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                    Thumbnail
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-3">
                   {!img.isPrimary && (
                     <button type="button" onClick={() => setPrimary(idx)}
-                      className="text-[10px] bg-[#f97316] text-white px-2 py-0.5 rounded-full w-full text-center">
-                      Set primary
+                      className="text-[10px] font-black uppercase tracking-widest bg-white text-black w-full py-2 rounded-lg hover:bg-[#f97316] hover:text-white transition-colors">
+                      Set as Main
                     </button>
                   )}
                   <button type="button" onClick={() => removeImage(idx)}
-                    className="text-[10px] bg-red-500/80 text-white px-2 py-0.5 rounded-full w-full text-center">
+                    className="text-[10px] font-black uppercase tracking-widest bg-red-500 text-white w-full py-2 rounded-lg hover:bg-red-600 transition-colors">
                     Remove
                   </button>
                 </div>
-                {img.isPrimary && (
-                  <span className="absolute top-1 left-1 text-[9px] bg-[#f97316] text-white px-1.5 py-0.5 rounded-full font-bold">
-                    Primary
-                  </span>
-                )}
               </div>
             ))}
           </div>

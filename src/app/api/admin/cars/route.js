@@ -64,11 +64,14 @@ export async function createCar(body) {
       available:    true,
       images: images?.length
         ? {
-            create: images.map((img, i) => ({
-              url:       img.url,
-              isPrimary: img.isPrimary || i === 0,
-              order:     i,
-            })),
+            create: (() => {
+              const hasPrimary = images.some(img => img.isPrimary);
+              return images.map((img, i) => ({
+                url:       img.url,
+                isPrimary: hasPrimary ? !!img.isPrimary : i === 0,
+                order:     i,
+              }));
+            })(),
           }
         : undefined,
     },
