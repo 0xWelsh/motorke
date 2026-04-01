@@ -2,7 +2,13 @@
 // Minimal seed — creates accounts only, no fake car listings
 const { PrismaClient } = require("@prisma/client");
 const crypto = require("crypto");
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DIRECT_URL,
+    },
+  },
+});
 
 function hashPassword(password) {
   const salt = crypto.randomBytes(16).toString("hex");
@@ -33,7 +39,7 @@ async function main() {
 
   // Admin account
   await prisma.user.create({
-    data: { name: "Motorke Admin", email: "admin@motorke.co.ke", passwordHash: hashPassword("admin1234"), role: "ADMIN", active: true },
+    data: { name: "Motorke Admin", email: "11241welshmuhuri@gmail.com", passwordHash: hashPassword("Welsh@2006"), role: "ADMIN", active: true },
   });
 
   // Dealer accounts
@@ -57,7 +63,7 @@ async function main() {
 
   console.log("\n✅ Seed complete — 5 dealerships, 7 accounts, 0 cars");
   console.log("   Add real cars via /admin/cars/new or bulk CSV upload");
-  console.log("\n   admin@motorke.co.ke     → admin1234");
+  console.log("\n   11241welshmuhuri@gmail.com     → Welsh@2006");
   console.log("   prestige@motorke.co.ke  → prestige123");
   console.log("   buyer@motorke.co.ke     → buyer123");
 }
