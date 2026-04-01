@@ -93,10 +93,40 @@ const HERO_IMAGES = [
 const TRENDING = ["Toyota Hilux", "Toyota Prado", "Subaru Forester", "Mazda CX-5"];
 
 export default async function HomePage() {
-  // FORCED ERROR FOR DEBUGGING - Remove after seeing the error message on the website
-  throw new Error("DEBUG: If you see this, the error page is working perfectly.");
+  let data;
+  let error;
   
-  const { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts } = await getCachedData();
+  try {
+    data = await getCachedData();
+  } catch (e) {
+    console.error("PAGE ERROR:", e);
+    error = e;
+  }
+
+  if (error) {
+    return (
+      <div className="bg-background min-h-screen flex items-center justify-center p-6 pb-20">
+        <div className="bg-red-950/20 border border-red-500/30 p-8 rounded-2xl max-w-2xl w-full">
+          <h1 className="text-2xl font-black text-white mb-4 uppercase tracking-tighter">🚨 Connection Diagnostic</h1>
+          <div className="space-y-4">
+            <p className="text-red-400 font-mono text-xs break-all">
+              <strong>Error Message:</strong> {error.message || "Unknown error"}
+            </p>
+            <p className="text-white/40 text-[10px] font-mono leading-relaxed bg-black/40 p-4 rounded-lg overflow-auto max-h-64">
+              <strong>Prisma Details:</strong> {JSON.stringify(error, null, 2)}
+            </p>
+            <div className="pt-4 border-t border-white/5">
+              <p className="text-white/60 text-[11px] leading-relaxed">
+                If the error mentions <strong>"Tenant not found"</strong>, double check your <strong>DATABASE_URL</strong> username in Vercel settings (it should have your project ID like <code>postgres.bbseolknavwpjzvotdct</code>).
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts } = data;
   const heroImage = HERO_IMAGES[Math.floor(Math.random() * HERO_IMAGES.length)];
 
   return (
