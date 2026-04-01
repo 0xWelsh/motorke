@@ -70,18 +70,29 @@ export default async function CarsPage({ searchParams }) {
     { revalidate: 3600, tags: ["makes"] }
   );
   
-  const [cars, total, allMakes] = await Promise.all([
-    db.car.findMany({
-      where,
-      include: {
-        images:  { where: { isPrimary: true }, take: 1 },
-        dealer:  { select: { id: true, name: true, slug: true, location: true, verified: true, lat: true, lng: true, county: true } },
-      },
-      orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
-      skip:  (page - 1) * limit,
-      take:  limit,
-    }),
-    db.car.count({ where }),
+  const getCars = unstable_cache(
+    async (where, page, limit) => {
+      const [cars, total] = await Promise.all([
+        db.car.findMany({
+          where,
+          include: {
+            images:  { where: { isPrimary: true }, take: 1 },
+            dealer:  { select: { id: true, name: true, slug: true, location: true, verified: true, lat: true, lng: true, county: true } },
+          },
+          orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
+          skip:  (page - 1) * limit,
+          take:  limit,
+        }),
+        db.car.count({ where }),
+      ]);
+      return { cars, total };
+    },
+    ["cars-list", JSON.stringify(where), page.toString()],
+    { revalidate: 300, tags: ["cars"] }
+  );
+  
+  const [{ cars, total }, allMakes] = await Promise.all([
+    getCars(where, page, limit),
     getAllMakes(),
   ]);
 
@@ -151,8 +162,8 @@ export default async function CarsPage({ searchParams }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {sortedCars.map((car) => (
-              <InventoryCard key={car.id} car={car} userLat={userLat} userLng={userLng} />
+            {sortedCars.map((car, idx) => (
+              <InventoryCard key={car.id} car={car} userLat={userLat} userLng={userLng} priority={idx < 4} />
             ))}
           </div>
         )}
@@ -177,7 +188,7 @@ export default async function CarsPage({ searchParams }) {
   );
 }
 
-function InventoryCard({ car, userLat, userLng }) {
+function InventoryCard({ car, userLat, userLng, priority = false }) {
   const img   = car.images[0]?.url;
   const title = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const dist  = userLat && car.dealer?.lat ? Math.round(distance(userLat, userLng, car.dealer.lat, car.dealer.lng)) : null;
@@ -196,13 +207,14 @@ function InventoryCard({ car, userLat, userLng }) {
       {/* Landscape thumbnail — sharp corners */}
       <div className="relative aspect-[16/10] bg-white/5 overflow-hidden">
         {img ? (
-          <Image 
-            src={img} 
-            alt={title} 
-            fill 
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+            <Image 
+              src={img} 
+              alt={title} 
+              fill 
+              priority={priority}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-white/20 text-[10px] font-bold uppercase tracking-widest">No Image</div>
         )}

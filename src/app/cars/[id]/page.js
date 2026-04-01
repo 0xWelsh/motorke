@@ -43,18 +43,26 @@ export default async function CarDetailPage({ params }) {
 
   const { car, dealer } = { car: carData, dealer: carData.dealer };
 
-  const similar = await db.car.findMany({
-    where: {
-      available: true,
-      id:        { not: car.id },
-      OR: [{ dealerId: car.dealerId }, { make: car.make }],
+  const getSimilarCars = unstable_cache(
+    async (carId, make, dealerId) => {
+      return db.car.findMany({
+        where: {
+          available: true,
+          id:        { not: carId },
+          OR: [{ dealerId: dealerId }, { make: make }],
+        },
+        include: {
+          images: { where: { isPrimary: true }, take: 1 },
+          dealer: { select: { name: true, location: true } },
+        },
+        take: 3,
+      });
     },
-    include: {
-      images: { where: { isPrimary: true }, take: 1 },
-      dealer: { select: { name: true, location: true } },
-    },
-    take: 3,
-  });
+    ["similar-cars", carId],
+    { revalidate: 3600, tags: ["cars"] }
+  );
+  
+  const similar = await getSimilarCars(car.id, car.make, car.dealerId);
 
   const title    = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const duty     = estimateDuty(car.price, car.year);

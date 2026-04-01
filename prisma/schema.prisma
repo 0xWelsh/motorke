@@ -91,6 +91,7 @@ model Dealer {
   users        User[]
   subscription Subscription?
 
+  @@index([county])
   @@map("dealers")
 }
 
@@ -162,6 +163,10 @@ model Car {
   @@index([dealerId])
   @@index([price])
   @@index([year])
+  @@index([available])
+  @@index([bodyType])
+  @@index([fuelType])
+  @@index([createdAt])
   @@map("cars")
 }
 

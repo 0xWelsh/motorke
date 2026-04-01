@@ -269,7 +269,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 px-6 relative z-10">
-            {featured.map(car => <CarCard key={car.id} car={car} />)}
+            {featured.map((car, idx) => <CarCard key={car.id} car={car} priority={idx < 3} />)}
           </div>
         </section>
       )}
@@ -282,7 +282,7 @@ export default async function HomePage() {
             <div className="h-px flex-1 mx-12 bg-white/10" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {newArrivals.map(car => <CarCard key={car.id} car={car} />)}
+            {newArrivals.map((car, idx) => <CarCard key={car.id} car={car} priority={idx < 4} />)}
           </div>
         </section>
       )}
@@ -310,7 +310,7 @@ export default async function HomePage() {
   );
 }
 
-function CarCard({ car }) {
+function CarCard({ car, priority = false }) {
   const img = car.images[0]?.url;
   const title = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   
@@ -323,6 +323,7 @@ function CarCard({ car }) {
             src={img} 
             alt={title} 
             fill 
+            priority={priority}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
