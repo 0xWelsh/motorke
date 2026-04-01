@@ -15,6 +15,7 @@ export async function GET() {
         passwordHash: await hashPassword(password),
         role: "ADMIN",
         active: true,
+        emailVerified: new Date(),
       },
       create: {
         name: "Motorke Admin",
@@ -22,6 +23,7 @@ export async function GET() {
         passwordHash: await hashPassword(password),
         role: "ADMIN",
         active: true,
+        emailVerified: new Date(),
       },
     });
 
