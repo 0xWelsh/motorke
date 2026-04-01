@@ -31,7 +31,7 @@ import { unstable_cache } from "next/cache";
 const getCachedData = unstable_cache(
   async () => {
     const week = new Date(); week.setDate(week.getDate() - 7);
-    const [featured, newArrivals, dealers, totalCars, totalDealers, priceCounts, posts, trending] = await Promise.all([
+    const [featured, newArrivals, dealers, totalCars, totalDealers, priceCounts] = await Promise.all([
       db.car.findMany({
         where: { available: true, featured: true },
         include: { images: { where: { isPrimary: true }, take: 1 }, dealer: { select: { name: true, location: true, verified: true, slug: true } } },
@@ -56,31 +56,9 @@ const getCachedData = unstable_cache(
         db.car.count({ where: { available: true, price: { gte: 4000000, lt: 7000000 } } }),
         db.car.count({ where: { available: true, price: { gte: 7000000 } } }),
       ]),
-      db.post.findMany({
-        where: { published: true },
-        orderBy: { createdAt: "desc" },
-        take: 3,
-      }),
-      db.car.groupBy({
-        by: ["make", "model"],
-        _sum: { views: true },
-        _count: { id: true },
-        where: { available: true },
-        orderBy: { _sum: { views: "desc" } },
-        take: 3,
-      }),
     ]);
 
-    // Average prices for trending
-    const trends = await Promise.all(trending.map(async (t) => {
-      const avg = await db.car.aggregate({
-        where: { make: t.make, model: t.model, available: true },
-        _avg: { price: true },
-      });
-      return { ...t, avgPrice: Math.round(avg._avg.price || 0) };
-    }));
-
-    return { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts, posts, trends };
+    return { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts };
   },
   ["homepage-data"],
   { revalidate: 900, tags: ["homepage"] }
@@ -115,34 +93,8 @@ const HERO_IMAGES = [
 
 const TRENDING = ["Toyota Hilux", "Toyota Prado", "Subaru Forester", "Mazda CX-5"];
 
-function TrendCard({ trend }) {
-  return (
-    <div className="bg-white/5 border border-white/5 p-6 rounded-2xl hover:border-orange-500/30 transition-all group">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-orange-600/10 flex items-center justify-center text-orange-500">
-            <TrendingUp className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 className="font-bold text-white text-sm">{trend.make} {trend.model}</h4>
-            <p className="text-[10px] text-white/30 uppercase tracking-widest">{trend.totalUnits} Units Available</p>
-          </div>
-        </div>
-        <div className="text-right">
-          <p className="text-sm font-black text-orange-500">{formatPrice(trend.avgPrice)}</p>
-          <p className="text-[10px] text-white/30 uppercase">Avg. Market Price</p>
-        </div>
-      </div>
-      <div className="w-full bg-white/5 h-1 rounded-full overflow-hidden">
-        <div className="bg-orange-600 h-full rounded-full transition-all duration-1000" style={{ width: `${Math.min(100, (trend.popularity / 500) * 100)}%` }} />
-      </div>
-      <p className="text-[9px] text-white/20 mt-2 uppercase tracking-tighter">Popularity Score: {trend.popularity.toLocaleString()}</p>
-    </div>
-  );
-}
-
 export default async function HomePage() {
-  const { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts, posts, trends } = await getCachedData();
+  const { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts } = await getCachedData();
   const heroImage = HERO_IMAGES[Math.floor(Math.random() * HERO_IMAGES.length)];
 
   return (
@@ -264,62 +216,45 @@ export default async function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {posts.length > 0 ? posts.map((news, i) => (
-            <Link key={i} href={`/news/${news.slug}`} className="group block">
+          {[
+            {
+              title: "KRA Announces Revised Duty Rates for 2026 Vehicle Imports",
+              tag: "Policy",
+              date: "24 Mar 2026",
+              img: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=800&q=80"
+            },
+            {
+              title: "The Rise of Electric Vehicles: Kenya's Growing Charging Infrastructure",
+              tag: "Trends",
+              date: "22 Mar 2026",
+              img: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=800&q=80"
+            },
+            {
+              title: "Port of Mombasa: Record 5,000 Units Landed This Week",
+              tag: "Logistics",
+              date: "20 Mar 2026",
+              img: "https://images.unsplash.com/photo-1493946740624-75b8787c3299?w=800&q=80"
+            }
+          ].map((news, i) => (
+            <Link key={i} href="#" className="group block">
               <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 mb-6 relative">
-                {news.image ? (
-                  <Image 
-                    src={news.image} 
-                    alt={news.title} 
-                    fill 
-                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" 
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-white/5 bg-orange-600/5">🗞️</div>
-                )}
+                <Image 
+                  src={news.img} 
+                  alt={news.title} 
+                  fill 
+                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" 
+                />
               </div>
               <div className="flex items-center gap-3 mb-3">
                 <span className="text-[10px] font-black text-white uppercase tracking-widest">{news.tag}</span>
                 <span className="w-1 h-1 rounded-full bg-white/20" />
-                <span className="text-[10px] font-bold text-white/40 uppercase">{new Date(news.createdAt).toLocaleDateString("en-GB", { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                <span className="text-[10px] font-bold text-white/40 uppercase">{news.date}</span>
               </div>
               <h3 className="text-lg font-bold text-white leading-snug group-hover:text-orange-500 transition-colors">{news.title}</h3>
             </Link>
-          )) : (
-            [
-              { title: "KRA Announces Revised Duty Rates for 2026 Vehicle Imports", tag: "Policy", date: "24 Mar 2026", img: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=800&q=80" },
-              { title: "The Rise of Electric Vehicles: Kenya's Growing Charging Infrastructure", tag: "Trends", date: "22 Mar 2026", img: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=800&q=80" },
-              { title: "Port of Mombasa: Record 5,000 Units Landed This Week", tag: "Logistics", date: "20 Mar 2026", img: "https://images.unsplash.com/photo-1493946740624-75b8787c3299?w=800&q=80" }
-            ].map((news, i) => (
-              <div key={i} className="opacity-50 grayscale pointer-events-none group">
-                <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-[#0a0a0a] border border-white/5 mb-6 relative">
-                  <Image src={news.img} fill className="object-cover opacity-80" alt="stub" />
-                </div>
-                <h3 className="text-lg font-bold text-white/40">{news.title}</h3>
-                <p className="text-[10px] mt-2 font-bold uppercase tracking-widest text-white/20">Awaiting Analyst Post...</p>
-              </div>
-            ))
-          )}
+          ))}
         </div>
       </section>
-
-      {/* ── LIVE MARKET TRENDS ── */}
-      {trends.length > 0 && (
-        <section className="container mx-auto px-6 py-12 max-w-6xl">
-           <div className="bg-orange-600/5 border border-orange-600/10 rounded-[2.5rem] p-10 relative overflow-hidden">
-             <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-8">
-                   <div className="px-3 py-1 rounded-full bg-orange-600 text-white text-[10px] font-black uppercase tracking-widest animate-pulse">Live</div>
-                   <h2 className="text-2xl font-black text-white tracking-tight">Vanguard Price Index</h2>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                   {trends.map((t, i) => <TrendCard key={i} trend={t} />)}
-                </div>
-             </div>
-             <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-orange-600/10 blur-[80px] rounded-full" />
-           </div>
-        </section>
-      )}
 
       {/* ── FEATURED CARS ── */}
       {featured.length > 0 && (

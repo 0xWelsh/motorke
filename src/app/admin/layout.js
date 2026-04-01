@@ -28,7 +28,6 @@ const links = [
   { href: "/admin/approvals", label: "Approvals",   Icon: ShieldCheck     },
   { href: "/admin/users",     label: "Users",       Icon: Users           },
   { href: "/admin/leads",     label: "Enquiries",   Icon: MessageSquare   },
-  { href: "/admin/news",      label: "News",        Icon: Bell            },
 ];
 
 const quickActions = [
