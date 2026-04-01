@@ -71,10 +71,11 @@ async function createCarRecord(body) {
       images: images?.length
         ? {
             create: (() => {
-              const hasPrimary = images.some(img => img.isPrimary);
+              const primaryIdx = images.findIndex(img => img.isPrimary);
+              const finalPrimaryIdx = primaryIdx !== -1 ? primaryIdx : 0;
               return images.map((img, i) => ({
                 url:       img.url,
-                isPrimary: hasPrimary ? !!img.isPrimary : i === 0,
+                isPrimary: i === finalPrimaryIdx,
                 order:     i,
               }));
             })(),

@@ -59,12 +59,13 @@ export async function PUT(request, { params }) {
     // Replace images if provided
     if (images && images.length > 0) {
       await db.carImage.deleteMany({ where: { carId: id } });
-      const hasPrimary = images.some(img => img.isPrimary);
+      const primaryIdx = images.findIndex(img => img.isPrimary);
+      const finalPrimaryIdx = primaryIdx !== -1 ? primaryIdx : 0;
       await db.carImage.createMany({
         data: images.map((img, i) => ({
           carId:     id,
           url:       img.url,
-          isPrimary: hasPrimary ? !!img.isPrimary : i === 0,
+          isPrimary: i === finalPrimaryIdx,
           order:     i,
         })),
       });
