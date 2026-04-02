@@ -1,5 +1,6 @@
 // src/app/layout.js
 import "./globals.css";
+import { CompareProvider } from "@/components/CompareContext";
 import Navbar from "@/components/Navbar";
 import { CompareBar } from "@/components/CompareSelector";
 import { ModalProvider } from "@/components/Modal";
@@ -21,12 +22,14 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className="bg-background text-pureWhite min-h-screen antialiased selection:bg-orange-600/30 selection:text-orange-200 flex flex-col">
+      <body className="bg-background text-pureWhite min-h-screen antialiased selection:bg-orange-600/30 selection:text-orange-200 flex flex-col font-jakarta">
+        <CompareProvider>
           <Navbar user={user} />
           <ModalProvider>
             <main className="flex-1">{children}</main>
             <CompareBar />
           </ModalProvider>
+        </CompareProvider>
         <footer className="mt-20 border-t border-white/5 bg-[#0a0a0a] py-12 px-6">
           <div className="container mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex flex-col items-center md:items-start">

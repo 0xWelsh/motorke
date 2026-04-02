@@ -10,6 +10,7 @@ import EnquiryForm from "@/components/EnquiryForm";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
 import { SaveButton, TrackRecentView } from "@/components/CarActions";
+import { CompareButton } from "@/components/CompareSelector";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -208,12 +209,17 @@ export default async function CarDetailPage({ params }) {
           </div>
 
           {/* Compare CTA */}
-          <div className="bg-white/5 border border-white/5 rounded-2xl p-4 text-center">
-            <p className="text-xs text-white/40 mb-2">Want to compare this car?</p>
-            <Link href={`/compare?a=${car.id}`}
-              className="text-sm text-orange-500 font-semibold hover:text-orange-400 transition-colors">
-              Add to comparison →
-            </Link>
+          <div className="bg-white/5 border border-white/5 rounded-2xl p-6 text-center space-y-4">
+            <div className="flex justify-center">
+              <div className="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center text-xl">⚖️</div>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-white mb-1">Want to compare this car?</p>
+              <p className="text-xs text-white/40">Add it to your selection and see how it stacks up side-by-side.</p>
+            </div>
+            <div className="flex justify-center">
+              <CompareButton car={car} />
+            </div>
           </div>
         </div>
       </div>

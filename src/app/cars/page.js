@@ -15,6 +15,8 @@ import {
 import Image from "next/image";
 import CarsSearch from "@/components/CarsSearch";
 import { unstable_cache } from "next/cache";
+import { CompareButton } from "@/components/CompareSelector";
+
 
 export const metadata = { title: "Inventory — Motorke Standard" };
 
@@ -272,9 +274,12 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
         {/* Price + View Offer */}
         <div className="flex items-center justify-between pt-3 border-t border-white/5 mt-auto">
           <p className="text-lg font-black text-orange-500">{formatPrice(car.price)}</p>
-          <span className="text-[10px] font-black uppercase tracking-widest text-white/30 group-hover:text-orange-500 transition-colors flex items-center gap-1">
-            View Offer <ChevronRight className="w-3 h-3" />
-          </span>
+          <div className="flex items-center gap-3">
+             <CompareButton car={car} />
+             <span className="text-[10px] font-black uppercase tracking-widest text-white/30 group-hover:text-orange-500 transition-colors flex items-center gap-1">
+               View Offer <ChevronRight className="w-3 h-3" />
+             </span>
+          </div>
         </div>
       </div>
     </Link>
