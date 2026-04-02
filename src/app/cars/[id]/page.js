@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
+import { unstable_cache } from "next/cache";
 import { formatPrice, formatMileage, estimateDuty,
          BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/utils";
 import EnquiryForm from "@/components/EnquiryForm";

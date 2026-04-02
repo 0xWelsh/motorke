@@ -16,13 +16,13 @@ model User {
   name          String
   avatarUrl     String?
   dealerId      String?
-  dealer        Dealer?    @relation(fields: [dealerId], references: [id], onDelete: Cascade)
   active        Boolean    @default(true)
   emailVerified DateTime?
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
-  sessions      Session[]
   savedCars     SavedCar[]
+  sessions      Session[]
+  dealer        Dealer?    @relation(fields: [dealerId], references: [id], onDelete: Cascade)
 
   @@map("users")
 }
@@ -40,10 +40,10 @@ model VerificationToken {
 model Session {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   token     String   @unique @default(cuid())
   expiresAt DateTime
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
@@ -51,19 +51,13 @@ model Session {
 model SavedCar {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   carId     String
-  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, carId])
   @@map("saved_cars")
-}
-
-enum UserRole {
-  ADMIN
-  DEALER
-  BUYER
 }
 
 model Dealer {
@@ -88,8 +82,8 @@ model Dealer {
   cars         Car[]
   branches     DealerBranch[]
   leads        Lead[]
-  users        User[]
   subscription Subscription?
+  users        User[]
 
   @@index([county])
   @@map("dealers")
@@ -98,8 +92,7 @@ model Dealer {
 model DealerBranch {
   id        String   @id @default(cuid())
   dealerId  String
-  dealer    Dealer   @relation(fields: [dealerId], references: [id], onDelete: Cascade)
-  name      String // e.g. "Mombasa Road Branch"
+  name      String
   location  String
   county    String   @default("Nairobi")
   address   String?
@@ -110,6 +103,7 @@ model DealerBranch {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   cars      Car[]
+  dealer    Dealer   @relation(fields: [dealerId], references: [id], onDelete: Cascade)
 
   @@map("dealer_branches")
 }
@@ -117,9 +111,6 @@ model DealerBranch {
 model Car {
   id            String        @id @default(cuid())
   dealerId      String
-  dealer        Dealer        @relation(fields: [dealerId], references: [id], onDelete: Cascade)
-  branchId      String?
-  branch        DealerBranch? @relation(fields: [branchId], references: [id])
   make          String
   model         String
   variant       String?
@@ -130,15 +121,7 @@ model Car {
   mileage       Int?
   fuelType      FuelType      @default(PETROL)
   transmission  Transmission  @default(AUTOMATIC)
-  drivetrain    Drivetrain    @default(FWD)
-  steering      Steering      @default(RHD)
   engineCC      Int?
-  cylinders     Int?
-  horsepower    Int?
-  torque        Int?
-  turbo         Boolean       @default(false)
-  sunroof       Boolean       @default(false)
-  airbags       Int?          @default(0)
   bodyType      BodyType      @default(SEDAN)
   color         String?
   doors         Int?          @default(4)
@@ -148,16 +131,27 @@ model Car {
   dutyPaid      Boolean       @default(true)
   description   String?
   features      String[]
-  badges        String[]
   available     Boolean       @default(true)
   featured      Boolean       @default(false)
   views         Int           @default(0)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+  branchId      String?
+  drivetrain    Drivetrain    @default(FWD)
+  badges        String[]
+  airbags       Int?          @default(0)
+  cylinders     Int?
+  horsepower    Int?
+  steering      Steering      @default(RHD)
+  sunroof       Boolean       @default(false)
+  torque        Int?
+  turbo         Boolean       @default(false)
   images        CarImage[]
+  carViews      CarView[]
+  branch        DealerBranch? @relation(fields: [branchId], references: [id])
+  dealer        Dealer        @relation(fields: [dealerId], references: [id], onDelete: Cascade)
   leads         Lead[]
   savedBy       SavedCar[]
-  carViews      CarView[]
 
   @@index([make, model])
   @@index([dealerId])
@@ -173,11 +167,11 @@ model Car {
 model CarImage {
   id        String  @id @default(cuid())
   carId     String
-  car       Car     @relation(fields: [carId], references: [id], onDelete: Cascade)
   url       String
   alt       String?
   isPrimary Boolean @default(false)
   order     Int     @default(0)
+  car       Car     @relation(fields: [carId], references: [id], onDelete: Cascade)
 
   @@map("car_images")
 }
@@ -185,17 +179,17 @@ model CarImage {
 model Lead {
   id        String     @id @default(cuid())
   carId     String
-  car       Car        @relation(fields: [carId], references: [id], onDelete: Cascade)
   dealerId  String
-  dealer    Dealer     @relation(fields: [dealerId], references: [id], onDelete: Cascade)
   name      String
   phone     String
   email     String?
   message   String?
   channel   String     @default("web")
-  status    LeadStatus @default(NEW)
   createdAt DateTime   @default(now())
+  status    LeadStatus @default(NEW)
   notes     LeadNote[]
+  car       Car        @relation(fields: [carId], references: [id], onDelete: Cascade)
+  dealer    Dealer     @relation(fields: [dealerId], references: [id], onDelete: Cascade)
 
   @@map("leads")
 }
@@ -203,10 +197,10 @@ model Lead {
 model LeadNote {
   id        String     @id @default(cuid())
   leadId    String
-  lead      Lead       @relation(fields: [leadId], references: [id], onDelete: Cascade)
   status    LeadStatus @default(NEW)
   note      String?
   createdAt DateTime   @default(now())
+  lead      Lead       @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
   @@map("lead_notes")
 }
@@ -214,9 +208,9 @@ model LeadNote {
 model CarView {
   id       String   @id @default(cuid())
   carId    String
-  car      Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
   viewedAt DateTime @default(now())
   source   String?
+  car      Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
 
   @@map("car_views")
 }
@@ -224,7 +218,6 @@ model CarView {
 model Subscription {
   id        String             @id @default(cuid())
   dealerId  String             @unique
-  dealer    Dealer             @relation(fields: [dealerId], references: [id], onDelete: Cascade)
   plan      SubscriptionPlan   @default(FREE)
   status    SubscriptionStatus @default(ACTIVE)
   startDate DateTime           @default(now())
@@ -235,6 +228,7 @@ model Subscription {
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
   payments  Payment[]
+  dealer    Dealer             @relation(fields: [dealerId], references: [id], onDelete: Cascade)
 
   @@map("subscriptions")
 }
@@ -242,14 +236,20 @@ model Subscription {
 model Payment {
   id             String        @id @default(cuid())
   subscriptionId String
-  subscription   Subscription  @relation(fields: [subscriptionId], references: [id])
   amount         Int
   method         PaymentMethod
   reference      String?
   status         PaymentStatus @default(PENDING)
   createdAt      DateTime      @default(now())
+  subscription   Subscription  @relation(fields: [subscriptionId], references: [id])
 
   @@map("payments")
+}
+
+enum UserRole {
+  ADMIN
+  DEALER
+  BUYER
 }
 
 enum Condition {
