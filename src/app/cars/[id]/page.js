@@ -1,5 +1,5 @@
 // src/app/cars/[id]/page.js
-export const dynamic = "force-dynamic";
+export const revalidate = 600; // Revalidate every 10 minutes
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
@@ -11,6 +11,8 @@ import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
 import { SaveButton, TrackRecentView } from "@/components/CarActions";
 import { CompareButton } from "@/components/CompareSelector";
+import PrintButton from "@/components/PrintButton";
+import SpecSheet from "@/components/SpecSheet";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -21,24 +23,44 @@ export async function generateMetadata({ params }) {
   return { title: `${car.year} ${car.make} ${car.model} — Motorke Kenya` };
 }
 
-export default async function CarDetailPage({ params }) {
-  const { id } = await params;
-  const [carData] = await Promise.all([
-    db.car.findUnique({
+// Pre-render top 100 most recent cars at build time
+export async function generateStaticParams() {
+  const cars = await db.car.findMany({
+    where: { available: true },
+    orderBy: { createdAt: "desc" },
+    take: 100,
+    select: { id: true },
+  });
+
+  return cars.map((car) => ({
+    id: car.id,
+  }));
+}
+
+const getCarData = unstable_cache(
+  async (id) => {
+    return db.car.findUnique({
       where:   { id: id },
       include: {
         images: { orderBy: { order: "asc" } },
         dealer: true,
       },
-    }),
-  ]);
+    });
+  },
+  ["car-detail"],
+  { revalidate: 600, tags: ["cars"] }
+);
+
+export default async function CarDetailPage({ params }) {
+  const { id } = await params;
+  const carData = await getCarData(id);
 
   if (!carData) notFound();
 
-  const session   = await getSession();
-  const userId    = session?.userId || null;
+  const session    = await getSession();
+  const userId     = session?.userId || null;
   const isLoggedIn = !!userId;
-  const savedCar  = userId ? await db.savedCar.findUnique({
+  const savedCar   = userId ? await db.savedCar.findUnique({
     where: { userId_carId: { userId, carId: id } },
   }).catch(() => null) : null;
   const isSaved = !!savedCar;
@@ -122,9 +144,10 @@ export default async function CarDetailPage({ params }) {
           </div>
 
           {/* Share + Save */}
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
             <ShareButtons title={title} price={formatPrice(car.price)} />
             <SaveButton carId={car.id} initialSaved={isSaved} isLoggedIn={isLoggedIn} />
+            <PrintButton carId={car.id} />
           </div>
           <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
 
@@ -264,6 +287,9 @@ export default async function CarDetailPage({ params }) {
           </div>
         </div>
       )}
+
+      {/* Hidden Spec Sheet for Printing */}
+      <SpecSheet car={car} dealer={dealer} />
     </div>
   );
 }

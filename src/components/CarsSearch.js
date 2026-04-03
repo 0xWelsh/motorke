@@ -2,16 +2,21 @@
 // src/components/CarsSearch.js
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Filter, X } from "lucide-react";
+import { Search, Filter, X, ChevronDown, ArrowUpDown, SlidersHorizontal } from "lucide-react";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
 import SearchSuggestions from "@/components/SearchSuggestions";
+import { FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/utils";
 
 export default function CarsSearch({ 
   initialSearch = "",
   initialMake = "",
   initialBodyType = "",
   initialFuelType = "",
+  initialTransmission = "",
   initialCounty = "",
+  initialMinPrice = "",
+  initialMaxPrice = "",
+  initialSort = "newest",
   allMakes = [],
   bodyTypeLabels = {},
   counties = []
@@ -20,7 +25,13 @@ export default function CarsSearch({
   const [make, setMake] = useState(initialMake);
   const [bodyType, setBodyType] = useState(initialBodyType);
   const [fuelType, setFuelType] = useState(initialFuelType);
+  const [transmission, setTransmission] = useState(initialTransmission);
   const [county, setCounty] = useState(initialCounty);
+  const [minPrice, setMinPrice] = useState(initialMinPrice);
+  const [maxPrice, setMaxPrice] = useState(initialMaxPrice);
+  const [sort, setSort] = useState(initialSort);
+  const [showMore, setShowMore] = useState(false);
+  
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -71,27 +82,17 @@ export default function CarsSearch({
   }, []);
 
   function handleSubmit(e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
     const params = new URLSearchParams();
     if (search.trim()) params.set("search", search.trim());
     if (make) params.set("make", make);
     if (bodyType) params.set("bodyType", bodyType);
     if (fuelType) params.set("fuelType", fuelType);
+    if (transmission) params.set("transmission", transmission);
     if (county) params.set("county", county);
-    router.push(`/cars?${params.toString()}`);
-  }
-
-  function handleSuggestionSelect(value) {
-    setSearch(value);
-    setShowSuggestions(false);
-    
-    // Auto-submit after selecting suggestion
-    const params = new URLSearchParams();
-    params.set("search", value);
-    if (make) params.set("make", make);
-    if (bodyType) params.set("bodyType", bodyType);
-    if (fuelType) params.set("fuelType", fuelType);
-    if (county) params.set("county", county);
+    if (minPrice) params.set("minPrice", minPrice);
+    if (maxPrice) params.set("maxPrice", maxPrice);
+    if (sort && sort !== "newest") params.set("sort", sort);
     router.push(`/cars?${params.toString()}`);
   }
 
@@ -100,74 +101,170 @@ export default function CarsSearch({
     setMake("");
     setBodyType("");
     setFuelType("");
+    setTransmission("");
     setCounty("");
+    setMinPrice("");
+    setMaxPrice("");
+    setSort("newest");
     router.push("/cars");
   }
 
-  const hasFilters = search || make || bodyType || fuelType || county;
+  const hasFilters = search || make || bodyType || fuelType || transmission || county || minPrice || maxPrice || sort !== "newest";
 
   return (
     <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-white/5 py-4 shadow-sm">
       <div className="container mx-auto px-6 max-w-7xl">
         <div ref={formRef} className="relative">
-          <form method="GET" onSubmit={handleSubmit} className="flex flex-wrap items-center gap-3">
-            <div className="relative flex-1 min-w-[240px] group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-white transition-colors" />
-              <input 
-                name="search" 
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
-                placeholder="Search inventory..." 
-                className="w-full bg-white/5 border border-white/5 rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold text-white outline-none focus:bg-surface focus:border-white/20 transition-all placeholder:text-white/30"
-              />
-            </div>
+          <form method="GET" onSubmit={handleSubmit} className="space-y-4">
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Primary Search */}
+              <div className="relative flex-1 min-w-[240px] group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-white transition-colors" />
+                <input 
+                  name="search" 
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
+                  placeholder="Search inventory (e.g. Toyota Prado)..." 
+                  className="w-full bg-white/5 border border-white/5 rounded-xl pl-11 pr-4 py-3 text-sm font-bold text-white outline-none focus:bg-surface focus:border-white/20 transition-all placeholder:text-white/30"
+                />
+              </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <select 
-                name="make" 
-                value={make}
-                onChange={e => setMake(e.target.value)}
-                className="bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:text-white focus:border-white/20 transition-all cursor-pointer"
-              >
-                <option value="">All Makes</option>
-                {allMakes.map(m => <option key={m.make} value={m.make}>{m.make}</option>)}
-              </select>
+              {/* Main Quick Filters */}
+              <div className="flex flex-wrap items-center gap-2">
+                <select 
+                  value={make}
+                  onChange={e => { setMake(e.target.value); handleSubmit(); }}
+                  className="bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:text-white focus:border-white/20 transition-all cursor-pointer"
+                >
+                  <option value="">All Makes</option>
+                  {allMakes.map(m => <option key={m.make} value={m.make}>{m.make}</option>)}
+                </select>
 
-              <select 
-                name="bodyType" 
-                value={bodyType}
-                onChange={e => setBodyType(e.target.value)}
-                className="bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:text-white focus:border-white/20 transition-all cursor-pointer"
-              >
-                <option value="">All Types</option>
-                {Object.entries(bodyTypeLabels).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-              </select>
+                <select 
+                  value={bodyType}
+                  onChange={e => { setBodyType(e.target.value); handleSubmit(); }}
+                  className="bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:text-white focus:border-white/20 transition-all cursor-pointer"
+                >
+                  <option value="">All Types</option>
+                  {Object.entries(bodyTypeLabels).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                </select>
 
-              <select 
-                name="county" 
-                value={county}
-                onChange={e => setCounty(e.target.value)}
-                className="bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:text-white focus:border-white/20 transition-all cursor-pointer"
-              >
-                <option value="">All Counties</option>
-                {counties.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-
-              <button type="submit" className="bg-white/10 hover:bg-orange-600 text-pureWhite p-2.5 rounded-xl transition-all">
-                <Filter className="w-4 h-4" />
-              </button>
-
-              {hasFilters && (
                 <button 
                   type="button"
-                  onClick={clearFilters}
-                  className="p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all"
+                  onClick={() => setShowMore(!showMore)}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all ${
+                    showMore || fuelType || transmission || county || minPrice || maxPrice
+                    ? "bg-orange-600/10 text-orange-500 border border-orange-500/20" 
+                    : "bg-white/5 border border-white/5 text-white/50 hover:text-white"
+                  }`}
                 >
-                  <X className="w-4 h-4" />
+                  <SlidersHorizontal className="w-3.5 h-3.5" />
+                  Filters
+                  <ChevronDown className={`w-3 h-3 transition-transform ${showMore ? "rotate-180" : ""}`} />
                 </button>
-              )}
+
+                <div className="w-px h-8 bg-white/5 mx-1 hidden md:block" />
+
+                <select 
+                  value={sort}
+                  onChange={e => { setSort(e.target.value); handleSubmit(); }}
+                  className="bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:text-white focus:border-white/20 transition-all cursor-pointer"
+                >
+                  <option value="newest">Newest First</option>
+                  <option value="price_asc">Lowest Price</option>
+                  <option value="price_desc">Highest Price</option>
+                  <option value="mileage_asc">Lowest Mileage</option>
+                  <option value="year_desc">Newest Year</option>
+                </select>
+
+                <button type="submit" className="bg-orange-600 hover:bg-orange-500 text-pureWhite px-6 py-3 rounded-xl transition-all text-xs font-black uppercase tracking-widest shadow-lg shadow-orange-600/20 active:scale-95">
+                  Find
+                </button>
+
+                {hasFilters && (
+                  <button 
+                    type="button"
+                    onClick={clearFilters}
+                    className="p-3 bg-white/5 hover:bg-white/10 text-white/30 hover:text-white rounded-xl transition-all border border-white/5"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
             </div>
+
+            {/* Expanded Filters */}
+            {showMore && (
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 pt-4 border-t border-white/5 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-white/30 pl-2">Fuel Type</label>
+                  <select 
+                    value={fuelType}
+                    onChange={e => setFuelType(e.target.value)}
+                    className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-[11px] font-bold text-white outline-none focus:border-white/20 transition-all"
+                  >
+                    <option value="">Any Fuel</option>
+                    {Object.entries(FUEL_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                  </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-white/30 pl-2">Transmission</label>
+                  <select 
+                    value={transmission}
+                    onChange={e => setTransmission(e.target.value)}
+                    className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-[11px] font-bold text-white outline-none focus:border-white/20 transition-all"
+                  >
+                    <option value="">Any Gearbox</option>
+                    {Object.entries(TRANSMISSION_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                  </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-white/30 pl-2">Location</label>
+                  <select 
+                    value={county}
+                    onChange={e => setCounty(e.target.value)}
+                    className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-[11px] font-bold text-white outline-none focus:border-white/20 transition-all"
+                  >
+                    <option value="">Any County</option>
+                    {counties.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+
+                <div className="space-y-1.5 lg:col-span-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-white/30 pl-2">Price Range (KES)</label>
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="number"
+                      placeholder="Min"
+                      value={minPrice}
+                      onChange={e => setMinPrice(e.target.value)}
+                      className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-[11px] font-bold text-white outline-none focus:border-white/20 transition-all placeholder:text-white/20"
+                    />
+                    <span className="text-white/20">—</span>
+                    <input 
+                      type="number"
+                      placeholder="Max"
+                      value={maxPrice}
+                      onChange={e => setMaxPrice(e.target.value)}
+                      className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-[11px] font-bold text-white outline-none focus:border-white/20 transition-all placeholder:text-white/20"
+                    />
+                  </div>
+                </div>
+                
+                <div className="flex items-end">
+                   <button 
+                     type="button"
+                     onClick={() => handleSubmit()}
+                     className="w-full bg-white/10 hover:bg-white/20 text-white text-[11px] font-black uppercase tracking-widest h-10 rounded-xl transition-all"
+                   >
+                     Apply
+                   </button>
+                </div>
+              </div>
+            )}
           </form>
 
           {/* Search Suggestions Dropdown */}
@@ -175,7 +272,7 @@ export default function CarsSearch({
             <SearchSuggestions
               suggestions={suggestions}
               loading={loadingSuggestions}
-              onSelect={handleSuggestionSelect}
+              onSelect={(val) => { setSearch(val); setShowSuggestions(false); handleSubmit(); }}
               inputValue={search}
               className="mt-2"
             />

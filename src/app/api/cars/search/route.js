@@ -2,16 +2,10 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { unstable_cache } from "next/cache";
 
-export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-  const query = searchParams.get("q") || "";
-
-  if (query.length < 2) {
-    return NextResponse.json([]);
-  }
-
-  try {
+const getSearchResults = unstable_cache(
+  async (query) => {
     const cars = await db.car.findMany({
       where: {
         available: true,
@@ -26,7 +20,7 @@ export async function GET(request) {
       take: 5,
     });
 
-    const results = cars.map(car => ({
+    return cars.map(car => ({
       id: car.id,
       make: car.make,
       model: car.model,
@@ -34,7 +28,21 @@ export async function GET(request) {
       price: car.price,
       image: car.images[0]?.url || null,
     }));
+  },
+  ["car-search"],
+  { revalidate: 600, tags: ["cars"] }
+);
 
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const query = searchParams.get("q") || "";
+
+  if (query.length < 2) {
+    return NextResponse.json([]);
+  }
+
+  try {
+    const results = await getSearchResults(query);
     return NextResponse.json(results);
   } catch (error) {
     console.error("Search error:", error);

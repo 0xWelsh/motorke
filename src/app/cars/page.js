@@ -1,5 +1,4 @@
 // src/app/cars/page.js
-export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { formatPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS, BADGE_OPTIONS } from "@/lib/utils";
 import Link from "next/link";
@@ -32,32 +31,47 @@ function distance(lat1, lng1, lat2, lng2) {
 const COUNTIES = ["Nairobi","Mombasa","Nakuru","Kisumu","Uasin Gishu","Kiambu","Machakos","Meru"];
 
 export default async function CarsPage({ searchParams }) {
-  const sp       = await searchParams;
-  const page     = parseInt(sp.page  || "1");
-  const limit    = 12;
-  const search   = sp.search   || "";
-  const make     = sp.make     || "";
-  const bodyType = sp.bodyType || "";
-  const fuelType = sp.fuelType || "";
-  const county   = sp.county   || "";
-  const minPrice = sp.minPrice ? parseInt(sp.minPrice) : undefined;
-  const maxPrice = sp.maxPrice ? parseInt(sp.maxPrice) : undefined;
+  const sp           = await searchParams;
+  const page         = parseInt(sp.page  || "1");
+  const limit        = 12;
+  const search       = sp.search       || "";
+  const make         = sp.make         || "";
+  const bodyType     = sp.bodyType     || "";
+  const fuelType     = sp.fuelType     || "";
+  const transmission = sp.transmission || "";
+  const county       = sp.county       || "";
+  const minPrice     = sp.minPrice ? parseInt(sp.minPrice) : undefined;
+  const maxPrice     = sp.maxPrice ? parseInt(sp.maxPrice) : undefined;
+  const sort         = sp.sort || "newest"; // newest, price_asc, price_desc, mileage_asc, year_desc
+  
   const userLat  = sp.lat  ? parseFloat(sp.lat)  : null;
   const userLng  = sp.lng  ? parseFloat(sp.lng)  : null;
 
   const where = {
     available: true,
-    ...(make     && { make: { equals: make, mode: "insensitive" } }),
-    ...(bodyType && { bodyType }),
-    ...(fuelType && { fuelType }),
+    ...(make         && { make: { equals: make, mode: "insensitive" } }),
+    ...(bodyType     && { bodyType }),
+    ...(fuelType     && { fuelType }),
+    ...(transmission && { transmission }),
     ...(minPrice || maxPrice ? { price: { ...(minPrice && { gte: minPrice }), ...(maxPrice && { lte: maxPrice }) } } : {}),
-    ...(county   && { dealer: { county: { equals: county, mode: "insensitive" } } }),
-    ...(search   && { OR: [
+    ...(county       && { dealer: { county: { equals: county, mode: "insensitive" } } }),
+    ...(search       && { OR: [
       { make:    { contains: search, mode: "insensitive" } },
       { model:   { contains: search, mode: "insensitive" } },
       { variant: { contains: search, mode: "insensitive" } },
     ]}),
   };
+
+  const orderBy = [];
+  if (sort === "price_asc")    orderBy.push({ price: "asc" });
+  else if (sort === "price_desc")   orderBy.push({ price: "desc" });
+  else if (sort === "mileage_asc") orderBy.push({ mileage: "asc" });
+  else if (sort === "year_desc")    orderBy.push({ year: "desc" });
+  else {
+    // Default: Featured first, then newest
+    orderBy.push({ featured: "desc" });
+    orderBy.push({ createdAt: "desc" });
+  }
 
   const getAllMakes = unstable_cache(
     async () => {
@@ -73,7 +87,7 @@ export default async function CarsPage({ searchParams }) {
   );
   
   const getCars = unstable_cache(
-    async (where, page, limit) => {
+    async (where, orderBy, page, limit) => {
       const [cars, total] = await Promise.all([
         db.car.findMany({
           where,
@@ -81,7 +95,7 @@ export default async function CarsPage({ searchParams }) {
             images:  { where: { isPrimary: true }, take: 1 },
             dealer:  { select: { id: true, name: true, slug: true, location: true, verified: true, lat: true, lng: true, county: true } },
           },
-          orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
+          orderBy: orderBy,
           skip:  (page - 1) * limit,
           take:  limit,
         }),
@@ -89,16 +103,16 @@ export default async function CarsPage({ searchParams }) {
       ]);
       return { cars, total };
     },
-    ["cars-list", JSON.stringify(where), page.toString()],
+    ["cars-list", JSON.stringify(where), JSON.stringify(orderBy), page.toString()],
     { revalidate: 300, tags: ["cars"] }
   );
   
   const [{ cars, total }, allMakes] = await Promise.all([
-    getCars(where, page, limit),
+    getCars(where, orderBy, page, limit),
     getAllMakes(),
   ]);
 
-  const sortedCars = userLat && userLng
+  const sortedCars = userLat && userLng && !sort.includes("price") // Don't override price/mileage sort with distance
     ? [...cars].sort((a, b) => {
         const da = distance(userLat, userLng, a.dealer?.lat, a.dealer?.lng);
         const db2 = distance(userLat, userLng, b.dealer?.lat, b.dealer?.lng);
@@ -106,8 +120,15 @@ export default async function CarsPage({ searchParams }) {
       })
     : cars;
 
-  const pages = Math.ceil(total / limit);
-  const hasFilters = search || make || bodyType || fuelType || county || minPrice || maxPrice;
+  const totalPages = Math.ceil(total / limit);
+  const hasFilters = search || make || bodyType || fuelType || transmission || county || minPrice || maxPrice;
+
+  // Build pagination links with all current filters
+  const getPageLink = (p) => {
+    const params = new URLSearchParams(sp);
+    params.set("page", p);
+    return `/cars?${params.toString()}`;
+  };
 
   return (
     <div className="bg-background min-h-screen">
@@ -117,7 +138,11 @@ export default async function CarsPage({ searchParams }) {
         initialMake={make}
         initialBodyType={bodyType}
         initialFuelType={fuelType}
+        initialTransmission={transmission}
         initialCounty={county}
+        initialMinPrice={minPrice}
+        initialMaxPrice={maxPrice}
+        initialSort={sort}
         allMakes={allMakes}
         bodyTypeLabels={BODY_TYPE_LABELS}
         counties={COUNTIES}
@@ -140,13 +165,11 @@ export default async function CarsPage({ searchParams }) {
           </div>
           
           <div className="flex items-center gap-6">
-            <div className="text-right">
+            <div className="text-right hidden sm:block">
               <p className="text-[10px] font-black uppercase tracking-widest text-white/30">Market View</p>
               <p className="text-xs font-black text-white">Nairobi Standard Time</p>
             </div>
-            <button className="flex items-center gap-2 bg-white/5 border border-white/10 px-5 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest text-white/50 hover:text-white transition-all">
-               <ArrowUpDown className="w-3 h-3" /> Sort: Relevance
-            </button>
+            {/* Sort is now handled inside CarsSearch for a unified UI, but we could keep a quick toggle here if needed */}
           </div>
         </div>
 
@@ -170,19 +193,43 @@ export default async function CarsPage({ searchParams }) {
           </div>
         )}
 
-        {/* ── PAGINATION ── */}
-        {pages > 1 && (
+        {/* ── IMPROVED PAGINATION ── */}
+        {totalPages > 1 && (
           <div className="flex justify-center items-center gap-2 mt-24">
-            {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
-              <Link key={p}
-                href={`/cars?page=${p}&search=${search}&make=${make}&bodyType=${bodyType}&fuelType=${fuelType}&county=${county}`}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center text-[11px] font-black transition-all ${
-                  p === page ? "bg-orange-600 text-white shadow-[0_0_15px_rgba(234,88,12,0.4)]" : "bg-white/5 border border-transparent text-white/40 hover:bg-white/10 hover:text-white"
-                }`}
-              >
-                {p.toString().padStart(2, '0')}
+            {/* Previous Button */}
+            {page > 1 && (
+              <Link href={getPageLink(page - 1)} className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 text-white/40 hover:bg-white/10 hover:text-white transition-all">
+                <ChevronRight className="w-4 h-4 rotate-180" />
               </Link>
-            ))}
+            )}
+
+            {/* Page Numbers with Ellipsis */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
+              // Show: first, last, current, and neighbours
+              if (p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)) {
+                return (
+                  <Link key={p}
+                    href={getPageLink(p)}
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center text-[11px] font-black transition-all ${
+                      p === page ? "bg-orange-600 text-white shadow-[0_0_15px_rgba(234,88,12,0.4)]" : "bg-white/5 border border-transparent text-white/40 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    {p.toString().padStart(2, '0')}
+                  </Link>
+                );
+              }
+              // Show ellipsis
+              if (p === 2 && page > 3) return <span key="e1" className="text-white/20 px-2 font-black">...</span>;
+              if (p === totalPages - 1 && page < totalPages - 2) return <span key="e2" className="text-white/20 px-2 font-black">...</span>;
+              return null;
+            })}
+
+            {/* Next Button */}
+            {page < totalPages && (
+              <Link href={getPageLink(page + 1)} className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 text-white/40 hover:bg-white/10 hover:text-white transition-all">
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            )}
           </div>
         )}
       </div>

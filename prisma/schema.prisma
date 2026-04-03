@@ -146,6 +146,8 @@ model Car {
   sunroof       Boolean       @default(false)
   torque        Int?
   turbo         Boolean       @default(false)
+  whatsappClicks Int          @default(0)
+  printCount    Int          @default(0)
   images        CarImage[]
   carViews      CarView[]
   branch        DealerBranch? @relation(fields: [branchId], references: [id])

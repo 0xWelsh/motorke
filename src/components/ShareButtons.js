@@ -2,12 +2,15 @@
 // src/components/ShareButtons.js
 // WhatsApp share + copy link for car detail pages
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function ShareButtons({ title, price }) {
   const [copied, setCopied] = useState(false);
+  const [url, setUrl]     = useState("");
 
-  const url = typeof window !== "undefined" ? window.location.href : "";
+  useEffect(() => {
+    setUrl(window.location.href);
+  }, []);
 
   function copyLink() {
     navigator.clipboard.writeText(url).then(() => {

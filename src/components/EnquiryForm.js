@@ -52,6 +52,13 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
         channel: "whatsapp",
       }),
     }).catch(() => {});
+
+    // Track WhatsApp action for analytics
+    fetch(`/api/cars/${carId}/track-action`, {
+      method: "POST",
+      body: JSON.stringify({ action: "whatsapp" }),
+      headers: { "Content-Type": "application/json" }
+    }).catch(() => {});
   }
 
   const inputCls = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";

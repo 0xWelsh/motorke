@@ -1,13 +1,8 @@
 // prisma/seed.js
-// Minimal seed — creates accounts only, no fake car listings
 const { PrismaClient } = require("@prisma/client");
 const crypto = require("crypto");
 const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DIRECT_URL,
-    },
-  },
+  datasources: { db: { url: process.env.DIRECT_URL } },
 });
 
 function hashPassword(password) {
@@ -16,56 +11,129 @@ function hashPassword(password) {
   return `${salt}:${hash}`;
 }
 
-async function main() {
-  console.log("🌱 Seeding Motorke (accounts only)...");
+const CAR_TEMPLATES = [
+  { 
+    make: "Audi",  
+    model: "A4",   
+    variant: "allroad",    
+    year: 2026, 
+    price: 4500000, 
+    mil: 33000, 
+    fuel: "PETROL", 
+    trans: "AUTOMATIC", 
+    cc: 3000, 
+    body: "WAGON", 
+    color: "Glacier White", 
+    img: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?q=80&w=800" 
+  },
+  { 
+    make: "Toyota",   
+    model: "Land Cruiser Prado",     
+    variant: "J250",
+    year: 2026, 
+    price: 17000000, 
+    mil: 50000, 
+    fuel: "PETROL", 
+    trans: "AUTOMATIC", 
+    cc: 3000, 
+    body: "SUV", 
+    color: "Heritage Blue", 
+    img: "https://images.unsplash.com/photo-1594568284297-7c64464062b1?q=80&w=800" 
+  },
+];
 
-  // Clear everything
+async function main() {
+  console.log("🌱 Seeding Motorke with Demo Data...");
+
+  // Clear existing
   await prisma.savedCar.deleteMany().catch(() => {});
+  await prisma.leadNote.deleteMany();
   await prisma.lead.deleteMany();
+  await prisma.carView.deleteMany();
   await prisma.carImage.deleteMany();
   await prisma.car.deleteMany();
   await prisma.session.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.subscription.deleteMany();
   await prisma.dealer.deleteMany();
 
-  // Create 5 placeholder dealerships (no cars yet — add real ones via admin)
-  const dealers = await Promise.all([
-    prisma.dealer.create({ data: { name: "Prestige Auto Kenya", slug: "prestige-auto", phone: "+254 720 100 200", whatsapp: "254720100200", email: "sales@prestigeauto.co.ke", location: "Westlands, Nairobi", county: "Nairobi", address: "Ring Road Westlands", lat: -1.2641, lng: 36.8037, verified: true, featured: true, description: "Premier destination for certified pre-owned Japanese imports." }}),
-    prisma.dealer.create({ data: { name: "Savanna Motors", slug: "savanna-motors", phone: "+254 733 200 300", whatsapp: "254733200300", email: "info@savannamotors.co.ke", location: "Mombasa Road, Nairobi", county: "Nairobi", address: "Enterprise Road, Industrial Area", lat: -1.3192, lng: 36.8553, verified: true, featured: true, description: "Specialists in 4x4s, pickups and SUVs." }}),
-    prisma.dealer.create({ data: { name: "Nakuru Auto Mart", slug: "nakuru-auto-mart", phone: "+254 722 400 500", whatsapp: "254722400500", email: "sales@nakuruautomart.co.ke", location: "Nakuru Town, Nakuru", county: "Nakuru", address: "Kenyatta Avenue, Nakuru CBD", lat: -0.2839, lng: 36.0667, verified: true, featured: false, description: "The Rift Valley's largest used car dealer." }}),
-    prisma.dealer.create({ data: { name: "Coast Car Centre", slug: "coast-car-centre", phone: "+254 741 600 700", whatsapp: "254741600700", email: "hello@coastcarcentre.co.ke", location: "Nyali, Mombasa", county: "Mombasa", address: "Links Road, Nyali", lat: -4.0374, lng: 39.7055, verified: false, featured: false, description: "Mombasa's trusted dealer since 2008." }}),
-    prisma.dealer.create({ data: { name: "Highland Motors Eldoret", slug: "highland-motors-eldoret", phone: "+254 712 800 900", whatsapp: "254712800900", email: "info@highlandmotors.co.ke", location: "Eldoret Town, Uasin Gishu", county: "Uasin Gishu", address: "Uganda Road, Eldoret", lat: 0.5143, lng: 35.2698, verified: false, featured: false, description: "North Rift's go-to dealer for tough, reliable vehicles." }}),
-  ]);
-
-  // Admin account
-  await prisma.user.create({
-    data: { name: "Motorke Admin", email: "11241welshmuhuri@gmail.com", passwordHash: hashPassword("Welsh@2006"), role: "ADMIN", active: true },
+  // Create Dealer
+  const autogrid = await prisma.dealer.create({
+    data: {
+      name: "AutoGrid Motors",
+      slug: "autogrid-motors",
+      phone: "+254 700 111 222",
+      whatsapp: "254700111222",
+      location: "Karen, Nairobi",
+      verified: true,
+      featured: true,
+      description: "Nairobi's premium destination for high-end Land Cruisers and European luxury wagons.",
+    }
   });
 
-  // Dealer accounts
-  const creds = [
-    { email: "prestige@motorke.co.ke",  password: "prestige123", idx: 0 },
-    { email: "savanna@motorke.co.ke",   password: "savanna123",  idx: 1 },
-    { email: "nakuru@motorke.co.ke",    password: "nakuru123",   idx: 2 },
-    { email: "coast@motorke.co.ke",     password: "coast123",    idx: 3 },
-    { email: "highland@motorke.co.ke",  password: "highland123", idx: 4 },
-  ];
-  for (const { email, password, idx } of creds) {
-    await prisma.user.create({
-      data: { name: `${dealers[idx].name} Manager`, email, passwordHash: hashPassword(password), role: "DEALER", dealerId: dealers[idx].id, active: true },
+  // Create Users
+  await prisma.user.create({
+    data: { name: "Welsh Admin", email: "11241welshmuhuri@gmail.com", passwordHash: hashPassword("Welsh@2006"), role: "ADMIN" }
+  });
+
+  await prisma.user.create({
+    data: { name: "AutoGrid Manager", email: "manager@autogrid.co.ke", passwordHash: hashPassword("autogrid123"), role: "DEALER", dealerId: autogrid.id }
+  });
+
+  // Create Cars for AutoGrid
+  for (const t of CAR_TEMPLATES) {
+    const car = await prisma.car.create({
+      data: {
+        dealerId: autogrid.id,
+        make: t.make,
+        model: t.model,
+        variant: t.variant,
+        year: t.year,
+        price: t.price,
+        mileage: t.mil,
+        fuelType: t.fuel,
+        transmission: t.trans,
+        engineCC: t.cc,
+        bodyType: t.body,
+        color: t.color,
+        description: `Stunning ${t.year} ${t.make} ${t.model} in ${t.color}. Immaculate condition, fully loaded with safety features and modern tech.`,
+        features: ["Keyless Entry", "Push Start", "Reverse Camera", "Alloy Wheels", "Leather Interior"],
+        images: { create: [{ url: t.img, isPrimary: true, order: 0 }] }
+      }
     });
+
+    // Generate fake views for the last 14 days
+    const now = new Date();
+    for (let i = 0; i < 14; i++) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - i);
+        const dailyViews = Math.floor(Math.random() * 15) + 5;
+        for (let j = 0; j < dailyViews; j++) {
+            await prisma.carView.create({ data: { carId: car.id, viewedAt: date, source: Math.random() > 0.5 ? "direct" : "search" } });
+        }
+    }
+
+    // Generate 1-3 leads per car
+    const numLeads = Math.floor(Math.random() * 3) + 1;
+    for (let l = 0; l < numLeads; l++) {
+        await prisma.lead.create({
+            data: {
+                carId: car.id,
+                dealerId: autogrid.id,
+                name: `Buyer ${l + 1}`,
+                phone: `+254 700 000 00${l}`,
+                message: `Hi, I'm interested in the ${t.make} ${t.model}. Is it still available?`,
+                status: l === 0 ? "NEW" : "CONTACTED"
+            }
+        });
+    }
   }
 
-  // Demo buyer
-  await prisma.user.create({
-    data: { name: "Demo Buyer", email: "buyer@motorke.co.ke", passwordHash: hashPassword("buyer123"), role: "BUYER", active: true },
-  });
-
-  console.log("\n✅ Seed complete — 5 dealerships, 7 accounts, 0 cars");
-  console.log("   Add real cars via /admin/cars/new or bulk CSV upload");
-  console.log("\n   11241welshmuhuri@gmail.com     → Welsh@2006");
-  console.log("   prestige@motorke.co.ke  → prestige123");
-  console.log("   buyer@motorke.co.ke     → buyer123");
+  console.log("\n✅ Seed complete!");
+  console.log("   - 1 Dealership (AutoGrid Motors)");
+  console.log("   - 2 Premium Cars");
+  console.log("   - ~400 Car Views");
+  console.log("   - ~6 Leads");
 }
 
 main().catch(e => { console.error("❌", e); process.exit(1); }).finally(() => prisma.$disconnect());

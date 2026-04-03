@@ -82,3 +82,34 @@ body {
   --tw-white: 255 255 255 !important;
   --tw-black: 0 0 0 !important;
 }
+
+/* --- Print styles for Spec Sheets --- */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* Hide standard UI */
+  nav, footer, .no-print, button, a[href^="tel:"], a[href^="https://wa.me/"], .compare-bar {
+    display: none !important;
+  }
+
+  /* Reset layout for print */
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Force background colors/images for printing */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 1cm;
+  }
+}
