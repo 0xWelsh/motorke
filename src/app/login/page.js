@@ -2,7 +2,8 @@
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ShieldCheck, Lock } from "lucide-react";
+import { ArrowLeft, ShieldCheck, Lock, Chrome } from "lucide-react";
+import Script from "next/script";
 
 export const metadata = { title: "Sign In — Motorke Standard" };
 
@@ -19,7 +20,11 @@ export default async function LoginPage({ searchParams }) {
   const error = sp.error;
 
   return (
-    <div className="h-screen w-full bg-background bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-orange-500/10 via-[#050505] to-[#050505] flex flex-col items-center justify-center p-6 overflow-hidden relative">
+    <>
+      <Script 
+        src="https://accounts.google.com/gsi/client" 
+        strategy="beforeInteractive"
+      />
       {/* Back to Home */}
       <Link 
         href="/" 
@@ -89,9 +94,51 @@ export default async function LoginPage({ searchParams }) {
               type="submit" 
               className="w-full bg-white/10 hover:bg-orange-600 text-pureWhite rounded-2xl py-4 font-black text-sm tracking-wide transition-all hover:shadow-[0_0_15px_rgba(234,88,12,0.4)] flex items-center justify-center gap-2 group"
             >
-              Sign In <Lock className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              Sign In <Lock className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </form>
+
+          <div className="relative my-8">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-white/5"></span>
+            </div>
+            <div className="relative flex justify-center text-[10px] uppercase font-black tracking-widest">
+              <span className="bg-surface px-4 text-white/20">Or continue with</span>
+            </div>
+          </div>
+
+          <button 
+            onClick={() => {
+              if (typeof window === 'undefined') return;
+              const client = window.google?.accounts?.id;
+              if (!client) return;
+              
+              client.initialize({
+                client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "your_google_client_id_here.apps.googleusercontent.com",
+                callback: async (response) => {
+                  try {
+                    const res = await fetch("/api/auth/google", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ token: response.credential }),
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                      window.location.href = data.destination || "/";
+                    } else {
+                      window.location.href = "/login?error=unknown";
+                    }
+                  } catch (err) {
+                    window.location.href = "/login?error=unknown";
+                  }
+                },
+              });
+              client.prompt();
+            }}
+            className="w-full bg-white text-black hover:bg-white/90 rounded-2xl py-4 font-black text-sm tracking-wide transition-all flex items-center justify-center gap-2 group shadow-xl"
+          >
+            <Chrome className="w-4 h-4" /> Sign in with Google
+          </button>
 
           <div className="mt-10 pt-8 border-t border-white/5 text-center">
             <p className="text-sm font-medium text-white/50">
@@ -112,6 +159,6 @@ export default async function LoginPage({ searchParams }) {
           </p>
         </div>
       </div>
-    </div>
+    </>
   );
 }
