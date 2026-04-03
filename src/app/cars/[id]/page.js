@@ -51,6 +51,25 @@ const getCarData = unstable_cache(
   { revalidate: 600, tags: ["cars"] }
 );
 
+const getSimilarCars = unstable_cache(
+  async (carId, make, dealerId) => {
+    return db.car.findMany({
+      where: {
+        available: true,
+        id:        { not: carId },
+        OR: [{ dealerId: dealerId }, { make: make }],
+      },
+      include: {
+        images: { where: { isPrimary: true }, take: 1 },
+        dealer: { select: { name: true, location: true } },
+      },
+      take: 3,
+    });
+  },
+  ["similar-cars"],
+  { revalidate: 3600, tags: ["cars"] }
+);
+
 export default async function CarDetailPage({ params }) {
   const { id } = await params;
   const carData = await getCarData(id);
@@ -67,24 +86,6 @@ export default async function CarDetailPage({ params }) {
 
   const { car, dealer } = { car: carData, dealer: carData.dealer };
 
-  const getSimilarCars = unstable_cache(
-    async (carId, make, dealerId) => {
-      return db.car.findMany({
-        where: {
-          available: true,
-          id:        { not: carId },
-          OR: [{ dealerId: dealerId }, { make: make }],
-        },
-        include: {
-          images: { where: { isPrimary: true }, take: 1 },
-          dealer: { select: { name: true, location: true } },
-        },
-        take: 3,
-      });
-    },
-    ["similar-cars", id],
-    { revalidate: 3600, tags: ["cars"] }
-  );
   
   const similar = await getSimilarCars(car.id, car.make, car.dealerId);
 
