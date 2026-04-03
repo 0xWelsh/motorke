@@ -48,11 +48,11 @@ const getCachedData = unstable_cache(
 );
 
 const PRICE_RANGES = [
-  { label: "Under 1M",  min: 0,       max: 1000000,  sub: "Budget Friendly",  icon: <Wallet className="w-5 h-5" /> },
-  { label: "1M – 2M",   min: 1000000, max: 2000000,  sub: "Everyday Cars",    icon: <Banknote className="w-5 h-5" /> },
-  { label: "2M – 4M",   min: 2000000, max: 4000000,  sub: "Executive Tier",   icon: <Briefcase className="w-5 h-5" /> },
-  { label: "4M – 7M",   min: 4000000, max: 7000000,  sub: "Premium Utility",  icon: <Trophy className="w-5 h-5" /> },
-  { label: "Above 7M",  min: 7000000, max: 99000000, sub: "Luxury Selection", icon: <Gem className="w-5 h-5" /> },
+  { label: "Under 1M", min: 0, max: 1000000, sub: "Budget Friendly", icon: <Wallet className="w-5 h-5" /> },
+  { label: "1M – 2M", min: 1000000, max: 2000000, sub: "Everyday Cars", icon: <Banknote className="w-5 h-5" /> },
+  { label: "2M – 4M", min: 2000000, max: 4000000, sub: "Executive Tier", icon: <Briefcase className="w-5 h-5" /> },
+  { label: "4M – 7M", min: 4000000, max: 7000000, sub: "Premium Utility", icon: <Trophy className="w-5 h-5" /> },
+  { label: "Above 7M", min: 7000000, max: 99000000, sub: "Luxury Selection", icon: <Gem className="w-5 h-5" /> },
 ];
 
 const HERO_CAR = "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=900&q=85";
@@ -67,8 +67,8 @@ export default async function HomePage() {
       <section className="relative min-h-[600px] flex items-center overflow-hidden border-b border-slate-100">
         {/* Full-bleed blurred background */}
         <div className="absolute inset-0 z-0">
-          <Image src={HERO_CAR} fill priority className="object-cover scale-105" alt="" style={{filter:"blur(6px)"}} />
-          <div className="absolute inset-0" style={{background:"rgba(255,255,255,0.82)"}} />
+          <Image src={HERO_CAR} fill priority className="object-cover scale-105" alt="" style={{ filter: "blur(6px)" }} />
+          <div className="absolute inset-0" style={{ background: "rgba(255,255,255,0.82)" }} />
         </div>
 
         <div className="container mx-auto px-6 max-w-7xl py-20 relative z-10">
@@ -85,12 +85,12 @@ export default async function HomePage() {
             </div>
 
             <h1 className="text-5xl md:text-6xl font-black text-slate-900 leading-[1.05] tracking-tighter mb-5">
-              Find your next<br />
-              <span style={{color:"#0891b2"}}>car in Kenya.</span>
+              Find your perfect car<br />
+              <span style={{ color: "#0891b2" }}>across all dealerships instantly.</span>
             </h1>
 
             <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-              Browse verified inventory from {totalDealers} trusted dealerships across the country.
+              Compare live listings from {totalDealers} trusted dealerships across the country; no more endless scrolling!
             </p>
 
             <div className="w-full max-w-xl mb-6">
@@ -123,7 +123,7 @@ export default async function HomePage() {
           {PRICE_RANGES.map((r, i) => (
             <Link key={r.label} href={`/cars?minPrice=${r.min}&maxPrice=${r.max}`}
               className="group bg-white border border-slate-200 hover:border-cyan-300 rounded-2xl p-6 flex flex-col items-center text-center transition-all duration-200 hover:shadow-md"
-              style={{"--hover-shadow":"0 4px 20px rgba(8,145,178,0.1)"}}>
+              style={{ "--hover-shadow": "0 4px 20px rgba(8,145,178,0.1)" }}>
               <div className="w-11 h-11 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 group-hover:text-cyan-600 group-hover:border-cyan-200 group-hover:bg-cyan-50 transition-all mb-4">
                 {r.icon}
               </div>
@@ -213,10 +213,10 @@ export default async function HomePage() {
         <div className="container mx-auto px-6 py-16 max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { v: `${totalCars}+`, l: "Active Units",     i: <Car className="w-5 h-5" /> },
-              { v: totalDealers,    l: "Verified Dealers",  i: <ShieldCheck className="w-5 h-5" /> },
-              { v: "Live",          l: "Comparison Tool",   i: <Flame className="w-5 h-5" /> },
-              { v: "24/7",          l: "Dealer Access",     i: <Clock className="w-5 h-5" /> },
+              { v: `${totalCars}+`, l: "Active Units", i: <Car className="w-5 h-5" /> },
+              { v: totalDealers, l: "Verified Dealers", i: <ShieldCheck className="w-5 h-5" /> },
+              { v: "Live", l: "Comparison Tool", i: <Flame className="w-5 h-5" /> },
+              { v: "24/7", l: "Dealer Access", i: <Clock className="w-5 h-5" /> },
             ].map((s, idx) => (
               <div key={idx} className="bg-slate-50 border border-slate-100 rounded-2xl p-8 text-center group hover:border-cyan-200 hover:bg-cyan-50 transition-all">
                 <div className="flex justify-center mb-3 text-slate-300 group-hover:text-cyan-500 transition-colors">
@@ -235,7 +235,7 @@ export default async function HomePage() {
 }
 
 function CarCard({ car, priority = false }) {
-  const img   = car.images[0]?.url;
+  const img = car.images[0]?.url;
   const title = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
 
   return (
@@ -285,7 +285,7 @@ function CarCard({ car, priority = false }) {
         </div>
 
         <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 mt-auto">
-          <p className="text-base font-black" style={{color:"#0891b2"}}>{formatPrice(car.price)}</p>
+          <p className="text-base font-black" style={{ color: "#0891b2" }}>{formatPrice(car.price)}</p>
           <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-cyan-600 transition-colors flex items-center gap-1">
             View <ChevronRight className="w-3 h-3" />
           </span>
