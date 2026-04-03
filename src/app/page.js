@@ -64,69 +64,47 @@ export default async function HomePage() {
     <div className="bg-background min-h-screen pb-20">
 
       {/* ── HERO ── */}
-      <section className="bg-white border-b border-slate-100">
-        <div className="container mx-auto px-6 max-w-7xl py-16 md:py-24">
-          <div className="flex flex-col md:flex-row items-center gap-12">
+      <section className="relative min-h-[600px] flex items-center overflow-hidden border-b border-slate-100">
+        {/* Full-bleed blurred background */}
+        <div className="absolute inset-0 z-0">
+          <Image src={HERO_CAR} fill priority className="object-cover scale-105" alt="" style={{filter:"blur(6px)"}} />
+          <div className="absolute inset-0" style={{background:"rgba(255,255,255,0.82)"}} />
+        </div>
 
-            {/* Left: copy + search */}
-            <div className="flex-1 max-w-xl">
-              {/* Live badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-50 border border-cyan-200 mb-6">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span className="text-[11px] font-bold text-cyan-700 uppercase tracking-widest">
-                  {totalCars.toLocaleString()} verified units live
-                </span>
-              </div>
-
-              <h1 className="text-5xl md:text-6xl font-black text-slate-900 leading-[1.05] tracking-tighter mb-5">
-                Find your next<br />
-                <span style={{color:"#0891b2"}}>car in Kenya.</span>
-              </h1>
-
-              <p className="text-lg text-slate-500 mb-8 leading-relaxed">
-                Browse verified inventory from {totalDealers} trusted dealerships across the country.
-              </p>
-
-              {/* Search */}
-              <div className="w-full mb-6">
-                <LocationSearch />
-              </div>
-
-              {/* Quick filters */}
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mr-1">Popular:</span>
-                {["SUVs", "Pickups", "Sedans", "Hatchbacks"].map(t => (
-                  <Link key={t} href={`/cars?search=${encodeURIComponent(t)}`}
-                    className="px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-[11px] font-bold text-slate-600 hover:bg-cyan-50 hover:border-cyan-300 hover:text-cyan-700 transition-all">
-                    {t}
-                  </Link>
-                ))}
-              </div>
+        <div className="container mx-auto px-6 max-w-7xl py-20 relative z-10">
+          <div className="max-w-2xl">
+            {/* Live badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm mb-6">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="text-[11px] font-bold text-slate-600 uppercase tracking-widest">
+                {totalCars.toLocaleString()} verified units live
+              </span>
             </div>
 
-            {/* Right: hero car image */}
-            <div className="flex-1 relative hidden md:block">
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/3]"
-                style={{boxShadow:"0 25px 60px -10px rgba(8,145,178,0.2)"}}>
-                <Image
-                  src={HERO_CAR}
-                  fill
-                  priority
-                  className="object-cover"
-                  alt="Featured car"
-                />
-              </div>
-              {/* Floating stat card */}
-              <div className="absolute -bottom-4 -left-6 bg-white rounded-2xl shadow-xl border border-slate-100 px-5 py-4 flex items-center gap-3">
-                <ShieldCheck className="w-5 h-5" style={{color:"#0891b2"}} />
-                <div>
-                  <p className="text-xs font-black text-slate-900">{totalDealers} Verified Dealers</p>
-                  <p className="text-[10px] text-slate-400 font-medium">Across Kenya</p>
-                </div>
-              </div>
+            <h1 className="text-5xl md:text-6xl font-black text-slate-900 leading-[1.05] tracking-tighter mb-5">
+              Find your next<br />
+              <span style={{color:"#0891b2"}}>car in Kenya.</span>
+            </h1>
+
+            <p className="text-lg text-slate-600 mb-8 leading-relaxed">
+              Browse verified inventory from {totalDealers} trusted dealerships across the country.
+            </p>
+
+            <div className="w-full max-w-xl mb-6">
+              <LocationSearch />
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mr-1">Popular:</span>
+              {["SUVs", "Pickups", "Sedans", "Hatchbacks"].map(t => (
+                <Link key={t} href={`/cars?search=${encodeURIComponent(t)}`}
+                  className="px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-[11px] font-bold text-slate-600 hover:bg-cyan-50 hover:border-cyan-300 hover:text-cyan-700 transition-all">
+                  {t}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
