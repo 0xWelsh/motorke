@@ -3,18 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { 
-  Search, 
-  User, 
-  Menu, 
-  X, 
-  ChevronDown, 
-  LogOut, 
-  Heart, 
-  LayoutDashboard, 
-  Store,
-  PlusCircle,
-  ShieldCheck,
-  Compass
+  Search, User, Menu, X, ChevronDown, LogOut, Heart,
+  LayoutDashboard, Store, PlusCircle, ShieldCheck, Compass
 } from "lucide-react";
 import { clsx } from "clsx";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
@@ -28,10 +18,10 @@ export default function Navbar({ user }) {
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const menuRef = useRef(null);
+  const menuRef   = useRef(null);
   const searchRef = useRef(null);
-  const router  = useRouter();
-  
+  const router    = useRouter();
+
   const { debouncedTerm } = useDebouncedSearch(search, 300);
 
   useEffect(() => {
@@ -46,52 +36,34 @@ export default function Navbar({ user }) {
     return () => document.removeEventListener("mousedown", h);
   }, []);
 
+  useEffect(() => {
+    if (!debouncedTerm || debouncedTerm.length < 2) {
+      setSuggestions([]); setShowSuggestions(false); return;
+    }
+    const fetchSuggestions = async () => {
+      try {
+        setLoadingSuggestions(true);
+        const res  = await fetch(`/api/search/suggestions?query=${encodeURIComponent(debouncedTerm)}`);
+        const data = await res.json();
+        setSuggestions(data.suggestions || []);
+        setShowSuggestions(data.suggestions?.length > 0);
+      } catch { setSuggestions([]); setShowSuggestions(false); }
+      finally  { setLoadingSuggestions(false); }
+    };
+    fetchSuggestions();
+  }, [debouncedTerm]);
+
+  useEffect(() => {
+    const h = (e) => { if (searchRef.current && !searchRef.current.contains(e.target)) setShowSuggestions(false); };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, []);
+
   function handleSearch(e) {
     e.preventDefault();
     if (search.trim()) router.push(`/cars?search=${encodeURIComponent(search.trim())}`);
     else router.push("/cars");
   }
-
-  // Fetch suggestions when debounced term changes
-  useEffect(() => {
-    if (!debouncedTerm || debouncedTerm.length < 2) {
-      setSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
-
-    const fetchSuggestions = async () => {
-      try {
-        setLoadingSuggestions(true);
-        const response = await fetch(`/api/search/suggestions?query=${encodeURIComponent(debouncedTerm)}`);
-        const data = await response.json();
-        setSuggestions(data.suggestions || []);
-        setShowSuggestions(data.suggestions && data.suggestions.length > 0);
-      } catch (error) {
-        console.error("Error fetching suggestions:", error);
-        setSuggestions([]);
-        setShowSuggestions(false);
-      } finally {
-        setLoadingSuggestions(false);
-      }
-    };
-
-    fetchSuggestions();
-  }, [debouncedTerm]);
-
-  // Handle click outside to close suggestions
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setShowSuggestions(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   function handleSuggestionSelect(value) {
     setSearch(value);
@@ -107,52 +79,49 @@ export default function Navbar({ user }) {
 
   return (
     <nav className={clsx(
-      "sticky top-0 z-[100] transition-all duration-500",
-      scrolled 
-        ? "bg-background/80 backdrop-blur-2xl border-b border-white/5 py-3 shadow-2xl" 
-        : "bg-transparent border-b border-transparent py-6"
+      "sticky top-0 z-[100] transition-all duration-300",
+      scrolled
+        ? "bg-white/90 backdrop-blur-xl border-b border-slate-200 py-3 shadow-sm"
+        : "bg-white border-b border-slate-100 py-4"
     )}>
       <div className="container mx-auto px-6 max-w-7xl">
-        <div className="flex items-center justify-between gap-12">
-          
-          {/* LOGO: THE STANDARD */}
+        <div className="flex items-center justify-between gap-8">
+
+          {/* LOGO */}
           <Link href="/" className="flex items-center gap-3 shrink-0 group">
-            <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center group-hover:bg-orange-600 transition-all duration-500 shadow-[0_0_20px_rgba(255,255,255,0.1)] group-hover:shadow-[0_0_30px_rgba(234,88,12,0.4)]">
-              <span className="text-black group-hover:text-white font-black text-xl tracking-tighter transition-colors">M</span>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm"
+              style={{background:"#0891b2"}}>
+              <span className="text-white font-black text-lg tracking-tighter">M</span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-black text-white tracking-tighter leading-none">
-                Motor<span className="text-white/40 group-hover:text-orange-600 transition-colors">ke</span>
-              </span>
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/30 mt-1">Standard</span>
-            </div>
+            <span className="text-lg font-black text-slate-900 tracking-tighter">
+              Motor<span style={{color:"#0891b2"}}>ke</span>
+            </span>
           </Link>
 
-          {/* MAIN NAVIGATION */}
-          <div className="hidden lg:flex items-center gap-2">
+          {/* NAV LINKS */}
+          <div className="hidden lg:flex items-center gap-1">
             {links.map(({ href, label, icon }) => (
-              <Link key={href} href={href} 
-                className="group flex items-center gap-2 px-5 py-2.5 rounded-2xl text-[11px] font-black uppercase tracking-widest text-white/50 hover:text-white hover:bg-white/5 transition-all">
-                <span className="text-white/20 group-hover:text-orange-500 transition-colors">{icon}</span>
+              <Link key={href} href={href}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all">
+                <span className="text-slate-300">{icon}</span>
                 {label}
               </Link>
             ))}
           </div>
 
-          {/* SEARCH: MINIMALIST INTEGRATION */}
+          {/* SEARCH */}
           <div ref={searchRef} className="hidden xl:flex flex-1 max-w-sm relative group">
             <form onSubmit={handleSearch} className="w-full">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 group-focus-within:text-white transition-colors" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 group-focus-within:text-cyan-600 transition-colors" style={{"--tw-text-opacity":1}} />
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
-                placeholder="Quick search..."
-                className="w-full bg-white/5 border border-transparent focus:border-white/20 focus:bg-white/10 rounded-2xl py-2.5 pl-11 pr-4 text-[13px] font-medium outline-none transition-all placeholder:text-white/20 text-white"
+                placeholder="Search cars..."
+                className="w-full bg-slate-50 border border-slate-200 focus:border-cyan-400 focus:bg-white rounded-xl py-2.5 pl-10 pr-4 text-[13px] font-medium outline-none transition-all placeholder:text-slate-400 text-slate-900"
+                style={{"--focus-border":"#0891b2"}}
               />
             </form>
-            
-            {/* Search Suggestions Dropdown */}
             {showSuggestions && (
               <SearchSuggestions
                 suggestions={suggestions}
@@ -165,39 +134,36 @@ export default function Navbar({ user }) {
           </div>
 
           {/* USER ACTIONS */}
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-4">
             {user ? (
               <div className="relative" ref={menuRef}>
-                <button 
-                  onClick={() => setUserMenu(!userMenu)} 
-                  className="flex items-center gap-3 bg-white/5 border border-white/10 pl-2 pr-4 py-2 rounded-2xl hover:border-white/30 transition-all shadow-sm"
+                <button
+                  onClick={() => setUserMenu(!userMenu)}
+                  className="flex items-center gap-2.5 bg-slate-50 border border-slate-200 pl-2 pr-4 py-2 rounded-xl hover:border-slate-300 transition-all"
                 >
-                  <div className="w-8 h-8 rounded-xl bg-white text-black flex items-center justify-center font-black text-xs uppercase">
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs uppercase text-white"
+                    style={{background:"#0891b2"}}>
                     {user.name?.[0]}
                   </div>
-                  <span className="text-xs font-black text-white uppercase tracking-widest">{user.name?.split(" ")[0]}</span>
-                  <ChevronDown className={clsx("w-3 h-3 text-white/30 transition-transform duration-300", userMenu && "rotate-180")} />
+                  <span className="text-xs font-bold text-slate-700">{user.name?.split(" ")[0]}</span>
+                  <ChevronDown className={clsx("w-3 h-3 text-slate-400 transition-transform duration-300", userMenu && "rotate-180")} />
                 </button>
-                
-                {userMenu && (
-                  <div className="absolute right-0 top-full mt-4 w-72 bg-surface border border-white/10 rounded-[2.5rem] shadow-2xl overflow-hidden p-3 animate-in fade-in slide-in-from-top-4 duration-300">
-                    <div className="px-5 py-5 bg-white/5 rounded-[2rem] mb-2">
-                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40 mb-1">Authenticated as</p>
-                      <p className="text-sm font-black text-white truncate">{user.email}</p>
-                    </div>
 
-                    <div className="space-y-1">
-                      {user.role === "ADMIN" && <MenuDropdownItem href="/admin" label="Administration" icon={<LayoutDashboard className="w-4 h-4" />} />}
-                      {user.role === "DEALER" && <MenuDropdownItem href="/portal" label="Dealer Portal" icon={<Store className="w-4 h-4" />} />}
-                      
+                {userMenu && (
+                  <div className="absolute right-0 top-full mt-3 w-64 bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden p-2">
+                    <div className="px-4 py-3 bg-slate-50 rounded-xl mb-2">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-0.5">Signed in as</p>
+                      <p className="text-sm font-bold text-slate-800 truncate">{user.email}</p>
+                    </div>
+                    <div className="space-y-0.5">
+                      {user.role === "ADMIN"  && <MenuDropdownItem href="/admin"   label="Administration"  icon={<LayoutDashboard className="w-4 h-4" />} />}
+                      {user.role === "DEALER" && <MenuDropdownItem href="/portal"  label="Dealer Portal"   icon={<Store className="w-4 h-4" />} />}
                       <MenuDropdownItem href="/account" label="Profile Settings" icon={<User className="w-4 h-4" />} />
-                      <MenuDropdownItem href="/saved" label="Watchlist" icon={<Heart className="w-4 h-4" />} />
-                      
-                      <div className="my-2 h-px bg-white/5 mx-4" />
+                      <MenuDropdownItem href="/saved"   label="Watchlist"        icon={<Heart className="w-4 h-4" />} />
+                      <div className="my-1 h-px bg-slate-100 mx-3" />
                       <form action="/api/auth/logout" method="POST">
-                        <button type="submit" className="w-full flex items-center gap-3 px-5 py-4 text-xs font-black uppercase tracking-widest text-rose-500 hover:bg-rose-500/10 rounded-[1.5rem] transition-colors">
-                          <LogOut className="w-4 h-4" />
-                          Terminate Session
+                        <button type="submit" className="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold uppercase tracking-widest text-rose-500 hover:bg-rose-50 rounded-xl transition-colors">
+                          <LogOut className="w-4 h-4" /> Sign Out
                         </button>
                       </form>
                     </div>
@@ -205,73 +171,74 @@ export default function Navbar({ user }) {
                 )}
               </div>
             ) : (
-              <div className="flex items-center gap-4">
-                <Link href="/login" className="text-[11px] font-black uppercase tracking-widest text-white/50 hover:text-white transition-colors">
+              <div className="flex items-center gap-3">
+                <Link href="/login" className="text-[12px] font-bold text-slate-500 hover:text-slate-900 transition-colors">
                   Sign In
                 </Link>
-                <Link href="/signup" className="bg-white hover:bg-orange-600 text-black hover:text-pureWhite px-8 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all">
-                  Join Standard
+                <Link href="/signup" className="text-white px-5 py-2.5 rounded-xl text-[12px] font-bold transition-all hover:opacity-90"
+                  style={{background:"#0891b2"}}>
+                  Get Started
                 </Link>
               </div>
             )}
-            
-            <div className="h-6 w-px bg-white/10" />
-            
+
             {user && (user.role === "DEALER" || user.role === "ADMIN") && (
-              <Link href="/portal/cars/new" className="hidden xl:flex items-center gap-2 group">
-                 <PlusCircle className="w-5 h-5 text-white/30 group-hover:text-orange-500 transition-colors" />
-                 <span className="text-[10px] font-black uppercase tracking-widest text-white/50 group-hover:text-white transition-colors">Post Unit</span>
-              </Link>
+              <>
+                <div className="h-5 w-px bg-slate-200" />
+                <Link href="/portal/cars/new" className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors">
+                  <PlusCircle className="w-4 h-4" /> Post Unit
+                </Link>
+              </>
             )}
           </div>
 
           {/* MOBILE TOGGLE */}
-          <div className="lg:hidden flex items-center gap-3">
-            <button 
-              onClick={() => setOpen(!open)} 
-              className="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/10 text-white rounded-2xl hover:bg-white/10 transition-colors"
+          <div className="lg:hidden">
+            <button
+              onClick={() => setOpen(!open)}
+              className="w-10 h-10 flex items-center justify-center bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors"
             >
-              {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* MOBILE OVERLAY */}
+      {/* MOBILE MENU */}
       {open && (
-        <div className="lg:hidden fixed inset-0 top-0 bg-background z-[200] p-8 animate-in slide-in-from-bottom duration-500">
-          <div className="flex items-center justify-between mb-12">
-            <span className="text-xl font-black text-white uppercase tracking-tighter">Motor<span className="text-orange-600">ke</span></span>
-            <button onClick={() => setOpen(false)} className="w-12 h-12 bg-white/10 text-white rounded-2xl flex items-center justify-center">
-              <X className="w-6 h-6" />
+        <div className="lg:hidden fixed inset-0 top-0 bg-white z-[200] p-8">
+          <div className="flex items-center justify-between mb-10">
+            <span className="text-xl font-black text-slate-900">Motor<span style={{color:"#0891b2"}}>ke</span></span>
+            <button onClick={() => setOpen(false)} className="w-10 h-10 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center">
+              <X className="w-5 h-5" />
             </button>
           </div>
-
-          <div className="space-y-6">
+          <div className="space-y-2">
             {links.map(({ href, label }) => (
-              <Link 
-                key={href} 
-                href={href} 
-                onClick={() => setOpen(false)} 
-                className="block text-4xl font-black text-white tracking-tighter hover:text-orange-500 transition-colors"
-              >
+              <Link key={href} href={href} onClick={() => setOpen(false)}
+                className="block text-2xl font-black text-slate-800 py-3 border-b border-slate-100 hover:text-cyan-600 transition-colors"
+                style={{"--hover-color":"#0891b2"}}>
                 {label}
               </Link>
             ))}
           </div>
-
-          <div className="absolute bottom-12 left-8 right-8 space-y-4">
+          <div className="absolute bottom-12 left-8 right-8 space-y-3">
             {!user ? (
-              <div className="grid grid-cols-1 gap-4">
-                <Link href="/signup" onClick={() => setOpen(false)} className="py-5 text-center font-black uppercase tracking-widest text-black bg-white rounded-3xl">
-                  Join Standard
+              <>
+                <Link href="/signup" onClick={() => setOpen(false)}
+                  className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-2xl"
+                  style={{background:"#0891b2"}}>
+                  Get Started
                 </Link>
-                <Link href="/login" onClick={() => setOpen(false)} className="py-5 text-center font-black uppercase tracking-widest text-white bg-white/10 rounded-3xl">
+                <Link href="/login" onClick={() => setOpen(false)}
+                  className="block py-4 text-center font-black uppercase tracking-widest text-slate-700 bg-slate-100 rounded-2xl">
                   Sign In
                 </Link>
-              </div>
+              </>
             ) : (
-               <Link href="/account" onClick={() => setOpen(false)} className="block py-5 text-center font-black uppercase tracking-widest text-black bg-white rounded-3xl">
+              <Link href="/account" onClick={() => setOpen(false)}
+                className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-2xl"
+                style={{background:"#0891b2"}}>
                 My Dashboard
               </Link>
             )}
@@ -284,8 +251,8 @@ export default function Navbar({ user }) {
 
 function MenuDropdownItem({ href, label, icon }) {
   return (
-    <Link href={href} className="flex items-center gap-3 px-5 py-4 text-xs font-black uppercase tracking-widest text-white/50 hover:text-white hover:bg-white/5 rounded-[1.5rem] transition-colors">
-      <span className="text-white/20">{icon}</span>
+    <Link href={href} className="flex items-center gap-3 px-4 py-3 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 hover:bg-slate-50 rounded-xl transition-colors">
+      <span className="text-slate-300">{icon}</span>
       {label}
     </Link>
   );

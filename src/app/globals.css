@@ -5,33 +5,16 @@
 @tailwind utilities;
 
 :root {
-  --bg:            #f8fafc;
-  --surface:       #ffffff;
-  --border:        rgba(0,0,0,0.1);
-  --border-light:  rgba(0,0,0,0.05);
-  --text:          #0f172a;
-  --text-muted:    #64748b;
-  --text-faint:    #94a3b8;
-  --orange:        #ea580c;
-
-  /* The magic inverse: pure white becomes black, pure black becomes white */
-  --tw-white:      0 0 0;
-  --tw-black:      255 255 255;
-}
-
-.dark {
-  --bg:            #050505;
-  --surface:       #111111;
-  --border:        #1f1f1f;
-  --border-light:  #2a2a2a;
-  --text:          #FFFFFF;
-  --text-muted:    #A3A3A3;
-  --text-faint:    #525252;
-  --orange:        #ea580c;
-
-  /* Classic defaults */
-  --tw-white:      255 255 255;
-  --tw-black:      0 0 0;
+  --bg:           #f0f9ff;
+  --surface:      #ffffff;
+  --border:       rgba(0,0,0,0.08);
+  --border-light: rgba(0,0,0,0.04);
+  --text:         #0f172a;
+  --text-muted:   #475569;
+  --text-faint:   #94a3b8;
+  --cyan:         #0891b2;
+  --cyan-dark:    #0e7490;
+  --cyan-light:   #e0f2fe;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,70 +29,40 @@ body {
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--orange); }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
 
 .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-.card-hover:hover { 
-  transform: translateY(-4px); 
-  box-shadow: 0 12px 40px -10px rgba(0,0,0,0.5), 0 0 20px -5px rgba(234, 88, 12, 0.1);
-  border-color: rgba(234, 88, 12, 0.2);
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px -10px rgba(8,145,178,0.15), 0 0 20px -5px rgba(8,145,178,0.08);
+  border-color: rgba(8,145,178,0.3);
 }
 
-/* Modal overlay */
 .mk-modal-overlay {
   position: fixed; inset: 0; z-index: 1000;
-  background: rgba(0,0,0,0.8);
+  background: rgba(15,23,42,0.6);
   backdrop-filter: blur(8px);
   display: flex; align-items: center; justify-content: center;
   padding: 1rem;
   animation: fadeIn 0.15s ease;
 }
 .mk-modal {
-  background: var(--surface); 
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 20px; 
+  border-radius: 20px;
   overflow: hidden;
   width: 100%; max-width: 420px;
-  box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.15);
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-/* Intelligent CSS override: Ensure dark containers maintain pure white text in light mode */
-.bg-slate-900, .bg-slate-800, .bg-slate-950, .bg-black, .bg-\[\#0a0a0a\], .bg-surface-dark {
-  --tw-white: 255 255 255 !important;
-  --tw-black: 0 0 0 !important;
-}
-
-/* --- Print styles for Spec Sheets --- */
 @media print {
-  body {
-    background: white !important;
-    color: black !important;
-  }
-  
-  /* Hide standard UI */
-  nav, footer, .no-print, button, a[href^="tel:"], a[href^="https://wa.me/"], .compare-bar {
-    display: none !important;
-  }
-
-  /* Reset layout for print */
-  main {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-  }
-
-  /* Force background colors/images for printing */
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  @page {
-    size: A4;
-    margin: 1cm;
-  }
+  body { background: white !important; color: black !important; }
+  nav, footer, .no-print, button, a[href^="tel:"], a[href^="https://wa.me/"], .compare-bar { display: none !important; }
+  main { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  @page { size: A4; margin: 1cm; }
 }
