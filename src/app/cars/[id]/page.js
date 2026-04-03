@@ -74,8 +74,8 @@ export default async function CarDetailPage({ params }) {
   const { id } = await params;
   const carData = await getCarData(id);
 
-  if (!carData) notFound();
-
+  if (!carData || !carData.dealer) notFound();
+  
   const session    = await getSession();
   const userId     = session?.userId || null;
   const isLoggedIn = !!userId;

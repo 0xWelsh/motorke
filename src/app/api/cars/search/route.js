@@ -29,7 +29,7 @@ const getSearchResults = unstable_cache(
       image: car.images[0]?.url || null,
     }));
   },
-  ["car-search", query],
+  ["car-search"],
   { revalidate: 600, tags: ["cars"] }
 );
 
