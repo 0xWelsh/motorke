@@ -201,9 +201,6 @@ export default async function HomePage() {
             <Newspaper className="w-5 h-5 text-slate-400" />
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">Market Intelligence</h2>
           </div>
-          <Link href="/news" className="text-xs font-bold uppercase tracking-widest text-[var(--brand-accent)] hover:text-[var(--brand)] transition-colors">
-            All Stories
-          </Link>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
