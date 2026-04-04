@@ -25,7 +25,7 @@ export default async function AdminNewUserPage({ searchParams }) {
 
       <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-7">
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3 mb-5">
+          <div className="bg-red-500/10 border border-red-500/20 text-white text-sm rounded-xl px-4 py-3 mb-5">
             {error === "exists"   && "A user with that email already exists."}
             {error === "mismatch" && "Passwords do not match."}
             {error === "notallowed" && "You cannot create another Admin user."}

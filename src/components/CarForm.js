@@ -138,15 +138,15 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     }
   }
 
-  const inputCls = "w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 placeholder:text-slate-300 outline-none focus:border-[var(--brand)] transition-all shadow-sm";
-  const selectCls = "w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 outline-none focus:border-[var(--brand)] transition-all shadow-sm appearance-none";
-  const labelCls = "block text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1 mb-2.5";
+  const inputCls = "w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-sm font-bold text-black placeholder:text-white outline-none focus:border-[var(--brand)] transition-all shadow-sm";
+  const selectCls = "w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-sm font-bold text-black outline-none focus:border-[var(--brand)] transition-all shadow-sm appearance-none";
+  const labelCls = "block text-[10px] font-black uppercase tracking-[0.2em] text-white ml-1 mb-2.5";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-12 animate-in fade-in duration-700">
 
       {error && (
-        <div className="bg-rose-50 border border-rose-100 text-rose-600 text-[11px] font-black uppercase tracking-widest rounded-2xl px-6 py-4 shadow-sm flex items-center gap-3">
+        <div className="bg-rose-50 border border-rose-100 text-black text-[11px] font-black uppercase tracking-widest rounded-2xl px-6 py-4 shadow-sm flex items-center gap-3">
           <Info size={16} />
           {error}
         </div>
@@ -174,7 +174,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
         <div className="flex items-center gap-3 mb-10">
            <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-           <h3 className="text-lg font-black text-slate-900 tracking-tight">Core Vehicle Identity</h3>
+           <h3 className="text-lg font-black text-black tracking-tight">Core Vehicle Identity</h3>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -210,7 +210,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm border-b-4 border-b-emerald-500">
           <label className={labelCls}>Showroom Price (KES) *</label>
           <input name="price" type="number" required defaultValue={car?.price || ""}
-            placeholder="e.g. 2,500,000" className={`${inputCls} text-emerald-600`} />
+            placeholder="e.g. 2,500,000" className={`${inputCls} text-black`} />
         </div>
         <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
           <label className={labelCls}>Distance Travelled (km)</label>
@@ -223,7 +223,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
         <div className="flex items-center gap-3 mb-10">
            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-           <h3 className="text-lg font-black text-slate-900 tracking-tight">Technical Architecture</h3>
+           <h3 className="text-lg font-black text-black tracking-tight">Technical Architecture</h3>
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -263,7 +263,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
              <label className="flex items-center gap-3 cursor-pointer group">
               <input type="checkbox" name="turbo" defaultChecked={car?.turbo ?? false}
                 className="w-5 h-5 accent-emerald-500 rounded-lg transition-all" />
-              <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-900 transition-colors">Induction: Turbo</span>
+              <span className="text-[11px] font-black uppercase tracking-widest text-white group-hover:text-black transition-colors">Induction: Turbo</span>
             </label>
           </div>
         </div>
@@ -272,7 +272,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
        {/* ── Features & Description ── */}
        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
-            <label className={labelCls}>Interior Excellence & Key Systems <span className="normal-case text-slate-300 font-bold ml-2">(Comma Separated)</span></label>
+            <label className={labelCls}>Interior Excellence & Key Systems <span className="normal-case text-white font-bold ml-2">(Comma Separated)</span></label>
             <textarea name="features" rows={4}
               defaultValue={car?.features?.join(", ") || ""}
               placeholder="e.g. Sunroof, Leather Trim, Reverse Camera, Apple CarPlay"
@@ -292,9 +292,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-3">
              <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-             <h3 className="text-lg font-black text-slate-900 tracking-tight">Showroom Visuals</h3>
+             <h3 className="text-lg font-black text-black tracking-tight">Showroom Visuals</h3>
           </div>
-          <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">Min. 3 High RES Photos Preferred</p>
+          <p className="text-[10px] font-black text-white uppercase tracking-widest leading-none">Min. 3 High RES Photos Preferred</p>
         </div>
 
         <label className={`group relative flex flex-col items-center justify-center border-2 border-dashed border-slate-100 hover:border-emerald-200 rounded-[2rem] p-16 cursor-pointer transition-all duration-500 bg-slate-50/20 hover:bg-emerald-50/10 mb-8 ${uploading ? "pointer-events-none opacity-50" : ""}`}>
@@ -303,16 +303,16 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           {uploading ? (
             <div className="text-center">
               <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-6" />
-              <p className="text-sm font-black text-slate-900 tracking-tight uppercase">Synchronizing Assets</p>
-              <p className="text-[10px] font-bold text-slate-400 mt-2">Item {uploadProgress.done} of {uploadProgress.total}</p>
+              <p className="text-sm font-black text-black tracking-tight uppercase">Synchronizing Assets</p>
+              <p className="text-[10px] font-bold text-white mt-2">Item {uploadProgress.done} of {uploadProgress.total}</p>
             </div>
           ) : (
             <div className="text-center group-hover:scale-105 transition-transform duration-500">
               <div className="w-16 h-16 bg-white border border-slate-100 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:shadow-xl transition-all">
-                 <Plus className="text-slate-300 group-hover:text-emerald-500" size={32} />
+                 <Plus className="text-white group-hover:text-black" size={32} />
               </div>
-              <p className="text-sm font-black text-slate-900 uppercase tracking-widest">Deploy Photos</p>
-              <p className="text-[10px] font-bold text-slate-400 mt-2 leading-relaxed">Drag assets or click to browse. WEBP/JPG/PNG supported.</p>
+              <p className="text-sm font-black text-black uppercase tracking-widest">Deploy Photos</p>
+              <p className="text-[10px] font-bold text-white mt-2 leading-relaxed">Drag assets or click to browse. WEBP/JPG/PNG supported.</p>
             </div>
           )}
         </label>
@@ -334,7 +334,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] opacity-0 group-hover/img:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-4">
                   {!img.isPrimary && (
                     <button type="button" onClick={() => setPrimary(idx)}
-                      className="w-full bg-white hover:bg-emerald-50 text-slate-900 text-[9px] font-black uppercase tracking-widest py-3 rounded-xl transition-all shadow-xl active:scale-95">
+                      className="w-full bg-white hover:bg-emerald-50 text-black text-[9px] font-black uppercase tracking-widest py-3 rounded-xl transition-all shadow-xl active:scale-95">
                       Main Hub
                     </button>
                   )}
@@ -351,7 +351,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
       {/* ── Badges ── */}
       <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
-        <label className={labelCls}>Marketplace Badges <span className="normal-case text-slate-300 font-bold ml-2">(Click to Toggle)</span></label>
+        <label className={labelCls}>Marketplace Badges <span className="normal-case text-white font-bold ml-2">(Click to Toggle)</span></label>
         <div className="flex flex-wrap gap-3 mt-4">
           {Object.entries(BADGE_OPTIONS).map(([name, { color }]) => {
             const active = badges.includes(name);
@@ -365,7 +365,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 className={`text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-xl border-2 transition-all active:scale-95 ${
                   active
                     ? `bg-emerald-500 border-emerald-500 text-white shadow-lg`
-                    : "bg-slate-50 border-slate-50 text-slate-400 hover:border-slate-200"
+                    : "bg-slate-50 border-slate-50 text-white hover:border-slate-200"
                 }`}
               >
                 {active && <Check size={10} className="inline-block mr-2" />}
@@ -380,7 +380,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
         <div className="flex items-center gap-3 mb-10">
            <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-           <h3 className="text-lg font-black text-slate-900 tracking-tight">Publicity Flags</h3>
+           <h3 className="text-lg font-black text-black tracking-tight">Publicity Flags</h3>
         </div>
         
         <div className="flex flex-wrap gap-x-12 gap-y-6">
@@ -393,7 +393,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             <label key={name} className="flex items-center gap-4 cursor-pointer group">
               <input type="checkbox" name={name} defaultChecked={defaultChecked}
                 className="w-6 h-6 accent-emerald-500 rounded-lg transition-all" />
-              <span className="text-[11px] font-black uppercase tracking-[0.1em] text-slate-400 group-hover:text-slate-900 transition-colors">{label}</span>
+              <span className="text-[11px] font-black uppercase tracking-[0.1em] text-white group-hover:text-black transition-colors">{label}</span>
             </label>
           ))}
         </div>
@@ -401,11 +401,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
       <div className="flex flex-col sm:flex-row gap-6 pt-10">
         <button type="submit" disabled={submitting || uploading}
-          className="flex-1 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-100 text-white disabled:text-slate-300 font-black py-7 rounded-[2.5rem] text-sm uppercase tracking-[0.25em] transition-all shadow-2xl shadow-slate-900/10 active:scale-[0.98] hover:scale-[1.01] flex items-center justify-center gap-3">
+          className="flex-1 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-100 text-white disabled:text-white font-black py-7 rounded-[2.5rem] text-sm uppercase tracking-[0.25em] transition-all shadow-2xl shadow-slate-900/10 active:scale-[0.98] hover:scale-[1.01] flex items-center justify-center gap-3">
           {submitting ? "Processing Asset..." : isEdit ? "Update Showroom Entry" : "Deploy to Marketplace"}
           {!submitting && <Check size={20} />}
         </button>
-        <a href="/portal" className="sm:w-56 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-900 font-black py-7 rounded-[2.5rem] text-[10px] uppercase tracking-[0.25em] transition-all flex items-center justify-center shadow-sm">
+        <a href="/portal" className="sm:w-56 bg-slate-50 hover:bg-slate-100 text-white hover:text-black font-black py-7 rounded-[2.5rem] text-[10px] uppercase tracking-[0.25em] transition-all flex items-center justify-center shadow-sm">
           Discard Changes
         </a>
       </div>

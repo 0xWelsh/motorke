@@ -43,7 +43,7 @@ function PasswordMeter({ password }) {
           <div key={i} className={`flex-1 rounded-full ${bg} transition-all duration-500`} />
         ))}
       </div>
-      <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] text-right">{label}</p>
+      <p className="text-[9px] font-black text-white uppercase tracking-[0.2em] text-right">{label}</p>
     </div>
   );
 }
@@ -88,8 +88,8 @@ export default function SignupForm({ error: initialError }) {
     }
   };
 
-  const inputCls = "w-full bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-200 shadow-sm shadow-slate-100";
-  const labelCls = "text-[10px] font-black text-slate-300 uppercase tracking-[0.25em] ml-1";
+  const inputCls = "w-full bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-black outline-none focus:border-emerald-500 transition-all placeholder:text-white shadow-sm shadow-slate-100";
+  const labelCls = "text-[10px] font-black text-white uppercase tracking-[0.25em] ml-1";
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen">
@@ -111,7 +111,7 @@ export default function SignupForm({ error: initialError }) {
              </div>
              <h2 className="text-5xl font-black text-white tracking-tighter leading-[0.95] mb-8">
                 Join the<br />
-                <span className="text-emerald-500">Elite Fleet.</span>
+                <span className="text-black">Elite Fleet.</span>
             </h2>
             <p className="text-white/60 text-lg font-medium leading-relaxed">
                Start your journey with the country's most trusted automotive network.
@@ -127,7 +127,7 @@ export default function SignupForm({ error: initialError }) {
           
           <Link 
             href="/" 
-            className="absolute top-10 right-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-300 hover:text-slate-900 transition-all hover:gap-4"
+            className="absolute top-10 right-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white hover:text-black transition-all hover:gap-4"
           >
             Showroom <ArrowLeft className="w-3 h-3 rotate-180" />
           </Link>
@@ -138,22 +138,22 @@ export default function SignupForm({ error: initialError }) {
                 <div className="inline-flex items-center gap-3 mb-8">
                    <img src="/logo.png" alt="Motorske" className="h-10 w-auto object-contain" />
                    <div className="h-4 w-px bg-slate-200 mx-1" />
-                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Register</span>
+                   <span className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Register</span>
                 </div>
-                <h1 className="text-4xl font-black text-slate-900 tracking-tighter mb-3">Create Account.</h1>
-                <p className="text-slate-400 font-medium text-sm">Select your profile type to get started.</p>
+                <h1 className="text-4xl font-black text-black tracking-tighter mb-3">Create Account.</h1>
+                <p className="text-white font-medium text-sm">Select your profile type to get started.</p>
              </header>
 
              {/* Role Switcher */}
              <div className="flex p-1.5 bg-slate-100 rounded-3xl gap-1.5 mb-12 w-fit">
                 <button type="button" onClick={() => setRole("BUYER")}
                   className={clsx("flex items-center gap-2.5 px-8 py-3.5 rounded-[1.25rem] text-[10px] font-black uppercase tracking-[0.15em] transition-all",
-                    role === "BUYER" ? "bg-white text-slate-950 shadow-xl shadow-slate-200" : "text-slate-400 hover:text-slate-600")}>
+                    role === "BUYER" ? "bg-white text-black shadow-xl shadow-slate-200" : "text-white hover:text-black")}>
                   <User size={14} /> Personal
                 </button>
                 <button type="button" onClick={() => setRole("DEALER")}
                   className={clsx("flex items-center gap-2.5 px-8 py-3.5 rounded-[1.25rem] text-[10px] font-black uppercase tracking-[0.15em] transition-all",
-                    role === "DEALER" ? "bg-slate-950 text-white shadow-xl shadow-slate-900/20" : "text-slate-400 hover:text-slate-600")}>
+                    role === "DEALER" ? "bg-slate-950 text-white shadow-xl shadow-slate-900/20" : "text-white hover:text-black")}>
                   <Building2 size={14} /> Dealership
                 </button>
              </div>
@@ -163,10 +163,10 @@ export default function SignupForm({ error: initialError }) {
 
                 {errorMsg && (
                    <div className="p-5 bg-rose-50 border border-rose-100 rounded-[1.5rem] flex items-start gap-4 animate-in fade-in slide-in-from-top-4 duration-500 mb-8">
-                      <div className="w-8 h-8 bg-rose-200 rounded-xl flex items-center justify-center text-rose-600 shadow-sm shrink-0">
+                      <div className="w-8 h-8 bg-rose-200 rounded-xl flex items-center justify-center text-black shadow-sm shrink-0">
                          <ShieldCheck size={16} />
                       </div>
-                      <p className="text-[11px] font-bold text-rose-900 leading-tight flex items-center min-h-[32px]">{errorMsg}</p>
+                      <p className="text-[11px] font-bold text-black leading-tight flex items-center min-h-[32px]">{errorMsg}</p>
                    </div>
                 )}
 
@@ -206,7 +206,7 @@ export default function SignupForm({ error: initialError }) {
                                  value={password} onChange={e => setPassword(e.target.value)}
                                  className={inputCls} 
                                />
-                               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-200 hover:text-slate-900">
+                               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-white hover:text-black">
                                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                                </button>
                                <PasswordMeter password={password} />
@@ -247,16 +247,16 @@ export default function SignupForm({ error: initialError }) {
                         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><UserPlus size={16} /> Finalize Registration</>}
                       </button>
                    </div>
-                   <p className="text-[11px] font-bold text-slate-400 max-w-[200px] text-center sm:text-left leading-relaxed">
-                      By proceeding, you agree to our <Link href="#" className="text-slate-900 border-b border-slate-950/10">Terms</Link> and <Link href="#" className="text-slate-900 border-b border-slate-950/10">Privacy</Link>.
+                   <p className="text-[11px] font-bold text-white max-w-[200px] text-center sm:text-left leading-relaxed">
+                      By proceeding, you agree to our <Link href="#" className="text-black border-b border-slate-950/10">Terms</Link> and <Link href="#" className="text-black border-b border-slate-950/10">Privacy</Link>.
                    </p>
                 </div>
              </form>
 
              <footer className="mt-20 pt-12 border-t border-slate-50 text-center lg:text-left">
-                <p className="text-sm font-bold text-slate-400">
+                <p className="text-sm font-bold text-white">
                    Part of our network?{" "}
-                   <Link href="/login" className="text-slate-900 hover:text-emerald-500 transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10">Sign in to your portal</Link>
+                   <Link href="/login" className="text-black hover:text-black transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10">Sign in to your portal</Link>
                 </p>
              </footer>
           </div>

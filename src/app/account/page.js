@@ -47,11 +47,11 @@ export default async function AccountPage({ searchParams }) {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
           <div>
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-600 mb-2 block">Personal Dashboard</span>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tight">Digital Garage</h1>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-black mb-2 block">Personal Dashboard</span>
+            <h1 className="text-4xl font-black text-black tracking-tight">Digital Garage</h1>
           </div>
-          <div className="flex items-center gap-2 text-xs font-bold dark:text-slate-400 text-slate-600 uppercase tracking-widest">
-            <Calendar size={14} className="text-amber-500" />
+          <div className="flex items-center gap-2 text-xs font-bold dark:text-white text-black uppercase tracking-widest">
+            <Calendar size={14} className="text-black" />
             Member since {new Date(user.createdAt || Date.now()).getFullYear()}
           </div>
         </div>
@@ -62,28 +62,28 @@ export default async function AccountPage({ searchParams }) {
           
           <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
             {/* Avatar */}
-            <div className="w-24 h-24 bg-slate-900 text-amber-500 rounded-[2rem] flex items-center justify-center font-black text-4xl shadow-2xl shadow-slate-900/10 rotate-3 group-hover:rotate-0 transition-transform">
+            <div className="w-24 h-24 bg-slate-900 text-black rounded-[2rem] flex items-center justify-center font-black text-4xl shadow-2xl shadow-slate-900/10 rotate-3 group-hover:rotate-0 transition-transform">
               {user.name?.[0]?.toUpperCase()}
             </div>
 
             {/* User Info */}
             <div className="flex-1 text-center md:text-left min-w-0">
               <div className="flex flex-col md:flex-row md:items-center gap-3 mb-2">
-                <h2 className="text-2xl font-black text-slate-900 tracking-tight">{user.name}</h2>
-                <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 border border-emerald-100 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider mx-auto md:mx-0">
+                <h2 className="text-2xl font-black text-black tracking-tight">{user.name}</h2>
+                <span className="inline-flex items-center gap-1 bg-emerald-50 text-black border border-emerald-100 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider mx-auto md:mx-0">
                   <ShieldCheck size={12} /> Verified Buyer
                 </span>
               </div>
-              <p className="dark:text-slate-500 text-slate-600 font-medium mb-6">{user.email}</p>
+              <p className="dark:text-black text-black font-medium mb-6">{user.email}</p>
               
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
                 <div className="bg-slate-50 border border-slate-100 px-4 py-2 rounded-xl flex items-center gap-2">
-                  <Heart size={14} className="text-rose-500" />
-                  <span className="text-xs font-black text-slate-700">{savedCars.length} Saved Cars</span>
+                  <Heart size={14} className="text-black" />
+                  <span className="text-xs font-black text-black">{savedCars.length} Saved Cars</span>
                 </div>
                 <div className="bg-slate-50 border border-slate-100 px-4 py-2 rounded-xl flex items-center gap-2">
-                  <MessageSquare size={14} className="text-amber-500" />
-                  <span className="text-xs font-black text-slate-700">{enquiries.length} Enquiries</span>
+                  <MessageSquare size={14} className="text-black" />
+                  <span className="text-xs font-black text-black">{enquiries.length} Enquiries</span>
                 </div>
               </div>
             </div>

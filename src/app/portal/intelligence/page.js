@@ -32,8 +32,8 @@ export default async function IntelligencePage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
         <div>
           <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--brand)] mb-3 block">Automotive Pulse</span>
-          <h1 className="text-5xl font-black text-slate-900 tracking-tight leading-[1.1]">Market Intelligence</h1>
-          <p className="text-slate-500 font-bold mt-4 text-base max-w-2xl">
+          <h1 className="text-5xl font-black text-black tracking-tight leading-[1.1]">Market Intelligence</h1>
+          <p className="text-black font-bold mt-4 text-base max-w-2xl">
             Stay ahead of the curve with real-time global automotive industry updates, 
             market distribution shifts, and technological breakthroughs.
           </p>
@@ -41,7 +41,7 @@ export default async function IntelligencePage() {
         <div className="flex items-center gap-4">
            <div className="flex items-center gap-3 px-6 py-4 bg-white border border-slate-100 rounded-3xl shadow-sm">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest whitespace-nowrap">
+              <span className="text-[10px] font-black text-black uppercase tracking-widest whitespace-nowrap">
                 Live Data Feed
               </span>
            </div>
@@ -52,14 +52,14 @@ export default async function IntelligencePage() {
       {articles.length === 0 ? (
         <div className="bg-white border-2 border-dashed border-slate-100 rounded-[4rem] py-48 text-center px-10 shadow-sm">
             <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-8">
-              <Newspaper className="text-slate-200" size={48} />
+              <Newspaper className="text-white" size={48} />
             </div>
-            <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-tight">Synchronizing Global Intel...</h3>
-            <p className="text-slate-500 text-sm font-bold max-w-sm mx-auto leading-relaxed">
+            <h3 className="text-2xl font-black text-black mb-3 tracking-tight">Synchronizing Global Intel...</h3>
+            <p className="text-black text-sm font-bold max-w-sm mx-auto leading-relaxed">
               We're currently populating your fresh automotive intelligence feed. 
               Our systems are scanning major global news hubs for the latest car market updates.
             </p>
-            <div className="mt-10 inline-flex items-center gap-2 text-[10px] font-black text-emerald-600 uppercase tracking-widest">
+            <div className="mt-10 inline-flex items-center gap-2 text-[10px] font-black text-black uppercase tracking-widest">
                <Clock size={14} /> Expected cycle time: &lt; 2 minutes
             </div>
         </div>
@@ -94,7 +94,7 @@ export default async function IntelligencePage() {
 
                 {/* Source Badge */}
                 <div className="absolute top-6 left-6">
-                   <div className="px-4 py-2 bg-white/95 backdrop-blur-xl rounded-xl text-[9px] font-black uppercase tracking-[0.15em] shadow-xl shadow-black/5 text-slate-900 flex items-center gap-2 border border-white/20">
+                   <div className="px-4 py-2 bg-white/95 backdrop-blur-xl rounded-xl text-[9px] font-black uppercase tracking-[0.15em] shadow-xl shadow-black/5 text-black flex items-center gap-2 border border-white/20">
                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                       {article.sourceName}
                    </div>
@@ -104,29 +104,29 @@ export default async function IntelligencePage() {
               {/* Sophisticated Content Block */}
               <div className="p-10 flex-1 flex flex-col">
                 <div className="flex items-center gap-3 mb-6">
-                   <TrendingUp size={14} className="text-emerald-500" />
-                   <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">
+                   <TrendingUp size={14} className="text-black" />
+                   <span className="text-[10px] font-black text-black uppercase tracking-widest">
                      Automotive Intel
                    </span>
                 </div>
                 
-                <h3 className="text-xl font-black text-slate-900 leading-[1.25] mb-6 mb-6 group-hover:text-[var(--brand)] transition-colors line-clamp-3 tracking-tight">
+                <h3 className="text-xl font-black text-black leading-[1.25] mb-6 mb-6 group-hover:text-[var(--brand)] transition-colors line-clamp-3 tracking-tight">
                   {article.title}
                 </h3>
                 
-                <p className="text-slate-500 text-sm font-bold leading-relaxed line-clamp-3 mb-10 opacity-70">
+                <p className="text-black text-sm font-bold leading-relaxed line-clamp-3 mb-10 opacity-70">
                   {article.description || "Fresh automotive trends and market shifts are currently reshaping the industry landscape. Deep dive into the full analysis via the source."}
                 </p>
                 
                 {/* Footer Meta */}
                 <div className="mt-auto pt-8 border-t border-slate-50 flex items-center justify-between">
                    <div className="flex flex-col">
-                      <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest mb-0.5">Published</span>
-                      <span className="text-[11px] font-black text-slate-700">
+                      <span className="text-[9px] font-black text-white uppercase tracking-widest mb-0.5">Published</span>
+                      <span className="text-[11px] font-black text-black">
                         {new Date(article.publishedAt).toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </span>
                    </div>
-                   <Link href={article.url} target="_blank" className="w-12 h-12 rounded-2xl bg-slate-50 hover:bg-emerald-50 text-slate-300 hover:text-emerald-600 flex items-center justify-center transition-all border border-slate-100">
+                   <Link href={article.url} target="_blank" className="w-12 h-12 rounded-2xl bg-slate-50 hover:bg-emerald-50 text-white hover:text-black flex items-center justify-center transition-all border border-slate-100">
                       <ExternalLink size={18} />
                    </Link>
                 </div>

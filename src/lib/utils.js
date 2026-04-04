@@ -66,18 +66,18 @@ export const DRIVETRAIN_LABELS = {
 
 /** Predefined badge options dealers can add to listings */
 export const BADGE_OPTIONS = {
-  "Available":     { color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  "Sold":          { color: "bg-red-50 text-red-700 border-red-200" },
-  "Reserved":      { color: "bg-yellow-50 text-yellow-700 border-yellow-200" },
-  "Fresh Import":  { color: "bg-blue-50 text-blue-700 border-blue-200" },
-  "Duty Free":     { color: "bg-purple-50 text-purple-700 border-purple-200" },
-  "Duty Paid":     { color: "bg-teal-50 text-teal-700 border-teal-200" },
-  "Low Mileage":   { color: "bg-cyan-50 text-cyan-700 border-cyan-200" },
-  "Price Drop":    { color: "bg-orange-50 text-orange-700 border-orange-200" },
-  "Hot Deal":      { color: "bg-rose-50 text-rose-700 border-rose-200" },
-  "Clearance":     { color: "bg-amber-50 text-amber-700 border-amber-200" },
-  "One Owner":     { color: "bg-indigo-50 text-indigo-700 border-indigo-200" },
-  "Financing OK":  { color: "bg-lime-50 text-lime-700 border-lime-200" },
+  "Available":     { color: "bg-emerald-50 text-black border-emerald-200" },
+  "Sold":          { color: "bg-red-50 text-black border-red-200" },
+  "Reserved":      { color: "bg-yellow-50 text-black border-yellow-200" },
+  "Fresh Import":  { color: "bg-blue-50 text-black border-blue-200" },
+  "Duty Free":     { color: "bg-purple-50 text-black border-purple-200" },
+  "Duty Paid":     { color: "bg-teal-50 text-black border-teal-200" },
+  "Low Mileage":   { color: "bg-cyan-50 text-black border-cyan-200" },
+  "Price Drop":    { color: "bg-orange-50 text-black border-orange-200" },
+  "Hot Deal":      { color: "bg-rose-50 text-black border-rose-200" },
+  "Clearance":     { color: "bg-amber-50 text-black border-amber-200" },
+  "One Owner":     { color: "bg-indigo-50 text-black border-indigo-200" },
+  "Financing OK":  { color: "bg-lime-50 text-black border-lime-200" },
 };
 
 /** Clamp a number between min and max */

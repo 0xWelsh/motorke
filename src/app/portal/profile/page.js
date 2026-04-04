@@ -16,15 +16,15 @@ export default async function PortalProfilePage() {
 
   if (!user) return null;
 
-  const inputCls = "w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-[var(--brand)] transition-all placeholder:text-slate-300 shadow-sm";
-  const labelCls = "text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1 mb-2.5 block";
+  const inputCls = "w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-black outline-none focus:border-[var(--brand)] transition-all placeholder:text-white shadow-sm";
+  const labelCls = "text-[10px] font-black uppercase tracking-[0.2em] text-white ml-1 mb-2.5 block";
 
   return (
     <div className="animate-in fade-in duration-700 max-w-4xl">
       <div className="mb-12">
         <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--brand)] mb-2.5 block">Account Settings</span>
-        <h1 className="text-5xl font-black text-slate-900 tracking-tight">Security & Identity</h1>
-        <p className="text-slate-500 font-bold mt-2">Manage your dealership presence and access credentials.</p>
+        <h1 className="text-5xl font-black text-black tracking-tight">Security & Identity</h1>
+        <p className="text-black font-bold mt-2">Manage your dealership presence and access credentials.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -43,14 +43,14 @@ export default async function PortalProfilePage() {
                 </div>
               </div>
               <div className="text-center sm:text-left">
-                <h2 className="text-2xl font-black text-slate-900 tracking-tight">{user.name}</h2>
-                <p className="text-sm font-bold text-slate-400 mt-1">{user.email}</p>
+                <h2 className="text-2xl font-black text-black tracking-tight">{user.name}</h2>
+                <p className="text-sm font-bold text-white mt-1">{user.email}</p>
                 <div className="flex items-center justify-center sm:justify-start gap-2 mt-4">
-                  <span className="text-[10px] font-black bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full uppercase tracking-widest border border-emerald-100">
+                  <span className="text-[10px] font-black bg-emerald-50 text-black px-3 py-1 rounded-full uppercase tracking-widest border border-emerald-100">
                     {user.role} Partner
                   </span>
                   {user.dealer?.verified && (
-                    <span className="text-[10px] font-black bg-blue-50 text-blue-600 px-3 py-1 rounded-full uppercase tracking-widest border border-blue-100">
+                    <span className="text-[10px] font-black bg-blue-50 text-black px-3 py-1 rounded-full uppercase tracking-widest border border-blue-100">
                       Verified Showroom
                     </span>
                   )}
@@ -63,7 +63,7 @@ export default async function PortalProfilePage() {
           <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm overflow-hidden">
             <div className="flex items-center gap-3 mb-10">
                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-               <h3 className="text-lg font-black text-slate-900 tracking-tight">Identity Details</h3>
+               <h3 className="text-lg font-black text-black tracking-tight">Identity Details</h3>
             </div>
             
             <form action="/api/profile/update" method="POST" className="space-y-8">
@@ -75,8 +75,8 @@ export default async function PortalProfilePage() {
                 <div>
                   <label className={labelCls}>Registered Email (Locked)</label>
                   <div className="relative">
-                    <input name="email" type="email" defaultValue={user.email} className={`${inputCls} bg-slate-50/50 text-slate-400 cursor-not-allowed`} disabled />
-                    <Shield className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-200" size={16} />
+                    <input name="email" type="email" defaultValue={user.email} className={`${inputCls} bg-slate-50/50 text-white cursor-not-allowed`} disabled />
+                    <Shield className="absolute right-5 top-1/2 -translate-y-1/2 text-white" size={16} />
                   </div>
                 </div>
               </div>
@@ -95,7 +95,7 @@ export default async function PortalProfilePage() {
           <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
             <div className="flex items-center gap-3 mb-8">
                <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-               <h3 className="text-sm font-black text-slate-900 tracking-[0.1em] uppercase">Partnership Meta</h3>
+               <h3 className="text-sm font-black text-black tracking-[0.1em] uppercase">Partnership Meta</h3>
             </div>
             <div className="space-y-6">
               {[
@@ -106,16 +106,16 @@ export default async function PortalProfilePage() {
               ].map(({ icon: Icon, label, value }) => (
                 <div key={label} className="group">
                   <div className="flex items-center gap-2 mb-2">
-                    <Icon size={12} className="text-slate-300 group-hover:text-emerald-500 transition-colors" />
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{label}</span>
+                    <Icon size={12} className="text-white group-hover:text-black transition-colors" />
+                    <span className="text-[10px] font-black text-white uppercase tracking-widest">{label}</span>
                   </div>
-                  <p className="text-sm font-black text-slate-900 ml-5">{value}</p>
+                  <p className="text-sm font-black text-black ml-5">{value}</p>
                 </div>
               ))}
             </div>
             
             <div className="mt-10 pt-10 border-t border-slate-50">
-               <p className="text-[10px] font-bold text-slate-400 italic leading-relaxed">
+               <p className="text-[10px] font-bold text-white italic leading-relaxed">
                  Need to change your registered email or dealership name? Contact our partner support team.
                </p>
             </div>

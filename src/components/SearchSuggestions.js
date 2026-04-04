@@ -15,7 +15,7 @@ export default function SearchSuggestions({
   const suggestionTypes = {
     make: { icon: <Tag className="w-4 h-4 text-[var(--brand)]" />, label: "Make" },
     model: { icon: <Car className="w-4 h-4 text-[var(--brand-accent)]" />, label: "Model" },
-    variant: { icon: <Tag className="w-4 h-4 text-slate-400" />, label: "Variant" },
+    variant: { icon: <Tag className="w-4 h-4 text-white" />, label: "Variant" },
   };
 
   return (
@@ -23,14 +23,14 @@ export default function SearchSuggestions({
       {loading ? (
         <div className="p-6 text-center">
           <div className="animate-pulse flex items-center justify-center gap-2">
-            <Search className="w-4 h-4 text-slate-400" />
-            <span className="text-sm font-medium text-slate-500">Searching suggestions...</span>
+            <Search className="w-4 h-4 text-white" />
+            <span className="text-sm font-medium text-black">Searching suggestions...</span>
           </div>
         </div>
       ) : (
         <div className="max-h-80 overflow-y-auto">
           {suggestions.map((suggestion, index) => {
-            const typeInfo = suggestionTypes[suggestion.type] || { icon: <Tag className="w-4 h-4 text-slate-400" />, label: "Result" };
+            const typeInfo = suggestionTypes[suggestion.type] || { icon: <Tag className="w-4 h-4 text-white" />, label: "Result" };
             
             // Highlight matching parts
             const matchIndex = suggestion.value.toLowerCase().indexOf(inputValue.toLowerCase());
@@ -48,16 +48,16 @@ export default function SearchSuggestions({
                   {typeInfo.icon}
                 </div>
                 <div className="flex-1 text-left">
-                  <div className="text-sm font-bold text-slate-800 group-hover:text-[var(--brand)] transition-colors">
+                  <div className="text-sm font-bold text-black group-hover:text-[var(--brand)] transition-colors">
                     {beforeMatch}
                     <span className="text-[var(--brand-accent)]">{matchText}</span>
                     {afterMatch}
                   </div>
-                  <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-0.5">
+                  <div className="text-[10px] font-medium text-black dark:text-white uppercase tracking-wider mt-0.5">
                     {typeInfo.label}
                   </div>
                 </div>
-                <div className="shrink-0 text-slate-200 group-hover:text-[var(--brand-accent)] transition-colors">
+                <div className="shrink-0 text-white group-hover:text-[var(--brand-accent)] transition-colors">
                   <Check className="w-4 h-4" />
                 </div>
               </button>

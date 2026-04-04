@@ -49,12 +49,12 @@ export default async function AdminEditUserPage(props) {
         <h2 className="font-black mb-5">Account details</h2>
 
         {saved && (
-          <div className="bg-green-500/10 border border-green-500/20 text-green-400 text-sm rounded-xl px-4 py-3 mb-5">
+          <div className="bg-green-500/10 border border-green-500/20 text-white text-sm rounded-xl px-4 py-3 mb-5">
             ✓ Changes saved
           </div>
         )}
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3 mb-5">
+          <div className="bg-red-500/10 border border-red-500/20 text-white text-sm rounded-xl px-4 py-3 mb-5">
             {error === "exists" ? "That email is already in use." : 
              error === "notallowed" ? "You cannot grant Admin rights." : 
              error === "self_delete" ? "You cannot delete your own account." : 
@@ -116,7 +116,7 @@ export default async function AdminEditUserPage(props) {
 
       {/* Danger zone */}
       <div className="mt-6 bg-red-500/5 border border-red-500/20 rounded-2xl p-6">
-        <h3 className="font-bold text-red-400 mb-1">Danger zone</h3>
+        <h3 className="font-bold text-white mb-1">Danger zone</h3>
         <p className="text-xs text-white/30 mb-4">
           Deleting a user account permanently revokes their access. Connected data may be removed or unlinked.
         </p>

@@ -154,20 +154,20 @@ export default async function CarsPage({ searchParams }) {
           <div>
             <div className="flex items-center gap-2 mb-2">
                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Live Inventory</span>
+               <span className="text-[10px] font-black uppercase tracking-widest text-white">Live Inventory</span>
             </div>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tight">
+            <h1 className="text-4xl font-black text-black tracking-tight">
               {search ? `Results for "${search}"` : county ? `Verified in ${county}` : "All Showcases"}
             </h1>
-            <p className="text-slate-500 font-medium mt-1">
+            <p className="text-black font-medium mt-1">
               Displaying {total} premium automotive units.
             </p>
           </div>
           
           <div className="flex items-center gap-6">
             <div className="text-right hidden sm:block">
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">Market View</p>
-              <p className="text-xs font-black text-slate-800">Nairobi Standard Time</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-white">Market View</p>
+              <p className="text-xs font-black text-black">Nairobi Standard Time</p>
             </div>
             {/* Sort is now handled inside CarsSearch for a unified UI, but we could keep a quick toggle here if needed */}
           </div>
@@ -177,11 +177,11 @@ export default async function CarsPage({ searchParams }) {
         {sortedCars.length === 0 ? (
           <div className="py-32 text-center border-2 border-dashed border-slate-100 rounded-[3rem] bg-white/50 shadow-sm">
             <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
-               <Search className="w-8 h-8 text-slate-200" />
+               <Search className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-xl font-black text-slate-800 mb-2">No matching units found.</h2>
-            <p className="text-slate-400 font-medium mb-8">Try adjusting your filters or search terms.</p>
-            <Link href="/cars" className="inline-flex items-center gap-2 bg-slate-100 text-slate-700 px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-colors">
+            <h2 className="text-xl font-black text-black mb-2">No matching units found.</h2>
+            <p className="text-white font-medium mb-8">Try adjusting your filters or search terms.</p>
+            <Link href="/cars" className="inline-flex items-center gap-2 bg-slate-100 text-black px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-colors">
               Reset Filters
             </Link>
           </div>
@@ -198,7 +198,7 @@ export default async function CarsPage({ searchParams }) {
           <div className="flex justify-center items-center gap-2 mt-24">
             {/* Previous Button */}
             {page > 1 && (
-              <Link href={getPageLink(page - 1)} className="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-100 text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-all shadow-sm">
+              <Link href={getPageLink(page - 1)} className="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-100 text-white hover:bg-slate-100 hover:text-black transition-all shadow-sm">
                 <ChevronRight className="w-4 h-4 rotate-180" />
               </Link>
             )}
@@ -211,7 +211,7 @@ export default async function CarsPage({ searchParams }) {
                   <Link key={p}
                     href={getPageLink(p)}
                     className={`w-10 h-10 rounded-xl flex items-center justify-center text-[11px] font-black transition-all ${
-                      p === page ? "bg-[var(--brand)] text-white shadow-lg shadow-[var(--brand)]/10" : "bg-slate-50 border border-slate-100 text-slate-400 hover:bg-slate-100 hover:text-slate-900 shadow-sm"
+                      p === page ? "bg-[var(--brand)] text-white shadow-lg shadow-[var(--brand)]/10" : "bg-slate-50 border border-slate-100 text-white hover:bg-slate-100 hover:text-black shadow-sm"
                     }`}
                   >
                     {p.toString().padStart(2, '0')}
@@ -219,14 +219,14 @@ export default async function CarsPage({ searchParams }) {
                 );
               }
               // Show ellipsis
-              if (p === 2 && page > 3) return <span key="e1" className="text-slate-200 px-2 font-black">...</span>;
-              if (p === totalPages - 1 && page < totalPages - 2) return <span key="e2" className="text-slate-200 px-2 font-black">...</span>;
+              if (p === 2 && page > 3) return <span key="e1" className="text-white px-2 font-black">...</span>;
+              if (p === totalPages - 1 && page < totalPages - 2) return <span key="e2" className="text-white px-2 font-black">...</span>;
               return null;
             })}
 
             {/* Next Button */}
             {page < totalPages && (
-              <Link href={getPageLink(page + 1)} className="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-100 text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-all shadow-sm">
+              <Link href={getPageLink(page + 1)} className="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-100 text-white hover:bg-slate-100 hover:text-black transition-all shadow-sm">
                 <ChevronRight className="w-4 h-4" />
               </Link>
             )}
@@ -265,7 +265,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-300 text-[10px] font-bold uppercase tracking-widest">No Image</div>
+          <div className="w-full h-full flex items-center justify-center text-white text-[10px] font-bold uppercase tracking-widest">No Image</div>
         )}
         {car.featured && (
           <span className="absolute top-3 right-3 bg-[var(--brand)] text-white text-[9px] font-black px-2.5 py-1 uppercase tracking-widest rounded-lg">
@@ -273,7 +273,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
           </span>
         )}
         {dist !== null && (
-          <span className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-900 text-[9px] font-bold px-2.5 py-1 rounded-lg border border-slate-100 shadow-sm">
+          <span className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-black text-[9px] font-bold px-2.5 py-1 rounded-lg border border-slate-100 shadow-sm">
             {dist}km away
           </span>
         )}
@@ -296,15 +296,15 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
           <span className="text-[10px] font-black bg-[var(--brand-light)] text-[var(--brand)] px-2 py-0.5 uppercase tracking-wider shrink-0 rounded-md">
             {car.year}
           </span>
-          <h3 className="font-bold text-slate-800 text-sm leading-tight truncate group-hover:text-[var(--brand-accent)] transition-colors">
+          <h3 className="font-bold text-black text-sm leading-tight truncate group-hover:text-[var(--brand-accent)] transition-colors">
             {title}
           </h3>
-          {car.dealer?.verified && <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />}
+          {car.dealer?.verified && <ShieldCheck className="w-3.5 h-3.5 text-black shrink-0" />}
         </div>
 
         {/* Description */}
         {car.description && (
-          <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">
+          <p className="text-xs text-white leading-relaxed line-clamp-2">
             {car.description}
           </p>
         )}
@@ -312,7 +312,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
         {/* Spec tags */}
         <div className="flex flex-wrap gap-1.5">
           {specs.map((s) => (
-            <span key={s} className="text-[10px] font-semibold text-slate-500 bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg">
+            <span key={s} className="text-[10px] font-semibold text-black bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg">
               {s}
             </span>
           ))}
@@ -320,10 +320,10 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
 
         {/* Price + View Offer */}
         <div className="flex items-center justify-between pt-3 border-t border-slate-50 mt-auto">
-          <p className="text-lg font-black text-slate-900">{formatPrice(car.price)}</p>
+          <p className="text-lg font-black text-black">{formatPrice(car.price)}</p>
           <div className="flex items-center gap-3">
              <CompareButton car={car} />
-             <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:text-[var(--brand-accent)] transition-colors flex items-center gap-1">
+             <span className="text-[10px] font-black uppercase tracking-widest text-white group-hover:text-[var(--brand-accent)] transition-colors flex items-center gap-1">
                View Offer <ChevronRight className="w-3 h-3" />
              </span>
           </div>

@@ -105,13 +105,13 @@ export default function LocationSearch() {
         className="flex items-center bg-white border border-slate-100 rounded-2xl p-2 shadow-sm focus-within:border-[var(--brand-accent)]/30 transition-all duration-300"
       >
         <div className="flex-1 flex items-center px-4 gap-3">
-          <Search className="w-5 h-5 dark:text-slate-400 text-slate-600 shrink-0" />
+          <Search className="w-5 h-5 dark:text-white text-black shrink-0" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
             placeholder="Search by make, model or keyword…"
-            className="w-full bg-transparent border-none outline-none py-3 text-base text-slate-800 placeholder:text-slate-300 font-semibold"
+            className="w-full bg-transparent border-none outline-none py-3 text-base text-black placeholder:text-white font-semibold"
           />
         </div>
 
@@ -121,7 +121,7 @@ export default function LocationSearch() {
           type="button"
           onClick={detectLocation}
           className={`p-3 rounded-xl transition-all duration-200 flex items-center gap-2 group ${
-            location ? "bg-[var(--brand-light)] text-[var(--brand)]" : "bg-transparent text-slate-400 hover:text-slate-900"
+            location ? "bg-[var(--brand-light)] text-[var(--brand)]" : "bg-transparent text-white hover:text-black"
           }`}
           title="Use my location"
         >
@@ -155,13 +155,13 @@ export default function LocationSearch() {
       {location && (
         <div className="flex items-center gap-3 mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
           <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full border border-slate-200">
-            <MapPin className="w-3 h-3 dark:text-slate-500 text-slate-600" />
-            <span className="text-[10px] font-black dark:text-slate-500 text-slate-600 uppercase tracking-widest">
+            <MapPin className="w-3 h-3 dark:text-black text-black" />
+            <span className="text-[10px] font-black dark:text-black text-black uppercase tracking-widest">
               Searching near you
             </span>
             <button 
               onClick={() => setLocation(null)} 
-              className="hover:text-red-500 transition-colors ml-1"
+              className="hover:text-black transition-colors ml-1"
             >
               <X className="w-3 h-3" />
             </button>

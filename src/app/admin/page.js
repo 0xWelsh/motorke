@@ -105,7 +105,7 @@ export default async function AdminDashboard() {
           { label: "Active Buyers", value: totalUsers.toLocaleString(), sub: "Market Reach", icon: <Users size={20} /> },
         ].map((stat, idx) => (
           <div key={idx} className="bg-surface border border-white/5 p-10 rounded-[2.5rem] shadow-xl hover:-translate-y-1 hover:shadow-2xl hover:border-border transition-all duration-500 group relative overflow-hidden">
-             <div className="absolute top-0 right-0 p-6 text-white/5 group-hover:text-orange-500/10 transition-colors">
+             <div className="absolute top-0 right-0 p-6 text-white/5 group-hover:text-black/10 transition-colors">
                 <Activity size={40} strokeWidth={3} />
              </div>
              <div className="relative z-10">
@@ -115,7 +115,7 @@ export default async function AdminDashboard() {
                 <p className="text-3xl sm:text-4xl font-black text-white mb-2 tracking-tighter">{stat.value}</p>
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-6">{stat.label}</p>
                 <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-tighter text-white/30">
-                   <TrendingUp size={12} className="text-orange-600" />
+                   <TrendingUp size={12} className="text-black" />
                    <span>{stat.sub}</span>
                 </div>
              </div>
@@ -128,7 +128,7 @@ export default async function AdminDashboard() {
          {/* Conversion Card */}
          <div className="bg-surface border border-white/5 rounded-[3rem] p-10 text-white relative overflow-hidden shadow-2xl transition-all hover:shadow-3xl hover:-translate-y-1">
             <div className="absolute top-0 right-0 w-64 h-64 bg-orange-600/10 blur-[100px] -mr-32 -mt-32" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-600 mb-10 block">Conversion Matrix</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-black mb-10 block">Conversion Matrix</span>
             
             <div className="space-y-6 relative z-10">
                {/* Unified Split-Bar Chart */}
@@ -139,7 +139,7 @@ export default async function AdminDashboard() {
                
                <div className="flex items-center justify-between">
                   <div>
-                     <p className="text-[11px] font-black uppercase tracking-widest flex items-center gap-2 mb-1 text-white/40"><Smartphone size={14} className="text-orange-500" /> WhatsApp</p>
+                     <p className="text-[11px] font-black uppercase tracking-widest flex items-center gap-2 mb-1 text-white/40"><Smartphone size={14} className="text-black" /> WhatsApp</p>
                      <p className="text-2xl font-black">{whatsappLeads} <span className="text-[10px] font-bold text-white/40 ml-1 uppercase">({Math.round((whatsappLeads/totalLeads)*100)}%)</span></p>
                   </div>
                   <div className="text-right">
@@ -177,9 +177,9 @@ export default async function AdminDashboard() {
                   const name  = dealerMap[dealerId] || "Unknown Dealer";
                   const pct   = Math.round((_count.id / leadsByDealer[0]._count.id) * 100);
                   const isTop = i < 3;
-                  const rankColor = i === 0 ? "text-amber-500 bg-amber-500/10 border-amber-500/20" : 
+                  const rankColor = i === 0 ? "text-black bg-amber-500/10 border-amber-500/20" : 
                                     i === 1 ? "text-white/40 bg-slate-400/10 border-slate-400/20" : 
-                                    i === 2 ? "text-orange-700 bg-orange-700/10 border-orange-700/20" : 
+                                    i === 2 ? "text-black bg-orange-700/10 border-orange-700/20" : 
                                     "text-white/40 bg-slate-100 dark:bg-white/5 border-transparent";
                   return (
                     <div key={dealerId} className="group cursor-default">
@@ -188,7 +188,7 @@ export default async function AdminDashboard() {
                              #{i + 1}
                           </div>
                           <div className="flex-1 flex justify-between items-center">
-                             <p className="text-sm font-black text-white uppercase tracking-tight group-hover:text-orange-500 transition-colors">{name}</p>
+                             <p className="text-sm font-black text-white uppercase tracking-tight group-hover:text-black transition-colors">{name}</p>
                              <p className="text-sm font-black text-white">{_count.id} <span className="text-[10px] text-white/40 uppercase tracking-tighter ml-1">leads</span></p>
                           </div>
                        </div>
@@ -227,7 +227,7 @@ export default async function AdminDashboard() {
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-black text-white leading-none mb-2">{formatPrice(car.price)}</p>
-                  <div className="flex items-center justify-end gap-1.5 text-orange-500">
+                  <div className="flex items-center justify-end gap-1.5 text-black">
                     <Eye size={12} strokeWidth={3} />
                     <span className="text-[11px] font-black">{car.views}</span>
                   </div>
@@ -259,7 +259,7 @@ export default async function AdminDashboard() {
                 </div>
                 <div className="text-right">
                   <div className={`inline-flex items-center gap-2 text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest mb-2 shadow-sm border ${
-                    lead.channel === "whatsapp" ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" : "bg-white/5 text-white/70 border-black/5 dark:border-white/10"
+                    lead.channel === "whatsapp" ? "bg-emerald-500/10 text-black border-emerald-500/20" : "bg-white/5 text-white/70 border-black/5 dark:border-white/10"
                   }`}>
                     {lead.channel === "whatsapp" ? <Smartphone size={10} /> : <Globe size={10} />}
                     {lead.channel}

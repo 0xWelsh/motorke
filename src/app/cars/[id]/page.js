@@ -118,12 +118,12 @@ export default async function CarDetailPage({ params }) {
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
       {/* Breadcrumb */}
-      <nav className="text-xs text-slate-400 mb-6 flex gap-2">
+      <nav className="text-xs text-white mb-6 flex gap-2">
         <Link href="/" className="hover:text-[var(--brand)] transition-colors">Home</Link>
         <span>/</span>
         <Link href="/cars" className="hover:text-[var(--brand)] transition-colors">Cars</Link>
         <span>/</span>
-        <span className="text-slate-900 font-bold">{title}</span>
+        <span className="text-black font-bold">{title}</span>
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -135,12 +135,12 @@ export default async function CarDetailPage({ params }) {
           {/* Title + price */}
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-black text-slate-900">{title}</h1>
-              <p className="text-slate-500 mt-1">{BODY_TYPE_LABELS[car.bodyType]} · {car.year} · {formatMileage(car.mileage)}</p>
+              <h1 className="text-3xl font-black text-black">{title}</h1>
+              <p className="text-black mt-1">{BODY_TYPE_LABELS[car.bodyType]} · {car.year} · {formatMileage(car.mileage)}</p>
             </div>
             <div className="text-right">
               <p className="text-3xl font-black text-[var(--brand)]">{formatPrice(car.price)}</p>
-              {car.negotiable && <p className="text-xs text-slate-400 mt-1">Negotiable</p>}
+              {car.negotiable && <p className="text-xs text-white mt-1">Negotiable</p>}
             </div>
           </div>
 
@@ -155,10 +155,10 @@ export default async function CarDetailPage({ params }) {
           {/* Feature badges */}
           {car.features?.length > 0 && (
             <div>
-              <h3 className="text-[11px] font-black text-slate-400 mb-3 uppercase tracking-[0.15em]">Features</h3>
+              <h3 className="text-[11px] font-black text-white mb-3 uppercase tracking-[0.15em]">Features</h3>
               <div className="flex flex-wrap gap-2">
                 {car.features.map((f) => (
-                  <span key={f} className="text-xs bg-slate-50 border border-slate-100 rounded-full px-3 py-1.5 text-slate-600 font-medium">
+                  <span key={f} className="text-xs bg-slate-50 border border-slate-100 rounded-full px-3 py-1.5 text-black font-medium">
                     {f}
                   </span>
                 ))}
@@ -169,19 +169,19 @@ export default async function CarDetailPage({ params }) {
           {/* Description */}
           {car.description && (
             <div>
-              <h3 className="text-[11px] font-black text-slate-400 mb-3 uppercase tracking-[0.15em]">About this car</h3>
-              <p className="text-slate-600 leading-relaxed text-sm">{car.description}</p>
+              <h3 className="text-[11px] font-black text-white mb-3 uppercase tracking-[0.15em]">About this car</h3>
+              <p className="text-black leading-relaxed text-sm">{car.description}</p>
             </div>
           )}
 
           {/* Spec grid */}
           <div>
-            <h3 className="text-[11px] font-black text-slate-400 mb-4 uppercase tracking-[0.15em]">Specifications</h3>
+            <h3 className="text-[11px] font-black text-white mb-4 uppercase tracking-[0.15em]">Specifications</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {specs.map(({ label, value }) => (
                 <div key={label} className="bg-slate-50 border border-slate-100 rounded-xl p-3">
-                  <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-1">{label}</p>
-                  <p className="text-sm font-bold text-slate-900">{value}</p>
+                  <p className="text-[10px] text-white uppercase tracking-widest mb-1">{label}</p>
+                  <p className="text-sm font-bold text-black">{value}</p>
                 </div>
               ))}
             </div>
@@ -209,10 +209,10 @@ export default async function CarDetailPage({ params }) {
                 <div className="flex items-center gap-2">
                   <p className="font-bold text-sm">{dealer.name}</p>
                   {dealer.verified && (
-                    <span className="text-[9px] bg-green-500/20 text-green-400 border border-green-500/30 rounded-full px-1.5 py-0.5">✓</span>
+                    <span className="text-[9px] bg-green-500/20 text-white border border-green-500/30 rounded-full px-1.5 py-0.5">✓</span>
                   )}
                 </div>
-                <p className="text-xs text-slate-400">{dealer.location}</p>
+                <p className="text-xs text-white">{dealer.location}</p>
               </div>
             </div>
             <Link href={`/dealers/${dealer.slug}`}
@@ -223,7 +223,7 @@ export default async function CarDetailPage({ params }) {
 
           {/* Enquiry form with WhatsApp */}
           <div className="bg-white border border-slate-100 shadow-2xl rounded-2xl p-5">
-            <h3 className="font-black text-slate-900 mb-4 uppercase tracking-widest text-xs">Contact dealer</h3>
+            <h3 className="font-black text-black mb-4 uppercase tracking-widest text-xs">Contact dealer</h3>
             <EnquiryForm
               carId={car.id}
               dealerId={dealer.id}
@@ -238,8 +238,8 @@ export default async function CarDetailPage({ params }) {
               <div className="w-12 h-12 rounded-full bg-[var(--brand-light)] flex items-center justify-center text-xl">⚖️</div>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-800 mb-1">Want to compare this car?</p>
-              <p className="text-xs text-slate-400">Add it to your selection and see how it stacks up side-by-side.</p>
+              <p className="text-sm font-bold text-black mb-1">Want to compare this car?</p>
+              <p className="text-xs text-white">Add it to your selection and see how it stacks up side-by-side.</p>
             </div>
             <div className="flex justify-center">
               <CompareButton car={car} />
@@ -251,7 +251,7 @@ export default async function CarDetailPage({ params }) {
       {/* Similar cars */}
       {similar.length > 0 && (
         <div className="mt-16">
-          <h2 className="text-2xl font-black mb-6 text-slate-900 tracking-tight">Similar cars</h2>
+          <h2 className="text-2xl font-black mb-6 text-black tracking-tight">Similar cars</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {similar.map((c) => {
               const img = c.images[0]?.url;
@@ -269,17 +269,17 @@ export default async function CarDetailPage({ params }) {
                         sizes="(max-width: 768px) 100vw, 33vw"
                       />
                     ) : (
-                      <div className="flex items-center justify-center h-full text-slate-300 text-[10px] font-bold uppercase tracking-widest">No Image</div>
+                      <div className="flex items-center justify-center h-full text-white text-[10px] font-bold uppercase tracking-widest">No Image</div>
                     )}
                   </div>
                   <div className="p-4 flex flex-col gap-2.5">
                     <div className="flex items-center gap-2.5">
                       <span className="text-[10px] font-black bg-[var(--brand-light)] text-[var(--brand)] px-2 py-0.5 uppercase tracking-wider shrink-0 rounded-md">{c.year}</span>
-                      <h3 className="font-bold text-slate-800 text-sm leading-tight truncate group-hover:text-[var(--brand-accent)] transition-colors">{title}</h3>
+                      <h3 className="font-bold text-black text-sm leading-tight truncate group-hover:text-[var(--brand-accent)] transition-colors">{title}</h3>
                     </div>
                     <div className="flex items-center justify-between pt-2.5 border-t border-slate-50">
-                      <p className="text-base font-black text-slate-900">{formatPrice(c.price)}</p>
-                      <span className="text-[10px] text-slate-400">{c.dealer?.name}</span>
+                      <p className="text-base font-black text-black">{formatPrice(c.price)}</p>
+                      <span className="text-[10px] text-white">{c.dealer?.name}</span>
                     </div>
                   </div>
                 </Link>

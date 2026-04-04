@@ -80,19 +80,19 @@ export default async function AdminApprovalsPage() {
                    <p className="text-[10px] text-white/40 mt-1">{dealer.location}</p>
                 </td>
                 <td className="px-8 py-6">
-                   <span className="text-[10px] font-black text-amber-500 bg-amber-500/10 px-3 py-1.5 rounded-full uppercase tracking-widest border border-amber-500/20">
+                   <span className="text-[10px] font-black text-black bg-amber-500/10 px-3 py-1.5 rounded-full uppercase tracking-widest border border-amber-500/20">
                      Awaiting Review
                    </span>
                 </td>
                 <td className="px-8 py-6 text-right">
                   <div className="flex items-center justify-end gap-3 transition-all duration-300">
-                    <Link href={`/admin/dealers/${dealer.id}/edit`} className="flex items-center gap-2 px-4 py-2 bg-orange-600/20 hover:bg-orange-600 text-orange-500 hover:text-white font-black text-[10px] uppercase tracking-widest rounded-xl transition-all border border-orange-500/20 hover:border-orange-500 shadow-lg" title="Manage Hub">
+                    <Link href={`/admin/dealers/${dealer.id}/edit`} className="flex items-center gap-2 px-4 py-2 bg-orange-600/20 hover:bg-orange-600 text-black hover:text-white font-black text-[10px] uppercase tracking-widest rounded-xl transition-all border border-orange-500/20 hover:border-orange-500 shadow-lg" title="Manage Hub">
                       <Edit3 size={14} /> Review Options
                     </Link>
                     
                     <form action={`/api/admin/dealers/${dealer.id}/toggle-verified`} method="POST">
                       <button type="submit" 
-                        className="flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-500 hover:text-white font-black text-[10px] uppercase tracking-widest border border-emerald-500/20 hover:border-emerald-500 rounded-xl transition-all shadow-lg"
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600 text-black hover:text-white font-black text-[10px] uppercase tracking-widest border border-emerald-500/20 hover:border-emerald-500 rounded-xl transition-all shadow-lg"
                         title="Approve Dealer"
                       >
                         <ShieldCheck size={14} /> Approve
@@ -110,7 +110,7 @@ export default async function AdminApprovalsPage() {
         
         {dealers.length === 0 && (
           <div className="py-24 text-center">
-            <ShieldCheck size={48} className="mx-auto text-emerald-500/30 mb-4" />
+            <ShieldCheck size={48} className="mx-auto text-black/30 mb-4" />
             <p className="text-sm font-black text-white/30 uppercase tracking-widest">All Caught Up</p>
             <p className="text-xs font-medium text-white/20 mt-1">There are no pending dealership approvals right now.</p>
           </div>

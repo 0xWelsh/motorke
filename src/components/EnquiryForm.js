@@ -61,17 +61,17 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
     }).catch(() => {});
   }
 
-  const inputCls = "w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[var(--brand-accent)]/30 focus:bg-white transition-all shadow-sm";
+  const inputCls = "w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-sm text-black placeholder-slate-400 outline-none focus:border-[var(--brand-accent)]/30 focus:bg-white transition-all shadow-sm";
 
   if (state === "sent") {
     return (
       <div className="text-center py-8">
         <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-3">
-          <span className="text-emerald-600 text-xl">✓</span>
+          <span className="text-black text-xl">✓</span>
         </div>
-        <p className="font-bold text-emerald-600 mb-1">Enquiry sent!</p>
-        <p className="text-xs text-slate-500">
-          {dealer.name} will contact you on <span className="text-slate-800 font-semibold">{phone}</span> shortly.
+        <p className="font-bold text-black mb-1">Enquiry sent!</p>
+        <p className="text-xs text-black">
+          {dealer.name} will contact you on <span className="text-black font-semibold">{phone}</span> shortly.
         </p>
         {waLink && (
           <a href={waLink} target="_blank" rel="noopener noreferrer"
@@ -101,12 +101,12 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
 
       <div className="flex items-center gap-3 my-1">
         <div className="flex-1 h-px bg-slate-100" />
-        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">or send a message</span>
+        <span className="text-[10px] text-white font-bold uppercase tracking-widest">or send a message</span>
         <div className="flex-1 h-px bg-slate-100" />
       </div>
 
       {state === "error" && (
-        <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2">
+        <p className="text-xs text-white bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2">
           Something went wrong. Please try WhatsApp instead.
         </p>
       )}
@@ -143,9 +143,9 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
         
         <div className="flex items-center justify-center gap-1.5 pt-2">
           <div className="w-3.5 h-3.5 rounded-full bg-emerald-100 flex items-center justify-center">
-            <span className="text-emerald-600 text-[8px]">✓</span>
+            <span className="text-black text-[8px]">✓</span>
           </div>
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Safe & Secure Enquiry</span>
+          <span className="text-[10px] font-bold text-white uppercase tracking-widest">Safe & Secure Enquiry</span>
         </div>
       </form>
     </div>

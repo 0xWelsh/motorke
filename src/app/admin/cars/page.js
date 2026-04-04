@@ -93,9 +93,9 @@ export default async function AdminCarsPage({ searchParams }) {
       {/* ── METRICS BANNER ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 group">
          {[
-            { l: "Live Display", v: liveCount, i: <ToggleRight size={18} className="text-emerald-500" /> },
+            { l: "Live Display", v: liveCount, i: <ToggleRight size={18} className="text-black" /> },
             { l: "Hidden / Drafts", v: hiddenCount, i: <ToggleLeft size={18} className="text-white/40" /> },
-            { l: "Platform Reach", v: totalViews.toLocaleString(), i: <Eye size={18} className="text-orange-500" /> }
+            { l: "Platform Reach", v: totalViews.toLocaleString(), i: <Eye size={18} className="text-black" /> }
          ].map((m, idx) => (
             <div key={idx} className="bg-surface border border-white/5 rounded-[2rem] p-6 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
                <div>
@@ -137,7 +137,7 @@ export default async function AdminCarsPage({ searchParams }) {
         </button>
 
         {(search || dealerId || status) && (
-          <Link href="/admin/cars" className="text-[10px] font-black uppercase tracking-widest text-orange-500 hover:text-orange-400 px-2">
+          <Link href="/admin/cars" className="text-[10px] font-black uppercase tracking-widest text-black hover:text-white px-2">
             Clear
           </Link>
         )}
@@ -192,7 +192,7 @@ export default async function AdminCarsPage({ searchParams }) {
                 <td className="px-8 py-5">
                   <div className="flex flex-col gap-1 items-start">
                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${
-                       car.available ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-black/5 text-white/40 border-black/10 dark:bg-white/5 dark:text-white/40 dark:border-white/10"
+                       car.available ? "bg-emerald-500/10 text-black border-emerald-500/20" : "bg-black/5 text-white/40 border-black/10 dark:bg-white/5 dark:text-white/40 dark:border-white/10"
                      }`}>
                        <div className={`w-1 h-1 rounded-full ${car.available ? "bg-emerald-500" : "bg-white/30"}`} />
                        {car.available ? "Live" : "Hidden"}
@@ -208,11 +208,11 @@ export default async function AdminCarsPage({ searchParams }) {
                       <Edit3 size={16} />
                     </Link>
                     <form action={`/api/admin/cars/${car.id}/toggle`} method="POST">
-                      <button type="submit" className="p-2 text-white/40 hover:text-orange-500 transition-colors" title={car.available ? "Hide" : "Show"}>
+                      <button type="submit" className="p-2 text-white/40 hover:text-black transition-colors" title={car.available ? "Hide" : "Show"}>
                         {car.available ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
                       </button>
                     </form>
-                    <Link href={`/cars/${car.id}`} target="_blank" className="p-2 text-white/40 hover:text-blue-500 transition-colors" title="View Live">
+                    <Link href={`/cars/${car.id}`} target="_blank" className="p-2 text-white/40 hover:text-black transition-colors" title="View Live">
                       <ExternalLink size={16} />
                     </Link>
                     <DeleteButton action={`/api/admin/cars/${car.id}/delete`} message="Permanently delete this listing?" />

@@ -48,29 +48,29 @@ export default async function DealerPage({ params }) {
 
           <div className="flex-1 text-center md:text-left min-w-0">
             <div className="flex flex-col md:flex-row items-center gap-4 mb-4">
-              <h1 className="font-black text-4xl text-slate-900 tracking-tight">{dealer.name}</h1>
+              <h1 className="font-black text-4xl text-black tracking-tight">{dealer.name}</h1>
               {dealer.verified && (
-                <span className="text-[10px] bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-full px-4 py-1.5 font-black uppercase tracking-widest flex items-center gap-2">
+                <span className="text-[10px] bg-emerald-50 text-black border border-emerald-100 rounded-full px-4 py-1.5 font-black uppercase tracking-widest flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   Verified Partner
                 </span>
               )}
             </div>
 
-            <p className="text-slate-500 font-bold text-sm mb-6 flex items-center justify-center md:justify-start gap-2 uppercase tracking-wide">
+            <p className="text-black font-bold text-sm mb-6 flex items-center justify-center md:justify-start gap-2 uppercase tracking-wide">
               📍 {dealer.address || dealer.location}
             </p>
 
             {dealer.description && (
-              <p className="text-slate-600 text-base leading-relaxed max-w-3xl mb-8 italic">
+              <p className="text-black text-base leading-relaxed max-w-3xl mb-8 italic">
                 "{dealer.description}"
               </p>
             )}
 
             <div className="flex flex-wrap justify-center md:justify-start gap-3">
-              {dealer.phone && <a href={`tel:${dealer.phone}`} className="text-[11px] bg-slate-50 border border-slate-100 text-slate-600 hover:text-[var(--brand)] hover:border-[var(--brand-accent)]/20 px-6 py-3 rounded-2xl transition-all font-black uppercase tracking-[0.15em] shadow-sm">📞 Call</a>}
-              {dealer.whatsapp && <a href={`https://wa.me/${dealer.whatsapp}`} target="_blank" rel="noopener noreferrer" className="text-[11px] bg-emerald-50 text-emerald-600 border border-emerald-100 hover:bg-emerald-100 px-6 py-3 rounded-2xl transition-all font-black uppercase tracking-[0.15em] shadow-sm">💬 WhatsApp</a>}
-              {dealer.email && <a href={`mailto:${dealer.email}`} className="text-[11px] bg-slate-50 border border-slate-100 text-slate-600 hover:text-[var(--brand)] hover:border-[var(--brand-accent)]/20 px-6 py-3 rounded-2xl transition-all font-black uppercase tracking-[0.15em] shadow-sm">✉️ Email</a>}
+              {dealer.phone && <a href={`tel:${dealer.phone}`} className="text-[11px] bg-slate-50 border border-slate-100 text-black hover:text-[var(--brand)] hover:border-[var(--brand-accent)]/20 px-6 py-3 rounded-2xl transition-all font-black uppercase tracking-[0.15em] shadow-sm">📞 Call</a>}
+              {dealer.whatsapp && <a href={`https://wa.me/${dealer.whatsapp}`} target="_blank" rel="noopener noreferrer" className="text-[11px] bg-emerald-50 text-black border border-emerald-100 hover:bg-emerald-100 px-6 py-3 rounded-2xl transition-all font-black uppercase tracking-[0.15em] shadow-sm">💬 WhatsApp</a>}
+              {dealer.email && <a href={`mailto:${dealer.email}`} className="text-[11px] bg-slate-50 border border-slate-100 text-black hover:text-[var(--brand)] hover:border-[var(--brand-accent)]/20 px-6 py-3 rounded-2xl transition-all font-black uppercase tracking-[0.15em] shadow-sm">✉️ Email</a>}
             </div>
           </div>
 
@@ -78,7 +78,7 @@ export default async function DealerPage({ params }) {
             {[{ v: dealer.cars.length, l: "Active Units" }, { v: makes.length, l: "Brands" }].map(({ v, l }) => (
               <div key={l} className="text-center bg-slate-50 border border-slate-100 rounded-[2rem] px-8 py-6 min-w-[140px] flex-1 md:flex-none shadow-sm">
                 <p className="font-black text-4xl text-[var(--brand)] mb-1">{v.toString().padStart(2, '0')}</p>
-                <p className="text-[9px] text-slate-400 uppercase tracking-[0.2em] font-black">{l}</p>
+                <p className="text-[9px] text-white uppercase tracking-[0.2em] font-black">{l}</p>
               </div>
             ))}
           </div>
@@ -89,7 +89,7 @@ export default async function DealerPage({ params }) {
       {makes.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-12">
           {makes.map(make => (
-            <span key={make} className="text-[10px] bg-slate-50 border border-slate-100 rounded-lg px-5 py-2.5 text-slate-500 font-black uppercase tracking-[0.2em] shadow-sm">
+            <span key={make} className="text-[10px] bg-slate-50 border border-slate-100 rounded-lg px-5 py-2.5 text-black font-black uppercase tracking-[0.2em] shadow-sm">
               {make}
             </span>
           ))}
@@ -98,7 +98,7 @@ export default async function DealerPage({ params }) {
 
       {/* Cars grid */}
       <div className="flex items-center gap-4 mb-10">
-        <h2 className="font-black text-3xl text-slate-900 tracking-tight">Dealer Inventory</h2>
+        <h2 className="font-black text-3xl text-black tracking-tight">Dealer Inventory</h2>
         <div className="h-px flex-1 bg-slate-100" />
       </div>
 
@@ -107,7 +107,7 @@ export default async function DealerPage({ params }) {
           <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
              <span className="text-4xl grayscale opacity-30">🏢</span>
           </div>
-          <p className="font-black text-slate-300 text-xl tracking-tight uppercase tracking-widest">No active showcases listed yet</p>
+          <p className="font-black text-white text-xl tracking-tight uppercase tracking-widest">No active showcases listed yet</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -126,7 +126,7 @@ export default async function DealerPage({ params }) {
                   {img ? (
                     <img src={img} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-300 text-[10px] font-bold uppercase tracking-widest">No Image</div>
+                    <div className="w-full h-full flex items-center justify-center text-white text-[10px] font-bold uppercase tracking-widest">No Image</div>
                   )}
                   {car.badges?.length > 0 && (
                     <div className="absolute bottom-3 left-3 flex flex-wrap gap-1">
@@ -141,16 +141,16 @@ export default async function DealerPage({ params }) {
                 <div className="p-4 flex flex-col gap-3">
                   <div className="flex items-center gap-2.5">
                     <span className="text-[10px] font-black bg-[var(--brand-light)] text-[var(--brand)] px-2 py-0.5 uppercase tracking-wider shrink-0 rounded-md">{car.year}</span>
-                    <h3 className="font-bold text-slate-800 text-sm leading-tight truncate group-hover:text-[var(--brand-accent)] transition-colors">{title}</h3>
+                    <h3 className="font-bold text-black text-sm leading-tight truncate group-hover:text-[var(--brand-accent)] transition-colors">{title}</h3>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {specs.map((s) => (
-                      <span key={s} className="text-[10px] font-semibold text-slate-500 bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg">{s}</span>
+                      <span key={s} className="text-[10px] font-semibold text-black bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg">{s}</span>
                     ))}
                   </div>
                   <div className="flex items-center justify-between pt-3 border-t border-slate-50 mt-auto">
-                    <p className="text-lg font-black text-slate-900">{formatPrice(car.price)}</p>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-[var(--brand-accent)] transition-colors flex items-center gap-1">
+                    <p className="text-lg font-black text-black">{formatPrice(car.price)}</p>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white group-hover:text-[var(--brand-accent)] transition-colors flex items-center gap-1">
                       View Offer <ChevronRight className="w-3 h-3" />
                     </span>
                   </div>
