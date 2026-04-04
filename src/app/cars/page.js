@@ -131,225 +131,202 @@ export default async function CarsPage({ searchParams }) {
   };
 
   return (
-    <div className="bg-[#FCFCFD] min-h-screen pb-32">
-      {/* ── BREADCRUMBS & CONTEXT ── */}
-      <div className="container mx-auto px-6 pt-12 max-w-7xl">
-        <div className="flex items-center gap-3 mb-10 overflow-x-auto pb-2 no-scrollbar">
-           <Link href="/" className="text-[10px] font-black uppercase tracking-widest text-slate-300 hover:text-slate-900 transition-colors whitespace-nowrap">Home</Link>
-           <ChevronRight size={10} className="text-slate-200 shrink-0" />
-           <span className="text-[10px] font-black uppercase tracking-widest text-slate-900 whitespace-nowrap">Inventory</span>
-           {make && (
-             <>
-               <ChevronRight size={10} className="text-slate-200 shrink-0" />
-               <span className="text-[10px] font-black uppercase tracking-widest text-[var(--brand)] whitespace-nowrap">{make}</span>
-             </>
-           )}
-        </div>
-      </div>
+    <div className="bg-background min-h-screen">
+      {/* ── MINIMAL FILTER BAR ── */}
+      <CarsSearch
+        initialSearch={search}
+        initialMake={make}
+        initialBodyType={bodyType}
+        initialFuelType={fuelType}
+        initialTransmission={transmission}
+        initialCounty={county}
+        initialMinPrice={minPrice}
+        initialMaxPrice={maxPrice}
+        initialSort={sort}
+        allMakes={allMakes}
+        bodyTypeLabels={BODY_TYPE_LABELS}
+        counties={COUNTIES}
+      />
 
-      <div className="container mx-auto px-6 max-w-7xl">
-        <div className="flex flex-col lg:flex-row gap-16">
+      <div className="container mx-auto px-6 py-12 max-w-7xl">
+        {/* ── RESULTS HEADER ── */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Live Inventory</span>
+            </div>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tight">
+              {search ? `Results for "${search}"` : county ? `Verified in ${county}` : "All Showcases"}
+            </h1>
+            <p className="text-slate-500 font-medium mt-1">
+              Displaying {total} premium automotive units.
+            </p>
+          </div>
           
-          {/* ── SIDEBAR FILTERS (Left) ── */}
-          <aside className="w-full lg:w-72 shrink-0">
-            <div className="lg:sticky lg:top-24">
-              <CarsSearch
-                initialSearch={search}
-                initialMake={make}
-                initialBodyType={bodyType}
-                initialFuelType={fuelType}
-                initialTransmission={transmission}
-                initialCounty={county}
-                initialMinPrice={minPrice}
-                initialMaxPrice={maxPrice}
-                initialSort={sort}
-                allMakes={allMakes}
-                bodyTypeLabels={BODY_TYPE_LABELS}
-                counties={COUNTIES}
-              />
-              
-              {/* Sidebar Promotions / Info */}
-              <div className="mt-12 p-8 bg-slate-900 rounded-[2.5rem] relative overflow-hidden group">
-                 <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-700" />
-                 <h4 className="text-white text-lg font-black leading-tight mb-3">Direct Import Services</h4>
-                 <p className="text-slate-400 text-[10px] font-bold leading-relaxed mb-6">Can't find what you're looking for? Let our professionals handle the sourcing and shipping from Japan or UK.</p>
-                 <Link href="/import" className="text-[10px] font-black uppercase tracking-widest text-white flex items-center gap-2 hover:gap-4 transition-all">
-                   Explore Direct Import <ChevronRight size={12} />
-                 </Link>
-              </div>
+          <div className="flex items-center gap-6">
+            <div className="text-right hidden sm:block">
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">Market View</p>
+              <p className="text-xs font-black text-slate-800">Nairobi Standard Time</p>
             </div>
-          </aside>
-
-          {/* ── MAIN CONTENT (Right) ── */}
-          <main className="flex-1">
-            {/* Header Content */}
-            <div className="mb-16">
-               <div className="flex items-center justify-between mb-6">
-                  <h1 className="text-5xl font-black text-slate-900 tracking-tight leading-none">
-                    {make || "All Inventory"}
-                  </h1>
-                  <p className="text-xs font-black text-slate-300 uppercase tracking-widest">{total} Unique Units</p>
-               </div>
-               
-               {/* Quick Sort Toggles / Results Summary */}
-               <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-slate-100">
-                  <div className="flex items-center gap-6">
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Showing Results of Automobiles:</span>
-                    <div className="flex items-center gap-1.5 p-1 bg-slate-50 rounded-xl border border-slate-100">
-                       <button className="px-4 py-1.5 bg-white text-[9px] font-black uppercase tracking-widest rounded-lg shadow-sm">Available In Kenya</button>
-                       <button className="px-4 py-1.5 text-[9px] font-black uppercase tracking-widest text-slate-400 opacity-50 cursor-not-allowed">Direct Import</button>
-                    </div>
-                  </div>
-               </div>
-            </div>
-
-            {/* Grid implementation */}
-            {sortedCars.length === 0 ? (
-              <div className="bg-white border-2 border-dashed border-slate-100 rounded-[3rem] py-40 text-center shadow-sm">
-                <Search className="mx-auto text-slate-100 mb-6" size={60} />
-                <h2 className="text-2xl font-black text-slate-900 mb-2">No matches found.</h2>
-                <p className="text-slate-400 font-bold max-w-xs mx-auto mb-10 leading-relaxed">We couldn't find any vehicles matching your current selection. Try broadening your criteria.</p>
-                <Link href="/cars" className="bg-slate-900 text-white px-10 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest transition-transform active:scale-95 shadow-xl shadow-slate-950/10">
-                  Reset Inventory
-                </Link>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-10">
-                {sortedCars.map((car, idx) => (
-                  <InventoryCard key={car.id} car={car} userLat={userLat} userLng={userLng} priority={idx < 4} />
-                ))}
-              </div>
-            )}
-
-            {/* Pagination Implementation */}
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-3 mt-24 pt-12 border-t border-slate-50">
-                {page > 1 && (
-                  <Link href={getPageLink(page - 1)} className="w-12 h-12 rounded-2xl flex items-center justify-center bg-white border border-slate-100 text-slate-400 hover:text-slate-900 transition-all hover:shadow-lg">
-                    <ChevronRight className="w-5 h-5 rotate-180" />
-                  </Link>
-                )}
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-                  if (p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)) {
-                    return (
-                      <Link key={p} href={getPageLink(p)}
-                        className={`w-12 h-12 rounded-2xl flex items-center justify-center text-[11px] font-black transition-all ${
-                          p === page ? "bg-slate-900 text-white shadow-xl shadow-slate-900/20" : "bg-white border border-slate-100 text-slate-400 hover:bg-slate-50 shadow-sm"
-                        }`}
-                      >
-                        {p.toString().padStart(2, '0')}
-                      </Link>
-                    );
-                  }
-                  if (p === 2 && page > 3) return <span key="e1" className="text-slate-200 px-2 font-black">...</span>;
-                  if (p === totalPages - 1 && page < totalPages - 2) return <span key="e2" className="text-slate-200 px-2 font-black">...</span>;
-                  return null;
-                })}
-                {page < totalPages && (
-                  <Link href={getPageLink(page + 1)} className="w-12 h-12 rounded-2xl flex items-center justify-center bg-white border border-slate-100 text-slate-400 hover:text-slate-900 transition-all hover:shadow-lg">
-                    <ChevronRight className="w-5 h-5" />
-                  </Link>
-                )}
-              </div>
-            )}
-          </main>
+            {/* Sort is now handled inside CarsSearch for a unified UI, but we could keep a quick toggle here if needed */}
+          </div>
         </div>
+
+        {/* ── CAR GRID ── */}
+        {sortedCars.length === 0 ? (
+          <div className="py-32 text-center border-2 border-dashed border-slate-100 rounded-[3rem] bg-white/50 shadow-sm">
+            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+               <Search className="w-8 h-8 text-slate-200" />
+            </div>
+            <h2 className="text-xl font-black text-slate-800 mb-2">No matching units found.</h2>
+            <p className="text-slate-400 font-medium mb-8">Try adjusting your filters or search terms.</p>
+            <Link href="/cars" className="inline-flex items-center gap-2 bg-slate-100 text-slate-700 px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-colors">
+              Reset Filters
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {sortedCars.map((car, idx) => (
+              <InventoryCard key={car.id} car={car} userLat={userLat} userLng={userLng} priority={idx < 4} />
+            ))}
+          </div>
+        )}
+
+        {/* ── IMPROVED PAGINATION ── */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-2 mt-24">
+            {/* Previous Button */}
+            {page > 1 && (
+              <Link href={getPageLink(page - 1)} className="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-100 text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-all shadow-sm">
+                <ChevronRight className="w-4 h-4 rotate-180" />
+              </Link>
+            )}
+
+            {/* Page Numbers with Ellipsis */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
+              // Show: first, last, current, and neighbours
+              if (p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)) {
+                return (
+                  <Link key={p}
+                    href={getPageLink(p)}
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center text-[11px] font-black transition-all ${
+                      p === page ? "bg-[var(--brand)] text-white shadow-lg shadow-[var(--brand)]/10" : "bg-slate-50 border border-slate-100 text-slate-400 hover:bg-slate-100 hover:text-slate-900 shadow-sm"
+                    }`}
+                  >
+                    {p.toString().padStart(2, '0')}
+                  </Link>
+                );
+              }
+              // Show ellipsis
+              if (p === 2 && page > 3) return <span key="e1" className="text-slate-200 px-2 font-black">...</span>;
+              if (p === totalPages - 1 && page < totalPages - 2) return <span key="e2" className="text-slate-200 px-2 font-black">...</span>;
+              return null;
+            })}
+
+            {/* Next Button */}
+            {page < totalPages && (
+              <Link href={getPageLink(page + 1)} className="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-100 text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-all shadow-sm">
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-/**
- * Premium minimalist vehicle card inspired by high-end marketplace aesthetics.
- */
 function InventoryCard({ car, userLat, userLng, priority = false }) {
   const img   = car.images[0]?.url;
-  const title = `${car.make} ${car.model}`;
+  const title = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const dist  = userLat && car.dealer?.lat ? Math.round(distance(userLat, userLng, car.dealer.lat, car.dealer.lng)) : null;
 
-  return (
-    <Link href={`/cars/${car.id}`} className="group block bg-white border border-slate-50 hover:border-slate-200 rounded-[3rem] overflow-hidden transition-all duration-700 hover:shadow-2xl hover:shadow-slate-900/5">
-      {/* High-Impact Thumbnail */}
-      <div className="relative aspect-[16/10] overflow-hidden bg-slate-50 border-b border-slate-50/50">
-        {img ? (
-          <Image 
-            src={img} 
-            alt={title} 
-            fill 
-            priority={priority}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms] ease-out" 
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-[10px] font-black text-slate-200 uppercase tracking-widest">Awaiting Capture</div>
-        )}
-        
-        {/* Available Badge - Minimalist */}
-        <div className="absolute top-6 right-6">
-           <span className="px-3.5 py-2 bg-emerald-500 text-white text-[8px] font-black uppercase tracking-[0.2em] rounded-xl shadow-lg shadow-emerald-500/20">
-             Available
-           </span>
-        </div>
+  const specs = [
+    car.fuelType && FUEL_LABELS[car.fuelType],
+    car.transmission === "AUTOMATIC" ? "Auto" : car.transmission === "MANUAL" ? "Manual" : car.transmission,
+    car.mileage ? `${Math.round(car.mileage / 1000)}k km` : null,
+    car.engineCC ? `${car.engineCC}cc` : null,
+    car.drivetrain,
+    BODY_TYPE_LABELS[car.bodyType],
+  ].filter(Boolean);
 
-        {/* Distance context */}
+  return (
+    <Link href={`/cars/${car.id}`} className="group block bg-white border border-slate-100 hover:border-[var(--brand-accent)]/30 overflow-hidden transition-all duration-500 rounded-3xl shadow-sm hover:shadow-xl">
+      {/* Landscape thumbnail — sharp corners */}
+      <div className="relative aspect-[16/10] bg-white/5 overflow-hidden">
+        {img ? (
+            <Image 
+              src={img} 
+              alt={title} 
+              fill 
+              priority={priority}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-slate-300 text-[10px] font-bold uppercase tracking-widest">No Image</div>
+        )}
+        {car.featured && (
+          <span className="absolute top-3 right-3 bg-[var(--brand)] text-white text-[9px] font-black px-2.5 py-1 uppercase tracking-widest rounded-lg">
+            Featured
+          </span>
+        )}
         {dist !== null && (
-          <div className="absolute bottom-6 left-6">
-             <div className="flex items-center gap-2 px-3 py-1.5 bg-white/95 backdrop-blur-md rounded-lg border border-white/20 shadow-sm">
-                <MapPin size={10} className="text-[var(--brand)]" />
-                <span className="text-[9px] font-black text-slate-900 uppercase tracking-tighter">{dist} km</span>
-             </div>
+          <span className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-900 text-[9px] font-bold px-2.5 py-1 rounded-lg border border-slate-100 shadow-sm">
+            {dist}km away
+          </span>
+        )}
+        {/* Badges */}
+        {car.badges?.length > 0 && (
+          <div className="absolute bottom-3 left-3 flex flex-wrap gap-1">
+            {car.badges.map((b) => (
+              <span key={b} className={`text-[9px] font-bold px-2 py-0.5 border ${BADGE_OPTIONS[b]?.color || "bg-white/10 text-white/60 border-white/10"}`}>
+                {b}
+              </span>
+            ))}
           </div>
         )}
       </div>
 
-      {/* Elegant Content Block */}
-      <div className="p-10 flex flex-col items-start gap-5">
-        <div className="flex flex-col gap-2 w-full">
-           <div className="flex items-center gap-3">
-              <span className="text-[11px] font-black text-slate-300 uppercase tracking-widest">{car.year}</span>
-              <div className="w-1 h-1 rounded-full bg-slate-200" />
-              <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-1.5">
-                {car.dealer?.verified && <ShieldCheck size={12} />}
-                Verified Dealer
-              </span>
-           </div>
-           <h3 className="text-2xl font-black text-slate-900 tracking-tight leading-tight group-hover:text-[var(--brand)] transition-colors line-clamp-1">
-             {title}
-           </h3>
-           {car.variant && (
-             <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">{car.variant}</p>
-           )}
+      {/* Content */}
+      <div className="p-4 flex flex-col gap-3">
+        {/* Year label + Car name */}
+        <div className="flex items-center gap-2.5">
+          <span className="text-[10px] font-black bg-[var(--brand-light)] text-[var(--brand)] px-2 py-0.5 uppercase tracking-wider shrink-0 rounded-md">
+            {car.year}
+          </span>
+          <h3 className="font-bold text-slate-800 text-sm leading-tight truncate group-hover:text-[var(--brand-accent)] transition-colors">
+            {title}
+          </h3>
+          {car.dealer?.verified && <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />}
         </div>
 
-        {/* Spec Row - Horizontal Minimalist Scroll */}
-        <div className="flex flex-wrap gap-2 pt-2">
-          {[
-            car.fuelType && FUEL_LABELS[car.fuelType],
-            car.transmission,
-            car.engineCC && `${car.engineCC} CC`,
-            BODY_TYPE_LABELS[car.bodyType]
-          ].filter(Boolean).map((spec) => (
-            <span key={spec} className="px-4 py-2 bg-slate-50 text-slate-400 text-[10px] font-bold uppercase tracking-widest rounded-xl border border-slate-100/50">
-              {spec}
+        {/* Description */}
+        {car.description && (
+          <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">
+            {car.description}
+          </p>
+        )}
+
+        {/* Spec tags */}
+        <div className="flex flex-wrap gap-1.5">
+          {specs.map((s) => (
+            <span key={s} className="text-[10px] font-semibold text-slate-500 bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg">
+              {s}
             </span>
           ))}
         </div>
 
-        {/* Dynamic Price - Centered focus */}
-        <div className="mt-8 pt-8 border-t border-slate-50 w-full flex items-center justify-between">
-           <div className="flex flex-col">
-              <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest mb-1">Pricing Guide</span>
-              <p className="text-2xl font-black text-slate-900 leading-none">
-                <span className="text-sm font-bold text-slate-400 mr-2">KES</span>
-                {formatPrice(car.price, true)}
-              </p>
-           </div>
-           <div className="flex items-center gap-3">
-              <CompareButton car={car} />
-              <button className="w-12 h-12 rounded-[1.25rem] bg-slate-50 group-hover:bg-slate-900 text-slate-300 group-hover:text-white flex items-center justify-center transition-all duration-500 border border-slate-100">
-                 <ChevronRight size={20} />
-              </button>
-           </div>
+        {/* Price + View Offer */}
+        <div className="flex items-center justify-between pt-3 border-t border-slate-50 mt-auto">
+          <p className="text-lg font-black text-slate-900">{formatPrice(car.price)}</p>
+          <div className="flex items-center gap-3">
+             <CompareButton car={car} />
+             <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:text-[var(--brand-accent)] transition-colors flex items-center gap-1">
+               View Offer <ChevronRight className="w-3 h-3" />
+             </span>
+          </div>
         </div>
       </div>
     </Link>
