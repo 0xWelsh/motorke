@@ -44,9 +44,9 @@ export default async function InventoryPage({ searchParams }) {
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
         <div>
           <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--brand)] mb-2.5 block">Asset Management</span>
-          <h1 className="text-5xl font-black text-black tracking-tight">Inventory</h1>
-          <p className="text-black font-bold mt-2 flex items-center gap-2">
-            <Activity size={14} className="text-black" />
+          <h1 className="text-5xl font-black text-slate-900 tracking-tight">Inventory</h1>
+          <p className="text-slate-500 font-bold mt-2 flex items-center gap-2">
+            <Activity size={14} className="text-emerald-500" />
             {totalCount} Total Units · {liveCount} Live on Marketplace
           </p>
         </div>
@@ -67,11 +67,11 @@ export default async function InventoryPage({ searchParams }) {
             className={`px-8 py-3 rounded-xl text-xs font-black transition-all duration-300 flex items-center gap-3 ${
               filter === key 
                 ? "bg-slate-900 text-white shadow-lg shadow-slate-900/10" 
-                : "text-white hover:text-black hover:bg-slate-50"
+                : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
             }`}>
             {label} 
             <span className={`px-2 py-0.5 rounded-md text-[10px] ${
-              filter === key ? "bg-white/20 text-white" : "bg-slate-100 text-white"
+              filter === key ? "bg-white/20 text-white" : "bg-slate-100 text-slate-400"
             }`}>
               {count}
             </span>
@@ -83,10 +83,10 @@ export default async function InventoryPage({ searchParams }) {
       {cars.length === 0 ? (
         <div className="bg-white border border-slate-100 rounded-[3rem] p-32 text-center shadow-sm">
           <div className="w-24 h-24 bg-slate-50 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 shadow-inner">
-             <CarIcon size={40} className="text-white" />
+             <CarIcon size={40} className="text-slate-200" />
           </div>
-          <h2 className="text-xl font-black text-black mb-2">No units found</h2>
-          <p className="text-sm font-medium text-white max-w-xs mx-auto">Try adjusting your filters or add a new vehicle to your showroom.</p>
+          <h2 className="text-xl font-black text-slate-900 mb-2">No units found</h2>
+          <p className="text-sm font-medium text-slate-400 max-w-xs mx-auto">Try adjusting your filters or add a new vehicle to your showroom.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -97,7 +97,7 @@ export default async function InventoryPage({ searchParams }) {
                 {car.images[0]
                   ? <img src={car.images[0].url} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   : <div className="flex items-center justify-center h-full bg-slate-50">
-                      <CarIcon size={48} className="text-white" />
+                      <CarIcon size={48} className="text-slate-200" />
                     </div>
                 }
                 
@@ -111,7 +111,7 @@ export default async function InventoryPage({ searchParams }) {
                     {car.available ? "● Live Marketplace" : "○ Hidden/Sold"}
                   </span>
                   {car.featured && (
-                    <span className="bg-amber-400 text-black text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm">
+                    <span className="bg-amber-400 text-amber-950 text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm">
                       ★ Featured
                     </span>
                   )}
@@ -122,39 +122,39 @@ export default async function InventoryPage({ searchParams }) {
               <div className="p-8 flex flex-col flex-1">
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="min-w-0">
-                    <h3 className="text-xl font-black text-black tracking-tight truncate group-hover:text-[var(--brand)] transition-colors">
+                    <h3 className="text-xl font-black text-slate-900 tracking-tight truncate group-hover:text-[var(--brand)] transition-colors">
                       {car.year} {car.make} {car.model}
                     </h3>
-                    <p className="text-[10px] font-black text-white uppercase tracking-widest mt-1 truncate">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1 truncate">
                       {car.variant || "Standard Trim"} · {car.fuelType}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between mb-8">
-                  <p className="text-2xl font-black text-black tracking-tighter">
+                  <p className="text-2xl font-black text-slate-900 tracking-tighter">
                     {formatPrice(car.price)}
                   </p>
                   <div className="flex flex-col items-end">
-                    <div className="flex items-center gap-1.5 text-white">
+                    <div className="flex items-center gap-1.5 text-slate-400">
                        <MessageSquare size={12} className="text-[var(--brand)]" />
                        <span className="text-[10px] font-black uppercase tracking-tight">{car._count.leads} Leads</span>
                     </div>
-                    <span className="text-[9px] font-bold text-white uppercase mt-0.5">{car.views} Unique Views</span>
+                    <span className="text-[9px] font-bold text-slate-300 uppercase mt-0.5">{car.views} Unique Views</span>
                   </div>
                 </div>
 
                 {/* Actions Grid */}
                 <div className="mt-auto grid grid-cols-2 gap-3 pt-6 border-t border-slate-50">
                   <Link href={`/portal/cars/${car.id}/edit`}
-                    className="flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 text-black text-xs font-black p-4 rounded-2xl transition-all border border-slate-100">
+                    className="flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 text-slate-900 text-xs font-black p-4 rounded-2xl transition-all border border-slate-100">
                     <Edit3 size={14} /> Edit
                   </Link>
                   <InventoryToggle carId={car.id} available={car.available} />
                 </div>
                 
                 <Link href={`/cars/${car.id}`} target="_blank"
-                  className="mt-3 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-white hover:text-[var(--brand)] transition-colors py-2 group/link">
+                  className="mt-3 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 hover:text-[var(--brand)] transition-colors py-2 group/link">
                   Public Listing <ChevronRight size={12} className="group-hover/link:translate-x-1 transition-transform" />
                 </Link>
               </div>

@@ -96,7 +96,7 @@ export default function DutyCalculatorPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
       <div className="mb-8">
-        <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 text-white text-xs px-3 py-1.5 rounded-full mb-4">
+        <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs px-3 py-1.5 rounded-full mb-4">
           🧾 KRA rates · Estimate only — verify with a licensed clearing agent
         </div>
         <h1 className="text-4xl font-black">Import duty calculator</h1>

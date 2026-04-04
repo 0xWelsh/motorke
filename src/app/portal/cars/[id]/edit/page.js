@@ -24,13 +24,13 @@ export default async function PortalEditCarPage({ params }) {
   return (
     <div className="animate-in fade-in duration-1000 max-w-4xl">
       <div className="mb-12">
-        <a href="/portal" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white hover:text-black transition-colors mb-6">
+        <a href="/portal" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-emerald-600 transition-colors mb-6">
           <span className="text-lg">←</span> Back to Showroom
         </a>
-        <h1 className="text-4xl font-black text-black tracking-tight">
+        <h1 className="text-4xl font-black text-slate-950 tracking-tight">
           Modify Entry
         </h1>
-        <p className="text-black font-medium mt-2">
+        <p className="text-slate-600 font-medium mt-2">
           {car.year} {car.make} {car.model} — System Ref: {car.id.slice(-8)}
         </p>
       </div>
@@ -44,8 +44,8 @@ export default async function PortalEditCarPage({ params }) {
 
       {/* Danger zone */}
       <div className="mt-20 bg-rose-50/30 border border-rose-100 rounded-[2.5rem] p-10">
-        <h3 className="text-lg font-black text-black tracking-tight mb-2 uppercase">Asset Decommissioning</h3>
-        <p className="text-[11px] font-bold text-white mb-8 uppercase tracking-widest">
+        <h3 className="text-lg font-black text-rose-600 tracking-tight mb-2 uppercase">Asset Decommissioning</h3>
+        <p className="text-[11px] font-bold text-rose-400 mb-8 uppercase tracking-widest">
           Permanently remove this vehicle profile and associated lead data from the marketplace.
         </p>
         <div className="flex">

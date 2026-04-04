@@ -119,14 +119,14 @@ export default function CarsSearch({
             <div className="flex flex-wrap items-center gap-3">
               {/* Primary Search */}
               <div className="relative flex-1 min-w-[240px] group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white group-focus-within:text-[var(--brand)] transition-colors" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-[var(--brand)] transition-colors" />
                 <input 
                   name="search" 
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                   placeholder="Search inventory (e.g. Toyota Prado)..." 
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl pl-11 pr-4 py-3 text-sm font-semibold text-black outline-none focus:bg-white focus:border-[var(--brand-accent)]/30 transition-all placeholder:text-white shadow-sm"
+                  className="w-full bg-slate-50 border border-slate-100 rounded-xl pl-11 pr-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:bg-white focus:border-[var(--brand-accent)]/30 transition-all placeholder:text-slate-300 shadow-sm"
                 />
               </div>
 
@@ -135,7 +135,7 @@ export default function CarsSearch({
                 <select 
                   value={make}
                   onChange={e => { setMake(e.target.value); handleSubmit(); }}
-                  className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-white outline-none focus:text-[var(--brand)] focus:border-[var(--brand-accent)]/30 transition-all cursor-pointer shadow-sm"
+                  className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-slate-400 outline-none focus:text-[var(--brand)] focus:border-[var(--brand-accent)]/30 transition-all cursor-pointer shadow-sm"
                 >
                   <option value="">All Makes</option>
                   {allMakes.map(m => <option key={m.make} value={m.make}>{m.make}</option>)}
@@ -144,7 +144,7 @@ export default function CarsSearch({
                 <select 
                   value={bodyType}
                   onChange={e => { setBodyType(e.target.value); handleSubmit(); }}
-                  className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-white outline-none focus:text-[var(--brand)] focus:border-[var(--brand-accent)]/30 transition-all cursor-pointer shadow-sm"
+                  className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-slate-400 outline-none focus:text-[var(--brand)] focus:border-[var(--brand-accent)]/30 transition-all cursor-pointer shadow-sm"
                 >
                   <option value="">All Types</option>
                   {Object.entries(bodyTypeLabels).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
@@ -156,7 +156,7 @@ export default function CarsSearch({
                   className={`flex items-center gap-2 px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all ${
                     showMore || fuelType || transmission || county || minPrice || maxPrice
                     ? "bg-[var(--brand-light)] text-[var(--brand)] border border-[var(--brand-accent)]/20" 
-                    : "bg-slate-50 border border-slate-100 text-white hover:text-[var(--brand)] shadow-sm"
+                    : "bg-slate-50 border border-slate-100 text-slate-400 hover:text-[var(--brand)] shadow-sm"
                   }`}
                 >
                   <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -169,7 +169,7 @@ export default function CarsSearch({
                 <select 
                   value={sort}
                   onChange={e => { setSort(e.target.value); handleSubmit(); }}
-                  className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-white outline-none focus:text-[var(--brand)] focus:border-[var(--brand-accent)]/30 transition-all cursor-pointer shadow-sm"
+                  className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-slate-400 outline-none focus:text-[var(--brand)] focus:border-[var(--brand-accent)]/30 transition-all cursor-pointer shadow-sm"
                 >
                   <option value="newest">Newest First</option>
                   <option value="price_asc">Lowest Price</option>
@@ -186,7 +186,7 @@ export default function CarsSearch({
                   <button 
                     type="button"
                     onClick={clearFilters}
-                    className="p-3 bg-slate-50 hover:bg-slate-100 text-white hover:text-[var(--brand)] rounded-xl transition-all border border-slate-200"
+                    className="p-3 bg-slate-50 hover:bg-slate-100 text-slate-300 hover:text-[var(--brand)] rounded-xl transition-all border border-slate-200"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -198,11 +198,11 @@ export default function CarsSearch({
             {showMore && (
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 pt-4 border-t border-slate-100 animate-in fade-in slide-in-from-top-2 duration-300">
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-white pl-2">Fuel Type</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-2">Fuel Type</label>
                   <select 
                     value={fuelType}
                     onChange={e => setFuelType(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-black outline-none focus:border-[var(--brand-accent)]/30 transition-all"
+                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-900 outline-none focus:border-[var(--brand-accent)]/30 transition-all"
                   >
                     <option value="">Any Fuel</option>
                     {Object.entries(FUEL_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
@@ -210,11 +210,11 @@ export default function CarsSearch({
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-white pl-2">Transmission</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-2">Transmission</label>
                   <select 
                     value={transmission}
                     onChange={e => setTransmission(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-black outline-none focus:border-[var(--brand-accent)]/30 transition-all"
+                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-900 outline-none focus:border-[var(--brand-accent)]/30 transition-all"
                   >
                     <option value="">Any Gearbox</option>
                     {Object.entries(TRANSMISSION_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
@@ -222,11 +222,11 @@ export default function CarsSearch({
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-white pl-2">Location</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-2">Location</label>
                   <select 
                     value={county}
                     onChange={e => setCounty(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-black outline-none focus:border-[var(--brand-accent)]/30 transition-all"
+                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-900 outline-none focus:border-[var(--brand-accent)]/30 transition-all"
                   >
                     <option value="">Any County</option>
                     {counties.map(c => <option key={c} value={c}>{c}</option>)}
@@ -234,22 +234,22 @@ export default function CarsSearch({
                 </div>
 
                 <div className="space-y-1.5 lg:col-span-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-white pl-2">Price Range (KES)</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-2">Price Range (KES)</label>
                   <div className="flex items-center gap-2">
                     <input 
                       type="number"
                       placeholder="Min"
                       value={minPrice}
                       onChange={e => setMinPrice(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-black outline-none focus:border-[var(--brand-accent)]/30 transition-all placeholder:text-white"
+                      className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-900 outline-none focus:border-[var(--brand-accent)]/30 transition-all placeholder:text-slate-300"
                     />
-                    <span className="text-white">—</span>
+                    <span className="text-slate-200">—</span>
                     <input 
                       type="number"
                       placeholder="Max"
                       value={maxPrice}
                       onChange={e => setMaxPrice(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-black outline-none focus:border-[var(--brand-accent)]/30 transition-all placeholder:text-white"
+                      className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-900 outline-none focus:border-[var(--brand-accent)]/30 transition-all placeholder:text-slate-300"
                     />
                   </div>
                 </div>
@@ -258,7 +258,7 @@ export default function CarsSearch({
                    <button 
                      type="button"
                      onClick={() => handleSubmit()}
-                     className="w-full bg-slate-100 hover:bg-slate-200 text-black text-[11px] font-black uppercase tracking-widest h-10 rounded-xl transition-all"
+                     className="w-full bg-slate-100 hover:bg-slate-200 text-slate-900 text-[11px] font-black uppercase tracking-widest h-10 rounded-xl transition-all"
                    >
                      Apply
                    </button>

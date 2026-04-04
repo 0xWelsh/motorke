@@ -69,7 +69,7 @@ export default function LoginForm({ error }) {
             </div>
             <h2 className="text-6xl font-black text-white tracking-tighter leading-[0.95] mb-8">
                High-Performance<br />
-               <span className="text-black">Marketplace.</span>
+               <span className="text-emerald-500">Marketplace.</span>
             </h2>
             <p className="text-white/60 text-lg font-medium leading-relaxed mb-10">
                Access Kenya's most sophisticated automotive inventory and dealer tools in one seamless dashboard.
@@ -93,7 +93,7 @@ export default function LoginForm({ error }) {
          
          <Link 
            href="/" 
-           className="absolute top-10 right-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white hover:text-black transition-all hover:gap-4"
+           className="absolute top-10 right-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-300 hover:text-slate-900 transition-all hover:gap-4"
          >
            Back to Showroom <ArrowLeft className="w-3 h-3 rotate-180" />
          </Link>
@@ -104,21 +104,21 @@ export default function LoginForm({ error }) {
                <div className="inline-flex items-center gap-3 mb-10">
                   <img src="/logo.png" alt="Motorske" className="h-10 w-auto object-contain" />
                   <div className="h-4 w-px bg-slate-200 mx-1" />
-                  <span className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Auth</span>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Auth</span>
                </div>
-               <h1 className="text-4xl font-black text-black tracking-tighter mb-3 leading-tight">Welcome Back.</h1>
-               <p className="text-white font-medium text-sm">Please enter your credentials to access your portal.</p>
+               <h1 className="text-4xl font-black text-slate-900 tracking-tighter mb-3 leading-tight">Welcome Back.</h1>
+               <p className="text-slate-400 font-medium text-sm">Please enter your credentials to access your portal.</p>
             </header>
 
             {/* Error Message */}
             {error && (
               <div className="mb-10 p-5 bg-rose-50 border border-rose-100 rounded-[1.5rem] flex items-start gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                <div className="w-8 h-8 bg-rose-200 rounded-xl flex items-center justify-center text-black shadow-sm shrink-0">
+                <div className="w-8 h-8 bg-rose-200 rounded-xl flex items-center justify-center text-rose-600 shadow-sm shrink-0">
                   <Lock size={16} />
                 </div>
                 <div>
-                   <p className="text-[11px] font-black text-black uppercase tracking-widest mb-1 leading-none">Authentication Failed</p>
-                   <p className="text-[11px] font-bold text-black leading-tight">
+                   <p className="text-[11px] font-black text-rose-900 uppercase tracking-widest mb-1 leading-none">Authentication Failed</p>
+                   <p className="text-[11px] font-bold text-rose-600 leading-tight">
                      {error === "invalid" && "The email or password you entered is incorrect."}
                      {error === "inactive" && "This account has been deactivated. Please contact support."}
                      {error === "unknown" && "An unexpected error occurred. Please try again."}
@@ -130,20 +130,20 @@ export default function LoginForm({ error }) {
             {/* Login Form */}
             <form action="/api/auth/login" method="POST" className="space-y-8">
                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-white uppercase tracking-[0.25em] ml-1">Email Address</label>
+                  <label className="text-[10px] font-black text-slate-300 uppercase tracking-[0.25em] ml-1">Email Address</label>
                   <input 
                     name="email" 
                     type="email" 
                     required 
                     placeholder="e.g. james@dealership.com" 
-                    className="w-full bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-black outline-none focus:border-emerald-500 transition-all placeholder:text-white shadow-sm shadow-slate-100"
+                    className="w-full bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-200 shadow-sm shadow-slate-100"
                   />
                </div>
 
                <div className="space-y-3">
                   <div className="flex items-center justify-between ml-1">
-                    <label className="text-[10px] font-black text-white uppercase tracking-[0.25em]">Secure Password</label>
-                    <Link href="#" className="text-[9px] font-black text-white hover:text-black uppercase tracking-widest transition-colors">Recover Account</Link>
+                    <label className="text-[10px] font-black text-slate-300 uppercase tracking-[0.25em]">Secure Password</label>
+                    <Link href="#" className="text-[9px] font-black text-slate-300 hover:text-emerald-500 uppercase tracking-widest transition-colors">Recover Account</Link>
                   </div>
                   <div className="relative group">
                     <input 
@@ -152,12 +152,12 @@ export default function LoginForm({ error }) {
                       required 
                       autoComplete="current-password"
                       placeholder="••••••••" 
-                      className="w-full bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-black outline-none focus:border-emerald-500 transition-all placeholder:text-white shadow-sm shadow-slate-100 pr-14"
+                      className="w-full bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-200 shadow-sm shadow-slate-100 pr-14"
                     />
                     <button 
                       type="button" 
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-5 top-1/2 -translate-y-1/2 text-white hover:text-black transition-colors"
+                      className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-200 hover:text-slate-900 transition-colors"
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -177,7 +177,7 @@ export default function LoginForm({ error }) {
                   <div className="w-full border-t border-slate-100"></div>
                </div>
                <div className="relative flex justify-center text-[10px] uppercase font-black tracking-[0.25em]">
-                  <span className="bg-[#FCFCFD] px-5 text-white">Social Connect</span>
+                  <span className="bg-[#FCFCFD] px-5 text-slate-200">Social Connect</span>
                </div>
             </div>
 
@@ -186,17 +186,17 @@ export default function LoginForm({ error }) {
             </div>
 
             <footer className="mt-16 pt-12 border-t border-slate-50 text-center lg:text-left">
-               <p className="text-sm font-bold text-white">
+               <p className="text-sm font-bold text-slate-400">
                   New to our marketplace?{" "}
-                  <Link href="/signup" className="text-black hover:text-black transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10 pb-0.5">Explore Dealer Subscription</Link>
+                  <Link href="/signup" className="text-slate-900 hover:text-emerald-500 transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10 pb-0.5">Explore Dealer Subscription</Link>
                </p>
                
                <div className="mt-10 flex flex-col lg:flex-row items-center gap-6">
                   <div className="flex items-center gap-2.5 px-4 py-2 bg-emerald-50 rounded-full border border-emerald-100">
-                     <ShieldCheck className="w-3.5 h-3.5 text-black" />
-                     <span className="text-[9px] font-black text-black uppercase tracking-widest">256-bit SSL Encrypted</span>
+                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                     <span className="text-[9px] font-black text-emerald-700 uppercase tracking-widest">256-bit SSL Encrypted</span>
                   </div>
-                  <p className="text-[10px] font-black text-white uppercase tracking-[0.2em]">
+                  <p className="text-[10px] font-black text-slate-200 uppercase tracking-[0.2em]">
                      MotorsKe © 2026
                   </p>
                </div>

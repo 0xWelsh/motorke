@@ -42,7 +42,7 @@ function VerifyForm() {
     return (
       <div className="text-center">
         <p className="text-white/40 mb-6">Invalid verification request. Missing credentials.</p>
-        <Link href="/signup" className="text-black font-black tracking-widest uppercase text-[10px] hover:text-white transition-colors">
+        <Link href="/signup" className="text-orange-500 font-black tracking-widest uppercase text-[10px] hover:text-white transition-colors">
           Return to Signup
         </Link>
       </div>
@@ -63,17 +63,17 @@ function VerifyForm() {
 
       {errorMsg && (
         <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
-          <div className="w-5 h-5 bg-red-500/20 rounded-full flex items-center justify-center text-black shadow-sm shrink-0 mt-0.5">
+          <div className="w-5 h-5 bg-red-500/20 rounded-full flex items-center justify-center text-red-500 shadow-sm shrink-0 mt-0.5">
             <span className="text-[10px] font-black">!</span>
           </div>
-          <p className="text-xs font-bold text-white leading-relaxed">{errorMsg}</p>
+          <p className="text-xs font-bold text-red-400 leading-relaxed">{errorMsg}</p>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-3">
            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/60 ml-2">
-             <Mail size={12} className="text-black" /> Email Code ({email})
+             <Mail size={12} className="text-orange-500" /> Email Code ({email})
            </div>
            <input required minLength={6} maxLength={6} placeholder="######"
              value={emailOtp} onChange={e => setEmailOtp(e.target.value)}
@@ -100,7 +100,7 @@ export default function VerifyPage() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl h-[500px] bg-orange-500/10 blur-[150px] rounded-full pointer-events-none" />
       
       <div className="w-full max-w-[420px] bg-surface/80 backdrop-blur-3xl border border-white/5 rounded-[2.5rem] p-10 shadow-2xl relative z-10 animate-in slide-in-from-bottom-8 fade-in duration-500">
-        <Suspense fallback={<div className="flex justify-center py-20"><Loader2 className="animate-spin text-black" size={32} /></div>}>
+        <Suspense fallback={<div className="flex justify-center py-20"><Loader2 className="animate-spin text-orange-500" size={32} /></div>}>
            <VerifyForm />
         </Suspense>
       </div>

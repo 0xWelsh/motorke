@@ -92,8 +92,8 @@ export function CompareButton({ car }) {
         selected
           ? "bg-[var(--brand-light)] border border-[var(--brand-accent)]/30 text-[var(--brand)] px-6"
           : isFull 
-            ? "bg-slate-50 border border-slate-100 text-white cursor-not-allowed px-4"
-            : "bg-slate-50 border border-slate-100 text-black hover:text-[var(--brand)] hover:border-[var(--brand-accent)]/20 hover:bg-[var(--brand-light)] px-6 active:scale-95"
+            ? "bg-slate-50 border border-slate-100 text-slate-300 cursor-not-allowed px-4"
+            : "bg-slate-50 border border-slate-100 text-slate-500 hover:text-[var(--brand)] hover:border-[var(--brand-accent)]/20 hover:bg-[var(--brand-light)] px-6 active:scale-95"
       }`}
     >
       <span className="relative z-10 flex items-center gap-2">

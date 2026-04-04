@@ -23,7 +23,7 @@ export default function LocationPicker({ defaultLat, defaultLng }) {
             Pin Location (Optional)
          </label>
          {lat && lng && (
-           <span className="text-[10px] text-black font-bold uppercase tracking-widest px-2 py-0.5 bg-emerald-500/10 rounded-full">
+           <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-widest px-2 py-0.5 bg-emerald-500/10 rounded-full">
              ✓ Pinned
            </span>
          )}
@@ -62,7 +62,7 @@ export default function LocationPicker({ defaultLat, defaultLng }) {
           <button 
              type="button" 
              onClick={() => { setLat(""); setLng(""); }} 
-             className="text-xs font-bold text-black hover:text-white transition-colors"
+             className="text-xs font-bold text-rose-500 hover:text-rose-400 transition-colors"
           >
              Remove Pin
           </button>

@@ -85,17 +85,17 @@ export default async function HomePage() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
               </span>
-              <span className="text-[11px] font-black text-black uppercase tracking-[0.15em]">
+              <span className="text-[11px] font-black text-slate-600 uppercase tracking-[0.15em]">
                 {totalCars.toLocaleString()} <span className="text-[var(--brand)] font-black">Verified Listings</span> Live
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-black text-black leading-[1] tracking-tighter mb-8">
+            <h1 className="text-5xl md:text-7xl font-black text-slate-900 leading-[1] tracking-tighter mb-8">
               Find your perfect car<br />
               <span className="text-[var(--brand)] drop-shadow-sm">across all dealerships instantly.</span>
             </h1>
 
-            <p className="text-lg text-black mb-8 leading-relaxed">
+            <p className="text-lg text-slate-600 mb-8 leading-relaxed">
               Compare live listings from {totalDealers} trusted dealerships across the country; no more endless scrolling!
             </p>
 
@@ -104,10 +104,10 @@ export default async function HomePage() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-black mr-1">Discovery Tiers</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mr-1">Discovery Tiers</span>
               {["SUVs", "Pickups", "Sedans", "Hatchbacks"].map(t => (
                 <Link key={t} href={`/cars?search=${encodeURIComponent(t)}`}
-                  className="px-4 py-2 rounded-xl bg-white border border-slate-200/60 shadow-sm text-[11px] font-black uppercase tracking-widest text-black hover:border-[var(--brand-accent)]/40 hover:text-[var(--brand)] hover:bg-[var(--brand-light)] transition-all">
+                  className="px-4 py-2 rounded-xl bg-white border border-slate-200/60 shadow-sm text-[11px] font-black uppercase tracking-widest text-slate-600 hover:border-[var(--brand-accent)]/40 hover:text-[var(--brand)] hover:bg-[var(--brand-light)] transition-all">
                   {t}
                 </Link>
               ))}
@@ -120,8 +120,8 @@ export default async function HomePage() {
       <section className="container mx-auto px-6 py-20 max-w-7xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
           <div>
-            <h2 className="text-2xl font-black text-black tracking-tight">Browse by Budget</h2>
-            <p className="text-black mt-1">Select a price range to explore available inventory.</p>
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Browse by Budget</h2>
+            <p className="text-slate-500 mt-1">Select a price range to explore available inventory.</p>
           </div>
         </div>
 
@@ -130,14 +130,14 @@ export default async function HomePage() {
             <Link key={r.label} href={`/cars?minPrice=${r.min}&maxPrice=${r.max}`}
               className="group bg-white border border-slate-200 hover:border-emerald-200 rounded-2xl p-6 flex flex-col items-center text-center transition-all duration-200 hover:shadow-md"
               style={{ "--hover-shadow": "0 4px 20px rgba(6,95,70,0.08)" }}>
-              <div className="w-11 h-11 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center text-white group-hover:text-[var(--brand)] group-hover:border-[var(--brand-accent)]/20 group-hover:bg-[var(--brand-light)] transition-all mb-4 text-xl">
+              <div className="w-11 h-11 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-[var(--brand)] group-hover:border-[var(--brand-accent)]/20 group-hover:bg-[var(--brand-light)] transition-all mb-4 text-xl">
                 {r.icon}
               </div>
-              <p className="text-base font-black text-black mb-0.5 group-hover:text-[var(--brand)] transition-colors">{r.label}</p>
-              <p className="text-[10px] font-black text-white uppercase tracking-widest mb-4 opacity-70 group-hover:opacity-100 transition-opacity">{r.sub}</p>
+              <p className="text-base font-black text-slate-900 mb-0.5 group-hover:text-[var(--brand)] transition-colors">{r.label}</p>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 opacity-70 group-hover:opacity-100 transition-opacity">{r.sub}</p>
               <div className="mt-auto pt-4 border-t border-slate-100 w-full flex items-center justify-center gap-1.5">
-                <span className="text-sm font-black text-black">{priceCounts[i]}</span>
-                <span className="text-[10px] font-bold text-white uppercase tracking-tight">units</span>
+                <span className="text-sm font-black text-slate-800">{priceCounts[i]}</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">units</span>
               </div>
             </Link>
           ))}
@@ -152,8 +152,8 @@ export default async function HomePage() {
         <section className="container mx-auto px-6 py-20 max-w-7xl">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <h2 className="text-2xl font-black text-black tracking-tight">Featured Listings</h2>
-              <p className="text-black mt-1">Hand-picked inventory from top dealers.</p>
+              <h2 className="text-2xl font-black text-slate-900 tracking-tight">Featured Listings</h2>
+              <p className="text-slate-500 mt-1">Hand-picked inventory from top dealers.</p>
             </div>
             <Link href="/cars" className="text-xs font-bold uppercase tracking-widest text-[var(--brand-accent)] hover:text-[var(--brand)] transition-colors flex items-center gap-1">
               View All <ChevronRight className="w-3.5 h-3.5" />
@@ -170,7 +170,7 @@ export default async function HomePage() {
         <section className="bg-white border-y border-slate-100">
           <div className="container mx-auto px-6 py-20 max-w-7xl">
             <div className="flex items-end justify-between mb-10">
-              <h2 className="text-2xl font-black text-black tracking-tight">Just Landed</h2>
+              <h2 className="text-2xl font-black text-slate-900 tracking-tight">Just Landed</h2>
               <Link href="/cars?sort=newest" className="text-xs font-bold uppercase tracking-widest text-[var(--brand-accent)] hover:text-[var(--brand)] transition-colors flex items-center gap-1">
                 See More <ChevronRight className="w-3.5 h-3.5" />
               </Link>
@@ -186,8 +186,8 @@ export default async function HomePage() {
       <section className="container mx-auto px-6 py-20 max-w-7xl">
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-3">
-            <Newspaper className="w-5 h-5 text-white" />
-            <h2 className="text-2xl font-black text-black tracking-tight">Market Intelligence</h2>
+            <Newspaper className="w-5 h-5 text-slate-400" />
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Market Intelligence</h2>
           </div>
           <Link href="/news" className="text-xs font-bold uppercase tracking-widest text-[var(--brand-accent)] hover:text-[var(--brand)] transition-colors">
             All Stories
@@ -205,17 +205,17 @@ export default async function HomePage() {
                 {news.urlToImage ? (
                   <Image src={news.urlToImage} alt={news.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-white text-[10px] font-bold uppercase tracking-widest">No Image</div>
+                  <div className="w-full h-full flex items-center justify-center text-slate-300 text-[10px] font-bold uppercase tracking-widest">No Image</div>
                 )}
               </div>
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-[10px] font-black text-[var(--brand)] uppercase tracking-widest">{news.category}</span>
                 <span className="w-1 h-1 rounded-full bg-slate-200" />
-                <span className="text-[10px] font-black text-black uppercase opacity-60">
+                <span className="text-[10px] font-black text-slate-500 uppercase opacity-60">
                   {new Date(news.publishedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                 </span>
               </div>
-              <h3 className="text-base font-black text-black leading-snug group-hover:text-[var(--brand)] transition-colors line-clamp-2">{news.title}</h3>
+              <h3 className="text-base font-black text-slate-800 leading-snug group-hover:text-[var(--brand)] transition-colors line-clamp-2">{news.title}</h3>
             </Link>
           ))}
         </div>
@@ -232,11 +232,11 @@ export default async function HomePage() {
               { v: "24/7", l: "Dealer Access", i: <Clock className="w-5 h-5" /> },
             ].map((s, idx) => (
               <div key={idx} className="bg-slate-50 border border-slate-100 rounded-2xl p-8 text-center group hover:border-[var(--brand-accent)]/20 hover:bg-[var(--brand-light)] transition-all">
-                <div className="flex justify-center mb-4 text-white group-hover:text-[var(--brand)] transition-colors">
+                <div className="flex justify-center mb-4 text-slate-300 group-hover:text-[var(--brand)] transition-colors">
                   {s.i}
                 </div>
-                <p className="text-4xl font-black text-black mb-1">{s.v}</p>
-                <p className="text-[11px] font-black uppercase tracking-[0.15em] text-white opacity-80">{s.l}</p>
+                <p className="text-4xl font-black text-slate-900 mb-1">{s.v}</p>
+                <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-400 opacity-80">{s.l}</p>
               </div>
             ))}
           </div>
@@ -261,12 +261,12 @@ function CarCard({ car, priority = false }) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-white text-[11px] font-bold uppercase tracking-widest">No Image</div>
+          <div className="w-full h-full flex items-center justify-center text-slate-300 text-[11px] font-bold uppercase tracking-widest">No Image</div>
         )}
         {car.badges?.length > 0 && (
           <div className="absolute bottom-3 left-3 flex flex-wrap gap-1">
             {car.badges.map((b) => (
-              <span key={b} className={`text-[9px] font-bold px-2 py-0.5 rounded ${BADGE_OPTIONS[b]?.color || "bg-white text-black border border-slate-200"}`}>
+              <span key={b} className={`text-[9px] font-bold px-2 py-0.5 rounded ${BADGE_OPTIONS[b]?.color || "bg-white text-slate-600 border border-slate-200"}`}>
                 {b}
               </span>
             ))}
@@ -279,7 +279,7 @@ function CarCard({ car, priority = false }) {
           <span className="text-[10px] font-black bg-[var(--brand-light)] text-[var(--brand)] px-2 py-0.5 rounded-md shrink-0">
             {car.year}
           </span>
-          <h3 className="font-bold text-black text-sm leading-tight truncate group-hover:text-[var(--brand-accent)] transition-colors">
+          <h3 className="font-bold text-slate-800 text-sm leading-tight truncate group-hover:text-[var(--brand-accent)] transition-colors">
             {title}
           </h3>
         </div>
@@ -291,15 +291,15 @@ function CarCard({ car, priority = false }) {
             car.transmission === "AUTOMATIC" ? "Auto" : car.transmission,
             car.drivetrain,
           ].filter(Boolean).map((s) => (
-            <span key={s} className="text-[10px] font-bold text-white bg-slate-50 border border-slate-100 px-2 py-0.5 rounded">
+            <span key={s} className="text-[10px] font-bold text-slate-400 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded">
               {s}
             </span>
           ))}
         </div>
 
         <div className="flex items-center justify-between pt-2.5 border-t border-slate-50 mt-auto">
-          <p className="text-lg font-black text-black">{formatPrice(car.price)}</p>
-          <span className="text-[10px] font-black uppercase tracking-widest text-white group-hover:text-[var(--brand-accent)] transition-colors flex items-center gap-1">
+          <p className="text-lg font-black text-slate-900">{formatPrice(car.price)}</p>
+          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-[var(--brand-accent)] transition-colors flex items-center gap-1">
             View <ChevronRight className="w-3 h-3" />
           </span>
         </div>

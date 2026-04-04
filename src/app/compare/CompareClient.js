@@ -161,7 +161,7 @@ export default function CompareClient({ initialCars }) {
                     <>
                       <button
                         onClick={() => removeFromCompare(car.id)}
-                        className="absolute top-4 right-4 text-white/20 hover:text-black transition-colors"
+                        className="absolute top-4 right-4 text-white/20 hover:text-red-500 transition-colors"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -182,7 +182,7 @@ export default function CompareClient({ initialCars }) {
                     <div className="h-full flex flex-col items-center justify-center gap-4">
                        <button
                          onClick={() => setActiveSlot(idx)}
-                         className="w-16 h-16 rounded-3xl bg-white/5 border border-dashed border-white/10 flex items-center justify-center text-white/20 hover:text-black hover:border-orange-500/50 transition-all group"
+                         className="w-16 h-16 rounded-3xl bg-white/5 border border-dashed border-white/10 flex items-center justify-center text-white/20 hover:text-orange-500 hover:border-orange-500/50 transition-all group"
                        >
                          <Search className="w-6 h-6 group-hover:scale-110 transition-transform" />
                        </button>
@@ -215,7 +215,7 @@ export default function CompareClient({ initialCars }) {
                                  </div>
                                  <div className="flex-1 min-w-0">
                                    <p className="text-xs font-black text-white">{res.year} {res.make} {res.model}</p>
-                                   <p className="text-[10px] text-black/70 font-bold">{formatPrice(res.price)}</p>
+                                   <p className="text-[10px] text-orange-500/70 font-bold">{formatPrice(res.price)}</p>
                                  </div>
                                  <ArrowRight className="w-4 h-4 text-white/20" />
                                </button>
@@ -263,7 +263,7 @@ export default function CompareClient({ initialCars }) {
                         return (
                           <div key={idx} className="p-6 md:p-8 flex items-center justify-center border-r border-white/5 last:border-r-0">
                             <span className={`text-[13px] font-black leading-relaxed text-center ${
-                              isBestValue ? "text-white" : "text-white/80"
+                              isBestValue ? "text-emerald-400" : "text-white/80"
                             }`}>
                               {value}
                               {isBestValue && <span className="block text-[8px] mt-1 opacity-50">Best Spec</span>}
@@ -287,7 +287,7 @@ export default function CompareClient({ initialCars }) {
            {initialCars.filter(Boolean).map(car => (
              <Link key={car.id} href={`/cars/${car.id}`} className="px-6 h-12 rounded-2xl bg-white/5 border border-white/10 hover:border-orange-500/50 hover:bg-white/10 transition-all flex items-center gap-2 group">
                 <span className="text-[11px] font-black text-white/60 group-hover:text-white uppercase tracking-widest">{car.make} {car.model}</span>
-                <ArrowRight className="w-3 h-3 text-black" />
+                <ArrowRight className="w-3 h-3 text-orange-500" />
              </Link>
            ))}
         </div>

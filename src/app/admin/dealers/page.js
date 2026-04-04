@@ -67,9 +67,9 @@ export default async function AdminDealersPage(props) {
       {/* ── METRICS BANNER ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 group">
          {[
-            { l: "Network Units", v: topStats.units.toLocaleString(), i: <Car size={18} className="text-black" /> },
-            { l: "Verified Partners", v: topStats.verified.toLocaleString(), i: <ShieldCheck size={18} className="text-black" /> },
-            { l: "Total Network Leads", v: topStats.leads.toLocaleString(), i: <MessageSquare size={18} className="text-black" /> }
+            { l: "Network Units", v: topStats.units.toLocaleString(), i: <Car size={18} className="text-blue-500" /> },
+            { l: "Verified Partners", v: topStats.verified.toLocaleString(), i: <ShieldCheck size={18} className="text-emerald-500" /> },
+            { l: "Total Network Leads", v: topStats.leads.toLocaleString(), i: <MessageSquare size={18} className="text-orange-500" /> }
          ].map((m, idx) => (
             <div key={idx} className="bg-surface border border-white/5 rounded-[2rem] p-6 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
                <div>
@@ -128,21 +128,21 @@ export default async function AdminDealersPage(props) {
                       {dealer._count.users}
                    </div>
                 </td>
-                <td className="px-8 py-6 text-sm font-black text-black">
+                <td className="px-8 py-6 text-sm font-black text-orange-600">
                    <div className="flex items-center gap-2 bg-orange-500/10 px-3 py-1.5 rounded-xl border border-transparent inline-flex shadow-sm">
-                      <MessageSquare size={14} className="text-black" />
+                      <MessageSquare size={14} className="text-orange-500" />
                       {dealer._count.leads}
                    </div>
                 </td>
                 <td className="px-8 py-6">
                   <div className="flex flex-wrap gap-2">
                     {dealer.verified && (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 text-black rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-500/20 shadow-sm">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-500/20 shadow-sm">
                         <ShieldCheck size={10} /> Verified
                       </span>
                     )}
                     {dealer.featured && (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-500/10 text-black rounded-full text-[9px] font-black uppercase tracking-widest border border-orange-500/20 shadow-sm">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-500/10 text-orange-500 rounded-full text-[9px] font-black uppercase tracking-widest border border-orange-500/20 shadow-sm">
                         <Star size={10} fill="currentColor" /> Featured
                       </span>
                     )}
@@ -153,15 +153,15 @@ export default async function AdminDealersPage(props) {
                 </td>
                 <td className="px-8 py-6 text-right">
                   <div className="flex items-center justify-end gap-3 transition-all duration-300">
-                    <Link href={`/admin/dealers/${dealer.id}/edit`} className="flex items-center gap-2 px-4 py-2 bg-orange-600/20 hover:bg-orange-600 text-black hover:text-white font-black text-[10px] uppercase tracking-widest rounded-xl transition-all border border-orange-500/20 hover:border-orange-500 shadow-lg" title="Manage Hub">
+                    <Link href={`/admin/dealers/${dealer.id}/edit`} className="flex items-center gap-2 px-4 py-2 bg-orange-600/20 hover:bg-orange-600 text-orange-500 hover:text-white font-black text-[10px] uppercase tracking-widest rounded-xl transition-all border border-orange-500/20 hover:border-orange-500 shadow-lg" title="Manage Hub">
                       <Edit3 size={14} /> Manage
                     </Link>
                     
                     <form action={`/api/admin/dealers/${dealer.id}/toggle-verified`} method="POST">
                       <button type="submit" 
                         className={dealer.verified 
-                          ? "flex items-center justify-center p-2 text-black bg-emerald-500/10 hover:bg-emerald-500/20 rounded-xl transition-colors"
-                          : "flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600 text-black hover:text-white font-black text-[10px] uppercase tracking-widest border border-emerald-500/20 hover:border-emerald-500 rounded-xl transition-all shadow-lg"}
+                          ? "flex items-center justify-center p-2 text-emerald-500 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-xl transition-colors"
+                          : "flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-500 hover:text-white font-black text-[10px] uppercase tracking-widest border border-emerald-500/20 hover:border-emerald-500 rounded-xl transition-all shadow-lg"}
                         title={dealer.verified ? "Verified Dealership" : "Approve Dealer"}
                       >
                         <ShieldCheck size={14} />
@@ -170,12 +170,12 @@ export default async function AdminDealersPage(props) {
                     </form>
 
                     <form action={`/api/admin/dealers/${dealer.id}/toggle-featured`} method="POST">
-                      <button type="submit" className={`p-2 transition-colors ${dealer.featured ? "text-black hover:text-white/40" : "text-white/40 hover:text-black dark:text-white/30 dark:hover:text-black"}`} title={dealer.featured ? "Remove Highlight" : "Feature Dealer"}>
+                      <button type="submit" className={`p-2 transition-colors ${dealer.featured ? "text-orange-500 hover:text-white/40" : "text-white/40 hover:text-orange-600 dark:text-white/30 dark:hover:text-orange-500"}`} title={dealer.featured ? "Remove Highlight" : "Feature Dealer"}>
                         <Star size={18} fill={dealer.featured ? "currentColor" : "none"} />
                       </button>
                     </form>
 
-                    <Link href={`/dealers/${dealer.slug}`} target="_blank" className="p-2 text-white/40 hover:text-black transition-colors" title="Public Profile">
+                    <Link href={`/dealers/${dealer.slug}`} target="_blank" className="p-2 text-white/40 hover:text-blue-500 transition-colors" title="Public Profile">
                       <ExternalLink size={16} />
                     </Link>
 

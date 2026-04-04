@@ -39,9 +39,9 @@ export default async function DealerShowcasePage({ params }) {
   if (!dealer) notFound();
 
   const stats = [
-    { label: "Live Listings", value: dealer.cars.length, icon: <Package className="text-black" /> },
-    { label: "Verified Since", value: new Date(dealer.createdAt).getFullYear(), icon: <ShieldCheck className="text-black" /> },
-    { label: "Location", value: dealer.county, icon: <MapPin className="text-black" /> },
+    { label: "Live Listings", value: dealer.cars.length, icon: <Package className="text-orange-500" /> },
+    { label: "Verified Since", value: new Date(dealer.createdAt).getFullYear(), icon: <ShieldCheck className="text-emerald-500" /> },
+    { label: "Location", value: dealer.county, icon: <MapPin className="text-blue-500" /> },
   ];
 
   return (
@@ -51,7 +51,7 @@ export default async function DealerShowcasePage({ params }) {
         <div className="container mx-auto px-6 py-20 max-w-7xl">
           <div className="flex flex-col lg:flex-row gap-12 lg:items-center">
             {/* Logo / Brand Mark */}
-            <div className="w-32 h-32 rounded-[3rem] bg-white/5 border border-white/10 flex items-center justify-center text-4xl font-black text-black relative shrink-0 shadow-2xl">
+            <div className="w-32 h-32 rounded-[3rem] bg-white/5 border border-white/10 flex items-center justify-center text-4xl font-black text-orange-500 relative shrink-0 shadow-2xl">
               {dealer.logoUrl ? (
                 <Image src={dealer.logoUrl} alt={dealer.name} fill className="object-cover p-4" />
               ) : (
@@ -97,30 +97,30 @@ export default async function DealerShowcasePage({ params }) {
             <div className="lg:w-80 space-y-3">
                <div className="p-6 bg-white/[0.02] border border-white/10 rounded-[2.5rem] shadow-2xl backdrop-blur-xl">
                   <h3 className="text-xs font-black uppercase tracking-widest text-white/30 mb-6 flex items-center gap-2">
-                    <TrendingUp size={12} className="text-black" /> Connect Direct
+                    <TrendingUp size={12} className="text-orange-500" /> Connect Direct
                   </h3>
                   <div className="space-y-2">
                     <a href={`tel:${dealer.phone}`} className="flex items-center justify-between w-full p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/20 transition-all group">
                        <span className="text-xs font-black text-white/60 group-hover:text-white uppercase tracking-widest">Voice Call</span>
-                       <Phone size={16} className="text-black" />
+                       <Phone size={16} className="text-orange-500" />
                     </a>
                     {dealer.whatsapp && (
                       <a href={`https://wa.me/${dealer.whatsapp}`} className="flex items-center justify-between w-full p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/10 hover:border-emerald-500/30 transition-all group">
-                         <span className="text-xs font-black text-black/60 group-hover:text-black uppercase tracking-widest">WhatsApp</span>
-                         <MessageSquare size={16} className="text-black" />
+                         <span className="text-xs font-black text-emerald-500/60 group-hover:text-emerald-500 uppercase tracking-widest">WhatsApp</span>
+                         <MessageSquare size={16} className="text-emerald-500" />
                       </a>
                     )}
                     {dealer.website && (
                       <a href={dealer.website} target="_blank" className="flex items-center justify-between w-full p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/20 transition-all group">
                          <span className="text-xs font-black text-white/60 group-hover:text-white uppercase tracking-widest">Website</span>
-                         <Globe size={16} className="text-white" />
+                         <Globe size={16} className="text-blue-400" />
                       </a>
                     )}
                   </div>
                </div>
                <div className="flex items-center gap-2 px-6 py-4 bg-orange-600/5 border border-orange-500/10 rounded-2xl">
-                 <MapPin size={14} className="text-black shrink-0" />
-                 <p className="text-[10px] font-black text-black/80 uppercase tracking-widest">{dealer.location}</p>
+                 <MapPin size={14} className="text-orange-500 shrink-0" />
+                 <p className="text-[10px] font-black text-orange-500/80 uppercase tracking-widest">{dealer.location}</p>
                </div>
             </div>
           </div>
@@ -186,10 +186,10 @@ function InventoryCard({ car }) {
 
       <div className="p-5 flex flex-col gap-3">
         <div className="flex items-center gap-2.5">
-          <span className="text-[9px] font-black bg-white/10 text-white px-2 py-0.5 uppercase tracking-wider shrink-0">
+          <span className="text-[9px] font-black bg-white/10 text-orange-400 px-2 py-0.5 uppercase tracking-wider shrink-0">
             {car.year}
           </span>
-          <h3 className="font-bold text-white text-sm leading-tight truncate group-hover:text-black transition-colors">
+          <h3 className="font-bold text-white text-sm leading-tight truncate group-hover:text-orange-500 transition-colors">
             {title}
           </h3>
         </div>
@@ -201,10 +201,10 @@ function InventoryCard({ car }) {
         </div>
 
         <div className="flex items-center justify-between pt-4 border-t border-white/5 mt-auto">
-          <p className="text-base font-black text-black">{formatPrice(car.price)}</p>
+          <p className="text-base font-black text-orange-500">{formatPrice(car.price)}</p>
           <div className="flex items-center gap-2">
              <CompareButton car={car} />
-             <ArrowRight size={14} className="text-white/20 group-hover:text-black group-hover:translate-x-1 transition-all" />
+             <ArrowRight size={14} className="text-white/20 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
           </div>
         </div>
       </div>

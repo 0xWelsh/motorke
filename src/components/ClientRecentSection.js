@@ -61,17 +61,17 @@ export default function ClientRecentSection() {
                   {user.name.charAt(0)}
                 </div>
               ) : (
-                <Clock className="w-6 h-6 text-white" />
+                <Clock className="w-6 h-6 text-slate-300" />
               )}
             </div>
             <div>
-              <h2 className="text-3xl font-black text-black tracking-tight">
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight">
                 {user ? `Welcome back, ${user.name.split(' ')[0]}!` : "Welcome back!"}
               </h2>
-              <p className="text-black text-sm font-medium">Picking up where you left off...</p>
+              <p className="text-slate-500 text-sm font-medium">Picking up where you left off...</p>
             </div>
           </div>
-          <Link href="/account/saved" className="bg-slate-50 border border-slate-100 px-6 py-3 rounded-xl text-sm font-bold text-black hover:border-[var(--brand-accent)]/30 hover:text-[var(--brand)] transition-all shadow-sm flex items-center gap-2">
+          <Link href="/account/saved" className="bg-slate-50 border border-slate-100 px-6 py-3 rounded-xl text-sm font-bold text-slate-600 hover:border-[var(--brand-accent)]/30 hover:text-[var(--brand)] transition-all shadow-sm flex items-center gap-2">
             My Saved Collection <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
@@ -80,7 +80,7 @@ export default function ClientRecentSection() {
         {recent.length > 0 && (
           <div className="mb-16">
             <div className="flex items-center gap-2 mb-6">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Recently Viewed</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Recently Viewed</span>
               <div className="h-px flex-1 bg-slate-100" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -97,7 +97,7 @@ export default function ClientRecentSection() {
             <div className="flex items-center gap-3 mb-6">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[var(--brand-accent)] fill-[var(--brand-accent)]" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-black">Recommended for You</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Recommended for You</span>
               </div>
               <div className="h-px flex-1 bg-slate-100" />
             </div>
@@ -125,12 +125,12 @@ function CarMiniCard({ car }) {
         {car.image ? (
           <img src={car.image} alt={car.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-white text-[10px] font-black uppercase tracking-widest">No Image</div>
+          <div className="w-full h-full flex items-center justify-center text-slate-300 text-[10px] font-black uppercase tracking-widest">No Image</div>
         )}
         <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/5 transition-colors duration-500" />
       </div>
       <div className="p-5">
-        <h3 className="font-bold text-black text-sm truncate group-hover:text-[var(--brand)] transition-colors mb-1">{car.title}</h3>
+        <h3 className="font-bold text-slate-800 text-sm truncate group-hover:text-[var(--brand)] transition-colors mb-1">{car.title}</h3>
         <p className="text-[var(--brand-accent)] font-black text-base">{formatPrice(car.price)}</p>
       </div>
     </Link>

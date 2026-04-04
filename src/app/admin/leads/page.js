@@ -80,7 +80,7 @@ export default async function AdminLeadsPage({ searchParams }) {
         </button>
 
         {dealerId && (
-          <Link href="/admin/leads" className="text-[10px] font-black uppercase tracking-widest text-black hover:text-white px-2">
+          <Link href="/admin/leads" className="text-[10px] font-black uppercase tracking-widest text-orange-500 hover:text-orange-400 px-2">
             Reset
           </Link>
         )}
@@ -121,11 +121,11 @@ export default async function AdminLeadsPage({ searchParams }) {
                 </td>
                 <td className="px-8 py-6">
                    <Link href={`/cars/${lead.car.id}`} target="_blank" className="inline-flex items-center gap-2 group/link">
-                      <div className="w-8 h-8 rounded-lg bg-white/5 ring-1 ring-white/10 flex items-center justify-center text-pureWhite/30 group-hover/link:bg-orange-500/10 group-hover/link:text-black group-hover/link:ring-orange-500/20 transition-all">
+                      <div className="w-8 h-8 rounded-lg bg-white/5 ring-1 ring-white/10 flex items-center justify-center text-pureWhite/30 group-hover/link:bg-orange-500/10 group-hover/link:text-orange-500 group-hover/link:ring-orange-500/20 transition-all">
                          <Car size={14} />
                       </div>
                       <div>
-                         <p className="text-xs font-black text-white uppercase tracking-tight group-hover/link:text-black transition-colors">
+                         <p className="text-xs font-black text-white uppercase tracking-tight group-hover/link:text-orange-500 transition-colors">
                             {lead.car.year} {lead.car.make}
                          </p>
                          <p className="text-[10px] font-black text-white/40 uppercase tracking-widest">{lead.car.model}</p>
@@ -141,7 +141,7 @@ export default async function AdminLeadsPage({ searchParams }) {
                          {lead.message || <span className="text-white/20 italic font-normal tracking-widest text-[9px] uppercase">No transmission data</span>}
                       </p>
                       <div className={`mt-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest border shadow-sm ${
-                        lead.channel === 'whatsapp' ? 'bg-emerald-500/10 text-black border-emerald-500/20' : 'bg-blue-500/10 text-black border-blue-500/20'
+                        lead.channel === 'whatsapp' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-blue-500/10 text-blue-500 border-blue-500/20'
                       }`}>
                          {lead.channel === 'whatsapp' ? <Smartphone size={8} /> : <Globe size={8} />}
                          {lead.channel}

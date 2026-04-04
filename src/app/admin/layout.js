@@ -49,7 +49,7 @@ function NavLink({ href, label, Icon, active }) {
       )}
     >
       <div className="flex items-center gap-3">
-        <Icon size={18} className={clsx("transition-transform duration-500", !active && "group-hover:scale-110 group-hover:text-black")} />
+        <Icon size={18} className={clsx("transition-transform duration-500", !active && "group-hover:scale-110 group-hover:text-orange-500")} />
         <span className="text-[13px] font-black uppercase tracking-widest">{label}</span>
       </div>
       {active && <div className="w-1.5 h-1.5 rounded-full bg-orange-600 shadow-[0_0_12px_rgba(234,88,12,0.8)]" />}
@@ -71,13 +71,13 @@ export default function AdminLayout({ children }) {
         <div className="p-10 relative z-10">
           <Link href="/" className="flex items-center gap-4 group">
             <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center group-hover:bg-orange-600 transition-all duration-500 shadow-2xl shadow-black">
-              <span className="text-black group-hover:text-white font-black text-2xl tracking-tighter transition-colors">M</span>
+              <span className="text-slate-900 group-hover:text-white font-black text-2xl tracking-tighter transition-colors">M</span>
             </div>
             <div>
               <span className="text-xl font-black text-white tracking-tighter block leading-none">
-                Motor<span className="dark:text-white text-black group-hover:text-black transition-colors">ke</span>
+                Motor<span className="dark:text-slate-400 text-slate-600 group-hover:text-orange-600 transition-colors">ke</span>
               </span>
-              <span className="text-[9px] font-black text-black uppercase tracking-[0.3em] mt-2 block">
+              <span className="text-[9px] font-black text-orange-600 uppercase tracking-[0.3em] mt-2 block">
                 Standard Admin
               </span>
             </div>
@@ -104,11 +104,11 @@ export default function AdminLayout({ children }) {
         {/* User / Footer */}
         <div className="p-8 border-t border-white/5 bg-black/20 relative z-10">
           <div className="space-y-1">
-            <Link href="/" className="flex items-center gap-3 px-4 py-3 dark:text-black text-black hover:text-white text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all">
+            <Link href="/" className="flex items-center gap-3 px-4 py-3 dark:text-slate-500 text-slate-600 hover:text-white text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all">
               <ExternalLink size={14} /> Live Showcase
             </Link>
             <form action="/api/auth/logout" method="POST">
-              <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 dark:text-black text-black hover:text-black text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all">
+              <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 dark:text-slate-500 text-slate-600 hover:text-rose-500 text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all">
                 <LogOut size={14} /> Terminate
               </button>
             </form>
@@ -143,7 +143,7 @@ export default function AdminLayout({ children }) {
               <div className="flex items-center gap-4 group cursor-default">
                 <div className="hidden md:flex flex-col items-end">
                   <p className="text-[11px] font-black text-white leading-none uppercase tracking-widest">Admin Standard</p>
-                  <p className="text-[9px] font-black text-black mt-1 flex items-center gap-1 uppercase tracking-widest">
+                  <p className="text-[9px] font-black text-orange-600 mt-1 flex items-center gap-1 uppercase tracking-widest">
                      <ShieldAlert size={10} /> Full Privilege
                   </p>
                 </div>

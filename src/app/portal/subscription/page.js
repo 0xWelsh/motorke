@@ -66,9 +66,9 @@ const PLANS = [
 ];
 
 const PAYMENT_METHODS = [
-  { id: "mpesa", label: "M-Pesa", icon: Smartphone, color: "text-black", desc: "Pay via Safaricom STK Push" },
-  { id: "card", label: "Card", icon: CreditCard, color: "text-black", desc: "Visa / Mastercard" },
-  { id: "bank", label: "Bank Transfer", icon: Building2, color: "text-black", desc: "Direct EFT / SWIFT" },
+  { id: "mpesa", label: "M-Pesa", icon: Smartphone, color: "text-emerald-500", desc: "Pay via Safaricom STK Push" },
+  { id: "card", label: "Card", icon: CreditCard, color: "text-blue-500", desc: "Visa / Mastercard" },
+  { id: "bank", label: "Bank Transfer", icon: Building2, color: "text-amber-500", desc: "Direct EFT / SWIFT" },
 ];
 
 const colorMap = {
@@ -80,16 +80,16 @@ const colorMap = {
     glow: "",
   },
   orange: {
-    badge: "bg-orange-500/10 text-black",
-    icon: "bg-orange-500/10 text-black",
-    check: "text-black",
+    badge: "bg-orange-500/10 text-orange-500",
+    icon: "bg-orange-500/10 text-orange-500",
+    check: "text-orange-500",
     btn: "bg-orange-600 hover:bg-orange-500 text-white shadow-[0_0_25px_rgba(234,88,12,0.3)] hover:shadow-[0_0_35px_rgba(234,88,12,0.5)]",
     glow: "shadow-[0_0_60px_rgba(234,88,12,0.1)]",
   },
   amber: {
-    badge: "bg-amber-500/10 text-black",
-    icon: "bg-amber-500/10 text-black",
-    check: "text-black",
+    badge: "bg-amber-500/10 text-amber-500",
+    icon: "bg-amber-500/10 text-amber-500",
+    check: "text-amber-500",
     btn: "bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white shadow-[0_0_25px_rgba(245,158,11,0.3)] hover:shadow-[0_0_35px_rgba(245,158,11,0.5)]",
     glow: "shadow-[0_0_60px_rgba(245,158,11,0.08)]",
   },
@@ -245,7 +245,7 @@ export default function SubscriptionPage() {
               <div className="text-center animate-in zoom-in duration-500">
                 <div className="w-24 h-24 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6 relative">
                   <div className="absolute inset-0 border-2 border-emerald-500 rounded-full animate-ping opacity-20" />
-                  <CheckCircle2 size={48} className="text-black" />
+                  <CheckCircle2 size={48} className="text-emerald-500" />
                 </div>
                 <h2 className="text-2xl font-black text-white mb-2 tracking-tight">Payment Received!</h2>
                 <p className="text-sm text-white/40 font-medium leading-relaxed">
@@ -258,11 +258,11 @@ export default function SubscriptionPage() {
 
             ) : status === "waiting" ? (
               <div className="text-center animate-in fade-in duration-500">
-                <Loader2 size={48} className="animate-spin text-black mx-auto mb-6" />
+                <Loader2 size={48} className="animate-spin text-orange-500 mx-auto mb-6" />
                 <h2 className="text-xl font-black text-white mb-2">Processing Payment</h2>
                 <p className="text-sm text-white/50">{message}</p>
                 <div className="mt-8 bg-black/20 p-4 rounded-xl border border-white/5 mx-auto max-w-[220px]">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-black animate-pulse">Awaiting Confirmation...</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-orange-500 animate-pulse">Awaiting Confirmation...</p>
                 </div>
               </div>
 
@@ -270,7 +270,7 @@ export default function SubscriptionPage() {
               <div className="animate-in fade-in duration-500">
                 <div className="text-center mb-8">
                   <div className="w-14 h-14 bg-amber-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Building2 size={24} className="text-black" />
+                    <Building2 size={24} className="text-amber-500" />
                   </div>
                   <h3 className="text-xl font-black text-white mb-1">Bank Transfer Details</h3>
                   <p className="text-xs text-white/40">Transfer <span className="text-white font-black">KES {planObj?.price.toLocaleString()}</span> to the following account</p>
@@ -291,7 +291,7 @@ export default function SubscriptionPage() {
                   ))}
                 </div>
                 <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl">
-                  <p className="text-[10px] font-black text-black uppercase tracking-widest mb-1">Important</p>
+                  <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest mb-1">Important</p>
                   <p className="text-xs text-white/50">After transferring, send your payment confirmation screenshot to <span className="text-white font-bold">billing@motorske.com</span> or WhatsApp <span className="text-white font-bold">+254 700 000 000</span>. Your plan will be activated within 24 hours.</p>
                 </div>
                 <button onClick={() => { setSelectedPlan(null); setStatus("idle"); }} className="w-full mt-6 bg-white/10 hover:bg-white/20 text-white rounded-2xl py-4 font-black text-sm transition-all">
@@ -305,7 +305,7 @@ export default function SubscriptionPage() {
                 <div className="text-center mb-2">
                   <h3 className="text-xl font-black text-white mb-1">Choose Payment Method</h3>
                   <p className="text-xs text-white/40">
-                    Upgrade to <span className="text-black font-black">{planObj?.name}</span> — <span className="text-white font-black">KES {planObj?.price.toLocaleString()}/mo</span>
+                    Upgrade to <span className="text-orange-500 font-black">{planObj?.name}</span> — <span className="text-white font-black">KES {planObj?.price.toLocaleString()}/mo</span>
                   </p>
                 </div>
 
@@ -337,7 +337,7 @@ export default function SubscriptionPage() {
 
                 {/* Error */}
                 {status === "error" && (
-                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-xs font-bold text-white">
+                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-xs font-bold text-red-400">
                     {message}
                   </div>
                 )}
@@ -346,7 +346,7 @@ export default function SubscriptionPage() {
                 {payMethod === "mpesa" && (
                   <div className="space-y-3">
                     <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/60 ml-2">
-                      <Smartphone size={12} className="text-black" />
+                      <Smartphone size={12} className="text-emerald-500" />
                       Safaricom Number
                     </label>
                     <input
@@ -362,17 +362,17 @@ export default function SubscriptionPage() {
 
                 {payMethod === "card" && (
                   <div className="p-6 bg-blue-500/5 border border-blue-500/10 rounded-2xl text-center">
-                    <CreditCard size={32} className="text-black mx-auto mb-3" />
+                    <CreditCard size={32} className="text-blue-500 mx-auto mb-3" />
                     <p className="text-sm font-bold text-white/60">You will be redirected to a secure payment page to enter your card details.</p>
-                    <p className="text-[10px] font-black text-black/60 uppercase tracking-widest mt-2">Powered by Pesapal</p>
+                    <p className="text-[10px] font-black text-blue-500/60 uppercase tracking-widest mt-2">Powered by Pesapal</p>
                   </div>
                 )}
 
                 {payMethod === "bank" && (
                   <div className="p-6 bg-amber-500/5 border border-amber-500/10 rounded-2xl text-center">
-                    <Building2 size={32} className="text-black mx-auto mb-3" />
+                    <Building2 size={32} className="text-amber-500 mx-auto mb-3" />
                     <p className="text-sm font-bold text-white/60">Click below to view our bank account details for direct transfer.</p>
-                    <p className="text-[10px] font-black text-black/60 uppercase tracking-widest mt-2">Manual activation within 24hrs</p>
+                    <p className="text-[10px] font-black text-amber-500/60 uppercase tracking-widest mt-2">Manual activation within 24hrs</p>
                   </div>
                 )}
 
@@ -380,7 +380,7 @@ export default function SubscriptionPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-2xl py-4 font-black tracking-wide transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] flex items-center justify-center gap-2"
+                  className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-emerald-50 rounded-2xl py-4 font-black tracking-wide transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] flex items-center justify-center gap-2"
                 >
                   {loading ? <Loader2 size={18} className="animate-spin" /> : <Banknote size={18} />}
                   {loading 
