@@ -43,6 +43,18 @@ const getCachedData = unstable_cache(
       db.article.findMany({
         take: 3,
         orderBy: { publishedAt: "desc" }
+      }).then(async (articles) => {
+        if (articles.length < 3) {
+          try {
+            const { fetchAutomotiveNews } = await import("@/lib/news");
+            await fetchAutomotiveNews(); // Seed database directly
+            return db.article.findMany({ take: 3, orderBy: { publishedAt: "desc" } });
+          } catch (e) {
+            console.error("Failed to automatically fetch fresh news:", e);
+            return articles;
+          }
+        }
+        return articles;
       }),
     ]);
     return { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts, articles };

@@ -1,51 +1,58 @@
 import { db } from "./db";
-
-const NEWS_API_KEY = process.env.NEWS_API_KEY;
+import Parser from "rss-parser";
 
 /**
- * Fetches the latest automotive and car market news from NewsAPI.org
+ * Fetches the latest automotive and car market news via public RSS feeds
  * and stores them in the database, preventing duplicates by URL.
  */
 export async function fetchAutomotiveNews() {
-  if (!NEWS_API_KEY) {
-    console.warn("NEWS_API_KEY not found in environment variables.");
-    return [];
-  }
-
   try {
-    // Search for automotive, car market, and industry news
-    const query = encodeURIComponent("automotive OR cars OR \"auto market\" OR \"car industry\"");
-    const res = await fetch(
-      `https://newsapi.org/v2/everything?q=${query}&language=en&sortBy=publishedAt&pageSize=40&apiKey=${NEWS_API_KEY}`
-    );
+    const parser = new Parser({
+      customFields: {
+        item: [
+          ["media:content", "mediaContent"],
+          ["enclosure", "enclosure"],
+        ],
+      },
+    });
     
-    if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Failed to connect to NewsAPI");
-    }
+    // Popular automotive news RSS feed
+    const feed = await parser.parseURL("https://www.motor1.com/rss/news/all/");
+    
+    // Filter and format items
+    const articles = feed.items.map(item => {
+      // Extract image
+      let img = null;
+      if (item.enclosure && item.enclosure.url) {
+        img = item.enclosure.url;
+      } else if (item.mediaContent && item.mediaContent.$ && item.mediaContent.$.url) {
+        img = item.mediaContent.$.url;
+      }
+      
+      // Fallback premium car image if RSS doesn't provide one
+      if (!img) {
+         img = "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80";
+      }
 
-    const data = await res.json();
+      // Safe substring for snippets
+      let cleanDesc = item.contentSnippet ? item.contentSnippet.trim() : "";
+      if (cleanDesc.length > 200) {
+          cleanDesc = cleanDesc.substring(0, 197) + "...";
+      }
 
-    if (data.status !== "ok") {
-      throw new Error(data.message || "NewsAPI error");
-    }
+      return {
+        title: item.title?.trim() || "Automotive Update",
+        description: cleanDesc || null,
+        url: item.link,
+        urlToImage: img,
+        publishedAt: item.isoDate ? new Date(item.isoDate) : new Date(),
+        sourceName: feed.title || "Motor1 News",
+      };
+    }).slice(0, 15); // Take the 15 most recent
 
-    // Filter out articles without mandatory information or images
-    const articles = data.articles
-      .filter((a) => a.title && a.url && a.urlToImage && a.title !== "[Removed]")
-      .map((a) => ({
-        title: a.title.trim(),
-        description: a.description ? a.description.trim() : null,
-        url: a.url,
-        urlToImage: a.urlToImage,
-        publishedAt: new Date(a.publishedAt),
-        sourceName: a.source.name,
-      }));
-
-    // Batch upsert to database
-    // Using a loop here to handle individual upserts based on URL uniqueness
     const results = [];
     for (const article of articles) {
+      if (!article.url) continue;
       try {
         const saved = await db.article.upsert({
           where: { url: article.url },
@@ -64,7 +71,7 @@ export async function fetchAutomotiveNews() {
       }
     }
 
-    console.log(`✓ Fetched and synchronized ${results.length} car news articles.`);
+    console.log(`✓ Fetched and synchronized ${results.length} RSS car news articles.`);
     return results;
   } catch (error) {
     console.error("Market Intelligence Fetch Error:", error);
