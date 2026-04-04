@@ -6,13 +6,13 @@ import { NextResponse } from "next/server";
 
 // POST — save a car
 export async function POST(request, { params }) {
-  const { id } = await params;
+  const { carId } = await params;
   const session = await getSessionFromRequest();
   if (!session) return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
 
   try {
     await db.savedCar.create({
-      data: { userId: session.userId, carId: id },
+      data: { userId: session.userId, carId },
     });
     return NextResponse.json({ saved: true });
   } catch {
@@ -23,11 +23,12 @@ export async function POST(request, { params }) {
 
 // DELETE — unsave a car
 export async function DELETE(request, { params }) {
+  const { carId } = await params;
   const session = await getSessionFromRequest();
   if (!session) return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
 
   await db.savedCar.deleteMany({
-    where: { userId: session.userId, carId: id },
+    where: { userId: session.userId, carId },
   });
 
   return NextResponse.json({ saved: false });
@@ -35,11 +36,12 @@ export async function DELETE(request, { params }) {
 
 // GET — check if car is saved
 export async function GET(request, { params }) {
+  const { carId } = await params;
   const session = await getSessionFromRequest();
   if (!session) return NextResponse.json({ saved: false });
 
   const existing = await db.savedCar.findUnique({
-    where: { userId_carId: { userId: session.userId, carId: id } },
+    where: { userId_carId: { userId: session.userId, carId } },
   });
 
   return NextResponse.json({ saved: !!existing });

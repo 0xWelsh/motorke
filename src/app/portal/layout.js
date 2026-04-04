@@ -11,6 +11,8 @@ import {
   CreditCard, 
   Settings, 
   LogOut,
+  ChevronRight,
+  ExternalLink,
   ShieldCheck,
   TrendingUp
 } from "lucide-react";
