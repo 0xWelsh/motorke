@@ -28,7 +28,7 @@ export default async function SignupPage({ searchParams }) {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 mb-8">
-            <img src="/logo.png" alt="Motorke" className="h-14 w-auto object-contain brightness-0 invert" />
+            <img src="/logo.png" alt="Motorke" className="h-24 w-auto object-contain brightness-0 invert" />
             <div className="h-4 w-px bg-white/10 mx-1" />
             <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Standard</span>
           </div>

@@ -36,7 +36,7 @@ export default async function RootLayout({ children }) {
         <footer className="mt-20 border-t border-slate-200 bg-white py-12 px-6">
           <div className="container mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex flex-col items-center md:items-start">
-              <img src="/logo.png" alt="Motorke" className="h-12 w-auto object-contain mb-2" />
+              <img src="/logo.png" alt="Motorke" className="h-20 w-auto object-contain mb-4" />
               <p className="text-slate-400 text-xs mt-1 font-medium tracking-wide">The Standard for Kenyan Automotive.</p>
             </div>
             <div className="flex gap-8">
