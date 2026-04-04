@@ -71,7 +71,7 @@ export default function PortalLayout({ children }) {
               <img src="/logo.png" alt="M" className="w-10 h-10 object-contain brightness-0 invert" />
             </div>
             <div>
-              <img src="/logo.png" alt="Motorke" className="h-20 w-auto object-contain" />
+              <img src="/logo.png" alt="Motorke" className="h-12 w-auto object-contain" />
               <span className="text-[10px] font-black text-emerald-600/70 uppercase tracking-[0.2em] mt-2 block">
                 Dealer Portal
               </span>
@@ -128,7 +128,7 @@ export default function PortalLayout({ children }) {
            
            <div className="flex items-center gap-4">
               <div className="hidden md:flex flex-col items-end">
-                 <img src="/logo.png" alt="Motorke" className="h-16 w-auto object-contain" />
+                 <img src="/logo.png" alt="Motorke" className="h-10 w-auto object-contain" />
                 <p className="text-[10px] font-black text-emerald-600 mt-1 flex items-center gap-1 uppercase tracking-[0.1em]">
                    <ShieldCheck size={10} className="fill-emerald-50" /> Active Subscription
                 </p>
