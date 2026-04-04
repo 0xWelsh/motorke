@@ -15,7 +15,7 @@ import { unstable_cache } from "next/cache";
 const getCachedData = unstable_cache(
   async () => {
     const week = new Date(); week.setDate(week.getDate() - 7);
-    const [featured, newArrivals, dealers, totalCars, totalDealers, priceCounts] = await Promise.all([
+    const [featured, newArrivals, dealers, totalCars, totalDealers, priceCounts, articles] = await Promise.all([
       db.car.findMany({
         where: { available: true, featured: true },
         include: { images: { where: { isPrimary: true }, take: 1 }, dealer: { select: { name: true, location: true, verified: true, slug: true } } },
@@ -40,8 +40,12 @@ const getCachedData = unstable_cache(
         db.car.count({ where: { available: true, price: { gte: 4000000, lt: 7000000 } } }),
         db.car.count({ where: { available: true, price: { gte: 7000000 } } }),
       ]),
+      db.article.findMany({
+        take: 3,
+        orderBy: { publishedAt: "desc" }
+      }),
     ]);
-    return { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts };
+    return { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts, articles };
   },
   ["homepage-data"],
   { revalidate: 900, tags: ["homepage"] }
@@ -58,7 +62,7 @@ const PRICE_RANGES = [
 const HERO_CAR = "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=900&q=85";
 
 export default async function HomePage() {
-  const { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts } = await getCachedData();
+  const { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts, articles } = await getCachedData();
 
   return (
     <div className="bg-background min-h-screen pb-20">
@@ -189,22 +193,29 @@ export default async function HomePage() {
             All Stories
           </Link>
         </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { title: "KRA Announces Revised Duty Rates for 2026 Vehicle Imports", tag: "Policy", date: "24 Mar 2026", img: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=800&q=80" },
-            { title: "The Rise of Electric Vehicles: Kenya's Growing Charging Infrastructure", tag: "Trends", date: "22 Mar 2026", img: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=800&q=80" },
-            { title: "Port of Mombasa: Record 5,000 Units Landed This Week", tag: "Logistics", date: "20 Mar 2026", img: "https://images.unsplash.com/photo-1493946740624-75b8787c3299?w=800&q=80" },
-          ].map((news, i) => (
-            <Link key={i} href="#" className="group block">
+          {(articles?.length > 0 ? articles : [
+            { title: "KRA Announces Revised Duty Rates for 2026 Vehicle Imports", category: "Policy", publishedAt: "2026-03-24T00:00:00Z", urlToImage: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=800&q=80", url: "#" },
+            { title: "The Rise of Electric Vehicles: Kenya's Growing Charging Infrastructure", category: "Trends", publishedAt: "2026-03-22T00:00:00Z", urlToImage: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=800&q=80", url: "#" },
+            { title: "Port of Mombasa: Record 5,000 Units Landed This Week", category: "Logistics", publishedAt: "2026-03-20T00:00:00Z", urlToImage: "https://images.unsplash.com/photo-1493946740624-75b8787c3299?w=800&q=80", url: "#" },
+          ]).map((news, i) => (
+            <Link key={i} href={news.url || "#"} target={news.url?.startsWith("http") ? "_blank" : undefined} className="group block">
               <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-slate-100 mb-4 relative">
-                <Image src={news.img} alt={news.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                {news.urlToImage ? (
+                  <Image src={news.urlToImage} alt={news.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-slate-300 text-[10px] font-bold uppercase tracking-widest">No Image</div>
+                )}
               </div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] font-black text-[var(--brand)] uppercase tracking-widest">{news.tag}</span>
+                <span className="text-[10px] font-black text-[var(--brand)] uppercase tracking-widest">{news.category}</span>
                 <span className="w-1 h-1 rounded-full bg-slate-200" />
-                <span className="text-[10px] font-black text-slate-500 uppercase opacity-60">{news.date}</span>
+                <span className="text-[10px] font-black text-slate-500 uppercase opacity-60">
+                  {new Date(news.publishedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                </span>
               </div>
-              <h3 className="text-base font-black text-slate-800 leading-snug group-hover:text-[var(--brand)] transition-colors">{news.title}</h3>
+              <h3 className="text-base font-black text-slate-800 leading-snug group-hover:text-[var(--brand)] transition-colors line-clamp-2">{news.title}</h3>
             </Link>
           ))}
         </div>
