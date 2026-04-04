@@ -1,11 +1,13 @@
 "use client";
 // src/components/SignupForm.js
-import { useState } from "react";
-import { UserPlus, Building2, User, Loader2, ArrowLeft, ShieldCheck, ChevronRight, Eye, EyeOff } from "lucide-react";
+import { useState, useEffect } from "react";
+import { UserPlus, Building2, User, Loader2, ArrowLeft, ShieldCheck, ChevronRight, Eye, EyeOff, MapPin, CheckCircle2 } from "lucide-react";
 import { clsx } from "clsx";
 import LocationPicker from "./LocationPicker";
 import Link from "next/link";
-import Image from "next/image";
+import Script from "next/script";
+import { motion, AnimatePresence } from "framer-motion";
+import AuthCarousel from "./AuthCarousel";
 
 const COUNTIES = [
   "Nairobi","Mombasa","Kisumu","Nakuru","Uasin Gishu","Kiambu","Machakos",
@@ -51,17 +53,40 @@ function PasswordMeter({ password }) {
 export default function SignupForm({ error: initialError }) {
   const [role, setRole] = useState("BUYER");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState(initialError || "");
   const [loading, setLoading] = useState(false);
 
+  // Multi-step form state for dealers
+  const [step, setStep] = useState(1);
+  const maxSteps = role === "DEALER" ? 2 : 1;
+
+  const isValidEmail = email.includes("@") && email.includes(".");
+
+  // Mock auto-fill geolocation (this would normally use navigator.geolocation)
+  const handleAutoFillLocation = () => {
+    alert("Location automatically filled using device Geolocation.");
+  };
+
+  const handleNextStep = (e) => {
+    e.preventDefault();
+    if (step < maxSteps) {
+      setStep(step + 1);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (role === "DEALER" && step < maxSteps) {
+      handleNextStep(e);
+      return;
+    }
+
     setErrorMsg("");
     setLoading(true);
 
     const formData = new FormData(e.target);
-    
     if (formData.get("password") !== formData.get("confirm")) {
        setErrorMsg("The passwords you entered do not match.");
        setLoading(false);
@@ -89,35 +114,51 @@ export default function SignupForm({ error: initialError }) {
   };
 
   const inputCls = "w-full bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-200 shadow-sm shadow-slate-100";
-  const labelCls = "text-[10px] font-black text-slate-300 uppercase tracking-[0.25em] ml-1";
+  const labelCls = "text-[10px] font-black text-slate-300 uppercase tracking-[0.25em] ml-1 flex items-center gap-2";
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen">
-       {/* ── VISUAL SECTION (Left) ── */}
-       <section className="hidden lg:flex lg:w-[40%] xl:w-[45%] relative items-end p-20 overflow-hidden bg-slate-900">
-          <Image 
-            src="/auth_hero.png" 
-            alt="Premium Car" 
-            fill 
-            priority
-            className="object-cover opacity-90 scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-          
-          <div className="relative z-10 max-w-sm">
-             <div className="mb-6 inline-flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span className="text-[10px] font-black text-white/80 uppercase tracking-[0.2em]">Verified Network</span>
-             </div>
-             <h2 className="text-5xl font-black text-white tracking-tighter leading-[0.95] mb-8">
-                Join the<br />
-                <span className="text-emerald-500">Elite Fleet.</span>
-            </h2>
-            <p className="text-white/60 text-lg font-medium leading-relaxed">
-               Start your journey with the country's most trusted automotive network.
-            </p>
-          </div>
-       </section>
+      <Script 
+        src="https://accounts.google.com/gsi/client" 
+        strategy="afterInteractive"
+        onLoad={() => {
+          if (!window.google) return;
+          window.google.accounts.id.initialize({
+            client_id: "660578051558-vigoibi56aj4elh0r9gh4cvjtff9asee.apps.googleusercontent.com",
+            use_fedcm_for_prompt: false,
+            callback: async (response) => {
+              try {
+                const res = await fetch("/api/auth/google", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ token: response.credential, action: "signup" }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                  window.location.href = data.destination || "/";
+                } else {
+                  setErrorMsg("Google signup failed.");
+                }
+              } catch (err) {
+                setErrorMsg("Network error during Google signup.");
+              }
+            },
+          });
+          window.google.accounts.id.renderButton(
+            document.getElementById("google-signup-button"),
+            { 
+              theme: "outline", 
+              size: "large", 
+              width: "100%", 
+              text: "signup_with",
+              shape: "pill",
+              logo_alignment: "left"
+            }
+          );
+        }}
+      />
+
+       <AuthCarousel />
 
        {/* ── FORM SECTION (Right) ── */}
        <section className={clsx(
@@ -132,8 +173,7 @@ export default function SignupForm({ error: initialError }) {
             Showroom <ArrowLeft className="w-3 h-3 rotate-180" />
           </Link>
 
-          <div className={clsx("w-full transition-all duration-700", role === "DEALER" ? "max-w-4xl" : "max-w-[440px]")}>
-             {/* Logo & Header */}
+          <div className={clsx("w-full transition-all duration-700 max-w-[440px]")}>
              <header className="mb-12">
                 <div className="inline-flex items-center gap-3 mb-8">
                    <img src="/logo.png" alt="Motorske" className="h-10 w-auto object-contain" />
@@ -144,21 +184,21 @@ export default function SignupForm({ error: initialError }) {
                 <p className="text-slate-400 font-medium text-sm">Select your profile type to get started.</p>
              </header>
 
-             {/* Role Switcher */}
-             <div className="flex p-1.5 bg-slate-100 rounded-3xl gap-1.5 mb-12 w-fit">
-                <button type="button" onClick={() => setRole("BUYER")}
+             <div className="flex p-1.5 bg-slate-100 rounded-3xl gap-1.5 mb-8 w-fit">
+                <button type="button" onClick={() => { setRole("BUYER"); setStep(1); }}
                   className={clsx("flex items-center gap-2.5 px-8 py-3.5 rounded-[1.25rem] text-[10px] font-black uppercase tracking-[0.15em] transition-all",
                     role === "BUYER" ? "bg-white text-slate-950 shadow-xl shadow-slate-200" : "text-slate-400 hover:text-slate-600")}>
                   <User size={14} /> Personal
                 </button>
-                <button type="button" onClick={() => setRole("DEALER")}
+                <button type="button" onClick={() => { setRole("DEALER"); setStep(1); }}
                   className={clsx("flex items-center gap-2.5 px-8 py-3.5 rounded-[1.25rem] text-[10px] font-black uppercase tracking-[0.15em] transition-all",
                     role === "DEALER" ? "bg-slate-950 text-white shadow-xl shadow-slate-900/20" : "text-slate-400 hover:text-slate-600")}>
                   <Building2 size={14} /> Dealership
                 </button>
              </div>
 
-             <form onSubmit={handleSubmit} className="space-y-10">
+             {/* Wrap form inside AnimatePresence for step transitions */}
+             <form onSubmit={handleSubmit} className="space-y-8 relative pb-20 lg:pb-0" id="signup-form">
                 <input type="hidden" name="role" value={role} />
 
                 {errorMsg && (
@@ -170,94 +210,169 @@ export default function SignupForm({ error: initialError }) {
                    </div>
                 )}
 
-                <div className={clsx("grid gap-x-12 gap-y-10 items-start transition-all", role === "DEALER" ? "md:grid-cols-2" : "grid-cols-1")}>
-                   {/* Personal Info */}
-                   <div className="space-y-10">
+                <AnimatePresence mode="wait">
+                  {(step === 1) && (
+                    <motion.div 
+                      key="step1" 
+                      initial={{ opacity: 0, x: -20 }} 
+                      animate={{ opacity: 1, x: 0 }} 
+                      exit={{ opacity: 0, x: -20 }} 
+                      transition={{ duration: 0.3 }}
+                      className="space-y-8"
+                    >
                       <div className="space-y-4">
-                         <label className={labelCls}>Identity Verification</label>
+                         <label htmlFor="regName" className={labelCls}>Identity Verification</label>
                          <div className="space-y-4">
-                            <input name="name" required placeholder="Full Legal Name" className={inputCls} />
-                            <input name="email" type="email" required placeholder="Email Address" className={inputCls} />
+                            <input id="regName" name="name" required placeholder="Full Legal Name" className={inputCls} />
+                            <div className="relative">
+                              <input id="regEmail" name="email" value={email} onChange={(e) => setEmail(e.target.value)} type="email" required placeholder="Email Address" className={clsx(inputCls, isValidEmail && "border-emerald-500", "pr-12")} />
+                              {isValidEmail && <CheckCircle2 className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-500" size={18} />}
+                            </div>
                          </div>
                       </div>
 
                       {role === "DEALER" && (
-                         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                            <label className={labelCls}>Business Entity</label>
+                         <div className="space-y-4">
+                            <label htmlFor="dealerName" className={labelCls}>Business Entity</label>
                             <div className="space-y-4">
-                               <input name="dealerName" required placeholder="Registered Dealership Name" className={inputCls} />
+                               <input id="dealerName" name="dealerName" required placeholder="Registered Dealership Name" className={inputCls} />
                                <div className="grid grid-cols-2 gap-4">
-                                  <input name="phone" required placeholder="Business Phone" className={inputCls} />
-                                  <input name="whatsapp" placeholder="WhatsApp (Optional)" className={inputCls} />
+                                  <input id="dealerPhone" name="phone" required placeholder="Business Phone" className={inputCls} />
+                                  <input id="dealerWhatsapp" name="whatsapp" placeholder="WhatsApp (Optional)" className={inputCls} />
                                </div>
-                               <textarea name="description" rows={3} placeholder="Dealer Bio & Specialty..." className={clsx(inputCls, "resize-none")} />
+                               <textarea id="dealerDesc" name="description" rows={3} placeholder="Dealer Bio & Specialty..." className={clsx(inputCls, "resize-none")} />
                             </div>
                          </div>
                       )}
 
-                      <div className="space-y-4 pt-4 border-t border-slate-50">
-                         <label className={labelCls}>Security Configuration</label>
-                         <div className="grid grid-cols-2 gap-4">
-                            <div className="relative group">
-                               <input 
-                                 name="password" 
-                                 type={showPassword ? "text" : "password"}
-                                 required minLength={8} placeholder="Password" 
-                                 value={password} onChange={e => setPassword(e.target.value)}
-                                 className={inputCls} 
-                               />
-                               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-200 hover:text-slate-900">
-                                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                               </button>
-                               <PasswordMeter password={password} />
-                            </div>
-                            <input name="confirm" type="password" required minLength={8} placeholder="Confirm" className={inputCls} />
-                         </div>
-                      </div>
-                   </div>
+                      {role === "BUYER" && (
+                        <div className="space-y-4 pt-4 border-t border-slate-50">
+                           <label htmlFor="regPassword" className={labelCls}>Security Configuration</label>
+                           <div className="grid grid-cols-2 gap-4">
+                              <div className="relative group">
+                                 <input 
+                                   id="regPassword"
+                                   name="password" 
+                                   type={showPassword ? "text" : "password"}
+                                   required minLength={8} placeholder="Password" 
+                                   value={password} onChange={e => setPassword(e.target.value)}
+                                   className={inputCls} 
+                                 />
+                                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-200 hover:text-slate-900">
+                                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                 </button>
+                                 <PasswordMeter password={password} />
+                              </div>
+                              <input id="regConfirm" name="confirm" type="password" required minLength={8} placeholder="Confirm" className={inputCls} />
+                           </div>
+                        </div>
+                      )}
 
-                   {/* Dealer Details (Column 2) */}
-                   {role === "DEALER" && (
-                      <div className="space-y-10 animate-in fade-in slide-in-from-right-8 duration-700">
-                         <div className="space-y-4">
-                            <label className={labelCls}>Geographic Coverage</label>
-                            <div className="grid grid-cols-2 gap-4">
-                               <select name="county" required className={clsx(inputCls, "appearance-none")}>
-                                 {COUNTIES.map(c => <option key={c} value={c}>{c}</option>)}
-                               </select>
-                               <input name="location" required placeholder="Primary Area (e.g. Kilimani)" className={inputCls} />
-                            </div>
-                            <input name="address" placeholder="Physical Business Address" className={inputCls} />
-                         </div>
-                         
-                         <div className="space-y-4">
-                            <label className={labelCls}>Precise Location</label>
-                            <div className="rounded-3xl overflow-hidden border border-slate-100 shadow-2xl shadow-slate-100">
-                               <LocationPicker />
-                            </div>
-                         </div>
-                      </div>
-                   )}
-                </div>
+                      {role === "DEALER" && (
+                        <div className="pt-4 flex justify-end">
+                           <button type="button" onClick={handleNextStep}
+                             className="bg-slate-950 hover:bg-black text-white px-8 rounded-2xl py-4 font-black text-[10px] uppercase tracking-[0.2em] transition-all shadow-xl shadow-slate-900/10 flex items-center justify-center gap-3">
+                             Continue <ChevronRight size={14} className="opacity-40" />
+                           </button>
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
 
-                <div className="pt-10 flex flex-col sm:flex-row items-center justify-between gap-10">
-                   <div className="flex-1">
-                      <button type="submit" disabled={loading}
-                        className="w-full bg-slate-950 hover:bg-black text-white rounded-[1.75rem] py-5 font-black text-[10px] uppercase tracking-[0.25em] transition-all shadow-2xl shadow-slate-950/20 flex items-center justify-center gap-3 active:scale-[0.98]">
-                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><UserPlus size={16} /> Finalize Registration</>}
-                      </button>
-                   </div>
-                   <p className="text-[11px] font-bold text-slate-400 max-w-[200px] text-center sm:text-left leading-relaxed">
+                  {(step === 2 && role === "DEALER") && (
+                    <motion.div 
+                      key="step2"
+                      initial={{ opacity: 0, x: 20 }} 
+                      animate={{ opacity: 1, x: 0 }} 
+                      exit={{ opacity: 0, x: 20 }} 
+                      transition={{ duration: 0.3 }}
+                      className="space-y-8"
+                    >
+                       <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <label htmlFor="county" className={labelCls}>Geographic Coverage</label>
+                            <button type="button" onClick={handleAutoFillLocation} className="text-[9px] font-black uppercase tracking-widest text-emerald-500 hover:text-emerald-700 flex items-center gap-1"><MapPin size={12}/> Auto-fill</button>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                             <select id="county" name="county" required className={clsx(inputCls, "appearance-none")}>
+                               {COUNTIES.map(c => <option key={c} value={c}>{c}</option>)}
+                             </select>
+                             <input id="location" name="location" required placeholder="Primary Area (e.g. Kilimani)" className={inputCls} />
+                          </div>
+                          <input id="address" name="address" placeholder="Physical Business Address" className={inputCls} />
+                       </div>
+                       
+                       <div className="space-y-4">
+                          <label className={labelCls}>Precise Mapping</label>
+                          <div className="rounded-3xl overflow-hidden border border-slate-100 shadow-2xl shadow-slate-100">
+                             <LocationPicker />
+                          </div>
+                       </div>
+
+                       <div className="space-y-4 pt-4 border-t border-slate-50">
+                          <label htmlFor="regPassword" className={labelCls}>Security Configuration</label>
+                          <div className="grid grid-cols-2 gap-4">
+                             <div className="relative group">
+                                <input 
+                                  id="regPassword"
+                                  name="password" 
+                                  type={showPassword ? "text" : "password"}
+                                  required minLength={8} placeholder="Password" 
+                                  value={password} onChange={e => setPassword(e.target.value)}
+                                  className={inputCls} 
+                                />
+                                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-200 hover:text-slate-900">
+                                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                </button>
+                                <PasswordMeter password={password} />
+                             </div>
+                             <input id="regConfirm" name="confirm" type="password" required minLength={8} placeholder="Confirm" className={inputCls} />
+                          </div>
+                       </div>
+
+                       <div className="pt-4 flex justify-between">
+                          <button type="button" onClick={() => setStep(1)} className="text-[10px] font-black uppercase text-slate-400 hover:text-slate-900 tracking-[0.2em] transition-colors">
+                            <ArrowLeft size={16}/> Back
+                          </button>
+                       </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="pt-6 border-t border-slate-100">
+                   <button type="submit" form="signup-form" disabled={loading}
+                     className="w-full bg-emerald-500 hover:bg-emerald-600 text-white rounded-[1.75rem] py-5 font-black text-[10px] uppercase tracking-[0.25em] transition-all shadow-2xl shadow-emerald-500/20 flex items-center justify-center gap-3 active:scale-[0.98]">
+                     {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><UserPlus size={16} /> Create Account</>}
+                   </button>
+                   <p className="mt-4 text-[11px] font-bold text-slate-400 text-center leading-relaxed">
                       By proceeding, you agree to our <Link href="#" className="text-slate-900 border-b border-slate-950/10">Terms</Link> and <Link href="#" className="text-slate-900 border-b border-slate-950/10">Privacy</Link>.
                    </p>
                 </div>
              </form>
 
-             <footer className="mt-20 pt-12 border-t border-slate-50 text-center lg:text-left">
+             <div className="relative my-8">
+               <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-slate-100"></div>
+               </div>
+               <div className="relative flex justify-center text-[10px] uppercase font-black tracking-[0.25em]">
+                  <span className="bg-[#FCFCFD] px-5 text-slate-200">Social Connect</span>
+               </div>
+             </div>
+
+             <div className="flex justify-center mb-10 w-full overflow-hidden">
+                <div id="google-signup-button" className="w-full max-w-[320px] transition-transform hover:scale-[1.02] flex justify-center" />
+             </div>
+
+             <footer className="mt-8 pt-8 border-t border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-6">
                 <p className="text-sm font-bold text-slate-400">
                    Part of our network?{" "}
                    <Link href="/login" className="text-slate-900 hover:text-emerald-500 transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10">Sign in to your portal</Link>
                 </p>
+
+                <div className="flex items-center gap-2.5 px-4 py-2 bg-emerald-50 rounded-full border border-emerald-100 shrink-0">
+                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                   <span className="text-[9px] font-black text-emerald-700 uppercase tracking-widest">256-bit SSL Encrypted</span>
+                </div>
              </footer>
           </div>
        </section>

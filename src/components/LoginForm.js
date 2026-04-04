@@ -2,12 +2,17 @@
 // src/components/LoginForm.js
 import { useState } from "react";
 import Link from "next/link";
-import { Lock, ArrowLeft, ShieldCheck, ChevronRight, Eye, EyeOff } from "lucide-react";
+import { Lock, ArrowLeft, ShieldCheck, ChevronRight, Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import Script from "next/script";
-import Image from "next/image";
+import AuthCarousel from "./AuthCarousel";
 
 export default function LoginForm({ error }) {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  
+  // Basic inline validation
+  const isValidEmail = email.includes("@") && email.includes(".");
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen">
@@ -51,42 +56,7 @@ export default function LoginForm({ error }) {
         }}
       />
 
-      {/* ── VISUAL SECTION (Left) ── */}
-      <section className="hidden lg:flex lg:w-[55%] relative items-end p-20 overflow-hidden bg-slate-900">
-         <Image 
-           src="/auth_hero.png" 
-           alt="Premium Car" 
-           fill 
-           priority
-           className="object-cover opacity-90 scale-105"
-         />
-         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-         
-         <div className="relative z-10 max-w-lg">
-            <div className="mb-6 inline-flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10">
-               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-               <span className="text-[10px] font-black text-white/80 uppercase tracking-[0.2em]">Established 2026</span>
-            </div>
-            <h2 className="text-6xl font-black text-white tracking-tighter leading-[0.95] mb-8">
-               High-Performance<br />
-               <span className="text-emerald-500">Marketplace.</span>
-            </h2>
-            <p className="text-white/60 text-lg font-medium leading-relaxed mb-10">
-               Access Kenya's most sophisticated automotive inventory and dealer tools in one seamless dashboard.
-            </p>
-            <div className="flex items-center gap-8">
-               <div className="flex flex-col">
-                  <span className="text-2xl font-black text-white">5,000+</span>
-                  <span className="text-[10px] font-black text-white/30 uppercase tracking-widest">Active Units</span>
-               </div>
-               <div className="w-px h-10 bg-white/10" />
-               <div className="flex flex-col">
-                  <span className="text-2xl font-black text-white">120+</span>
-                  <span className="text-[10px] font-black text-white/30 uppercase tracking-widest">Verified Dealers</span>
-               </div>
-            </div>
-         </div>
-      </section>
+      <AuthCarousel />
 
       {/* ── FORM SECTION (Right) ── */}
       <section className="flex-1 flex flex-col items-center justify-center p-8 sm:p-20 bg-[#FCFCFD] relative">
@@ -129,27 +99,36 @@ export default function LoginForm({ error }) {
 
             {/* Login Form */}
             <form action="/api/auth/login" method="POST" className="space-y-8">
-               <div className="space-y-3">
-                  <label className="text-[10px] font-black text-slate-300 uppercase tracking-[0.25em] ml-1">Email Address</label>
-                  <input 
-                    name="email" 
-                    type="email" 
-                    required 
-                    placeholder="e.g. james@dealership.com" 
-                    className="w-full bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-200 shadow-sm shadow-slate-100"
-                  />
+               <div className="space-y-3 relative">
+                  <label htmlFor="emailAddress" className="text-[10px] font-black text-slate-300 uppercase tracking-[0.25em] ml-1">Email Address</label>
+                  <div className="relative">
+                    <input 
+                      id="emailAddress"
+                      name="email" 
+                      type="email" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required 
+                      placeholder="e.g. james@dealership.com" 
+                      className={`w-full bg-white border ${isValidEmail ? 'border-emerald-500' : 'border-slate-100'} rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-200 shadow-sm shadow-slate-100 pr-12`}
+                    />
+                    {isValidEmail && <CheckCircle2 className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-500" size={18} />}
+                  </div>
                </div>
 
                <div className="space-y-3">
                   <div className="flex items-center justify-between ml-1">
-                    <label className="text-[10px] font-black text-slate-300 uppercase tracking-[0.25em]">Secure Password</label>
+                    <label htmlFor="securePassword" className="text-[10px] font-black text-slate-300 uppercase tracking-[0.25em]">Secure Password</label>
                     <Link href="#" className="text-[9px] font-black text-slate-300 hover:text-emerald-500 uppercase tracking-widest transition-colors">Recover Account</Link>
                   </div>
                   <div className="relative group">
                     <input 
+                      id="securePassword"
                       name="password" 
                       type={showPassword ? "text" : "password"}
                       required 
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       autoComplete="current-password"
                       placeholder="••••••••" 
                       className="w-full bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-200 shadow-sm shadow-slate-100 pr-14"
@@ -162,6 +141,16 @@ export default function LoginForm({ error }) {
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
+               </div>
+
+               <div className="flex items-center justify-between ml-1 pb-2">
+                 <label htmlFor="rememberMe" className="flex items-center gap-2 cursor-pointer group">
+                   <div className="relative flex items-center justify-center w-5 h-5 bg-white border border-slate-200 rounded text-transparent group-hover:border-emerald-500 transition-colors">
+                     <input type="checkbox" id="rememberMe" name="remember" className="absolute opacity-0 w-full h-full cursor-pointer peer" />
+                     <CheckCircle2 size={14} className="peer-checked:text-emerald-500 transition-colors" />
+                   </div>
+                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-slate-900 transition-colors">Remember Me</span>
+                 </label>
                </div>
 
                <button 
@@ -192,10 +181,6 @@ export default function LoginForm({ error }) {
                </p>
                
                <div className="mt-10 flex flex-col lg:flex-row items-center gap-6">
-                  <div className="flex items-center gap-2.5 px-4 py-2 bg-emerald-50 rounded-full border border-emerald-100">
-                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                     <span className="text-[9px] font-black text-emerald-700 uppercase tracking-widest">256-bit SSL Encrypted</span>
-                  </div>
                   <p className="text-[10px] font-black text-slate-200 uppercase tracking-[0.2em]">
                      MotorsKe © 2026
                   </p>
