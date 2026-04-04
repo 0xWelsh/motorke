@@ -11,9 +11,8 @@ import {
   CreditCard, 
   Settings, 
   LogOut,
-  ChevronRight,
-  ExternalLink,
-  ShieldCheck
+  ShieldCheck,
+  TrendingUp
 } from "lucide-react";
 import { clsx } from "clsx";
 
@@ -22,6 +21,7 @@ const links = [
   { href: "/portal/inventory", label: "Inventory",  Icon: Package         },
   { href: "/portal/leads",     label: "Inquiries",  Icon: MessageSquare   },
   { href: "/portal/analytics", label: "Performance", Icon: BarChart2       },
+  { href: "/portal/intelligence", label: "Intelligence", Icon: TrendingUp },
   { href: "/portal/subscription",   label: "Subscription", Icon: CreditCard      },
   { href: "/portal/profile",   label: "Settings",   Icon: Settings        },
 ];

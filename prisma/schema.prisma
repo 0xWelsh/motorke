@@ -333,3 +333,17 @@ enum PaymentStatus {
   FAILED
   REFUNDED
 }
+
+model Article {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  url         String   @unique
+  urlToImage  String?
+  publishedAt DateTime
+  sourceName  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("articles")
+}
