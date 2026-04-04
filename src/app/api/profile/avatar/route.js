@@ -1,9 +1,7 @@
-export const dynamic = "force-dynamic";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { uploadImage } from "@/lib/storage";
 
 export async function POST(request) {
   try {
@@ -30,18 +28,14 @@ export async function POST(request) {
       return NextResponse.json({ error: "Image must be under 5MB." }, { status: 400 });
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Generate unique filename
-    const ext = file.name.split(".").pop();
-    const filename = `${session.userId}-${Date.now()}.${ext}`;
+    const buffer = Buffer.from(await file.arrayBuffer());
     
-    const uploadsDir = path.join(process.cwd(), "public", "uploads", "avatars");
-    await mkdir(uploadsDir, { recursive: true });
-    await writeFile(path.join(uploadsDir, filename), buffer);
+    // Generate unique path for Supabase
+    const ext = file.name.split(".").pop();
+    const path = `avatars/${session.userId}-${Date.now()}.${ext}`;
 
-    const avatarUrl = `/uploads/avatars/${filename}`;
+    // Upload to Supabase
+    const avatarUrl = await uploadImage(buffer, path, file.type);
 
     // Update user record
     await db.user.update({

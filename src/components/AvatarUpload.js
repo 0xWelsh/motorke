@@ -21,16 +21,16 @@ export default function AvatarUpload({ currentUrl, userName, size = "lg" }) {
 
     setUploading(true);
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("avatar", file);
 
     try {
-      const res = await fetch("/api/upload", {
+      const res = await fetch("/api/profile/avatar", {
         method: "POST",
         body: formData,
       });
       const data = await res.json();
       if (res.ok) {
-        setAvatarUrl(data.url + "?t=" + Date.now()); // cache bust
+        setAvatarUrl(data.avatarUrl + "?t=" + Date.now()); // cache bust
       }
     } catch (err) {
       console.error("Upload failed:", err);
