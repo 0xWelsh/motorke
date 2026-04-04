@@ -9,6 +9,9 @@ import { getSession } from "@/lib/auth";
 export const metadata = {
   title: "Motorke — Find Your Car in Kenya",
   description: "Compare cars from top dealerships across Kenya.",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default async function RootLayout({ children }) {
@@ -33,7 +36,7 @@ export default async function RootLayout({ children }) {
         <footer className="mt-20 border-t border-slate-200 bg-white py-12 px-6">
           <div className="container mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex flex-col items-center md:items-start">
-              <span className="text-xl font-black tracking-tighter text-slate-900">Motor<span className="text-cyan-DEFAULT" style={{color:"#0891b2"}}>ke</span></span>
+              <img src="/logo.png" alt="Motorke" className="h-8 w-auto object-contain mb-2" />
               <p className="text-slate-400 text-xs mt-1 font-medium tracking-wide">The Standard for Kenyan Automotive.</p>
             </div>
             <div className="flex gap-8">

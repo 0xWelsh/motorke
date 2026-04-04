@@ -88,13 +88,8 @@ export default function Navbar({ user }) {
         <div className="flex items-center justify-between gap-8">
 
           {/* LOGO */}
-          <Link href="/" className="flex items-center gap-3 shrink-0 group">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm bg-[var(--brand)]">
-              <span className="text-white font-black text-lg tracking-tighter">M</span>
-            </div>
-            <span className="text-lg font-black text-slate-900 tracking-tighter">
-              Motor<span className="text-[var(--brand-accent)]">ke</span>
-            </span>
+          <Link href="/" className="flex items-center shrink-0 group">
+            <img src="/logo.png" alt="Motorke" className="h-10 w-auto object-contain" />
           </Link>
 
           {/* NAV LINKS */}
@@ -204,7 +199,7 @@ export default function Navbar({ user }) {
       {open && (
         <div className="lg:hidden fixed inset-0 top-0 bg-white z-[200] p-8">
           <div className="flex items-center justify-between mb-10">
-            <span className="text-xl font-black text-slate-900">Motor<span className="text-[var(--brand-accent)]">ke</span></span>
+            <img src="/logo.png" alt="Motorke" className="h-8 w-auto object-contain" />
             <button onClick={() => setOpen(false)} className="w-10 h-10 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center">
               <X className="w-5 h-5" />
             </button>
