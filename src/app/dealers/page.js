@@ -99,6 +99,7 @@ export default async function DealersPage() {
           </div>
         );
       })}
+      </div>
     </div>
   );
 }
