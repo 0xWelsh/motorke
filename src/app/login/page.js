@@ -18,7 +18,7 @@ export default async function LoginPage({ searchParams }) {
   const error = sp.error;
 
   return (
-    <div className="h-screen w-full bg-background bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-orange-500/10 via-[#050505] to-[#050505] flex flex-col items-center justify-center p-6 overflow-hidden relative">
+    <div className="min-h-screen w-full bg-[#FCFCFD]">
       <LoginForm error={error} />
     </div>
   );
