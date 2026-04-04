@@ -12,6 +12,7 @@ export default function AvatarUpload({ currentUrl, userName, size = "lg" }) {
     sm: "w-10 h-10 text-sm rounded-xl",
     md: "w-14 h-14 text-lg rounded-2xl",
     lg: "w-24 h-24 text-3xl rounded-[2rem]",
+    xl: "w-32 h-32 text-4xl rounded-[2.5rem]",
   };
 
   const handleUpload = async (e) => {
@@ -20,16 +21,16 @@ export default function AvatarUpload({ currentUrl, userName, size = "lg" }) {
 
     setUploading(true);
     const formData = new FormData();
-    formData.append("avatar", file);
+    formData.append("file", file);
 
     try {
-      const res = await fetch("/api/profile/avatar", {
+      const res = await fetch("/api/upload", {
         method: "POST",
         body: formData,
       });
       const data = await res.json();
-      if (data.success) {
-        setAvatarUrl(data.avatarUrl + "?t=" + Date.now()); // cache bust
+      if (res.ok) {
+        setAvatarUrl(data.url + "?t=" + Date.now()); // cache bust
       }
     } catch (err) {
       console.error("Upload failed:", err);
@@ -54,10 +55,10 @@ export default function AvatarUpload({ currentUrl, userName, size = "lg" }) {
         <img
           src={avatarUrl}
           alt={userName}
-          className={`${sizeMap[size]} object-cover border-2 border-white/10 group-hover:border-orange-500/50 transition-all`}
+          className={`${sizeMap[size]} object-cover border-4 border-white shadow-xl shadow-emerald-900/5 group-hover:border-emerald-100 transition-all`}
         />
       ) : (
-        <div className={`${sizeMap[size]} bg-white/10 border-2 border-white/10 group-hover:border-orange-500/50 text-white/40 group-hover:text-white flex items-center justify-center font-black transition-all`}>
+        <div className={`${sizeMap[size]} bg-emerald-50 border-4 border-white text-emerald-600 flex items-center justify-center font-black shadow-xl shadow-emerald-900/5 group-hover:border-emerald-100 transition-all`}>
           {initial}
         </div>
       )}

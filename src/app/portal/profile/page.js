@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 import { requireDealer } from "@/lib/auth";
 import { db } from "@/lib/db";
 import AvatarUpload from "@/components/AvatarUpload";
-import { User, Mail, Phone, Shield, Calendar } from "lucide-react";
+import { User, Mail, Phone, Shield, Calendar, Plus } from "lucide-react";
 
 export const metadata = { title: "Profile Settings — Motorke Dealer Portal" };
 
