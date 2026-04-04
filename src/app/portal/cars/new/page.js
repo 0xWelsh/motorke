@@ -11,14 +11,14 @@ export default async function PortalNewCarPage() {
   const dealers = [user.dealer];
 
   return (
-    <div className="p-8 max-w-3xl">
-      <div className="mb-8">
-        <a href="/portal" className="text-xs text-white/40 hover:text-white transition-colors">
-          ← My listings
+    <div className="animate-in fade-in duration-1000 max-w-4xl">
+      <div className="mb-12">
+        <a href="/portal" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-emerald-600 transition-colors mb-6">
+          <span className="text-lg">←</span> Back to Showroom
         </a>
-        <h1 className="text-3xl font-black mt-2">Add new car</h1>
-        <p className="text-white/40 text-sm mt-1">
-          Fill in the details and upload photos. Your listing goes live immediately.
+        <h1 className="text-4xl font-black text-slate-900 tracking-tight">Expand Inventory</h1>
+        <p className="text-slate-500 font-bold mt-2">
+          Deploy a new vehicle to the marketplace. Ensure all technical specs are precise.
         </p>
       </div>
       <CarForm dealers={dealers} action="/api/portal/cars" />

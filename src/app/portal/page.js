@@ -49,46 +49,47 @@ export default async function PortalPage() {
         </div>
       )}
       
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-brand mb-2 block">Enterprise Overview</span>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Welcome, {user.dealer?.name}</h1>
+          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--brand)] mb-2.5 block">Dealer Intelligence</span>
+          <h1 className="text-5xl font-black text-slate-900 tracking-tight">Marketplace Insights</h1>
         </div>
         <Link href="/portal/cars/new"
-          className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-pureWhite text-sm font-black px-8 py-4 rounded-2xl transition-all shadow-xl shadow-slate-900/10 hover:scale-105 active:scale-95">
-          <Plus size={18} /> Add New Listing
+          className="flex items-center gap-2 bg-[var(--brand)] hover:bg-[var(--brand-accent)] text-white text-[13px] font-black px-10 py-4 rounded-2xl transition-all shadow-xl shadow-[var(--brand)]/20 hover:scale-105 active:scale-95 uppercase tracking-widest">
+          <Plus size={18} /> New Listing
         </Link>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {[
-          { label: "Live Inventory", value: live,   icon: <CheckCircle2 className="text-emerald-500" />, sub: "Currently visible to buyers" },
-          { label: "Hidden Items",   value: hidden, icon: <EyeOff className="text-slate-400" />, sub: "Drafts or sold out items" },
-          { label: "Total Inquiries", value: leads,  icon: <MessageSquare className="text-brand" />, sub: "Potential buyer messages" },
+          { label: "Live Inventory", value: live,   icon: <CheckCircle2 className="text-emerald-600" />, sub: "Publicly visible units" },
+          { label: "Hidden Listings",   value: hidden, icon: <EyeOff className="text-slate-400" />, sub: "Drafts or private units" },
+          { label: "Buyer Leads", value: leads,  icon: <MessageSquare className="text-[var(--brand)]" />, sub: "New enquiries today" },
         ].map((stat, i) => (
-          <div key={i} className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm hover:shadow-xl transition-all duration-300 group">
-            <div className="flex items-center justify-between mb-6">
-              <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:bg-brand-light/50 transition-all">
+          <div key={i} className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm hover:shadow-xl transition-all duration-500 group">
+            <div className="flex items-center justify-between mb-8">
+              <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:bg-emerald-50 transition-all shadow-sm">
                 {stat.icon}
               </div>
-              <ArrowUpRight className="text-slate-200 group-hover:text-brand transition-colors" size={20} />
+              <ArrowUpRight className="text-slate-200 group-hover:text-[var(--brand)] transition-colors" size={24} />
             </div>
-            <p className="text-4xl font-black text-slate-900 mb-2">{stat.value}</p>
-            <p className="text-[11px] font-black uppercase tracking-widest text-slate-500 mb-1">{stat.label}</p>
-            <p className="text-[10px] font-black text-slate-400">{stat.sub}</p>
+            <p className="text-5xl font-black text-slate-900 mb-2.5 tracking-tighter">{stat.value.toString().padStart(2, '0')}</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--brand)] mb-1.5">{stat.label}</p>
+            <p className="text-[10px] font-bold text-slate-400">{stat.sub}</p>
           </div>
         ))}
       </div>
 
       {/* Main Content Area */}
-      <div className="bg-white border border-slate-200 rounded-[2.5rem] shadow-sm overflow-hidden">
-        <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-          <h2 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
-            <Car size={20} className="text-amber-600" /> Recent Inventory
+      <div className="bg-white border border-slate-100 rounded-[3rem] shadow-sm overflow-hidden">
+        <div className="px-10 py-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/10">
+          <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            Showroom Activity
           </h2>
-          <Link href="/portal/inventory" className="text-xs font-black uppercase tracking-widest dark:text-slate-400 text-slate-600 hover:text-amber-600 transition-colors">
-            Manage All
+          <Link href="/portal/inventory" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-[var(--brand)] transition-colors">
+            Manage Inventory →
           </Link>
         </div>
 
@@ -149,18 +150,18 @@ export default async function PortalPage() {
                       </span>
                     </td>
                     <td className="px-8 py-5 text-right">
-                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Link href={`/portal/cars/${car.id}/edit`}
-                          className="p-2 dark:text-slate-400 text-slate-600 hover:text-slate-900 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-all shadow-sm">
+                          className="p-2.5 bg-slate-50 text-slate-500 hover:text-[var(--brand)] hover:bg-emerald-50 rounded-xl border border-slate-100 hover:border-emerald-100 transition-all shadow-sm">
                           <Edit3 size={16} />
                         </Link>
                         <Link href={`/cars/${car.id}`} target="_blank"
-                          className="p-2 dark:text-slate-400 text-slate-600 hover:text-amber-600 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-all shadow-sm">
+                          className="p-2.5 bg-slate-50 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl border border-slate-100 hover:border-emerald-100 transition-all shadow-sm">
                           <ExternalLink size={16} />
                         </Link>
                         <form action={`/api/admin/cars/${car.id}/toggle`} method="POST">
                           <button type="submit"
-                            className="p-2 dark:text-slate-400 text-slate-600 hover:text-slate-900 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-all shadow-sm">
+                            className="p-2.5 bg-slate-50 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-xl border border-slate-100 transition-all shadow-sm">
                             {car.available ? <EyeOff size={16} /> : <Eye size={16} />}
                           </button>
                         </form>

@@ -33,8 +33,8 @@ function NavLink({ href, label, Icon, active }) {
       className={clsx(
         "flex items-center justify-between group px-4 py-3 rounded-2xl transition-all duration-200",
         active 
-          ? "bg-orange-600 text-white shadow-[0_0_15px_rgba(234,88,12,0.4)]" 
-          : "text-white/40 hover:text-white hover:bg-white/5"
+          ? "bg-[var(--brand)] text-white shadow-lg shadow-[var(--brand)]/10" 
+          : "text-slate-400 hover:text-white hover:bg-white/5 shadow-sm"
       )}
     >
       <div className="flex items-center gap-3">
@@ -56,14 +56,14 @@ export default function PortalLayout({ children }) {
         {/* Branding */}
         <div className="p-8">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform">
+            <div className="w-10 h-10 bg-[var(--brand)] rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform shadow-lg shadow-[var(--brand)]/10">
               <span className="text-white font-black text-xl">M</span>
             </div>
             <div>
               <span className="text-xl font-black text-white tracking-tighter block leading-none">
-                Motor<span className="text-orange-600">ke</span>
+                Motor<span className="text-[var(--brand-accent)]">ke</span>
               </span>
-              <span className="text-[10px] font-black text-orange-600/60 uppercase tracking-widest mt-1 block">
+              <span className="text-[10px] font-black text-[var(--brand-accent)]/80 uppercase tracking-widest mt-1 block">
                 Dealer Portal
               </span>
             </div>
@@ -90,7 +90,7 @@ export default function PortalLayout({ children }) {
         {/* User / Footer */}
         <div className="p-4 border-t border-white/5 bg-black/20">
           <Link href="/portal/cars/new" 
-            className="flex items-center justify-center gap-2 w-full bg-orange-600 hover:bg-orange-500 text-pureWhite font-black py-4 rounded-2xl mb-4 transition-all hover:scale-[1.02] shadow-[0_0_15px_rgba(234,88,12,0.4)]">
+            className="flex items-center justify-center gap-2 w-full bg-[var(--brand)] hover:bg-[var(--brand-accent)] text-white font-black py-4 rounded-2xl mb-4 transition-all hover:scale-[1.02] shadow-lg shadow-[var(--brand)]/20">
             <Plus size={18} /> Add New Vehicle
           </Link>
           
@@ -110,21 +110,21 @@ export default function PortalLayout({ children }) {
       {/* Main Content */}
       <main className="flex-1 overflow-x-hidden relative">
         {/* Modern Top Header / Breadcrumb */}
-        <header className="sticky top-0 z-40 bg-surface/80 backdrop-blur-xl border-b border-white/5 px-10 py-4 flex items-center justify-between">
-           <div className="flex items-center gap-2 text-xs font-bold text-white/40 uppercase tracking-widest">
-              <span>Portal</span>
-              <ChevronRight size={12} className="text-white/20" />
-              <span className="text-white">{links.find(l => l.href === path)?.label || "Dashboard"}</span>
+        <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-10 py-4 flex items-center justify-between">
+           <div className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest">
+              <span>Management</span>
+              <ChevronRight size={12} className="text-slate-200" />
+              <span className="text-slate-900">{links.find(l => l.href === path)?.label || "Overview"}</span>
            </div>
            
            <div className="flex items-center gap-4">
               <div className="hidden md:flex flex-col items-end">
-                <p className="text-xs font-black text-white leading-none">Verified Dealer</p>
-                <p className="text-[10px] font-bold text-emerald-500 mt-1 flex items-center gap-1 uppercase tracking-tighter">
-                   <ShieldCheck size={10} /> Active Plan
+                <p className="text-xs font-black text-slate-900 leading-none">Verified Showroom</p>
+                <p className="text-[10px] font-black text-emerald-600 mt-1 flex items-center gap-1 uppercase tracking-[0.1em]">
+                   <ShieldCheck size={10} className="fill-emerald-50" /> Active Subscription
                 </p>
               </div>
-              <div className="w-10 h-10 rounded-2xl bg-white/10 text-orange-500 flex items-center justify-center font-black">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-100 text-[var(--brand)] flex items-center justify-center font-black shadow-sm">
                 D
               </div>
            </div>

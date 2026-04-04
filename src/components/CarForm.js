@@ -5,6 +5,7 @@
 "use client";
 
 import { useState } from "react";
+import { Plus, Check, Info } from "lucide-react";
 import { BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS, BADGE_OPTIONS } from "@/lib/utils";
 
 const MAKES = [
@@ -20,7 +21,7 @@ const CONDITIONS = ["Foreign Used", "Locally Used", "Brand New"];
 export default function CarForm({ dealers = [], car = null, action, method = "POST" }) {
   const isEdit = !!car;
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 40 }, (_, i) => currentYear - i); // Expanded year range
+  const years = Array.from({ length: 40 }, (_, i) => currentYear - i);
 
   const [uploading, setUploading]   = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ done: 0, total: 0 });
@@ -39,7 +40,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setError("");
     setUploadProgress({ done: 0, total: files.length });
 
-    // Upload all files in parallel
     const results = await Promise.allSettled(
       files.map(async (file) => {
         const formData = new FormData();
@@ -55,12 +55,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       })
     );
 
-    // Collect successful uploads
     const urls = results
       .filter((r) => r.status === "fulfilled")
       .map((r) => r.value);
 
-    // Collect failures
     const failures = results
       .filter((r) => r.status === "rejected")
       .map((r) => r.reason.message);
@@ -88,7 +86,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   function removeImage(idx) {
     setImages((prev) => {
       const next = prev.filter((_, i) => i !== idx);
-      // If we removed the primary, make first image primary
       if (prev[idx].isPrimary && next.length > 0) next[0].isPrimary = true;
       return next;
     });
@@ -102,11 +99,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     const fd = new FormData(e.target);
     const data = Object.fromEntries(fd.entries());
 
-    // Parse features
     data.features = (data.features || "")
       .split(",").map((f) => f.trim()).filter(Boolean);
 
-    // Attach images
     data.images   = images;
     data.year      = parseInt(data.year);
     data.price     = parseInt(data.price);
@@ -136,7 +131,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || "Failed to save");
 
-      // Redirect to the car page or admin cars list
       window.location.href = result.redirectTo || "/admin/cars";
     } catch (err) {
       setError(err.message);
@@ -144,29 +138,32 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     }
   }
 
-  const inputCls = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
-  const selectCls = "w-full bg-surface border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
-  const labelCls = "block text-xs text-white/40 uppercase tracking-wider mb-2";
+  const inputCls = "w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 placeholder:text-slate-300 outline-none focus:border-[var(--brand)] transition-all shadow-sm";
+  const selectCls = "w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 outline-none focus:border-[var(--brand)] transition-all shadow-sm appearance-none";
+  const labelCls = "block text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1 mb-2.5";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-7">
+    <form onSubmit={handleSubmit} className="space-y-12 animate-in fade-in duration-700">
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3">
+        <div className="bg-rose-50 border border-rose-100 text-rose-600 text-[11px] font-black uppercase tracking-widest rounded-2xl px-6 py-4 shadow-sm flex items-center gap-3">
+          <Info size={16} />
           {error}
         </div>
       )}
 
-      {/* ── Dealership (admin only — hidden if only 1 dealer) ── */}
+      {/* ── Dealership ── */}
       {dealers.length > 1 && (
-        <div>
-          <label className={labelCls}>Dealership *</label>
-          <select name="dealerId" defaultValue={car?.dealerId || ""} required className={selectCls}>
-            <option value="">Select dealership</option>
-            {dealers.map((d) => (
-              <option key={d.id} value={d.id}>{d.name} — {d.location}</option>
-            ))}
-          </select>
+        <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-sm">
+          <label className={labelCls}>Assigned Dealership *</label>
+          <div className="relative">
+            <select name="dealerId" defaultValue={car?.dealerId || ""} required className={selectCls}>
+              <option value="">Select Showroom Territory</option>
+              {dealers.map((d) => (
+                <option key={d.id} value={d.id}>{d.name} — {d.location}</option>
+              ))}
+            </select>
+          </div>
         </div>
       )}
       {dealers.length === 1 && (
@@ -174,173 +171,188 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       )}
 
       {/* ── Identity ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div>
-          <label className={labelCls}>Make *</label>
-          <input name="make" list="makes-list" required defaultValue={car?.make || ""}
-            placeholder="Toyota" className={inputCls} />
-          <datalist id="makes-list">
-            {MAKES.map((m) => <option key={m} value={m} />)}
-          </datalist>
+      <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
+        <div className="flex items-center gap-3 mb-10">
+           <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+           <h3 className="text-lg font-black text-slate-900 tracking-tight">Core Vehicle Identity</h3>
         </div>
-        <div>
-          <label className={labelCls}>Model *</label>
-          <input name="model" required defaultValue={car?.model || ""}
-            placeholder="Hilux" className={inputCls} />
-        </div>
-        <div>
-          <label className={labelCls}>Variant</label>
-          <input name="variant" defaultValue={car?.variant || ""}
-            placeholder="Double Cab 4x4" className={inputCls} />
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <label className={labelCls}>Manufacturer Spec *</label>
+            <input name="make" list="makes-list" required defaultValue={car?.make || ""}
+              placeholder="e.g. Toyota" className={inputCls} />
+            <datalist id="makes-list">
+              {MAKES.map((m) => <option key={m} value={m} />)}
+            </datalist>
+          </div>
+          <div>
+            <label className={labelCls}>Model Group *</label>
+            <input name="model" required defaultValue={car?.model || ""}
+              placeholder="e.g. Hilux" className={inputCls} />
+          </div>
+          <div>
+            <label className={labelCls}>Model Variant</label>
+            <input name="variant" defaultValue={car?.variant || ""}
+              placeholder="e.g. Double Cab 4x4" className={inputCls} />
+          </div>
         </div>
       </div>
 
-      {/* ── Year / Price / Mileage ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div>
-          <label className={labelCls}>Year *</label>
+      {/* ── Logistics ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
+          <label className={labelCls}>Model Year *</label>
           <select name="year" defaultValue={car?.year || currentYear} required className={selectCls}>
             {years.map((y) => <option key={y} value={y}>{y}</option>)}
           </select>
         </div>
-        <div>
-          <label className={labelCls}>Price (KES) *</label>
+        <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm border-b-4 border-b-emerald-500">
+          <label className={labelCls}>Showroom Price (KES) *</label>
           <input name="price" type="number" required defaultValue={car?.price || ""}
-            placeholder="2500000" className={inputCls} />
+            placeholder="e.g. 2,500,000" className={`${inputCls} text-emerald-600`} />
         </div>
-        <div>
-          <label className={labelCls}>Mileage (km)</label>
+        <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
+          <label className={labelCls}>Distance Travelled (km)</label>
           <input name="mileage" type="number" defaultValue={car?.mileage || ""}
-            placeholder="45000" className={inputCls} />
+            placeholder="e.g. 45,000" className={inputCls} />
         </div>
       </div>
 
       {/* ── Engine & Performance ── */}
-      <div className="border-t border-white/5 pt-7">
-        <h3 className="text-sm font-black text-white/80 uppercase tracking-widest mb-6 flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-          Engine & Performance
-        </h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
+        <div className="flex items-center gap-3 mb-10">
+           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+           <h3 className="text-lg font-black text-slate-900 tracking-tight">Technical Architecture</h3>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
-            <label className={labelCls}>Engine Size (cc)</label>
+            <label className={labelCls}>Displacement (cc)</label>
             <input name="engineCC" type="number" defaultValue={car?.engineCC || ""}
               placeholder="2000" className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>Cylinders</label>
+            <label className={labelCls}>Cylinder Count</label>
             <input name="cylinders" type="number" defaultValue={car?.cylinders || ""}
               placeholder="4" className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>Horsepower (hp)</label>
+            <label className={labelCls}>Output (HP)</label>
             <input name="horsepower" type="number" defaultValue={car?.horsepower || ""}
               placeholder="180" className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>Torque (Nm)</label>
+            <label className={labelCls}>Peak Torque (Nm)</label>
             <input name="torque" type="number" defaultValue={car?.torque || ""}
               placeholder="250" className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>Fuel Type *</label>
+            <label className={labelCls}>Energy Source *</label>
             <select name="fuelType" defaultValue={car?.fuelType || "PETROL"} required className={selectCls}>
               {Object.entries(FUEL_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
             </select>
           </div>
           <div>
-            <label className={labelCls}>Transmission *</label>
+            <label className={labelCls}>Drive Logic *</label>
             <select name="transmission" defaultValue={car?.transmission || "AUTOMATIC"} required className={selectCls}>
               {Object.entries(TRANSMISSION_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
             </select>
           </div>
-          <div className="flex items-end pb-3">
-             <label className="flex items-center gap-2 cursor-pointer">
+          <div className="flex items-center pt-8">
+             <label className="flex items-center gap-3 cursor-pointer group">
               <input type="checkbox" name="turbo" defaultChecked={car?.turbo ?? false}
-                className="w-4 h-4 accent-[#f97316]" />
-              <span className="text-sm text-white/60">Turbocharged</span>
+                className="w-5 h-5 accent-emerald-500 rounded-lg transition-all" />
+              <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-900 transition-colors">Induction: Turbo</span>
             </label>
           </div>
         </div>
       </div>
 
-      {/* ── Chassis & Exterior ── */}
-      <div className="border-t border-white/5 pt-7">
-        <h3 className="text-sm font-black text-white/80 uppercase tracking-widest mb-6 flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-          Chassis & Exterior
-        </h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div>
-            <label className={labelCls}>Body type *</label>
-            <select name="bodyType" defaultValue={car?.bodyType || "SEDAN"} required className={selectCls}>
-              {Object.entries(BODY_TYPE_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-            </select>
+       {/* ── Features & Description ── */}
+       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
+            <label className={labelCls}>Interior Excellence & Key Systems <span className="normal-case text-slate-300 font-bold ml-2">(Comma Separated)</span></label>
+            <textarea name="features" rows={4}
+              defaultValue={car?.features?.join(", ") || ""}
+              placeholder="e.g. Sunroof, Leather Trim, Reverse Camera, Apple CarPlay"
+              className={`${inputCls} resize-none py-6`} />
           </div>
-          <div>
-            <label className={labelCls}>Drivetrain</label>
-            <select name="drivetrain" defaultValue={car?.drivetrain || "FWD"} className={selectCls}>
-              {Object.entries(DRIVETRAIN_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-            </select>
+          <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
+            <label className={labelCls}>Listing Description</label>
+            <textarea name="description" rows={4}
+              defaultValue={car?.description || ""}
+              placeholder="Provide history, condition, and any unique selling points..."
+              className={`${inputCls} resize-none py-6`} />
           </div>
-          <div>
-            <label className={labelCls}>Steering</label>
-            <select name="steering" defaultValue={car?.steering || "RHD"} className={selectCls}>
-              {Object.entries(STEERING_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className={labelCls}>Colour</label>
-            <input name="color" defaultValue={car?.color || ""}
-              placeholder="Pearl White" className={inputCls} />
-          </div>
-        </div>
-      </div>
+       </div>
 
-      {/* ── Comfort & Safety ── */}
-      <div className="border-t border-white/5 pt-7">
-        <h3 className="text-sm font-black text-white/80 uppercase tracking-widest mb-6 flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-          Comfort & Safety
-        </h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div>
-            <label className={labelCls}>Seats</label>
-            <input name="seats" type="number" min="1" max="60" defaultValue={car?.seats || "5"}
-              className={inputCls} />
+      {/* ── Image Upload ── */}
+      <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
+        <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center gap-3">
+             <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+             <h3 className="text-lg font-black text-slate-900 tracking-tight">Showroom Visuals</h3>
           </div>
-          <div>
-            <label className={labelCls}>Airbags</label>
-            <input name="airbags" type="number" min="0" max="20" defaultValue={car?.airbags || "0"}
-              className={inputCls} />
-          </div>
-          <div className="flex items-end pb-3">
-             <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" name="sunroof" defaultChecked={car?.sunroof ?? false}
-                className="w-4 h-4 accent-[#f97316]" />
-              <span className="text-sm text-white/60">Sunroof</span>
-            </label>
-          </div>
+          <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">Min. 3 High RES Photos Preferred</p>
         </div>
-      </div>
 
-      {/* ── Features ── */}
-      <div>
-        <label className={labelCls}>
-          Features <span className="normal-case text-white/20">(comma-separated)</span>
+        <label className={`group relative flex flex-col items-center justify-center border-2 border-dashed border-slate-100 hover:border-emerald-200 rounded-[2rem] p-16 cursor-pointer transition-all duration-500 bg-slate-50/20 hover:bg-emerald-50/10 mb-8 ${uploading ? "pointer-events-none opacity-50" : ""}`}>
+          <input type="file" accept="image/*" multiple onChange={handleImageChange} className="hidden" disabled={uploading} />
+          
+          {uploading ? (
+            <div className="text-center">
+              <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-6" />
+              <p className="text-sm font-black text-slate-900 tracking-tight uppercase">Synchronizing Assets</p>
+              <p className="text-[10px] font-bold text-slate-400 mt-2">Item {uploadProgress.done} of {uploadProgress.total}</p>
+            </div>
+          ) : (
+            <div className="text-center group-hover:scale-105 transition-transform duration-500">
+              <div className="w-16 h-16 bg-white border border-slate-100 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:shadow-xl transition-all">
+                 <Plus className="text-slate-300 group-hover:text-emerald-500" size={32} />
+              </div>
+              <p className="text-sm font-black text-slate-900 uppercase tracking-widest">Deploy Photos</p>
+              <p className="text-[10px] font-bold text-slate-400 mt-2 leading-relaxed">Drag assets or click to browse. WEBP/JPG/PNG supported.</p>
+            </div>
+          )}
         </label>
-        <input name="features"
-          defaultValue={car?.features?.join(", ") || ""}
-          placeholder="Sunroof, Leather seats, Reverse camera, Apple CarPlay"
-          className={inputCls} />
+
+        {images.length > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {images.map((img, idx) => (
+              <div key={idx} className={`group/img relative rounded-[1.5rem] overflow-hidden border-2 transition-all duration-500 ${
+                img.isPrimary ? "border-emerald-500 shadow-xl" : "border-slate-50 shadow-sm hover:border-slate-200"
+              }`}>
+                <img src={img.url} alt="" className="w-full aspect-square object-cover transition-transform duration-700 group-hover/img:scale-110" />
+                
+                {img.isPrimary && (
+                  <div className="absolute top-3 left-3 bg-emerald-500 text-white px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest shadow-lg flex items-center gap-1.5">
+                    <span className="w-1 h-1 bg-white rounded-full animate-pulse" /> Asset Primary
+                  </div>
+                )}
+
+                <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] opacity-0 group-hover/img:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-4">
+                  {!img.isPrimary && (
+                    <button type="button" onClick={() => setPrimary(idx)}
+                      className="w-full bg-white hover:bg-emerald-50 text-slate-900 text-[9px] font-black uppercase tracking-widest py-3 rounded-xl transition-all shadow-xl active:scale-95">
+                      Main Hub
+                    </button>
+                  )}
+                  <button type="button" onClick={() => removeImage(idx)}
+                    className="w-full bg-rose-500/90 hover:bg-rose-600 text-white text-[9px] font-black uppercase tracking-widest py-3 rounded-xl transition-all active:scale-95">
+                    Purge
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── Badges ── */}
-      <div>
-        <label className={labelCls}>
-          Listing Badges <span className="normal-case text-white/20">(click to toggle)</span>
-        </label>
-        <div className="flex flex-wrap gap-2">
+      <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
+        <label className={labelCls}>Marketplace Badges <span className="normal-case text-slate-300 font-bold ml-2">(Click to Toggle)</span></label>
+        <div className="flex flex-wrap gap-3 mt-4">
           {Object.entries(BADGE_OPTIONS).map(([name, { color }]) => {
             const active = badges.includes(name);
             return (
@@ -350,12 +362,13 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 onClick={() => setBadges((prev) =>
                   active ? prev.filter((b) => b !== name) : [...prev, name]
                 )}
-                className={`text-xs font-semibold px-3 py-1.5 border transition-all ${
+                className={`text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-xl border-2 transition-all active:scale-95 ${
                   active
-                    ? `${color} ring-1 ring-white/20`
-                    : "bg-white/5 text-white/30 border-white/10 hover:text-white/60"
+                    ? `bg-emerald-500 border-emerald-500 text-white shadow-lg`
+                    : "bg-slate-50 border-slate-50 text-slate-400 hover:border-slate-200"
                 }`}
               >
+                {active && <Check size={10} className="inline-block mr-2" />}
                 {name}
               </button>
             );
@@ -363,94 +376,39 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
       </div>
 
-      {/* ── Description ── */}
-      <div>
-        <label className={labelCls}>Description</label>
-        <textarea name="description" rows={4} defaultValue={car?.description || ""}
-          placeholder="Describe the car — history, condition, any extras included..."
-          className={`${inputCls} resize-none`} />
+      {/* ── Status Flags ── */}
+      <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
+        <div className="flex items-center gap-3 mb-10">
+           <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+           <h3 className="text-lg font-black text-slate-900 tracking-tight">Publicity Flags</h3>
+        </div>
+        
+        <div className="flex flex-wrap gap-x-12 gap-y-6">
+          {[
+            { name: "negotiable", label: "Accepting Offers", defaultChecked: car?.negotiable ?? true },
+            { name: "dutyPaid",   label: "Customs Duty Paid", defaultChecked: car?.dutyPaid ?? true },
+            { name: "imported",   label: "Import Origin Docs", defaultChecked: car?.imported ?? true },
+            { name: "featured",   label: "Premium Spotlight", defaultChecked: car?.featured ?? false },
+          ].map(({ name, label, defaultChecked }) => (
+            <label key={name} className="flex items-center gap-4 cursor-pointer group">
+              <input type="checkbox" name={name} defaultChecked={defaultChecked}
+                className="w-6 h-6 accent-emerald-500 rounded-lg transition-all" />
+              <span className="text-[11px] font-black uppercase tracking-[0.1em] text-slate-400 group-hover:text-slate-900 transition-colors">{label}</span>
+            </label>
+          ))}
+        </div>
       </div>
 
-      {/* ── Images ── */}
-      <div>
-        <label className={labelCls}>Photos</label>
-
-        {/* Upload area */}
-        <label className="flex flex-col items-center justify-center border-2 border-dashed border-white/10 hover:border-[#f97316]/30 rounded-2xl p-8 cursor-pointer transition-colors mb-4">
-          <input type="file" accept="image/*" multiple onChange={handleImageChange}
-            className="hidden" disabled={uploading} />
-          {uploading ? (
-            <div className="text-center">
-              <div className="w-8 h-8 border-2 border-[#f97316] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-              <p className="text-sm text-white/40">
-                Uploading {uploadProgress.done} of {uploadProgress.total}…
-              </p>
-            </div>
-          ) : (
-            <div className="text-center">
-              <p className="text-3xl mb-2">📷</p>
-              <p className="text-sm text-white/50">Click or drag to bulk-upload photos</p>
-              <p className="text-xs text-white/20 mt-1">JPG, PNG, WEBP · Select as many as you want</p>
-            </div>
-          )}
-        </label>
-
-        {/* Uploaded images preview */}
-        {images.length > 0 && (
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
-            {images.map((img, idx) => (
-              <div key={idx} className={`relative rounded-xl overflow-hidden border-2 transition-colors ${
-                img.isPrimary ? "border-[#f97316]" : "border-white/10"
-              }`}>
-                <img src={img.url} alt="" className="w-full aspect-square object-cover" />
-                {img.isPrimary && (
-                  <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-[#f97316] text-white px-2 py-1 rounded-lg font-black text-[9px] uppercase tracking-tighter shadow-lg">
-                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                    Thumbnail
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-3">
-                  {!img.isPrimary && (
-                    <button type="button" onClick={() => setPrimary(idx)}
-                      className="text-[10px] font-black uppercase tracking-widest bg-white text-black w-full py-2 rounded-lg hover:bg-[#f97316] hover:text-white transition-colors">
-                      Set as Main
-                    </button>
-                  )}
-                  <button type="button" onClick={() => removeImage(idx)}
-                    className="text-[10px] font-black uppercase tracking-widest bg-red-500 text-white w-full py-2 rounded-lg hover:bg-red-600 transition-colors">
-                    Remove
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+      <div className="flex flex-col sm:flex-row gap-6 pt-10">
+        <button type="submit" disabled={submitting || uploading}
+          className="flex-1 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-100 text-white disabled:text-slate-300 font-black py-7 rounded-[2.5rem] text-sm uppercase tracking-[0.25em] transition-all shadow-2xl shadow-slate-900/10 active:scale-[0.98] hover:scale-[1.01] flex items-center justify-center gap-3">
+          {submitting ? "Processing Asset..." : isEdit ? "Update Showroom Entry" : "Deploy to Marketplace"}
+          {!submitting && <Check size={20} />}
+        </button>
+        <a href="/portal" className="sm:w-56 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-900 font-black py-7 rounded-[2.5rem] text-[10px] uppercase tracking-[0.25em] transition-all flex items-center justify-center shadow-sm">
+          Discard Changes
+        </a>
       </div>
-
-      {/* ── Flags ── */}
-      <div className="flex flex-wrap gap-6">
-        {[
-          { name: "negotiable", label: "Price negotiable",    defaultChecked: car?.negotiable ?? true  },
-          { name: "dutyPaid",   label: "Duty fully paid",     defaultChecked: car?.dutyPaid   ?? true  },
-          { name: "imported",   label: "Imported from Japan", defaultChecked: car?.imported   ?? true  },
-          { name: "featured",   label: "Featured listing",    defaultChecked: car?.featured   ?? false },
-        ].map(({ name, label, defaultChecked }) => (
-          <label key={name} className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" name={name} defaultChecked={defaultChecked}
-              className="w-4 h-4 accent-[#f97316]" />
-            <span className="text-sm text-white/60">{label}</span>
-          </label>
-        ))}
-      </div>
-
-      {/* ── Submit ── */}
-      <button
-        type="submit"
-        disabled={submitting || uploading}
-        className="w-full bg-[#f97316] hover:bg-[#ea6c0b] disabled:opacity-50 disabled:cursor-not-allowed text-white font-black py-4 rounded-xl transition-colors text-base"
-      >
-        {submitting ? "Saving…" : isEdit ? "Save changes" : "Publish listing →"}
-      </button>
     </form>
   );
 }

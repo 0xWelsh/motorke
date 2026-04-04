@@ -1,18 +1,38 @@
 "use client";
-// src/components/LeadManager.js
-
 import { useState } from "react";
 import { useModal } from "@/components/Modal";
+import { 
+  Search, 
+  Phone, 
+  Mail, 
+  MessageCircle, 
+  User, 
+  Calendar, 
+  ChevronDown, 
+  Plus, 
+  ExternalLink,
+  MessageSquare,
+  CheckCircle2,
+  Clock,
+  Ban,
+  ArrowRight,
+  Car as CarIcon
+} from "lucide-react";
 
-const STATUSES = ["NEW","CONTACTED","INTERESTED","NEGOTIATING","SOLD","DEAD"];
+/**
+ * Status Metadata for Premium Branding
+ * Emerald (Success/Sold), Sky (Interested), Slate (Neutral/Dead)
+ */
 const STATUS_META = {
-  NEW:         { label: "New",         bg: "#dbeafe", color: "#1d4ed8", dot: "#3B82F6" },
-  CONTACTED:   { label: "Contacted",   bg: "#fef3c7", color: "#92400e", dot: "#F59E0B" },
-  INTERESTED:  { label: "Interested",  bg: "#e0f2fe", color: "#075985", dot: "#0891b2" },
-  NEGOTIATING: { label: "Negotiating", bg: "#fae8ff", color: "#7e22ce", dot: "#a855f7" },
-  SOLD:        { label: "Sold",        bg: "#dcfce7", color: "#166534", dot: "#10B981" },
-  DEAD:        { label: "Dead",        bg: "#f5f5f5", color: "#6b7280", dot: "#9CA3AF" },
+  NEW:         { label: "New",         bg: "bg-blue-50",     text: "text-blue-600",     border: "border-blue-100",   icon: <Clock size={12} /> },
+  CONTACTED:   { label: "Contacted",   bg: "bg-amber-50",    text: "text-amber-600",    border: "border-amber-100",  icon: <MessageCircle size={12} /> },
+  INTERESTED:  { label: "Interested",  bg: "bg-sky-50",      text: "text-sky-600",      border: "border-sky-100",    icon: <User size={12} /> },
+  NEGOTIATING: { label: "Negotiating", bg: "bg-purple-50",   text: "text-purple-600",   border: "border-purple-100", icon: <MessageSquare size={12} /> },
+  SOLD:        { label: "Closed/Sold", bg: "bg-emerald-50",  text: "text-emerald-600",  border: "border-emerald-100",icon: <CheckCircle2 size={12} /> },
+  DEAD:        { label: "Closed/Dead", bg: "bg-slate-50",    text: "text-slate-400",    border: "border-slate-100",  icon: <Ban size={12} /> },
 };
+
+const STATUSES = Object.keys(STATUS_META);
 
 const fmt    = (n)   => "KSh " + Number(n).toLocaleString("en-KE");
 const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-KE", { day:"numeric", month:"short", year:"numeric" });
@@ -22,7 +42,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
   const [expanded,     setExpanded]     = useState(null);
   const [noteInputs,   setNoteInputs]   = useState({});
   const [saving,       setSaving]       = useState({});
-  const { success, alert } = useModal();
+  const { success } = useModal();
 
   async function updateStatus(leadId, status) {
     setSaving(prev => ({ ...prev, [leadId]: true }));
@@ -47,163 +67,200 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
       body: JSON.stringify({ note }),
     });
     if (res.ok) {
+      const newNote = { id: Date.now(), note, createdAt: new Date().toISOString() };
+      setLeads(prev => prev.map(l => l.id === leadId ? { ...l, notes: [newNote, ...(l.notes || [])] } : l));
       setNoteInputs(prev => ({ ...prev, [leadId]: "" }));
-      await success("Note saved");
+      await success("Note saved successfully");
     }
     setSaving(prev => ({ ...prev, [`note_${leadId}`]: false }));
   }
 
-  const totalAll      = Object.values(countMap).reduce((s, v) => s + v, 0);
-  const inputStyle    = { width: "100%", background: "#F7F8FA", border: "1.5px solid #E4E4E7", borderRadius: 9, padding: "9px 13px", fontSize: 13, fontFamily: "inherit", outline: "none" };
-  const s             = { background: "#fff", border: "1px solid #E4E4E7", borderRadius: 14 };
+  const totalAll = Object.values(countMap).reduce((s, v) => s + v, 0);
 
   return (
-    <div>
-      {/* Status tabs */}
-      <div style={{ display: "flex", gap: 4, marginBottom: 20, background: "#fff", border: "1px solid #E4E4E7", borderRadius: 12, padding: 4, flexWrap: "wrap" }}>
-        {[{ key: "", label: "All", count: totalAll }, ...STATUSES.map(s => ({ key: s, label: STATUS_META[s].label, count: countMap[s] || 0 }))].map(({ key, label, count }) => (
-          <a key={key} href={`/portal/leads?status=${key}&search=${currentSearch}`}
-            style={{ padding: "7px 14px", borderRadius: 9, fontSize: 12, fontWeight: 600, textDecoration: "none", display: "flex", alignItems: "center", gap: 6, transition: "all 0.15s",
-              background: currentStatus === key ? "#1C1C1E" : "transparent",
-              color:      currentStatus === key ? "white"   : "#6B7280",
-            }}>
-            {label}
-            {count > 0 && (
-              <span style={{ background: currentStatus === key ? "rgba(255,255,255,0.2)" : "#F5F5F5", color: currentStatus === key ? "white" : "#6B7280", borderRadius: 99, padding: "1px 7px", fontSize: 10, fontWeight: 700 }}>
-                {count}
-              </span>
-            )}
-          </a>
-        ))}
-      </div>
+    <div className="space-y-8">
+      {/* Search & Tabs Combined */}
+      <div className="flex flex-col xl:flex-row gap-6 items-start xl:items-center justify-between pb-8 border-b border-slate-50">
+        <div className="flex bg-white border border-slate-100 p-1.5 rounded-2xl w-fit shadow-sm overflow-x-auto max-w-full">
+          {[{ key: "", label: "All Leads", count: totalAll }, ...STATUSES.map(s => ({ key: s, label: STATUS_META[s].label, count: countMap[s] || 0 }))].map(({ key, label, count }) => (
+            <Link key={key} href={`/portal/leads?status=${key}&search=${currentSearch}`}
+              className={`px-5 py-2.5 rounded-xl text-xs font-black transition-all duration-300 flex items-center gap-2.5 whitespace-nowrap ${
+                currentStatus === key 
+                  ? "bg-slate-900 text-white shadow-lg shadow-slate-900/10" 
+                  : "text-slate-400 hover:text-slate-900 hover:bg-slate-50"
+              }`}>
+              {label}
+              {count > 0 && (
+                <span className={`px-2 py-0.5 rounded-md text-[9px] ${
+                  currentStatus === key ? "bg-white/20 text-white" : "bg-slate-50 text-slate-400 border border-slate-100"
+                }`}>
+                  {count}
+                </span>
+              )}
+            </Link>
+          ))}
+        </div>
 
-      {/* Search */}
-      <form method="GET" style={{ marginBottom: 16, display: "flex", gap: 8 }}>
-        <input name="search" defaultValue={currentSearch} placeholder="Search by name, phone, email…" style={{ ...inputStyle, maxWidth: 320 }} />
-        <input type="hidden" name="status" value={currentStatus} />
-        <button type="submit" style={{ background: "#1C1C1E", color: "white", border: "none", borderRadius: 9, padding: "9px 18px", fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>Search</button>
-        {currentSearch && <a href={`/portal/leads?status=${currentStatus}`} style={{ color: "#F59E0B", fontSize: 13, padding: "9px 4px", textDecoration: "none" }}>Clear ×</a>}
-      </form>
+        <form method="GET" className="relative group w-full xl:w-96">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[var(--brand)] transition-colors" size={18} />
+          <input name="search" defaultValue={currentSearch} placeholder="Client name, phone, or email…" 
+            className="w-full bg-white border border-slate-100 rounded-2xl pl-12 pr-4 py-4 text-sm font-bold text-slate-900 placeholder:text-slate-300 outline-none focus:border-[var(--brand)] transition-all shadow-sm" />
+          <input type="hidden" name="status" value={currentStatus} />
+          {currentSearch && (
+            <Link href={`/portal/leads?status=${currentStatus}`} className="absolute right-4 top-1/2 -translate-y-1/2 text-rose-500 font-black text-[10px] uppercase tracking-widest hover:text-rose-600">
+              Clear ×
+            </Link>
+          )}
+        </form>
+      </div>
 
       {/* Leads list */}
       {leads.length === 0 ? (
-        <div style={{ ...s, padding: 48, textAlign: "center", color: "#9CA3AF" }}>
-          <p style={{ fontSize: 13 }}>No enquiries found</p>
+        <div className="bg-white border border-slate-100 rounded-[3rem] p-32 text-center shadow-sm">
+           <div className="w-24 h-24 bg-slate-50 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8">
+              <MessageSquare size={40} className="text-slate-200" />
+           </div>
+           <p className="text-sm font-black text-slate-400 tracking-tight">No enquiries match your criteria</p>
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <div className="space-y-4">
           {leads.map(lead => {
-            const sm      = STATUS_META[lead.status] || STATUS_META.NEW;
-            const isOpen  = expanded === lead.id;
-            const img     = lead.car?.images?.[0]?.url;
+            const sm = STATUS_META[lead.status] || STATUS_META.NEW;
+            const isOpen = expanded === lead.id;
+            const img = lead.car?.images?.[0]?.url;
             return (
-              <div key={lead.id} style={{ ...s, overflow: "hidden" }}>
+              <div key={lead.id} className={`group bg-white border rounded-[2rem] transition-all duration-500 overflow-hidden shadow-sm hover:shadow-xl ${
+                isOpen ? "border-[var(--brand-accent)]/30 ring-1 ring-[var(--brand-accent)]/5 shadow-2xl" : "border-slate-100"
+              }`}>
                 {/* Lead row */}
-                <div style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: 14, cursor: "pointer" }}
-                  onClick={() => setExpanded(isOpen ? null : lead.id)}>
+                <div onClick={() => setExpanded(isOpen ? null : lead.id)}
+                  className="p-6 md:p-8 flex items-center gap-6 cursor-pointer select-none">
 
-                  {/* Car thumbnail */}
-                  <div style={{ width: 56, height: 40, borderRadius: 8, background: "#F7F8FA", overflow: "hidden", flexShrink: 0 }}>
+                  <div className="w-16 h-12 md:w-20 md:h-14 rounded-2xl bg-slate-50 border border-slate-100 overflow-hidden shrink-0 group-hover:scale-105 transition-transform duration-500">
                     {img
-                      ? <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", fontSize: 20 }}>🚗</div>
+                      ? <img src={img} alt="" className="w-full h-full object-cover" />
+                      : <div className="flex items-center justify-center h-full text-slate-200"><CarIcon size={24} /></div>
                     }
                   </div>
 
-                  {/* Lead info */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <p style={{ fontWeight: 700, fontSize: 14, color: "#1C1C1E" }}>{lead.name}</p>
-                      <span style={{ fontSize: 10, borderRadius: 99, padding: "2px 9px", fontWeight: 700, background: sm.bg, color: sm.color }}>
-                        {sm.label}
-                      </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-1.5 flex-wrap">
+                      <h4 className="font-black text-slate-900 text-base tracking-tight">{lead.name}</h4>
+                      <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${sm.bg} ${sm.text} ${sm.border}`}>
+                        {sm.icon} {sm.label}
+                      </div>
                       {lead.channel === "whatsapp" && (
-                        <span style={{ fontSize: 10, background: "#dcfce7", color: "#166534", borderRadius: 99, padding: "2px 9px", fontWeight: 600 }}>WhatsApp</span>
+                        <div className="flex items-center gap-1 text-[10px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
+                           <MessageCircle size={10} className="fill-emerald-500" /> WhatsApp Direct
+                        </div>
                       )}
                     </div>
-                    <p style={{ fontSize: 12, color: "#6B7280", marginTop: 3 }}>
-                      {lead.car.year} {lead.car.make} {lead.car.model} · {fmt(lead.car.price)}
+                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-tight truncate">
+                      Interest: <span className="text-slate-600">{lead.car.year} {lead.car.make} {lead.car.model}</span> · {fmt(lead.car.price)}
                     </p>
                   </div>
 
-                  {/* Contact + date */}
-                  <div style={{ textAlign: "right", flexShrink: 0 }}>
-                    <p style={{ fontSize: 12, color: "#6B7280" }}>{lead.phone}</p>
-                    <p style={{ fontSize: 11, color: "#9CA3AF", marginTop: 3 }}>{fmtDate(lead.createdAt)}</p>
+                  <div className="hidden md:flex flex-col items-end text-right shrink-0">
+                    <p className="text-xs font-black text-slate-900 tracking-tight">{lead.phone}</p>
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-300 mt-1">
+                      <Calendar size={10} /> {fmtDate(lead.createdAt)}
+                    </div>
                   </div>
 
-                  {/* Expand arrow */}
-                  <span style={{ fontSize: 12, color: "#9CA3AF", marginLeft: 8, transition: "transform 0.2s", transform: isOpen ? "rotate(180deg)" : "none" }}>▼</span>
+                  <ChevronDown className={`text-slate-200 transition-transform duration-500 ${isOpen ? "rotate-180 text-[var(--brand)]" : ""}`} size={20} />
                 </div>
 
                 {/* Expanded panel */}
                 {isOpen && (
-                  <div style={{ borderTop: "1px solid #F7F8FA", padding: "18px 20px", background: "#FAFAFA" }}>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-
-                      {/* Contact details */}
+                  <div className="animate-in slide-in-from-top-4 duration-500 bg-slate-50/50 border-t border-slate-100 px-8 py-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                      {/* Left: Engagement Info */}
                       <div>
-                        <p style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Contact details</p>
-                        {[
-                          { label: "Phone",   value: lead.phone },
-                          { label: "Email",   value: lead.email || "—" },
-                          { label: "Message", value: lead.message || "—" },
-                        ].map(({ label, value }) => (
-                          <div key={label} style={{ marginBottom: 8 }}>
-                            <p style={{ fontSize: 11, color: "#9CA3AF" }}>{label}</p>
-                            <p style={{ fontSize: 13, color: "#1C1C1E", fontWeight: 500 }}>{value}</p>
-                          </div>
-                        ))}
-                        {/* Quick contact */}
-                        <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
-                          <a href={`tel:${lead.phone}`} style={{ flex: 1, textAlign: "center", padding: "8px", border: "1.5px solid #E4E4E7", borderRadius: 8, color: "#1C1C1E", textDecoration: "none", fontWeight: 600, fontSize: 12 }}>
-                            📞 Call
+                        <div className="flex items-center gap-2 mb-6">
+                           <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                           <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Client Profile & Message</h5>
+                        </div>
+                        
+                        <div className="space-y-6 mb-10">
+                           <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 shadow-sm"><Phone size={16} /></div>
+                              <div>
+                                 <p className="text-[10px] font-black uppercase text-slate-300">Primary Phone</p>
+                                 <p className="text-sm font-black text-slate-900">{lead.phone}</p>
+                              </div>
+                           </div>
+                           <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 shadow-sm"><Mail size={16} /></div>
+                              <div>
+                                 <p className="text-[10px] font-black uppercase text-slate-300">Email Address</p>
+                                 <p className="text-sm font-black text-slate-900">{lead.email || "No email provided"}</p>
+                              </div>
+                           </div>
+                           <div className="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm">
+                              <p className="text-[10px] font-black uppercase text-slate-300 mb-2 flex items-center gap-2"><MessageSquare size={10} /> Original Message</p>
+                              <p className="text-sm font-medium text-slate-600 leading-relaxed italic">"{lead.message || "Enquiry regarding listing visibility."}"</p>
+                           </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-4">
+                          <a href={`tel:${lead.phone}`} className="flex-1 flex items-center justify-center gap-2 bg-slate-900 text-white text-xs font-black px-6 py-4 rounded-2xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10">
+                            <Phone size={14} /> Call Client
                           </a>
                           {lead.phone && (
-                            <a href={`https://wa.me/${lead.phone.replace(/\D/g,"")}`} target="_blank" rel="noopener noreferrer"
-                              style={{ flex: 1, textAlign: "center", padding: "8px", background: "#dcfce7", border: "1.5px solid #bbf7d0", borderRadius: 8, color: "#166534", textDecoration: "none", fontWeight: 600, fontSize: 12 }}>
-                              💬 WhatsApp
+                            <a href={`https://wa.me/${lead.phone.replace(/\D/g,"")}`} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 bg-emerald-600 text-white text-xs font-black px-6 py-4 rounded-2xl hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-600/10">
+                              <MessageCircle size={14} className="fill-emerald-500 text-emerald-600" /> WhatsApp
                             </a>
                           )}
                         </div>
                       </div>
 
-                      {/* Status + notes */}
+                      {/* Right: Status & Timeline */}
                       <div>
-                        <p style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Update status</p>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
+                        <div className="flex items-center gap-2 mb-6">
+                           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                           <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Status Update & Private Notes</h5>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-8">
                           {STATUSES.map(st => {
                             const m = STATUS_META[st];
+                            const isCurrent = lead.status === st;
                             return (
                               <button key={st} onClick={() => updateStatus(lead.id, st)} disabled={saving[lead.id]}
-                                style={{ fontSize: 11, borderRadius: 99, padding: "5px 12px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit", border: "1.5px solid",
-                                  background: lead.status === st ? m.bg   : "#fff",
-                                  color:      lead.status === st ? m.color : "#6B7280",
-                                  borderColor: lead.status === st ? m.dot  : "#E4E4E7",
-                                }}>
-                                {m.label}
+                                className={`flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl border text-[10px] font-black uppercase tracking-wider transition-all shadow-sm ${
+                                  isCurrent 
+                                    ? `${m.bg} ${m.text} ${m.border} ring-1 ring-white`
+                                    : "bg-white text-slate-400 border-slate-100 hover:border-slate-300 hover:text-slate-600 shadow-none border-dashed"
+                                }`}>
+                                {isCurrent ? m.icon : null} {m.label}
                               </button>
                             );
                           })}
                         </div>
 
-                        <p style={{ fontSize: 11, fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>Add note</p>
-                        <div style={{ display: "flex", gap: 6 }}>
+                        <div className="relative group">
                           <input value={noteInputs[lead.id] || ""} onChange={e => setNoteInputs(prev => ({ ...prev, [lead.id]: e.target.value }))}
-                            placeholder="e.g. Interested, offered KSh 3.8M…"
-                            style={{ ...inputStyle, flex: 1 }}
+                            placeholder="Add internal note... (e.g. Offered KSh 3.2M)"
+                            className="w-full bg-white border border-slate-100 rounded-2xl pl-5 pr-32 py-5 text-sm font-medium text-slate-900 placeholder:text-slate-300 outline-none focus:border-[var(--brand)] transition-all shadow-sm"
                             onKeyDown={e => e.key === "Enter" && addNote(lead.id)}
                           />
-                          <button onClick={() => addNote(lead.id)} disabled={saving[`note_${lead.id}`]}
-                            style={{ background: "#F59E0B", color: "#1C1C1E", border: "none", borderRadius: 9, padding: "9px 16px", fontWeight: 700, fontSize: 12, cursor: "pointer", fontFamily: "inherit" }}>
-                            {saving[`note_${lead.id}`] ? "…" : "Save"}
+                          <button onClick={() => addNote(lead.id)} disabled={saving[`note_${lead.id}`] || !noteInputs[lead.id]?.trim()}
+                            className="absolute right-2 top-2 bottom-2 bg-[var(--brand)] disabled:bg-slate-100 text-white disabled:text-slate-300 px-6 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm">
+                            {saving[`note_${lead.id}`] ? "..." : "Save Note"}
                           </button>
                         </div>
 
-                        {lead.notes?.[0] && (
-                          <div style={{ marginTop: 10, background: "#fff", border: "1px solid #E4E4E7", borderRadius: 8, padding: "8px 12px" }}>
-                            <p style={{ fontSize: 11, color: "#9CA3AF", marginBottom: 3 }}>Latest note</p>
-                            <p style={{ fontSize: 12, color: "#374151" }}>{lead.notes[0].note}</p>
+                        {lead.notes?.length > 0 && (
+                          <div className="mt-6 space-y-4 max-h-48 overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-slate-100">
+                             {lead.notes.map((note, idx) => (
+                               <div key={note.id || idx} className="bg-white/40 border border-slate-100/50 p-4 rounded-xl relative group/note">
+                                  <div className="flex items-center justify-between mb-1.5 text-[9px] font-bold text-slate-300 uppercase tracking-tighter">
+                                     <span>Internal Intel</span>
+                                     <span>{fmtDate(note.createdAt)}</span>
+                                  </div>
+                                  <p className="text-xs font-medium text-slate-600 leading-relaxed">{note.note}</p>
+                               </div>
+                             ))}
                           </div>
                         )}
                       </div>

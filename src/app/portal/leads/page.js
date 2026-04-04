@@ -43,11 +43,15 @@ export default async function PortalLeadsPage({ searchParams }) {
   const total    = leads.length;
 
   return (
-    <div style={{ padding: "28px 32px", maxWidth: 1100 }}>
-      <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontWeight: 800, fontSize: "1.5rem", color: "#1C1C1E" }}>Lead management</h1>
-        <p style={{ color: "#6B7280", fontSize: 14, marginTop: 4 }}>{total} enquir{total !== 1 ? "ies" : "y"} total</p>
+    <div className="animate-in fade-in duration-700 max-w-7xl">
+      <div className="mb-12">
+        <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--brand)] mb-2.5 block">Customer Relations</span>
+        <h1 className="text-5xl font-black text-slate-900 tracking-tight">Leads & Inquiries</h1>
+        <p className="text-slate-500 font-bold mt-2 flex items-center gap-2">
+          {total} Active Enquir{total !== 1 ? "ies" : "y"} Under Management
+        </p>
       </div>
+
       <LeadManager leads={leads.map(l => ({
         ...l,
         createdAt: l.createdAt.toISOString(),

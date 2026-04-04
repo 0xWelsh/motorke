@@ -22,14 +22,17 @@ export default async function PortalEditCarPage({ params }) {
   const dealers = [user.dealer];
 
   return (
-    <div className="p-8 max-w-3xl">
-      <div className="mb-8">
-        <a href="/portal" className="text-xs text-white/40 hover:text-white transition-colors">
-          ← My listings
+    <div className="animate-in fade-in duration-1000 max-w-4xl">
+      <div className="mb-12">
+        <a href="/portal" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-emerald-600 transition-colors mb-6">
+          <span className="text-lg">←</span> Back to Showroom
         </a>
-        <h1 className="text-3xl font-black mt-2">
-          Edit — {car.year} {car.make} {car.model}
+        <h1 className="text-4xl font-black text-slate-950 tracking-tight">
+          Modify Entry
         </h1>
+        <p className="text-slate-600 font-medium mt-2">
+          {car.year} {car.make} {car.model} — System Ref: {car.id.slice(-8)}
+        </p>
       </div>
 
       <CarForm
@@ -40,12 +43,14 @@ export default async function PortalEditCarPage({ params }) {
       />
 
       {/* Danger zone */}
-      <div className="mt-8 bg-red-500/5 border border-red-500/20 rounded-2xl p-6">
-        <h3 className="font-bold text-red-400 mb-1">Remove listing</h3>
-        <p className="text-xs text-white/30 mb-4">
-          Permanently removes this car and all enquiries. Cannot be undone.
+      <div className="mt-20 bg-rose-50/30 border border-rose-100 rounded-[2.5rem] p-10">
+        <h3 className="text-lg font-black text-rose-600 tracking-tight mb-2 uppercase">Asset Decommissioning</h3>
+        <p className="text-[11px] font-bold text-rose-400 mb-8 uppercase tracking-widest">
+          Permanently remove this vehicle profile and associated lead data from the marketplace.
         </p>
-        <DeleteButton action={`/api/admin/cars/${car.id}/delete`} message="Delete this car permanently?" />
+        <div className="flex">
+          <DeleteButton action={`/api/admin/cars/${car.id}/delete`} message="Permanently decommission this vehicle asset?" />
+        </div>
       </div>
     </div>
   );

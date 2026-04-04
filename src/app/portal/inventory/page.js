@@ -1,11 +1,16 @@
-// src/app/portal/inventory/page.js
-export const dynamic = "force-dynamic";
-import { requireDealer } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { formatPrice, formatMileage } from "@/lib/utils";
-import InventoryToggle from "@/components/InventoryToggle";
-
-export const metadata = { title: "Inventory — Motorke Portal" };
+import { 
+  Plus, 
+  Search, 
+  Filter, 
+  Car as CarIcon, 
+  ExternalLink, 
+  Edit3, 
+  ChevronRight,
+  Eye,
+  EyeOff,
+  MessageSquare,
+  Activity
+} from "lucide-react";
 
 export default async function InventoryPage({ searchParams }) {
   const user   = await requireDealer();
@@ -34,83 +39,124 @@ export default async function InventoryPage({ searchParams }) {
   ]);
 
   return (
-    <div style={{ padding: "28px 32px", maxWidth: 1100 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+    <div className="animate-in fade-in duration-700 max-w-7xl">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
         <div>
-          <h1 style={{ fontWeight: 800, fontSize: "1.5rem", color: "#1C1C1E" }}>Inventory</h1>
-          <p style={{ color: "#6B7280", fontSize: 14, marginTop: 4 }}>{totalCount} total · {liveCount} live · {soldCount} sold</p>
+          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--brand)] mb-2.5 block">Asset Management</span>
+          <h1 className="text-5xl font-black text-slate-900 tracking-tight">Inventory</h1>
+          <p className="text-slate-500 font-bold mt-2 flex items-center gap-2">
+            <Activity size={14} className="text-emerald-500" />
+            {totalCount} Total Units · {liveCount} Live on Marketplace
+          </p>
         </div>
-        <a href="/portal/cars/new" style={{ background: "#F59E0B", color: "#1C1C1E", textDecoration: "none", borderRadius: 9, padding: "9px 18px", fontWeight: 700, fontSize: 13 }}>
-          + Add car
-        </a>
+        <Link href="/portal/cars/new"
+          className="flex items-center gap-2 bg-[var(--brand)] hover:bg-[var(--brand-accent)] text-white text-[13px] font-black px-10 py-4 rounded-2xl transition-all shadow-xl shadow-[var(--brand)]/20 hover:scale-105 active:scale-95 uppercase tracking-widest">
+          <Plus size={18} /> Add Vehicle
+        </Link>
       </div>
 
-      {/* Filter tabs */}
-      <div style={{ display: "flex", gap: 4, marginBottom: 20, background: "#fff", border: "1px solid #E4E4E7", borderRadius: 12, padding: 4, width: "fit-content" }}>
+      {/* Filter Tabs */}
+      <div className="flex bg-white/50 backdrop-blur-sm border border-slate-100 p-1.5 rounded-2xl w-fit mb-10 shadow-sm">
         {[
-          { key: "all",  label: "All",       count: totalCount },
-          { key: "live", label: "Available",  count: liveCount  },
-          { key: "sold", label: "Sold/Hidden",count: soldCount  },
+          { key: "all",  label: "All Inventory", count: totalCount },
+          { key: "live", label: "Available",     count: liveCount },
+          { key: "sold", label: "Sold/Drafts",    count: soldCount },
         ].map(({ key, label, count }) => (
-          <a key={key} href={`/portal/inventory?filter=${key}`}
-            style={{ padding: "7px 16px", borderRadius: 9, fontSize: 13, fontWeight: 600, textDecoration: "none", transition: "all 0.15s",
-              background: filter === key ? "#1C1C1E" : "transparent",
-              color:      filter === key ? "white"   : "#6B7280",
-            }}>
-            {label} <span style={{ opacity: 0.6, fontSize: 11 }}>({count})</span>
-          </a>
+          <Link key={key} href={`/portal/inventory?filter=${key}`}
+            className={`px-8 py-3 rounded-xl text-xs font-black transition-all duration-300 flex items-center gap-3 ${
+              filter === key 
+                ? "bg-slate-900 text-white shadow-lg shadow-slate-900/10" 
+                : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
+            }`}>
+            {label} 
+            <span className={`px-2 py-0.5 rounded-md text-[10px] ${
+              filter === key ? "bg-white/20 text-white" : "bg-slate-100 text-slate-400"
+            }`}>
+              {count}
+            </span>
+          </Link>
         ))}
       </div>
 
-      {/* Cars grid */}
+      {/* Grid */}
       {cars.length === 0 ? (
-        <div style={{ background: "#fff", border: "1px solid #E4E4E7", borderRadius: 14, padding: 48, textAlign: "center", color: "#9CA3AF" }}>
-          <p style={{ fontSize: 13 }}>No cars in this category</p>
+        <div className="bg-white border border-slate-100 rounded-[3rem] p-32 text-center shadow-sm">
+          <div className="w-24 h-24 bg-slate-50 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 shadow-inner">
+             <CarIcon size={40} className="text-slate-200" />
+          </div>
+          <h2 className="text-xl font-black text-slate-900 mb-2">No units found</h2>
+          <p className="text-sm font-medium text-slate-400 max-w-xs mx-auto">Try adjusting your filters or add a new vehicle to your showroom.</p>
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 16 }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {cars.map(car => (
-            <div key={car.id} style={{ background: "#fff", border: "1.5px solid #E4E4E7", borderRadius: 12, overflow: "hidden" }}>
-              {/* Image */}
-              <div style={{ position: "relative", aspectRatio: "16/10", background: "#F7F8FA" }}>
+            <div key={car.id} className="group bg-white border border-slate-100 hover:border-emerald-100 rounded-[2.5rem] overflow-hidden transition-all duration-500 shadow-sm hover:shadow-2xl flex flex-col h-full">
+              {/* Image & Status Badge */}
+              <div className="relative aspect-[16/11] bg-slate-100 overflow-hidden shrink-0">
                 {car.images[0]
-                  ? <img src={car.images[0].url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", fontSize: 36 }}>🚗</div>
+                  ? <img src={car.images[0].url} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  : <div className="flex items-center justify-center h-full bg-slate-50">
+                      <CarIcon size={48} className="text-slate-200" />
+                    </div>
                 }
-                <span style={{
-                  position: "absolute", top: 10, left: 10,
-                  fontSize: 10, fontWeight: 700, borderRadius: 99, padding: "3px 10px",
-                  background: car.available ? "#dcfce7" : "#fef2f2",
-                  color:      car.available ? "#166534" : "#991b1b",
-                }}>
-                  {car.available ? "Live" : "Hidden"}
-                </span>
-                {car.featured && (
-                  <span style={{ position: "absolute", top: 10, right: 10, fontSize: 10, fontWeight: 700, borderRadius: 99, padding: "3px 10px", background: "#FEF3C7", color: "#92400e" }}>
-                    Featured
+                
+                {/* Overlay Badges */}
+                <div className="absolute top-4 left-4 flex flex-col gap-2">
+                  <span className={`text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm backdrop-blur-md ${
+                    car.available 
+                      ? "bg-emerald-500/90 text-white" 
+                      : "bg-slate-900/90 text-white"
+                  }`}>
+                    {car.available ? "● Live Marketplace" : "○ Hidden/Sold"}
                   </span>
-                )}
-              </div>
-
-              {/* Info */}
-              <div style={{ padding: "14px 16px" }}>
-                <p style={{ fontWeight: 700, fontSize: 14, color: "#1C1C1E" }}>{car.year} {car.make} {car.model}</p>
-                {car.variant && <p style={{ fontSize: 12, color: "#9CA3AF", marginTop: 2 }}>{car.variant}</p>}
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10 }}>
-                  <p style={{ fontWeight: 800, fontSize: 15, color: "#F59E0B" }}>{formatPrice(car.price)}</p>
-                  <p style={{ fontSize: 11, color: "#9CA3AF" }}>{car.views} views · {car._count.leads} leads</p>
+                  {car.featured && (
+                    <span className="bg-amber-400 text-amber-950 text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm">
+                      ★ Featured
+                    </span>
+                  )}
                 </div>
               </div>
 
-              {/* Actions */}
-              <div style={{ padding: "10px 16px 14px", borderTop: "1px solid #F7F8FA", display: "flex", gap: 8 }}>
-                <a href={`/portal/cars/${car.id}/edit`} style={{ flex: 1, textAlign: "center", padding: "7px", border: "1.5px solid #E4E4E7", borderRadius: 8, color: "#1C1C1E", textDecoration: "none", fontWeight: 600, fontSize: 12 }}>
-                  Edit
-                </a>
-                <InventoryToggle carId={car.id} available={car.available} />
-                <a href={`/cars/${car.id}`} target="_blank" style={{ padding: "7px 12px", border: "1.5px solid #E4E4E7", borderRadius: 8, color: "#6B7280", textDecoration: "none", fontSize: 12 }}>
-                  ↗
-                </a>
+              {/* Info Body */}
+              <div className="p-8 flex flex-col flex-1">
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <div className="min-w-0">
+                    <h3 className="text-xl font-black text-slate-900 tracking-tight truncate group-hover:text-[var(--brand)] transition-colors">
+                      {car.year} {car.make} {car.model}
+                    </h3>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1 truncate">
+                      {car.variant || "Standard Trim"} · {car.fuelType}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between mb-8">
+                  <p className="text-2xl font-black text-slate-900 tracking-tighter">
+                    {formatPrice(car.price)}
+                  </p>
+                  <div className="flex flex-col items-end">
+                    <div className="flex items-center gap-1.5 text-slate-400">
+                       <MessageSquare size={12} className="text-[var(--brand)]" />
+                       <span className="text-[10px] font-black uppercase tracking-tight">{car._count.leads} Leads</span>
+                    </div>
+                    <span className="text-[9px] font-bold text-slate-300 uppercase mt-0.5">{car.views} Unique Views</span>
+                  </div>
+                </div>
+
+                {/* Actions Grid */}
+                <div className="mt-auto grid grid-cols-2 gap-3 pt-6 border-t border-slate-50">
+                  <Link href={`/portal/cars/${car.id}/edit`}
+                    className="flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 text-slate-900 text-xs font-black p-4 rounded-2xl transition-all border border-slate-100">
+                    <Edit3 size={14} /> Edit
+                  </Link>
+                  <InventoryToggle carId={car.id} available={car.available} />
+                </div>
+                
+                <Link href={`/cars/${car.id}`} target="_blank"
+                  className="mt-3 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 hover:text-[var(--brand)] transition-colors py-2 group/link">
+                  Public Listing <ChevronRight size={12} className="group-hover/link:translate-x-1 transition-transform" />
+                </Link>
               </div>
             </div>
           ))}

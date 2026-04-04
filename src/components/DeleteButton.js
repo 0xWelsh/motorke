@@ -19,11 +19,11 @@ export default function DeleteButton({ action, label = "Delete", message = "Are 
   }
 
   return (
-    <button type="button" onClick={handleClick} style={{
-      fontSize: 12, border: "1px solid #fecaca", borderRadius: 7,
-      padding: "4px 10px", color: "#dc2626", background: "#fef2f2",
-      cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap",
-    }}>
+    <button
+      type="button"
+      onClick={handleClick}
+      className="bg-rose-50 hover:bg-rose-100 text-rose-600 text-[10px] font-black uppercase tracking-widest px-6 py-3 rounded-xl border border-rose-100 transition-all active:scale-95 shadow-sm"
+    >
       {label}
     </button>
   );

@@ -19,15 +19,14 @@ export default function InventoryToggle({ carId, available: initialAvailable }) 
 
   return (
     <button onClick={toggle} disabled={loading}
-      style={{
-        flex: 1, padding: "7px", borderRadius: 8, border: "1.5px solid",
-        fontWeight: 600, fontSize: 12, cursor: loading ? "wait" : "pointer",
-        fontFamily: "inherit", transition: "all 0.15s",
-        background:   available ? "#fef2f2"  : "#f0fdf4",
-        color:        available ? "#991b1b"  : "#166534",
-        borderColor:  available ? "#fecaca"  : "#bbf7d0",
-      }}>
-      {loading ? "…" : available ? "Mark sold" : "Mark live"}
+      className={`flex-1 p-4 rounded-2xl font-black text-[13px] transition-all duration-300 border uppercase tracking-widest ${
+        loading 
+          ? "bg-slate-50 text-slate-300 border-slate-100 cursor-wait"
+          : available 
+            ? "bg-rose-50 text-rose-600 border-rose-100 hover:bg-rose-100 shadow-sm" 
+            : "bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-100 shadow-sm"
+      }`}>
+      {loading ? "…" : available ? "Mark Sold" : "Mark Live"}
     </button>
   );
 }
