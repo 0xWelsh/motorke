@@ -5,6 +5,7 @@ const nextConfig = {
     remotePatterns: [
       // Seed data placeholder images
       { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "cdn.motor1.com" },
       // Supabase Storage (replace project ref wildcard with yours for tighter security)
       { protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" },
     ],
