@@ -111,14 +111,13 @@ export default function Navbar({ user }) {
           {/* SEARCH */}
           <div ref={searchRef} className="hidden xl:flex flex-1 max-w-sm relative group">
             <form onSubmit={handleSearch} className="w-full">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 group-focus-within:text-cyan-600 transition-colors" style={{"--tw-text-opacity":1}} />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 group-focus-within:text-[var(--brand)] transition-colors" />
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                 placeholder="Search cars..."
-                className="w-full bg-slate-50 border border-slate-200 focus:border-cyan-400 focus:bg-white rounded-xl py-2.5 pl-10 pr-4 text-[13px] font-medium outline-none transition-all placeholder:text-slate-400 text-slate-900"
-                style={{"--focus-border":"#0891b2"}}
+                className="w-full bg-slate-50 border border-slate-100 focus:border-[var(--brand-accent)]/30 focus:bg-white rounded-xl py-2.5 pl-10 pr-4 text-[13px] font-semibold outline-none transition-all placeholder:text-slate-300 text-slate-900 shadow-sm"
               />
             </form>
             {showSuggestions && (
@@ -213,8 +212,7 @@ export default function Navbar({ user }) {
           <div className="space-y-2">
             {links.map(({ href, label }) => (
               <Link key={href} href={href} onClick={() => setOpen(false)}
-                className="block text-2xl font-black text-slate-800 py-3 border-b border-slate-100 hover:text-cyan-600 transition-colors"
-                style={{"--hover-color":"#0891b2"}}>
+                className="block text-2xl font-black text-slate-800 py-4 border-b border-slate-100 hover:text-[var(--brand)] transition-colors">
                 {label}
               </Link>
             ))}
@@ -233,8 +231,7 @@ export default function Navbar({ user }) {
               </>
             ) : (
               <Link href="/account" onClick={() => setOpen(false)}
-                className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-2xl"
-                style={{background:"#0891b2"}}>
+                className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-2xl bg-[var(--brand)] shadow-lg shadow-[var(--brand)]/10">
                 My Dashboard
               </Link>
             )}

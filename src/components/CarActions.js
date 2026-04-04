@@ -27,11 +27,11 @@ export function SaveButton({ carId, initialSaved = false, isLoggedIn }) {
       onClick={toggle}
       disabled={loading}
       title={saved ? "Remove from saved" : "Save this car"}
-      className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-black text-sm transition-all duration-300 uppercase tracking-widest ${
+      className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-black text-[12px] transition-all duration-300 uppercase tracking-widest ${
         saved 
-          ? "bg-orange-500/10 border border-orange-500 text-orange-500 shadow-[0_0_15px_rgba(234,88,12,0.2)]" 
-          : "bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white hover:border-white/20"
-      } ${loading ? "cursor-wait" : "cursor-pointer"}`}
+          ? "bg-emerald-50 border border-emerald-100 text-emerald-700 shadow-sm" 
+          : "bg-slate-50 border border-slate-100 text-slate-500 hover:bg-slate-100 hover:text-slate-900 shadow-sm"
+      } ${loading ? "cursor-wait opacity-50" : "cursor-pointer active:scale-95"}`}
     >
       <span className="text-lg leading-none">{saved ? "❤️" : "🤍"}</span>
       {saved ? "Saved" : "Save car"}

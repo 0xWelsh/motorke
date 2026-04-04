@@ -154,9 +154,9 @@ export default async function CarsPage({ searchParams }) {
           <div>
             <div className="flex items-center gap-2 mb-2">
                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-               <span className="text-[10px] font-black uppercase tracking-widest text-white/30">Live Inventory</span>
+               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Live Inventory</span>
             </div>
-            <h1 className="text-4xl font-black text-white tracking-tight">
+            <h1 className="text-4xl font-black text-slate-900 tracking-tight">
               {search ? `Results for "${search}"` : county ? `Verified in ${county}` : "All Showcases"}
             </h1>
             <p className="text-slate-500 font-medium mt-1">
@@ -198,7 +198,7 @@ export default async function CarsPage({ searchParams }) {
           <div className="flex justify-center items-center gap-2 mt-24">
             {/* Previous Button */}
             {page > 1 && (
-              <Link href={getPageLink(page - 1)} className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 text-white/40 hover:bg-white/10 hover:text-white transition-all">
+              <Link href={getPageLink(page - 1)} className="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-100 text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-all shadow-sm">
                 <ChevronRight className="w-4 h-4 rotate-180" />
               </Link>
             )}
@@ -211,7 +211,7 @@ export default async function CarsPage({ searchParams }) {
                   <Link key={p}
                     href={getPageLink(p)}
                     className={`w-10 h-10 rounded-xl flex items-center justify-center text-[11px] font-black transition-all ${
-                      p === page ? "bg-orange-600 text-white shadow-[0_0_15px_rgba(234,88,12,0.4)]" : "bg-white/5 border border-transparent text-white/40 hover:bg-white/10 hover:text-white"
+                      p === page ? "bg-[var(--brand)] text-white shadow-lg shadow-[var(--brand)]/10" : "bg-slate-50 border border-slate-100 text-slate-400 hover:bg-slate-100 hover:text-slate-900 shadow-sm"
                     }`}
                   >
                     {p.toString().padStart(2, '0')}
@@ -219,14 +219,14 @@ export default async function CarsPage({ searchParams }) {
                 );
               }
               // Show ellipsis
-              if (p === 2 && page > 3) return <span key="e1" className="text-white/20 px-2 font-black">...</span>;
-              if (p === totalPages - 1 && page < totalPages - 2) return <span key="e2" className="text-white/20 px-2 font-black">...</span>;
+              if (p === 2 && page > 3) return <span key="e1" className="text-slate-200 px-2 font-black">...</span>;
+              if (p === totalPages - 1 && page < totalPages - 2) return <span key="e2" className="text-slate-200 px-2 font-black">...</span>;
               return null;
             })}
 
             {/* Next Button */}
             {page < totalPages && (
-              <Link href={getPageLink(page + 1)} className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 text-white/40 hover:bg-white/10 hover:text-white transition-all">
+              <Link href={getPageLink(page + 1)} className="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-50 border border-slate-100 text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-all shadow-sm">
                 <ChevronRight className="w-4 h-4" />
               </Link>
             )}
@@ -265,7 +265,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-white/20 text-[10px] font-bold uppercase tracking-widest">No Image</div>
+          <div className="w-full h-full flex items-center justify-center text-slate-300 text-[10px] font-bold uppercase tracking-widest">No Image</div>
         )}
         {car.featured && (
           <span className="absolute top-3 right-3 bg-[var(--brand)] text-white text-[9px] font-black px-2.5 py-1 uppercase tracking-widest rounded-lg">
@@ -273,7 +273,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
           </span>
         )}
         {dist !== null && (
-          <span className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-orange-400 text-[9px] font-bold px-2.5 py-1">
+          <span className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-900 text-[9px] font-bold px-2.5 py-1 rounded-lg border border-slate-100 shadow-sm">
             {dist}km away
           </span>
         )}

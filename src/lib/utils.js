@@ -66,18 +66,18 @@ export const DRIVETRAIN_LABELS = {
 
 /** Predefined badge options dealers can add to listings */
 export const BADGE_OPTIONS = {
-  "Available":     { color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
-  "Sold":          { color: "bg-red-500/20 text-red-400 border-red-500/30" },
-  "Reserved":      { color: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30" },
-  "Fresh Import":  { color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
-  "Duty Free":     { color: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
-  "Duty Paid":     { color: "bg-teal-500/20 text-teal-400 border-teal-500/30" },
-  "Low Mileage":   { color: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30" },
-  "Price Drop":    { color: "bg-orange-500/20 text-orange-400 border-orange-500/30" },
-  "Hot Deal":      { color: "bg-rose-500/20 text-rose-400 border-rose-500/30" },
-  "Clearance":     { color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
-  "One Owner":     { color: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30" },
-  "Financing OK":  { color: "bg-lime-500/20 text-lime-400 border-lime-500/30" },
+  "Available":     { color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+  "Sold":          { color: "bg-red-50 text-red-700 border-red-200" },
+  "Reserved":      { color: "bg-yellow-50 text-yellow-700 border-yellow-200" },
+  "Fresh Import":  { color: "bg-blue-50 text-blue-700 border-blue-200" },
+  "Duty Free":     { color: "bg-purple-50 text-purple-700 border-purple-200" },
+  "Duty Paid":     { color: "bg-teal-50 text-teal-700 border-teal-200" },
+  "Low Mileage":   { color: "bg-cyan-50 text-cyan-700 border-cyan-200" },
+  "Price Drop":    { color: "bg-orange-50 text-orange-700 border-orange-200" },
+  "Hot Deal":      { color: "bg-rose-50 text-rose-700 border-rose-200" },
+  "Clearance":     { color: "bg-amber-50 text-amber-700 border-amber-200" },
+  "One Owner":     { color: "bg-indigo-50 text-indigo-700 border-indigo-200" },
+  "Financing OK":  { color: "bg-lime-50 text-lime-700 border-lime-200" },
 };
 
 /** Clamp a number between min and max */

@@ -82,7 +82,7 @@ export default async function HomePage() {
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
               </span>
               <span className="text-[11px] font-black text-slate-600 uppercase tracking-[0.15em]">
-                {totalCars.toLocaleString()} <span className="text-brand font-black">Verified Listings</span> Live
+                {totalCars.toLocaleString()} <span className="text-[var(--brand)] font-black">Verified Listings</span> Live
               </span>
             </div>
 
@@ -124,8 +124,8 @@ export default async function HomePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
           {PRICE_RANGES.map((r, i) => (
             <Link key={r.label} href={`/cars?minPrice=${r.min}&maxPrice=${r.max}`}
-              className="group bg-white border border-slate-200 hover:border-cyan-300 rounded-2xl p-6 flex flex-col items-center text-center transition-all duration-200 hover:shadow-md"
-              style={{ "--hover-shadow": "0 4px 20px rgba(8,145,178,0.1)" }}>
+              className="group bg-white border border-slate-200 hover:border-emerald-200 rounded-2xl p-6 flex flex-col items-center text-center transition-all duration-200 hover:shadow-md"
+              style={{ "--hover-shadow": "0 4px 20px rgba(6,95,70,0.08)" }}>
               <div className="w-11 h-11 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-[var(--brand)] group-hover:border-[var(--brand-accent)]/20 group-hover:bg-[var(--brand-light)] transition-all mb-4 text-xl">
                 {r.icon}
               </div>
@@ -250,7 +250,7 @@ function CarCard({ car, priority = false }) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-400 text-[11px] font-bold uppercase tracking-widest">No Image</div>
+          <div className="w-full h-full flex items-center justify-center text-slate-300 text-[11px] font-bold uppercase tracking-widest">No Image</div>
         )}
         {car.badges?.length > 0 && (
           <div className="absolute bottom-3 left-3 flex flex-wrap gap-1">
@@ -280,7 +280,7 @@ function CarCard({ car, priority = false }) {
             car.transmission === "AUTOMATIC" ? "Auto" : car.transmission,
             car.drivetrain,
           ].filter(Boolean).map((s) => (
-            <span key={s} className="text-[10px] font-semibold text-slate-500 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded">
+            <span key={s} className="text-[10px] font-bold text-slate-400 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded">
               {s}
             </span>
           ))}
@@ -288,7 +288,7 @@ function CarCard({ car, priority = false }) {
 
         <div className="flex items-center justify-between pt-2.5 border-t border-slate-50 mt-auto">
           <p className="text-lg font-black text-slate-900">{formatPrice(car.price)}</p>
-          <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:text-[var(--brand-accent)] transition-colors flex items-center gap-1">
+          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-[var(--brand-accent)] transition-colors flex items-center gap-1">
             View <ChevronRight className="w-3 h-3" />
           </span>
         </div>

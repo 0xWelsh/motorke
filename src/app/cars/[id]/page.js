@@ -118,12 +118,12 @@ export default async function CarDetailPage({ params }) {
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
       {/* Breadcrumb */}
-      <nav className="text-xs text-white/30 mb-6 flex gap-2">
-        <Link href="/" className="hover:text-white transition-colors">Home</Link>
+      <nav className="text-xs text-slate-400 mb-6 flex gap-2">
+        <Link href="/" className="hover:text-[var(--brand)] transition-colors">Home</Link>
         <span>/</span>
-        <Link href="/cars" className="hover:text-white transition-colors">Cars</Link>
+        <Link href="/cars" className="hover:text-[var(--brand)] transition-colors">Cars</Link>
         <span>/</span>
-        <span className="text-white/60">{title}</span>
+        <span className="text-slate-900 font-bold">{title}</span>
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -135,8 +135,8 @@ export default async function CarDetailPage({ params }) {
           {/* Title + price */}
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-black">{title}</h1>
-              <p className="text-white/40 mt-1">{BODY_TYPE_LABELS[car.bodyType]} · {car.year} · {formatMileage(car.mileage)}</p>
+              <h1 className="text-3xl font-black text-slate-900">{title}</h1>
+              <p className="text-slate-500 mt-1">{BODY_TYPE_LABELS[car.bodyType]} · {car.year} · {formatMileage(car.mileage)}</p>
             </div>
             <div className="text-right">
               <p className="text-3xl font-black text-[var(--brand)]">{formatPrice(car.price)}</p>
@@ -155,10 +155,10 @@ export default async function CarDetailPage({ params }) {
           {/* Feature badges */}
           {car.features?.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-white/60 mb-3 uppercase tracking-wider">Features</h3>
+              <h3 className="text-[11px] font-black text-slate-400 mb-3 uppercase tracking-[0.15em]">Features</h3>
               <div className="flex flex-wrap gap-2">
                 {car.features.map((f) => (
-                  <span key={f} className="text-xs bg-white/5 border border-white/10 rounded-full px-3 py-1.5 text-white/70">
+                  <span key={f} className="text-xs bg-slate-50 border border-slate-100 rounded-full px-3 py-1.5 text-slate-600 font-medium">
                     {f}
                   </span>
                 ))}
@@ -169,19 +169,19 @@ export default async function CarDetailPage({ params }) {
           {/* Description */}
           {car.description && (
             <div>
-              <h3 className="text-sm font-semibold text-white/60 mb-3 uppercase tracking-wider">About this car</h3>
-              <p className="text-white/70 leading-relaxed text-sm">{car.description}</p>
+              <h3 className="text-[11px] font-black text-slate-400 mb-3 uppercase tracking-[0.15em]">About this car</h3>
+              <p className="text-slate-600 leading-relaxed text-sm">{car.description}</p>
             </div>
           )}
 
           {/* Spec grid */}
           <div>
-            <h3 className="text-sm font-semibold text-white/60 mb-4 uppercase tracking-wider">Specifications</h3>
+            <h3 className="text-[11px] font-black text-slate-400 mb-4 uppercase tracking-[0.15em]">Specifications</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {specs.map(({ label, value }) => (
-                <div key={label} className="bg-white/5 border border-white/10 rounded-xl p-3">
-                  <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">{label}</p>
-                  <p className="text-sm font-semibold text-white">{value}</p>
+                <div key={label} className="bg-slate-50 border border-slate-100 rounded-xl p-3">
+                  <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-1">{label}</p>
+                  <p className="text-sm font-bold text-slate-900">{value}</p>
                 </div>
               ))}
             </div>
@@ -212,7 +212,7 @@ export default async function CarDetailPage({ params }) {
                     <span className="text-[9px] bg-green-500/20 text-green-400 border border-green-500/30 rounded-full px-1.5 py-0.5">✓</span>
                   )}
                 </div>
-                <p className="text-xs text-white/40">{dealer.location}</p>
+                <p className="text-xs text-slate-400">{dealer.location}</p>
               </div>
             </div>
             <Link href={`/dealers/${dealer.slug}`}
@@ -222,8 +222,8 @@ export default async function CarDetailPage({ params }) {
           </div>
 
           {/* Enquiry form with WhatsApp */}
-          <div className="bg-surface border border-white/5 shadow-2xl rounded-2xl p-5">
-            <h3 className="font-bold mb-4">Contact dealer</h3>
+          <div className="bg-white border border-slate-100 shadow-2xl rounded-2xl p-5">
+            <h3 className="font-black text-slate-900 mb-4 uppercase tracking-widest text-xs">Contact dealer</h3>
             <EnquiryForm
               carId={car.id}
               dealerId={dealer.id}
@@ -251,7 +251,7 @@ export default async function CarDetailPage({ params }) {
       {/* Similar cars */}
       {similar.length > 0 && (
         <div className="mt-16">
-          <h2 className="text-2xl font-black mb-6">Similar cars</h2>
+          <h2 className="text-2xl font-black mb-6 text-slate-900 tracking-tight">Similar cars</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {similar.map((c) => {
               const img = c.images[0]?.url;

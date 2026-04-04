@@ -66,8 +66,8 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
   if (state === "sent") {
     return (
       <div className="text-center py-8">
-        <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-          <span className="text-green-400 text-xl">✓</span>
+        <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-3">
+          <span className="text-emerald-600 text-xl">✓</span>
         </div>
         <p className="font-bold text-emerald-600 mb-1">Enquiry sent!</p>
         <p className="text-xs text-slate-500">
@@ -101,7 +101,7 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
 
       <div className="flex items-center gap-3 my-1">
         <div className="flex-1 h-px bg-slate-100" />
-        <span className="text-xs text-slate-300 font-bold uppercase tracking-widest text-[10px]">or send a message</span>
+        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">or send a message</span>
         <div className="flex-1 h-px bg-slate-100" />
       </div>
 
