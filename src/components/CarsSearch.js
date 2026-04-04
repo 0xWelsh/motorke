@@ -1,11 +1,30 @@
 "use client";
 // src/components/CarsSearch.js
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
-import { Search, Filter, X, ChevronDown, ArrowUpDown, SlidersHorizontal } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { 
+  Search, 
+  Filter, 
+  X, 
+  ChevronDown, 
+  SlidersHorizontal,
+  ChevronRight,
+  TrendingUp,
+  Banknote
+} from "lucide-react";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
 import SearchSuggestions from "@/components/SearchSuggestions";
 import { FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/utils";
+import { clsx } from "clsx";
+
+const BUDGET_RANGES = [
+  { label: "0 - 1M",   min: 0,       max: 1000000 },
+  { label: "1M - 2M",  min: 1000000, max: 2000000 },
+  { label: "2M - 3M",  min: 2000000, max: 3000000 },
+  { label: "3M - 5M",  min: 3000000, max: 5000000 },
+  { label: "5M - 10M", min: 5000000, max: 10000000 },
+  { label: "Above 10M", min: 10000000, max: undefined },
+];
 
 export default function CarsSearch({ 
   initialSearch = "",
@@ -30,17 +49,26 @@ export default function CarsSearch({
   const [minPrice, setMinPrice] = useState(initialMinPrice);
   const [maxPrice, setMaxPrice] = useState(initialMaxPrice);
   const [sort, setSort] = useState(initialSort);
-  const [showMore, setShowMore] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
   
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  
   const router = useRouter();
+  const searchParams = useSearchParams();
   const formRef = useRef(null);
   
   const { debouncedTerm } = useDebouncedSearch(search, 300);
 
-  // Fetch suggestions when debounced term changes
+  // Sync state with URL params (especially for quick filters)
+  useEffect(() => {
+    setSearch(searchParams.get("search") || "");
+    setMake(searchParams.get("make") || "");
+    setMinPrice(searchParams.get("minPrice") || "");
+    setMaxPrice(searchParams.get("maxPrice") || "");
+  }, [searchParams]);
+
   useEffect(() => {
     if (!debouncedTerm || debouncedTerm.length < 2) {
       setSuggestions([]);
@@ -57,8 +85,6 @@ export default function CarsSearch({
         setShowSuggestions(data.suggestions && data.suggestions.length > 0);
       } catch (error) {
         console.error("Error fetching suggestions:", error);
-        setSuggestions([]);
-        setShowSuggestions(false);
       } finally {
         setLoadingSuggestions(false);
       }
@@ -67,218 +93,205 @@ export default function CarsSearch({
     fetchSuggestions();
   }, [debouncedTerm]);
 
-  // Handle click outside to close suggestions
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (formRef.current && !formRef.current.contains(event.target)) {
-        setShowSuggestions(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+  function handleSubmit(overrideParams = {}) {
+    const params = new URLSearchParams(searchParams);
+    
+    // Default values from state
+    const currentValues = {
+      search, make, bodyType, fuelType, transmission, county, minPrice, maxPrice, sort
     };
-  }, []);
 
-  function handleSubmit(e) {
-    if (e) e.preventDefault();
-    const params = new URLSearchParams();
-    if (search.trim()) params.set("search", search.trim());
-    if (make) params.set("make", make);
-    if (bodyType) params.set("bodyType", bodyType);
-    if (fuelType) params.set("fuelType", fuelType);
-    if (transmission) params.set("transmission", transmission);
-    if (county) params.set("county", county);
-    if (minPrice) params.set("minPrice", minPrice);
-    if (maxPrice) params.set("maxPrice", maxPrice);
-    if (sort && sort !== "newest") params.set("sort", sort);
+    // Apply overrides or defaults
+    const finalValues = { ...currentValues, ...overrideParams };
+
+    Object.entries(finalValues).forEach(([key, value]) => {
+      if (value && value !== "newest") params.set(key, value);
+      else params.delete(key);
+    });
+
+    params.set("page", "1"); // Reset pagination on search
     router.push(`/cars?${params.toString()}`);
   }
 
-  function clearFilters() {
-    setSearch("");
-    setMake("");
-    setBodyType("");
-    setFuelType("");
-    setTransmission("");
-    setCounty("");
-    setMinPrice("");
-    setMaxPrice("");
-    setSort("newest");
-    router.push("/cars");
+  function handleBudgetClick(min, max) {
+    handleSubmit({ minPrice: min?.toString() || "", maxPrice: max?.toString() || "" });
   }
 
-  const hasFilters = search || make || bodyType || fuelType || transmission || county || minPrice || maxPrice || sort !== "newest";
+  const labelCls = "text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2.5 block ml-1";
+  const selectCls = "w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-3.5 text-sm font-bold text-slate-900 outline-none focus:border-[var(--brand)] transition-all cursor-pointer shadow-sm appearance-none";
 
   return (
-    <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-200/50 py-4 shadow-sm">
-      <div className="container mx-auto px-6 max-w-7xl">
-        <div ref={formRef} className="relative">
-          <form method="GET" onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex flex-wrap items-center gap-3">
-              {/* Primary Search */}
-              <div className="relative flex-1 min-w-[240px] group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-[var(--brand)] transition-colors" />
-                <input 
-                  name="search" 
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
-                  placeholder="Search inventory (e.g. Toyota Prado)..." 
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl pl-11 pr-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:bg-white focus:border-[var(--brand-accent)]/30 transition-all placeholder:text-slate-300 shadow-sm"
-                />
-              </div>
-
-              {/* Main Quick Filters */}
-              <div className="flex flex-wrap items-center gap-2">
-                <select 
-                  value={make}
-                  onChange={e => { setMake(e.target.value); handleSubmit(); }}
-                  className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-slate-400 outline-none focus:text-[var(--brand)] focus:border-[var(--brand-accent)]/30 transition-all cursor-pointer shadow-sm"
-                >
-                  <option value="">All Makes</option>
-                  {allMakes.map(m => <option key={m.make} value={m.make}>{m.make}</option>)}
-                </select>
-
-                <select 
-                  value={bodyType}
-                  onChange={e => { setBodyType(e.target.value); handleSubmit(); }}
-                  className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-slate-400 outline-none focus:text-[var(--brand)] focus:border-[var(--brand-accent)]/30 transition-all cursor-pointer shadow-sm"
-                >
-                  <option value="">All Types</option>
-                  {Object.entries(bodyTypeLabels).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-                </select>
-
-                <button 
-                  type="button"
-                  onClick={() => setShowMore(!showMore)}
-                  className={`flex items-center gap-2 px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all ${
-                    showMore || fuelType || transmission || county || minPrice || maxPrice
-                    ? "bg-[var(--brand-light)] text-[var(--brand)] border border-[var(--brand-accent)]/20" 
-                    : "bg-slate-50 border border-slate-100 text-slate-400 hover:text-[var(--brand)] shadow-sm"
-                  }`}
-                >
-                  <SlidersHorizontal className="w-3.5 h-3.5" />
-                  Filters
-                  <ChevronDown className={`w-3 h-3 transition-transform ${showMore ? "rotate-180" : ""}`} />
-                </button>
-
-                <div className="w-px h-8 bg-white/5 mx-1 hidden md:block" />
-
-                <select 
-                  value={sort}
-                  onChange={e => { setSort(e.target.value); handleSubmit(); }}
-                  className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-slate-400 outline-none focus:text-[var(--brand)] focus:border-[var(--brand-accent)]/30 transition-all cursor-pointer shadow-sm"
-                >
-                  <option value="newest">Newest First</option>
-                  <option value="price_asc">Lowest Price</option>
-                  <option value="price_desc">Highest Price</option>
-                  <option value="mileage_asc">Lowest Mileage</option>
-                  <option value="year_desc">Newest Year</option>
-                </select>
-
-                <button type="submit" className="bg-[var(--brand)] hover:bg-[var(--brand-accent)] text-white px-6 py-3 rounded-xl transition-all text-xs font-black uppercase tracking-widest shadow-lg shadow-[var(--brand)]/10 active:scale-95">
-                  Find
-                </button>
-
-                {hasFilters && (
-                  <button 
-                    type="button"
-                    onClick={clearFilters}
-                    className="p-3 bg-slate-50 hover:bg-slate-100 text-slate-300 hover:text-[var(--brand)] rounded-xl transition-all border border-slate-200"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Expanded Filters */}
-            {showMore && (
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 pt-4 border-t border-slate-100 animate-in fade-in slide-in-from-top-2 duration-300">
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-2">Fuel Type</label>
-                  <select 
-                    value={fuelType}
-                    onChange={e => setFuelType(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-900 outline-none focus:border-[var(--brand-accent)]/30 transition-all"
-                  >
-                    <option value="">Any Fuel</option>
-                    {Object.entries(FUEL_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-                  </select>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-2">Transmission</label>
-                  <select 
-                    value={transmission}
-                    onChange={e => setTransmission(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-900 outline-none focus:border-[var(--brand-accent)]/30 transition-all"
-                  >
-                    <option value="">Any Gearbox</option>
-                    {Object.entries(TRANSMISSION_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-                  </select>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-2">Location</label>
-                  <select 
-                    value={county}
-                    onChange={e => setCounty(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-900 outline-none focus:border-[var(--brand-accent)]/30 transition-all"
-                  >
-                    <option value="">Any County</option>
-                    {counties.map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
-                </div>
-
-                <div className="space-y-1.5 lg:col-span-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 pl-2">Price Range (KES)</label>
-                  <div className="flex items-center gap-2">
-                    <input 
-                      type="number"
-                      placeholder="Min"
-                      value={minPrice}
-                      onChange={e => setMinPrice(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-900 outline-none focus:border-[var(--brand-accent)]/30 transition-all placeholder:text-slate-300"
-                    />
-                    <span className="text-slate-200">—</span>
-                    <input 
-                      type="number"
-                      placeholder="Max"
-                      value={maxPrice}
-                      onChange={e => setMaxPrice(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-[11px] font-bold text-slate-900 outline-none focus:border-[var(--brand-accent)]/30 transition-all placeholder:text-slate-300"
-                    />
-                  </div>
-                </div>
-                
-                <div className="flex items-end">
-                   <button 
-                     type="button"
-                     onClick={() => handleSubmit()}
-                     className="w-full bg-slate-100 hover:bg-slate-200 text-slate-900 text-[11px] font-black uppercase tracking-widest h-10 rounded-xl transition-all"
-                   >
-                     Apply
-                   </button>
-                </div>
-              </div>
-            )}
-          </form>
-
-          {/* Search Suggestions Dropdown */}
+    <div className="flex flex-col gap-10" ref={formRef}>
+      {/* Search Input Section */}
+      <section>
+        <label className={labelCls}>Search Vehicle</label>
+        <div className="relative group">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-[var(--brand)] transition-colors" />
+          <input 
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && handleSubmit()}
+            placeholder="e.g. Land Cruiser V8..." 
+            className="w-full bg-white border border-slate-100 rounded-2xl pl-12 pr-4 py-4 text-sm font-bold text-slate-900 outline-none focus:border-[var(--brand)] transition-all placeholder:text-slate-200 shadow-sm shadow-slate-100"
+          />
           {showSuggestions && (
             <SearchSuggestions
               suggestions={suggestions}
               loading={loadingSuggestions}
-              onSelect={(val) => { setSearch(val); setShowSuggestions(false); handleSubmit(); }}
+              onSelect={(val) => { setSearch(val); setShowSuggestions(false); handleSubmit({ search: val }); }}
               inputValue={search}
-              className="mt-2"
+              className="absolute top-full left-0 right-0 mt-2 z-50"
             />
           )}
         </div>
-      </div>
+      </section>
+
+      {/* Budget Grid Section */}
+      <section>
+        <div className="flex items-center gap-2 mb-4">
+           <Banknote size={14} className="text-emerald-500" />
+           <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Filter by Budget (KES)</label>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {BUDGET_RANGES.map((range) => {
+            const isActive = minPrice === range.min?.toString() && maxPrice === (range.max?.toString() || "");
+            return (
+              <button
+                key={range.label}
+                onClick={() => handleBudgetClick(range.min, range.max)}
+                className={clsx(
+                  "py-3.5 px-3 rounded-2xl text-[10px] font-bold uppercase tracking-wider transition-all border",
+                  isActive 
+                    ? "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-sm" 
+                    : "bg-white border-slate-50 text-slate-400 hover:border-slate-200 hover:text-slate-600 shadow-sm"
+                )}
+              >
+                {range.label}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Advanced Filters Trigger */}
+      <section className="pt-6 border-t border-slate-50">
+        <button 
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          className="flex items-center justify-between w-full group py-2"
+        >
+          <div className="flex items-center gap-2">
+            <SlidersHorizontal size={14} className="text-slate-900" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Advanced Search</span>
+          </div>
+          <ChevronDown size={14} className={clsx("text-slate-300 transition-transform duration-300", showAdvanced && "rotate-180")} />
+        </button>
+
+        {showAdvanced && (
+          <div className="space-y-8 pt-8 animate-in fade-in slide-in-from-top-4 duration-500">
+            {/* Make */}
+            <div>
+              <label className={labelCls}>Brand & Model</label>
+              <div className="space-y-3">
+                <div className="relative">
+                  <select 
+                    value={make}
+                    onChange={e => { setMake(e.target.value); handleSubmit({ make: e.target.value }); }}
+                    className={selectCls}
+                  >
+                    <option value="">Specific Brand</option>
+                    {allMakes.map(m => <option key={m.make} value={m.make}>{m.make}</option>)}
+                  </select>
+                  <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                </div>
+                
+                <div className="relative">
+                  <select 
+                    value={bodyType}
+                    onChange={e => { setBodyType(e.target.value); handleSubmit({ bodyType: e.target.value }); }}
+                    className={selectCls}
+                  >
+                    <option value="">Vehicle Type</option>
+                    {Object.entries(bodyTypeLabels).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                  </select>
+                  <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                </div>
+              </div>
+            </div>
+
+            {/* Fuel & Transmission */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-3">
+                <label className={labelCls}>Fuel</label>
+                <div className="relative">
+                  <select 
+                    value={fuelType}
+                    onChange={e => setFuelType(e.target.value)}
+                    className={selectCls}
+                  >
+                    <option value="">Any</option>
+                    {Object.entries(FUEL_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <label className={labelCls}>Trans</label>
+                <div className="relative">
+                  <select 
+                    value={transmission}
+                    onChange={e => setTransmission(e.target.value)}
+                    className={selectCls}
+                  >
+                    <option value="">Any</option>
+                    {Object.entries(TRANSMISSION_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Price Inputs (Manual) */}
+            <div>
+              <label className={labelCls}>Manual Price Range</label>
+              <div className="flex items-center gap-2">
+                <input 
+                  type="number"
+                  placeholder="Min"
+                  value={minPrice}
+                  onChange={e => setMinPrice(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3 text-xs font-bold text-slate-900 outline-none focus:border-[var(--brand)] transition-all"
+                />
+                <span className="text-slate-200">/</span>
+                <input 
+                  type="number"
+                  placeholder="Max"
+                  value={maxPrice}
+                  onChange={e => setMaxPrice(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3 text-xs font-bold text-slate-900 outline-none focus:border-[var(--brand)] transition-all"
+                />
+              </div>
+            </div>
+
+            {/* Apply Button */}
+            <button 
+              onClick={() => handleSubmit()}
+              className="w-full bg-slate-900 hover:bg-black text-white text-[10px] font-black uppercase tracking-[0.2em] py-5 rounded-2xl transition-all shadow-xl shadow-slate-950/10 active:scale-[0.98]"
+            >
+              Update Search
+            </button>
+          </div>
+        )}
+      </section>
+
+      {/* Clear Filters */}
+      {(search || make || minPrice || maxPrice || bodyType) && (
+        <button 
+          onClick={() => {
+            router.push("/cars");
+          }}
+          className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-300 hover:text-rose-500 transition-colors"
+        >
+          <X size={12} /> Clear all filters
+        </button>
+      )}
     </div>
   );
 }
