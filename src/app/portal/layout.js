@@ -61,9 +61,9 @@ export default function PortalLayout({ children }) {
   const path = usePathname();
 
   return (
-    <div className="flex min-h-screen bg-slate-50/30">
+    <div className="flex h-screen bg-slate-50/30 overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-72 bg-white flex flex-col shrink-0 sticky top-0 h-screen border-r border-slate-100 z-50">
+      <aside className="w-72 bg-white flex flex-col shrink-0 border-r border-slate-100 z-50 h-full">
         {/* Branding */}
         <div className="p-8 mb-4">
           <Link href="/" className="flex items-center gap-4 group">
@@ -119,7 +119,7 @@ export default function PortalLayout({ children }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-x-hidden relative">
+      <main className="flex-1 h-full overflow-y-auto relative custom-scrollbar">
         {/* Modern Top Header / Breadcrumb */}
         <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-10 py-4 flex items-center justify-between">
            <div className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest">
