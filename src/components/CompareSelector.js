@@ -12,13 +12,13 @@ export function CompareBar() {
   const compareUrl = `/compare?${compareCars.map((c, i) => `${"abc"[i]}=${c.id}`).join("&")}`;
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-2xl animate-in fade-in slide-in-from-bottom-6 duration-500">
-      <div className="bg-[#121212]/90 backdrop-blur-3xl border border-white/10 rounded-[2rem] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(249,115,22,0.1)] flex items-center justify-between gap-4">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-2xl animate-in fade-in slide-in-from-bottom-6 duration-700">
+      <div className="bg-[var(--brand)]/90 backdrop-blur-3xl border border-white/10 rounded-full p-2 shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center justify-between gap-4">
         {/* Selected Cars Thumbnails */}
         <div className="flex items-center gap-2 px-2 overflow-x-auto no-scrollbar">
           {compareCars.map((car) => (
             <div key={car.id} className="relative group shrink-0">
-              <div className="w-12 h-12 rounded-2xl overflow-hidden bg-white/5 border border-white/10 shadow-lg">
+              <div className="w-12 h-12 rounded-full overflow-hidden bg-white/10 border border-white/20 shadow-lg transition-transform hover:scale-110">
                 {car.image ? (
                   <Image src={car.image} alt={car.model} fill className="object-cover" />
                 ) : (
@@ -36,7 +36,7 @@ export function CompareBar() {
 
           {/* Empty Slots */}
           {Array.from({ length: 3 - compareCars.length }).map((_, i) => (
-            <div key={`empty-${i}`} className="w-12 h-12 rounded-2xl border border-dashed border-white/10 flex items-center justify-center text-white/10 select-none">
+            <div key={`empty-${i}`} className="w-12 h-12 rounded-full border border-dashed border-white/20 flex items-center justify-center text-white/20 select-none">
               <span className="text-xl">+</span>
             </div>
           ))}
@@ -45,8 +45,8 @@ export function CompareBar() {
         {/* Info + Actions */}
         <div className="flex items-center gap-4 pr-4">
           <div className="hidden sm:block text-right">
-            <p className="text-[10px] font-black uppercase tracking-widest text-[#f97316]">Comparison</p>
-            <p className="text-xs font-bold text-white/50">{compareCars.length}/3 selected</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-[var(--brand-accent)]">Comparison Tool</p>
+            <p className="text-xs font-bold text-white/70">{compareCars.length}/3 selected</p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -58,7 +58,7 @@ export function CompareBar() {
             </button>
             <Link 
               href={compareUrl}
-              className="bg-orange-600 hover:bg-orange-500 text-white text-[11px] font-black uppercase tracking-widest px-6 h-10 rounded-2xl flex items-center shadow-lg shadow-orange-600/20 active:scale-95 transition-all"
+              className="bg-white text-[var(--brand)] hover:bg-[var(--brand-light)] text-[11px] font-black uppercase tracking-widest px-6 h-10 rounded-full flex items-center shadow-lg transition-all active:scale-95"
             >
               Compare
             </Link>
@@ -88,12 +88,12 @@ export function CompareButton({ car }) {
     <button
       onClick={handleToggle}
       disabled={!selected && isFull}
-      className={`relative h-10 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 overflow-hidden group ${
+      className={`relative h-10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 overflow-hidden group ${
         selected
-          ? "bg-orange-500/10 border border-orange-500/40 text-orange-500 px-6"
+          ? "bg-[var(--brand-light)] border border-[var(--brand-accent)]/30 text-[var(--brand)] px-6"
           : isFull 
-            ? "bg-white/5 border border-white/5 text-white/10 cursor-not-allowed px-4"
-            : "bg-white/5 border border-white/10 text-white/50 hover:text-white hover:border-white/20 hover:bg-white/10 px-6 active:scale-95"
+            ? "bg-slate-50 border border-slate-100 text-slate-300 cursor-not-allowed px-4"
+            : "bg-slate-50 border border-slate-100 text-slate-500 hover:text-[var(--brand)] hover:border-[var(--brand-accent)]/20 hover:bg-[var(--brand-light)] px-6 active:scale-95"
       }`}
     >
       <span className="relative z-10 flex items-center gap-2">
@@ -112,7 +112,7 @@ export function CompareButton({ car }) {
         )}
       </span>
       {!selected && !isFull && (
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-600/0 via-orange-600/5 to-orange-600/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[var(--brand-accent)]/0 via-[var(--brand-accent)]/5 to-[var(--brand-accent)]/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
       )}
     </button>
   );

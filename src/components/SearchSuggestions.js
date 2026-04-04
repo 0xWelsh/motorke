@@ -13,13 +13,13 @@ export default function SearchSuggestions({
   if (!suggestions.length && !loading) return null;
 
   const suggestionTypes = {
-    make: { icon: <Tag className="w-4 h-4 text-orange-500" />, label: "Make" },
-    model: { icon: <Car className="w-4 h-4 text-blue-500" />, label: "Model" },
-    variant: { icon: <Tag className="w-4 h-4 text-green-500" />, label: "Variant" },
+    make: { icon: <Tag className="w-4 h-4 text-[var(--brand)]" />, label: "Make" },
+    model: { icon: <Car className="w-4 h-4 text-[var(--brand-accent)]" />, label: "Model" },
+    variant: { icon: <Tag className="w-4 h-4 text-slate-400" />, label: "Variant" },
   };
 
   return (
-    <div className={`absolute left-0 right-0 top-full mt-2 bg-white dark:bg-surface border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden ${className}`}>
+    <div className={`absolute left-0 right-0 top-full mt-2 bg-white border border-slate-100 rounded-2xl shadow-2xl z-50 overflow-hidden ${className}`}>
       {loading ? (
         <div className="p-6 text-center">
           <div className="animate-pulse flex items-center justify-center gap-2">
@@ -42,22 +42,22 @@ export default function SearchSuggestions({
               <button
                 key={`${suggestion.type}-${index}`}
                 onClick={() => onSelect(suggestion.value)}
-                className="w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors duration-200 group"
+                className="w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-50 transition-colors duration-200 group border-b border-slate-50 last:border-0"
               >
                 <div className="shrink-0">
                   {typeInfo.icon}
                 </div>
                 <div className="flex-1 text-left">
-                  <div className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-orange-600 transition-colors">
+                  <div className="text-sm font-bold text-slate-800 group-hover:text-[var(--brand)] transition-colors">
                     {beforeMatch}
-                    <span className="bg-yellow-200 dark:bg-yellow-400/20 px-1 rounded">{matchText}</span>
+                    <span className="text-[var(--brand-accent)]">{matchText}</span>
                     {afterMatch}
                   </div>
                   <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-0.5">
                     {typeInfo.label}
                   </div>
                 </div>
-                <div className="shrink-0 text-slate-300 group-hover:text-orange-500 transition-colors">
+                <div className="shrink-0 text-slate-200 group-hover:text-[var(--brand-accent)] transition-colors">
                   <Check className="w-4 h-4" />
                 </div>
               </button>

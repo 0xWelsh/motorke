@@ -159,15 +159,15 @@ export default async function CarsPage({ searchParams }) {
             <h1 className="text-4xl font-black text-white tracking-tight">
               {search ? `Results for "${search}"` : county ? `Verified in ${county}` : "All Showcases"}
             </h1>
-            <p className="text-white/50 font-medium mt-1">
+            <p className="text-slate-500 font-medium mt-1">
               Displaying {total} premium automotive units.
             </p>
           </div>
           
           <div className="flex items-center gap-6">
             <div className="text-right hidden sm:block">
-              <p className="text-[10px] font-black uppercase tracking-widest text-white/30">Market View</p>
-              <p className="text-xs font-black text-white">Nairobi Standard Time</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-300">Market View</p>
+              <p className="text-xs font-black text-slate-800">Nairobi Standard Time</p>
             </div>
             {/* Sort is now handled inside CarsSearch for a unified UI, but we could keep a quick toggle here if needed */}
           </div>
@@ -175,13 +175,13 @@ export default async function CarsPage({ searchParams }) {
 
         {/* ── CAR GRID ── */}
         {sortedCars.length === 0 ? (
-          <div className="py-32 text-center border-2 border-dashed border-white/10 rounded-[3rem]">
-            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
-               <Search className="w-8 h-8 text-white/20" />
+          <div className="py-32 text-center border-2 border-dashed border-slate-100 rounded-[3rem] bg-white/50 shadow-sm">
+            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+               <Search className="w-8 h-8 text-slate-200" />
             </div>
-            <h2 className="text-xl font-black text-white mb-2">No matching units found.</h2>
-            <p className="text-white/40 font-medium mb-8">Try adjusting your filters or search terms.</p>
-            <Link href="/cars" className="inline-flex items-center gap-2 bg-white/10 text-white px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/20 transition-colors">
+            <h2 className="text-xl font-black text-slate-800 mb-2">No matching units found.</h2>
+            <p className="text-slate-400 font-medium mb-8">Try adjusting your filters or search terms.</p>
+            <Link href="/cars" className="inline-flex items-center gap-2 bg-slate-100 text-slate-700 px-8 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-colors">
               Reset Filters
             </Link>
           </div>
@@ -252,7 +252,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
   ].filter(Boolean);
 
   return (
-    <Link href={`/cars/${car.id}`} className="group block bg-surface border border-white/5 hover:border-orange-500/30 overflow-hidden transition-all duration-300">
+    <Link href={`/cars/${car.id}`} className="group block bg-white border border-slate-100 hover:border-[var(--brand-accent)]/30 overflow-hidden transition-all duration-500 rounded-3xl shadow-sm hover:shadow-xl">
       {/* Landscape thumbnail — sharp corners */}
       <div className="relative aspect-[16/10] bg-white/5 overflow-hidden">
         {img ? (
@@ -268,7 +268,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
           <div className="w-full h-full flex items-center justify-center text-white/20 text-[10px] font-bold uppercase tracking-widest">No Image</div>
         )}
         {car.featured && (
-          <span className="absolute top-3 right-3 bg-orange-600 text-pureWhite text-[9px] font-black px-2.5 py-1 uppercase tracking-widest">
+          <span className="absolute top-3 right-3 bg-[var(--brand)] text-white text-[9px] font-black px-2.5 py-1 uppercase tracking-widest rounded-lg">
             Featured
           </span>
         )}
@@ -293,10 +293,10 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
       <div className="p-4 flex flex-col gap-3">
         {/* Year label + Car name */}
         <div className="flex items-center gap-2.5">
-          <span className="text-[10px] font-black bg-white/10 text-orange-400 px-2 py-0.5 uppercase tracking-wider shrink-0">
+          <span className="text-[10px] font-black bg-[var(--brand-light)] text-[var(--brand)] px-2 py-0.5 uppercase tracking-wider shrink-0 rounded-md">
             {car.year}
           </span>
-          <h3 className="font-bold text-white text-sm leading-tight truncate group-hover:text-orange-500 transition-colors">
+          <h3 className="font-bold text-slate-800 text-sm leading-tight truncate group-hover:text-[var(--brand-accent)] transition-colors">
             {title}
           </h3>
           {car.dealer?.verified && <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />}
@@ -304,7 +304,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
 
         {/* Description */}
         {car.description && (
-          <p className="text-xs text-white/40 leading-relaxed line-clamp-2">
+          <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">
             {car.description}
           </p>
         )}
@@ -312,18 +312,18 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
         {/* Spec tags */}
         <div className="flex flex-wrap gap-1.5">
           {specs.map((s) => (
-            <span key={s} className="text-[10px] font-semibold text-white/50 bg-white/5 border border-white/5 px-2 py-0.5">
+            <span key={s} className="text-[10px] font-semibold text-slate-500 bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg">
               {s}
             </span>
           ))}
         </div>
 
         {/* Price + View Offer */}
-        <div className="flex items-center justify-between pt-3 border-t border-white/5 mt-auto">
-          <p className="text-lg font-black text-orange-500">{formatPrice(car.price)}</p>
+        <div className="flex items-center justify-between pt-3 border-t border-slate-50 mt-auto">
+          <p className="text-lg font-black text-slate-900">{formatPrice(car.price)}</p>
           <div className="flex items-center gap-3">
              <CompareButton car={car} />
-             <span className="text-[10px] font-black uppercase tracking-widest text-white/30 group-hover:text-orange-500 transition-colors flex items-center gap-1">
+             <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 group-hover:text-[var(--brand-accent)] transition-colors flex items-center gap-1">
                View Offer <ChevronRight className="w-3 h-3" />
              </span>
           </div>

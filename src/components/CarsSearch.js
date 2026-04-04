@@ -112,21 +112,21 @@ export default function CarsSearch({
   const hasFilters = search || make || bodyType || fuelType || transmission || county || minPrice || maxPrice || sort !== "newest";
 
   return (
-    <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-white/5 py-4 shadow-sm">
+    <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-200/50 py-4 shadow-sm">
       <div className="container mx-auto px-6 max-w-7xl">
         <div ref={formRef} className="relative">
           <form method="GET" onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-wrap items-center gap-3">
               {/* Primary Search */}
               <div className="relative flex-1 min-w-[240px] group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-white transition-colors" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-[var(--brand)] transition-colors" />
                 <input 
                   name="search" 
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                   placeholder="Search inventory (e.g. Toyota Prado)..." 
-                  className="w-full bg-white/5 border border-white/5 rounded-xl pl-11 pr-4 py-3 text-sm font-bold text-white outline-none focus:bg-surface focus:border-white/20 transition-all placeholder:text-white/30"
+                  className="w-full bg-slate-50 border border-slate-100 rounded-xl pl-11 pr-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:bg-white focus:border-[var(--brand-accent)]/30 transition-all placeholder:text-slate-300 shadow-sm"
                 />
               </div>
 
@@ -135,7 +135,7 @@ export default function CarsSearch({
                 <select 
                   value={make}
                   onChange={e => { setMake(e.target.value); handleSubmit(); }}
-                  className="bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:text-white focus:border-white/20 transition-all cursor-pointer"
+                  className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-slate-400 outline-none focus:text-[var(--brand)] focus:border-[var(--brand-accent)]/30 transition-all cursor-pointer shadow-sm"
                 >
                   <option value="">All Makes</option>
                   {allMakes.map(m => <option key={m.make} value={m.make}>{m.make}</option>)}
@@ -144,7 +144,7 @@ export default function CarsSearch({
                 <select 
                   value={bodyType}
                   onChange={e => { setBodyType(e.target.value); handleSubmit(); }}
-                  className="bg-white/5 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:text-white focus:border-white/20 transition-all cursor-pointer"
+                  className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 text-[11px] font-black uppercase tracking-widest text-slate-400 outline-none focus:text-[var(--brand)] focus:border-[var(--brand-accent)]/30 transition-all cursor-pointer shadow-sm"
                 >
                   <option value="">All Types</option>
                   {Object.entries(bodyTypeLabels).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
@@ -155,8 +155,8 @@ export default function CarsSearch({
                   onClick={() => setShowMore(!showMore)}
                   className={`flex items-center gap-2 px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all ${
                     showMore || fuelType || transmission || county || minPrice || maxPrice
-                    ? "bg-orange-600/10 text-orange-500 border border-orange-500/20" 
-                    : "bg-white/5 border border-white/5 text-white/50 hover:text-white"
+                    ? "bg-[var(--brand-light)] text-[var(--brand)] border border-[var(--brand-accent)]/20" 
+                    : "bg-slate-50 border border-slate-100 text-slate-400 hover:text-[var(--brand)] shadow-sm"
                   }`}
                 >
                   <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -178,7 +178,7 @@ export default function CarsSearch({
                   <option value="year_desc">Newest Year</option>
                 </select>
 
-                <button type="submit" className="bg-orange-600 hover:bg-orange-500 text-pureWhite px-6 py-3 rounded-xl transition-all text-xs font-black uppercase tracking-widest shadow-lg shadow-orange-600/20 active:scale-95">
+                <button type="submit" className="bg-[var(--brand)] hover:bg-[var(--brand-accent)] text-white px-6 py-3 rounded-xl transition-all text-xs font-black uppercase tracking-widest shadow-lg shadow-[var(--brand)]/10 active:scale-95">
                   Find
                 </button>
 

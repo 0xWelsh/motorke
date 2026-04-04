@@ -139,8 +139,8 @@ export default async function CarDetailPage({ params }) {
               <p className="text-white/40 mt-1">{BODY_TYPE_LABELS[car.bodyType]} · {car.year} · {formatMileage(car.mileage)}</p>
             </div>
             <div className="text-right">
-              <p className="text-3xl font-black text-orange-500">{formatPrice(car.price)}</p>
-              {car.negotiable && <p className="text-xs text-white/40 mt-1">Negotiable</p>}
+              <p className="text-3xl font-black text-[var(--brand)]">{formatPrice(car.price)}</p>
+              {car.negotiable && <p className="text-xs text-slate-400 mt-1">Negotiable</p>}
             </div>
           </div>
 
@@ -188,10 +188,10 @@ export default async function CarDetailPage({ params }) {
           </div>
 
           {/* Duty estimate */}
-          <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-5">
-            <h3 className="text-sm font-semibold text-amber-400 mb-1">🧾 Estimated import duty</h3>
-            <p className="text-2xl font-black text-amber-300">{formatPrice(duty)}</p>
-            <p className="text-xs text-amber-400/60 mt-1">
+          <div className="bg-[var(--brand-light)] border border-[var(--brand-accent)]/10 rounded-2xl p-5">
+            <h3 className="text-sm font-semibold text-[var(--brand)] mb-1">🧾 Estimated import duty</h3>
+            <p className="text-2xl font-black text-[var(--brand)]">{formatPrice(duty)}</p>
+            <p className="text-xs text-[var(--brand)]/60 mt-1">
               Rough KRA estimate based on car age and value. Verify with a clearing agent before purchase.
             </p>
           </div>
@@ -202,7 +202,7 @@ export default async function CarDetailPage({ params }) {
           {/* Dealer card */}
           <div className="bg-surface border border-white/5 shadow-2xl rounded-2xl p-5">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-500 font-black text-lg">
+              <div className="w-12 h-12 rounded-xl bg-[var(--brand-light)] flex items-center justify-center text-[var(--brand)] font-black text-lg">
                 {dealer.name[0]}
               </div>
               <div>
@@ -216,7 +216,7 @@ export default async function CarDetailPage({ params }) {
               </div>
             </div>
             <Link href={`/dealers/${dealer.slug}`}
-              className="block text-center text-xs text-orange-500 border border-orange-500/30 rounded-xl py-2 hover:bg-orange-500/10 transition-colors">
+              className="block text-center text-xs text-[var(--brand)] border border-[var(--brand-accent)]/20 rounded-xl py-2 hover:bg-[var(--brand-light)] transition-colors">
               View all cars from this dealer
             </Link>
           </div>
@@ -233,13 +233,13 @@ export default async function CarDetailPage({ params }) {
           </div>
 
           {/* Compare CTA */}
-          <div className="bg-white/5 border border-white/5 rounded-2xl p-6 text-center space-y-4">
+          <div className="bg-slate-50 border border-slate-100 rounded-2xl p-6 text-center space-y-4 shadow-sm">
             <div className="flex justify-center">
-              <div className="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center text-xl">⚖️</div>
+              <div className="w-12 h-12 rounded-full bg-[var(--brand-light)] flex items-center justify-center text-xl">⚖️</div>
             </div>
             <div>
-              <p className="text-sm font-bold text-white mb-1">Want to compare this car?</p>
-              <p className="text-xs text-white/40">Add it to your selection and see how it stacks up side-by-side.</p>
+              <p className="text-sm font-bold text-slate-800 mb-1">Want to compare this car?</p>
+              <p className="text-xs text-slate-400">Add it to your selection and see how it stacks up side-by-side.</p>
             </div>
             <div className="flex justify-center">
               <CompareButton car={car} />
@@ -258,8 +258,8 @@ export default async function CarDetailPage({ params }) {
               const title = `${c.make} ${c.model}`;
               return (
                 <Link key={c.id} href={`/cars/${c.id}`}
-                  className="group block bg-surface border border-white/5 hover:border-orange-500/30 overflow-hidden transition-all duration-300">
-                  <div className="relative aspect-[16/10] bg-white/5 overflow-hidden">
+                  className="group block bg-white border border-slate-100 hover:border-[var(--brand-accent)]/30 overflow-hidden transition-all duration-500 rounded-2xl shadow-sm hover:shadow-lg">
+                  <div className="relative aspect-[16/10] bg-slate-50 overflow-hidden">
                     {img ? (
                       <Image 
                         src={img} 
@@ -269,17 +269,17 @@ export default async function CarDetailPage({ params }) {
                         sizes="(max-width: 768px) 100vw, 33vw"
                       />
                     ) : (
-                      <div className="flex items-center justify-center h-full text-white/20 text-[10px] font-bold uppercase tracking-widest">No Image</div>
+                      <div className="flex items-center justify-center h-full text-slate-300 text-[10px] font-bold uppercase tracking-widest">No Image</div>
                     )}
                   </div>
                   <div className="p-4 flex flex-col gap-2.5">
                     <div className="flex items-center gap-2.5">
-                      <span className="text-[10px] font-black bg-white/10 text-orange-400 px-2 py-0.5 uppercase tracking-wider shrink-0">{c.year}</span>
-                      <h3 className="font-bold text-white text-sm leading-tight truncate group-hover:text-orange-500 transition-colors">{title}</h3>
+                      <span className="text-[10px] font-black bg-[var(--brand-light)] text-[var(--brand)] px-2 py-0.5 uppercase tracking-wider shrink-0 rounded-md">{c.year}</span>
+                      <h3 className="font-bold text-slate-800 text-sm leading-tight truncate group-hover:text-[var(--brand-accent)] transition-colors">{title}</h3>
                     </div>
-                    <div className="flex items-center justify-between pt-2.5 border-t border-white/5">
-                      <p className="text-base font-black text-orange-500">{formatPrice(c.price)}</p>
-                      <span className="text-[10px] text-white/30">{c.dealer?.name}</span>
+                    <div className="flex items-center justify-between pt-2.5 border-t border-slate-50">
+                      <p className="text-base font-black text-slate-900">{formatPrice(c.price)}</p>
+                      <span className="text-[10px] text-slate-400">{c.dealer?.name}</span>
                     </div>
                   </div>
                 </Link>

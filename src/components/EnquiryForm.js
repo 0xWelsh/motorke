@@ -61,7 +61,7 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
     }).catch(() => {});
   }
 
-  const inputCls = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
+  const inputCls = "w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[var(--brand-accent)]/30 focus:bg-white transition-all shadow-sm";
 
   if (state === "sent") {
     return (
@@ -69,14 +69,14 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
         <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
           <span className="text-green-400 text-xl">✓</span>
         </div>
-        <p className="font-bold text-green-400 mb-1">Enquiry sent!</p>
-        <p className="text-xs text-white/40">
-          {dealer.name} will contact you on <span className="text-white/60">{phone}</span> shortly.
+        <p className="font-bold text-emerald-600 mb-1">Enquiry sent!</p>
+        <p className="text-xs text-slate-500">
+          {dealer.name} will contact you on <span className="text-slate-800 font-semibold">{phone}</span> shortly.
         </p>
         {waLink && (
           <a href={waLink} target="_blank" rel="noopener noreferrer"
             onClick={handleWhatsApp}
-            className="mt-4 inline-flex items-center gap-2 bg-[#25D366]/15 border border-[#25D366]/30 text-[#25D366] text-xs font-semibold px-4 py-2.5 rounded-xl hover:bg-[#25D366]/25 transition-colors">
+            className="mt-4 inline-flex items-center gap-2 bg-[#25D366]/10 border border-[#25D366]/20 text-[#25D366] text-xs font-semibold px-4 py-2.5 rounded-xl hover:bg-[#25D366]/20 transition-colors">
             💬 Also message on WhatsApp
           </a>
         )}
@@ -93,16 +93,16 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleWhatsApp}
-          className="flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1fb558] text-white font-bold text-sm py-3 rounded-xl transition-colors w-full"
+          className="flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1fb558] text-white font-bold text-sm py-3.5 rounded-xl transition-all w-full shadow-lg shadow-[#25D366]/10 active:scale-[0.98]"
         >
           💬 WhatsApp {dealer.name}
         </a>
       )}
 
       <div className="flex items-center gap-3 my-1">
-        <div className="flex-1 h-px bg-white/10" />
-        <span className="text-xs text-white/20">or send a message</span>
-        <div className="flex-1 h-px bg-white/10" />
+        <div className="flex-1 h-px bg-slate-100" />
+        <span className="text-xs text-slate-300 font-bold uppercase tracking-widest text-[10px]">or send a message</span>
+        <div className="flex-1 h-px bg-slate-100" />
       </div>
 
       {state === "error" && (
@@ -136,10 +136,17 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
         <button
           type="submit"
           disabled={state === "sending"}
-          className="w-full bg-white/10 hover:bg-white/15 disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
+          className="w-full bg-[var(--brand)] hover:bg-[var(--brand-accent)] disabled:opacity-50 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg shadow-[var(--brand)]/10 active:scale-[0.98]"
         >
           {state === "sending" ? "Sending…" : "Send enquiry"}
         </button>
+        
+        <div className="flex items-center justify-center gap-1.5 pt-2">
+          <div className="w-3.5 h-3.5 rounded-full bg-emerald-100 flex items-center justify-center">
+            <span className="text-emerald-600 text-[8px]">✓</span>
+          </div>
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Safe & Secure Enquiry</span>
+        </div>
       </form>
     </div>
   );

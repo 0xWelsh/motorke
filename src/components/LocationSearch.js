@@ -102,7 +102,7 @@ export default function LocationSearch() {
       <form 
         ref={formRef}
         onSubmit={handleSubmit} 
-        className="flex items-center bg-white border border-slate-200 rounded-2xl p-2 shadow-sm focus-within:border-slate-900 transition-all duration-300"
+        className="flex items-center bg-white border border-slate-100 rounded-2xl p-2 shadow-sm focus-within:border-[var(--brand-accent)]/30 transition-all duration-300"
       >
         <div className="flex-1 flex items-center px-4 gap-3">
           <Search className="w-5 h-5 dark:text-slate-400 text-slate-600 shrink-0" />
@@ -111,7 +111,7 @@ export default function LocationSearch() {
             onChange={e => setSearch(e.target.value)}
             onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
             placeholder="Search by make, model or keyword…"
-            className="w-full bg-transparent border-none outline-none py-3 text-base text-slate-900 placeholder:dark:text-slate-400 text-slate-600 font-medium"
+            className="w-full bg-transparent border-none outline-none py-3 text-base text-slate-800 placeholder:text-slate-300 font-semibold"
           />
         </div>
 
@@ -121,7 +121,7 @@ export default function LocationSearch() {
           type="button"
           onClick={detectLocation}
           className={`p-3 rounded-xl transition-all duration-200 flex items-center gap-2 group ${
-            location ? "bg-orange-50 text-orange-600" : "bg-transparent dark:text-slate-400 text-slate-600 hover:text-slate-900"
+            location ? "bg-[var(--brand-light)] text-[var(--brand)]" : "bg-transparent text-slate-400 hover:text-slate-900"
           }`}
           title="Use my location"
         >
@@ -135,7 +135,7 @@ export default function LocationSearch() {
 
         <button 
           type="submit" 
-          className="bg-slate-900 hover:bg-orange-600 text-pureWhite px-8 py-3 rounded-xl font-black text-sm transition-all duration-300 ml-2"
+          className="bg-[var(--brand)] hover:bg-[var(--brand-accent)] text-white px-8 py-3 rounded-xl font-black text-sm transition-all duration-300 ml-2 shadow-lg shadow-[var(--brand)]/10"
         >
           Search
         </button>

@@ -5,16 +5,28 @@
 @tailwind utilities;
 
 :root {
-  --bg:           #f0f9ff;
+  /* Core Palette — "Trust & Precision" */
+  --bg:           #fbfcfd; /* Even cleaner, near-white slate */
   --surface:      #ffffff;
-  --border:       rgba(0,0,0,0.08);
-  --border-light: rgba(0,0,0,0.04);
-  --text:         #0f172a;
-  --text-muted:   #475569;
-  --text-faint:   #94a3b8;
-  --cyan:         #0891b2;
-  --cyan-dark:    #0e7490;
-  --cyan-light:   #e0f2fe;
+  --brand:        #065f46; /* Deep Emerald (Emerald-800) — Trust & Stability */
+  --brand-light:  #ecfdf5; /* Emerald-50 */
+  --brand-accent: #10b981; /* Emerald-500 — Positive Action */
+  
+  /* Neutral Palette — Refined Contrast */
+  --text:         #0f172a; /* Slate-900 */
+  --text-muted:   #475569; /* Slate-600 */
+  --text-faint:   #94a3b8; /* Slate-400 */
+  
+  /* Borders — Invisible until needed */
+  --border:       rgba(15, 23, 42, 0.06);
+  --border-light: rgba(15, 23, 42, 0.03);
+  
+  /* Utilities — Premium Depth */
+  --glass:        rgba(255, 255, 255, 0.8);
+  --glass-blur:   blur(16px);
+  --shadow-sm:    0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md:    0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg:    0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,13 +42,13 @@ body {
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+::-webkit-scrollbar-thumb:hover { background: var(--brand-accent); }
 
-.card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.card-hover { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 .card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px -10px rgba(8,145,178,0.15), 0 0 20px -5px rgba(8,145,178,0.08);
-  border-color: rgba(8,145,178,0.3);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--brand-accent);
 }
 
 .mk-modal-overlay {

@@ -89,12 +89,11 @@ export default function Navbar({ user }) {
 
           {/* LOGO */}
           <Link href="/" className="flex items-center gap-3 shrink-0 group">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm"
-              style={{background:"#0891b2"}}>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm bg-[var(--brand)]">
               <span className="text-white font-black text-lg tracking-tighter">M</span>
             </div>
             <span className="text-lg font-black text-slate-900 tracking-tighter">
-              Motor<span style={{color:"#0891b2"}}>ke</span>
+              Motor<span className="text-[var(--brand-accent)]">ke</span>
             </span>
           </Link>
 
@@ -141,8 +140,7 @@ export default function Navbar({ user }) {
                   onClick={() => setUserMenu(!userMenu)}
                   className="flex items-center gap-2.5 bg-slate-50 border border-slate-200 pl-2 pr-4 py-2 rounded-xl hover:border-slate-300 transition-all"
                 >
-                  <div className="w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs uppercase text-white"
-                    style={{background:"#0891b2"}}>
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs uppercase text-white bg-[var(--brand)]">
                     {user.name?.[0]}
                   </div>
                   <span className="text-xs font-bold text-slate-700">{user.name?.split(" ")[0]}</span>
@@ -175,8 +173,7 @@ export default function Navbar({ user }) {
                 <Link href="/login" className="text-[12px] font-bold text-slate-500 hover:text-slate-900 transition-colors">
                   Sign In
                 </Link>
-                <Link href="/signup" className="text-white px-5 py-2.5 rounded-xl text-[12px] font-bold transition-all hover:opacity-90"
-                  style={{background:"#0891b2"}}>
+                <Link href="/signup" className="text-white px-5 py-2.5 rounded-xl text-[12px] font-bold transition-all hover:bg-[var(--brand)] bg-[var(--brand-accent)] shadow-sm shadow-[var(--brand-accent)]/10">
                   Get Started
                 </Link>
               </div>
@@ -208,7 +205,7 @@ export default function Navbar({ user }) {
       {open && (
         <div className="lg:hidden fixed inset-0 top-0 bg-white z-[200] p-8">
           <div className="flex items-center justify-between mb-10">
-            <span className="text-xl font-black text-slate-900">Motor<span style={{color:"#0891b2"}}>ke</span></span>
+            <span className="text-xl font-black text-slate-900">Motor<span className="text-[var(--brand-accent)]">ke</span></span>
             <button onClick={() => setOpen(false)} className="w-10 h-10 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center">
               <X className="w-5 h-5" />
             </button>
@@ -226,8 +223,7 @@ export default function Navbar({ user }) {
             {!user ? (
               <>
                 <Link href="/signup" onClick={() => setOpen(false)}
-                  className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-2xl"
-                  style={{background:"#0891b2"}}>
+                  className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-2xl bg-[var(--brand)] shadow-lg shadow-[var(--brand)]/10">
                   Get Started
                 </Link>
                 <Link href="/login" onClick={() => setOpen(false)}

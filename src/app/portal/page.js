@@ -39,19 +39,19 @@ export default async function PortalPage() {
     <div className="animate-in fade-in duration-700">
       {user.dealer && !user.dealer.verified && (
         <div className="mb-10 p-6 bg-amber-500/10 border border-amber-500/20 rounded-[2rem] flex items-start gap-4 shadow-sm shadow-amber-500/5">
-           <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-600 flex items-center justify-center shrink-0 mt-1">
-             <ShieldCheck size={16} />
-           </div>
-           <div>
-             <h3 className="text-sm font-black text-amber-500 tracking-tight mb-1">Account under review</h3>
-             <p className="text-xs font-bold text-slate-400">Your dealership is pending verification by our administrators. You can build out your profile and prepare your inventory, but your dealership will not be publicly visible until approved.</p>
-           </div>
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
+              <ShieldCheck size={20} />
+            </div>
+            <div>
+              <h3 className="text-sm font-black text-amber-600 tracking-tight mb-1">Account under review</h3>
+              <p className="text-[11px] font-black text-slate-500 leading-tight">Your dealership is pending verification by our administrators. You can build out your profile and prepare your inventory, but your dealership will not be publicly visible until approved.</p>
+            </div>
         </div>
       )}
       
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-600 mb-2 block">Enterprise Overview</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-brand mb-2 block">Enterprise Overview</span>
           <h1 className="text-4xl font-black text-slate-900 tracking-tight">Welcome, {user.dealer?.name}</h1>
         </div>
         <Link href="/portal/cars/new"
@@ -64,19 +64,19 @@ export default async function PortalPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {[
           { label: "Live Inventory", value: live,   icon: <CheckCircle2 className="text-emerald-500" />, sub: "Currently visible to buyers" },
-          { label: "Hidden Items",   value: hidden, icon: <EyeOff className="dark:text-slate-400 text-slate-600" />, sub: "Drafts or sold out items" },
-          { label: "Total Inquiries", value: leads,  icon: <MessageSquare className="text-amber-500" />, sub: "Potential buyer messages" },
+          { label: "Hidden Items",   value: hidden, icon: <EyeOff className="text-slate-400" />, sub: "Drafts or sold out items" },
+          { label: "Total Inquiries", value: leads,  icon: <MessageSquare className="text-brand" />, sub: "Potential buyer messages" },
         ].map((stat, i) => (
           <div key={i} className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm hover:shadow-xl transition-all duration-300 group">
             <div className="flex items-center justify-between mb-6">
-              <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:bg-brand-light/50 transition-all">
                 {stat.icon}
               </div>
-              <ArrowUpRight className="text-slate-200 group-hover:text-amber-500 transition-colors" size={20} />
+              <ArrowUpRight className="text-slate-200 group-hover:text-brand transition-colors" size={20} />
             </div>
             <p className="text-4xl font-black text-slate-900 mb-2">{stat.value}</p>
-            <p className="text-xs font-black uppercase tracking-widest dark:text-slate-400 text-slate-600 mb-1">{stat.label}</p>
-            <p className="text-[10px] font-bold dark:text-slate-300 text-slate-500">{stat.sub}</p>
+            <p className="text-[11px] font-black uppercase tracking-widest text-slate-500 mb-1">{stat.label}</p>
+            <p className="text-[10px] font-black text-slate-400">{stat.sub}</p>
           </div>
         ))}
       </div>
@@ -111,10 +111,10 @@ export default async function PortalPage() {
             <table className="w-full">
               <thead>
                 <tr className="bg-slate-50/50">
-                  <th className="text-left text-[10px] font-black dark:text-slate-400 text-slate-600 uppercase tracking-widest px-8 py-5">Vehicle Details</th>
-                  <th className="text-left text-[10px] font-black dark:text-slate-400 text-slate-600 uppercase tracking-widest px-6 py-5 hidden sm:table-cell">Price / Market</th>
-                  <th className="text-left text-[10px] font-black dark:text-slate-400 text-slate-600 uppercase tracking-widest px-6 py-5">Status</th>
-                  <th className="text-right text-[10px] font-black dark:text-slate-400 text-slate-600 uppercase tracking-widest px-8 py-5">Actions</th>
+                  <th className="text-left text-[10px] font-black text-slate-500 uppercase tracking-widest px-8 py-5">Vehicle Details</th>
+                  <th className="text-left text-[10px] font-black text-slate-500 uppercase tracking-widest px-6 py-5 hidden sm:table-cell">Price / Market</th>
+                  <th className="text-left text-[10px] font-black text-slate-500 uppercase tracking-widest px-6 py-5">Status</th>
+                  <th className="text-right text-[10px] font-black text-slate-500 uppercase tracking-widest px-8 py-5">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
@@ -142,7 +142,7 @@ export default async function PortalPage() {
                       <span className={`inline-flex items-center gap-1.5 text-[10px] font-black px-3 py-1.5 rounded-lg uppercase tracking-wider ${
                         car.available
                           ? "bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100"
-                          : "bg-slate-100 dark:text-slate-500 text-slate-600"
+                          : "bg-slate-100 text-slate-500"
                       }`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${car.available ? "bg-emerald-500 animate-pulse" : "bg-slate-400"}`} />
                         {car.available ? "Live" : "Draft"}

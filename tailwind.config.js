@@ -9,18 +9,18 @@ module.exports = {
     extend: {
       colors: {
         background: "var(--bg)",
-        surface: {
-          DEFAULT: "var(--surface)",
+        surface:    "var(--surface)",
+        brand: {
+          DEFAULT: "var(--brand)",
+          light:   "var(--brand-light)",
+          accent:  "var(--brand-accent)",
         },
-        cyan: {
-          DEFAULT: "#0891b2",
-          dark:    "#0e7490",
-          light:   "#e0f2fe",
-          glow:    "rgba(8,145,178,0.3)",
-        },
-        orange: {
-          DEFAULT: "#ea580c",
-          dark:    "#c2410c",
+        slate: {
+          900: "#0f172a",
+          600: "#475569",
+          500: "#64748b",
+          100: "#f1f5f9",
+          50:  "#f8fafc",
         },
       },
       fontFamily: {
