@@ -5,19 +5,19 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const slides = [
   {
-    image: "/auth_hero.png",
+    image: "/signup/main.webp",
     title: "High-Performance",
     subtitle: "Marketplace.",
     description: "Access Kenya's most sophisticated automotive inventory and dealer tools in one seamless dashboard.",
   },
   {
-    image: "/auth_hero.png", // Replace with a different premium car if available
+    image: "/signup/land_cruiser.webp",
     title: "Accelerate Your",
     subtitle: "Sales Engine.",
     description: "Reach thousands of verified buyers with our advanced analytics and leading CRM tools.",
   },
   {
-    image: "/auth_hero.png", 
+    image: "/signup/crown.webp", 
     title: "Intelligence &",
     subtitle: "Analytics.",
     description: "Stay ahead of the curve with real-time market data, trend forecasting, and competitive pricing analysis.",
