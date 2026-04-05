@@ -44,7 +44,7 @@ function PasswordMeter({ password }) {
           <div key={i} className={`flex-1 rounded-full ${bg} transition-all duration-500`} />
         ))}
       </div>
-      <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] text-right">{label}</p>
+      <p className="text-[9px] font-black text-slate-700 uppercase tracking-[0.2em] text-right">{label}</p>
     </div>
   );
 }
@@ -95,8 +95,8 @@ export default function SignupForm({ error: initialError }) {
     }
   };
 
-  const inputCls = "w-full bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-200 shadow-sm shadow-slate-100";
-  const labelCls = "text-[10px] font-black text-slate-300 uppercase tracking-[0.25em] ml-1 flex items-center gap-2";
+  const inputCls = "w-full bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100";
+  const labelCls = "text-[10px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1 flex items-center gap-2";
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen">
@@ -150,7 +150,7 @@ export default function SignupForm({ error: initialError }) {
           
           <Link 
             href="/" 
-            className="absolute top-10 right-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-300 hover:text-slate-900 transition-all hover:gap-4"
+            className="absolute top-10 right-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
           >
             Showroom <ArrowLeft className="w-3 h-3 rotate-180" />
           </Link>
@@ -163,7 +163,7 @@ export default function SignupForm({ error: initialError }) {
                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Register</span>
                 </div>
                 <h1 className="text-4xl font-black text-slate-900 tracking-tighter mb-3">Create Account.</h1>
-                <p className="text-slate-400 font-medium text-sm">Select your profile type to get started.</p>
+                <p className="text-slate-700 font-medium text-sm">Select your profile type to get started.</p>
              </header>
 
              <div className="flex p-1.5 bg-slate-100 rounded-3xl gap-1.5 mb-8 w-fit">
@@ -275,7 +275,7 @@ export default function SignupForm({ error: initialError }) {
                         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><UserPlus size={16} /> Finalize Registration</>}
                       </button>
                    </div>
-                   <p className="text-[11px] font-bold text-slate-400 max-w-[200px] text-center sm:text-left leading-relaxed">
+                   <p className="text-[11px] font-bold text-slate-700 max-w-[200px] text-center sm:text-left leading-relaxed">
                       By proceeding, you agree to our <Link href="#" className="text-slate-900 border-b border-slate-950/10">Terms</Link> and <Link href="#" className="text-slate-900 border-b border-slate-950/10">Privacy</Link>.
                    </p>
                 </div>
@@ -295,7 +295,7 @@ export default function SignupForm({ error: initialError }) {
              </div>
 
              <footer className="mt-8 pt-8 border-t border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-6 max-w-[440px]">
-                <p className="text-sm font-bold text-slate-400">
+                <p className="text-sm font-bold text-slate-900">
                    Part of our network?{" "}
                    <Link href="/login" className="text-slate-900 hover:text-emerald-500 transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10">Sign in to your portal</Link>
                 </p>

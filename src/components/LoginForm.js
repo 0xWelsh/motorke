@@ -63,7 +63,7 @@ export default function LoginForm({ error }) {
          
          <Link 
            href="/" 
-           className="absolute top-10 right-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-300 hover:text-slate-900 transition-all hover:gap-4"
+           className="absolute top-10 right-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
          >
            Back to Showroom <ArrowLeft className="w-3 h-3 rotate-180" />
          </Link>
@@ -74,10 +74,10 @@ export default function LoginForm({ error }) {
                <div className="inline-flex items-center gap-3 mb-10">
                   <img src="/logo.png" alt="Motorske" className="h-10 w-auto object-contain" />
                   <div className="h-4 w-px bg-slate-200 mx-1" />
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Auth</span>
+                  <span className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">Auth</span>
                </div>
                <h1 className="text-4xl font-black text-slate-900 tracking-tighter mb-3 leading-tight">Welcome Back.</h1>
-               <p className="text-slate-400 font-medium text-sm">Please enter your credentials to access your portal.</p>
+               <p className="text-slate-700 font-medium text-sm">Please enter your credentials to access your portal.</p>
             </header>
 
             {/* Error Message */}
@@ -100,7 +100,7 @@ export default function LoginForm({ error }) {
             {/* Login Form */}
             <form action="/api/auth/login" method="POST" className="space-y-8">
                <div className="space-y-3 relative">
-                  <label htmlFor="emailAddress" className="text-[10px] font-black text-slate-300 uppercase tracking-[0.25em] ml-1">Email Address</label>
+                  <label htmlFor="emailAddress" className="text-[10px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1">Email Address</label>
                   <div className="relative">
                     <input 
                       id="emailAddress"
@@ -110,7 +110,7 @@ export default function LoginForm({ error }) {
                       onChange={(e) => setEmail(e.target.value)}
                       required 
                       placeholder="e.g. james@dealership.com" 
-                      className={`w-full bg-white border ${isValidEmail ? 'border-emerald-500' : 'border-slate-100'} rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-200 shadow-sm shadow-slate-100 pr-12`}
+                      className={`w-full bg-white border ${isValidEmail ? 'border-emerald-500' : 'border-slate-100'} rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100 pr-12`}
                     />
                     {isValidEmail && <CheckCircle2 className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-500" size={18} />}
                   </div>
@@ -118,8 +118,8 @@ export default function LoginForm({ error }) {
 
                <div className="space-y-3">
                   <div className="flex items-center justify-between ml-1">
-                    <label htmlFor="securePassword" className="text-[10px] font-black text-slate-300 uppercase tracking-[0.25em]">Secure Password</label>
-                    <Link href="#" className="text-[9px] font-black text-slate-300 hover:text-emerald-500 uppercase tracking-widest transition-colors">Recover Account</Link>
+                    <label htmlFor="securePassword" className="text-[10px] font-black text-slate-700 uppercase tracking-[0.25em]">Secure Password</label>
+                    <Link href="#" className="text-[9px] font-black text-slate-600 hover:text-emerald-500 uppercase tracking-widest transition-colors">Recover Account</Link>
                   </div>
                   <div className="relative group">
                     <input 
@@ -131,12 +131,12 @@ export default function LoginForm({ error }) {
                       onChange={(e) => setPassword(e.target.value)}
                       autoComplete="current-password"
                       placeholder="••••••••" 
-                      className="w-full bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-200 shadow-sm shadow-slate-100 pr-14"
+                      className="w-full bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100 pr-14"
                     />
                     <button 
                       type="button" 
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-200 hover:text-slate-900 transition-colors"
+                      className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-900 transition-colors"
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -149,7 +149,7 @@ export default function LoginForm({ error }) {
                      <input type="checkbox" id="rememberMe" name="remember" className="absolute opacity-0 w-full h-full cursor-pointer peer" />
                      <CheckCircle2 size={14} className="peer-checked:text-emerald-500 transition-colors" />
                    </div>
-                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-slate-900 transition-colors">Remember Me</span>
+                   <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest group-hover:text-slate-900 transition-colors">Remember Me</span>
                  </label>
                </div>
 
@@ -166,7 +166,7 @@ export default function LoginForm({ error }) {
                   <div className="w-full border-t border-slate-100"></div>
                </div>
                <div className="relative flex justify-center text-[10px] uppercase font-black tracking-[0.25em]">
-                  <span className="bg-[#FCFCFD] px-5 text-slate-200">Social Connect</span>
+                  <span className="bg-[#FCFCFD] px-5 text-slate-700">Social Connect</span>
                </div>
             </div>
 
@@ -175,13 +175,13 @@ export default function LoginForm({ error }) {
             </div>
 
             <footer className="mt-16 pt-12 border-t border-slate-50 text-center lg:text-left">
-               <p className="text-sm font-bold text-slate-400">
+               <p className="text-sm font-bold text-slate-900">
                   New to our marketplace?{" "}
                   <Link href="/signup" className="text-slate-900 hover:text-emerald-500 transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10 pb-0.5">Explore Dealer Subscription</Link>
                </p>
                
                <div className="mt-10 flex flex-col lg:flex-row items-center gap-6">
-                  <p className="text-[10px] font-black text-slate-200 uppercase tracking-[0.2em]">
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
                      MotorsKe © 2026
                   </p>
                </div>

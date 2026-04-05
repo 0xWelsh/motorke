@@ -14,8 +14,8 @@
   
   /* Neutral Palette — Refined Contrast */
   --text:         #0f172a; /* Slate-900 */
-  --text-muted:   #475569; /* Slate-600 */
-  --text-faint:   #94a3b8; /* Slate-400 */
+  --text-muted:   #1e293b; /* Slate-800 — Optimized for readability on white */
+  --text-faint:   #475569; /* Slate-600 */
   
   /* Borders — Invisible until needed */
   --border:       rgba(15, 23, 42, 0.06);

@@ -84,19 +84,19 @@ export default async function AdminDashboard() {
         <div>
           <div className="flex items-center gap-3 mb-4">
              <div className="w-2 h-2 rounded-full bg-emerald-600 shadow-[0_0_10px_rgba(16,185,129,0.3)] animate-pulse" />
-             <span className="text-[11px] font-black uppercase tracking-[0.4em] text-slate-400">Universal Nexus Terminal</span>
+             <span className="text-[11px] font-black uppercase tracking-[0.4em] text-slate-800">Universal Nexus Terminal</span>
           </div>
           <h1 className="text-5xl font-black text-slate-900 tracking-tighter leading-none mb-1">
              Market <span className="text-emerald-600">Nexus</span>
           </h1>
-          <p className="text-slate-500 mt-4 text-sm font-medium tracking-wide">Real-time operational signals and platform-wide unit intelligence.</p>
+          <p className="text-slate-700 mt-4 text-sm font-medium tracking-wide">Real-time operational signals and platform-wide unit intelligence.</p>
         </div>
         
         <div className="flex items-center gap-4">
            <Link href="/admin/cars/new" className="bg-emerald-600 text-white px-10 py-4 rounded-2xl text-[12px] font-bold uppercase tracking-widest flex items-center gap-3 hover:bg-slate-900 transition-all shadow-xl shadow-emerald-200 group">
              <Plus size={16} className="group-hover:rotate-90 transition-transform duration-500" /> Deploy Asset
            </Link>
-           <Link href="/admin/dealers/new" className="bg-white border border-slate-200 text-slate-600 px-10 py-4 rounded-2xl text-[12px] font-bold uppercase tracking-widest flex items-center gap-3 hover:bg-slate-50 hover:border-slate-300 transition-all">
+           <Link href="/admin/dealers/new" className="bg-white border border-slate-200 text-slate-900 px-10 py-4 rounded-2xl text-[12px] font-bold uppercase tracking-widest flex items-center gap-3 hover:bg-slate-50 hover:border-slate-300 transition-all">
              <Building2 size={16} /> Add Partner
            </Link>
         </div>
@@ -127,8 +127,8 @@ export default async function AdminDashboard() {
                 </div>
                 
                 <p className="text-4xl font-black text-slate-900 mb-2 tracking-tighter leading-none">{stat.value}</p>
-                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-1">{stat.label}</p>
-                <p className="text-[10px] font-semibold text-slate-300 uppercase tracking-widest">{stat.sub}</p>
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-900 mb-1">{stat.label}</p>
+                <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-widest">{stat.sub}</p>
              </div>
           </div>
         ))}
@@ -151,7 +151,7 @@ export default async function AdminDashboard() {
                {/* Custom Wave Progress Bar */}
                <div className="relative w-full h-14 rounded-2xl bg-slate-50 overflow-hidden border border-slate-100 shadow-inner">
                   <div className="absolute inset-0 flex items-center px-6 justify-between z-10">
-                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Direct WhatsApp Yield</span>
+                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">Direct WhatsApp Yield</span>
                      <span className="text-base font-black text-slate-900">{Math.round((whatsappLeads/totalLeads)*100)}%</span>
                   </div>
                   <div className="h-full bg-emerald-600/10 border-r-2 border-emerald-600 transition-all duration-1000 ease-out" style={{ width: `${(whatsappLeads/totalLeads)*100}%` }} />
@@ -161,18 +161,18 @@ export default async function AdminDashboard() {
                   <div className="p-6 rounded-2xl bg-slate-50/50 border border-slate-100 hover:border-emerald-200 hover:bg-white transition-all shadow-sm">
                      <div className="flex items-center gap-3 mb-4 text-emerald-600">
                         <Smartphone size={20} />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Mobile API</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">Mobile API</span>
                      </div>
                      <p className="text-3xl font-black text-slate-900 leading-none">{whatsappLeads}</p>
-                     <p className="text-[9px] font-bold text-slate-300 mt-2 uppercase tracking-widest">Instant Enquiries</p>
+                     <p className="text-[9px] font-bold text-slate-600 mt-2 uppercase tracking-widest">Instant Enquiries</p>
                   </div>
                   <div className="p-6 rounded-2xl bg-slate-50/50 border border-slate-100 hover:border-blue-200 hover:bg-white transition-all shadow-sm">
                      <div className="flex items-center gap-3 mb-4 text-blue-600">
                         <Globe size={20} />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Web Core</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">Web Core</span>
                      </div>
                      <p className="text-3xl font-black text-slate-900 leading-none">{webLeads}</p>
-                     <p className="text-[9px] font-bold text-slate-300 mt-2 uppercase tracking-widest">Portal Entries</p>
+                     <p className="text-[9px] font-bold text-slate-600 mt-2 uppercase tracking-widest">Portal Entries</p>
                   </div>
                </div>
             </div>
@@ -180,7 +180,7 @@ export default async function AdminDashboard() {
             <div className="mt-12 pt-8 border-t border-slate-100 flex items-center justify-between relative z-10">
                <div>
                   <p className="text-4xl font-black text-slate-900 leading-none opacity-80">{totalLeads}</p>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mt-3">Synthesized Yield</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 mt-3">Synthesized Yield</p>
                </div>
                <div className="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center bg-white shadow-lg group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all duration-500 scale-110">
                   <ArrowUpRight size={20} />
@@ -193,9 +193,9 @@ export default async function AdminDashboard() {
             <div className="flex items-center justify-between mb-12 relative z-10">
                <div>
                   <h3 className="text-2xl font-black text-slate-900 tracking-tighter">Partner Performance</h3>
-                  <p className="text-sm font-medium text-slate-400 mt-2">Utilization metrics across authorized dealership hubs.</p>
+                  <p className="text-sm font-medium text-slate-700 mt-2">Utilization metrics across authorized dealership hubs.</p>
                </div>
-               <Link href="/admin/dealers" className="px-6 py-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-900 hover:text-white transition-all shadow-sm">
+               <Link href="/admin/dealers" className="px-6 py-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-900 hover:bg-slate-900 hover:text-white transition-all shadow-sm">
                   Full Analytics <ArrowRight size={14} />
                </Link>
             </div>
@@ -215,11 +215,11 @@ export default async function AdminDashboard() {
                           <div className="flex-1 flex justify-between items-center">
                              <div>
                                 <p className="text-base font-black text-slate-900 uppercase tracking-tight group-hover/item:text-emerald-600 transition-colors leading-none mb-1.5">{name}</p>
-                                <p className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em]">Authorized Licensee</p>
+                                <p className="text-[10px] font-bold text-slate-700 uppercase tracking-[0.2em]">Authorized Licensee</p>
                              </div>
                              <div className="text-right">
                                 <p className="text-xl font-black text-slate-900 leading-none mb-1.5">{_count.id}</p>
-                                <p className="text-[9px] font-bold text-slate-300 uppercase tracking-[0.1em]">Signals Yielded</p>
+                                <p className="text-[9px] font-bold text-slate-700 uppercase tracking-[0.1em]">Signals Yielded</p>
                              </div>
                           </div>
                        </div>
@@ -247,7 +247,7 @@ export default async function AdminDashboard() {
                </div>
                <h2 className="text-2xl font-black text-slate-900 tracking-tighter">High-Yield Assets</h2>
             </div>
-            <Link href="/admin/cars" className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400 hover:text-emerald-600 transition-colors">Audit Collection</Link>
+            <Link href="/admin/cars" className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-900 hover:text-emerald-600 transition-colors">Audit Collection</Link>
           </div>
           
           <div className="grid gap-4">
@@ -265,7 +265,7 @@ export default async function AdminDashboard() {
                   <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.25em] mb-1.5 leading-none">{car.dealer?.name}</p>
                   <p className="text-lg font-black text-slate-900 lg:truncate tracking-tighter leading-none mb-3">{car.year} {car.make} {car.model}</p>
                   <div className="flex items-center gap-4">
-                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{car.variant || "Standard Spec"}</span>
+                     <span className="text-[10px] font-bold text-slate-700 uppercase tracking-widest">{car.variant || "Standard Spec"}</span>
                      <div className="w-1 h-1 rounded-full bg-slate-200" />
                      <div className="flex items-center gap-1.5 text-emerald-600">
                         <Eye size={12} />
@@ -276,7 +276,7 @@ export default async function AdminDashboard() {
                 
                 <div className="text-right relative z-10">
                   <p className="text-xl font-black text-slate-900 leading-none mb-2 tracking-tighter">{formatPrice(car.price)}</p>
-                  <Link href={`/admin/cars/${car.id}`} className="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-emerald-600 transition-colors">Configuration</Link>
+                  <Link href={`/admin/cars/${car.id}`} className="text-[10px] font-bold text-slate-900 uppercase tracking-widest hover:text-emerald-600 transition-colors">Configuration</Link>
                 </div>
               </div>
             ))}
@@ -292,7 +292,7 @@ export default async function AdminDashboard() {
                </div>
                <h2 className="text-2xl font-black text-slate-900 tracking-tighter">Signal Stream</h2>
             </div>
-            <Link href="/admin/leads" className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400 hover:text-slate-900 transition-colors">Audit Feed</Link>
+            <Link href="/admin/leads" className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-900 hover:text-slate-900 transition-colors">Audit Feed</Link>
           </div>
           
           <div className="bg-white border border-slate-200 rounded-[3rem] p-8 shadow-sm space-y-5">
@@ -318,7 +318,7 @@ export default async function AdminDashboard() {
                     {lead.channel === "whatsapp" ? <Smartphone size={10} /> : <Globe size={10} />}
                     {lead.channel}
                   </div>
-                  <p className="text-[10px] font-bold text-slate-300 uppercase tracking-tighter block mt-1">
+                  <p className="text-[10px] font-bold text-slate-700 uppercase tracking-tighter block mt-1">
                     Captured {new Date(lead.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short" })}
                   </p>
                 </div>
@@ -326,7 +326,7 @@ export default async function AdminDashboard() {
             ))}
             
             <div className="pt-8 border-t border-slate-100">
-               <div className="flex items-center gap-4 text-[11px] font-black text-slate-300 uppercase tracking-[0.3em]">
+               <div className="flex items-center gap-4 text-[11px] font-black text-slate-700 uppercase tracking-[0.3em]">
                   <div className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
                   Terminal Data Integrity: 100%
                </div>

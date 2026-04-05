@@ -45,10 +45,10 @@ export default async function AdminDealersPage() {
         <div>
            <div className="flex items-center gap-3 mb-3">
              <div className="w-2 h-2 rounded-full bg-emerald-600 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
-             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400">Node Management Hub</span>
+             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-800">Node Management Hub</span>
           </div>
           <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-            Partner Network <span className="text-slate-300 font-medium ml-3">/ {dealers.length} Licensed Nodes</span>
+            Partner Network <span className="text-slate-500 font-medium ml-3">/ {dealers.length} Licensed Nodes</span>
           </h1>
         </div>
         <Link href="/admin/dealers/new" className="bg-slate-900 text-white px-10 py-5 rounded-2xl text-[12px] font-bold uppercase tracking-widest flex items-center gap-3 hover:bg-emerald-600 transition-all shadow-xl shadow-slate-200">
@@ -70,13 +70,13 @@ export default async function AdminDealersPage() {
                     </div>
                     <div>
                       <h3 className="text-xl font-black text-slate-900 tracking-tighter leading-none mb-2 group-hover:text-emerald-600 transition-colors uppercase">{dealer.name}</h3>
-                      <div className="flex items-center gap-2 text-slate-400">
+                      <div className="flex items-center gap-2 text-slate-600">
                         <MapPin size={12} className="text-emerald-600/40" />
                         <span className="text-[10px] font-bold uppercase tracking-widest">{dealer.county || "Global Node"}</span>
                       </div>
                     </div>
                   </div>
-                  <button className="text-slate-200 hover:text-slate-900 transition-colors">
+                  <button className="text-slate-400 hover:text-slate-900 transition-colors">
                      <MoreVertical size={20} />
                   </button>
                </div>
@@ -89,7 +89,7 @@ export default async function AdminDealersPage() {
                     { label: "Users",  value: dealer._count.users, icon: <Users size={12} /> },
                   ].map((stat) => (
                     <div key={stat.label} className="bg-slate-50 border border-slate-100 p-4 rounded-2xl hover:bg-white transition-all shadow-sm">
-                       <div className="flex items-center gap-1.5 text-slate-300 mb-2">
+                       <div className="flex items-center gap-1.5 text-slate-500 mb-2">
                           {stat.icon}
                           <span className="text-[9px] font-bold uppercase tracking-widest leading-none">{stat.label}</span>
                        </div>
@@ -111,7 +111,7 @@ export default async function AdminDealersPage() {
                       </div>
                     )}
                  </div>
-                 <Link href={`/admin/dealers/${dealer.id}/edit`} className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all shadow-sm group-hover:scale-110">
+                 <Link href={`/admin/dealers/${dealer.id}/edit`} className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all shadow-sm group-hover:scale-110">
                     <ArrowUpRight size={18} />
                  </Link>
                </div>
@@ -123,9 +123,9 @@ export default async function AdminDealersPage() {
 
         {dealers.length === 0 && (
           <div className="col-span-full py-40 text-center">
-            <Building2 size={48} className="mx-auto text-slate-200 mb-8" />
+            <Building2 size={48} className="mx-auto text-slate-300 mb-8" />
             <p className="text-xl font-black text-slate-900 uppercase tracking-tighter">Partner Network Empty</p>
-            <p className="text-sm font-medium text-slate-400 mt-2">No dealership hubs have been authorized yet.</p>
+            <p className="text-sm font-medium text-slate-600 mt-2">No dealership hubs have been authorized yet.</p>
           </div>
         )}
       </div>
