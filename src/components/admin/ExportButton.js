@@ -23,9 +23,9 @@ export default function ExportButton({ data, filename = "export.csv" }) {
   return (
     <button 
       onClick={exportToCSV}
-      className="bg-white/5 border border-white/10 text-white/40 px-6 py-3.5 rounded-2xl text-[11px] font-bold uppercase tracking-widest flex items-center gap-3 hover:bg-white/10 hover:text-white transition-all shadow-xl"
+      className="bg-white border border-slate-200 text-slate-600 px-6 py-3.5 rounded-2xl text-[11px] font-bold uppercase tracking-widest flex items-center gap-3 hover:bg-slate-50 hover:text-slate-900 transition-all shadow-sm"
     >
-      <Download size={16} /> Export CSV
+      <Download size={16} /> Export Registry
     </button>
   );
 }

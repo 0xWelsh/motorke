@@ -31,8 +31,10 @@ export default async function AdminApprovalsPage() {
   });
 
   const gradients = [
-    "from-emerald-500 to-teal-500", "from-blue-500 to-indigo-500",
-    "from-teal-500 to-emerald-600", "from-cyan-500 to-blue-500",
+    "from-slate-100 to-slate-200",
+    "from-emerald-50 to-emerald-100",
+    "from-blue-50 to-blue-100",
+    "from-slate-50 to-slate-100",
   ];
 
   return (
@@ -41,70 +43,70 @@ export default async function AdminApprovalsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-8">
         <div>
           <div className="flex items-center gap-3 mb-3">
-             <div className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)] animate-pulse" />
-             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-amber-500/60">Verification Gateway</span>
+             <div className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.3)] animate-pulse" />
+             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400">Verification Gateway</span>
           </div>
-          <h1 className="text-4xl font-black text-white tracking-tight">
-            Pending Approvals <span className="text-white/20 font-medium ml-3">/ {dealers.length} Requests</span>
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight">
+            Pending Approvals <span className="text-slate-300 font-medium ml-3">/ {dealers.length} Requests</span>
           </h1>
         </div>
       </div>
 
-      {/* ── DATA TABLE ── */}
-      <div className="bg-[#0a0c10] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl">
+      {/* ── DATA REGISTRY ── */}
+      <div className="bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
-              <tr className="border-b border-white/5 bg-white/[0.02]">
+              <tr className="border-b border-slate-100 bg-slate-50/50">
                 {["Partner Proposal", "Operational Node", "Status", ""].map((h) => (
-                  <th key={h} className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.25em] text-white/20">{h}</th>
+                  <th key={h} className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-slate-100">
               {dealers.map((dealer) => {
                 const gradient = gradients[dealer.id.charCodeAt(0) % gradients.length];
                 return (
-                <tr key={dealer.id} className="group hover:bg-white/[0.02] transition-colors">
+                <tr key={dealer.id} className="group hover:bg-slate-50/50 transition-colors">
                   <td className="px-10 py-7">
                     <div className="flex items-center gap-5">
-                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${gradient} text-white flex items-center justify-center font-black text-xl shadow-lg group-hover:scale-105 transition-transform duration-500`}>
+                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${gradient} text-slate-900 flex items-center justify-center font-black text-xl shadow-sm border border-white group-hover:scale-105 transition-transform duration-500`}>
                         {dealer.name[0]?.toUpperCase()}
                       </div>
                       <div>
-                        <p className="text-lg font-black text-white tracking-tight leading-none mb-1.5">{dealer.name}</p>
+                        <p className="text-lg font-black text-slate-900 tracking-tight leading-none mb-1.5 uppercase group-hover:text-emerald-600 transition-colors">{dealer.name}</p>
                         <div className="flex items-center gap-3">
-                           <span className="text-[10px] font-bold text-white/30 uppercase tracking-widest">{dealer.phone}</span>
-                           <div className="w-1 h-1 rounded-full bg-white/10" />
-                           <span className="text-[10px] font-bold text-emerald-500/60 uppercase tracking-widest">Entry: {new Date(dealer.createdAt).toLocaleDateString()}</span>
+                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{dealer.phone}</span>
+                           <div className="w-1 h-1 rounded-full bg-slate-200" />
+                           <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Entry: {new Date(dealer.createdAt).toLocaleDateString()}</span>
                         </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-10 py-7">
-                     <div className="flex items-center gap-2.5 text-white/60 mb-1">
-                        <MapPin size={14} className="text-emerald-500/40" />
+                     <div className="flex items-center gap-2.5 text-slate-600 mb-1">
+                        <MapPin size={14} className="text-emerald-600/40" />
                         <p className="text-xs font-bold uppercase tracking-widest">{dealer.county || "Unknown Territory"}</p>
                      </div>
-                     <p className="text-[11px] font-medium text-white/20 uppercase tracking-tighter">{dealer.location}</p>
+                     <p className="text-[11px] font-medium text-slate-400 uppercase tracking-tighter">{dealer.location}</p>
                   </td>
                   <td className="px-10 py-7">
-                     <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/5 border border-amber-500/10 rounded-full w-fit">
-                        <Clock size={12} className="text-amber-500/60" />
-                        <span className="text-[10px] font-bold text-amber-500/60 uppercase tracking-widest">
+                     <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-100 rounded-full w-fit shadow-sm">
+                        <Clock size={12} className="text-amber-600" />
+                        <span className="text-[10px] font-bold text-amber-600 uppercase tracking-widest">
                           Awaiting Validation
                         </span>
                      </div>
                   </td>
                   <td className="px-10 py-7 text-right">
-                    <div className="flex items-center justify-end gap-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300">
-                      <Link href={`/admin/dealers/${dealer.id}/edit`} className="h-11 px-6 bg-white/5 hover:bg-white/10 text-white/40 hover:text-white font-bold text-[10px] uppercase tracking-widest rounded-xl transition-all border border-white/5 flex items-center gap-2" title="Audit Profile">
+                    <div className="flex items-center justify-end gap-3 opacity-0 lg:group-hover:opacity-100 transition-all duration-300">
+                      <Link href={`/admin/dealers/${dealer.id}/edit`} className="h-11 px-6 bg-white border border-slate-200 text-slate-400 hover:text-slate-900 hover:border-slate-300 font-bold text-[10px] uppercase tracking-widest rounded-xl transition-all flex items-center gap-2 shadow-sm" title="Audit Profile">
                         <Edit3 size={14} /> Inspect
                       </Link>
                       
                       <form action={`/api/admin/dealers/${dealer.id}/toggle-verified`} method="POST">
                         <button type="submit" 
-                          className="h-11 px-6 bg-emerald-600/10 hover:bg-emerald-600 text-emerald-500 hover:text-white font-bold text-[10px] uppercase tracking-widest border border-emerald-500/20 hover:border-emerald-600 rounded-xl transition-all shadow-lg flex items-center gap-2"
+                          className="h-11 px-6 bg-slate-900 hover:bg-emerald-600 text-white font-bold text-[10px] uppercase tracking-widest border border-transparent rounded-xl transition-all shadow-xl shadow-slate-100 flex items-center gap-2"
                         >
                           <CheckCircle2 size={14} /> Authorize
                         </button>
@@ -122,11 +124,11 @@ export default async function AdminApprovalsPage() {
         
         {dealers.length === 0 && (
           <div className="py-32 text-center">
-            <div className="w-20 h-20 bg-white/[0.02] rounded-full border border-white/5 flex items-center justify-center mx-auto mb-8">
-               <ShieldCheck size={32} className="text-emerald-500/20" />
+            <div className="w-20 h-20 bg-slate-50 rounded-full border border-slate-100 flex items-center justify-center mx-auto mb-8">
+               <ShieldCheck size={32} className="text-slate-200" />
             </div>
-            <p className="text-lg font-black text-white/20 uppercase tracking-[0.3em]">Queue Purged</p>
-            <p className="text-sm font-medium text-white/10 mt-2">All partner nodes have been successfully validated.</p>
+            <p className="text-xl font-black text-slate-900 uppercase tracking-tighter">Queue Purged</p>
+            <p className="text-sm font-medium text-slate-400 mt-2 tracking-wide">All partner nodes have been successfully validated.</p>
           </div>
         )}
       </div>

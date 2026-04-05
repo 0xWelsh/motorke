@@ -41,17 +41,17 @@ function NavLink({ href, label, Icon, active }) {
     <Link 
       href={href} 
       className={clsx(
-        "flex items-center justify-between group px-5 py-3.5 rounded-2xl transition-all duration-500",
+        "flex items-center justify-between group px-5 py-3 rounded-xl transition-all duration-300",
         active 
-          ? "bg-emerald-600/10 text-emerald-500 border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.05)]" 
-          : "text-white/40 hover:text-white hover:bg-white/5 border border-transparent"
+          ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/20" 
+          : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
       )}
     >
-      <div className="flex items-center gap-3.5">
-        <Icon size={18} className={clsx("transition-all duration-500", active ? "text-emerald-500" : "group-hover:scale-110 group-hover:text-emerald-400")} />
-        <span className="text-[12px] font-bold uppercase tracking-wider">{label}</span>
+      <div className="flex items-center gap-3">
+        <Icon size={18} className={clsx("transition-colors", active ? "text-white" : "group-hover:text-emerald-600")} />
+        <span className="text-[13px] font-bold uppercase tracking-wider">{label}</span>
       </div>
-      {active && <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.8)]" />}
+      {active && <div className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />}
     </Link>
   );
 }
@@ -67,110 +67,101 @@ export default function AdminLayout({ children }) {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#05070a] text-slate-200 selection:bg-emerald-500/30">
+    <div className="flex min-h-screen bg-[#f8fafc] text-slate-900 selection:bg-emerald-100 selection:text-emerald-900">
       {/* Sidebar */}
-      <aside className="w-72 bg-slate-950/50 backdrop-blur-3xl border-r border-white/5 flex flex-col shrink-0 sticky top-0 h-screen z-50 overflow-hidden">
-        {/* Ambient Glow */}
-        <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-600/5 blur-[120px] -ml-32 -mt-32 pointer-events-none" />
-        
+      <aside className="w-72 bg-white border-r border-slate-200 flex flex-col shrink-0 sticky top-0 h-screen z-50">
         {/* Branding */}
-        <div className="p-8 relative z-10">
+        <div className="p-8">
           <Link href="/" className="flex items-center gap-4 group">
-            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center group-hover:bg-emerald-600 transition-all duration-500 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-              <span className="text-slate-950 group-hover:text-white font-black text-2xl tracking-tighter transition-colors">M</span>
+            <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center group-hover:bg-emerald-600 transition-all duration-500 shadow-xl shadow-slate-200">
+              <span className="text-white font-black text-2xl tracking-tighter">M</span>
             </div>
             <div>
-              <span className="text-xl font-black text-white tracking-tighter block leading-none">
-                Motor<span className="text-emerald-500 transition-colors">ke</span>
+              <span className="text-xl font-black text-slate-900 tracking-tighter block leading-none">
+                Motor<span className="text-emerald-600">ke</span>
               </span>
-              <span className="text-[10px] font-bold text-white/30 uppercase tracking-[0.25em] mt-1.5 block">
-                Management
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1.5 block">
+                Control Center
               </span>
             </div>
           </Link>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto relative z-10 custom-scrollbar">
+        <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto custom-scrollbar">
           <div className="px-4 mb-4">
-             <p className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em]">Core Systems</p>
+             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Core Operations</p>
           </div>
           {links.map(({ href, label, Icon }) => (
             <NavLink key={href} href={href} label={label} Icon={Icon} active={path === href} />
           ))}
           
-          <div className="px-4 mb-4 mt-10">
-             <p className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em]">Operations</p>
+          <div className="px-4 mb-4 mt-8">
+             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Management</p>
           </div>
           {quickActions.map(({ href, label, Icon }) => (
             <NavLink key={href} href={href} label={label} Icon={Icon} active={path === href} />
           ))}
         </nav>
 
-        {/* Footer / Auth */}
-        <div className="p-6 border-t border-white/5 bg-black/20 relative z-10">
-          <div className="space-y-1">
-            <Link href="/" className="flex items-center gap-3 px-4 py-3 text-white/40 hover:text-white text-[11px] font-bold uppercase tracking-widest rounded-xl transition-all hover:bg-white/5">
-              <ExternalLink size={14} /> Live Terminal
-            </Link>
-            <form action="/api/auth/logout" method="POST">
-              <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 text-white/40 hover:text-rose-500 text-[11px] font-bold uppercase tracking-widest rounded-xl transition-all hover:bg-rose-500/5">
-                <LogOut size={14} /> Deauthorize
-              </button>
-            </form>
-          </div>
+        {/* Footer */}
+        <div className="p-6 border-t border-slate-100 bg-slate-50/50">
+          <Link href="/" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 text-[11px] font-bold uppercase tracking-widest rounded-xl transition-all hover:bg-white border border-transparent hover:border-slate-200">
+            <ExternalLink size={14} /> Live View
+          </Link>
+          <form action="/api/auth/logout" method="POST" className="mt-1">
+            <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 text-slate-500 hover:text-rose-600 text-[11px] font-bold uppercase tracking-widest rounded-xl transition-all hover:bg-rose-50 hover:border-rose-100 border border-transparent">
+              <LogOut size={14} /> Deauthorize
+            </button>
+          </form>
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 overflow-x-hidden relative flex flex-col">
-        {/* Surface Glow Header */}
-        <header className="sticky top-0 z-40 bg-[#05070a]/80 backdrop-blur-3xl border-b border-white/5 px-10 py-4 flex items-center justify-between">
-           <div className="flex items-center gap-4 text-[11px] font-bold text-white/40 uppercase tracking-widest">
-              <span className="hover:text-emerald-500 transition-colors cursor-default">Admin Control</span>
-              <ChevronRight size={12} className="text-white/10" />
-              <span className="text-white">{links.find(l => l.href === path)?.label || "Overview"}</span>
+        {/* Header */}
+        <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 px-10 py-5 flex items-center justify-between">
+           <div className="flex items-center gap-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+              <span className="hover:text-emerald-600 transition-colors cursor-default">Nexus</span>
+              <ChevronRight size={12} className="text-slate-300" />
+              <span className="text-slate-900 font-black">{links.find(l => l.href === path)?.label || "Overview"}</span>
            </div>
            
            <div className="flex items-center gap-8">
-              {/* Search Interface */}
+              {/* Search */}
               <div className="hidden lg:flex items-center relative group">
-                <Search className="absolute left-4 w-4 h-4 text-white/20 group-focus-within:text-emerald-500 transition-colors" />
+                <Search className="absolute left-4 w-4 h-4 text-slate-400 group-focus-within:text-emerald-600 transition-colors" />
                 <input 
                   type="text"
-                  placeholder="Search anything... (Enter) "
+                  placeholder="Universal Search... (Enter)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleGlobalSearch}
-                  className="bg-white/5 border border-white/5 rounded-2xl pl-12 pr-4 py-2.5 text-[12px] font-medium w-72 focus:w-96 focus:border-emerald-500/30 focus:outline-none transition-all placeholder:text-white/20"
+                  className="bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-4 py-2.5 text-[13px] font-medium w-64 focus:w-80 focus:border-emerald-500/50 focus:bg-white focus:outline-none transition-all placeholder:text-slate-400"
                 />
-                <Command className="absolute right-4 w-3.5 h-3.5 text-white/10" />
               </div>
 
-              <div className="flex items-center gap-5 border-l border-white/5 pl-8">
-                 <button className="text-white/30 hover:text-emerald-400 transition-all relative" title="Notifications">
-                    <Bell size={18} />
-                    <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-emerald-500 rounded-full border border-slate-950" />
+              <div className="flex items-center gap-4 border-l border-slate-200 pl-8">
+                 <button className="text-slate-400 hover:text-emerald-600 transition-all relative" title="Alerts">
+                    <Bell size={20} />
+                    <span className="absolute top-0 right-0 w-2 h-2 bg-emerald-600 rounded-full border-2 border-white" />
                  </button>
-                 <button className="text-white/30 hover:text-white transition-all" title="Settings">
-                    <Settings size={18} />
+                 <button className="text-slate-400 hover:text-slate-900 transition-all" title="Configuration">
+                    <Settings size={20} />
                  </button>
               </div>
 
-              <div className="flex items-center gap-3.5 bg-white/5 border border-white/10 pl-4 py-1.5 pr-1.5 rounded-2xl group cursor-pointer hover:border-emerald-500/30 transition-all">
-                <div className="hidden sm:flex flex-col items-end">
-                  <p className="text-[11px] font-bold text-white uppercase tracking-wider">Super Admin</p>
-                  <p className="text-[9px] font-bold text-emerald-500/60 uppercase tracking-[0.2em] flex items-center gap-1.5">
-                     <div className="w-1 h-1 bg-emerald-500 rounded-full animate-pulse" /> Level 4
-                  </p>
-                </div>
-                <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black text-xs shadow-lg group-hover:scale-105 transition-transform">
+              <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 p-1.5 pr-4 rounded-2xl group cursor-pointer hover:border-emerald-200 hover:bg-emerald-50/30 transition-all">
+                <div className="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-xs shadow-lg group-hover:bg-emerald-600 transition-all duration-300">
                   AD
+                </div>
+                <div className="hidden sm:flex flex-col">
+                  <p className="text-[11px] font-black text-slate-900 uppercase leading-none">Super Admin</p>
+                  <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest mt-1">Verified Node</p>
                 </div>
               </div>
            </div>
         </header>
-
 
         <div className="p-10 max-w-[1600px] mx-auto w-full">
           {children}
