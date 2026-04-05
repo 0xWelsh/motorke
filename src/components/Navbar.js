@@ -136,12 +136,6 @@ export default function Navbar({ user }) {
           <div className="hidden lg:flex items-center gap-4">
             {user ? (
               <div className="flex items-center gap-4">
-                {mounted && (
-                  <button onClick={() => setTheme(theme === "dark" || (theme === "system" && systemTheme === "dark") ? "light" : "dark")} className="ml-2 w-9 h-9 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors">
-                    {theme === "dark" || (theme === "system" && systemTheme === "dark") ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                  </button>
-                )}
-                
                 <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setUserMenu(!userMenu)}

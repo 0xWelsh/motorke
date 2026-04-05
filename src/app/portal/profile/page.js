@@ -16,42 +16,41 @@ export default async function PortalProfilePage() {
 
   if (!user) return null;
 
-  const inputCls = "w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-[var(--brand)] transition-all placeholder:text-slate-300 shadow-sm";
-  const labelCls = "text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1 mb-2.5 block";
+  const inputCls = "w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3.5 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 focus:bg-white transition-all placeholder:text-slate-300 shadow-sm";
+  const labelCls = "text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1 mb-2.5 block";
 
   return (
     <div className="animate-in fade-in duration-700 max-w-4xl">
-      <div className="mb-12">
-        <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--brand)] mb-2.5 block">Account Settings</span>
-        <h1 className="text-5xl font-black text-slate-900 tracking-tight">Security & Identity</h1>
-        <p className="text-slate-500 font-bold mt-2">Manage your dealership presence and access credentials.</p>
+      <div className="mb-10">
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight">Security & Identity</h1>
+        <p className="text-slate-500 font-medium mt-1">Manage your dealership presence and access credentials.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <div className="lg:col-span-2 space-y-8">
           {/* Avatar Section */}
-          <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex flex-col sm:flex-row items-center gap-10">
-              <div className="relative group">
+          <div className="bg-white border border-slate-100 rounded-2xl p-8 shadow-sm">
+            <div className="flex flex-col sm:flex-row items-center gap-8">
+              <div className="relative group hover:scale-105 transition-transform">
                 <AvatarUpload 
                   currentUrl={user.avatarUrl} 
                   userName={user.name} 
                   size="xl" 
                 />
-                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-500 rounded-full border-4 border-white flex items-center justify-center text-white shadow-lg">
+                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-500 rounded-full border-[3px] border-white flex items-center justify-center text-white shadow-md">
                    <Plus size={14} strokeWidth={3} />
                 </div>
               </div>
               <div className="text-center sm:text-left">
                 <h2 className="text-2xl font-black text-slate-900 tracking-tight">{user.name}</h2>
-                <p className="text-sm font-bold text-slate-400 mt-1">{user.email}</p>
+                <p className="text-sm font-medium text-slate-500 mt-0.5">{user.email}</p>
                 <div className="flex items-center justify-center sm:justify-start gap-2 mt-4">
                   <span className="text-[10px] font-black bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full uppercase tracking-widest border border-emerald-100">
                     {user.role} Partner
                   </span>
                   {user.dealer?.verified && (
-                    <span className="text-[10px] font-black bg-blue-50 text-blue-600 px-3 py-1 rounded-full uppercase tracking-widest border border-blue-100">
-                      Verified Showroom
+                    <span className="text-[10px] font-black bg-blue-50 text-blue-600 px-3 py-1 rounded-full uppercase tracking-widest border border-blue-100 flex items-center gap-1">
+                      <Shield size={10} className="fill-blue-100" /> Verified Showroom
                     </span>
                   )}
                 </div>
@@ -60,7 +59,7 @@ export default async function PortalProfilePage() {
           </div>
 
           {/* Account Details */}
-          <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm overflow-hidden">
+          <div className="bg-white border border-slate-100 rounded-2xl p-8 shadow-sm">
             <div className="flex items-center gap-3 mb-10">
                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                <h3 className="text-lg font-black text-slate-900 tracking-tight">Identity Details</h3>
@@ -81,9 +80,9 @@ export default async function PortalProfilePage() {
                 </div>
               </div>
 
-              <div className="pt-4">
-                <button type="submit" className="bg-slate-900 hover:bg-slate-800 text-white rounded-2xl px-12 py-5 font-black text-sm tracking-widest transition-all shadow-xl shadow-slate-900/10 hover:scale-[1.02] uppercase">
-                  Synchronize Profile
+              <div className="pt-2">
+                <button type="submit" className="bg-slate-900 hover:bg-black text-white rounded-xl px-8 py-3.5 font-black text-xs tracking-widest transition-all shadow-md mt-2 hover:-translate-y-0.5 uppercase">
+                  Save Changes
                 </button>
               </div>
             </form>
@@ -92,10 +91,10 @@ export default async function PortalProfilePage() {
 
         {/* Sidebar Info */}
         <div className="space-y-8">
-          <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
-            <div className="flex items-center gap-3 mb-8">
+          <div className="bg-white border border-slate-100 rounded-2xl p-8 shadow-sm">
+            <div className="flex items-center gap-3 mb-6">
                <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-               <h3 className="text-sm font-black text-slate-900 tracking-[0.1em] uppercase">Partnership Meta</h3>
+               <h3 className="text-xs font-black text-slate-900 tracking-widest uppercase">Overview</h3>
             </div>
             <div className="space-y-6">
               {[

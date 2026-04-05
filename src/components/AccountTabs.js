@@ -1,43 +1,40 @@
 "use client";
-// src/components/AccountTabs.js
-
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Settings, Bookmark, MessageSquare, History, Phone, ShieldCheck, Clock, MapPin, Eye, EyeOff } from "lucide-react";
+import { clsx } from "clsx";
 
-const fmt      = (n)   => "KSh " + Number(n).toLocaleString("en-KE");
-const fmtKm    = (km)  => km ? `${Number(km).toLocaleString("en-KE")} km` : "N/A";
-const fmtDate  = (iso) => new Date(iso).toLocaleDateString("en-KE", { day:"numeric", month:"short", year:"numeric" });
-
-const card  = { background:"#111", border:"1px solid rgba(255,255,255,0.05)", borderRadius:24, overflow:"hidden", boxShadow:"0 10px 40px rgba(0,0,0,0.5)" };
-const input = { width:"100%", background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:16, padding:"16px", fontSize:14, fontFamily:"inherit", outline:"none", color:"white", transition:"all 0.3s" };
-const label = { display:"block", fontSize:10, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.1em", color:"rgba(255,255,255,0.4)", marginBottom:8 };
-const btn   = (color="#ea580c") => ({ background:color, color:"white", border:"none", borderRadius:16, padding:"16px", fontWeight:900, fontSize:14, cursor:"pointer", fontFamily:"inherit", width:"100%", transition:"all 0.3s", boxShadow:`0 0 15px ${color}40` });
+const fmt = (n) => "KSh " + Number(n).toLocaleString("en-KE");
+const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" });
 
 export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
-  const [tab,        setTab]       = useState(init || "profile");
-  const [saved,      setSaved]     = useState(savedCars);
-  const [name,       setName]      = useState(user.name);
-  const [email,      setEmail]     = useState(user.email);
-  const [phone,      setPhone]     = useState("");
-  const [profMsg,    setProfMsg]   = useState("");
-  const [pwMsg,      setPwMsg]     = useState("");
-  const [pwErr,      setPwErr]     = useState("");
-  const [recent,     setRecent]    = useState([]);
+  const [tab, setTab] = useState(init || "profile");
+  const [saved, setSaved] = useState(savedCars);
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
+  const [phone, setPhone] = useState("");
+  const [profMsg, setProfMsg] = useState("");
+  const [pwMsg, setPwMsg] = useState("");
+  const [pwErr, setPwErr] = useState("");
+  const [recent, setRecent] = useState([]);
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
 
   useEffect(() => {
     try { setRecent(JSON.parse(localStorage.getItem("motorke_recent") || "[]")); } catch {}
   }, []);
 
   const tabs = [
-    { id:"profile",   label:"Profile"                        },
-    { id:"saved",     label:`Saved (${saved.length})`        },
-    { id:"enquiries", label:`Enquiries (${enquiries.length})`},
-    { id:"recent",    label:"Recently viewed"                },
+    { id: "profile", label: "Profile Settings", icon: <Settings size={14} /> },
+    { id: "saved", label: `Watchlist (${saved.length})`, icon: <Bookmark size={14} /> },
+    { id: "enquiries", label: `Enquiries (${enquiries.length})`, icon: <MessageSquare size={14} /> },
+    { id: "recent", label: "Browsing History", icon: <History size={14} /> },
   ];
 
   async function saveProfile(e) {
     e.preventDefault();
     const res = await fetch("/api/account/profile", {
-      method:"POST", headers:{"Content-Type":"application/json"},
+      method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, phone }),
     });
     setProfMsg(res.ok ? "success" : "error");
@@ -47,203 +44,283 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
   async function changePassword(e) {
     e.preventDefault();
     setPwErr(""); setPwMsg("");
-    const fd  = new FormData(e.target);
+    const fd = new FormData(e.target);
     const cur = fd.get("current"), np = fd.get("new"), cf = fd.get("confirm");
-    if (np !== cf)      { setPwErr("Passwords don't match"); return; }
-    if (np.length < 8)  { setPwErr("Minimum 8 characters"); return; }
+    if (np !== cf) { setPwErr("Passwords don't match."); return; }
+    if (np.length < 8) { setPwErr("Must be at least 8 characters."); return; }
     const res = await fetch("/api/portal/password", {
-      method:"POST", headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ current:cur, newPassword:np, confirm:cf }),
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ current: cur, newPassword: np, confirm: cf }),
     });
     if (res.ok) { setPwMsg("success"); e.target.reset(); setTimeout(() => setPwMsg(""), 3000); }
-    else setPwErr("Current password is incorrect");
+    else setPwErr("Current password is incorrect.");
   }
 
   async function unsave(carId) {
-    await fetch(`/api/saved/${carId}`, { method:"DELETE" });
+    await fetch(`/api/saved/${carId}`, { method: "DELETE" });
     setSaved(prev => prev.filter(c => c.id !== carId));
   }
 
+  const inputCls = "w-full bg-slate-50 border border-slate-100 focus:border-amber-500 focus:bg-white rounded-xl py-3.5 px-5 text-sm font-bold text-slate-900 outline-none transition-all placeholder:text-slate-300 shadow-sm";
+  const labelCls = "text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2 block";
+
   return (
-    <div>
+    <div className="flex flex-col h-full bg-white">
       {/* Tab bar */}
-      <div style={{ display:"flex", gap:4, marginBottom:32, background:"rgba(255,255,255,0.02)", border:"1px solid rgba(255,255,255,0.05)", borderRadius:16, padding:6 }}>
-        {tabs.map(({ id, label: l }) => (
-          <button key={id} onClick={() => setTab(id)} style={{
-            flex:1, padding:"12px 8px", borderRadius:12, border:"none", cursor:"pointer",
-            fontSize:12, fontWeight:900, textTransform:"uppercase", letterSpacing:"0.05em", fontFamily:"inherit", transition:"all 0.3s",
-            background: tab===id ? "#ea580c" : "transparent",
-            color:      tab===id ? "white"   : "rgba(255,255,255,0.4)",
-            boxShadow:  tab===id ? "0 0 15px rgba(234,88,12,0.4)" : "none"
-          }}>{l}</button>
-        ))}
+      <div className="border-b border-slate-100 bg-slate-50/50 px-6 pt-6 overflow-x-auto custom-scrollbar">
+        <div className="flex items-center gap-6 min-w-max">
+          {tabs.map(({ id, label, icon }) => (
+            <button
+              key={id}
+              onClick={() => setTab(id)}
+              className={clsx(
+                "flex items-center gap-2 pb-4 text-[11px] font-black uppercase tracking-widest transition-all",
+                tab === id
+                  ? "text-amber-500 border-b-2 border-amber-500 -mb-0.5"
+                  : "text-slate-400 hover:text-slate-600 border-b-2 border-transparent"
+              )}
+            >
+              {icon} {label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* ── PROFILE ── */}
-      {tab === "profile" && (
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))", gap:24 }}>
-          <div style={{ ...card, padding:32 }}>
-            <h2 style={{ fontWeight:900, fontSize:"1.25rem", color:"white", marginBottom:24 }}>Personal details</h2>
-            {profMsg === "success" && <Alert type="success">Profile updated successfully</Alert>}
-            {profMsg === "error"   && <Alert type="error">Something went wrong</Alert>}
-            <form onSubmit={saveProfile} style={{ display:"flex", flexDirection:"column", gap:20 }}>
-              <div><label style={label}>Full name</label><input value={name} onChange={e=>setName(e.target.value)} required style={input} /></div>
-              <div><label style={label}>Email</label><input value={email} onChange={e=>setEmail(e.target.value)} type="email" required style={input} /></div>
+      <div className="p-8 md:p-12">
+        {/* ── PROFILE ── */}
+        {tab === "profile" && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="space-y-6">
               <div>
-                <label style={label}>Phone number</label>
-                <input value={phone} onChange={e=>setPhone(e.target.value)} placeholder="+254 7xx xxx xxx" style={input} />
-                <p style={{ fontSize:11, color:"rgba(255,255,255,0.3)", marginTop:8 }}>Dealers use this to call you back</p>
+                <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" /> General Details
+                </h2>
+                <p className="text-sm font-medium text-slate-500 mt-1 mb-8">Ensure your contact details are accurate so sellers can reach you.</p>
               </div>
-              <button type="submit" style={btn()}>Save changes</button>
-            </form>
-          </div>
 
-          <div style={{ ...card, padding:32 }}>
-            <h2 style={{ fontWeight:900, fontSize:"1.25rem", color:"white", marginBottom:24 }}>Change password</h2>
-            {pwMsg === "success" && <Alert type="success">Password updated</Alert>}
-            {pwErr && <Alert type="error">{pwErr}</Alert>}
-            <form onSubmit={changePassword} style={{ display:"flex", flexDirection:"column", gap:20 }}>
-              <div><label style={label}>Current password</label><input name="current" type="password" required style={input} /></div>
-              <div><label style={label}>New password</label><input name="new" type="password" required minLength={8} style={input} /></div>
-              <div><label style={label}>Confirm new password</label><input name="confirm" type="password" required minLength={8} style={input} /></div>
-              <button type="submit" style={btn("#1A1A1A")}>Update password</button>
-            </form>
-          </div>
-        </div>
-      )}
+              {profMsg === "success" && <Alert type="success">Profile identity synchronized.</Alert>}
+              {profMsg === "error" && <Alert type="error">Could not sync profile identity.</Alert>}
 
-      {/* ── SAVED CARS ── */}
-      {tab === "saved" && (
-        saved.length === 0
-          ? <Empty icon="🚗" title="No saved cars yet" desc="Tap the bookmark icon on any car to save it here" href="/cars" cta="Browse cars" />
-          : (
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(250px,1fr))", gap:24 }}>
-              {saved.map(car => (
-                <div key={car.id} style={card}>
-                  <div style={{ position:"relative", aspectRatio:"16/10", background:"rgba(255,255,255,0.05)", overflow:"hidden" }}>
-                    {car.image
-                      ? <img src={car.image} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
-                      : <div style={{ display:"flex", alignItems:"center", justifyContent:"center", height:"100%", fontSize:40 }}>🚗</div>
-                    }
-                    {!car.available && (
-                      <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.7)", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                        <span style={{ background:"#1A1A1A", color:"white", fontSize:11, fontWeight:900, padding:"6px 16px", borderRadius:99, letterSpacing:"0.1em" }}>SOLD</span>
-                      </div>
-                    )}
-                    <button onClick={() => unsave(car.id)}
-                      title="Remove"
-                      style={{ position:"absolute", top:12, right:12, width:32, height:32, borderRadius:"50%", background:"rgba(0,0,0,0.5)", backdropFilter:"blur(4px)", color:"white", border:"1px solid rgba(255,255,255,0.1)", cursor:"pointer", fontWeight:700, fontSize:16, display:"flex", alignItems:"center", justifyContent:"center", transition:"all 0.2s" }}>
-                      ×
+              <form onSubmit={saveProfile} className="space-y-6">
+                <div>
+                  <label className={labelCls}>Full Legal Name</label>
+                  <input value={name} onChange={e => setName(e.target.value)} required className={inputCls} placeholder="e.g. John Doe" />
+                </div>
+                <div>
+                  <label className={labelCls}>Primary Email</label>
+                  <input value={email} onChange={e => setEmail(e.target.value)} type="email" required className={clsx(inputCls, "bg-slate-50/50 text-slate-400 cursor-not-allowed")} disabled />
+                </div>
+                <div>
+                  <label className={labelCls}>Contact Phone</label>
+                  <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="+254 7XX XXX XXX" className={inputCls} />
+                </div>
+                <button type="submit" className="bg-slate-900 hover:bg-black text-white px-8 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-lg hover:-translate-y-0.5 mt-2">
+                  Save Changes
+                </button>
+              </form>
+            </div>
+
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500" /> Security Access
+                </h2>
+                <p className="text-sm font-medium text-slate-500 mt-1 mb-8">Maintain healthy security hygiene by rotating passwords periodically.</p>
+              </div>
+
+              {pwMsg === "success" && <Alert type="success">Security vault updated.</Alert>}
+              {pwErr && <Alert type="error">{pwErr}</Alert>}
+
+              <form onSubmit={changePassword} className="space-y-6">
+                <div>
+                  <label className={labelCls}>Current Password</label>
+                  <div className="relative group">
+                    <input name="current" type={showCurrent ? "text" : "password"} required className={inputCls} placeholder="••••••••" />
+                    <button type="button" onClick={() => setShowCurrent(!showCurrent)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+                      {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
-                  <div style={{ padding:"20px" }}>
-                    <a href={`/cars/${car.id}`} style={{ textDecoration:"none" }}>
-                      <p style={{ fontWeight:900, fontSize:15, color:"white" }}>{car.year} {car.make} {car.model}</p>
-                    </a>
-                    <p style={{ fontSize:12, color:"rgba(255,255,255,0.5)", marginTop:4 }}>{car.dealer?.name}</p>
-                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginTop:16 }}>
-                      <p style={{ fontWeight:900, fontSize:18, color:"#ea580c" }}>{fmt(car.price)}</p>
-                      <p style={{ fontSize:11, color:"rgba(255,255,255,0.3)" }}>Saved {fmtDate(car.savedAt)}</p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className={labelCls}>New Password</label>
+                    <div className="relative group">
+                      <input name="new" type={showNew ? "text" : "password"} required minLength={8} className={inputCls} placeholder="••••••••" />
+                      <button type="button" onClick={() => setShowNew(!showNew)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+                        {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )
-      )}
-
-      {/* ── ENQUIRIES ── */}
-      {tab === "enquiries" && (
-        enquiries.length === 0
-          ? <Empty icon="📩" title="No enquiries yet" desc="When you contact a dealer, your messages appear here" href="/cars" cta="Browse cars" />
-          : (
-            <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
-              {enquiries.map(e => (
-                <div key={e.id} style={{ ...card, padding:24, display:"flex", gap:20, alignItems:"flex-start" }}>
-                  <div style={{ width:48, height:48, borderRadius:14, background:"rgba(234,88,12,0.1)", color:"#ea580c", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:900, fontSize:20, flexShrink:0 }}>
-                    {e.dealer.name[0]}
+                  <div>
+                    <label className={labelCls}>Verify Password</label>
+                    <input name="confirm" type={showNew ? "text" : "password"} required minLength={8} className={inputCls} placeholder="••••••••" />
                   </div>
-                  <div style={{ flex:1, minWidth:0 }}>
-                    <div style={{ display:"flex", justifyContent:"space-between", flexWrap:"wrap", gap:8 }}>
-                      <div>
-                        <p style={{ fontWeight:900, fontSize:15, color:"white" }}>{e.dealer.name}</p>
-                        <a href={`/cars/${e.car.id}`} style={{ fontSize:13, color:"#ea580c", textDecoration:"none", fontWeight:600 }}>
-                          {e.car.year} {e.car.make} {e.car.model} — {fmt(e.car.price)}
-                        </a>
-                      </div>
-                      <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                        <span style={{ fontSize:10, borderRadius:99, padding:"4px 12px", fontWeight:900, textTransform:"uppercase", letterSpacing:"0.05em", background: e.channel==="whatsapp"?"rgba(16,185,129,0.1)":"rgba(255,255,255,0.05)", color: e.channel==="whatsapp"?"#10B981":"rgba(255,255,255,0.6)", border: e.channel==="whatsapp"?"1px solid rgba(16,185,129,0.2)":"1px solid rgba(255,255,255,0.1)" }}>
-                          {e.channel === "whatsapp" ? "💬 WhatsApp" : "📧 Form"}
+                </div>
+                <button type="submit" className="bg-rose-500 hover:bg-rose-600 text-white px-8 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-lg hover:-translate-y-0.5 mt-2">
+                  Rotate Password
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* ── SAVED CARS ── */}
+        {tab === "saved" && (
+          saved.length === 0
+            ? <Empty icon={<Bookmark size={32} className="text-amber-500" />} title="No Watchlist Assets" desc="You haven't bookmarked any listings yet. When you find an interesting unit, save it to track price changes." href="/cars" cta="Explore Inventory Drop" />
+            : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                {saved.map(car => (
+                  <div key={car.id} className="group bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 relative flex flex-col">
+                    <div className="relative aspect-[4/3] bg-slate-50 overflow-hidden">
+                      {car.image
+                        ? <img src={car.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                        : <div className="flex items-center justify-center h-full text-slate-300"><Eye size={32} /></div>
+                      }
+                      {!car.available && (
+                        <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center">
+                          <span className="bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full ring-1 ring-white/20">Sold Asset</span>
+                        </div>
+                      )}
+                      <button onClick={() => unsave(car.id)}
+                        className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/90 backdrop-blur flex items-center justify-center text-slate-900 hover:bg-rose-500 hover:text-white transition-colors shadow-sm">
+                        ✕
+                      </button>
+                      <div className="absolute bottom-4 left-4">
+                        <span className="bg-slate-900/80 backdrop-blur text-white px-3 py-1.5 rounded-lg text-xs font-black shadow-sm">
+                          {fmt(car.price)}
                         </span>
-                        <p style={{ fontSize:11, color:"rgba(255,255,255,0.4)" }}>{fmtDate(e.createdAt)}</p>
                       </div>
                     </div>
-                    {e.message && (
-                      <p style={{ fontSize:14, color:"rgba(255,255,255,0.7)", marginTop:12, background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.05)", borderRadius:12, padding:"12px 16px", fontStyle:"italic" }}>
-                        "{e.message}"
-                      </p>
-                    )}
-                    <div style={{ display:"flex", gap:12, marginTop:16 }}>
-                      {e.dealer.phone && <a href={`tel:${e.dealer.phone}`} style={{ fontSize:12, border:"1px solid rgba(255,255,255,0.1)", background:"rgba(255,255,255,0.05)", borderRadius:8, padding:"6px 16px", color:"white", textDecoration:"none", fontWeight:700 }}>📞 Call</a>}
-                      {e.dealer.whatsapp && <a href={`https://wa.me/${e.dealer.whatsapp}`} target="_blank" rel="noopener noreferrer" style={{ fontSize:12, background:"rgba(16,185,129,0.1)", border:"1px solid rgba(16,185,129,0.2)", borderRadius:8, padding:"6px 16px", color:"#10B981", textDecoration:"none", fontWeight:700 }}>💬 WhatsApp</a>}
-                      {!e.car.available && <span style={{ fontSize:12, background:"rgba(239,68,68,0.1)", border:"1px solid rgba(239,68,68,0.2)", borderRadius:8, padding:"6px 16px", color:"#ef4444", fontWeight:700 }}>Car sold</span>}
+                    <div className="p-5 flex-1 flex flex-col">
+                      <Link href={`/cars/${car.id}`} className="block flex-1 group-hover:text-amber-500 transition-colors">
+                        <h3 className="font-black text-slate-900 text-base tracking-tight leading-tight">{car.year} {car.make} {car.model}</h3>
+                        <p className="text-xs font-bold text-slate-400 mt-1">{car.dealer?.name}</p>
+                      </Link>
+                      <div className="flex items-center justify-between mt-4 border-t border-slate-50 pt-4">
+                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Tracked {fmtDate(car.savedAt)}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )
-      )}
+                ))}
+              </div>
+            )
+        )}
 
-      {/* ── RECENTLY VIEWED ── */}
-      {tab === "recent" && (
-        recent.length === 0
-          ? <Empty icon="👁️" title="No recently viewed cars" desc="Cars you view will appear here for easy access" href="/cars" cta="Browse cars" />
-          : (
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))", gap:24 }}>
-              {recent.map(car => (
-                <a key={car.id} href={`/cars/${car.id}`} style={{ ...card, textDecoration:"none", display:"block", transition:"all 0.3s" }}>
-                  <div style={{ aspectRatio:"16/10", background:"rgba(255,255,255,0.05)", overflow:"hidden" }}>
-                    {car.image
-                      ? <img src={car.image} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
-                      : <div style={{ display:"flex", alignItems:"center", justifyContent:"center", height:"100%", fontSize:36 }}>🚗</div>
-                    }
+        {/* ── ENQUIRIES ── */}
+        {tab === "enquiries" && (
+          enquiries.length === 0
+            ? <Empty icon={<MessageSquare size={32} className="text-blue-500" />} title="Zero Active Dialogues" desc="Messages and inquiries you send to dealerships will be indexed here." href="/cars" cta="Browse Showrooms" />
+            : (
+              <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                {enquiries.map(e => (
+                  <div key={e.id} className="bg-white border border-slate-100 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 shadow-sm group hover:border-blue-500/30 transition-colors">
+                    <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center font-black text-xl text-blue-500 shrink-0">
+                      {e.dealer.name[0]}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                        <div>
+                          <h3 className="font-black text-slate-900 text-lg tracking-tight leading-tight">{e.dealer.name}</h3>
+                          <Link href={`/cars/${e.car.id}`} className="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors line-clamp-1 block mt-1">
+                            Regarding: {e.car.year} {e.car.make} {e.car.model} — {fmt(e.car.price)}
+                          </Link>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className={clsx(
+                            "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border",
+                            e.channel === "whatsapp" ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-slate-50 text-slate-500 border-slate-200"
+                          )}>
+                            {e.channel === "whatsapp" ? "WhatsApp Sent" : "Form Sent"}
+                          </span>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-1.5"><Clock size={12}/> {fmtDate(e.createdAt)}</span>
+                        </div>
+                      </div>
+                      
+                      {e.message && (
+                        <div className="bg-slate-50 rounded-xl p-5 mb-5 border border-slate-100">
+                          <p className="text-sm font-medium text-slate-600 italic">"{e.message}"</p>
+                        </div>
+                      )}
+                      
+                      <div className="flex flex-wrap gap-3">
+                        {e.dealer.phone && (
+                          <a href={`tel:${e.dealer.phone}`} className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-xl text-xs font-black transition-transform hover:-translate-y-0.5 shadow-md">
+                            <Phone size={14} /> Direct Call
+                          </a>
+                        )}
+                        {e.dealer.whatsapp && (
+                          <a href={`https://wa.me/${e.dealer.whatsapp}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-xs font-black transition-transform hover:-translate-y-0.5 shadow-md">
+                            <MessageSquare size={14} className="fill-white" /> Follow Up
+                          </a>
+                        )}
+                        {!e.car.available && (
+                          <span className="flex items-center gap-2 bg-rose-50 text-rose-500 border border-rose-100 px-4 py-2.5 rounded-xl text-xs font-black">
+                            Unit Sold
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div style={{ padding:"16px 20px" }}>
-                    <p style={{ fontWeight:900, fontSize:14, color:"white" }}>{car.title}</p>
-                    <p style={{ fontWeight:900, fontSize:15, color:"#ea580c", marginTop:6 }}>{fmt(car.price)}</p>
-                    <p style={{ fontSize:11, color:"rgba(255,255,255,0.4)", marginTop:8 }}>
-                      Viewed {new Date(car.viewedAt).toLocaleDateString("en-KE", { day:"numeric", month:"short" })}
-                    </p>
-                  </div>
-                </a>
-              ))}
-            </div>
-          )
-      )}
+                ))}
+              </div>
+            )
+        )}
+
+        {/* ── RECENTLY VIEWED ── */}
+        {tab === "recent" && (
+          recent.length === 0
+            ? <Empty icon={<History size={32} className="text-indigo-500" />} title="Blank Horizon" desc="Cars you examine will automatically be cached here for rapid access." href="/cars" cta="Scan Marketplace" />
+            : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                {recent.map(car => (
+                  <Link key={car.id} href={`/cars/${car.id}`} className="group bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+                    <div className="aspect-[4/3] bg-slate-50 overflow-hidden relative">
+                      {car.image
+                        ? <img src={car.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                        : <div className="flex items-center justify-center h-full text-slate-300"><Eye size={24} /></div>
+                      }
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-white">Re-examine</span>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <p className="font-bold text-slate-900 text-sm tracking-tight leading-tight line-clamp-1 group-hover:text-amber-600 transition-colors">{car.title}</p>
+                      <p className="font-black text-slate-500 text-xs mt-1">{fmt(car.price)}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )
+        )}
+      </div>
     </div>
   );
 }
 
 function Alert({ type, children }) {
-  const styles = {
-    success: { background:"rgba(16, 185, 129, 0.1)", border:"1px solid rgba(16, 185, 129, 0.2)", color:"#34d399" },
-    error:   { background:"rgba(239, 68, 68, 0.1)", border:"1px solid rgba(239, 68, 68, 0.2)", color:"#f87171" },
-  };
   return (
-    <div style={{ ...styles[type], borderRadius:12, padding:"12px 16px", marginBottom:20, fontSize:13, fontWeight:700 }}>
-      {type === "success" ? "✓ " : "⚠ "}{children}
+    <div className={clsx(
+      "flex items-center gap-3 px-5 py-4 rounded-xl border mb-6",
+      type === "success" ? "bg-emerald-50 border-emerald-100 text-emerald-800" : "bg-rose-50 border-rose-100 text-rose-800"
+    )}>
+      {type === "success" ? <ShieldCheck size={18} className="text-emerald-500" /> : <div className="text-rose-500 font-bold">⚠</div>}
+      <span className="text-xs font-bold">{children}</span>
     </div>
   );
 }
 
 function Empty({ icon, title, desc, href, cta }) {
   return (
-    <div style={{ background:"#111", border:"1px solid rgba(255,255,255,0.05)", borderRadius:24, padding:48, textAlign:"center", boxShadow:"0 10px 40px rgba(0,0,0,0.5)" }}>
-      <p style={{ fontSize:48, marginBottom:20 }}>{icon}</p>
-      <p style={{ fontWeight:900, fontSize:"1.25rem", color:"white", marginBottom:12, letterSpacing:"-0.02em" }}>{title}</p>
-      <p style={{ color:"rgba(255,255,255,0.5)", fontSize:14, marginBottom:32 }}>{desc}</p>
-      <a href={href} style={{ background:"#ea580c", color:"white", textDecoration:"none", borderRadius:16, padding:"14px 32px", fontWeight:900, fontSize:14, display:"inline-block", transition:"all 0.2s", boxShadow:"0 0 15px rgba(234,88,12,0.4)" }}>{cta}</a>
+    <div className="flex flex-col items-center justify-center py-20 px-6 text-center max-w-lg mx-auto bg-slate-50 border border-slate-100 rounded-3xl animate-in zoom-in-95 duration-500">
+      <div className="w-20 h-20 bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center justify-center mb-6">
+        {icon}
+      </div>
+      <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2">{title}</h3>
+      <p className="text-sm font-medium text-slate-500 mb-8">{desc}</p>
+      <Link href={href} className="bg-slate-900 hover:bg-black text-white px-8 py-4 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg transition-transform hover:-translate-y-0.5">
+        {cta}
+      </Link>
     </div>
   );
 }
