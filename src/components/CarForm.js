@@ -146,9 +146,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     }
   }
 
-  const inputCls = "w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 placeholder:text-slate-300 outline-none focus:border-[var(--brand)] transition-all shadow-sm";
-  const selectCls = "w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 outline-none focus:border-[var(--brand)] transition-all shadow-sm appearance-none";
-  const labelCls = "block text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1 mb-2.5";
+  const inputCls = "w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:border-emerald-500 transition-all shadow-sm";
+  const selectCls = "w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white outline-none focus:border-emerald-500 transition-all shadow-sm appearance-none";
+  const labelCls = "block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 ml-1 mb-2";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-12 animate-in fade-in duration-700">
@@ -162,11 +162,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
       {/* ── Dealership ── */}
       {dealers.length > 1 && (
-        <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-sm">
           <label className={labelCls}>Assigned Dealership *</label>
           <div className="relative">
             <select name="dealerId" defaultValue={car?.dealerId || ""} required className={selectCls}>
-              <option value="">Select Showroom Territory</option>
+              <option value="">Select Dealership</option>
               {dealers.map((d) => (
                 <option key={d.id} value={d.id}>{d.name} — {d.location}</option>
               ))}
@@ -179,15 +179,15 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       )}
 
       {/* ── Identity ── */}
-      <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
-        <div className="flex items-center gap-3 mb-10">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-sm">
+        <div className="flex items-center gap-3 mb-8">
            <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-           <h3 className="text-lg font-black text-slate-900 tracking-tight">Core Vehicle Identity</h3>
+           <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Vehicle Details</h3>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label className={labelCls}>Manufacturer Spec *</label>
+            <label className={labelCls}>Make *</label>
             <input name="make" list="makes-list" required defaultValue={car?.make || ""}
               placeholder="e.g. Toyota" className={inputCls} />
             <datalist id="makes-list">
@@ -195,74 +195,74 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             </datalist>
           </div>
           <div>
-            <label className={labelCls}>Model Group *</label>
+            <label className={labelCls}>Model *</label>
             <input name="model" required defaultValue={car?.model || ""}
               placeholder="e.g. Hilux" className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>Model Variant</label>
+            <label className={labelCls}>Variant / Trim</label>
             <input name="variant" defaultValue={car?.variant || ""}
               placeholder="e.g. Double Cab 4x4" className={inputCls} />
           </div>
         </div>
       </div>
 
-      {/* ── Logistics ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
-          <label className={labelCls}>Model Year *</label>
+      {/* ── Logistics & Basics ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-sm">
+          <label className={labelCls}>Year *</label>
           <select name="year" defaultValue={car?.year || currentYear} required className={selectCls}>
             {years.map((y) => <option key={y} value={y}>{y}</option>)}
           </select>
         </div>
-        <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm border-b-4 border-b-emerald-500">
-          <label className={labelCls}>Showroom Price (KES) *</label>
+        <div className="bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-500/30 rounded-2xl p-8 shadow-sm border-b-4 border-b-emerald-500/50">
+          <label className={labelCls}>Price (KES) *</label>
           <input name="price" type="number" required defaultValue={car?.price || ""}
-            placeholder="e.g. 2,500,000" className={`${inputCls} text-emerald-600`} />
+            placeholder="e.g. 2500000" className={`${inputCls} text-emerald-600 dark:text-emerald-400`} />
         </div>
-        <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
-          <label className={labelCls}>Distance Travelled (km)</label>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-sm">
+          <label className={labelCls}>Mileage (km)</label>
           <input name="mileage" type="number" defaultValue={car?.mileage || ""}
-            placeholder="e.g. 45,000" className={inputCls} />
+            placeholder="e.g. 45000" className={inputCls} />
         </div>
       </div>
 
       {/* ── Engine & Performance ── */}
-      <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
-        <div className="flex items-center gap-3 mb-10">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-sm">
+        <div className="flex items-center gap-3 mb-8">
            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-           <h3 className="text-lg font-black text-slate-900 tracking-tight">Technical Architecture</h3>
+           <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Engine & Details</h3>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div>
-            <label className={labelCls}>Displacement (cc)</label>
+            <label className={labelCls}>Engine Size (cc)</label>
             <input name="engineCC" type="number" defaultValue={car?.engineCC || ""}
-              placeholder="2000" className={inputCls} />
+              placeholder="e.g. 2000" className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>Cylinder Count</label>
+            <label className={labelCls}>Cylinders</label>
             <input name="cylinders" type="number" defaultValue={car?.cylinders || ""}
-              placeholder="4" className={inputCls} />
+              placeholder="e.g. 4" className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>Output (HP)</label>
+            <label className={labelCls}>Horsepower</label>
             <input name="horsepower" type="number" defaultValue={car?.horsepower || ""}
-              placeholder="180" className={inputCls} />
+              placeholder="e.g. 180" className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>Peak Torque (Nm)</label>
+            <label className={labelCls}>Torque (Nm)</label>
             <input name="torque" type="number" defaultValue={car?.torque || ""}
-              placeholder="250" className={inputCls} />
+              placeholder="e.g. 250" className={inputCls} />
           </div>
           <div>
-            <label className={labelCls}>Energy Source *</label>
+            <label className={labelCls}>Fuel Type *</label>
             <select name="fuelType" defaultValue={car?.fuelType || "PETROL"} required className={selectCls}>
               {Object.entries(FUEL_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
             </select>
           </div>
           <div>
-            <label className={labelCls}>Drive Logic *</label>
+            <label className={labelCls}>Transmission *</label>
             <select name="transmission" defaultValue={car?.transmission || "AUTOMATIC"} required className={selectCls}>
               {Object.entries(TRANSMISSION_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
             </select>
@@ -271,45 +271,45 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
              <label className="flex items-center gap-3 cursor-pointer group">
               <input type="checkbox" name="turbo" defaultChecked={car?.turbo ?? false}
                 className="w-5 h-5 accent-emerald-500 rounded-lg transition-all" />
-              <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-900 transition-colors">Induction: Turbo</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Has Turbo</span>
             </label>
           </div>
         </div>
       </div>
 
        {/* ── Features & Description ── */}
-       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
-            <label className={labelCls}>Interior Excellence & Key Systems <span className="normal-case text-slate-300 font-bold ml-2">(Comma Separated)</span></label>
+       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-sm">
+            <label className={labelCls}>Features (Comma Separated)</label>
             <textarea name="features" rows={4}
               defaultValue={car?.features?.join(", ") || ""}
-              placeholder="e.g. Sunroof, Leather Trim, Reverse Camera, Apple CarPlay"
+              placeholder="e.g. Sunroof, Leather Trim, Reverse Camera"
               className={`${inputCls} resize-none py-6`} />
           </div>
-          <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-sm">
             <label className={labelCls}>Listing Description</label>
             <textarea name="description" rows={4}
               defaultValue={car?.description || ""}
-              placeholder="Provide history, condition, and any unique selling points..."
+              placeholder="Provide history, condition, and any unique points..."
               className={`${inputCls} resize-none py-6`} />
           </div>
        </div>
 
       {/* ── Image Upload ── */}
-      <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
-        <div className="flex items-center justify-between mb-10">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-sm">
+        <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
              <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-             <h3 className="text-lg font-black text-slate-900 tracking-tight">Showroom Visuals</h3>
+             <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Photos</h3>
           </div>
-          <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">Min. 3 High RES Photos Preferred</p>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Min. 3 Photos Recommended</p>
         </div>
 
         {uploading && (
-          <div className="text-center mb-8 p-6 bg-slate-50 border border-slate-200 rounded-[2rem]">
-            <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-6" />
-            <p className="text-sm font-black text-slate-900 tracking-tight uppercase">Synchronizing Assets</p>
-            <p className="text-[10px] font-bold text-slate-400 mt-2">Item {uploadProgress.done} of {uploadProgress.total}</p>
+          <div className="text-center mb-8 p-6 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl">
+            <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-sm font-bold text-slate-900 dark:text-white tracking-tight uppercase">Uploading Images...</p>
+            <p className="text-[10px] font-bold text-slate-500 mt-2">Image {uploadProgress.done} of {uploadProgress.total}</p>
           </div>
         )}
 
@@ -323,9 +323,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       </div>
 
       {/* ── Badges ── */}
-      <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
-        <label className={labelCls}>Marketplace Badges <span className="normal-case text-slate-300 font-bold ml-2">(Click to Toggle)</span></label>
-        <div className="flex flex-wrap gap-3 mt-4">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-sm">
+        <label className={labelCls}>Tags <span className="normal-case text-slate-400 font-bold ml-2">(Click to Toggle)</span></label>
+        <div className="flex flex-wrap gap-2 mt-3">
           {Object.entries(BADGE_OPTIONS).map(([name, { color }]) => {
             const active = badges.includes(name);
             return (
@@ -335,13 +335,13 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 onClick={() => setBadges((prev) =>
                   active ? prev.filter((b) => b !== name) : [...prev, name]
                 )}
-                className={`text-[10px] font-black uppercase tracking-widest px-5 py-3 rounded-xl border-2 transition-all active:scale-95 ${
+                className={`text-[10px] font-bold uppercase tracking-wider px-4 py-2 rounded-lg border-2 transition-all active:scale-95 ${
                   active
-                    ? `bg-emerald-500 border-emerald-500 text-white shadow-lg`
-                    : "bg-slate-50 border-slate-50 text-slate-400 hover:border-slate-200"
+                    ? `bg-emerald-500 border-emerald-500 text-white shadow-md`
+                    : "bg-slate-50 dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-500 hover:border-slate-300 dark:hover:border-slate-500"
                 }`}
               >
-                {active && <Check size={10} className="inline-block mr-2" />}
+                {active && <Check size={10} className="inline-block mr-1.5" />}
                 {name}
               </button>
             );
@@ -350,37 +350,37 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       </div>
 
       {/* ── Status Flags ── */}
-      <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 shadow-sm">
-        <div className="flex items-center gap-3 mb-10">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-sm">
+        <div className="flex items-center gap-3 mb-8">
            <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-           <h3 className="text-lg font-black text-slate-900 tracking-tight">Publicity Flags</h3>
+           <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Additional Options</h3>
         </div>
         
-        <div className="flex flex-wrap gap-x-12 gap-y-6">
+        <div className="flex flex-wrap gap-x-10 gap-y-5">
           {[
             { name: "negotiable", label: "Accepting Offers", defaultChecked: car?.negotiable ?? true },
-            { name: "dutyPaid",   label: "Customs Duty Paid", defaultChecked: car?.dutyPaid ?? true },
-            { name: "imported",   label: "Import Origin Docs", defaultChecked: car?.imported ?? true },
-            { name: "featured",   label: "Premium Spotlight", defaultChecked: car?.featured ?? false },
+            { name: "dutyPaid",   label: "Duty Paid", defaultChecked: car?.dutyPaid ?? true },
+            { name: "imported",   label: "Imported", defaultChecked: car?.imported ?? true },
+            { name: "featured",   label: "Featured Listing", defaultChecked: car?.featured ?? false },
           ].map(({ name, label, defaultChecked }) => (
-            <label key={name} className="flex items-center gap-4 cursor-pointer group">
+            <label key={name} className="flex items-center gap-3 cursor-pointer group">
               <input type="checkbox" name={name} defaultChecked={defaultChecked}
-                className="w-6 h-6 accent-emerald-500 rounded-lg transition-all" />
-              <span className="text-[11px] font-black uppercase tracking-[0.1em] text-slate-400 group-hover:text-slate-900 transition-colors">{label}</span>
+                className="w-5 h-5 accent-emerald-500 rounded-md transition-all" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{label}</span>
             </label>
           ))}
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-6 pt-10">
-        <button type="submit" disabled={submitting || uploading}
-          className="flex-1 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-100 text-white disabled:text-slate-300 font-black py-7 rounded-[2.5rem] text-sm uppercase tracking-[0.25em] transition-all shadow-2xl shadow-slate-900/10 active:scale-[0.98] hover:scale-[1.01] flex items-center justify-center gap-3">
-          {submitting ? "Processing Asset..." : isEdit ? "Update Showroom Entry" : "Deploy to Marketplace"}
-          {!submitting && <Check size={20} />}
-        </button>
-        <a href="/portal" className="sm:w-56 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-900 font-black py-7 rounded-[2.5rem] text-[10px] uppercase tracking-[0.25em] transition-all flex items-center justify-center shadow-sm">
-          Discard Changes
+      <div className="flex justify-end gap-4 pt-6">
+        <a href="/portal" className="px-6 py-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl text-xs uppercase tracking-wider transition-all flex items-center justify-center">
+          Cancel
         </a>
+        <button type="submit" disabled={submitting || uploading}
+          className="px-8 py-4 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold rounded-xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+          {submitting ? "Saving..." : isEdit ? "Save Changes" : "Create Listing"}
+          {!submitting && <Check size={16} />}
+        </button>
       </div>
     </form>
   );

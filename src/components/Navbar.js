@@ -4,8 +4,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { 
   Search, User, Menu, X, ChevronDown, LogOut, Heart,
-  LayoutDashboard, Store, PlusCircle, ShieldCheck, Compass
+  LayoutDashboard, Store, PlusCircle, ShieldCheck, Compass,
+  Sun, Moon
 } from "lucide-react";
+import { useTheme } from "next-themes";
 import { clsx } from "clsx";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
 import SearchSuggestions from "@/components/SearchSuggestions";
@@ -21,6 +23,10 @@ export default function Navbar({ user }) {
   const menuRef   = useRef(null);
   const searchRef = useRef(null);
   const router    = useRouter();
+  
+  const { theme, setTheme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const { debouncedTerm } = useDebouncedSearch(search, 300);
 
@@ -81,8 +87,8 @@ export default function Navbar({ user }) {
     <nav className={clsx(
       "sticky top-0 z-[100] transition-all duration-300",
       scrolled
-        ? "bg-white/90 backdrop-blur-xl border-b border-slate-200 py-1.5 shadow-sm"
-        : "bg-white border-b border-slate-100 py-2.5"
+        ? "bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 py-1.5 shadow-sm"
+        : "bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-900 py-2.5"
     )}>
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="flex items-center justify-between gap-8">
@@ -129,7 +135,14 @@ export default function Navbar({ user }) {
           {/* USER ACTIONS */}
           <div className="hidden lg:flex items-center gap-4">
             {user ? (
-              <div className="relative" ref={menuRef}>
+              <div className="flex items-center gap-4">
+                {mounted && (
+                  <button onClick={() => setTheme(theme === "dark" || (theme === "system" && systemTheme === "dark") ? "light" : "dark")} className="ml-2 w-9 h-9 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors">
+                    {theme === "dark" || (theme === "system" && systemTheme === "dark") ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                  </button>
+                )}
+                
+                <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setUserMenu(!userMenu)}
                   className="flex items-center gap-2.5 bg-slate-50 border border-slate-200 pl-2 pr-4 py-2 rounded-xl hover:border-slate-300 transition-all"
@@ -161,6 +174,7 @@ export default function Navbar({ user }) {
                     </div>
                   </div>
                 )}
+              </div>
               </div>
             ) : (
               <div className="flex items-center gap-3">

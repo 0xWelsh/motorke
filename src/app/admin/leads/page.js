@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import ExportButton from "@/components/admin/ExportButton";
 
-export const metadata = { title: "Yield Stream — Motorske Control" };
+export const metadata = { title: "Leads Dashboard — Motorske Admin" };
 
 export default async function AdminLeadsPage({ searchParams }) {
   await requireAdmin();
@@ -54,12 +54,12 @@ export default async function AdminLeadsPage({ searchParams }) {
       {/* ── HEADER ── */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-12 gap-8">
         <div>
-           <div className="flex items-center gap-3 mb-3">
-             <div className="w-2 h-2 rounded-full bg-emerald-600 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
-             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-800">Yield Pipeline Intelligence</span>
+           <div className="flex items-center gap-2 mb-2">
+             <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Leads CRM</span>
           </div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-            Market Enquiries <span className="text-slate-500 font-medium ml-3">/ {total} Signals</span>
+          <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+            Customer Leads <span className="text-slate-500 font-medium ml-3">/ {total} Total</span>
           </h1>
         </div>
         
@@ -80,109 +80,96 @@ export default async function AdminLeadsPage({ searchParams }) {
       </div>
 
       {/* ── ADVANCED FILTERS ── */}
-      <form method="GET" className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-10 bg-white border border-slate-200 p-4 rounded-3xl shadow-sm">
+      <form method="GET" className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-sm">
         <div className="lg:col-span-7 relative group">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 group-focus-within:text-emerald-600 transition-colors" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-emerald-500 transition-colors" />
           <input 
-            placeholder="Filter by Buyer, Contact, or Message Snippet..." 
-            className="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-medium text-slate-900 outline-none focus:border-emerald-500/30 focus:bg-white focus:shadow-sm transition-all placeholder:text-slate-600"
+            placeholder="Search by buyer name, contact, or vehicle..." 
+            className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none focus:border-emerald-500/50 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
 
         <div className="lg:col-span-3">
-          <select name="dealerId" defaultValue={dealerId} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest text-slate-700 outline-none focus:border-emerald-500/30 transition-all cursor-pointer hover:bg-white shadow-sm hover:shadow-md">
-            <option value="">All Partners</option>
+          <select name="dealerId" defaultValue={dealerId} className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300 outline-none focus:border-emerald-500/50 transition-all cursor-pointer">
+            <option value="">All Dealerships</option>
             {dealers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
           </select>
         </div>
 
         <div className="lg:col-span-2">
-           <button type="submit" className="w-full bg-slate-900 hover:bg-emerald-600 text-white py-3.5 rounded-2xl transition-all shadow-xl shadow-slate-100 flex items-center justify-center gap-2 font-bold text-[11px] uppercase tracking-widest group">
+           <button type="submit" className="w-full bg-slate-900 dark:bg-slate-700 hover:bg-emerald-600 dark:hover:bg-emerald-600 text-white py-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 text-sm font-bold group">
             <Filter size={16} className="group-hover:scale-110 transition-transform" /> Filter
           </button>
         </div>
       </form>
 
       {/* ── DATA REGISTRY ── */}
-      <div className="bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[1000px]">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50/50">
-                {["Buyer Profile", "Inquiry Target", "Dealer Hub", "Signal Channel", "Timestamp", ""].map((h) => (
-                  <th key={h} className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">{h}</th>
+              <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+                {["Buyer", "Vehicle", "Dealership", "Source", "Date", ""].map((h) => (
+                  <th key={h} className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {leads.map((lead) => (
-                <tr key={lead.id} className="group hover:bg-slate-50/50 transition-colors relative">
-                  <td className="px-10 py-7">
-                    <div className="flex items-center gap-5">
-                      <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 text-slate-900 group-hover:bg-slate-900 group-hover:text-white flex items-center justify-center font-black text-xl transition-all duration-500 shadow-sm overflow-hidden relative">
-                        <span className="relative z-10">{lead.name[0]}</span>
-                      </div>
-                      <div>
-                        <p className="text-base font-black text-slate-900 tracking-tight leading-none mb-1.5 group-hover:text-emerald-600 transition-colors uppercase">{lead.name}</p>
-                        <div className="flex items-center gap-4">
-                           <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
-                              <Phone size={12} className="text-emerald-600/40" /> {lead.phone}
-                           </div>
-                           {lead.email && (
-                             <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
-                                <Mail size={12} className="text-emerald-600/40" /> {lead.email}
-                             </div>
-                           )}
-                        </div>
-                      </div>
+                <tr key={lead.id} className="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors relative">
+                  <td className="px-6 py-4">
+                    <div className="flex flex-col gap-1">
+                       <p className="text-sm font-bold text-slate-900 dark:text-white capitalize group-hover:text-emerald-500 transition-colors">{lead.name}</p>
+                       <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                             <Phone size={12} /> {lead.phone}
+                          </div>
+                          {lead.email && (
+                            <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                               <Mail size={12} /> {lead.email}
+                            </div>
+                          )}
+                       </div>
                     </div>
                   </td>
-                  <td className="px-10 py-7">
+                  <td className="px-6 py-4">
                      <Link href={`/cars/${lead.car.id}`} target="_blank" className="group/link block">
-                        <p className="text-xs font-bold text-slate-900 uppercase tracking-widest group-hover/link:text-emerald-600 transition-colors leading-none mb-1">
+                        <p className="text-sm font-semibold text-slate-900 dark:text-white group-hover/link:text-emerald-500 transition-colors mb-0.5">
                            {lead.car.year} {lead.car.make}
                         </p>
-                        <p className="text-[10px] font-medium text-slate-600 uppercase tracking-tighter">{lead.car.model}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{lead.car.model}</p>
                      </Link>
                   </td>
-                  <td className="px-10 py-7">
-                     <p className="text-[11px] font-bold text-slate-900 uppercase tracking-widest leading-none mb-1">{lead.dealer.name}</p>
-                     <div className="flex items-center gap-1.5">
-                        <div className="w-1 h-1 rounded-full bg-emerald-600" />
-                        <p className="text-[9px] font-medium text-slate-600 uppercase tracking-widest">Authorized Partner</p>
-                     </div>
+                  <td className="px-6 py-4">
+                     <p className="text-sm font-semibold text-slate-900 dark:text-white">{lead.dealer.name}</p>
                   </td>
-                  <td className="px-10 py-7">
-                     <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border transition-all shadow-sm ${
-                        lead.channel === 'whatsapp' ? 'bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-100' : 'bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100'
+                  <td className="px-6 py-4">
+                     <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold ${
+                        lead.channel === 'whatsapp' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400'
                      }`}>
-                        {lead.channel === 'whatsapp' ? <Smartphone size={12} /> : <Globe size={12} />}
-                        {lead.channel}
+                        {lead.channel === 'whatsapp' ? <Smartphone size={14} /> : <Globe size={14} />}
+                        <span className="capitalize">{lead.channel}</span>
                      </div>
                   </td>
-                  <td className="px-10 py-7">
-                     <div className="flex flex-col items-start gap-1">
-                        <div className="flex items-center gap-1.5 text-slate-600">
-                           <Clock size={12} className="text-emerald-600/40" />
-                           <p className="text-[11px] font-bold text-slate-900 uppercase tracking-tighter">
-                             {new Date(lead.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short" })}
-                           </p>
-                        </div>
-                        <p className="text-[9px] font-medium text-slate-500 uppercase tracking-widest ml-4">
+                  <td className="px-6 py-4">
+                     <div className="flex flex-col">
+                        <p className="text-sm text-slate-900 dark:text-slate-300">
+                          {new Date(lead.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short" })}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
                            {new Date(lead.createdAt).toLocaleTimeString("en-KE", { hour: "2-digit", minute: "2-digit" })}
                         </p>
                      </div>
                   </td>
-                  <td className="px-10 py-7 text-right">
+                  <td className="px-6 py-4 text-right">
                     {lead.phone && (
                       <a 
                         href={`https://wa.me/${lead.phone.replace(/\D/g, '').replace(/^0/, '254')}?text=${encodeURIComponent(`Hello ${lead.name.split(' ')[0]}, I'm reaching out from ${lead.dealer.name} regarding your inquiry on the ${lead.car.year} ${lead.car.make} ${lead.car.model}.`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-white text-emerald-600 hover:bg-emerald-600 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 border border-slate-200 shadow-sm opacity-0 group-hover:opacity-100"
-                        title="Direct WhatsApp Message"
+                        className="inline-flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500 hover:text-white dark:hover:bg-emerald-500 dark:hover:text-white rounded-lg text-xs font-bold transition-all border border-slate-200 dark:border-slate-700 shadow-sm opacity-0 group-hover:opacity-100"
                       >
-                        <Smartphone size={14} /> Reach Out
+                        <Smartphone size={14} /> Message
                       </a>
                     )}
                   </td>
@@ -193,29 +180,29 @@ export default async function AdminLeadsPage({ searchParams }) {
         </div>
         
         {leads.length === 0 && (
-          <div className="py-32 text-center">
-            <div className="w-20 h-20 bg-slate-50 rounded-full border border-slate-100 flex items-center justify-center mx-auto mb-8">
-               <Zap size={32} className="text-slate-400" />
+          <div className="py-24 text-center">
+            <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+               <MessageSquare size={24} className="text-slate-400 dark:text-slate-500" />
             </div>
-            <p className="text-xl font-black text-slate-900 uppercase tracking-tighter">No Signals Captured</p>
-            <p className="text-sm font-medium text-slate-600 mt-2 tracking-wide">Yield pipeline is currently clear.</p>
+            <p className="text-lg font-bold text-slate-900 dark:text-white">No Leads Found</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">There are currently no inquiries in the system.</p>
           </div>
         )}
       </div>
 
       {/* ── PAGINATION ── */}
       {pages > 1 && (
-        <div className="flex justify-center items-center gap-3 mt-16">
+        <div className="flex justify-center items-center gap-2 mt-8">
           {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
             <Link key={p}
               href={`/admin/leads?page=${p}&dealerId=${dealerId}`}
-              className={`w-12 h-12 rounded-2xl flex items-center justify-center text-[11px] font-black tracking-widest transition-all ${
+              className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold transition-all ${
                 p === page 
-                  ? "bg-slate-900 text-white shadow-xl shadow-slate-100 scale-110" 
-                  : "bg-white border border-slate-200 text-slate-700 hover:border-emerald-200 hover:text-emerald-600"
+                  ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/20" 
+                  : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-emerald-500 hover:text-emerald-500"
               }`}
             >
-              {p.toString().padStart(2, '0')}
+              {p}
             </Link>
           ))}
         </div>
