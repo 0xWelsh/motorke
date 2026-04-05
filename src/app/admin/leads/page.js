@@ -109,7 +109,7 @@ export default async function AdminLeadsPage({ searchParams }) {
           <table className="w-full text-left border-collapse min-w-[1000px]">
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/50">
-                {["Buyer Profile", "Inquiry Target", "Dealer Hub", "Signal Channel", "Timestamp"].map((h) => (
+                {["Buyer Profile", "Inquiry Target", "Dealer Hub", "Signal Channel", "Timestamp", ""].map((h) => (
                   <th key={h} className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">{h}</th>
                 ))}
               </tr>
@@ -172,6 +172,19 @@ export default async function AdminLeadsPage({ searchParams }) {
                            {new Date(lead.createdAt).toLocaleTimeString("en-KE", { hour: "2-digit", minute: "2-digit" })}
                         </p>
                      </div>
+                  </td>
+                  <td className="px-10 py-7 text-right">
+                    {lead.phone && (
+                      <a 
+                        href={`https://wa.me/${lead.phone.replace(/\D/g, '').replace(/^0/, '254')}?text=${encodeURIComponent(`Hello ${lead.name.split(' ')[0]}, I'm reaching out from ${lead.dealer.name} regarding your inquiry on the ${lead.car.year} ${lead.car.make} ${lead.car.model}.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-white text-emerald-600 hover:bg-emerald-600 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 border border-slate-200 shadow-sm opacity-0 group-hover:opacity-100"
+                        title="Direct WhatsApp Message"
+                      >
+                        <Smartphone size={14} /> Reach Out
+                      </a>
+                    )}
                   </td>
                 </tr>
               ))}

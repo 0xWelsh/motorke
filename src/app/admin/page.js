@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
 import Link from "next/link";
+import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
 import { 
   Car, 
   Building2, 
@@ -132,6 +133,10 @@ export default async function AdminDashboard() {
              </div>
           </div>
         ))}
+      </div>
+
+      <div className="mb-16">
+         <AnalyticsDashboard realtimeLeads={totalLeads} />
       </div>
 
       {/* ── INTELLIGENCE GRID ── */}

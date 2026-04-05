@@ -4,8 +4,9 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Plus, Check, Info } from "lucide-react";
+import MediaUploader from "./admin/MediaUploader";
 import { BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS, BADGE_OPTIONS } from "@/lib/utils";
 
 const MAKES = [
@@ -33,15 +34,22 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [badges, setBadges]         = useState(car?.badges || []);
 
   // Handle image file selection → upload to Supabase via API (parallel)
-  async function handleImageChange(e) {
-    const files = Array.from(e.target.files);
-    if (!files.length) return;
+  async function handleFilesSelected(newFiles) {
+    // newFiles from MediaUploader are File objects
+    // Find files that don't have a URL yet
+    const toUpload = newFiles.filter(f => !f.url);
+    if (!toUpload.length) {
+       // Just order or primary changed
+       setImages(newFiles.map(f => ({ url: f.url || f.preview, isPrimary: f.isPrimary })));
+       return;
+    }
+
     setUploading(true);
     setError("");
-    setUploadProgress({ done: 0, total: files.length });
+    setUploadProgress({ done: 0, total: toUpload.length });
 
     const results = await Promise.allSettled(
-      files.map(async (file) => {
+      toUpload.map(async (file) => {
         const formData = new FormData();
         formData.append("file", file);
 
@@ -297,56 +305,21 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none">Min. 3 High RES Photos Preferred</p>
         </div>
 
-        <label className={`group relative flex flex-col items-center justify-center border-2 border-dashed border-slate-100 hover:border-emerald-200 rounded-[2rem] p-16 cursor-pointer transition-all duration-500 bg-slate-50/20 hover:bg-emerald-50/10 mb-8 ${uploading ? "pointer-events-none opacity-50" : ""}`}>
-          <input type="file" accept="image/*" multiple onChange={handleImageChange} className="hidden" disabled={uploading} />
-          
-          {uploading ? (
-            <div className="text-center">
-              <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-6" />
-              <p className="text-sm font-black text-slate-900 tracking-tight uppercase">Synchronizing Assets</p>
-              <p className="text-[10px] font-bold text-slate-400 mt-2">Item {uploadProgress.done} of {uploadProgress.total}</p>
-            </div>
-          ) : (
-            <div className="text-center group-hover:scale-105 transition-transform duration-500">
-              <div className="w-16 h-16 bg-white border border-slate-100 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:shadow-xl transition-all">
-                 <Plus className="text-slate-300 group-hover:text-emerald-500" size={32} />
-              </div>
-              <p className="text-sm font-black text-slate-900 uppercase tracking-widest">Deploy Photos</p>
-              <p className="text-[10px] font-bold text-slate-400 mt-2 leading-relaxed">Drag assets or click to browse. WEBP/JPG/PNG supported.</p>
-            </div>
-          )}
-        </label>
-
-        {images.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {images.map((img, idx) => (
-              <div key={idx} className={`group/img relative rounded-[1.5rem] overflow-hidden border-2 transition-all duration-500 ${
-                img.isPrimary ? "border-emerald-500 shadow-xl" : "border-slate-50 shadow-sm hover:border-slate-200"
-              }`}>
-                <img src={img.url} alt="" className="w-full aspect-square object-cover transition-transform duration-700 group-hover/img:scale-110" />
-                
-                {img.isPrimary && (
-                  <div className="absolute top-3 left-3 bg-emerald-500 text-white px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest shadow-lg flex items-center gap-1.5">
-                    <span className="w-1 h-1 bg-white rounded-full animate-pulse" /> Asset Primary
-                  </div>
-                )}
-
-                <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] opacity-0 group-hover/img:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-4">
-                  {!img.isPrimary && (
-                    <button type="button" onClick={() => setPrimary(idx)}
-                      className="w-full bg-white hover:bg-emerald-50 text-slate-900 text-[9px] font-black uppercase tracking-widest py-3 rounded-xl transition-all shadow-xl active:scale-95">
-                      Main Hub
-                    </button>
-                  )}
-                  <button type="button" onClick={() => removeImage(idx)}
-                    className="w-full bg-rose-500/90 hover:bg-rose-600 text-white text-[9px] font-black uppercase tracking-widest py-3 rounded-xl transition-all active:scale-95">
-                    Purge
-                  </button>
-                </div>
-              </div>
-            ))}
+        {uploading && (
+          <div className="text-center mb-8 p-6 bg-slate-50 border border-slate-200 rounded-[2rem]">
+            <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-6" />
+            <p className="text-sm font-black text-slate-900 tracking-tight uppercase">Synchronizing Assets</p>
+            <p className="text-[10px] font-bold text-slate-400 mt-2">Item {uploadProgress.done} of {uploadProgress.total}</p>
           </div>
         )}
+
+        <div className={uploading ? "opacity-50 pointer-events-none" : ""}>
+          <MediaUploader 
+             initialImages={images} 
+             onFilesSelected={handleFilesSelected} 
+             maxFiles={15} 
+          />
+        </div>
       </div>
 
       {/* ── Badges ── */}
