@@ -24,7 +24,8 @@ import {
   ShieldCheck,
   Zap,
   MoreVertical,
-  ArrowUpDown
+  ArrowUpDown,
+  MessageSquare
 } from "lucide-react";
 import ExportButton from "@/components/admin/ExportButton";
 
