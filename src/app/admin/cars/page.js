@@ -19,10 +19,15 @@ import {
   ToggleRight,
   ExternalLink,
   Car,
-  Activity
+  Activity,
+  Layers,
+  ShieldCheck,
+  Zap,
+  MoreVertical
 } from "lucide-react";
+import ExportButton from "@/components/admin/ExportButton";
 
-export const metadata = { title: "Inventory Management — Motorke Standard" };
+export const metadata = { title: "Asset Registry — Motorske Control" };
 
 export default async function AdminCarsPage({ searchParams }) {
   await requireAdmin();
@@ -66,179 +71,217 @@ export default async function AdminCarsPage({ searchParams }) {
   const pages = Math.ceil(total / limit);
 
   return (
-    <div className="animate-in fade-in duration-700">
+    <div className="animate-in fade-in slide-in-from-bottom-2 duration-700">
       {/* ── HEADER ── */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-12 gap-8">
         <div>
-          <div className="flex items-center gap-2 mb-2">
-             <div className="w-2 h-2 rounded-full bg-orange-600" />
-             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">Inventory Core</span>
+          <div className="flex items-center gap-3 mb-3">
+             <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-emerald-500/60">Asset Registry Console</span>
           </div>
-          <h1 className="text-3xl font-black text-white tracking-tight">
-            Vehicle Showcases <span className="text-white/30 font-medium ml-2">({total})</span>
+          <h1 className="text-4xl font-black text-white tracking-tight">
+            Vehicle Showcases <span className="text-white/20 font-medium ml-3">/ {total} Units</span>
           </h1>
         </div>
         
         <div className="flex items-center gap-3">
-          <Link href="/admin/cars/bulk" className="bg-transparent border border-white/20 text-white px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-white/5 transition-all shadow-sm">
-            <Upload size={14} /> Bulk
+          <ExportButton 
+            filename="motorske-inventory.csv" 
+            data={cars.map(c => ({
+              ID: c.id,
+              Make: c.make,
+              Model: c.model,
+              Year: c.year,
+              Price: c.price,
+              Dealer: c.dealer.name,
+              Views: c.views,
+              Leads: c._count.leads,
+              Status: c.available ? "Live" : "Hidden",
+              CreatedAt: c.createdAt
+            }))} 
+          />
+          <Link href="/admin/cars/bulk" className="bg-white/5 border border-white/10 text-white/60 px-6 py-3.5 rounded-2xl text-[11px] font-bold uppercase tracking-widest flex items-center gap-3 hover:bg-white/10 hover:text-white transition-all">
+            <Upload size={16} /> Bulk Import
           </Link>
           <ClearAllButton />
-          <Link href="/admin/cars/new" className="bg-white/10 border border-white/10 text-pureWhite px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-orange-600 hover:text-white hover:border-orange-500 transition-all shadow-xl">
-            <Plus size={14} /> Add Listing
+          <Link href="/admin/cars/new" className="bg-emerald-600 text-white px-8 py-3.5 rounded-2xl text-[11px] font-bold uppercase tracking-widest flex items-center gap-3 hover:bg-emerald-500 transition-all shadow-xl shadow-emerald-900/10">
+            <Plus size={16} /> New Listing
           </Link>
         </div>
       </div>
 
-      {/* ── METRICS BANNER ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 group">
+      {/* ── METRICS GRID ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 group">
          {[
-            { l: "Live Display", v: liveCount, i: <ToggleRight size={18} className="text-emerald-500" /> },
-            { l: "Hidden / Drafts", v: hiddenCount, i: <ToggleLeft size={18} className="text-white/40" /> },
-            { l: "Platform Reach", v: totalViews.toLocaleString(), i: <Eye size={18} className="text-orange-500" /> }
+            { l: "Operational States", v: liveCount, d: "Active on Terminal", i: <ToggleRight size={20} className="text-emerald-500" /> },
+            { l: "Registry Cache", v: hiddenCount, d: "Drafts / Archive", i: <ToggleLeft size={20} className="text-white/20" /> },
+            { l: "Network Impressions", v: totalViews.toLocaleString(), d: "Global Reach", i: <Zap size={20} className="text-emerald-500" /> }
          ].map((m, idx) => (
-            <div key={idx} className="bg-surface border border-white/5 rounded-[2rem] p-6 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+            <div key={idx} className="bg-[#0a0c10] border border-white/5 rounded-3xl p-8 flex items-center justify-between shadow-2xl hover:border-emerald-500/20 transition-all group/card">
                <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">{m.l}</p>
-                  <p className="text-2xl font-black text-white leading-none">{m.v}</p>
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-white/40 mb-2">{m.l}</p>
+                  <p className="text-3xl font-black text-white leading-none mb-2">{m.v}</p>
+                  <p className="text-[10px] font-medium text-white/20 uppercase tracking-tighter">{m.d}</p>
                </div>
-               <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
+               <div className="w-12 h-12 rounded-2xl bg-white/[0.03] flex items-center justify-center border border-white/5 group-hover/card:bg-emerald-600/10 transition-colors">
                   {m.i}
                </div>
             </div>
          ))}
       </div>
 
-      {/* ── FILTERS ── */}
-      <form method="GET" className="flex flex-wrap items-center gap-3 mb-8 bg-surface border border-white/5 p-4 rounded-[2rem] shadow-sm">
-        <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 transition-colors" />
+      {/* ── ADVANCED FILTERS ── */}
+      <form method="GET" className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-10 bg-[#0a0c10] border border-white/5 p-4 rounded-3xl shadow-xl">
+        <div className="lg:col-span-5 relative group">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-emerald-500 transition-colors" />
           <input 
             name="search" 
             defaultValue={search} 
-            placeholder="Search make or model..." 
-            className="w-full bg-white/5 border border-transparent rounded-xl pl-11 pr-4 py-2.5 text-xs font-bold text-white outline-none focus:border-orange-500/30 transition-all placeholder:text-white/40"
+            placeholder="Filter by Make, Model, or Plate..." 
+            className="w-full bg-white/[0.03] border border-white/5 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-medium text-white outline-none focus:border-emerald-500/30 focus:bg-white/[0.05] transition-all placeholder:text-white/20"
           />
         </div>
 
-        <select name="dealerId" defaultValue={dealerId} className="bg-white/5 border border-transparent rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:border-orange-500/30 transition-all cursor-pointer">
-          <option value="">All Dealers</option>
-          {dealers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-        </select>
+        <div className="lg:col-span-3">
+          <select name="dealerId" defaultValue={dealerId} className="w-full bg-black border border-white/5 rounded-2xl px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest text-white/40 outline-none focus:border-emerald-500/30 transition-all cursor-pointer hover:bg-white/5">
+            <option value="">All Partners</option>
+            {dealers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+          </select>
+        </div>
 
-        <select name="status" defaultValue={status} className="bg-white/5 border border-transparent rounded-xl px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white/50 outline-none focus:border-orange-500/30 transition-all cursor-pointer">
-          <option value="">All Status</option>
-          <option value="live">Live Only</option>
-          <option value="hidden">Hidden Only</option>
-        </select>
+        <div className="lg:col-span-2">
+          <select name="status" defaultValue={status} className="w-full bg-black border border-white/5 rounded-2xl px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest text-white/40 outline-none focus:border-emerald-500/30 transition-all cursor-pointer hover:bg-white/5">
+            <option value="">All States</option>
+            <option value="live">Live Only</option>
+            <option value="hidden">Hidden Only</option>
+          </select>
+        </div>
 
-        <button type="submit" className="bg-white/10 hover:bg-orange-600 text-pureWhite hover:text-white p-2.5 rounded-xl transition-all shadow-sm">
-          <Filter size={16} />
-        </button>
-
-        {(search || dealerId || status) && (
-          <Link href="/admin/cars" className="text-[10px] font-black uppercase tracking-widest text-orange-500 hover:text-orange-400 px-2">
-            Clear
-          </Link>
-        )}
+        <div className="lg:col-span-2 flex items-center gap-2">
+          <button type="submit" className="flex-1 bg-white/10 hover:bg-emerald-600 text-white py-3.5 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 font-bold text-[11px] uppercase tracking-widest">
+            <Filter size={16} /> Apply
+          </button>
+          
+          {(search || dealerId || status) && (
+            <Link href="/admin/cars" className="p-3.5 rounded-2xl bg-white/5 text-white/40 hover:text-rose-500 transition-all" title="Reset Filters">
+              <Trash2 size={16} />
+            </Link>
+          )}
+        </div>
       </form>
 
-      {/* ── DATA TABLE ── */}
-      <div className="bg-surface border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-border-light bg-white/[0.02]">
-              {["Car Details", "Dealer Hub", "Investment", "Engagement", "Status", ""].map((h) => (
-                <th key={h} className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border-light">
-            {cars.map((car) => (
-              <tr key={car.id} className="group hover:bg-white/5 transition-colors">
-                <td className="px-8 py-5">
-                  <div className="flex items-center gap-4">
-                     <div className="w-16 h-12 rounded-xl bg-white/5 overflow-hidden shrink-0">
-                      {car.images[0] ? (
-                        <img src={car.images[0].url} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
-                      ) : (
-                        <div className="flex items-center justify-center h-full text-black/20 dark:text-white/30"><Car size={16} /></div>
-                      )}
-                    </div>
-                    <div>
-                      <p className="text-sm font-black text-white tracking-tight">{car.year} {car.make} {car.model}</p>
-                      <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mt-0.5">{car.variant || "Standard"}</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-8 py-5">
-                   <p className="text-xs font-black text-white/40 uppercase tracking-tighter">{car.dealer.name}</p>
-                </td>
-                <td className="px-8 py-5">
-                   <p className="text-sm font-black text-white">{formatPrice(car.price)}</p>
-                </td>
-                <td className="px-8 py-5">
-                   <div className="flex items-center gap-4">
-                      <div className="text-center">
-                         <p className="text-[10px] font-black text-white">{car.views}</p>
-                         <p className="text-[8px] font-black text-white/40 uppercase">Views</p>
-                      </div>
-                      <div className="text-center">
-                         <p className="text-[10px] font-black text-white">{car._count.leads}</p>
-                         <p className="text-[8px] font-black text-white/40 uppercase">Leads</p>
-                      </div>
-                   </div>
-                </td>
-                <td className="px-8 py-5">
-                  <div className="flex flex-col gap-1 items-start">
-                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${
-                       car.available ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-black/5 text-white/40 border-black/10 dark:bg-white/5 dark:text-white/40 dark:border-white/10"
-                     }`}>
-                       <div className={`w-1 h-1 rounded-full ${car.available ? "bg-emerald-500" : "bg-white/30"}`} />
-                       {car.available ? "Live" : "Hidden"}
-                     </span>
-                     <span className="text-[8px] font-black uppercase tracking-widest text-white/40 ml-1">
-                        Listed {new Date(car.createdAt).toLocaleDateString("en-KE", { month: "short", day: "numeric" })}
-                     </span>
-                  </div>
-                </td>
-                <td className="px-8 py-5 text-right">
-                  <div className="flex items-center justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Link href={`/admin/cars/${car.id}/edit`} className="p-2 text-white/40 hover:text-white transition-colors" title="Edit">
-                      <Edit3 size={16} />
-                    </Link>
-                    <form action={`/api/admin/cars/${car.id}/toggle`} method="POST">
-                      <button type="submit" className="p-2 text-white/40 hover:text-orange-500 transition-colors" title={car.available ? "Hide" : "Show"}>
-                        {car.available ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
-                      </button>
-                    </form>
-                    <Link href={`/cars/${car.id}`} target="_blank" className="p-2 text-white/40 hover:text-blue-500 transition-colors" title="View Live">
-                      <ExternalLink size={16} />
-                    </Link>
-                    <DeleteButton action={`/api/admin/cars/${car.id}/delete`} message="Permanently delete this listing?" />
-                  </div>
-                </td>
+      {/* ── DATA REGISTRY ── */}
+      <div className="bg-[#0a0c10] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[1000px]">
+            <thead>
+              <tr className="border-b border-white/5 bg-white/[0.02]">
+                {["Configuration", "Node", "Appraisal", "Engagement", "Telemetry", ""].map((h) => (
+                  <th key={h} className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.25em] text-white/20">{h}</th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {cars.map((car) => (
+                <tr key={car.id} className="group hover:bg-white/[0.02] transition-colors relative">
+                  <td className="px-10 py-6">
+                    <div className="flex items-center gap-5">
+                       <div className="w-20 h-14 rounded-2xl bg-white/5 overflow-hidden shrink-0 border border-white/5 relative shadow-2xl">
+                        {car.images[0] ? (
+                          <img src={car.images[0].url} alt="" className="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" />
+                        ) : (
+                          <div className="flex items-center justify-center h-full text-white/10"><Car size={20} /></div>
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-base font-black text-white tracking-tight leading-none mb-1.5">{car.year} {car.make} {car.model}</p>
+                        <div className="flex items-center gap-2">
+                           <span className="text-[10px] font-bold text-white/30 uppercase tracking-widest">{car.variant || "Standard Spec"}</span>
+                           <div className="w-1 h-1 rounded-full bg-white/10" />
+                           <span className="text-[10px] font-bold text-emerald-500/60 uppercase tracking-widest">#{car.id.slice(-4)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-10 py-6">
+                     <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">{car.dealer.name}</p>
+                     <p className="text-[9px] font-medium text-white/10 uppercase tracking-tighter">Verified Partner</p>
+                  </td>
+                  <td className="px-10 py-6">
+                     <p className="text-base font-black text-white tracking-tighter">{formatPrice(car.price)}</p>
+                     <p className="text-[10px] font-bold text-emerald-500/40 uppercase tracking-widest mt-1">Market Val</p>
+                  </td>
+                  <td className="px-10 py-6">
+                     <div className="flex items-center gap-6">
+                        <div>
+                           <p className="text-sm font-black text-white">{car.views.toLocaleString()}</p>
+                           <p className="text-[9px] font-bold text-white/10 uppercase tracking-widest">Views</p>
+                        </div>
+                        <div className="w-px h-6 bg-white/5" />
+                        <div>
+                           <p className="text-sm font-black text-white">{car._count.leads}</p>
+                           <p className="text-[9px] font-bold text-white/10 uppercase tracking-widest">Leads</p>
+                        </div>
+                     </div>
+                  </td>
+                  <td className="px-10 py-6">
+                    <div className="flex flex-col gap-2 items-start">
+                       <span className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border transition-all ${
+                         car.available 
+                          ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]" 
+                          : "bg-white/5 text-white/20 border-white/10"
+                       }`}>
+                         <div className={`w-1.5 h-1.5 rounded-full ${car.available ? "bg-emerald-500 animate-pulse" : "bg-white/10"}`} />
+                         {car.available ? "Terminal Live" : "Cache Only"}
+                       </span>
+                       <span className="text-[10px] font-bold text-white/10 uppercase tracking-[0.2em] ml-1">
+                          Since {new Date(car.createdAt).toLocaleDateString("en-KE", { month: "short", day: "numeric" })}
+                       </span>
+                    </div>
+                  </td>
+                  <td className="px-10 py-6 text-right">
+                    <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                      <Link href={`/admin/cars/${car.id}/edit`} className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors" title="Edit Master">
+                        <Edit3 size={16} />
+                      </Link>
+                      <form action={`/api/admin/cars/${car.id}/toggle`} method="POST">
+                        <button type="submit" className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-white/40 hover:text-emerald-500 hover:bg-emerald-500/10 transition-colors" title={car.available ? "Decommission" : "Provision"}>
+                          {car.available ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
+                        </button>
+                      </form>
+                      <Link href={`/cars/${car.id}`} target="_blank" className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-white/40 hover:text-blue-500 hover:bg-blue-500/10 transition-colors" title="Live Terminal">
+                        <ExternalLink size={16} />
+                      </Link>
+                      <DeleteButton action={`/api/admin/cars/${car.id}/delete`} message="Permanently purge this asset from the registry?" />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         
         {cars.length === 0 && (
-          <div className="py-20 text-center">
-            <Car size={40} className="mx-auto text-white/5 mb-4" />
-            <p className="text-sm font-black text-white/30 uppercase tracking-widest">No matching units found</p>
+          <div className="py-32 text-center">
+            <div className="w-20 h-20 bg-white/[0.02] rounded-full border border-white/5 flex items-center justify-center mx-auto mb-8">
+               <Layers size={32} className="text-white/10" />
+            </div>
+            <p className="text-lg font-black text-white/20 uppercase tracking-[0.3em]">No Assets Identified</p>
+            <p className="text-sm font-medium text-white/10 mt-2">Adjust your filters or initiate a new registry entry.</p>
           </div>
         )}
       </div>
 
       {/* ── PAGINATION ── */}
       {pages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-12">
+        <div className="flex justify-center items-center gap-3 mt-16">
           {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
             <Link key={p}
               href={`/admin/cars?page=${p}&search=${search}&dealerId=${dealerId}&status=${status}`}
-              className={`w-10 h-10 rounded-xl flex items-center justify-center text-[11px] font-black transition-all ${
-                p === page ? "bg-orange-600 text-white shadow-xl" : "bg-surface border border-white/10 text-white/40 hover:border-white/30 hover:text-white"
+              className={`w-12 h-12 rounded-2xl flex items-center justify-center text-[11px] font-black tracking-widest transition-all ${
+                p === page 
+                  ? "bg-emerald-600 text-white shadow-[0_0_25px_rgba(16,185,129,0.3)] scale-110" 
+                  : "bg-[#0a0c10] border border-white/5 text-white/20 hover:border-white/30 hover:text-white"
               }`}
             >
               {p.toString().padStart(2, '0')}

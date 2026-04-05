@@ -3,196 +3,151 @@ export const dynamic = "force-dynamic";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import DeleteButton from "@/components/DeleteButton";
 import { 
   Building2, 
+  Search, 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Globe, 
   Plus, 
+  MoreVertical, 
+  ChevronRight, 
   ShieldCheck, 
-  Star, 
-  Edit3, 
-  ExternalLink, 
-  MapPin,
+  Clock,
   Car,
-  Users,
-  MessageSquare,
-  Activity
+  TrendingUp,
+  ArrowRight,
+  ExternalLink
 } from "lucide-react";
+import { formatPrice } from "@/lib/utils";
 
-export const metadata = { title: "Dealer Network — Motorke Standard Admin" };
+export const metadata = { title: "Partner Network — Motorske Admin" };
 
-export default async function AdminDealersPage(props) {
-  const searchParams = typeof props.searchParams === "undefined" ? {} : props.searchParams;
+export default async function AdminDealersPage({ searchParams }) {
   await requireAdmin();
+  const sp     = await searchParams;
+  const search = sp.search || "";
 
-  const isPending = searchParams?.filter === "pending";
-
-  const allDealers = await db.dealer.findMany({
-    include: { _count: { select: { cars: true, users: true, leads: true } } },
-    orderBy: { createdAt: "desc" },
+  const dealers = await db.dealer.findMany({
+    where: search ? {
+      OR: [
+        { name:     { contains: search, mode: "insensitive" } },
+        { location: { contains: search, mode: "insensitive" } },
+      ]
+    } : {},
+    include: {
+       _count: { select: { cars: true, leads: true } },
+       cars: { select: { price: true }, where: { available: true } }
+    },
+    orderBy: { name: "asc" }
   });
 
-  const dealers = isPending ? allDealers.filter((d) => !d.verified) : allDealers;
-
-  const topStats = {
-    units: dealers.reduce((acc, d) => acc + d._count.cars, 0),
-    leads: dealers.reduce((acc, d) => acc + d._count.leads, 0),
-    verified: dealers.filter(d => d.verified).length
-  };
-
-  const gradients = [
-    "from-blue-500 to-cyan-500", "from-purple-500 to-pink-500",
-    "from-orange-500 to-rose-500", "from-emerald-500 to-teal-500",
-    "from-indigo-500 to-violet-500", "from-rose-500 to-orange-400"
-  ];
-
   return (
-    <div className="animate-in fade-in duration-700">
+    <div className="animate-in fade-in slide-in-from-bottom-2 duration-700">
       {/* ── HEADER ── */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-12 gap-8">
         <div>
-          <div className="flex items-center gap-2 mb-2">
-             <div className="w-2 h-2 rounded-full bg-orange-600" />
-             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">Network Operations</span>
+           <div className="flex items-center gap-3 mb-3">
+             <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-emerald-500/60">Partner Ecosystem</span>
           </div>
-          <h1 className="text-3xl font-black text-white tracking-tight">
-            {isPending ? "Pending Approvals" : "Dealer Partners"} <span className="text-white/30 font-medium ml-2">({dealers.length})</span>
-          </h1>
+          <h1 className="text-4xl font-black text-white tracking-tight">Authorized Dealerships</h1>
         </div>
         
-        <Link href="/admin/dealers/new" className="bg-white/10 border border-white/10 text-pureWhite px-8 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-orange-600 hover:text-white hover:border-orange-500 transition-all shadow-xl">
-          <Plus size={14} /> Add Dealership
+        <Link href="/admin/dealers/new" className="bg-emerald-600 text-white px-8 py-3.5 rounded-2xl text-[11px] font-bold uppercase tracking-widest flex items-center gap-3 hover:bg-emerald-500 transition-all shadow-xl shadow-emerald-900/10">
+          <Plus size={16} /> Add Partner Node
         </Link>
       </div>
 
-      {/* ── METRICS BANNER ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 group">
-         {[
-            { l: "Network Units", v: topStats.units.toLocaleString(), i: <Car size={18} className="text-blue-500" /> },
-            { l: "Verified Partners", v: topStats.verified.toLocaleString(), i: <ShieldCheck size={18} className="text-emerald-500" /> },
-            { l: "Total Network Leads", v: topStats.leads.toLocaleString(), i: <MessageSquare size={18} className="text-orange-500" /> }
-         ].map((m, idx) => (
-            <div key={idx} className="bg-surface border border-white/5 rounded-[2rem] p-6 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
-               <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1">{m.l}</p>
-                  <p className="text-2xl font-black text-white leading-none">{m.v}</p>
-               </div>
-               <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
-                  {m.i}
-               </div>
-            </div>
-         ))}
+      {/* ── SEARCH BAR ── */}
+      <div className="relative mb-10 group">
+        <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-white/20 group-focus-within:text-emerald-500 transition-colors" />
+        <form method="GET">
+           <input 
+             name="search"
+             defaultValue={search}
+             placeholder="Identify partners by name, location, or license ID..." 
+             className="w-full bg-[#0a0c10] border border-white/5 rounded-3xl pl-16 pr-6 py-5 text-sm font-medium text-white outline-none focus:border-emerald-500/30 focus:bg-black transition-all placeholder:text-white/20 shadow-2xl"
+           />
+        </form>
       </div>
 
-      {/* ── DATA TABLE ── */}
-      <div className="bg-surface border border-white/5 rounded-[3rem] overflow-hidden shadow-2xl">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-border-light bg-white/[0.02]">
-              {["Dealership Hub", "Geographic", "Inventory", "Network", "Leads", "Verification", ""].map((h) => (
-                <th key={h} className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-white/40">{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border-light">
-            {dealers.map((dealer) => {
-              const gradient = gradients[dealer.id.charCodeAt(0) % gradients.length];
-              return (
-              <tr key={dealer.id} className="group hover:bg-white/5 transition-colors">
-                <td className="px-8 py-6">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${gradient} text-white flex items-center justify-center font-black text-lg transition-transform duration-500 shadow-lg group-hover:scale-110 group-hover:shadow-xl`}>
-                      {dealer.name[0]?.toUpperCase()}
-                    </div>
-                    <div>
-                      <p className="text-sm font-black text-white tracking-tight">{dealer.name}</p>
-                      <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mt-0.5">{dealer.slug}</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-8 py-6">
-                   <div className="flex items-center gap-2 text-white/60">
-                      <MapPin size={12} className="text-white/30" />
-                      <p className="text-xs font-black uppercase tracking-tighter">{dealer.county}</p>
-                   </div>
-                   <p className="text-[10px] text-white/40 mt-1">{dealer.location}</p>
-                </td>
-                <td className="px-8 py-6">
-                   <div className="flex items-center gap-2">
-                      <Car size={14} className="text-white/30" />
-                      <p className="text-sm font-black text-white">{dealer._count.cars}</p>
-                   </div>
-                </td>
-                <td className="px-8 py-6 text-sm font-black text-white">
-                   <div className="flex items-center gap-2">
-                      <Users size={14} className="text-white/30" />
-                      {dealer._count.users}
-                   </div>
-                </td>
-                <td className="px-8 py-6 text-sm font-black text-orange-600">
-                   <div className="flex items-center gap-2 bg-orange-500/10 px-3 py-1.5 rounded-xl border border-transparent inline-flex shadow-sm">
-                      <MessageSquare size={14} className="text-orange-500" />
-                      {dealer._count.leads}
-                   </div>
-                </td>
-                <td className="px-8 py-6">
-                  <div className="flex flex-wrap gap-2">
-                    {dealer.verified && (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-500/20 shadow-sm">
-                        <ShieldCheck size={10} /> Verified
-                      </span>
-                    )}
-                    {dealer.featured && (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-500/10 text-orange-500 rounded-full text-[9px] font-black uppercase tracking-widest border border-orange-500/20 shadow-sm">
-                        <Star size={10} fill="currentColor" /> Featured
-                      </span>
-                    )}
-                    {!dealer.verified && !dealer.featured && (
-                      <span className="text-[10px] font-black text-white/30 uppercase tracking-widest">Standard</span>
-                    )}
-                  </div>
-                </td>
-                <td className="px-8 py-6 text-right">
-                  <div className="flex items-center justify-end gap-3 transition-all duration-300">
-                    <Link href={`/admin/dealers/${dealer.id}/edit`} className="flex items-center gap-2 px-4 py-2 bg-orange-600/20 hover:bg-orange-600 text-orange-500 hover:text-white font-black text-[10px] uppercase tracking-widest rounded-xl transition-all border border-orange-500/20 hover:border-orange-500 shadow-lg" title="Manage Hub">
-                      <Edit3 size={14} /> Manage
-                    </Link>
-                    
-                    <form action={`/api/admin/dealers/${dealer.id}/toggle-verified`} method="POST">
-                      <button type="submit" 
-                        className={dealer.verified 
-                          ? "flex items-center justify-center p-2 text-emerald-500 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-xl transition-colors"
-                          : "flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-500 hover:text-white font-black text-[10px] uppercase tracking-widest border border-emerald-500/20 hover:border-emerald-500 rounded-xl transition-all shadow-lg"}
-                        title={dealer.verified ? "Verified Dealership" : "Approve Dealer"}
-                      >
-                        <ShieldCheck size={14} />
-                        {!dealer.verified && "Approve"}
-                      </button>
-                    </form>
+      {/* ── DEALER GRID ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {dealers.map((dealer) => {
+           const inventoryValue = dealer.cars.reduce((acc, car) => acc + car.price, 0);
+           return (
+             <div key={dealer.id} className="bg-[#0a0c10] border border-white/5 rounded-[2.5rem] p-8 hover:border-emerald-500/20 transition-all duration-500 group relative flex flex-col">
+                <div className="absolute top-0 right-0 p-6 text-white/[0.02] group-hover:text-emerald-500/[0.05] transition-colors pointer-events-none">
+                   <Building2 size={100} strokeWidth={1} />
+                </div>
 
-                    <form action={`/api/admin/dealers/${dealer.id}/toggle-featured`} method="POST">
-                      <button type="submit" className={`p-2 transition-colors ${dealer.featured ? "text-orange-500 hover:text-white/40" : "text-white/40 hover:text-orange-600 dark:text-white/30 dark:hover:text-orange-500"}`} title={dealer.featured ? "Remove Highlight" : "Feature Dealer"}>
-                        <Star size={18} fill={dealer.featured ? "currentColor" : "none"} />
-                      </button>
-                    </form>
+                <div className="flex items-start justify-between mb-8 relative z-10">
+                   <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-white/40 group-hover:bg-emerald-600/10 group-hover:text-emerald-500 transition-all duration-500">
+                      {dealer.logo ? (
+                         <img src={dealer.logo} alt="" className="w-full h-full object-contain p-2 grayscale group-hover:grayscale-0 transition-all" />
+                      ) : (
+                         <Building2 size={24} />
+                      )}
+                   </div>
+                   <div className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[10px] font-bold uppercase tracking-widest">
+                      Verified Hub
+                   </div>
+                </div>
 
-                    <Link href={`/dealers/${dealer.slug}`} target="_blank" className="p-2 text-white/40 hover:text-blue-500 transition-colors" title="Public Profile">
-                      <ExternalLink size={16} />
-                    </Link>
+                <div className="relative z-10 flex-1">
+                   <h3 className="text-xl font-black text-white tracking-tight mb-2 group-hover:text-emerald-400 transition-colors uppercase">{dealer.name}</h3>
+                   <div className="flex items-center gap-2 text-[10px] font-bold text-white/20 uppercase tracking-widest mb-6">
+                      <MapPin size={12} className="text-emerald-500/40" />
+                      {dealer.location}
+                   </div>
 
-                    <DeleteButton action={`/api/admin/dealers/${dealer.id}/delete`} message="Permanently terminate this dealer profile and ALL associated cars/users?" label="Delete" />
-                  </div>
-                </td>
-              </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        
+                   <div className="grid grid-cols-2 gap-4 mb-8">
+                      <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                         <p className="text-[9px] font-bold text-white/20 uppercase tracking-widest mb-1">Inventory</p>
+                         <p className="text-lg font-black text-white tracking-tight">{dealer._count.cars} Units</p>
+                      </div>
+                      <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                         <p className="text-[9px] font-bold text-white/20 uppercase tracking-widest mb-1">Leads</p>
+                         <p className="text-lg font-black text-white tracking-tight">{dealer._count.leads} Yield</p>
+                      </div>
+                   </div>
+                   
+                   <div className="space-y-3">
+                      <div className="flex items-center justify-between text-[11px]">
+                         <span className="text-white/20 font-bold uppercase tracking-widest">Portfolio Value</span>
+                         <span className="text-emerald-500 font-black">{formatPrice(inventoryValue)}</span>
+                      </div>
+                      <div className="w-full h-1 bg-white/[0.03] rounded-full overflow-hidden border border-white/5">
+                         <div className="h-full bg-emerald-600/30 w-full animate-pulse" />
+                      </div>
+                   </div>
+                </div>
+
+                <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between relative z-10">
+                   <div className="flex items-center gap-3">
+                      <Link href={`tel:${dealer.phone}`} className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-white/20 hover:text-white hover:bg-white/10 transition-all border border-white/5" title="Contact Node">
+                         <Phone size={14} />
+                      </Link>
+                      <Link href={`mailto:${dealer.email}`} className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-white/20 hover:text-white hover:bg-white/10 transition-all border border-white/5" title="Email Liaison">
+                         <Mail size={14} />
+                      </Link>
+                   </div>
+                   <Link href={`/admin/dealers/${dealer.id}`} className="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-white/40 hover:bg-white/10 hover:text-white transition-all flex items-center gap-2">
+                       Full Profile <ExternalLink size={12} />
+                   </Link>
+                </div>
+             </div>
+           );
+        })}
+
         {dealers.length === 0 && (
-          <div className="py-20 text-center">
-            <Building2 size={40} className="mx-auto text-white/5 mb-4" />
-            <p className="text-sm font-black text-white/30 uppercase tracking-widest">No dealers in network</p>
-          </div>
+           <div className="col-span-full py-40 text-center border-2 border-dashed border-white/5 rounded-[3rem]">
+              <Building2 size={40} className="mx-auto text-white/10 mb-6" />
+              <p className="text-lg font-black text-white/20 uppercase tracking-[0.4em]">No Authorized Nodes Found</p>
+              <p className="text-sm font-medium text-white/10 mt-3">Try adjusting your search criteria.</p>
+           </div>
         )}
       </div>
     </div>
