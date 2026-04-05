@@ -56,10 +56,10 @@ export default async function AdminLeadsPage({ searchParams }) {
         <div>
            <div className="flex items-center gap-3 mb-3">
              <div className="w-2 h-2 rounded-full bg-emerald-600 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
-             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400">Yield Pipeline Intelligence</span>
+             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-800">Yield Pipeline Intelligence</span>
           </div>
           <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-            Market Enquiries <span className="text-slate-300 font-medium ml-3">/ {total} Signals</span>
+            Market Enquiries <span className="text-slate-500 font-medium ml-3">/ {total} Signals</span>
           </h1>
         </div>
         
@@ -82,15 +82,15 @@ export default async function AdminLeadsPage({ searchParams }) {
       {/* ── ADVANCED FILTERS ── */}
       <form method="GET" className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-10 bg-white border border-slate-200 p-4 rounded-3xl shadow-sm">
         <div className="lg:col-span-7 relative group">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-emerald-600 transition-colors" />
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 group-focus-within:text-emerald-600 transition-colors" />
           <input 
             placeholder="Filter by Buyer, Contact, or Message Snippet..." 
-            className="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-medium text-slate-900 outline-none focus:border-emerald-500/30 focus:bg-white focus:shadow-sm transition-all placeholder:text-slate-400"
+            className="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-medium text-slate-900 outline-none focus:border-emerald-500/30 focus:bg-white focus:shadow-sm transition-all placeholder:text-slate-600"
           />
         </div>
 
         <div className="lg:col-span-3">
-          <select name="dealerId" defaultValue={dealerId} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest text-slate-500 outline-none focus:border-emerald-500/30 transition-all cursor-pointer hover:bg-white shadow-sm hover:shadow-md">
+          <select name="dealerId" defaultValue={dealerId} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-3.5 text-[11px] font-bold uppercase tracking-widest text-slate-700 outline-none focus:border-emerald-500/30 transition-all cursor-pointer hover:bg-white shadow-sm hover:shadow-md">
             <option value="">All Partners</option>
             {dealers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
           </select>
@@ -110,7 +110,7 @@ export default async function AdminLeadsPage({ searchParams }) {
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/50">
                 {["Buyer Profile", "Inquiry Target", "Dealer Hub", "Signal Channel", "Timestamp"].map((h) => (
-                  <th key={h} className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">{h}</th>
+                  <th key={h} className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">{h}</th>
                 ))}
               </tr>
             </thead>
@@ -125,11 +125,11 @@ export default async function AdminLeadsPage({ searchParams }) {
                       <div>
                         <p className="text-base font-black text-slate-900 tracking-tight leading-none mb-1.5 group-hover:text-emerald-600 transition-colors uppercase">{lead.name}</p>
                         <div className="flex items-center gap-4">
-                           <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                           <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
                               <Phone size={12} className="text-emerald-600/40" /> {lead.phone}
                            </div>
                            {lead.email && (
-                             <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                             <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-600 uppercase tracking-widest">
                                 <Mail size={12} className="text-emerald-600/40" /> {lead.email}
                              </div>
                            )}
@@ -142,14 +142,14 @@ export default async function AdminLeadsPage({ searchParams }) {
                         <p className="text-xs font-bold text-slate-900 uppercase tracking-widest group-hover/link:text-emerald-600 transition-colors leading-none mb-1">
                            {lead.car.year} {lead.car.make}
                         </p>
-                        <p className="text-[10px] font-medium text-slate-400 uppercase tracking-tighter">{lead.car.model}</p>
+                        <p className="text-[10px] font-medium text-slate-600 uppercase tracking-tighter">{lead.car.model}</p>
                      </Link>
                   </td>
                   <td className="px-10 py-7">
-                     <p className="text-[11px] font-bold text-slate-600 uppercase tracking-widest leading-none mb-1">{lead.dealer.name}</p>
+                     <p className="text-[11px] font-bold text-slate-900 uppercase tracking-widest leading-none mb-1">{lead.dealer.name}</p>
                      <div className="flex items-center gap-1.5">
                         <div className="w-1 h-1 rounded-full bg-emerald-600" />
-                        <p className="text-[9px] font-medium text-slate-400 uppercase tracking-widest">Authorized Partner</p>
+                        <p className="text-[9px] font-medium text-slate-600 uppercase tracking-widest">Authorized Partner</p>
                      </div>
                   </td>
                   <td className="px-10 py-7">
@@ -162,13 +162,13 @@ export default async function AdminLeadsPage({ searchParams }) {
                   </td>
                   <td className="px-10 py-7">
                      <div className="flex flex-col items-start gap-1">
-                        <div className="flex items-center gap-1.5 text-slate-400">
+                        <div className="flex items-center gap-1.5 text-slate-600">
                            <Clock size={12} className="text-emerald-600/40" />
                            <p className="text-[11px] font-bold text-slate-900 uppercase tracking-tighter">
                              {new Date(lead.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short" })}
                            </p>
                         </div>
-                        <p className="text-[9px] font-medium text-slate-300 uppercase tracking-widest ml-4">
+                        <p className="text-[9px] font-medium text-slate-500 uppercase tracking-widest ml-4">
                            {new Date(lead.createdAt).toLocaleTimeString("en-KE", { hour: "2-digit", minute: "2-digit" })}
                         </p>
                      </div>
@@ -182,10 +182,10 @@ export default async function AdminLeadsPage({ searchParams }) {
         {leads.length === 0 && (
           <div className="py-32 text-center">
             <div className="w-20 h-20 bg-slate-50 rounded-full border border-slate-100 flex items-center justify-center mx-auto mb-8">
-               <Zap size={32} className="text-slate-200" />
+               <Zap size={32} className="text-slate-400" />
             </div>
             <p className="text-xl font-black text-slate-900 uppercase tracking-tighter">No Signals Captured</p>
-            <p className="text-sm font-medium text-slate-400 mt-2 tracking-wide">Yield pipeline is currently clear.</p>
+            <p className="text-sm font-medium text-slate-600 mt-2 tracking-wide">Yield pipeline is currently clear.</p>
           </div>
         )}
       </div>
@@ -199,7 +199,7 @@ export default async function AdminLeadsPage({ searchParams }) {
               className={`w-12 h-12 rounded-2xl flex items-center justify-center text-[11px] font-black tracking-widest transition-all ${
                 p === page 
                   ? "bg-slate-900 text-white shadow-xl shadow-slate-100 scale-110" 
-                  : "bg-white border border-slate-200 text-slate-400 hover:border-emerald-200 hover:text-emerald-600"
+                  : "bg-white border border-slate-200 text-slate-700 hover:border-emerald-200 hover:text-emerald-600"
               }`}
             >
               {p.toString().padStart(2, '0')}

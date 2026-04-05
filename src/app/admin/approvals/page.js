@@ -44,10 +44,10 @@ export default async function AdminApprovalsPage() {
         <div>
           <div className="flex items-center gap-3 mb-3">
              <div className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.3)] animate-pulse" />
-             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400">Verification Gateway</span>
+             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-800">Verification Gateway</span>
           </div>
           <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-            Pending Approvals <span className="text-slate-300 font-medium ml-3">/ {dealers.length} Requests</span>
+            Pending Approvals <span className="text-slate-500 font-medium ml-3">/ {dealers.length} Requests</span>
           </h1>
         </div>
       </div>
@@ -59,7 +59,7 @@ export default async function AdminApprovalsPage() {
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/50">
                 {["Partner Proposal", "Operational Node", "Status", ""].map((h) => (
-                  <th key={h} className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">{h}</th>
+                  <th key={h} className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">{h}</th>
                 ))}
               </tr>
             </thead>
@@ -76,7 +76,7 @@ export default async function AdminApprovalsPage() {
                       <div>
                         <p className="text-lg font-black text-slate-900 tracking-tight leading-none mb-1.5 uppercase group-hover:text-emerald-600 transition-colors">{dealer.name}</p>
                         <div className="flex items-center gap-3">
-                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{dealer.phone}</span>
+                           <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{dealer.phone}</span>
                            <div className="w-1 h-1 rounded-full bg-slate-200" />
                            <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Entry: {new Date(dealer.createdAt).toLocaleDateString()}</span>
                         </div>
@@ -84,11 +84,11 @@ export default async function AdminApprovalsPage() {
                     </div>
                   </td>
                   <td className="px-10 py-7">
-                     <div className="flex items-center gap-2.5 text-slate-600 mb-1">
+                     <div className="flex items-center gap-2.5 text-slate-700 mb-1">
                         <MapPin size={14} className="text-emerald-600/40" />
                         <p className="text-xs font-bold uppercase tracking-widest">{dealer.county || "Unknown Territory"}</p>
                      </div>
-                     <p className="text-[11px] font-medium text-slate-400 uppercase tracking-tighter">{dealer.location}</p>
+                     <p className="text-[11px] font-medium text-slate-600 uppercase tracking-tighter">{dealer.location}</p>
                   </td>
                   <td className="px-10 py-7">
                      <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-100 rounded-full w-fit shadow-sm">
@@ -100,7 +100,7 @@ export default async function AdminApprovalsPage() {
                   </td>
                   <td className="px-10 py-7 text-right">
                     <div className="flex items-center justify-end gap-3 opacity-0 lg:group-hover:opacity-100 transition-all duration-300">
-                      <Link href={`/admin/dealers/${dealer.id}/edit`} className="h-11 px-6 bg-white border border-slate-200 text-slate-400 hover:text-slate-900 hover:border-slate-300 font-bold text-[10px] uppercase tracking-widest rounded-xl transition-all flex items-center gap-2 shadow-sm" title="Audit Profile">
+                      <Link href={`/admin/dealers/${dealer.id}/edit`} className="h-11 px-6 bg-white border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 font-bold text-[10px] uppercase tracking-widest rounded-xl transition-all flex items-center gap-2 shadow-sm" title="Audit Profile">
                         <Edit3 size={14} /> Inspect
                       </Link>
                       
@@ -125,10 +125,10 @@ export default async function AdminApprovalsPage() {
         {dealers.length === 0 && (
           <div className="py-32 text-center">
             <div className="w-20 h-20 bg-slate-50 rounded-full border border-slate-100 flex items-center justify-center mx-auto mb-8">
-               <ShieldCheck size={32} className="text-slate-200" />
+               <ShieldCheck size={32} className="text-slate-400" />
             </div>
             <p className="text-xl font-black text-slate-900 uppercase tracking-tighter">Queue Purged</p>
-            <p className="text-sm font-medium text-slate-400 mt-2 tracking-wide">All partner nodes have been successfully validated.</p>
+            <p className="text-sm font-medium text-slate-600 mt-2 tracking-wide">All partner nodes have been successfully validated.</p>
           </div>
         )}
       </div>
