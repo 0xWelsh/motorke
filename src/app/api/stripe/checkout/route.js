@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getUser } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 import Stripe from "stripe";
 
 // Mock initialization until actual keys are active
@@ -9,7 +9,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_mock", {
 
 export async function POST(req) {
   try {
-    const user = await getUser();
+    const authSession = await getSession();
+    const user = authSession?.user;
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
