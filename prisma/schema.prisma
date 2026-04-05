@@ -12,7 +12,6 @@ model User {
   id            String     @id @default(cuid())
   email         String     @unique
   passwordHash  String?
-  googleId      String?    @unique
   role          UserRole   @default(BUYER)
   name          String
   avatarUrl     String?
@@ -21,6 +20,7 @@ model User {
   emailVerified DateTime?
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+  googleId      String?    @unique
   savedCars     SavedCar[]
   sessions      Session[]
   dealer        Dealer?    @relation(fields: [dealerId], references: [id], onDelete: Cascade)
@@ -110,51 +110,51 @@ model DealerBranch {
 }
 
 model Car {
-  id            String        @id @default(cuid())
-  dealerId      String
-  make          String
-  model         String
-  variant       String?
-  year          Int
-  condition     Condition     @default(USED)
-  price         Int
-  negotiable    Boolean       @default(true)
-  mileage       Int?
-  fuelType      FuelType      @default(PETROL)
-  transmission  Transmission  @default(AUTOMATIC)
-  engineCC      Int?
-  bodyType      BodyType      @default(SEDAN)
-  color         String?
-  doors         Int?          @default(4)
-  seats         Int?          @default(5)
-  imported      Boolean       @default(true)
-  importCountry String?       @default("Japan")
-  dutyPaid      Boolean       @default(true)
-  description   String?
-  features      String[]
-  available     Boolean       @default(true)
-  featured      Boolean       @default(false)
-  views         Int           @default(0)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  branchId      String?
-  drivetrain    Drivetrain    @default(FWD)
-  badges        String[]
-  airbags       Int?          @default(0)
-  cylinders     Int?
-  horsepower    Int?
-  steering      Steering      @default(RHD)
-  sunroof       Boolean       @default(false)
-  torque        Int?
-  turbo         Boolean       @default(false)
-  whatsappClicks Int          @default(0)
-  printCount    Int          @default(0)
-  images        CarImage[]
-  carViews      CarView[]
-  branch        DealerBranch? @relation(fields: [branchId], references: [id])
-  dealer        Dealer        @relation(fields: [dealerId], references: [id], onDelete: Cascade)
-  leads         Lead[]
-  savedBy       SavedCar[]
+  id             String        @id @default(cuid())
+  dealerId       String
+  make           String
+  model          String
+  variant        String?
+  year           Int
+  condition      Condition     @default(USED)
+  price          Int
+  negotiable     Boolean       @default(true)
+  mileage        Int?
+  fuelType       FuelType      @default(PETROL)
+  transmission   Transmission  @default(AUTOMATIC)
+  engineCC       Int?
+  bodyType       BodyType      @default(SEDAN)
+  color          String?
+  doors          Int?          @default(4)
+  seats          Int?          @default(5)
+  imported       Boolean       @default(true)
+  importCountry  String?       @default("Japan")
+  dutyPaid       Boolean       @default(true)
+  description    String?
+  features       String[]
+  available      Boolean       @default(true)
+  featured       Boolean       @default(false)
+  views          Int           @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  branchId       String?
+  drivetrain     Drivetrain    @default(FWD)
+  badges         String[]
+  airbags        Int?          @default(0)
+  cylinders      Int?
+  horsepower     Int?
+  steering       Steering      @default(RHD)
+  sunroof        Boolean       @default(false)
+  torque         Int?
+  turbo          Boolean       @default(false)
+  printCount     Int           @default(0)
+  whatsappClicks Int           @default(0)
+  images         CarImage[]
+  carViews       CarView[]
+  branch         DealerBranch? @relation(fields: [branchId], references: [id])
+  dealer         Dealer        @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+  leads          Lead[]
+  savedBy        SavedCar[]
 
   @@index([make, model])
   @@index([dealerId])
@@ -249,6 +249,20 @@ model Payment {
   @@map("payments")
 }
 
+model Article {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  url         String   @unique
+  urlToImage  String?
+  publishedAt DateTime
+  sourceName  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("articles")
+}
+
 enum UserRole {
   ADMIN
   DEALER
@@ -332,18 +346,4 @@ enum PaymentStatus {
   COMPLETED
   FAILED
   REFUNDED
-}
-
-model Article {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  url         String   @unique
-  urlToImage  String?
-  publishedAt DateTime
-  sourceName  String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("articles")
 }
