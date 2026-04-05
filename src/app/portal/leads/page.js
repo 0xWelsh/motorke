@@ -45,9 +45,9 @@ export default async function PortalLeadsPage({ searchParams }) {
   return (
     <div className="animate-in fade-in duration-700 max-w-7xl">
       <div className="mb-12">
-        <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--brand)] mb-2.5 block">Customer Relations</span>
-        <h1 className="text-5xl font-black text-slate-900 tracking-tight">Leads & Inquiries</h1>
-        <p className="text-slate-500 font-bold mt-2 flex items-center gap-2">
+        <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-500 mb-2 block">Customer Relations</span>
+        <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Leads & Inquiries</h1>
+        <p className="text-slate-500 dark:text-slate-400 font-bold mt-2 flex items-center gap-2">
           {total} Active Enquir{total !== 1 ? "ies" : "y"} Under Management
         </p>
       </div>

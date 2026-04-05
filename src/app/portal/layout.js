@@ -33,27 +33,27 @@ function NavLink({ href, label, Icon, active }) {
     <Link 
       href={href} 
       className={clsx(
-        "flex items-center justify-between group px-4 py-3.5 rounded-2xl transition-all duration-300 relative",
+        "flex items-center justify-between group px-4 py-3 rounded-xl transition-all duration-300 relative",
         active 
-          ? "bg-emerald-50 text-[var(--brand)] shadow-sm" 
-          : "text-slate-900 hover:text-emerald-800 hover:bg-slate-50"
+          ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 shadow-sm" 
+          : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800"
       )}
     >
       <div className="flex items-center gap-3">
-        <Icon size={18} className={clsx("transition-all duration-300", active ? "text-[var(--brand)] scale-110" : "text-slate-900/40 group-hover:scale-110 group-hover:text-emerald-600")} />
-        <span className={clsx("text-sm tracking-tight transition-all", active ? "font-black" : "font-black")}>{label}</span>
+        <Icon size={18} className={clsx("transition-all duration-300", active ? "scale-110" : "text-slate-400 group-hover:scale-110 group-hover:text-emerald-500")} />
+        <span className={clsx("text-sm transition-all", active ? "font-bold" : "font-semibold")}>{label}</span>
       </div>
       
       {active && (
         <div className="flex items-center gap-2">
-           <div className="w-1.5 h-1.5 rounded-full bg-[var(--brand)]" />
-           <ChevronRight size={14} className="text-[var(--brand)] opacity-30" />
+           <div className="w-1.5 h-1.5 rounded-full bg-current" />
+           <ChevronRight size={14} className="opacity-30" />
         </div>
       )}
 
       {/* Precision Accent Bar */}
       {active && (
-        <div className="absolute left-0 top-3 bottom-3 w-1 bg-[var(--brand)] rounded-r-full" />
+        <div className="absolute left-0 top-3 bottom-3 w-1 bg-emerald-500 rounded-r-full" />
       )}
     </Link>
   );
@@ -63,18 +63,18 @@ export default function PortalLayout({ children }) {
   const path = usePathname();
 
   return (
-    <div className="flex h-screen bg-slate-50/30 overflow-hidden">
+    <div className="flex h-screen bg-slate-50 dark:bg-black overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-72 bg-white flex flex-col shrink-0 border-r border-slate-100 z-50 h-full">
+      <aside className="w-72 bg-white dark:bg-slate-900 flex flex-col shrink-0 border-r border-slate-200 dark:border-slate-800 z-50 h-full">
         {/* Branding */}
         <div className="p-8 mb-4">
-          <Link href="/" className="flex items-center gap-4 group">
-            <div className="w-11 h-11 bg-[var(--brand)] rounded-2xl flex items-center justify-center group-hover:rotate-6 transition-all duration-500 shadow-xl shadow-emerald-900/10">
-              <img src="/logo.png" alt="M" className="w-10 h-10 object-contain brightness-0 invert" />
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 bg-slate-900 dark:bg-slate-100 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-all duration-500 shadow-md">
+              <img src="/logo.png" alt="M" className="w-6 h-6 object-contain brightness-0 invert dark:invert-0" />
             </div>
             <div>
-              <img src="/logo.png" alt="Motorke" className="h-12 w-auto object-contain" />
-              <span className="text-[10px] font-black text-emerald-600/70 uppercase tracking-[0.2em] mt-2 block">
+              <span className="text-xl font-bold text-slate-900 dark:text-white tracking-tight leading-none block">Motorske</span>
+              <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-500 uppercase tracking-widest mt-0.5 block">
                 Dealer Portal
               </span>
             </div>
@@ -82,16 +82,16 @@ export default function PortalLayout({ children }) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto custom-scrollbar">
-          <div className="px-4 mb-3">
-             <p className="text-[9px] font-black text-slate-900/20 uppercase tracking-[0.3em]">Core Operations</p>
+        <nav className="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar">
+          <div className="px-4 mb-2 mt-4">
+             <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Overview</p>
           </div>
           {links.slice(0, 3).map(({ href, label, Icon }) => (
             <NavLink key={href} href={href} label={label} Icon={Icon} active={path === href} />
           ))}
           
-          <div className="px-4 mb-3 mt-10">
-             <p className="text-[9px] font-black text-slate-900/20 uppercase tracking-[0.3em]">Growth & Capital</p>
+          <div className="px-4 mb-2 mt-8">
+             <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Management</p>
           </div>
           {links.slice(3).map(({ href, label, Icon }) => (
             <NavLink key={href} href={href} label={label} Icon={Icon} active={path === href} />
@@ -99,19 +99,19 @@ export default function PortalLayout({ children }) {
         </nav>
 
         {/* User / Footer */}
-        <div className="p-6 border-t border-slate-50 bg-slate-50/30">
+        <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
           <Link href="/portal/cars/new" 
-            className="flex items-center justify-center gap-2 w-full bg-slate-950 hover:bg-black text-white font-black py-4 rounded-2xl mb-6 transition-all hover:scale-[1.02] shadow-xl shadow-slate-900/10 uppercase text-[10px] tracking-widest">
+            className="flex items-center justify-center gap-2 w-full bg-slate-900 dark:bg-emerald-600 hover:bg-slate-800 dark:hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl mb-4 transition-all shadow-md uppercase text-xs tracking-wider">
             <Plus size={16} /> Deploy Vehicle
           </Link>
           
           <div className="space-y-1">
-            <Link href="/" className="flex items-center gap-3 px-4 py-3 text-slate-900/40 hover:text-slate-950 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">
+            <Link href="/" className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all">
               <ExternalLink size={14} /> Marketplace
             </Link>
             <form action="/api/auth/logout" method="POST">
-              <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 text-slate-900/40 hover:text-rose-600 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">
-                <LogOut size={14} /> Terminate Session
+              <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-500 text-xs font-bold uppercase tracking-wider rounded-xl transition-all">
+                <LogOut size={14} /> Sign Out
               </button>
             </form>
           </div>
@@ -121,21 +121,21 @@ export default function PortalLayout({ children }) {
       {/* Main Content */}
       <main className="flex-1 h-full overflow-y-auto relative custom-scrollbar">
         {/* Modern Top Header / Breadcrumb */}
-        <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-10 py-4 flex items-center justify-between">
-           <div className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest">
+        <header className="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 px-8 py-4 flex items-center justify-between">
+           <div className="flex items-center gap-2 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
               <span>Management</span>
-              <ChevronRight size={12} className="text-slate-200" />
-              <span className="text-slate-900">{links.find(l => l.href === path)?.label || "Overview"}</span>
+              <ChevronRight size={12} className="text-slate-300 dark:text-slate-600" />
+              <span className="text-slate-900 dark:text-white">{links.find(l => l.href === path)?.label || "Overview"}</span>
            </div>
            
            <div className="flex items-center gap-4">
               <div className="hidden md:flex flex-col items-end">
-                 <img src="/logo.png" alt="Motorke" className="h-10 w-auto object-contain" />
-                <p className="text-[10px] font-black text-emerald-600 mt-1 flex items-center gap-1 uppercase tracking-[0.1em]">
-                   <ShieldCheck size={10} className="fill-emerald-50" /> Active Subscription
+                 <span className="text-sm font-bold text-slate-900 dark:text-white tracking-tight leading-none">Motorske</span>
+                <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-500 mt-1 flex items-center gap-1 uppercase tracking-wider">
+                   <ShieldCheck size={12} /> Active Subscription
                 </p>
               </div>
-              <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-100 text-[var(--brand)] flex items-center justify-center font-black shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center font-bold shadow-sm">
                 D
               </div>
            </div>
