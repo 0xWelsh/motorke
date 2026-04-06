@@ -18,9 +18,9 @@ const PRESETS = [
 ];
 
 const SEVERITY_STYLES = {
-  minor: "text-amber-300 border-amber-400/30 bg-amber-500/10",
-  moderate: "text-orange-300 border-orange-400/30 bg-orange-500/10",
-  major: "text-rose-300 border-rose-400/30 bg-rose-500/10",
+  minor: "text-amber-300 border-amber-300/35 bg-amber-400/10",
+  moderate: "text-orange-300 border-orange-300/35 bg-orange-400/10",
+  major: "text-rose-300 border-rose-300/35 bg-rose-400/10",
 };
 
 const FUEL_ECO_SCORE = {
@@ -452,11 +452,11 @@ export default function CompareClient({ initialCars }) {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_15%_12%,rgba(255,106,27,0.14),transparent_36%),radial-gradient(circle_at_85%_18%,rgba(56,189,248,0.08),transparent_34%),linear-gradient(180deg,#090d12_0%,#111821_100%)]">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_14%_10%,rgba(245,158,11,0.16),transparent_34%),radial-gradient(circle_at_84%_16%,rgba(34,211,238,0.12),transparent_36%),linear-gradient(180deg,#060b11_0%,#121b27_100%)]">
     <div className="max-w-7xl mx-auto px-4 py-12 text-slate-100">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#ff7b29] mb-3">Dyno Console - Spec Heavy Mode</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#f59e0b] mb-3">Dyno Console - Spec Heavy Mode</p>
           <h1 className="text-5xl font-black mb-4 tracking-tighter">Comparison Engine</h1>
           <p className="text-slate-300/80 max-w-2xl font-medium">Mechanical-grade side-by-side analysis. Compare up to 3 vehicles across pricing, powertrain, safety, comfort, and ownership factors.</p>
         </div>
@@ -467,8 +467,8 @@ export default function CompareClient({ initialCars }) {
               onClick={() => setPreset(option.id)}
               className={`px-4 h-10 rounded-xl text-[10px] font-black uppercase tracking-[0.14em] transition-all border ${
                 preset === option.id
-                  ? "bg-[#ff7b29] text-[#1f1207] border-[#ff7b29]"
-                  : "bg-[#141c25] text-slate-300 border-[#2a3340] hover:text-white hover:border-[#ff7b29]/60"
+                  ? "bg-[#f59e0b] text-[#1a1304] border-[#f59e0b]"
+                  : "bg-[#16202b] text-slate-300 border-[#324052] hover:text-white hover:border-[#f59e0b]/60"
               }`}
             >
               {option.label}
@@ -478,7 +478,7 @@ export default function CompareClient({ initialCars }) {
           <button
             onClick={() => setShowDiffOnly(!showDiffOnly)}
             className={`px-6 h-12 rounded-2xl flex items-center gap-2 text-xs font-black uppercase tracking-widest transition-all ${
-              showDiffOnly ? "bg-[#ff7b29] text-[#1f1207] shadow-[0_0_26px_rgba(255,123,41,0.35)]" : "bg-[#141c25] border border-[#2a3340] text-slate-300 hover:text-white hover:border-[#ff7b29]/60"
+              showDiffOnly ? "bg-[#f59e0b] text-[#1a1304] shadow-[0_0_28px_rgba(245,158,11,0.38)]" : "bg-[#16202b] border border-[#324052] text-slate-300 hover:text-white hover:border-[#f59e0b]/60"
             }`}
           >
             {showDiffOnly ? <Check className="w-4 h-4" /> : <Minus className="w-4 h-4" />}
@@ -486,7 +486,7 @@ export default function CompareClient({ initialCars }) {
           </button>
           <button
             onClick={clearCompare}
-            className="px-6 h-12 rounded-2xl bg-[#141c25] border border-[#2a3340] text-slate-300 hover:text-white hover:border-slate-500 text-xs font-black uppercase tracking-widest transition-all"
+            className="px-6 h-12 rounded-2xl bg-[#16202b] border border-[#324052] text-slate-300 hover:text-white hover:border-slate-400 text-xs font-black uppercase tracking-widest transition-all"
           >
             Clear All
           </button>
@@ -496,12 +496,12 @@ export default function CompareClient({ initialCars }) {
       <div className="sticky top-[84px] z-40 mb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
           {winnerRail.map((item) => (
-            <div key={item.title} className="border border-[#2a3340] bg-[#101822]/95 backdrop-blur-xl rounded-xl p-4">
-              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#ff9a54] mb-2">{item.title}</p>
+            <div key={item.title} className="border border-[#324052] bg-[#111b26]/95 backdrop-blur-xl rounded-xl p-4">
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#fbbf24] mb-2">{item.title}</p>
               {item.car ? (
                 <Link href={`/cars/${item.car.id}`} className="block group">
                   <p className="text-sm font-black text-slate-100 group-hover:text-white line-clamp-1">{item.car.year} {item.car.make} {item.car.model}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 mt-1">{item.sub}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-300/80 mt-1">{item.sub}</p>
                 </Link>
               ) : (
                 <p className="text-xs font-bold text-slate-500">Add more cars to compute winner</p>
@@ -511,11 +511,11 @@ export default function CompareClient({ initialCars }) {
         </div>
       </div>
 
-      <div className="relative border border-[#2a3340] rounded-[2rem] overflow-hidden bg-[#0f151d]">
+      <div className="relative border border-[#324052] rounded-[2rem] overflow-hidden bg-[#0f1722]">
         {/* Table Header (Sticky) */}
-        <div className="sticky top-0 z-30 bg-[#0f151d]/95 backdrop-blur-2xl border-b border-[#2a3340]">
+        <div className="sticky top-0 z-30 bg-[#0f1722]/95 backdrop-blur-2xl border-b border-[#324052]">
           <div className="grid grid-cols-[160px_1fr_1fr_1fr] md:grid-cols-[240px_1fr_1fr_1fr]">
-            <div className="p-8 flex items-center justify-center border-r border-[#25303d]">
+            <div className="p-8 flex items-center justify-center border-r border-[#2b3a4c]">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 -rotate-90">Model View ⚖️</span>
             </div>
             {SLOT_KEYS.map((_, idx) => {
@@ -523,7 +523,7 @@ export default function CompareClient({ initialCars }) {
               const hydrated = !!(car && initialCarsById.has(car.id));
               const imageUrl = car?.images?.[0]?.url || car?.image || null;
               return (
-                <div key={idx} className={`p-6 md:p-8 flex flex-col gap-4 border-r border-[#25303d] last:border-r-0 relative transition-all ${!car ? "bg-[#0d131a]" : ""}`}>
+                <div key={idx} className={`p-6 md:p-8 flex flex-col gap-4 border-r border-[#2b3a4c] last:border-r-0 relative transition-all ${!car ? "bg-[#101923]" : ""}`}>
                   {car ? (
                     <>
                       <button
@@ -532,7 +532,7 @@ export default function CompareClient({ initialCars }) {
                       >
                         <X className="w-4 h-4" />
                       </button>
-                      <div className="relative aspect-[16/10] rounded-2xl overflow-hidden border border-[#2b3441] bg-[#131c27]">
+                      <div className="relative aspect-[16/10] rounded-2xl overflow-hidden border border-[#344457] bg-[#172230]">
                         {imageUrl ? (
                           <Image src={imageUrl} alt={car.model} fill className="object-cover" />
                         ) : (
@@ -540,11 +540,11 @@ export default function CompareClient({ initialCars }) {
                         )}
                       </div>
                       <div>
-                         <p className="text-[10px] font-black uppercase tracking-widest text-[#ff7b29] mb-1">{car.year}</p>
+                         <p className="text-[10px] font-black uppercase tracking-widest text-[#f59e0b] mb-1">{car.year}</p>
                          <h3 className="font-black text-sm md:text-base leading-tight text-slate-100 mb-1 line-clamp-2">{car.make} {car.model}</h3>
-                         <p className="text-slate-400 text-[10px] truncate">{car.variant || "Standard Variant"}</p>
-                         <div className="mt-2 h-1.5 w-full bg-[#1f2a37] rounded-full overflow-hidden">
-                           <div className="h-full bg-gradient-to-r from-[#ff7b29] to-[#ff9a54]" style={{ width: `${hydrated ? calcCoverage(car, allSpecs) : 0}%` }} />
+                         <p className="text-slate-300/75 text-[10px] truncate">{car.variant || "Standard Variant"}</p>
+                         <div className="mt-2 h-1.5 w-full bg-[#2a3a4d] rounded-full overflow-hidden">
+                           <div className="h-full bg-gradient-to-r from-[#f59e0b] to-[#fbbf24]" style={{ width: `${hydrated ? calcCoverage(car, allSpecs) : 0}%` }} />
                          </div>
                          <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-2">
                            Spec Coverage: {hydrated ? `${calcCoverage(car, allSpecs)}%` : "Loading"}
@@ -555,14 +555,14 @@ export default function CompareClient({ initialCars }) {
                     <div className="h-full flex flex-col items-center justify-center gap-4">
                        <button
                          onClick={() => setActiveSlot(idx)}
-                         className="w-16 h-16 rounded-3xl bg-[#131c27] border border-dashed border-[#2a3340] flex items-center justify-center text-slate-500 hover:text-[#ff7b29] hover:border-[#ff7b29]/50 transition-all group"
+                         className="w-16 h-16 rounded-3xl bg-[#172230] border border-dashed border-[#324052] flex items-center justify-center text-slate-500 hover:text-[#f59e0b] hover:border-[#f59e0b]/50 transition-all group"
                        >
                          <Search className="w-6 h-6 group-hover:scale-110 transition-transform" />
                        </button>
                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Empty Slot</span>
                        
                        {activeSlot === idx && (
-                         <div className="absolute inset-0 bg-[#0f151d] z-40 p-4 transition-all animate-in fade-in zoom-in-95">
+                         <div className="absolute inset-0 bg-[#0f1722] z-40 p-4 transition-all animate-in fade-in zoom-in-95">
                            <div className="relative">
                              <input
                                autoFocus
@@ -570,7 +570,7 @@ export default function CompareClient({ initialCars }) {
                                placeholder="Search car..."
                                value={searchQuery}
                                onChange={(e) => setSearchQuery(e.target.value)}
-                               className="w-full bg-[#141d28] border border-[#2a3340] rounded-2xl px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-[#ff7b29]/60 transition-all font-bold"
+                               className="w-full bg-[#172230] border border-[#324052] rounded-2xl px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-[#f59e0b]/60 transition-all font-bold"
                              />
                              <button onClick={() => setActiveSlot(null)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-100">
                                <X className="w-4 h-4" />
@@ -584,14 +584,14 @@ export default function CompareClient({ initialCars }) {
                                <button
                                  key={res.id}
                                  onClick={() => onAddCarSearch(res)}
-                                 className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-[#17202b] border border-transparent hover:border-[#2f3b4a] transition-all text-left"
+                                 className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-[#1a2431] border border-transparent hover:border-[#3b4a5e] transition-all text-left"
                                >
-                                 <div className="w-12 h-12 rounded-xl overflow-hidden bg-[#1a2431] shrink-0 relative">
+                                 <div className="w-12 h-12 rounded-xl overflow-hidden bg-[#1d2938] shrink-0 relative">
                                    {res.image && <Image src={res.image} alt={res.model} fill className="object-cover" />}
                                  </div>
                                  <div className="flex-1 min-w-0">
                                    <p className="text-xs font-black text-slate-100">{res.year} {res.make} {res.model}</p>
-                                   <p className="text-[10px] text-[#ff9a54] font-bold">{formatPrice(res.price)}</p>
+                                   <p className="text-[10px] text-[#fbbf24] font-bold">{formatPrice(res.price)}</p>
                                  </div>
                                  <ArrowRight className="w-4 h-4 text-slate-500" />
                                </button>
@@ -611,14 +611,14 @@ export default function CompareClient({ initialCars }) {
         </div>
 
         {/* Table Content */}
-        <div className="divide-y divide-[#202a36]">
+        <div className="divide-y divide-[#2a3747]">
           {specGroups.map((group) => (
-            <div key={group.name} className="bg-[#101822]">
-              <div className="grid grid-cols-[160px_1fr] md:grid-cols-[240px_1fr] py-4 px-8 items-center bg-[#0f151d]">
-                <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#ff7b29]">{group.name}</h2>
-                <div className="h-px bg-[#293341]" />
+            <div key={group.name} className="bg-[#111b26]">
+              <div className="grid grid-cols-[160px_1fr] md:grid-cols-[240px_1fr] py-4 px-8 items-center bg-[#0f1722]">
+                <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#f59e0b]">{group.name}</h2>
+                <div className="h-px bg-[#344457]" />
               </div>
-              <div className="divide-y divide-[#1a2430]">
+              <div className="divide-y divide-[#223142]">
                 {group.specs.map((spec) => {
                   if (!shouldShowSpec(spec)) return null;
 
@@ -627,8 +627,8 @@ export default function CompareClient({ initialCars }) {
                   if (showDiffOnly && !diff && fullComparedCars.length > 1) return null;
 
                   return (
-                    <div key={spec.label} className={`grid grid-cols-[160px_1fr_1fr_1fr] md:grid-cols-[240px_1fr_1fr_1fr] transition-colors ${diff ? "bg-[#17202b]" : "hover:bg-[#141d28]"}`}>
-                      <div className="p-6 md:p-8 flex items-center border-r border-[#25303d] bg-[#0f151d]">
+                    <div key={spec.label} className={`grid grid-cols-[160px_1fr_1fr_1fr] md:grid-cols-[240px_1fr_1fr_1fr] transition-colors ${diff ? "bg-[#1a2431]" : "hover:bg-[#182330]"}`}>
+                      <div className="p-6 md:p-8 flex items-center border-r border-[#2b3a4c] bg-[#0f1722]">
                         <div className="space-y-2">
                           <span className="text-[11px] font-bold text-slate-300 uppercase tracking-widest block">{spec.label}</span>
                           {severity !== "none" && fullComparedCars.length > 1 && (
@@ -640,10 +640,10 @@ export default function CompareClient({ initialCars }) {
                       </div>
                       {SLOT_KEYS.map((_, idx) => {
                         const car = comparedSlots[idx];
-                        if (!car) return <div key={idx} className="p-6 md:p-8 border-r border-[#25303d] last:border-r-0" />;
+                        if (!car) return <div key={idx} className="p-6 md:p-8 border-r border-[#2b3a4c] last:border-r-0" />;
                         if (!initialCarsById.has(car.id)) {
                           return (
-                            <div key={idx} className="p-6 md:p-8 flex items-center justify-center border-r border-[#25303d] last:border-r-0">
+                            <div key={idx} className="p-6 md:p-8 flex items-center justify-center border-r border-[#2b3a4c] last:border-r-0">
                               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Loading...</span>
                             </div>
                           );
@@ -656,12 +656,12 @@ export default function CompareClient({ initialCars }) {
                         const missing = isMissing(raw);
 
                         return (
-                          <div key={idx} className="p-6 md:p-8 flex items-center justify-center border-r border-[#25303d] last:border-r-0">
+                          <div key={idx} className="p-6 md:p-8 flex items-center justify-center border-r border-[#2b3a4c] last:border-r-0">
                             <div className="w-full text-center space-y-1.5">
                               {gaugePercent !== null && (
-                                <div className="h-1.5 w-full bg-[#223041] rounded-full overflow-hidden">
+                                <div className="h-1.5 w-full bg-[#304257] rounded-full overflow-hidden">
                                   <div
-                                    className={`h-full ${isBestValue ? "bg-emerald-400" : "bg-[#ff7b29]"}`}
+                                    className={`h-full ${isBestValue ? "bg-emerald-400" : "bg-[#f59e0b]"}`}
                                     style={{ width: `${Math.max(8, gaugePercent)}%` }}
                                   />
                                 </div>
@@ -688,26 +688,26 @@ export default function CompareClient({ initialCars }) {
       </div>
       
       {/* Compare Page Bottom CTA */}
-      <div className="mt-12 flex flex-col items-center gap-6 p-12 bg-[#101822] border border-[#2a3340] rounded-[2rem] text-center">
+      <div className="mt-12 flex flex-col items-center gap-6 p-12 bg-[#111b26] border border-[#324052] rounded-[2rem] text-center">
         <p className="text-slate-300 text-sm font-medium">Move from comparison to action</p>
 
         <div className="flex flex-wrap justify-center gap-3">
           {overallWinner && (
-            <Link href={`/cars/${overallWinner.id}`} className="px-6 h-12 rounded-2xl bg-[#ff7b29] text-[#1f1207] border border-[#ff7b29] hover:bg-[#ff9a54] transition-all flex items-center gap-2 font-black text-[11px] uppercase tracking-[0.14em]">
+            <Link href={`/cars/${overallWinner.id}`} className="px-6 h-12 rounded-2xl bg-[#f59e0b] text-[#1a1304] border border-[#f59e0b] hover:bg-[#fbbf24] transition-all flex items-center gap-2 font-black text-[11px] uppercase tracking-[0.14em]">
               Shortlist Winner <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           )}
 
           {topTwo.map((car, idx) => (
-            <Link key={car.id} href={`/cars/${car.id}`} className="px-6 h-12 rounded-2xl bg-[#141c25] border border-[#2a3340] hover:border-[#ff7b29]/60 hover:bg-[#182231] transition-all flex items-center gap-2 group">
+            <Link key={car.id} href={`/cars/${car.id}`} className="px-6 h-12 rounded-2xl bg-[#16202b] border border-[#324052] hover:border-[#f59e0b]/60 hover:bg-[#1a2634] transition-all flex items-center gap-2 group">
               <span className="text-[11px] font-black text-slate-300 group-hover:text-slate-100 uppercase tracking-widest">Enquire Top {idx + 1}</span>
-              <ArrowRight className="w-3 h-3 text-[#ff7b29]" />
+              <ArrowRight className="w-3 h-3 text-[#f59e0b]" />
             </Link>
           ))}
 
           <button
             onClick={handleSaveComparison}
-            className="px-6 h-12 rounded-2xl bg-[#141c25] border border-[#2a3340] hover:border-emerald-400/60 hover:bg-[#182231] transition-all flex items-center gap-2"
+            className="px-6 h-12 rounded-2xl bg-[#16202b] border border-[#324052] hover:border-cyan-300/60 hover:bg-[#1a2634] transition-all flex items-center gap-2"
           >
             <span className="text-[11px] font-black text-slate-300 uppercase tracking-widest">
               {saveState === "copied" ? "Saved" : saveState === "failed" ? "Save Failed" : "Save Comparison"}
