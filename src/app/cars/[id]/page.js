@@ -6,7 +6,7 @@ import { getSession } from "@/lib/auth";
 import { unstable_cache } from "next/cache";
 import { formatPrice, formatMileage, estimateDuty, whatsappLink,
          BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/utils";
-import { MessageCircle, Play, ChevronRight, MapPin, Wallet, ShieldCheck } from "lucide-react";
+import { MessageCircle, ChevronRight, MapPin, Wallet, ShieldCheck } from "lucide-react";
 import EnquiryForm from "@/components/EnquiryForm";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
@@ -19,9 +19,40 @@ import Image from "next/image";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const car = await db.car.findUnique({ where: { id: id } });
+  const car = await db.car.findFirst({
+    where: { id, available: true },
+    include: {
+      images: { where: { isPrimary: true }, take: 1 },
+      dealer: { select: { name: true, location: true } },
+    },
+  });
   if (!car) return {};
-  return { title: `${car.year} ${car.make} ${car.model} — Motorke Kenya` };
+
+  const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} - Motorke Kenya`;
+  const description = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatPrice(car.price)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Motorke.`;
+  const image = car.images[0]?.url || "/logo.png";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke";
+  const url = `${baseUrl}/cars/${id}`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/cars/${id}` },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "Motorke",
+      images: [{ url: image }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
 }
 
 // Pre-render top 100 most recent cars at build time
@@ -40,11 +71,15 @@ export async function generateStaticParams() {
 
 const getCarData = unstable_cache(
   async (id) => {
-    return db.car.findUnique({
-      where:   { id: id },
+    return db.car.findFirst({
+      where:   { id, available: true },
       include: {
         images: { orderBy: { order: "asc" } },
-        dealer: true,
+        dealer: {
+          include: {
+            users: { select: { avatarUrl: true }, take: 1 },
+          },
+        },
       },
     });
   },
@@ -53,19 +88,45 @@ const getCarData = unstable_cache(
 );
 
 const getSimilarCars = unstable_cache(
-  async (carId, make, dealerId) => {
-    return db.car.findMany({
+  async (carId, make, dealerId, bodyType, year, price) => {
+    const candidates = await db.car.findMany({
       where: {
         available: true,
         id:        { not: carId },
-        OR: [{ dealerId: dealerId }, { make: make }],
+        OR: [{ dealerId }, { make }, { bodyType }],
       },
       include: {
         images: { where: { isPrimary: true }, take: 1 },
-        dealer: { select: { name: true, location: true } },
+        dealer: { select: { name: true, location: true, verified: true } },
       },
-      take: 3,
+      take: 24,
     });
+
+    return candidates
+      .map((candidate) => {
+        let score = 0;
+
+        if (candidate.dealerId === dealerId) score += 45;
+        if (candidate.make === make) score += 28;
+        if (candidate.bodyType === bodyType) score += 20;
+
+        const yearGap = Math.abs((candidate.year || 0) - (year || 0));
+        score += Math.max(0, 15 - yearGap * 3);
+
+        const priceGap = Math.abs((candidate.price || 0) - (price || 0));
+        const priceGapRatio = price ? priceGap / price : 1;
+        score += Math.max(0, 20 - priceGapRatio * 40);
+
+        if (candidate.dealer?.verified) score += 3;
+
+        return { candidate, score };
+      })
+      .sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return (b.candidate.createdAt?.getTime?.() || 0) - (a.candidate.createdAt?.getTime?.() || 0);
+      })
+      .slice(0, 3)
+      .map((entry) => entry.candidate);
   },
   ["similar-cars"],
   { revalidate: 3600, tags: ["cars"] }
@@ -88,20 +149,29 @@ export default async function CarDetailPage({ params }) {
   const { car, dealer } = { car: carData, dealer: carData.dealer };
 
   
-  const similar = await getSimilarCars(car.id, car.make, car.dealerId);
+  const similar = await getSimilarCars(car.id, car.make, car.dealerId, car.bodyType, car.year, car.price);
 
   const title    = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const duty     = estimateDuty(car.price, car.year);
   const primaryImg = car.images.find((i) => i.isPrimary) || car.images[0];
+  const dealerBrandImage = dealer.logoUrl || dealer.users?.[0]?.avatarUrl || null;
+  const compareCar = {
+    id: car.id,
+    year: car.year,
+    make: car.make,
+    model: `${car.make} ${car.model}`,
+    price: car.price,
+    image: primaryImg?.url,
+  };
 
   const specs = [
     { label: "Year",          value: car.year },
     { label: "Mileage",       value: formatMileage(car.mileage) },
-    { label: "Fuel",          value: FUEL_LABELS[car.fuelType] },
-    { label: "Transmission",  value: TRANSMISSION_LABELS[car.transmission] },
+    { label: "Fuel",          value: FUEL_LABELS[car.fuelType] || "N/A" },
+    { label: "Transmission",  value: TRANSMISSION_LABELS[car.transmission] || "N/A" },
     { label: "Drivetrain",    value: DRIVETRAIN_LABELS[car.drivetrain] || "N/A" },
     { label: "Steering",      value: STEERING_LABELS[car.steering] || "N/A" },
-    { label: "Body type",     value: BODY_TYPE_LABELS[car.bodyType] },
+    { label: "Body type",     value: BODY_TYPE_LABELS[car.bodyType] || "N/A" },
     { label: "Engine size",   value: car.engineCC ? `${car.engineCC}cc` : "N/A" },
     { label: "Cylinders",     value: car.cylinders || "N/A" },
     { label: "Horsepower",    value: car.horsepower ? `${car.horsepower} hp` : "N/A" },
@@ -142,7 +212,7 @@ export default async function CarDetailPage({ params }) {
               </div>
               <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">{title}</h1>
               <p className="text-lg text-slate-500 font-medium">
-                {BODY_TYPE_LABELS[car.bodyType]} · {formatMileage(car.mileage)} · {car.location || dealer.location}
+                {BODY_TYPE_LABELS[car.bodyType] || "Body type N/A"} · {formatMileage(car.mileage)} · {car.location || dealer.location || "Location on request"}
               </p>
             </div>
             <div className="text-right space-y-1">
@@ -158,13 +228,27 @@ export default async function CarDetailPage({ params }) {
                 </div>
               )}
             </div>
+
+            <div className="w-full flex flex-wrap items-center gap-3 pt-3 border-t border-slate-100">
+              {dealer.whatsapp && (
+                <a
+                  href={whatsappLink(dealer.whatsapp, title, dealer.name)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 h-11 px-5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-extrabold uppercase tracking-widest transition-colors"
+                >
+                  <MessageCircle className="w-4 h-4 fill-current" /> WhatsApp Dealer
+                </a>
+              )}
+              <CompareButton car={compareCar} />
+              <SaveButton carId={car.id} initialSaved={isSaved} isLoggedIn={isLoggedIn} />
+            </div>
           </div>
 
           {/* Share + Save */}
           <div className="flex flex-wrap items-center gap-4">
             <ShareButtons title={title} price={formatPrice(car.price)} />
             <div className="h-8 w-px bg-slate-100 mx-2 hidden sm:block" />
-            <SaveButton carId={car.id} initialSaved={isSaved} isLoggedIn={isLoggedIn} />
             <PrintButton carId={car.id} />
           </div>
           <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
@@ -205,18 +289,20 @@ export default async function CarDetailPage({ params }) {
           </div>
 
           {/* Duty estimate */}
-          <div className="bg-emerald-900 rounded-xl p-10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-800/50 blur-3xl -mr-32 -mt-32 rounded-full" />
-            <div className="relative z-10 space-y-4">
-              <div className="flex items-center gap-3 text-emerald-400 font-extrabold text-xs uppercase tracking-widest">
-                <Wallet className="w-4 h-4" /> Estimated Import Duty
+          {car.imported && !car.dutyPaid && (
+            <div className="bg-emerald-900 rounded-xl p-10 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-800/50 blur-3xl -mr-32 -mt-32 rounded-full" />
+              <div className="relative z-10 space-y-4">
+                <div className="flex items-center gap-3 text-emerald-400 font-extrabold text-xs uppercase tracking-widest">
+                  <Wallet className="w-4 h-4" /> Estimated Import Duty
+                </div>
+                <p className="text-5xl font-extrabold text-white tracking-tight">{formatPrice(duty)}</p>
+                <p className="text-sm text-emerald-100/60 max-w-md font-medium">
+                  This is a rough KRA estimate based on age and market value. Always verify with a licensed clearing agent.
+                </p>
               </div>
-              <p className="text-5xl font-extrabold text-white tracking-tight">{formatPrice(duty)}</p>
-              <p className="text-sm text-emerald-100/60 max-w-md font-medium">
-                This is a rough KRA estimate based on age and market value. Always verify with a licensed clearing agent.
-              </p>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Right: dealer card + enquiry */}
@@ -224,8 +310,12 @@ export default async function CarDetailPage({ params }) {
           {/* Dealer card */}
           <div className="bg-white border border-slate-200 rounded-xl p-8 space-y-8 sticky top-28">
             <div className="flex items-center gap-5">
-              <div className="w-16 h-16 rounded-xl bg-brand-light flex items-center justify-center text-brand font-extrabold text-2xl">
-                {dealer.name[0]}
+              <div className="w-16 h-16 rounded-xl bg-brand-light flex items-center justify-center text-brand font-extrabold text-2xl overflow-hidden">
+                {dealerBrandImage ? (
+                  <img src={dealerBrandImage} alt={dealer.name} className="w-full h-full object-cover" />
+                ) : (
+                  dealer.name[0]
+                )}
               </div>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
@@ -237,7 +327,7 @@ export default async function CarDetailPage({ params }) {
                   )}
                 </div>
                 <p className="text-sm font-bold text-slate-400 flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5" /> {dealer.location}
+                  <MapPin className="w-3.5 h-3.5" /> {dealer.location || "Location on request"}
                 </p>
               </div>
             </div>

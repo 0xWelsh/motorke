@@ -3,6 +3,24 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
+const RATE_LIMIT_MS = 15000;
+const RATE_LIMIT_MAX_WINDOW = 8000;
+const leadRateLimitStore = globalThis.__motorkeLeadRateLimit || new Map();
+globalThis.__motorkeLeadRateLimit = leadRateLimitStore;
+
+function normalizeKenyanPhone(value) {
+  const digits = (value || "").toString().replace(/\D/g, "");
+  if (!digits) return "";
+  if (digits.startsWith("254") && digits.length === 12) return digits;
+  if (digits.startsWith("0") && digits.length === 10) return `254${digits.slice(1)}`;
+  if (digits.length === 9 && /^(7|1)/.test(digits)) return `254${digits}`;
+  return "";
+}
+
+function isValidKenyanPhone(value) {
+  return /^254(7\d{8}|1\d{8})$/.test(value);
+}
+
 export async function POST(request) {
   try {
     const contentType = request.headers.get("content-type") || "";
@@ -16,10 +34,58 @@ export async function POST(request) {
     }
 
     const { carId, dealerId, name, phone, email, message, channel } = body;
+    const normalizedChannel = (channel || "web").toString().toLowerCase();
+    const forwardedFor = request.headers.get("x-forwarded-for") || "";
+    const ip = forwardedFor.split(",")[0]?.trim() || "unknown";
+    const rateKey = `${ip}:${carId || "unknown"}`;
+    const now = Date.now();
+    const lastHit = leadRateLimitStore.get(rateKey) || 0;
 
-    if (!carId || !dealerId || !name || !phone) {
+    // Lightweight anti-spam guard with periodic map cleanup.
+    if (now - lastHit < RATE_LIMIT_MS) {
       return NextResponse.json(
-        { error: "Missing required fields: carId, dealerId, name, phone" },
+        { error: "Too many lead requests. Please try again in a few seconds." },
+        { status: 429 }
+      );
+    }
+
+    if (leadRateLimitStore.size > RATE_LIMIT_MAX_WINDOW) {
+      for (const [key, timestamp] of leadRateLimitStore.entries()) {
+        if (now - timestamp > RATE_LIMIT_MS * 20) {
+          leadRateLimitStore.delete(key);
+        }
+      }
+    }
+    leadRateLimitStore.set(rateKey, now);
+
+    if (!carId || !dealerId) {
+      return NextResponse.json(
+        { error: "Missing required fields: carId, dealerId" },
+        { status: 400 }
+      );
+    }
+
+    const normalizedPhone = normalizeKenyanPhone(phone);
+    const requiresBuyerContact = normalizedChannel !== "whatsapp";
+    const normalizedName = name?.toString().trim();
+
+    if (requiresBuyerContact && !normalizedName) {
+      return NextResponse.json(
+        { error: "Name is required for web enquiries" },
+        { status: 400 }
+      );
+    }
+
+    if (requiresBuyerContact && !normalizedPhone) {
+      return NextResponse.json(
+        { error: "Phone number is required for web enquiries" },
+        { status: 400 }
+      );
+    }
+
+    if (normalizedPhone && !isValidKenyanPhone(normalizedPhone)) {
+      return NextResponse.json(
+        { error: "Invalid phone number format" },
         { status: 400 }
       );
     }
@@ -27,10 +93,10 @@ export async function POST(request) {
     // Verify car + dealer exist
     const car = await db.car.findUnique({
       where:  { id: carId },
-      select: { id: true, dealerId: true },
+      select: { id: true, dealerId: true, available: true },
     });
 
-    if (!car || car.dealerId !== dealerId) {
+    if (!car || !car.available || car.dealerId !== dealerId) {
       return NextResponse.json({ error: "Invalid car or dealer" }, { status: 400 });
     }
 
@@ -38,11 +104,11 @@ export async function POST(request) {
       data: {
         carId,
         dealerId,
-        name:    name.toString().trim(),
-        phone:   phone.toString().trim(),
+        name:    normalizedName || (normalizedChannel === "whatsapp" ? "WhatsApp tap" : "Anonymous"),
+        phone:   normalizedPhone || "not-provided",
         email:   email?.toString().trim() || null,
         message: message?.toString().trim() || null,
-        channel: channel || "web",
+        channel: normalizedChannel,
       },
     });
 

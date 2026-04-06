@@ -6,12 +6,29 @@
 import { useState } from "react";
 import { whatsappLink } from "@/lib/utils";
 
+function normalizeKenyanPhone(value) {
+  const digits = (value || "").replace(/\D/g, "");
+  if (!digits) return "";
+  if (digits.startsWith("254") && digits.length === 12) return digits;
+  if (digits.startsWith("0") && digits.length === 10) return `254${digits.slice(1)}`;
+  if (digits.length === 9 && /^(7|1)/.test(digits)) return `254${digits}`;
+  return "";
+}
+
+function isValidKenyanPhone(value) {
+  return /^254(7\d{8}|1\d{8})$/.test(value);
+}
+
 export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
   const [state, setState]   = useState("idle"); // idle | sending | sent | error
   const [name, setName]     = useState("");
   const [phone, setPhone]   = useState("");
   const [email, setEmail]   = useState("");
   const [message, setMessage] = useState("");
+  const [website, setWebsite] = useState(""); // Honeypot field
+  const [consent, setConsent] = useState(false);
+  const [lastSubmitAt, setLastSubmitAt] = useState(0);
+  const [errorText, setErrorText] = useState("");
 
   const waLink = dealer.whatsapp
     ? whatsappLink(dealer.whatsapp, carTitle, dealer.name)
@@ -19,6 +36,34 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setErrorText("");
+
+    if (website.trim()) {
+      setState("error");
+      setErrorText("Submission blocked.");
+      return;
+    }
+
+    if (!consent) {
+      setState("error");
+      setErrorText("Please confirm consent to be contacted.");
+      return;
+    }
+
+    const now = Date.now();
+    if (lastSubmitAt && now - lastSubmitAt < 15000) {
+      setState("error");
+      setErrorText("Please wait a few seconds before sending another enquiry.");
+      return;
+    }
+
+    const normalizedPhone = normalizeKenyanPhone(phone);
+    if (!isValidKenyanPhone(normalizedPhone)) {
+      setState("error");
+      setErrorText("Use a valid Kenyan number (e.g. 07XXXXXXXX or +2547XXXXXXXX).");
+      return;
+    }
+
     setState("sending");
 
     try {
@@ -26,29 +71,40 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          carId, dealerId, name, phone, email, message,
+          carId,
+          dealerId,
+          name,
+          phone: normalizedPhone,
+          email,
+          message,
           channel: "web",
         }),
       });
 
       if (!res.ok) throw new Error("Failed");
       setState("sent");
+      setLastSubmitAt(now);
     } catch {
       setState("error");
+      setErrorText("Something went wrong. Please try WhatsApp instead.");
     }
   }
 
   // Track WhatsApp taps as leads too
   async function handleWhatsApp() {
+    const normalizedPhone = normalizeKenyanPhone(phone);
+
     // Fire-and-forget — don't block the WhatsApp redirect
     fetch("/api/leads", {
       method:  "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        carId, dealerId,
-        name:    "WhatsApp enquiry",
-        phone:   dealer.whatsapp || "",
-        message: `Buyer tapped WhatsApp on: ${carTitle}`,
+        carId,
+        dealerId,
+        name: name?.trim() || "WhatsApp tap",
+        phone: normalizedPhone,
+        email: email?.trim() || null,
+        message: `Buyer tapped WhatsApp on: ${carTitle}${message?.trim() ? ` | Buyer note: ${message.trim()}` : ""}`,
         channel: "whatsapp",
       }),
     }).catch(() => {});
@@ -107,19 +163,28 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
 
       {state === "error" && (
         <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2">
-          Something went wrong. Please try WhatsApp instead.
+          {errorText || "Something went wrong. Please try WhatsApp instead."}
         </p>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-2.5">
+        <input
+          tabIndex={-1}
+          autoComplete="off"
+          value={website}
+          onChange={(e) => setWebsite(e.target.value)}
+          className="hidden"
+          aria-hidden="true"
+        />
         <input
           value={name} onChange={(e) => setName(e.target.value)}
           required placeholder="Your name"
           className={inputCls}
         />
         <input
+          type="tel"
           value={phone} onChange={(e) => setPhone(e.target.value)}
-          required placeholder="Phone number (07xx…)"
+          required placeholder="Phone number (07xx or +2547xx...)"
           className={inputCls}
         />
         <input
@@ -140,6 +205,17 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
         >
           {state === "sending" ? "Sending…" : "Send enquiry"}
         </button>
+
+        <label className="flex items-start gap-2.5 text-[11px] text-slate-500 pt-1">
+          <input
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+            className="mt-0.5"
+            required
+          />
+          I consent to Motorke and this dealer contacting me about this vehicle.
+        </label>
         
         <div className="flex items-center justify-center gap-1.5 pt-2">
           <div className="w-3.5 h-3.5 rounded-full bg-emerald-100 flex items-center justify-center">
