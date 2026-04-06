@@ -101,12 +101,12 @@ export default async function HomePage() {
               </span>
             </div>
 
-            <h1 className="text-6xl md:text-8xl font-extrabold text-slate-900 leading-[0.95] tracking-tighter mb-10">
+            <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 leading-[1] tracking-tighter mb-8">
               Find your perfect car<br />
               <span className="text-brand drop-shadow-sm">across all dealerships instantly.</span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-slate-600 mb-12 leading-relaxed max-w-2xl font-medium">
+            <p className="text-lg md:text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl font-medium">
               Compare live listings from {totalDealers} trusted dealerships across the country; no more endless scrolling!
             </p>
 
