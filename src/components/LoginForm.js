@@ -59,7 +59,7 @@ export default function LoginForm({ error }) {
       <AuthCarousel />
 
       {/* ── FORM SECTION (Right) ── */}
-      <section className="flex-1 flex flex-col items-center justify-center p-8 sm:p-20 bg-[#FCFCFD] relative">
+      <section className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 bg-[#FCFCFD] relative">
          
          <Link 
            href="/" 
@@ -70,8 +70,8 @@ export default function LoginForm({ error }) {
 
          <div className="w-full max-w-[420px]">
             {/* Logo & Header */}
-            <header className="mb-16 text-center lg:text-left">
-               <div className="inline-flex items-center gap-3 mb-10">
+            <header className="mb-8 text-center lg:text-left">
+               <div className="inline-flex items-center gap-3 mb-6">
                   <img src="/logo.png" alt="Motorske" className="h-10 w-auto object-contain" />
                   <div className="h-4 w-px bg-slate-200 mx-1" />
                   <span className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">Auth</span>
@@ -98,7 +98,7 @@ export default function LoginForm({ error }) {
             )}
 
             {/* Login Form */}
-            <form action="/api/auth/login" method="POST" className="space-y-8">
+            <form action="/api/auth/login" method="POST" className="space-y-5">
                <div className="space-y-3 relative">
                   <label htmlFor="emailAddress" className="text-[10px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1">Email Address</label>
                   <div className="relative">
@@ -161,7 +161,7 @@ export default function LoginForm({ error }) {
                </button>
             </form>
 
-            <div className="relative my-12">
+            <div className="relative my-6">
                <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-slate-100"></div>
                </div>
@@ -174,13 +174,13 @@ export default function LoginForm({ error }) {
                <div id="google-button-container" className="w-full max-w-[320px] transition-transform hover:scale-[1.02]" />
             </div>
 
-            <footer className="mt-16 pt-12 border-t border-slate-50 text-center lg:text-left">
+            <footer className="mt-8 pt-6 border-t border-slate-50 text-center lg:text-left">
                <p className="text-sm font-bold text-slate-900">
                   New to our marketplace?{" "}
                   <Link href="/signup" className="text-slate-900 hover:text-emerald-500 transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10 pb-0.5">Explore Dealer Subscription</Link>
                </p>
                
-               <div className="mt-10 flex flex-col lg:flex-row items-center gap-6">
+               <div className="mt-6 flex flex-col lg:flex-row items-center gap-6">
                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
                      MotorsKe © 2026
                   </p>

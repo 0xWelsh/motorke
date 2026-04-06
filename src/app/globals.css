@@ -6,27 +6,39 @@
 
 :root {
   /* Core Palette — "Trust & Precision" */
-  --bg:           #fbfcfd; /* Even cleaner, near-white slate */
+  --bg:           #f8fafc; /* Refined slate background */
   --surface:      #ffffff;
-  --brand:        #065f46; /* Deep Emerald (Emerald-800) — Trust & Stability */
-  --brand-light:  #ecfdf5; /* Emerald-50 */
+  --brand:        #064e3b; /* Slightly deeper emerald for better contrast */
+  --brand-light:  #f0fdf4; /* Softer emerald-50 */
   --brand-accent: #10b981; /* Emerald-500 — Positive Action */
   
   /* Neutral Palette — Refined Contrast */
   --text:         #0f172a; /* Slate-900 */
-  --text-muted:   #1e293b; /* Slate-800 — Optimized for readability on white */
-  --text-faint:   #475569; /* Slate-600 */
+  --text-muted:   #334155; /* Slate-700 — Improved readability */
+  --text-faint:   #64748b; /* Slate-500 */
   
-  /* Borders — Invisible until needed */
-  --border:       rgba(15, 23, 42, 0.06);
-  --border-light: rgba(15, 23, 42, 0.03);
+  /* Borders — Soft & Professional */
+  --border:       #e2e8f0; /* Slate-200 */
+  --border-light: #f1f5f9; /* Slate-100 */
   
   /* Utilities — Premium Depth */
-  --glass:        rgba(255, 255, 255, 0.8);
-  --glass-blur:   blur(16px);
-  --shadow-sm:    0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md:    0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --shadow-lg:    0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  --glass:        rgba(255, 255, 255, 0.7);
+  --glass-blur:   blur(12px);
+  --shadow-sm:    0 1px 3px 0 rgb(0 0 0 / 0.05);
+  --shadow-md:    0 4px 12px -2px rgb(0 0 0 / 0.08), 0 2px 6px -2px rgb(0 0 0 / 0.04);
+  --shadow-lg:    0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --radius:       1.25rem; /* Standard 20px rounding */
+}
+
+.dark {
+  --bg:           #020617;
+  --surface:      #0f172a;
+  --brand-light:  #064e3b20;
+  --text:         #f8fafc;
+  --text-muted:   #cbd5e1;
+  --text-faint:   #94a3b8;
+  --border:       #1e293b;
+  --border-light: #0f172a;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,44 +49,57 @@ body {
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6; /* Improved line height for readability */
 }
 
-::-webkit-scrollbar { width: 4px; }
+/* Typography Overrides for Readability */
+h1, h2, h3, h4, h5, h6 {
+  @apply tracking-tight font-extrabold;
+}
+
+p {
+  @apply leading-relaxed;
+}
+
+::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--brand-accent); }
 
-.custom-scrollbar::-webkit-scrollbar { width: 3px; }
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--brand-accent); }
 
-.card-hover { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.card-hover { 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+}
 .card-hover:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
   border-color: var(--brand-accent);
 }
 
 .mk-modal-overlay {
   position: fixed; inset: 0; z-index: 1000;
-  background: rgba(15,23,42,0.6);
+  background: rgba(15,23,42,0.4);
   backdrop-filter: blur(8px);
   display: flex; align-items: center; justify-content: center;
   padding: 1rem;
-  animation: fadeIn 0.15s ease;
+  animation: fadeIn 0.2s ease-out;
 }
 .mk-modal {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 20px;
+  border-radius: var(--radius);
   overflow: hidden;
-  width: 100%; max-width: 420px;
-  box-shadow: 0 24px 60px rgba(0,0,0,0.15);
-  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%; max-width: 480px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
 @media print {
   body { background: white !important; color: black !important; }

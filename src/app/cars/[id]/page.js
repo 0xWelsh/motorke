@@ -116,37 +116,48 @@ export default async function CarDetailPage({ params }) {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
+    <div className="max-w-7xl mx-auto px-6 py-16">
       {/* Breadcrumb */}
-      <nav className="text-xs text-slate-400 mb-6 flex gap-2">
-        <Link href="/" className="hover:text-[var(--brand)] transition-colors">Home</Link>
-        <span>/</span>
-        <Link href="/cars" className="hover:text-[var(--brand)] transition-colors">Cars</Link>
-        <span>/</span>
-        <span className="text-slate-900 font-bold">{title}</span>
+      <nav className="text-sm font-medium text-slate-400 mb-10 flex gap-3 items-center">
+        <Link href="/" className="hover:text-brand transition-colors">Home</Link>
+        <ChevronRight className="w-3 h-3" />
+        <Link href="/cars" className="hover:text-brand transition-colors">Inventory</Link>
+        <ChevronRight className="w-3 h-3" />
+        <span className="text-slate-900 font-extrabold">{title}</span>
       </nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         {/* Left: images + details */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-12">
           {/* Image gallery with lightbox */}
           <ImageGallery images={car.images} title={title} />
 
           {/* Title + price */}
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-black text-slate-900">{title}</h1>
-              <p className="text-slate-500 mt-1">{BODY_TYPE_LABELS[car.bodyType]} · {car.year} · {formatMileage(car.mileage)}</p>
+          <div className="flex flex-wrap items-start justify-between gap-6 pb-8 border-b border-slate-100">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <span className="px-3 py-1 rounded-lg bg-brand-light text-brand text-xs font-extrabold">{car.year}</span>
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{car.make}</span>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">{title}</h1>
+              <p className="text-lg text-slate-500 font-medium">
+                {BODY_TYPE_LABELS[car.bodyType]} · {formatMileage(car.mileage)} · {car.location || dealer.location}
+              </p>
             </div>
-            <div className="text-right">
-              <p className="text-3xl font-black text-[var(--brand)]">{formatPrice(car.price)}</p>
-              {car.negotiable && <p className="text-xs text-slate-400 mt-1">Negotiable</p>}
+            <div className="text-right space-y-1">
+              <p className="text-4xl font-extrabold text-brand tracking-tight">{formatPrice(car.price)}</p>
+              {car.negotiable && (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-50 text-slate-400 text-[10px] font-extrabold uppercase tracking-widest">
+                  Negotiable Price
+                </div>
+              )}
             </div>
           </div>
 
           {/* Share + Save */}
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+          <div className="flex flex-wrap items-center gap-4">
             <ShareButtons title={title} price={formatPrice(car.price)} />
+            <div className="h-8 w-px bg-slate-100 mx-2 hidden sm:block" />
             <SaveButton carId={car.id} initialSaved={isSaved} isLoggedIn={isLoggedIn} />
             <PrintButton carId={car.id} />
           </div>
@@ -154,11 +165,11 @@ export default async function CarDetailPage({ params }) {
 
           {/* Feature badges */}
           {car.features?.length > 0 && (
-            <div>
-              <h3 className="text-[11px] font-black text-slate-400 mb-3 uppercase tracking-[0.15em]">Features</h3>
-              <div className="flex flex-wrap gap-2">
+            <div className="space-y-6">
+              <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Key Features</h3>
+              <div className="flex flex-wrap gap-3">
                 {car.features.map((f) => (
-                  <span key={f} className="text-xs bg-slate-50 border border-slate-100 rounded-full px-3 py-1.5 text-slate-600 font-medium">
+                  <span key={f} className="text-sm bg-white border border-slate-200 rounded-2xl px-5 py-2.5 text-slate-700 font-bold shadow-sm">
                     {f}
                   </span>
                 ))}
@@ -168,81 +179,78 @@ export default async function CarDetailPage({ params }) {
 
           {/* Description */}
           {car.description && (
-            <div>
-              <h3 className="text-[11px] font-black text-slate-400 mb-3 uppercase tracking-[0.15em]">About this car</h3>
-              <p className="text-slate-600 leading-relaxed text-sm">{car.description}</p>
+            <div className="space-y-6">
+              <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Dealer Description</h3>
+              <p className="text-slate-600 leading-relaxed text-lg font-medium max-w-3xl whitespace-pre-line">{car.description}</p>
             </div>
           )}
 
           {/* Spec grid */}
-          <div>
-            <h3 className="text-[11px] font-black text-slate-400 mb-4 uppercase tracking-[0.15em]">Specifications</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="space-y-8">
+            <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Detailed Specifications</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {specs.map(({ label, value }) => (
-                <div key={label} className="bg-slate-50 border border-slate-100 rounded-xl p-3">
-                  <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-1">{label}</p>
-                  <p className="text-sm font-bold text-slate-900">{value}</p>
+                <div key={label} className="bg-slate-50/50 border border-slate-100 rounded-2xl p-5 group hover:bg-white hover:border-brand-accent/20 hover:shadow-md transition-all">
+                  <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">{label}</p>
+                  <p className="text-base font-extrabold text-slate-900">{value}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Duty estimate */}
-          <div className="bg-[var(--brand-light)] border border-[var(--brand-accent)]/10 rounded-2xl p-5">
-            <h3 className="text-sm font-semibold text-[var(--brand)] mb-1">🧾 Estimated import duty</h3>
-            <p className="text-2xl font-black text-[var(--brand)]">{formatPrice(duty)}</p>
-            <p className="text-xs text-[var(--brand)]/60 mt-1">
-              Rough KRA estimate based on car age and value. Verify with a clearing agent before purchase.
-            </p>
+          <div className="bg-emerald-900 rounded-3xl p-10 relative overflow-hidden shadow-xl shadow-emerald-900/10">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-800/50 blur-3xl -mr-32 -mt-32 rounded-full" />
+            <div className="relative z-10 space-y-4">
+              <div className="flex items-center gap-3 text-emerald-400 font-extrabold text-xs uppercase tracking-widest">
+                <Wallet className="w-4 h-4" /> Estimated Import Duty
+              </div>
+              <p className="text-5xl font-extrabold text-white tracking-tight">{formatPrice(duty)}</p>
+              <p className="text-sm text-emerald-100/60 max-w-md font-medium">
+                This is a rough KRA estimate based on age and market value. Always verify with a licensed clearing agent.
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Right: dealer card + enquiry */}
-        <div className="space-y-5">
+        <div className="space-y-8">
           {/* Dealer card */}
-          <div className="bg-surface border border-white/5 shadow-2xl rounded-2xl p-5">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-[var(--brand-light)] flex items-center justify-center text-[var(--brand)] font-black text-lg">
+          <div className="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 rounded-[2.5rem] p-8 space-y-8 sticky top-28">
+            <div className="flex items-center gap-5">
+              <div className="w-16 h-16 rounded-2xl bg-brand-light flex items-center justify-center text-brand font-extrabold text-2xl shadow-sm">
                 {dealer.name[0]}
               </div>
-              <div>
+              <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <p className="font-bold text-sm">{dealer.name}</p>
+                  <p className="font-extrabold text-lg text-slate-900">{dealer.name}</p>
                   {dealer.verified && (
-                    <span className="text-[9px] bg-green-500/20 text-green-400 border border-green-500/30 rounded-full px-1.5 py-0.5">✓</span>
+                    <div className="p-1 rounded-full bg-emerald-50 text-emerald-500">
+                      <ShieldCheck className="w-4 h-4" />
+                    </div>
                   )}
                 </div>
-                <p className="text-xs text-slate-400">{dealer.location}</p>
+                <p className="text-sm font-bold text-slate-400 flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5" /> {dealer.location}
+                </p>
               </div>
             </div>
+            
             <Link href={`/dealers/${dealer.slug}`}
-              className="block text-center text-xs text-[var(--brand)] border border-[var(--brand-accent)]/20 rounded-xl py-2 hover:bg-[var(--brand-light)] transition-colors">
-              View all cars from this dealer
+              className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-brand border-2 border-brand-light rounded-2xl py-4 hover:bg-brand-light transition-all">
+              Browse Dealer Inventory
             </Link>
-          </div>
 
-          {/* Enquiry form with WhatsApp */}
-          <div className="bg-white border border-slate-100 shadow-2xl rounded-2xl p-5">
-            <h3 className="font-black text-slate-900 mb-4 uppercase tracking-widest text-xs">Contact dealer</h3>
-            <EnquiryForm
-              carId={car.id}
-              dealerId={dealer.id}
-              carTitle={title}
-              dealer={dealer}
-            />
-          </div>
+            <div className="h-px bg-slate-100" />
 
-          {/* Compare CTA */}
-          <div className="bg-slate-50 border border-slate-100 rounded-2xl p-6 text-center space-y-4 shadow-sm">
-            <div className="flex justify-center">
-              <div className="w-12 h-12 rounded-full bg-[var(--brand-light)] flex items-center justify-center text-xl">⚖️</div>
-            </div>
-            <div>
-              <p className="text-sm font-bold text-slate-800 mb-1">Want to compare this car?</p>
-              <p className="text-xs text-slate-400">Add it to your selection and see how it stacks up side-by-side.</p>
-            </div>
-            <div className="flex justify-center">
-              <CompareButton car={car} />
+            <div className="space-y-6">
+              <h3 className="font-extrabold text-slate-900 uppercase tracking-widest text-xs">Direct Enquiry</h3>
+              <EnquiryForm
+                carId={car.id}
+                dealerId={dealer.id}
+                carTitle={title}
+                dealer={dealer}
+              />
             </div>
           </div>
         </div>
@@ -250,15 +258,20 @@ export default async function CarDetailPage({ params }) {
 
       {/* Similar cars */}
       {similar.length > 0 && (
-        <div className="mt-16">
-          <h2 className="text-2xl font-black mb-6 text-slate-900 tracking-tight">Similar cars</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="mt-32 space-y-12">
+          <div className="flex items-end justify-between">
+            <div className="space-y-2">
+              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Similar units you might like</h2>
+              <p className="text-lg text-slate-500 font-medium">Hand-picked alternatives from our verified inventory.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
             {similar.map((c) => {
               const img = c.images[0]?.url;
               const title = `${c.make} ${c.model}`;
               return (
                 <Link key={c.id} href={`/cars/${c.id}`}
-                  className="group block bg-white border border-slate-100 hover:border-[var(--brand-accent)]/30 overflow-hidden transition-all duration-500 rounded-2xl shadow-sm hover:shadow-lg">
+                  className="group block bg-white border border-slate-200 hover:border-brand-accent/40 overflow-hidden transition-all duration-500 rounded-3xl shadow-sm hover:shadow-xl">
                   <div className="relative aspect-[16/10] bg-slate-50 overflow-hidden">
                     {img ? (
                       <Image 
@@ -269,17 +282,19 @@ export default async function CarDetailPage({ params }) {
                         sizes="(max-width: 768px) 100vw, 33vw"
                       />
                     ) : (
-                      <div className="flex items-center justify-center h-full text-slate-300 text-[10px] font-bold uppercase tracking-widest">No Image</div>
+                      <div className="flex items-center justify-center h-full text-slate-300 text-xs font-bold uppercase tracking-widest">No Image</div>
                     )}
                   </div>
-                  <div className="p-4 flex flex-col gap-2.5">
-                    <div className="flex items-center gap-2.5">
-                      <span className="text-[10px] font-black bg-[var(--brand-light)] text-[var(--brand)] px-2 py-0.5 uppercase tracking-wider shrink-0 rounded-md">{c.year}</span>
-                      <h3 className="font-bold text-slate-800 text-sm leading-tight truncate group-hover:text-[var(--brand-accent)] transition-colors">{title}</h3>
+                  <div className="p-6 flex flex-col gap-4">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-[11px] font-extrabold bg-brand-light text-brand px-2 py-0.5 rounded-md tracking-tight">{c.year}</span>
+                        <h3 className="font-extrabold text-slate-800 text-lg leading-tight truncate group-hover:text-brand transition-colors">{title}</h3>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between pt-2.5 border-t border-slate-50">
-                      <p className="text-base font-black text-slate-900">{formatPrice(c.price)}</p>
-                      <span className="text-[10px] text-slate-400">{c.dealer?.name}</span>
+                    <div className="flex items-center justify-between pt-4 border-t border-slate-50">
+                      <p className="text-xl font-extrabold text-slate-900">{formatPrice(c.price)}</p>
+                      <span className="text-xs font-bold text-slate-400">{c.dealer?.name}</span>
                     </div>
                   </div>
                 </Link>

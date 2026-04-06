@@ -91,96 +91,115 @@ export default function DutyCalculatorPage() {
     { label: "Estimated landed cost", value: fmt(result.landed), note: "purchase price + all duties", highlight: true },
   ];
 
-  const inputCls = "bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors w-full";
+  const inputCls = "bg-white border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 outline-none focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/5 transition-all w-full shadow-sm";
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-12">
-      <div className="mb-8">
-        <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs px-3 py-1.5 rounded-full mb-4">
-          🧾 KRA rates · Estimate only — verify with a licensed clearing agent
+    <div className="max-w-4xl mx-auto px-6 py-20">
+      <div className="mb-12 space-y-4">
+        <div className="inline-flex items-center gap-2 bg-brand-light border border-brand-accent/20 text-brand text-xs font-extrabold px-4 py-2 rounded-xl uppercase tracking-widest shadow-sm">
+          🧾 KRA Rates · 2026 Estimate
         </div>
-        <h1 className="text-4xl font-black">Import duty calculator</h1>
-        <p className="text-white/40 mt-2">
-          Estimate the Kenya Revenue Authority import duties on a used vehicle imported from Japan or the UK.
+        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">Import Duty Calculator</h1>
+        <p className="text-lg text-slate-500 font-medium max-w-2xl leading-relaxed">
+          Accurately estimate Kenya Revenue Authority import duties for vehicles from Japan, UK, and other global markets.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
         {/* Inputs */}
-        <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-6 space-y-5">
-          <h2 className="font-black text-lg">Vehicle details</h2>
+        <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 space-y-8 shadow-xl shadow-slate-200/50">
+          <h2 className="font-extrabold text-xl text-slate-900 flex items-center gap-3">
+             <div className="w-8 h-8 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
+               <Car className="w-4 h-4" />
+             </div>
+             Vehicle Details
+          </h2>
 
-          <div>
-            <label className="block text-xs text-white/40 uppercase tracking-wider mb-2">
-              Purchase price (USD, CIF)
-            </label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 text-sm">$</span>
-              <input type="number" value={cifUsd} onChange={e => setCifUsd(+e.target.value)}
-                className={`${inputCls} pl-8`} min="500" step="500" />
+          <div className="space-y-6">
+            <div>
+              <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-3">
+                Purchase Price (USD, CIF)
+              </label>
+              <div className="relative group">
+                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 font-bold">$</span>
+                <input type="number" value={cifUsd} onChange={e => setCifUsd(+e.target.value)}
+                  className={`${inputCls} pl-10`} min="500" step="500" />
+              </div>
+              <p className="text-[11px] text-slate-400 font-bold mt-2 italic px-1">CIF includes purchase price, insurance, and freight to Mombasa.</p>
             </div>
-            <p className="text-xs text-white/20 mt-1">CIF = Cost + Insurance + Freight to Mombasa</p>
-          </div>
 
-          <div>
-            <label className="block text-xs text-white/40 uppercase tracking-wider mb-2">
-              USD → KES exchange rate
+            <div>
+              <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-3">
+                USD → KES Exchange Rate
+              </label>
+              <input type="number" value={exchangeRate} onChange={e => setExchangeRate(+e.target.value)}
+                className={inputCls} min="50" step="1" />
+              <p className="text-[11px] text-slate-500 font-bold mt-2 px-1">
+                Converted CIF: <span className="text-brand font-extrabold">{fmt(cifUsd * exchangeRate)}</span>
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-3">
+                  Year of Manufacture
+                </label>
+                <select value={year} onChange={e => setYear(+e.target.value)} className={inputCls}>
+                  {Array.from({ length: 20 }, (_, i) => currentYear - i).map(y => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-3">
+                  Engine Size (CC)
+                </label>
+                <select value={engineCC} onChange={e => setEngineCC(+e.target.value)} className={inputCls} disabled={isElectric}>
+                  {[660, 1000, 1200, 1300, 1500, 1600, 1800, 2000, 2400, 2700, 3000, 3500, 4000, 4500].map(cc => (
+                    <option key={cc} value={cc}>{cc}cc</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <label className="flex items-center gap-4 cursor-pointer p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-brand-accent/30 transition-all">
+              <input type="checkbox" checked={isElectric} onChange={e => setIsElectric(e.target.checked)}
+                className="w-5 h-5 accent-brand rounded-lg" />
+              <div className="space-y-0.5">
+                <span className="text-sm font-extrabold text-slate-900">Electric Vehicle</span>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Excise Rate reduced to 10%</p>
+              </div>
             </label>
-            <input type="number" value={exchangeRate} onChange={e => setExchangeRate(+e.target.value)}
-              className={inputCls} min="50" step="1" />
-            <p className="text-xs text-white/20 mt-1">
-              CIF in KES: <strong className="text-white/40">{fmt(cifUsd * exchangeRate)}</strong>
-            </p>
           </div>
-
-          <div>
-            <label className="block text-xs text-white/40 uppercase tracking-wider mb-2">
-              Year of manufacture
-            </label>
-            <select value={year} onChange={e => setYear(+e.target.value)} className={inputCls}>
-              {Array.from({ length: 20 }, (_, i) => currentYear - i).map(y => (
-                <option key={y} value={y}>{y} ({currentYear - y} yr{currentYear - y !== 1 ? "s" : ""} old)</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs text-white/40 uppercase tracking-wider mb-2">
-              Engine size (cc)
-            </label>
-            <select value={engineCC} onChange={e => setEngineCC(+e.target.value)} className={inputCls} disabled={isElectric}>
-              {[660, 1000, 1200, 1300, 1500, 1600, 1800, 2000, 2400, 2700, 3000, 3500, 4000, 4500].map(cc => (
-                <option key={cc} value={cc}>{cc}cc</option>
-              ))}
-            </select>
-          </div>
-
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" checked={isElectric} onChange={e => setIsElectric(e.target.checked)}
-              className="w-4 h-4 accent-[#f97316]" />
-            <span className="text-sm text-white/60">Electric vehicle (lower excise rate 10%)</span>
-          </label>
         </div>
 
         {/* Summary */}
-        <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-6">
-          <h2 className="font-black text-lg mb-5">Duty breakdown</h2>
-          <div className="space-y-3">
+        <div className="bg-slate-900 rounded-[2.5rem] p-10 space-y-10 shadow-2xl shadow-slate-900/10 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-brand/20 blur-3xl -mr-32 -mt-32 rounded-full" />
+          
+          <h2 className="font-extrabold text-xl text-white relative z-10 flex items-center gap-3">
+             <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-brand">
+               <Banknote className="w-4 h-4" />
+             </div>
+             Tax Breakdown
+          </h2>
+
+          <div className="space-y-6 relative z-10">
             {rows.map(({ label, value, note, highlight }) => (
               <div key={label}
-                className={`flex justify-between items-start gap-4 py-2 ${
+                className={`flex justify-between items-start gap-6 py-2 ${
                   highlight
-                    ? "border-t border-white/10 pt-3 mt-1"
-                    : "border-b border-white/5"
+                    ? "border-t border-white/10 pt-6 mt-4"
+                    : "border-b border-white/5 pb-4"
                 }`}>
-                <div className="min-w-0">
-                  <p className={`text-xs leading-snug ${highlight ? "font-bold text-white" : "text-white/50"}`}>
+                <div className="space-y-1">
+                  <p className={`text-xs font-extrabold uppercase tracking-widest ${highlight ? "text-brand" : "text-slate-400"}`}>
                     {label}
                   </p>
-                  {note && <p className="text-[10px] text-white/20 mt-0.5">{note}</p>}
+                  {note && <p className="text-[11px] text-white/30 font-bold uppercase tracking-widest">{note}</p>}
                 </div>
-                <p className={`text-sm whitespace-nowrap flex-shrink-0 ${
-                  highlight ? "font-black text-[#f97316]" : "text-white/70"
+                <p className={`text-lg font-extrabold tabular-nums ${
+                  highlight ? "text-white text-2xl" : "text-white/80"
                 }`}>
                   {value}
                 </p>
@@ -191,23 +210,24 @@ export default function DutyCalculatorPage() {
       </div>
 
       {/* Disclaimer */}
-      <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-5 text-xs text-white/30 leading-relaxed">
-        <p className="font-semibold text-white/50 mb-2">⚠️ Important disclaimer</p>
-        <p>
-          This calculator provides estimates based on publicly available KRA duty rates and the depreciation schedule for
-          imported vehicles. Actual duties may vary based on the vehicle's specific classification, current exchange rates
-          at the time of entry, and KRA assessments. Always consult a licensed clearing agent before importing a vehicle.
-          Duty rates are subject to change in the annual Kenya Budget.
+      <div className="bg-white border border-slate-200 rounded-3xl p-8 space-y-4 shadow-sm">
+        <div className="flex items-center gap-3 text-brand font-extrabold text-xs uppercase tracking-widest">
+           <ShieldCheck className="w-4 h-4" /> Important Disclaimer
+        </div>
+        <p className="text-sm text-slate-500 font-medium leading-relaxed">
+          This calculator provides estimates based on publicly available KRA duty rates and depreciation schedules. 
+          Actual duties may vary based on specific classification, CRSP values, and assessment at the port of entry. 
+          Always consult a licensed clearing agent before proceeding with an import.
         </p>
       </div>
 
       {/* CTA */}
-      <div className="mt-8 text-center">
-        <p className="text-white/40 text-sm mb-4">Ready to find your car?</p>
-        <a href="/cars"
-          className="inline-flex items-center gap-2 bg-[#f97316] hover:bg-[#ea6c0b] text-white font-bold px-8 py-3 rounded-xl transition-colors">
-          Browse available cars →
-        </a>
+      <div className="mt-16 text-center space-y-6">
+        <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">Ready to start your search?</p>
+        <Link href="/cars"
+          className="inline-flex items-center gap-3 bg-brand text-white font-extrabold px-12 py-5 rounded-2xl text-xs uppercase tracking-[0.2em] transition-all hover:bg-brand-accent shadow-xl shadow-brand/20 active:scale-95">
+          Browse Live Inventory <ChevronRight className="w-4 h-4" />
+        </Link>
       </div>
     </div>
   );

@@ -144,7 +144,7 @@ export default function SignupForm({ error: initialError }) {
 
        {/* ── FORM SECTION (Right) ── */}
        <section className={clsx(
-         "flex-1 flex flex-col items-center justify-center p-8 sm:p-20 bg-[#FCFCFD] relative overflow-y-auto",
+         "flex-1 flex flex-col items-center justify-center p-6 sm:p-12 bg-[#FCFCFD] relative overflow-y-auto",
          role === "DEALER" ? "lg:items-start lg:pl-32" : ""
        )}>
           
@@ -156,17 +156,17 @@ export default function SignupForm({ error: initialError }) {
           </Link>
 
           <div className={clsx("w-full transition-all duration-700", role === "DEALER" ? "max-w-4xl" : "max-w-[440px]")}>
-             <header className="mb-12">
-                <div className="inline-flex items-center gap-3 mb-8">
+             <header className="mb-6">
+                <div className="inline-flex items-center gap-3 mb-4">
                    <img src="/logo.png" alt="Motorske" className="h-10 w-auto object-contain" />
                    <div className="h-4 w-px bg-slate-200 mx-1" />
                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Register</span>
                 </div>
-                <h1 className="text-4xl font-black text-slate-900 tracking-tighter mb-3">Create Account.</h1>
+                <h1 className="text-4xl font-black text-slate-900 tracking-tighter mb-2">Create Account.</h1>
                 <p className="text-slate-700 font-medium text-sm">Select your profile type to get started.</p>
              </header>
 
-             <div className="flex p-1.5 bg-slate-100 rounded-3xl gap-1.5 mb-8 w-fit">
+             <div className="flex p-1.5 bg-slate-100 rounded-3xl gap-1.5 mb-4 w-fit">
                 <button type="button" onClick={() => setRole("BUYER")}
                   className={clsx("flex items-center gap-2.5 px-8 py-3.5 rounded-[1.25rem] text-[10px] font-black uppercase tracking-[0.15em] transition-all",
                     role === "BUYER" ? "bg-white text-slate-950 shadow-xl shadow-slate-200" : "text-slate-400 hover:text-slate-600")}>
@@ -179,7 +179,7 @@ export default function SignupForm({ error: initialError }) {
                 </button>
              </div>
 
-             <form onSubmit={handleSubmit} className="space-y-10 relative pb-10" id="signup-form">
+             <form onSubmit={handleSubmit} className="space-y-6 relative pb-6" id="signup-form">
                 <input type="hidden" name="role" value={role} />
 
                 {errorMsg && (
@@ -191,9 +191,9 @@ export default function SignupForm({ error: initialError }) {
                    </div>
                 )}
 
-                <div className={clsx("grid gap-x-12 gap-y-10 items-start transition-all", role === "DEALER" ? "md:grid-cols-2" : "grid-cols-1")}>
+                <div className={clsx("grid gap-x-12 gap-y-6 items-start transition-all", role === "DEALER" ? "md:grid-cols-2" : "grid-cols-1")}>
                    {/* Personal Info */}
-                   <div className="space-y-10">
+                   <div className="space-y-6">
                       <div className="space-y-4">
                          <label htmlFor="regName" className={labelCls}>Identity Verification</label>
                          <div className="space-y-4">
@@ -268,7 +268,7 @@ export default function SignupForm({ error: initialError }) {
                    )}
                 </div>
 
-                <div className="pt-10 flex flex-col sm:flex-row items-center justify-between gap-10 border-t border-slate-50 mt-10">
+                <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-10 border-t border-slate-50 mt-6">
                    <div className="flex-1 w-full max-w-xs">
                       <button type="submit" disabled={loading}
                         className="w-full bg-slate-950 hover:bg-black text-white rounded-[1.75rem] py-5 font-black text-[10px] uppercase tracking-[0.25em] transition-all shadow-2xl shadow-slate-950/20 flex items-center justify-center gap-3 active:scale-[0.98]">
@@ -281,7 +281,7 @@ export default function SignupForm({ error: initialError }) {
                 </div>
              </form>
 
-             <div className="relative my-8 max-w-[440px]">
+             <div className="relative my-4 max-w-[440px]">
                <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-slate-100"></div>
                </div>
@@ -290,11 +290,11 @@ export default function SignupForm({ error: initialError }) {
                </div>
              </div>
 
-             <div className="flex justify-start mb-10 w-full overflow-hidden max-w-[440px]">
+             <div className="flex justify-start mb-6 w-full overflow-hidden max-w-[440px]">
                 <div id="google-signup-button" className="w-full max-w-[320px] transition-transform hover:scale-[1.02]" />
              </div>
 
-             <footer className="mt-8 pt-8 border-t border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-6 max-w-[440px]">
+             <footer className="mt-4 pt-4 border-t border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-6 max-w-[440px]">
                 <p className="text-sm font-bold text-slate-900">
                    Part of our network?{" "}
                    <Link href="/login" className="text-slate-900 hover:text-emerald-500 transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10">Sign in to your portal</Link>

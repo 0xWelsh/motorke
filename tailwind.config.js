@@ -17,9 +17,15 @@ module.exports = {
           accent:  "var(--brand-accent)",
         },
         slate: {
+          950: "#020617",
           900: "#0f172a",
+          800: "#1e293b",
+          700: "#334155",
           600: "#475569",
           500: "#64748b",
+          400: "#94a3b8",
+          300: "#cbd5e1",
+          200: "#e2e8f0",
           100: "#f1f5f9",
           50:  "#f8fafc",
         },
@@ -28,13 +34,24 @@ module.exports = {
         sans:    ["Plus Jakarta Sans", "sans-serif"],
         display: ["Plus Jakarta Sans", "sans-serif"],
       },
+      fontSize: {
+        '2xs': ['0.65rem', { lineHeight: '1rem' }],
+        'xs':  ['0.75rem', { lineHeight: '1.25rem' }],
+        'sm':  ['0.875rem', { lineHeight: '1.5rem' }],
+        'base': ['1rem', { lineHeight: '1.75rem' }],
+      },
+      borderRadius: {
+        '2xl': '1rem',
+        '3xl': '1.5rem',
+        '4xl': '2rem',
+      },
       animation: {
         'glow-pulse': 'glow 3s ease-in-out infinite alternate',
       },
       keyframes: {
         glow: {
-          '0%':   { boxShadow: '0 0 20px rgba(8,145,178,0)' },
-          '100%': { boxShadow: '0 0 40px rgba(8,145,178,0.3)' },
+          '0%':   { boxShadow: '0 0 20px rgba(16,185,129,0)' },
+          '100%': { boxShadow: '0 0 40px rgba(16,185,129,0.3)' },
         }
       }
     },
