@@ -1,14 +1,17 @@
 // src/app/page.js
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
-import { formatPrice, BADGE_OPTIONS } from "@/lib/utils";
+import { formatPrice, BADGE_OPTIONS, whatsappLink, estimateDuty } from "@/lib/utils";
 import Link from "next/link";
 import LocationSearch from "@/components/LocationSearch";
 import {
   ChevronRight, ShieldCheck, Newspaper,
-  Flame, Clock, Car, Wallet, Banknote, Briefcase, Trophy, Gem
+  Flame, Clock, Car, Wallet, Banknote, Briefcase, Trophy, Gem,
+  MessageCircle, Play
 } from "lucide-react";
 import ClientRecentSection from "@/components/ClientRecentSection";
+import LiveActivityFeed from "@/components/LiveActivityFeed";
+import DealerDiscovery from "@/components/DealerDiscovery";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
 
@@ -18,12 +21,12 @@ const getCachedData = unstable_cache(
     const [featured, newArrivals, dealers, totalCars, totalDealers, priceCounts, articles] = await Promise.all([
       db.car.findMany({
         where: { available: true, featured: true },
-        include: { images: { where: { isPrimary: true }, take: 1 }, dealer: { select: { name: true, location: true, verified: true, slug: true } } },
+        include: { images: { where: { isPrimary: true }, take: 1 }, dealer: { select: { id: true, name: true, location: true, verified: true, slug: true, whatsapp: true } } },
         take: 6, orderBy: { createdAt: "desc" },
       }),
       db.car.findMany({
         where: { available: true, createdAt: { gte: week } },
-        include: { images: { where: { isPrimary: true }, take: 1 }, dealer: { select: { name: true, location: true } } },
+        include: { images: { where: { isPrimary: true }, take: 1 }, dealer: { select: { id: true, name: true, location: true, whatsapp: true } } },
         take: 4, orderBy: { createdAt: "desc" },
       }),
       db.dealer.findMany({
@@ -47,7 +50,7 @@ const getCachedData = unstable_cache(
         if (articles.length < 3) {
           try {
             const { fetchAutomotiveNews } = await import("@/lib/news");
-            await fetchAutomotiveNews(); // Seed database directly
+            await fetchAutomotiveNews();
             return db.article.findMany({ take: 3, orderBy: { publishedAt: "desc" } });
           } catch (e) {
             console.error("Failed to automatically fetch fresh news:", e);
@@ -80,7 +83,7 @@ export default async function HomePage() {
     <div className="bg-background min-h-screen pb-32">
 
       {/* ── HERO ── */}
-      <section className="relative min-h-[650px] flex items-center overflow-hidden border-b border-slate-100">
+      <section className="relative min-h-[750px] flex items-center overflow-hidden border-b border-slate-100">
         {/* Immersive glassmorphism overlay */}
         <div className="absolute inset-0 z-0">
           <Image src={HERO_CAR} fill priority className="object-cover scale-105" alt="" style={{ filter: "blur(4px)" }} />
@@ -89,46 +92,55 @@ export default async function HomePage() {
         </div>
 
         <div className="container mx-auto px-6 max-w-7xl py-24 relative z-10">
-          <div className="max-w-3xl">
-            {/* Premium Status Badge */}
-            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-white border border-slate-200/60 shadow-sm mb-10 backdrop-blur-sm">
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-              </span>
-              <span className="text-xs font-extrabold text-slate-700 uppercase tracking-widest">
-                {totalCars.toLocaleString()} <span className="text-brand">Verified Units</span> Available Now
-              </span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <div className="lg:col-span-7">
+              {/* Premium Status Badge */}
+              <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-white border border-slate-200/60 shadow-sm mb-10 backdrop-blur-sm">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+                <span className="text-xs font-extrabold text-slate-700 uppercase tracking-widest">
+                  {totalCars.toLocaleString()} <span className="text-brand">Verified Units</span> Available Now
+                </span>
+              </div>
+
+              <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 leading-[1] tracking-tighter mb-8">
+                Find your perfect car<br />
+                <span className="text-brand drop-shadow-sm">across all dealerships instantly.</span>
+              </h1>
+
+              <p className="text-lg md:text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl font-medium">
+                Compare live listings from {totalDealers} trusted dealerships across the country; no more endless scrolling!
+              </p>
+
+              <div className="w-full max-w-2xl mb-10">
+                <LocationSearch />
+              </div>
+
+              <div className="flex flex-wrap items-center gap-4">
+                <span className="text-xs font-extrabold uppercase tracking-widest text-slate-400 mr-2">Quick Search</span>
+                {["SUVs", "Pickups", "Sedans", "Hatchbacks"].map(t => (
+                  <Link key={t} href={`/cars?search=${encodeURIComponent(t)}`}
+                    className="px-5 py-2.5 rounded-xl bg-white border border-slate-200/60 shadow-sm text-xs font-extrabold uppercase tracking-widest text-slate-600 hover:border-brand-accent hover:text-brand hover:bg-brand-light transition-all">
+                    {t}
+                  </Link>
+                ))}
+              </div>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 leading-[1] tracking-tighter mb-8">
-              Find your perfect car<br />
-              <span className="text-brand drop-shadow-sm">across all dealerships instantly.</span>
-            </h1>
-
-            <p className="text-lg md:text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl font-medium">
-              Compare live listings from {totalDealers} trusted dealerships across the country; no more endless scrolling!
-            </p>
-
-            <div className="w-full max-w-2xl mb-10">
-              <LocationSearch />
+            {/* LIVE PULSE COMPONENT */}
+            <div className="lg:col-span-5 hidden lg:block h-[500px]">
+               <LiveActivityFeed />
             </div>
 
-            <div className="flex flex-wrap items-center gap-4">
-              <span className="text-xs font-extrabold uppercase tracking-widest text-slate-400 mr-2">Quick Search</span>
-              {["SUVs", "Pickups", "Sedans", "Hatchbacks"].map(t => (
-                <Link key={t} href={`/cars?search=${encodeURIComponent(t)}`}
-                  className="px-5 py-2.5 rounded-xl bg-white border border-slate-200/60 shadow-sm text-xs font-extrabold uppercase tracking-widest text-slate-600 hover:border-brand-accent hover:text-brand hover:bg-brand-light transition-all">
-                  {t}
-                </Link>
-              ))}
-            </div>
           </div>
         </div>
       </section>
 
       {/* ── BROWSE BY BUDGET ── */}
-      <section className="container mx-auto px-6 py-32 max-w-7xl">
+      <section className="container mx-auto px-6 py-24 max-w-7xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div className="space-y-2">
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Browse by Budget</h2>
@@ -153,6 +165,9 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* ── DEALER DISCOVERY ── */}
+      <DealerDiscovery dealers={dealers} />
 
       {/* ── RECENT / RECOMMENDATIONS ── */}
       <ClientRecentSection />
@@ -272,10 +287,11 @@ export default async function HomePage() {
 function CarCard({ car, priority = false }) {
   const img = car.images[0]?.url;
   const title = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
+  const totalLanded = car.imported && !car.dutyPaid ? car.price + estimateDuty(car.price, car.year) : null;
 
   return (
-    <Link href={`/cars/${car.id}`} className="group block bg-white border border-slate-100 hover:border-brand-accent/40 rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-xl shadow-sm">
-      <div className="relative aspect-[16/10] bg-slate-50 overflow-hidden">
+    <div className="group block bg-white border border-slate-100 hover:border-brand-accent/40 rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-xl shadow-sm flex flex-col h-full">
+      <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-slate-50 overflow-hidden shrink-0">
         {img ? (
           <Image
             src={img} alt={title} fill priority={priority}
@@ -285,19 +301,25 @@ function CarCard({ car, priority = false }) {
         ) : (
           <div className="w-full h-full flex items-center justify-center text-slate-300 text-xs font-bold uppercase tracking-widest">No Image</div>
         )}
-        {car.badges?.length > 0 && (
-          <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-            {car.badges.slice(0, 2).map((b) => (
-              <span key={b} className={`text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-sm backdrop-blur-md ${BADGE_OPTIONS[b]?.color || "bg-white/90 text-slate-700"}`}>
-                {b}
-              </span>
-            ))}
+        
+        {/* TikTok Style Play Indicator */}
+        {car.videoUrl && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
+             <Play className="w-6 h-6 text-white fill-white ml-1" />
           </div>
         )}
-      </div>
 
-      <div className="p-5 flex flex-col gap-3">
-        <div className="space-y-1">
+        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+          {car.badges?.slice(0, 2).map((b) => (
+            <span key={b} className={`text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-sm backdrop-blur-md ${BADGE_OPTIONS[b]?.color || "bg-white/90 text-slate-700"}`}>
+              {b}
+            </span>
+          ))}
+        </div>
+      </Link>
+
+      <div className="p-5 flex flex-col flex-1 gap-4">
+        <Link href={`/cars/${car.id}`} className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-extrabold bg-brand-light text-brand px-2 py-0.5 rounded-md tracking-tight">
               {car.year}
@@ -309,7 +331,7 @@ function CarCard({ car, priority = false }) {
           <h3 className="font-extrabold text-slate-900 text-lg leading-snug truncate group-hover:text-brand transition-colors">
             {title}
           </h3>
-        </div>
+        </Link>
 
         <div className="flex flex-wrap gap-2">
           {[
@@ -323,13 +345,32 @@ function CarCard({ car, priority = false }) {
           ))}
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-slate-50 mt-2">
-          <p className="text-xl font-extrabold text-slate-900">{formatPrice(car.price)}</p>
-          <span className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-brand-light group-hover:text-brand transition-all">
-            <ChevronRight className="w-4 h-4" />
-          </span>
+        <div className="mt-auto space-y-4">
+          <div className="flex items-center justify-between pt-4 border-t border-slate-50">
+            <div>
+              <p className="text-xl font-extrabold text-slate-900">{formatPrice(car.price)}</p>
+              {totalLanded && (
+                <p className="text-[10px] font-extrabold text-brand uppercase tracking-wider">Est. {formatPrice(totalLanded)} Total</p>
+              )}
+            </div>
+            <Link href={`/cars/${car.id}`} className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-brand-light hover:text-brand transition-all">
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          {/* Quick WhatsApp Inquiry */}
+          {car.dealer?.whatsapp && (
+            <a 
+              href={whatsappLink(car.dealer.whatsapp, title, car.dealer.name)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl bg-emerald-50 text-emerald-600 text-xs font-extrabold uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all border border-emerald-100"
+            >
+              <MessageCircle className="w-4 h-4 fill-current" /> Chat with Dealer
+            </a>
+          )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

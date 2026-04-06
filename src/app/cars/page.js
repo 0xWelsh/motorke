@@ -1,6 +1,6 @@
 // src/app/cars/page.js
 import { db } from "@/lib/db";
-import { formatPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS, BADGE_OPTIONS } from "@/lib/utils";
+import { formatPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS, BADGE_OPTIONS, whatsappLink, estimateDuty } from "@/lib/utils";
 import Link from "next/link";
 import { 
   MapPin, 
@@ -9,7 +9,9 @@ import {
   X, 
   ArrowUpDown,
   ShieldCheck,
-  Search
+  Search,
+  MessageCircle,
+  Play
 } from "lucide-react";
 import Image from "next/image";
 import CarsSearch from "@/components/CarsSearch";
@@ -93,7 +95,7 @@ export default async function CarsPage({ searchParams }) {
           where,
           include: {
             images:  { where: { isPrimary: true }, take: 1 },
-            dealer:  { select: { id: true, name: true, slug: true, location: true, verified: true, lat: true, lng: true, county: true } },
+            dealer:  { select: { id: true, name: true, slug: true, location: true, verified: true, lat: true, lng: true, county: true, whatsapp: true } },
           },
           orderBy: orderBy,
           skip:  (page - 1) * limit,
@@ -244,6 +246,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
   const img   = car.images[0]?.url;
   const title = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const dist  = userLat && car.dealer?.lat ? Math.round(distance(userLat, userLng, car.dealer.lat, car.dealer.lng)) : null;
+  const totalLanded = car.imported && !car.dutyPaid ? car.price + estimateDuty(car.price, car.year) : null;
 
   const specs = [
     car.fuelType && FUEL_LABELS[car.fuelType],
@@ -254,8 +257,8 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
   ].filter(Boolean);
 
   return (
-    <Link href={`/cars/${car.id}`} className="group block bg-white border border-slate-200 hover:border-brand-accent/40 overflow-hidden transition-all duration-500 rounded-3xl shadow-sm hover:shadow-xl">
-      <div className="relative aspect-[16/10] bg-slate-50 overflow-hidden">
+    <div className="group block bg-white border border-slate-200 hover:border-brand-accent/40 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:shadow-xl shadow-sm flex flex-col h-full">
+      <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-slate-50 overflow-hidden shrink-0">
         {img ? (
             <Image 
               src={img} 
@@ -268,29 +271,36 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
         ) : (
           <div className="w-full h-full flex items-center justify-center text-slate-300 text-xs font-bold uppercase tracking-widest">No Image</div>
         )}
-        {car.featured && (
-          <span className="absolute top-4 left-4 bg-brand text-white text-[10px] font-extrabold px-3 py-1.5 uppercase tracking-widest rounded-xl shadow-lg">
-            Featured
-          </span>
+
+        {/* Video Indicator */}
+        {car.videoUrl && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30">
+             <Play className="w-5 h-5 text-white fill-white ml-0.5" />
+          </div>
         )}
+
+        <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+          {car.featured && (
+            <span className="bg-brand text-white text-[10px] font-extrabold px-3 py-1.5 uppercase tracking-widest rounded-xl shadow-lg">
+              Featured
+            </span>
+          )}
+          {car.badges?.slice(0, 1).map((b) => (
+            <span key={b} className={`text-[10px] font-extrabold px-3 py-1.5 rounded-xl shadow-sm backdrop-blur-md ${BADGE_OPTIONS[b]?.color || "bg-white/90 text-slate-700"}`}>
+              {b}
+            </span>
+          ))}
+        </div>
+
         {dist !== null && (
           <span className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md text-slate-900 text-[10px] font-extrabold px-3 py-1.5 rounded-xl border border-white shadow-sm">
             {dist}km away
           </span>
         )}
-        {car.badges?.length > 0 && (
-          <div className="absolute bottom-4 left-4 flex flex-wrap gap-1.5">
-            {car.badges.slice(0, 2).map((b) => (
-              <span key={b} className={`text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-sm backdrop-blur-md ${BADGE_OPTIONS[b]?.color || "bg-white/90 text-slate-700"}`}>
-                {b}
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
+      </Link>
 
-      <div className="p-6 flex flex-col gap-4">
-        <div className="space-y-1.5">
+      <div className="p-6 flex flex-col flex-1 gap-4">
+        <Link href={`/cars/${car.id}`} className="space-y-1.5">
           <div className="flex items-center gap-2.5">
             <span className="text-[11px] font-extrabold bg-brand-light text-brand px-2 py-0.5 rounded-md tracking-tight">
               {car.year}
@@ -302,33 +312,42 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
           <h3 className="font-extrabold text-slate-900 text-lg leading-snug truncate group-hover:text-brand transition-colors">
             {title}
           </h3>
-        </div>
+        </Link>
 
         <div className="flex flex-wrap gap-2">
-          {specs.map((s) => (
+          {specs.slice(0, 4).map((s) => (
             <span key={s} className="text-xs font-semibold text-slate-500 bg-slate-50 border border-slate-100/50 px-2.5 py-1 rounded-lg">
               {s}
             </span>
           ))}
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-slate-50 mt-2">
-          <div className="space-y-0.5">
-            <p className="text-2xl font-extrabold text-slate-900">{formatPrice(car.price)}</p>
-            {car.dealer?.verified && (
-              <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 uppercase tracking-wider">
-                <ShieldCheck className="w-3.5 h-3.5" /> Verified Dealer
-              </div>
-            )}
+        <div className="mt-auto space-y-4 pt-4 border-t border-slate-50">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <p className="text-2xl font-extrabold text-slate-900 leading-none">{formatPrice(car.price)}</p>
+              {totalLanded && (
+                <p className="text-[10px] font-extrabold text-brand uppercase tracking-wider">Est. {formatPrice(totalLanded)} Total</p>
+              )}
+            </div>
+            <Link href={`/cars/${car.id}`} className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-brand-light hover:text-brand transition-all">
+              <ChevronRight className="w-5 h-5" />
+            </Link>
           </div>
-          <div className="flex items-center gap-3">
-             <CompareButton car={car} />
-             <span className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-brand-light group-hover:text-brand transition-all">
-               <ChevronRight className="w-5 h-5" />
-             </span>
-          </div>
+
+          {/* Quick WhatsApp Inquiry */}
+          {car.dealer?.whatsapp && (
+            <a 
+              href={whatsappLink(car.dealer.whatsapp, title, car.dealer.name)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full py-3.5 rounded-[1.25rem] bg-emerald-50 text-emerald-600 text-xs font-extrabold uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all border border-emerald-100 shadow-sm"
+            >
+              <MessageCircle className="w-4 h-4 fill-current" /> WhatsApp Dealer
+            </a>
+          )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

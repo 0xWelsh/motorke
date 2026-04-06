@@ -4,8 +4,9 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { unstable_cache } from "next/cache";
-import { formatPrice, formatMileage, estimateDuty,
+import { formatPrice, formatMileage, estimateDuty, whatsappLink,
          BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/utils";
+import { MessageCircle, Play, ChevronRight, MapPin, Wallet, ShieldCheck } from "lucide-react";
 import EnquiryForm from "@/components/EnquiryForm";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
@@ -146,6 +147,11 @@ export default async function CarDetailPage({ params }) {
             </div>
             <div className="text-right space-y-1">
               <p className="text-4xl font-extrabold text-brand tracking-tight">{formatPrice(car.price)}</p>
+              {car.imported && !car.dutyPaid && (
+                <p className="text-sm font-extrabold text-emerald-600 uppercase tracking-widest">
+                  Est. {formatPrice(car.price + duty)} Total Landed
+                </p>
+              )}
               {car.negotiable && (
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-50 text-slate-400 text-[10px] font-extrabold uppercase tracking-widest">
                   Negotiable Price
@@ -236,10 +242,18 @@ export default async function CarDetailPage({ params }) {
               </div>
             </div>
             
-            <Link href={`/dealers/${dealer.slug}`}
-              className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-brand border-2 border-brand-light rounded-2xl py-4 hover:bg-brand-light transition-all">
-              Browse Dealer Inventory
-            </Link>
+            <div className="flex flex-col gap-3">
+              <Link href={`/dealers/${dealer.slug}`}
+                className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-brand border-2 border-brand-light rounded-2xl py-4 hover:bg-brand-light transition-all">
+                Browse Dealer Inventory
+              </Link>
+              {dealer.whatsapp && (
+                <a href={whatsappLink(dealer.whatsapp, title, dealer.name)} target="_blank" rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-white bg-emerald-500 rounded-2xl py-4 hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20">
+                  <MessageCircle className="w-4 h-4 fill-current" /> WhatsApp Dealer
+                </a>
+              )}
+            </div>
 
             <div className="h-px bg-slate-100" />
 

@@ -132,6 +132,7 @@ model Car {
   dutyPaid       Boolean       @default(true)
   description    String?
   features       String[]
+  videoUrl       String?
   available      Boolean       @default(true)
   featured       Boolean       @default(false)
   views          Int           @default(0)
