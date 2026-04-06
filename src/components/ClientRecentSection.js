@@ -71,7 +71,7 @@ export default function ClientRecentSection() {
               <p className="text-slate-700 text-sm font-medium">Picking up where you left off...</p>
             </div>
           </div>
-          <Link href="/account/saved" className="bg-slate-50 border border-slate-100 px-6 py-3 rounded-xl text-sm font-bold text-slate-900 hover:border-[var(--brand-accent)]/30 hover:text-[var(--brand)] transition-all shadow-sm flex items-center gap-2">
+          <Link href="/account?tab=saved" className="bg-slate-50 border border-slate-100 px-6 py-3 rounded-xl text-sm font-bold text-slate-900 hover:border-[var(--brand-accent)]/30 hover:text-[var(--brand)] transition-all shadow-sm flex items-center gap-2">
             My Saved Collection <ChevronRight className="w-4 h-4" />
           </Link>
         </div>

@@ -167,7 +167,7 @@ export default function Navbar({ user }) {
                       {user.role === "ADMIN"  && <MenuDropdownItem href="/admin"   label="Administration"  icon={<LayoutDashboard className="w-5 h-5" />} />}
                       {user.role === "DEALER" && <MenuDropdownItem href="/portal"  label="Dealer Portal"   icon={<Store className="w-5 h-5" />} />}
                       <MenuDropdownItem href="/account" label="Profile Settings" icon={<User className="w-5 h-5" />} />
-                      <MenuDropdownItem href="/saved"   label="Watchlist"        icon={<Heart className="w-5 h-5" />} />
+                      <MenuDropdownItem href="/account?tab=saved"   label="Watchlist"        icon={<Heart className="w-5 h-5" />} />
                       <div className="my-2 h-px bg-slate-100 mx-4" />
                       <form action="/api/auth/logout" method="POST">
                         <button type="submit" className="w-full flex items-center gap-4 px-5 py-4 text-[11px] font-extrabold uppercase tracking-widest text-rose-500 hover:bg-rose-50 rounded-2xl transition-all">
@@ -254,7 +254,7 @@ export default function Navbar({ user }) {
                 <p className="text-sm font-bold text-slate-900 mb-3 truncate">{user.email}</p>
                 <div className="space-y-2">
                   <Link href="/account" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Profile Settings</Link>
-                  <Link href="/saved" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Watchlist</Link>
+                  <Link href="/account?tab=saved" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Watchlist</Link>
                   {user.role === "ADMIN" && <Link href="/admin" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Administration</Link>}
                   {user.role === "DEALER" && <Link href="/portal" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Dealer Portal</Link>}
                 </div>

@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
-// POST — save a car
+// POST - save a car
 export async function POST(request, { params }) {
   const { carId } = await params;
   const session = await getSessionFromRequest();
@@ -16,12 +16,12 @@ export async function POST(request, { params }) {
     });
     return NextResponse.json({ saved: true });
   } catch {
-    // Already saved — ignore unique constraint error
+    // Already saved - ignore unique constraint error
     return NextResponse.json({ saved: true });
   }
 }
 
-// DELETE — unsave a car
+// DELETE - unsave a car
 export async function DELETE(request, { params }) {
   const { carId } = await params;
   const session = await getSessionFromRequest();
@@ -34,7 +34,7 @@ export async function DELETE(request, { params }) {
   return NextResponse.json({ saved: false });
 }
 
-// GET — check if car is saved
+// GET - check if car is saved
 export async function GET(request, { params }) {
   const { carId } = await params;
   const session = await getSessionFromRequest();
