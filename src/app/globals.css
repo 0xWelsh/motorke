@@ -1,39 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* Core Palette — "Trust & Precision" */
-  --bg:           #f8fafc; /* Refined slate background */
+  /* Core Palette — clean editorial warm neutral */
+  --bg:           #f5f3ef;
   --surface:      #ffffff;
-  --brand:        #064e3b; /* Slightly deeper emerald for better contrast */
-  --brand-light:  #f0fdf4; /* Softer emerald-50 */
-  --brand-accent: #10b981; /* Emerald-500 — Positive Action */
+  --brand:        #111111;
+  --brand-light:  #fff2e8;
+  --brand-accent: #ff5a2f;
   
-  /* Neutral Palette — Refined Contrast */
-  --text:         #0f172a; /* Slate-900 */
-  --text-muted:   #334155; /* Slate-700 — Improved readability */
-  --text-faint:   #64748b; /* Slate-500 */
+  --text:         #121212;
+  --text-muted:   #2f2f2f;
+  --text-faint:   #6a6a6a;
   
-  /* Borders — Soft & Professional */
-  --border:       #e2e8f0; /* Slate-200 */
-  --border-light: #f1f5f9; /* Slate-100 */
+  --border:       #ded8d0;
+  --border-light: #ebe6df;
   
-  /* Utilities — Premium Depth */
   --glass:        rgba(255, 255, 255, 0.7);
   --glass-blur:   blur(12px);
   --shadow-sm:    0 1px 3px 0 rgb(0 0 0 / 0.05);
   --shadow-md:    0 4px 12px -2px rgb(0 0 0 / 0.08), 0 2px 6px -2px rgb(0 0 0 / 0.04);
   --shadow-lg:    0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --radius:       1.25rem; /* Standard 20px rounding */
+  --radius:       1.25rem;
 }
 
 .dark {
   --bg:           #020617;
   --surface:      #0f172a;
-  --brand-light:  #064e3b20;
+  --brand-light:  #2b1a15;
   --text:         #f8fafc;
   --text-muted:   #cbd5e1;
   --text-faint:   #94a3b8;
@@ -44,17 +41,18 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
   background: var(--bg);
+  background-image: radial-gradient(circle at 10% 10%, rgba(255, 90, 47, 0.08), transparent 35%);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6; /* Improved line height for readability */
+  line-height: 1.6;
 }
 
-/* Typography Overrides for Readability */
 h1, h2, h3, h4, h5, h6 {
-  @apply tracking-tight font-extrabold;
+  font-family: 'Space Grotesk', sans-serif;
+  @apply tracking-tight font-bold;
 }
 
 p {
@@ -78,6 +76,12 @@ p {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
   border-color: var(--brand-accent);
+}
+
+.mk-pill-btn {
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
 }
 
 .mk-modal-overlay {

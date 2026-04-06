@@ -1,317 +1,294 @@
 // src/app/page.js
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
-import { formatPrice, BADGE_OPTIONS, whatsappLink, estimateDuty } from "@/lib/utils";
+import { formatPrice, BADGE_OPTIONS } from "@/lib/utils";
 import Link from "next/link";
 import LocationSearch from "@/components/LocationSearch";
 import {
-  ChevronRight, ShieldCheck, Newspaper,
-  Flame, Clock, Car, Wallet, Banknote, Briefcase, Trophy, Gem,
-  MessageCircle, Play
+  ArrowUpRight, ChevronRight, MapPin, ShieldCheck, Sparkles
 } from "lucide-react";
-import ClientRecentSection from "@/components/ClientRecentSection";
-import LiveActivityFeed from "@/components/LiveActivityFeed";
-import DealerDiscovery from "@/components/DealerDiscovery";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
 
 const getCachedData = unstable_cache(
   async () => {
     const week = new Date(); week.setDate(week.getDate() - 7);
-    const [featured, newArrivals, dealers, totalCars, totalDealers, priceCounts, articles] = await Promise.all([
+    const [featured, newArrivals, dealers, totalCars, totalDealers] = await Promise.all([
       db.car.findMany({
         where: { available: true, featured: true },
-        include: { images: { where: { isPrimary: true }, take: 1 }, dealer: { select: { id: true, name: true, location: true, verified: true, slug: true, whatsapp: true } } },
-        take: 6, orderBy: { createdAt: "desc" },
+        include: {
+          images: { where: { isPrimary: true }, take: 1 },
+          dealer: { select: { id: true, name: true, location: true, verified: true, slug: true } },
+        },
+        take: 8,
+        orderBy: { createdAt: "desc" },
       }),
       db.car.findMany({
         where: { available: true, createdAt: { gte: week } },
-        include: { images: { where: { isPrimary: true }, take: 1 }, dealer: { select: { id: true, name: true, location: true, whatsapp: true } } },
-        take: 4, orderBy: { createdAt: "desc" },
+        include: {
+          images: { where: { isPrimary: true }, take: 1 },
+          dealer: { select: { id: true, name: true, location: true, slug: true } },
+        },
+        take: 8,
+        orderBy: { createdAt: "desc" },
       }),
       db.dealer.findMany({
-        where: { featured: true },
+        where: { OR: [{ featured: true }, { verified: true }] },
         include: { _count: { select: { cars: { where: { available: true } } } } },
-        take: 4,
+        take: 8,
+        orderBy: [{ featured: "desc" }, { verified: "desc" }, { createdAt: "desc" }],
       }),
       db.car.count({ where: { available: true } }),
       db.dealer.count(),
-      Promise.all([
-        db.car.count({ where: { available: true, price: { lt: 1000000 } } }),
-        db.car.count({ where: { available: true, price: { gte: 1000000, lt: 2000000 } } }),
-        db.car.count({ where: { available: true, price: { gte: 2000000, lt: 4000000 } } }),
-        db.car.count({ where: { available: true, price: { gte: 4000000, lt: 7000000 } } }),
-        db.car.count({ where: { available: true, price: { gte: 7000000 } } }),
-      ]),
-      db.article.findMany({
-        take: 3,
-        orderBy: { publishedAt: "desc" }
-      }).then(async (articles) => {
-        if (articles.length < 3) {
-          try {
-            const { fetchAutomotiveNews } = await import("@/lib/news");
-            await fetchAutomotiveNews();
-            return db.article.findMany({ take: 3, orderBy: { publishedAt: "desc" } });
-          } catch (e) {
-            console.error("Failed to automatically fetch fresh news:", e);
-            return articles;
-          }
-        }
-        return articles;
-      }),
     ]);
-    return { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts, articles };
+    return { featured, newArrivals, dealers, totalCars, totalDealers };
   },
-  ["homepage-data"],
+  ["homepage-minimal-v2"],
   { revalidate: 900, tags: ["homepage"] }
 );
 
-const PRICE_RANGES = [
-  { label: "Under 1M", min: 0, max: 1000000, sub: "Budget Friendly", icon: <Wallet className="w-5 h-5" /> },
-  { label: "1M – 2M", min: 1000000, max: 2000000, sub: "Everyday Cars", icon: <Banknote className="w-5 h-5" /> },
-  { label: "2M – 4M", min: 2000000, max: 4000000, sub: "Executive Tier", icon: <Briefcase className="w-5 h-5" /> },
-  { label: "4M – 7M", min: 4000000, max: 7000000, sub: "Premium Utility", icon: <Trophy className="w-5 h-5" /> },
-  { label: "Above 7M", min: 7000000, max: 99000000, sub: "Luxury Selection", icon: <Gem className="w-5 h-5" /> },
-];
-
-const HERO_CAR = "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=900&q=85";
+const HERO_TEXTURE = "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1600&q=80";
 
 export default async function HomePage() {
-  const { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts, articles } = await getCachedData();
+  const { featured, newArrivals, dealers, totalCars, totalDealers } = await getCachedData();
+  const spotlight = featured.length > 0 ? featured : newArrivals;
+  const heroPrimary = spotlight[0] || null;
+  const heroSecondary = spotlight[1] || null;
 
   return (
-    <div className="bg-background min-h-screen pb-32">
-
-      {/* ── HERO ── */}
-      <section className="relative min-h-[750px] flex items-center overflow-hidden border-b border-slate-100">
-        {/* Immersive glassmorphism overlay */}
+    <div className="min-h-screen pb-28">
+      <section className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image src={HERO_CAR} fill priority className="object-cover scale-105" alt="" style={{ filter: "blur(4px)" }} />
-          <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-white/80 to-brand-light/40" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(3,105,161,0.05),transparent_50%)]" />
+          <Image src={HERO_TEXTURE} fill priority className="object-cover opacity-10" alt="" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,90,47,0.12),transparent_40%)]" />
+          <div className="absolute -top-24 -right-20 h-80 w-80 rounded-full bg-[#ff5a2f]/10 blur-3xl" />
         </div>
 
-        <div className="container mx-auto px-6 max-w-7xl py-24 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
+        <div className="container mx-auto px-6 max-w-7xl pt-8 pb-20 md:pt-14 md:pb-24 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             <div className="lg:col-span-7">
-              {/* Premium Status Badge */}
-              <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-white border border-slate-200/60 shadow-sm mb-10 backdrop-blur-sm">
-                <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                </span>
-                <span className="text-xs font-extrabold text-slate-700 uppercase tracking-widest">
-                  {totalCars.toLocaleString()} <span className="text-brand">Verified Units</span> Available Now
+              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white border border-[#e6dfd6] shadow-sm mb-8">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5a2f] animate-pulse" />
+                <span className="text-[11px] font-extrabold tracking-[0.18em] uppercase text-slate-700">
+                  {totalCars.toLocaleString()} Live Cars • {totalDealers.toLocaleString()} Dealerships
                 </span>
               </div>
 
-              <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 leading-[1] tracking-tighter mb-8">
-                Find your perfect car<br />
-                <span className="text-brand drop-shadow-sm">across all dealerships instantly.</span>
+              <h1 className="text-5xl md:text-7xl font-bold text-slate-900 leading-[0.95] tracking-tight mb-7">
+                Digital showroom.
+                <br />
+                <span className="text-[#ff5a2f]">Real dealerships.</span>
               </h1>
 
-              <p className="text-lg md:text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl font-medium">
-                Compare live listings from {totalDealers} trusted dealerships across the country; no more endless scrolling!
+              <p className="text-lg md:text-xl text-slate-600 mb-9 leading-relaxed max-w-2xl font-medium">
+                Buyers discover and compare quality inventory fast. Dealerships get a clean digital presence that actually converts.
               </p>
 
               <div className="w-full max-w-2xl mb-10">
                 <LocationSearch />
               </div>
 
-              <div className="flex flex-wrap items-center gap-4">
-                <span className="text-xs font-extrabold uppercase tracking-widest text-slate-400 mr-2">Quick Search</span>
-                {["SUVs", "Pickups", "Sedans", "Hatchbacks"].map(t => (
-                  <Link key={t} href={`/cars?search=${encodeURIComponent(t)}`}
-                    className="px-5 py-2.5 rounded-xl bg-white border border-slate-200/60 shadow-sm text-xs font-extrabold uppercase tracking-widest text-slate-600 hover:border-brand-accent hover:text-brand hover:bg-brand-light transition-all">
-                    {t}
+              <div className="flex flex-wrap items-center gap-3 mb-7">
+                <Link href="/cars" className="mk-pill-btn inline-flex items-center gap-2 bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 text-xs uppercase transition-colors">
+                  Explore Cars <ArrowUpRight className="w-4 h-4" />
+                </Link>
+                <Link href="/dealers" className="mk-pill-btn inline-flex items-center gap-2 bg-white border border-[#e7e1d8] text-slate-900 px-6 py-3 text-xs uppercase hover:bg-[#faf7f2] transition-colors">
+                  Visit Dealers <ChevronRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              <div className="flex flex-wrap gap-2.5">
+                {["SUV", "Pickup", "Sedan", "Hybrid", "Electric"].map((type) => (
+                  <Link
+                    key={type}
+                    href={`/cars?search=${encodeURIComponent(type)}`}
+                    className="px-4 py-2 rounded-full border border-[#e7e1d8] bg-white text-[11px] font-bold uppercase tracking-[0.12em] text-slate-700 hover:border-[#ff5a2f]/40 hover:text-slate-900"
+                  >
+                    {type}
                   </Link>
                 ))}
               </div>
             </div>
 
-            {/* LIVE PULSE COMPONENT */}
-            <div className="lg:col-span-5 hidden lg:block h-[500px]">
-               <LiveActivityFeed />
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ── BROWSE BY BUDGET ── */}
-      <section className="container mx-auto px-6 py-24 max-w-7xl">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div className="space-y-2">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Browse by Budget</h2>
-            <p className="text-lg text-slate-500 font-medium">Find the perfect match within your price range.</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {PRICE_RANGES.map((r, i) => (
-            <Link key={r.label} href={`/cars?minPrice=${r.min}&maxPrice=${r.max}`}
-              className="group bg-white border border-slate-200 hover:border-brand-accent/30 rounded-3xl p-8 flex flex-col items-center text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-brand group-hover:border-brand-accent/20 group-hover:bg-brand-light transition-all mb-6 text-2xl">
-                {r.icon}
-              </div>
-              <p className="text-lg font-extrabold text-slate-900 mb-1 group-hover:text-brand transition-colors">{r.label}</p>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 opacity-80">{r.sub}</p>
-              <div className="mt-auto pt-6 border-t border-slate-100 w-full flex items-center justify-center gap-2">
-                <span className="text-base font-extrabold text-slate-800">{priceCounts[i]}</span>
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Units Available</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ── DEALER DISCOVERY ── */}
-      <DealerDiscovery dealers={dealers} />
-
-      {/* ── RECENT / RECOMMENDATIONS ── */}
-      <ClientRecentSection />
-
-      {/* ── FEATURED CARS ── */}
-      {featured.length > 0 && (
-        <section className="container mx-auto px-6 py-32 max-w-7xl">
-          <div className="flex items-end justify-between mb-12">
-            <div className="space-y-2">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Featured Listings</h2>
-              <p className="text-lg text-slate-500 font-medium">Hand-picked inventory from our most trusted partners.</p>
-            </div>
-            <Link href="/cars" className="hidden sm:flex items-center gap-2 px-6 py-3 rounded-2xl bg-brand text-white text-xs font-extrabold uppercase tracking-widest hover:bg-brand-accent transition-all shadow-lg shadow-brand/10">
-              View All <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {featured.map((car, idx) => <CarCard key={car.id} car={car} priority={idx < 3} />)}
-          </div>
-        </section>
-      )}
-
-      {/* ── NEW ARRIVALS ── */}
-      {newArrivals.length > 0 && (
-        <section className="bg-slate-900 py-32 overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-1/3 h-full bg-brand-accent/5 blur-3xl" />
-          <div className="container mx-auto px-6 max-w-7xl relative z-10">
-            <div className="flex items-end justify-between mb-12">
-              <div className="space-y-2">
-                <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">Just Landed</h2>
-                <p className="text-lg text-slate-400 font-medium">The latest inventory added in the last 7 days.</p>
-              </div>
-              <Link href="/cars?sort=newest" className="text-sm font-extrabold uppercase tracking-widest text-brand-accent hover:text-white transition-colors flex items-center gap-2">
-                See More <ChevronRight className="w-4 h-4" />
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {newArrivals.map((car, idx) => <CarCard key={car.id} car={car} priority={idx < 4} />)}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ── MARKET NEWS ── */}
-      <section className="container mx-auto px-6 py-32 max-w-7xl">
-        <div className="flex items-center justify-between mb-16">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-2xl bg-slate-50 text-slate-400">
-              <Newspaper className="w-6 h-6" />
-            </div>
-            <div className="space-y-1">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Market Intelligence</h2>
-              <p className="text-lg text-slate-500 font-medium">Insights and updates from the Kenyan automotive landscape.</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {(articles?.length > 0 ? articles : [
-            { title: "KRA Announces Revised Duty Rates for 2026 Vehicle Imports", category: "Policy", publishedAt: "2026-03-24T00:00:00Z", urlToImage: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=800&q=80", url: "#" },
-            { title: "The Rise of Electric Vehicles: Kenya's Growing Charging Infrastructure", category: "Trends", publishedAt: "2026-03-22T00:00:00Z", urlToImage: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=800&q=80", url: "#" },
-            { title: "Port of Mombasa: Record 5,000 Units Landed This Week", category: "Logistics", publishedAt: "2026-03-20T00:00:00Z", urlToImage: "https://images.unsplash.com/photo-1493946740624-75b8787c3299?w=800&q=80", url: "#" },
-          ]).map((news, i) => (
-            <Link key={i} href={news.url || "#"} target={news.url?.startsWith("http") ? "_blank" : undefined} className="group block space-y-5">
-              <div className="aspect-[16/9] overflow-hidden rounded-3xl bg-slate-100 relative shadow-md">
-                {news.urlToImage ? (
-                  <Image src={news.urlToImage} alt={news.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-slate-300 text-xs font-bold uppercase tracking-widest">No Image</div>
-                )}
-                <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1.5 rounded-xl bg-white/90 backdrop-blur-md text-[10px] font-extrabold text-brand uppercase tracking-widest shadow-sm">{news.category}</span>
+            <div className="lg:col-span-5 hidden lg:grid grid-cols-2 gap-4">
+              {heroPrimary && (
+                <HeroCarPanel car={heroPrimary} tall />
+              )}
+              <div className="flex flex-col gap-4">
+                {heroSecondary && <HeroCarPanel car={heroSecondary} />}
+                <div className="bg-white border border-[#e8e2d9] rounded-3xl p-5 shadow-sm">
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-400 mb-3">Why Dealers Join</p>
+                  <ul className="space-y-2.5 text-sm text-slate-700 font-semibold">
+                    <li>Clean storefront page for every dealership</li>
+                    <li>Inventory visible to active buyers</li>
+                    <li>Direct leads from web and WhatsApp</li>
+                  </ul>
                 </div>
               </div>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 text-xs font-bold text-slate-400">
-                  <span>{new Date(news.publishedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</span>
-                  <span className="w-1 h-1 rounded-full bg-slate-200" />
-                  <span>5 min read</span>
-                </div>
-                <h3 className="text-xl font-extrabold text-slate-800 leading-snug group-hover:text-brand transition-colors line-clamp-2">{news.title}</h3>
-              </div>
-            </Link>
-          ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ── STATS BAR ── */}
+      <section className="container mx-auto px-6 py-20 max-w-7xl">
+        <div className="flex items-end justify-between mb-10 gap-5">
+          <div>
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Cars</p>
+            <h2 className="text-3xl md:text-5xl text-slate-900">Featured Inventory</h2>
+          </div>
+          <Link href="/cars" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 border border-[#e7e1d8] bg-white px-5 py-3 text-xs uppercase text-slate-900 hover:bg-[#faf7f2]">
+            View All <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          {spotlight.slice(0, 8).map((car) => <CarCard key={car.id} car={car} />)}
+        </div>
+      </section>
+
       <section className="container mx-auto px-6 py-16 max-w-7xl">
-        <div className="bg-white border border-slate-200 rounded-[3rem] p-12 md:p-20 shadow-xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-light/20 blur-3xl -mr-32 -mt-32 rounded-full" />
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 relative z-10">
-            {[
-              { v: `${totalCars}+`, l: "Active Units", i: <Car className="w-7 h-7" /> },
-              { v: totalDealers, l: "Verified Dealers", i: <ShieldCheck className="w-7 h-7" /> },
-              { v: "Live", l: "Comparison", i: <Flame className="w-7 h-7" /> },
-              { v: "24/7", l: "Dealer Access", i: <Clock className="w-7 h-7" /> },
-            ].map((s, idx) => (
-              <div key={idx} className="space-y-4 text-center lg:text-left">
-                <div className="flex justify-center lg:justify-start text-brand">
-                  {s.i}
-                </div>
-                <div className="space-y-1">
-                  <p className="text-5xl font-extrabold text-slate-900 tracking-tight">{s.v}</p>
-                  <p className="text-sm font-bold uppercase tracking-widest text-slate-400">{s.l}</p>
-                </div>
-              </div>
+        <div className="rounded-[2rem] border border-[#e7e1d8] bg-white p-8 md:p-10 shadow-sm">
+          <div className="flex items-center justify-between mb-8 gap-4">
+            <div>
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Dealers</p>
+              <h2 className="text-3xl md:text-4xl text-slate-900">Verified Dealerships</h2>
+            </div>
+            <Link href="/dealers" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 border border-[#e7e1d8] bg-white px-5 py-3 text-xs uppercase text-slate-900 hover:bg-[#faf7f2]">
+              All Dealers <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+            {dealers.slice(0, 8).map((dealer) => (
+              <DealerCard key={dealer.id} dealer={dealer} />
             ))}
           </div>
+        </section>
+
+      {newArrivals.length > 0 && (
+        <section className="container mx-auto px-6 py-8 max-w-7xl">
+          <div className="flex items-end justify-between mb-10 gap-4">
+            <div>
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Fresh</p>
+              <h2 className="text-3xl md:text-5xl text-slate-900">New Arrivals</h2>
+            </div>
+            <Link href="/cars?sort=newest" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 border border-[#e7e1d8] bg-white px-5 py-3 text-xs uppercase text-slate-900 hover:bg-[#faf7f2]">
+              Latest Cars <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            {newArrivals.slice(0, 8).map((car) => <CarCard key={car.id} car={car} />)}
+          </div>
+        </section>
+      )}
+
+      <section className="container mx-auto px-6 pt-16 max-w-7xl">
+        <div className="rounded-[2rem] overflow-hidden border border-[#e8e2d9] bg-[#111111] p-10 md:p-14 text-white relative">
+          <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-[#ff5a2f]/30 blur-3xl" />
+          <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/70 mb-3">For Dealerships</p>
+          <h3 className="text-3xl md:text-5xl leading-tight max-w-3xl mb-5">
+            Your cars deserve better than a social media album.
+          </h3>
+          <p className="text-base md:text-lg text-white/80 max-w-2xl mb-8 font-medium">
+            Get a modern digital storefront, profile your brand, and capture buyer leads in one clean system.
+          </p>
+          <Link href="/signup" className="mk-pill-btn inline-flex items-center gap-2 bg-white text-black px-6 py-3 text-xs uppercase hover:bg-[#ffe6db] transition-colors">
+            Create Dealer Account <ArrowUpRight className="w-4 h-4" />
+          </Link>
         </div>
       </section>
-
     </div>
   );
 }
 
-function CarCard({ car, priority = false }) {
-  const img = car.images[0]?.url;
-  const title = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
-  const totalLanded = car.imported && !car.dutyPaid ? car.price + estimateDuty(car.price, car.year) : null;
+function HeroCarPanel({ car, tall = false }) {
+  const image = car.images[0]?.url;
+  const title = `${car.year} ${car.make} ${car.model}`;
 
   return (
-    <div className="group block bg-white border border-slate-100 hover:border-brand-accent/40 rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-xl shadow-sm flex flex-col h-full">
-      <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-slate-50 overflow-hidden shrink-0">
+    <Link
+      href={`/cars/${car.id}`}
+      className={[
+        "group relative overflow-hidden rounded-3xl border border-[#e8e2d9] bg-white shadow-sm",
+        tall ? "min-h-[420px]" : "min-h-[200px]",
+      ].join(" ")}
+    >
+      {image ? (
+        <Image src={image} alt={title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+      ) : (
+        <div className="absolute inset-0 bg-[#f3eee7]" />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+      <div className="absolute left-4 right-4 bottom-4 text-white">
+        <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-white/80 mb-1">{car.dealer?.name}</p>
+        <p className="font-bold leading-tight">{title}</p>
+        <p className="text-sm font-bold mt-1 text-white/90">{formatPrice(car.price)}</p>
+      </div>
+    </Link>
+  );
+}
+
+function DealerCard({ dealer }) {
+  return (
+    <Link
+      href={`/dealers/${dealer.slug}`}
+      className="group border border-[#e8e2d9] bg-white rounded-3xl p-6 hover:shadow-md transition-all"
+    >
+      <div className="flex items-start justify-between mb-6">
+        <div className="w-14 h-14 rounded-2xl bg-[#faf7f2] border border-[#ede6dd] flex items-center justify-center text-xl font-black text-slate-900 overflow-hidden">
+          {dealer.logoUrl ? (
+            <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-contain p-2" />
+          ) : (
+            dealer.name?.[0]
+          )}
+        </div>
+        {dealer.verified && (
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-emerald-700">
+            <ShieldCheck className="w-3.5 h-3.5" /> Verified
+          </span>
+        )}
+      </div>
+
+      <h3 className="text-lg font-bold text-slate-900 group-hover:text-black mb-2 line-clamp-1">{dealer.name}</h3>
+      <p className="text-xs text-slate-500 font-bold uppercase tracking-[0.12em] flex items-center gap-1.5 mb-6">
+        <MapPin className="w-3.5 h-3.5" /> {dealer.location}
+      </p>
+
+      <div className="flex items-center justify-between border-t border-[#efe8df] pt-4">
+        <div>
+          <p className="text-2xl font-bold text-slate-900 leading-none">{dealer._count?.cars || 0}</p>
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mt-1">Live Cars</p>
+        </div>
+        <span className="inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">
+          View <ChevronRight className="w-4 h-4" />
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+function CarCard({ car }) {
+  const img = car.images[0]?.url;
+  const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
+
+  return (
+    <article className="group block bg-white border border-[#e8e2d9] hover:border-[#d8cec1] rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-xl shadow-sm flex flex-col h-full">
+      <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-[#f4efe8] overflow-hidden shrink-0">
         {img ? (
           <Image
-            src={img} alt={title} fill priority={priority}
+            src={img}
+            alt={title}
+            fill
             className="object-cover group-hover:scale-105 transition-transform duration-700"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-300 text-xs font-bold uppercase tracking-widest">No Image</div>
-        )}
-        
-        {/* TikTok Style Play Indicator */}
-        {car.videoUrl && (
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
-             <Play className="w-6 h-6 text-white fill-white ml-1" />
-          </div>
+          <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs font-bold uppercase tracking-widest">No Image</div>
         )}
 
         <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
           {car.badges?.slice(0, 2).map((b) => (
-            <span key={b} className={`text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-sm backdrop-blur-md ${BADGE_OPTIONS[b]?.color || "bg-white/90 text-slate-700"}`}>
+            <span key={b} className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow-sm backdrop-blur-md ${BADGE_OPTIONS[b]?.color || "bg-white/95 text-slate-700"}`}>
               {b}
             </span>
           ))}
@@ -320,57 +297,32 @@ function CarCard({ car, priority = false }) {
 
       <div className="p-5 flex flex-col flex-1 gap-4">
         <Link href={`/cars/${car.id}`} className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-extrabold bg-brand-light text-brand px-2 py-0.5 rounded-md tracking-tight">
-              {car.year}
-            </span>
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              {car.make}
-            </span>
-          </div>
-          <h3 className="font-extrabold text-slate-900 text-lg leading-snug truncate group-hover:text-brand transition-colors">
+          <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400">{car.make}</p>
+          <h3 className="font-bold text-slate-900 text-lg leading-snug line-clamp-2 group-hover:text-black transition-colors">
             {title}
           </h3>
         </Link>
 
         <div className="flex flex-wrap gap-2">
-          {[
-            car.mileage ? `${Math.round(car.mileage / 1000)}k km` : null,
-            car.fuelType?.split(" ")[0],
-            car.transmission === "AUTOMATIC" ? "Auto" : "Manual",
-          ].filter(Boolean).map((s) => (
-            <span key={s} className="text-xs font-semibold text-slate-500 bg-slate-50 border border-slate-100/50 px-2.5 py-1 rounded-lg">
-              {s}
+          {[car.fuelType, car.transmission === "AUTOMATIC" ? "Auto" : "Manual", car.bodyType].filter(Boolean).map((value) => (
+            <span key={value} className="text-[11px] font-bold text-slate-600 bg-[#faf7f2] border border-[#efe8df] px-2.5 py-1 rounded-full uppercase tracking-wide">
+              {value}
             </span>
           ))}
         </div>
 
-        <div className="mt-auto space-y-4">
-          <div className="flex items-center justify-between pt-4 border-t border-slate-50">
-            <div>
-              <p className="text-xl font-extrabold text-slate-900">{formatPrice(car.price)}</p>
-              {totalLanded && (
-                <p className="text-[10px] font-extrabold text-brand uppercase tracking-wider">Est. {formatPrice(totalLanded)} Total</p>
-              )}
-            </div>
-            <Link href={`/cars/${car.id}`} className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-brand-light hover:text-brand transition-all">
-              <ChevronRight className="w-4 h-4" />
-            </Link>
+        <div className="mt-auto flex items-end justify-between pt-4 border-t border-[#efe8df]">
+          <div>
+            <p className="text-xl font-bold text-slate-900 leading-none">{formatPrice(car.price)}</p>
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mt-1 flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5" /> {car.dealer?.name}
+            </p>
           </div>
-
-          {/* Quick WhatsApp Inquiry */}
-          {car.dealer?.whatsapp && (
-            <a 
-              href={whatsappLink(car.dealer.whatsapp, title, car.dealer.name)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl bg-emerald-50 text-emerald-600 text-xs font-extrabold uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all border border-emerald-100"
-            >
-              <MessageCircle className="w-4 h-4 fill-current" /> Chat with Dealer
-            </a>
-          )}
+          <Link href={`/cars/${car.id}`} className="w-9 h-9 rounded-full border border-[#e8e2d9] bg-white flex items-center justify-center text-slate-700 hover:bg-[#111111] hover:text-white transition-all">
+            <ChevronRight className="w-4 h-4" />
+          </Link>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

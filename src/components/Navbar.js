@@ -5,9 +5,8 @@ import Link from "next/link";
 import { 
   Search, User, Menu, X, ChevronDown, LogOut, Heart,
   LayoutDashboard, Store, PlusCircle, ShieldCheck, Compass,
-  Sun, Moon
+  ArrowUpRight
 } from "lucide-react";
-import { useTheme } from "next-themes";
 import { clsx } from "clsx";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
 import SearchSuggestions from "@/components/SearchSuggestions";
@@ -23,10 +22,6 @@ export default function Navbar({ user }) {
   const menuRef   = useRef(null);
   const searchRef = useRef(null);
   const router    = useRouter();
-  
-  const { theme, setTheme, systemTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
 
   const { debouncedTerm } = useDebouncedSearch(search, 300);
 
@@ -78,32 +73,36 @@ export default function Navbar({ user }) {
   }
 
   const links = [
-    { href: "/cars",    label: "Inventory", icon: <Store className="w-4 h-4" /> },
+    { href: "/cars",    label: "Cars", icon: <Store className="w-4 h-4" /> },
     { href: "/dealers", label: "Dealers",   icon: <ShieldCheck className="w-4 h-4" /> },
     { href: "/compare", label: "Compare",   icon: <Compass className="w-4 h-4" /> },
   ];
 
   return (
     <nav className={clsx(
-      "sticky top-0 z-[100] transition-all duration-500",
+      "sticky top-0 z-[100] transition-all duration-300",
       scrolled
-        ? "bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-b border-slate-200 py-3 shadow-md"
-        : "bg-white dark:bg-slate-950 border-b border-slate-100 py-5"
+        ? "bg-white/90 backdrop-blur-xl border-b border-[#e8e2d9] py-3 shadow-sm"
+        : "bg-transparent py-5"
     )}>
       <div className="container mx-auto px-6 max-w-7xl">
-        <div className="flex items-center justify-between gap-12">
+        <div className="flex items-center justify-between gap-8">
 
           {/* LOGO */}
-          <Link href="/" className="flex items-center shrink-0 group transition-transform active:scale-95">
-            <img src="/logo.png" alt="Motorke" className="h-14 w-auto object-contain" />
+          <Link href="/" className="flex items-center gap-3 shrink-0 group transition-transform active:scale-95">
+            <img src="/logo.png" alt="Motorke" className="h-11 w-auto object-contain" />
+            <div className="hidden 2xl:block">
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-slate-900 leading-none">Digital Showroom</p>
+              <p className="text-[10px] font-semibold tracking-wide text-slate-500 mt-1">Built for modern dealerships</p>
+            </div>
           </Link>
 
           {/* NAV LINKS */}
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-1.5 bg-white border border-[#e7e1d8] p-1 rounded-full shadow-sm">
             {links.map(({ href, label, icon }) => (
               <Link key={href} href={href}
-                className="flex items-center gap-2.5 px-5 py-2.5 rounded-2xl text-[13px] font-extrabold uppercase tracking-widest text-slate-700 hover:bg-slate-50 hover:text-brand transition-all">
-                <span className="text-slate-400 group-hover:text-brand">{icon}</span>
+                className="flex items-center gap-2 px-4 py-2.5 rounded-full text-[12px] font-extrabold uppercase tracking-[0.16em] text-slate-700 hover:bg-[#faf7f2] hover:text-black transition-all">
+                <span className="text-slate-400">{icon}</span>
                 {label}
               </Link>
             ))}
@@ -112,13 +111,13 @@ export default function Navbar({ user }) {
           {/* SEARCH */}
           <div ref={searchRef} className="hidden xl:flex flex-1 max-w-md relative group">
             <form onSubmit={handleSearch} className="w-full">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-brand transition-colors" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 transition-colors" />
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
-                placeholder="Search by make, model, or body type..."
-                className="w-full bg-slate-50 border border-slate-100 focus:border-brand-accent/30 focus:bg-white focus:ring-4 focus:ring-brand-accent/5 rounded-2xl py-3.5 pl-12 pr-6 text-sm font-bold outline-none transition-all placeholder:text-slate-400 text-slate-900 shadow-sm"
+                placeholder="Search cars, e.g. Prado, X5, CX-5"
+                className="w-full bg-white border border-[#e7e1d8] focus:border-[#ff5a2f]/40 focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-full py-3 pl-12 pr-6 text-sm font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900 shadow-sm"
               />
             </form>
             {showSuggestions && (
@@ -133,15 +132,15 @@ export default function Navbar({ user }) {
           </div>
 
           {/* USER ACTIONS */}
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-4">
             {user ? (
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-4">
                 <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setUserMenu(!userMenu)}
-                  className="flex items-center gap-3 bg-slate-50 border border-slate-200 pl-2 pr-5 py-2 rounded-2xl hover:border-slate-300 transition-all shadow-sm"
+                  className="flex items-center gap-3 bg-white border border-[#e7e1d8] pl-2 pr-5 py-2 rounded-full hover:border-[#d8d0c6] transition-all shadow-sm"
                 >
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center font-extrabold text-sm uppercase text-white bg-brand shadow-lg shadow-brand/20">
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center font-extrabold text-sm uppercase text-white bg-[#111111]">
                     {user.name?.[0]}
                   </div>
                   <span className="text-sm font-extrabold text-slate-900 tracking-tight">{user.name?.split(" ")[0]}</span>
@@ -149,8 +148,8 @@ export default function Navbar({ user }) {
                 </button>
 
                 {userMenu && (
-                  <div className="absolute right-0 top-full mt-4 w-72 bg-white border border-slate-200 rounded-3xl shadow-2xl overflow-hidden p-3 animate-in fade-in slide-in-from-top-2">
-                    <div className="px-5 py-4 bg-slate-50 rounded-2xl mb-3">
+                  <div className="absolute right-0 top-full mt-4 w-72 bg-white border border-[#e7e1d8] rounded-3xl shadow-2xl overflow-hidden p-3 animate-in fade-in slide-in-from-top-2">
+                    <div className="px-5 py-4 bg-[#faf7f2] rounded-2xl mb-3">
                       <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-1">Signed in as</p>
                       <p className="text-sm font-extrabold text-slate-900 truncate">{user.email}</p>
                     </div>
@@ -172,19 +171,19 @@ export default function Navbar({ user }) {
               </div>
             ) : (
               <div className="flex items-center gap-4">
-                <Link href="/login" className="text-sm font-extrabold text-slate-900 hover:text-brand transition-colors px-4">
+                <Link href="/login" className="text-sm font-extrabold text-slate-900 hover:text-black transition-colors px-4">
                   Sign In
                 </Link>
-                <Link href="/signup" className="text-white px-8 py-4 rounded-2xl text-xs font-extrabold uppercase tracking-widest transition-all hover:bg-brand bg-brand-accent shadow-lg shadow-brand-accent/20 active:scale-95">
-                  Get Started
+                <Link href="/signup" className="mk-pill-btn text-white px-6 py-3 text-xs uppercase transition-all bg-[#111111] hover:bg-[#ff5a2f] shadow-lg shadow-black/10 active:scale-95 inline-flex items-center gap-2">
+                  For Dealers <ArrowUpRight className="w-4 h-4" />
                 </Link>
               </div>
             )}
 
             {user && (user.role === "DEALER" || user.role === "ADMIN") && (
               <>
-                <div className="h-8 w-px bg-slate-100" />
-                <Link href="/portal/cars/new" className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-slate-900 hover:text-brand transition-colors">
+                <div className="h-8 w-px bg-[#e5ddd2]" />
+                <Link href="/portal/cars/new" className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-slate-900 hover:text-[#ff5a2f] transition-colors">
                   <PlusCircle className="w-5 h-5" /> Post Unit
                 </Link>
               </>
@@ -195,7 +194,7 @@ export default function Navbar({ user }) {
           <div className="lg:hidden">
             <button
               onClick={() => setOpen(!open)}
-              className="w-10 h-10 flex items-center justify-center bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors"
+              className="w-10 h-10 flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-700 rounded-xl hover:bg-[#faf7f2] transition-colors"
             >
               {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -205,17 +204,28 @@ export default function Navbar({ user }) {
 
       {/* MOBILE MENU */}
       {open && (
-        <div className="lg:hidden fixed inset-0 top-0 bg-white z-[200] p-8">
+        <div className="lg:hidden fixed inset-0 top-0 bg-[#f5f3ef] z-[200] p-8">
           <div className="flex items-center justify-between mb-10">
             <img src="/logo.png" alt="Motorke" className="h-10 w-auto object-contain" />
-            <button onClick={() => setOpen(false)} className="w-10 h-10 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center">
+            <button onClick={() => setOpen(false)} className="w-10 h-10 bg-white border border-[#e7e1d8] text-slate-700 rounded-xl flex items-center justify-center">
               <X className="w-5 h-5" />
             </button>
           </div>
+          <form onSubmit={handleSearch} className="mb-8">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search cars"
+                className="w-full bg-white border border-[#e7e1d8] rounded-full py-3 pl-12 pr-4 text-sm font-semibold outline-none"
+              />
+            </div>
+          </form>
           <div className="space-y-2">
             {links.map(({ href, label }) => (
               <Link key={href} href={href} onClick={() => setOpen(false)}
-                className="block text-2xl font-black text-slate-800 py-4 border-b border-slate-100 hover:text-[var(--brand)] transition-colors">
+                className="block text-2xl font-black text-slate-800 py-4 border-b border-[#e7e1d8] hover:text-black transition-colors">
                 {label}
               </Link>
             ))}
@@ -224,17 +234,17 @@ export default function Navbar({ user }) {
             {!user ? (
               <>
                 <Link href="/signup" onClick={() => setOpen(false)}
-                  className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-2xl bg-[var(--brand)] shadow-lg shadow-[var(--brand)]/10">
-                  Get Started
+                  className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-full bg-[#111111] shadow-lg shadow-black/10">
+                  For Dealers
                 </Link>
                 <Link href="/login" onClick={() => setOpen(false)}
-                  className="block py-4 text-center font-black uppercase tracking-widest text-slate-700 bg-slate-100 rounded-2xl">
+                  className="block py-4 text-center font-black uppercase tracking-widest text-slate-700 bg-white border border-[#e7e1d8] rounded-full">
                   Sign In
                 </Link>
               </>
             ) : (
               <Link href="/account" onClick={() => setOpen(false)}
-                className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-2xl bg-[var(--brand)] shadow-lg shadow-[var(--brand)]/10">
+                className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-full bg-[#111111] shadow-lg shadow-black/10">
                 My Dashboard
               </Link>
             )}
@@ -247,7 +257,7 @@ export default function Navbar({ user }) {
 
 function MenuDropdownItem({ href, label, icon }) {
   return (
-    <Link href={href} className="flex items-center gap-3 px-4 py-3 text-xs font-bold uppercase tracking-widest text-slate-900 hover:bg-slate-50 rounded-xl transition-colors">
+    <Link href={href} className="flex items-center gap-3 px-4 py-3 text-xs font-bold uppercase tracking-widest text-slate-900 hover:bg-[#faf7f2] rounded-xl transition-colors">
       <span className="text-slate-400">{icon}</span>
       {label}
     </Link>
