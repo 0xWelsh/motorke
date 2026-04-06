@@ -67,7 +67,8 @@ export function CompareProvider({ children }) {
       removeFromCompare, 
       clearCompare, 
       isInCompare,
-      isFull: compareCars.length >= 3
+      isFull: compareCars.length >= 3,
+      isInitialized
     }}>
       {children}
     </CompareContext.Provider>
