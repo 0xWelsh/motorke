@@ -163,6 +163,7 @@ export default async function HomePage() {
               <DealerCard key={dealer.id} dealer={dealer} />
             ))}
           </div>
+        </div>
         </section>
 
       {newArrivals.length > 0 && (
