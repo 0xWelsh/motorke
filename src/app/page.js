@@ -64,27 +64,31 @@ export default async function HomePage() {
         <div className="absolute inset-0 z-0">
           <Image src={HERO_TEXTURE} fill priority className="object-cover opacity-10" alt="" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,90,47,0.12),transparent_40%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_25%,rgba(17,17,17,0.08),transparent_38%)]" />
           <div className="absolute -top-24 -right-20 h-80 w-80 rounded-full bg-[#ff5a2f]/10 blur-3xl" />
         </div>
 
         <div className="container mx-auto px-6 max-w-7xl pt-8 pb-20 md:pt-14 md:pb-24 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white border border-[#e6dfd6] shadow-sm mb-8">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5a2f] animate-pulse" />
-                <span className="text-[11px] font-extrabold tracking-[0.18em] uppercase text-slate-700">
-                  {totalCars.toLocaleString()} Live Cars • {totalDealers.toLocaleString()} Dealerships
+              <div className="flex flex-wrap items-center gap-3 sm:gap-5 border-b border-[#e6dfd6] pb-3 mb-8">
+                <span className="inline-flex items-center gap-2 text-[11px] font-extrabold tracking-[0.16em] uppercase text-slate-600">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#ff5a2f] animate-pulse" />
+                  Live Market
                 </span>
+                <span className="text-[11px] font-black tracking-[0.14em] uppercase text-slate-700">{totalCars.toLocaleString()} Cars</span>
+                <span className="text-[11px] font-black tracking-[0.14em] uppercase text-slate-700">{totalDealers.toLocaleString()} Dealers</span>
+                <span className="text-[11px] font-black tracking-[0.14em] uppercase text-slate-400">Updated Daily</span>
               </div>
 
-              <h1 className="text-5xl md:text-7xl font-bold text-slate-900 leading-[0.95] tracking-tight mb-7">
-                Digital showroom.
+              <h1 className="text-5xl md:text-7xl font-bold text-slate-900 leading-[0.92] tracking-tight mb-7">
+                Buy cars with
                 <br />
-                <span className="text-[#ff5a2f]">Real dealerships.</span>
+                <span className="text-[#ff5a2f]">dealer-level clarity.</span>
               </h1>
 
               <p className="text-lg md:text-xl text-slate-600 mb-9 leading-relaxed max-w-2xl font-medium">
-                Buyers discover and compare quality inventory fast. Dealerships get a clean digital presence that actually converts.
+                Explore inventory from verified showrooms, compare units side by side, and reach real dealership teams without noisy listings.
               </p>
 
               <div className="w-full max-w-2xl mb-10">
@@ -100,7 +104,7 @@ export default async function HomePage() {
                 </Link>
               </div>
 
-              <div className="flex flex-wrap gap-2.5">
+              <div className="flex flex-wrap gap-2.5 mb-8">
                 {["SUV", "Pickup", "Sedan", "Hybrid", "Electric"].map((type) => (
                   <Link
                     key={type}
@@ -111,22 +115,44 @@ export default async function HomePage() {
                   </Link>
                 ))}
               </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-[#e7e1d8] max-w-2xl">
+                {[
+                  { label: "Verified Profiles", value: "Trust Signals" },
+                  { label: "Transparent Specs", value: "No Guesswork" },
+                  { label: "Direct Contact", value: "Fast Follow-up" },
+                ].map((item) => (
+                  <div key={item.label}>
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-1">{item.label}</p>
+                    <p className="text-sm font-bold text-slate-800">{item.value}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="lg:col-span-5 hidden lg:grid grid-cols-2 gap-4">
-              {heroPrimary && (
-                <HeroCarPanel car={heroPrimary} tall />
-              )}
-              <div className="flex flex-col gap-4">
-                {heroSecondary && <HeroCarPanel car={heroSecondary} />}
-                <div className="bg-white border border-[#e8e2d9] rounded-xl p-5">
-                  <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-400 mb-3">Why Dealers Join</p>
-                  <ul className="space-y-2.5 text-sm text-slate-700 font-semibold">
-                    <li>Clean storefront page for every dealership</li>
-                    <li>Inventory visible to active buyers</li>
-                    <li>Direct leads from web and WhatsApp</li>
-                  </ul>
+            <div className="lg:col-span-5 hidden lg:flex flex-col gap-4">
+              <div className="grid grid-cols-2 gap-4">
+                {heroPrimary && (
+                  <HeroCarPanel car={heroPrimary} tall />
+                )}
+                <div className="flex flex-col gap-4">
+                  {heroSecondary && <HeroCarPanel car={heroSecondary} />}
+                  <div className="py-2 border-y border-[#e8e2d9]">
+                    <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-400 mb-2">Dealer Growth</p>
+                    <ul className="space-y-2 text-sm text-slate-700 font-semibold">
+                      <li>Visible showroom presence</li>
+                      <li>Discovery by active buyers</li>
+                      <li>Leads from web and WhatsApp</li>
+                    </ul>
+                  </div>
                 </div>
+              </div>
+
+              <div className="flex items-center justify-between border-b border-[#e8e2d9] pb-3">
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-500">Trusted Buying Starts Here</p>
+                <Link href="/dealers" className="mk-inline-action inline-flex items-center gap-1.5">
+                  See Dealers <ArrowUpRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
           </div>
