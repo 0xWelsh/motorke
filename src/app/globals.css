@@ -84,6 +84,36 @@ p {
   letter-spacing: 0.02em;
 }
 
+.mk-inline-action {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #475569;
+  transition: color 0.2s ease;
+}
+
+.mk-inline-action:hover {
+  color: #111827;
+}
+
+/* Global de-boxing pass: reduce visual weight of repeated card/button containers */
+.shadow-sm,
+.shadow-md,
+.shadow-lg,
+.shadow-xl,
+.shadow-2xl {
+  box-shadow: none !important;
+}
+
+[class*="bg-white"][class*="border"][class*="rounded-2xl"],
+[class*="bg-white"][class*="border"][class*="rounded-3xl"],
+[class*="bg-white"][class*="border"][class*="rounded-[2rem]"],
+[class*="bg-white"][class*="border"][class*="rounded-[2.5rem]"],
+[class*="bg-white"][class*="border"][class*="rounded-[3rem]"] {
+  box-shadow: none !important;
+}
+
 .mk-logo-shell {
   position: relative;
   display: inline-flex;

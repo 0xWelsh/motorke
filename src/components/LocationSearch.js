@@ -102,7 +102,7 @@ export default function LocationSearch() {
       <form 
         ref={formRef}
         onSubmit={handleSubmit} 
-        className="flex items-center bg-white border border-slate-100 rounded-2xl p-2 shadow-sm focus-within:border-[var(--brand-accent)]/30 transition-all duration-300"
+        className="flex items-center bg-white border border-slate-100 rounded-xl p-2 focus-within:border-[var(--brand-accent)]/30 transition-all duration-300"
       >
         <div className="flex-1 flex items-center px-4 gap-3">
           <Search className="w-5 h-5 dark:text-slate-400 text-slate-600 shrink-0" />
@@ -120,7 +120,7 @@ export default function LocationSearch() {
         <button
           type="button"
           onClick={detectLocation}
-          className={`p-3 rounded-xl transition-all duration-200 flex items-center gap-2 group ${
+          className={`p-3 rounded-lg transition-all duration-200 flex items-center gap-2 group ${
             location ? "bg-[var(--brand-light)] text-[var(--brand)]" : "bg-transparent text-slate-400 hover:text-slate-900"
           }`}
           title="Use my location"
@@ -135,7 +135,7 @@ export default function LocationSearch() {
 
         <button 
           type="submit" 
-          className="bg-[var(--brand)] hover:bg-[var(--brand-accent)] text-white px-8 py-3 rounded-xl font-black text-sm transition-all duration-300 ml-2 shadow-lg shadow-[var(--brand)]/10"
+          className="bg-[var(--brand)] hover:bg-[var(--brand-accent)] text-white px-8 py-3 rounded-lg font-black text-sm transition-all duration-300 ml-2"
         >
           Search
         </button>

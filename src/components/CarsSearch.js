@@ -150,7 +150,7 @@ export default function CarsSearch({
                   onChange={e => setSearch(e.target.value)}
                   onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                   placeholder="Search cars, e.g. Prado, CX-5, X-Trail" 
-                  className="w-full bg-white border border-[#e7e1d8] rounded-full pl-11 pr-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:bg-white focus:border-[#ff5a2f]/35 focus:ring-4 focus:ring-[#ff5a2f]/10 transition-all placeholder:text-slate-400 shadow-sm"
+                  className="w-full bg-white border border-[#e7e1d8] rounded-xl pl-11 pr-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:bg-white focus:border-[#ff5a2f]/35 focus:ring-4 focus:ring-[#ff5a2f]/10 transition-all placeholder:text-slate-400"
                 />
               </div>
 
@@ -163,7 +163,7 @@ export default function CarsSearch({
                     setMake(next);
                     pushWith({ make: next });
                   }}
-                  className="bg-white border border-[#e7e1d8] rounded-full px-4 py-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-600 outline-none focus:border-[#ff5a2f]/35 transition-all cursor-pointer shadow-sm"
+                  className="bg-white border border-[#e7e1d8] rounded-xl px-4 py-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-600 outline-none focus:border-[#ff5a2f]/35 transition-all cursor-pointer"
                 >
                   <option value="">All Makes</option>
                   {allMakes.map(m => <option key={m.make} value={m.make}>{m.make}</option>)}
@@ -176,7 +176,7 @@ export default function CarsSearch({
                     setBodyType(next);
                     pushWith({ bodyType: next });
                   }}
-                  className="bg-white border border-[#e7e1d8] rounded-full px-4 py-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-600 outline-none focus:border-[#ff5a2f]/35 transition-all cursor-pointer shadow-sm"
+                  className="bg-white border border-[#e7e1d8] rounded-xl px-4 py-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-600 outline-none focus:border-[#ff5a2f]/35 transition-all cursor-pointer"
                 >
                   <option value="">All Types</option>
                   {Object.entries(bodyTypeLabels).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
@@ -185,10 +185,10 @@ export default function CarsSearch({
                 <button 
                   type="button"
                   onClick={() => setShowMore(!showMore)}
-                  className={`flex items-center gap-2 px-4 py-3 rounded-full text-[11px] font-extrabold uppercase tracking-[0.14em] transition-all ${
+                  className={`flex items-center gap-2 px-4 py-3 rounded-xl text-[11px] font-extrabold uppercase tracking-[0.14em] transition-all ${
                     showMore || fuelType || transmission || county || minPrice || maxPrice
                     ? "bg-[#fff2e8] text-[#111111] border border-[#ff5a2f]/30" 
-                    : "bg-white border border-[#e7e1d8] text-slate-600 hover:text-black shadow-sm"
+                    : "bg-white border border-[#e7e1d8] text-slate-600 hover:text-black"
                   }`}
                 >
                   <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -205,7 +205,7 @@ export default function CarsSearch({
                     setSort(next);
                     pushWith({ sort: next });
                   }}
-                  className="bg-white border border-[#e7e1d8] rounded-full px-4 py-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-600 outline-none focus:border-[#ff5a2f]/35 transition-all cursor-pointer shadow-sm"
+                  className="bg-white border border-[#e7e1d8] rounded-xl px-4 py-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-600 outline-none focus:border-[#ff5a2f]/35 transition-all cursor-pointer"
                 >
                   <option value="newest">Newest First</option>
                   <option value="price_asc">Lowest Price</option>
@@ -214,7 +214,7 @@ export default function CarsSearch({
                   <option value="year_desc">Newest Year</option>
                 </select>
 
-                <button type="submit" className="bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 rounded-full transition-all text-xs font-extrabold uppercase tracking-[0.14em] shadow-lg shadow-black/10 active:scale-95">
+                <button type="submit" className="bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 rounded-xl transition-all text-xs font-extrabold uppercase tracking-[0.14em] active:scale-95">
                   Find
                 </button>
 
@@ -222,7 +222,7 @@ export default function CarsSearch({
                   <button 
                     type="button"
                     onClick={clearFilters}
-                    className="p-3 bg-white hover:bg-[#faf7f2] text-slate-400 hover:text-[#111111] rounded-full transition-all border border-[#e7e1d8]"
+                    className="p-3 bg-white hover:bg-[#faf7f2] text-slate-400 hover:text-[#111111] rounded-xl transition-all border border-[#e7e1d8]"
                   >
                     <X className="w-4 h-4" />
                   </button>

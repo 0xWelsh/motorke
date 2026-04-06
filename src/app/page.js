@@ -119,7 +119,7 @@ export default async function HomePage() {
               )}
               <div className="flex flex-col gap-4">
                 {heroSecondary && <HeroCarPanel car={heroSecondary} />}
-                <div className="bg-white border border-[#e8e2d9] rounded-3xl p-5 shadow-sm">
+                <div className="bg-white border border-[#e8e2d9] rounded-xl p-5">
                   <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-400 mb-3">Why Dealers Join</p>
                   <ul className="space-y-2.5 text-sm text-slate-700 font-semibold">
                     <li>Clean storefront page for every dealership</li>
@@ -149,8 +149,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="container mx-auto px-6 py-16 max-w-7xl">
-        <div className="rounded-[2rem] border border-[#e7e1d8] bg-white p-8 md:p-10 shadow-sm">
+      <section className="container mx-auto px-6 py-16 max-w-7xl border-y border-[#e7e1d8]">
+        <div className="py-8 md:py-10">
           <div className="flex items-center justify-between mb-8 gap-4">
             <div>
               <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Dealers</p>
@@ -167,7 +167,7 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
-        </section>
+      </section>
 
       {newArrivals.length > 0 && (
         <section className="container mx-auto px-6 py-8 max-w-7xl">
@@ -213,7 +213,7 @@ function HeroCarPanel({ car, tall = false }) {
     <Link
       href={`/cars/${car.id}`}
       className={[
-        "group relative overflow-hidden rounded-3xl border border-[#e8e2d9] bg-white shadow-sm",
+        "group relative overflow-hidden rounded-xl border border-[#e8e2d9] bg-white",
         tall ? "min-h-[420px]" : "min-h-[200px]",
       ].join(" ")}
     >
@@ -238,10 +238,10 @@ function DealerCard({ dealer }) {
   return (
     <Link
       href={`/dealers/${dealer.slug}`}
-      className="group border border-[#e8e2d9] bg-white rounded-3xl p-6 hover:shadow-md transition-all"
+      className="group border-y border-[#e8e2d9] py-5 transition-all"
     >
-      <div className="flex items-start justify-between mb-6">
-        <div className="w-14 h-14 rounded-2xl bg-[#faf7f2] border border-[#ede6dd] flex items-center justify-center text-xl font-black text-slate-900 overflow-hidden">
+      <div className="flex items-start justify-between mb-4">
+        <div className="w-14 h-14 rounded-xl bg-[#faf7f2] border border-[#ede6dd] flex items-center justify-center text-xl font-black text-slate-900 overflow-hidden">
           {brandImage ? (
             <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover" />
           ) : (
@@ -265,7 +265,7 @@ function DealerCard({ dealer }) {
           <p className="text-2xl font-bold text-slate-900 leading-none">{dealer._count?.cars || 0}</p>
           <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mt-1">Live Cars</p>
         </div>
-        <span className="inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">
+        <span className="mk-inline-action inline-flex items-center gap-1">
           View <ChevronRight className="w-4 h-4" />
         </span>
       </div>
@@ -278,7 +278,7 @@ function CarCard({ car }) {
   const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
 
   return (
-    <article className="group block bg-white border border-[#e8e2d9] hover:border-[#d8cec1] rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-xl shadow-sm flex flex-col h-full">
+    <article className="group block bg-white border border-[#e8e2d9] hover:border-[#d8cec1] rounded-xl overflow-hidden transition-all duration-500 flex flex-col h-full">
       <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-[#f4efe8] overflow-hidden shrink-0">
         {img ? (
           <Image
@@ -294,7 +294,7 @@ function CarCard({ car }) {
 
         <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
           {car.badges?.slice(0, 2).map((b) => (
-            <span key={b} className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow-sm backdrop-blur-md ${BADGE_OPTIONS[b]?.color || "bg-white/95 text-slate-700"}`}>
+            <span key={b} className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full backdrop-blur-md ${BADGE_OPTIONS[b]?.color || "bg-white/95 text-slate-700"}`}>
               {b}
             </span>
           ))}
@@ -324,7 +324,7 @@ function CarCard({ car }) {
               <Sparkles className="w-3.5 h-3.5" /> {car.dealer?.name}
             </p>
           </div>
-          <Link href={`/cars/${car.id}`} className="w-9 h-9 rounded-full border border-[#e8e2d9] bg-white flex items-center justify-center text-slate-700 hover:bg-[#111111] hover:text-white transition-all">
+          <Link href={`/cars/${car.id}`} className="w-9 h-9 rounded-lg border border-[#e8e2d9] bg-white flex items-center justify-center text-slate-700 hover:bg-[#111111] hover:text-white transition-all">
             <ChevronRight className="w-4 h-4" />
           </Link>
         </div>

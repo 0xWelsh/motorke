@@ -101,10 +101,10 @@ export default function Navbar({ user }) {
           </Link>
 
           {/* NAV LINKS */}
-          <div className="hidden lg:flex items-center gap-1.5 bg-white border border-[#e7e1d8] p-1 rounded-full shadow-sm">
+          <div className="hidden lg:flex items-center gap-5 border-b border-[#e7e1d8] pb-2">
             {links.map(({ href, label, icon }) => (
               <Link key={href} href={href}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-full text-[12px] font-extrabold uppercase tracking-[0.16em] text-slate-700 hover:bg-[#faf7f2] hover:text-black transition-all">
+                className="flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-[0.16em] text-slate-700 hover:text-black transition-all">
                 <span className="text-slate-400">{icon}</span>
                 {label}
               </Link>
@@ -120,7 +120,7 @@ export default function Navbar({ user }) {
                 onChange={e => setSearch(e.target.value)}
                 onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                 placeholder="Search cars, e.g. Prado, X5, CX-5"
-                className="w-full bg-white border border-[#e7e1d8] focus:border-[#ff5a2f]/40 focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-full py-3 pl-12 pr-6 text-sm font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900 shadow-sm"
+                className="w-full bg-white border border-[#e7e1d8] focus:border-[#ff5a2f]/40 focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-xl py-3 pl-12 pr-6 text-sm font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900"
               />
             </form>
             {showSuggestions && (
@@ -141,7 +141,7 @@ export default function Navbar({ user }) {
                 <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setUserMenu(!userMenu)}
-                  className="flex items-center gap-3 bg-white border border-[#e7e1d8] pl-2 pr-5 py-2 rounded-full hover:border-[#d8d0c6] transition-all shadow-sm"
+                  className="flex items-center gap-3 bg-white border border-[#e7e1d8] pl-2 pr-5 py-2 rounded-xl hover:border-[#d8d0c6] transition-all"
                 >
                   <div className="w-9 h-9 rounded-full flex items-center justify-center font-extrabold text-sm uppercase text-white bg-[#111111]">
                     {user.name?.[0]}
@@ -177,7 +177,7 @@ export default function Navbar({ user }) {
                 <Link href="/login" className="text-sm font-extrabold text-slate-900 hover:text-black transition-colors px-4">
                   Sign In
                 </Link>
-                <Link href="/signup" className="mk-pill-btn text-white px-6 py-3 text-xs uppercase transition-all bg-[#111111] hover:bg-[#ff5a2f] shadow-lg shadow-black/10 active:scale-95 inline-flex items-center gap-2">
+                <Link href="/signup" className="mk-pill-btn text-white px-6 py-3 text-xs uppercase transition-all bg-[#111111] hover:bg-[#ff5a2f] active:scale-95 inline-flex items-center gap-2">
                   For Dealers <ArrowUpRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -224,7 +224,7 @@ export default function Navbar({ user }) {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search cars"
-                className="w-full bg-white border border-[#e7e1d8] rounded-full py-3 pl-12 pr-4 text-sm font-semibold outline-none"
+                className="w-full bg-white border border-[#e7e1d8] rounded-xl py-3 pl-12 pr-4 text-sm font-semibold outline-none"
               />
             </div>
           </form>
@@ -240,17 +240,17 @@ export default function Navbar({ user }) {
             {!user ? (
               <>
                 <Link href="/signup" onClick={() => setOpen(false)}
-                  className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-full bg-[#111111] shadow-lg shadow-black/10">
+                  className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-xl bg-[#111111]">
                   For Dealers
                 </Link>
                 <Link href="/login" onClick={() => setOpen(false)}
-                  className="block py-4 text-center font-black uppercase tracking-widest text-slate-700 bg-white border border-[#e7e1d8] rounded-full">
+                  className="block py-4 text-center font-black uppercase tracking-widest text-slate-700 bg-white border border-[#e7e1d8] rounded-xl">
                   Sign In
                 </Link>
               </>
             ) : (
               <Link href="/account" onClick={() => setOpen(false)}
-                className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-full bg-[#111111] shadow-lg shadow-black/10">
+                className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-xl bg-[#111111]">
                 My Dashboard
               </Link>
             )}

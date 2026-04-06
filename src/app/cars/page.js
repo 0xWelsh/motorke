@@ -148,7 +148,7 @@ export default async function CarsPage({ searchParams }) {
       <div className="container mx-auto px-6 py-12 max-w-7xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 mb-3 rounded-full border border-[#e7e1d8] bg-white px-3 py-1.5">
+            <div className="inline-flex items-center gap-2 mb-3 border-b border-[#e7e1d8] pb-1">
               <span className="h-2 w-2 rounded-full bg-[#ff5a2f] animate-pulse" />
               <span className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-500">Live Cars</span>
             </div>
@@ -159,7 +159,7 @@ export default async function CarsPage({ searchParams }) {
               {total.toLocaleString()} active listings from verified dealerships.
             </p>
           </div>
-          <div className="hidden md:flex items-center gap-3 rounded-full border border-[#e7e1d8] bg-white px-4 py-2 shadow-sm">
+          <div className="hidden md:flex items-center gap-3 border-b border-[#e7e1d8] pb-2">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
             <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-600">Dealer-Verified Listings</p>
           </div>
@@ -168,7 +168,7 @@ export default async function CarsPage({ searchParams }) {
         {activeFilterPills.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-8">
             {activeFilterPills.map((pill) => (
-              <span key={pill} className="rounded-full border border-[#e7e1d8] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-slate-600">
+              <span key={pill} className="rounded-lg border border-[#e7e1d8] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-slate-600">
                 {pill}
               </span>
             ))}
@@ -176,8 +176,8 @@ export default async function CarsPage({ searchParams }) {
         )}
 
         {sortedCars.length === 0 ? (
-          <div className="py-32 text-center border border-[#e7e1d8] rounded-[2rem] bg-white shadow-sm">
-            <div className="w-20 h-20 bg-[#faf7f2] rounded-3xl flex items-center justify-center mx-auto mb-6">
+          <div className="py-24 text-center border-y border-[#e7e1d8]">
+            <div className="w-20 h-20 bg-[#faf7f2] rounded-xl flex items-center justify-center mx-auto mb-6">
               <Search className="w-8 h-8 text-slate-300" />
             </div>
             <h2 className="text-2xl text-slate-900 mb-3">No cars match these filters</h2>
@@ -197,7 +197,7 @@ export default async function CarsPage({ searchParams }) {
         {totalPages > 1 && (
           <div className="flex justify-center items-center gap-3 mt-16">
             {page > 1 && (
-              <Link href={getPageLink(page - 1)} className="w-11 h-11 rounded-full flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all shadow-sm">
+              <Link href={getPageLink(page - 1)} className="w-11 h-11 rounded-lg flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
                 <ChevronRight className="w-5 h-5 rotate-180" />
               </Link>
             )}
@@ -208,10 +208,10 @@ export default async function CarsPage({ searchParams }) {
                   return (
                     <Link key={p}
                       href={getPageLink(p)}
-                      className={`w-11 h-11 rounded-full flex items-center justify-center text-xs font-extrabold transition-all ${
+                      className={`w-11 h-11 rounded-lg flex items-center justify-center text-xs font-extrabold transition-all ${
                         p === page 
                           ? "bg-[#111111] text-white shadow-md" 
-                          : "bg-white border border-[#e7e1d8] text-slate-600 hover:bg-[#faf7f2] shadow-sm"
+                          : "bg-white border border-[#e7e1d8] text-slate-600 hover:bg-[#faf7f2]"
                       }`}
                     >
                       {p}
@@ -225,7 +225,7 @@ export default async function CarsPage({ searchParams }) {
             </div>
 
             {page < totalPages && (
-              <Link href={getPageLink(page + 1)} className="w-11 h-11 rounded-full flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all shadow-sm">
+              <Link href={getPageLink(page + 1)} className="w-11 h-11 rounded-lg flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
                 <ChevronRight className="w-5 h-5" />
               </Link>
             )}
@@ -255,7 +255,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
   };
 
   return (
-    <article className="group block bg-white border border-[#e8e2d9] hover:border-[#d8cec1] rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-xl shadow-sm flex flex-col h-full">
+    <article className="group block bg-white border border-[#e8e2d9] hover:border-[#d8cec1] rounded-xl overflow-hidden transition-all duration-500 flex flex-col h-full">
       <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-slate-50 overflow-hidden shrink-0">
         {img ? (
             <Image 
@@ -272,19 +272,19 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
 
         <div className="absolute top-4 left-4 flex flex-wrap gap-2">
           {car.featured && (
-            <span className="bg-[#111111] text-white text-[10px] font-extrabold px-3 py-1.5 uppercase tracking-[0.12em] rounded-full shadow-sm">
+            <span className="bg-[#111111] text-white text-[10px] font-extrabold px-3 py-1.5 uppercase tracking-[0.12em] rounded-full">
               Featured
             </span>
           )}
           {car.badges?.slice(0, 1).map((b) => (
-            <span key={b} className={`text-[10px] font-extrabold px-3 py-1.5 rounded-full shadow-sm backdrop-blur-md ${BADGE_OPTIONS[b]?.color || "bg-white/90 text-slate-700"}`}>
+            <span key={b} className={`text-[10px] font-extrabold px-3 py-1.5 rounded-full backdrop-blur-md ${BADGE_OPTIONS[b]?.color || "bg-white/90 text-slate-700"}`}>
               {b}
             </span>
           ))}
         </div>
 
         {dist !== null && (
-          <span className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md text-slate-900 text-[10px] font-extrabold px-3 py-1.5 rounded-full border border-white shadow-sm">
+          <span className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md text-slate-900 text-[10px] font-extrabold px-3 py-1.5 rounded-full border border-white">
             {dist}km away
           </span>
         )}
@@ -319,7 +319,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
         <div className="mt-auto space-y-3 pt-4 border-t border-[#efe8df]">
           <div className="flex items-end justify-between">
             <p className="text-2xl font-bold text-slate-900 leading-none">{formatPrice(car.price)}</p>
-            <Link href={`/cars/${car.id}`} className="mk-pill-btn inline-flex items-center gap-1.5 border border-[#e7e1d8] bg-white px-3 py-2 text-[10px] uppercase text-slate-700 hover:bg-[#faf7f2]">
+            <Link href={`/cars/${car.id}`} className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-slate-600 hover:text-black transition-colors">
               Details <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>

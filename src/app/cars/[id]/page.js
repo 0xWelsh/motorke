@@ -153,7 +153,7 @@ export default async function CarDetailPage({ params }) {
                 </p>
               )}
               {car.negotiable && (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-50 text-slate-400 text-[10px] font-extrabold uppercase tracking-widest">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md border border-slate-200 text-slate-400 text-[10px] font-extrabold uppercase tracking-widest">
                   Negotiable Price
                 </div>
               )}
@@ -175,7 +175,7 @@ export default async function CarDetailPage({ params }) {
               <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Key Features</h3>
               <div className="flex flex-wrap gap-3">
                 {car.features.map((f) => (
-                  <span key={f} className="text-sm bg-white border border-slate-200 rounded-2xl px-5 py-2.5 text-slate-700 font-bold shadow-sm">
+                  <span key={f} className="text-sm bg-white border border-slate-200 rounded-lg px-4 py-2 text-slate-700 font-bold">
                     {f}
                   </span>
                 ))}
@@ -196,7 +196,7 @@ export default async function CarDetailPage({ params }) {
             <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Detailed Specifications</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {specs.map(({ label, value }) => (
-                <div key={label} className="bg-slate-50/50 border border-slate-100 rounded-2xl p-5 group hover:bg-white hover:border-brand-accent/20 hover:shadow-md transition-all">
+                <div key={label} className="bg-slate-50/50 border border-slate-100 rounded-lg p-5 group hover:bg-white hover:border-brand-accent/20 transition-all">
                   <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">{label}</p>
                   <p className="text-base font-extrabold text-slate-900">{value}</p>
                 </div>
@@ -205,7 +205,7 @@ export default async function CarDetailPage({ params }) {
           </div>
 
           {/* Duty estimate */}
-          <div className="bg-emerald-900 rounded-3xl p-10 relative overflow-hidden shadow-xl shadow-emerald-900/10">
+          <div className="bg-emerald-900 rounded-xl p-10 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-800/50 blur-3xl -mr-32 -mt-32 rounded-full" />
             <div className="relative z-10 space-y-4">
               <div className="flex items-center gap-3 text-emerald-400 font-extrabold text-xs uppercase tracking-widest">
@@ -222,9 +222,9 @@ export default async function CarDetailPage({ params }) {
         {/* Right: dealer card + enquiry */}
         <div className="space-y-8">
           {/* Dealer card */}
-          <div className="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 rounded-[2.5rem] p-8 space-y-8 sticky top-28">
+          <div className="bg-white border border-slate-200 rounded-xl p-8 space-y-8 sticky top-28">
             <div className="flex items-center gap-5">
-              <div className="w-16 h-16 rounded-2xl bg-brand-light flex items-center justify-center text-brand font-extrabold text-2xl shadow-sm">
+              <div className="w-16 h-16 rounded-xl bg-brand-light flex items-center justify-center text-brand font-extrabold text-2xl">
                 {dealer.name[0]}
               </div>
               <div className="space-y-1">
@@ -244,12 +244,12 @@ export default async function CarDetailPage({ params }) {
             
             <div className="flex flex-col gap-3">
               <Link href={`/dealers/${dealer.slug}`}
-                className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-brand border-2 border-brand-light rounded-2xl py-4 hover:bg-brand-light transition-all">
+                className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-brand border border-brand-light rounded-lg py-4 hover:bg-brand-light transition-all">
                 Browse Dealer Inventory
               </Link>
               {dealer.whatsapp && (
                 <a href={whatsappLink(dealer.whatsapp, title, dealer.name)} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-white bg-emerald-500 rounded-2xl py-4 hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20">
+                  className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-white bg-emerald-500 rounded-lg py-4 hover:bg-emerald-600 transition-all">
                   <MessageCircle className="w-4 h-4 fill-current" /> WhatsApp Dealer
                 </a>
               )}
@@ -285,7 +285,7 @@ export default async function CarDetailPage({ params }) {
               const title = `${c.make} ${c.model}`;
               return (
                 <Link key={c.id} href={`/cars/${c.id}`}
-                  className="group block bg-white border border-slate-200 hover:border-brand-accent/40 overflow-hidden transition-all duration-500 rounded-3xl shadow-sm hover:shadow-xl">
+                  className="group block bg-white border border-slate-200 hover:border-brand-accent/40 overflow-hidden transition-all duration-500 rounded-xl">
                   <div className="relative aspect-[16/10] bg-slate-50 overflow-hidden">
                     {img ? (
                       <Image 
