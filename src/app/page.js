@@ -71,6 +71,8 @@ const PRICE_RANGES = [
   { label: "Above 7M", min: 7000000, max: 99000000, sub: "Luxury Selection", icon: <Gem className="w-5 h-5" /> },
 ];
 
+const HERO_CAR = "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=900&q=85";
+
 export default async function HomePage() {
   const { featured, newArrivals, dealers, totalCars, totalDealers, priceCounts, articles } = await getCachedData();
 
@@ -78,18 +80,18 @@ export default async function HomePage() {
     <div className="bg-background min-h-screen pb-32">
 
       {/* ── HERO ── */}
-      <section className="relative min-h-[700px] flex items-center overflow-hidden border-b border-slate-200/60 bg-white">
-        {/* Modern decorative background elements */}
+      <section className="relative min-h-[650px] flex items-center overflow-hidden border-b border-slate-100">
+        {/* Immersive glassmorphism overlay */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-brand-light/30 to-transparent" />
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-accent/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-slate-50 to-transparent" />
+          <Image src={HERO_CAR} fill priority className="object-cover scale-105" alt="" style={{ filter: "blur(4px)" }} />
+          <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-white/80 to-brand-light/40" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(3,105,161,0.05),transparent_50%)]" />
         </div>
 
         <div className="container mx-auto px-6 max-w-7xl py-24 relative z-10">
           <div className="max-w-3xl">
             {/* Premium Status Badge */}
-            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm mb-10">
+            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-white border border-slate-200/60 shadow-sm mb-10 backdrop-blur-sm">
               <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
@@ -100,15 +102,15 @@ export default async function HomePage() {
             </div>
 
             <h1 className="text-6xl md:text-8xl font-extrabold text-slate-900 leading-[0.95] tracking-tighter mb-10">
-              Your next car,<br />
-              <span className="text-brand">found instantly.</span>
+              Find your perfect car<br />
+              <span className="text-brand drop-shadow-sm">across all dealerships instantly.</span>
             </h1>
 
             <p className="text-xl md:text-2xl text-slate-600 mb-12 leading-relaxed max-w-2xl font-medium">
-              The smartest way to browse {totalDealers} trusted Kenyan dealerships in one place. No stress, just cars.
+              Compare live listings from {totalDealers} trusted dealerships across the country; no more endless scrolling!
             </p>
 
-            <div className="w-full max-w-2xl mb-10 p-2 bg-white rounded-3xl shadow-xl border border-slate-100">
+            <div className="w-full max-w-2xl mb-10">
               <LocationSearch />
             </div>
 
@@ -116,7 +118,7 @@ export default async function HomePage() {
               <span className="text-xs font-extrabold uppercase tracking-widest text-slate-400 mr-2">Quick Search</span>
               {["SUVs", "Pickups", "Sedans", "Hatchbacks"].map(t => (
                 <Link key={t} href={`/cars?search=${encodeURIComponent(t)}`}
-                  className="px-5 py-2.5 rounded-xl bg-slate-50 border border-slate-200/60 text-xs font-extrabold uppercase tracking-widest text-slate-600 hover:border-brand-accent hover:text-brand hover:bg-brand-light transition-all">
+                  className="px-5 py-2.5 rounded-xl bg-white border border-slate-200/60 shadow-sm text-xs font-extrabold uppercase tracking-widest text-slate-600 hover:border-brand-accent hover:text-brand hover:bg-brand-light transition-all">
                   {t}
                 </Link>
               ))}
