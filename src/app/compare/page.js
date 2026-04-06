@@ -12,7 +12,7 @@ export default async function ComparePage({ searchParams }) {
         where:   { id: { in: idsInUrl }, available: true },
         include: {
           images: { where: { isPrimary: true }, take: 1 },
-          dealer: { select: { name: true, slug: true, location: true } },
+          dealer: { select: { name: true, slug: true, location: true, verified: true } },
         },
       })
     : [];
