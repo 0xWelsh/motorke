@@ -21,6 +21,8 @@ export default async function DealerPage({ params }) {
   const dealer = await db.dealer.findUnique({
     where:   { slug },
     include: {
+      users: { select: { name: true, avatarUrl: true, email: true }, take: 1 },
+      branches: { select: { id: true, name: true, location: true }, orderBy: { createdAt: "asc" } },
       cars: {
         where:   { available: true },
         include: { images: { where: { isPrimary: true }, take: 1 } },
@@ -32,6 +34,8 @@ export default async function DealerPage({ params }) {
   if (!dealer) notFound();
 
   const makes = [...new Set(dealer.cars.map((c) => c.make))];
+  const primaryUser = dealer.users?.[0] || null;
+  const brandImage = dealer.logoUrl || primaryUser?.avatarUrl || null;
   const contactLinks = [
     dealer.phone ? { href: `tel:${dealer.phone}`, label: "Call", icon: <Phone className="w-4 h-4" /> } : null,
     dealer.whatsapp ? { href: `https://wa.me/${dealer.whatsapp}`, label: "WhatsApp", icon: <MessageCircle className="w-4 h-4" />, external: true } : null,
@@ -47,11 +51,11 @@ export default async function DealerPage({ params }) {
 
           <div className="relative flex flex-col lg:flex-row items-start gap-8">
             <div className="w-28 h-28 rounded-3xl bg-[#faf7f2] border border-[#ece6dd] text-slate-900 flex items-center justify-center font-black text-5xl shrink-0 shadow-sm overflow-hidden">
-            {dealer.logoUrl ? (
-                <Image src={dealer.logoUrl} alt={dealer.name} width={112} height={112} className="w-full h-full object-cover" />
-            ) : (
-              dealer.name[0]
-            )}
+              {brandImage ? (
+                <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover" />
+              ) : (
+                dealer.name[0]
+              )}
             </div>
 
             <div className="flex-1 min-w-0">
@@ -101,6 +105,83 @@ export default async function DealerPage({ params }) {
             </div>
           </div>
 
+        </section>
+
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+          <article className="lg:col-span-2 bg-white border border-[#e8e2d9] rounded-3xl p-7 shadow-sm">
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500 mb-3">Dealer Identity</p>
+            <h2 className="text-2xl md:text-3xl text-slate-900 tracking-tight mb-3">Why buyers trust {dealer.name}</h2>
+            <p className="text-slate-600 leading-relaxed mb-5">
+              {dealer.description || `${dealer.name} runs a focused showroom experience with direct communication channels, clear inventory availability, and a buyer-first approach to follow-up.`}
+            </p>
+
+            <div className="flex flex-wrap gap-2.5 mb-5">
+              {dealer.verified && (
+                <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 px-3 py-1.5">
+                  Verified Showroom
+                </span>
+              )}
+              <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] rounded-full border border-[#e7e1d8] bg-white text-slate-700 px-3 py-1.5">
+                {dealer.cars.length} Active Listings
+              </span>
+              <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] rounded-full border border-[#e7e1d8] bg-white text-slate-700 px-3 py-1.5">
+                {new Date(dealer.createdAt).getFullYear()} Joined
+              </span>
+              {dealer.branches.length > 0 && (
+                <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] rounded-full border border-[#e7e1d8] bg-white text-slate-700 px-3 py-1.5">
+                  {dealer.branches.length + 1} Locations
+                </span>
+              )}
+            </div>
+
+            {dealer.branches.length > 0 && (
+              <div>
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500 mb-2">Additional Branches</p>
+                <div className="flex flex-wrap gap-2">
+                  {dealer.branches.map((branch) => (
+                    <span key={branch.id} className="text-[10px] font-bold rounded-full border border-[#ece6dd] bg-[#faf7f2] text-slate-600 px-3 py-1.5 uppercase tracking-[0.12em]">
+                      {branch.name}: {branch.location}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </article>
+
+          <aside className="bg-white border border-[#e8e2d9] rounded-3xl p-7 shadow-sm">
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500 mb-4">Primary Contact</p>
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 rounded-2xl bg-[#faf7f2] border border-[#ece6dd] overflow-hidden flex items-center justify-center text-2xl font-black text-slate-900">
+                {primaryUser?.avatarUrl ? (
+                  <img src={primaryUser.avatarUrl} alt={primaryUser.name || dealer.name} className="w-full h-full object-cover" />
+                ) : (
+                  (primaryUser?.name || dealer.name)[0]
+                )}
+              </div>
+              <div>
+                <p className="text-base font-bold text-slate-900 leading-tight">{primaryUser?.name || `${dealer.name} Team`}</p>
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-500">Dealer Representative</p>
+              </div>
+            </div>
+
+            <p className="text-sm text-slate-600 leading-relaxed mb-5">
+              Reach the dealership through verified channels for availability, booking, and inspection arrangements.
+            </p>
+
+            <div className="space-y-2.5">
+              {contactLinks.slice(0, 3).map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target={item.external ? "_blank" : undefined}
+                  rel={item.external ? "noopener noreferrer" : undefined}
+                  className="mk-pill-btn w-full inline-flex items-center justify-center gap-2 bg-white border border-[#e7e1d8] text-slate-700 hover:bg-[#faf7f2] px-4 py-2.5 text-[10px] uppercase tracking-[0.14em]"
+                >
+                  {item.icon} {item.label}
+                </a>
+              ))}
+            </div>
+          </aside>
         </section>
 
       {makes.length > 0 && (

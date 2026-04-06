@@ -34,7 +34,10 @@ const getCachedData = unstable_cache(
       }),
       db.dealer.findMany({
         where: { OR: [{ featured: true }, { verified: true }] },
-        include: { _count: { select: { cars: { where: { available: true } } } } },
+        include: {
+          _count: { select: { cars: { where: { available: true } } } },
+          users: { select: { avatarUrl: true }, take: 1 },
+        },
         take: 8,
         orderBy: [{ featured: "desc" }, { verified: "desc" }, { createdAt: "desc" }],
       }),
@@ -43,7 +46,7 @@ const getCachedData = unstable_cache(
     ]);
     return { featured, newArrivals, dealers, totalCars, totalDealers };
   },
-  ["homepage-minimal-v2"],
+  ["homepage-minimal-v3"],
   { revalidate: 900, tags: ["homepage"] }
 );
 
@@ -230,6 +233,8 @@ function HeroCarPanel({ car, tall = false }) {
 }
 
 function DealerCard({ dealer }) {
+  const brandImage = dealer.logoUrl || dealer.users?.[0]?.avatarUrl;
+
   return (
     <Link
       href={`/dealers/${dealer.slug}`}
@@ -237,8 +242,8 @@ function DealerCard({ dealer }) {
     >
       <div className="flex items-start justify-between mb-6">
         <div className="w-14 h-14 rounded-2xl bg-[#faf7f2] border border-[#ede6dd] flex items-center justify-center text-xl font-black text-slate-900 overflow-hidden">
-          {dealer.logoUrl ? (
-            <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-contain p-2" />
+          {brandImage ? (
+            <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover" />
           ) : (
             dealer.name?.[0]
           )}

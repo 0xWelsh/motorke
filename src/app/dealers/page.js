@@ -8,7 +8,10 @@ export const metadata = { title: "Dealerships — Motorke Kenya" };
 
 export default async function DealersPage() {
   const dealers = await db.dealer.findMany({
-    include: { _count: { select: { cars: { where: { available: true } } } } },
+    include: {
+      _count: { select: { cars: { where: { available: true } } } },
+      users: { select: { avatarUrl: true }, take: 1 },
+    },
     orderBy: [{ featured: "desc" }, { verified: "desc" }, { name: "asc" }],
   });
 
@@ -75,7 +78,10 @@ export default async function DealersPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {countyDealers.map((dealer) => (
+                {countyDealers.map((dealer) => {
+                  const brandImage = dealer.logoUrl || dealer.users?.[0]?.avatarUrl;
+
+                  return (
                   <Link
                     key={dealer.id}
                     href={`/dealers/${dealer.slug}`}
@@ -83,8 +89,8 @@ export default async function DealersPage() {
                   >
                     <div className="flex items-start justify-between mb-6">
                       <div className="w-16 h-16 rounded-2xl bg-[#faf7f2] border border-[#ece6dd] flex items-center justify-center overflow-hidden shadow-sm transition-transform group-hover:scale-105">
-                        {dealer.logoUrl ? (
-                          <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" />
+                        {brandImage ? (
+                          <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover" />
                         ) : (
                           <span className="text-slate-900 font-black text-2xl">{dealer.name[0]}</span>
                         )}
@@ -128,7 +134,8 @@ export default async function DealersPage() {
                       </div>
                     </div>
                   </Link>
-                ))}
+                  );
+                })}
               </div>
             </section>
           );
