@@ -38,7 +38,9 @@ export default async function RootLayout({ children }) {
           <footer className="mt-20 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-12 px-6 transition-colors duration-300">
             <div className="container mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex flex-col items-center md:items-start">
-                <img src="/logo.png" alt="Motorke" className="h-10 w-auto object-contain mb-2" />
+                <span className="mk-logo-shell mk-logo-shell-sm mb-2">
+                  <img src="/logo.png" alt="Motorke" className="mk-logo-img" />
+                </span>
                 <p className="text-slate-500 dark:text-slate-500 text-xs mt-1 font-semibold tracking-wide">Cars first. Dealers visible. Buyers confident.</p>
               </div>
               <div className="flex gap-8">

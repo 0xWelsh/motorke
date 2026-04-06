@@ -90,7 +90,12 @@ export default function Navbar({ user }) {
 
           {/* LOGO */}
           <Link href="/" className="flex items-center gap-3 shrink-0 group transition-transform active:scale-95">
-            <img src="/logo.png" alt="Motorke" className="h-11 w-auto object-contain" />
+            <span className={clsx(
+              "mk-logo-shell",
+              scrolled ? "ring-2 ring-[#ff5a2f]/15" : ""
+            )}>
+              <img src="/logo.png" alt="Motorke" className="mk-logo-img" />
+            </span>
             <div className="hidden 2xl:block">
               <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-slate-900 leading-none">Digital Showroom</p>
               <p className="text-[10px] font-semibold tracking-wide text-slate-500 mt-1">Built for modern dealerships</p>
@@ -206,7 +211,9 @@ export default function Navbar({ user }) {
       {open && (
         <div className="lg:hidden fixed inset-0 top-0 bg-[#f5f3ef] z-[200] p-8">
           <div className="flex items-center justify-between mb-10">
-            <img src="/logo.png" alt="Motorke" className="h-10 w-auto object-contain" />
+            <span className="mk-logo-shell mk-logo-shell-sm">
+              <img src="/logo.png" alt="Motorke" className="mk-logo-img" />
+            </span>
             <button onClick={() => setOpen(false)} className="w-10 h-10 bg-white border border-[#e7e1d8] text-slate-700 rounded-xl flex items-center justify-center">
               <X className="w-5 h-5" />
             </button>
