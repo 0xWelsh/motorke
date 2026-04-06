@@ -102,43 +102,43 @@ export default function LocationSearch() {
       <form 
         ref={formRef}
         onSubmit={handleSubmit} 
-        className="flex items-center bg-white border border-slate-100 rounded-xl p-2 focus-within:border-[var(--brand-accent)]/30 transition-all duration-300"
+        className="flex flex-col sm:flex-row sm:items-center bg-white border border-slate-100 rounded-xl p-2.5 sm:p-2 focus-within:border-[var(--brand-accent)]/30 transition-all duration-300"
       >
-        <div className="flex-1 flex items-center px-4 gap-3">
+        <div className="flex-1 flex items-center px-3 sm:px-4 gap-3 min-w-0">
           <Search className="w-5 h-5 dark:text-slate-400 text-slate-600 shrink-0" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
             placeholder="Search by make, model or keyword…"
-            className="w-full bg-transparent border-none outline-none py-3 text-base text-slate-800 placeholder:text-slate-300 font-semibold"
+            className="w-full bg-transparent border-none outline-none py-3 text-sm sm:text-base text-slate-800 placeholder:text-slate-300 font-semibold"
           />
         </div>
 
-        <div className="h-8 w-px bg-slate-100 mx-2 hidden sm:block" />
+        <div className="grid grid-cols-2 gap-2 mt-2 sm:mt-0 sm:ml-2 sm:flex sm:items-center w-full sm:w-auto">
+          <button
+            type="button"
+            onClick={detectLocation}
+            className={`h-11 px-3 sm:px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 group w-full sm:w-auto ${
+              location ? "bg-[var(--brand-light)] text-[var(--brand)]" : "bg-transparent border border-slate-200 text-slate-400 hover:text-slate-900"
+            }`}
+            title="Use my location"
+          >
+            {locating ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <MapPin className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            )}
+            {location && <span className="text-xs font-bold hidden sm:block">Near Me</span>}
+          </button>
 
-        <button
-          type="button"
-          onClick={detectLocation}
-          className={`p-3 rounded-lg transition-all duration-200 flex items-center gap-2 group ${
-            location ? "bg-[var(--brand-light)] text-[var(--brand)]" : "bg-transparent text-slate-400 hover:text-slate-900"
-          }`}
-          title="Use my location"
-        >
-          {locating ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <MapPin className="w-5 h-5 group-hover:scale-110 transition-transform" />
-          )}
-          {location && <span className="text-xs font-bold hidden sm:block">Near Me</span>}
-        </button>
-
-        <button 
-          type="submit" 
-          className="bg-[var(--brand)] hover:bg-[var(--brand-accent)] text-white px-8 py-3 rounded-lg font-black text-sm transition-all duration-300 ml-2"
-        >
-          Search
-        </button>
+          <button 
+            type="submit" 
+            className="h-11 bg-[var(--brand)] hover:bg-[var(--brand-accent)] text-white px-5 sm:px-8 rounded-lg font-black text-sm transition-all duration-300 w-full sm:w-auto"
+          >
+            Search
+          </button>
+        </div>
       </form>
 
       {/* Search Suggestions Dropdown */}

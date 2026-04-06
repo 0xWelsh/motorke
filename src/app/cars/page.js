@@ -145,14 +145,14 @@ export default async function CarsPage({ searchParams }) {
         counties={COUNTIES}
       />
 
-      <div className="container mx-auto px-6 py-12 max-w-7xl">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-7xl">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-10 gap-6">
           <div>
             <div className="inline-flex items-center gap-2 mb-3 border-b border-[#e7e1d8] pb-1">
               <span className="h-2 w-2 rounded-full bg-[#ff5a2f] animate-pulse" />
               <span className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-500">Live Cars</span>
             </div>
-            <h1 className="text-4xl md:text-5xl text-slate-900 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl text-slate-900 tracking-tight">
               {search ? `Results for ${search}` : county ? `${county} Inventory` : "Explore Cars"}
             </h1>
             <p className="text-base md:text-lg text-slate-600 font-medium mt-2">
@@ -187,7 +187,7 @@ export default async function CarsPage({ searchParams }) {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {sortedCars.map((car, idx) => (
               <InventoryCard key={car.id} car={car} userLat={userLat} userLng={userLng} priority={idx < 4} />
             ))}
@@ -195,40 +195,42 @@ export default async function CarsPage({ searchParams }) {
         )}
 
         {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-3 mt-16">
-            {page > 1 && (
-              <Link href={getPageLink(page - 1)} className="w-11 h-11 rounded-lg flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
-                <ChevronRight className="w-5 h-5 rotate-180" />
-              </Link>
-            )}
+          <div className="mt-12 sm:mt-16 overflow-x-auto pb-2">
+            <div className="min-w-max flex justify-center items-center gap-2 sm:gap-3 mx-auto">
+              {page > 1 && (
+                <Link href={getPageLink(page - 1)} className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
+                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 rotate-180" />
+                </Link>
+              )}
 
-            <div className="flex items-center gap-2">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-                if (p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)) {
-                  return (
-                    <Link key={p}
-                      href={getPageLink(p)}
-                      className={`w-11 h-11 rounded-lg flex items-center justify-center text-xs font-extrabold transition-all ${
-                        p === page 
-                          ? "bg-[#111111] text-white shadow-md" 
-                          : "bg-white border border-[#e7e1d8] text-slate-600 hover:bg-[#faf7f2]"
-                      }`}
-                    >
-                      {p}
-                    </Link>
-                  );
-                }
-                if (p === 2 && page > 3) return <span key="e1" className="text-slate-400 px-1 font-extrabold">...</span>;
-                if (p === totalPages - 1 && page < totalPages - 2) return <span key="e2" className="text-slate-400 px-1 font-extrabold">...</span>;
-                return null;
-              })}
+              <div className="flex items-center gap-2">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
+                  if (p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)) {
+                    return (
+                      <Link key={p}
+                        href={getPageLink(p)}
+                        className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center text-xs font-extrabold transition-all ${
+                          p === page 
+                            ? "bg-[#111111] text-white shadow-md" 
+                            : "bg-white border border-[#e7e1d8] text-slate-600 hover:bg-[#faf7f2]"
+                        }`}
+                      >
+                        {p}
+                      </Link>
+                    );
+                  }
+                  if (p === 2 && page > 3) return <span key="e1" className="text-slate-400 px-1 font-extrabold">...</span>;
+                  if (p === totalPages - 1 && page < totalPages - 2) return <span key="e2" className="text-slate-400 px-1 font-extrabold">...</span>;
+                  return null;
+                })}
+              </div>
+
+              {page < totalPages && (
+                <Link href={getPageLink(page + 1)} className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
+                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                </Link>
+              )}
             </div>
-
-            {page < totalPages && (
-              <Link href={getPageLink(page + 1)} className="w-11 h-11 rounded-lg flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
-                <ChevronRight className="w-5 h-5" />
-              </Link>
-            )}
           </div>
         )}
       </div>
@@ -290,7 +292,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
         )}
       </Link>
 
-      <div className="p-6 flex flex-col flex-1 gap-4">
+      <div className="p-4 sm:p-6 flex flex-col flex-1 gap-4">
         <div className="flex items-center justify-between gap-3">
           <Link href={`/dealers/${car.dealer?.slug}`} className="inline-flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500 hover:text-black">
             {car.dealer?.verified && <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />}

@@ -22,15 +22,15 @@ export default async function DealersPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="container mx-auto px-6 py-12 max-w-7xl">
+      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-7xl">
         <header className="mb-12 md:mb-14">
           <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500 mb-4">Dealer Network</p>
-          <h1 className="text-4xl md:text-6xl text-slate-900 tracking-tight mb-4">Trusted Dealerships, Clearly Listed</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-6xl text-slate-900 tracking-tight mb-4">Trusted Dealerships, Clearly Listed</h1>
           <p className="text-base md:text-lg text-slate-600 font-medium max-w-3xl">
             Browse verified dealer profiles by county, compare footprint quickly, and connect with the right team without jumping through crowded card layouts.
           </p>
 
-          <div className="mt-8 border-y border-[#e7e1d8] py-6 grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6">
+          <div className="mt-6 sm:mt-8 border-y border-[#e7e1d8] py-6 grid grid-cols-2 md:grid-cols-4 gap-x-6 sm:gap-x-8 gap-y-6">
             {[
               { label: "Dealerships", value: dealers.length, icon: <Building2 className="w-4 h-4" /> },
               { label: "Verified", value: verifiedCount, icon: <ShieldCheck className="w-4 h-4" /> },
@@ -48,7 +48,7 @@ export default async function DealersPage() {
           </div>
         </header>
 
-        <nav className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-10 md:mb-12">
+        <nav className="flex items-center gap-x-4 gap-y-2 mb-8 sm:mb-10 md:mb-12 overflow-x-auto no-scrollbar pb-1 whitespace-nowrap">
           {counties.map((county) => (
             <a
               key={county}
@@ -84,9 +84,9 @@ export default async function DealersPage() {
                   <Link
                     key={dealer.id}
                     href={`/dealers/${dealer.slug}`}
-                    className="group block py-6 md:py-7 transition-colors"
+                    className="group block py-5 md:py-7 transition-colors"
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-[84px_minmax(0,1fr)_140px] gap-5 items-start">
+                    <div className="grid grid-cols-1 md:grid-cols-[84px_minmax(0,1fr)_140px] gap-4 md:gap-5 items-start">
                       <div className="w-20 h-20 rounded-2xl bg-[#faf7f2] border border-[#ece6dd] flex items-center justify-center overflow-hidden">
                         {brandImage ? (
                           <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover" />
@@ -97,7 +97,7 @@ export default async function DealersPage() {
 
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2 mb-2.5">
-                          <h3 className="text-2xl text-slate-900 leading-tight group-hover:text-black transition-colors line-clamp-1">{dealer.name}</h3>
+                          <h3 className="text-xl sm:text-2xl text-slate-900 leading-tight group-hover:text-black transition-colors line-clamp-1">{dealer.name}</h3>
                           {dealer.verified && (
                             <span className="text-[9px] text-emerald-700 inline-flex items-center gap-1 font-extrabold uppercase tracking-[0.14em]">
                               <ShieldCheck className="w-3 h-3" /> Verified

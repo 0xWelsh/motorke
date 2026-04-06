@@ -68,8 +68,8 @@ export default async function HomePage() {
           <div className="absolute -top-24 -right-20 h-80 w-80 rounded-full bg-[#ff5a2f]/10 blur-3xl" />
         </div>
 
-        <div className="container mx-auto px-6 max-w-7xl pt-8 pb-20 md:pt-14 md:pb-24 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-6 pb-14 sm:pt-8 sm:pb-20 md:pt-14 md:pb-24 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
             <div className="lg:col-span-7">
               <div className="flex flex-wrap items-center gap-3 sm:gap-5 border-b border-[#e6dfd6] pb-3 mb-8">
                 <span className="inline-flex items-center gap-2 text-[11px] font-extrabold tracking-[0.16em] uppercase text-slate-600">
@@ -81,13 +81,13 @@ export default async function HomePage() {
                 <span className="text-[11px] font-black tracking-[0.14em] uppercase text-slate-400">Updated Daily</span>
               </div>
 
-              <h1 className="text-5xl md:text-7xl font-bold text-slate-900 leading-[0.92] tracking-tight mb-7">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-slate-900 leading-[0.92] tracking-tight mb-6 sm:mb-7">
                 Buy cars with
                 <br />
                 <span className="text-[#ff5a2f]">dealer-level clarity.</span>
               </h1>
 
-              <p className="text-lg md:text-xl text-slate-600 mb-9 leading-relaxed max-w-2xl font-medium">
+              <p className="text-base sm:text-lg md:text-xl text-slate-600 mb-8 sm:mb-9 leading-relaxed max-w-2xl font-medium">
                 Explore inventory from verified showrooms, compare units side by side, and reach real dealership teams without noisy listings.
               </p>
 
@@ -159,11 +159,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="container mx-auto px-6 py-20 max-w-7xl">
-        <div className="flex items-end justify-between mb-10 gap-5">
+      <section className="container mx-auto px-4 sm:px-6 py-14 sm:py-20 max-w-7xl">
+        <div className="flex items-end justify-between mb-8 sm:mb-10 gap-5">
           <div>
             <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Cars</p>
-            <h2 className="text-3xl md:text-5xl text-slate-900">Featured Inventory</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-5xl text-slate-900">Featured Inventory</h2>
           </div>
           <Link href="/cars" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 border border-[#e7e1d8] bg-white px-5 py-3 text-xs uppercase text-slate-900 hover:bg-[#faf7f2]">
             View All <ChevronRight className="w-4 h-4" />
@@ -175,12 +175,12 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="container mx-auto px-6 py-16 max-w-7xl border-y border-[#e7e1d8]">
+      <section className="container mx-auto px-4 sm:px-6 py-12 sm:py-16 max-w-7xl border-y border-[#e7e1d8]">
         <div className="py-8 md:py-10">
           <div className="flex items-center justify-between mb-8 gap-4">
             <div>
               <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Dealers</p>
-              <h2 className="text-3xl md:text-4xl text-slate-900">Verified Dealerships</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl text-slate-900">Verified Dealerships</h2>
             </div>
             <Link href="/dealers" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 border border-[#e7e1d8] bg-white px-5 py-3 text-xs uppercase text-slate-900 hover:bg-[#faf7f2]">
               All Dealers <ChevronRight className="w-4 h-4" />
@@ -196,11 +196,11 @@ export default async function HomePage() {
       </section>
 
       {newArrivals.length > 0 && (
-        <section className="container mx-auto px-6 py-8 max-w-7xl">
-          <div className="flex items-end justify-between mb-10 gap-4">
+        <section className="container mx-auto px-4 sm:px-6 py-8 max-w-7xl">
+          <div className="flex items-end justify-between mb-8 sm:mb-10 gap-4">
             <div>
               <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Fresh</p>
-              <h2 className="text-3xl md:text-5xl text-slate-900">New Arrivals</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-5xl text-slate-900">New Arrivals</h2>
             </div>
             <Link href="/cars?sort=newest" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 border border-[#e7e1d8] bg-white px-5 py-3 text-xs uppercase text-slate-900 hover:bg-[#faf7f2]">
               Latest Cars <ChevronRight className="w-4 h-4" />
@@ -212,11 +212,11 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section className="container mx-auto px-6 pt-16 max-w-7xl">
-        <div className="rounded-[2rem] overflow-hidden border border-[#e8e2d9] bg-[#111111] p-10 md:p-14 text-white relative">
+      <section className="container mx-auto px-4 sm:px-6 pt-12 sm:pt-16 max-w-7xl">
+        <div className="rounded-[2rem] overflow-hidden border border-[#e8e2d9] bg-[#111111] p-6 sm:p-10 md:p-14 text-white relative">
           <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-[#ff5a2f]/30 blur-3xl" />
           <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/70 mb-3">For Dealerships</p>
-          <h3 className="text-3xl md:text-5xl leading-tight max-w-3xl mb-5">
+          <h3 className="text-2xl sm:text-3xl md:text-5xl leading-tight max-w-3xl mb-5">
             Your cars deserve better than a social media album.
           </h3>
           <p className="text-base md:text-lg text-white/80 max-w-2xl mb-8 font-medium">

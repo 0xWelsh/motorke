@@ -32,6 +32,13 @@ export default function Navbar({ user }) {
   }, []);
 
   useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  useEffect(() => {
     const h = (e) => { if (menuRef.current && !menuRef.current.contains(e.target)) setUserMenu(false); };
     document.addEventListener("mousedown", h);
     return () => document.removeEventListener("mousedown", h);
@@ -85,14 +92,14 @@ export default function Navbar({ user }) {
         ? "bg-white/90 backdrop-blur-xl border-b border-[#e8e2d9] py-3 shadow-sm"
         : "bg-transparent py-5"
     )}>
-      <div className="container mx-auto px-6 max-w-7xl">
-        <div className="flex items-center justify-between gap-8">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+        <div className="flex items-center justify-between gap-4 sm:gap-8">
 
           {/* LOGO */}
           <Link href="/" className="flex items-center gap-3 shrink-0 group transition-transform active:scale-95">
             <span aria-label="Motorke" className="inline-flex items-center">
-              <span className="text-[20px] md:text-[22px] leading-none font-black uppercase tracking-[0.2em] text-slate-900">MOTOR</span>
-              <span className="text-[20px] md:text-[22px] leading-none font-black uppercase tracking-[0.2em] text-[#ff5a2f]">KE</span>
+              <span className="text-[16px] sm:text-[20px] md:text-[22px] leading-none font-black uppercase tracking-[0.16em] sm:tracking-[0.2em] text-slate-900">MOTOR</span>
+              <span className="text-[16px] sm:text-[20px] md:text-[22px] leading-none font-black uppercase tracking-[0.16em] sm:tracking-[0.2em] text-[#ff5a2f]">KE</span>
             </span>
             <div className="hidden 2xl:block">
               <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-900 leading-none">Digital Showroom</p>
@@ -197,7 +204,7 @@ export default function Navbar({ user }) {
           <div className="lg:hidden">
             <button
               onClick={() => setOpen(!open)}
-              className="w-10 h-10 flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-700 rounded-xl hover:bg-[#faf7f2] transition-colors"
+              className="w-11 h-11 flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-700 rounded-xl hover:bg-[#faf7f2] transition-colors"
             >
               {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -207,53 +214,81 @@ export default function Navbar({ user }) {
 
       {/* MOBILE MENU */}
       {open && (
-        <div className="lg:hidden fixed inset-0 top-0 bg-[#f5f3ef] z-[200] p-8">
-          <div className="flex items-center justify-between mb-10">
-            <span className="inline-flex items-center">
-              <span className="text-[18px] leading-none font-black uppercase tracking-[0.18em] text-slate-900">MOTOR</span>
-              <span className="text-[18px] leading-none font-black uppercase tracking-[0.18em] text-[#ff5a2f]">KE</span>
-            </span>
-            <button onClick={() => setOpen(false)} className="w-10 h-10 bg-white border border-[#e7e1d8] text-slate-700 rounded-xl flex items-center justify-center">
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-          <form onSubmit={handleSearch} className="mb-8">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder="Search cars"
-                className="w-full bg-white border border-[#e7e1d8] rounded-xl py-3 pl-12 pr-4 text-sm font-semibold outline-none"
-              />
+        <div className="lg:hidden fixed inset-0 z-[200] bg-black/30" onClick={() => setOpen(false)}>
+          <div className="ml-auto h-full w-full max-w-sm bg-[#f5f3ef] border-l border-[#e7e1d8] p-5 sm:p-6 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <span className="inline-flex items-center">
+                <span className="text-[16px] leading-none font-black uppercase tracking-[0.16em] text-slate-900">MOTOR</span>
+                <span className="text-[16px] leading-none font-black uppercase tracking-[0.16em] text-[#ff5a2f]">KE</span>
+              </span>
+              <button onClick={() => setOpen(false)} className="w-10 h-10 bg-white border border-[#e7e1d8] text-slate-700 rounded-xl flex items-center justify-center">
+                <X className="w-5 h-5" />
+              </button>
             </div>
-          </form>
-          <div className="space-y-2">
-            {links.map(({ href, label }) => (
-              <Link key={href} href={href} onClick={() => setOpen(false)}
-                className="block text-2xl font-black text-slate-800 py-4 border-b border-[#e7e1d8] hover:text-black transition-colors">
-                {label}
-              </Link>
-            ))}
-          </div>
-          <div className="absolute bottom-12 left-8 right-8 space-y-3">
-            {!user ? (
-              <>
-                <Link href="/signup" onClick={() => setOpen(false)}
-                  className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-xl bg-[#111111]">
-                  For Dealers
+
+            <form onSubmit={(e) => { handleSearch(e); setOpen(false); }} className="mb-6">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Search cars"
+                  className="w-full bg-white border border-[#e7e1d8] rounded-xl py-3.5 pl-12 pr-4 text-sm font-semibold outline-none"
+                />
+              </div>
+            </form>
+
+            <div className="space-y-1 mb-6">
+              {links.map(({ href, label, icon }) => (
+                <Link key={href} href={href} onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 text-lg font-black text-slate-800 py-3 px-2 border-b border-[#e7e1d8] hover:text-black transition-colors">
+                  <span className="text-slate-400">{icon}</span>
+                  {label}
                 </Link>
-                <Link href="/login" onClick={() => setOpen(false)}
-                  className="block py-4 text-center font-black uppercase tracking-widest text-slate-700 bg-white border border-[#e7e1d8] rounded-xl">
-                  Sign In
-                </Link>
-              </>
-            ) : (
-              <Link href="/account" onClick={() => setOpen(false)}
-                className="block py-4 text-center font-black uppercase tracking-widest text-white rounded-xl bg-[#111111]">
-                My Dashboard
-              </Link>
+              ))}
+            </div>
+
+            {user && (
+              <div className="rounded-2xl border border-[#e7e1d8] bg-white p-4 mb-6">
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-1">Signed in</p>
+                <p className="text-sm font-bold text-slate-900 mb-3 truncate">{user.email}</p>
+                <div className="space-y-2">
+                  <Link href="/account" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Profile Settings</Link>
+                  <Link href="/saved" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Watchlist</Link>
+                  {user.role === "ADMIN" && <Link href="/admin" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Administration</Link>}
+                  {user.role === "DEALER" && <Link href="/portal" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Dealer Portal</Link>}
+                </div>
+              </div>
             )}
+
+            <div className="space-y-3 pb-4">
+              {!user ? (
+                <>
+                  <Link href="/signup" onClick={() => setOpen(false)}
+                    className="block py-3.5 text-center font-black uppercase tracking-widest text-white rounded-xl bg-[#111111]">
+                    For Dealers
+                  </Link>
+                  <Link href="/login" onClick={() => setOpen(false)}
+                    className="block py-3.5 text-center font-black uppercase tracking-widest text-slate-700 bg-white border border-[#e7e1d8] rounded-xl">
+                    Sign In
+                  </Link>
+                </>
+              ) : (
+                <>
+                  {(user.role === "DEALER" || user.role === "ADMIN") && (
+                    <Link href="/portal/cars/new" onClick={() => setOpen(false)}
+                      className="block py-3.5 text-center font-black uppercase tracking-widest text-white rounded-xl bg-[#111111]">
+                      Post Unit
+                    </Link>
+                  )}
+                  <form action="/api/auth/logout" method="POST">
+                    <button type="submit" className="w-full py-3.5 text-center font-black uppercase tracking-widest text-rose-600 bg-white border border-rose-200 rounded-xl">
+                      Sign Out
+                    </button>
+                  </form>
+                </>
+              )}
+            </div>
           </div>
         </div>
       )}

@@ -136,13 +136,13 @@ export default function CarsSearch({
   const hasFilters = search || make || bodyType || fuelType || transmission || county || minPrice || maxPrice || sort !== "newest";
 
   return (
-    <div className="sticky top-[72px] z-30 bg-[#f5f3ef]/90 backdrop-blur-xl border-b border-[#e7e1d8] py-4">
-      <div className="container mx-auto px-6 max-w-7xl">
+    <div className="sticky top-[64px] md:top-[72px] z-30 bg-[#f5f3ef]/90 backdrop-blur-xl border-b border-[#e7e1d8] py-3 md:py-4">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
         <div ref={formRef} className="relative">
-          <form method="GET" onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex flex-wrap items-center gap-3">
+          <form method="GET" onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-3">
               {/* Primary Search */}
-              <div className="relative flex-1 min-w-[240px] group">
+              <div className="relative w-full md:flex-1 group">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 transition-colors" />
                 <input 
                   name="search" 
@@ -155,7 +155,7 @@ export default function CarsSearch({
               </div>
 
               {/* Main Quick Filters */}
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 md:flex md:flex-wrap items-center gap-2 w-full md:w-auto">
                 <select 
                   value={make}
                   onChange={e => {
@@ -163,7 +163,7 @@ export default function CarsSearch({
                     setMake(next);
                     pushWith({ make: next });
                   }}
-                  className="bg-white border border-[#e7e1d8] rounded-xl px-4 py-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-600 outline-none focus:border-[#ff5a2f]/35 transition-all cursor-pointer"
+                  className="bg-white border border-[#e7e1d8] rounded-xl px-3 py-3 text-[11px] font-bold md:font-extrabold md:uppercase tracking-[0.08em] md:tracking-[0.14em] text-slate-700 outline-none focus:border-[#ff5a2f]/35 transition-all cursor-pointer"
                 >
                   <option value="">All Makes</option>
                   {allMakes.map(m => <option key={m.make} value={m.make}>{m.make}</option>)}
@@ -176,7 +176,7 @@ export default function CarsSearch({
                     setBodyType(next);
                     pushWith({ bodyType: next });
                   }}
-                  className="bg-white border border-[#e7e1d8] rounded-xl px-4 py-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-600 outline-none focus:border-[#ff5a2f]/35 transition-all cursor-pointer"
+                  className="bg-white border border-[#e7e1d8] rounded-xl px-3 py-3 text-[11px] font-bold md:font-extrabold md:uppercase tracking-[0.08em] md:tracking-[0.14em] text-slate-700 outline-none focus:border-[#ff5a2f]/35 transition-all cursor-pointer"
                 >
                   <option value="">All Types</option>
                   {Object.entries(bodyTypeLabels).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
@@ -185,7 +185,7 @@ export default function CarsSearch({
                 <button 
                   type="button"
                   onClick={() => setShowMore(!showMore)}
-                  className={`flex items-center gap-2 px-4 py-3 rounded-xl text-[11px] font-extrabold uppercase tracking-[0.14em] transition-all ${
+                  className={`flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-[11px] font-bold md:font-extrabold md:uppercase tracking-[0.08em] md:tracking-[0.14em] transition-all ${
                     showMore || fuelType || transmission || county || minPrice || maxPrice
                     ? "bg-[#fff2e8] text-[#111111] border border-[#ff5a2f]/30" 
                     : "bg-white border border-[#e7e1d8] text-slate-600 hover:text-black"
@@ -196,8 +196,6 @@ export default function CarsSearch({
                   <ChevronDown className={`w-3 h-3 transition-transform ${showMore ? "rotate-180" : ""}`} />
                 </button>
 
-                <div className="w-px h-8 bg-[#e7e1d8] mx-1 hidden md:block" />
-
                 <select 
                   value={sort}
                   onChange={e => {
@@ -205,7 +203,7 @@ export default function CarsSearch({
                     setSort(next);
                     pushWith({ sort: next });
                   }}
-                  className="bg-white border border-[#e7e1d8] rounded-xl px-4 py-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-600 outline-none focus:border-[#ff5a2f]/35 transition-all cursor-pointer"
+                  className="bg-white border border-[#e7e1d8] rounded-xl px-3 py-3 text-[11px] font-bold md:font-extrabold md:uppercase tracking-[0.08em] md:tracking-[0.14em] text-slate-700 outline-none focus:border-[#ff5a2f]/35 transition-all cursor-pointer"
                 >
                   <option value="newest">Newest First</option>
                   <option value="price_asc">Lowest Price</option>
@@ -214,25 +212,27 @@ export default function CarsSearch({
                   <option value="year_desc">Newest Year</option>
                 </select>
 
-                <button type="submit" className="bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 rounded-xl transition-all text-xs font-extrabold uppercase tracking-[0.14em] active:scale-95">
+                <button type="submit" className="col-span-2 sm:col-span-4 md:col-span-1 bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 rounded-xl transition-all text-xs font-extrabold uppercase tracking-[0.14em] active:scale-95">
                   Find
                 </button>
-
-                {hasFilters && (
-                  <button 
-                    type="button"
-                    onClick={clearFilters}
-                    className="p-3 bg-white hover:bg-[#faf7f2] text-slate-400 hover:text-[#111111] rounded-xl transition-all border border-[#e7e1d8]"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
               </div>
             </div>
 
+            {hasFilters && (
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-slate-500 hover:text-slate-900"
+                >
+                  <X className="w-3.5 h-3.5" /> Clear all filters
+                </button>
+              </div>
+            )}
+
             {/* Expanded Filters */}
             {showMore && (
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 pt-4 border-t border-[#e7e1d8] animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 pt-4 border-t border-[#e7e1d8] animate-in fade-in slide-in-from-top-2 duration-300">
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500 pl-2">Fuel</label>
                   <select 
@@ -290,7 +290,7 @@ export default function CarsSearch({
                   </div>
                 </div>
                 
-                <div className="flex items-end">
+                <div className="flex items-end sm:col-span-2 lg:col-span-1">
                    <button 
                      type="button"
                      onClick={() => handleSubmit()}

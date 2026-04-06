@@ -45,10 +45,10 @@ export default async function DealerPage({ params }) {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <section className="pb-10 border-b border-[#e8e2d9]">
-          <div className="grid grid-cols-1 lg:grid-cols-[112px_minmax(0,1fr)_220px] gap-7 lg:gap-10 items-start">
-            <div className="w-28 h-28 rounded-3xl bg-[#faf7f2] border border-[#ece6dd] text-slate-900 flex items-center justify-center font-black text-5xl overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-[112px_minmax(0,1fr)_220px] gap-5 sm:gap-7 lg:gap-10 items-start">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-[#faf7f2] border border-[#ece6dd] text-slate-900 flex items-center justify-center font-black text-4xl sm:text-5xl overflow-hidden">
               {brandImage ? (
                 <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover" />
               ) : (
@@ -58,7 +58,7 @@ export default async function DealerPage({ params }) {
 
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-3 mb-3">
-                <h1 className="text-4xl md:text-5xl text-slate-900 tracking-tight">{dealer.name}</h1>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl text-slate-900 tracking-tight">{dealer.name}</h1>
                 {dealer.verified && (
                   <span className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-emerald-700">
                     <ShieldCheck className="w-3.5 h-3.5" /> Verified
@@ -93,7 +93,7 @@ export default async function DealerPage({ params }) {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 lg:grid-cols-1 gap-4 lg:border-l lg:border-[#ece6dd] lg:pl-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-4 lg:border-l lg:border-[#ece6dd] lg:pl-8">
               {[
                 { label: "Live Cars", value: dealer.cars.length },
                 { label: "Brands", value: makes.length },
@@ -186,7 +186,7 @@ export default async function DealerPage({ params }) {
           <div className="flex items-end justify-between gap-4 mb-6">
             <div>
               <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500 mb-2">Inventory</p>
-              <h2 className="text-3xl md:text-4xl text-slate-900 tracking-tight">Current Listings</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl text-slate-900 tracking-tight">Current Listings</h2>
             </div>
             <Link href="/cars" className="hidden sm:inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-[0.14em] text-slate-600 hover:text-black transition-colors">
               View All Cars <ArrowUpRight className="w-3.5 h-3.5" />
@@ -217,7 +217,7 @@ export default async function DealerPage({ params }) {
 
                 return (
                   <article key={car.id} className="py-6">
-                    <div className="grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)_170px] gap-5 items-start">
+                    <div className="grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)_170px] gap-4 md:gap-5 items-start">
                       <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-slate-50 overflow-hidden rounded-2xl border border-[#ece6dd]">
                         {img ? (
                           <Image
@@ -244,7 +244,7 @@ export default async function DealerPage({ params }) {
 
                       <div className="min-w-0">
                         <Link href={`/cars/${car.id}`}>
-                          <h3 className="text-xl font-bold text-slate-900 leading-tight mb-2 hover:text-black transition-colors">{title}</h3>
+                          <h3 className="text-lg sm:text-xl font-bold text-slate-900 leading-tight mb-2 hover:text-black transition-colors">{title}</h3>
                         </Link>
 
                         <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-extrabold uppercase tracking-[0.12em] text-slate-500 mb-4">

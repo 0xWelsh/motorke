@@ -6,7 +6,7 @@ import { getSession } from "@/lib/auth";
 import { unstable_cache } from "next/cache";
 import { formatPrice, formatMileage, estimateDuty, whatsappLink,
          BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/utils";
-import { MessageCircle, ChevronRight, MapPin, Wallet, ShieldCheck } from "lucide-react";
+import { MessageCircle, ChevronRight, MapPin, Wallet, ShieldCheck, Phone } from "lucide-react";
 import EnquiryForm from "@/components/EnquiryForm";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
@@ -187,36 +187,36 @@ export default async function CarDetailPage({ params }) {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16 pb-24 sm:pb-16">
       {/* Breadcrumb */}
-      <nav className="text-sm font-medium text-slate-400 mb-10 flex gap-3 items-center">
+      <nav className="text-sm font-medium text-slate-400 mb-8 sm:mb-10 flex gap-2 sm:gap-3 items-center flex-wrap">
         <Link href="/" className="hover:text-brand transition-colors">Home</Link>
         <ChevronRight className="w-3 h-3" />
         <Link href="/cars" className="hover:text-brand transition-colors">Inventory</Link>
         <ChevronRight className="w-3 h-3" />
-        <span className="text-slate-900 font-extrabold">{title}</span>
+        <span className="text-slate-900 font-extrabold truncate max-w-full">{title}</span>
       </nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
         {/* Left: images + details */}
-        <div className="lg:col-span-2 space-y-12">
+        <div className="lg:col-span-2 space-y-8 sm:space-y-10 lg:space-y-12">
           {/* Image gallery with lightbox */}
           <ImageGallery images={car.images} title={title} />
 
           {/* Title + price */}
-          <div className="flex flex-wrap items-start justify-between gap-6 pb-8 border-b border-slate-100">
+          <div className="flex flex-wrap items-start justify-between gap-4 sm:gap-6 pb-6 sm:pb-8 border-b border-slate-100">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
                 <span className="px-3 py-1 rounded-lg bg-brand-light text-brand text-xs font-extrabold">{car.year}</span>
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{car.make}</span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">{title}</h1>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">{title}</h1>
               <p className="text-lg text-slate-500 font-medium">
                 {BODY_TYPE_LABELS[car.bodyType] || "Body type N/A"} · {formatMileage(car.mileage)} · {car.location || dealer.location || "Location on request"}
               </p>
             </div>
-            <div className="text-right space-y-1">
-              <p className="text-4xl font-extrabold text-brand tracking-tight">{formatPrice(car.price)}</p>
+            <div className="text-left sm:text-right space-y-1">
+              <p className="text-3xl sm:text-4xl font-extrabold text-brand tracking-tight">{formatPrice(car.price)}</p>
               {car.imported && !car.dutyPaid && (
                 <p className="text-sm font-extrabold text-emerald-600 uppercase tracking-widest">
                   Est. {formatPrice(car.price + duty)} Total Landed
@@ -246,12 +246,42 @@ export default async function CarDetailPage({ params }) {
           </div>
 
           {/* Share + Save */}
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             <ShareButtons title={title} price={formatPrice(car.price)} />
             <div className="h-8 w-px bg-slate-100 mx-2 hidden sm:block" />
             <PrintButton carId={car.id} />
           </div>
           <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
+
+          {/* Mobile sticky quick actions */}
+          <div className="lg:hidden sticky bottom-3 z-30">
+            <div className="rounded-2xl border border-slate-200 bg-white/95 backdrop-blur p-2 shadow-[0_14px_30px_rgba(15,23,42,0.16)] flex items-center gap-2">
+              {dealer.whatsapp && (
+                <a
+                  href={whatsappLink(dealer.whatsapp, title, dealer.name)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 h-12 rounded-xl bg-emerald-500 text-white text-[11px] font-extrabold uppercase tracking-[0.12em] flex items-center justify-center gap-1.5"
+                >
+                  <MessageCircle className="w-4 h-4 fill-current" /> WhatsApp
+                </a>
+              )}
+              {dealer.phone && (
+                <a
+                  href={`tel:${dealer.phone}`}
+                  className="flex-1 h-12 rounded-xl bg-slate-900 text-white text-[11px] font-extrabold uppercase tracking-[0.12em] flex items-center justify-center gap-1.5"
+                >
+                  <Phone className="w-4 h-4" /> Call
+                </a>
+              )}
+              <Link
+                href={`/dealers/${dealer.slug}`}
+                className="h-12 px-4 rounded-xl border border-slate-200 bg-white text-slate-700 text-[10px] font-extrabold uppercase tracking-[0.12em] inline-flex items-center justify-center"
+              >
+                Dealer
+              </Link>
+            </div>
+          </div>
 
           {/* Feature badges */}
           {car.features?.length > 0 && (
@@ -278,9 +308,9 @@ export default async function CarDetailPage({ params }) {
           {/* Spec grid */}
           <div className="space-y-8">
             <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Detailed Specifications</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {specs.map(({ label, value }) => (
-                <div key={label} className="bg-slate-50/50 border border-slate-100 rounded-lg p-5 group hover:bg-white hover:border-brand-accent/20 transition-all">
+                <div key={label} className="bg-slate-50/50 border border-slate-100 rounded-lg p-4 sm:p-5 group hover:bg-white hover:border-brand-accent/20 transition-all">
                   <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">{label}</p>
                   <p className="text-base font-extrabold text-slate-900">{value}</p>
                 </div>
@@ -290,13 +320,13 @@ export default async function CarDetailPage({ params }) {
 
           {/* Duty estimate */}
           {car.imported && !car.dutyPaid && (
-            <div className="bg-emerald-900 rounded-xl p-10 relative overflow-hidden">
+            <div className="bg-emerald-900 rounded-xl p-6 sm:p-10 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-800/50 blur-3xl -mr-32 -mt-32 rounded-full" />
               <div className="relative z-10 space-y-4">
                 <div className="flex items-center gap-3 text-emerald-400 font-extrabold text-xs uppercase tracking-widest">
                   <Wallet className="w-4 h-4" /> Estimated Import Duty
                 </div>
-                <p className="text-5xl font-extrabold text-white tracking-tight">{formatPrice(duty)}</p>
+                <p className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">{formatPrice(duty)}</p>
                 <p className="text-sm text-emerald-100/60 max-w-md font-medium">
                   This is a rough KRA estimate based on age and market value. Always verify with a licensed clearing agent.
                 </p>
@@ -306,9 +336,9 @@ export default async function CarDetailPage({ params }) {
         </div>
 
         {/* Right: dealer card + enquiry */}
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           {/* Dealer card */}
-          <div className="bg-white border border-slate-200 rounded-xl p-8 space-y-8 sticky top-28">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 space-y-6 sm:space-y-8 lg:sticky lg:top-28">
             <div className="flex items-center gap-5">
               <div className="w-16 h-16 rounded-xl bg-brand-light flex items-center justify-center text-brand font-extrabold text-2xl overflow-hidden">
                 {dealerBrandImage ? (
@@ -362,14 +392,14 @@ export default async function CarDetailPage({ params }) {
 
       {/* Similar cars */}
       {similar.length > 0 && (
-        <div className="mt-32 space-y-12">
+        <div className="mt-16 sm:mt-24 lg:mt-32 space-y-8 sm:space-y-12">
           <div className="flex items-end justify-between">
             <div className="space-y-2">
-              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Similar units you might like</h2>
-              <p className="text-lg text-slate-500 font-medium">Hand-picked alternatives from our verified inventory.</p>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Similar units you might like</h2>
+              <p className="text-base sm:text-lg text-slate-500 font-medium">Hand-picked alternatives from our verified inventory.</p>
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
             {similar.map((c) => {
               const img = c.images[0]?.url;
               const title = `${c.make} ${c.model}`;

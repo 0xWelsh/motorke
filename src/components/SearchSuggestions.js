@@ -19,7 +19,7 @@ export default function SearchSuggestions({
   };
 
   return (
-    <div className={`absolute left-0 right-0 top-full mt-2 bg-white border border-slate-100 rounded-2xl shadow-2xl z-50 overflow-hidden ${className}`}>
+    <div className={`absolute left-0 right-0 top-full mt-2 bg-white border border-slate-100 rounded-xl sm:rounded-2xl shadow-2xl z-50 overflow-hidden ${className}`}>
       {loading ? (
         <div className="p-6 text-center">
           <div className="animate-pulse flex items-center justify-center gap-2">
@@ -28,7 +28,7 @@ export default function SearchSuggestions({
           </div>
         </div>
       ) : (
-        <div className="max-h-80 overflow-y-auto">
+        <div className="max-h-[65vh] sm:max-h-80 overflow-y-auto">
           {suggestions.map((suggestion, index) => {
             const typeInfo = suggestionTypes[suggestion.type] || { icon: <Tag className="w-4 h-4 text-slate-400" />, label: "Result" };
             
@@ -42,7 +42,7 @@ export default function SearchSuggestions({
               <button
                 key={`${suggestion.type}-${index}`}
                 onClick={() => onSelect(suggestion.value)}
-                className="w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-50 transition-colors duration-200 group border-b border-slate-50 last:border-0"
+                className="w-full flex items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-3 hover:bg-slate-50 transition-colors duration-200 group border-b border-slate-50 last:border-0"
               >
                 <div className="shrink-0">
                   {typeInfo.icon}
