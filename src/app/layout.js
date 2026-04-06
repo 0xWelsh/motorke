@@ -11,7 +11,11 @@ export const metadata = {
   title: "Motorke — Find Your Car in Kenya",
   description: "Compare cars from top dealerships across Kenya.",
   icons: {
-    icon: "/favicon.png",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.svg",
   },
 };
 
