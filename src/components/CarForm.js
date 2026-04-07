@@ -270,6 +270,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [modelOptions, setModelOptions] = useState([]);
   const [loadingModels, setLoadingModels] = useState(false);
   const [modelSources, setModelSources] = useState(["inventory"]);
+  const [selectedModel, setSelectedModel] = useState((baseSeed.model || "").trim());
+  const [variantOptions, setVariantOptions] = useState([]);
+  const [loadingVariants, setLoadingVariants] = useState(false);
+  const [variantSources, setVariantSources] = useState(["inventory"]);
 
   const formRef = useRef(null);
   const saveTimeoutRef = useRef(null);
@@ -363,6 +367,13 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   }, [formVersion, formSeed.make]);
 
   useEffect(() => {
+    const currentModel =
+      formRef.current?.querySelector('input[name="model"]')?.value?.trim() ||
+      (formSeed.model || "").trim();
+    setSelectedModel(currentModel);
+  }, [formVersion, formSeed.model]);
+
+  useEffect(() => {
     const make = selectedMake.trim();
     if (!make) {
       setModelOptions([]);
@@ -396,6 +407,43 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     loadModels();
     return () => controller.abort();
   }, [selectedMake]);
+
+  useEffect(() => {
+    const make = selectedMake.trim();
+    const model = selectedModel.trim();
+    if (!make || !model) {
+      setVariantOptions([]);
+      setLoadingVariants(false);
+      setVariantSources(["inventory"]);
+      return;
+    }
+
+    const controller = new AbortController();
+
+    async function loadVariants() {
+      setLoadingVariants(true);
+      try {
+        const res = await fetch(
+          `/api/cars/variants?make=${encodeURIComponent(make)}&model=${encodeURIComponent(model)}&limit=200`,
+          { signal: controller.signal }
+        );
+        if (!res.ok) throw new Error("Failed to load variants");
+        const data = await res.json();
+        setVariantOptions(Array.isArray(data.variants) ? data.variants : []);
+        setVariantSources(Array.isArray(data.sources) && data.sources.length > 0 ? data.sources : ["inventory"]);
+      } catch (err) {
+        if (err?.name !== "AbortError") {
+          setVariantOptions([]);
+          setVariantSources(["inventory"]);
+        }
+      } finally {
+        if (!controller.signal.aborted) setLoadingVariants(false);
+      }
+    }
+
+    loadVariants();
+    return () => controller.abort();
+  }, [selectedMake, selectedModel]);
 
   async function handleFilesSelected(newFiles) {
     const toUpload = newFiles.filter((f) => !f.url);
@@ -643,7 +691,20 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 defaultValue={formSeed.make}
                 placeholder="e.g. Toyota"
                 className={inputCls}
-                onChange={(e) => setSelectedMake(e.target.value.trim())}
+                onChange={(e) => {
+                  const nextMake = e.target.value.trim();
+                  const currentMake = selectedMake.trim();
+                  if (nextMake.toLowerCase() !== currentMake.toLowerCase()) {
+                    const modelInput = formRef.current?.querySelector('input[name="model"]');
+                    const variantInput = formRef.current?.querySelector('input[name="variant"]');
+                    if (modelInput) modelInput.value = "";
+                    if (variantInput) variantInput.value = "";
+                    setSelectedModel("");
+                    setVariantOptions([]);
+                    setVariantSources(["inventory"]);
+                  }
+                  setSelectedMake(nextMake);
+                }}
               />
               <datalist id="make-list">
                 {MAKES.map((make) => <option key={make} value={make} />)}
@@ -658,6 +719,17 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 defaultValue={formSeed.model}
                 placeholder={selectedMake ? `Type or pick a ${selectedMake} model` : "Pick make first or type model"}
                 className={inputCls}
+                onChange={(e) => {
+                  const nextModel = e.target.value.trim();
+                  const currentModel = selectedModel.trim();
+                  if (nextModel.toLowerCase() !== currentModel.toLowerCase()) {
+                    const variantInput = formRef.current?.querySelector('input[name="variant"]');
+                    if (variantInput) variantInput.value = "";
+                    setVariantOptions([]);
+                    setVariantSources(["inventory"]);
+                  }
+                  setSelectedModel(nextModel);
+                }}
               />
               <datalist id="model-list">
                 {modelOptions.map((model) => <option key={model} value={model} />)}
@@ -674,7 +746,25 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             </div>
             <div>
               <label className={labelCls}>Variant</label>
-              <input name="variant" defaultValue={formSeed.variant} placeholder="e.g. Premium" className={inputCls} />
+              <input
+                name="variant"
+                list="variant-list"
+                defaultValue={formSeed.variant}
+                placeholder={selectedModel ? `Type or pick a ${selectedModel} variant` : "Pick model first or type variant"}
+                className={inputCls}
+              />
+              <datalist id="variant-list">
+                {variantOptions.map((variant) => <option key={variant} value={variant} />)}
+              </datalist>
+              <p className="mt-1 text-[10px] font-semibold text-slate-500">
+                {selectedMake && selectedModel
+                  ? loadingVariants
+                    ? "Loading variant suggestions..."
+                    : variantOptions.length > 0
+                      ? `${variantOptions.length} variant suggestion(s) for ${selectedMake} ${selectedModel}${variantSources.includes("vpic") ? " (inventory + internet)" : ""}`
+                      : `No variant suggestions found for ${selectedMake} ${selectedModel} yet. You can still type manually.`
+                  : "Choose make and model to get matching variant suggestions."}
+              </p>
             </div>
 
             <div>
