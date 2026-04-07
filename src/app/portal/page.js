@@ -20,8 +20,11 @@ import {
 
 export const metadata = { title: "Dashboard — Motorke Dealer Portal" };
 
-export default async function PortalPage() {
+export default async function PortalPage({ searchParams }) {
   const user = await requireDealer();
+  const sp = await searchParams;
+  const created = sp?.created === "1";
+  const createdCarId = sp?.car || "";
 
   const [cars, leads] = await Promise.all([
     db.car.findMany({
@@ -54,11 +57,31 @@ export default async function PortalPage() {
           <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-500 mb-2 block">Dealer Dashboard</span>
           <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Overview</h1>
         </div>
-        <Link href="/portal/cars/new"
-          className="flex items-center gap-2 bg-slate-900 dark:bg-emerald-600 hover:bg-slate-800 dark:hover:bg-emerald-500 text-white text-sm font-bold px-6 py-3 rounded-xl transition-all shadow-md hover:scale-105 active:scale-95 tracking-wide">
-          <Plus size={18} /> New Listing
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/portal/cars/bulk"
+            className="flex items-center gap-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-sm font-bold px-4 py-3 rounded-xl transition-all tracking-wide">
+            <Plus size={18} /> Bulk Upload
+          </Link>
+          <Link href="/portal/cars/new"
+            className="flex items-center gap-2 bg-slate-900 dark:bg-emerald-600 hover:bg-slate-800 dark:hover:bg-emerald-500 text-white text-sm font-bold px-6 py-3 rounded-xl transition-all shadow-md hover:scale-105 active:scale-95 tracking-wide">
+            <Plus size={18} /> New Listing
+          </Link>
+        </div>
       </div>
+
+      {created && (
+        <div className="mb-8 rounded-2xl border border-emerald-200 bg-emerald-50 px-6 py-5">
+          <h2 className="text-sm font-black uppercase tracking-[0.12em] text-emerald-700">Listing Published</h2>
+          <p className="mt-2 text-sm font-semibold text-emerald-800">
+            Great work. Complete these quick actions to boost enquiries.
+          </p>
+          <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
+            <Link href={createdCarId ? `/cars/${createdCarId}` : "/portal/inventory"} className="rounded-lg border border-emerald-200 bg-white px-3 py-2 text-xs font-black uppercase tracking-wider text-emerald-700 hover:bg-emerald-100">View Live Listing</Link>
+            <Link href="/portal/inventory" className="rounded-lg border border-emerald-200 bg-white px-3 py-2 text-xs font-black uppercase tracking-wider text-emerald-700 hover:bg-emerald-100">Share To Buyer Groups</Link>
+            <Link href="/portal/leads" className="rounded-lg border border-emerald-200 bg-white px-3 py-2 text-xs font-black uppercase tracking-wider text-emerald-700 hover:bg-emerald-100">Watch Incoming Leads</Link>
+          </div>
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">

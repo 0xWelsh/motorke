@@ -20,7 +20,7 @@ export async function PUT(request, { params }) {
   try {
     const body = await request.json();
     const {
-      make, model, variant, year, price, mileage,
+      make, model, variant, year, price, mileage, condition,
       fuelType, transmission, bodyType, engineCC, drivetrain, steering,
       cylinders, horsepower, torque, turbo, sunroof, airbags,
       color, seats, description, features, badges, images,
@@ -37,6 +37,7 @@ export async function PUT(request, { params }) {
         year:         parseInt(year),
         price:        parseInt(price),
         mileage:      mileage ? parseInt(mileage) : null,
+        condition:    condition || "USED",
         fuelType,
         transmission,
         bodyType,

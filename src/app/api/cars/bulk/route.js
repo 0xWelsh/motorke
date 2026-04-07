@@ -1,8 +1,24 @@
-// src/app/api/admin/cars/bulk/route.js
+// src/app/api/cars/bulk/route.js
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
+
+const VALID_FUEL = ["PETROL", "DIESEL", "HYBRID", "ELECTRIC", "LPG"];
+const VALID_TRANS = ["AUTOMATIC", "MANUAL", "CVT"];
+const VALID_BODY = ["SEDAN", "SUV", "HATCHBACK", "PICKUP", "VAN", "WAGON", "COUPE", "CONVERTIBLE", "BUS", "TRUCK"];
+const VALID_DRIVETRAIN = ["FWD", "RWD", "AWD", "FOURWD"];
+const VALID_STEERING = ["RHD", "LHD"];
+
+function normalizeRow(raw) {
+  return Object.fromEntries(Object.entries(raw || {}).map(([k, v]) => [k.toLowerCase(), v]));
+}
+
+function parseBool(value, fallback = true) {
+  if (value === undefined || value === null || value === "") return fallback;
+  const normalized = String(value).toLowerCase();
+  return !(normalized === "false" || normalized === "0" || normalized === "no");
+}
 
 export async function POST(request) {
   const session = await getSessionFromRequest();
@@ -21,23 +37,22 @@ export async function POST(request) {
     const dealer = await db.dealer.findUnique({ where: { id: dealerId } });
     if (!dealer) return NextResponse.json({ error: "Dealer not found" }, { status: 404 });
 
-    const VALID_FUEL  = ["PETROL","DIESEL","HYBRID","ELECTRIC","LPG"];
-    const VALID_TRANS = ["AUTOMATIC","MANUAL","CVT"];
-    const VALID_BODY  = ["SEDAN","SUV","HATCHBACK","PICKUP","VAN","WAGON","COUPE","CONVERTIBLE","BUS","TRUCK"];
-    const VALID_DRIVE = ["RHD","LHD","AWD","FWD","RWD","FOURWD"];
-
     let count = 0;
     const errors = [];
 
     for (const [i, row] of rows.entries()) {
       try {
-        // Normalize keys (CSV headers may be lowercase)
-        const r = Object.fromEntries(Object.entries(row).map(([k, v]) => [k.toLowerCase(), v]));
+        const r = normalizeRow(row);
 
-        const fuelType     = (r.fueltype || r.fueltype || "PETROL").toUpperCase();
-        const transmission = (r.transmission || "AUTOMATIC").toUpperCase();
-        const bodyType     = (r.bodytype || "SEDAN").toUpperCase();
-        const driveType    = (r.drivetype || "RHD").toUpperCase();
+        const fuelType = String(r.fueltype || "PETROL").toUpperCase();
+        const transmission = String(r.transmission || "AUTOMATIC").toUpperCase();
+        const bodyType = String(r.bodytype || "SEDAN").toUpperCase();
+        const drivetrain = String(r.drivetrain || r.drivetype || "FWD").toUpperCase();
+        const steering = String(r.steering || "RHD").toUpperCase();
+
+        if (!r.make || !r.model || !r.year || !r.price) {
+          throw new Error("Missing required columns: make, model, year, price");
+        }
 
         if (!VALID_FUEL.includes(fuelType))     throw new Error(`Invalid fuelType: ${fuelType}`);
         if (!VALID_TRANS.includes(transmission)) throw new Error(`Invalid transmission: ${transmission}`);
@@ -57,18 +72,20 @@ export async function POST(request) {
             year:         parseInt(r.year),
             price:        parseInt(r.price),
             mileage:      r.mileage ? parseInt(r.mileage) : null,
+            condition:    String(r.condition || "USED").toUpperCase(),
             fuelType,
             transmission,
             bodyType,
-            driveType:    VALID_DRIVE.includes(driveType) ? driveType : "RHD",
+            drivetrain:   VALID_DRIVETRAIN.includes(drivetrain) ? drivetrain : "FWD",
+            steering:     VALID_STEERING.includes(steering) ? steering : "RHD",
             engineCC:     r.enginecc ? parseInt(r.enginecc) : null,
             color:        r.color?.trim() || null,
             seats:        r.seats ? parseInt(r.seats) : null,
             description:  r.description?.trim() || null,
             features,
-            negotiable:   true,
-            dutyPaid:     r.dutypaid !== "false",
-            imported:     r.imported !== "false",
+            negotiable:   parseBool(r.negotiable, true),
+            dutyPaid:     parseBool(r.dutypaid, true),
+            imported:     parseBool(r.imported, true),
             importCountry: r.importcountry || "Japan",
             available:    true,
             // Create image if URL provided

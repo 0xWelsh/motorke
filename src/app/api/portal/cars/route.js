@@ -10,15 +10,26 @@ export async function POST(request) {
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
 
+  if (!session.user.dealerId) {
+    return NextResponse.json({ error: "Dealer profile is not linked to this account" }, { status: 400 });
+  }
+
   try {
     const body = await request.json();
+
+    if (!body?.make || !body?.model || !body?.year || !body?.price) {
+      return NextResponse.json(
+        { error: "Missing required fields: make, model, year, price" },
+        { status: 400 }
+      );
+    }
 
     // Force the dealerId to be the dealer's own — never trust client input
     body.dealerId = session.user.dealerId;
 
     const car = await createCarRecord(body);
     return NextResponse.json(
-      { success: true, redirectTo: "/portal" },
+      { success: true, redirectTo: `/portal?created=1&car=${car.id}` },
       { status: 201 }
     );
   } catch (err) {
@@ -30,6 +41,7 @@ export async function POST(request) {
 async function createCarRecord(body) {
   const {
     dealerId, make, model, variant, year, price, mileage,
+    condition,
     fuelType, transmission, bodyType, engineCC, drivetrain, steering,
     cylinders, horsepower, torque, turbo, sunroof, airbags,
     color, seats, description, features, badges, images,
@@ -46,6 +58,7 @@ async function createCarRecord(body) {
       year:         parseInt(year),
       price:        parseInt(price),
       mileage:      mileage ? parseInt(mileage) : null,
+      condition:    condition || "USED",
       fuelType:     fuelType || "PETROL",
       transmission: transmission || "AUTOMATIC",
       bodyType:     bodyType || "SEDAN",

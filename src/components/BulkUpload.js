@@ -44,7 +44,7 @@ function validateRow(row, i) {
   return errors;
 }
 
-export default function BulkUpload({ dealers }) {
+export default function BulkUpload({ dealers, mode = "ADMIN" }) {
   const [rows,      setRows]      = useState([]);
   const [errors,    setErrors]    = useState([]);
   const [dealerId,  setDealerId]  = useState(dealers[0]?.id || "");
@@ -52,6 +52,8 @@ export default function BulkUpload({ dealers }) {
   const [result,    setResult]    = useState(null);
   const [dragOver,  setDragOver]  = useState(false);
   const fileRef = useRef(null);
+  const isDealerMode = mode === "DEALER";
+  const submitEndpoint = isDealerMode ? "/api/portal/cars/bulk" : "/api/cars/bulk";
 
   function processFile(file) {
     if (!file) return;
@@ -74,11 +76,11 @@ export default function BulkUpload({ dealers }) {
   }
 
   async function handleSubmit() {
-    if (!dealerId) { alert("Select a dealership first"); return; }
+    if (!dealerId && !isDealerMode) { alert("Select a dealership first"); return; }
     if (errors.length > 0) { alert("Fix validation errors before uploading"); return; }
     setUploading(true);
     try {
-      const res  = await fetch("/api/admin/cars/bulk", {
+      const res  = await fetch(submitEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dealerId, rows }),
@@ -99,14 +101,28 @@ export default function BulkUpload({ dealers }) {
   return (
     <div>
       {/* Dealer selector */}
-      <div style={{ background: "#fff", border: "1px solid #E2E2E2", borderRadius: 14, padding: "20px 24px", marginBottom: 16 }}>
-        <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#555", marginBottom: 8 }}>
-          Assign all cars to dealership *
-        </label>
-        <select value={dealerId} onChange={e => setDealerId(e.target.value)} style={{ ...s.select, maxWidth: 400 }}>
-          {dealers.map(d => <option key={d.id} value={d.id}>{d.name} — {d.location}</option>)}
-        </select>
-      </div>
+      {isDealerMode ? (
+        <div style={{ background: "#fff", border: "1px solid #E2E2E2", borderRadius: 14, padding: "20px 24px", marginBottom: 16 }}>
+          <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#555", marginBottom: 8 }}>
+            Uploading as dealership
+          </label>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "#0A2640" }}>
+            {dealers[0]?.name || "Dealer"}
+          </p>
+          <p style={{ fontSize: 12, color: "#777", marginTop: 4 }}>
+            All imported cars will be assigned to your account automatically.
+          </p>
+        </div>
+      ) : (
+        <div style={{ background: "#fff", border: "1px solid #E2E2E2", borderRadius: 14, padding: "20px 24px", marginBottom: 16 }}>
+          <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#555", marginBottom: 8 }}>
+            Assign all cars to dealership *
+          </label>
+          <select value={dealerId} onChange={e => setDealerId(e.target.value)} style={{ ...s.select, maxWidth: 400 }}>
+            {dealers.map(d => <option key={d.id} value={d.id}>{d.name} — {d.location}</option>)}
+          </select>
+        </div>
+      )}
 
       {/* Drop zone */}
       <div

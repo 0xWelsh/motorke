@@ -101,6 +101,10 @@ export default function PortalLayout({ children }) {
 
         {/* User / Footer */}
         <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+          <Link href="/portal/cars/bulk" 
+            className="flex items-center justify-center gap-2 w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold py-3.5 rounded-xl mb-3 transition-all uppercase text-xs tracking-wider">
+            <Plus size={16} /> Bulk Upload
+          </Link>
           <Link href="/portal/cars/new" 
             className="flex items-center justify-center gap-2 w-full bg-slate-900 dark:bg-emerald-600 hover:bg-slate-800 dark:hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl mb-4 transition-all shadow-md uppercase text-xs tracking-wider">
             <Plus size={16} /> Add Car

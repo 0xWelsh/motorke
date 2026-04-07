@@ -24,7 +24,7 @@ export default async function BulkUploadPage() {
           <p style={{ fontWeight: 700, fontSize: 14, color: "#0A2640" }}>📄 Download the template first</p>
           <p style={{ fontSize: 13, color: "#555", marginTop: 3 }}>Fill in the CSV template with your car data, then upload it below.</p>
         </div>
-        <a href="/api/admin/cars/bulk/template" style={{ background: "#0A2640", color: "white", textDecoration: "none", borderRadius: 10, padding: "10px 20px", fontWeight: 700, fontSize: 13, flexShrink: 0 }}>
+        <a href="/api/cars/bulk/template" style={{ background: "#0A2640", color: "white", textDecoration: "none", borderRadius: 10, padding: "10px 20px", fontWeight: 700, fontSize: 13, flexShrink: 0 }}>
           Download template
         </a>
       </div>
@@ -46,7 +46,8 @@ export default async function BulkUploadPage() {
             { col: "engineCC",       eg: "2755"         },
             { col: "color",          eg: "Pearl White"  },
             { col: "seats",          eg: "5"            },
-            { col: "driveType",      eg: "RHD / AWD / FOURWD" },
+            { col: "drivetrain",     eg: "FWD / RWD / AWD / FOURWD" },
+            { col: "steering",       eg: "RHD / LHD" },
             { col: "features",       eg: "Sunroof;Leather;Camera" },
             { col: "description",    eg: "One owner, full service history" },
             { col: "imageUrl",       eg: "https://..." },
@@ -61,7 +62,7 @@ export default async function BulkUploadPage() {
       </div>
 
       {/* Upload component */}
-      <BulkUpload dealers={dealers} />
+      <BulkUpload dealers={dealers} mode="ADMIN" />
     </div>
   );
 }

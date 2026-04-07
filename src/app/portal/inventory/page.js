@@ -55,10 +55,16 @@ export default async function InventoryPage({ searchParams }) {
             {totalCount} Total Units · {liveCount} Live
           </p>
         </div>
-        <Link href="/portal/cars/new"
-          className="flex items-center gap-2 bg-slate-900 dark:bg-slate-100 dark:text-slate-900 hover:bg-slate-800 text-white text-sm font-bold px-6 py-3 rounded-xl transition-all shadow-md hover:scale-105 active:scale-95 tracking-wide">
-          <Plus size={18} /> Add Vehicle
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/portal/cars/bulk"
+            className="flex items-center gap-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-sm font-bold px-4 py-3 rounded-xl transition-all tracking-wide">
+            <Plus size={18} /> Bulk Upload
+          </Link>
+          <Link href="/portal/cars/new"
+            className="flex items-center gap-2 bg-slate-900 dark:bg-slate-100 dark:text-slate-900 hover:bg-slate-800 text-white text-sm font-bold px-6 py-3 rounded-xl transition-all shadow-md hover:scale-105 active:scale-95 tracking-wide">
+            <Plus size={18} /> Add Vehicle
+          </Link>
+        </div>
       </div>
 
       {/* Filter Tabs */}
