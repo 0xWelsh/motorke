@@ -89,7 +89,7 @@ export default function Navbar({ user }) {
     <nav className={clsx(
       "sticky top-0 z-[100] transition-all duration-300",
       scrolled
-        ? "bg-white/90 backdrop-blur-xl border-b border-[#e8e2d9] py-3 shadow-sm"
+        ? "bg-white/95 backdrop-blur-xl border-b border-slate-200 py-3 shadow-sm"
         : "bg-transparent py-5"
     )}>
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
@@ -109,7 +109,7 @@ export default function Navbar({ user }) {
           </Link>
 
           {/* NAV LINKS */}
-          <div className="hidden lg:flex items-center gap-5 border-b border-[#e7e1d8] pb-2">
+          <div className="hidden lg:flex items-center gap-5 border-b border-slate-200 pb-2">
             {links.map(({ href, label, icon }) => (
               <Link key={href} href={href}
                 className="flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-[0.16em] text-slate-700 hover:text-black transition-all">
@@ -128,7 +128,7 @@ export default function Navbar({ user }) {
                 onChange={e => setSearch(e.target.value)}
                 onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                 placeholder="Search cars, e.g. Prado, X5, CX-5"
-                className="w-full bg-white border border-[#e7e1d8] focus:border-[#ff5a2f]/40 focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-xl py-3 pl-12 pr-6 text-sm font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900"
+                className="w-full bg-white border border-slate-200 focus:border-[#ff5a2f]/40 focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-xl py-3 pl-12 pr-6 text-sm font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900"
               />
             </form>
             {showSuggestions && (
@@ -149,7 +149,7 @@ export default function Navbar({ user }) {
                 <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setUserMenu(!userMenu)}
-                  className="flex items-center gap-3 bg-white border border-[#e7e1d8] pl-2 pr-5 py-2 rounded-xl hover:border-[#d8d0c6] transition-all"
+                  className="flex items-center gap-3 bg-white border border-slate-200 pl-2 pr-5 py-2 rounded-xl hover:border-slate-300 transition-all"
                 >
                   <div className="w-9 h-9 rounded-full flex items-center justify-center font-extrabold text-sm uppercase text-white bg-[#111111]">
                     {user.name?.[0]}
@@ -159,8 +159,8 @@ export default function Navbar({ user }) {
                 </button>
 
                 {userMenu && (
-                  <div className="absolute right-0 top-full mt-4 w-72 bg-white border border-[#e7e1d8] rounded-3xl shadow-2xl overflow-hidden p-3 animate-in fade-in slide-in-from-top-2">
-                    <div className="px-5 py-4 bg-[#faf7f2] rounded-2xl mb-3">
+                  <div className="absolute right-0 top-full mt-4 w-72 bg-white border border-slate-200 rounded-3xl shadow-2xl overflow-hidden p-3 animate-in fade-in slide-in-from-top-2">
+                    <div className="px-5 py-4 bg-slate-50 rounded-2xl mb-3">
                       <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-1">Signed in</p>
                       <p className="text-sm font-extrabold text-slate-900 truncate">{user.email}</p>
                     </div>

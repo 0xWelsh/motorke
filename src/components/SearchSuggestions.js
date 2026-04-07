@@ -57,7 +57,7 @@ export default function SearchSuggestions({
                     {typeInfo.label}
                   </div>
                 </div>
-                <div className="shrink-0 text-slate-200 group-hover:text-[var(--brand-accent)] transition-colors">
+                <div className="shrink-0 text-slate-400 group-hover:text-[var(--brand-accent)] transition-colors">
                   <Check className="w-4 h-4" />
                 </div>
               </button>

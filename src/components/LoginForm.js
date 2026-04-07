@@ -67,7 +67,7 @@ export default function LoginForm({ error }) {
       <AuthCarousel />
 
       {/* ── FORM SECTION (Right) ── */}
-      <section className="flex-1 flex flex-col items-center justify-center p-5 sm:p-8 lg:p-12 bg-[#FCFCFD] relative">
+      <section className="flex-1 flex flex-col items-center justify-center p-5 sm:p-8 lg:p-12 bg-white relative">
          
         <Link 
            href="/" 
@@ -201,7 +201,7 @@ export default function LoginForm({ error }) {
                   <div className="w-full border-t border-slate-100"></div>
                </div>
                <div className="relative flex justify-center text-[10px] uppercase font-black tracking-[0.25em]">
-                <span className="bg-[#FCFCFD] px-5 text-slate-700">Continue with Google</span>
+               <span className="bg-white px-5 text-slate-700">Continue with Google</span>
                </div>
             </div>
 

@@ -51,7 +51,7 @@ export default async function IntelligencePage() {
       {articles.length === 0 ? (
         <div className="bg-white border-2 border-dashed border-slate-100 rounded-[4rem] py-48 text-center px-10 shadow-sm">
             <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-8">
-              <Newspaper className="text-slate-200" size={48} />
+              <Newspaper className="text-slate-300" size={48} />
             </div>
             <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-tight">Loading Latest Updates...</h3>
             <p className="text-slate-500 text-sm font-bold max-w-sm mx-auto leading-relaxed">

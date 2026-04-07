@@ -210,7 +210,7 @@ export default async function PortalProfilePage({ searchParams }) {
                   <label className={labelCls}>Registered Email (Locked)</label>
                   <div className="relative">
                     <input name="email" type="email" defaultValue={user.email} className={`${inputCls} bg-slate-50/50 text-slate-400 cursor-not-allowed`} disabled />
-                    <Shield className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-200" size={16} />
+                    <Shield className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                   </div>
                 </div>
               </div>

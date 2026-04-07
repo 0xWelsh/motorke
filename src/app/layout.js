@@ -30,8 +30,8 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-background text-foreground min-h-screen antialiased flex flex-col font-sans transition-colors duration-300">
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+      <body className="bg-background text-slate-900 min-h-screen antialiased flex flex-col font-sans transition-colors duration-300">
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <CompareProvider>
             <Navbar user={user} />
             <ModalProvider>
@@ -48,7 +48,7 @@ export default async function RootLayout({ children }) {
                 <p className="text-slate-500 dark:text-slate-500 text-xs mt-1 font-semibold tracking-wide">Cars first. Dealers visible. Buyers confident.</p>
               </div>
               <div className="flex gap-8 flex-wrap justify-center">
-                {[["Showcase", "/cars"], ["Dealerships", "/dealers"], ["Duty Calculator", "/duty"], ["Terms", "/terms"], ["Privacy", "/privacy"]].map(([label, href]) => (
+                {[ ["Showcase", "/cars"], ["Dealers", "/dealers"], ["Duty Calculator", "/duty"], ["Terms", "/terms"], ["Privacy", "/privacy"]].map(([label, href]) => (
                   <a key={href} href={href} className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition-colors">{label}</a>
                 ))}
               </div>

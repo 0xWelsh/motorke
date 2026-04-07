@@ -160,7 +160,7 @@ export default function SignupForm({ error: initialError }) {
 
        {/* ── FORM SECTION (Right) ── */}
        <section className={clsx(
-         "flex-1 flex flex-col items-center justify-center p-5 sm:p-8 lg:p-12 bg-[#FCFCFD] relative overflow-y-auto",
+         "flex-1 flex flex-col items-center justify-center p-5 sm:p-8 lg:p-12 bg-white relative overflow-y-auto",
          role === "DEALER" ? "lg:items-start lg:pl-32" : ""
        )}>
           
@@ -258,7 +258,7 @@ export default function SignupForm({ error: initialError }) {
                                  value={password} onChange={e => setPassword(e.target.value)}
                                  className={inputCls} 
                                />
-                               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-200 hover:text-slate-900">
+                               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-900">
                                  <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
                                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                                </button>
@@ -319,7 +319,7 @@ export default function SignupForm({ error: initialError }) {
                   <div className="w-full border-t border-slate-100"></div>
                </div>
                <div className="relative flex justify-center text-[10px] uppercase font-black tracking-[0.25em]">
-                <span className="bg-[#FCFCFD] px-5 text-slate-200">Continue with Google</span>
+                <span className="bg-white px-5 text-slate-600">Continue with Google</span>
                </div>
              </div>
 
