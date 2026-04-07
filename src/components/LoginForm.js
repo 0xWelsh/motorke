@@ -10,6 +10,8 @@ export default function LoginForm({ error }) {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "660578051558-vigoibi56aj4elh0r9gh4cvjtff9asee.apps.googleusercontent.com";
+  const canSubmit = email.trim().length > 0 && password.length > 0;
   
   // Basic inline validation
   const isValidEmail = email.includes("@") && email.includes(".");
@@ -20,9 +22,9 @@ export default function LoginForm({ error }) {
         src="https://accounts.google.com/gsi/client" 
         strategy="afterInteractive"
         onLoad={() => {
-          if (!window.google) return;
+          if (!window.google || !googleClientId) return;
           window.google.accounts.id.initialize({
-            client_id: "660578051558-vigoibi56aj4elh0r9gh4cvjtff9asee.apps.googleusercontent.com",
+            client_id: googleClientId,
             use_fedcm_for_prompt: false,
             callback: async (response) => {
               try {
@@ -42,8 +44,11 @@ export default function LoginForm({ error }) {
               }
             },
           });
+          const googleButtonContainer = document.getElementById("google-button-container");
+          if (!googleButtonContainer) return;
+
           window.google.accounts.id.renderButton(
-            document.getElementById("google-button-container"),
+            googleButtonContainer,
             { 
               theme: "outline", 
               size: "large", 
@@ -59,25 +64,25 @@ export default function LoginForm({ error }) {
       <AuthCarousel />
 
       {/* ── FORM SECTION (Right) ── */}
-      <section className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 bg-[#FCFCFD] relative">
+      <section className="flex-1 flex flex-col items-center justify-center p-5 sm:p-8 lg:p-12 bg-[#FCFCFD] relative">
          
-         <Link 
+        <Link 
            href="/" 
-           className="absolute top-10 right-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
+          className="absolute top-4 right-4 sm:top-8 sm:right-8 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
          >
            Back to Showroom <ArrowLeft className="w-3 h-3 rotate-180" />
          </Link>
 
-         <div className="w-full max-w-[420px]">
+        <div className="w-full max-w-[420px] mt-10 sm:mt-0">
             {/* Logo & Header */}
-            <header className="mb-8 text-center lg:text-left">
+          <header className="mb-7 text-center lg:text-left">
                <div className="inline-flex items-center gap-3 mb-6">
                   <img src="/logo.png" alt="Motorske" className="h-10 w-auto object-contain" />
                   <div className="h-4 w-px bg-slate-200 mx-1" />
                   <span className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">Auth</span>
                </div>
-               <h1 className="text-4xl font-black text-slate-900 tracking-tighter mb-3 leading-tight">Welcome Back.</h1>
-               <p className="text-slate-700 font-medium text-sm">Please enter your credentials to access your portal.</p>
+            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tighter mb-3 leading-tight">Welcome Back.</h1>
+            <p className="text-slate-700 font-medium text-sm">Sign in to continue managing listings and leads in under 30 seconds.</p>
             </header>
 
             {/* Error Message */}
@@ -109,6 +114,7 @@ export default function LoginForm({ error }) {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required 
+                      autoComplete="email"
                       placeholder="e.g. james@dealership.com" 
                       className={`w-full bg-white border ${isValidEmail ? 'border-emerald-500' : 'border-slate-100'} rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100 pr-12`}
                     />
@@ -119,7 +125,7 @@ export default function LoginForm({ error }) {
                <div className="space-y-3">
                   <div className="flex items-center justify-between ml-1">
                     <label htmlFor="securePassword" className="text-[10px] font-black text-slate-700 uppercase tracking-[0.25em]">Secure Password</label>
-                    <Link href="#" className="text-[9px] font-black text-slate-600 hover:text-emerald-500 uppercase tracking-widest transition-colors">Recover Account</Link>
+                    <Link href="/forgot-password" className="text-[9px] font-black text-slate-600 hover:text-emerald-500 uppercase tracking-widest transition-colors">Recover Account</Link>
                   </div>
                   <div className="relative group">
                     <input 
@@ -137,6 +143,7 @@ export default function LoginForm({ error }) {
                       type="button" 
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-900 transition-colors"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -155,11 +162,16 @@ export default function LoginForm({ error }) {
 
                <button 
                  type="submit" 
-                 className="w-full bg-slate-950 hover:bg-black text-white rounded-2xl py-5 font-black text-[10px] uppercase tracking-[0.2em] transition-all shadow-2xl shadow-slate-900/10 flex items-center justify-center gap-3 active:scale-[0.98]"
+                 disabled={!canSubmit}
+                 className="w-full bg-slate-950 hover:bg-black disabled:bg-slate-400 disabled:cursor-not-allowed text-white rounded-2xl py-5 font-black text-[10px] uppercase tracking-[0.2em] transition-all shadow-2xl shadow-slate-900/10 flex items-center justify-center gap-3 active:scale-[0.98]"
                >
                  Authenticate Access <ChevronRight size={14} className="opacity-40" />
                </button>
             </form>
+
+            <div className="mt-4 rounded-2xl bg-emerald-50 border border-emerald-100 px-4 py-3 text-[11px] font-bold text-emerald-800">
+              Trusted by Kenyan buyers and dealers to manage high-intent car enquiries securely.
+            </div>
 
             <div className="relative my-6">
                <div className="absolute inset-0 flex items-center">
@@ -179,6 +191,9 @@ export default function LoginForm({ error }) {
                   New to our marketplace?{" "}
                   <Link href="/signup" className="text-slate-900 hover:text-emerald-500 transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10 pb-0.5">Explore Dealer Subscription</Link>
                </p>
+              <p className="mt-3 text-[11px] font-semibold text-slate-600">
+                By signing in you agree to our <Link href="/terms" className="text-slate-900 hover:text-emerald-600">Terms</Link> and <Link href="/privacy" className="text-slate-900 hover:text-emerald-600">Privacy Policy</Link>.
+              </p>
                
                <div className="mt-6 flex flex-col lg:flex-row items-center gap-6">
                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">

@@ -8,7 +8,11 @@ export const metadata = { title: "Create Account — Motorke Premium" };
 export default async function SignupPage({ searchParams }) {
   const sp = await searchParams;
   const session = await getSession();
-  if (session) redirect("/");
+  if (session) {
+    if (session.user.role === "ADMIN") redirect("/admin");
+    if (session.user.role === "DEALER") redirect("/portal");
+    redirect("/");
+  }
 
   const error = sp.error;
 

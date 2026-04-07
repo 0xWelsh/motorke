@@ -56,6 +56,7 @@ export default function SignupForm({ error: initialError }) {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState(initialError || "");
   const [loading, setLoading] = useState(false);
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "660578051558-vigoibi56aj4elh0r9gh4cvjtff9asee.apps.googleusercontent.com";
 
   const isValidEmail = email.includes("@") && email.includes(".");
 
@@ -104,9 +105,9 @@ export default function SignupForm({ error: initialError }) {
         src="https://accounts.google.com/gsi/client" 
         strategy="afterInteractive"
         onLoad={() => {
-          if (!window.google) return;
+          if (!window.google || !googleClientId) return;
           window.google.accounts.id.initialize({
-            client_id: "660578051558-vigoibi56aj4elh0r9gh4cvjtff9asee.apps.googleusercontent.com",
+            client_id: googleClientId,
             use_fedcm_for_prompt: false,
             callback: async (response) => {
               try {
@@ -126,12 +127,15 @@ export default function SignupForm({ error: initialError }) {
               }
             },
           });
+          const googleSignupContainer = document.getElementById("google-signup-button");
+          if (!googleSignupContainer) return;
+
           window.google.accounts.id.renderButton(
-            document.getElementById("google-signup-button"),
+            googleSignupContainer,
             { 
               theme: "outline", 
               size: "large", 
-              width: "100%", 
+              width: "320", 
               text: "signup_with",
               shape: "pill",
               logo_alignment: "left"
@@ -144,36 +148,36 @@ export default function SignupForm({ error: initialError }) {
 
        {/* ── FORM SECTION (Right) ── */}
        <section className={clsx(
-         "flex-1 flex flex-col items-center justify-center p-6 sm:p-12 bg-[#FCFCFD] relative overflow-y-auto",
+         "flex-1 flex flex-col items-center justify-center p-5 sm:p-8 lg:p-12 bg-[#FCFCFD] relative overflow-y-auto",
          role === "DEALER" ? "lg:items-start lg:pl-32" : ""
        )}>
           
           <Link 
             href="/" 
-            className="absolute top-10 right-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
+            className="absolute top-4 right-4 sm:top-8 sm:right-8 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
           >
             Showroom <ArrowLeft className="w-3 h-3 rotate-180" />
           </Link>
 
-          <div className={clsx("w-full transition-all duration-700", role === "DEALER" ? "max-w-4xl" : "max-w-[440px]")}>
+          <div className={clsx("w-full transition-all duration-700 mt-10 sm:mt-0", role === "DEALER" ? "max-w-4xl" : "max-w-[440px]")}>
              <header className="mb-6">
                 <div className="inline-flex items-center gap-3 mb-4">
                    <img src="/logo.png" alt="Motorske" className="h-10 w-auto object-contain" />
                    <div className="h-4 w-px bg-slate-200 mx-1" />
                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Register</span>
                 </div>
-                <h1 className="text-4xl font-black text-slate-900 tracking-tighter mb-2">Create Account.</h1>
-                <p className="text-slate-700 font-medium text-sm">Select your profile type to get started.</p>
+                <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tighter mb-2">Create Account.</h1>
+                <p className="text-slate-700 font-medium text-sm">Start with a buyer or dealer profile and unlock verified marketplace actions.</p>
              </header>
 
-             <div className="flex p-1.5 bg-slate-100 rounded-3xl gap-1.5 mb-4 w-fit">
+             <div className="flex w-full sm:w-fit p-1.5 bg-slate-100 rounded-3xl gap-1.5 mb-4">
                 <button type="button" onClick={() => setRole("BUYER")}
-                  className={clsx("flex items-center gap-2.5 px-8 py-3.5 rounded-[1.25rem] text-[10px] font-black uppercase tracking-[0.15em] transition-all",
+                  className={clsx("flex-1 sm:flex-none justify-center flex items-center gap-2.5 px-6 sm:px-8 py-3.5 rounded-[1.25rem] text-[10px] font-black uppercase tracking-[0.15em] transition-all",
                     role === "BUYER" ? "bg-white text-slate-950 shadow-xl shadow-slate-200" : "text-slate-400 hover:text-slate-600")}>
                   <User size={14} /> Personal
                 </button>
                 <button type="button" onClick={() => setRole("DEALER")}
-                  className={clsx("flex items-center gap-2.5 px-8 py-3.5 rounded-[1.25rem] text-[10px] font-black uppercase tracking-[0.15em] transition-all",
+                  className={clsx("flex-1 sm:flex-none justify-center flex items-center gap-2.5 px-6 sm:px-8 py-3.5 rounded-[1.25rem] text-[10px] font-black uppercase tracking-[0.15em] transition-all",
                     role === "DEALER" ? "bg-slate-950 text-white shadow-xl shadow-slate-900/20" : "text-slate-400 hover:text-slate-600")}>
                   <Building2 size={14} /> Dealership
                 </button>
@@ -219,9 +223,9 @@ export default function SignupForm({ error: initialError }) {
                          </div>
                       )}
 
-                      <div className="space-y-4 pt-4 border-t border-slate-50">
+                       <div className="space-y-4 pt-4 border-t border-slate-50">
                          <label htmlFor="regPassword" className={labelCls}>Security Configuration</label>
-                         <div className="grid grid-cols-2 gap-4">
+                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="relative group">
                                <input 
                                  id="regPassword"
@@ -232,6 +236,7 @@ export default function SignupForm({ error: initialError }) {
                                  className={inputCls} 
                                />
                                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-200 hover:text-slate-900">
+                                 <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
                                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                                </button>
                                <PasswordMeter password={password} />
@@ -271,15 +276,19 @@ export default function SignupForm({ error: initialError }) {
                 <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-10 border-t border-slate-50 mt-6">
                    <div className="flex-1 w-full max-w-xs">
                       <button type="submit" disabled={loading}
-                        className="w-full bg-slate-950 hover:bg-black text-white rounded-[1.75rem] py-5 font-black text-[10px] uppercase tracking-[0.25em] transition-all shadow-2xl shadow-slate-950/20 flex items-center justify-center gap-3 active:scale-[0.98]">
+                      className="w-full bg-slate-950 hover:bg-black disabled:bg-slate-400 disabled:cursor-not-allowed text-white rounded-[1.75rem] py-5 font-black text-[10px] uppercase tracking-[0.25em] transition-all shadow-2xl shadow-slate-950/20 flex items-center justify-center gap-3 active:scale-[0.98]">
                         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><UserPlus size={16} /> Finalize Registration</>}
                       </button>
                    </div>
-                   <p className="text-[11px] font-bold text-slate-700 max-w-[200px] text-center sm:text-left leading-relaxed">
-                      By proceeding, you agree to our <Link href="#" className="text-slate-900 border-b border-slate-950/10">Terms</Link> and <Link href="#" className="text-slate-900 border-b border-slate-950/10">Privacy</Link>.
+                   <p className="text-[11px] font-bold text-slate-700 max-w-[260px] text-center sm:text-left leading-relaxed">
+                     By proceeding, you agree to our <Link href="/terms" className="text-slate-900 border-b border-slate-950/10">Terms</Link> and <Link href="/privacy" className="text-slate-900 border-b border-slate-950/10">Privacy</Link>.
                    </p>
                 </div>
              </form>
+
+               <div className="rounded-2xl bg-emerald-50 border border-emerald-100 px-4 py-3 text-[11px] font-bold text-emerald-800 mb-5 max-w-[440px]">
+                Dealers get verified lead intake, inventory tools, and portal analytics from day one.
+               </div>
 
              <div className="relative my-4 max-w-[440px]">
                <div className="absolute inset-0 flex items-center">

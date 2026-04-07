@@ -1,6 +1,7 @@
 // src/lib/mail.js
 import { db } from "@/lib/db";
 import nodemailer from "nodemailer";
+import crypto from "crypto";
 
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS?.replace(/\s+/g, '');
@@ -11,6 +12,22 @@ const transporter = nodemailer.createTransport({
   secure: true,
   auth: { user: SMTP_USER, pass: SMTP_PASS },
 });
+
+function buildEmailFooter() {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke";
+  return `
+    <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid #e2e8f0;">
+      <p style="margin: 0 0 6px; font-size: 12px; color: #475569;">Motorke Digital Dealership Network</p>
+      <p style="margin: 0; font-size: 12px; color: #64748b;">
+        <a href="${siteUrl}/terms" style="color: #0f172a; text-decoration: underline;">Terms</a>
+        &nbsp;•&nbsp;
+        <a href="${siteUrl}/privacy" style="color: #0f172a; text-decoration: underline;">Privacy</a>
+        &nbsp;•&nbsp;
+        <a href="mailto:support@motorke.com" style="color: #0f172a; text-decoration: underline;">support@motorke.com</a>
+      </p>
+    </div>
+  `;
+}
 
 export async function createEmailOTP(email) {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -51,6 +68,7 @@ export async function sendVerificationEmail(email, name, otp) {
       <p style="font-size: 12px; color: #999; margin-top: 40px;">
         This code expires in 30 minutes. If you did not create a Motorske account, you can safely ignore this.
       </p>
+      ${buildEmailFooter()}
     </div>
   `;
 
@@ -143,6 +161,7 @@ export async function sendLeadAlertEmail({
       <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke"}/portal/leads" style="display:inline-block;background:#0f172a;color:#fff;text-decoration:none;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:700;">Open Leads Dashboard</a>
 
       <p style="margin-top: 20px; color: #94a3b8; font-size: 12px;">Lead Ref: ${safeLeadId}</p>
+      ${buildEmailFooter()}
     </div>
   `;
 
@@ -156,6 +175,74 @@ export async function sendLeadAlertEmail({
     return { success: true };
   } catch (error) {
     console.error("Lead alert email failed:", error);
+    return { success: false, error };
+  }
+}
+
+export async function createPasswordResetToken(email) {
+  const token = crypto.randomBytes(24).toString("hex");
+  const expires = new Date(Date.now() + 30 * 60 * 1000);
+  const identifier = `reset:${email.toLowerCase()}`;
+
+  await db.verificationToken.deleteMany({ where: { identifier } });
+  await db.verificationToken.create({
+    data: {
+      identifier,
+      token,
+      expires,
+    },
+  });
+
+  return token;
+}
+
+export async function sendPasswordResetEmail({ email, name, resetToken }) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke";
+  const resetUrl = `${siteUrl}/reset-password?token=${encodeURIComponent(resetToken)}&email=${encodeURIComponent(email)}`;
+  const escapeHtml = (value) =>
+    (value || "")
+      .toString()
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+
+  if (!SMTP_USER || !SMTP_PASS) {
+    console.log("RESET EMAIL (MOCK):", {
+      email,
+      resetUrl,
+    });
+    return { success: true, mocked: true };
+  }
+
+  const safeName = escapeHtml((name || "there").toString().split(" ")[0]);
+  const htmlContent = `
+    <div style="font-family: 'Manrope', Helvetica, Arial, sans-serif; max-width: 620px; margin: 0 auto; padding: 30px; color: #0f172a;">
+      <h1 style="margin: 0 0 8px; font-size: 26px; font-weight: 800;">Reset your password</h1>
+      <p style="margin: 0 0 22px; font-size: 15px; color: #475569;">Hi ${safeName}, we received a request to reset your Motorke account password.</p>
+
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; margin-bottom: 20px;">
+        <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1.6;">For your security, this link expires in 30 minutes. If you did not request this reset, you can ignore this email.</p>
+      </div>
+
+      <a href="${resetUrl}" style="display:inline-block; background:#0f172a; color:#ffffff; text-decoration:none; padding:12px 18px; border-radius:10px; font-size:13px; font-weight:700;">Reset Password</a>
+
+      <p style="margin-top: 20px; font-size: 12px; color: #64748b; word-break: break-all;">${resetUrl}</p>
+      ${buildEmailFooter()}
+    </div>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: '"Motorke Security" <noreply@motorke.com>',
+      to: email,
+      subject: "Reset your Motorke password",
+      html: htmlContent,
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Password reset email failed:", error);
     return { success: false, error };
   }
 }

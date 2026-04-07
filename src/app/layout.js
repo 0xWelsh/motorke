@@ -47,8 +47,8 @@ export default async function RootLayout({ children }) {
                 </span>
                 <p className="text-slate-500 dark:text-slate-500 text-xs mt-1 font-semibold tracking-wide">Cars first. Dealers visible. Buyers confident.</p>
               </div>
-              <div className="flex gap-8">
-                {[["Showcase", "/cars"], ["Dealerships", "/dealers"], ["Duty Calculator", "/duty"]].map(([label, href]) => (
+              <div className="flex gap-8 flex-wrap justify-center">
+                {[["Showcase", "/cars"], ["Dealerships", "/dealers"], ["Duty Calculator", "/duty"], ["Terms", "/terms"], ["Privacy", "/privacy"]].map(([label, href]) => (
                   <a key={href} href={href} className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 transition-colors">{label}</a>
                 ))}
               </div>
