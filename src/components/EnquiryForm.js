@@ -19,11 +19,11 @@ function isValidKenyanPhone(value) {
   return /^254(7\d{8}|1\d{8})$/.test(value);
 }
 
-export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
+export default function EnquiryForm({ carId, dealerId, carTitle, dealer, userName = "", userEmail = "" }) {
   const [state, setState]   = useState("idle"); // idle | sending | sent | error
-  const [name, setName]     = useState("");
+  const [name, setName]     = useState(userName);
   const [phone, setPhone]   = useState("");
-  const [email, setEmail]   = useState("");
+  const [email, setEmail]   = useState(userEmail);
   const [message, setMessage] = useState("");
   const [website, setWebsite] = useState(""); // Honeypot field
   const [consent, setConsent] = useState(false);
@@ -33,6 +33,12 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
   const waLink = dealer.whatsapp
     ? whatsappLink(dealer.whatsapp, carTitle, dealer.name)
     : null;
+
+  const quickMessages = [
+    "Is this car still available?",
+    "Can I book a viewing today?",
+    "What is your best final price?",
+  ];
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -162,7 +168,7 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
       </div>
 
       {state === "error" && (
-        <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2">
+        <p className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
           {errorText || "Something went wrong. Please try WhatsApp instead."}
         </p>
       )}
@@ -187,6 +193,7 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
           required placeholder="Phone number (07xx or +2547xx...)"
           className={inputCls}
         />
+        <p className="text-[11px] text-slate-500 -mt-1">We will use this number for dealer callback and WhatsApp updates.</p>
         <input
           value={email} onChange={(e) => setEmail(e.target.value)}
           type="email" placeholder="Email (optional)"
@@ -198,6 +205,20 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer }) {
           placeholder="Any questions about this car?"
           className={`${inputCls} resize-none`}
         />
+
+        <div className="flex flex-wrap gap-2 pt-1">
+          {quickMessages.map((preset) => (
+            <button
+              key={preset}
+              type="button"
+              onClick={() => setMessage(preset)}
+              className="text-[10px] font-bold uppercase tracking-[0.08em] px-2.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+            >
+              {preset}
+            </button>
+          ))}
+        </div>
+
         <button
           type="submit"
           disabled={state === "sending"}

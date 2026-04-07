@@ -36,7 +36,7 @@ export default function ShareButtons({ title, price }) {
       </a>
       <button
         onClick={copyLink}
-        className="flex items-center gap-1.5 text-xs bg-white/5 border border-white/10 text-white/50 hover:text-white rounded-lg px-3 py-2 transition-colors"
+        className="flex items-center gap-1.5 text-xs bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg px-3 py-2 transition-colors"
       >
         {copied ? "✓ Copied!" : "🔗 Copy link"}
       </button>

@@ -367,6 +367,14 @@ export default async function CarDetailPage({ params }) {
                 className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-brand border border-brand-light rounded-lg py-4 hover:bg-brand-light transition-all">
                 Browse Dealer Inventory
               </Link>
+              {dealer.phone && (
+                <a
+                  href={`tel:${dealer.phone}`}
+                  className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-slate-900 border border-slate-200 rounded-lg py-4 hover:bg-slate-50 transition-all"
+                >
+                  <Phone className="w-4 h-4" /> Call Dealer
+                </a>
+              )}
               {dealer.whatsapp && (
                 <a href={whatsappLink(dealer.whatsapp, title, dealer.name)} target="_blank" rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-white bg-emerald-500 rounded-lg py-4 hover:bg-emerald-600 transition-all">
@@ -379,11 +387,16 @@ export default async function CarDetailPage({ params }) {
 
             <div className="space-y-6">
               <h3 className="font-extrabold text-slate-900 uppercase tracking-widest text-xs">Direct Enquiry</h3>
+              <p className="text-[11px] font-semibold text-slate-500">
+                Quick tip: WhatsApp usually gets the fastest response.
+              </p>
               <EnquiryForm
                 carId={car.id}
                 dealerId={dealer.id}
                 carTitle={title}
                 dealer={dealer}
+                userName={session?.user?.name || ""}
+                userEmail={session?.user?.email || ""}
               />
             </div>
           </div>
