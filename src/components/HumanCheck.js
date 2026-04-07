@@ -8,6 +8,16 @@ export default function HumanCheck({ value, onChange }) {
   const widgetRef = useRef(null);
   const widgetIdRef = useRef(null);
   const [scriptReady, setScriptReady] = useState(false);
+  const [scriptTimeout, setScriptTimeout] = useState(false);
+
+  useEffect(() => {
+    if (!siteKey) return;
+    const timeout = setTimeout(() => {
+      if (!scriptReady) setScriptTimeout(true);
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, [siteKey, scriptReady]);
 
   useEffect(() => {
     if (!siteKey || !scriptReady) return;
@@ -53,6 +63,12 @@ export default function HumanCheck({ value, onChange }) {
       <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
         <div ref={widgetRef} />
       </div>
+      {!scriptReady && !scriptTimeout && (
+        <p className="text-[11px] font-semibold text-slate-500">Loading security check...</p>
+      )}
+      {scriptTimeout && !scriptReady && (
+        <p className="text-[11px] font-semibold text-rose-600">Security widget did not load. Disable blockers or refresh the page.</p>
+      )}
       <p className="text-[11px] font-semibold text-slate-500">Security check helps block automated abuse.</p>
     </div>
   );

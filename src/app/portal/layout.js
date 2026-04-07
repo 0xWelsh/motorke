@@ -71,7 +71,7 @@ export default function PortalLayout({ children }) {
         <div className="p-8 mb-4">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-slate-900 dark:bg-slate-100 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-all duration-500 shadow-md">
-              <img src="/logo.png" alt="M" className="w-6 h-6 object-contain brightness-0 invert dark:invert-0" />
+              <img src="/favicon.svg" alt="Motorke" className="w-6 h-6 object-contain rounded-lg" />
             </div>
             <div>
               <span className="text-xl font-bold text-slate-900 dark:text-white tracking-tight leading-none block">Motorske</span>

@@ -74,7 +74,7 @@ export default function AdminLayout({ children }) {
         <div className="p-8">
           <Link href="/" className="flex items-center gap-4 group">
             <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center group-hover:bg-emerald-600 transition-all duration-500 shadow-xl shadow-slate-200">
-              <span className="text-white font-black text-2xl tracking-tighter">M</span>
+              <img src="/favicon.svg" alt="Motorke" className="w-7 h-7 object-contain rounded-lg" />
             </div>
             <div>
               <span className="text-xl font-black text-slate-900 tracking-tighter block leading-none">

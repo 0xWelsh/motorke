@@ -5,13 +5,16 @@ import Link from "next/link";
 import { Lock, ArrowLeft, ShieldCheck, ChevronRight, Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import Script from "next/script";
 import AuthCarousel from "./AuthCarousel";
+import HumanCheck from "./HumanCheck";
 
 export default function LoginForm({ error }) {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [website, setWebsite] = useState("");
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "660578051558-vigoibi56aj4elh0r9gh4cvjtff9asee.apps.googleusercontent.com";
-  const canSubmit = email.trim().length > 0 && password.length > 0;
+  const canSubmit = email.trim().length > 0 && password.length > 0 && captchaToken.length > 0;
   
   // Basic inline validation
   const isValidEmail = email.includes("@") && email.includes(".");
@@ -77,7 +80,7 @@ export default function LoginForm({ error }) {
             {/* Logo & Header */}
           <header className="mb-7 text-center lg:text-left">
                <div className="inline-flex items-center gap-3 mb-6">
-                  <img src="/logo.png" alt="Motorske" className="h-10 w-auto object-contain" />
+                <img src="/favicon.svg" alt="Motorke" className="h-10 w-10 object-contain rounded-xl" />
                   <div className="h-4 w-px bg-slate-200 mx-1" />
                   <span className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">Auth</span>
                </div>
@@ -96,6 +99,7 @@ export default function LoginForm({ error }) {
                    <p className="text-[11px] font-bold text-rose-600 leading-tight">
                      {error === "invalid" && "The email or password you entered is incorrect."}
                      {error === "inactive" && "This account has been deactivated. Please contact support."}
+                     {error === "captcha" && "Please complete the security check and try again."}
                      {error === "unknown" && "An unexpected error occurred. Please try again."}
                    </p>
                 </div>
@@ -104,6 +108,23 @@ export default function LoginForm({ error }) {
 
             {/* Login Form */}
             <form action="/api/auth/login" method="POST" className="space-y-5">
+               <input
+                 type="hidden"
+                 name="captchaToken"
+                 value={captchaToken}
+                 readOnly
+               />
+               <input
+                 type="text"
+                 name="website"
+                 value={website}
+                 onChange={(e) => setWebsite(e.target.value)}
+                 tabIndex={-1}
+                 autoComplete="off"
+                 className="hidden"
+                 aria-hidden="true"
+               />
+
                <div className="space-y-3 relative">
                   <label htmlFor="emailAddress" className="text-[10px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1">Email Address</label>
                   <div className="relative">
@@ -159,6 +180,8 @@ export default function LoginForm({ error }) {
                    <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest group-hover:text-slate-900 transition-colors">Remember Me</span>
                  </label>
                </div>
+
+               <HumanCheck value={captchaToken} onChange={setCaptchaToken} />
 
                <button 
                  type="submit" 

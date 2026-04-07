@@ -7,6 +7,7 @@ import LocationPicker from "./LocationPicker";
 import Link from "next/link";
 import Script from "next/script";
 import AuthCarousel from "./AuthCarousel";
+import HumanCheck from "./HumanCheck";
 
 const COUNTIES = [
   "Nairobi","Mombasa","Kisumu","Nakuru","Uasin Gishu","Kiambu","Machakos",
@@ -50,12 +51,23 @@ function PasswordMeter({ password }) {
 }
 
 export default function SignupForm({ error: initialError }) {
+  const initialErrorMessage =
+    initialError === "invalid"
+      ? "Please fill all required fields correctly."
+      : initialError === "exists"
+        ? "An account with that email already exists."
+        : initialError === "captcha"
+          ? "Please complete the security check and try again."
+          : initialError || "";
+
   const [role, setRole] = useState("BUYER");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(initialError || "");
+  const [errorMsg, setErrorMsg] = useState(initialErrorMessage);
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [website, setWebsite] = useState("");
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "660578051558-vigoibi56aj4elh0r9gh4cvjtff9asee.apps.googleusercontent.com";
 
   const isValidEmail = email.includes("@") && email.includes(".");
@@ -162,7 +174,7 @@ export default function SignupForm({ error: initialError }) {
           <div className={clsx("w-full transition-all duration-700 mt-10 sm:mt-0", role === "DEALER" ? "max-w-4xl" : "max-w-[440px]")}>
              <header className="mb-6">
                 <div className="inline-flex items-center gap-3 mb-4">
-                   <img src="/logo.png" alt="Motorske" className="h-10 w-auto object-contain" />
+                   <img src="/favicon.svg" alt="Motorke" className="h-10 w-10 object-contain rounded-xl" />
                    <div className="h-4 w-px bg-slate-200 mx-1" />
                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Register</span>
                 </div>
@@ -185,6 +197,17 @@ export default function SignupForm({ error: initialError }) {
 
              <form onSubmit={handleSubmit} className="space-y-6 relative pb-6" id="signup-form">
                 <input type="hidden" name="role" value={role} />
+                <input type="hidden" name="captchaToken" value={captchaToken} readOnly />
+                <input
+                  type="text"
+                  name="website"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  className="hidden"
+                  aria-hidden="true"
+                />
 
                 {errorMsg && (
                    <div className="p-5 bg-rose-50 border border-rose-100 rounded-[1.5rem] flex items-start gap-4 animate-in fade-in slide-in-from-top-4 duration-500 mb-8">
@@ -275,7 +298,8 @@ export default function SignupForm({ error: initialError }) {
 
                 <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-10 border-t border-slate-50 mt-6">
                    <div className="flex-1 w-full max-w-xs">
-                      <button type="submit" disabled={loading}
+                      <HumanCheck value={captchaToken} onChange={setCaptchaToken} />
+                      <button type="submit" disabled={loading || !captchaToken}
                       className="w-full bg-slate-950 hover:bg-black disabled:bg-slate-400 disabled:cursor-not-allowed text-white rounded-[1.75rem] py-5 font-black text-[10px] uppercase tracking-[0.25em] transition-all shadow-2xl shadow-slate-950/20 flex items-center justify-center gap-3 active:scale-[0.98]">
                         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><UserPlus size={16} /> Finalize Registration</>}
                       </button>

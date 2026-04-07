@@ -1,12 +1,15 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { verifyPassword, createSession } from "@/lib/auth";
+import { verifyTurnstileToken } from "@/lib/captcha";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const loginSchema = z.object({
   email: z.string().email().toLowerCase().trim(),
   password: z.string().min(1),
+  captchaToken: z.string().min(2),
+  website: z.string().optional(),
 });
 
 export async function POST(request) {
@@ -19,7 +22,17 @@ export async function POST(request) {
       return NextResponse.redirect(new URL("/login?error=invalid", request.url));
     }
 
-    const { email, password } = parsed.data;
+    const { email, password, captchaToken, website } = parsed.data;
+    if (website) {
+      return NextResponse.redirect(new URL("/login?error=invalid", request.url));
+    }
+
+    const forwardedFor = request.headers.get("x-forwarded-for") || "";
+    const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+    const captchaCheck = await verifyTurnstileToken({ token: captchaToken, ip });
+    if (!captchaCheck.success) {
+      return NextResponse.redirect(new URL("/login?error=captcha", request.url));
+    }
 
     const user = await db.user.findUnique({ where: { email } });
 

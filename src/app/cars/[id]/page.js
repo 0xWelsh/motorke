@@ -30,7 +30,7 @@ export async function generateMetadata({ params }) {
 
   const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} - Motorke Kenya`;
   const description = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatPrice(car.price)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Motorke.`;
-  const image = car.images[0]?.url || "/logo.png";
+  const image = car.images[0]?.url || "/favicon.png";
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke";
   const url = `${baseUrl}/cars/${id}`;
 

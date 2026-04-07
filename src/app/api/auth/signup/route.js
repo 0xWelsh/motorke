@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { hashPassword } from "@/lib/auth";
 import { createEmailOTP, sendVerificationEmail } from "@/lib/mail";
+import { verifyTurnstileToken } from "@/lib/captcha";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -15,6 +16,8 @@ const signupSchema = z.object({
   role: z.enum(["BUYER", "DEALER"]).default("BUYER"),
   dealerName: z.string().optional(),
   phone: z.string().optional(),
+  captchaToken: z.string().min(2),
+  website: z.string().optional(),
 }).refine(data => data.password === data.confirm, {
   message: "Passwords don't match",
   path: ["confirm"]
@@ -33,7 +36,20 @@ export async function POST(request) {
       return NextResponse.redirect(new URL("/signup?error=invalid", request.url));
     }
     
-    const { name, email, password, role, dealerName, phone } = parsed.data;
+    const { name, email, password, role, dealerName, phone, captchaToken, website } = parsed.data;
+
+    if (website) {
+      if (wantsJson) return NextResponse.json({ error: "Please fill all required fields correctly." }, { status: 400 });
+      return NextResponse.redirect(new URL("/signup?error=invalid", request.url));
+    }
+
+    const forwardedFor = request.headers.get("x-forwarded-for") || "";
+    const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+    const captchaCheck = await verifyTurnstileToken({ token: captchaToken, ip });
+    if (!captchaCheck.success) {
+      if (wantsJson) return NextResponse.json({ error: "Captcha verification failed. Please confirm you are human." }, { status: 400 });
+      return NextResponse.redirect(new URL("/signup?error=captcha", request.url));
+    }
 
     if (role === "DEALER" && (!dealerName || !phone)) {
        if (wantsJson) return NextResponse.json({ error: "Missing required dealership details." }, { status: 400 });
