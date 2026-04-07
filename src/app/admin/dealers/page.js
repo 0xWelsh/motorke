@@ -20,7 +20,7 @@ import {
   Users
 } from "lucide-react";
 
-export const metadata = { title: "Dealers — Motorske Admin" };
+export const metadata = { title: "Dealers — Motorke Admin" };
 
 export default async function AdminDealersPage() {
   await requireAdmin();
@@ -46,14 +46,14 @@ export default async function AdminDealersPage() {
         <div>
            <div className="flex items-center gap-2 mb-2">
              <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Dealerships</span>
+             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Dealers</span>
           </div>
           <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">
-            Dealer Network <span className="text-slate-500 font-medium ml-3">/ {dealers.length} Total</span>
+            Dealers <span className="text-slate-500 font-medium ml-3">/ {dealers.length} Total</span>
           </h1>
         </div>
         <Link href="/admin/dealers/new" className="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:hover:text-white transition-all shadow-md">
-          <UserPlus size={18} /> Add Dealership
+          <UserPlus size={18} /> Add Dealer
         </Link>
       </div>
 
@@ -73,7 +73,7 @@ export default async function AdminDealersPage() {
                       <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-none mb-1 group-hover:text-emerald-500 transition-colors capitalize">{dealer.name}</h3>
                       <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
                         <MapPin size={12} />
-                        <span className="text-xs font-semibold capitalize">{dealer.county || "Global"}</span>
+                        <span className="text-xs font-semibold capitalize">{dealer.county || "Unknown"}</span>
                       </div>
                     </div>
                   </div>
@@ -125,8 +125,8 @@ export default async function AdminDealersPage() {
             <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
               <Building2 size={24} className="text-slate-400 dark:text-slate-500" />
             </div>
-            <p className="text-lg font-bold text-slate-900 dark:text-white">Dealer Network Empty</p>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">No dealerships have been authorized yet.</p>
+            <p className="text-lg font-bold text-slate-900 dark:text-white">No Dealers Yet</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">No dealers have been approved yet.</p>
           </div>
         )}
       </div>

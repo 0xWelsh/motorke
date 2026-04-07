@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export const metadata = { title: "Market Intelligence — Motorke Dealer Portal" };
+export const metadata = { title: "Market Updates — Motorke Dealer Portal" };
 
 /**
  * Premium dashboard for car dealers to track world automotive news
@@ -31,18 +31,17 @@ export default async function IntelligencePage() {
       {/* Header section with high-contrast typography */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--brand)] mb-3 block">Automotive Pulse</span>
-          <h1 className="text-5xl font-black text-slate-900 tracking-tight leading-[1.1]">Market Intelligence</h1>
+          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--brand)] mb-3 block">Market Updates</span>
+          <h1 className="text-5xl font-black text-slate-900 tracking-tight leading-[1.1]">Market Updates</h1>
           <p className="text-slate-500 font-bold mt-4 text-base max-w-2xl">
-            Stay ahead of the curve with real-time global automotive industry updates, 
-            market distribution shifts, and technological breakthroughs.
+            Follow the latest automotive news, price shifts, and product launches from trusted sources.
           </p>
         </div>
         <div className="flex items-center gap-4">
            <div className="flex items-center gap-3 px-6 py-4 bg-white border border-slate-100 rounded-3xl shadow-sm">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest whitespace-nowrap">
-                Live Data Feed
+                Live Feed
               </span>
            </div>
         </div>
@@ -54,13 +53,12 @@ export default async function IntelligencePage() {
             <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-8">
               <Newspaper className="text-slate-200" size={48} />
             </div>
-            <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-tight">Synchronizing Global Intel...</h3>
+            <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-tight">Loading Latest Updates...</h3>
             <p className="text-slate-500 text-sm font-bold max-w-sm mx-auto leading-relaxed">
-              We're currently populating your fresh automotive intelligence feed. 
-              Our systems are scanning major global news hubs for the latest car market updates.
+              We are currently loading automotive news from trusted global sources.
             </p>
             <div className="mt-10 inline-flex items-center gap-2 text-[10px] font-black text-emerald-600 uppercase tracking-widest">
-               <Clock size={14} /> Expected cycle time: &lt; 2 minutes
+               <Clock size={14} /> Expected refresh: &lt; 2 minutes
             </div>
         </div>
       ) : (
@@ -88,7 +86,7 @@ export default async function IntelligencePage() {
                      target="_blank"
                      className="bg-white text-black text-[10px] font-black uppercase tracking-widest px-10 py-4 rounded-2xl flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 shadow-2xl"
                    >
-                     Read Analysis <ArrowRight size={14} />
+                     Read Article <ArrowRight size={14} />
                    </Link>
                 </div>
 
@@ -106,7 +104,7 @@ export default async function IntelligencePage() {
                 <div className="flex items-center gap-3 mb-6">
                    <TrendingUp size={14} className="text-emerald-500" />
                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">
-                     Automotive Intel
+                     Auto News
                    </span>
                 </div>
                 
@@ -115,7 +113,7 @@ export default async function IntelligencePage() {
                 </h3>
                 
                 <p className="text-slate-500 text-sm font-bold leading-relaxed line-clamp-3 mb-10 opacity-70">
-                  {article.description || "Fresh automotive trends and market shifts are currently reshaping the industry landscape. Deep dive into the full analysis via the source."}
+                  {article.description || "Latest automotive trends and market changes. Open the source article for details."}
                 </p>
                 
                 {/* Footer Meta */}

@@ -17,7 +17,7 @@ function buildEmailFooter() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke";
   return `
     <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid #e2e8f0;">
-      <p style="margin: 0 0 6px; font-size: 12px; color: #475569;">Motorke Digital Dealership Network</p>
+      <p style="margin: 0 0 6px; font-size: 12px; color: #475569;">Motorke Marketplace</p>
       <p style="margin: 0; font-size: 12px; color: #64748b;">
         <a href="${siteUrl}/terms" style="color: #0f172a; text-decoration: underline;">Terms</a>
         &nbsp;•&nbsp;

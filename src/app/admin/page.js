@@ -24,7 +24,7 @@ import {
   Clock
 } from "lucide-react";
 
-export const metadata = { title: "Nexus Dashboard — Motorske Admin" };
+export const metadata = { title: "Admin Dashboard — Motorske" };
 
 export default async function AdminDashboard() {
   await requireAdmin();

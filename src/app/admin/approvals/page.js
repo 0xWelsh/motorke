@@ -19,7 +19,7 @@ import {
   XCircle
 } from "lucide-react";
 
-export const metadata = { title: "Moderation Queue — Motorske Admin" };
+export const metadata = { title: "Approvals — Motorke Admin" };
 
 export default async function AdminApprovalsPage() {
   await requireAdmin();
@@ -44,10 +44,10 @@ export default async function AdminApprovalsPage() {
         <div>
           <div className="flex items-center gap-3 mb-3">
              <div className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.3)] animate-pulse" />
-             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-800">Verification Gateway</span>
+             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-800">Dealer Approval</span>
           </div>
           <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-            Pending Approvals <span className="text-slate-500 font-medium ml-3">/ {dealers.length} Requests</span>
+            Pending Approvals <span className="text-slate-500 font-medium ml-3">/ {dealers.length} Dealers</span>
           </h1>
         </div>
       </div>
@@ -58,7 +58,7 @@ export default async function AdminApprovalsPage() {
           <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/50">
-                {["Partner Proposal", "Operational Node", "Status", ""].map((h) => (
+                {["Dealer", "Details", "Status", ""].map((h) => (
                   <th key={h} className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.25em] text-slate-700">{h}</th>
                 ))}
               </tr>

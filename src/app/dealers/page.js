@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import { ArrowUpRight, Building2, CarFront, MapPin, ShieldCheck } from "lucide-react";
 
-export const metadata = { title: "Dealerships — Motorke Kenya" };
+export const metadata = { title: "Dealers — Motorke Kenya" };
 
 export default async function DealersPage() {
   const dealers = await db.dealer.findMany({
@@ -24,10 +24,10 @@ export default async function DealersPage() {
     <div className="min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-7xl">
         <header className="mb-12 md:mb-14">
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500 mb-4">Dealer Network</p>
-          <h1 className="text-3xl sm:text-4xl md:text-6xl text-slate-900 tracking-tight mb-4">Trusted Dealerships, Clearly Listed</h1>
+          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500 mb-4">Dealers</p>
+          <h1 className="text-3xl sm:text-4xl md:text-6xl text-slate-900 tracking-tight mb-4">Trusted Dealers</h1>
           <p className="text-base md:text-lg text-slate-600 font-medium max-w-3xl">
-            Browse verified dealer profiles by county, compare footprint quickly, and connect with the right team without jumping through crowded card layouts.
+            Browse verified dealer profiles by county, compare inventory quickly, and connect with the right team.
           </p>
 
           <div className="mt-6 sm:mt-8 border-y border-[#e7e1d8] py-6 grid grid-cols-2 md:grid-cols-4 gap-x-6 sm:gap-x-8 gap-y-6">
@@ -62,7 +62,7 @@ export default async function DealersPage() {
 
         {dealers.length === 0 && (
           <div className="border-y border-[#e7e1d8] py-16">
-            <p className="text-sm font-bold text-slate-500 uppercase tracking-[0.14em]">No dealerships available yet</p>
+            <p className="text-sm font-bold text-slate-500 uppercase tracking-[0.14em]">No dealers yet</p>
           </div>
         )}
 

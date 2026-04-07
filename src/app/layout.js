@@ -55,7 +55,7 @@ export default async function RootLayout({ children }) {
             </div>
             <div className="container mx-auto max-w-7xl mt-12 pt-8 border-t border-slate-100 dark:border-slate-800/50 text-center md:text-left flex flex-col md:flex-row justify-between items-center">
               <p className="text-[10px] font-bold tracking-widest uppercase text-slate-400 dark:text-slate-600 mb-4 md:mb-0">
-                <span suppressHydrationWarning>{new Date().getFullYear()}</span> Motorke Digital Dealership Network
+                <span suppressHydrationWarning>{new Date().getFullYear()}</span> Motorke Marketplace
               </p>
               <div className="flex gap-4">
                 <a href="#" className="text-slate-400 dark:text-slate-600 hover:text-slate-700 dark:hover:text-slate-400 transition-colors">

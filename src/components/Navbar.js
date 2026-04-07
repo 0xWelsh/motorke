@@ -161,7 +161,7 @@ export default function Navbar({ user }) {
                 {userMenu && (
                   <div className="absolute right-0 top-full mt-4 w-72 bg-white border border-[#e7e1d8] rounded-3xl shadow-2xl overflow-hidden p-3 animate-in fade-in slide-in-from-top-2">
                     <div className="px-5 py-4 bg-[#faf7f2] rounded-2xl mb-3">
-                      <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-1">Signed in as</p>
+                      <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-1">Signed in</p>
                       <p className="text-sm font-extrabold text-slate-900 truncate">{user.email}</p>
                     </div>
                     <div className="space-y-1">

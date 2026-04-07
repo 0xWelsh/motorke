@@ -77,7 +77,7 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
   return (
     <div className="animate-in fade-in duration-1000 max-w-7xl">
       <div className="mb-12">
-        <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--brand)] mb-2.5 block">Market Intelligence</span>
+        <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--brand)] mb-2.5 block">Analytics</span>
         <h1 className="text-5xl font-black text-slate-900 tracking-tight">Performance Insights</h1>
         <p className="text-slate-500 font-bold mt-2">Aggregated dealership analytics for the rolling 14-day window.</p>
       </div>
@@ -85,10 +85,10 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
       {/* KPI Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
         {[
-          { label: "Market Visibility", value: totalViews, icon: Users, color: "text-blue-500", bg: "bg-blue-50", trend: "+12%", up: true },
+          { label: "Listing Views", value: totalViews, icon: Users, color: "text-blue-500", bg: "bg-blue-50", trend: "+12%", up: true },
           { label: "WhatsApp Leads", value: totalClicks, icon: MousePointer2, color: "text-emerald-500", bg: "bg-emerald-50", trend: "+5%", up: true },
-          { label: "Enquiry Velocity", value: `${convRate}%`, icon: TrendingUp, color: "text-purple-500", bg: "bg-purple-50", trend: "-2%", up: false },
-          { label: "Digital Print-outs", value: totalPrints, icon: Printer, color: "text-slate-400", bg: "bg-slate-50", trend: "+18%", up: true },
+          { label: "Lead Rate", value: `${convRate}%`, icon: TrendingUp, color: "text-purple-500", bg: "bg-purple-50", trend: "-2%", up: false },
+          { label: "Printouts", value: totalPrints, icon: Printer, color: "text-slate-400", bg: "bg-slate-50", trend: "+18%", up: true },
         ].map((kpi, i) => (
           <div key={i} className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-sm hover:shadow-xl transition-all group">
             <div className="flex items-center justify-between mb-6">

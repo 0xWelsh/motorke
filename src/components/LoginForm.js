@@ -188,7 +188,7 @@ export default function LoginForm({ error }) {
                  disabled={!canSubmit}
                  className="w-full bg-slate-950 hover:bg-black disabled:bg-slate-400 disabled:cursor-not-allowed text-white rounded-2xl py-5 font-black text-[10px] uppercase tracking-[0.2em] transition-all shadow-2xl shadow-slate-900/10 flex items-center justify-center gap-3 active:scale-[0.98]"
                >
-                 Authenticate Access <ChevronRight size={14} className="opacity-40" />
+                 Log In <ChevronRight size={14} className="opacity-40" />
                </button>
             </form>
 
@@ -201,7 +201,7 @@ export default function LoginForm({ error }) {
                   <div className="w-full border-t border-slate-100"></div>
                </div>
                <div className="relative flex justify-center text-[10px] uppercase font-black tracking-[0.25em]">
-                  <span className="bg-[#FCFCFD] px-5 text-slate-700">Social Connect</span>
+                <span className="bg-[#FCFCFD] px-5 text-slate-700">Continue with Google</span>
                </div>
             </div>
 
@@ -212,7 +212,7 @@ export default function LoginForm({ error }) {
             <footer className="mt-8 pt-6 border-t border-slate-50 text-center lg:text-left">
                <p className="text-sm font-bold text-slate-900">
                   New to our marketplace?{" "}
-                  <Link href="/signup" className="text-slate-900 hover:text-emerald-500 transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10 pb-0.5">Explore Dealer Subscription</Link>
+                <Link href="/signup" className="text-slate-900 hover:text-emerald-500 transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10 pb-0.5">Create an Account</Link>
                </p>
               <p className="mt-3 text-[11px] font-semibold text-slate-600">
                 By signing in you agree to our <Link href="/terms" className="text-slate-900 hover:text-emerald-600">Terms</Link> and <Link href="/privacy" className="text-slate-900 hover:text-emerald-600">Privacy Policy</Link>.

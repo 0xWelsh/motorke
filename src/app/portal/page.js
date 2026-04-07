@@ -51,7 +51,7 @@ export default async function PortalPage() {
       
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
         <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-500 mb-2 block">Dealer Intelligence</span>
+          <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-500 mb-2 block">Dealer Dashboard</span>
           <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Overview</h1>
         </div>
         <Link href="/portal/cars/new"

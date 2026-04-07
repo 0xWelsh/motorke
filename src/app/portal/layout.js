@@ -22,9 +22,9 @@ import NotificationsBell from "@/components/NotificationsBell";
 const links = [
   { href: "/portal",           label: "Overview",   Icon: LayoutDashboard },
   { href: "/portal/inventory", label: "Inventory",  Icon: Package         },
-  { href: "/portal/leads",     label: "Inquiries",  Icon: MessageSquare   },
-  { href: "/portal/analytics", label: "Performance", Icon: BarChart2       },
-  { href: "/portal/intelligence", label: "Intelligence", Icon: TrendingUp },
+  { href: "/portal/leads",     label: "Leads",      Icon: MessageSquare   },
+  { href: "/portal/analytics", label: "Analytics",  Icon: BarChart2       },
+  { href: "/portal/intelligence", label: "Insights", Icon: TrendingUp },
   { href: "/portal/subscription",   label: "Subscription", Icon: CreditCard      },
   { href: "/portal/profile",   label: "Settings",   Icon: Settings        },
 ];
@@ -103,7 +103,7 @@ export default function PortalLayout({ children }) {
         <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
           <Link href="/portal/cars/new" 
             className="flex items-center justify-center gap-2 w-full bg-slate-900 dark:bg-emerald-600 hover:bg-slate-800 dark:hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl mb-4 transition-all shadow-md uppercase text-xs tracking-wider">
-            <Plus size={16} /> Deploy Vehicle
+            <Plus size={16} /> Add Car
           </Link>
           
           <div className="space-y-1">

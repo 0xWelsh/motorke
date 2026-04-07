@@ -5,19 +5,19 @@ import { Quote } from "lucide-react";
 
 const quotes = [
   {
-    text: "The cars we drive say a lot about us. They are a reflection of our ambitions, our drive, and the journey we are undertaking. Choose your next machine with purpose and precision.",
-    author: "Motorske Intelligence",
-    role: "Platform Thesis"
+    text: "Find the right car faster. Compare listings, prices, and dealer details in one place.",
+    author: "Motorke",
+    role: "Car Search"
   },
   {
-    text: "A dealership is more than a showroom; it is a gateway to mobility. Every vehicle placed on this platform connects a driver with their destination, powered by trust and unparalleled data.",
-    author: "Motorske Dealer Hub",
-    role: "Partner Manifesto"
+    text: "Dealers can list cars, get leads, and manage their inventory from one dashboard.",
+    author: "Motorke",
+    role: "Dealer Tools"
   },
   {
-    text: "In the modern automotive market, speed is everything. Not just on the road, but in how fast you can connect a high-intent buyer with the exact specifications they are looking for.",
-    author: "Yield Streams",
-    role: "Market Dynamics"
+    text: "Buyers and dealers connect directly with clear contact info and secure account tools.",
+    author: "Motorke",
+    role: "Trusted Marketplace"
   }
 ];
 

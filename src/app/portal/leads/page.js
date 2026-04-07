@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
 import LeadManager from "@/components/LeadManager";
 
-export const metadata = { title: "Lead Management — Motorke Portal" };
+export const metadata = { title: "Leads — Motorke Portal" };
 
 export default async function PortalLeadsPage({ searchParams }) {
   const user   = await requireDealer();
@@ -45,10 +45,10 @@ export default async function PortalLeadsPage({ searchParams }) {
   return (
     <div className="animate-in fade-in duration-700 max-w-7xl">
       <div className="mb-12">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-500 mb-2 block">Customer Relations</span>
-        <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Leads & Inquiries</h1>
+        <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-500 mb-2 block">Leads</span>
+        <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Leads</h1>
         <p className="text-slate-500 dark:text-slate-400 font-bold mt-2 flex items-center gap-2">
-          {total} Active Enquir{total !== 1 ? "ies" : "y"} Under Management
+          {total} Active Lead{total !== 1 ? "s" : ""}
         </p>
       </div>
 

@@ -25,15 +25,15 @@ import NotificationsBell from "@/components/NotificationsBell";
 const links = [
   { href: "/admin",           label: "Overview",    Icon: LayoutDashboard },
   { href: "/admin/cars",      label: "Inventory",   Icon: Car             },
-  { href: "/admin/dealers",   label: "Dealers Hub", Icon: Building2       },
-  { href: "/admin/approvals", label: "Moderation",  Icon: ShieldAlert     },
-  { href: "/admin/users",     label: "Network",     Icon: Users           },
-  { href: "/admin/leads",     label: "Intelligence",Icon: MessageSquare   },
+  { href: "/admin/dealers",   label: "Dealers",     Icon: Building2       },
+  { href: "/admin/approvals", label: "Approvals",   Icon: ShieldAlert     },
+  { href: "/admin/users",     label: "Users",       Icon: Users           },
+  { href: "/admin/leads",     label: "Leads",       Icon: MessageSquare   },
 ];
 
 const quickActions = [
-  { href: "/admin/cars/new",    label: "New Unit",    Icon: Plus },
-  { href: "/admin/dealers/new", label: "Join Partner", Icon: UserPlus },
+  { href: "/admin/cars/new",    label: "Add Car",    Icon: Plus },
+  { href: "/admin/dealers/new", label: "Add Dealer", Icon: UserPlus },
 ];
 
 function NavLink({ href, label, Icon, active }) {
@@ -81,7 +81,7 @@ export default function AdminLayout({ children }) {
                 Motor<span className="text-emerald-600">ke</span>
               </span>
               <span className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em] mt-1.5 block">
-                Control Center
+                Admin Panel
               </span>
             </div>
           </Link>
@@ -107,11 +107,11 @@ export default function AdminLayout({ children }) {
         {/* Footer */}
         <div className="p-6 border-t border-slate-100 bg-slate-50/50">
           <Link href="/" className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:text-slate-900 text-[11px] font-bold uppercase tracking-widest rounded-xl transition-all hover:bg-white border border-transparent hover:border-slate-200">
-            <ExternalLink size={14} /> Live View
+            <ExternalLink size={14} /> View Site
           </Link>
           <form action="/api/auth/logout" method="POST" className="mt-1">
             <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 text-slate-700 hover:text-rose-600 text-[11px] font-bold uppercase tracking-widest rounded-xl transition-all hover:bg-rose-50 hover:border-rose-100 border border-transparent">
-              <LogOut size={14} /> Deauthorize
+              <LogOut size={14} /> Log Out
             </button>
           </form>
         </div>
@@ -122,7 +122,7 @@ export default function AdminLayout({ children }) {
         {/* Header */}
         <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 px-10 py-5 flex items-center justify-between">
            <div className="flex items-center gap-4 text-[11px] font-bold text-slate-600 uppercase tracking-widest">
-              <span className="hover:text-emerald-600 transition-colors cursor-default">Nexus</span>
+              <span className="hover:text-emerald-600 transition-colors cursor-default">Admin</span>
               <ChevronRight size={12} className="text-slate-400" />
               <span className="text-slate-900 font-black">{links.find(l => l.href === path)?.label || "Overview"}</span>
            </div>
@@ -133,7 +133,7 @@ export default function AdminLayout({ children }) {
                 <Search className="absolute left-4 w-4 h-4 text-slate-500 group-focus-within:text-emerald-600 transition-colors" />
                 <input 
                   type="text"
-                  placeholder="Universal Search... (Enter)"
+                  placeholder="Search cars... (Enter)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleGlobalSearch}
@@ -154,7 +154,7 @@ export default function AdminLayout({ children }) {
                 </div>
                 <div className="hidden sm:flex flex-col">
                   <p className="text-[11px] font-black text-slate-900 uppercase leading-none">Super Admin</p>
-                  <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest mt-1">Verified Node</p>
+                  <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest mt-1">Verified</p>
                 </div>
               </div>
            </div>

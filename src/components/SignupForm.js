@@ -301,7 +301,7 @@ export default function SignupForm({ error: initialError }) {
                       <HumanCheck value={captchaToken} onChange={setCaptchaToken} />
                       <button type="submit" disabled={loading || !captchaToken}
                       className="w-full bg-slate-950 hover:bg-black disabled:bg-slate-400 disabled:cursor-not-allowed text-white rounded-[1.75rem] py-5 font-black text-[10px] uppercase tracking-[0.25em] transition-all shadow-2xl shadow-slate-950/20 flex items-center justify-center gap-3 active:scale-[0.98]">
-                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><UserPlus size={16} /> Finalize Registration</>}
+                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><UserPlus size={16} /> Sign Up</>}
                       </button>
                    </div>
                    <p className="text-[11px] font-bold text-slate-700 max-w-[260px] text-center sm:text-left leading-relaxed">
@@ -319,7 +319,7 @@ export default function SignupForm({ error: initialError }) {
                   <div className="w-full border-t border-slate-100"></div>
                </div>
                <div className="relative flex justify-center text-[10px] uppercase font-black tracking-[0.25em]">
-                  <span className="bg-[#FCFCFD] px-5 text-slate-200">Social Connect</span>
+                <span className="bg-[#FCFCFD] px-5 text-slate-200">Continue with Google</span>
                </div>
              </div>
 
@@ -329,7 +329,7 @@ export default function SignupForm({ error: initialError }) {
 
              <footer className="mt-4 pt-4 border-t border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-6 max-w-[440px]">
                 <p className="text-sm font-bold text-slate-900">
-                   Part of our network?{" "}
+                 Already have an account?{" "}
                    <Link href="/login" className="text-slate-900 hover:text-emerald-500 transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10">Sign in to your portal</Link>
                 </p>
 

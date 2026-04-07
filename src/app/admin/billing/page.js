@@ -2,21 +2,21 @@ import { requireAdmin } from "@/lib/auth";
 import Link from "next/link";
 import { Check, ShieldCheck, Zap, Globe, ArrowRight, Building2 } from "lucide-react";
 
-export const metadata = { title: "Billing & Subscriptions — Admin" };
+export const metadata = { title: "Billing — Admin" };
 
 export default async function AdminBillingPage() {
   await requireAdmin();
 
   const tiers = [
     {
-      name: "Standard Partner",
+      name: "Standard Plan",
       price: "15,000",
       description: "Perfect for independent dealerships looking to scale.",
       features: [
         "Up to 50 active listings",
-        "Basic Analytics Dashboard",
+        "Basic Analytics",
         "Email Support",
-        "Standard Market Intel"
+        "Market Updates"
       ],
       icon: <Building2 className="text-slate-400" size={24} />,
       btnText: "Current Plan",
@@ -24,13 +24,13 @@ export default async function AdminBillingPage() {
       priceId: ""
     },
     {
-      name: "Premium Nexus",
+      name: "Premium Plan",
       price: "45,000",
-      description: "Uncapped performance and dedicated account management.",
+      description: "More reach and dedicated account support.",
       features: [
         "Unlimited active listings",
-        "Advanced Analytics & ROI Tracking",
-        "Direct WhatsApp AI Routing",
+        "Advanced Analytics and ROI Tracking",
+        "Direct WhatsApp Routing",
         "Priority Search Placement",
         "1-on-1 Account Manager"
       ],
@@ -47,8 +47,8 @@ export default async function AdminBillingPage() {
          <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-emerald-50 border border-emerald-100 rounded-full text-[10px] font-black uppercase tracking-widest text-emerald-600">
             <ShieldCheck size={14} /> Subscription Management
          </div>
-         <h1 className="text-5xl font-black text-slate-900 tracking-tighter mb-4">Choose Your Tier.</h1>
-         <p className="text-slate-600 font-medium max-w-xl mx-auto">Access premium intelligence, uncap your inventory, and scale your dealership yield with Motorske Premium.</p>
+        <h1 className="text-5xl font-black text-slate-900 tracking-tighter mb-4">Choose a Plan.</h1>
+        <p className="text-slate-600 font-medium max-w-xl mx-auto">Manage plans, grow inventory, and unlock more dealer tools with Motorke Premium.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
