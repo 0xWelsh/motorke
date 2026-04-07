@@ -4,42 +4,66 @@ import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 
 export default function HumanCheck({ value, onChange }) {
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   const widgetRef = useRef(null);
   const widgetIdRef = useRef(null);
   const [scriptReady, setScriptReady] = useState(false);
   const [scriptTimeout, setScriptTimeout] = useState(false);
 
+  const provider = recaptchaSiteKey ? "recaptcha" : turnstileSiteKey ? "turnstile" : "fallback";
+
   useEffect(() => {
-    if (!siteKey) return;
+    if (provider === "fallback") return;
     const timeout = setTimeout(() => {
       if (!scriptReady) setScriptTimeout(true);
     }, 5000);
 
     return () => clearTimeout(timeout);
-  }, [siteKey, scriptReady]);
+  }, [provider, scriptReady]);
 
   useEffect(() => {
-    if (!siteKey || !scriptReady) return;
-    if (!window.turnstile || !widgetRef.current || widgetIdRef.current !== null) return;
+    if (provider === "fallback" || !scriptReady || !widgetRef.current || widgetIdRef.current !== null) return;
 
-    widgetIdRef.current = window.turnstile.render(widgetRef.current, {
-      sitekey: siteKey,
-      callback: (token) => onChange(token),
-      "expired-callback": () => onChange(""),
-      "error-callback": () => onChange(""),
-      theme: "light",
-    });
+    if (provider === "recaptcha") {
+      if (!window.grecaptcha || !recaptchaSiteKey) return;
+
+      window.grecaptcha.ready(() => {
+        widgetIdRef.current = window.grecaptcha.render(widgetRef.current, {
+          sitekey: recaptchaSiteKey,
+          theme: "light",
+          callback: (token) => onChange(token),
+          "expired-callback": () => onChange(""),
+          "error-callback": () => onChange(""),
+        });
+      });
+      return;
+    }
+
+    if (provider === "turnstile") {
+      if (!window.turnstile || !turnstileSiteKey) return;
+      widgetIdRef.current = window.turnstile.render(widgetRef.current, {
+        sitekey: turnstileSiteKey,
+        callback: (token) => onChange(token),
+        "expired-callback": () => onChange(""),
+        "error-callback": () => onChange(""),
+        theme: "light",
+      });
+    }
 
     return () => {
-      if (widgetIdRef.current !== null && window.turnstile) {
+      if (widgetIdRef.current === null) return;
+      if (provider === "turnstile" && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current);
-        widgetIdRef.current = null;
       }
+      if (provider === "recaptcha" && window.grecaptcha) {
+        window.grecaptcha.reset(widgetIdRef.current);
+      }
+      widgetIdRef.current = null;
     };
-  }, [onChange, scriptReady, siteKey]);
+  }, [onChange, provider, recaptchaSiteKey, scriptReady, turnstileSiteKey]);
 
-  if (!siteKey) {
+  if (provider === "fallback") {
     return (
       <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700">
         <input
@@ -48,7 +72,7 @@ export default function HumanCheck({ value, onChange }) {
           onChange={(event) => onChange(event.target.checked ? "human-checked" : "")}
           className="h-4 w-4 rounded border-slate-300"
         />
-        Are you human?
+        Are you human? (Local fallback)
       </label>
     );
   }
@@ -56,7 +80,7 @@ export default function HumanCheck({ value, onChange }) {
   return (
     <div className="space-y-2">
       <Script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+        src={provider === "recaptcha" ? "https://www.google.com/recaptcha/api.js?render=explicit" : "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"}
         strategy="afterInteractive"
         onLoad={() => setScriptReady(true)}
       />
@@ -69,7 +93,12 @@ export default function HumanCheck({ value, onChange }) {
       {scriptTimeout && !scriptReady && (
         <p className="text-[11px] font-semibold text-rose-600">Security widget did not load. Disable blockers or refresh the page.</p>
       )}
-      <p className="text-[11px] font-semibold text-slate-500">Security check helps block automated abuse.</p>
+      <p className="text-[11px] font-semibold text-slate-500">
+        {provider === "recaptcha" ? "Verified by Google reCAPTCHA." : "Security check helps block automated abuse."}
+      </p>
     </div>
   );
 }
+
+/* global grecaptcha */
+/* global turnstile */
