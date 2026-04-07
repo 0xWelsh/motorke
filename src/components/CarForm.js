@@ -114,6 +114,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const isEdit = method === "PUT" && !!car;
   const isPortal = action?.startsWith("/api/portal/");
   const isNew = !isEdit;
+  const initialSimpleMode = isPortal && isNew;
 
   const dealerScope = dealers?.[0]?.id || "shared";
   const draftKey = useMemo(
@@ -130,7 +131,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [formSeed, setFormSeed] = useState(baseSeed);
   const [formVersion, setFormVersion] = useState(0);
   const [step, setStep] = useState(1);
-  const [simpleMode, setSimpleMode] = useState(isPortal && isNew);
+  const [simpleMode, setSimpleMode] = useState(initialSimpleMode);
 
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ done: 0, total: 0 });
@@ -182,7 +183,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         setBadges(Array.isArray(parsed.badges) ? parsed.badges : []);
         setSelectedFeatures(Array.isArray(parsed.selectedFeatures) ? parsed.selectedFeatures : []);
         setStep(parsed.step || 1);
-        setSimpleMode(typeof parsed.simpleMode === "boolean" ? parsed.simpleMode : simpleMode);
+        setSimpleMode(typeof parsed.simpleMode === "boolean" ? parsed.simpleMode : initialSimpleMode);
         setDraftLoaded(true);
         setFormVersion((v) => v + 1);
         return;
@@ -201,7 +202,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         // Ignore malformed defaults
       }
     }
-  }, [defaultsKey, draftKey, isNew, simpleMode]);
+  }, [defaultsKey, draftKey, initialSimpleMode, isNew]);
 
   useEffect(() => {
     if (!isNew || !draftKey || !formRef.current) return;
