@@ -266,6 +266,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [selectedFeatures, setSelectedFeatures] = useState(car?.features || []);
   const [customFeature, setCustomFeature] = useState("");
   const [draftLoaded, setDraftLoaded] = useState(false);
+  const [selectedMake, setSelectedMake] = useState((baseSeed.make || "").trim());
+  const [modelOptions, setModelOptions] = useState([]);
+  const [loadingModels, setLoadingModels] = useState(false);
+  const [modelSources, setModelSources] = useState(["inventory"]);
 
   const formRef = useRef(null);
   const saveTimeoutRef = useRef(null);
@@ -350,6 +354,48 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   useEffect(() => {
     if (isNew) saveDraft();
   }, [images, badges, selectedFeatures, step, simpleMode, isNew, saveDraft]);
+
+  useEffect(() => {
+    const currentMake =
+      formRef.current?.querySelector('input[name="make"]')?.value?.trim() ||
+      (formSeed.make || "").trim();
+    setSelectedMake(currentMake);
+  }, [formVersion, formSeed.make]);
+
+  useEffect(() => {
+    const make = selectedMake.trim();
+    if (!make) {
+      setModelOptions([]);
+      setLoadingModels(false);
+      setModelSources(["inventory"]);
+      return;
+    }
+
+    const controller = new AbortController();
+
+    async function loadModels() {
+      setLoadingModels(true);
+      try {
+        const res = await fetch(`/api/cars/models?make=${encodeURIComponent(make)}&limit=300`, {
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error("Failed to load models");
+        const data = await res.json();
+        setModelOptions(Array.isArray(data.models) ? data.models : []);
+        setModelSources(Array.isArray(data.sources) && data.sources.length > 0 ? data.sources : ["inventory"]);
+      } catch (err) {
+        if (err?.name !== "AbortError") {
+          setModelOptions([]);
+          setModelSources(["inventory"]);
+        }
+      } finally {
+        if (!controller.signal.aborted) setLoadingModels(false);
+      }
+    }
+
+    loadModels();
+    return () => controller.abort();
+  }, [selectedMake]);
 
   async function handleFilesSelected(newFiles) {
     const toUpload = newFiles.filter((f) => !f.url);
@@ -590,14 +636,41 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label className={labelCls}>Make *</label>
-              <input name="make" list="make-list" required defaultValue={formSeed.make} placeholder="e.g. Toyota" className={inputCls} />
+              <input
+                name="make"
+                list="make-list"
+                required
+                defaultValue={formSeed.make}
+                placeholder="e.g. Toyota"
+                className={inputCls}
+                onChange={(e) => setSelectedMake(e.target.value.trim())}
+              />
               <datalist id="make-list">
                 {MAKES.map((make) => <option key={make} value={make} />)}
               </datalist>
             </div>
             <div>
               <label className={labelCls}>Model *</label>
-              <input name="model" required defaultValue={formSeed.model} placeholder="e.g. Harrier" className={inputCls} />
+              <input
+                name="model"
+                list="model-list"
+                required
+                defaultValue={formSeed.model}
+                placeholder={selectedMake ? `Type or pick a ${selectedMake} model` : "Pick make first or type model"}
+                className={inputCls}
+              />
+              <datalist id="model-list">
+                {modelOptions.map((model) => <option key={model} value={model} />)}
+              </datalist>
+              <p className="mt-1 text-[10px] font-semibold text-slate-500">
+                {selectedMake
+                  ? loadingModels
+                    ? "Loading model suggestions..."
+                    : modelOptions.length > 0
+                      ? `${modelOptions.length} model suggestion(s) for ${selectedMake}${modelSources.includes("vpic") ? " (inventory + internet)" : ""}`
+                      : `No model suggestions found for ${selectedMake} yet. You can still type manually.`
+                  : "Choose a make to get matching model suggestions."}
+              </p>
             </div>
             <div>
               <label className={labelCls}>Variant</label>
