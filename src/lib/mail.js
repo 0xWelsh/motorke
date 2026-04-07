@@ -67,3 +67,95 @@ export async function sendVerificationEmail(email, name, otp) {
     return { error };
   }
 }
+
+export async function sendLeadAlertEmail({
+  to = [],
+  dealerName,
+  carTitle,
+  buyerName,
+  buyerPhone,
+  buyerEmail,
+  buyerMessage,
+  channel,
+  leadId,
+}) {
+  const escapeHtml = (value) =>
+    (value || "")
+      .toString()
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+
+  const safeDealerName = escapeHtml(dealerName || "Dealer Team");
+  const safeCarTitle = escapeHtml(carTitle || "Listing");
+  const safeBuyerName = escapeHtml(buyerName || "Unknown");
+  const safeBuyerPhone = escapeHtml(buyerPhone || "Not provided");
+  const safeBuyerEmail = escapeHtml(buyerEmail || "Not provided");
+  const safeChannel = escapeHtml(channel || "web");
+  const safeBuyerMessage = escapeHtml(buyerMessage || "No message left.");
+  const safeLeadId = escapeHtml(leadId || "");
+
+  const recipients = [...new Set((to || []).filter(Boolean))];
+  if (recipients.length === 0) return { success: true, skipped: true };
+
+  if (!SMTP_USER || !SMTP_PASS) {
+    console.log("LEAD ALERT EMAIL (MOCK):", {
+      to: recipients,
+      dealerName,
+      carTitle,
+      buyerName,
+      buyerPhone,
+      buyerEmail,
+      channel,
+      leadId,
+    });
+    return { success: true, mocked: true };
+  }
+
+  const htmlContent = `
+    <div style="font-family: 'Manrope', Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 28px; color: #111827;">
+      <h1 style="margin: 0 0 8px; font-size: 24px; font-weight: 800;">New Buyer Enquiry</h1>
+      <p style="margin: 0 0 20px; color: #475569; font-size: 14px;">
+        A potential buyer has reached out on Motorke.
+      </p>
+
+      <div style="border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; margin-bottom: 14px;">
+        <p style="margin: 0 0 8px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: .08em; font-weight: 700;">Dealer</p>
+        <p style="margin: 0; font-weight: 700;">${safeDealerName}</p>
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; margin-bottom: 14px;">
+        <p style="margin: 0 0 8px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: .08em; font-weight: 700;">Vehicle</p>
+        <p style="margin: 0; font-weight: 700;">${safeCarTitle}</p>
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; margin-bottom: 18px;">
+        <p style="margin: 0 0 8px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: .08em; font-weight: 700;">Buyer</p>
+        <p style="margin: 0 0 6px;"><strong>Name:</strong> ${safeBuyerName}</p>
+        <p style="margin: 0 0 6px;"><strong>Phone:</strong> ${safeBuyerPhone}</p>
+        <p style="margin: 0 0 6px;"><strong>Email:</strong> ${safeBuyerEmail}</p>
+        <p style="margin: 0 0 6px;"><strong>Channel:</strong> ${safeChannel}</p>
+        <p style="margin: 10px 0 0;"><strong>Message:</strong> ${safeBuyerMessage}</p>
+      </div>
+
+      <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke"}/portal/leads" style="display:inline-block;background:#0f172a;color:#fff;text-decoration:none;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:700;">Open Leads Dashboard</a>
+
+      <p style="margin-top: 20px; color: #94a3b8; font-size: 12px;">Lead Ref: ${safeLeadId}</p>
+    </div>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: '"Motorke Alerts" <noreply@motorke.com>',
+      to: recipients.join(","),
+      subject: `New Buyer Enquiry - ${carTitle || "Vehicle"}`,
+      html: htmlContent,
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Lead alert email failed:", error);
+    return { success: false, error };
+  }
+}

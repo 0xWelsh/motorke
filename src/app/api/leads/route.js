@@ -1,6 +1,7 @@
 // src/app/api/leads/route.js
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
+import { sendLeadAlertEmail } from "@/lib/mail";
 import { NextResponse } from "next/server";
 
 const RATE_LIMIT_MS = 15000;
@@ -19,6 +20,84 @@ function normalizeKenyanPhone(value) {
 
 function isValidKenyanPhone(value) {
   return /^254(7\d{8}|1\d{8})$/.test(value);
+}
+
+function buildCarTitle(car) {
+  const parts = [car?.year, car?.make, car?.model].filter(Boolean);
+  return parts.join(" ") || "Vehicle";
+}
+
+async function dispatchLeadNotifications({ lead, car, dealerId }) {
+  try {
+    const [dealerUsers, adminUsers] = await Promise.all([
+      db.user.findMany({
+        where: {
+          role: "DEALER",
+          dealerId,
+          active: true,
+        },
+        select: {
+          id: true,
+          email: true,
+        },
+      }),
+      db.user.findMany({
+        where: {
+          role: "ADMIN",
+          active: true,
+        },
+        select: {
+          id: true,
+        },
+      }),
+    ]);
+
+    const carTitle = buildCarTitle(car);
+    const buyerName = lead.name || "Buyer";
+    const notificationRows = [
+      ...dealerUsers.map((user) => ({
+        userId: user.id,
+        type: "LEAD_NEW",
+        title: `New enquiry for ${carTitle}`,
+        message: `${buyerName} sent an enquiry.`,
+        link: `/portal/leads?lead=${lead.id}`,
+      })),
+      ...adminUsers.map((user) => ({
+        userId: user.id,
+        type: "LEAD_NEW",
+        title: `New lead submitted (${carTitle})`,
+        message: `${buyerName} reached out to dealer ${car?.dealer?.name || "Unknown Dealer"}.`,
+        link: `/admin/leads?lead=${lead.id}`,
+      })),
+    ];
+
+    if (notificationRows.length) {
+      await db.notification.createMany({ data: notificationRows });
+    }
+
+    const dealerEmailRecipients = [
+      ...new Set([
+        ...(dealerUsers.map((user) => user.email).filter(Boolean)),
+        car?.dealer?.email,
+      ]),
+    ];
+
+    if (dealerEmailRecipients.length) {
+      await sendLeadAlertEmail({
+        to: dealerEmailRecipients,
+        dealerName: car?.dealer?.name,
+        carTitle,
+        buyerName: lead.name,
+        buyerPhone: lead.phone,
+        buyerEmail: lead.email,
+        buyerMessage: lead.message,
+        channel: lead.channel,
+        leadId: lead.id,
+      });
+    }
+  } catch (notificationError) {
+    console.error("Lead notification dispatch error:", notificationError);
+  }
 }
 
 export async function POST(request) {
@@ -93,7 +172,20 @@ export async function POST(request) {
     // Verify car + dealer exist
     const car = await db.car.findUnique({
       where:  { id: carId },
-      select: { id: true, dealerId: true, available: true },
+      select: {
+        id: true,
+        dealerId: true,
+        available: true,
+        year: true,
+        make: true,
+        model: true,
+        dealer: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
     });
 
     if (!car || !car.available || car.dealerId !== dealerId) {
@@ -110,6 +202,12 @@ export async function POST(request) {
         message: message?.toString().trim() || null,
         channel: normalizedChannel,
       },
+    });
+
+    await dispatchLeadNotifications({
+      lead,
+      car,
+      dealerId,
     });
 
     return NextResponse.json({ success: true, leadId: lead.id }, { status: 201 });

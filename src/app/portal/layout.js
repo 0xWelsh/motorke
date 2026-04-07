@@ -17,6 +17,7 @@ import {
   TrendingUp
 } from "lucide-react";
 import { clsx } from "clsx";
+import NotificationsBell from "@/components/NotificationsBell";
 
 const links = [
   { href: "/portal",           label: "Overview",   Icon: LayoutDashboard },
@@ -135,6 +136,7 @@ export default function PortalLayout({ children }) {
                    <ShieldCheck size={12} /> Active Subscription
                 </p>
               </div>
+              <NotificationsBell variant="portal" />
               <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center font-bold shadow-sm">
                 D
               </div>

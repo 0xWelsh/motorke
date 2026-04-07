@@ -14,13 +14,13 @@ import {
   ExternalLink,
   ShieldAlert,
   Settings,
-  Bell,
   Search,
   UserPlus,
   Command
 } from "lucide-react";
 import { clsx } from "clsx";
 import { useState } from "react";
+import NotificationsBell from "@/components/NotificationsBell";
 
 const links = [
   { href: "/admin",           label: "Overview",    Icon: LayoutDashboard },
@@ -142,10 +142,7 @@ export default function AdminLayout({ children }) {
               </div>
 
               <div className="flex items-center gap-4 border-l border-slate-200 pl-8">
-                 <button className="text-slate-600 hover:text-emerald-600 transition-all relative" title="Alerts">
-                    <Bell size={20} />
-                    <span className="absolute top-0 right-0 w-2 h-2 bg-emerald-600 rounded-full border-2 border-white" />
-                 </button>
+                  <NotificationsBell variant="admin" />
                  <button className="text-slate-600 hover:text-slate-900 transition-all" title="Configuration">
                     <Settings size={20} />
                  </button>
