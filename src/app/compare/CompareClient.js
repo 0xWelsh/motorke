@@ -149,6 +149,27 @@ function getGaugePercent(spec, cars, raw) {
   return Math.round(((raw - min) / (max - min)) * 100);
 }
 
+function formatKesCompact(value) {
+  if (typeof value !== "number" || Number.isNaN(value)) return "N/A";
+  if (value >= 1000000) return `KSh ${(value / 1000000).toFixed(2)}M`;
+  if (value >= 1000) return `KSh ${(value / 1000).toFixed(0)}K`;
+  return `KSh ${Math.round(value)}`;
+}
+
+function roadTone(score) {
+  if (typeof score !== "number") return "border-slate-500/30 bg-slate-500/10 text-slate-300";
+  if (score >= 80) return "border-emerald-500/40 bg-emerald-500/15 text-emerald-300";
+  if (score >= 65) return "border-cyan-500/40 bg-cyan-500/15 text-cyan-300";
+  if (score >= 50) return "border-amber-500/40 bg-amber-500/15 text-amber-300";
+  return "border-rose-500/40 bg-rose-500/15 text-rose-300";
+}
+
+function importTone(eligible) {
+  if (eligible === true) return "border-emerald-500/40 bg-emerald-500/15 text-emerald-300";
+  if (eligible === false) return "border-rose-500/40 bg-rose-500/15 text-rose-300";
+  return "border-slate-500/30 bg-slate-500/10 text-slate-300";
+}
+
 export default function CompareClient({ initialCars }) {
   const { compareCars, addToCompare, removeFromCompare, clearCompare, isFull, isInitialized } = useCompare();
   const router = useRouter();
@@ -372,6 +393,40 @@ export default function CompareClient({ initialCars }) {
     return items[0]?.car || null;
   }, [fullComparedCars, insightsMap]);
 
+  const tcoStats = useMemo(() => {
+    const entries = fullComparedCars
+      .map((car) => ({ carId: car.id, annualTco: insightsMap.get(car.id)?.tco?.annualTotal }))
+      .filter((entry) => typeof entry.annualTco === "number");
+
+    if (entries.length === 0) {
+      return { min: null, max: null, savingsByCarId: new Map() };
+    }
+
+    const min = Math.min(...entries.map((entry) => entry.annualTco));
+    const max = Math.max(...entries.map((entry) => entry.annualTco));
+    const savingsByCarId = new Map(entries.map((entry) => [entry.carId, Math.max(0, max - entry.annualTco)]));
+
+    return { min, max, savingsByCarId };
+  }, [fullComparedCars, insightsMap]);
+
+  const kenyaLensSummary = useMemo(() => {
+    const count = fullComparedCars.length;
+    if (count === 0) return null;
+
+    const eligibleCount = fullComparedCars.filter((car) => getInsights(car)?.importEligibility === true).length;
+    const bestRoadScore = Math.max(...fullComparedCars.map((car) => getInsights(car)?.roadSuitabilityScore || 0));
+    const spread =
+      typeof tcoStats.max === "number" && typeof tcoStats.min === "number"
+        ? Math.max(0, tcoStats.max - tcoStats.min)
+        : 0;
+
+    return {
+      eligibleCount,
+      bestRoadScore,
+      annualTcoSpread: spread,
+    };
+  }, [fullComparedCars, tcoStats]);
+
   const winnerRail = [
     {
       title: "Best Price",
@@ -512,7 +567,7 @@ export default function CompareClient({ initialCars }) {
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#f59e0b] mb-3">Dyno Console - Spec Heavy Mode</p>
           <h1 className="text-5xl font-black mb-4 tracking-tighter">Comparison Engine</h1>
-          <p className="text-slate-300/80 max-w-2xl font-medium">Mechanical-grade side-by-side analysis. Compare up to 3 vehicles across pricing, powertrain, safety, comfort, and ownership factors.</p>
+          <p className="text-slate-300/80 max-w-2xl font-medium">Mechanical-grade side-by-side analysis with Kenya buyer signals: annual operating cost, road readiness, import eligibility, and parts availability.</p>
         </div>
         <div className="flex items-center gap-3 flex-wrap md:justify-end">
           {PRESETS.map((option) => (
@@ -546,6 +601,23 @@ export default function CompareClient({ initialCars }) {
           </button>
         </div>
       </div>
+
+      {kenyaLensSummary && (
+        <div className="mb-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="border border-[#324052] bg-[#111b26]/95 rounded-xl px-4 py-3">
+            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">Annual TCO Gap</p>
+            <p className="text-lg font-black text-emerald-300 mt-1">{formatKesCompact(kenyaLensSummary.annualTcoSpread)}/yr</p>
+          </div>
+          <div className="border border-[#324052] bg-[#111b26]/95 rounded-xl px-4 py-3">
+            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">Top Road Score</p>
+            <p className="text-lg font-black text-cyan-300 mt-1">{kenyaLensSummary.bestRoadScore}/100</p>
+          </div>
+          <div className="border border-[#324052] bg-[#111b26]/95 rounded-xl px-4 py-3">
+            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">Import Eligible</p>
+            <p className="text-lg font-black text-[#fbbf24] mt-1">{kenyaLensSummary.eligibleCount}/{fullComparedCars.length} cars</p>
+          </div>
+        </div>
+      )}
 
       <div className="sticky top-[84px] z-40 mb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
@@ -597,6 +669,19 @@ export default function CompareClient({ initialCars }) {
                          <p className="text-[10px] font-black uppercase tracking-widest text-[#f59e0b] mb-1">{car.year}</p>
                          <h3 className="font-black text-sm md:text-base leading-tight text-slate-100 mb-1 line-clamp-2">{car.make} {car.model}</h3>
                          <p className="text-slate-300/75 text-[10px] truncate">{car.variant || "Standard Variant"}</p>
+                         {hydrated && (
+                           <div className="mt-2 flex flex-wrap gap-1.5">
+                             <span className={`inline-flex px-2 py-0.5 rounded-full border text-[8px] font-black uppercase tracking-[0.12em] ${roadTone(getInsights(car)?.roadSuitabilityScore)}`}>
+                               Road {getInsights(car)?.roadSuitabilityScore || "N/A"}
+                             </span>
+                             <span className="inline-flex px-2 py-0.5 rounded-full border border-cyan-500/35 bg-cyan-500/12 text-cyan-200 text-[8px] font-black uppercase tracking-[0.12em]">
+                               TCO {formatKesCompact(getInsights(car)?.tco?.annualTotal || 0)}/yr
+                             </span>
+                             <span className={`inline-flex px-2 py-0.5 rounded-full border text-[8px] font-black uppercase tracking-[0.12em] ${importTone(getInsights(car)?.importEligibility)}`}>
+                               {getInsights(car)?.importEligibility ? "Import OK" : getInsights(car)?.importEligibility === false ? "Over-age" : "Eligibility N/A"}
+                             </span>
+                           </div>
+                         )}
                          <div className="mt-2 h-1.5 w-full bg-[#2a3a4d] rounded-full overflow-hidden">
                            <div className="h-full bg-gradient-to-r from-[#f59e0b] to-[#fbbf24]" style={{ width: `${hydrated ? calcCoverage(car, allSpecs) : 0}%` }} />
                          </div>
@@ -708,6 +793,9 @@ export default function CompareClient({ initialCars }) {
                         const isBestValue = best != null && raw === best;
                         const gaugePercent = getGaugePercent(spec, fullComparedCars, raw);
                         const missing = isMissing(raw);
+                        const annualTcoSavings = spec.id === "annualTco" ? (tcoStats.savingsByCarId.get(car.id) || 0) : 0;
+                        const isAnnualTcoWinner = spec.id === "annualTco" && annualTcoSavings > 0 && typeof tcoStats.max === "number";
+                        const trafficDelta = spec.id === "trafficFactor" ? (getInsights(car)?.tco?.trafficMultiplier || 1) : null;
 
                         return (
                           <div key={idx} className="p-6 md:p-8 flex items-center justify-center border-r border-[#2b3a4c] last:border-r-0">
@@ -725,6 +813,16 @@ export default function CompareClient({ initialCars }) {
                                 missing ? "text-slate-500" : isBestValue ? "text-emerald-300" : "text-slate-100"
                               }`}>
                                 {value}
+                                {spec.id === "annualTco" && !missing && (
+                                  <span className={`block text-[8px] mt-1 uppercase tracking-[0.12em] ${isAnnualTcoWinner ? "text-emerald-400/90" : "text-slate-500"}`}>
+                                    {annualTcoSavings > 0 ? `Saves ${formatKesCompact(annualTcoSavings)}/yr vs highest` : "Highest annual operating cost in this set"}
+                                  </span>
+                                )}
+                                {spec.id === "trafficFactor" && typeof trafficDelta === "number" && !missing && (
+                                  <span className="block text-[8px] mt-1 uppercase tracking-[0.12em] text-cyan-300/80">
+                                    {trafficDelta <= 1.12 ? "Traffic efficient" : trafficDelta <= 1.25 ? "Moderate traffic penalty" : "Heavy traffic penalty"}
+                                  </span>
+                                )}
                                 {missing && <span className="block text-[8px] mt-1 uppercase tracking-[0.12em]">Missing data</span>}
                                 {isBestValue && !missing && <span className="block text-[8px] mt-1 uppercase tracking-[0.12em] text-emerald-400/80">Best Spec</span>}
                               </span>
