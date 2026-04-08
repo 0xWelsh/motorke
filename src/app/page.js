@@ -5,7 +5,7 @@ import { formatPrice, BADGE_OPTIONS } from "@/lib/utils";
 import Link from "next/link";
 import LocationSearch from "@/components/LocationSearch";
 import {
-  ArrowUpRight, ChevronRight, MapPin, ShieldCheck, Sparkles
+  ArrowUpRight, ChevronRight, MapPin, Newspaper, ShieldCheck, Sparkles
 } from "lucide-react";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
@@ -13,7 +13,7 @@ import { unstable_cache } from "next/cache";
 const getCachedData = unstable_cache(
   async () => {
     const week = new Date(); week.setDate(week.getDate() - 7);
-    const [featured, newArrivals, dealers, totalCars, totalDealers] = await Promise.all([
+    const [featured, newArrivals, dealers, newsItems, totalCars, totalDealers] = await Promise.all([
       db.car.findMany({
         where: { available: true, featured: true },
         include: {
@@ -41,10 +41,21 @@ const getCachedData = unstable_cache(
         take: 8,
         orderBy: [{ featured: "desc" }, { verified: "desc" }, { createdAt: "desc" }],
       }),
+      db.article.findMany({
+        orderBy: { publishedAt: "desc" },
+        take: 8,
+        select: {
+          id: true,
+          title: true,
+          url: true,
+          sourceName: true,
+          publishedAt: true,
+        },
+      }),
       db.car.count({ where: { available: true } }),
       db.dealer.count(),
     ]);
-    return { featured, newArrivals, dealers, totalCars, totalDealers };
+    return { featured, newArrivals, dealers, newsItems, totalCars, totalDealers };
   },
   ["homepage-minimal-v3"],
   { revalidate: 900, tags: ["homepage"] }
@@ -53,7 +64,7 @@ const getCachedData = unstable_cache(
 const HERO_TEXTURE = "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1600&q=80";
 
 export default async function HomePage() {
-  const { featured, newArrivals, dealers, totalCars, totalDealers } = await getCachedData();
+  const { featured, newArrivals, dealers, newsItems, totalCars, totalDealers } = await getCachedData();
   const spotlight = featured.length > 0 ? featured : newArrivals;
   const heroPrimary = spotlight[0] || null;
   const heroSecondary = spotlight[1] || null;
@@ -69,18 +80,56 @@ export default async function HomePage() {
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-6 pb-14 sm:pt-8 sm:pb-20 md:pt-14 md:pb-24 relative z-10">
+          <div className="mx-auto w-full max-w-6xl rounded-2xl border border-[#e7e1d8] bg-white/95 backdrop-blur-sm px-4 sm:px-5 py-3.5 mb-7 sm:mb-9">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-2.5">
+              <p className="inline-flex items-center gap-2 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-700">
+                <Newspaper className="w-3.5 h-3.5 text-[#ff5a2f]" />
+                Auto News Wire
+              </p>
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                <span className="text-[10px] font-black tracking-[0.14em] uppercase text-slate-700">{totalCars.toLocaleString()} Cars</span>
+                <span className="text-[10px] font-black tracking-[0.14em] uppercase text-slate-700">{totalDealers.toLocaleString()} Dealers</span>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto no-scrollbar">
+              <div className="min-w-max flex items-center gap-2.5">
+                {(newsItems?.length ? newsItems : [
+                  { id: "fallback-1", title: "Fresh inventory added daily from verified dealers", url: "/cars", sourceName: "Motorke" },
+                  { id: "fallback-2", title: "Compare vehicle options before contacting a seller", url: "/compare", sourceName: "Motorke" },
+                  { id: "fallback-3", title: "Browse trusted dealership profiles across Kenya", url: "/dealers", sourceName: "Motorke" },
+                ]).map((item) => {
+                  const internal = item.url?.startsWith("/");
+                  const source = item.sourceName || "Market Feed";
+
+                  return internal ? (
+                    <Link
+                      key={item.id}
+                      href={item.url}
+                      className="inline-flex items-center gap-2 rounded-full border border-[#ece5db] bg-[#faf7f2] hover:bg-white px-3.5 sm:px-4 py-2 text-[10px] sm:text-[11px] text-slate-700 transition-colors"
+                    >
+                      <span className="font-black uppercase tracking-[0.1em] text-slate-500">{source}</span>
+                      <span className="font-bold whitespace-nowrap">{item.title}</span>
+                    </Link>
+                  ) : (
+                    <a
+                      key={item.id}
+                      href={item.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-[#ece5db] bg-[#faf7f2] hover:bg-white px-3.5 sm:px-4 py-2 text-[10px] sm:text-[11px] text-slate-700 transition-colors"
+                    >
+                      <span className="font-black uppercase tracking-[0.1em] text-slate-500">{source}</span>
+                      <span className="font-bold whitespace-nowrap">{item.title}</span>
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
             <div className="lg:col-span-7">
-              <div className="flex flex-wrap items-center gap-3 sm:gap-5 border-b border-[#e6dfd6] pb-3 mb-8">
-                <span className="inline-flex items-center gap-2 text-[11px] font-extrabold tracking-[0.16em] uppercase text-slate-600">
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#ff5a2f] animate-pulse" />
-                  Live Market
-                </span>
-                <span className="text-[11px] font-black tracking-[0.14em] uppercase text-slate-700">{totalCars.toLocaleString()} Cars</span>
-                <span className="text-[11px] font-black tracking-[0.14em] uppercase text-slate-700">{totalDealers.toLocaleString()} Dealers</span>
-                <span className="text-[11px] font-black tracking-[0.14em] uppercase text-slate-400">Updated Daily</span>
-              </div>
-
               <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-slate-900 leading-[0.92] tracking-tight mb-6 sm:mb-7">
                 Buy cars with
                 <br />
