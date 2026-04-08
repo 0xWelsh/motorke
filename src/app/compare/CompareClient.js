@@ -15,7 +15,7 @@ import {
 import { computeComparisonInsights } from "@/lib/comparison";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, X, Check, ArrowRight, Minus } from "lucide-react";
+import { Search, X, Check, ArrowRight, Minus, Download } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const SLOT_KEYS = ["a", "b", "c"];
@@ -28,10 +28,19 @@ const PRESETS = [
 ];
 
 const SEVERITY_STYLES = {
-  minor: "text-amber-300 border-amber-300/35 bg-amber-400/10",
-  moderate: "text-orange-300 border-orange-300/35 bg-orange-400/10",
-  major: "text-rose-300 border-rose-300/35 bg-rose-400/10",
+  minor: "text-amber-100 border-amber-300/70 bg-amber-500/25",
+  moderate: "text-orange-100 border-orange-300/70 bg-orange-500/25",
+  major: "text-rose-100 border-rose-300/70 bg-rose-500/25",
 };
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
 function yesNo(value) {
   if (value === true) return "Yes";
@@ -181,6 +190,7 @@ export default function CompareClient({ initialCars }) {
   const [activeSlot, setActiveSlot] = useState(null);
   const [didInitialSync, setDidInitialSync] = useState(false);
   const [saveState, setSaveState] = useState("idle");
+  const [pdfState, setPdfState] = useState("idle");
 
   const initialCarsById = useMemo(() => {
     return new Map(initialCars.map((car) => [car.id, car]));
@@ -479,6 +489,178 @@ export default function CompareClient({ initialCars }) {
     }
   }
 
+  function handleDownloadPdf() {
+    if (fullComparedCars.length === 0 || typeof window === "undefined") return;
+
+    try {
+      setPdfState("printing");
+
+      const visibleGroups = specGroups
+        .map((group) => {
+          const rows = group.specs
+            .filter((spec) => shouldShowSpec(spec))
+            .filter((spec) => !(showDiffOnly && fullComparedCars.length > 1 && !isDifferent(spec, fullComparedCars)))
+            .map((spec) => ({
+              label: spec.label,
+              values: fullComparedCars.map((car) => spec.pick(car).value),
+            }));
+
+          return { name: group.name, rows };
+        })
+        .filter((group) => group.rows.length > 0);
+
+      const title = fullComparedCars
+        .map((car) => `${car.year} ${car.make} ${car.model}`)
+        .join(" vs ");
+
+      const popup = window.open("", "_blank", "width=1200,height=900");
+      if (!popup) {
+        throw new Error("Popup blocked");
+      }
+
+      const printedAt = new Date().toLocaleString("en-KE");
+
+      const rowsHtml = visibleGroups
+        .map(
+          (group) => `
+            <tr class="group-row"><td colspan="${2 + fullComparedCars.length}">${escapeHtml(group.name)}</td></tr>
+            ${group.rows
+              .map(
+                (row) => `
+                  <tr>
+                    <td class="label">${escapeHtml(row.label)}</td>
+                    ${row.values.map((value) => `<td>${escapeHtml(value)}</td>`).join("")}
+                  </tr>
+                `
+              )
+              .join("")}
+          `
+        )
+        .join("");
+
+      const summaryRows = fullComparedCars
+        .map((car) => {
+          const insight = getInsights(car);
+          const annualTco = insight?.tco?.annualTotal || 0;
+          const road = insight?.roadSuitabilityScore ?? "N/A";
+          const importStatus = insight?.importEligibility === true ? "Eligible" : insight?.importEligibility === false ? "Not Eligible" : "N/A";
+
+          return `
+            <tr>
+              <td>${escapeHtml(`${car.year} ${car.make} ${car.model}`)}</td>
+              <td>${escapeHtml(formatPrice(car.price || 0))}</td>
+              <td>${escapeHtml(formatPrice(annualTco))}</td>
+              <td>${escapeHtml(String(road))}</td>
+              <td>${escapeHtml(importStatus)}</td>
+            </tr>
+          `;
+        })
+        .join("");
+
+      popup.document.write(`
+        <!doctype html>
+        <html>
+          <head>
+            <meta charset="utf-8" />
+            <title>Motorke Comparison PDF</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                margin: 24px;
+                color: #0f172a;
+                background: #ffffff;
+              }
+              h1 { font-size: 20px; margin: 0 0 8px; }
+              p.meta { margin: 0 0 18px; color: #334155; font-size: 12px; }
+              table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 22px;
+                font-size: 12px;
+              }
+              th, td {
+                border: 1px solid #cbd5e1;
+                padding: 8px;
+                text-align: left;
+                vertical-align: top;
+              }
+              th {
+                background: #e2e8f0;
+                font-weight: 700;
+              }
+              tr.group-row td {
+                background: #f1f5f9;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: #334155;
+              }
+              td.label {
+                font-weight: 700;
+                background: #f8fafc;
+              }
+              .section-title {
+                font-size: 13px;
+                margin: 20px 0 8px;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                color: #475569;
+                font-weight: 700;
+              }
+              @page { size: A4; margin: 12mm; }
+            </style>
+          </head>
+          <body>
+            <h1>Motorke Comparison Report</h1>
+            <p class="meta">${escapeHtml(title)}<br/>Generated: ${escapeHtml(printedAt)} · Preset: ${escapeHtml(preset)}</p>
+
+            <div class="section-title">Quick Summary</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Car</th>
+                  <th>Price</th>
+                  <th>Annual TCO</th>
+                  <th>Road Score</th>
+                  <th>Import Eligibility</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${summaryRows}
+              </tbody>
+            </table>
+
+            <div class="section-title">Detailed Comparison</div>
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 24%">Specification</th>
+                  ${fullComparedCars
+                    .map((car) => `<th>${escapeHtml(`${car.year} ${car.make} ${car.model}`)}</th>`)
+                    .join("")}
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+              </tbody>
+            </table>
+          </body>
+        </html>
+      `);
+
+      popup.document.close();
+      popup.focus();
+      popup.print();
+
+      setPdfState("done");
+      setTimeout(() => setPdfState("idle"), 1800);
+    } catch (error) {
+      console.error("Failed to generate PDF:", error);
+      setPdfState("failed");
+      setTimeout(() => setPdfState("idle"), 1800);
+    }
+  }
+
   // Sync URL-loaded cars into context once compare storage is ready.
   useEffect(() => {
     if (!isInitialized) return;
@@ -561,15 +743,15 @@ export default function CompareClient({ initialCars }) {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_14%_10%,rgba(245,158,11,0.16),transparent_34%),radial-gradient(circle_at_84%_16%,rgba(34,211,238,0.12),transparent_36%),linear-gradient(180deg,#060b11_0%,#121b27_100%)]">
-    <div className="max-w-7xl mx-auto px-4 py-12 text-slate-100">
+    <div className="mk-compare-page min-h-screen bg-[radial-gradient(circle_at_14%_10%,rgba(245,158,11,0.2),transparent_34%),radial-gradient(circle_at_84%_16%,rgba(34,211,238,0.16),transparent_36%),linear-gradient(180deg,#0b1220_0%,#1a2c40_100%)]">
+    <div className="max-w-7xl mx-auto px-4 py-12 text-slate-50">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#f59e0b] mb-3">Dyno Console - Spec Heavy Mode</p>
           <h1 className="text-5xl font-black mb-4 tracking-tighter">Comparison Engine</h1>
-          <p className="text-slate-300/80 max-w-2xl font-medium">Mechanical-grade side-by-side analysis with Kenya buyer signals: annual operating cost, road readiness, import eligibility, and parts availability.</p>
+          <p className="text-slate-100 max-w-2xl font-medium">Mechanical-grade side-by-side analysis with Kenya buyer signals: annual operating cost, road readiness, import eligibility, and parts availability.</p>
         </div>
-        <div className="flex items-center gap-3 flex-wrap md:justify-end">
+        <div className="no-print flex items-center gap-3 flex-wrap md:justify-end">
           {PRESETS.map((option) => (
             <button
               key={option.id}
@@ -622,15 +804,15 @@ export default function CompareClient({ initialCars }) {
       <div className="sticky top-[84px] z-40 mb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
           {winnerRail.map((item) => (
-            <div key={item.title} className="border border-[#324052] bg-[#111b26]/95 backdrop-blur-xl rounded-xl p-4">
+            <div key={item.title} className="border border-[#4b6078] bg-[#0f1b2b]/95 backdrop-blur-xl rounded-xl p-4">
               <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#fbbf24] mb-2">{item.title}</p>
               {item.car ? (
                 <Link href={`/cars/${item.car.id}`} className="block group">
                   <p className="text-sm font-black text-slate-100 group-hover:text-white line-clamp-1">{item.car.year} {item.car.make} {item.car.model}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-300/80 mt-1">{item.sub}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-100 mt-1">{item.sub}</p>
                 </Link>
               ) : (
-                <p className="text-xs font-bold text-slate-500">Add more cars to compute winner</p>
+                <p className="text-xs font-bold text-slate-300">Add more cars to compute winner</p>
               )}
             </div>
           ))}
@@ -668,7 +850,7 @@ export default function CompareClient({ initialCars }) {
                       <div>
                          <p className="text-[10px] font-black uppercase tracking-widest text-[#f59e0b] mb-1">{car.year}</p>
                          <h3 className="font-black text-sm md:text-base leading-tight text-slate-100 mb-1 line-clamp-2">{car.make} {car.model}</h3>
-                         <p className="text-slate-300/75 text-[10px] truncate">{car.variant || "Standard Variant"}</p>
+                         <p className="text-slate-100 text-[10px] truncate">{car.variant || "Standard Variant"}</p>
                          {hydrated && (
                            <div className="mt-2 flex flex-wrap gap-1.5">
                              <span className={`inline-flex px-2 py-0.5 rounded-full border text-[8px] font-black uppercase tracking-[0.12em] ${roadTone(getInsights(car)?.roadSuitabilityScore)}`}>
@@ -769,7 +951,7 @@ export default function CompareClient({ initialCars }) {
                     <div key={spec.label} className={`grid grid-cols-[160px_1fr_1fr_1fr] md:grid-cols-[240px_1fr_1fr_1fr] transition-colors ${diff ? "bg-[#1a2431]" : "hover:bg-[#182330]"}`}>
                       <div className="p-6 md:p-8 flex items-center border-r border-[#2b3a4c] bg-[#0f1722]">
                         <div className="space-y-2">
-                          <span className="text-[11px] font-bold text-slate-300 uppercase tracking-widest block">{spec.label}</span>
+                          <span className="text-[11px] font-bold text-slate-100 uppercase tracking-widest block">{spec.label}</span>
                           {severity !== "none" && fullComparedCars.length > 1 && (
                             <span className={`inline-flex px-2 py-0.5 rounded-full border text-[8px] font-black uppercase tracking-[0.12em] ${SEVERITY_STYLES[severity]}`}>
                               {severity}
@@ -840,7 +1022,7 @@ export default function CompareClient({ initialCars }) {
       </div>
       
       {/* Compare Page Bottom CTA */}
-      <div className="mt-12 flex flex-col items-center gap-6 p-12 bg-[#111b26] border border-[#324052] rounded-[2rem] text-center">
+      <div className="no-print mt-12 flex flex-col items-center gap-6 p-12 bg-[#111b26] border border-[#4b6078] rounded-[2rem] text-center">
         <p className="text-slate-300 text-sm font-medium">Move from comparison to action</p>
 
         <div className="flex flex-wrap justify-center gap-3">
@@ -863,6 +1045,17 @@ export default function CompareClient({ initialCars }) {
           >
             <span className="text-[11px] font-black text-slate-300 uppercase tracking-widest">
               {saveState === "copied" ? "Saved" : saveState === "failed" ? "Save Failed" : "Save Comparison"}
+            </span>
+          </button>
+
+          <button
+            onClick={handleDownloadPdf}
+            disabled={fullComparedCars.length === 0}
+            className="px-6 h-12 rounded-2xl bg-[#f8fafc] border border-[#d7dee8] text-[#0f172a] hover:bg-white transition-all flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <Download className="w-4 h-4" />
+            <span className="text-[11px] font-black uppercase tracking-widest">
+              {pdfState === "printing" ? "Preparing PDF" : pdfState === "done" ? "PDF Ready" : pdfState === "failed" ? "PDF Failed" : "Download PDF"}
             </span>
           </button>
         </div>
