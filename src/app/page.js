@@ -78,7 +78,7 @@ export default async function HomePage() {
           <div className="absolute -top-24 -right-20 h-80 w-80 rounded-full bg-[#ff5a2f]/10 blur-3xl" />
         </div>
 
-        <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-6 pb-14 sm:pt-8 sm:pb-20 md:pt-14 md:pb-24 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-2 pb-14 sm:pt-3 sm:pb-20 md:pt-8 md:pb-24 relative z-10">
           <NewsRibbon initialNews={newsItems} />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
