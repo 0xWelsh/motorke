@@ -744,19 +744,19 @@ export default function CompareClient({ initialCars }) {
 
   return (
     <div className="mk-compare-page min-h-screen bg-[radial-gradient(circle_at_14%_10%,rgba(245,158,11,0.2),transparent_34%),radial-gradient(circle_at_84%_16%,rgba(34,211,238,0.16),transparent_36%),linear-gradient(180deg,#0b1220_0%,#1a2c40_100%)]">
-    <div className="max-w-7xl mx-auto px-4 py-12 text-slate-50">
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
+    <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12 text-slate-50">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-6 sm:gap-8">
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#f59e0b] mb-3">Dyno Console - Spec Heavy Mode</p>
-          <h1 className="text-5xl font-black mb-4 tracking-tighter">Comparison Engine</h1>
-          <p className="text-slate-100 max-w-2xl font-medium">Mechanical-grade side-by-side analysis with Kenya buyer signals: annual operating cost, road readiness, import eligibility, and parts availability.</p>
+          <h1 className="text-3xl sm:text-5xl font-black mb-3 sm:mb-4 tracking-tighter">Comparison Engine</h1>
+          <p className="text-slate-100 max-w-2xl font-medium text-sm sm:text-base">Mechanical-grade side-by-side analysis with Kenya buyer signals: annual operating cost, road readiness, import eligibility, and parts availability.</p>
         </div>
-        <div className="no-print flex items-center gap-3 flex-wrap md:justify-end">
+        <div className="no-print flex items-center gap-2 sm:gap-3 flex-wrap md:justify-end">
           {PRESETS.map((option) => (
             <button
               key={option.id}
               onClick={() => setPreset(option.id)}
-              className={`px-4 h-10 rounded-xl text-[10px] font-black uppercase tracking-[0.14em] transition-all border ${
+              className={`px-3 sm:px-4 h-9 sm:h-10 rounded-xl text-[10px] font-black uppercase tracking-[0.14em] transition-all border ${
                 preset === option.id
                   ? "bg-[#f59e0b] text-[#1a1304] border-[#f59e0b]"
                   : "bg-[#16202b] text-slate-300 border-[#324052] hover:text-white hover:border-[#f59e0b]/60"
@@ -768,7 +768,7 @@ export default function CompareClient({ initialCars }) {
 
           <button
             onClick={() => setShowDiffOnly(!showDiffOnly)}
-            className={`px-6 h-12 rounded-2xl flex items-center gap-2 text-xs font-black uppercase tracking-widest transition-all ${
+            className={`w-full sm:w-auto justify-center px-5 sm:px-6 h-11 sm:h-12 rounded-2xl flex items-center gap-2 text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all ${
               showDiffOnly ? "bg-[#f59e0b] text-[#1a1304] shadow-[0_0_28px_rgba(245,158,11,0.38)]" : "bg-[#16202b] border border-[#324052] text-slate-300 hover:text-white hover:border-[#f59e0b]/60"
             }`}
           >
@@ -777,7 +777,7 @@ export default function CompareClient({ initialCars }) {
           </button>
           <button
             onClick={clearCompare}
-            className="px-6 h-12 rounded-2xl bg-[#16202b] border border-[#324052] text-slate-300 hover:text-white hover:border-slate-400 text-xs font-black uppercase tracking-widest transition-all"
+            className="w-full sm:w-auto px-5 sm:px-6 h-11 sm:h-12 rounded-2xl bg-[#16202b] border border-[#324052] text-slate-300 hover:text-white hover:border-slate-400 text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all"
           >
             Clear All
           </button>
@@ -801,7 +801,7 @@ export default function CompareClient({ initialCars }) {
         </div>
       )}
 
-      <div className="sticky top-[84px] z-40 mb-8">
+      <div className="mb-8 sm:sticky sm:top-[84px] sm:z-40">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
           {winnerRail.map((item) => (
             <div key={item.title} className="border border-[#4b6078] bg-[#0f1b2b]/95 backdrop-blur-xl rounded-xl p-4">
@@ -819,7 +819,8 @@ export default function CompareClient({ initialCars }) {
         </div>
       </div>
 
-      <div className="relative border border-[#324052] rounded-[2rem] overflow-hidden bg-[#0f1722]">
+      <div className="relative border border-[#324052] rounded-[2rem] overflow-x-auto bg-[#0f1722]">
+        <div className="min-w-[980px]">
         {/* Table Header (Sticky) */}
         <div className="sticky top-0 z-30 bg-[#0f1722]/95 backdrop-blur-2xl border-b border-[#324052]">
           <div className="grid grid-cols-[160px_1fr_1fr_1fr] md:grid-cols-[240px_1fr_1fr_1fr]">
@@ -1019,15 +1020,16 @@ export default function CompareClient({ initialCars }) {
             </div>
           ))}
         </div>
+        </div>
       </div>
       
       {/* Compare Page Bottom CTA */}
-      <div className="no-print mt-12 flex flex-col items-center gap-6 p-12 bg-[#111b26] border border-[#4b6078] rounded-[2rem] text-center">
+      <div className="no-print mt-10 sm:mt-12 flex flex-col items-center gap-5 sm:gap-6 p-6 sm:p-12 bg-[#111b26] border border-[#4b6078] rounded-[2rem] text-center">
         <p className="text-slate-300 text-sm font-medium">Move from comparison to action</p>
 
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-3 w-full">
           {overallWinner && (
-            <Link href={`/cars/${overallWinner.id}`} className="px-6 h-12 rounded-2xl bg-[#f59e0b] text-[#1a1304] border border-[#f59e0b] hover:bg-[#fbbf24] transition-all flex items-center gap-2 font-black text-[11px] uppercase tracking-[0.14em]">
+            <Link href={`/cars/${overallWinner.id}`} className="w-full sm:w-auto justify-center px-6 h-12 rounded-2xl bg-[#f59e0b] text-[#1a1304] border border-[#f59e0b] hover:bg-[#fbbf24] transition-all flex items-center gap-2 font-black text-[11px] uppercase tracking-[0.14em]">
               Shortlist Winner <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           )}

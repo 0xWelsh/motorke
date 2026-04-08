@@ -239,9 +239,9 @@ export default async function CarDetailPage({ params }) {
   const ownershipSpecs = compactSpecs.slice(9, 16);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16 pb-24 sm:pb-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-16 pb-36 sm:pb-28 lg:pb-16">
       {/* Breadcrumb */}
-      <nav className="text-sm font-medium text-slate-400 mb-8 sm:mb-10 flex gap-2 sm:gap-3 items-center flex-wrap">
+      <nav className="hidden sm:flex text-sm font-medium text-slate-400 mb-8 sm:mb-10 gap-2 sm:gap-3 items-center flex-wrap">
         <Link href="/" className="hover:text-brand transition-colors">Home</Link>
         <ChevronRight className="w-3 h-3" />
         <Link href="/cars" className="hover:text-brand transition-colors">Inventory</Link>
@@ -249,22 +249,22 @@ export default async function CarDetailPage({ params }) {
         <span className="text-slate-900 font-extrabold truncate max-w-full">{title}</span>
       </nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
         {/* Left: images + details */}
         <div className="lg:col-span-2 space-y-8 sm:space-y-10 lg:space-y-12">
           {/* Image gallery with lightbox */}
           <ImageGallery images={car.images} title={title} />
 
           {/* Title + price */}
-          <div className="space-y-4 pb-6 sm:pb-8 border-b border-slate-100">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-              <span className="inline-flex items-center mr-3 px-3 py-1 rounded-lg bg-brand-light text-brand text-xs sm:text-sm font-extrabold align-middle">
+          <div className="space-y-3 pb-6 sm:pb-8 border-b border-slate-100">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+              <span className="inline-flex items-center mr-2 sm:mr-3 px-2.5 py-1 rounded-lg bg-brand-light text-brand text-[11px] sm:text-sm font-extrabold align-middle">
                 {car.year}
               </span>
               {car.make} {car.model}{car.variant ? ` ${car.variant}` : ""}
             </h1>
 
-            <p className="text-3xl sm:text-4xl font-extrabold text-brand tracking-tight">{formatPrice(car.price)}</p>
+            <p className="text-2xl sm:text-4xl font-extrabold text-brand tracking-tight">{formatPrice(car.price)}</p>
 
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-700 text-[10px] font-extrabold uppercase tracking-wider">
@@ -288,7 +288,7 @@ export default async function CarDetailPage({ params }) {
               ))}
             </div>
 
-            <p className="text-sm sm:text-base text-slate-600 font-semibold flex items-center gap-1.5">
+            <p className="text-sm text-slate-600 font-semibold flex items-center gap-1.5">
               <MapPin className="w-4 h-4 text-slate-400" />
               {car.location || dealer.location || "Location on request"}
             </p>
@@ -299,60 +299,64 @@ export default async function CarDetailPage({ params }) {
               </p>
             )}
 
-            <div className="w-full flex flex-wrap items-center gap-3 pt-3 border-t border-slate-100">
+            <div className="w-full grid grid-cols-1 sm:flex sm:flex-wrap items-center gap-2.5 sm:gap-3 pt-3 border-t border-slate-100">
               {dealer.whatsapp && (
                 <a
                   href={whatsappLink(dealer.whatsapp, title, dealer.name)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 h-11 px-5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-extrabold uppercase tracking-widest transition-colors"
+                  className="w-full sm:w-auto justify-center flex items-center gap-2 h-11 px-5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-extrabold uppercase tracking-widest transition-colors"
                 >
                   <MessageCircle className="w-4 h-4 fill-current" /> WhatsApp Dealer
                 </a>
               )}
               <Link
                 href={`/dealers/${dealer.slug}#dealer-gallery`}
-                className="h-11 px-4 rounded-xl border border-slate-200 bg-white text-slate-700 text-xs font-extrabold uppercase tracking-[0.12em] inline-flex items-center justify-center"
+                className="w-full sm:w-auto h-11 px-4 rounded-xl border border-slate-200 bg-white text-slate-700 text-xs font-extrabold uppercase tracking-[0.12em] inline-flex items-center justify-center"
               >
                 View Dealer Gallery
               </Link>
-              <CompareButton car={compareCar} />
-              <SaveButton carId={car.id} initialSaved={isSaved} isLoggedIn={isLoggedIn} />
+              <div className="w-full sm:w-auto [&>button]:w-full sm:[&>button]:w-auto [&>button]:justify-center">
+                <CompareButton car={compareCar} />
+              </div>
+              <div className="w-full sm:w-auto [&>button]:w-full sm:[&>button]:w-auto [&>button]:justify-center">
+                <SaveButton carId={car.id} initialSaved={isSaved} isLoggedIn={isLoggedIn} />
+              </div>
             </div>
           </div>
 
           {/* Kenya utility summary */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-1.5">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+            <div className="rounded-xl border border-slate-200 bg-white p-3 sm:p-4 space-y-1.5">
               <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
                 <Gauge className="w-3.5 h-3.5" /> Ground Clearance
               </p>
-              <p className="text-sm font-extrabold text-slate-900">{groundMm ? `${groundMm} mm` : "Not listed"}</p>
-              <p className="text-xs font-semibold text-slate-500">{groundSafety}</p>
+              <p className="text-xs sm:text-sm font-extrabold text-slate-900">{groundMm ? `${groundMm} mm` : "Not listed"}</p>
+              <p className="text-[11px] sm:text-xs font-semibold text-slate-500">{groundSafety}</p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-1.5">
+            <div className="rounded-xl border border-slate-200 bg-white p-3 sm:p-4 space-y-1.5">
               <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
                 <Fuel className="w-3.5 h-3.5" /> Fuel Economy
               </p>
-              <p className="text-sm font-extrabold text-slate-900">Approx. {formatPrice(monthlyFuelCost)}/mo</p>
-              <p className="text-xs font-semibold text-slate-500">{FUEL_LABELS[car.fuelType] || "Fuel"} + Nairobi traffic adjusted</p>
+              <p className="text-xs sm:text-sm font-extrabold text-slate-900">Approx. {formatPrice(monthlyFuelCost)}/mo</p>
+              <p className="text-[11px] sm:text-xs font-semibold text-slate-500">{FUEL_LABELS[car.fuelType] || "Fuel"} + Nairobi traffic adjusted</p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-1.5">
+            <div className="rounded-xl border border-slate-200 bg-white p-3 sm:p-4 space-y-1.5">
               <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
                 <Cog className="w-3.5 h-3.5" /> Spare Parts
               </p>
-              <p className="text-sm font-extrabold text-slate-900">{spareTone}</p>
-              <p className="text-xs font-semibold text-slate-500">Kirinyaga index: {insight.spareAvailabilityScore}/10</p>
+              <p className="text-xs sm:text-sm font-extrabold text-slate-900">{spareTone}</p>
+              <p className="text-[11px] sm:text-xs font-semibold text-slate-500">Kirinyaga index: {insight.spareAvailabilityScore}/10</p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-1.5">
+            <div className="rounded-xl border border-slate-200 bg-white p-3 sm:p-4 space-y-1.5">
               <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5" /> Previous Use
               </p>
-              <p className="text-sm font-extrabold text-slate-900">{previousUse}</p>
-              <p className="text-xs font-semibold text-slate-500">{insight.importEligibility ? "Within import age rules" : "Check age/compliance"}</p>
+              <p className="text-xs sm:text-sm font-extrabold text-slate-900">{previousUse}</p>
+              <p className="text-[11px] sm:text-xs font-semibold text-slate-500">{insight.importEligibility ? "Within import age rules" : "Check age/compliance"}</p>
             </div>
           </div>
 
@@ -365,7 +369,7 @@ export default async function CarDetailPage({ params }) {
           <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
 
           {/* Mobile sticky quick actions */}
-          <div className="lg:hidden fixed bottom-3 inset-x-0 z-40 px-4 sm:px-6">
+          <div className="lg:hidden fixed bottom-3 inset-x-0 z-40 px-3 sm:px-6">
             <div className="rounded-2xl border border-slate-200 bg-white/95 backdrop-blur p-2 shadow-[0_14px_30px_rgba(15,23,42,0.16)] flex items-center gap-2">
               {dealer.whatsapp && (
                 <a
@@ -387,7 +391,7 @@ export default async function CarDetailPage({ params }) {
               )}
               <Link
                 href={`/dealers/${dealer.slug}`}
-                className="h-12 px-4 rounded-xl border border-slate-200 bg-white text-slate-700 text-[10px] font-extrabold uppercase tracking-[0.12em] inline-flex items-center justify-center"
+                className="hidden sm:inline-flex h-12 px-4 rounded-xl border border-slate-200 bg-white text-slate-700 text-[10px] font-extrabold uppercase tracking-[0.12em] items-center justify-center"
               >
                 Dealer
               </Link>
@@ -414,8 +418,8 @@ export default async function CarDetailPage({ params }) {
                 <div>
                   <p className="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">Core Specs</p>
                   <ul className="list-disc pl-5 space-y-1.5 text-sm font-semibold text-slate-700">
-                    {quickSpecs.map((line) => (
-                      <li key={line}>{line}</li>
+                    {quickSpecs.map((line, idx) => (
+                      <li key={line} className={idx > 5 ? "hidden sm:list-item" : ""}>{line}</li>
                     ))}
                   </ul>
                 </div>
@@ -423,11 +427,11 @@ export default async function CarDetailPage({ params }) {
                 <div>
                   <p className="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">Ownership & Extras</p>
                   <ul className="list-disc pl-5 space-y-1.5 text-sm font-semibold text-slate-700">
-                    {ownershipSpecs.map((line) => (
-                      <li key={line}>{line}</li>
+                    {ownershipSpecs.map((line, idx) => (
+                      <li key={line} className={idx > 4 ? "hidden sm:list-item" : ""}>{line}</li>
                     ))}
-                    {car.features?.slice(0, 6).map((feature) => (
-                      <li key={feature}>{feature}</li>
+                    {car.features?.slice(0, 6).map((feature, idx) => (
+                      <li key={feature} className={idx > 2 ? "hidden sm:list-item" : ""}>{feature}</li>
                     ))}
                   </ul>
                 </div>

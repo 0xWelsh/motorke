@@ -54,10 +54,10 @@ export default async function DealerPage({ params }) {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-7 sm:py-12">
         <section className="pb-10 border-b border-[#e8e2d9]">
           <div className="grid grid-cols-1 lg:grid-cols-[112px_minmax(0,1fr)_220px] gap-5 sm:gap-7 lg:gap-10 items-start">
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-[#faf7f2] border border-[#ece6dd] text-slate-900 flex items-center justify-center font-black text-4xl sm:text-5xl overflow-hidden">
+            <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-3xl bg-[#faf7f2] border border-[#ece6dd] text-slate-900 flex items-center justify-center font-black text-4xl sm:text-5xl overflow-hidden">
               {brandImage ? (
                 <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover" />
               ) : (
@@ -67,7 +67,7 @@ export default async function DealerPage({ params }) {
 
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-3 mb-3">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl text-slate-900 tracking-tight">{dealer.name}</h1>
+                <h1 className="text-2xl sm:text-4xl md:text-5xl text-slate-900 tracking-tight">{dealer.name}</h1>
                 {dealer.verified && (
                   <span className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-emerald-700">
                     <ShieldCheck className="w-3.5 h-3.5" /> Verified
@@ -79,11 +79,11 @@ export default async function DealerPage({ params }) {
                 <MapPin className="w-3.5 h-3.5" /> {dealer.address || dealer.location}
               </p>
 
-              <p className="text-slate-600 text-base leading-relaxed max-w-3xl mb-6">
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-3xl mb-5 sm:mb-6">
                 {dealer.description || `${dealer.name} maintains a curated selection of vehicles for buyers who want trusted listings, clear pricing, and direct contact with a real dealership team.`}
               </p>
 
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-5 gap-y-2">
                 {contactLinks.length > 0 ? (
                   contactLinks.map((item) => (
                     <a
@@ -192,8 +192,8 @@ export default async function DealerPage({ params }) {
         )}
 
         {dealerGallery.length > 0 && (
-          <section id="dealer-gallery" className="scroll-mt-24 py-2 pb-10 border-b border-[#ece6dd]">
-            <div className="flex items-end justify-between gap-4 mb-6">
+          <section id="dealer-gallery" className="scroll-mt-28 py-2 pb-10 border-b border-[#ece6dd]">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 sm:gap-4 mb-6">
               <div>
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500 mb-2">Dealer Gallery</p>
                 <h2 className="text-2xl sm:text-3xl text-slate-900 tracking-tight">Inside {dealer.name}</h2>
@@ -288,7 +288,9 @@ export default async function DealerPage({ params }) {
                           ))}
                         </div>
 
-                        <CompareButton car={compareCar} />
+                        <div className="w-full [&>button]:w-full md:[&>button]:w-auto [&>button]:justify-center">
+                          <CompareButton car={compareCar} />
+                        </div>
                         {dealerGallery.length > 0 && (
                           <div className="mt-2">
                             <Link href={`/dealers/${dealer.slug}#dealer-gallery`} className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-600 hover:text-black transition-colors">
@@ -298,8 +300,8 @@ export default async function DealerPage({ params }) {
                         )}
                       </div>
 
-                      <div className="md:text-right">
-                        <p className="text-2xl font-bold text-slate-900 mb-3">{formatPrice(car.price)}</p>
+                      <div className="flex items-center justify-between md:block md:text-right">
+                        <p className="text-2xl font-bold text-slate-900 md:mb-3">{formatPrice(car.price)}</p>
                         <Link href={`/cars/${car.id}`} className="inline-flex items-center gap-1 text-xs font-extrabold uppercase tracking-[0.14em] text-slate-600 hover:text-black transition-colors">
                           Details <ChevronRight className="w-3.5 h-3.5" />
                         </Link>
