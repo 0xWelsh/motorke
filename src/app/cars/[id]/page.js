@@ -255,20 +255,6 @@ export default async function CarDetailPage({ params }) {
           {/* Image gallery with lightbox */}
           <ImageGallery images={car.images} title={title} />
 
-          {/* Description directly below photos */}
-          {descriptionBullets.length > 0 && (
-            <div className="space-y-3">
-              <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Vehicle Description</h3>
-              <div className="rounded-xl border border-slate-200 bg-white p-5">
-                <ul className="list-disc pl-5 space-y-1.5 text-sm font-semibold text-slate-700">
-                  {descriptionBullets.map((line, idx) => (
-                    <li key={`${line}-${idx}`}>{line}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          )}
-
           {/* Title + price */}
           <div className="flex flex-wrap items-start justify-between gap-4 sm:gap-6 pb-6 sm:pb-8 border-b border-slate-100">
             <div className="space-y-2">
@@ -404,6 +390,18 @@ export default async function CarDetailPage({ params }) {
 
           {/* Compact vehicle snapshot */}
           <div className="space-y-4">
+            {descriptionBullets.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Vehicle Description</h3>
+                <div className="rounded-xl border border-slate-200 bg-white p-5">
+                  <ul className="list-disc pl-5 space-y-1.5 text-sm font-semibold text-slate-700">
+                    {descriptionBullets.map((line, idx) => (
+                      <li key={`${line}-${idx}`}>{line}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
             <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Vehicle Snapshot</h3>
             <div className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6 space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
