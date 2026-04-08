@@ -4,9 +4,10 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { unstable_cache } from "next/cache";
+import { computeComparisonInsights } from "@/lib/comparison";
 import { formatPrice, formatMileage, estimateDuty, whatsappLink,
          BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/utils";
-import { MessageCircle, ChevronRight, MapPin, Wallet, ShieldCheck, Phone } from "lucide-react";
+import { MessageCircle, ChevronRight, MapPin, Wallet, ShieldCheck, Phone, Fuel, Gauge, Cog } from "lucide-react";
 import EnquiryForm from "@/components/EnquiryForm";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
@@ -132,6 +133,14 @@ const getSimilarCars = unstable_cache(
   { revalidate: 3600, tags: ["cars"] }
 );
 
+function batteryTechLabel(value) {
+  if (!value) return null;
+  if (value === "NIMH") return "NiMH";
+  if (value === "LI_ION") return "Li-ion";
+  if (value === "NA") return "N/A";
+  return value;
+}
+
 export default async function CarDetailPage({ params }) {
   const { id } = await params;
   const carData = await getCarData(id);
@@ -163,6 +172,36 @@ export default async function CarDetailPage({ params }) {
     price: car.price,
     image: primaryImg?.url,
   };
+
+  const insight = computeComparisonInsights(car);
+  const monthlyFuelCost = Math.round((insight?.tco?.annualFuelCost || 0) / 12);
+  const groundMm = car.groundClearanceMm;
+  const groundSafety =
+    typeof groundMm === "number"
+      ? groundMm >= 165
+        ? "Speed-bump safe"
+        : groundMm >= 150
+          ? "Moderate clearance"
+          : "Low on high bumps"
+      : `Road score ${insight.roadSuitabilityScore}/100`;
+  const spareTone =
+    insight.spareAvailabilityScore >= 8
+      ? "High availability"
+      : insight.spareAvailabilityScore >= 6
+        ? "Moderate availability"
+        : "Limited availability";
+  const previousUse = car.imported
+    ? `Ex-${car.importCountry || "Import"} / ${car.dutyPaid ? "Duty paid" : "Duty pending"}`
+    : "Local unit";
+
+  const trustBadges = [
+    dealer.verified ? "Verified Dealer" : null,
+    car.dutyPaid ? "Import Docs Present" : null,
+    insight.importEligibility === true ? "Import Age Eligible" : null,
+    car.fuelType === "HYBRID" && car.hybridBatteryTech
+      ? `${batteryTechLabel(car.hybridBatteryTech)} Battery`
+      : null,
+  ].filter(Boolean);
 
   const specs = [
     { label: "Year",          value: car.year },
@@ -210,6 +249,18 @@ export default async function CarDetailPage({ params }) {
                 <span className="px-3 py-1 rounded-lg bg-brand-light text-brand text-xs font-extrabold">{car.year}</span>
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{car.make}</span>
               </div>
+              {trustBadges.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {trustBadges.map((badge) => (
+                    <span
+                      key={badge}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 text-[10px] font-extrabold uppercase tracking-wider"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5" /> {badge}
+                    </span>
+                  ))}
+                </div>
+              )}
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">{title}</h1>
               <p className="text-lg text-slate-500 font-medium">
                 {BODY_TYPE_LABELS[car.bodyType] || "Body type N/A"} · {formatMileage(car.mileage)} · {car.location || dealer.location || "Location on request"}
@@ -245,6 +296,41 @@ export default async function CarDetailPage({ params }) {
             </div>
           </div>
 
+          {/* Kenya utility summary */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-1.5">
+              <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
+                <Gauge className="w-3.5 h-3.5" /> Ground Clearance
+              </p>
+              <p className="text-sm font-extrabold text-slate-900">{groundMm ? `${groundMm} mm` : "Not listed"}</p>
+              <p className="text-xs font-semibold text-slate-500">{groundSafety}</p>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-1.5">
+              <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
+                <Fuel className="w-3.5 h-3.5" /> Fuel Economy
+              </p>
+              <p className="text-sm font-extrabold text-slate-900">Approx. {formatPrice(monthlyFuelCost)}/mo</p>
+              <p className="text-xs font-semibold text-slate-500">{FUEL_LABELS[car.fuelType] || "Fuel"} + Nairobi traffic adjusted</p>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-1.5">
+              <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
+                <Cog className="w-3.5 h-3.5" /> Spare Parts
+              </p>
+              <p className="text-sm font-extrabold text-slate-900">{spareTone}</p>
+              <p className="text-xs font-semibold text-slate-500">Kirinyaga index: {insight.spareAvailabilityScore}/10</p>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-1.5">
+              <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5" /> Previous Use
+              </p>
+              <p className="text-sm font-extrabold text-slate-900">{previousUse}</p>
+              <p className="text-xs font-semibold text-slate-500">{insight.importEligibility ? "Within import age rules" : "Check age/compliance"}</p>
+            </div>
+          </div>
+
           {/* Share + Save */}
           <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             <ShareButtons title={title} price={formatPrice(car.price)} />
@@ -254,7 +340,7 @@ export default async function CarDetailPage({ params }) {
           <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
 
           {/* Mobile sticky quick actions */}
-          <div className="lg:hidden sticky bottom-3 z-30">
+          <div className="lg:hidden fixed bottom-3 inset-x-0 z-40 px-4 sm:px-6">
             <div className="rounded-2xl border border-slate-200 bg-white/95 backdrop-blur p-2 shadow-[0_14px_30px_rgba(15,23,42,0.16)] flex items-center gap-2">
               {dealer.whatsapp && (
                 <a
