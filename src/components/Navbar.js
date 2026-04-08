@@ -10,6 +10,7 @@ import {
 import { clsx } from "clsx";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
 import SearchSuggestions from "@/components/SearchSuggestions";
+import NotificationsBell from "@/components/NotificationsBell";
 
 export default function Navbar({ user }) {
   const [open,      setOpen]      = useState(false);
@@ -146,6 +147,7 @@ export default function Navbar({ user }) {
           <div className="hidden lg:flex items-center gap-4">
             {user ? (
               <div className="flex items-center gap-4">
+                <NotificationsBell variant="navbar" />
                 <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setUserMenu(!userMenu)}
@@ -257,6 +259,9 @@ export default function Navbar({ user }) {
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-1">Signed in</p>
                 <p className="text-sm font-bold text-slate-900 mb-3 truncate">{user.email}</p>
                 <div className="space-y-2">
+                  {user.role === "BUYER" && <Link href="/account?tab=enquiries" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Enquiry Alerts</Link>}
+                  {user.role === "DEALER" && <Link href="/portal/leads" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Lead Alerts</Link>}
+                  {user.role === "ADMIN" && <Link href="/admin/leads" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Lead Alerts</Link>}
                   <Link href="/account" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Profile Settings</Link>
                   <Link href="/account?tab=saved" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Watchlist</Link>
                   {user.role === "ADMIN" && <Link href="/admin" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Administration</Link>}

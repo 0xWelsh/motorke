@@ -1,6 +1,7 @@
 // src/app/api/leads/route.js
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
+import { getSessionFromRequest } from "@/lib/auth";
 import { sendLeadAlertEmail } from "@/lib/mail";
 import { NextResponse } from "next/server";
 
@@ -27,7 +28,7 @@ function buildCarTitle(car) {
   return parts.join(" ") || "Vehicle";
 }
 
-async function dispatchLeadNotifications({ lead, car, dealerId }) {
+async function dispatchLeadNotifications({ lead, car, dealerId, buyerUserId }) {
   try {
     const [dealerUsers, adminUsers] = await Promise.all([
       db.user.findMany({
@@ -69,6 +70,15 @@ async function dispatchLeadNotifications({ lead, car, dealerId }) {
         message: `${buyerName} reached out to dealer ${car?.dealer?.name || "Unknown Dealer"}.`,
         link: `/admin/leads?lead=${lead.id}`,
       })),
+      ...(buyerUserId
+        ? [{
+            userId: buyerUserId,
+            type: "LEAD_SENT",
+            title: `Enquiry sent for ${carTitle}`,
+            message: `Your enquiry was delivered to ${car?.dealer?.name || "the dealer"}.`,
+            link: "/account?tab=enquiries",
+          }]
+        : []),
     ];
 
     if (notificationRows.length) {
@@ -102,6 +112,10 @@ async function dispatchLeadNotifications({ lead, car, dealerId }) {
 
 export async function POST(request) {
   try {
+    const session = await getSessionFromRequest();
+    const buyerUserId =
+      session?.user?.id && session?.user?.role === "BUYER" ? session.user.id : null;
+
     const contentType = request.headers.get("content-type") || "";
     let body;
 
@@ -208,6 +222,7 @@ export async function POST(request) {
       lead,
       car,
       dealerId,
+      buyerUserId,
     });
 
     return NextResponse.json({ success: true, leadId: lead.id }, { status: 201 });

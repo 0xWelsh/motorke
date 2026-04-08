@@ -21,6 +21,7 @@ function formatRelativeTime(value) {
 
 export default function NotificationsBell({ variant = "portal" }) {
   const isAdmin = variant === "admin";
+  const isNavbar = variant === "navbar";
   const wrapperRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -32,11 +33,11 @@ export default function NotificationsBell({ variant = "portal" }) {
     () =>
       clsx(
         "absolute right-0 top-full mt-3 w-[360px] max-w-[90vw] rounded-2xl border shadow-2xl z-50 overflow-hidden",
-        isAdmin
+        isAdmin || isNavbar
           ? "bg-white border-slate-200 text-slate-900"
           : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
       ),
-    [isAdmin]
+    [isAdmin, isNavbar]
   );
 
   const fetchNotifications = async () => {
@@ -135,6 +136,8 @@ export default function NotificationsBell({ variant = "portal" }) {
           "transition-all relative",
           isAdmin
             ? "text-slate-600 hover:text-emerald-600"
+            : isNavbar
+              ? "w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#ff5a2f] hover:border-slate-300 flex items-center justify-center"
             : "w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center justify-center"
         )}
         title="Notifications"
@@ -144,7 +147,7 @@ export default function NotificationsBell({ variant = "portal" }) {
         {unreadCount > 0 && (
           <span className={clsx(
             "absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-bold flex items-center justify-center",
-            isAdmin
+            isAdmin || isNavbar
               ? "bg-emerald-600 text-white border-2 border-white"
               : "bg-emerald-600 text-white border-2 border-slate-50 dark:border-slate-900"
           )}>
@@ -157,11 +160,11 @@ export default function NotificationsBell({ variant = "portal" }) {
         <div className={dropdownClassName}>
           <div className={clsx(
             "px-4 py-3 border-b flex items-center justify-between",
-            isAdmin ? "border-slate-200" : "border-slate-200 dark:border-slate-800"
+            isAdmin || isNavbar ? "border-slate-200" : "border-slate-200 dark:border-slate-800"
           )}>
             <div>
               <p className="text-sm font-bold">Notifications</p>
-              <p className={clsx("text-xs", isAdmin ? "text-slate-500" : "text-slate-500 dark:text-slate-400")}>
+              <p className={clsx("text-xs", isAdmin || isNavbar ? "text-slate-500" : "text-slate-500 dark:text-slate-400")}>
                 {unreadCount > 0 ? `${unreadCount} unread` : "All caught up"}
               </p>
             </div>
@@ -179,18 +182,18 @@ export default function NotificationsBell({ variant = "portal" }) {
 
           <div className="max-h-96 overflow-auto">
             {loading ? (
-              <p className={clsx("px-4 py-6 text-sm", isAdmin ? "text-slate-500" : "text-slate-500 dark:text-slate-400")}>
+              <p className={clsx("px-4 py-6 text-sm", isAdmin || isNavbar ? "text-slate-500" : "text-slate-500 dark:text-slate-400")}>
                 Loading notifications...
               </p>
             ) : notifications.length === 0 ? (
-              <p className={clsx("px-4 py-6 text-sm", isAdmin ? "text-slate-500" : "text-slate-500 dark:text-slate-400")}>
+              <p className={clsx("px-4 py-6 text-sm", isAdmin || isNavbar ? "text-slate-500" : "text-slate-500 dark:text-slate-400")}>
                 No notifications yet.
               </p>
             ) : (
               notifications.map((item) => {
                 const itemClass = clsx(
                   "block px-4 py-3 border-b transition-colors",
-                  isAdmin
+                  isAdmin || isNavbar
                     ? "border-slate-100 hover:bg-slate-50"
                     : "border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/70",
                   item.read ? "opacity-80" : ""
@@ -202,10 +205,10 @@ export default function NotificationsBell({ variant = "portal" }) {
                       <p className="text-sm font-semibold leading-tight">{item.title}</p>
                       {!item.read && <span className="mt-1 w-2 h-2 rounded-full bg-emerald-500 shrink-0" />}
                     </div>
-                    <p className={clsx("text-xs mt-1", isAdmin ? "text-slate-600" : "text-slate-600 dark:text-slate-300")}>
+                    <p className={clsx("text-xs mt-1", isAdmin || isNavbar ? "text-slate-600" : "text-slate-600 dark:text-slate-300")}>
                       {item.message}
                     </p>
-                    <p className={clsx("text-[11px] mt-1", isAdmin ? "text-slate-500" : "text-slate-500 dark:text-slate-400")}>
+                    <p className={clsx("text-[11px] mt-1", isAdmin || isNavbar ? "text-slate-500" : "text-slate-500 dark:text-slate-400")}>
                       {formatRelativeTime(item.createdAt)}
                     </p>
                   </>
