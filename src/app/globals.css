@@ -114,6 +114,73 @@ p {
   color: #111827;
 }
 
+.mk-news-ribbon {
+  border-top: 1px solid #e8e2d9;
+  border-bottom: 1px solid #e8e2d9;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+}
+
+.mk-news-track {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: max-content;
+  will-change: transform;
+  animation: mk-news-ltr 42s linear infinite;
+}
+
+.mk-news-ribbon:hover .mk-news-track {
+  animation-play-state: paused;
+}
+
+.mk-news-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+  color: #334155;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.mk-news-item:hover {
+  color: #0f172a;
+}
+
+.mk-news-source {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.mk-news-title {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.mk-news-title::after {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin-left: 0.6rem;
+  border-radius: 999px;
+  background: #cbd5e1;
+  vertical-align: middle;
+}
+
+@keyframes mk-news-ltr {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
 /* Global de-boxing pass: reduce visual weight of repeated card/button containers */
 .shadow-sm,
 .shadow-md,
