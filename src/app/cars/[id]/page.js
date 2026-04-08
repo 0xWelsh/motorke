@@ -133,6 +133,25 @@ const getSimilarCars = unstable_cache(
   { revalidate: 3600, tags: ["cars"] }
 );
 
+const getDealerGalleryCars = unstable_cache(
+  async (dealerId, carId) => {
+    return db.car.findMany({
+      where: {
+        dealerId,
+        available: true,
+        id: { not: carId },
+      },
+      include: {
+        images: { where: { isPrimary: true }, take: 1 },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 8,
+    });
+  },
+  ["dealer-gallery-cars"],
+  { revalidate: 1800, tags: ["cars"] }
+);
+
 function batteryTechLabel(value) {
   if (!value) return null;
   if (value === "NIMH") return "NiMH";
@@ -159,6 +178,7 @@ export default async function CarDetailPage({ params }) {
 
   
   const similar = await getSimilarCars(car.id, car.make, car.dealerId, car.bodyType, car.year, car.price);
+  const dealerGalleryCars = await getDealerGalleryCars(car.dealerId, car.id);
 
   const title    = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const duty     = estimateDuty(car.price, car.year);
@@ -225,6 +245,19 @@ export default async function CarDetailPage({ params }) {
     { label: "Duty paid",     value: car.dutyPaid ? "Yes" : "No" },
   ];
 
+  const descriptionBullets = (car.description || "")
+    .split(/\r?\n|[.!?]+/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 8)
+    .slice(0, 4);
+
+  const compactSpecs = specs
+    .filter((entry) => entry.value && entry.value !== "N/A")
+    .map((entry) => `${entry.label}: ${entry.value}`);
+
+  const quickSpecs = compactSpecs.slice(0, 9);
+  const ownershipSpecs = compactSpecs.slice(9, 16);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16 pb-24 sm:pb-16">
       {/* Breadcrumb */}
@@ -241,6 +274,42 @@ export default async function CarDetailPage({ params }) {
         <div className="lg:col-span-2 space-y-8 sm:space-y-10 lg:space-y-12">
           {/* Image gallery with lightbox */}
           <ImageGallery images={car.images} title={title} />
+
+          {/* Dealer gallery */}
+          {dealerGalleryCars.length > 0 && (
+            <div className="space-y-3">
+              <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Dealer Gallery</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                {dealerGalleryCars.map((entry) => {
+                  const galleryImg = entry.images?.[0]?.url;
+                  return (
+                    <Link
+                      key={entry.id}
+                      href={`/cars/${entry.id}`}
+                      className="group block rounded-xl overflow-hidden border border-slate-200 bg-white"
+                    >
+                      <div className="relative aspect-[4/3] bg-slate-50">
+                        {galleryImg ? (
+                          <Image
+                            src={galleryImg}
+                            alt={`${entry.year} ${entry.make} ${entry.model}`}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            sizes="(max-width: 640px) 50vw, 25vw"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">No Image</div>
+                        )}
+                      </div>
+                      <div className="px-2.5 py-2">
+                        <p className="text-[10px] font-extrabold text-slate-900 truncate">{entry.year} {entry.make} {entry.model}</p>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Title + price */}
           <div className="flex flex-wrap items-start justify-between gap-4 sm:gap-6 pb-6 sm:pb-8 border-b border-slate-100">
@@ -369,38 +438,43 @@ export default async function CarDetailPage({ params }) {
             </div>
           </div>
 
-          {/* Feature badges */}
-          {car.features?.length > 0 && (
-            <div className="space-y-6">
-              <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Key Features</h3>
-              <div className="flex flex-wrap gap-3">
-                {car.features.map((f) => (
-                  <span key={f} className="text-sm bg-white border border-slate-200 rounded-lg px-4 py-2 text-slate-700 font-bold">
-                    {f}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Description */}
-          {car.description && (
-            <div className="space-y-6">
-              <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Dealer Description</h3>
-              <p className="text-slate-600 leading-relaxed text-lg font-medium max-w-3xl whitespace-pre-line">{car.description}</p>
-            </div>
-          )}
-
-          {/* Spec grid */}
-          <div className="space-y-8">
-            <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Detailed Specifications</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-              {specs.map(({ label, value }) => (
-                <div key={label} className="bg-slate-50/50 border border-slate-100 rounded-lg p-4 sm:p-5 group hover:bg-white hover:border-brand-accent/20 transition-all">
-                  <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">{label}</p>
-                  <p className="text-base font-extrabold text-slate-900">{value}</p>
+          {/* Compact vehicle snapshot */}
+          <div className="space-y-4">
+            <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Vehicle Snapshot</h3>
+            <div className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6 space-y-5">
+              {descriptionBullets.length > 0 && (
+                <div>
+                  <p className="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">Dealer Notes</p>
+                  <ul className="list-disc pl-5 space-y-1.5 text-sm font-semibold text-slate-700">
+                    {descriptionBullets.map((line, idx) => (
+                      <li key={`${line}-${idx}`}>{line}</li>
+                    ))}
+                  </ul>
                 </div>
-              ))}
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <p className="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">Core Specs</p>
+                  <ul className="list-disc pl-5 space-y-1.5 text-sm font-semibold text-slate-700">
+                    {quickSpecs.map((line) => (
+                      <li key={line}>{line}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">Ownership & Extras</p>
+                  <ul className="list-disc pl-5 space-y-1.5 text-sm font-semibold text-slate-700">
+                    {ownershipSpecs.map((line) => (
+                      <li key={line}>{line}</li>
+                    ))}
+                    {car.features?.slice(0, 6).map((feature) => (
+                      <li key={feature}>{feature}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
 
