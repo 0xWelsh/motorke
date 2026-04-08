@@ -256,42 +256,48 @@ export default async function CarDetailPage({ params }) {
           <ImageGallery images={car.images} title={title} />
 
           {/* Title + price */}
-          <div className="flex flex-wrap items-start justify-between gap-4 sm:gap-6 pb-6 sm:pb-8 border-b border-slate-100">
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <span className="px-3 py-1 rounded-lg bg-brand-light text-brand text-xs font-extrabold">{car.year}</span>
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{car.make}</span>
-              </div>
-              {trustBadges.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {trustBadges.map((badge) => (
-                    <span
-                      key={badge}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 text-[10px] font-extrabold uppercase tracking-wider"
-                    >
-                      <ShieldCheck className="w-3.5 h-3.5" /> {badge}
-                    </span>
-                  ))}
-                </div>
-              )}
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">{title}</h1>
-              <p className="text-lg text-slate-500 font-medium">
-                {BODY_TYPE_LABELS[car.bodyType] || "Body type N/A"} · {formatMileage(car.mileage)} · {car.location || dealer.location || "Location on request"}
-              </p>
-            </div>
-            <div className="text-left sm:text-right space-y-1">
-              <p className="text-3xl sm:text-4xl font-extrabold text-brand tracking-tight">{formatPrice(car.price)}</p>
-              {car.imported && !car.dutyPaid && (
-                <p className="text-sm font-extrabold text-emerald-600 uppercase tracking-widest">
-                  Est. {formatPrice(car.price + duty)} Total Landed
-                </p>
-              )}
+          <div className="space-y-4 pb-6 sm:pb-8 border-b border-slate-100">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+              <span className="inline-flex items-center mr-3 px-3 py-1 rounded-lg bg-brand-light text-brand text-xs sm:text-sm font-extrabold align-middle">
+                {car.year}
+              </span>
+              {car.make} {car.model}{car.variant ? ` ${car.variant}` : ""}
+            </h1>
+
+            <p className="text-3xl sm:text-4xl font-extrabold text-brand tracking-tight">{formatPrice(car.price)}</p>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-700 text-[10px] font-extrabold uppercase tracking-wider">
+                {BODY_TYPE_LABELS[car.bodyType] || "Body type N/A"}
+              </span>
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-700 text-[10px] font-extrabold uppercase tracking-wider">
+                {formatMileage(car.mileage)}
+              </span>
               {car.negotiable && (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md border border-slate-200 text-slate-400 text-[10px] font-extrabold uppercase tracking-widest">
-                  Negotiable Price
-                </div>
+                <span className="inline-flex items-center px-2.5 py-1 rounded-full border border-slate-200 bg-white text-slate-700 text-[10px] font-extrabold uppercase tracking-wider">
+                  Negotiable
+                </span>
               )}
+              {trustBadges.map((badge) => (
+                <span
+                  key={badge}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 text-[10px] font-extrabold uppercase tracking-wider"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" /> {badge}
+                </span>
+              ))}
             </div>
+
+            <p className="text-sm sm:text-base text-slate-600 font-semibold flex items-center gap-1.5">
+              <MapPin className="w-4 h-4 text-slate-400" />
+              {car.location || dealer.location || "Location on request"}
+            </p>
+
+            {car.imported && !car.dutyPaid && (
+              <p className="text-sm font-extrabold text-emerald-600 uppercase tracking-widest">
+                Est. {formatPrice(car.price + duty)} Total Landed
+              </p>
+            )}
 
             <div className="w-full flex flex-wrap items-center gap-3 pt-3 border-t border-slate-100">
               {dealer.whatsapp && (
