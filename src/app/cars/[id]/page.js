@@ -133,25 +133,6 @@ const getSimilarCars = unstable_cache(
   { revalidate: 3600, tags: ["cars"] }
 );
 
-const getDealerGalleryCars = unstable_cache(
-  async (dealerId, carId) => {
-    return db.car.findMany({
-      where: {
-        dealerId,
-        available: true,
-        id: { not: carId },
-      },
-      include: {
-        images: { where: { isPrimary: true }, take: 1 },
-      },
-      orderBy: { createdAt: "desc" },
-      take: 8,
-    });
-  },
-  ["dealer-gallery-cars"],
-  { revalidate: 1800, tags: ["cars"] }
-);
-
 function batteryTechLabel(value) {
   if (!value) return null;
   if (value === "NIMH") return "NiMH";
@@ -178,7 +159,6 @@ export default async function CarDetailPage({ params }) {
 
   
   const similar = await getSimilarCars(car.id, car.make, car.dealerId, car.bodyType, car.year, car.price);
-  const dealerGalleryCars = await getDealerGalleryCars(car.dealerId, car.id);
 
   const title    = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const duty     = estimateDuty(car.price, car.year);
@@ -275,38 +255,16 @@ export default async function CarDetailPage({ params }) {
           {/* Image gallery with lightbox */}
           <ImageGallery images={car.images} title={title} />
 
-          {/* Dealer gallery */}
-          {dealerGalleryCars.length > 0 && (
+          {/* Description directly below photos */}
+          {descriptionBullets.length > 0 && (
             <div className="space-y-3">
-              <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Dealer Gallery</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                {dealerGalleryCars.map((entry) => {
-                  const galleryImg = entry.images?.[0]?.url;
-                  return (
-                    <Link
-                      key={entry.id}
-                      href={`/cars/${entry.id}`}
-                      className="group block rounded-xl overflow-hidden border border-slate-200 bg-white"
-                    >
-                      <div className="relative aspect-[4/3] bg-slate-50">
-                        {galleryImg ? (
-                          <Image
-                            src={galleryImg}
-                            alt={`${entry.year} ${entry.make} ${entry.model}`}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
-                            sizes="(max-width: 640px) 50vw, 25vw"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">No Image</div>
-                        )}
-                      </div>
-                      <div className="px-2.5 py-2">
-                        <p className="text-[10px] font-extrabold text-slate-900 truncate">{entry.year} {entry.make} {entry.model}</p>
-                      </div>
-                    </Link>
-                  );
-                })}
+              <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Vehicle Description</h3>
+              <div className="rounded-xl border border-slate-200 bg-white p-5">
+                <ul className="list-disc pl-5 space-y-1.5 text-sm font-semibold text-slate-700">
+                  {descriptionBullets.map((line, idx) => (
+                    <li key={`${line}-${idx}`}>{line}</li>
+                  ))}
+                </ul>
               </div>
             </div>
           )}
@@ -360,6 +318,12 @@ export default async function CarDetailPage({ params }) {
                   <MessageCircle className="w-4 h-4 fill-current" /> WhatsApp Dealer
                 </a>
               )}
+              <Link
+                href={`/dealers/${dealer.slug}#dealer-gallery`}
+                className="h-11 px-4 rounded-xl border border-slate-200 bg-white text-slate-700 text-xs font-extrabold uppercase tracking-[0.12em] inline-flex items-center justify-center"
+              >
+                View Dealer Gallery
+              </Link>
               <CompareButton car={compareCar} />
               <SaveButton carId={car.id} initialSaved={isSaved} isLoggedIn={isLoggedIn} />
             </div>
@@ -442,17 +406,6 @@ export default async function CarDetailPage({ params }) {
           <div className="space-y-4">
             <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-[0.2em]">Vehicle Snapshot</h3>
             <div className="rounded-xl border border-slate-200 bg-white p-5 sm:p-6 space-y-5">
-              {descriptionBullets.length > 0 && (
-                <div>
-                  <p className="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">Dealer Notes</p>
-                  <ul className="list-disc pl-5 space-y-1.5 text-sm font-semibold text-slate-700">
-                    {descriptionBullets.map((line, idx) => (
-                      <li key={`${line}-${idx}`}>{line}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <p className="text-[11px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">Core Specs</p>

@@ -36,6 +36,15 @@ export default async function DealerPage({ params }) {
   const makes = [...new Set(dealer.cars.map((c) => c.make))];
   const primaryUser = dealer.users?.[0] || null;
   const brandImage = dealer.logoUrl || primaryUser?.avatarUrl || null;
+  const dealerGallery = dealer.cars
+    .filter((entry) => entry.images?.[0]?.url)
+    .map((entry) => ({
+      id: entry.id,
+      title: `${entry.year} ${entry.make} ${entry.model}${entry.variant ? ` ${entry.variant}` : ""}`,
+      image: entry.images[0]?.url,
+      price: entry.price,
+    }))
+    .slice(0, 18);
   const contactLinks = [
     dealer.phone ? { href: `tel:${dealer.phone}`, label: "Call", icon: <Phone className="w-4 h-4" /> } : null,
     dealer.whatsapp ? { href: `https://wa.me/${dealer.whatsapp}`, label: "WhatsApp", icon: <MessageCircle className="w-4 h-4" />, external: true } : null,
@@ -182,6 +191,32 @@ export default async function DealerPage({ params }) {
           </div>
         )}
 
+        {dealerGallery.length > 0 && (
+          <section id="dealer-gallery" className="scroll-mt-24 py-2 pb-10 border-b border-[#ece6dd]">
+            <div className="flex items-end justify-between gap-4 mb-6">
+              <div>
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500 mb-2">Dealer Gallery</p>
+                <h2 className="text-2xl sm:text-3xl text-slate-900 tracking-tight">Inside {dealer.name}</h2>
+              </div>
+              <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500">{dealerGallery.length} showcase photos</p>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              {dealerGallery.map((item) => (
+                <Link key={item.id} href={`/cars/${item.id}`} className="group block rounded-2xl border border-[#ece6dd] overflow-hidden bg-white">
+                  <div className="relative aspect-[4/3] bg-slate-50">
+                    <Image src={item.image} alt={item.title} fill className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" sizes="(max-width: 768px) 50vw, 16vw" />
+                  </div>
+                  <div className="px-2.5 py-2.5">
+                    <p className="text-[10px] font-extrabold text-slate-800 truncate">{item.title}</p>
+                    <p className="text-[10px] font-bold text-slate-500 mt-0.5">{formatPrice(item.price)}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
         <section className="pt-2 pb-10">
           <div className="flex items-end justify-between gap-4 mb-6">
             <div>
@@ -254,6 +289,13 @@ export default async function DealerPage({ params }) {
                         </div>
 
                         <CompareButton car={compareCar} />
+                        {dealerGallery.length > 0 && (
+                          <div className="mt-2">
+                            <Link href={`/dealers/${dealer.slug}#dealer-gallery`} className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-600 hover:text-black transition-colors">
+                              View Dealer Gallery <ChevronRight className="w-3.5 h-3.5" />
+                            </Link>
+                          </div>
+                        )}
                       </div>
 
                       <div className="md:text-right">
