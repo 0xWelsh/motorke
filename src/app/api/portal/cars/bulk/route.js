@@ -8,6 +8,7 @@ const VALID_TRANS = ["AUTOMATIC", "MANUAL", "CVT"];
 const VALID_BODY = ["SEDAN", "SUV", "HATCHBACK", "PICKUP", "VAN", "WAGON", "COUPE", "CONVERTIBLE", "BUS", "TRUCK"];
 const VALID_DRIVETRAIN = ["FWD", "RWD", "AWD", "FOURWD"];
 const VALID_STEERING = ["RHD", "LHD"];
+const VALID_HYBRID_BATTERY = ["NIMH", "LI_ION", "OTHER", "NA"];
 
 function normalizeRow(raw) {
   return Object.fromEntries(Object.entries(raw || {}).map(([k, v]) => [k.toLowerCase(), v]));
@@ -44,6 +45,9 @@ export async function POST(request) {
         const bodyType = String(row.bodytype || "SEDAN").toUpperCase();
         const drivetrain = String(row.drivetrain || row.drivetype || "FWD").toUpperCase();
         const steering = String(row.steering || "RHD").toUpperCase();
+        const hybridBatteryTech = row.hybridbatterytech
+          ? String(row.hybridbatterytech).toUpperCase().trim()
+          : null;
 
         if (!row.make || !row.model || !row.year || !row.price) {
           throw new Error("Missing required columns: make, model, year, price");
@@ -51,6 +55,9 @@ export async function POST(request) {
         if (!VALID_FUEL.includes(fuelType)) throw new Error(`Invalid fuelType: ${fuelType}`);
         if (!VALID_TRANS.includes(transmission)) throw new Error(`Invalid transmission: ${transmission}`);
         if (!VALID_BODY.includes(bodyType)) throw new Error(`Invalid bodyType: ${bodyType}`);
+        if (hybridBatteryTech && !VALID_HYBRID_BATTERY.includes(hybridBatteryTech)) {
+          throw new Error(`Invalid hybridBatteryTech: ${hybridBatteryTech}`);
+        }
 
         const features = row.features
           ? String(row.features).split(";").map((f) => f.trim()).filter(Boolean)
@@ -72,6 +79,13 @@ export async function POST(request) {
             drivetrain: VALID_DRIVETRAIN.includes(drivetrain) ? drivetrain : "FWD",
             steering: VALID_STEERING.includes(steering) ? steering : "RHD",
             engineCC: row.enginecc ? parseInt(row.enginecc, 10) : null,
+            groundClearanceMm: row.groundclearancemm ? parseInt(row.groundclearancemm, 10) : null,
+            hybridBatteryTech,
+            spareAvailability: row.spareavailability ? parseInt(row.spareavailability, 10) : null,
+            importEligibility:
+              row.importeligibility === undefined || row.importeligibility === null || row.importeligibility === ""
+                ? null
+                : parseBool(row.importeligibility, true),
             color: row.color ? String(row.color).trim() : null,
             seats: row.seats ? parseInt(row.seats, 10) : null,
             description: row.description ? String(row.description).trim() : null,

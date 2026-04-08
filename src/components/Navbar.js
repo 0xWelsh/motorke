@@ -99,13 +99,14 @@ export default function Navbar({ user }) {
           {/* LOGO */}
           <Link href="/" className="flex items-center gap-3 shrink-0 group transition-transform active:scale-95">
             <img src="/favicon.svg" alt="Motorke" className="h-9 w-9 sm:h-10 sm:w-10 object-contain rounded-xl" />
-            <span aria-label="Motorke" className="inline-flex items-center">
-              <span className="text-[16px] sm:text-[20px] md:text-[22px] leading-none font-black uppercase tracking-[0.16em] sm:tracking-[0.2em] text-slate-900">MOTOR</span>
-              <span className="text-[16px] sm:text-[20px] md:text-[22px] leading-none font-black uppercase tracking-[0.16em] sm:tracking-[0.2em] text-[#ff5a2f]">KE</span>
-            </span>
-            <div className="hidden 2xl:block">
-              <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-900 leading-none">Digital Showroom</p>
-              <p className="text-[10px] font-semibold tracking-wide text-slate-500 mt-1">Dealership Marketplace</p>
+            <div className="flex flex-col">
+              <span aria-label="Motorke" className="inline-flex items-center">
+                <span className="text-[16px] sm:text-[20px] md:text-[22px] leading-none font-black uppercase tracking-[0.16em] sm:tracking-[0.2em] text-slate-900">MOTOR</span>
+                <span className="text-[16px] sm:text-[20px] md:text-[22px] leading-none font-black uppercase tracking-[0.16em] sm:tracking-[0.2em] text-[#ff5a2f]">KE</span>
+              </span>
+              <p className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-600 mt-1 leading-none">
+                Digital Showroom
+              </p>
             </div>
           </Link>
 
@@ -222,10 +223,15 @@ export default function Navbar({ user }) {
             <div className="flex items-center justify-between mb-6">
               <div className="inline-flex items-center gap-2.5">
                 <img src="/favicon.svg" alt="Motorke" className="h-8 w-8 object-contain rounded-lg" />
-                <span className="inline-flex items-center">
-                  <span className="text-[16px] leading-none font-black uppercase tracking-[0.16em] text-slate-900">MOTOR</span>
-                  <span className="text-[16px] leading-none font-black uppercase tracking-[0.16em] text-[#ff5a2f]">KE</span>
-                </span>
+                <div className="flex flex-col">
+                  <span className="inline-flex items-center">
+                    <span className="text-[16px] leading-none font-black uppercase tracking-[0.16em] text-slate-900">MOTOR</span>
+                    <span className="text-[16px] leading-none font-black uppercase tracking-[0.16em] text-[#ff5a2f]">KE</span>
+                  </span>
+                  <p className="text-[9px] font-extrabold uppercase tracking-[0.18em] text-slate-600 mt-1 leading-none">
+                    Digital Showroom
+                  </p>
+                </div>
               </div>
               <button onClick={() => setOpen(false)} className="w-10 h-10 bg-white border border-[#e7e1d8] text-slate-700 rounded-xl flex items-center justify-center">
                 <X className="w-5 h-5" />

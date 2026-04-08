@@ -162,6 +162,10 @@ model Car {
   cylinders      Int?
   horsepower     Int?
   steering       Steering      @default(RHD)
+  groundClearanceMm Int?
+  hybridBatteryTech HybridBatteryTech?
+  spareAvailability Int?
+  importEligibility Boolean?
   sunroof        Boolean       @default(false)
   torque         Int?
   turbo          Boolean       @default(false)
@@ -299,6 +303,13 @@ enum FuelType {
   HYBRID
   ELECTRIC
   LPG
+}
+
+enum HybridBatteryTech {
+  NIMH
+  LI_ION
+  OTHER
+  NA
 }
 
 enum Transmission {

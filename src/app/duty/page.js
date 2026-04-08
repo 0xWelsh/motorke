@@ -1,74 +1,28 @@
 "use client";
 // src/app/duty/page.js
-// Full Kenya KRA import duty calculator
-// Based on: CIF value → IDF (2.25%) → EX (20%) → Excise (25%) → VAT (16%) → RDL + IDF levy
+// Kenya import duty calculator with online-rate fallback support
 
-import { useState } from "react";
-
-const RATES = {
-  idf:    0.0225,  // Import Declaration Fee
-  ex:     0.20,    // Excise Duty (most cars)
-  excise: 0.25,    // Excise Value Added
-  vat:    0.16,    // VAT
-  rdl:    10000,   // Railway Development Levy (flat KES)
-};
-
-// Depreciation schedule (KRA)
-function depreciate(value, ageYears) {
-  if (ageYears <= 1)  return value * 0.90;
-  if (ageYears <= 2)  return value * 0.80;
-  if (ageYears <= 3)  return value * 0.70;
-  if (ageYears <= 4)  return value * 0.60;
-  if (ageYears <= 5)  return value * 0.50;
-  if (ageYears <= 6)  return value * 0.40;
-  if (ageYears <= 7)  return value * 0.30;
-  return value * 0.30; // minimum 30% of original
-}
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { Banknote, Car, ChevronRight, ShieldCheck } from "lucide-react";
+import { calculateDutyBreakdown, getAgeYearsFromYear, getDefaultDutyRates } from "@/lib/duty";
 
 function fmt(n) {
   return "KSh " + Math.round(n).toLocaleString("en-KE");
 }
 
-function calcDuty({ cifKes, ageYears, engineCC, isElectric }) {
-  const customsValue = depreciate(cifKes, ageYears);
-
-  // Import Declaration Fee
-  const idf = customsValue * RATES.idf;
-
-  // Excise Duty — based on engine size
-  let exciseRate = 0.20;
-  if (isElectric)         exciseRate = 0.10;
-  else if (engineCC > 3000) exciseRate = 0.30;
-  else if (engineCC > 2000) exciseRate = 0.25;
-  else if (engineCC > 1500) exciseRate = 0.20;
-  else                    exciseRate = 0.15;
-
-  const excise = customsValue * exciseRate;
-
-  // VAT on (customs value + IDF + excise)
-  const vatBase = customsValue + idf + excise;
-  const vat = vatBase * RATES.vat;
-
-  // Railway Development Levy
-  const rdl = RATES.rdl;
-
-  const total = idf + excise + vat + rdl;
-  const landed = cifKes + total; // original purchase price + all duties
-
-  return {
-    customsValue,
-    idf,
-    excise,
-    exciseRate,
-    vat,
-    rdl,
-    total,
-    landed,
-  };
-}
-
 export default function DutyCalculatorPage() {
   const currentYear = new Date().getFullYear();
+  const [rates, setRates] = useState(() => getDefaultDutyRates());
+  const [ratesMeta, setRatesMeta] = useState({
+    source: "local-default",
+    effectiveFrom: null,
+    lastUpdated: null,
+    fallback: true,
+    stale: false,
+    error: null,
+  });
+  const [ratesLoading, setRatesLoading] = useState(true);
 
   const [cifUsd,      setCifUsd]      = useState(15000);
   const [exchangeRate, setExchangeRate] = useState(130);
@@ -76,16 +30,52 @@ export default function DutyCalculatorPage() {
   const [engineCC,    setEngineCC]    = useState(2000);
   const [isElectric,  setIsElectric]  = useState(false);
 
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadRates() {
+      try {
+        const response = await fetch("/api/duty/rates", { cache: "no-store" });
+        if (!response.ok) throw new Error("Unable to fetch online duty rates");
+
+        const data = await response.json();
+        if (!mounted) return;
+
+        if (data?.rates) setRates(data.rates);
+        if (data?.meta) setRatesMeta(data.meta);
+      } catch (error) {
+        if (!mounted) return;
+        setRatesMeta((prev) => ({
+          ...prev,
+          fallback: true,
+          stale: true,
+          error: error?.message || "Unable to fetch online duty rates",
+        }));
+      } finally {
+        if (mounted) setRatesLoading(false);
+      }
+    }
+
+    loadRates();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   const cifKes  = cifUsd * exchangeRate;
-  const ageYears = currentYear - year;
-  const result  = calcDuty({ cifKes, ageYears, engineCC, isElectric });
+  const ageYears = getAgeYearsFromYear(year);
+  const result = useMemo(
+    () => calculateDutyBreakdown({ cifKes, ageYears, engineCC, isElectric, rates }),
+    [cifKes, ageYears, engineCC, isElectric, rates]
+  );
 
   const rows = [
     { label: "CIF value (purchase + freight + insurance)", value: fmt(cifKes), note: null, highlight: false },
     { label: "Customs value after depreciation", value: fmt(result.customsValue), note: `${ageYears} year${ageYears !== 1 ? "s" : ""} old`, highlight: false },
-    { label: "Import Declaration Fee (IDF) 2.25%", value: fmt(result.idf), note: null, highlight: false },
-    { label: `Excise Duty ${(result.exciseRate * 100).toFixed(0)}%`, value: fmt(result.excise), note: isElectric ? "EV rate" : engineCC > 3000 ? ">3000cc" : engineCC > 2000 ? ">2000cc" : engineCC > 1500 ? ">1500cc" : "≤1500cc", highlight: false },
-    { label: "VAT 16% (on customs + IDF + excise)", value: fmt(result.vat), note: null, highlight: false },
+    { label: `Import Declaration Fee (IDF) ${(rates.idfRate * 100).toFixed(2)}%`, value: fmt(result.idf), note: null, highlight: false },
+    { label: `Excise Duty ${(result.exciseRate * 100).toFixed(0)}%`, value: fmt(result.excise), note: result.exciseLabel, highlight: false },
+    { label: `VAT ${(rates.vatRate * 100).toFixed(0)}% (on customs + IDF + excise)`, value: fmt(result.vat), note: null, highlight: false },
     { label: "Railway Development Levy (RDL)", value: fmt(result.rdl), note: "flat rate", highlight: false },
     { label: "Total import duties", value: fmt(result.total), note: null, highlight: true },
     { label: "Estimated landed cost", value: fmt(result.landed), note: "purchase price + all duties", highlight: true },
@@ -97,7 +87,7 @@ export default function DutyCalculatorPage() {
     <div className="max-w-4xl mx-auto px-6 py-20">
       <div className="mb-12 space-y-4">
         <div className="inline-flex items-center gap-2 bg-brand-light border border-brand-accent/20 text-brand text-xs font-extrabold px-4 py-2 rounded-xl uppercase tracking-widest shadow-sm">
-          🧾 KRA Rates · 2026 Estimate
+          {ratesLoading ? "Updating rates..." : ratesMeta.fallback ? "Using fallback rates" : "Online rates active"}
         </div>
         <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">Import Duty Calculator</h1>
         <p className="text-lg text-slate-500 font-medium max-w-2xl leading-relaxed">
@@ -214,6 +204,16 @@ export default function DutyCalculatorPage() {
         <div className="flex items-center gap-3 text-brand font-extrabold text-xs uppercase tracking-widest">
            <ShieldCheck className="w-4 h-4" /> Important Disclaimer
         </div>
+        <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">
+          Rate source: {ratesMeta.source || "local-default"}
+          {ratesMeta.effectiveFrom ? ` · effective ${ratesMeta.effectiveFrom}` : ""}
+          {ratesMeta.lastUpdated ? ` · updated ${new Date(ratesMeta.lastUpdated).toLocaleString("en-KE")}` : ""}
+        </p>
+        {ratesMeta.error && (
+          <p className="text-xs text-amber-700 font-semibold">
+            Online rates are unavailable right now. Showing safe fallback values.
+          </p>
+        )}
         <p className="text-sm text-slate-500 font-medium leading-relaxed">
           This calculator provides estimates based on publicly available KRA duty rates and depreciation schedules. 
           Actual duties may vary based on specific classification, CRSP values, and assessment at the port of entry. 

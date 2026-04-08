@@ -2,7 +2,17 @@
 // src/app/compare/CompareClient.js
 import { useEffect, useMemo, useState } from "react";
 import { useCompare } from "@/components/CompareContext";
-import { formatPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/utils";
+import {
+  formatPrice,
+  formatMileage,
+  BODY_TYPE_LABELS,
+  FUEL_LABELS,
+  HYBRID_BATTERY_LABELS,
+  TRANSMISSION_LABELS,
+  STEERING_LABELS,
+  DRIVETRAIN_LABELS,
+} from "@/lib/utils";
+import { computeComparisonInsights } from "@/lib/comparison";
 import Link from "next/link";
 import Image from "next/image";
 import { Search, X, Check, ArrowRight, Minus } from "lucide-react";
@@ -21,13 +31,6 @@ const SEVERITY_STYLES = {
   minor: "text-amber-300 border-amber-300/35 bg-amber-400/10",
   moderate: "text-orange-300 border-orange-300/35 bg-orange-400/10",
   major: "text-rose-300 border-rose-300/35 bg-rose-400/10",
-};
-
-const FUEL_ECO_SCORE = {
-  ELECTRIC: 4,
-  HYBRID: 3,
-  PETROL: 2,
-  DIESEL: 1,
 };
 
 function yesNo(value) {
@@ -174,6 +177,15 @@ export default function CompareClient({ initialCars }) {
     return comparedSlots.filter((car) => car && initialCarsById.has(car.id));
   }, [comparedSlots, initialCarsById]);
 
+  const insightsMap = useMemo(() => {
+    return new Map(fullComparedCars.map((car) => [car.id, computeComparisonInsights(car)]));
+  }, [fullComparedCars]);
+
+  function getInsights(car) {
+    if (!car) return null;
+    return insightsMap.get(car.id) || computeComparisonInsights(car);
+  }
+
   const specGroups = [
     {
       name: "Core",
@@ -220,6 +232,32 @@ export default function CompareClient({ initialCars }) {
         { id: "dealerVerified", label: "Dealer verified", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: yesNo(c?.dealer?.verified), raw: c?.dealer?.verified }), rank: "booltrue" },
       ],
     },
+    {
+      name: "Kenya Ops Intelligence",
+      specs: [
+        { id: "groundClearance", label: "Ground clearance", tags: ["all", "city", "longtrip", "family"], pick: (c) => ({ value: c?.groundClearanceMm ? `${c.groundClearanceMm} mm` : "N/A", raw: c?.groundClearanceMm }), rank: "max" },
+        { id: "roadSuitability", label: "Road suitability", tags: ["all", "city", "longtrip", "family"], pick: (c) => ({ value: `${getInsights(c)?.roadSuitabilityScore ?? "N/A"}/100`, raw: getInsights(c)?.roadSuitabilityScore }), rank: "max" },
+        { id: "spares", label: "Spare availability", tags: ["all", "city", "longtrip", "family"], pick: (c) => ({ value: `${getInsights(c)?.spareAvailabilityScore ?? "N/A"}/10`, raw: getInsights(c)?.spareAvailabilityScore }), rank: "max" },
+        {
+          id: "batteryTech",
+          label: "Hybrid battery tech",
+          tags: ["all", "city", "family"],
+          pick: (c) => {
+            if (c?.fuelType !== "HYBRID") return { value: "N/A", raw: null };
+            return {
+              value: HYBRID_BATTERY_LABELS[c?.hybridBatteryTech] || "N/A",
+              raw: c?.hybridBatteryTech || null,
+            };
+          },
+        },
+        { id: "importEligibility", label: "Import eligibility", tags: ["all", "city", "longtrip"], pick: (c) => ({ value: yesNo(getInsights(c)?.importEligibility), raw: getInsights(c)?.importEligibility }), rank: "booltrue" },
+        { id: "trafficFactor", label: "Traffic fuel factor", tags: ["all", "city", "longtrip"], pick: (c) => ({ value: `${((getInsights(c)?.tco?.trafficMultiplier ?? 1) * 100 - 100).toFixed(0)}%`, raw: getInsights(c)?.tco?.trafficMultiplier }), rank: "min" },
+        { id: "annualFuel", label: "Annual energy cost", tags: ["all", "city", "longtrip"], pick: (c) => ({ value: formatPrice(getInsights(c)?.tco?.annualFuelCost || 0), raw: getInsights(c)?.tco?.annualFuelCost }), rank: "min" },
+        { id: "annualInsurance", label: "Annual insurance", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: formatPrice(getInsights(c)?.tco?.annualInsurance || 0), raw: getInsights(c)?.tco?.annualInsurance }), rank: "min" },
+        { id: "annualMaintenance", label: "Annual maintenance", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: formatPrice(getInsights(c)?.tco?.annualMaintenance || 0), raw: getInsights(c)?.tco?.annualMaintenance }), rank: "min" },
+        { id: "annualTco", label: "Annual TCO", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: formatPrice(getInsights(c)?.tco?.annualTotal || 0), raw: getInsights(c)?.tco?.annualTotal }), rank: "min" },
+      ],
+    },
   ];
 
   const allSpecs = useMemo(() => specGroups.flatMap((group) => group.specs), [specGroups]);
@@ -232,6 +270,8 @@ export default function CompareClient({ initialCars }) {
     const valueMap = new Map();
 
     cars.forEach((car) => {
+      const insight = insightsMap.get(car.id);
+
       const perf = (
         normalizeScore(cars, (x) => x.horsepower, car.id, true) * 0.4 +
         normalizeScore(cars, (x) => x.torque, car.id, true) * 0.3 +
@@ -247,16 +287,17 @@ export default function CompareClient({ initialCars }) {
       );
 
       const economy = (
-        normalizeScore(cars, (x) => x.mileage, car.id, false) * 0.45 +
-        normalizeScore(cars, (x) => FUEL_ECO_SCORE[x.fuelType] ?? 1, car.id, true) * 0.25 +
-        (car.dutyPaid ? 1 : 0) * 0.2 +
-        normalizeScore(cars, (x) => x.price, car.id, false) * 0.1
+        normalizeScore(cars, (x) => insightsMap.get(x.id)?.tco?.annualTotal, car.id, false) * 0.52 +
+        normalizeScore(cars, (x) => insightsMap.get(x.id)?.spareAvailabilityScore, car.id, true) * 0.14 +
+        normalizeScore(cars, (x) => insightsMap.get(x.id)?.roadSuitabilityScore, car.id, true) * 0.14 +
+        (insight?.importEligibility ? 1 : 0) * 0.2
       );
 
       const value = (
-        normalizeScore(cars, (x) => x.price, car.id, false) * 0.5 +
-        normalizeScore(cars, (x) => x.mileage, car.id, false) * 0.3 +
-        normalizeScore(cars, (x) => x.year, car.id, true) * 0.2
+        normalizeScore(cars, (x) => x.price, car.id, false) * 0.35 +
+        normalizeScore(cars, (x) => insightsMap.get(x.id)?.tco?.annualTotal, car.id, false) * 0.4 +
+        normalizeScore(cars, (x) => x.mileage, car.id, false) * 0.1 +
+        normalizeScore(cars, (x) => x.year, car.id, true) * 0.15
       );
 
       performanceMap.set(car.id, perf);
@@ -290,7 +331,7 @@ export default function CompareClient({ initialCars }) {
       valueMap,
       overallMap,
     };
-  }, [fullComparedCars, preset]);
+  }, [fullComparedCars, insightsMap, preset]);
 
   const rankedCars = useMemo(() => {
     return [...fullComparedCars]
@@ -315,8 +356,21 @@ export default function CompareClient({ initialCars }) {
   }
 
   const winnerPerformance = winnerFromMap(scoreMaps.performanceMap);
-  const winnerEconomy = winnerFromMap(scoreMaps.economyMap);
-  const winnerComfort = winnerFromMap(scoreMaps.comfortMap);
+  const winnerRoad = useMemo(() => {
+    const items = fullComparedCars
+      .map((car) => ({ car, score: insightsMap.get(car.id)?.roadSuitabilityScore }))
+      .filter((entry) => typeof entry.score === "number")
+      .sort((a, b) => b.score - a.score);
+    return items[0]?.car || null;
+  }, [fullComparedCars, insightsMap]);
+
+  const winnerLowestTco = useMemo(() => {
+    const items = fullComparedCars
+      .map((car) => ({ car, tco: insightsMap.get(car.id)?.tco?.annualTotal }))
+      .filter((entry) => typeof entry.tco === "number")
+      .sort((a, b) => a.tco - b.tco);
+    return items[0]?.car || null;
+  }, [fullComparedCars, insightsMap]);
 
   const winnerRail = [
     {
@@ -330,14 +384,14 @@ export default function CompareClient({ initialCars }) {
       sub: winnerPerformance ? `${Math.round((scoreMaps.performanceMap.get(winnerPerformance.id) || 0) * 100)} pts` : "N/A",
     },
     {
-      title: "Best Economy",
-      car: winnerEconomy,
-      sub: winnerEconomy ? `${Math.round((scoreMaps.economyMap.get(winnerEconomy.id) || 0) * 100)} pts` : "N/A",
+      title: "Lowest Annual TCO",
+      car: winnerLowestTco,
+      sub: winnerLowestTco ? formatPrice(insightsMap.get(winnerLowestTco.id)?.tco?.annualTotal || 0) : "N/A",
     },
     {
-      title: "Best Comfort",
-      car: winnerComfort,
-      sub: winnerComfort ? `${Math.round((scoreMaps.comfortMap.get(winnerComfort.id) || 0) * 100)} pts` : "N/A",
+      title: "Most Road Ready",
+      car: winnerRoad,
+      sub: winnerRoad ? `${insightsMap.get(winnerRoad.id)?.roadSuitabilityScore || 0}/100` : "N/A",
     },
   ];
 

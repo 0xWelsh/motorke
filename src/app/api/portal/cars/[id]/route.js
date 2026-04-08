@@ -4,6 +4,15 @@ import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
+function parseOptionalBool(value) {
+  if (value === null || value === undefined || value === "") return null;
+  if (typeof value === "string") {
+    const normalized = value.toLowerCase();
+    return !(normalized === "false" || normalized === "0" || normalized === "no");
+  }
+  return Boolean(value);
+}
+
 export async function PUT(request, { params }) {
   const { id } = await params;
   const session = await getSessionFromRequest();
@@ -22,6 +31,7 @@ export async function PUT(request, { params }) {
     const {
       make, model, variant, year, price, mileage, condition,
       fuelType, transmission, bodyType, engineCC, drivetrain, steering,
+      groundClearanceMm, hybridBatteryTech, spareAvailability, importEligibility,
       cylinders, horsepower, torque, turbo, sunroof, airbags,
       color, seats, description, features, badges, images,
       negotiable, dutyPaid, imported,
@@ -42,6 +52,10 @@ export async function PUT(request, { params }) {
         transmission,
         bodyType,
         engineCC:     engineCC ? parseInt(engineCC) : null,
+        groundClearanceMm: groundClearanceMm ? parseInt(groundClearanceMm) : null,
+        hybridBatteryTech: hybridBatteryTech || null,
+        spareAvailability: spareAvailability ? parseInt(spareAvailability) : null,
+        importEligibility: parseOptionalBool(importEligibility),
         cylinders:    cylinders ? parseInt(cylinders) : null,
         horsepower:   horsepower ? parseInt(horsepower) : null,
         torque:       torque ? parseInt(torque) : null,

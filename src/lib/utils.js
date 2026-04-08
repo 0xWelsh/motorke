@@ -1,4 +1,5 @@
 // src/lib/utils.js
+import { estimateDuty as estimateDutyCore } from "./duty";
 
 /** Format KES price → "KSh 4,200,000" */
 export function formatPrice(amount) {
@@ -13,15 +14,7 @@ export function formatMileage(km) {
 
 /** Rough import duty estimate (simplified Kenya KRA formula for illustration) */
 export function estimateDuty(price, year) {
-  const age = new Date().getFullYear() - year;
-  // Kenya depreciates customs value: 10% per year after yr 1, capped at 70%
-  const depreciation = Math.min(age * 0.10, 0.70);
-  const customsValue = price * (1 - depreciation);
-  const importDuty    = customsValue * 0.25;  // 25% IDF
-  const exciseDuty    = customsValue * 0.20;  // 20% excise
-  const vat           = (customsValue + importDuty + exciseDuty) * 0.16; // 16% VAT
-  const rdl           = 10000; // Registration & road levies (KES)
-  return Math.round(importDuty + exciseDuty + vat + rdl);
+  return estimateDutyCore(price, year);
 }
 
 /** Body type → human label (Expanded for precision) */
@@ -44,6 +37,13 @@ export const FUEL_LABELS = {
   HYBRID:  "Hybrid",
   ELECTRIC:"Electric",
   LPG:     "LPG",
+};
+
+export const HYBRID_BATTERY_LABELS = {
+  NIMH: "NiMH",
+  LI_ION: "Li-ion",
+  OTHER: "Other",
+  NA: "N/A",
 };
 
 export const TRANSMISSION_LABELS = {

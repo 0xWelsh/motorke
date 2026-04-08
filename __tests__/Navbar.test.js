@@ -18,9 +18,9 @@ describe('Navbar Component', () => {
   it('renders sign in and sign up links when no user is provided', () => {
     render(<Navbar user={null} />);
     
-    // Check for Sign In and Join Standard links
+    // Check for Sign In and For Dealers links
     expect(screen.getByRole('link', { name: /sign in/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /join standard/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /for dealers/i })).toBeInTheDocument();
   });
 
   it('renders user menu when user is provided', () => {

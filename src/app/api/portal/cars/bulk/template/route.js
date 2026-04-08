@@ -4,13 +4,14 @@ export async function GET() {
   const headers = [
     "make", "model", "variant", "year", "price", "mileage",
     "condition", "fuelType", "transmission", "bodyType", "drivetrain", "steering",
-    "engineCC", "color", "seats", "features", "description", "imageUrl",
+    "engineCC", "groundClearanceMm", "hybridBatteryTech", "spareAvailability", "importEligibility",
+    "color", "seats", "features", "description", "imageUrl",
     "negotiable", "dutyPaid", "imported", "importCountry",
   ];
 
   const examples = [
-    ["Toyota", "Harrier", "2.0 Premium", "2020", "4200000", "38000", "USED", "PETROL", "AUTOMATIC", "SUV", "FWD", "RHD", "1998", "Pearl White", "5", "Sunroof;Leather Seats;Reverse Camera;Apple CarPlay", "Clean unit with full service history.", "", "true", "true", "true", "Japan"],
-    ["Subaru", "Forester", "2.0i EyeSight", "2019", "2850000", "39000", "USED", "PETROL", "CVT", "SUV", "AWD", "RHD", "1995", "Dark Blue", "5", "AWD;EyeSight;Panoramic Roof", "Safety package and good condition.", "", "true", "true", "true", "Japan"],
+    ["Toyota", "Harrier", "2.0 Premium", "2020", "4200000", "38000", "USED", "PETROL", "AUTOMATIC", "SUV", "FWD", "RHD", "1998", "190", "NA", "9", "true", "Pearl White", "5", "Sunroof;Leather Seats;Reverse Camera;Apple CarPlay", "Clean unit with full service history.", "", "true", "true", "true", "Japan"],
+    ["Toyota", "Aqua", "S", "2019", "1800000", "61000", "USED", "HYBRID", "AUTOMATIC", "HATCHBACK", "FWD", "RHD", "1490", "140", "NIMH", "9", "true", "Silver", "5", "Hybrid;Reverse Camera;Lane Assist", "Efficient city hybrid with clean history.", "", "true", "true", "true", "Japan"],
   ];
 
   const rows = [headers.join(",")];

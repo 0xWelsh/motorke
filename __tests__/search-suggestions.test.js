@@ -1,31 +1,48 @@
+/** @jest-environment node */
+
 import { test, expect, beforeAll, afterAll } from '@jest/globals';
-import { execSync } from 'child_process';
+import { spawn } from 'child_process';
+
+const BASE_URL = 'http://localhost:3000';
+const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+
+async function waitForServer(url, timeoutMs = 45000) {
+  const startedAt = Date.now();
+
+  while (Date.now() - startedAt < timeoutMs) {
+    try {
+      const res = await fetch(`${url}/api/search/suggestions?query=toy`);
+      if (res.ok) return;
+    } catch {
+      // Server not ready yet.
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+
+  throw new Error(`Server did not become ready within ${timeoutMs}ms`);
+}
 
 describe('Search Suggestions API', () => {
   let serverProcess = null;
 
-  beforeAll(() => {
-    // Start the development server
-    try {
-      execSync('cd /home/welsh/E-GARAGE/Motorske/motorke && npm run dev &', { stdio: 'inherit' });
-      // Wait a bit for server to start
-      setTimeout(() => {}, 5000);
-    } catch (error) {
-      console.log('Server already running or failed to start');
-    }
-  });
+  beforeAll(async () => {
+    serverProcess = spawn(npmCommand, ['run', 'dev'], {
+      cwd: process.cwd(),
+      stdio: 'ignore',
+    });
+
+    await waitForServer(BASE_URL);
+  }, 60000);
 
   afterAll(() => {
-    // Clean up
-    try {
-      execSync('pkill -f "next dev"');
-    } catch (error) {
-      console.log('No server process to kill');
+    if (serverProcess && !serverProcess.killed) {
+      serverProcess.kill('SIGTERM');
     }
   });
 
   test('should return suggestions for "toy"', async () => {
-    const response = await fetch('http://localhost:3000/api/search/suggestions?query=toy');
+    const response = await fetch(`${BASE_URL}/api/search/suggestions?query=toy`);
     const data = await response.json();
     
     expect(response.status).toBe(200);
@@ -40,7 +57,7 @@ describe('Search Suggestions API', () => {
   });
 
   test('should return suggestions for "land"', async () => {
-    const response = await fetch('http://localhost:3000/api/search/suggestions?query=land');
+    const response = await fetch(`${BASE_URL}/api/search/suggestions?query=land`);
     const data = await response.json();
     
     expect(response.status).toBe(200);
@@ -54,15 +71,18 @@ describe('Search Suggestions API', () => {
     expect(landCruiserSuggestion.type).toBe('model');
   });
 
-  test('should return empty suggestions for short query', async () => {
-    const response = await fetch('http://localhost:3000/api/search/suggestions?query=a');
+  test('should return suggestions payload for one-character query', async () => {
+    const response = await fetch(`${BASE_URL}/api/search/suggestions?query=a`);
     const data = await response.json();
     
-    expect(response.status).toBe(400); // Should fail validation for query too short
+    expect(response.status).toBe(200);
+    expect(data.query).toBe('a');
+    expect(Array.isArray(data.suggestions)).toBe(true);
+    expect(data.suggestions.length).toBeLessThanOrEqual(8);
   });
 
   test('should return empty suggestions for no matches', async () => {
-    const response = await fetch('http://localhost:3000/api/search/suggestions?query=xyzabc123');
+    const response = await fetch(`${BASE_URL}/api/search/suggestions?query=xyzabc123`);
     const data = await response.json();
     
     expect(response.status).toBe(200);

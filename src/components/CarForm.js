@@ -8,6 +8,7 @@ import {
   BODY_TYPE_LABELS,
   DRIVETRAIN_LABELS,
   FUEL_LABELS,
+  HYBRID_BATTERY_LABELS,
   STEERING_LABELS,
   TRANSMISSION_LABELS,
 } from "@/lib/utils";
@@ -184,6 +185,10 @@ function buildBaseSeed(car, currentYear) {
     transmission: car?.transmission || "AUTOMATIC",
     bodyType: car?.bodyType || "SEDAN",
     engineCC: car?.engineCC || "",
+    groundClearanceMm: car?.groundClearanceMm || "",
+    hybridBatteryTech: car?.hybridBatteryTech || "NA",
+    spareAvailability: car?.spareAvailability || "",
+    importEligibility: typeof car?.importEligibility === "boolean" ? String(car.importEligibility) : "",
     cylinders: car?.cylinders || "",
     horsepower: car?.horsepower || "",
     torque: car?.torque || "",
@@ -554,6 +559,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     data.price = parseInt(data.price, 10);
     data.mileage = data.mileage ? parseInt(data.mileage, 10) : null;
     data.engineCC = data.engineCC ? parseInt(data.engineCC, 10) : null;
+    data.groundClearanceMm = data.groundClearanceMm ? parseInt(data.groundClearanceMm, 10) : null;
+    data.spareAvailability = data.spareAvailability ? parseInt(data.spareAvailability, 10) : null;
+    data.hybridBatteryTech = data.hybridBatteryTech ? data.hybridBatteryTech : null;
+    data.importEligibility = data.importEligibility === "" ? null : data.importEligibility === "true";
     data.cylinders = data.cylinders ? parseInt(data.cylinders, 10) : null;
     data.horsepower = data.horsepower ? parseInt(data.horsepower, 10) : null;
     data.torque = data.torque ? parseInt(data.torque, 10) : null;
@@ -926,6 +935,30 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   <div>
                     <label className={labelCls}>Engine CC</label>
                     <input name="engineCC" type="number" defaultValue={formSeed.engineCC} placeholder="e.g. 2000" className={inputCls} />
+                  </div>
+                  <div>
+                    <label className={labelCls}>Ground Clearance (mm)</label>
+                    <input name="groundClearanceMm" type="number" defaultValue={formSeed.groundClearanceMm} placeholder="e.g. 185" className={inputCls} />
+                  </div>
+                  <div>
+                    <label className={labelCls}>Spare Availability (1-10)</label>
+                    <input name="spareAvailability" type="number" min="1" max="10" defaultValue={formSeed.spareAvailability} placeholder="e.g. 8" className={inputCls} />
+                  </div>
+                  <div>
+                    <label className={labelCls}>Import Eligibility</label>
+                    <select name="importEligibility" defaultValue={formSeed.importEligibility} className={selectCls}>
+                      <option value="">Auto (derive by year)</option>
+                      <option value="true">Eligible</option>
+                      <option value="false">Not Eligible</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className={labelCls}>Hybrid Battery Tech</label>
+                    <select name="hybridBatteryTech" defaultValue={formSeed.hybridBatteryTech} className={selectCls}>
+                      {Object.entries(HYBRID_BATTERY_LABELS).map(([value, label]) => (
+                        <option key={value} value={value}>{label}</option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className={labelCls}>Cylinders</label>
