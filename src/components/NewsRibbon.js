@@ -55,12 +55,7 @@ export default function NewsRibbon({ initialNews = [] }) {
 
   return (
     <div className="mk-news-ribbon mb-6 sm:mb-8" aria-label="Latest automotive news">
-      <div className="h-9 sm:h-10 px-3 sm:px-4 flex items-center gap-3">
-        <span className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-slate-700 shrink-0">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#ff5a2f] animate-pulse" />
-          News
-        </span>
-
+      <div className="h-9 sm:h-10 px-3 sm:px-4 flex items-center">
         <div className="relative flex-1 overflow-hidden">
           <div className="mk-news-track">
             {tickerItems.map((item, idx) => {
@@ -92,10 +87,6 @@ export default function NewsRibbon({ initialNews = [] }) {
             })}
           </div>
         </div>
-
-        <span className="hidden md:inline text-[9px] font-black uppercase tracking-[0.14em] text-slate-500 shrink-0">
-          Refresh 5m
-        </span>
       </div>
     </div>
   );
