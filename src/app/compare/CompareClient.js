@@ -824,32 +824,32 @@ export default function CompareClient({ initialCars }) {
         {/* Table Header (Sticky) */}
         <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-2xl border-b border-[#d7dee8]">
           <div className="grid grid-cols-[160px_1fr_1fr_1fr] md:grid-cols-[240px_1fr_1fr_1fr]">
-            <div className="p-8 flex items-center justify-center border-r border-[#e2e8f0]">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 -rotate-90">Model View ⚖️</span>
+            <div className="sticky left-0 z-40 p-6 md:p-8 flex items-center justify-center border-r border-[#e2e8f0] bg-[#f8fafc]">
+              <span className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 -rotate-90">Model View ⚖️</span>
             </div>
             {SLOT_KEYS.map((_, idx) => {
               const car = comparedSlots[idx];
               const hydrated = !!(car && initialCarsById.has(car.id));
               const imageUrl = car?.images?.[0]?.url || car?.image || null;
               return (
-                <div key={idx} className={`p-6 md:p-8 flex flex-col gap-4 border-r border-[#e2e8f0] last:border-r-0 relative transition-all ${!car ? "bg-[#f8fafc]" : ""}`}>
+                <div key={idx} className={`p-4 md:p-5 flex flex-col gap-4 border-r border-[#e2e8f0] last:border-r-0 relative transition-all ${!car ? "bg-[#f8fafc]" : ""}`}>
                   {car ? (
-                    <>
+                    <div className="relative h-full rounded-2xl border border-[#e2e8f0] bg-white p-4 md:p-5">
                       <button
                         onClick={() => removeFromCompare(car.id)}
-                        className="absolute top-4 right-4 text-slate-400 hover:text-slate-900 transition-colors"
+                        className="absolute top-3 right-3 text-slate-400 hover:text-slate-900 transition-colors"
                       >
                         <X className="w-4 h-4" />
                       </button>
-                      <div className="relative aspect-[16/10] rounded-2xl overflow-hidden border border-[#d7dee8] bg-[#f8fafc]">
+                      <div className="relative aspect-[16/10] rounded-xl overflow-hidden border border-[#d7dee8] bg-[#f8fafc]">
                         {imageUrl ? (
                           <Image src={imageUrl} alt={car.model} fill className="object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold uppercase tracking-widest text-[10px]">No Image</div>
                         )}
                       </div>
-                      <div>
-                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">{car.year}</p>
+                      <div className="mt-3">
+                         <p className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-500 mb-1">{car.year}</p>
                          <h3 className="font-black text-sm md:text-base leading-tight text-slate-900 mb-1 line-clamp-2">{car.make} {car.model}</h3>
                          <p className="text-slate-600 text-[10px] truncate">{car.variant || "Standard Variant"}</p>
                          {hydrated && (
@@ -868,23 +868,23 @@ export default function CompareClient({ initialCars }) {
                          <div className="mt-2 h-1.5 w-full bg-[#e5e7eb] rounded-full overflow-hidden">
                            <div className="h-full bg-gradient-to-r from-[#111827] to-[#334155]" style={{ width: `${hydrated ? calcCoverage(car, allSpecs) : 0}%` }} />
                          </div>
-                         <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-2">
+                         <p className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.1em] mt-2">
                            Spec Coverage: {hydrated ? `${calcCoverage(car, allSpecs)}%` : "Loading"}
                          </p>
                       </div>
-                    </>
+                    </div>
                   ) : (
-                    <div className="h-full flex flex-col items-center justify-center gap-4">
+                    <div className="relative h-full rounded-2xl border border-[#e2e8f0] bg-[#fbfcfe] flex flex-col items-center justify-center gap-4 p-4 md:p-5">
                        <button
                          onClick={() => setActiveSlot(idx)}
                          className="w-16 h-16 rounded-3xl bg-white border border-dashed border-[#cbd5e1] flex items-center justify-center text-slate-500 hover:text-slate-900 hover:border-slate-500 transition-all group"
                        >
                          <Search className="w-6 h-6 group-hover:scale-110 transition-transform" />
                        </button>
-                       <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Empty Slot</span>
+                       <span className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Empty Slot</span>
                        
                        {activeSlot === idx && (
-                         <div className="absolute inset-0 bg-white z-40 p-4 transition-all animate-in fade-in zoom-in-95">
+                         <div className="absolute inset-0 rounded-2xl border border-[#e2e8f0] bg-white z-40 p-4 transition-all animate-in fade-in zoom-in-95">
                            <div className="relative">
                              <input
                                autoFocus
@@ -937,20 +937,23 @@ export default function CompareClient({ initialCars }) {
           {specGroups.map((group) => (
             <div key={group.name} className="bg-white">
               <div className="grid grid-cols-[160px_1fr] md:grid-cols-[240px_1fr] py-4 px-8 items-center bg-[#f8fafc]">
-                <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">{group.name}</h2>
+                <h2 className="sticky left-0 z-30 bg-[#f8fafc] text-[10px] font-black uppercase tracking-[0.22em] text-slate-500">{group.name}</h2>
                 <div className="h-px bg-[#e2e8f0]" />
               </div>
               <div className="divide-y divide-[#eef2f7]">
-                {group.specs.map((spec) => {
+                {group.specs.map((spec, specIndex) => {
                   if (!shouldShowSpec(spec)) return null;
 
                   const diff = isDifferent(spec, fullComparedCars);
                   const severity = getDiffSeverity(spec, fullComparedCars);
                   if (showDiffOnly && !diff && fullComparedCars.length > 1) return null;
 
+                  const zebra = specIndex % 2 === 0 ? "bg-white" : "bg-[#fbfcfe]";
+                  const rowTone = diff ? "bg-[#f4f6fa]" : `${zebra} hover:bg-[#f6f8fb]`;
+
                   return (
-                    <div key={spec.label} className={`grid grid-cols-[160px_1fr_1fr_1fr] md:grid-cols-[240px_1fr_1fr_1fr] transition-colors ${diff ? "bg-[#f8fafc]" : "hover:bg-[#f8fafc]"}`}>
-                      <div className="p-6 md:p-8 flex items-center border-r border-[#e2e8f0] bg-[#f9fafb]">
+                    <div key={spec.label} className={`grid grid-cols-[160px_1fr_1fr_1fr] md:grid-cols-[240px_1fr_1fr_1fr] transition-colors ${rowTone}`}>
+                      <div className="sticky left-0 z-20 p-5 md:p-6 flex items-center border-r border-[#e2e8f0] bg-[#f9fafb]">
                         <div className="space-y-2">
                           <span className="text-[11px] font-bold text-slate-900 uppercase tracking-widest block">{spec.label}</span>
                           {severity !== "none" && fullComparedCars.length > 1 && (
@@ -962,10 +965,10 @@ export default function CompareClient({ initialCars }) {
                       </div>
                       {SLOT_KEYS.map((_, idx) => {
                         const car = comparedSlots[idx];
-                        if (!car) return <div key={idx} className="p-6 md:p-8 border-r border-[#e2e8f0] last:border-r-0" />;
+                        if (!car) return <div key={idx} className="p-5 md:p-6 border-r border-[#e2e8f0] last:border-r-0" />;
                         if (!initialCarsById.has(car.id)) {
                           return (
-                            <div key={idx} className="p-6 md:p-8 flex items-center justify-center border-r border-[#e2e8f0] last:border-r-0">
+                            <div key={idx} className="p-5 md:p-6 flex items-center justify-center border-r border-[#e2e8f0] last:border-r-0">
                               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Loading...</span>
                             </div>
                           );
@@ -981,7 +984,7 @@ export default function CompareClient({ initialCars }) {
                         const trafficDelta = spec.id === "trafficFactor" ? (getInsights(car)?.tco?.trafficMultiplier || 1) : null;
 
                         return (
-                          <div key={idx} className="p-6 md:p-8 flex items-center justify-center border-r border-[#e2e8f0] last:border-r-0">
+                          <div key={idx} className="p-5 md:p-6 flex items-center justify-center border-r border-[#e2e8f0] last:border-r-0">
                             <div className="w-full text-center space-y-1.5">
                               {gaugePercent !== null && (
                                 <div className="h-1.5 w-full bg-[#e5e7eb] rounded-full overflow-hidden">
@@ -1007,7 +1010,11 @@ export default function CompareClient({ initialCars }) {
                                   </span>
                                 )}
                                 {missing && <span className="block text-[8px] mt-1 uppercase tracking-[0.12em]">Missing data</span>}
-                                {isBestValue && !missing && <span className="block text-[8px] mt-1 uppercase tracking-[0.12em] text-black/80">Best Spec</span>}
+                                {isBestValue && !missing && (
+                                  <span className="inline-flex mt-1 px-2 py-0.5 rounded-sm bg-black text-white text-[8px] font-black uppercase tracking-[0.12em]">
+                                    Best Spec
+                                  </span>
+                                )}
                               </span>
                             </div>
                           </div>
