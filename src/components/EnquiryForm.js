@@ -4,6 +4,7 @@
 // Tracks both web form submissions and WhatsApp taps as leads.
 
 import { useState } from "react";
+import Link from "next/link";
 import { whatsappLink } from "@/lib/utils";
 
 function normalizeKenyanPhone(value) {
@@ -34,9 +35,10 @@ export default function EnquiryForm({
   const [name, setName]     = useState(userName);
   const [phone, setPhone]   = useState("");
   const [email, setEmail]   = useState(userEmail);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(`Hi, I'm interested in the ${carTitle}. Please get back to me with more details.`);
   const [website, setWebsite] = useState(""); // Honeypot field
   const [consent, setConsent] = useState(false);
+  const [notifySimilar, setNotifySimilar] = useState(false);
   const [lastSubmitAt, setLastSubmitAt] = useState(0);
   const [errorText, setErrorText] = useState("");
 
@@ -84,6 +86,10 @@ export default function EnquiryForm({
     setState("sending");
 
     try {
+      const leadMessage = notifySimilar
+        ? `${message?.trim() || ""}\n\n[Notify me when similar listings appear]`
+        : message;
+
       const res = await fetch("/api/leads", {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
@@ -93,7 +99,7 @@ export default function EnquiryForm({
           name,
           phone: normalizedPhone,
           email,
-          message,
+          message: leadMessage,
           channel: "web",
         }),
       });
@@ -242,12 +248,24 @@ export default function EnquiryForm({
           </div>
         )}
 
+        {!showQuickMessages && (
+          <label className="flex items-start gap-2.5 text-[11px] text-slate-500 pt-0.5">
+            <input
+              type="checkbox"
+              checked={notifySimilar}
+              onChange={(e) => setNotifySimilar(e.target.checked)}
+              className="mt-0.5"
+            />
+            Notify me when similar listings appear
+          </label>
+        )}
+
         <button
           type="submit"
           disabled={state === "sending"}
-          className="w-full bg-[var(--brand)] hover:bg-[var(--brand-accent)] disabled:opacity-50 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg shadow-[var(--brand)]/10 active:scale-[0.98]"
+          className="w-full bg-slate-700 hover:bg-slate-800 disabled:opacity-50 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-widest transition-all active:scale-[0.98]"
         >
-          {state === "sending" ? "Sending…" : "Send enquiry"}
+          {state === "sending" ? "Sending..." : "Submit Enquiry"}
         </button>
 
         <label className="flex items-start gap-2.5 text-[11px] text-slate-500 pt-1">
@@ -258,7 +276,7 @@ export default function EnquiryForm({
             className="mt-0.5"
             required
           />
-          I consent to Motorke and this dealer contacting me about this vehicle.
+          I agree to the <Link href="/terms" className="underline underline-offset-2">Terms of Use</Link> and <Link href="/privacy" className="underline underline-offset-2">Privacy Policy</Link>.
         </label>
         
         {showSafetyBadge && (
