@@ -112,8 +112,8 @@ export default function SignupForm({ error: initialError }) {
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_18%_14%,rgba(16,185,129,0.08),transparent_38%),radial-gradient(circle_at_84%_86%,rgba(15,23,42,0.08),transparent_40%),#FCFCFD]">
-      <Script 
-        src="https://accounts.google.com/gsi/client" 
+      <Script
+        src="https://accounts.google.com/gsi/client"
         strategy="afterInteractive"
         onLoad={() => {
           if (!window.google || !googleClientId) return;
@@ -133,42 +133,41 @@ export default function SignupForm({ error: initialError }) {
                 } else {
                   setErrorMsg("Google signup failed.");
                 }
-               <section className="min-h-screen px-4 py-6 sm:px-6 sm:py-10 lg:py-12 flex items-center justify-center">
-                 <div className={clsx(
-                   "w-full rounded-[2rem] border border-slate-200 bg-white shadow-[0_30px_70px_rgba(15,23,42,0.08)] p-5 sm:p-8 lg:p-10 relative",
-                   role === "DEALER" ? "max-w-5xl" : "max-w-[560px]"
-                 )}>
+              } catch (err) {
+                setErrorMsg("Network error during Google signup.");
+              }
+            },
+          });
 
-          window.google.accounts.id.renderButton(
-            googleSignupContainer,
-                    className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
-              theme: "outline", 
-              size: "large", 
-              width: "320", 
-              text: "signup_with",
-                  <div className={clsx("w-full mx-auto transition-all duration-700 mt-10 sm:mt-8", role === "DEALER" ? "max-w-4xl" : "max-w-[440px]") }>
-              logo_alignment: "left"
-            }
-          );
+          const googleSignupContainer = document.getElementById("google-signup-button");
+          if (!googleSignupContainer) return;
+
+          window.google.accounts.id.renderButton(googleSignupContainer, {
+            theme: "outline",
+            size: "large",
+            width: "320",
+            text: "signup_with",
+            shape: "pill",
+            logo_alignment: "left",
+          });
         }}
       />
 
-       <AuthCarousel />
-
-       {/* ── FORM SECTION (Right) ── */}
-       <section className={clsx(
-         "flex-1 flex flex-col items-center justify-center p-5 sm:p-8 lg:p-12 bg-white relative overflow-y-auto",
-         role === "DEALER" ? "lg:items-start lg:pl-32" : ""
-       )}>
-          
-          <Link 
-            href="/" 
-            className="absolute top-4 right-4 sm:top-8 sm:right-8 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
+      <section className="min-h-screen px-4 py-6 sm:px-6 sm:py-10 lg:py-12 flex items-center justify-center">
+        <div
+          className={clsx(
+            "w-full rounded-[2rem] border border-slate-200 bg-white shadow-[0_30px_70px_rgba(15,23,42,0.08)] p-5 sm:p-8 lg:p-10 relative",
+            role === "DEALER" ? "max-w-5xl" : "max-w-[560px]"
+          )}
+        >
+          <Link
+            href="/"
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
           >
             Showroom <ArrowLeft className="w-3 h-3 rotate-180" />
           </Link>
 
-          <div className={clsx("w-full transition-all duration-700 mt-10 sm:mt-0", role === "DEALER" ? "max-w-4xl" : "max-w-[440px]")}>
+          <div className={clsx("w-full mx-auto transition-all duration-700 mt-10 sm:mt-8", role === "DEALER" ? "max-w-4xl" : "max-w-[440px]") }>
              <header className="mb-6">
                 <div className="inline-flex items-center gap-3 mb-4">
                    <img src="/favicon.svg" alt="Motorke" className="h-10 w-10 object-contain rounded-xl" />
@@ -336,8 +335,8 @@ export default function SignupForm({ error: initialError }) {
                 </div>
              </footer>
           </div>
-            </div>
-       </section>
+        </div>
+      </section>
     </div>
   );
 }
