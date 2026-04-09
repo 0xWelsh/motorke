@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { UploadCloud, X, Image as ImageIcon, CheckCircle2 } from "lucide-react";
 
 export default function MediaUploader({ initialImages = [], onFilesSelected, maxFiles = 10 }) {
