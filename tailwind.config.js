@@ -31,7 +31,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans:    ["Plus Jakarta Sans", "ui-sans-serif", "system-ui", "sans-serif"],
+        sans:    ["Playfair Display", "ui-serif", "Georgia", "serif"],
         display: ["Playfair Display", "ui-serif", "Georgia", "serif"],
       },
       fontSize: {

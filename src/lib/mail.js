@@ -53,7 +53,7 @@ export async function sendVerificationEmail(email, name, otp) {
   }
 
   const htmlContent = `
-    <div style="font-family: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #1A1A1A;">
+    <div style="font-family: 'Playfair Display', Georgia, serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #1A1A1A;">
       <div style="margin-bottom: 40px; text-align: center;">
         <span style="font-weight: 800; font-size: 24px; text-transform: uppercase;">Motor<span style="color: #E8490F;">ke</span></span>
         <p style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3em; color: #999; margin-top: 5px;">Standard</p>
@@ -133,7 +133,7 @@ export async function sendLeadAlertEmail({
   }
 
   const htmlContent = `
-    <div style="font-family: 'Manrope', Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 28px; color: #111827;">
+    <div style="font-family: 'Playfair Display', Georgia, serif; max-width: 640px; margin: 0 auto; padding: 28px; color: #111827;">
       <h1 style="margin: 0 0 8px; font-size: 24px; font-weight: 800;">New Buyer Enquiry</h1>
       <p style="margin: 0 0 20px; color: #475569; font-size: 14px;">
         A potential buyer has reached out on Motorke.
@@ -218,7 +218,7 @@ export async function sendPasswordResetEmail({ email, name, resetToken }) {
 
   const safeName = escapeHtml((name || "there").toString().split(" ")[0]);
   const htmlContent = `
-    <div style="font-family: 'Manrope', Helvetica, Arial, sans-serif; max-width: 620px; margin: 0 auto; padding: 30px; color: #0f172a;">
+    <div style="font-family: 'Playfair Display', Georgia, serif; max-width: 620px; margin: 0 auto; padding: 30px; color: #0f172a;">
       <h1 style="margin: 0 0 8px; font-size: 26px; font-weight: 800;">Reset your password</h1>
       <p style="margin: 0 0 22px; font-size: 15px; color: #475569;">Hi ${safeName}, we received a request to reset your Motorke account password.</p>
 
