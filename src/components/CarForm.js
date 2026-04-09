@@ -692,7 +692,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       )}
       {dealers.length === 1 && dealers[0] && <input type="hidden" name="dealerId" value={dealers[0].id} />}
 
-      {(!isNew || step === 1) && (
+      <div className={isNew && step !== 1 ? "hidden" : "block"}>
         <div className="bg-white border border-slate-200 rounded-2xl p-8">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
@@ -845,10 +845,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             </div>
             </div>
           </div>
-        )}
+        </div>
 
-        {(!isNew || step === 2) && (
-          <div className="bg-white border border-slate-200 rounded-2xl p-8">
+          <div className={isNew && step !== 2 ? "hidden" : "block"}>
+            <div className="bg-white border border-slate-200 rounded-2xl p-8">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -871,9 +871,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               Upload starts immediately so dealers can continue filling details while photos process.
             </div>
           </div>
-        )}
+        </div>
 
-        {(!isNew || step === 3) && (
+        <div className={isNew && step !== 3 ? "hidden" : "block"}>
           <div className="space-y-6">
             <div className="bg-white border border-slate-200 rounded-2xl p-8">
               <div className="flex items-center gap-3 mb-8">
@@ -1053,7 +1053,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               </div>
             </div>
           </div>
-        )}
+        </div>
 
         <div className="flex flex-wrap justify-between items-center gap-3 pt-2">
           <a href={isPortal ? "/portal" : "/admin"} className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase tracking-wider transition-all">
