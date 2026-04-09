@@ -32,7 +32,7 @@ module.exports = {
       },
       fontFamily: {
         sans:    ["Plus Jakarta Sans", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["Sora", "Plus Jakarta Sans", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["Playfair Display", "ui-serif", "Georgia", "serif"],
       },
       fontSize: {
         '2xs': ['0.65rem', { lineHeight: '1rem' }],
