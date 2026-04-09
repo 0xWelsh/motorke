@@ -3,6 +3,7 @@
 // Returns { url } — the public URL stored in the database
 
 import { uploadImage, imagePath } from "@/lib/storage";
+import { applyListingWatermark } from "@/lib/watermark";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
@@ -41,6 +42,16 @@ export async function POST(request) {
       );
     }
 
+    // Add brand watermark before upload.
+    let processedBuffer = buffer;
+    try {
+      processedBuffer = await applyListingWatermark(buffer, file.type);
+    } catch (watermarkError) {
+      console.error("Watermark processing failed:", watermarkError);
+      // Keep upload flow resilient even if watermarking fails unexpectedly.
+      processedBuffer = buffer;
+    }
+
     // Generate a unique path
     const path = imagePath(
       `tmp-${session.userId}`,   // temp prefix; overwritten when car is saved
@@ -48,7 +59,7 @@ export async function POST(request) {
       file.type
     );
 
-    const url = await uploadImage(buffer, path, file.type);
+    const url = await uploadImage(processedBuffer, path, file.type);
     return NextResponse.json({ url });
   } catch (err) {
     console.error("Upload error:", err);
