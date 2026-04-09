@@ -59,12 +59,66 @@ export default function ImageGallery({ images, title }) {
   }
 
   const current = images[active];
+  const desktopMosaic = images.length >= 5;
+  const mosaicImages = images.slice(0, 5);
+  const remainingCount = Math.max(0, images.length - 5);
 
   return (
     <>
-      {/* Main image */}
+      {/* Desktop mosaic */}
+      {desktopMosaic && (
+        <div className="hidden md:grid grid-cols-12 gap-2.5 rounded-2xl overflow-hidden">
+          <button
+            type="button"
+            onClick={() => { setActive(0); setLightbox(true); }}
+            className="relative col-span-6 row-span-2 aspect-[4/3] overflow-hidden bg-slate-100 group"
+            aria-label="Open primary photo"
+          >
+            <Image
+              src={mosaicImages[0].url}
+              alt={mosaicImages[0].alt || `${title} photo 1`}
+              fill
+              priority
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              sizes="(max-width: 1200px) 60vw, 42vw"
+            />
+            <span className="absolute bottom-4 left-4 w-10 h-10 rounded-lg border border-white/70 bg-white/90 text-slate-700 inline-flex items-center justify-center">
+              ↗
+            </span>
+          </button>
+
+          {mosaicImages.slice(1, 5).map((img, idx) => {
+            const imageIndex = idx + 1;
+            const isLastVisible = imageIndex === 4;
+            return (
+              <button
+                key={img.url}
+                type="button"
+                onClick={() => { setActive(imageIndex); setLightbox(true); }}
+                className="relative col-span-3 aspect-[4/3] overflow-hidden bg-slate-100 group"
+                aria-label={`Open photo ${imageIndex + 1}`}
+              >
+                <Image
+                  src={img.url}
+                  alt={img.alt || `${title} photo ${imageIndex + 1}`}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  sizes="(max-width: 1200px) 28vw, 18vw"
+                />
+                {isLastVisible && (
+                  <span className="absolute bottom-3 right-3 text-xs font-extrabold uppercase tracking-[0.1em] px-3 py-1.5 rounded bg-white/92 text-slate-800 border border-white">
+                    {remainingCount > 0 ? `${remainingCount}+ Photos` : `${images.length} Photos`}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Main image (mobile + fallback) */}
       <div
-        className="relative aspect-[16/9] bg-white/5 rounded-2xl overflow-hidden group cursor-zoom-in"
+        className={`relative aspect-[16/9] bg-white/5 rounded-2xl overflow-hidden group cursor-zoom-in ${desktopMosaic ? "md:hidden" : ""}`}
         onClick={() => setLightbox(true)}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
@@ -87,7 +141,6 @@ export default function ImageGallery({ images, title }) {
           sizes="(max-width: 1024px) 100vw, 66vw"
         />
 
-        {/* Nav arrows on hover */}
         {images.length > 1 && (
           <>
             <button
@@ -109,22 +162,20 @@ export default function ImageGallery({ images, title }) {
           </>
         )}
 
-        {/* Counter badge */}
         {images.length > 1 && (
           <span className="absolute bottom-3 right-3 text-xs bg-black/60 text-white/80 px-2.5 py-1 rounded-full backdrop-blur-sm">
             {active + 1} / {images.length}
           </span>
         )}
 
-        {/* Expand hint */}
         <span className="absolute bottom-3 left-3 text-xs bg-black/50 text-white/70 px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
           Click to expand
         </span>
       </div>
 
-      {/* Thumbnail strip */}
+      {/* Thumbnail strip (mobile/fallback) */}
       {images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-1 mt-3 scrollbar-none">
+        <div className={`flex gap-2 overflow-x-auto pb-1 mt-3 scrollbar-none ${desktopMosaic ? "md:hidden" : ""}`}>
           {images.map((img, i) => (
             <button
               type="button"

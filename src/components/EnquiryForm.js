@@ -19,7 +19,17 @@ function isValidKenyanPhone(value) {
   return /^254(7\d{8}|1\d{8})$/.test(value);
 }
 
-export default function EnquiryForm({ carId, dealerId, carTitle, dealer, userName = "", userEmail = "" }) {
+export default function EnquiryForm({
+  carId,
+  dealerId,
+  carTitle,
+  dealer,
+  userName = "",
+  userEmail = "",
+  whatsAppFirst = true,
+  showQuickMessages = true,
+  showSafetyBadge = true,
+}) {
   const [state, setState]   = useState("idle"); // idle | sending | sent | error
   const [name, setName]     = useState(userName);
   const [phone, setPhone]   = useState("");
@@ -33,6 +43,7 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer, userNam
   const waLink = dealer.whatsapp
     ? whatsappLink(dealer.whatsapp, carTitle, dealer.name)
     : null;
+  const callLink = dealer.phone ? `tel:${dealer.phone}` : null;
 
   const quickMessages = [
     "Is this car still available?",
@@ -123,6 +134,14 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer, userNam
     }).catch(() => {});
   }
 
+  function handleCall() {
+    fetch(`/api/cars/${carId}/track-action`, {
+      method: "POST",
+      body: JSON.stringify({ action: "call" }),
+      headers: { "Content-Type": "application/json" }
+    }).catch(() => {});
+  }
+
   const inputCls = "w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[var(--brand-accent)]/30 focus:bg-white transition-all shadow-sm";
 
   if (state === "sent") {
@@ -149,7 +168,7 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer, userNam
   return (
     <div className="space-y-3">
       {/* WhatsApp button — primary CTA */}
-      {waLink && (
+      {waLink && whatsAppFirst && (
         <a
           href={waLink}
           target="_blank"
@@ -161,11 +180,13 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer, userNam
         </a>
       )}
 
-      <div className="flex items-center gap-3 my-1">
-        <div className="flex-1 h-px bg-slate-100" />
-        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">or send a message</span>
-        <div className="flex-1 h-px bg-slate-100" />
-      </div>
+      {waLink && whatsAppFirst && (
+        <div className="flex items-center gap-3 my-1">
+          <div className="flex-1 h-px bg-slate-100" />
+          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">or send a message</span>
+          <div className="flex-1 h-px bg-slate-100" />
+        </div>
+      )}
 
       {state === "error" && (
         <p className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
@@ -206,18 +227,20 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer, userNam
           className={`${inputCls} resize-none`}
         />
 
-        <div className="flex flex-wrap gap-2 pt-1">
-          {quickMessages.map((preset) => (
-            <button
-              key={preset}
-              type="button"
-              onClick={() => setMessage(preset)}
-              className="text-[10px] font-bold uppercase tracking-[0.08em] px-2.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
-            >
-              {preset}
-            </button>
-          ))}
-        </div>
+        {showQuickMessages && (
+          <div className="flex flex-wrap gap-2 pt-1">
+            {quickMessages.map((preset) => (
+              <button
+                key={preset}
+                type="button"
+                onClick={() => setMessage(preset)}
+                className="text-[10px] font-bold uppercase tracking-[0.08em] px-2.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+              >
+                {preset}
+              </button>
+            ))}
+          </div>
+        )}
 
         <button
           type="submit"
@@ -238,13 +261,44 @@ export default function EnquiryForm({ carId, dealerId, carTitle, dealer, userNam
           I consent to Motorke and this dealer contacting me about this vehicle.
         </label>
         
-        <div className="flex items-center justify-center gap-1.5 pt-2">
-          <div className="w-3.5 h-3.5 rounded-full bg-emerald-100 flex items-center justify-center">
-            <span className="text-emerald-600 text-[8px]">✓</span>
+        {showSafetyBadge && (
+          <div className="flex items-center justify-center gap-1.5 pt-2">
+            <div className="w-3.5 h-3.5 rounded-full bg-emerald-100 flex items-center justify-center">
+              <span className="text-emerald-600 text-[8px]">✓</span>
+            </div>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Safe & Secure Enquiry</span>
           </div>
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Safe & Secure Enquiry</span>
-        </div>
+        )}
       </form>
+
+      {!whatsAppFirst && (waLink || callLink) && (
+        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+          {waLink ? (
+            <a
+              href={waLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleWhatsApp}
+              className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1fb558] text-white font-bold text-xs py-2.5 rounded-lg transition-colors"
+            >
+              WhatsApp
+            </a>
+          ) : (
+            <span className="inline-flex items-center justify-center text-xs font-bold py-2.5 rounded-lg bg-slate-100 text-slate-400">WhatsApp</span>
+          )}
+          {callLink ? (
+            <a
+              href={callLink}
+              onClick={handleCall}
+              className="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white font-bold text-xs py-2.5 rounded-lg transition-colors"
+            >
+              Call Now
+            </a>
+          ) : (
+            <span className="inline-flex items-center justify-center text-xs font-bold py-2.5 rounded-lg bg-slate-100 text-slate-400">Call</span>
+          )}
+        </div>
+      )}
     </div>
   );
 }

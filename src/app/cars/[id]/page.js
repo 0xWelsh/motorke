@@ -212,98 +212,159 @@ export default async function CarDetailPage({ params }) {
     .filter((line) => line.length > 8)
     .slice(0, 4);
 
+  const visibleSpecs = specs.filter((entry) => entry.value && entry.value !== "N/A").slice(0, 14);
+  const specRows = [];
+  for (let i = 0; i < visibleSpecs.length; i += 2) {
+    specRows.push([visibleSpecs[i], visibleSpecs[i + 1] || null]);
+  }
+
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-10 lg:py-12 pb-36 sm:pb-28 lg:pb-16">
-      {/* Breadcrumb */}
-      <nav className="hidden sm:flex text-sm font-medium text-slate-400 mb-8 sm:mb-10 gap-2 sm:gap-3 items-center flex-wrap">
-        <Link href="/" className="hover:text-brand transition-colors">Home</Link>
-        <ChevronRight className="w-3 h-3" />
-        <Link href="/cars" className="hover:text-brand transition-colors">Inventory</Link>
-        <ChevronRight className="w-3 h-3" />
-        <span className="text-slate-900 font-extrabold truncate max-w-full">{title}</span>
-      </nav>
+    <div className="w-full bg-[#f4f5f7]">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10 pb-36 sm:pb-28 lg:pb-16">
+        {/* Breadcrumb */}
+        <nav className="hidden sm:flex text-sm font-medium text-slate-500 mb-6 sm:mb-8 gap-2 sm:gap-3 items-center flex-wrap">
+          <Link href="/" className="hover:text-brand transition-colors">Home</Link>
+          <ChevronRight className="w-3 h-3" />
+          <Link href="/cars" className="hover:text-brand transition-colors">Vehicles</Link>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-slate-900 font-extrabold truncate max-w-full">{title}</span>
+        </nav>
 
-      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_420px] gap-6 sm:gap-8 lg:gap-10 items-start">
-        {/* Left: hero media + narrative + details */}
         <div className="space-y-6 sm:space-y-8">
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
-            <div className="flex flex-wrap items-center gap-2 mb-3">
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-extrabold uppercase tracking-[0.12em]">
-                {car.available ? "Available" : "On Hold"}
-              </span>
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full border border-slate-200 text-slate-600 text-[10px] font-extrabold uppercase tracking-[0.12em]">
-                {BODY_TYPE_LABELS[car.bodyType] || "Vehicle"}
-              </span>
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full border border-slate-200 text-slate-600 text-[10px] font-extrabold uppercase tracking-[0.12em]">
-                {formatMileage(car.mileage)}
-              </span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">{title}</h1>
-            <p className="mt-3 text-3xl sm:text-4xl font-extrabold text-brand tracking-tight">{formatPrice(car.price)}</p>
-            <p className="mt-1 text-xs font-bold uppercase tracking-[0.12em] text-slate-500">Price includes dealer handling. Shipping and registration confirmed at enquiry.</p>
-
-            <div className="mt-4 flex flex-wrap gap-2">
-              {trustBadges.map((badge) => (
-                <span
-                  key={badge}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 text-[10px] font-extrabold uppercase tracking-[0.12em]"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5" /> {badge}
-                </span>
-              ))}
-            </div>
-          </div>
-
           <ImageGallery images={car.images} title={title} />
 
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-4 sm:gap-5">
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 space-y-4">
-              <div>
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-500 mb-2">Description</p>
-                {descriptionBullets.length > 0 ? (
-                  <ul className="list-disc pl-5 space-y-1.5 text-sm font-semibold text-slate-700">
-                    {descriptionBullets.map((line, idx) => (
-                      <li key={`${line}-${idx}`}>{line}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-sm font-semibold text-slate-600">Clean listing with verified seller profile and direct response channels.</p>
-                )}
-              </div>
+          <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_360px] gap-5 sm:gap-7 lg:gap-8 items-start">
+            <div className="space-y-5">
+              <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
+                <span className="inline-flex items-center px-2.5 py-1 rounded bg-emerald-100 text-emerald-700 text-[10px] font-extrabold uppercase tracking-[0.12em]">
+                  {car.available ? "Available" : "On Hold"}
+                </span>
+                <h1 className="mt-3 text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">{title}</h1>
+                <p className="mt-4 text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">{formatPrice(car.price)}</p>
+                <p className="mt-1 text-sm font-semibold text-slate-500">Price includes shipping</p>
 
-              <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2.5">
-                <Link
-                  href={`/dealers/${dealer.slug}#dealer-gallery`}
-                  className="h-10 px-4 rounded-lg border border-slate-200 bg-white text-slate-700 text-[10px] font-extrabold uppercase tracking-[0.12em] inline-flex items-center justify-center"
-                >
-                  View Dealer Gallery
-                </Link>
-                <div className="[&>button]:h-10 [&>button]:px-4 [&>button]:rounded-lg">
-                  <CompareButton car={compareCar} />
+                <div className="mt-5 border-t border-slate-100 pt-4">
+                  <h2 className="text-sm font-extrabold uppercase tracking-[0.12em] text-slate-700 mb-2">Description</h2>
+                  <p className="text-base font-semibold text-slate-700 leading-relaxed">
+                    {descriptionBullets.length > 0 ? descriptionBullets.join(" • ") : "High-spec unit with verified dealer profile and direct enquiry support."}
+                  </p>
                 </div>
-                <div className="[&>button]:h-10 [&>button]:px-4 [&>button]:rounded-lg">
-                  <SaveButton carId={car.id} initialSaved={isSaved} isLoggedIn={isLoggedIn} />
+              </section>
+
+              <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
+                <h2 className="text-sm font-extrabold uppercase tracking-[0.12em] text-slate-700 mb-3">Vehicle Details</h2>
+                <div className="divide-y divide-slate-100 border-y border-slate-100">
+                  {specRows.map((row, idx) => (
+                    <div key={`${row[0]?.label || "row"}-${idx}`} className="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
+                      {[0, 1].map((rowIdx) => {
+                        const item = row[rowIdx];
+                        if (!item) return <div key={rowIdx} className="py-3 sm:py-3.5" />;
+                        return (
+                          <div key={item.label} className="py-3 sm:py-3.5 flex items-center justify-between gap-3 sm:border-r last:sm:border-r-0 sm:border-slate-100">
+                            <span className="text-sm font-semibold text-slate-500">{item.label}</span>
+                            <span className="text-sm font-extrabold text-slate-900 text-right">{item.value}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ))}
                 </div>
-              </div>
 
-              <div className="pt-1 flex flex-wrap items-center gap-3">
-                <ShareButtons title={title} price={formatPrice(car.price)} />
-                <PrintButton carId={car.id} />
-              </div>
-            </div>
+                <div className="mt-4 flex flex-wrap items-center gap-2.5">
+                  {trustBadges.map((badge) => (
+                    <span
+                      key={badge}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 text-[10px] font-extrabold uppercase tracking-[0.12em]"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5" /> {badge}
+                    </span>
+                  ))}
+                </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
-              <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-500 mb-3">Vehicle Details</p>
-              <dl className="divide-y divide-slate-100 border-y border-slate-100">
-                {specs.filter((entry) => entry.value && entry.value !== "N/A").slice(0, 14).map((entry) => (
-                  <div key={entry.label} className="py-2.5 grid grid-cols-[120px_minmax(0,1fr)] gap-3 items-start">
-                    <dt className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-slate-500">{entry.label}</dt>
-                    <dd className="text-sm font-semibold text-slate-800 break-words">{entry.value}</dd>
+                <div className="mt-4 flex flex-wrap items-center gap-2.5">
+                  <Link
+                    href={`/dealers/${dealer.slug}#dealer-gallery`}
+                    className="h-10 px-4 rounded-lg border border-slate-200 bg-white text-slate-700 text-[10px] font-extrabold uppercase tracking-[0.12em] inline-flex items-center justify-center"
+                  >
+                    View Dealer Gallery
+                  </Link>
+                  <div className="[&>button]:h-10 [&>button]:px-4 [&>button]:rounded-lg">
+                    <CompareButton car={compareCar} />
                   </div>
-                ))}
-              </dl>
+                  <div className="[&>button]:h-10 [&>button]:px-4 [&>button]:rounded-lg">
+                    <SaveButton carId={car.id} initialSaved={isSaved} isLoggedIn={isLoggedIn} />
+                  </div>
+                  <PrintButton carId={car.id} />
+                </div>
+
+                <div className="mt-3 flex flex-wrap items-center gap-3">
+                  <ShareButtons title={title} price={formatPrice(car.price)} />
+                </div>
+              </section>
+
+              {/* Duty estimate */}
+              {car.imported && !car.dutyPaid && (
+                <div className="bg-emerald-900 rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-800/50 blur-3xl -mr-32 -mt-32 rounded-full" />
+                  <div className="relative z-10 space-y-3">
+                    <div className="flex items-center gap-3 text-emerald-400 font-extrabold text-xs uppercase tracking-widest">
+                      <Wallet className="w-4 h-4" /> Estimated Import Duty
+                    </div>
+                    <p className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">{formatPrice(duty)}</p>
+                    <p className="text-sm text-emerald-100/70 max-w-xl font-medium">
+                      This is a rough KRA estimate based on age and market value. Always verify with a licensed clearing agent.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
+
+            <aside className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 lg:sticky lg:top-24 space-y-4">
+              <div className="pb-3 border-b border-slate-100">
+                <p className="text-sm font-semibold text-slate-500">Price</p>
+                <p className="text-4xl font-extrabold text-slate-900 tracking-tight mt-1">{formatPrice(car.price)}</p>
+                <p className="text-xs font-semibold text-slate-500 mt-1">Shipping included to major ports</p>
+              </div>
+
+              <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/70 p-3">
+                <div className="w-10 h-10 rounded-lg bg-brand-light flex items-center justify-center text-brand font-extrabold text-lg overflow-hidden">
+                  {dealerBrandImage ? (
+                    <img src={dealerBrandImage} alt={dealer.name} className="w-full h-full object-cover" />
+                  ) : (
+                    dealer.name[0]
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-extrabold text-slate-900 truncate">{dealer.name}</p>
+                  <p className="text-xs font-semibold text-slate-500 flex items-center gap-1 truncate">
+                    <MapPin className="w-3.5 h-3.5" /> {car.location || dealer.location || "Location on request"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-1">
+                <EnquiryForm
+                  carId={car.id}
+                  dealerId={dealer.id}
+                  carTitle={title}
+                  dealer={dealer}
+                  userName={session?.user?.name || ""}
+                  userEmail={session?.user?.email || ""}
+                  whatsAppFirst={false}
+                  showQuickMessages={false}
+                  showSafetyBadge={false}
+                />
+              </div>
+
+              <div className="pt-2 border-t border-slate-100">
+                <Link
+                  href={`/dealers/${dealer.slug}`}
+                  className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-brand border border-brand-light rounded-lg py-3 hover:bg-brand-light transition-all"
+                >
+                  Browse Dealer Inventory
+                </Link>
+              </div>
+            </aside>
           </div>
 
           <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
@@ -337,87 +398,9 @@ export default async function CarDetailPage({ params }) {
               </Link>
             </div>
           </div>
-
-          {/* Duty estimate */}
-          {car.imported && !car.dutyPaid && (
-            <div className="bg-emerald-900 rounded-xl p-6 sm:p-10 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-800/50 blur-3xl -mr-32 -mt-32 rounded-full" />
-              <div className="relative z-10 space-y-4">
-                <div className="flex items-center gap-3 text-emerald-400 font-extrabold text-xs uppercase tracking-widest">
-                  <Wallet className="w-4 h-4" /> Estimated Import Duty
-                </div>
-                <p className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">{formatPrice(duty)}</p>
-                <p className="text-sm text-emerald-100/60 max-w-md font-medium">
-                  This is a rough KRA estimate based on age and market value. Always verify with a licensed clearing agent.
-                </p>
-              </div>
-            </div>
-          )}
         </div>
 
-        {/* Right: enquiry-first panel */}
-        <div className="space-y-6 sm:space-y-8">
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 space-y-5 lg:sticky lg:top-24">
-            <div className="space-y-1">
-              <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-500">Send an Enquiry</p>
-              <p className="text-sm font-semibold text-slate-700">Hi, I&apos;m interested in the {title}. Please share more details.</p>
-            </div>
-
-            <div className="flex items-center gap-5">
-              <div className="w-16 h-16 rounded-xl bg-brand-light flex items-center justify-center text-brand font-extrabold text-2xl overflow-hidden">
-                {dealerBrandImage ? (
-                  <img src={dealerBrandImage} alt={dealer.name} className="w-full h-full object-cover" />
-                ) : (
-                  dealer.name[0]
-                )}
-              </div>
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <p className="font-extrabold text-lg text-slate-900">{dealer.name}</p>
-                  {dealer.verified && (
-                    <div className="p-1 rounded-full bg-emerald-50 text-emerald-500">
-                      <ShieldCheck className="w-4 h-4" />
-                    </div>
-                  )}
-                </div>
-                <p className="text-sm font-bold text-slate-400 flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5" /> {dealer.location || "Location on request"}
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <EnquiryForm
-                carId={car.id}
-                dealerId={dealer.id}
-                carTitle={title}
-                dealer={dealer}
-                userName={session?.user?.name || ""}
-                userEmail={session?.user?.email || ""}
-              />
-            </div>
-
-            <div className="pt-1 border-t border-slate-100 flex flex-col gap-2.5">
-              <Link
-                href={`/dealers/${dealer.slug}`}
-                className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-brand border border-brand-light rounded-lg py-3 hover:bg-brand-light transition-all"
-              >
-                Browse Dealer Inventory
-              </Link>
-              {dealer.phone && (
-                <a
-                  href={`tel:${dealer.phone}`}
-                  className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-slate-900 border border-slate-200 rounded-lg py-3 hover:bg-slate-50 transition-all"
-                >
-                  <Phone className="w-4 h-4" /> Call Dealer
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Similar cars */}
+        {/* Similar cars */}
       {similar.length > 0 && (
         <div className="mt-16 sm:mt-24 lg:mt-32 space-y-8 sm:space-y-12">
           <div className="flex items-end justify-between">
@@ -467,6 +450,7 @@ export default async function CarDetailPage({ params }) {
 
       {/* Hidden Spec Sheet for Printing */}
       <SpecSheet car={car} dealer={dealer} />
+    </div>
     </div>
   );
 }
