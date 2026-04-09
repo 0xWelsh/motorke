@@ -342,6 +342,7 @@ export default function SignupForm({ error: initialError }) {
              </footer>
           </div>
         </div>
+      </div>
       </section>
     </div>
   );
