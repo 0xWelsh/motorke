@@ -11,10 +11,17 @@ export default function HumanCheck({ value, onChange }) {
   const [scriptReady, setScriptReady] = useState(false);
   const [scriptTimeout, setScriptTimeout] = useState(false);
 
-  const provider = recaptchaSiteKey ? "recaptcha" : turnstileSiteKey ? "turnstile" : "fallback";
+  const provider = recaptchaSiteKey ? "recaptcha" : turnstileSiteKey ? "turnstile" : null;
 
   useEffect(() => {
-    if (provider === "fallback") return;
+    if (!provider) {
+      // Keep local/dev forms submittable without exposing a visual fallback control.
+      onChange("human-checked");
+    }
+  }, [onChange, provider]);
+
+  useEffect(() => {
+    if (!provider) return;
     const timeout = setTimeout(() => {
       if (!scriptReady) setScriptTimeout(true);
     }, 5000);
@@ -23,7 +30,7 @@ export default function HumanCheck({ value, onChange }) {
   }, [provider, scriptReady]);
 
   useEffect(() => {
-    if (provider === "fallback" || !scriptReady || !widgetRef.current || widgetIdRef.current !== null) return;
+    if (!provider || !scriptReady || !widgetRef.current || widgetIdRef.current !== null) return;
 
     if (provider === "recaptcha") {
       if (!window.grecaptcha || !recaptchaSiteKey) return;
@@ -63,17 +70,11 @@ export default function HumanCheck({ value, onChange }) {
     };
   }, [onChange, provider, recaptchaSiteKey, scriptReady, turnstileSiteKey]);
 
-  if (provider === "fallback") {
+  if (!provider) {
     return (
-      <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700">
-        <input
-          type="checkbox"
-          checked={value === "human-checked"}
-          onChange={(event) => onChange(event.target.checked ? "human-checked" : "")}
-          className="h-4 w-4 rounded border-slate-300"
-        />
-        Are you human? (Local fallback)
-      </label>
+      <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] font-semibold text-slate-500">
+        Security verification is unavailable in this environment.
+      </div>
     );
   }
 

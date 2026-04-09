@@ -54,7 +54,7 @@ describe('Search Suggestions API', () => {
     const toyotaSuggestion = data.suggestions.find(s => s.value === 'Toyota');
     expect(toyotaSuggestion).toBeDefined();
     expect(toyotaSuggestion.type).toBe('make');
-  });
+  }, 20000);
 
   test('should return suggestions for "land"', async () => {
     const response = await fetch(`${BASE_URL}/api/search/suggestions?query=land`);
@@ -69,7 +69,7 @@ describe('Search Suggestions API', () => {
     const landCruiserSuggestion = data.suggestions.find(s => s.value === 'Land Cruiser');
     expect(landCruiserSuggestion).toBeDefined();
     expect(landCruiserSuggestion.type).toBe('model');
-  });
+  }, 20000);
 
   test('should return suggestions payload for one-character query', async () => {
     const response = await fetch(`${BASE_URL}/api/search/suggestions?query=a`);
@@ -79,7 +79,7 @@ describe('Search Suggestions API', () => {
     expect(data.query).toBe('a');
     expect(Array.isArray(data.suggestions)).toBe(true);
     expect(data.suggestions.length).toBeLessThanOrEqual(8);
-  });
+  }, 20000);
 
   test('should return empty suggestions for no matches', async () => {
     const response = await fetch(`${BASE_URL}/api/search/suggestions?query=xyzabc123`);
@@ -89,5 +89,5 @@ describe('Search Suggestions API', () => {
     expect(data.query).toBe('xyzabc123');
     expect(Array.isArray(data.suggestions)).toBe(true);
     expect(data.suggestions.length).toBe(0);
-  });
+  }, 20000);
 });

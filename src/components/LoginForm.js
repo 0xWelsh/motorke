@@ -13,7 +13,8 @@ export default function LoginForm({ error }) {
   const [captchaToken, setCaptchaToken] = useState("");
   const [website, setWebsite] = useState("");
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "660578051558-vigoibi56aj4elh0r9gh4cvjtff9asee.apps.googleusercontent.com";
-  const canSubmit = email.trim().length > 0 && password.length > 0 && captchaToken.length > 0;
+  const requiresHumanCheck = Boolean(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+  const canSubmit = email.trim().length > 0 && password.length > 0 && (!requiresHumanCheck || captchaToken.length > 0);
   
   // Basic inline validation
   const isValidEmail = email.includes("@") && email.includes(".");
@@ -63,35 +64,34 @@ export default function LoginForm({ error }) {
         }}
       />
 
-      <section className="min-h-screen px-4 py-6 sm:px-6 sm:py-10 lg:py-12 flex items-center justify-center">
-        <div className="w-full max-w-[540px] rounded-[2rem] border border-slate-200 bg-white shadow-[0_30px_70px_rgba(15,23,42,0.08)] p-5 sm:p-8 lg:p-10 relative">
+      <section className="h-dvh px-4 py-4 sm:px-6 sm:py-6 flex items-center justify-center overflow-hidden">
+        <div className="w-full max-w-[520px] max-h-[94dvh] overflow-y-auto rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_24px_56px_rgba(15,23,42,0.08)] p-4 sm:p-6 lg:p-7 relative">
           <Link
             href="/"
-            className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
+            className="absolute top-3.5 right-3.5 sm:top-5 sm:right-5 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
           >
             Back to Showroom <ArrowLeft className="w-3 h-3 rotate-180" />
           </Link>
 
-          <div className="w-full max-w-[420px] mx-auto mt-10 sm:mt-8">
+          <div className="w-full max-w-[410px] mx-auto mt-8 sm:mt-6">
             {/* Logo & Header */}
-          <header className="mb-7 text-center">
-               <div className="inline-flex items-center gap-3 mb-6">
+          <header className="mb-4 text-center">
+               <div className="inline-flex items-center gap-3 mb-3">
                 <img src="/favicon.svg" alt="Motorke" className="h-10 w-10 object-contain rounded-xl" />
                   <div className="h-4 w-px bg-slate-200 mx-1" />
                   <span className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">Auth</span>
                </div>
-            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tighter mb-3 leading-tight">Welcome Back.</h1>
-            <p className="text-slate-700 font-medium text-sm">Sign in to continue managing listings and leads in under 30 seconds.</p>
+            <h1 className="text-3xl sm:text-[2rem] font-black text-slate-900 tracking-tighter mb-1.5 leading-tight">Welcome Back!</h1>
             </header>
 
             {/* Error Message */}
             {error && (
-              <div className="mb-10 p-5 bg-rose-50 border border-rose-100 rounded-[1.5rem] flex items-start gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
-                <div className="w-8 h-8 bg-rose-200 rounded-xl flex items-center justify-center text-rose-600 shadow-sm shrink-0">
-                  <Lock size={16} />
+              <div className="mb-4 p-3.5 bg-rose-50 border border-rose-100 rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-top-4 duration-500">
+                <div className="w-7 h-7 bg-rose-200 rounded-lg flex items-center justify-center text-rose-600 shadow-sm shrink-0">
+                  <Lock size={14} />
                 </div>
                 <div>
-                   <p className="text-[11px] font-black text-rose-900 uppercase tracking-widest mb-1 leading-none">Authentication Failed</p>
+                   <p className="text-[10px] font-black text-rose-900 uppercase tracking-widest mb-1 leading-none">Authentication Failed</p>
                    <p className="text-[11px] font-bold text-rose-600 leading-tight">
                      {error === "invalid" && "The email or password you entered is incorrect."}
                      {error === "inactive" && "This account has been deactivated. Please contact support."}
@@ -103,7 +103,7 @@ export default function LoginForm({ error }) {
             )}
 
             {/* Login Form */}
-            <form action="/api/auth/login" method="POST" className="space-y-5">
+            <form action="/api/auth/login" method="POST" className="space-y-3.5">
                <input
                  type="hidden"
                  name="captchaToken"
@@ -121,7 +121,7 @@ export default function LoginForm({ error }) {
                  aria-hidden="true"
                />
 
-               <div className="space-y-3 relative">
+               <div className="space-y-1.5 relative">
                   <label htmlFor="emailAddress" className="text-[10px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1">Email Address</label>
                   <div className="relative">
                     <input 
@@ -133,17 +133,14 @@ export default function LoginForm({ error }) {
                       required 
                       autoComplete="email"
                       placeholder="e.g. james@dealership.com" 
-                      className={`w-full bg-white border ${isValidEmail ? 'border-emerald-500' : 'border-slate-100'} rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100 pr-12`}
+                      className={`w-full bg-white border ${isValidEmail ? 'border-emerald-500' : 'border-slate-100'} rounded-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100 pr-11`}
                     />
                     {isValidEmail && <CheckCircle2 className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-500" size={18} />}
                   </div>
                </div>
 
-               <div className="space-y-3">
-                  <div className="flex items-center justify-between ml-1">
-                    <label htmlFor="securePassword" className="text-[10px] font-black text-slate-700 uppercase tracking-[0.25em]">Secure Password</label>
-                    <Link href="/forgot-password" className="text-[9px] font-black text-slate-600 hover:text-emerald-500 uppercase tracking-widest transition-colors">Recover Account</Link>
-                  </div>
+               <div className="space-y-1.5">
+                  <label htmlFor="securePassword" className="text-[10px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1">Enter Password</label>
                   <div className="relative group">
                     <input 
                       id="securePassword"
@@ -154,20 +151,20 @@ export default function LoginForm({ error }) {
                       onChange={(e) => setPassword(e.target.value)}
                       autoComplete="current-password"
                       placeholder="••••••••" 
-                      className="w-full bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100 pr-14"
+                      className="w-full bg-white border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100 pr-12"
                     />
                     <button 
                       type="button" 
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-900 transition-colors"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-900 transition-colors"
                       aria-label={showPassword ? "Hide password" : "Show password"}
                     >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
                     </button>
                   </div>
                </div>
 
-               <div className="flex items-center justify-between ml-1 pb-2">
+               <div className="flex items-center justify-between ml-1 pt-0.5">
                  <label htmlFor="rememberMe" className="flex items-center gap-2 cursor-pointer group">
                    <div className="relative flex items-center justify-center w-5 h-5 bg-white border border-slate-200 rounded text-transparent group-hover:border-emerald-500 transition-colors">
                      <input type="checkbox" id="rememberMe" name="remember" className="absolute opacity-0 w-full h-full cursor-pointer peer" />
@@ -177,48 +174,38 @@ export default function LoginForm({ error }) {
                  </label>
                </div>
 
-               <HumanCheck value={captchaToken} onChange={setCaptchaToken} />
+               <div className="space-y-1.5">
+                 <p className="text-[10px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1">Are You Human?</p>
+                 <HumanCheck value={captchaToken} onChange={setCaptchaToken} />
+               </div>
 
                <button 
                  type="submit" 
                  disabled={!canSubmit}
-                 className="w-full bg-slate-950 hover:bg-black disabled:bg-slate-400 disabled:cursor-not-allowed text-white rounded-2xl py-5 font-black text-[10px] uppercase tracking-[0.2em] transition-all shadow-2xl shadow-slate-900/10 flex items-center justify-center gap-3 active:scale-[0.98]"
+                 className="w-full bg-slate-950 hover:bg-black disabled:bg-slate-400 disabled:cursor-not-allowed text-white rounded-xl py-3.5 font-black text-[10px] uppercase tracking-[0.2em] transition-all shadow-2xl shadow-slate-900/10 flex items-center justify-center gap-2.5 active:scale-[0.98]"
                >
                  Log In <ChevronRight size={14} className="opacity-40" />
                </button>
+
+               <div className="relative pt-0.5">
+                 <div className="absolute inset-0 flex items-center">
+                   <div className="w-full border-t border-slate-100"></div>
+                 </div>
+                 <div className="relative flex justify-center text-[10px] uppercase font-black tracking-[0.25em]">
+                   <span className="bg-white px-4 text-slate-700">Continue with Google</span>
+                 </div>
+               </div>
+
+               <div className="flex justify-center">
+                 <div id="google-button-container" className="w-full max-w-[320px]" />
+               </div>
             </form>
 
-            <div className="mt-4 rounded-2xl bg-emerald-50 border border-emerald-100 px-4 py-3 text-[11px] font-bold text-emerald-800">
-              Trusted by Kenyan buyers and dealers to manage high-intent car enquiries securely.
-            </div>
-
-            <div className="relative my-6">
-               <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-100"></div>
-               </div>
-               <div className="relative flex justify-center text-[10px] uppercase font-black tracking-[0.25em]">
-               <span className="bg-white px-5 text-slate-700">Continue with Google</span>
-               </div>
-            </div>
-
-            <div className="flex justify-center">
-               <div id="google-button-container" className="w-full max-w-[320px] transition-transform hover:scale-[1.02]" />
-            </div>
-
-            <footer className="mt-8 pt-6 border-t border-slate-50 text-center">
+            <footer className="mt-4 pt-3 border-t border-slate-100 text-center">
                <p className="text-sm font-bold text-slate-900">
                   New to our marketplace?{" "}
                 <Link href="/signup" className="text-slate-900 hover:text-emerald-500 transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10 pb-0.5">Create an Account</Link>
                </p>
-              <p className="mt-3 text-[11px] font-semibold text-slate-600">
-                By signing in you agree to our <Link href="/terms" className="text-slate-900 hover:text-emerald-600">Terms</Link> and <Link href="/privacy" className="text-slate-900 hover:text-emerald-600">Privacy Policy</Link>.
-              </p>
-
-                <div className="mt-6 flex flex-col items-center gap-6">
-                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
-                     MotorsKe © 2026
-                  </p>
-               </div>
             </footer>
              </div>
             </div>

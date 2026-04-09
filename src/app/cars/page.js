@@ -129,110 +129,116 @@ export default async function CarsPage({ searchParams }) {
   };
 
   return (
-    <div className="min-h-screen">
-      <CarsSearch
-        initialSearch={search}
-        initialMake={make}
-        initialBodyType={bodyType}
-        initialFuelType={fuelType}
-        initialTransmission={transmission}
-        initialCounty={county}
-        initialMinPrice={minPrice}
-        initialMaxPrice={maxPrice}
-        initialSort={sort}
-        allMakes={allMakes}
-        bodyTypeLabels={BODY_TYPE_LABELS}
-        counties={COUNTIES}
-      />
+    <div className="min-h-screen bg-[#f7f6f3]">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-6 lg:py-8">
+        <div className="grid grid-cols-1 xl:grid-cols-[300px_minmax(0,1fr)] gap-5 lg:gap-8 items-start">
+          <aside className="xl:sticky xl:top-[84px]">
+            <CarsSearch
+              initialSearch={search}
+              initialMake={make}
+              initialBodyType={bodyType}
+              initialFuelType={fuelType}
+              initialTransmission={transmission}
+              initialCounty={county}
+              initialMinPrice={minPrice}
+              initialMaxPrice={maxPrice}
+              initialSort={sort}
+              allMakes={allMakes}
+              bodyTypeLabels={BODY_TYPE_LABELS}
+              counties={COUNTIES}
+            />
+          </aside>
 
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-7xl">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-10 gap-6">
-          <div>
-            <div className="inline-flex items-center gap-2 mb-3 border-b border-[#e7e1d8] pb-1">
-              <span className="h-2 w-2 rounded-full bg-[#ff5a2f] animate-pulse" />
-              <span className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-500">Live Cars</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl text-slate-900 tracking-tight">
-              {search ? `Results for ${search}` : county ? `${county} Inventory` : "Explore Cars"}
-            </h1>
-            <p className="text-base md:text-lg text-slate-600 font-medium mt-2">
-              {total.toLocaleString()} active listings from verified dealerships.
-            </p>
-          </div>
-          <div className="hidden md:flex items-center gap-3 border-b border-[#e7e1d8] pb-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-600">Dealer-Verified Listings</p>
-          </div>
-        </div>
-
-        {activeFilterPills.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-8">
-            {activeFilterPills.map((pill) => (
-              <span key={pill} className="rounded-lg border border-[#e7e1d8] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-slate-600">
-                {pill}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {sortedCars.length === 0 ? (
-          <div className="py-24 text-center border-y border-[#e7e1d8]">
-            <div className="w-20 h-20 bg-[#faf7f2] rounded-xl flex items-center justify-center mx-auto mb-6">
-              <Search className="w-8 h-8 text-slate-300" />
-            </div>
-            <h2 className="text-2xl text-slate-900 mb-3">No cars match these filters</h2>
-            <p className="text-base text-slate-600 font-medium mb-8 max-w-md mx-auto">Try broadening your search or resetting filters.</p>
-            <Link href="/cars" className="mk-pill-btn inline-flex items-center gap-2 bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 text-xs uppercase transition-colors">
-              Reset Search <ArrowUpRight className="w-4 h-4" />
-            </Link>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-            {sortedCars.map((car, idx) => (
-              <InventoryCard key={car.id} car={car} userLat={userLat} userLng={userLng} priority={idx < 4} />
-            ))}
-          </div>
-        )}
-
-        {totalPages > 1 && (
-          <div className="mt-12 sm:mt-16 overflow-x-auto pb-2">
-            <div className="min-w-max flex justify-center items-center gap-2 sm:gap-3 mx-auto">
-              {page > 1 && (
-                <Link href={getPageLink(page - 1)} className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
-                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 rotate-180" />
-                </Link>
-              )}
-
-              <div className="flex items-center gap-2">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-                  if (p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)) {
-                    return (
-                      <Link key={p}
-                        href={getPageLink(p)}
-                        className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center text-xs font-extrabold transition-all ${
-                          p === page 
-                            ? "bg-[#111111] text-white shadow-md" 
-                            : "bg-white border border-[#e7e1d8] text-slate-600 hover:bg-[#faf7f2]"
-                        }`}
-                      >
-                        {p}
-                      </Link>
-                    );
-                  }
-                  if (p === 2 && page > 3) return <span key="e1" className="text-slate-400 px-1 font-extrabold">...</span>;
-                  if (p === totalPages - 1 && page < totalPages - 2) return <span key="e2" className="text-slate-400 px-1 font-extrabold">...</span>;
-                  return null;
-                })}
+          <section className="min-w-0">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 gap-4 sm:gap-6">
+              <div>
+                <div className="inline-flex items-center gap-2 mb-2 border-b border-[#e7e1d8] pb-1">
+                  <span className="h-2 w-2 rounded-full bg-[#ff5a2f] animate-pulse" />
+                  <span className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-500">Live Cars</span>
+                </div>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-tight">
+                  {search ? `Results for ${search}` : county ? `${county} Inventory` : "Explore Cars"}
+                </h1>
+                <p className="text-sm sm:text-base text-slate-600 font-medium mt-2">
+                  {total.toLocaleString()} active listings from verified dealerships.
+                </p>
               </div>
-
-              {page < totalPages && (
-                <Link href={getPageLink(page + 1)} className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
-                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                </Link>
-              )}
+              <div className="hidden md:flex items-center gap-2.5 rounded-xl border border-[#e7e1d8] bg-white px-3 py-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-600">Dealer-Verified Listings</p>
+              </div>
             </div>
-          </div>
-        )}
+
+            {activeFilterPills.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-6">
+                {activeFilterPills.map((pill) => (
+                  <span key={pill} className="rounded-lg border border-[#ddd4c8] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-slate-600">
+                    {pill}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {sortedCars.length === 0 ? (
+              <div className="py-20 text-center border border-[#ddd4c8] rounded-2xl bg-white">
+                <div className="w-20 h-20 bg-[#faf7f2] rounded-xl flex items-center justify-center mx-auto mb-6">
+                  <Search className="w-8 h-8 text-slate-300" />
+                </div>
+                <h2 className="text-2xl text-slate-900 mb-3">No cars match these filters</h2>
+                <p className="text-base text-slate-600 font-medium mb-8 max-w-md mx-auto">Try broadening your search or resetting filters.</p>
+                <Link href="/cars" className="mk-pill-btn inline-flex items-center gap-2 bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 text-xs uppercase transition-colors">
+                  Reset Search <ArrowUpRight className="w-4 h-4" />
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+                {sortedCars.map((car, idx) => (
+                  <InventoryCard key={car.id} car={car} userLat={userLat} userLng={userLng} priority={idx < 4} />
+                ))}
+              </div>
+            )}
+
+            {totalPages > 1 && (
+              <div className="mt-10 sm:mt-12 overflow-x-auto pb-2">
+                <div className="min-w-max flex justify-center items-center gap-2 sm:gap-3 mx-auto">
+                  {page > 1 && (
+                    <Link href={getPageLink(page - 1)} className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center bg-white border border-[#ddd4c8] text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
+                      <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 rotate-180" />
+                    </Link>
+                  )}
+
+                  <div className="flex items-center gap-2">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
+                      if (p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)) {
+                        return (
+                          <Link key={p}
+                            href={getPageLink(p)}
+                            className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center text-xs font-extrabold transition-all ${
+                              p === page
+                                ? "bg-[#111111] text-white shadow-md"
+                                : "bg-white border border-[#ddd4c8] text-slate-600 hover:bg-[#faf7f2]"
+                            }`}
+                          >
+                            {p}
+                          </Link>
+                        );
+                      }
+                      if (p === 2 && page > 3) return <span key="e1" className="text-slate-400 px-1 font-extrabold">...</span>;
+                      if (p === totalPages - 1 && page < totalPages - 2) return <span key="e2" className="text-slate-400 px-1 font-extrabold">...</span>;
+                      return null;
+                    })}
+                  </div>
+
+                  {page < totalPages && (
+                    <Link href={getPageLink(page + 1)} className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center bg-white border border-[#ddd4c8] text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
+                      <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </Link>
+                  )}
+                </div>
+              </div>
+            )}
+          </section>
+        </div>
       </div>
     </div>
   );
