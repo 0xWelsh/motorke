@@ -6,7 +6,6 @@ import { clsx } from "clsx";
 import LocationPicker from "./LocationPicker";
 import Link from "next/link";
 import Script from "next/script";
-import AuthCarousel from "./AuthCarousel";
 import HumanCheck from "./HumanCheck";
 
 const COUNTIES = [
@@ -112,7 +111,7 @@ export default function SignupForm({ error: initialError }) {
   const labelCls = "text-[10px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1 flex items-center gap-2";
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_18%_14%,rgba(16,185,129,0.08),transparent_38%),radial-gradient(circle_at_84%_86%,rgba(15,23,42,0.08),transparent_40%),#FCFCFD]">
       <Script 
         src="https://accounts.google.com/gsi/client" 
         strategy="afterInteractive"
@@ -134,22 +133,20 @@ export default function SignupForm({ error: initialError }) {
                 } else {
                   setErrorMsg("Google signup failed.");
                 }
-              } catch (err) {
-                setErrorMsg("Network error during Google signup.");
-              }
-            },
-          });
-          const googleSignupContainer = document.getElementById("google-signup-button");
-          if (!googleSignupContainer) return;
+               <section className="min-h-screen px-4 py-6 sm:px-6 sm:py-10 lg:py-12 flex items-center justify-center">
+                 <div className={clsx(
+                   "w-full rounded-[2rem] border border-slate-200 bg-white shadow-[0_30px_70px_rgba(15,23,42,0.08)] p-5 sm:p-8 lg:p-10 relative",
+                   role === "DEALER" ? "max-w-5xl" : "max-w-[560px]"
+                 )}>
 
           window.google.accounts.id.renderButton(
             googleSignupContainer,
-            { 
+                    className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
               theme: "outline", 
               size: "large", 
               width: "320", 
               text: "signup_with",
-              shape: "pill",
+                  <div className={clsx("w-full mx-auto transition-all duration-700 mt-10 sm:mt-8", role === "DEALER" ? "max-w-4xl" : "max-w-[440px]") }>
               logo_alignment: "left"
             }
           );
@@ -339,6 +336,7 @@ export default function SignupForm({ error: initialError }) {
                 </div>
              </footer>
           </div>
+            </div>
        </section>
     </div>
   );

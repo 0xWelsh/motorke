@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { Lock, ArrowLeft, ShieldCheck, ChevronRight, Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import Script from "next/script";
-import AuthCarousel from "./AuthCarousel";
 import HumanCheck from "./HumanCheck";
 
 export default function LoginForm({ error }) {
@@ -20,7 +19,7 @@ export default function LoginForm({ error }) {
   const isValidEmail = email.includes("@") && email.includes(".");
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_20%_15%,rgba(16,185,129,0.08),transparent_38%),radial-gradient(circle_at_80%_85%,rgba(15,23,42,0.08),transparent_40%),#FCFCFD]">
       <Script 
         src="https://accounts.google.com/gsi/client" 
         strategy="afterInteractive"
@@ -64,21 +63,18 @@ export default function LoginForm({ error }) {
         }}
       />
 
-      <AuthCarousel />
+      <section className="min-h-screen px-4 py-6 sm:px-6 sm:py-10 lg:py-12 flex items-center justify-center">
+        <div className="w-full max-w-[540px] rounded-[2rem] border border-slate-200 bg-white shadow-[0_30px_70px_rgba(15,23,42,0.08)] p-5 sm:p-8 lg:p-10 relative">
+          <Link
+            href="/"
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
+          >
+            Back to Showroom <ArrowLeft className="w-3 h-3 rotate-180" />
+          </Link>
 
-      {/* ── FORM SECTION (Right) ── */}
-      <section className="flex-1 flex flex-col items-center justify-center p-5 sm:p-8 lg:p-12 bg-white relative">
-         
-        <Link 
-           href="/" 
-          className="absolute top-4 right-4 sm:top-8 sm:right-8 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
-         >
-           Back to Showroom <ArrowLeft className="w-3 h-3 rotate-180" />
-         </Link>
-
-        <div className="w-full max-w-[420px] mt-10 sm:mt-0">
+          <div className="w-full max-w-[420px] mx-auto mt-10 sm:mt-8">
             {/* Logo & Header */}
-          <header className="mb-7 text-center lg:text-left">
+          <header className="mb-7 text-center">
                <div className="inline-flex items-center gap-3 mb-6">
                 <img src="/favicon.svg" alt="Motorke" className="h-10 w-10 object-contain rounded-xl" />
                   <div className="h-4 w-px bg-slate-200 mx-1" />
@@ -209,7 +205,7 @@ export default function LoginForm({ error }) {
                <div id="google-button-container" className="w-full max-w-[320px] transition-transform hover:scale-[1.02]" />
             </div>
 
-            <footer className="mt-8 pt-6 border-t border-slate-50 text-center lg:text-left">
+            <footer className="mt-8 pt-6 border-t border-slate-50 text-center">
                <p className="text-sm font-bold text-slate-900">
                   New to our marketplace?{" "}
                 <Link href="/signup" className="text-slate-900 hover:text-emerald-500 transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10 pb-0.5">Create an Account</Link>
@@ -217,14 +213,15 @@ export default function LoginForm({ error }) {
               <p className="mt-3 text-[11px] font-semibold text-slate-600">
                 By signing in you agree to our <Link href="/terms" className="text-slate-900 hover:text-emerald-600">Terms</Link> and <Link href="/privacy" className="text-slate-900 hover:text-emerald-600">Privacy Policy</Link>.
               </p>
-               
-               <div className="mt-6 flex flex-col lg:flex-row items-center gap-6">
+
+                <div className="mt-6 flex flex-col items-center gap-6">
                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
                      MotorsKe © 2026
                   </p>
                </div>
             </footer>
-         </div>
+             </div>
+            </div>
       </section>
     </div>
   );
