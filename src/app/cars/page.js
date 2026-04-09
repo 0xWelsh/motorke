@@ -130,7 +130,7 @@ export default async function CarsPage({ searchParams }) {
 
   return (
     <div className="min-h-screen bg-[#f7f6f3]">
-      <div className="w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-6 lg:py-8">
+      <div className="max-w-[1520px] mx-auto px-5 sm:px-8 lg:px-12 py-5 sm:py-6 lg:py-8">
         <div className="grid grid-cols-1 xl:grid-cols-[300px_minmax(0,1fr)] gap-5 lg:gap-8 items-start">
           <aside className="xl:sticky xl:top-[84px]">
             <CarsSearch

@@ -439,7 +439,7 @@ export default async function CarDetailPage({ params }) {
                     <div className="flex items-center justify-between pt-4 border-t border-slate-50">
                       <p className="text-xl font-extrabold text-slate-900">{formatPrice(c.price)}</p>
                       <span className="text-xs font-bold text-slate-400">{c.dealer?.name}</span>
-                    </div>
+                  </div>
                   </div>
                 </Link>
               );
