@@ -64,14 +64,14 @@ export default function ImageGallery({ images, title }) {
   return (
     <>
       {mosaicMode ? (
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-2 sm:gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] gap-1.5 sm:gap-2">
           <button
             type="button"
             onClick={() => {
               setActive(0);
               setLightbox(true);
             }}
-            className="relative aspect-[16/11] rounded-2xl overflow-hidden bg-white/5 group"
+            className="relative lg:row-span-2 aspect-[4/3] lg:aspect-auto lg:h-full rounded-sm overflow-hidden bg-white/5 group"
             aria-label="Open hero image"
           >
             <Image
@@ -82,43 +82,41 @@ export default function ImageGallery({ images, title }) {
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
               sizes="(max-width: 1024px) 100vw, 66vw"
             />
-            <span className="absolute bottom-3 left-3 inline-flex items-center justify-center w-9 h-9 rounded-lg bg-white/90 text-slate-700 text-sm shadow">
+            <span className="absolute bottom-2.5 left-2.5 inline-flex items-center justify-center w-8 h-8 rounded-sm bg-white/90 text-slate-700 text-sm shadow">
               ↗
             </span>
           </button>
 
-          <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            {images.slice(1, 5).map((img, i) => {
-              const idx = i + 1;
-              const isLastVisible = idx === 4;
+          {images.slice(1, 5).map((img, i) => {
+            const idx = i + 1;
+            const isLastVisible = idx === 4;
 
-              return (
-                <button
-                  type="button"
-                  key={`${img.url}-${idx}`}
-                  onClick={() => {
-                    setActive(idx);
-                    setLightbox(true);
-                  }}
-                  className="relative aspect-[4/3] rounded-xl overflow-hidden bg-white/5 group"
-                  aria-label={`Open image ${idx + 1}`}
-                >
-                  <Image
-                    src={img.url}
-                    alt={img.alt || `${title} image ${idx + 1}`}
-                    fill
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                    sizes="(max-width: 1024px) 50vw, 22vw"
-                  />
-                  {isLastVisible && remainingCount > 0 && (
-                    <span className="absolute bottom-2.5 right-2.5 bg-white/95 text-slate-800 text-[11px] font-extrabold uppercase tracking-[0.12em] px-2.5 py-1 rounded-md">
-                      {remainingCount}+ Photos
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+            return (
+              <button
+                type="button"
+                key={`${img.url}-${idx}`}
+                onClick={() => {
+                  setActive(idx);
+                  setLightbox(true);
+                }}
+                className="relative aspect-square rounded-sm overflow-hidden bg-white/5 group"
+                aria-label={`Open image ${idx + 1}`}
+              >
+                <Image
+                  src={img.url}
+                  alt={img.alt || `${title} image ${idx + 1}`}
+                  fill
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                  sizes="(max-width: 1024px) 50vw, 18vw"
+                />
+                {isLastVisible && remainingCount > 0 && (
+                  <span className="absolute bottom-2 right-2 bg-white/95 text-slate-800 text-[10px] font-extrabold uppercase tracking-[0.12em] px-2.5 py-1 rounded-sm">
+                    {remainingCount}+ Photos
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       ) : (
         <>

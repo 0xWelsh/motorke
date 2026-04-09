@@ -220,7 +220,7 @@ export default async function CarDetailPage({ params }) {
 
   return (
     <div className="w-full bg-[#f4f5f7]">
-      <div className="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10 pb-36 sm:pb-28 lg:pb-16">
+      <div className="max-w-[1240px] mx-auto px-5 sm:px-7 lg:px-9 py-6 sm:py-8 lg:py-10 pb-36 sm:pb-28 lg:pb-16">
         {/* Breadcrumb */}
         <nav className="hidden sm:flex text-sm font-medium text-slate-500 mb-6 sm:mb-8 gap-2 sm:gap-3 items-center flex-wrap">
           <Link href="/" className="hover:text-brand transition-colors">Home</Link>
