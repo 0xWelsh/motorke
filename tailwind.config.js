@@ -31,8 +31,9 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans:    ["Playfair Display", "ui-serif", "Georgia", "serif"],
-        display: ["Playfair Display", "ui-serif", "Georgia", "serif"],
+        sans:    ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
+        display: ["Satoshi", "Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
+        mono:    ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "monospace"],
       },
       fontSize: {
         '2xs': ['0.65rem', { lineHeight: '1rem' }],
