@@ -1,6 +1,20 @@
 import { NextResponse } from "next/server";
 
+const SESSION_COOKIE = "motorke_session";
+
 export function middleware(request) {
+  const { pathname } = request.nextUrl;
+
+  // Session-based route protection for /admin and /portal
+  if (pathname.startsWith("/admin") || pathname.startsWith("/portal")) {
+    const session = request.cookies.get(SESSION_COOKIE);
+    if (!session?.value) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("from", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
   const response = NextResponse.next();
 
   // Security Headers
