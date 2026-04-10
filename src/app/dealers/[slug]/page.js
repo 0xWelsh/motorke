@@ -310,7 +310,7 @@ export default async function DealerPage({ params }) {
                 return (
                   <article key={car.id} className="py-6">
                     <div className="grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)_170px] gap-4 md:gap-5 items-start">
-                      <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-slate-50 overflow-hidden rounded-2xl border border-[#ece6dd]">
+                      <Link href={`/cars/${car.id}`} className=\"relative aspect-[16/10] bg-slate-50 overflow-hidden border border-[#ece6dd]\">
                         {img ? (
                           <Image
                             src={img}

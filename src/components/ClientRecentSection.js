@@ -120,7 +120,7 @@ export default function ClientRecentSection() {
 
 function CarMiniCard({ car }) {
   return (
-    <Link href={`/cars/${car.id}`} className="group bg-white border border-slate-100 rounded-2xl overflow-hidden hover:border-[var(--brand-accent)]/30 hover:shadow-xl transition-all duration-500 shadow-sm">
+    <Link href={`/cars/${car.id}`} className="group bg-white border border-slate-100 overflow-hidden hover:border-[var(--brand-accent)]/30 hover:shadow-xl transition-all duration-500 shadow-sm">
       <div className="aspect-[16/10] overflow-hidden bg-slate-50 relative">
         {car.image ? (
           <img src={car.image} alt={car.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />

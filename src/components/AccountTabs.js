@@ -274,7 +274,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
             : (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {recent.map(car => (
-                  <Link key={car.id} href={`/cars/${car.id}`} className="group bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+                  <Link key={car.id} href={`/cars/${car.id}`} className="group bg-white border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
                     <div className="aspect-[4/3] bg-slate-50 overflow-hidden relative">
                       {car.image
                         ? <img src={car.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />

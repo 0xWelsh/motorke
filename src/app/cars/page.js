@@ -263,7 +263,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
   };
 
   return (
-    <article className="group block bg-white border border-[#e8e2d9] hover:border-[#d8cec1] rounded-xl overflow-hidden transition-all duration-500 flex flex-col h-full">
+    <article className="group block bg-white border border-[#e8e2d9] hover:border-[#d8cec1] overflow-hidden transition-all duration-500 flex flex-col h-full">
       <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-slate-50 overflow-hidden shrink-0">
         {img ? (
             <Image 

@@ -241,7 +241,7 @@ function HeroCarPanel({ car, tall = false }) {
     <Link
       href={`/cars/${car.id}`}
       className={[
-        "group relative overflow-hidden rounded-xl border border-[#e8e2d9] bg-white",
+        "group relative overflow-hidden border border-[#e8e2d9] bg-white",
         tall ? "min-h-[420px]" : "min-h-[200px]",
       ].join(" ")}
     >
@@ -306,7 +306,7 @@ function CarCard({ car }) {
   const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
 
   return (
-    <article className="group block bg-white border border-[#e8e2d9] hover:border-[#d8cec1] rounded-xl overflow-hidden transition-all duration-500 flex flex-col h-full">
+    <article className="group block bg-white border border-[#e8e2d9] hover:border-[#d8cec1] overflow-hidden transition-all duration-500 flex flex-col h-full">
       <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-[#f4efe8] overflow-hidden shrink-0">
         {img ? (
           <Image

@@ -415,7 +415,7 @@ export default async function CarDetailPage({ params }) {
               const title = `${c.make} ${c.model}`;
               return (
                 <Link key={c.id} href={`/cars/${c.id}`}
-                  className="group block bg-white border border-slate-200 hover:border-brand-accent/40 overflow-hidden transition-all duration-500 rounded-xl">
+                  className="group block bg-white border border-slate-200 hover:border-brand-accent/40 overflow-hidden transition-all duration-500">
                   <div className="relative aspect-[16/10] bg-slate-50 overflow-hidden">
                     {img ? (
                       <Image 
