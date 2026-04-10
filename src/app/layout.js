@@ -38,7 +38,7 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-background text-slate-900 min-h-screen antialiased flex flex-col font-sans transition-colors duration-300">
+      <body className="bg-background dark:bg-slate-900 text-slate-900 dark:text-white min-h-screen antialiased flex flex-col font-sans transition-colors duration-300">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <CompareProvider>
             <Navbar user={user} />
