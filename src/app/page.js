@@ -5,6 +5,8 @@ import { formatPrice, BADGE_OPTIONS } from "@/lib/utils";
 import Link from "next/link";
 import LocationSearch from "@/components/LocationSearch";
 import NewsRibbon from "@/components/NewsRibbon";
+import HotThisWeek from "@/components/HotThisWeek";
+import HeroReviews from "@/components/HeroReviews";
 import {
   ArrowUpRight, ChevronRight, MapPin, ShieldCheck, Sparkles
 } from "lucide-react";
@@ -132,30 +134,9 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="lg:col-span-5 hidden lg:flex flex-col gap-4">
-              <div className="grid grid-cols-2 gap-4">
-                {heroPrimary && (
-                  <HeroCarPanel car={heroPrimary} tall />
-                )}
-                <div className="flex flex-col gap-4">
-                  {heroSecondary && <HeroCarPanel car={heroSecondary} />}
-                  <div className="py-2 border-y border-[#e8e2d9]">
-                    <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-400 mb-2">Dealer Growth</p>
-                    <ul className="space-y-2 text-sm text-slate-700 font-semibold">
-                      <li>Visible showroom presence</li>
-                      <li>Discovery by active buyers</li>
-                      <li>Leads from web and WhatsApp</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between border-b border-[#e8e2d9] pb-3">
-                <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-500">Trusted Buying Starts Here</p>
-                <Link href="/dealers" className="mk-inline-action inline-flex items-center gap-1.5">
-                  See Dealers <ArrowUpRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
+            <div className="lg:col-span-5 hidden lg:flex flex-col gap-6">
+              <HotThisWeek />
+              <HeroReviews />
             </div>
           </div>
         </div>
@@ -230,33 +211,6 @@ export default async function HomePage() {
         </div>
       </section>
     </div>
-  );
-}
-
-function HeroCarPanel({ car, tall = false }) {
-  const image = car.images[0]?.url;
-  const title = `${car.year} ${car.make} ${car.model}`;
-
-  return (
-    <Link
-      href={`/cars/${car.id}`}
-      className={[
-        "group relative overflow-hidden border border-[#e8e2d9] bg-white",
-        tall ? "min-h-[420px]" : "min-h-[200px]",
-      ].join(" ")}
-    >
-      {image ? (
-        <Image src={image} alt={title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-      ) : (
-        <div className="absolute inset-0 bg-[#f3eee7]" />
-      )}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-      <div className="absolute left-4 right-4 bottom-4 text-white">
-        <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-white/80 mb-1">{car.dealer?.name}</p>
-        <p className="font-bold leading-tight">{title}</p>
-        <p className="text-sm font-bold mt-1 text-white/90">{formatPrice(car.price)}</p>
-      </div>
-    </Link>
   );
 }
 
