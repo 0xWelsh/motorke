@@ -28,8 +28,8 @@ function buildWatermarkSvg(width, height, text) {
         font-size="${fontSize}"
         font-weight="700"
         letter-spacing="1"
-        fill="rgba(255,255,255,0.24)"
-        stroke="rgba(0,0,0,0.28)"
+        fill="rgba(255,255,255,0.65)"
+        stroke="rgba(0,0,0,0.45)"
         stroke-width="${strokeWidth}"
       >${escapeXml(text)}</text>
     </svg>`

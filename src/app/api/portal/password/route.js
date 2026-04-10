@@ -32,13 +32,13 @@ export async function POST(request) {
     return NextResponse.json({ error: "short" }, { status: 400 });
   }
 
-  const user = await db.user.findUnique({ where: { id: session.userId } });
+  const user = await db.user.findUnique({ where: { id: session.user.id } });
   if (!verifyPassword(current, user.passwordHash)) {
     return NextResponse.json({ error: "wrong" }, { status: 400 });
   }
 
   await db.user.update({
-    where: { id: session.userId },
+    where: { id: session.user.id },
     data:  { passwordHash: hashPassword(newPassword) },
   });
 

@@ -12,7 +12,7 @@ export async function POST(request, { params }) {
   }
 
   // Prevent admin from suspending themselves
-  if (id === session.userId) {
+  if (id === session.user.id) {
     return NextResponse.redirect(new URL("/admin/users?error=self", request.url));
   }
 

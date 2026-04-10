@@ -28,7 +28,13 @@ export async function POST(request, { params }) {
 
   // Delete images from Supabase Storage
   for (const img of car.images) {
-    await deleteImage(img.url).catch(() => {});
+    await deleteImage(img.url).catch((error) => {
+      console.error("Failed to delete car image during car deletion:", {
+        carId: id,
+        imageUrl: img.url,
+        error,
+      });
+    });
   }
 
   // Delete from DB (cascade removes images + leads)

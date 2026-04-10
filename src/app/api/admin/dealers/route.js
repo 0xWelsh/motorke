@@ -27,32 +27,55 @@ export async function POST(request) {
   }
 
   try {
-    // Generate a unique slug
-    let slug    = slugify(name);
-    let attempt = 0;
-    while (await db.dealer.findUnique({ where: { slug } })) {
-      attempt++;
-      slug = `${slugify(name)}-${attempt}`;
+    const baseSlug = slugify(name) || `dealer-${Date.now()}`;
+    const county = formData.get("county")?.toString() || "Nairobi";
+    const location = formData.get("location")?.toString().trim() || "";
+    const address = formData.get("address")?.toString().trim() || null;
+    const latRaw = formData.get("lat")?.toString();
+    const lngRaw = formData.get("lng")?.toString();
+    const phone = formData.get("phone")?.toString().trim() || "";
+    const whatsapp = formData.get("whatsapp")?.toString().trim() || null;
+    const email = formData.get("email")?.toString().trim() || null;
+    const website = formData.get("website")?.toString().trim() || null;
+    const description = formData.get("description")?.toString().trim() || null;
+    const verified = formData.get("verified") === "on";
+    const featured = formData.get("featured") === "on";
+
+    let created = null;
+    for (let attempt = 0; attempt < 6; attempt++) {
+      const slug = attempt === 0 ? baseSlug : `${baseSlug}-${Date.now()}-${attempt}`;
+      try {
+        created = await db.dealer.create({
+          data: {
+            name,
+            slug,
+            county,
+            location,
+            address,
+            lat: latRaw ? parseFloat(latRaw) : null,
+            lng: lngRaw ? parseFloat(lngRaw) : null,
+            phone,
+            whatsapp,
+            email,
+            website,
+            description,
+            verified,
+            featured,
+          },
+        });
+        break;
+      } catch (err) {
+        const isSlugConflict =
+          err?.code === "P2002" &&
+          Array.isArray(err?.meta?.target) &&
+          err.meta.target.includes("slug");
+        if (!isSlugConflict || attempt === 5) throw err;
+      }
     }
 
-    await db.dealer.create({
-      data: {
-        name,
-        slug,
-        county:      formData.get("county")?.toString()   || "Nairobi",
-        location:    formData.get("location")?.toString().trim() || "",
-        address:     formData.get("address")?.toString().trim()  || null,
-        lat:         formData.get("lat") ? parseFloat(formData.get("lat")) : null,
-        lng:         formData.get("lng") ? parseFloat(formData.get("lng")) : null,
-        phone:       formData.get("phone")?.toString().trim()    || "",
-        whatsapp:    formData.get("whatsapp")?.toString().trim() || null,
-        email:       formData.get("email")?.toString().trim()    || null,
-        website:     formData.get("website")?.toString().trim()  || null,
-        description: formData.get("description")?.toString().trim() || null,
-        verified:    formData.get("verified") === "on",
-        featured:    formData.get("featured") === "on",
-      },
-    });
+    if (!created) {
+      throw new Error("Unable to create dealer. Please try again.");
+    }
 
     return NextResponse.redirect(new URL("/admin/dealers?created=1", request.url));
   } catch (err) {

@@ -4,6 +4,7 @@ import { requireDealer } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { formatPrice, formatMileage } from "@/lib/utils";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { 
   Plus, 
   Car, 
@@ -25,6 +26,10 @@ export default async function PortalPage({ searchParams }) {
   const sp = await searchParams;
   const created = sp?.created === "1";
   const createdCarId = sp?.car || "";
+
+  if (!user.dealerId || !user.dealer) {
+    redirect("/portal/profile?error=missing_dealer");
+  }
 
   const [cars, leads] = await Promise.all([
     db.car.findMany({

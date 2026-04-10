@@ -130,14 +130,18 @@ export default function EnquiryForm({
         message: `Buyer tapped WhatsApp on: ${carTitle}${message?.trim() ? ` | Buyer note: ${message.trim()}` : ""}`,
         channel: "whatsapp",
       }),
-    }).catch(() => {});
+    }).catch((error) => {
+      console.error("Lead tracking for WhatsApp tap failed:", error);
+    });
 
     // Track WhatsApp action for analytics
     fetch(`/api/cars/${carId}/track-action`, {
       method: "POST",
       body: JSON.stringify({ action: "whatsapp" }),
       headers: { "Content-Type": "application/json" }
-    }).catch(() => {});
+    }).catch((error) => {
+      console.error("WhatsApp action tracking failed:", error);
+    });
   }
 
   function handleCall() {
@@ -145,7 +149,9 @@ export default function EnquiryForm({
       method: "POST",
       body: JSON.stringify({ action: "call" }),
       headers: { "Content-Type": "application/json" }
-    }).catch(() => {});
+    }).catch((error) => {
+      console.error("Call action tracking failed:", error);
+    });
   }
 
   const inputCls = "w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[var(--brand-accent)]/30 focus:bg-white transition-all shadow-sm";

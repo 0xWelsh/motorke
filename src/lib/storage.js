@@ -87,10 +87,18 @@ export async function deleteImage(publicUrl) {
   const path = publicUrl.slice(idx + marker.length);
 
   const url = `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`;
-  await fetch(url, {
-    method:  "DELETE",
-    headers: { "Authorization": `Bearer ${SERVICE_KEY}` },
-  }).catch(() => {});
+  try {
+    const res = await fetch(url, {
+      method:  "DELETE",
+      headers: { "Authorization": `Bearer ${SERVICE_KEY}` },
+    });
+    if (!res.ok) {
+      const detail = await res.text();
+      console.error("Failed to delete storage image:", { path, detail });
+    }
+  } catch (error) {
+    console.error("Storage delete request failed:", { path, error });
+  }
 }
 
 /**

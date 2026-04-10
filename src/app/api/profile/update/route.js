@@ -18,7 +18,7 @@ export async function POST(request) {
     }
 
     await db.user.update({
-      where: { id: session.userId },
+      where: { id: session.user.id },
       data: { name }
     });
 

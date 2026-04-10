@@ -21,7 +21,9 @@ export async function GET(request, { params }) {
   db.car.update({
     where: { id: id },
     data:  { views: { increment: 1 } },
-  }).catch(() => {});
+  }).catch((error) => {
+    console.error("Failed to increment car view count:", error);
+  });
 
   // Fetch similar cars from same dealer or same make
   const similar = await db.car.findMany({

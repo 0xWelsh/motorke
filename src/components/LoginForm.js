@@ -12,7 +12,10 @@ export default function LoginForm({ error }) {
   const [password, setPassword] = useState("");
   const [captchaToken, setCaptchaToken] = useState("");
   const [website, setWebsite] = useState("");
-  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "660578051558-vigoibi56aj4elh0r9gh4cvjtff9asee.apps.googleusercontent.com";
+  
+  // Google OAuth only available if client ID is configured
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  const hasGoogleAuth = Boolean(googleClientId);
   const requiresHumanCheck = Boolean(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
   const canSubmit = email.trim().length > 0 && password.length > 0 && (!requiresHumanCheck || captchaToken.length > 0);
   
@@ -21,48 +24,50 @@ export default function LoginForm({ error }) {
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_20%_15%,rgba(16,185,129,0.08),transparent_38%),radial-gradient(circle_at_80%_85%,rgba(15,23,42,0.08),transparent_40%),#FCFCFD]">
-      <Script 
-        src="https://accounts.google.com/gsi/client" 
-        strategy="afterInteractive"
-        onLoad={() => {
-          if (!window.google || !googleClientId) return;
-          window.google.accounts.id.initialize({
-            client_id: googleClientId,
-            use_fedcm_for_prompt: false,
-            callback: async (response) => {
-              try {
-                const res = await fetch("/api/auth/google", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ token: response.credential }),
-                });
-                const data = await res.json();
-                if (data.success) {
-                  window.location.href = data.destination || "/";
-                } else {
+      {hasGoogleAuth && (
+        <Script 
+          src="https://accounts.google.com/gsi/client" 
+          strategy="afterInteractive"
+          onLoad={() => {
+            if (!window.google || !googleClientId) return;
+            window.google.accounts.id.initialize({
+              client_id: googleClientId,
+              use_fedcm_for_prompt: false,
+              callback: async (response) => {
+                try {
+                  const res = await fetch("/api/auth/google", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: response.credential }),
+                  });
+                  const data = await res.json();
+                  if (data.success) {
+                    window.location.href = data.destination || "/";
+                  } else {
+                    window.location.href = "/login?error=unknown";
+                  }
+                } catch (err) {
                   window.location.href = "/login?error=unknown";
                 }
-              } catch (err) {
-                window.location.href = "/login?error=unknown";
-              }
-            },
-          });
-          const googleButtonContainer = document.getElementById("google-button-container");
-          if (!googleButtonContainer) return;
+              },
+            });
+            const googleButtonContainer = document.getElementById("google-button-container");
+            if (!googleButtonContainer) return;
 
-          window.google.accounts.id.renderButton(
-            googleButtonContainer,
-            { 
-              theme: "outline", 
-              size: "large", 
-              width: "320", 
-              text: "signin_with",
-              shape: "pill",
-              logo_alignment: "left"
-            }
-          );
-        }}
-      />
+            window.google.accounts.id.renderButton(
+              googleButtonContainer,
+              { 
+                theme: "outline", 
+                size: "large", 
+                width: "320", 
+                text: "signin_with",
+                shape: "pill",
+                logo_alignment: "left"
+              }
+            );
+          }}
+        />
+      )}
 
       <section className="h-dvh px-4 py-4 sm:px-6 sm:py-6 flex items-center justify-center overflow-hidden">
         <div className="w-full max-w-[520px] max-h-[94dvh] overflow-y-auto rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_24px_56px_rgba(15,23,42,0.08)] p-4 sm:p-6 lg:p-7 relative">

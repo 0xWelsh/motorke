@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { verifyPassword, createSession } from "@/lib/auth";
 import { verifyTurnstileToken } from "@/lib/captcha";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -29,6 +30,19 @@ export async function POST(request) {
 
     const forwardedFor = request.headers.get("x-forwarded-for") || "";
     const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+
+    // Rate limit login attempts per IP
+    const ipLimit = checkRateLimit({
+      name: "login-ip",
+      key: ip,
+      windowMs: 3600000, // 1 hour
+      maxRequests: 5,
+    });
+
+    if (ipLimit.limited) {
+      return NextResponse.redirect(new URL("/login?error=too_many", request.url));
+    }
+
     const captchaCheck = await verifyTurnstileToken({ token: captchaToken, ip });
     if (!captchaCheck.success) {
       return NextResponse.redirect(new URL("/login?error=captcha", request.url));

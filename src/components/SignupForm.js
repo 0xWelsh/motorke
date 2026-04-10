@@ -68,7 +68,10 @@ export default function SignupForm({ error: initialError }) {
   const [loading, setLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState("");
   const [website, setWebsite] = useState("");
-  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "660578051558-vigoibi56aj4elh0r9gh4cvjtff9asee.apps.googleusercontent.com";
+  
+  // Google OAuth only available if client ID is configured
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  const hasGoogleAuth = Boolean(googleClientId);
   const requiresHumanCheck = Boolean(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 
   const isValidEmail = email.includes("@") && email.includes(".");
@@ -114,46 +117,48 @@ export default function SignupForm({ error: initialError }) {
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_18%_14%,rgba(16,185,129,0.08),transparent_38%),radial-gradient(circle_at_84%_86%,rgba(15,23,42,0.08),transparent_40%),#FCFCFD]">
-      <Script
-        src="https://accounts.google.com/gsi/client"
-        strategy="afterInteractive"
-        onLoad={() => {
-          if (!window.google || !googleClientId) return;
-          window.google.accounts.id.initialize({
-            client_id: googleClientId,
-            use_fedcm_for_prompt: false,
-            callback: async (response) => {
-              try {
-                const res = await fetch("/api/auth/google", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ token: response.credential, action: "signup" }),
-                });
-                const data = await res.json();
-                if (data.success) {
-                  window.location.href = data.destination || "/";
-                } else {
-                  setErrorMsg("Google signup failed.");
+      {hasGoogleAuth && (
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="afterInteractive"
+          onLoad={() => {
+            if (!window.google || !googleClientId) return;
+            window.google.accounts.id.initialize({
+              client_id: googleClientId,
+              use_fedcm_for_prompt: false,
+              callback: async (response) => {
+                try {
+                  const res = await fetch("/api/auth/google", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: response.credential, action: "signup" }),
+                  });
+                  const data = await res.json();
+                  if (data.success) {
+                    window.location.href = data.destination || "/";
+                  } else {
+                    setErrorMsg("Google signup failed.");
+                  }
+                } catch (err) {
+                  setErrorMsg("Network error during Google signup.");
                 }
-              } catch (err) {
-                setErrorMsg("Network error during Google signup.");
-              }
-            },
-          });
+              },
+            });
 
-          const googleSignupContainer = document.getElementById("google-signup-button");
-          if (!googleSignupContainer) return;
+            const googleSignupContainer = document.getElementById("google-signup-button");
+            if (!googleSignupContainer) return;
 
-          window.google.accounts.id.renderButton(googleSignupContainer, {
-            theme: "outline",
-            size: "large",
-            width: "320",
-            text: "signup_with",
-            shape: "pill",
-            logo_alignment: "left",
-          });
-        }}
-      />
+            window.google.accounts.id.renderButton(googleSignupContainer, {
+              theme: "outline",
+              size: "large",
+              width: "320",
+              text: "signup_with",
+              shape: "pill",
+              logo_alignment: "left",
+            });
+          }}
+        />
+      )}
 
       <section className="h-dvh px-4 py-4 sm:px-6 sm:py-6 flex items-center justify-center overflow-hidden">
         <div

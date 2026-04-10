@@ -1,4 +1,15 @@
 // next.config.js
+// Validate environment variables at build/start time
+const { validateEnv } = require('./src/lib/validate-env');
+try {
+  validateEnv({ strict: process.env.NODE_ENV === "production" });
+} catch (error) {
+  console.error(error.message);
+  if (process.env.NODE_ENV === "production") {
+    process.exit(1);
+  }
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {

@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { hashPassword } from "@/lib/auth";
 import { createEmailOTP, sendVerificationEmail } from "@/lib/mail";
 import { verifyTurnstileToken } from "@/lib/captcha";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -45,6 +46,20 @@ export async function POST(request) {
 
     const forwardedFor = request.headers.get("x-forwarded-for") || "";
     const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+
+    // Rate limit signup attempts per IP
+    const ipLimit = checkRateLimit({
+      name: "signup-ip",
+      key: ip,
+      windowMs: 3600000, // 1 hour
+      maxRequests: 3,
+    });
+
+    if (ipLimit.limited) {
+      if (wantsJson) return NextResponse.json({ error: "Too many signup attempts. Please try again later." }, { status: 429 });
+      return NextResponse.redirect(new URL("/signup?error=too_many", request.url));
+    }
+
     const captchaCheck = await verifyTurnstileToken({ token: captchaToken, ip });
     if (!captchaCheck.success) {
       if (wantsJson) return NextResponse.json({ error: "Captcha verification failed. Please confirm you are human." }, { status: 400 });

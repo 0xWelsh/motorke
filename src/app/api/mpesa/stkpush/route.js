@@ -12,7 +12,7 @@ export async function POST(request) {
     }
 
     const user = await db.user.findUnique({
-      where: { id: session.userId },
+      where: { id: session.user.id },
       include: { dealer: true }
     });
 

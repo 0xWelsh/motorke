@@ -76,7 +76,9 @@ export async function destroySession() {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
   if (token) {
-    await db.session.deleteMany({ where: { token } }).catch(() => {});
+    await db.session.deleteMany({ where: { token } }).catch((error) => {
+      console.error("Failed to destroy session token:", error);
+    });
   }
   cookieStore.delete(SESSION_COOKIE);
 }

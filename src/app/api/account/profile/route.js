@@ -17,14 +17,14 @@ export async function POST(request) {
 
     // Check email not taken by another user
     const existing = await db.user.findFirst({
-      where: { email: email.toLowerCase(), id: { not: session.userId } },
+      where: { email: email.toLowerCase(), id: { not: session.user.id } },
     });
     if (existing) {
       return NextResponse.json({ error: "Email already in use" }, { status: 400 });
     }
 
     await db.user.update({
-      where: { id: session.userId },
+      where: { id: session.user.id },
       data:  { name: name.trim(), email: email.toLowerCase().trim() },
     });
 

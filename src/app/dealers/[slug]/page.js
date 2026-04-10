@@ -1,12 +1,14 @@
 // src/app/dealers/[slug]/page.js
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
+import { getSession } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import { formatPrice, formatMileage, FUEL_LABELS, BADGE_OPTIONS } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight, ChevronRight, Globe, Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
 import { CompareButton } from "@/components/CompareSelector";
+import DealerReviews from "@/components/DealerReviews";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -17,12 +19,27 @@ export async function generateMetadata({ params }) {
 
 export default async function DealerPage({ params }) {
   const { slug } = await params;
+  const session = await getSession();
+
+  const viewer = session?.user
+    ? {
+        id: session.user.id,
+        name: session.user.name,
+        role: session.user.role,
+        dealerId: session.user.dealerId,
+      }
+    : null;
 
   const dealer = await db.dealer.findUnique({
     where:   { slug },
     include: {
       users: { select: { name: true, avatarUrl: true, email: true }, take: 1 },
       branches: { select: { id: true, name: true, location: true }, orderBy: { createdAt: "asc" } },
+      reviews: {
+        include: { user: { select: { id: true, name: true, avatarUrl: true } } },
+        orderBy: { createdAt: "desc" },
+        take: 12,
+      },
       cars: {
         where:   { available: true },
         include: { images: { where: { isPrimary: true }, take: 1 } },
@@ -32,6 +49,25 @@ export default async function DealerPage({ params }) {
   });
 
   if (!dealer) notFound();
+
+  const [reviewStats, viewerReview] = await Promise.all([
+    db.dealerReview.aggregate({
+      where: { dealerId: dealer.id },
+      _avg: { rating: true },
+      _count: { _all: true },
+    }),
+    viewer
+      ? db.dealerReview.findUnique({
+          where: {
+            dealerId_userId: {
+              dealerId: dealer.id,
+              userId: viewer.id,
+            },
+          },
+          select: { rating: true, comment: true },
+        })
+      : Promise.resolve(null),
+  ]);
 
   const makes = [...new Set(dealer.cars.map((c) => c.make))];
   const primaryUser = dealer.users?.[0] || null;
@@ -51,6 +87,15 @@ export default async function DealerPage({ params }) {
     dealer.email ? { href: `mailto:${dealer.email}`, label: "Email", icon: <Mail className="w-4 h-4" /> } : null,
     dealer.website ? { href: dealer.website, label: "Website", icon: <Globe className="w-4 h-4" />, external: true } : null,
   ].filter(Boolean);
+  const averageRating = Number(reviewStats._avg.rating || 0);
+  const totalReviews = reviewStats._count._all;
+  const reviewItems = dealer.reviews.map((review) => ({
+    id: review.id,
+    rating: review.rating,
+    comment: review.comment,
+    createdAt: review.createdAt.toISOString(),
+    user: review.user,
+  }));
 
   return (
     <div className="min-h-screen">
@@ -181,6 +226,18 @@ export default async function DealerPage({ params }) {
               ))}
             </div>
           </aside>
+        </section>
+
+        <section className="py-10 border-b border-[#ece6dd]">
+          <DealerReviews
+            dealerSlug={dealer.slug}
+            dealerName={dealer.name}
+            averageRating={averageRating}
+            totalReviews={totalReviews}
+            reviews={reviewItems}
+            viewer={viewer}
+            viewerReview={viewerReview}
+          />
         </section>
 
         {makes.length > 0 && (

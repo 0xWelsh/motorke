@@ -11,6 +11,7 @@ import { clsx } from "clsx";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
 import SearchSuggestions from "@/components/SearchSuggestions";
 import NotificationsBell from "@/components/NotificationsBell";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Navbar({ user }) {
   const [open,      setOpen]      = useState(false);
@@ -90,7 +91,7 @@ export default function Navbar({ user }) {
     <nav className={clsx(
       "sticky top-0 z-[100] transition-all duration-300",
       scrolled
-        ? "bg-white/95 backdrop-blur-xl border-b border-slate-200 py-3 shadow-sm"
+        ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 py-3 shadow-sm"
         : "bg-transparent py-5"
     )}>
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
@@ -111,11 +112,11 @@ export default function Navbar({ user }) {
           </Link>
 
           {/* NAV LINKS */}
-          <div className="hidden lg:flex items-center gap-5 border-b border-slate-200 pb-2">
+          <div className="hidden lg:flex items-center gap-5 border-b border-slate-200 dark:border-slate-700 pb-2">
             {links.map(({ href, label, icon }) => (
               <Link key={href} href={href}
-                className="flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-[0.16em] text-slate-700 hover:text-black transition-all">
-                <span className="text-slate-400">{icon}</span>
+                className="flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-[0.16em] text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white transition-all">
+                <span className="text-slate-400 dark:text-slate-500">{icon}</span>
                 {label}
               </Link>
             ))}
@@ -145,7 +146,8 @@ export default function Navbar({ user }) {
           </div>
 
           {/* USER ACTIONS */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-3">
+            <ThemeToggle />
             {user ? (
               <div className="flex items-center gap-4">
                 <NotificationsBell variant="navbar" />

@@ -32,14 +32,14 @@ export async function POST(request) {
     
     // Generate unique path for Supabase
     const ext = file.name.split(".").pop();
-    const path = `avatars/${session.userId}-${Date.now()}.${ext}`;
+    const path = `avatars/${session.user.id}-${Date.now()}.${ext}`;
 
     // Upload to Supabase
     const avatarUrl = await uploadImage(buffer, path, file.type);
 
     // Update user record
     await db.user.update({
-      where: { id: session.userId },
+      where: { id: session.user.id },
       data: { avatarUrl }
     });
 

@@ -54,7 +54,7 @@ export async function POST(request) {
 
     // Generate a unique path
     const path = imagePath(
-      `tmp-${session.userId}`,   // temp prefix; overwritten when car is saved
+      `tmp-${session.user.id}`,   // temp prefix; overwritten when car is saved
       Date.now(),
       file.type
     );
