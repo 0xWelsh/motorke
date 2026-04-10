@@ -25,6 +25,7 @@ model User {
   sessions      Session[]
   notifications Notification[]
   dealerReviews DealerReview[]
+  carReviews    CarReview[]
   dealer        Dealer?    @relation(fields: [dealerId], references: [id], onDelete: Cascade)
 
   @@map("users")
@@ -175,6 +176,7 @@ model Car {
   whatsappClicks Int           @default(0)
   images         CarImage[]
   carViews       CarView[]
+  reviews        CarReview[]
   branch         DealerBranch? @relation(fields: [branchId], references: [id])
   dealer         Dealer        @relation(fields: [dealerId], references: [id], onDelete: Cascade)
   leads          Lead[]
@@ -236,6 +238,23 @@ model DealerReview {
   @@index([dealerId, createdAt])
   @@index([rating])
   @@map("dealer_reviews")
+}
+
+model CarReview {
+  id        String   @id @default(cuid())
+  carId     String
+  userId    String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([carId, userId])
+  @@index([carId, createdAt])
+  @@index([rating])
+  @@map("car_reviews")
 }
 
 model LeadNote {
