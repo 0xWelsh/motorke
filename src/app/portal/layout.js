@@ -14,9 +14,12 @@ import {
   ChevronRight,
   ExternalLink,
   ShieldCheck,
-  TrendingUp
+  TrendingUp,
+  Menu,
+  X
 } from "lucide-react";
 import { clsx } from "clsx";
+import { useState, useEffect } from "react";
 import NotificationsBell from "@/components/NotificationsBell";
 
 const links = [
@@ -62,13 +65,30 @@ function NavLink({ href, label, Icon, active }) {
 
 export default function PortalLayout({ children }) {
   const path = usePathname();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [path]);
 
   return (
-    <div className="flex h-screen bg-slate-50 dark:bg-black overflow-hidden">
+    <div className="flex h-screen bg-slate-50 dark:bg-black overflow-hidden relative">
+      
+      {/* Mobile Backdrop */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-72 bg-white dark:bg-slate-900 flex flex-col shrink-0 border-r border-slate-200 dark:border-slate-800 z-50 h-full">
+      <aside className={clsx(
+        "w-72 bg-white dark:bg-slate-900 flex flex-col shrink-0 border-r border-slate-200 dark:border-slate-800 z-50 h-full fixed lg:static transition-transform duration-300",
+        sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      )}>
         {/* Branding */}
-        <div className="p-8 mb-4">
+        <div className="p-6 lg:p-8 mb-2 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-slate-900 dark:bg-slate-100 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-all duration-500 shadow-md">
               <img src="/favicon.svg" alt="Motorke" className="w-6 h-6 object-contain rounded-lg" />
@@ -80,6 +100,9 @@ export default function PortalLayout({ children }) {
               </span>
             </div>
           </Link>
+          <button className="lg:hidden p-2 text-slate-400 hover:bg-slate-100 rounded-lg" onClick={() => setSidebarOpen(false)}>
+            <X size={20} />
+          </button>
         </div>
 
         {/* Navigation */}
@@ -124,30 +147,36 @@ export default function PortalLayout({ children }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 h-full overflow-y-auto relative custom-scrollbar">
+      <main className="flex-1 h-full min-w-0 overflow-y-auto relative custom-scrollbar flex flex-col">
         {/* Modern Top Header / Breadcrumb */}
-        <header className="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 px-8 py-4 flex items-center justify-between">
-           <div className="flex items-center gap-2 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-              <span>Management</span>
-              <ChevronRight size={12} className="text-slate-300 dark:text-slate-600" />
-              <span className="text-slate-900 dark:text-white">{links.find(l => l.href === path)?.label || "Overview"}</span>
+        <header className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 py-3 lg:py-4 flex items-center justify-between">
+           <div className="flex items-center gap-2 text-[10px] lg:text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest shrink-0">
+              <button 
+                className="lg:hidden p-2 -ml-2 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                onClick={() => setSidebarOpen(true)}
+              >
+                 <Menu size={20} />
+              </button>
+              <span className="hidden sm:inline">Management</span>
+              <ChevronRight size={12} className="hidden sm:block text-slate-300 dark:text-slate-600" />
+              <span className="text-slate-900 dark:text-white truncate max-w-[120px] sm:max-w-none">{links.find(l => l.href === path)?.label || "Overview"}</span>
            </div>
            
            <div className="flex items-center gap-4">
-              <div className="hidden md:flex flex-col items-end">
+              <div className="hidden lg:flex flex-col items-end">
                  <span className="text-sm font-bold text-slate-900 dark:text-white tracking-tight leading-none">Motorske</span>
                 <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-500 mt-1 flex items-center gap-1 uppercase tracking-wider">
                    <ShieldCheck size={12} /> Active Subscription
                 </p>
               </div>
               <NotificationsBell variant="portal" />
-              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center font-bold shadow-sm">
+              <div className="hidden sm:flex w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 items-center justify-center font-bold shadow-sm">
                 D
               </div>
            </div>
         </header>
 
-        <div className="p-10">
+        <div className="p-4 sm:p-6 lg:p-10 w-full overflow-hidden relative z-10 flex-1">
           {children}
         </div>
       </main>

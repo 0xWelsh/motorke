@@ -16,10 +16,12 @@ import {
   Settings,
   Search,
   UserPlus,
-  Command
+  Command,
+  Menu,
+  X
 } from "lucide-react";
 import { clsx } from "clsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NotificationsBell from "@/components/NotificationsBell";
 
 const links = [
@@ -60,6 +62,12 @@ function NavLink({ href, label, Icon, active }) {
 export default function AdminLayout({ children }) {
   const path = usePathname();
   const [searchQuery, setSearchQuery] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Close sidebar when navigating on mobile
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [path]);
 
   const handleGlobalSearch = (e) => {
     if (e.key === "Enter" && searchQuery.trim()) {
@@ -68,11 +76,23 @@ export default function AdminLayout({ children }) {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#f8fafc] text-slate-900 selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="flex bg-[#f8fafc] text-slate-900 selection:bg-emerald-100 selection:text-emerald-900 relative">
+      
+      {/* Mobile Backdrop */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-72 bg-white border-r border-slate-200 flex flex-col shrink-0 sticky top-0 h-screen z-50">
+      <aside className={clsx(
+        "w-72 bg-white border-r border-slate-200 flex flex-col shrink-0 lg:sticky top-0 h-screen z-50 fixed transition-transform duration-300",
+        sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      )}>
         {/* Branding */}
-        <div className="p-8">
+        <div className="p-6 lg:p-8 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-4 group">
             <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center group-hover:bg-emerald-600 transition-all duration-500 shadow-xl shadow-slate-200">
               <img src="/favicon.svg" alt="Motorke" className="w-7 h-7 object-contain rounded-lg" />
@@ -86,6 +106,9 @@ export default function AdminLayout({ children }) {
               </span>
             </div>
           </Link>
+          <button className="lg:hidden p-2 text-slate-400 hover:bg-slate-100 rounded-lg" onClick={() => setSidebarOpen(false)}>
+            <X size={20} />
+          </button>
         </div>
 
         {/* Navigation */}
@@ -119,13 +142,19 @@ export default function AdminLayout({ children }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-x-hidden relative flex flex-col">
+      <main className="flex-1 min-w-0 min-h-screen relative flex flex-col">
         {/* Header */}
-        <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 px-10 py-5 flex items-center justify-between">
-           <div className="flex items-center gap-4 text-[11px] font-bold text-slate-600 uppercase tracking-widest">
-              <span className="hover:text-emerald-600 transition-colors cursor-default">Admin</span>
-              <ChevronRight size={12} className="text-slate-400" />
-              <span className="text-slate-900 font-black">{links.find(l => l.href === path)?.label || "Overview"}</span>
+        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 lg:px-10 py-4 lg:py-5 flex items-center justify-between">
+           <div className="flex items-center gap-3 lg:gap-4 text-[11px] font-bold text-slate-600 uppercase tracking-widest shrink-0">
+              <button 
+                className="lg:hidden p-2 -ml-2 text-slate-400 hover:text-slate-900 transition-colors"
+                onClick={() => setSidebarOpen(true)}
+              >
+                 <Menu size={20} />
+              </button>
+              <span className="hidden sm:inline hover:text-emerald-600 transition-colors cursor-default">Admin</span>
+              <ChevronRight size={12} className="hidden sm:block text-slate-400" />
+              <span className="text-slate-900 font-black truncate max-w-[120px] sm:max-w-none">{links.find(l => l.href === path)?.label || "Overview"}</span>
            </div>
            
            <div className="flex items-center gap-8">
@@ -142,18 +171,18 @@ export default function AdminLayout({ children }) {
                 />
               </div>
 
-              <div className="flex items-center gap-4 border-l border-slate-200 pl-8">
+              <div className="flex items-center gap-3 lg:gap-4 border-l border-slate-200 pl-4 lg:pl-8">
                   <NotificationsBell variant="admin" />
-                 <button className="text-slate-600 hover:text-slate-900 transition-all" title="Configuration">
+                 <button className="hidden sm:block text-slate-600 hover:text-slate-900 transition-all" title="Configuration">
                     <Settings size={20} />
                  </button>
               </div>
 
-              <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 p-1.5 pr-4 rounded-2xl group cursor-pointer hover:border-emerald-200 hover:bg-emerald-50/30 transition-all">
-                <div className="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-xs shadow-lg group-hover:bg-emerald-600 transition-all duration-300">
+              <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 p-1.5 lg:pr-4 rounded-2xl group cursor-pointer hover:border-emerald-200 hover:bg-emerald-50/30 transition-all">
+                <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-[10px] lg:text-xs shadow-lg group-hover:bg-emerald-600 transition-all duration-300">
                   AD
                 </div>
-                <div className="hidden sm:flex flex-col">
+                <div className="hidden lg:flex flex-col">
                   <p className="text-[11px] font-black text-slate-900 uppercase leading-none">Super Admin</p>
                   <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest mt-1">Verified</p>
                 </div>
@@ -161,7 +190,7 @@ export default function AdminLayout({ children }) {
            </div>
         </header>
 
-        <div className="p-10 max-w-[1600px] mx-auto w-full">
+        <div className="p-4 sm:p-6 lg:p-10 w-full overflow-hidden max-w-[1600px] mx-auto relative z-10 flex-1">
           {children}
         </div>
       </main>
