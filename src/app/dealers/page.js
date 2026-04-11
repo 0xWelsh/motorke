@@ -91,7 +91,7 @@ export default async function DealersPage() {
                         {brandImage ? (
                           <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover" />
                         ) : (
-                          <span className="text-slate-900 font-black text-2xl">{dealer.name[0]}</span>
+                          <span className="text-slate-900 font-black text-2xl">{dealer.name?.[0] || '?'}</span>
                         )}
                       </div>
 
@@ -109,7 +109,7 @@ export default async function DealersPage() {
                         </div>
 
                         <p className="text-slate-500 text-xs font-bold flex items-center gap-1.5 uppercase tracking-[0.12em] mb-3">
-                          <MapPin className="w-3.5 h-3.5" /> {dealer.location}
+                          <MapPin className="w-3.5 h-3.5" /> {dealer.location || 'Location not set'}
                         </p>
 
                         {dealer.description && (
