@@ -8,10 +8,11 @@ export const metadata = { title: "Sign In — Motorke Standard" };
 export default async function LoginPage({ searchParams }) {
   const sp = await searchParams;
   const session = await getSession();
+  const role = session?.user?.role;
   
-  if (session) {
-    if (session.user.role === "ADMIN")  redirect("/admin");
-    if (session.user.role === "DEALER") redirect("/portal");
+  if (role) {
+    if (role === "ADMIN")  redirect("/admin");
+    if (role === "DEALER") redirect("/portal");
     redirect("/");
   }
 

@@ -12,6 +12,13 @@ const SESSION_DAYS   = 30;
 
 import bcrypt from "bcrypt";
 
+function isDynamicServerUsageError(error) {
+  return (
+    error?.digest === "DYNAMIC_SERVER_USAGE" ||
+    (typeof error?.message === "string" && error.message.includes("Dynamic server usage"))
+  );
+}
+
 // ── Password hashing ─────────────────────────────────────────
 export async function hashPassword(password) {
   return await bcrypt.hash(password, 10);
@@ -55,21 +62,34 @@ export async function createSession(userId) {
 }
 
 export async function getSession() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
-  if (!token) return null;
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(SESSION_COOKIE)?.value;
+    if (!token) return null;
 
-  const session = await db.session.findUnique({
-    where:   { token },
-    include: { user: { include: { dealer: true } } },
-  });
+    const session = await db.session.findUnique({
+      where: { token },
+      include: { user: { include: { dealer: true } } },
+    });
 
-  if (!session || session.expiresAt < new Date()) {
-    if (session) await db.session.delete({ where: { token } });
+    if (!session || session.expiresAt < new Date()) {
+      if (session) {
+        await db.session.delete({ where: { token } }).catch((error) => {
+          console.error("Failed to clean up expired session:", error);
+        });
+      }
+      return null;
+    }
+
+    // Defensive guard in case a legacy/invalid session row exists without user data.
+    if (!session.user) return null;
+
+    return session;
+  } catch (error) {
+    if (isDynamicServerUsageError(error)) throw error;
+    console.error("Failed to read session:", error);
     return null;
   }
-
-  return session;
 }
 
 export async function destroySession() {
@@ -107,11 +127,17 @@ export async function requireDealer() {
 
 // ── API route guard ───────────────────────────────────────────
 export async function getSessionFromRequest() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
-  if (!token) return null;
-  return db.session.findUnique({
-    where:   { token },
-    include: { user: { include: { dealer: true } } },
-  });
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(SESSION_COOKIE)?.value;
+    if (!token) return null;
+    return await db.session.findUnique({
+      where: { token },
+      include: { user: { include: { dealer: true } } },
+    });
+  } catch (error) {
+    if (isDynamicServerUsageError(error)) throw error;
+    console.error("Failed to read session from request:", error);
+    return null;
+  }
 }
