@@ -29,6 +29,6 @@ export async function POST(request, { params }) {
   await db.session.deleteMany({ where: { userId: id } });
 
   return NextResponse.redirect(
-    new URL(`/admin/users/${id}/edit?saved=1`, request.url)
+    new URL(`/admin/users/${id}/edit?saved=password`, request.url)
   );
 }

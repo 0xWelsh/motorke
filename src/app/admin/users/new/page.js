@@ -2,91 +2,167 @@
 export const dynamic = "force-dynamic";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
+import Link from "next/link";
+import { 
+  ChevronLeft, 
+  UserPlus, 
+  Mail, 
+  Lock, 
+  Shield, 
+  Building2, 
+  AlertTriangle,
+  Lightbulb
+} from "lucide-react";
 
-export const metadata = { title: "Create User — Admin" };
+export const metadata = { title: "Create Identity — Admin" };
 
-export default async function AdminNewUserPage({ searchParams }) {
+export default async function AdminNewUserPage(props) {
   await requireAdmin();
+  const searchParams = await props.searchParams;
   const dealers = await db.dealer.findMany({ orderBy: { name: "asc" } });
-  const error   = searchParams.error;
+  const error   = searchParams?.error;
 
-  const inputCls  = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
-  const labelCls  = "block text-xs text-white/40 uppercase tracking-wider mb-2";
+  const inputCls  = "w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
+  const selectCls = "w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-900 outline-none focus:border-slate-800 transition-all font-bold appearance-none";
+  const labelCls  = "block text-[10px] font-black uppercase tracking-[0.15em] text-slate-500 mb-2";
 
   return (
-    <div className="p-8 max-w-lg">
-      <div className="mb-8">
-        <a href="/admin/users" className="text-xs text-white/40 hover:text-white transition-colors">← Users</a>
-        <h1 className="text-3xl font-black mt-2">Create portal user</h1>
-        <p className="text-white/40 text-sm mt-1">
-          Create a login for a dealership or another admin.
+    <div className="max-w-4xl mx-auto animate-in fade-in duration-500">
+      <div className="mb-10">
+        <Link href="/admin/users" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 hover:text-slate-900 transition-colors mb-6">
+          <ChevronLeft size={14} /> Back to Directory
+        </Link>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight">Provision Identity</h1>
+        <p className="text-slate-500 text-sm font-medium mt-2 max-w-xl">
+          Create a secure login for a new dealership partner or another system administrator.
         </p>
       </div>
 
-      <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-7">
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3 mb-5">
-            {error === "exists"   && "A user with that email already exists."}
-            {error === "mismatch" && "Passwords do not match."}
-            {error === "notallowed" && "You cannot create another Admin user."}
-            {error === "unknown"  && "Something went wrong. Please try again."}
-          </div>
-        )}
-
-        <form action="/api/admin/users" method="POST" className="space-y-5">
-          <div>
-            <label className={labelCls}>Full name *</label>
-            <input name="name" required placeholder="John Kamau" className={inputCls} />
-          </div>
-          <div>
-            <label className={labelCls}>Email *</label>
-            <input name="email" type="email" required placeholder="john@dealership.co.ke" className={inputCls} />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className={labelCls}>Password *</label>
-              <input name="password" type="password" required minLength={8} className={inputCls} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-8">
+          <div className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm">
+            <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100">
+               <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500">
+                  <UserPlus size={18} />
+               </div>
+               <div>
+                  <h2 className="text-lg font-black text-slate-900">Identity Details</h2>
+                  <p className="text-xs font-medium text-slate-500">Set up credentials and roles</p>
+               </div>
             </div>
-            <div>
-              <label className={labelCls}>Confirm *</label>
-              <input name="confirm" type="password" required minLength={8} className={inputCls} />
-            </div>
+
+            {error && (
+              <div className="bg-red-50 border border-red-100 text-red-600 text-sm font-bold rounded-xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
+                <AlertTriangle size={16} />
+                {error === "exists"   && "A user with that email already exists."}
+                {error === "mismatch" && "Passwords do not match."}
+                {error === "notallowed" && "You cannot create another Admin user."}
+                {error === "unknown"  && "Something went wrong. Please try again."}
+              </div>
+            )}
+
+            <form action="/api/admin/users" method="POST" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="md:col-span-2">
+                  <label className={labelCls}>Full Name</label>
+                  <div className="relative">
+                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><UserPlus size={16} /></span>
+                     <input name="name" required placeholder="e.g. Jane Doe" className={`${inputCls} pl-11`} />
+                  </div>
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className={labelCls}>Contact Email</label>
+                  <div className="relative">
+                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Mail size={16} /></span>
+                     <input name="email" type="email" required placeholder="partner@dealership.co.ke" className={`${inputCls} pl-11`} />
+                  </div>
+                </div>
+
+                <div>
+                  <label className={labelCls}>Initial Password</label>
+                  <div className="relative">
+                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Lock size={16} /></span>
+                     <input name="password" type="password" required minLength={8} className={`${inputCls} pl-11`} placeholder="Required..." />
+                  </div>
+                </div>
+
+                <div>
+                  <label className={labelCls}>Confirm Password</label>
+                  <div className="relative">
+                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Lock size={16} /></span>
+                     <input name="confirm" type="password" required minLength={8} className={`${inputCls} pl-11`} placeholder="Matches above..." />
+                  </div>
+                </div>
+
+                <div>
+                  <label className={labelCls}>System Role</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Shield size={16} /></span>
+                    <select name="role" className={`${selectCls} pl-11`}>
+                      <option value="DEALER">Dealer Partner</option>
+                      <option value="ADMIN">System Admin</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className={labelCls}>Link Dealership</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Building2 size={16} /></span>
+                    <select name="dealerId" defaultValue="" className={`${selectCls} pl-11`}>
+                      <option value="" disabled>Select a dealership</option>
+                      {dealers.map((d) => (
+                        <option key={d.id} value={d.id}>{d.name} — {d.location}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <p className="text-[10px] uppercase font-black tracking-widest text-slate-400 mt-2 ml-1">Not required for Admins</p>
+                </div>
+              </div>
+
+              <div className="pt-8 mt-4 border-t border-slate-100 flex justify-end">
+                <button type="submit" className="bg-slate-900 border border-slate-900 text-white px-8 h-12 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-emerald-600 hover:border-emerald-600 transition-all shadow-sm flex items-center gap-2">
+                  Provision Identity
+                </button>
+              </div>
+            </form>
           </div>
-          <p className="text-xs text-white/20 -mt-2">Share this password with the dealer securely — they can change it after login.</p>
+        </div>
 
-          <div>
-            <label className={labelCls}>Role *</label>
-            <select name="role" className="w-full bg-surface border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50">
-              <option value="DEALER">Dealer</option>
-            </select>
-          </div>
+        {/* SIDEBAR ONBOARDING TIP */}
+        <div className="space-y-8">
+           <div className="bg-slate-50 border border-slate-200 rounded-[2rem] p-8 shadow-sm">
+              <div className="flex items-center gap-3 mb-6 pb-6 border-b border-slate-200/60">
+                 <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500 shadow-sm">
+                    <Lightbulb size={18} />
+                 </div>
+                 <div>
+                    <h2 className="text-lg font-black text-slate-900">Partner Setup</h2>
+                 </div>
+              </div>
+              
+              <ol className="text-xs font-medium text-slate-600 space-y-4 mb-2 leading-relaxed">
+                 <li className="flex gap-3 relative">
+                    <span className="w-5 h-5 shrink-0 rounded-full bg-slate-900 text-white flex items-center justify-center font-black text-[10px]">1</span>
+                    <span>Ensure the <Link href="/admin/dealers/new" className="text-slate-900 font-black underline">dealership profile</Link> is created first.</span>
+                 </li>
+                 <li className="flex gap-3 relative">
+                    <span className="w-5 h-5 shrink-0 rounded-full bg-slate-900 text-white flex items-center justify-center font-black text-[10px]">2</span>
+                    <span>Create their login identity here.</span>
+                 </li>
+                 <li className="flex gap-3 relative">
+                    <span className="w-5 h-5 shrink-0 rounded-full bg-slate-900 text-white flex items-center justify-center font-black text-[10px]">3</span>
+                    <span>Share the temporary credentials over a secure channel.</span>
+                 </li>
+                 <li className="flex gap-3 relative">
+                    <span className="w-5 h-5 shrink-0 rounded-full bg-slate-900 text-white flex items-center justify-center font-black text-[10px]">4</span>
+                    <span>The partner will log in at <code className="font-bold text-slate-900">/portal</code> and start uploading cars.</span>
+                 </li>
+              </ol>
+           </div>
+        </div>
 
-          <div>
-            <label className={labelCls}>Linked dealership *</label>
-            <select name="dealerId" required defaultValue="" className="w-full bg-surface border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50">
-              <option value="" disabled>Select a dealership</option>
-              {dealers.map((d) => (
-                <option key={d.id} value={d.id}>{d.name} — {d.location}</option>
-              ))}
-            </select>
-          </div>
-
-          <button type="submit"
-            className="w-full bg-[#f97316] hover:bg-[#ea6c0b] text-white font-bold py-3 rounded-xl transition-colors">
-            Create account →
-          </button>
-        </form>
-      </div>
-
-      {/* Tip card */}
-      <div className="mt-5 bg-white/[0.03] border border-white/10 rounded-2xl p-5 text-sm text-white/40">
-        <p className="font-semibold text-white/60 mb-1">💡 Onboarding a new dealer?</p>
-        <ol className="list-decimal list-inside space-y-1 text-xs">
-          <li>Make sure the dealership exists — <a href="/admin/dealers/new" className="text-[#f97316]">add it first</a> if not.</li>
-          <li>Create the user account here, linked to that dealership.</li>
-          <li>Share the login URL (<code className="bg-white/5 px-1 rounded">/login</code>) and their credentials.</li>
-          <li>They log in at <code className="bg-white/5 px-1 rounded">/portal</code> and start adding cars.</li>
-        </ol>
       </div>
     </div>
   );

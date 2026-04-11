@@ -119,7 +119,7 @@ export default async function AdminUsersPage(props) {
                       </button>
                     </form>
 
-                    <Link href={`/admin/users/${user.id}/reset-password`} className="p-2 text-slate-400 hover:text-emerald-600 transition-colors" title="Reset Security">
+                    <Link href={`/admin/users/${user.id}/edit#security`} className="p-2 text-slate-400 hover:text-emerald-600 transition-colors" title="Reset Security">
                       <RefreshCw size={16} />
                     </Link>
                   </div>

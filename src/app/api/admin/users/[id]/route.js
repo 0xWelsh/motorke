@@ -43,7 +43,7 @@ export async function POST(request, { params }) {
     });
 
     return NextResponse.redirect(
-      new URL(`/admin/users/${id}/edit?saved=1`, request.url)
+      new URL(`/admin/users/${id}/edit?saved=profile`, request.url)
     );
   } catch (err) {
     console.error(err);

@@ -3,8 +3,19 @@ export const dynamic = "force-dynamic";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import DeleteButton from "@/components/DeleteButton";
 import AdminAvatarUpload from "@/components/AdminAvatarUpload";
+import { 
+  ChevronLeft, 
+  User, 
+  Lock, 
+  AlertTriangle,
+  Mail,
+  Shield,
+  Building2,
+  Key
+} from "lucide-react";
 
 export const metadata = { title: "Edit User — Admin" };
 
@@ -26,101 +37,181 @@ export default async function AdminEditUserPage(props) {
   const saved = searchParams?.saved;
   const error = searchParams?.error;
 
-  const inputCls  = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
-  const selectCls = "w-full bg-surface border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
-  const labelCls  = "block text-xs text-white/40 uppercase tracking-wider mb-2";
+  const inputCls  = "w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
+  const selectCls = "w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-900 outline-none focus:border-slate-800 transition-all font-bold appearance-none";
+  const labelCls  = "block text-[10px] font-black uppercase tracking-[0.15em] text-slate-500 mb-2";
 
   return (
-    <div className="p-8 max-w-lg">
-      <div className="mb-8">
-        <a href="/admin/users" className="text-xs text-white/40 hover:text-white transition-colors">← Users</a>
-        <div className="flex items-center gap-5 mt-4">
-          <AdminAvatarUpload currentUrl={user.avatarUrl} targetId={user.id} targetType="user" name={user.name} size="lg" />
+    <div className="max-w-4xl mx-auto animate-in fade-in duration-500">
+      <div className="mb-10">
+        <Link href="/admin/users" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 hover:text-slate-900 transition-colors mb-8">
+          <ChevronLeft size={14} /> Back to Directory
+        </Link>
+        
+        <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
+          <div className="shrink-0 flex items-center justify-center bg-slate-50 border border-dashed border-slate-200 rounded-3xl p-2 h-28 w-28">
+             <AdminAvatarUpload currentUrl={user.avatarUrl} targetId={user.id} targetType="user" name={user.name} size="lg" />
+          </div>
           <div>
-            <h1 className="text-3xl font-black">{user.name}</h1>
-            <p className="text-white/30 text-sm mt-1">{user.email}</p>
-            <p className="text-xs text-white/40 mt-1">Click the photo to upload or change it</p>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight">{user.name}</h1>
+            <p className="text-slate-500 text-sm font-medium mt-1 mb-3">{user.email}</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex px-3 py-1 rounded-lg bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-widest">
+                ID: {user.id.slice(-8)}
+              </span>
+              <span className={`inline-flex px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${user.active ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
+                {user.active ? 'Active' : 'Locked'}
+              </span>
+              <span className="inline-flex px-3 py-1 rounded-lg bg-slate-100 text-slate-700 text-[10px] font-black uppercase tracking-widest">
+                {user.role}
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Edit form */}
-      <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-7 mb-5">
-        <h2 className="font-black mb-5">Account details</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-8">
+          {/* PROFILE EDIT FORM */}
+          <div className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm">
+            <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100">
+               <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500">
+                  <User size={18} />
+               </div>
+               <div>
+                  <h2 className="text-lg font-black text-slate-900">Profile Information</h2>
+                  <p className="text-xs font-medium text-slate-500">Update general account details</p>
+               </div>
+            </div>
 
-        {saved && (
-          <div className="bg-green-500/10 border border-green-500/20 text-green-400 text-sm rounded-xl px-4 py-3 mb-5">
-            ✓ Changes saved
-          </div>
-        )}
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3 mb-5">
-            {error === "exists" ? "That email is already in use." : 
-             error === "notallowed" ? "You cannot grant Admin rights." : 
-             error === "self_delete" ? "You cannot delete your own account." : 
-             error === "delete_failed" ? "Failed to delete user." : 
-             "Something went wrong."}
-          </div>
-        )}
+            {saved === "profile" && (
+              <div className="bg-emerald-50 border border-emerald-100 text-emerald-600 text-sm font-bold rounded-xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
+                ✓ Profile saved successfully
+              </div>
+            )}
+            {error && (
+              <div className="bg-red-50 border border-red-100 text-red-600 text-sm font-bold rounded-xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
+                <AlertTriangle size={16} /> 
+                {error === "exists" ? "That email is already in use." : 
+                 error === "notallowed" ? "You cannot grant Admin rights." : 
+                 error === "self_delete" ? "You cannot delete your own account." : 
+                 error === "delete_failed" ? "Failed to delete user." : 
+                 error === "short" ? "Password must be at least 8 characters long." : 
+                 "Something went wrong."}
+              </div>
+            )}
 
-        <form action={`/api/admin/users/${params.id}`} method="POST" className="space-y-4">
-          <div>
-            <label className={labelCls}>Full name *</label>
-            <input name="name" required defaultValue={user.name} className={inputCls} />
+            <form action={`/api/admin/users/${params.id}`} method="POST" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className={labelCls}>Full Name</label>
+                  <div className="relative">
+                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><User size={16} /></span>
+                     <input name="name" required defaultValue={user.name} className={`${inputCls} pl-11`} placeholder="e.g. John Doe" />
+                  </div>
+                </div>
+                <div>
+                  <label className={labelCls}>Email Address</label>
+                  <div className="relative">
+                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Mail size={16} /></span>
+                     <input name="email" type="email" required defaultValue={user.email} className={`${inputCls} pl-11`} placeholder="john@example.com" />
+                  </div>
+                </div>
+                <div>
+                  <label className={labelCls}>System Role</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Shield size={16} /></span>
+                    <select name="role" defaultValue={user.role} className={`${selectCls} pl-11`}>
+                      <option value="DEALER">Dealer</option>
+                      <option value="ADMIN">Admin</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className={labelCls}>Linked Dealership</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Building2 size={16} /></span>
+                    <select name="dealerId" defaultValue={user.dealerId || ""} className={`${selectCls} pl-11`}>
+                      <option value="">Unassigned</option>
+                      {dealers.map((d) => (
+                        <option key={d.id} value={d.id}>{d.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div className="pt-4 border-t border-slate-100 flex justify-end">
+                <button type="submit" className="bg-slate-900 border border-slate-900 text-white px-8 h-12 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-emerald-600 hover:border-emerald-600 transition-all shadow-sm">
+                  Save Details
+                </button>
+              </div>
+            </form>
           </div>
-          <div>
-            <label className={labelCls}>Email *</label>
-            <input name="email" type="email" required defaultValue={user.email} className={inputCls} />
-          </div>
-          <div>
-            <label className={labelCls}>Role *</label>
-            <select name="role" defaultValue={user.role} className={selectCls}>
-              <option value="DEALER">Dealer</option>
-              {user.role === "ADMIN" && <option value="ADMIN">Admin</option>}
-            </select>
-          </div>
-          <div>
-            <label className={labelCls}>Linked dealership</label>
-            <select name="dealerId" defaultValue={user.dealerId || ""} className={selectCls}>
-              {user.role === "ADMIN" && <option value="">None (Admin only)</option>}
-              {user.role !== "ADMIN" && <option value="" disabled>Select a dealership</option>}
-              {dealers.map((d) => (
-                <option key={d.id} value={d.id}>{d.name}</option>
-              ))}
-            </select>
-          </div>
-          <button type="submit"
-            className="w-full bg-[#f97316] hover:bg-[#ea6c0b] text-white font-bold py-3 rounded-xl transition-colors">
-            Save changes
-          </button>
-        </form>
-      </div>
 
-      {/* Reset password */}
-      <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-7">
-        <h2 className="font-black mb-2">Reset password</h2>
-        <p className="text-xs text-white/30 mb-5">
-          Set a new temporary password for this user. Share it with them securely.
-        </p>
-        <form action={`/api/admin/users/${params.id}/reset-password`} method="POST" className="space-y-4">
-          <div>
-            <label className={labelCls}>New password *</label>
-            <input name="password" type="password" required minLength={8} className={inputCls} />
-          </div>
-          <button type="submit"
-            className="border border-white/20 hover:border-white/40 text-white/60 hover:text-white font-bold px-5 py-2.5 rounded-xl transition-all text-sm">
-            Reset password
-          </button>
-        </form>
-      </div>
+          {/* RESET PASSWORD */}
+          <div id="security" className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm">
+            <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100">
+               <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500">
+                  <Lock size={18} />
+               </div>
+               <div>
+                  <h2 className="text-lg font-black text-slate-900">Force Password Reset</h2>
+                  <p className="text-xs font-medium text-slate-500">Generate a new temporary password</p>
+               </div>
+            </div>
 
-      {/* Danger zone */}
-      <div className="mt-6 bg-red-500/5 border border-red-500/20 rounded-2xl p-6">
-        <h3 className="font-bold text-red-400 mb-1">Danger zone</h3>
-        <p className="text-xs text-white/30 mb-4">
-          Deleting a user account permanently revokes their access. Connected data may be removed or unlinked.
-        </p>
-        <DeleteButton action={`/api/admin/users/${params.id}/delete`} message="Permanently delete this user profile? This cannot be undone." label="Delete User" />
+            {saved === "password" && (
+              <div className="bg-emerald-50 border border-emerald-100 text-emerald-600 text-sm font-bold rounded-xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
+                ✓ New password successfully set
+              </div>
+            )}
+
+            <form action={`/api/admin/users/${params.id}/reset-password`} method="POST" className="space-y-6">
+              <div>
+                <label className={labelCls}>New Password</label>
+                <div className="relative">
+                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Key size={16} /></span>
+                   <input name="password" type="password" required minLength={8} className={`${inputCls} pl-11`} placeholder="Requires at least 8 characters..." />
+                </div>
+                <p className="text-xs text-slate-500 font-medium mt-3">
+                  Upon saving, the user's active sessions will be terminated and they will need to sign in with this new password.
+                </p>
+              </div>
+              <div className="pt-4 flex justify-end">
+                <button type="submit" className="bg-white border border-slate-200 text-slate-700 px-8 h-12 rounded-xl text-[11px] font-black uppercase tracking-widest hover:border-slate-800 hover:text-slate-900 transition-all shadow-sm">
+                  Update Password
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {/* SIDEBAR */}
+        <div className="space-y-8">
+           <div className="bg-red-50 border border-red-100 rounded-[2rem] p-8">
+              <div className="flex items-center gap-3 mb-6 pb-6 border-b border-red-200/50">
+                 <div className="w-10 h-10 rounded-xl bg-red-100 border border-red-200 flex items-center justify-center text-red-600">
+                    <AlertTriangle size={18} />
+                 </div>
+                 <div>
+                    <h2 className="text-lg font-black text-red-900">Danger Zone</h2>
+                 </div>
+              </div>
+              
+              <ul className="text-xs font-medium text-red-700 space-y-3 mb-8 leading-relaxed list-disc list-inside px-2">
+                 <li>Deleting this profile permanently removes access</li>
+                 <li>All active sessions will be killed instantly</li>
+                 <li>Data tied exclusively to this user may be anonymized or erased</li>
+              </ul>
+
+              <DeleteButton 
+                action={`/api/admin/users/${params.id}/delete`} 
+                message="Permanently delete this user's profile and revoke access? This cannot be undone." 
+                label="Delete Profile" 
+                className="w-full bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-[11px] h-12 rounded-xl transition-colors shadow-sm shadow-red-600/20"
+              />
+           </div>
+        </div>
       </div>
     </div>
   );
