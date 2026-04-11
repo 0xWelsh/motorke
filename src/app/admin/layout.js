@@ -34,6 +34,7 @@ const links = [
 const quickActions = [
   { href: "/admin/cars/new",    label: "Add Car",    Icon: Plus },
   { href: "/admin/dealers/new", label: "Add Dealer", Icon: UserPlus },
+  { href: "/admin/settings",    label: "Configurations", Icon: Settings },
 ];
 
 function NavLink({ href, label, Icon, active }) {

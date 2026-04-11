@@ -17,7 +17,8 @@ import {
   MoreVertical,
   Activity,
   ArrowUpRight,
-  Users
+  Users,
+  LogIn
 } from "lucide-react";
 
 export const metadata = { title: "Dealers — Motorke Admin" };
@@ -77,9 +78,12 @@ export default async function AdminDealersPage() {
                       </div>
                     </div>
                   </div>
-                  <button className="text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
-                     <MoreVertical size={20} />
-                  </button>
+                  <form action="/api/auth/impersonate" method="POST">
+                    <input type="hidden" name="dealerId" value={dealer.id} />
+                    <button type="submit" title="Login as Dealer" className="text-slate-400 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-500 transition-colors p-2 bg-slate-50 dark:bg-slate-800 rounded-lg shadow-sm border border-slate-100 dark:border-slate-700 font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5">
+                       <LogIn size={14} /> <span>Login</span>
+                    </button>
+                  </form>
                </div>
 
                {/* Metrics Panel */}

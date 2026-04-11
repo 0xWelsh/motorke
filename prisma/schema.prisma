@@ -414,3 +414,12 @@ enum PaymentStatus {
   FAILED
   REFUNDED
 }
+
+model Setting {
+  key         String   @id
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+  
+  @@map("settings")
+}

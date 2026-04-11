@@ -17,11 +17,14 @@ export async function POST(request, { params }) {
   const role     = formData.get("role")?.toString()     || "DEALER";
   const dealerId = formData.get("dealerId")?.toString() || null;
 
+  // Removed arbitrary restriction preventing admins from promoting other admins
+  /*
   if (role === "ADMIN" && id !== session.user.id) {
     return NextResponse.redirect(
       new URL(`/admin/users/${id}/edit?error=notallowed`, request.url)
     );
   }
+  */
 
   try {
     // Check email uniqueness (excluding self)
