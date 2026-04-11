@@ -1,11 +1,11 @@
-// src/app/api/cars/[carId]/reviews/route.js
+// src/app/api/cars/[id]/reviews/route.js
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { getSessionFromRequest } from "@/lib/auth";
 
 export async function GET(request, { params }) {
   try {
-    const { carId } = params;
+    const { id: carId } = params;
     const reviews = await db.carReview.findMany({
       where: { carId },
       include: {
@@ -16,7 +16,9 @@ export async function GET(request, { params }) {
     });
 
     const avgRating =
-      reviews.length > 0 ? Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length) * 10) / 10 : 0;
+      reviews.length > 0
+        ? Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length) * 10) / 10
+        : 0;
 
     return NextResponse.json({
       reviews,
@@ -36,7 +38,7 @@ export async function POST(request, { params }) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { carId } = params;
+    const { id: carId } = params;
     const body = await request.json();
     const { rating, comment } = body;
 
