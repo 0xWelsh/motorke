@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Phone, Mail, Globe, ShieldCheck } from "lucide-react";
+import { MapPin, Phone, Mail, Globe, ShieldCheck, MessageCircle } from "lucide-react";
 import { getSession } from "@/lib/auth";
 import DealerReviews from "@/components/DealerReviews";
 import DealerInventory from "@/components/DealerInventory";
@@ -70,7 +70,7 @@ export default async function DealerPage(props) {
   }
   if (dealer.whatsapp) {
     contactLinks.push({
-      icon: <img src="/whatsapp.svg" alt="WhatsApp" className="w-4 h-4 opacity-75" onError={(e) => e.target.style.display='none'} />,
+      icon: <MessageCircle className="w-4 h-4" />,
       label: "WhatsApp",
       href: `https://wa.me/${dealer.whatsapp.replace(/\D/g, '')}`,
       external: true,
