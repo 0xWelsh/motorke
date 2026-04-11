@@ -82,6 +82,11 @@ export default function ImageGallery({ images, title }) {
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
               sizes="(max-width: 1024px) 100vw, 66vw"
             />
+            {images.length > 1 && (
+               <span className="absolute bottom-2.5 right-2.5 lg:hidden bg-white/95 text-slate-800 text-[10px] font-extrabold uppercase tracking-[0.12em] px-2.5 py-1 rounded-sm shadow">
+                 {images.length} Photos
+               </span>
+            )}
             <span className="absolute bottom-2.5 left-2.5 inline-flex items-center justify-center w-8 h-8 rounded-sm bg-white/90 text-slate-700 text-sm shadow">
               ↗
             </span>
@@ -99,7 +104,7 @@ export default function ImageGallery({ images, title }) {
                   setActive(idx);
                   setLightbox(true);
                 }}
-                className="relative aspect-square rounded-sm overflow-hidden bg-white/5 group"
+                className="hidden lg:block relative aspect-square rounded-sm overflow-hidden bg-white/5 group"
                 aria-label={`Open image ${idx + 1}`}
               >
                 <Image
@@ -183,7 +188,7 @@ export default function ImageGallery({ images, title }) {
           </div>
 
           {images.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto pb-1 mt-3 scrollbar-none">
+            <div className="hidden lg:flex gap-2 overflow-x-auto pb-1 mt-3 scrollbar-none">
               {images.map((img, i) => (
                 <button
                   type="button"

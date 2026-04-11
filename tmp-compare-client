@@ -1,0 +1,131 @@
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+          {winnerRail.map((item) => (
+            <div key={item.title} className="border border-[#d7dee8] bg-white rounded-xl p-4">
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 mb-2">{item.title}</p>
+              {item.car ? (
+                <Link href={`/cars/${item.car.id}`} className="block group">
+                  <p className="text-sm font-black text-slate-900 group-hover:text-black line-clamp-1">{item.car.year} {item.car.make} {item.car.model}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-700 mt-1">{item.sub}</p>
+                </Link>
+              ) : (
+                <p className="text-xs font-bold text-slate-500">Add more cars to compute winner</p>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="relative border border-[#d7dee8] rounded-[2rem] overflow-x-auto bg-white">
+        <div className="min-w-[980px]">
+        {/* Table Header (Sticky) */}
+        <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-2xl border-b border-[#d7dee8]">
+          <div className="grid grid-cols-[160px_1fr_1fr_1fr] md:grid-cols-[240px_1fr_1fr_1fr]">
+            <div className="sticky left-0 z-40 p-6 md:p-8 flex items-center justify-center border-r border-[#e2e8f0] bg-[#f8fafc]">
+              <span className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 -rotate-90">Model View ⚖️</span>
+            </div>
+            {SLOT_KEYS.map((_, idx) => {
+              const car = comparedSlots[idx];
+              const hydrated = !!(car && initialCarsById.has(car.id));
+              const imageUrl = car?.images?.[0]?.url || car?.image || null;
+              return (
+                <div key={idx} className={`p-4 md:p-5 flex flex-col gap-4 border-r border-[#e2e8f0] last:border-r-0 relative transition-all ${!car ? "bg-[#f8fafc]" : ""}`}>
+                  {car ? (
+                    <div className="relative h-full rounded-2xl border border-[#e2e8f0] bg-white p-4 md:p-5">
+                      <button
+                        onClick={() => removeFromCompare(car.id)}
+                        className="absolute top-3 right-3 text-slate-400 hover:text-slate-900 transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                      <div className="relative aspect-[16/10] rounded-xl overflow-hidden border border-[#d7dee8] bg-[#f8fafc]">
+                        {imageUrl ? (
+                          <Image src={imageUrl} alt={car.model} fill className="object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold uppercase tracking-widest text-[10px]">No Image</div>
+                        )}
+                      </div>
+                      <div className="mt-3">
+                         <p className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-500 mb-1">{car.year}</p>
+                         <h3 className="font-black text-sm md:text-base leading-tight text-slate-900 mb-1 line-clamp-2">{car.make} {car.model}</h3>
+                         <p className="text-slate-600 text-[10px] truncate">{car.variant || "Standard Variant"}</p>
+                         {hydrated && (
+                           <div className="mt-2 flex flex-wrap gap-1.5">
+                             <span className={`inline-flex px-2 py-0.5 rounded-full border text-[8px] font-black uppercase tracking-[0.12em] ${roadTone(getInsights(car)?.roadSuitabilityScore)}`}>
+                               Road {getInsights(car)?.roadSuitabilityScore || "N/A"}
+                             </span>
+                             <span className="inline-flex px-2 py-0.5 rounded-full border border-zinc-400 bg-zinc-200 text-zinc-800 text-[8px] font-black uppercase tracking-[0.12em]">
+                               TCO {formatKesCompact(getInsights(car)?.tco?.annualTotal || 0)}/yr
+                             </span>
+                             <span className={`inline-flex px-2 py-0.5 rounded-full border text-[8px] font-black uppercase tracking-[0.12em] ${importTone(getInsights(car)?.importEligibility)}`}>
+                               {getInsights(car)?.importEligibility ? "Import OK" : getInsights(car)?.importEligibility === false ? "Over-age" : "Eligibility N/A"}
+                             </span>
+                           </div>
+                         )}
+                         <div className="mt-2 h-1.5 w-full bg-[#e5e7eb] rounded-full overflow-hidden">
+                           <div className="h-full bg-gradient-to-r from-[#111827] to-[#334155]" style={{ width: `${hydrated ? calcCoverage(car, allSpecs) : 0}%` }} />
+                         </div>
+                         <p className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.1em] mt-2">
+                           Spec Coverage: {hydrated ? `${calcCoverage(car, allSpecs)}%` : "Loading"}
+                         </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="relative h-full rounded-2xl border border-[#e2e8f0] bg-[#fbfcfe] flex flex-col items-center justify-center gap-4 p-4 md:p-5">
+                       <button
+                         onClick={() => setActiveSlot(idx)}
+                         className="w-16 h-16 rounded-3xl bg-white border border-dashed border-[#cbd5e1] flex items-center justify-center text-slate-500 hover:text-slate-900 hover:border-slate-500 transition-all group"
+                       >
+                         <Search className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                       </button>
+                       <span className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Empty Slot</span>
+                       
+                       {activeSlot === idx && (
+                         <div className="absolute inset-0 rounded-2xl border border-[#e2e8f0] bg-white z-40 p-4 transition-all animate-in fade-in zoom-in-95">
+                           <div className="relative">
+                             <input
+                               autoFocus
+                               type="text"
+                               placeholder="Search car..."
+                               value={searchQuery}
+                               onChange={(e) => setSearchQuery(e.target.value)}
+                               className="w-full bg-white border border-[#cbd5e1] rounded-2xl px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#111827]/45 transition-all font-bold"
+                             />
+                             <button onClick={() => setActiveSlot(null)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-900">
+                               <X className="w-4 h-4" />
+                             </button>
+                           </div>
+                           <div className="mt-4 space-y-2 max-h-[300px] overflow-y-auto no-scrollbar">
+                             {loadingSearch && (
+                               <p className="text-center py-6 text-xs text-slate-400 font-bold">Searching inventory...</p>
+                             )}
+                             {searchResults.map((res) => (
+                               <button
+                                 key={res.id}
+                                 onClick={() => onAddCarSearch(res)}
+                                 className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-[#f8fafc] border border-transparent hover:border-[#d7dee8] transition-all text-left"
+                               >
+                                 <div className="w-12 h-12 rounded-xl overflow-hidden bg-[#eef2f7] shrink-0 relative">
+                                   {res.image && <Image src={res.image} alt={res.model} fill className="object-cover" />}
+                                 </div>
+                                 <div className="flex-1 min-w-0">
+                                   <p className="text-xs font-black text-slate-900">{res.year} {res.make} {res.model}</p>
+                                   <p className="text-[10px] text-slate-700 font-bold">{formatPrice(res.price)}</p>
+                                 </div>
+                                 <ArrowRight className="w-4 h-4 text-slate-500" />
+                               </button>
+                             ))}
+                             {!loadingSearch && searchQuery.length >= 2 && searchResults.length === 0 && (
+                               <p className="text-center py-8 text-xs text-slate-500 font-bold">No units found matching "{searchQuery}"</p>
+                             )}
+                           </div>
+                         </div>
+                       )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Table Content */}

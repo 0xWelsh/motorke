@@ -192,6 +192,31 @@ export default function CompareClient({ initialCars }) {
   const [saveState, setSaveState] = useState("idle");
   const [pdfState, setPdfState] = useState("idle");
 
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [tutorialStep, setTutorialStep] = useState(0);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hasSeen = localStorage.getItem("hasSeenCompareTour");
+      if (!hasSeen) {
+        setShowTutorial(true);
+      }
+    }
+  }, []);
+
+  const nextStep = () => {
+    if (tutorialStep < 2) {
+      setTutorialStep(tutorialStep + 1);
+    } else {
+      closeTutorial();
+    }
+  };
+
+  const closeTutorial = () => {
+    setShowTutorial(false);
+    localStorage.setItem("hasSeenCompareTour", "true");
+  };
+
   const initialCarsById = useMemo(() => {
     return new Map(initialCars.map((car) => [car.id, car]));
   }, [initialCars]);
@@ -754,6 +779,7 @@ export default function CompareClient({ initialCars }) {
         <div className="no-print flex items-center gap-2 sm:gap-3 flex-wrap md:justify-end">
           {PRESETS.map((option) => (
             <button
+              id={option.id === "all" ? "tour-presets" : undefined}
               key={option.id}
               onClick={() => setPreset(option.id)}
               className={`px-3 sm:px-4 h-9 sm:h-10 rounded-xl text-[10px] font-black uppercase tracking-[0.14em] transition-all border ${
@@ -767,6 +793,7 @@ export default function CompareClient({ initialCars }) {
           ))}
 
           <button
+            id="tour-diff"
             onClick={() => setShowDiffOnly(!showDiffOnly)}
             className={`w-full sm:w-auto justify-center px-5 sm:px-6 h-11 sm:h-12 rounded-2xl flex items-center gap-2 text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all ${
               showDiffOnly ? "bg-[#111827] text-white border border-[#111827]" : "bg-white border border-[#cbd5e1] text-slate-700 hover:text-slate-900 hover:border-[#111827]/35"
@@ -876,6 +903,7 @@ export default function CompareClient({ initialCars }) {
                   ) : (
                     <div className="relative h-full rounded-2xl border border-[#e2e8f0] bg-[#fbfcfe] flex flex-col items-center justify-center gap-4 p-4 md:p-5">
                        <button
+                         id={idx === 1 ? "tour-add-slot" : undefined}
                          onClick={() => setActiveSlot(idx)}
                          className="w-16 h-16 rounded-3xl bg-white border border-dashed border-[#cbd5e1] flex items-center justify-center text-slate-500 hover:text-slate-900 hover:border-slate-500 transition-all group"
                        >
@@ -1070,6 +1098,66 @@ export default function CompareClient({ initialCars }) {
         </div>
       </div>
     </div>
+
+      {showTutorial && (
+        <div className="fixed inset-0 z-[100] bg-[#0f172a]/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-[2rem] p-8 max-w-lg w-full shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
+            <div className="absolute top-0 left-0 w-full h-2 bg-slate-100">
+              <div 
+                className="h-full bg-slate-900 transition-all duration-300"
+                style={{ width: `${((tutorialStep + 1) / 3) * 100}%` }}
+              />
+            </div>
+            
+            <div className="mt-4">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">
+                Dyno Overview &bull; Step {tutorialStep + 1} of 3
+              </p>
+              
+              {tutorialStep === 0 && (
+                <>
+                  <h3 className="text-2xl font-black mb-3 tracking-tighter">Compare Your Finalists</h3>
+                  <p className="text-slate-600 font-medium text-sm leading-relaxed mb-6">
+                    Start by searching our inventory for the cars you're considering. Click the <strong className="text-slate-900 font-black">Empty Slot</strong> magnifying glass below to add a vehicle to the Dyno Console.
+                  </p>
+                </>
+              )}
+              {tutorialStep === 1 && (
+                <>
+                  <h3 className="text-2xl font-black mb-3 tracking-tighter">Pinpoint Differences</h3>
+                  <p className="text-slate-600 font-medium text-sm leading-relaxed mb-6">
+                    Toggle <strong className="text-slate-900 font-black">Differences Only</strong> at the top right to instantly hide matching specs. We also highlight critical Kenya buyer signals like Duty, Clearances, and Parts Cost.
+                  </p>
+                </>
+              )}
+              {tutorialStep === 2 && (
+                <>
+                  <h3 className="text-2xl font-black mb-3 tracking-tighter">Contextual Views</h3>
+                  <p className="text-slate-600 font-medium text-sm leading-relaxed mb-6">
+                    Switch between our preset modes (like <strong className="text-slate-900 font-black">Family</strong>, <strong className="text-slate-900 font-black">City</strong>, or <strong className="text-slate-900 font-black">Long Trip</strong>) to filter noise and only see the mechanical traits relevant to your exact use case.
+                  </p>
+                </>
+              )}
+
+              <div className="flex items-center justify-between mt-8 pt-2">
+                <button 
+                  onClick={closeTutorial}
+                  className="text-[11px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors"
+                >
+                  Skip Tour
+                </button>
+                <button 
+                  onClick={nextStep}
+                  className="px-6 h-12 flex items-center justify-center rounded-2xl bg-[#111827] text-white hover:bg-black text-[11px] font-black uppercase tracking-widest transition-all"
+                >
+                  {tutorialStep === 2 ? "Start Comp" : "Next Step"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
