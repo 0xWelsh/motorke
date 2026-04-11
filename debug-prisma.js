@@ -3,16 +3,13 @@ const prisma = new PrismaClient();
 
 async function main() {
   try {
-    const car = await prisma.car.findFirst();
-    console.log('Successfully fetched a car:', !!car);
-    if (car) {
-      console.log('Car columns:', Object.keys(car));
-    }
+    const promise = new Promise((resolve) => resolve("test"));
+    await prisma.user.update({
+      where: { id: "123" },
+      data: { passwordHash: promise }
+    });
   } catch (err) {
-    console.error('Prisma Error:', err);
-  } finally {
-    await prisma.$disconnect();
+    console.error(err.message);
   }
 }
-
 main();

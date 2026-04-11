@@ -32,11 +32,13 @@ export async function POST(request) {
       return NextResponse.redirect(new URL("/admin/users/new?error=exists", request.url));
     }
 
+    const hashedPassword = await hashPassword(password);
+    
     await db.user.create({
       data: {
         name,
         email,
-        passwordHash: hashPassword(password),
+        passwordHash: hashedPassword,
         role,
         dealerId: dealerId || null,
         active: true,

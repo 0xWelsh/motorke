@@ -20,15 +20,26 @@ export async function POST(request, { params }) {
     );
   }
 
-  await db.user.update({
-    where: { id: id },
-    data:  { passwordHash: hashPassword(password) },
-  });
+  try {
+    const hashedPassword = await hashPassword(password);
 
-  // Kill their existing sessions so they must log in with the new password
-  await db.session.deleteMany({ where: { userId: id } });
+    await db.user.update({
+      where: { id: id },
+      data:  { passwordHash: hashedPassword },
+    });
 
-  return NextResponse.redirect(
-    new URL(`/admin/users/${id}/edit?saved=password`, request.url)
-  );
+    // Kill their existing sessions so they must log in with the new password
+    await db.session.deleteMany({ where: { userId: id } });
+
+    return NextResponse.redirect(
+      new URL(`/admin/users/${id}/edit?saved=password`, request.url),
+      { status: 303 }
+    );
+  } catch (error) {
+    console.error("Password reset error:", error);
+    return NextResponse.redirect(
+      new URL(`/admin/users/${id}/edit?error=unknown`, request.url),
+      { status: 303 }
+    );
+  }
 }
