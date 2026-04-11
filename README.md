@@ -97,7 +97,9 @@ npx prisma generate && npx prisma migrate deploy && next build
 ```bash
 npm run dev          # Dev server
 npm run build        # Production build
+npm run build:local  # Local-safe build (forces Prisma sync against .env.local DATABASE_URL)
 npm run db:migrate   # Run migrations
+npm run db:push:local # Sync local DB schema from prisma/schema.prisma
 npm run db:seed      # Seed database
 npm run db:studio    # Visual DB browser
 npm run db:reset     # ⚠️  Wipe + re-seed (dev only)

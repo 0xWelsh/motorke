@@ -7,7 +7,7 @@ import { unstable_cache } from "next/cache";
 import { computeComparisonInsights } from "@/lib/comparison";
 import { formatPrice, formatMileage, estimateDuty, whatsappLink,
          BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/utils";
-import { MessageCircle, ChevronRight, MapPin, Wallet, ShieldCheck, Phone } from "lucide-react";
+import { MessageCircle, ChevronRight, MapPin, Wallet, ShieldCheck, Phone, Star } from "lucide-react";
 import EnquiryForm from "@/components/EnquiryForm";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
@@ -15,6 +15,7 @@ import { SaveButton, TrackRecentView } from "@/components/CarActions";
 import { CompareButton } from "@/components/CompareSelector";
 import PrintButton from "@/components/PrintButton";
 import SpecSheet from "@/components/SpecSheet";
+import CarReviewForm from "@/components/CarReviewForm";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -133,6 +134,27 @@ const getSimilarCars = unstable_cache(
   { revalidate: 3600, tags: ["cars"] }
 );
 
+const getCarReviews = unstable_cache(
+  async (carId) => {
+    const reviews = await db.carReview.findMany({
+      where: { carId },
+      include: {
+        user: { select: { name: true, avatarUrl: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+    });
+
+    const avgRating = reviews.length > 0
+      ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+      : null;
+
+    return { reviews, avgRating, count: reviews.length };
+  },
+  ["car-reviews"],
+  { revalidate: 300, tags: ["car-reviews"] }
+);
+
 function batteryTechLabel(value) {
   if (!value) return null;
   if (value === "NIMH") return "NiMH";
@@ -159,6 +181,7 @@ export default async function CarDetailPage({ params }) {
 
   
   const similar = await getSimilarCars(car.id, car.make, car.dealerId, car.bodyType, car.year, car.price);
+  const reviewsData = await getCarReviews(car.id);
 
   const title    = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const duty     = estimateDuty(car.price, car.year);
@@ -447,6 +470,82 @@ export default async function CarDetailPage({ params }) {
           </div>
         </div>
       )}
+
+      {/* Reviews Section */}
+      <div className="mt-16 sm:mt-24 lg:mt-32 space-y-8 sm:space-y-12">
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Customer reviews</h2>
+            {reviewsData.avgRating && (
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-50 border border-amber-200">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-4 h-4 ${
+                        i < Math.round(parseFloat(reviewsData.avgRating))
+                          ? 'fill-amber-400 text-amber-400'
+                          : 'text-slate-300'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <p className="text-sm font-extrabold text-slate-900">{reviewsData.avgRating} <span className="text-slate-500 font-semibold">({reviewsData.count})</span></p>
+              </div>
+            )}
+          </div>
+          <p className="text-base sm:text-lg text-slate-500 font-medium">Real feedback from verified buyers.</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Review Form */}
+          <div>
+            <CarReviewForm carId={car.id} />
+          </div>
+
+          {/* Reviews List */}
+          <div className="space-y-4">
+            {reviewsData.reviews.length > 0 ? (
+              reviewsData.reviews.map((review) => (
+                <div key={review.id} className="border border-slate-200 rounded-lg p-5 bg-white">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      {review.user.avatarUrl ? (
+                        <img src={review.user.avatarUrl} alt={review.user.name} className="w-10 h-10 rounded-full object-cover" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-sm font-bold text-slate-600">
+                          {review.user.name[0]}
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-extrabold text-slate-900 text-sm">{review.user.name}</p>
+                        <p className="text-xs text-slate-500">{new Date(review.createdAt).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-4 h-4 ${
+                            i < review.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  {review.comment && (
+                    <p className="text-sm text-slate-700 font-medium leading-relaxed">{review.comment}</p>
+                  )}
+                </div>
+              ))
+            ) : (
+              <div className="border border-slate-200 rounded-lg p-8 bg-slate-50 text-center">
+                <p className="text-sm text-slate-500 font-medium">No reviews yet. Be the first to share your experience!</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* Hidden Spec Sheet for Printing */}
       <SpecSheet car={car} dealer={dealer} />

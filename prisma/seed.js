@@ -47,6 +47,8 @@ async function main() {
 
   // Clear existing
   await prisma.savedCar.deleteMany().catch(() => {});
+  await prisma.carReview.deleteMany().catch(() => {});
+  await prisma.dealerReview.deleteMany().catch(() => {});
   await prisma.leadNote.deleteMany();
   await prisma.lead.deleteMany();
   await prisma.carView.deleteMany();
@@ -129,11 +131,115 @@ async function main() {
     }
   }
 
+  // Create reviewer users and their reviews
+  const reviewerNames = [
+    "James Mwangi",
+    "Sarah Kipchoge",
+    "Mark Omondi",
+    "Priya Patel",
+    "David Kariuki",
+    "Lisa Mwaluko",
+  ];
+
+  const reviewerUsers = await Promise.all(
+    reviewerNames.map((name, idx) =>
+      prisma.user.create({
+        data: {
+          name,
+          email: `reviewer${idx + 1}@motorke.ke`,
+          passwordHash: hashPassword("Password123"),
+          role: "USER",
+        },
+      })
+    )
+  );
+
+  // Fetch all cars
+  const allCars = await prisma.car.findMany();
+
+  // Add car reviews
+  const carReviewComments = [
+    "Excellent condition! Runs smoothly and all features work perfectly. Highly recommend!",
+    "Great car for the price. Very comfortable on long drives. Will definitely buy from this dealer again.",
+    "Perfect family SUV. Spacious interior and very safe. Seller was helpful throughout.",
+    "Impressive performance and fuel efficiency. Better than I expected for this model year.",
+    "Beautiful finish and attention to detail. This is a keeper!",
+    "Very reliable vehicle. Had it for 6 months now with zero issues. Great investment.",
+  ];
+
+  for (const car of allCars) {
+    // Add 3-5 reviews per car
+    const numReviews = Math.floor(Math.random() * 3) + 3;
+    for (let i = 0; i < numReviews; i++) {
+      const randomUser = reviewerUsers[Math.floor(Math.random() * reviewerUsers.length)];
+      const randomRating = [4, 4, 4, 5, 5, 5][Math.floor(Math.random() * 6)];
+      const randomComment =
+        carReviewComments[Math.floor(Math.random() * carReviewComments.length)];
+
+      await prisma.carReview.upsert({
+        where: {
+          carId_userId: {
+            carId: car.id,
+            userId: randomUser.id,
+          },
+        },
+        create: {
+          carId: car.id,
+          userId: randomUser.id,
+          rating: randomRating,
+          comment: randomComment,
+        },
+        update: {
+          rating: randomRating,
+          comment: randomComment,
+        },
+      });
+    }
+  }
+
+  // Add dealer reviews
+  const dealerReviewComments = [
+    "Professional team, great selection of vehicles. Will definitely return.",
+    "Smooth transaction. Staff was knowledgeable and helpful. Highly satisfied!",
+    "Fair pricing and honest about car conditions. Reliable dealer!",
+    "Quick process and no hidden charges. Excellent customer service!",
+    "Best dealer experience I've had. They really care about customer satisfaction.",
+  ];
+
+  for (let i = 0; i < 5; i++) {
+    const randomUser = reviewerUsers[i % reviewerUsers.length];
+    const randomRating = [4, 4, 5, 5, 5][i % 5];
+    const randomComment =
+      dealerReviewComments[Math.floor(Math.random() * dealerReviewComments.length)];
+
+    await prisma.dealerReview.upsert({
+      where: {
+        dealerId_userId: {
+          dealerId: autogrid.id,
+          userId: randomUser.id,
+        },
+      },
+      create: {
+        dealerId: autogrid.id,
+        userId: randomUser.id,
+        rating: randomRating,
+        comment: randomComment,
+      },
+      update: {
+        rating: randomRating,
+        comment: randomComment,
+      },
+    });
+  }
+
   console.log("\n✅ Seed complete!");
   console.log("   - 1 Dealership (AutoGrid Motors)");
   console.log("   - 2 Premium Cars");
   console.log("   - ~400 Car Views");
   console.log("   - ~6 Leads");
+  console.log(`   - 6 Reviewer Users`);
+  console.log(`   - ${allCars.length * 4} Car Reviews (avg 4 per car)`);
+  console.log(`   - 5 Dealer Reviews`);
 }
 
 main().catch(e => { console.error("❌", e); process.exit(1); }).finally(() => prisma.$disconnect());
