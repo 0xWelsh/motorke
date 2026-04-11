@@ -33,12 +33,12 @@ export default async function DealerPage(props) {
       cars: {
         where: { available: true },
         include: {
-          images: { take: 1, orderBy: { createdAt: "asc" } },
+          images: { take: 1, orderBy: { order: "asc" } },
         },
         orderBy: { createdAt: "desc" },
       },
       reviews: {
-        include: { user: { select: { name: true, image: true } } },
+        include: { user: { select: { name: true, avatarUrl: true } } },
         orderBy: { createdAt: "desc" },
       },
     },
