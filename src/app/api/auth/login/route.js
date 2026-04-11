@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { verifyPassword, createSession } from "@/lib/auth";
-import { verifyTurnstileToken } from "@/lib/captcha";
+import { isCaptchaConfigured, verifyTurnstileToken } from "@/lib/captcha";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { NextResponse } from "next/server";
 import { z } from "zod";
@@ -9,7 +9,7 @@ import { z } from "zod";
 const loginSchema = z.object({
   email: z.string().email().toLowerCase().trim(),
   password: z.string().min(1),
-  captchaToken: z.string().min(2),
+  captchaToken: z.string().optional(),
   website: z.string().optional(),
 });
 
@@ -43,9 +43,31 @@ export async function POST(request) {
       return NextResponse.redirect(new URL("/login?error=too_many", request.url));
     }
 
-    const captchaCheck = await verifyTurnstileToken({ token: captchaToken, ip });
-    if (!captchaCheck.success) {
-      return NextResponse.redirect(new URL("/login?error=captcha", request.url));
+    const fallbackRequested = captchaToken === "widget-unavailable";
+    if (isCaptchaConfigured()) {
+      if (fallbackRequested) {
+        const fallbackIpLimit = checkRateLimit({
+          name: "login-fallback-ip",
+          key: ip,
+          windowMs: 3600000,
+          maxRequests: 3,
+        });
+        const fallbackEmailLimit = checkRateLimit({
+          name: "login-fallback-email",
+          key: email,
+          windowMs: 3600000,
+          maxRequests: 5,
+        });
+
+        if (fallbackIpLimit.limited || fallbackEmailLimit.limited) {
+          return NextResponse.redirect(new URL("/login?error=too_many", request.url));
+        }
+      } else {
+        const captchaCheck = await verifyTurnstileToken({ token: captchaToken || "", ip });
+        if (!captchaCheck.success) {
+          return NextResponse.redirect(new URL("/login?error=captcha", request.url));
+        }
+      }
     }
 
     const user = await db.user.findUnique({ where: { email } });

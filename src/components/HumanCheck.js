@@ -3,7 +3,7 @@
 import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 
-export default function HumanCheck({ value, onChange }) {
+export default function HumanCheck({ value, onChange, onFallbackChange }) {
   const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
   const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   const widgetRef = useRef(null);
@@ -17,8 +17,9 @@ export default function HumanCheck({ value, onChange }) {
     if (!provider) {
       // Keep local/dev forms submittable without exposing a visual fallback control.
       onChange("human-checked");
+      onFallbackChange?.(false);
     }
-  }, [onChange, provider]);
+  }, [onChange, onFallbackChange, provider]);
 
   useEffect(() => {
     if (!provider) return;
@@ -28,6 +29,13 @@ export default function HumanCheck({ value, onChange }) {
 
     return () => clearTimeout(timeout);
   }, [provider, scriptReady]);
+
+  useEffect(() => {
+    if (scriptReady) {
+      setScriptTimeout(false);
+      onFallbackChange?.(false);
+    }
+  }, [onFallbackChange, scriptReady]);
 
   useEffect(() => {
     if (!provider || !scriptReady || !widgetRef.current || widgetIdRef.current !== null) return;
@@ -78,6 +86,11 @@ export default function HumanCheck({ value, onChange }) {
     );
   }
 
+  function useFallback() {
+    onChange("widget-unavailable");
+    onFallbackChange?.(true);
+  }
+
   return (
     <div className="space-y-2">
       <Script
@@ -92,7 +105,16 @@ export default function HumanCheck({ value, onChange }) {
         <p className="text-[11px] font-semibold text-slate-500">Loading security check...</p>
       )}
       {scriptTimeout && !scriptReady && (
-        <p className="text-[11px] font-semibold text-rose-600">Security widget did not load. Disable blockers or refresh the page.</p>
+        <div className="space-y-2">
+          <p className="text-[11px] font-semibold text-rose-600">Security check did not load. Refresh this page, or continue without it.</p>
+          <button
+            type="button"
+            onClick={useFallback}
+            className="text-[11px] font-bold text-slate-900 underline underline-offset-2 hover:text-black"
+          >
+            Continue without security check
+          </button>
+        </div>
       )}
       <p className="text-[11px] font-semibold text-slate-500">
         {provider === "recaptcha" ? "Verified by Google reCAPTCHA." : "Security check helps block automated abuse."}

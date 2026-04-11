@@ -11,13 +11,14 @@ export default function LoginForm({ error }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [captchaToken, setCaptchaToken] = useState("");
+  const [usingSecurityFallback, setUsingSecurityFallback] = useState(false);
   const [website, setWebsite] = useState("");
   
   // Google OAuth only available if client ID is configured
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
   const hasGoogleAuth = Boolean(googleClientId);
   const requiresHumanCheck = Boolean(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
-  const canSubmit = email.trim().length > 0 && password.length > 0 && (!requiresHumanCheck || captchaToken.length > 0);
+  const canSubmit = email.trim().length > 0 && password.length > 0 && (!requiresHumanCheck || captchaToken.length > 0 || usingSecurityFallback);
   
   // Basic inline validation
   const isValidEmail = email.includes("@") && email.includes(".");
@@ -100,7 +101,8 @@ export default function LoginForm({ error }) {
                    <p className="text-[11px] font-bold text-rose-600 leading-tight">
                      {error === "invalid" && "The email or password you entered is incorrect."}
                      {error === "inactive" && "This account has been deactivated. Please contact support."}
-                     {error === "captcha" && "Please complete the security check and try again."}
+                     {error === "captcha" && "Security check failed. Please try again, or use the fallback option."}
+                     {error === "too_many" && "Too many attempts from this network. Please wait and try again."}
                      {error === "unknown" && "An unexpected error occurred. Please try again."}
                    </p>
                 </div>
@@ -181,8 +183,18 @@ export default function LoginForm({ error }) {
 
                <div className="space-y-1.5">
                  <p className="text-[10px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1">Are You Human?</p>
-                 <HumanCheck value={captchaToken} onChange={setCaptchaToken} />
+                 <HumanCheck
+                   value={captchaToken}
+                   onChange={setCaptchaToken}
+                   onFallbackChange={setUsingSecurityFallback}
+                 />
                </div>
+
+               {usingSecurityFallback && (
+                 <p className="text-[11px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                   Fallback mode is active for this login attempt.
+                 </p>
+               )}
 
                <button 
                  type="submit" 

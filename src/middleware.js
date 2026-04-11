@@ -25,8 +25,8 @@ export function middleware(request) {
     "style-src 'self' 'unsafe-inline' *.googleapis.com *.fontshare.com fonts.googleapis.com; " +
     "img-src 'self' data: blob: https: *.supabase.co *.unsplash.com; " +
     "font-src 'self' *.fontshare.com fonts.gstatic.com; " +
-    "connect-src 'self' *.google.com *.gstatic.com *.recaptcha.net *.supabase.co *.safaricom.co.ke vercel.com; " +
-    "frame-src 'self' *.google.com *.recaptcha.net; " +
+    "connect-src 'self' *.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com *.supabase.co *.safaricom.co.ke vercel.com; " +
+    "frame-src 'self' *.google.com *.recaptcha.net *.cloudflare.com; " +
     "object-src 'none'; " +
     "base-uri 'self'; " +
     "form-action 'self';"
