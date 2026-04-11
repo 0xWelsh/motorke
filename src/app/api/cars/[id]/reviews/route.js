@@ -3,8 +3,9 @@ import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { getSessionFromRequest } from "@/lib/auth";
 
-export async function GET(request, { params }) {
+export async function GET(request, props) {
   try {
+    const params = await props.params;
     const { id: carId } = params;
     const reviews = await db.carReview.findMany({
       where: { carId },
@@ -31,8 +32,9 @@ export async function GET(request, { params }) {
   }
 }
 
-export async function POST(request, { params }) {
+export async function POST(request, props) {
   try {
+    const params = await props.params;
     const session = await getSessionFromRequest();
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
