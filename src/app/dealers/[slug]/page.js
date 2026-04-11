@@ -31,7 +31,7 @@ export default async function DealerPage(props) {
     where: { slug: params.slug },
     include: {
       cars: {
-        where: { status: "AVAILABLE" },
+        where: { available: true },
         include: {
           images: { take: 1, orderBy: { createdAt: "asc" } },
         },
