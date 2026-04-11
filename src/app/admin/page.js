@@ -14,7 +14,8 @@ export const metadata = { title: "Admin Dashboard — Motorske" };
 export default async function AdminDashboard({ searchParams }) {
   await requireAdmin();
 
-  const range = searchParams?.range || "30"; // "7", "30", "all"
+  const resolvedParams = await searchParams;
+  const range = resolvedParams?.range || "30"; // "7", "30", "all"
   const now = new Date();
   
   let startDate = new Date(0); // All time
@@ -43,7 +44,7 @@ export default async function AdminDashboard({ searchParams }) {
     db.car.aggregate({ _sum: { price: true }, where: { available: true } }),
     db.dealer.findMany({ where: { verified: false }, take: 4, select: { id: true, name: true, createdAt: true } }),
     db.car.findMany({ where: { available: true, condition: "USED" }, take: 3, select: { id: true, make: true, model: true } }), // Mocking flagged/reported items for now
-    db.subscription.count({ where: { plan: "PREMIUM", status: "ACTIVE" } }),
+    db.subscription.count({ where: { plan: "PRO", status: "ACTIVE" } }),
     db.subscription.count({ where: { plan: "FREE", status: "ACTIVE" } }),
     db.car.findMany({ where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } }, select: { createdAt: true } }),
     db.lead.findMany({ where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } }, select: { createdAt: true } })

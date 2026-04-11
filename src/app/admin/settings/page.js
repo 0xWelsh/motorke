@@ -7,14 +7,15 @@ export const metadata = { title: "Settings — Motorke Admin" };
 export default async function AdminSettingsPage({ searchParams }) {
   await requireAdmin();
 
+  const resolvedParams = await searchParams;
+  const isSaved = resolvedParams?.saved === "1";
+  const error = resolvedParams?.error;
+
   const rawSettings = await db.setting.findMany();
   const settings = rawSettings.reduce((acc, s) => {
     acc[s.key] = s.value;
     return acc;
   }, {});
-
-  const isSaved = searchParams?.saved === "1";
-  const error = searchParams?.error;
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-700 max-w-4xl">
