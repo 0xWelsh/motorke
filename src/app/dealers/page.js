@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { ArrowUpRight, Building2, CarFront, MapPin, ShieldCheck } from "lucide-react";
+import NearbyDealersList from "@/components/NearbyDealersList";
 
 export const metadata = { title: "Dealers — Motorke Kenya" };
 
@@ -45,6 +46,20 @@ export default async function DealersPage() {
             ))}
           </div>
         </header>
+
+        {/* Find Nearby Section */}
+        <section className="mb-16 p-6 border border-slate-200 rounded-lg bg-slate-50">
+          <div className="mb-4">
+            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-2">
+              <MapPin className="w-5 h-5 text-blue-600" />
+              Find Nearby Dealers
+            </h2>
+            <p className="text-sm text-slate-600">
+              Search for dealers within your preferred radius using your current location.
+            </p>
+          </div>
+          <NearbyDealersList />
+        </section>
 
         {/* County Navigation */}
         <nav className="flex items-center gap-2 mb-12 overflow-x-auto pb-2">
