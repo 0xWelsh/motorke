@@ -112,22 +112,22 @@ export default function PortalLayout({ children }) {
         </nav>
 
         {/* User / Footer */}
-        <div className="p-6 border-t border-slate-200 dark:border-slate-800/50 bg-slate-50 dark:bg-slate-900/50">
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800/50 bg-slate-50 dark:bg-slate-900/50 shrink-0">
           <Link href="/portal/cars/bulk" 
-            className="flex items-center justify-center gap-2 w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold py-3.5 rounded-xl mb-3 transition-all uppercase text-xs tracking-wider">
+            className="flex items-center justify-center gap-2 w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold py-3 rounded-lg mb-2 transition-all uppercase text-xs tracking-wider">
             <Plus size={16} /> Bulk Upload
           </Link>
           <Link href="/portal/cars/new" 
-            className="flex items-center justify-center gap-2 w-full bg-slate-900 dark:bg-emerald-600 hover:bg-slate-800 dark:hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl mb-4 transition-all shadow-md uppercase text-xs tracking-wider">
+            className="flex items-center justify-center gap-2 w-full bg-slate-900 dark:bg-emerald-600 hover:bg-slate-800 dark:hover:bg-emerald-500 text-white font-bold py-3 rounded-lg mb-3 transition-all shadow-md uppercase text-xs tracking-wider">
             <Plus size={16} /> Add Car
           </Link>
           
           <div className="space-y-1">
-            <Link href="/" className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all">
+            <Link href="/" className="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-bold uppercase tracking-wider rounded-lg transition-all">
               <ExternalLink size={14} /> Marketplace
             </Link>
             <form action="/api/auth/logout" method="POST">
-              <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-500 text-xs font-bold uppercase tracking-wider rounded-xl transition-all">
+              <button type="submit" className="flex items-center gap-3 w-full px-3 py-2 text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-500 text-xs font-bold uppercase tracking-wider rounded-lg transition-all">
                 <LogOut size={14} /> Sign Out
               </button>
             </form>
