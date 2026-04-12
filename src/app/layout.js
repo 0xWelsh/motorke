@@ -38,7 +38,7 @@ export default async function RootLayout({ children }) {
   } : null;
 
   return (
-    <html lang="en" suppressHydrationWarning style={{ scrollBehavior: "smooth" }}>
+    <html lang="en" suppressHydrationWarning>
       <body className="bg-background text-slate-900 min-h-screen antialiased flex flex-col font-sans transition-colors duration-300">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <CompareProvider>
