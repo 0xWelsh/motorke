@@ -72,7 +72,7 @@ export default function PortalLayout({ children }) {
   }, [path]);
 
   return (
-    <div className="flex h-screen bg-slate-50 dark:bg-black overflow-hidden relative">
+    <div className="flex h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden relative">
       
       {/* Mobile Backdrop */}
       {sidebarOpen && (
@@ -84,7 +84,7 @@ export default function PortalLayout({ children }) {
 
       {/* Sidebar */}
       <aside className={clsx(
-        "w-72 bg-white dark:bg-slate-900 flex flex-col shrink-0 border-r border-slate-200 dark:border-slate-800 z-50 h-full fixed lg:static transition-transform duration-300",
+        "w-72 bg-white dark:bg-slate-900 flex flex-col shrink-0 border-r border-slate-200 dark:border-slate-800/50 z-50 h-full fixed lg:static transition-transform duration-300 shadow-lg lg:shadow-none",
         sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         {/* Branding */}
@@ -123,7 +123,7 @@ export default function PortalLayout({ children }) {
         </nav>
 
         {/* User / Footer */}
-        <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+        <div className="p-6 border-t border-slate-200 dark:border-slate-800/50 bg-slate-50 dark:bg-slate-900/50">
           <Link href="/portal/cars/bulk" 
             className="flex items-center justify-center gap-2 w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold py-3.5 rounded-xl mb-3 transition-all uppercase text-xs tracking-wider">
             <Plus size={16} /> Bulk Upload
@@ -147,7 +147,7 @@ export default function PortalLayout({ children }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 h-full min-w-0 overflow-y-auto relative custom-scrollbar flex flex-col">
+      <main className="flex-1 h-full min-w-0 overflow-y-auto relative custom-scrollbar flex flex-col bg-white dark:bg-slate-900">
         {/* Modern Top Header / Breadcrumb */}
         <header className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 py-3 lg:py-4 flex items-center justify-between">
            <div className="flex items-center gap-2 text-[10px] lg:text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest shrink-0">
