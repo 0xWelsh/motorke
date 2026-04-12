@@ -231,7 +231,7 @@ export default async function DealerPage(props) {
                   <MessageCircle className="w-3.5 h-3.5" />
                   Usually replies within 15 minutes
                 </p>
-              )
+              )}
 
               {dealerRatingTags.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-2">
