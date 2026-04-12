@@ -147,13 +147,11 @@ export default async function DealerPage(props) {
       <div className={`max-w-7xl mx-auto px-4 sm:px-6 pb-24 ${hasHeroBanner ? "-mt-24 sm:-mt-32 relative z-10" : "pt-8 sm:pt-12"}`}>
         
         {/* Dealership Info Card */}
-        <section className="bg-white/75 backdrop-blur-xl rounded-[24px] p-6 sm:p-10 shadow-[0_18px_50px_rgba(0,0,0,0.08)] border border-emerald-200/30 ring-1 ring-white/50 mb-10">
+        <section className="bg-white rounded-2xl p-6 sm:p-10 shadow-sm border border-slate-200 mb-10">
           <div className="grid grid-cols-1 lg:grid-cols-[140px_minmax(0,1fr)_auto] gap-6 sm:gap-8 lg:gap-12 items-start">
             
             {/* Logo */}
-            <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-[28px] bg-white border-[3px] border-emerald-500 shadow-lg text-slate-900 flex items-center justify-center font-black text-4xl sm:text-5xl overflow-hidden -mt-16 sm:-mt-20">
-              {/* Pulsing green indicator dot */}
-              <div className="absolute top-2 right-2 w-3 h-3 bg-emerald-500 rounded-full animate-pulse" />
+            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center font-black text-4xl sm:text-5xl overflow-hidden -mt-16 sm:-mt-20 shadow-md">
               {dealer.logoUrl ? (
                 <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" />
               ) : (
@@ -176,14 +174,11 @@ export default async function DealerPage(props) {
                 <MapPin className="w-4 h-4" /> {dealer.address || dealer.location}
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-                <div className="rounded-xl border border-emerald-200/50 bg-gradient-to-br from-emerald-50 to-emerald-50/30 px-3 py-3">
-                  <div className="flex items-center gap-2 mb-1">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                    <p className="text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700">Verification</p>
-                  </div>
-                  <p className="text-xs font-black text-slate-900">
-                    {dealer.verified ? "MotorKE Verified / NTSA" : "Verification in progress"}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+                  <p className="text-xs font-semibold text-slate-600 mb-1">Verification</p>
+                  <p className="text-sm font-bold text-slate-900">
+                    {dealer.verified ? "MotorKE Verified" : "Verification pending"}
                   </p>
                 </div>
 
@@ -191,21 +186,15 @@ export default async function DealerPage(props) {
                   href={googleMapsHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-xl border border-blue-200/50 bg-gradient-to-br from-blue-50 to-blue-50/30 px-3 py-3 hover:border-blue-300/50 transition-colors"
+                  className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 hover:bg-slate-100 transition-colors"
                 >
-                  <div className="flex items-center gap-2 mb-1">
-                    <MapPin className="w-3.5 h-3.5 text-blue-600" />
-                    <p className="text-[10px] font-black uppercase tracking-[0.12em] text-blue-700">Yard Location</p>
-                  </div>
-                  <p className="text-xs font-black text-slate-900">Open Maps</p>
+                  <p className="text-xs font-semibold text-slate-600 mb-1">Location</p>
+                  <p className="text-sm font-bold text-slate-900">View on map →</p>
                 </a>
 
-                <div className="rounded-xl border border-amber-200/50 bg-gradient-to-br from-amber-50 to-amber-50/30 px-3 py-3">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-base">📅</span>
-                    <p className="text-[10px] font-black uppercase tracking-[0.12em] text-amber-700">Operating Since</p>
-                  </div>
-                  <p className="text-xs font-black text-slate-900">{startedYear}</p>
+                <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+                  <p className="text-xs font-semibold text-slate-600 mb-1">Operating since</p>
+                  <p className="text-sm font-bold text-slate-900">{startedYear}</p>
                 </div>
               </div>
 
@@ -224,8 +213,8 @@ export default async function DealerPage(props) {
                         target={item.external ? "_blank" : undefined}
                         rel={item.external ? "noopener noreferrer" : undefined}
                         className={isWhatsApp
-                          ? "inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#25D366] border border-[#20ba5e] text-xs font-black uppercase tracking-[0.14em] text-white hover:bg-[#1fad57] transition-all shadow-md"
-                          : "inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white border border-slate-300 text-xs font-black uppercase tracking-[0.14em] text-slate-700 hover:border-slate-400 transition-all"
+                          ? "inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 text-xs font-semibold text-white hover:bg-green-700 transition-colors"
+                          : "inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-slate-200 transition-colors"
                         }
                       >
                         {item.icon} {item.label}
@@ -233,23 +222,23 @@ export default async function DealerPage(props) {
                     );
                   })
                 ) : (
-                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">Contact details unavailable</p>
+                  <p className="text-xs text-slate-400">Contact info not available</p>
                 )}
               </div>
 
               {whatsappChatHref && (
-                <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700">
+                <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600">
                   <MessageCircle className="w-3.5 h-3.5" />
-                  Typically replies in under 15 minutes
+                  Usually replies within 15 minutes
                 </p>
-              )}
+              )
 
               {dealerRatingTags.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-2">
                   {dealerRatingTags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-700"
+                      className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-700"
                     >
                       {tag}
                     </span>
@@ -259,16 +248,16 @@ export default async function DealerPage(props) {
             </div>
 
             {/* Stats Sidebar inside Header */}
-              <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:border-l lg:border-emerald-100/50 lg:pl-10 w-full pt-4 lg:pt-0">
+              <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:border-l lg:border-slate-200 lg:pl-10 w-full pt-4 lg:pt-0">
               <div>
-                <span className="text-slate-900 font-black text-5xl leading-none font-mono">{dealer.cars.length}</span>
-                <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.14em] mt-1">Live Inventory</p>
+                <p className="text-slate-900 font-bold text-3xl leading-none">{dealer.cars.length}</p>
+                <p className="text-xs text-slate-500 font-medium mt-2">Cars in stock</p>
               </div>
               <a href="#reviews" className="group block">
-                <span className="flex items-center gap-1.5 text-slate-900 font-black text-5xl leading-none group-hover:text-amber-600 transition-colors font-mono">
-                   {averageRating > 0 ? averageRating.toFixed(1) : "N/A"} <span className="text-amber-500">★</span>
+                <span className="flex items-center gap-1.5 text-slate-900 font-bold text-3xl leading-none group-hover:text-amber-600 transition-colors">
+                   {averageRating > 0 ? averageRating.toFixed(1) : "—"} <span className="text-lg text-amber-500">★</span>
                 </span>
-                <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.14em] mt-1 group-hover:text-slate-700 transition-colors">{totalReviews} Reviews</p>
+                <p className="text-xs text-slate-500 font-medium mt-2 group-hover:text-slate-700 transition-colors">{totalReviews} {totalReviews === 1 ? "review" : "reviews"}</p>
               </a>
             </div>
           </div>
