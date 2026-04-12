@@ -21,62 +21,60 @@ export default async function DealersPage() {
   const totalCars = dealers.reduce((sum, dealer) => sum + (dealer._count?.cars || 0), 0);
 
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-7xl">
-        <header className="mb-12 md:mb-14">
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500 mb-4">Dealers</p>
-          <h1 className="text-3xl sm:text-4xl md:text-6xl text-slate-900 tracking-tight mb-4">Trusted Dealers</h1>
-          <p className="text-base md:text-lg text-slate-600 font-medium max-w-3xl">
-            Browse verified dealer profiles by county, compare inventory quickly, and connect with the right team.
+    <div className="min-h-screen bg-white">
+      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-16 max-w-7xl">
+        {/* Header */}
+        <header className="mb-16">
+          <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-3">Trusted Dealers</h1>
+          <p className="text-base text-slate-600 font-medium max-w-3xl mb-10">
+            Browse verified dealer profiles by county and find your next car.
           </p>
 
-          <div className="mt-6 sm:mt-8 border-y border-[#e7e1d8] py-6 grid grid-cols-2 md:grid-cols-4 gap-x-6 sm:gap-x-8 gap-y-6">
+          {/* Stats Grid */}
+          <div className="border-t border-b border-slate-200 py-8 grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { label: "Dealerships", value: dealers.length, icon: <Building2 className="w-4 h-4" /> },
-              { label: "Verified", value: verifiedCount, icon: <ShieldCheck className="w-4 h-4" /> },
-              { label: "Featured", value: featuredCount, icon: <ArrowUpRight className="w-4 h-4" /> },
-              { label: "Live Cars", value: totalCars, icon: <CarFront className="w-4 h-4" /> },
+              { label: "Dealerships", value: dealers.length },
+              { label: "Verified", value: verifiedCount },
+              { label: "Featured", value: featuredCount },
+              { label: "Live Cars", value: totalCars },
             ].map((item) => (
               <div key={item.label}>
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500 inline-flex items-center gap-1.5 mb-1">
-                  {item.icon}
-                  {item.label}
-                </p>
-                <p className="text-3xl font-bold text-slate-900 leading-none">{item.value}</p>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">{item.label}</p>
+                <p className="text-3xl font-bold text-slate-900">{item.value}</p>
               </div>
             ))}
           </div>
         </header>
 
-        <nav className="flex items-center gap-x-4 gap-y-2 mb-8 sm:mb-10 md:mb-12 overflow-x-auto no-scrollbar pb-1 whitespace-nowrap">
+        {/* County Navigation */}
+        <nav className="flex items-center gap-2 mb-12 overflow-x-auto pb-2">
           {counties.map((county) => (
             <a
               key={county}
               href={`#county-${encodeURIComponent(county)}`}
-              className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-500 hover:text-slate-900 transition-colors"
+              className="text-sm font-semibold text-slate-600 hover:text-slate-900 whitespace-nowrap transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-100"
             >
               {county}
             </a>
           ))}
         </nav>
 
+        {/* Empty State */}
         {dealers.length === 0 && (
-          <div className="border-y border-[#e7e1d8] py-16">
-            <p className="text-sm font-bold text-slate-500 uppercase tracking-[0.14em]">No dealers yet</p>
+          <div className="border-y border-slate-200 py-16">
+            <p className="text-sm text-slate-600">No dealers available yet.</p>
           </div>
         )}
 
+        {/* Dealers by County */}
         {counties.map((county) => {
           const countyDealers = dealers.filter((d) => d.county === county);
 
           return (
-            <section key={county} id={`county-${encodeURIComponent(county)}`} className="mb-14 last:mb-0 scroll-mt-40">
-              <div className="flex items-end justify-between gap-4 mb-4">
-                <h2 className="text-sm font-extrabold uppercase tracking-[0.18em] text-slate-700">{county}</h2>
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400">{countyDealers.length} dealers</p>
-              </div>
+            <section key={county} id={`county-${encodeURIComponent(county)}`} className="mb-16 last:mb-0 scroll-mt-40">
+              <h2 className="text-lg font-bold text-slate-900 mb-6">{county}</h2>
 
-              <div className="border-y border-[#ece6dd] divide-y divide-[#ece6dd]">
+              <div className="space-y-4 border-b border-slate-200 pb-8">
                 {countyDealers.map((dealer) => {
                   const brandImage = dealer.logoUrl || dealer.users?.[0]?.avatarUrl;
 
@@ -84,50 +82,47 @@ export default async function DealersPage() {
                   <Link
                     key={dealer.id}
                     href={`/dealers/${dealer.slug}`}
-                    className="group block py-5 md:py-7 transition-colors"
+                    className="group block p-5 rounded-lg border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all"
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-[84px_minmax(0,1fr)_140px] gap-4 md:gap-5 items-start">
-                      <div className="w-20 h-20 rounded-2xl bg-[#faf7f2] border border-[#ece6dd] flex items-center justify-center overflow-hidden">
+                    <div className="flex items-start gap-5">
+                      {/* Logo */}
+                      <div className="w-16 h-16 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden shrink-0">
                         {brandImage ? (
                           <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover" />
                         ) : (
-                          <span className="text-slate-900 font-black text-2xl">{dealer.name?.[0] || '?'}</span>
+                          <span className="text-slate-900 font-bold text-lg">{dealer.name?.[0] || '?'}</span>
                         )}
                       </div>
 
-                      <div className="min-w-0">
-                        <div className="flex flex-wrap items-center gap-2 mb-2.5">
-                          <h3 className="text-xl sm:text-2xl text-slate-900 leading-tight group-hover:text-black transition-colors line-clamp-1">{dealer.name}</h3>
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2 mb-2">
+                          <h3 className="text-lg font-bold text-slate-900 group-hover:text-slate-700 transition-colors truncate">{dealer.name}</h3>
                           {dealer.verified && (
-                            <span className="text-[9px] text-emerald-700 inline-flex items-center gap-1 font-extrabold uppercase tracking-[0.14em]">
-                              <ShieldCheck className="w-3 h-3" /> Verified
+                            <span className="text-xs font-semibold text-slate-700 bg-slate-100 px-2 py-1 rounded">
+                              Verified
                             </span>
                           )}
                           {dealer.featured && (
-                            <span className="text-[9px] text-[#bf441f] font-extrabold uppercase tracking-[0.14em]">Featured</span>
+                            <span className="text-xs font-semibold text-slate-700 bg-slate-100 px-2 py-1 rounded">Featured</span>
                           )}
                         </div>
 
-                        <p className="text-slate-500 text-xs font-bold flex items-center gap-1.5 uppercase tracking-[0.12em] mb-3">
-                          <MapPin className="w-3.5 h-3.5" /> {dealer.location || 'Location not set'}
+                        <p className="text-sm text-slate-600 flex items-center gap-1.5 mb-2">
+                          <MapPin size={14} className="text-slate-400" /> {dealer.location || 'Location not set'}
                         </p>
 
                         {dealer.description && (
-                          <p className="text-sm text-slate-600 leading-relaxed line-clamp-2 max-w-2xl">
+                          <p className="text-sm text-slate-600 line-clamp-2">
                             {dealer.description}
                           </p>
                         )}
                       </div>
 
-                      <div className="md:text-right flex md:block items-center justify-between gap-4">
-                        <div>
-                          <span className="text-slate-900 font-bold text-2xl leading-none">{dealer._count.cars}</span>
-                          <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-[0.14em] mt-1">Live Cars</p>
-                        </div>
-
-                        <span className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-[0.12em] text-slate-600 group-hover:text-black transition-colors md:mt-3">
-                          View Dealer <ArrowUpRight className="w-3.5 h-3.5" />
-                        </span>
+                      {/* Stats */}
+                      <div className="text-right shrink-0">
+                        <p className="text-2xl font-bold text-slate-900">{dealer._count.cars}</p>
+                        <p className="text-xs text-slate-500 font-medium">Live Cars</p>
                       </div>
                     </div>
                   </Link>
