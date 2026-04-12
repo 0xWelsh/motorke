@@ -73,7 +73,7 @@ export default async function DealersPage() {
               Explore dealership locations across Kenya. Click markers to view details.
             </p>
           </div>
-          <div className="h-[500px] rounded-lg overflow-hidden border border-slate-200 shadow-sm">
+          <div className="h-[300px] sm:h-[400px] md:h-[500px] rounded-lg overflow-hidden border border-slate-200 shadow-sm">
             <DealersMapView dealers={dealers} />
           </div>
         </section>
