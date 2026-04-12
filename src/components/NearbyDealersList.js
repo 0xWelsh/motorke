@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MapPin, Loader2, AlertCircle, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { getUserLocation, formatDistance } from '@/lib/geolocation';
@@ -10,18 +10,45 @@ export default function NearbyDealersList() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [radius, setRadius] = useState(50);
+  const [savedLocation, setSavedLocation] = useState(null);
+  const [locationSource, setLocationSource] = useState(null); // "saved" or "current"
 
-  async function handleFindNearby() {
+  // Load buyer's saved location on mount
+  useEffect(() => {
+    async function loadSavedLocation() {
+      try {
+        const response = await fetch('/api/account/location');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.lat && data.lng) {
+            setSavedLocation(data);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load saved location:', err);
+      }
+    }
+    loadSavedLocation();
+  }, []);
+
+  async function handleFindNearby(source = 'current') {
     setLoading(true);
     setError(null);
     setDealers(null);
+    setLocationSource(source);
 
     try {
-      const location = await getUserLocation();
-      if (!location) {
-        setError('Location access denied. Please enable geolocation in your browser settings.');
-        setLoading(false);
-        return;
+      let location;
+      
+      if (source === 'saved' && savedLocation) {
+        location = { lat: savedLocation.lat, lng: savedLocation.lng };
+      } else {
+        location = await getUserLocation();
+        if (!location) {
+          setError('Location access denied. Please enable geolocation in your browser settings.');
+          setLoading(false);
+          return;
+        }
       }
 
       const response = await fetch(
@@ -64,23 +91,63 @@ export default function NearbyDealersList() {
           </select>
         </div>
 
-        <button
-          onClick={handleFindNearby}
-          disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Finding...
-            </>
-          ) : (
-            <>
-              <MapPin className="w-4 h-4" />
-              Find Nearby
-            </>
-          )}
-        </button>
+        {/* Show both options if saved location exists */}
+        {savedLocation ? (
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleFindNearby('saved')}
+              disabled={loading}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-slate-600 text-white rounded-lg font-medium hover:bg-slate-700 disabled:opacity-50 transition"
+            >
+              {loading && locationSource === 'saved' ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Finding...
+                </>
+              ) : (
+                <>
+                  <MapPin className="w-4 h-4" />
+                  Saved Location
+                </>
+              )}
+            </button>
+            <button
+              onClick={() => handleFindNearby('current')}
+              disabled={loading}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition"
+            >
+              {loading && locationSource === 'current' ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Finding...
+                </>
+              ) : (
+                <>
+                  <MapPin className="w-4 h-4" />
+                  Current Location
+                </>
+              )}
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => handleFindNearby('current')}
+            disabled={loading}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Finding...
+              </>
+            ) : (
+              <>
+                <MapPin className="w-4 h-4" />
+                Find Nearby
+              </>
+            )}
+          </button>
+        )}
       </div>
 
       {/* Error State */}
@@ -96,6 +163,7 @@ export default function NearbyDealersList() {
         <div className="space-y-3">
           <p className="text-sm text-slate-600">
             {dealers.length} dealer{dealers.length !== 1 ? 's' : ''} found
+            {locationSource && ` • Using ${locationSource === 'saved' ? 'saved' : 'current'} location`}
           </p>
 
           {dealers.length > 0 ? (

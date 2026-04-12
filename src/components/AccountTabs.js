@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Settings, Bookmark, MessageSquare, History, Phone, ShieldCheck, Clock, MapPin, Eye, EyeOff } from "lucide-react";
 import { clsx } from "clsx";
+import BuyerLocationSettings from "./BuyerLocationSettings";
 
 const fmt = (n) => "KSh " + Number(n).toLocaleString("en-KE");
 const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" });
@@ -160,6 +161,11 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                   Rotate Password
                 </button>
               </form>
+            </div>
+
+            {/* Location Settings */}
+            <div className="lg:col-span-2 border-t border-slate-100 pt-8">
+              <BuyerLocationSettings initialLat={null} initialLng={null} />
             </div>
           </div>
         )}

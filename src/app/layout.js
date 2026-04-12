@@ -1,5 +1,6 @@
 // src/app/layout.js
 import "./globals.css";
+import Script from "next/script";
 import { CompareProvider } from "@/components/CompareContext";
 import Navbar from "@/components/Navbar";
 import { CompareBar } from "@/components/CompareSelector";
@@ -39,6 +40,12 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
+          strategy="beforeInteractive"
+        />
+      </head>
       <body className="bg-background text-slate-900 min-h-screen antialiased flex flex-col font-sans transition-colors duration-300">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <CompareProvider>

@@ -1,0 +1,3 @@
+-- Add geolocation fields to users table
+ALTER TABLE "users" ADD COLUMN "lat" DOUBLE PRECISION,
+ADD COLUMN "lng" DOUBLE PRECISION;
