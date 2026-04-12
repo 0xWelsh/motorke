@@ -58,6 +58,27 @@ export default async function DealerPage(props) {
   const averageRating = totalReviews > 0
     ? dealer.reviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews
     : 0;
+  const startedYear = new Date(dealer.createdAt).getFullYear();
+  const mapsQuery = encodeURIComponent(
+    [dealer.address || dealer.location, dealer.county, "Kenya"].filter(Boolean).join(", ")
+  );
+  const googleMapsHref = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+  const dealerRatingTags = [];
+  if (totalReviews >= 8 && averageRating >= 4.5) {
+    dealerRatingTags.push("Fair Pricing", "Clean Logbooks", "Good After-sales");
+  } else if (totalReviews >= 3 && averageRating >= 4) {
+    dealerRatingTags.push("Fair Pricing", "Smooth Process");
+  } else if (totalReviews > 0) {
+    dealerRatingTags.push("Rated by Buyers");
+  }
+
+  const whatsappNumber = dealer.whatsapp?.replace(/\D/g, "") || "";
+  const whatsappPrefill = encodeURIComponent(
+    `Hi, I'm viewing your showroom on MotorKE and I'd like to ask about your available cars.`
+  );
+  const whatsappChatHref = whatsappNumber
+    ? `https://wa.me/${whatsappNumber}?text=${whatsappPrefill}`
+    : null;
 
   // Contact links array
   const contactLinks = [];
@@ -72,7 +93,7 @@ export default async function DealerPage(props) {
     contactLinks.push({
       icon: <MessageCircle className="w-4 h-4" />,
       label: "WhatsApp",
-      href: `https://wa.me/${dealer.whatsapp.replace(/\D/g, '')}`,
+      href: whatsappChatHref,
       external: true,
     });
   }
@@ -153,6 +174,30 @@ export default async function DealerPage(props) {
                 <MapPin className="w-4 h-4" /> {dealer.address || dealer.location}
               </p>
 
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
+                  <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 mb-1">Verification</p>
+                  <p className="text-xs font-black text-slate-900">
+                    {dealer.verified ? "MotorKE Verified / NTSA Registered" : "Verification in progress"}
+                  </p>
+                </div>
+
+                <a
+                  href={googleMapsHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 hover:border-slate-300 transition-colors"
+                >
+                  <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 mb-1">Yard Location</p>
+                  <p className="text-xs font-black text-slate-900">Open in Google Maps</p>
+                </a>
+
+                <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
+                  <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 mb-1">Operating Years</p>
+                  <p className="text-xs font-black text-slate-900">Selling in Kenya since {startedYear}</p>
+                </div>
+              </div>
+
               <p className="text-slate-600 text-sm leading-relaxed max-w-3xl mb-6 font-medium">
                 {dealer.description || `${dealer.name} maintains a curated selection of vehicles for buyers who want trusted listings, clear pricing, and direct contact with a real dealership team.`}
               </p>
@@ -174,6 +219,26 @@ export default async function DealerPage(props) {
                   <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">Contact details unavailable</p>
                 )}
               </div>
+
+              {whatsappChatHref && (
+                <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700">
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  Typically replies in under 15 minutes
+                </p>
+              )}
+
+              {dealerRatingTags.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {dealerRatingTags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-700"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Stats Sidebar inside Header */}
@@ -262,6 +327,22 @@ export default async function DealerPage(props) {
                 Connect directly with the dealer. Motorke verified this partner's business details to ensure a safe shopping experience.
               </p>
             </div>
+
+            <div className="rounded-[2rem] border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
+              <h2 className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-5">Dealership Services</h2>
+              <div className="space-y-3">
+                {[
+                  { name: "Trade-in Available", value: "Available on request" },
+                  { name: "Bank Financing Partners", value: "Ask dealer for partner banks" },
+                  { name: "Insurance Facilitation", value: "Paperwork support available" },
+                ].map((item) => (
+                  <div key={item.name} className="rounded-xl border border-slate-100 bg-slate-50 px-3 py-3">
+                    <p className="text-xs font-black text-slate-900">{item.name}</p>
+                    <p className="text-[11px] font-bold text-slate-500 mt-1">{item.value}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </aside>
 
         </div>
@@ -287,6 +368,20 @@ export default async function DealerPage(props) {
            )}
         </div>
       </div>
+
+      {whatsappChatHref && (
+        <div className="fixed bottom-24 sm:bottom-6 right-4 sm:right-6 z-[60]">
+          <a
+            href={whatsappChatHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-lg shadow-emerald-900/20 hover:brightness-95 transition-all"
+          >
+            <MessageCircle className="w-4 h-4" />
+            Chat with {dealer.name}
+          </a>
+        </div>
+      )}
 
     </div>
   );
