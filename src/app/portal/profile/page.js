@@ -54,8 +54,39 @@ export default async function PortalProfilePage({ searchParams }) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <div className="lg:col-span-2 space-y-8">
+      {/* Account Overview - Top Section */}
+      <div className="bg-white border border-slate-200 rounded-lg p-8 shadow-sm mb-12">
+        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wide mb-6">Account Overview</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {[
+            { icon: User, label: "Role", value: user.role },
+            { icon: Building2, label: "Dealership", value: user.dealer?.name || "Not linked" },
+            { icon: MapPin, label: "Location", value: user.dealer?.location || "Not set" },
+            { icon: Phone, label: "Phone", value: user.dealer?.phone || "Not set" },
+            { icon: Globe, label: "Website", value: user.dealer?.website || "Not set" },
+            { icon: Mail, label: "Scope", value: "Enterprise" },
+            { icon: Shield, label: "Trust", value: user.emailVerified ? "100%" : "Pending" },
+            { icon: Calendar, label: "Member Since", value: new Date(user.createdAt).toLocaleDateString("en-KE", { month: "short", year: "numeric" }) },
+          ].map(({ icon: Icon, label, value }) => (
+            <div key={label}>
+              <div className="flex items-center gap-2 mb-1">
+                <Icon size={12} className="text-slate-400" />
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">{label}</span>
+              </div>
+              <p className="text-sm font-semibold text-slate-900">{value}</p>
+            </div>
+          ))}
+        </div>
+        
+        <div className="mt-8 pt-8 border-t border-slate-200">
+           <p className="text-xs text-slate-500 leading-relaxed">
+             Need to change your registered email or dealership name? Contact partner support.
+           </p>
+        </div>
+      </div>
+
+      {/* Settings Sections */}
+      <div className="space-y-8">
           {/* Personal Avatar Section */}
           <div className="bg-white border border-slate-200 rounded-lg p-8 shadow-sm">
             <div className="flex flex-col sm:flex-row items-center gap-8">
@@ -226,40 +257,6 @@ export default async function PortalProfilePage({ searchParams }) {
             </form>
           </div>
         </div>
-
-        {/* Sidebar Info */}
-        <div className="space-y-8">
-          <div className="bg-white border border-slate-200 rounded-lg p-8 shadow-sm">
-            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wide mb-6">Account Overview</h3>
-            <div className="space-y-6">
-              {[
-                { icon: User, label: "Role", value: user.role },
-                { icon: Building2, label: "Dealership", value: user.dealer?.name || "Not linked" },
-                { icon: MapPin, label: "Location", value: user.dealer?.location || "Not set" },
-                { icon: Phone, label: "Phone", value: user.dealer?.phone || "Not set" },
-                { icon: Globe, label: "Website", value: user.dealer?.website || "Not set" },
-                { icon: Mail, label: "Scope", value: "Enterprise" },
-                { icon: Shield, label: "Trust", value: user.emailVerified ? "100%" : "Pending" },
-                { icon: Calendar, label: "Member Since", value: new Date(user.createdAt).toLocaleDateString("en-KE", { month: "short", year: "numeric" }) },
-              ].map(({ icon: Icon, label, value }) => (
-                <div key={label}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Icon size={12} className="text-slate-400" />
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">{label}</span>
-                  </div>
-                  <p className="text-sm font-semibold text-slate-900 ml-5">{value}</p>
-                </div>
-              ))}
-            </div>
-            
-            <div className="mt-8 pt-8 border-t border-slate-200">
-               <p className="text-xs text-slate-500 leading-relaxed">
-                 Need to change your registered email or dealership name? Contact partner support.
-               </p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
