@@ -27,7 +27,6 @@ const links = [
   { href: "/portal/inventory", label: "Inventory",  Icon: Package         },
   { href: "/portal/leads",     label: "Leads",      Icon: MessageSquare   },
   { href: "/portal/analytics", label: "Analytics",  Icon: BarChart2       },
-  { href: "/portal/intelligence", label: "Insights", Icon: TrendingUp },
   { href: "/portal/subscription",   label: "Subscription", Icon: CreditCard      },
   { href: "/portal/profile",   label: "Settings",   Icon: Settings        },
 ];
