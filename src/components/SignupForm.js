@@ -160,40 +160,40 @@ export default function SignupForm({ error: initialError }) {
         />
       )}
 
-      <section className="min-h-dvh px-4 py-8 sm:px-6 sm:py-12 flex items-center justify-center\">
-        <div className=\"w-full max-w-md\">
+      <section className="min-h-dvh px-4 py-8 sm:px-6 sm:py-12 flex items-center justify-center">
+        <div className="w-full max-w-md">
           {/* Header */}
-          <div className=\"mb-8 text-center\">
-            <div className=\"flex items-center justify-center gap-2 mb-4\">
-              <img src=\"/favicon.svg\" alt=\"Motorke\" className=\"h-8 w-8 object-contain\" />
-              <h1 className=\"text-2xl font-bold text-slate-900\">Motorke</h1>
+          <div className="mb-8 text-center">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <img src="/favicon.svg" alt="Motorke" className="h-8 w-8 object-contain" />
+              <h1 className="text-2xl font-bold text-slate-900">Motorke</h1>
             </div>
-            <h2 className=\"text-3xl font-bold text-slate-900 mb-2\">Create Account</h2>
-            <p className=\"text-sm text-slate-600\">Join as buyer or dealer to get started</p>
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">Create Account</h2>
+            <p className="text-sm text-slate-600">Join as buyer or dealer to get started</p>
           </div>
 
           {/* Role Toggle */}
-          <div className=\"flex gap-2 mb-6 bg-slate-100 p-1 rounded-lg\">
+          <div className="flex gap-2 mb-6 bg-slate-100 p-1 rounded-lg">
             <button 
-              type=\"button\" 
-              onClick={() => setRole(\"BUYER\")}
+              type="button" 
+              onClick={() => setRole("BUYER")}
               className={clsx(
-                \"flex-1 py-2 px-3 rounded-md font-semibold text-sm transition-all\",
-                role === \"BUYER\" 
-                  ? \"bg-white text-slate-900 shadow-sm\" 
-                  : \"text-slate-600 hover:text-slate-900\"
+                "flex-1 py-2 px-3 rounded-md font-semibold text-sm transition-all",
+                role === "BUYER" 
+                  ? "bg-white text-slate-900 shadow-sm" 
+                  : "text-slate-600 hover:text-slate-900"
               )}
             >
               Personal
             </button>
             <button 
-              type=\"button\" 
-              onClick={() => setRole(\"DEALER\")}
+              type="button" 
+              onClick={() => setRole("DEALER")}
               className={clsx(
-                \"flex-1 py-2 px-3 rounded-md font-semibold text-sm transition-all\",
-                role === \"DEALER\" 
-                  ? \"bg-slate-900 text-white shadow-sm\" 
-                  : \"text-slate-600 hover:text-slate-900\"
+                "flex-1 py-2 px-3 rounded-md font-semibold text-sm transition-all",
+                role === "DEALER" 
+                  ? "bg-slate-900 text-white shadow-sm" 
+                  : "text-slate-600 hover:text-slate-900"
               )}
             >
               Dealership
@@ -202,52 +202,52 @@ export default function SignupForm({ error: initialError }) {
 
           {/* Error Message */}
           {errorMsg && (
-            <div className=\"mb-6 p-4 bg-red-50 border border-red-200 rounded-lg\">
-              <p className=\"text-sm font-semibold text-red-900\">{errorMsg}</p>
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm font-semibold text-red-900">{errorMsg}</p>
             </div>
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className=\"space-y-4 mb-6\">
-            <input type=\"hidden\" name=\"captchaToken\" value={captchaToken} readOnly />
-            <input type=\"text\" name=\"website\" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete=\"off\" className=\"hidden\" aria-hidden=\"true\" />
-            <input type=\"hidden\" name=\"role\" value={role} />
+          <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+            <input type="hidden" name="captchaToken" value={captchaToken} readOnly />
+            <input type="text" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+            <input type="hidden" name="role" value={role} />
 
             {/* Email */}
             <div>
-              <label htmlFor=\"email\" className=\"block text-sm font-semibold text-slate-900 mb-2\">Email Address</label>
+              <label htmlFor="email" className="block text-sm font-semibold text-slate-900 mb-2">Email Address</label>
               <input 
-                id=\"email\"
-                name=\"email\" 
-                type=\"email\" 
+                id="email"
+                name="email" 
+                type="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required 
-                autoComplete=\"email\"
-                placeholder=\"you@dealership.com\" 
-                className=\"w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all\"
+                autoComplete="email"
+                placeholder="you@dealership.com" 
+                className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
               />
             </div>
 
             {/* Password */}
             <div>
-              <label htmlFor=\"password\" className=\"block text-sm font-semibold text-slate-900 mb-2\">Password</label>
-              <div className=\"relative\">
+              <label htmlFor="password" className="block text-sm font-semibold text-slate-900 mb-2">Password</label>
+              <div className="relative">
                 <input 
-                  id=\"password\"
-                  name=\"password\" 
-                  type={showPassword ? \"text\" : \"password\"}
+                  id="password"
+                  name="password" 
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required 
-                  autoComplete=\"new-password\"
-                  placeholder=\"•••••••••\" 
-                  className=\"w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all pr-10\"
+                  autoComplete="new-password"
+                  placeholder="•••••••••" 
+                  className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all pr-10"
                 />
                 <button 
-                  type=\"button\" 
+                  type="button" 
                   onClick={() => setShowPassword(!showPassword)}
-                  className=\"absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors\"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                   tabIndex={-1}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -258,41 +258,41 @@ export default function SignupForm({ error: initialError }) {
 
             {/* Confirm Password */}
             <div>
-              <label htmlFor=\"confirm\" className=\"block text-sm font-semibold text-slate-900 mb-2\">Confirm Password</label>
+              <label htmlFor="confirm" className="block text-sm font-semibold text-slate-900 mb-2">Confirm Password</label>
               <input 
-                id=\"confirm\"
-                name=\"confirm\" 
-                type={showPassword ? \"text\" : \"password\"}
+                id="confirm"
+                name="confirm" 
+                type={showPassword ? "text" : "password"}
                 required 
-                autoComplete=\"new-password\"
-                placeholder=\"•••••••••\" 
-                className=\"w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all\"
+                autoComplete="new-password"
+                placeholder="•••••••••" 
+                className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
               />
             </div>
 
             {/* Dealer Fields */}
-            {role === \"DEALER\" && (
-              <div className=\"space-y-4 pt-2 border-t border-slate-200\">
+            {role === "DEALER" && (
+              <div className="space-y-4 pt-2 border-t border-slate-200">
                 <div>
-                  <label htmlFor=\"dealerName\" className=\"block text-sm font-semibold text-slate-900 mb-2\">Dealership Name</label>
+                  <label htmlFor="dealerName" className="block text-sm font-semibold text-slate-900 mb-2">Dealership Name</label>
                   <input 
-                    id=\"dealerName\"
-                    name=\"dealerName\" 
-                    type=\"text\" 
-                    placeholder=\"Your dealership name\" 
-                    className=\"w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all\"
+                    id="dealerName"
+                    name="dealerName" 
+                    type="text" 
+                    placeholder="Your dealership name" 
+                    className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor=\"county\" className=\"block text-sm font-semibold text-slate-900 mb-2\">County</label>
+                  <label htmlFor="county" className="block text-sm font-semibold text-slate-900 mb-2">County</label>
                   <select 
-                    id=\"county\"
-                    name=\"county\"
+                    id="county"
+                    name="county"
                     required
-                    className=\"w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all\"
+                    className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
                   >
-                    <option value=\"\">Select a county</option>
+                    <option value="">Select a county</option>
                     {COUNTIES.map((c) => (
                       <option key={c} value={c}>{c}</option>
                     ))}
@@ -303,7 +303,7 @@ export default function SignupForm({ error: initialError }) {
 
             {/* Security Check */}
             <div>
-              <label className=\"text-sm font-semibold text-slate-900 mb-2 block\">Security</label>
+              <label className="text-sm font-semibold text-slate-900 mb-2 block">Security</label>
               <HumanCheck
                 value={captchaToken}
                 onChange={setCaptchaToken}
@@ -312,46 +312,49 @@ export default function SignupForm({ error: initialError }) {
 
             {/* Submit Button */}
             <button 
-              type=\"submit\" 
+              type="submit" 
               disabled={loading}
-              className=\"w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg py-2.5 font-semibold transition-all flex items-center justify-center gap-2\"
+              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg py-2.5 font-semibold transition-all flex items-center justify-center gap-2"
             >
-              {loading ? <Loader2 size={18} className=\"animate-spin\" /> : null}
-              {loading ? \"Creating account...\" : \"Create Account\"}
+              {loading ? <Loader2 size={18} className="animate-spin" /> : null}
+              {loading ? "Creating account..." : "Create Account"}
             </button>
 
             {/* Divider */}
-            <div className=\"relative\">
-              <div className=\"absolute inset-0 flex items-center\">
-                <div className=\"w-full border-t border-slate-200\"></div>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200"></div>
               </div>
-              <div className=\"relative flex justify-center\">
-                <span className=\"bg-white px-3 text-xs text-slate-600\">or sign up with</span>
+              <div className="relative flex justify-center">
+                <span className="bg-white px-3 text-xs text-slate-600">or sign up with</span>
               </div>
             </div>
 
             {/* Google Button */}
-            <div id=\"google-signup-button\" className=\"w-full\" />
+            <div id="google-signup-button" className="w-full" />
           </form>
 
           {/* Footer */}
-          <div className=\"text-center\">
-            <p className=\"text-sm text-slate-600\">
-              Already have an account?{\" \"}\n              <Link href=\"/login\" className=\"font-semibold text-slate-900 hover:text-slate-700 transition-colors\">
+          <div className="text-center">
+            <p className="text-sm text-slate-600">
+              Already have an account?{" "}
+              <Link href="/login" className="font-semibold text-slate-900 hover:text-slate-700 transition-colors">
                 Sign in
               </Link>
             </p>
-            <p className=\"text-xs text-slate-500 mt-4\">
-              By signing up you agree to our{\" \"}\n              <Link href=\"/terms\" className=\"underline underline-offset-2 hover:text-slate-700\">\n                Terms\n              </Link>\n              {\" \"}and{\" \"}\n              <Link href=\"/privacy\" className=\"underline underline-offset-2 hover:text-slate-700\">\n                Privacy Policy\n              </Link>\n            </p>
+            <p className="text-xs text-slate-500 mt-4">
+              By signing up you agree to our{" "}
+              <Link href="/terms" className="underline underline-offset-2 hover:text-slate-700">
+                Terms
+              </Link>
+              {" "}and{" "}
+              <Link href="/privacy" className="underline underline-offset-2 hover:text-slate-700">
+                Privacy Policy
+              </Link>
+            </p>
           </div>
         </div>
       </section>
     </div>
   );
 }
-                <input type="hidden" name="role" value={role} />
-                <input type="hidden" name="captchaToken" value={captchaToken} readOnly />
-                <input
-                  type="text"
-                  name="website"
-                  value={website}
