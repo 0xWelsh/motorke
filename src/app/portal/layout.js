@@ -87,35 +87,24 @@ export default function PortalLayout({ children }) {
         "w-72 bg-white dark:bg-slate-900 flex flex-col shrink-0 border-r border-slate-200 dark:border-slate-800/50 z-50 h-full fixed lg:static transition-transform duration-300 shadow-lg lg:shadow-none",
         sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
-        {/* Branding */}
-        <div className="p-6 lg:p-8 mb-2 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-slate-900 dark:bg-slate-100 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-all duration-500 shadow-md">
-              <img src="/favicon.svg" alt="Motorke" className="w-6 h-6 object-contain rounded-lg" />
-            </div>
-            <div>
-              <span className="text-xl font-bold text-slate-900 dark:text-white tracking-tight leading-none block">Motorske</span>
-              <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-500 uppercase tracking-widest mt-0.5 block">
-                Dealer Portal
-              </span>
-            </div>
-          </Link>
-          <button className="lg:hidden p-2 text-slate-400 hover:bg-slate-100 rounded-lg" onClick={() => setSidebarOpen(false)}>
+        {/* Close Button */}
+        <div className="p-4 flex items-center justify-end lg:hidden">
+          <button className="p-2 text-slate-400 hover:bg-slate-100 rounded-lg" onClick={() => setSidebarOpen(false)}>
             <X size={20} />
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar">
-          <div className="px-4 mb-2 mt-4">
-             <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Overview</p>
+        <nav className="flex-1 px-3 space-y-1 overflow-y-auto custom-scrollbar">
+          <div className="mb-2 bg-slate-900 dark:bg-black px-4 py-2.5 rounded-lg">
+             <p className="text-xs font-black text-white uppercase tracking-wider">Overview</p>
           </div>
           {links.slice(0, 3).map(({ href, label, Icon }) => (
             <NavLink key={href} href={href} label={label} Icon={Icon} active={path === href} />
           ))}
           
-          <div className="px-4 mb-2 mt-8">
-             <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Management</p>
+          <div className="mb-2 mt-6 bg-slate-900 dark:bg-black px-4 py-2.5 rounded-lg">
+             <p className="text-xs font-black text-white uppercase tracking-wider">Management</p>
           </div>
           {links.slice(3).map(({ href, label, Icon }) => (
             <NavLink key={href} href={href} label={label} Icon={Icon} active={path === href} />
@@ -176,7 +165,7 @@ export default function PortalLayout({ children }) {
            </div>
         </header>
 
-        <div className="p-4 sm:p-6 lg:p-10 w-full overflow-hidden relative z-10 flex-1">
+        <div className="p-4 sm:p-6 lg:p-10 w-full overflow-y-auto relative z-10 flex-1">
           {children}
         </div>
       </main>
