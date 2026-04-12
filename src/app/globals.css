@@ -5,6 +5,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .font-times {
+    font-family: "Times New Roman", Times, serif;
+  }
+}
+
 :root {
   /* Core Palette — light-first neutral */
   --bg:           #ffffff;

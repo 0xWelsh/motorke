@@ -162,7 +162,7 @@ export default async function DealerPage(props) {
             {/* Title & Details */}
             <div className="min-w-0 pt-2 lg:pt-0">
               <div className="flex flex-wrap items-center gap-3 mb-4">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight">{dealer.name}</h1>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight font-times">{dealer.name}</h1>
                 {dealer.verified && (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[10px] font-black uppercase tracking-[0.14em] text-emerald-700 border border-emerald-100">
                     <ShieldCheck className="w-3.5 h-3.5" /> Verified Profile
