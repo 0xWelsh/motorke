@@ -147,11 +147,13 @@ export default async function DealerPage(props) {
       <div className={`max-w-7xl mx-auto px-4 sm:px-6 pb-24 ${hasHeroBanner ? "-mt-24 sm:-mt-32 relative z-10" : "pt-8 sm:pt-12"}`}>
         
         {/* Dealership Info Card */}
-        <section className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-sm border border-slate-200 mb-10">
+        <section className="bg-white/75 backdrop-blur-xl rounded-[24px] p-6 sm:p-10 shadow-[0_18px_50px_rgba(0,0,0,0.08)] border border-emerald-200/30 ring-1 ring-white/50 mb-10">
           <div className="grid grid-cols-1 lg:grid-cols-[140px_minmax(0,1fr)_auto] gap-6 sm:gap-8 lg:gap-12 items-start">
             
             {/* Logo */}
-            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-[2rem] bg-slate-50 border-[4px] border-white shadow-lg text-slate-900 flex items-center justify-center font-black text-4xl sm:text-5xl overflow-hidden -mt-16 sm:-mt-20">
+            <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-[28px] bg-white border-[3px] border-emerald-500 shadow-lg text-slate-900 flex items-center justify-center font-black text-4xl sm:text-5xl overflow-hidden -mt-16 sm:-mt-20">
+              {/* Pulsing green indicator dot */}
+              <div className="absolute top-2 right-2 w-3 h-3 bg-emerald-500 rounded-full animate-pulse" />
               {dealer.logoUrl ? (
                 <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" />
               ) : (
@@ -175,10 +177,13 @@ export default async function DealerPage(props) {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-                <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
-                  <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 mb-1">Verification</p>
+                <div className="rounded-xl border border-emerald-200/50 bg-gradient-to-br from-emerald-50 to-emerald-50/30 px-3 py-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    <p className="text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700">Verification</p>
+                  </div>
                   <p className="text-xs font-black text-slate-900">
-                    {dealer.verified ? "MotorKE Verified / NTSA Registered" : "Verification in progress"}
+                    {dealer.verified ? "MotorKE Verified / NTSA" : "Verification in progress"}
                   </p>
                 </div>
 
@@ -186,15 +191,21 @@ export default async function DealerPage(props) {
                   href={googleMapsHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 hover:border-slate-300 transition-colors"
+                  className="rounded-xl border border-blue-200/50 bg-gradient-to-br from-blue-50 to-blue-50/30 px-3 py-3 hover:border-blue-300/50 transition-colors"
                 >
-                  <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 mb-1">Yard Location</p>
-                  <p className="text-xs font-black text-slate-900">Open in Google Maps</p>
+                  <div className="flex items-center gap-2 mb-1">
+                    <MapPin className="w-3.5 h-3.5 text-blue-600" />
+                    <p className="text-[10px] font-black uppercase tracking-[0.12em] text-blue-700">Yard Location</p>
+                  </div>
+                  <p className="text-xs font-black text-slate-900">Open Maps</p>
                 </a>
 
-                <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
-                  <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 mb-1">Operating Years</p>
-                  <p className="text-xs font-black text-slate-900">Selling in Kenya since {startedYear}</p>
+                <div className="rounded-xl border border-amber-200/50 bg-gradient-to-br from-amber-50 to-amber-50/30 px-3 py-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-base">📅</span>
+                    <p className="text-[10px] font-black uppercase tracking-[0.12em] text-amber-700">Operating Since</p>
+                  </div>
+                  <p className="text-xs font-black text-slate-900">{startedYear}</p>
                 </div>
               </div>
 
@@ -204,17 +215,23 @@ export default async function DealerPage(props) {
 
               <div className="flex flex-wrap items-center gap-3">
                 {contactLinks.length > 0 ? (
-                  contactLinks.map((item) => (
-                    <a
-                      key={item.label}
-                      href={item.href}
-                      target={item.external ? "_blank" : undefined}
-                      rel={item.external ? "noopener noreferrer" : undefined}
-                      className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-50 border border-slate-200 text-xs font-black uppercase tracking-[0.14em] text-slate-700 hover:text-slate-900 hover:border-slate-300 transition-all"
-                    >
-                      {item.icon} {item.label}
-                    </a>
-                  ))
+                  contactLinks.map((item) => {
+                    const isWhatsApp = item.label === "WhatsApp";
+                    return (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        target={item.external ? "_blank" : undefined}
+                        rel={item.external ? "noopener noreferrer" : undefined}
+                        className={isWhatsApp
+                          ? "inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#25D366] border border-[#20ba5e] text-xs font-black uppercase tracking-[0.14em] text-white hover:bg-[#1fad57] transition-all shadow-md"
+                          : "inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white border border-slate-300 text-xs font-black uppercase tracking-[0.14em] text-slate-700 hover:border-slate-400 transition-all"
+                        }
+                      >
+                        {item.icon} {item.label}
+                      </a>
+                    );
+                  })
                 ) : (
                   <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">Contact details unavailable</p>
                 )}
@@ -242,14 +259,14 @@ export default async function DealerPage(props) {
             </div>
 
             {/* Stats Sidebar inside Header */}
-            <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:border-l lg:border-slate-100 lg:pl-10 w-full pt-4 lg:pt-0">
+              <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:border-l lg:border-emerald-100/50 lg:pl-10 w-full pt-4 lg:pt-0">
               <div>
-                <span className="text-slate-900 font-black text-3xl leading-none">{dealer.cars.length}</span>
+                <span className="text-slate-900 font-black text-5xl leading-none font-mono">{dealer.cars.length}</span>
                 <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.14em] mt-1">Live Inventory</p>
               </div>
               <a href="#reviews" className="group block">
-                <span className="flex items-center gap-1.5 text-slate-900 font-black text-3xl leading-none group-hover:text-amber-600 transition-colors">
-                   {averageRating > 0 ? averageRating.toFixed(1) : "N/A"} <span className="text-amber-500 text-2xl">★</span>
+                <span className="flex items-center gap-1.5 text-slate-900 font-black text-5xl leading-none group-hover:text-amber-600 transition-colors font-mono">
+                   {averageRating > 0 ? averageRating.toFixed(1) : "N/A"} <span className="text-amber-500">★</span>
                 </span>
                 <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.14em] mt-1 group-hover:text-slate-700 transition-colors">{totalReviews} Reviews</p>
               </a>
