@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import { CompareBar } from "@/components/CompareSelector";
 import { ModalProvider } from "@/components/Modal";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import ScrollToTop from "@/components/ScrollToTop";
 import { getSession } from "@/lib/auth";
 
 export const metadata = {
@@ -37,7 +38,7 @@ export default async function RootLayout({ children }) {
   } : null;
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning style={{ scrollBehavior: "smooth" }}>
       <body className="bg-background text-slate-900 min-h-screen antialiased flex flex-col font-sans transition-colors duration-300">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <CompareProvider>
@@ -47,7 +48,7 @@ export default async function RootLayout({ children }) {
               <CompareBar />
             </ModalProvider>
           </CompareProvider>
-          <footer className="mt-20 border-t border-slate-200 bg-white py-12 px-6 transition-colors duration-300">
+          <footer className="mt-20 border-t border-slate-200 bg-white py-12 px-6 transition-all duration-300 ease-out">
             <div className="container mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex flex-col items-center md:items-start">
                 <span className="mk-logo-shell mk-logo-shell-sm mb-2">
@@ -72,6 +73,7 @@ export default async function RootLayout({ children }) {
               </div>
             </div>
           </footer>
+          <ScrollToTop />
         </ThemeProvider>
       </body>
     </html>
