@@ -62,23 +62,23 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
     setSaved(prev => prev.filter(c => c.id !== carId));
   }
 
-  const inputCls = "w-full bg-slate-50 border border-slate-100 focus:border-amber-500 focus:bg-white rounded-xl py-3.5 px-5 text-sm font-bold text-slate-900 outline-none transition-all placeholder:text-slate-300 shadow-sm";
-  const labelCls = "text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2 block";
+  const inputCls = "w-full bg-white border border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-100 rounded-lg py-2.5 px-4 text-sm font-medium text-slate-900 outline-none transition-colors placeholder:text-slate-400";
+  const labelCls = "text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5 block";
 
   return (
     <div className="flex flex-col h-full bg-white">
       {/* Tab bar */}
-      <div className="border-b border-slate-100 bg-slate-50/50 px-6 pt-6 overflow-x-auto custom-scrollbar">
+      <div className="border-b border-slate-200 bg-white px-6 pt-0 overflow-x-auto">
         <div className="flex items-center gap-6 min-w-max">
           {tabs.map(({ id, label, icon }) => (
             <button
               key={id}
               onClick={() => setTab(id)}
               className={clsx(
-                "flex items-center gap-2 pb-4 text-[11px] font-black uppercase tracking-widest transition-all",
+                "flex items-center gap-2 py-4 text-xs font-bold uppercase tracking-widest transition-all border-b-2",
                 tab === id
-                  ? "text-amber-500 border-b-2 border-amber-500 -mb-0.5"
-                  : "text-slate-400 hover:text-slate-600 border-b-2 border-transparent"
+                  ? "text-slate-900 border-b-2 border-slate-900"
+                  : "text-slate-500 hover:text-slate-700 border-b-2 border-transparent"
               )}
             >
               {icon} {label}
@@ -87,7 +87,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
         </div>
       </div>
 
-      <div className="p-8 md:p-12">
+      <div className="p-6 sm:p-8">
         {/* ── PROFILE ── */}
         {tab === "profile" && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -115,7 +115,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                   <label className={labelCls}>Contact Phone</label>
                   <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="+254 7XX XXX XXX" className={inputCls} />
                 </div>
-                <button type="submit" className="bg-slate-900 hover:bg-black text-white px-8 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-lg hover:-translate-y-0.5 mt-2">
+                <button type="submit" className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition">
                   Save Changes
                 </button>
               </form>
@@ -157,8 +157,8 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                     <input name="confirm" type={showNew ? "text" : "password"} required minLength={8} className={inputCls} placeholder="••••••••" />
                   </div>
                 </div>
-                <button type="submit" className="bg-rose-500 hover:bg-rose-600 text-white px-8 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-lg hover:-translate-y-0.5 mt-2">
-                  Rotate Password
+                <button type="submit" className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition">
+                  Update Password
                 </button>
               </form>
             </div>
@@ -249,15 +249,15 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                         </div>
                       )}
                       
-                      <div className="flex flex-wrap gap-3">
+                      <div className="flex flex-wrap gap-2">
                         {e.dealer.phone && (
-                          <a href={`tel:${e.dealer.phone}`} className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-xl text-xs font-black transition-transform hover:-translate-y-0.5 shadow-md">
-                            <Phone size={14} /> Direct Call
+                          <a href={`tel:${e.dealer.phone}`} className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-xs font-semibold transition">
+                            <Phone size={14} /> Call
                           </a>
                         )}
                         {e.dealer.whatsapp && (
-                          <a href={`https://wa.me/${e.dealer.whatsapp}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-xs font-black transition-transform hover:-translate-y-0.5 shadow-md">
-                            <MessageSquare size={14} className="fill-white" /> Follow Up
+                          <a href={`https://wa.me/${e.dealer.whatsapp}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition">
+                            <MessageSquare size={14} className="fill-white" /> WhatsApp
                           </a>
                         )}
                         {!e.car.available && (

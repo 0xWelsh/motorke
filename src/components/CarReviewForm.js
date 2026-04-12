@@ -30,9 +30,10 @@ export default function CarReviewForm({ carId, onReviewSubmitted }) {
         body: JSON.stringify({ rating, comment }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to submit review");
+        throw new Error(data.error || `Error: ${res.status} ${res.statusText}`);
       }
 
       setSuccess(true);
@@ -40,8 +41,10 @@ export default function CarReviewForm({ carId, onReviewSubmitted }) {
       setComment("");
       router.refresh();
       if (onReviewSubmitted) onReviewSubmitted();
+      setTimeout(() => setSuccess(false), 5000);
     } catch (err) {
-      setError(err.message);
+      console.error("Review submission error:", err);
+      setError(err.message || "Failed to submit review");
     } finally {
       setLoading(false);
     }

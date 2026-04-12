@@ -36,17 +36,28 @@ export async function POST(request, props) {
   try {
     const params = await props.params;
     const session = await getSessionFromRequest();
+    
     if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      console.error("Car review POST: No session found");
+      return NextResponse.json({ error: "Unauthorized - Please log in" }, { status: 401 });
     }
 
     const { id: carId } = params;
+    
+    if (!carId) {
+      console.error("Car review POST: No carId found");
+      return NextResponse.json({ error: "Invalid car ID" }, { status: 400 });
+    }
+
     const body = await request.json();
     const { rating, comment } = body;
 
     if (!rating || rating < 1 || rating > 5) {
+      console.error("Car review POST: Invalid rating", { rating });
       return NextResponse.json({ error: "Rating must be between 1 and 5" }, { status: 400 });
     }
+
+    console.log("Creating car review:", { carId, userId: session.user.id, rating });
 
     const review = await db.carReview.upsert({
       where: {
@@ -70,9 +81,13 @@ export async function POST(request, props) {
       },
     });
 
+    console.log("Review created successfully:", review.id);
     return NextResponse.json(review, { status: 201 });
   } catch (error) {
     console.error("Failed to create car review:", error);
-    return NextResponse.json({ error: "Failed to create review" }, { status: 500 });
+    return NextResponse.json(
+      { error: error?.message || "Failed to create review" },
+      { status: 500 }
+    );
   }
 }
