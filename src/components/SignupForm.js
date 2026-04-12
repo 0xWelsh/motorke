@@ -116,7 +116,7 @@ export default function SignupForm({ error: initialError }) {
   const labelCls = "text-[10px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1 flex items-center gap-2";
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_18%_14%,rgba(16,185,129,0.08),transparent_38%),radial-gradient(circle_at_84%_86%,rgba(15,23,42,0.08),transparent_40%),#FCFCFD]">
+    <div className="min-h-screen bg-white">
       {hasGoogleAuth && (
         <Script
           src="https://accounts.google.com/gsi/client"
@@ -151,204 +151,207 @@ export default function SignupForm({ error: initialError }) {
             window.google.accounts.id.renderButton(googleSignupContainer, {
               theme: "outline",
               size: "large",
-              width: "320",
+              width: "100%",
               text: "signup_with",
-              shape: "pill",
-              logo_alignment: "left",
+              shape: "rectangular",
+              logo_alignment: "center",
             });
           }}
         />
       )}
 
-      <section className="h-dvh px-4 py-4 sm:px-6 sm:py-6 flex items-center justify-center overflow-hidden">
-        <div
-          className={clsx(
-            "w-full rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_24px_56px_rgba(15,23,42,0.08)] p-4 sm:p-6 lg:p-7 relative",
-            role === "DEALER" ? "max-w-5xl" : "max-w-[560px]"
+      <section className="min-h-dvh px-4 py-8 sm:px-6 sm:py-12 flex items-center justify-center\">
+        <div className=\"w-full max-w-md\">
+          {/* Header */}
+          <div className=\"mb-8 text-center\">
+            <div className=\"flex items-center justify-center gap-2 mb-4\">
+              <img src=\"/favicon.svg\" alt=\"Motorke\" className=\"h-8 w-8 object-contain\" />
+              <h1 className=\"text-2xl font-bold text-slate-900\">Motorke</h1>
+            </div>
+            <h2 className=\"text-3xl font-bold text-slate-900 mb-2\">Create Account</h2>
+            <p className=\"text-sm text-slate-600\">Join as buyer or dealer to get started</p>
+          </div>
+
+          {/* Role Toggle */}
+          <div className=\"flex gap-2 mb-6 bg-slate-100 p-1 rounded-lg\">
+            <button 
+              type=\"button\" 
+              onClick={() => setRole(\"BUYER\")}
+              className={clsx(
+                \"flex-1 py-2 px-3 rounded-md font-semibold text-sm transition-all\",
+                role === \"BUYER\" 
+                  ? \"bg-white text-slate-900 shadow-sm\" 
+                  : \"text-slate-600 hover:text-slate-900\"
+              )}
+            >
+              Personal
+            </button>
+            <button 
+              type=\"button\" 
+              onClick={() => setRole(\"DEALER\")}
+              className={clsx(
+                \"flex-1 py-2 px-3 rounded-md font-semibold text-sm transition-all\",
+                role === \"DEALER\" 
+                  ? \"bg-slate-900 text-white shadow-sm\" 
+                  : \"text-slate-600 hover:text-slate-900\"
+              )}
+            >
+              Dealership
+            </button>
+          </div>
+
+          {/* Error Message */}
+          {errorMsg && (
+            <div className=\"mb-6 p-4 bg-red-50 border border-red-200 rounded-lg\">
+              <p className=\"text-sm font-semibold text-red-900\">{errorMsg}</p>
+            </div>
           )}
-        >
-        <div className="max-h-[94dvh] overflow-y-auto">
-          <Link
-            href="/"
-            className="absolute top-3.5 right-3.5 sm:top-5 sm:right-5 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-900 hover:text-black transition-all hover:gap-4"
-          >
-            Showroom <ArrowLeft className="w-3 h-3 rotate-180" />
-          </Link>
 
-          <div className={clsx("w-full mx-auto transition-all duration-700 mt-8 sm:mt-6", role === "DEALER" ? "max-w-4xl" : "max-w-[440px]") }>
-             <header className="mb-4">
-                <div className="inline-flex items-center gap-3 mb-2.5">
-                   <img src="/favicon.svg" alt="Motorke" className="h-10 w-10 object-contain rounded-xl" />
-                   <div className="h-4 w-px bg-slate-200 mx-1" />
-                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Register</span>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className=\"space-y-4 mb-6\">
+            <input type=\"hidden\" name=\"captchaToken\" value={captchaToken} readOnly />
+            <input type=\"text\" name=\"website\" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete=\"off\" className=\"hidden\" aria-hidden=\"true\" />
+            <input type=\"hidden\" name=\"role\" value={role} />
+
+            {/* Email */}
+            <div>
+              <label htmlFor=\"email\" className=\"block text-sm font-semibold text-slate-900 mb-2\">Email Address</label>
+              <input 
+                id=\"email\"
+                name=\"email\" 
+                type=\"email\" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required 
+                autoComplete=\"email\"
+                placeholder=\"you@dealership.com\" 
+                className=\"w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all\"
+              />
+            </div>
+
+            {/* Password */}
+            <div>
+              <label htmlFor=\"password\" className=\"block text-sm font-semibold text-slate-900 mb-2\">Password</label>
+              <div className=\"relative\">
+                <input 
+                  id=\"password\"
+                  name=\"password\" 
+                  type={showPassword ? \"text\" : \"password\"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required 
+                  autoComplete=\"new-password\"
+                  placeholder=\"•••••••••\" 
+                  className=\"w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all pr-10\"
+                />
+                <button 
+                  type=\"button\" 
+                  onClick={() => setShowPassword(!showPassword)}
+                  className=\"absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors\"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {password && <PasswordMeter password={password} />}
+            </div>
+
+            {/* Confirm Password */}
+            <div>
+              <label htmlFor=\"confirm\" className=\"block text-sm font-semibold text-slate-900 mb-2\">Confirm Password</label>
+              <input 
+                id=\"confirm\"
+                name=\"confirm\" 
+                type={showPassword ? \"text\" : \"password\"}
+                required 
+                autoComplete=\"new-password\"
+                placeholder=\"•••••••••\" 
+                className=\"w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all\"
+              />
+            </div>
+
+            {/* Dealer Fields */}
+            {role === \"DEALER\" && (
+              <div className=\"space-y-4 pt-2 border-t border-slate-200\">
+                <div>
+                  <label htmlFor=\"dealerName\" className=\"block text-sm font-semibold text-slate-900 mb-2\">Dealership Name</label>
+                  <input 
+                    id=\"dealerName\"
+                    name=\"dealerName\" 
+                    type=\"text\" 
+                    placeholder=\"Your dealership name\" 
+                    className=\"w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all\"
+                  />
                 </div>
-                <h1 className="text-3xl sm:text-[2rem] font-black text-slate-900 tracking-tighter mb-1.5">Create Account</h1>
-                <p className="text-slate-700 font-medium text-xs sm:text-sm">Choose buyer or dealer and get started.</p>
-             </header>
 
-             <div className="flex w-full sm:w-fit p-1 bg-slate-100 rounded-2xl gap-1 mb-3">
-                <button type="button" onClick={() => setRole("BUYER")}
-                  className={clsx("flex-1 sm:flex-none justify-center flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all",
-                    role === "BUYER" ? "bg-white text-slate-950 shadow-xl shadow-slate-200" : "text-slate-400 hover:text-slate-600")}>
-                  <User size={14} /> Personal
-                </button>
-                <button type="button" onClick={() => setRole("DEALER")}
-                  className={clsx("flex-1 sm:flex-none justify-center flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all",
-                    role === "DEALER" ? "bg-slate-950 text-white shadow-xl shadow-slate-900/20" : "text-slate-400 hover:text-slate-600")}>
-                  <Building2 size={14} /> Dealership
-                </button>
-             </div>
+                <div>
+                  <label htmlFor=\"county\" className=\"block text-sm font-semibold text-slate-900 mb-2\">County</label>
+                  <select 
+                    id=\"county\"
+                    name=\"county\"
+                    required
+                    className=\"w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all\"
+                  >
+                    <option value=\"\">Select a county</option>
+                    {COUNTIES.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
 
-             <form onSubmit={handleSubmit} className="space-y-4 relative" id="signup-form">
+            {/* Security Check */}
+            <div>
+              <label className=\"text-sm font-semibold text-slate-900 mb-2 block\">Security</label>
+              <HumanCheck
+                value={captchaToken}
+                onChange={setCaptchaToken}
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button 
+              type=\"submit\" 
+              disabled={loading}
+              className=\"w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg py-2.5 font-semibold transition-all flex items-center justify-center gap-2\"
+            >
+              {loading ? <Loader2 size={18} className=\"animate-spin\" /> : null}
+              {loading ? \"Creating account...\" : \"Create Account\"}
+            </button>
+
+            {/* Divider */}
+            <div className=\"relative\">
+              <div className=\"absolute inset-0 flex items-center\">
+                <div className=\"w-full border-t border-slate-200\"></div>
+              </div>
+              <div className=\"relative flex justify-center\">
+                <span className=\"bg-white px-3 text-xs text-slate-600\">or sign up with</span>
+              </div>
+            </div>
+
+            {/* Google Button */}
+            <div id=\"google-signup-button\" className=\"w-full\" />
+          </form>
+
+          {/* Footer */}
+          <div className=\"text-center\">
+            <p className=\"text-sm text-slate-600\">
+              Already have an account?{\" \"}\n              <Link href=\"/login\" className=\"font-semibold text-slate-900 hover:text-slate-700 transition-colors\">
+                Sign in
+              </Link>
+            </p>
+            <p className=\"text-xs text-slate-500 mt-4\">
+              By signing up you agree to our{\" \"}\n              <Link href=\"/terms\" className=\"underline underline-offset-2 hover:text-slate-700\">\n                Terms\n              </Link>\n              {\" \"}and{\" \"}\n              <Link href=\"/privacy\" className=\"underline underline-offset-2 hover:text-slate-700\">\n                Privacy Policy\n              </Link>\n            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
                 <input type="hidden" name="role" value={role} />
                 <input type="hidden" name="captchaToken" value={captchaToken} readOnly />
                 <input
                   type="text"
                   name="website"
                   value={website}
-                  onChange={(e) => setWebsite(e.target.value)}
-                  tabIndex={-1}
-                  autoComplete="off"
-                  className="hidden"
-                  aria-hidden="true"
-                />
-
-                {errorMsg && (
-                   <div className="p-3.5 bg-rose-50 border border-rose-100 rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-top-4 duration-500">
-                     <div className="w-7 h-7 bg-rose-200 rounded-lg flex items-center justify-center text-rose-600 shadow-sm shrink-0">
-                       <ShieldCheck size={14} />
-                      </div>
-                      <p className="text-[11px] font-bold text-rose-900 leading-tight flex items-center min-h-[32px]">{errorMsg}</p>
-                   </div>
-                )}
-
-                 <div className={clsx("grid gap-x-8 gap-y-4 items-start transition-all", role === "DEALER" ? "md:grid-cols-2" : "grid-cols-1") }>
-                   {/* Personal Info */}
-                   <div className="space-y-4">
-                     <div className="space-y-2">
-                         <label htmlFor="regName" className={labelCls}>Identity Verification</label>
-                       <div className="space-y-3">
-                            <input id="regName" name="name" required placeholder="Full Legal Name" className={inputCls} />
-                            <div className="relative">
-                              <input id="regEmail" name="email" value={email} onChange={(e) => setEmail(e.target.value)} type="email" required placeholder="Email Address" className={clsx(inputCls, isValidEmail && "border-emerald-500", "pr-12")} />
-                              {isValidEmail && <CheckCircle2 className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-500" size={18} />}
-                            </div>
-                         </div>
-                      </div>
-
-                      {role === "DEALER" && (
-                         <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                            <label htmlFor="dealerName" className={labelCls}>Business Entity</label>
-                           <div className="space-y-3">
-                               <input id="dealerName" name="dealerName" required placeholder="Registered Dealership Name" className={inputCls} />
-                             <div className="grid grid-cols-2 gap-3">
-                                  <input id="dealerPhone" name="phone" required placeholder="Business Phone" className={inputCls} />
-                                  <input id="dealerWhatsapp" name="whatsapp" placeholder="WhatsApp (Optional)" className={inputCls} />
-                               </div>
-                             <textarea id="dealerDesc" name="description" rows={2} placeholder="Dealer Bio & Specialty..." className={clsx(inputCls, "resize-none")} />
-                            </div>
-                         </div>
-                      )}
-
-                        <div className="space-y-3 pt-3 border-t border-slate-100">
-                         <label htmlFor="regPassword" className={labelCls}>Security Configuration</label>
-                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div className="relative group">
-                               <input 
-                                 id="regPassword"
-                                 name="password" 
-                                 type={showPassword ? "text" : "password"}
-                                 required minLength={8} placeholder="Password" 
-                                 value={password} onChange={e => setPassword(e.target.value)}
-                                 className={inputCls} 
-                               />
-                               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-900">
-                                 <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
-                                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                               </button>
-                               <PasswordMeter password={password} />
-                            </div>
-                            <input id="regConfirm" name="confirm" type="password" required minLength={8} placeholder="Confirm" className={inputCls} />
-                         </div>
-                      </div>
-                   </div>
-
-                   {/* Dealer Details (Column 2) */}
-                   {role === "DEALER" && (
-                     <div className="space-y-5 animate-in fade-in slide-in-from-right-8 duration-700">
-                       <div className="space-y-3">
-                            <div className="flex items-center justify-between">
-                              <label htmlFor="county" className={labelCls}>Geographic Coverage</label>
-                              <button type="button" onClick={handleAutoFillLocation} className="text-[9px] font-black uppercase tracking-widest text-emerald-500 hover:text-emerald-700 flex items-center gap-1"><MapPin size={12}/> Auto-fill</button>
-                            </div>
-                         <div className="grid grid-cols-2 gap-3">
-                               <select id="county" name="county" required className={clsx(inputCls, "appearance-none")}>
-                                 {COUNTIES.map(c => <option key={c} value={c}>{c}</option>)}
-                               </select>
-                               <input id="location" name="location" required placeholder="Primary Area (e.g. Kilimani)" className={inputCls} />
-                            </div>
-                            <input id="address" name="address" placeholder="Physical Business Address" className={inputCls} />
-                         </div>
-                         
-                         <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <label className={labelCls}>Precise Mapping</label>
-                              <button
-                                type="button"
-                                onClick={() => setShowMapPin((prev) => !prev)}
-                                className="text-[9px] font-black uppercase tracking-widest text-slate-600 hover:text-slate-900"
-                              >
-                                {showMapPin ? "Hide Map" : "Pin on Map"}
-                              </button>
-                            </div>
-                            {showMapPin && (
-                              <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-xl shadow-slate-100">
-                                <LocationPicker />
-                              </div>
-                            )}
-                         </div>
-                      </div>
-                   )}
-                </div>
-
-                <div className="pt-3 flex flex-col gap-3 border-t border-slate-100 mt-1">
-                   <div className="w-full">
-                      <p className="text-[10px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1 mb-1.5">Are You Human?</p>
-                      <HumanCheck value={captchaToken} onChange={setCaptchaToken} />
-                      <button type="submit" disabled={loading || (requiresHumanCheck && !captchaToken)}
-                      className="mt-2 w-full bg-slate-950 hover:bg-black disabled:bg-slate-400 disabled:cursor-not-allowed text-white rounded-xl py-3.5 font-black text-[10px] uppercase tracking-[0.25em] transition-all shadow-2xl shadow-slate-950/20 flex items-center justify-center gap-2.5 active:scale-[0.98]">
-                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><UserPlus size={16} /> Sign Up</>}
-                      </button>
-                   </div>
-                   <p className="text-[11px] font-bold text-slate-700 text-center leading-relaxed">
-                     By proceeding, you agree to our <Link href="/terms" className="text-slate-900 border-b border-slate-950/10">Terms</Link> and <Link href="/privacy" className="text-slate-900 border-b border-slate-950/10">Privacy</Link>.
-                   </p>
-                </div>
-
-                <div className="relative pt-0.5">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-slate-100"></div>
-                  </div>
-                  <div className="relative flex justify-center text-[10px] uppercase font-black tracking-[0.25em]">
-                    <span className="bg-white px-5 text-slate-600">Continue with Google</span>
-                  </div>
-                </div>
-
-                <div className="flex justify-center w-full overflow-hidden">
-                  <div id="google-signup-button" className="w-full max-w-[320px]" />
-                </div>
-             </form>
-
-             <footer className="mt-3 pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 max-w-[440px]">
-                <p className="text-sm font-bold text-slate-900">
-                 Already have an account?{" "}
-                   <Link href="/login" className="text-slate-900 hover:text-emerald-500 transition-colors border-b-2 border-slate-900/10 hover:border-emerald-500/10">Sign in to your portal</Link>
-                </p>
-             </footer>
-          </div>
-        </div>
-      </div>
-      </section>
-    </div>
-  );
-}
