@@ -156,18 +156,18 @@ export default function SubscriptionPage() {
 
   return (
     <div className="w-full">
-      <div className="mb-10">
+      <div className="mb-6">
         <h1 className="text-4xl font-bold text-slate-900 mb-2">Billing & Subscriptions</h1>
         <p className="text-slate-600 font-medium">Choose the plan that fits your dealership. Upgrade or downgrade anytime.</p>
       </div>
 
       {/* Pricing Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
         {PLANS.map((plan) => {
           const colors = colorMap[plan.color];
           const Icon = plan.icon;
           return (
-            <div key={plan.id} className={`relative bg-white border ${plan.borderColor} rounded-lg p-8 flex flex-col transition-all duration-300 hover:shadow-md`}>
+            <div key={plan.id} className={`relative bg-white border ${plan.borderColor} rounded-lg p-6 flex flex-col transition-all duration-300 hover:shadow-md`}>
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <span className="bg-slate-900 text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-md">
@@ -175,13 +175,13 @@ export default function SubscriptionPage() {
                   </span>
                 </div>
               )}
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-4">
                 <div className={`w-10 h-10 rounded-lg ${colors.icon} flex items-center justify-center`}>
                   <Icon size={20} />
                 </div>
                 <h3 className="text-lg font-bold text-slate-900">{plan.name}</h3>
               </div>
-              <div className="mb-8">
+              <div className="mb-6">
                 <div className="flex items-end gap-1">
                   {plan.price === 0 ? (
                     <span className="text-3xl font-bold text-slate-900">Free</span>
@@ -194,9 +194,9 @@ export default function SubscriptionPage() {
                   <span className="text-xs font-medium text-slate-500 mb-1 ml-1">{plan.period}</span>
                 </div>
               </div>
-              <div className="space-y-3 mb-8 flex-1">
+              <div className="space-y-2 mb-6 flex-1">
                 {plan.features.map((feature, i) => (
-                  <div key={i} className="flex items-start gap-2.5">
+                  <div key={i} className="flex items-start gap-2">
                     <CheckCircle2 size={14} className={`${colors.check} shrink-0 mt-0.5`} />
                     <span className="text-sm text-slate-700 font-medium">{feature}</span>
                   </div>
@@ -217,45 +217,45 @@ export default function SubscriptionPage() {
       {/* ─── Payment Checkout Modal ─── */}
       {selectedPlan && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-          <div className="w-full max-w-lg bg-white border border-slate-200 rounded-lg p-8 relative max-h-[90vh] overflow-y-auto">
+          <div className="w-full max-w-lg bg-white border border-slate-200 rounded-lg p-6 relative max-h-[90vh] overflow-y-auto">
             <button onClick={() => { setSelectedPlan(null); setStatus("idle"); setLoading(false); setPayMethod("mpesa"); }} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors">
               <X size={20} />
             </button>
 
             {status === "success" ? (
               <div className="text-center">
-                <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
                   <CheckCircle2 size={48} className="text-emerald-600" />
                 </div>
                 <h2 className="text-2xl font-bold text-slate-900 mb-2">Payment Received!</h2>
                 <p className="text-sm text-slate-600 font-medium">
                   Your {planObj?.name} subscription is now active. Welcome to the next level!
                 </p>
-                <button onClick={() => { setSelectedPlan(null); setStatus("idle"); }} className="mt-8 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-lg px-8 py-3 font-semibold text-sm transition-all">
+                <button onClick={() => { setSelectedPlan(null); setStatus("idle"); }} className="mt-6 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-lg px-8 py-3 font-semibold text-sm transition-all">
                   Close
                 </button>
               </div>
 
             ) : status === "waiting" ? (
               <div className="text-center">
-                <Loader2 size={48} className="animate-spin text-slate-700 mx-auto mb-6" />
+                <Loader2 size={48} className="animate-spin text-slate-700 mx-auto mb-4" />
                 <h2 className="text-xl font-bold text-slate-900 mb-2">Processing Payment</h2>
                 <p className="text-sm text-slate-600">{message}</p>
-                <div className="mt-8 bg-slate-50 p-4 rounded-lg border border-slate-200 mx-auto max-w-[220px]">
+                <div className="mt-6 bg-slate-50 p-4 rounded-lg border border-slate-200 mx-auto max-w-[220px]">
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Awaiting Confirmation...</p>
                 </div>
               </div>
 
             ) : status === "bank_details" ? (
               <div>
-                <div className="text-center mb-8">
-                  <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <div className="text-center mb-6">
+                  <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                     <Building2 size={24} className="text-slate-700" />
                   </div>
                   <h3 className="text-xl font-bold text-slate-900 mb-1">Bank Transfer Details</h3>
                   <p className="text-xs text-slate-600">Transfer <span className="text-slate-900 font-bold">KES {planObj?.price.toLocaleString()}</span> to the following account</p>
                 </div>
-                <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 space-y-4 mb-6">
+                <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 space-y-3 mb-4">
                   {[
                     ["Bank Name", "Equity Bank"],
                     ["Account Name", "Motorske Ltd"],
@@ -274,15 +274,15 @@ export default function SubscriptionPage() {
                   <p className="text-xs font-semibold text-amber-900 uppercase tracking-wider mb-1">Important</p>
                   <p className="text-xs text-slate-700">After transferring, send your payment confirmation screenshot to <span className="text-slate-900 font-bold">billing@motorske.com</span> or WhatsApp <span className="text-slate-900 font-bold">+254 700 000 000</span>. Your plan will be activated within 24 hours.</p>
                 </div>
-                <button onClick={() => { setSelectedPlan(null); setStatus("idle"); }} className="w-full mt-6 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-lg py-3 font-semibold text-sm transition-all">
+                <button onClick={() => { setSelectedPlan(null); setStatus("idle"); }} className="w-full mt-4 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-lg py-3 font-semibold text-sm transition-all">
                   Done
                 </button>
               </div>
 
             ) : (
-              <form onSubmit={handlePayment} className="space-y-6">
+              <form onSubmit={handlePayment} className="space-y-4">
                 {/* Header */}
-                <div className="text-center mb-2">
+                <div className="text-center mb-1">
                   <h3 className="text-xl font-bold text-slate-900 mb-1">Choose Payment Method</h3>
                   <p className="text-xs text-slate-600">
                     Upgrade to <span className="text-slate-900 font-bold">{planObj?.name}</span> — <span className="text-slate-900 font-bold">KES {planObj?.price.toLocaleString()}/mo</span>
@@ -324,7 +324,7 @@ export default function SubscriptionPage() {
 
                 {/* Dynamic Input based on method */}
                 {payMethod === "mpesa" && (
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-700">
                       <Smartphone size={14} className="text-slate-700" />
                       Safaricom Number
