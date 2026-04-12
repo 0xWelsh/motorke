@@ -96,25 +96,34 @@ export default async function DealerPage(props) {
   const dealerGallery = dealer.cars
     .flatMap(c => c.images.map(i => ({ image: i.url, title: `${c.make} ${c.model}` })))
     .slice(0, 3);
+  const hasHeroBanner = Boolean(dealer.bannerUrl) || dealerGallery.length >= 3;
 
   return (
     <div className="min-h-screen bg-[#fbfcfe]">
       {/* 1. HERO COVER BANNER */}
-      {dealerGallery.length >= 3 && (
+      {hasHeroBanner && (
         <div className="w-full h-[240px] sm:h-[320px] lg:h-[400px] relative overflow-hidden bg-slate-900">
-           <div className="absolute inset-0 grid grid-cols-3 gap-1 opacity-70">
-              {dealerGallery.slice(0, 3).map((car, i) => (
-                <div key={i} className="relative h-full w-full">
-                  <Image src={car.image} alt={car.title} fill className="object-cover" />
-                </div>
-              ))}
-           </div>
+           {dealer.bannerUrl ? (
+             <img
+               src={dealer.bannerUrl}
+               alt={`${dealer.name} banner`}
+               className="absolute inset-0 h-full w-full object-cover opacity-80"
+             />
+           ) : (
+             <div className="absolute inset-0 grid grid-cols-3 gap-1 opacity-70">
+                {dealerGallery.slice(0, 3).map((car, i) => (
+                  <div key={i} className="relative h-full w-full">
+                    <Image src={car.image} alt={car.title} fill className="object-cover" />
+                  </div>
+                ))}
+             </div>
+           )}
            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
         </div>
       )}
 
       {/* Adjust container based on presence of hero banner */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 pb-24 ${dealerGallery.length >= 3 ? "-mt-24 sm:-mt-32 relative z-10" : "pt-8 sm:pt-12"}`}>
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 pb-24 ${hasHeroBanner ? "-mt-24 sm:-mt-32 relative z-10" : "pt-8 sm:pt-12"}`}>
         
         {/* Dealership Info Card */}
         <section className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-sm border border-slate-200 mb-10">
@@ -122,10 +131,10 @@ export default async function DealerPage(props) {
             
             {/* Logo */}
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-[2rem] bg-slate-50 border-[4px] border-white shadow-lg text-slate-900 flex items-center justify-center font-black text-4xl sm:text-5xl overflow-hidden -mt-16 sm:-mt-20">
-              {dealer.logo ? (
-                <img src={dealer.logo} alt={dealer.name} className="w-full h-full object-cover" />
+              {dealer.logoUrl ? (
+                <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" />
               ) : (
-                dealer.name[0]
+                dealer.name?.[0] || "D"
               )}
             </div>
 

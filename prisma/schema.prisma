@@ -86,6 +86,7 @@ model Dealer {
   slug         String         @unique
   description  String?
   logoUrl      String?
+  bannerUrl    String?
   phone        String
   whatsapp     String?
   email        String?

@@ -3,6 +3,7 @@ import { requireDealer } from "@/lib/auth";
 import { db } from "@/lib/db";
 import AvatarUpload from "@/components/AvatarUpload";
 import DealerLogoUpload from "@/components/DealerLogoUpload";
+import DealerBannerUpload from "@/components/DealerBannerUpload";
 import { User, Mail, Shield, Calendar, Plus, Building2, MapPin, Globe, Phone } from "lucide-react";
 
 export const metadata = { title: "Profile Settings — Motorke Dealer Portal" };
@@ -113,6 +114,14 @@ export default async function PortalProfilePage({ searchParams }) {
                     )}
                   </div>
                 </div>
+              </div>
+
+              <div className="mt-8 pt-8 border-t border-slate-100">
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Dealer Banner Photo</p>
+                <p className="text-sm font-medium text-slate-500 mb-4">
+                  Upload a wide photo to display at the top of your public dealer page.
+                </p>
+                <DealerBannerUpload currentUrl={user.dealer.bannerUrl} dealerName={user.dealer.name} />
               </div>
             </div>
           )}
