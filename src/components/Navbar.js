@@ -97,17 +97,8 @@ export default function Navbar({ user }) {
         <div className="flex items-center justify-between gap-4 sm:gap-8">
 
           {/* LOGO */}
-          <Link href="/" className="flex items-center gap-3 shrink-0 group transition-transform active:scale-95">
-            <img src="/favicon.svg" alt="Motorke" className="h-9 w-9 sm:h-10 sm:w-10 object-contain rounded-xl" />
-            <div className="flex flex-col">
-              <span aria-label="Motorke" className="inline-flex items-center">
-                <span className="text-[16px] sm:text-[20px] md:text-[22px] leading-none font-black uppercase tracking-[0.16em] sm:tracking-[0.2em] text-slate-900">MOTOR</span>
-                <span className="text-[16px] sm:text-[20px] md:text-[22px] leading-none font-black uppercase tracking-[0.16em] sm:tracking-[0.2em] text-[#ff5a2f]">KE</span>
-              </span>
-              <p className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-600 mt-1 leading-none">
-                Digital Showroom
-              </p>
-            </div>
+          <Link href="/" className="flex items-center gap-2 shrink-0 group transition-transform active:scale-95">
+            <img src="/favicon.png" alt="Motorke Digital Showroom" className="h-10 sm:h-12 object-contain" />
           </Link>
 
           {/* NAV LINKS */}
@@ -222,7 +213,7 @@ export default function Navbar({ user }) {
           <div className="ml-auto h-full w-full max-w-sm bg-[#f5f3ef] border-l border-[#e7e1d8] p-5 sm:p-6 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div className="inline-flex items-center gap-2.5">
-                <img src="/favicon.png" alt="Motorke" className="h-8 w-8 object-contain rounded-lg" />
+                <img src="/favicon.png" alt="Motorke Digital Showroom" className="h-10 object-contain" />
                 <div className="flex flex-col">
                   <span className="inline-flex items-center">
                     <span className="text-[16px] leading-none font-black uppercase tracking-[0.16em] text-slate-900">MOTOR</span>
