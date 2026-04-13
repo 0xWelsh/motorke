@@ -61,7 +61,7 @@ const getCachedData = unstable_cache(
   { revalidate: 900, tags: ["homepage"] }
 );
 
-const HERO_TEXTURE = "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1600&q=80";
+const HERO_TEXTURE = "/images/hero-mercedes.jpg";
 
 export default async function HomePage() {
   const { featured, newArrivals, dealers, newsItems } = await getCachedData();

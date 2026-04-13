@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { UploadCloud, Image as ImageIcon, CheckCircle2 } from "lucide-react";
+import { UploadCloud, Image as ImageIcon, CheckCircle2, Camera } from "lucide-react";
 
 export default function MediaUploader({ initialImages = [], onFilesSelected, maxFiles = 10 }) {
   const [dragActive, setDragActive] = useState(false);
@@ -14,6 +14,8 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
   }, [onFilesSelected]);
 
   const isFileDrag = (e) => Array.from(e?.dataTransfer?.types || []).includes("Files");
+  const inputRef = useRef(null);
+  const cameraRef = useRef(null);
 
   useEffect(() => {
     // Sync external changes (like upload completion)
@@ -21,7 +23,6 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
        setFiles(initialImages.map(img => ({ ...img, preview: img.url || img.preview })));
     }
   }, [initialImages]);
-  const inputRef = useRef(null);
 
   const handleDrag = useCallback((e) => {
     if (!isFileDrag(e)) return;
@@ -74,6 +75,13 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
     if (files[idx].isPrimary && newArr.length > 0) newArr[0].isPrimary = true;
     
     syncFiles([...newArr]);
+  };
+
+  const handleCameraCapture = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      handleFiles(e.target.files);
+      e.target.value = ""; // Reset input so same photo can be taken again
+    }
   };
 
   const setPrimary = (idx) => {
@@ -134,11 +142,28 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
           className="hidden" 
           onChange={handleChange} 
         />
+        <input 
+          ref={cameraRef}
+          type="file" 
+          accept="image/*" 
+          capture="environment"
+          className="hidden" 
+          onChange={handleCameraCapture} 
+        />
         <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 text-emerald-600 border border-slate-100">
           <UploadCloud size={32} />
         </div>
         <p className="text-lg font-black text-slate-900 tracking-tight">Drag & Drop Media Assets</p>
         <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-2 block">Or click to browse standard files</p>
+        
+        {/* Camera button for mobile */}
+        <button
+          type="button"
+          onClick={() => cameraRef.current?.click()}
+          className="mt-4 flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-colors border border-blue-200 md:hidden"
+        >
+          <Camera size={16} /> Take Photo
+        </button>
         
         {dragActive && (
           <div className="absolute inset-0 z-50 bg-emerald-600/5 backdrop-blur-sm rounded-3xl border-2 border-emerald-500 flex items-center justify-center">
