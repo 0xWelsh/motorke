@@ -87,15 +87,6 @@ export default function DutyCalculatorPage() {
     <div className="min-h-screen bg-white">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
         <div className="mb-12 sm:mb-16 space-y-4">
-          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest ${
-            ratesMeta.error 
-              ? "bg-amber-50 text-amber-700 border border-amber-200"
-              : ratesMeta.fallback
-                ? "bg-blue-50 text-blue-700 border border-blue-200"
-                : "bg-emerald-50 text-emerald-700 border border-emerald-200"
-          }`}>
-            {ratesLoading ? "Updating rates..." : ratesMeta.fallback ? "Using fallback rates" : "Online rates active"}
-          </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Import Duty Calculator</h1>
           <p className="text-base sm:text-lg text-slate-600 font-medium max-w-3xl leading-relaxed">
             Estimate Kenya Revenue Authority import duties for vehicles. Calculate landed costs from Japan, UK, and other markets.

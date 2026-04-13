@@ -222,7 +222,7 @@ export default function Navbar({ user }) {
           <div className="ml-auto h-full w-full max-w-sm bg-[#f5f3ef] border-l border-[#e7e1d8] p-5 sm:p-6 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div className="inline-flex items-center gap-2.5">
-                <img src="/favicon.svg" alt="Motorke" className="h-8 w-8 object-contain rounded-lg" />
+                <img src="/favicon.png" alt="Motorke" className="h-8 w-8 object-contain rounded-lg" />
                 <div className="flex flex-col">
                   <span className="inline-flex items-center">
                     <span className="text-[16px] leading-none font-black uppercase tracking-[0.16em] text-slate-900">MOTOR</span>

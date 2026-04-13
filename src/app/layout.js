@@ -13,10 +13,10 @@ export const metadata = {
   description: "Compare cars from top dealerships across Kenya.",
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/symbol.jpeg", type: "image/jpeg" },
       { url: "/favicon.png", type: "image/png" },
     ],
-    shortcut: "/favicon.svg",
+    shortcut: "/symbol.jpeg",
   },
 };
 
@@ -52,7 +52,7 @@ export default async function RootLayout({ children }) {
             <div className="container mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex flex-col items-center md:items-start">
                 <span className="mk-logo-shell mk-logo-shell-sm mb-2">
-                  <img src="/favicon.svg" alt="Motorke" className="mk-logo-img" />
+                  <img src="/favicon.png" alt="Motorke" className="mk-logo-img" />
                 </span>
                 <p className="text-slate-500 text-xs mt-1 font-semibold tracking-wide">Cars first. Dealers visible. Buyers confident.</p>
               </div>
