@@ -73,7 +73,7 @@ export default async function HomePage() {
     <div className="min-h-screen pb-28">
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image src={HERO_TEXTURE} fill priority className="object-cover opacity-40" alt="" />
+          <Image src={HERO_TEXTURE} fill priority className="object-cover opacity-[0.04]" alt="" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,90,47,0.08),transparent_40%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_25%,rgba(17,17,17,0.05),transparent_38%)]" />
           <div className="absolute -top-24 -right-20 h-80 w-80 rounded-full bg-[#ff5a2f]/5 blur-3xl" />
