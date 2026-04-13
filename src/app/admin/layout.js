@@ -88,8 +88,8 @@ export default function AdminLayout({ children }) {
 
       {/* Sidebar */}
       <aside className={clsx(
-        "w-72 bg-white border-r border-slate-200 flex flex-col shrink-0 lg:sticky top-0 h-screen z-50 fixed transition-transform duration-300 shadow-sm",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        "w-72 bg-white border-r border-slate-200 flex flex-col shrink-0 h-screen z-50 fixed transition-transform duration-300 shadow-lg lg:shadow-sm lg:border-r lg:sticky lg:top-0 lg:translate-x-0",
+        sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         {/* Branding */}
         <div className="p-6 lg:p-8 flex items-center justify-between">
