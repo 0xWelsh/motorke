@@ -21,7 +21,6 @@ const getCachedData = unstable_cache(
         include: {
           images: { where: { isPrimary: true }, take: 1 },
           dealer: { select: { id: true, name: true, location: true, verified: true, slug: true } },
-          _count: { select: { views: { where: { createdAt: { gte: week } } } } },
         },
         take: 8,
         orderBy: { createdAt: "desc" },
@@ -31,11 +30,9 @@ const getCachedData = unstable_cache(
         include: {
           images: { where: { isPrimary: true }, take: 1 },
           dealer: { select: { id: true, name: true, location: true, verified: true, slug: true } },
-          _count: { select: { views: { where: { createdAt: { gte: week } } } } },
+          _count: { select: { views: true } },
         },
-        take: 8,
-        orderBy: { views: { _count: "desc" } },
-        skip: 0,
+        take: 100, // Get more to sort by views in memory
       }),
       db.car.findMany({
         where: { available: true, createdAt: { gte: week } },
@@ -78,9 +75,14 @@ const HERO_TEXTURE = "/images/mercedes.jpg";
 export default async function HomePage() {
   const { featured, hotThisWeek, newArrivals, dealers, newsItems } = await getCachedData();
   
+  // Sort hot cars by view count and take top 8
+  const hotSorted = hotThisWeek
+    .sort((a, b) => (b._count?.views || 0) - (a._count?.views || 0))
+    .slice(0, 8)
+    .filter(car => (car._count?.views || 0) > 0);
+  
   // Priority: Hot This Week (with views) > Featured > New Arrivals
-  const hotThisWeekFiltered = hotThisWeek.filter(car => car._count?.views > 0);
-  const spotlight = hotThisWeekFiltered.length > 0 ? hotThisWeekFiltered : featured.length > 0 ? featured : newArrivals;
+  const spotlight = hotSorted.length > 0 ? hotSorted : featured.length > 0 ? featured : newArrivals;
   const heroPrimary = spotlight[0] || null;
   const heroSecondary = spotlight[1] || null;
 
