@@ -30,7 +30,7 @@ const getCachedData = unstable_cache(
         include: {
           images: { where: { isPrimary: true }, take: 1 },
           dealer: { select: { id: true, name: true, location: true, verified: true, slug: true } },
-          _count: { select: { views: true } },
+          _count: { select: { carViews: true } },
         },
         take: 100, // Get more to sort by views in memory
       }),
@@ -66,7 +66,7 @@ const getCachedData = unstable_cache(
     ]);
     return { featured, hotThisWeek, newArrivals, dealers, newsItems };
   },
-  ["homepage-minimal-v4"],
+  ["homepage-minimal-v5"],
   { revalidate: 900, tags: ["homepage"] }
 );
 
@@ -77,8 +77,8 @@ export default async function HomePage() {
   
   // Sort hot cars by view count and take top 8
   const hotSorted = (hotThisWeek || [])
-    .filter(car => car && car._count?.views > 0)
-    .sort((a, b) => (b._count?.views || 0) - (a._count?.views || 0))
+    .filter(car => car && car._count?.carViews > 0)
+    .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
     .slice(0, 8);
   
   // Priority: Hot This Week (with views) > Featured > New Arrivals
