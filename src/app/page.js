@@ -15,15 +15,27 @@ import { unstable_cache } from "next/cache";
 const getCachedData = unstable_cache(
   async () => {
     const week = new Date(); week.setDate(week.getDate() - 7);
-    const [featured, newArrivals, dealers, newsItems] = await Promise.all([
+    const [featured, hotThisWeek, newArrivals, dealers, newsItems] = await Promise.all([
       db.car.findMany({
         where: { available: true, featured: true },
         include: {
           images: { where: { isPrimary: true }, take: 1 },
           dealer: { select: { id: true, name: true, location: true, verified: true, slug: true } },
+          _count: { select: { views: { where: { createdAt: { gte: week } } } } },
         },
         take: 8,
         orderBy: { createdAt: "desc" },
+      }),
+      db.car.findMany({
+        where: { available: true },
+        include: {
+          images: { where: { isPrimary: true }, take: 1 },
+          dealer: { select: { id: true, name: true, location: true, verified: true, slug: true } },
+          _count: { select: { views: { where: { createdAt: { gte: week } } } } },
+        },
+        take: 8,
+        orderBy: { views: { _count: "desc" } },
+        skip: 0,
       }),
       db.car.findMany({
         where: { available: true, createdAt: { gte: week } },
@@ -55,17 +67,20 @@ const getCachedData = unstable_cache(
         },
       }),
     ]);
-    return { featured, newArrivals, dealers, newsItems };
+    return { featured, hotThisWeek, newArrivals, dealers, newsItems };
   },
-  ["homepage-minimal-v3"],
+  ["homepage-minimal-v4"],
   { revalidate: 900, tags: ["homepage"] }
 );
 
 const HERO_TEXTURE = "/images/mercedes.jpg";
 
 export default async function HomePage() {
-  const { featured, newArrivals, dealers, newsItems } = await getCachedData();
-  const spotlight = featured.length > 0 ? featured : newArrivals;
+  const { featured, hotThisWeek, newArrivals, dealers, newsItems } = await getCachedData();
+  
+  // Priority: Hot This Week (with views) > Featured > New Arrivals
+  const hotThisWeekFiltered = hotThisWeek.filter(car => car._count?.views > 0);
+  const spotlight = hotThisWeekFiltered.length > 0 ? hotThisWeekFiltered : featured.length > 0 ? featured : newArrivals;
   const heroPrimary = spotlight[0] || null;
   const heroSecondary = spotlight[1] || null;
 
