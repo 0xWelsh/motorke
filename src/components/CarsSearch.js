@@ -181,7 +181,9 @@ export default function CarsSearch({
                     setShowSuggestions(false);
                     pushWith({ search: val });
                   }}
+                  onClose={() => setShowSuggestions(false)}
                   inputValue={search}
+                  className="w-full left-0 right-0"
                 />
               )}
             </div>

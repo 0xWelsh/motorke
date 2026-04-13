@@ -2,47 +2,32 @@
 // src/hooks/useDebouncedSearch.js
 import { useState, useEffect, useCallback } from "react";
 
-export default function useDebouncedSearch(initialValue = "", delay = 300) {
-  const [searchTerm, setSearchTerm] = useState(initialValue);
-  const [debouncedTerm, setDebouncedTerm] = useState(initialValue);
+export default function useDebouncedSearch(searchValue = "", delay = 300) {
+  const [debouncedTerm, setDebouncedTerm] = useState(searchValue);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Debounce effect
+  // Debounce effect - tracks the searchValue prop
   useEffect(() => {
     const timerId = setTimeout(() => {
-      setDebouncedTerm(searchTerm);
+      setDebouncedTerm(searchValue);
     }, delay);
 
     return () => {
       clearTimeout(timerId);
     };
-  }, [searchTerm, delay]);
-
-  // Reset error when search term changes
-  useEffect(() => {
-    if (error && searchTerm !== initialValue) {
-      setError(null);
-    }
-  }, [searchTerm, error, initialValue]);
-
-  const setSearch = useCallback((value) => {
-    setSearchTerm(value);
-  }, []);
+  }, [searchValue, delay]);
 
   const reset = useCallback(() => {
-    setSearchTerm(initialValue);
-    setDebouncedTerm(initialValue);
+    setDebouncedTerm("");
     setIsLoading(false);
     setError(null);
-  }, [initialValue]);
+  }, []);
 
   return {
-    searchTerm,
     debouncedTerm,
     isLoading,
     error,
-    setSearch,
     setIsLoading,
     setError,
     reset,
