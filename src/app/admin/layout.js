@@ -76,7 +76,7 @@ export default function AdminLayout({ children }) {
   };
 
   return (
-    <div className="flex bg-[#f8fafc] text-slate-900 selection:bg-emerald-100 selection:text-emerald-900 relative">
+    <div className="flex bg-slate-50 text-slate-900 selection:bg-emerald-100 selection:text-emerald-900 relative">
       
       {/* Mobile Backdrop */}
       {sidebarOpen && (
@@ -88,7 +88,7 @@ export default function AdminLayout({ children }) {
 
       {/* Sidebar */}
       <aside className={clsx(
-        "w-72 bg-white border-r border-slate-200 flex flex-col shrink-0 lg:sticky top-0 h-screen z-50 fixed transition-transform duration-300",
+        "w-72 bg-white border-r border-slate-200 flex flex-col shrink-0 lg:sticky top-0 h-screen z-50 fixed transition-transform duration-300 shadow-sm",
         sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         {/* Branding */}
@@ -144,7 +144,7 @@ export default function AdminLayout({ children }) {
       {/* Main Content */}
       <main className="flex-1 min-w-0 min-h-screen relative flex flex-col">
         {/* Header */}
-        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 lg:px-10 py-4 lg:py-5 flex items-center justify-between">
+        <header className="sticky top-0 z-30 bg-white border-b border-slate-200 px-4 lg:px-10 py-4 lg:py-5 flex items-center justify-between shadow-sm">
            <div className="flex items-center gap-3 lg:gap-4 text-[11px] font-bold text-slate-600 uppercase tracking-widest shrink-0">
               <button 
                 className="lg:hidden p-2 -ml-2 text-slate-400 hover:text-slate-900 transition-colors"
@@ -178,8 +178,8 @@ export default function AdminLayout({ children }) {
                  </button>
               </div>
 
-              <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 p-1.5 lg:pr-4 rounded-2xl group cursor-pointer hover:border-emerald-200 hover:bg-emerald-50/30 transition-all">
-                <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-[10px] lg:text-xs shadow-lg group-hover:bg-emerald-600 transition-all duration-300">
+              <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 p-1.5 lg:pr-4 rounded-2xl group cursor-pointer hover:border-emerald-300 hover:bg-emerald-100/40 transition-all">
+                <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black text-[10px] lg:text-xs shadow-md group-hover:bg-emerald-700 transition-all duration-300">
                   AD
                 </div>
                 <div className="hidden lg:flex flex-col">

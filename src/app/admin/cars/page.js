@@ -67,9 +67,9 @@ export default async function AdminCarsPage({ searchParams }) {
         <div>
            <div className="flex items-center gap-2 mb-2">
              <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Inventory</span>
+             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Inventory</span>
           </div>
-          <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight">
             Cars <span className="text-slate-500 font-medium ml-3">/ {total} Total</span>
           </h1>
         </div>
@@ -90,60 +90,60 @@ export default async function AdminCarsPage({ searchParams }) {
               CreatedAt: c.createdAt
             }))} 
           />
-          <Link href="/admin/cars/bulk" className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm">
+          <Link href="/admin/cars/bulk" className="bg-white border border-slate-200 text-slate-900 px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-slate-50 transition-all shadow-sm">
             <Upload size={16} /> Bulk Import
           </Link>
           <ClearAllButton />
-          <Link href="/admin/cars/new" className="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:hover:text-white transition-all shadow-md">
+          <Link href="/admin/cars/new" className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-emerald-700 transition-all shadow-md">
             <Plus size={16} /> New Car
           </Link>
         </div>
       </div>
 
       {/* ── SEARCH & FILTERS ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-sm">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-8 bg-white border border-slate-200 p-4 rounded-2xl shadow-sm">
          <form className="lg:col-span-12 relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-emerald-500 transition-colors" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-emerald-600 transition-colors" />
             <input 
               name="search"
               defaultValue={search}
               placeholder="Search by Make, Model, VIN or Plate Number..."
-              className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none focus:border-emerald-500/50 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm font-medium text-slate-900 outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/10 transition-all placeholder:text-slate-400"
             />
          </form>
       </div>
 
       {/* ── DATA REGISTRY ── */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[1000px]">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+              <tr className="border-b border-slate-200 bg-slate-50">
                 {["ID", "Car", "Dealership", "Metrics", "Price", ""].map((h) => (
-                  <th key={h} className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{h}</th>
+                  <th key={h} className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-600">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+            <tbody className="divide-y divide-slate-100">
               {cars.map((car) => (
-                <tr key={car.id} className="group hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <tr key={car.id} className="group hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="text-xs font-bold text-slate-900 dark:text-white uppercase">
+                      <div className="text-xs font-bold text-slate-900 uppercase">
                         #{car.id.slice(-4)}
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <p className="text-sm font-bold text-slate-900 dark:text-white mb-0.5 group-hover:text-emerald-500 transition-colors">{car.year} {car.make} {car.model}</p>
+                    <p className="text-sm font-bold text-slate-900 mb-0.5 group-hover:text-emerald-600 transition-colors">{car.year} {car.make} {car.model}</p>
                     <div className="flex items-center gap-2">
-                       <span className="text-xs text-slate-500 dark:text-slate-400 uppercase">{car.plate || "No Plate"}</span>
-                       <div className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600" />
-                       <span className="text-xs text-slate-500 dark:text-slate-400 uppercase">{car.vin || "No VIN"}</span>
+                       <span className="text-xs text-slate-600 uppercase">{car.plate || "No Plate"}</span>
+                       <div className="w-1 h-1 rounded-full bg-slate-300" />
+                       <span className="text-xs text-slate-600 uppercase">{car.vin || "No VIN"}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                     <p className="text-sm font-semibold text-slate-900 dark:text-white">{car.dealer.name}</p>
+                     <p className="text-sm font-semibold text-slate-900">{car.dealer.name}</p>
                   </td>
                   <td className="px-6 py-4">
                      <div className="flex items-center gap-4">
