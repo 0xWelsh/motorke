@@ -1,0 +1,60 @@
+{
+  "name": "Motorke - Kenya's Vehicle Marketplace",
+  "short_name": "Motorke",
+  "description": "Buy and sell verified vehicles from trusted dealers across Kenya",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#1e40af",
+  "icons": [
+    {
+      "src": "/symbol.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/symbol.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["shopping", "automotive"],
+  "screenshots": [
+    {
+      "src": "/images/mercedes.jpg",
+      "sizes": "540x720",
+      "type": "image/jpeg",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse Cars",
+      "short_name": "Browse",
+      "description": "Browse available vehicles",
+      "url": "/search?utm_source=pwa_menu",
+      "icons": [
+        {
+          "src": "/symbol.jpeg",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "My Saved Cars",
+      "short_name": "Saved",
+      "description": "View your saved cars",
+      "url": "/saved?utm_source=pwa_menu",
+      "icons": [
+        {
+          "src": "/symbol.jpeg",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}

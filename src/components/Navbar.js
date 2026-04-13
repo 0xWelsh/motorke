@@ -251,6 +251,25 @@ export default function Navbar({ user }) {
               ))}
             </div>
 
+            {/* Help & Resources */}
+            <div className="px-2 py-4 border-b border-[#e7e1d8] mb-6">
+              <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-3">Help & Resources</p>
+              <div className="space-y-2">
+                <Link href="/faq" onClick={() => setOpen(false)}
+                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors">
+                  FAQ
+                </Link>
+                <Link href="/mission" onClick={() => setOpen(false)}
+                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors">
+                  Our Mission
+                </Link>
+                <Link href="/contact" onClick={() => setOpen(false)}
+                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors">
+                  Contact Support
+                </Link>
+              </div>
+            </div>
+
             {user && (
               <div className="rounded-2xl border border-[#e7e1d8] bg-white p-4 mb-6">
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-2">Signed in</p>

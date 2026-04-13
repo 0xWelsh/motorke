@@ -6,11 +6,13 @@ import { CompareBar } from "@/components/CompareSelector";
 import { ModalProvider } from "@/components/Modal";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ScrollToTop from "@/components/ScrollToTop";
+import { PWARegister } from "@/components/PWARegister";
 import { getSession } from "@/lib/auth";
 
 export const metadata = {
   title: "Motorke — Find Your Car in Kenya",
   description: "Compare cars from top dealerships across Kenya.",
+  manifest: "/manifest.json",
   icons: {
     icon: [
       { url: "/symbol.jpeg", type: "image/jpeg" },
@@ -40,6 +42,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="bg-background text-slate-900 min-h-screen antialiased flex flex-col font-sans transition-colors duration-300">
+        <PWARegister />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <CompareProvider>
             <Navbar user={user} />
@@ -57,7 +60,7 @@ export default async function RootLayout({ children }) {
                 <p className="text-slate-500 text-xs mt-1 font-semibold tracking-wide">Cars first. Dealers visible. Buyers confident.</p>
               </div>
               <div className="flex gap-8 flex-wrap justify-center">
-                {[ ["Showcase", "/cars"], ["Dealers", "/dealers"], ["Duty Calculator", "/duty"], ["Terms", "/terms"], ["Privacy", "/privacy"]].map(([label, href]) => (
+                {[ ["Showcase", "/cars"], ["Dealers", "/dealers"], ["Duty", "/duty"], ["FAQ", "/faq"], ["Mission", "/mission"], ["Contact", "/contact"], ["Terms", "/terms"], ["Privacy", "/privacy"]].map(([label, href]) => (
                   <a key={href} href={href} className="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-colors">{label}</a>
                 ))}
               </div>
