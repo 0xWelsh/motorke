@@ -5,7 +5,7 @@ import Link from "next/link";
 import { 
   Search, User, Menu, X, ChevronDown, LogOut, Heart,
   LayoutDashboard, Store, PlusCircle, ShieldCheck, Compass,
-  ArrowUpRight
+  ArrowUpRight, Bell, Settings, BarChart2, Shield
 } from "lucide-react";
 import { clsx } from "clsx";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
@@ -262,29 +262,67 @@ export default function Navbar({ user }) {
 
             {user && (
               <div className="rounded-2xl border border-[#e7e1d8] bg-white p-4 mb-6">
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-1">Signed in</p>
-                <p className="text-sm font-bold text-slate-900 mb-3 truncate">{user.email}</p>
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-2">Signed in</p>
+                <p className="text-sm font-bold text-slate-900 mb-4 truncate">{user.email}</p>
                 <div className="space-y-2">
-                  {user.role === "BUYER" && <Link href="/account?tab=enquiries" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Enquiry Alerts</Link>}
-                  {user.role === "DEALER" && <Link href="/portal/leads" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Lead Alerts</Link>}
-                  {user.role === "ADMIN" && <Link href="/admin/leads" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Lead Alerts</Link>}
-                  <Link href="/account" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Profile Settings</Link>
-                  <Link href="/account?tab=saved" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Watchlist</Link>
-                  {user.role === "ADMIN" && <Link href="/admin" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Administration</Link>}
-                  {user.role === "DEALER" && <Link href="/portal" onClick={() => setOpen(false)} className="block text-xs font-extrabold uppercase tracking-[0.12em] text-slate-700">Dealer Portal</Link>}
+                  {user.role === "BUYER" && (
+                    <Link href="/account?tab=enquiries" onClick={() => setOpen(false)} 
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      <Bell size={16} className="flex-shrink-0" />
+                      <span>Enquiry Alerts</span>
+                    </Link>
+                  )}
+                  {user.role === "DEALER" && (
+                    <Link href="/portal/leads" onClick={() => setOpen(false)} 
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-lg text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      <Bell size={16} className="flex-shrink-0" />
+                      <span>Lead Alerts</span>
+                    </Link>
+                  )}
+                  {user.role === "ADMIN" && (
+                    <Link href="/admin/leads" onClick={() => setOpen(false)} 
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      <Bell size={16} className="flex-shrink-0" />
+                      <span>Lead Alerts</span>
+                    </Link>
+                  )}
+                  <Link href="/account" onClick={() => setOpen(false)} 
+                    className="flex items-center gap-3 px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                    <Settings size={16} className="flex-shrink-0" />
+                    <span>Profile Settings</span>
+                  </Link>
+                  <Link href="/account?tab=saved" onClick={() => setOpen(false)} 
+                    className="flex items-center gap-3 px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                    <Heart size={16} className="flex-shrink-0" />
+                    <span>Watchlist</span>
+                  </Link>
+                  {user.role === "ADMIN" && (
+                    <Link href="/admin" onClick={() => setOpen(false)} 
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      <Shield size={16} className="flex-shrink-0" />
+                      <span>Administration</span>
+                    </Link>
+                  )}
+                  {user.role === "DEALER" && (
+                    <Link href="/portal" onClick={() => setOpen(false)} 
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      <Store size={16} className="flex-shrink-0" />
+                      <span>Dealer Portal</span>
+                    </Link>
+                  )}
                 </div>
               </div>
             )}
 
-            <div className="space-y-3 pb-4">
+            <div className="space-y-3 pb-4 border-t border-[#e7e1d8] pt-4">
               {!user ? (
                 <>
                   <Link href="/signup" onClick={() => setOpen(false)}
-                    className="block py-3.5 text-center font-black uppercase tracking-widest text-white rounded-xl bg-[#111111]">
+                    className="block py-3.5 text-center font-black uppercase tracking-widest text-white rounded-xl bg-[#111111] hover:bg-black transition-colors">
                     For Dealers
                   </Link>
                   <Link href="/login" onClick={() => setOpen(false)}
-                    className="block py-3.5 text-center font-black uppercase tracking-widest text-slate-700 bg-white border border-[#e7e1d8] rounded-xl">
+                    className="block py-3.5 text-center font-black uppercase tracking-widest text-slate-700 bg-white border border-[#e7e1d8] rounded-xl hover:bg-slate-50 transition-colors">
                     Sign In
                   </Link>
                 </>
@@ -292,13 +330,14 @@ export default function Navbar({ user }) {
                 <>
                   {(user.role === "DEALER" || user.role === "ADMIN") && (
                     <Link href="/portal/cars/new" onClick={() => setOpen(false)}
-                      className="block py-3.5 text-center font-black uppercase tracking-widest text-white rounded-xl bg-[#111111]">
+                      className="block py-3.5 text-center font-black uppercase tracking-widest text-white rounded-xl bg-[#111111] hover:bg-black transition-colors">
                       Post Unit
                     </Link>
                   )}
                   <form action="/api/auth/logout" method="POST">
-                    <button type="submit" className="w-full py-3.5 text-center font-black uppercase tracking-widest text-rose-600 bg-white border border-rose-200 rounded-xl">
-                      Sign Out
+                    <button type="submit" className="w-full flex items-center justify-center gap-2 py-3.5 text-center font-black uppercase tracking-widest text-rose-600 bg-white border border-rose-300 hover:bg-rose-50 rounded-xl transition-colors">
+                      <LogOut size={18} strokeWidth={2.5} />
+                      <span>Sign Out</span>
                     </button>
                   </form>
                 </>
