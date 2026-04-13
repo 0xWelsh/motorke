@@ -76,15 +76,15 @@ export default async function HomePage() {
   const { featured, hotThisWeek, newArrivals, dealers, newsItems } = await getCachedData();
   
   // Sort hot cars by view count and take top 8
-  const hotSorted = hotThisWeek
+  const hotSorted = (hotThisWeek || [])
+    .filter(car => car && car._count?.views > 0)
     .sort((a, b) => (b._count?.views || 0) - (a._count?.views || 0))
-    .slice(0, 8)
-    .filter(car => (car._count?.views || 0) > 0);
+    .slice(0, 8);
   
   // Priority: Hot This Week (with views) > Featured > New Arrivals
-  const spotlight = hotSorted.length > 0 ? hotSorted : featured.length > 0 ? featured : newArrivals;
-  const heroPrimary = spotlight[0] || null;
-  const heroSecondary = spotlight[1] || null;
+  const spotlight = hotSorted.length > 0 ? hotSorted : (featured && featured.length > 0) ? featured : newArrivals;
+  const heroPrimary = spotlight?.[0] || null;
+  const heroSecondary = spotlight?.[1] || null;
 
   return (
     <div className="min-h-screen pb-28">
