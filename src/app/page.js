@@ -61,7 +61,7 @@ const getCachedData = unstable_cache(
   { revalidate: 900, tags: ["homepage"] }
 );
 
-const HERO_TEXTURE = "/images/hero-mercedes.jpg";
+const HERO_TEXTURE = "/images/mercedes.jpg";
 
 export default async function HomePage() {
   const { featured, newArrivals, dealers, newsItems } = await getCachedData();
@@ -73,10 +73,10 @@ export default async function HomePage() {
     <div className="min-h-screen pb-28">
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image src={HERO_TEXTURE} fill priority className="object-cover opacity-10" alt="" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,90,47,0.12),transparent_40%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_25%,rgba(17,17,17,0.08),transparent_38%)]" />
-          <div className="absolute -top-24 -right-20 h-80 w-80 rounded-full bg-[#ff5a2f]/10 blur-3xl" />
+          <Image src={HERO_TEXTURE} fill priority className="object-cover opacity-40" alt="" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,90,47,0.08),transparent_40%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_25%,rgba(17,17,17,0.05),transparent_38%)]" />
+          <div className="absolute -top-24 -right-20 h-80 w-80 rounded-full bg-[#ff5a2f]/5 blur-3xl" />
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-2 pb-14 sm:pt-3 sm:pb-20 md:pt-8 md:pb-24 relative z-10">

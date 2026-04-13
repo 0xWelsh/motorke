@@ -246,3 +246,86 @@ export async function sendPasswordResetEmail({ email, name, resetToken }) {
     return { success: false, error };
   }
 }
+
+export async function sendBetterDealEmail({ userEmail, userName, previousCar, newCar, savings }) {
+  if (!SMTP_USER || !SMTP_PASS) {
+    console.log("✉️ ======================================");
+    console.log(`✉️ BETTER DEAL EMAIL TO: ${userEmail}`);
+    console.log(`✉️ Previous: ${previousCar.year} ${previousCar.make} ${previousCar.model}`);
+    console.log(`✉️ New: ${newCar.year} ${newCar.make} ${newCar.model}`);
+    console.log(`✉️ Savings: KSh ${savings.toLocaleString("en-KE")}`);
+    console.log("✉️ ======================================");
+    return { success: true };
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke";
+  const newCarUrl = `${siteUrl}/cars/${newCar.id}`;
+  const savingsPercent = ((savings / previousCar.price) * 100).toFixed(1);
+
+  const htmlContent = `
+    <div style="max-width: 600px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1f2937;">
+      <div style="background: linear-gradient(135deg, #111111 0%, #1f2937 100%); padding: 32px; border-radius: 16px; color: white; text-align: center;">
+        <h1 style="margin: 0; font-size: 24px; font-weight: 900;">Better Deal Found! 🎯</h1>
+        <p style="margin: 8px 0 0; font-size: 14px; opacity: 0.9;">We found something even better for you</p>
+      </div>
+
+      <div style="padding: 32px;">
+        <p style="margin: 0 0 24px; font-size: 16px;">Hi ${userName},</p>
+        
+        <p style="margin: 0 0 24px; font-size: 14px; color: #4b5563; line-height: 1.6;">
+          You recently viewed the <strong>${previousCar.year} ${previousCar.make} ${previousCar.model}</strong>. 
+          We found an even better option that just arrived in our inventory!
+        </p>
+
+        <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 24px 0;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            ${newCar.primaryImage ? `<img src="${newCar.primaryImage}" alt="${newCar.year} ${newCar.make}" style="width: 100px; height: 75px; object-fit: cover; border-radius: 8px;" />` : ''}
+            <div style="flex: 1;">
+              <h3 style="margin: 0 0 4px; font-size: 18px; font-weight: 900; color: #111111;">
+                ${newCar.year} ${newCar.make} ${newCar.model}
+              </h3>
+              <p style="margin: 0 0 8px; font-size: 13px; color: #64748b;">
+                ${newCar.mileage ? `${parseInt(newCar.mileage).toLocaleString()} km • ` : ''}${newCar.location}
+              </p>
+              <p style="margin: 0; font-size: 20px; font-weight: 900; color: #ff5a2f;">
+                KSh ${parseInt(newCar.price).toLocaleString("en-KE")}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: #ecfdf5; border-left: 4px solid #10b981; padding: 16px; border-radius: 8px; margin: 24px 0;">
+          <p style="margin: 0; font-size: 14px; font-weight: 600; color: #047857;">
+            💰 Save KSh ${parseInt(savings).toLocaleString("en-KE")} (${savingsPercent}%)
+          </p>
+          <p style="margin: 4px 0 0; font-size: 12px; color: #059669;">
+            compared to the ${previousCar.year} ${previousCar.make}
+          </p>
+        </div>
+
+        <a href="${newCarUrl}" style="display: inline-block; width: 100%; text-align: center; background: #111111; color: white; padding: 14px 24px; border-radius: 8px; font-size: 14px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em; margin: 24px 0; transition: background 0.2s;">
+          View This Car
+        </a>
+
+        <p style="margin: 24px 0; font-size: 13px; color: #64748b; line-height: 1.6;">
+          This deal won't last long. Better deals go fast on Motorke!
+        </p>
+      </div>
+
+      ${buildEmailFooter()}
+    </div>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: '"Motorke" <deals@motorke.com>',
+      to: userEmail,
+      subject: `Better deal: ${newCar.year} ${newCar.make} - Save KSh ${parseInt(savings).toLocaleString("en-KE")}`,
+      html: htmlContent,
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Better deal email failed:", error);
+    return { success: false, error };
+  }
+}

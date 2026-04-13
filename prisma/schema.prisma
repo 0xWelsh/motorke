@@ -28,6 +28,7 @@ model User {
   notifications Notification[]
   dealerReviews DealerReview[]
   carReviews    CarReview[]
+  carViews      CarView[]
   dealer        Dealer?    @relation(fields: [dealerId], references: [id], onDelete: Cascade)
 
   @@map("users")
@@ -274,10 +275,13 @@ model LeadNote {
 model CarView {
   id       String   @id @default(cuid())
   carId    String
+  userId   String?
   viewedAt DateTime @default(now())
   source   String?
   car      Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  user     User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId, carId, viewedAt])
   @@map("car_views")
 }
 

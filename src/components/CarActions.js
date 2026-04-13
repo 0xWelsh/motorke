@@ -40,10 +40,11 @@ export function SaveButton({ carId, initialSaved = false, isLoggedIn }) {
 }
 
 // ── Recently Viewed Tracker ───────────────────────────────────
-// Call this on every car detail page to track views in localStorage
+// Call this on every car detail page to track views in localStorage + database
 export function TrackRecentView({ car }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
+    
     try {
       const MAX   = 12;
       const KEY   = "motorke_recent";
@@ -60,6 +61,15 @@ export function TrackRecentView({ car }) {
       const filtered = existing.filter(c => c.id !== car.id);
       const updated  = [entry, ...filtered].slice(0, MAX);
       localStorage.setItem(KEY, JSON.stringify(updated));
+    } catch {}
+
+    // Also track in database for logged-in users
+    try {
+      fetch("/api/cars/views", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ carId: car.id }),
+      }).catch(() => {}); // Silent fail if offline
     } catch {}
   }, [car.id]);
 
