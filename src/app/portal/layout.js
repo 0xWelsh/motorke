@@ -71,7 +71,7 @@ export default function PortalLayout({ children }) {
       )}
 
       {/* Top Header */}
-      <header className="sticky top-0 z-30 bg-white border-b border-slate-200 px-4 lg:px-8 py-4 flex items-center justify-between shadow-sm">
+      <header className="sticky top-0 z-30 bg-white border-b border-slate-200 px-3 sm:px-4 lg:px-8 py-3 sm:py-4 flex items-center justify-between shadow-sm">
          <div className="flex items-center gap-3">
            <button 
              onClick={() => setDrawerOpen(!drawerOpen)}

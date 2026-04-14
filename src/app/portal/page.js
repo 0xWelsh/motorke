@@ -46,30 +46,33 @@ export default async function PortalPage({ searchParams }) {
   return (
     <div className="animate-in fade-in duration-700">
       {user.dealer && !user.dealer.verified && (
-        <div className="mb-10 p-6 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-2xl flex items-start gap-4 shadow-sm">
-            <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-500 flex items-center justify-center shrink-0 mt-0.5">
-              <ShieldCheck size={20} />
+        <div className="mb-8 sm:mb-10 p-4 sm:p-6 bg-amber-50 border border-amber-200 rounded-xl sm:rounded-2xl flex items-start gap-3 sm:gap-4 shadow-sm">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
+              <ShieldCheck size={18} className="sm:block hidden" />
+              <ShieldCheck size={16} className="sm:hidden" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-amber-800 dark:text-amber-500 tracking-tight mb-1">Account Under Review</h3>
-              <p className="text-xs font-semibold text-amber-700/80 dark:text-amber-500/80 leading-tight">Your dealership is pending verification. You can prepare your inventory, but it will not be publicly visible until approved.</p>
+              <h3 className="text-xs sm:text-sm font-bold text-amber-800 tracking-tight mb-1">Account Under Review</h3>
+              <p className="text-xs font-medium text-amber-700/80 leading-tight">Dealer pending verification. Inventory visible after approval.</p>
             </div>
         </div>
       )}
       
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
+      <div className="flex flex-col gap-6 sm:gap-8 mb-8 sm:mb-12">
         <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-500 mb-2 block">Dealer Dashboard</span>
-          <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Overview</h1>
+          <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-emerald-600 mb-1 sm:mb-2 block">Dealer Dashboard</span>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight\">Overview</h1>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3\">
           <Link href="/portal/cars/bulk"
-            className="flex items-center gap-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-sm font-bold px-4 py-3 rounded-xl transition-all tracking-wide">
-            <Plus size={18} /> Bulk Upload
+            className="flex items-center justify-center sm:justify-start gap-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-bold px-4 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all tracking-wide\">
+            <Plus size={16} className="sm:block hidden" />
+            <Plus size={14} className=\"sm:hidden\" /> Bulk Upload
           </Link>
           <Link href="/portal/cars/new"
-            className="flex items-center gap-2 bg-slate-900 dark:bg-emerald-600 hover:bg-slate-800 dark:hover:bg-emerald-500 text-white text-sm font-bold px-6 py-3 rounded-xl transition-all shadow-md hover:scale-105 active:scale-95 tracking-wide">
-            <Plus size={18} /> New Listing
+            className="flex items-center justify-center sm:justify-start gap-2 bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all shadow-md hover:scale-105 active:scale-95 tracking-wide\">
+            <Plus size={16} className=\"sm:block hidden\" />
+            <Plus size={14} className=\"sm:hidden\" /> New Listing
           </Link>
         </div>
       </div>

@@ -44,40 +44,42 @@ export default async function InventoryPage({ searchParams }) {
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
+      <div className="flex flex-col gap-6 sm:gap-8 mb-8 sm:mb-10">
         <div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Inventory</h1>
-          <p className="text-slate-600 font-medium">
-            {totalCount} total units · {liveCount} live
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-1 sm:mb-2\">Inventory</h1>
+          <p className="text-xs sm:text-sm text-slate-600 font-medium\">
+            {totalCount} total · {liveCount} live
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3\">
           <Link href="/portal/cars/bulk"
-            className="flex items-center gap-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold px-4 py-2.5 rounded-lg transition-all">
-            <Plus size={16} /> Bulk Upload
+            className="flex items-center justify-center sm:justify-start gap-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold px-4 sm:px-4 py-2.5 sm:py-2.5 rounded-lg transition-all\">
+            <Plus size={16} className=\"sm:block hidden\" />
+            <Plus size={14} className=\"sm:hidden\" /> Bulk Upload
           </Link>
           <Link href="/portal/cars/new"
-            className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold px-6 py-2.5 rounded-lg transition-all shadow-sm">
-            <Plus size={16} /> Add Vehicle
+            className="flex items-center justify-center sm:justify-start gap-2 bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold px-4 sm:px-6 py-2.5 sm:py-2.5 rounded-lg transition-all shadow-sm\">
+            <Plus size={16} className=\"sm:block hidden\" />
+            <Plus size={14} className=\"sm:hidden\" /> Add Vehicle
           </Link>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex bg-white border border-slate-200 p-1 rounded-lg w-fit mb-10 shadow-sm">
+      <div className="flex bg-white border border-slate-200 p-1 rounded-lg w-full overflow-x-auto mb-8 sm:mb-10 shadow-sm\">
         {[
           { key: "all",  label: "All", count: totalCount },
           { key: "live", label: "Available",     count: liveCount },
           { key: "sold", label: "Sold/Drafts",    count: soldCount },
         ].map(({ key, label, count }) => (
           <Link key={key} href={`/portal/inventory?filter=${key}`}
-            className={`px-4 py-2 rounded-md text-sm font-semibold transition-all flex items-center gap-2 ${
+            className={`px-2 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2 flex-shrink-0 ${
               filter === key 
                 ? "bg-slate-900 text-white shadow-sm" 
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
             }`}>
             {label} 
-            <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+            <span className={`px-1.5 py-0.5 rounded text-[10px] sm:text-xs font-medium ${
               filter === key ? "bg-white/20" : "bg-slate-100 text-slate-600"
             }`}>
               {count}

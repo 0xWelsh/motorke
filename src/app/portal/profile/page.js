@@ -38,26 +38,26 @@ export default async function PortalProfilePage({ searchParams }) {
 
   return (
     <div className="w-full max-w-4xl">
-      <div className="mb-12">
-        <h1 className="text-4xl font-bold text-slate-900 mb-2">Account Settings</h1>
-        <p className="text-slate-600 font-medium">Manage your dealer profile and account details.</p>
+      <div className="mb-8 sm:mb-10">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-1 sm:mb-2\">Account Settings</h1>
+        <p className="text-xs sm:text-sm text-slate-600 font-medium\">Manage your dealer profile and account details.</p>
       </div>
 
       {saved && (
-        <div className="mb-6 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold text-slate-700">
+        <div className="mb-6 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold text-slate-700\">
           Profile saved successfully.
         </div>
       )}
       {error && (
-        <div className="mb-6 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold text-slate-700">
+        <div className="mb-6 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold text-slate-700\">
           Something went wrong. Please try again.
         </div>
       )}
 
       {/* Account Overview - Top Section */}
-      <div className="bg-white border border-slate-200 rounded-lg p-8 shadow-sm mb-12">
-        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wide mb-6">Account Overview</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="bg-white border border-slate-200 rounded-lg p-4 sm:p-6 md:p-8 shadow-sm mb-8 sm:mb-10\">
+        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wide mb-4 sm:mb-6\">Account Overview</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6\">
           {[
             { icon: User, label: "Role", value: user.role },
             { icon: Building2, label: "Dealership", value: user.dealer?.name || "Not linked" },
@@ -69,17 +69,17 @@ export default async function PortalProfilePage({ searchParams }) {
             { icon: Calendar, label: "Member Since", value: new Date(user.createdAt).toLocaleDateString("en-KE", { month: "short", year: "numeric" }) },
           ].map(({ icon: Icon, label, value }) => (
             <div key={label}>
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
                 <Icon size={12} className="text-slate-400" />
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">{label}</span>
+                <span className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wide">{label}</span>
               </div>
-              <p className="text-sm font-semibold text-slate-900">{value}</p>
+              <p className="text-xs sm:text-sm font-semibold text-slate-900 truncate">{value}</p>
             </div>
           ))}
         </div>
         
-        <div className="mt-8 pt-8 border-t border-slate-200">
-           <p className="text-xs text-slate-500 leading-relaxed">
+        <div className=\"mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-slate-200\">
+           <p className=\"text-xs text-slate-500 leading-relaxed\">
              Need to change your registered email or dealership name? Contact partner support.
            </p>
         </div>

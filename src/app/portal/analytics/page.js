@@ -89,53 +89,56 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
 
   return (
     <div className="w-full">
-      <div className="mb-12">
-        <h1 className="text-4xl font-bold text-slate-900">Analytics</h1>
-        <p className="text-slate-600 font-medium mt-2">Your dealership performance over the last 14 days.</p>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900">Analytics</h1>
+        <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1 sm:mt-2">Performance over 14 days</p>
       </div>
 
       {/* KPI Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-8 sm:mb-10">
         {[
           { label: "Total Views", value: totalViews, icon: Users, trend: viewsTrend, up: viewsTrend >= 0 },
           { label: "WhatsApp Clicks", value: totalClicks, icon: MousePointer2, trend: clicksTrend, up: true },
           { label: "Conversion Rate", value: `${convRate}%`, icon: TrendingUp, trend: leadsTrend, up: leadsTrend >= 0 },
           { label: "Leads Generated", value: totalLeads, icon: Award, trend: leadsTrend, up: leadsTrend >= 0 },
         ].map((kpi, i) => (
-          <div key={i} className="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-10 h-10 bg-slate-100 text-slate-700 rounded-lg flex items-center justify-center">
-                <kpi.icon size={18} />
+          <div key={i} className="bg-white border border-slate-200 rounded-lg p-3 sm:p-4 md:p-6 shadow-sm">
+            <div className="flex items-start justify-between mb-2 sm:mb-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-slate-100 text-slate-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                <kpi.icon size={14} className="sm:block hidden" />
+                <kpi.icon size={12} className="sm:hidden" />
               </div>
-              <div className={`text-xs font-semibold flex items-center gap-1 ${kpi.up ? 'text-emerald-600' : 'text-rose-600'}`}>
-                {kpi.up ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+              <div className={`text-[10px] sm:text-xs font-semibold flex items-center gap-0.5 flex-shrink-0 ${kpi.up ? 'text-emerald-600' : 'text-rose-600'}`}>
+                {kpi.up ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
                 {Math.abs(kpi.trend)}%
               </div>
             </div>
-            <p className="text-3xl font-bold text-slate-900 mb-1">{typeof kpi.value === 'number' ? kpi.value.toLocaleString() : kpi.value}</p>
-            <p className="text-xs font-medium text-slate-500">{kpi.label}</p>
+            <p className="text-lg sm:text-2xl md:text-3xl font-bold text-slate-900 mb-0.5 sm:mb-1 line-clamp-1">{typeof kpi.value === 'number' ? kpi.value.toLocaleString() : kpi.value}</p>
+            <p className="text-[10px] sm:text-xs font-medium text-slate-500 line-clamp-1">{kpi.label}</p>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-12">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-10">
         {/* Trend Chart */}
-        <div className="xl:col-span-2 bg-white border border-slate-200 rounded-lg p-8 shadow-sm overflow-hidden">
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-3">
-              <BarChart3 size={20} className="text-slate-700" /> 14-Day Engagement Trends
+        <div className="xl:col-span-2 bg-white border border-slate-200 rounded-lg p-4 sm:p-6 md:p-8 shadow-sm overflow-hidden">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+            <h2 className="text-sm sm:text-base md:text-lg font-bold text-slate-900 flex items-center gap-2 flex-shrink-0">
+              <BarChart3 size={16} className="sm:block hidden text-slate-700" />
+              <BarChart3 size={14} className="sm:hidden text-slate-700" />
+              <span className="truncate">Trends</span>
             </h2>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
-                <span className="w-2 h-2 rounded-full bg-slate-900" /> Views
+            <div className="flex items-center gap-3 flex-shrink-0 text-[10px] sm:text-xs font-medium text-slate-600">
+              <div className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-slate-900" /> Views
               </div>
-              <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
-                <span className="w-2 h-2 rounded-full bg-blue-500" /> Leads
+              <div className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-blue-500" /> Leads
               </div>
             </div>
           </div>
           
-          <div className="h-[280px] w-full relative">
+          <div className="h-48 sm:h-64 md:h-80 w-full relative">
             <svg viewBox="0 0 1400 300" className="w-full h-full" preserveAspectRatio="none">
               {chartData.map((d, i) => {
                 const x = (i / 13) * 1400;
@@ -184,12 +187,13 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
         </div>
 
         {/* Top Performer */}
-        <div className="bg-white border border-slate-200 rounded-lg p-8 shadow-sm">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-              <Award size={20} className="text-slate-700" />
+        <div className="bg-white border border-slate-200 rounded-lg p-4 sm:p-6 md:p-8 shadow-sm">
+          <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Award size={16} className="sm:block hidden text-slate-700" />
+              <Award size={14} className="sm:hidden text-slate-700" />
             </div>
-            <h3 className="font-bold text-slate-900">Top Performer</h3>
+            <h3 className="font-bold text-sm sm:text-base text-slate-900 truncate">Top Car</h3>
           </div>
           {topCar ? (
             <div className="space-y-4">
@@ -219,13 +223,15 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
         </div>
       </div>
 
-      {/* Breakdown */}
+      {/* Inventory Performance */}
       <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-          <h2 className="font-bold text-slate-900">Inventory Performance</h2>
-          <span className="text-xs text-slate-500">{cars.length} vehicles listed</span>
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+          <h2 className="font-bold text-sm sm:text-base text-slate-900">Inventory Performance</h2>
+          <span className="text-xs text-slate-500">{cars.length} listed</span>
         </div>
-        <div className="overflow-x-auto">
+        
+        {/* Desktop Table */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="text-left border-b border-slate-100 bg-slate-50">
@@ -264,6 +270,46 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
                })}
             </tbody>
           </table>
+        </div>
+        
+        {/* Mobile Cards */}
+        <div className="md:hidden divide-y divide-slate-100">
+          {cars.map(car => {
+            const daysListed = Math.floor((new Date() - new Date(car.createdAt)) / (1000 * 60 * 60 * 24));
+            const carLeads = leads.filter(l => l.carId === car.id).length;
+            const convRate = car.views > 0 ? ((carLeads / car.views) * 100).toFixed(1) : 0;
+            return (
+              <div key={car.id} className="p-4 hover:bg-slate-50 transition-all">
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <div>
+                    <p className="font-semibold text-sm text-slate-900">{car.make} {car.model}</p>
+                    <p className="text-xs text-slate-500">{formatPrice(car.price)}</p>
+                  </div>
+                  <span className={`inline-flex px-2 py-1 rounded text-xs font-semibold flex-shrink-0 ${
+                    convRate > 5 
+                      ? 'bg-emerald-50 text-emerald-700' 
+                      : 'bg-slate-100 text-slate-700'
+                  }`}>
+                    {convRate}%
+                  </span>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                  <div>
+                    <p className="text-slate-500 mb-0.5">Days</p>
+                    <p className="font-semibold text-slate-900">{daysListed}</p>
+                  </div>
+                  <div>
+                    <p className="text-slate-500 mb-0.5">Views</p>
+                    <p className="font-semibold text-slate-900">{car.views.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-slate-500 mb-0.5">Leads</p>
+                    <p className="font-semibold text-slate-900">{carLeads}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
