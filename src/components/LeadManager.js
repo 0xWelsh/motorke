@@ -150,16 +150,16 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                       )}
                     </div>
                     <p className="text-xs text-slate-600 line-clamp-1">
-                      <span className=\"text-slate-900 font-bold\">{lead.car.year} {lead.car.make} {lead.car.model}</span> · {fmt(lead.car.price)}
+                      <span className="text-slate-900 font-bold">{lead.car.year} {lead.car.make} {lead.car.model}</span> · {fmt(lead.createdAt)}
                     </p>
-                    <p className=\"md:hidden text-xs text-slate-500 mt-1 flex items-center gap-1\">
+                    <p className="md:hidden text-xs text-slate-500 mt-1 flex items-center gap-1">
                       <span>{lead.phone}</span> · <span>{fmtDate(lead.createdAt)}</span>
                     </p>
                   </div>
 
-                  <div className=\"hidden md:flex flex-col items-end text-right shrink-0\">
-                    <p className=\"text-sm font-bold text-slate-900\">{lead.phone}</p>
-                    <div className=\"flex items-center gap-1.5 text-xs font-medium text-slate-500 mt-1\">
+                  <div className="hidden md:flex flex-col items-end text-right shrink-0">
+                    <p className="text-sm font-bold text-slate-900">{lead.phone}</p>
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500 mt-1">
                       <Calendar size={12} /> {fmtDate(lead.createdAt)}
                     </div>
                   </div>
@@ -246,14 +246,14 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                         </div>
 
                         {lead.notes?.length > 0 && (
-                          <div className="space-y-2 max-h-40 overflow-y-auto\">
+                          <div className="space-y-2 max-h-40 overflow-y-auto">
                              {lead.notes.map((note, idx) => (
-                               <div key={note.id || idx} className="bg-white border border-slate-200 p-3 rounded-lg\">
-                                  <div className="flex items-center justify-between mb-1 text-xs font-bold text-slate-500 uppercase gap-2\">
+                               <div key={note.id || idx} className="bg-white border border-slate-200 p-3 rounded-lg">
+                                  <div className="flex items-center justify-between mb-1 text-xs font-bold text-slate-500 uppercase gap-2">
                                      <span>Note</span>
-                                     <span className=\"flex-shrink-0\">{fmtDate(note.createdAt)}</span>
+                                     <span className="flex-shrink-0">{fmtDate(note.createdAt)}</span>
                                   </div>
-                                  <p className="text-xs text-slate-700 leading-relaxed\">{note.note}</p>
+                                  <p className="text-xs text-slate-700 leading-relaxed">{note.note}</p>
                                </div>
                              ))}
                           </div>

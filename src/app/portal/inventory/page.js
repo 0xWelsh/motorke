@@ -47,26 +47,26 @@ export default async function InventoryPage({ searchParams }) {
       <div className="flex flex-col gap-6 sm:gap-8 mb-8 sm:mb-10">
         <div>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-1 sm:mb-2\">Inventory</h1>
-          <p className="text-xs sm:text-sm text-slate-600 font-medium\">
+          <p className="text-xs sm:text-sm text-slate-600 font-medium">
             {totalCount} total · {liveCount} live
           </p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3\">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
           <Link href="/portal/cars/bulk"
-            className="flex items-center justify-center sm:justify-start gap-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold px-4 sm:px-4 py-2.5 sm:py-2.5 rounded-lg transition-all\">
-            <Plus size={16} className=\"sm:block hidden\" />
-            <Plus size={14} className=\"sm:hidden\" /> Bulk Upload
+            className="flex items-center justify-center sm:justify-start gap-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold px-4 sm:px-4 py-2.5 sm:py-2.5 rounded-lg transition-all">
+            <Plus size={16} className="sm:block hidden" />
+            <Plus size={14} className="sm:hidden" /> Bulk Upload
           </Link>
           <Link href="/portal/cars/new"
-            className="flex items-center justify-center sm:justify-start gap-2 bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold px-4 sm:px-6 py-2.5 sm:py-2.5 rounded-lg transition-all shadow-sm\">
-            <Plus size={16} className=\"sm:block hidden\" />
-            <Plus size={14} className=\"sm:hidden\" /> Add Vehicle
+            className="flex items-center justify-center sm:justify-start gap-2 bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold px-4 sm:px-6 py-2.5 sm:py-2.5 rounded-lg transition-all shadow-sm">
+            <Plus size={16} className="sm:block hidden" />
+            <Plus size={14} className="sm:hidden" /> Add Vehicle
           </Link>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex bg-white border border-slate-200 p-1 rounded-lg w-full overflow-x-auto mb-8 sm:mb-10 shadow-sm\">
+      <div className="flex bg-white border border-slate-200 p-1 rounded-lg w-full overflow-x-auto mb-8 sm:mb-10 shadow-sm">
         {[
           { key: "all",  label: "All", count: totalCount },
           { key: "live", label: "Available",     count: liveCount },

@@ -63,16 +63,16 @@ export default async function PortalPage({ searchParams }) {
           <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-emerald-600 mb-1 sm:mb-2 block">Dealer Dashboard</span>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight\">Overview</h1>
         </div>
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3\">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
           <Link href="/portal/cars/bulk"
-            className="flex items-center justify-center sm:justify-start gap-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-bold px-4 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all tracking-wide\">
+            className="flex items-center justify-center sm:justify-start gap-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-bold px-4 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all tracking-wide">
             <Plus size={16} className="sm:block hidden" />
-            <Plus size={14} className=\"sm:hidden\" /> Bulk Upload
+            <Plus size={14} className="sm:hidden" /> Bulk Upload
           </Link>
           <Link href="/portal/cars/new"
-            className="flex items-center justify-center sm:justify-start gap-2 bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all shadow-md hover:scale-105 active:scale-95 tracking-wide\">
-            <Plus size={16} className=\"sm:block hidden\" />
-            <Plus size={14} className=\"sm:hidden\" /> New Listing
+            className="flex items-center justify-center sm:justify-start gap-2 bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl transition-all shadow-md hover:scale-105 active:scale-95 tracking-wide">
+            <Plus size={16} className="sm:block hidden" />
+            <Plus size={14} className="sm:hidden" /> New Listing
           </Link>
         </div>
       </div>

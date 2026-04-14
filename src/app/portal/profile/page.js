@@ -78,8 +78,8 @@ export default async function PortalProfilePage({ searchParams }) {
           ))}
         </div>
         
-        <div className=\"mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-slate-200\">
-           <p className=\"text-xs text-slate-500 leading-relaxed\">
+        <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-slate-200">
+          <p className="text-xs text-slate-500 leading-relaxed">
              Need to change your registered email or dealership name? Contact partner support.
            </p>
         </div>
