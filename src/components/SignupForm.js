@@ -301,14 +301,16 @@ export default function SignupForm({ error: initialError }) {
               </div>
             )}
 
-            {/* Security Check */}
-            <div>
-              <label className="text-sm font-semibold text-slate-900 mb-2 block">Security</label>
-              <HumanCheck
-                value={captchaToken}
-                onChange={setCaptchaToken}
-              />
-            </div>
+            {/* Security Check (Optional for Beta) */}
+            {requiresHumanCheck && (
+              <div>
+                <label className="text-xs font-medium text-slate-500 mb-2 block">Security (Optional)</label>
+                <HumanCheck
+                  value={captchaToken}
+                  onChange={setCaptchaToken}
+                />
+              </div>
+            )}
 
             {/* Submit Button */}
             <button 

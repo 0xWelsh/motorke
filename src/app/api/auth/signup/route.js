@@ -17,7 +17,7 @@ const signupSchema = z.object({
   role: z.enum(["BUYER", "DEALER"]).default("BUYER"),
   dealerName: z.string().optional(),
   phone: z.string().optional(),
-  captchaToken: z.string().min(2),
+  captchaToken: z.string().optional(),
   website: z.string().optional(),
 }).refine(data => data.password === data.confirm, {
   message: "Passwords don't match",
@@ -60,10 +60,13 @@ export async function POST(request) {
       return NextResponse.redirect(new URL("/signup?error=too_many", request.url));
     }
 
-    const captchaCheck = await verifyTurnstileToken({ token: captchaToken, ip });
-    if (!captchaCheck.success) {
-      if (wantsJson) return NextResponse.json({ error: "Captcha verification failed. Please confirm you are human." }, { status: 400 });
-      return NextResponse.redirect(new URL("/signup?error=captcha", request.url));
+    // Verify captcha if token is provided (optional for now - allow signup even if captcha fails)
+    if (captchaToken && captchaToken.trim()) {
+      const captchaCheck = await verifyTurnstileToken({ token: captchaToken, ip });
+      // Log but don't block - captcha is optional during beta
+      if (!captchaCheck.success) {
+        console.warn(`Captcha verification failed for IP ${ip}: ${captchaCheck.reason}`);
+      }
     }
 
     if (role === "DEALER" && (!dealerName || !phone)) {
