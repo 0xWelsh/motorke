@@ -115,11 +115,11 @@ export default async function HomePage() {
                 <LocationSearch />
               </div>
 
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-10">
-                <Link href="/cars" className="mk-pill-btn inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-7 py-3.5 text-xs font-bold uppercase transition-all shadow-lg hover:shadow-[#ff5a2f]/30 active:scale-95">
+              <div className="flex flex-col sm:flex-row justify-center sm:justify-start items-stretch sm:items-center gap-4 sm:gap-3 mb-10">
+                <Link href="/cars" className="mk-pill-btn flex justify-center items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-7 py-3.5 text-xs font-bold uppercase transition-all shadow-lg hover:shadow-[#ff5a2f]/30 active:scale-95">
                   Search Now <ArrowUpRight className="w-4 h-4" />
                 </Link>
-                <Link href="/dealers" className="mk-pill-btn inline-flex items-center gap-2 bg-white border-2 border-[#111111] text-slate-900 px-7 py-3 text-xs font-bold uppercase hover:bg-[#f5f5f5] transition-all active:scale-95">
+                <Link href="/dealers" className="mk-pill-btn flex justify-center items-center gap-2 bg-white border-2 border-[#111111] text-slate-900 px-7 py-3 text-xs font-bold uppercase hover:bg-[#f5f5f5] transition-all active:scale-95">
                   View Dealers
                 </Link>
               </div>
@@ -270,10 +270,6 @@ export default async function HomePage() {
                         <div className="w-full h-full flex items-center justify-center text-white/30 text-xs font-bold">No Image</div>
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                      
-                      <div className="absolute top-3 right-3 bg-[#ff5a2f] text-white text-xs font-bold px-3 py-1.5 rounded-full">
-                        {car._count?.carViews || 0} views
-                      </div>
                     </div>
 
                     <div className="p-6 flex flex-col flex-1 gap-4">
