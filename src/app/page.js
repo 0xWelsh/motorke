@@ -7,7 +7,7 @@ import LocationSearch from "@/components/LocationSearch";
 import NewsRibbon from "@/components/NewsRibbon";
 import HeroReviews from "@/components/HeroReviews";
 import {
-  ArrowUpRight, ChevronRight, MapPin, ShieldCheck, Sparkles
+  ArrowUpRight, ChevronRight, MapPin, ShieldCheck, Sparkles, TrendingUp, Users, Zap, Lock
 } from "lucide-react";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
@@ -107,20 +107,20 @@ export default async function HomePage() {
                 <span className="text-[#ff5a2f]">dealer-level clarity.</span>
               </h1>
 
-              <p className="text-base sm:text-lg md:text-xl text-slate-600 mb-8 sm:mb-9 leading-relaxed max-w-2xl font-medium">
+              <p className="text-base sm:text-lg md:text-xl text-slate-600 mb-6 sm:mb-7 leading-relaxed max-w-2xl font-medium">
                 Explore inventory from verified showrooms, compare units side by side, and reach real dealership teams without noisy listings.
               </p>
 
-              <div className="w-full max-w-2xl mb-10">
+              <div className="w-full max-w-lg mb-6">
                 <LocationSearch />
               </div>
 
-              <div className="flex flex-wrap items-center gap-3 mb-7">
-                <Link href="/cars" className="mk-pill-btn inline-flex items-center gap-2 bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 text-xs uppercase transition-colors">
-                  Explore Cars <ArrowUpRight className="w-4 h-4" />
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-10">
+                <Link href="/cars" className="mk-pill-btn inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-7 py-3.5 text-xs font-bold uppercase transition-all shadow-lg hover:shadow-[#ff5a2f]/30 active:scale-95">
+                  Search Now <ArrowUpRight className="w-4 h-4" />
                 </Link>
-                <Link href="/dealers" className="mk-pill-btn inline-flex items-center gap-2 bg-white border border-[#e7e1d8] text-slate-900 px-6 py-3 text-xs uppercase hover:bg-[#faf7f2] transition-colors">
-                  Visit Dealers <ChevronRight className="w-4 h-4" />
+                <Link href="/dealers" className="mk-pill-btn inline-flex items-center gap-2 bg-white border-2 border-[#111111] text-slate-900 px-7 py-3 text-xs font-bold uppercase hover:bg-[#f5f5f5] transition-all active:scale-95">
+                  View Dealers
                 </Link>
               </div>
 
@@ -136,7 +136,7 @@ export default async function HomePage() {
                 ))}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-[#e7e1d8] max-w-2xl">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-[#e7e1d8] max-w-2xl mb-8">
                 {[
                   { label: "Verified Profiles", value: "Trust Signals" },
                   { label: "Transparent Specs", value: "No Guesswork" },
@@ -145,6 +145,20 @@ export default async function HomePage() {
                   <div key={item.label}>
                     <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-1">{item.label}</p>
                     <p className="text-sm font-bold text-slate-800">{item.value}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Trust Badges */}
+              <div className="flex flex-wrap gap-3 items-center">
+                {[
+                  { icon: "🔒", label: "SSL Secured" },
+                  { icon: "✓", label: "Verified Dealers" },
+                  { icon: "⭐", label: "5-Star Support" },
+                ].map(({ icon, label }) => (
+                  <div key={label} className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-slate-50 border border-[#e7e1d8] text-xs font-bold text-slate-700">
+                    <span className="text-lg">{icon}</span>
+                    {label}
                   </div>
                 ))}
               </div>
@@ -165,14 +179,116 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="container mx-auto px-4 sm:px-6 py-14 sm:py-20 max-w-7xl">
-        <div className="flex items-end justify-between mb-8 sm:mb-10 gap-5">
-          <div>
-            <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Cars</p>
-            <h2 className="text-2xl sm:text-3xl md:text-5xl text-slate-900">Featured Inventory</h2>
+      {/* Stats Section */}
+      <section className="bg-gradient-to-br from-slate-50 to-slate-100/50 border-b border-[#e7e1d8] py-12 sm:py-16 md:py-20">
+        <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+            {[
+              { label: "Total Cars", value: "500+", icon: TrendingUp },
+              { label: "Verified Dealers", value: "50+", icon: ShieldCheck },
+              { label: "Happy Buyers", value: "10K+", icon: Users },
+              { label: "Avg Response", value: "< 2hrs", icon: Zap },
+            ].map(({ label, value, icon: Icon }) => (
+              <div key={label} className="text-center">
+                <div className="w-12 h-12 rounded-lg bg-white border border-[#e8e2d9] flex items-center justify-center mx-auto mb-3 shadow-sm">
+                  <Icon className="w-6 h-6 text-[#ff5a2f]" />
+                </div>
+                <p className="text-2xl sm:text-3xl font-bold text-slate-900 mb-1">{value}</p>
+                <p className="text-xs sm:text-sm font-semibold text-slate-600 uppercase tracking-wide">{label}</p>
+              </div>
+            ))}
           </div>
-          <Link href="/cars" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 border border-[#e7e1d8] bg-white px-5 py-3 text-xs uppercase text-slate-900 hover:bg-[#faf7f2]">
-            View All <ChevronRight className="w-4 h-4" />
+        </div>
+      </section>
+
+      {/* Why Us Section */}
+      <section className="container mx-auto px-4 sm:px-6 py-12 sm:py-20 max-w-7xl">
+        <div className="mb-12">
+          <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Platform</p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-4 max-w-2xl">Why buyers choose Motorke</h2>
+          <p className="text-base sm:text-lg text-slate-600 max-w-2xl">Transparent pricing, verified sellers, and direct communication—no middlemen, no surprises.</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { icon: ShieldCheck, label: "Verified Dealers", desc: "100% verified profiles with trust signals" },
+            { icon: Lock, label: "Transparent Specs", desc: "Complete specs, condition photos, price clarity" },
+            { icon: Zap, label: "Fast Response", desc: "Direct dealer contact, average 2-hour reply" },
+            { icon: TrendingUp, label: "Best Selection", desc: "500+ cars from top dealerships daily" },
+          ].map(({ icon: Icon, label, desc }) => (
+            <div key={label} className="p-6 rounded-xl border border-[#e8e2d9] bg-white hover:shadow-md transition-all group">
+              <div className="w-12 h-12 rounded-lg bg-[#ff5a2f]/10 flex items-center justify-center mb-4 group-hover:bg-[#ff5a2f]/20 transition-colors">
+                <Icon className="w-6 h-6 text-[#ff5a2f]" />
+              </div>
+              <h3 className="font-bold text-slate-900 mb-2">{label}</h3>
+              <p className="text-sm text-slate-600">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Hot This Week */}
+      {hotSorted.length > 0 && (
+        <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-14 sm:py-20 text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#ff5a2f]/10 rounded-full blur-3xl -z-0" />
+          <div className="container mx-auto px-4 sm:px-6 max-w-7xl relative z-10">
+            <div className="flex items-end justify-between mb-12 gap-5">
+              <div>
+                <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-white/60 mb-3">Trending</p>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2">Hot This Week</h2>
+                <p className="text-base text-white/70">Most viewed and inquired vehicles right now</p>
+              </div>
+              <Link href="/cars?sort=trending" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 border border-white/20 bg-white/10 backdrop-blur-sm px-5 py-3 text-xs uppercase text-white hover:bg-white/20 transition-colors">
+                View Trending <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+              {hotSorted.slice(0, 4).map((car) => (
+                <Link
+                  key={car.id}
+                  href={`/cars/${car.id}`}
+                  className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/20 transition-all"
+                >
+                  <div className="aspect-[16/10] relative overflow-hidden bg-white/5">
+                    {car.images[0]?.url ? (
+                      <Image
+                        src={car.images[0].url}
+                        alt={`${car.year} ${car.make} ${car.model}`}
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-white/30">No Image</div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute top-3 right-3 bg-[#ff5a2f] text-white text-xs font-bold px-3 py-1 rounded-full">
+                      {car._count?.carViews || 0} views
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <p className="text-xs font-bold text-white/60 uppercase tracking-wide mb-1">{car.make}</p>
+                    <h3 className="text-sm font-bold text-white mb-3 line-clamp-1">{car.year} {car.make} {car.model}</h3>
+                    <div className="flex items-center justify-between pt-3 border-t border-white/10">
+                      <p className="text-lg font-bold text-white">{formatPrice(car.price)}</p>
+                      <span className="text-white/60 group-hover:text-white transition-colors">→</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+            
+      <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-24 max-w-7xl">
+        <div className="flex items-end justify-between mb-12 sm:mb-14 gap-5">
+          <div>
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Showcase</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900">Featured Inventory</h2>
+          </div>
+          <Link href="/cars" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-5 py-3 text-xs font-bold uppercase transition-all shadow-md">
+            View All Cars <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -181,34 +297,36 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="container mx-auto px-4 sm:px-6 py-12 sm:py-16 max-w-7xl border-y border-[#e7e1d8]">
-        <div className="py-8 md:py-10">
-          <div className="flex items-center justify-between mb-8 gap-4">
-            <div>
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Dealers</p>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl text-slate-900">Verified Dealerships</h2>
+      <section className="bg-gradient-to-br from-slate-50 to-slate-100 py-14 sm:py-20 border-t border-[#e7e1d8]">
+        <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+          <div className="py-8 md:py-10">
+            <div className="flex items-center justify-between mb-10 gap-4">
+              <div>
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Network</p>
+                <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">Verified Dealerships</h2>
+              </div>
+              <Link href="/dealers" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-5 py-3 text-xs font-bold uppercase transition-all shadow-md">
+                View All Dealers <ChevronRight className="w-4 h-4" />
+              </Link>
             </div>
-            <Link href="/dealers" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 border border-[#e7e1d8] bg-white px-5 py-3 text-xs uppercase text-slate-900 hover:bg-[#faf7f2]">
-              All Dealers <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-            {dealers.slice(0, 8).map((dealer) => (
-              <DealerCard key={dealer.id} dealer={dealer} />
-            ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+              {dealers.slice(0, 8).map((dealer) => (
+                <DealerCard key={dealer.id} dealer={dealer} />
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {newArrivals.length > 0 && (
-        <section className="container mx-auto px-4 sm:px-6 py-8 max-w-7xl">
-          <div className="flex items-end justify-between mb-8 sm:mb-10 gap-4">
+        <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-24 max-w-7xl border-t border-[#e7e1d8]">
+          <div className="flex items-end justify-between mb-12 sm:mb-14 gap-4">
             <div>
               <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Fresh</p>
-              <h2 className="text-2xl sm:text-3xl md:text-5xl text-slate-900">New Arrivals</h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900">New Arrivals</h2>
             </div>
-            <Link href="/cars?sort=newest" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 border border-[#e7e1d8] bg-white px-5 py-3 text-xs uppercase text-slate-900 hover:bg-[#faf7f2]">
+            <Link href="/cars?sort=newest" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-5 py-3 text-xs font-bold uppercase transition-all shadow-md">
               Latest Cars <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -218,19 +336,23 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section className="container mx-auto px-4 sm:px-6 pt-12 sm:pt-16 max-w-7xl">
-        <div className="rounded-[2rem] overflow-hidden border border-[#e8e2d9] bg-[#111111] p-6 sm:p-10 md:p-14 text-white relative">
-          <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-[#ff5a2f]/30 blur-3xl" />
-          <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/70 mb-3">For Dealerships</p>
-          <h3 className="text-2xl sm:text-3xl md:text-5xl leading-tight max-w-3xl mb-5">
-            Your cars deserve better than a social media album.
-          </h3>
-          <p className="text-base md:text-lg text-white/80 max-w-2xl mb-8 font-medium">
-            Get a modern digital storefront, profile your brand, and capture buyer leads in one clean system.
-          </p>
-          <Link href="/signup" className="mk-pill-btn inline-flex items-center gap-2 bg-white text-black px-6 py-3 text-xs uppercase hover:bg-[#ffe6db] transition-colors">
-            Create Dealer Account <ArrowUpRight className="w-4 h-4" />
-          </Link>
+      <section className="container mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-20 max-w-7xl">
+        <div className="rounded-3xl overflow-hidden border border-slate-200 bg-gradient-to-br from-[#111111] via-slate-900 to-[#1a1a1a] p-6 sm:p-10 md:p-16 text-white relative shadow-2xl">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#ff5a2f]/20 blur-3xl" />
+          <div className="absolute -left-32 -bottom-20 h-80 w-80 rounded-full bg-[#ff5a2f]/10 blur-3xl" />
+          
+          <div className="relative z-10 max-w-2xl">
+            <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-white/60 mb-4">For Dealerships</p>
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-6">
+              Your cars deserve better than a social media album.
+            </h3>
+            <p className="text-base sm:text-lg text-white/80 mb-10 font-medium">
+              Get a modern digital storefront, profile your brand, reach verified buyers, and capture leads in one clean system. No fees. No middlemen.
+            </p>
+            <Link href="/signup" className="mk-pill-btn inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-8 py-4 text-xs font-bold uppercase transition-all shadow-lg hover:shadow-[#ff5a2f]/40 active:scale-95">
+              Create Dealer Account <ArrowUpRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
       </section>
     </div>
