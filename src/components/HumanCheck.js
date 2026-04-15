@@ -12,8 +12,20 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
   const [scriptReady, setScriptReady] = useState(false);
   const [scriptTimeout, setScriptTimeout] = useState(false);
   const [scriptError, setScriptError] = useState(false);
+  const [provider, setProvider] = useState(null);
 
-  const provider = recaptchaSiteKey ? "recaptcha" : turnstileSiteKey ? "turnstile" : null;
+  // On mount, determine provider based on screen size (once per session)
+  // Mobile prefers Turnstile (compact mode), desktop prefers reCAPTCHA
+  useEffect(() => {
+    const isMobile = window.innerWidth < 640;
+    const selectedProvider = isMobile 
+      ? (turnstileSiteKey ? "turnstile" : recaptchaSiteKey ? "recaptcha" : null)
+      : (recaptchaSiteKey ? "recaptcha" : turnstileSiteKey ? "turnstile" : null);
+    setProvider(selectedProvider);
+  }, [recaptchaSiteKey, turnstileSiteKey]);
+
+  // Store initial mobile state for Turnstile sizing
+  const isMobileRef = useRef(window.innerWidth < 640);
 
   // If no provider configured, auto-approve for development
   useEffect(() => {
@@ -77,7 +89,7 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
             "expired-callback": () => onChange(""),
             "error-callback": () => onChange(""),
             theme: "light",
-            size: "normal",
+            size: isMobileRef.current ? "compact" : "normal",
           });
         } catch (e) {
           console.error("Turnstile render error:", e);
@@ -155,8 +167,8 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
       )}
 
       {scriptReady && !scriptError && (
-        <div className="rounded-lg border border-slate-200 bg-white p-2">
-          <div ref={widgetRef} />
+        <div className="flex justify-center rounded-lg border border-slate-200 bg-white p-3">
+          <div ref={widgetRef} className="inline-block" />
         </div>
       )}
 
