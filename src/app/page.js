@@ -7,7 +7,7 @@ import LocationSearch from "@/components/LocationSearch";
 import NewsRibbon from "@/components/NewsRibbon";
 import HeroReviews from "@/components/HeroReviews";
 import {
-  ArrowUpRight, ChevronRight, MapPin, ShieldCheck, Sparkles, TrendingUp, Users, Zap, Lock
+  ArrowUpRight, ChevronRight, MapPin, ShieldCheck, Sparkles, TrendingUp, Users, Zap, Lock, CheckCircle, Star
 } from "lucide-react";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
@@ -152,12 +152,12 @@ export default async function HomePage() {
               {/* Trust Badges */}
               <div className="flex flex-wrap gap-3 items-center">
                 {[
-                  { icon: "🔒", label: "SSL Secured" },
-                  { icon: "✓", label: "Verified Dealers" },
-                  { icon: "⭐", label: "5-Star Support" },
-                ].map(({ icon, label }) => (
+                  { Icon: Lock, label: "SSL Secured" },
+                  { Icon: CheckCircle, label: "Verified Dealers" },
+                  { Icon: Star, label: "5-Star Support" },
+                ].map(({ Icon, label }) => (
                   <div key={label} className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-slate-50 border border-[#e7e1d8] text-xs font-bold text-slate-700">
-                    <span className="text-lg">{icon}</span>
+                    <Icon className="w-4 h-4 text-orange-600" />
                     {label}
                   </div>
                 ))}

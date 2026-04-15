@@ -76,7 +76,7 @@ export default function LoginForm({ error }) {
           {/* Header */}
           <div className="mb-8 text-center">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <img src="/favicon.png" alt="Motorke" className="h-8 w-8 object-contain" />
+              <img src="/headerlogo.png" alt="Motorke" className="h-8 w-8 object-contain" />
               <h1 className="text-2xl font-bold text-slate-900">Motorke</h1>
             </div>
             <h2 className="text-3xl font-bold text-slate-900 mb-2">Welcome Back</h2>

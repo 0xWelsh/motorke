@@ -15,10 +15,10 @@ export const metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/symbol.jpeg", type: "image/jpeg" },
-      { url: "/favicon.png", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/headerlogo.png", type: "image/png" },
     ],
-    shortcut: "/symbol.jpeg",
+    shortcut: "/favicon.svg",
   },
 };
 

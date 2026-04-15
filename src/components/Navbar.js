@@ -98,7 +98,7 @@ export default function Navbar({ user }) {
 
           {/* LOGO */}
           <Link href="/" className="flex items-center gap-2 shrink-0 group transition-transform active:scale-95">
-            <img src="/favicon.png" alt="Motorke Digital Showroom" className="h-10 sm:h-12 object-contain" />
+            <img src="/headerlogo.png" alt="Motorke Digital Showroom" className="h-10 sm:h-12 object-contain" />
           </Link>
 
           {/* NAV LINKS */}
