@@ -243,7 +243,7 @@ export default async function CarDetailPage({ params }) {
 
   return (
     <div className="w-full bg-white">
-      <div className="max-w-full mx-auto px-5 sm:px-7 lg:px-12 py-6 sm:py-10 lg:py-12 pb-36 sm:pb-28 lg:pb-16">
+      <div className="max-w-6xl mx-auto px-5 sm:px-7 lg:px-10 py-6 sm:py-10 lg:py-12 pb-36 sm:pb-28 lg:pb-16">
         {/* Breadcrumb */}
         <nav className="hidden sm:flex text-sm font-medium text-slate-500 mb-8 sm:mb-10 gap-2 sm:gap-3 items-center flex-wrap">
           <Link href="/" className="hover:text-brand transition-colors">Home</Link>
@@ -265,32 +265,32 @@ export default async function CarDetailPage({ params }) {
                   <span className="inline-flex items-center px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-extrabold uppercase tracking-widest">
                     {car.available ? "Available" : "On Hold"}
                   </span>
-                  <h1 className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">{title}</h1>
+                  <h1 className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-slate-900 tracking-tight leading-snug">{title}</h1>
                 </div>
 
                 <div>
-                  <p className="text-sm text-slate-600 font-semibold mb-2">Price</p>
-                  <p className="text-5xl sm:text-6xl font-extrabold text-slate-900">{formatPrice(car.price)}</p>
-                  <p className="text-sm text-slate-500 font-semibold mt-2">Shipping included to major ports</p>
+                  <p className="text-[13px] text-slate-600 font-medium mb-2 tracking-wider">Price</p>
+                  <p className="text-5xl sm:text-6xl lg:text-7xl font-serif font-bold text-slate-900 tracking-tight">{formatPrice(car.price)}</p>
+                  <p className="text-[13px] text-slate-500 font-medium mt-3 tracking-wider">Shipping included to major ports</p>
                 </div>
               </div>
 
               {/* Description */}
               <div className="border-t border-slate-200 pt-6">
-                <h2 className="text-lg font-extrabold uppercase tracking-widest text-slate-900 mb-4">Description</h2>
-                <p className="text-base text-slate-700 leading-relaxed font-semibold">
+                <h2 className="text-base font-serif font-bold uppercase tracking-wider text-slate-900 mb-4">Description</h2>
+                <p className="text-[15px] text-slate-700 leading-relaxed font-medium">
                   {descriptionBullets.length > 0 ? descriptionBullets.join(" • ") : "High-spec unit with verified dealer profile and direct enquiry support."}
                 </p>
               </div>
 
               {/* Vehicle Details */}
               <div className="border-t border-slate-200 pt-6">
-                <h2 className="text-lg font-extrabold uppercase tracking-widest text-slate-900 mb-6">Vehicle Details</h2>
+                <h2 className="text-base font-serif font-bold uppercase tracking-wider text-slate-900 mb-6">Vehicle Details</h2>
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
                   {visibleSpecs.map((item) => (
                     <div key={item.label}>
-                      <p className="text-sm text-slate-600 font-semibold mb-1">{item.label}</p>
-                      <p className="text-lg font-extrabold text-slate-900">{item.value}</p>
+                      <p className="text-[13px] text-slate-600 font-medium mb-1.5 tracking-wider">{item.label}</p>
+                      <p className="text-[15px] font-semibold text-slate-900">{item.value}</p>
                     </div>
                   ))}
                 </div>
@@ -349,9 +349,9 @@ export default async function CarDetailPage({ params }) {
             {/* Right: Sidebar Form */}
             <aside className="bg-slate-50 border border-slate-200 rounded-2xl p-6 lg:sticky lg:top-24 space-y-6">
               <div className="pb-4 border-b border-slate-200">
-                <p className="text-sm text-slate-600 font-semibold mb-2">Price</p>
-                <p className="text-4xl font-extrabold text-slate-900 tracking-tight">{formatPrice(car.price)}</p>
-                <p className="text-xs text-slate-500 font-semibold mt-2">Shipping included to major ports</p>
+                <p className="text-[13px] text-slate-600 font-medium mb-2 tracking-wider">Price</p>
+                <p className="text-5xl font-serif font-bold text-slate-900 tracking-tight">{formatPrice(car.price)}</p>
+                <p className="text-[13px] text-slate-500 font-medium mt-3 tracking-wider">Shipping included to major ports</p>
               </div>
 
               <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3">
@@ -371,7 +371,7 @@ export default async function CarDetailPage({ params }) {
               </div>
 
               <div className="space-y-4 pt-2 border-t border-slate-200">
-                <h3 className="text-sm font-extrabold uppercase tracking-widest text-slate-900">Send an Enquiry</h3>
+                <h3 className="text-base font-serif font-bold uppercase tracking-wider text-slate-900">Send an Enquiry</h3>
                 <EnquiryForm
                   carId={car.id}
                   dealerId={dealer.id}
