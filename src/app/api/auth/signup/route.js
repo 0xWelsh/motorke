@@ -16,6 +16,7 @@ const signupSchema = z.object({
   confirm: z.string(),
   role: z.enum(["BUYER", "DEALER"]).default("BUYER"),
   dealerName: z.string().optional(),
+  county: z.string().optional(),
   phone: z.string().optional(),
   captchaToken: z.string().optional(),
   website: z.string().optional(),
@@ -37,7 +38,7 @@ export async function POST(request) {
       return NextResponse.redirect(new URL("/signup?error=invalid", request.url));
     }
     
-    const { name, email, password, role, dealerName, phone, captchaToken, website } = parsed.data;
+    const { name, email, password, role, dealerName, county, phone, captchaToken, website } = parsed.data;
 
     if (website) {
       if (wantsJson) return NextResponse.json({ error: "Please fill all required fields correctly." }, { status: 400 });
@@ -93,7 +94,7 @@ export async function POST(request) {
            name: dealerName,
            slug: finalSlug,
            phone: phone,
-           county:   rawData.county?.toString() || "Nairobi",
+           county: county || "Nairobi",
            location: rawData.location?.toString().trim() || "Headquarters",
            address:  rawData.address?.toString().trim() || null,
            whatsapp: rawData.whatsapp?.toString().trim() || null,

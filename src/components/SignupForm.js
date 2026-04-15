@@ -229,6 +229,20 @@ export default function SignupForm({ error: initialError }) {
               />
             </div>
 
+            {/* Full Name */}
+            <div>
+              <label htmlFor="name" className="block text-sm font-semibold text-slate-900 mb-2">Full Name</label>
+              <input 
+                id="name"
+                name="name" 
+                type="text" 
+                required 
+                autoComplete="name"
+                placeholder="Your full name" 
+                className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+              />
+            </div>
+
             {/* Password */}
             <div>
               <label htmlFor="password" className="block text-sm font-semibold text-slate-900 mb-2">Password</label>
