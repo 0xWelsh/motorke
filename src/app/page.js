@@ -441,19 +441,25 @@ function DealerCard({ dealer }) {
 
 function CarCard({ car }) {
   const img = car.images[0]?.url;
-  const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
+  const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` (${car.variant})` : ""}`;
   
-  // Build specs string
+  // Build detailed specs string
   const specs = [
     car.engine ? `${car.engine}` : null,
-    car.fuelType,
-    car.transmission === "AUTOMATIC" ? "Auto" : "Manual",
-    car.bodyType
+    car.transmission === "AUTOMATIC" ? "AT" : "MT",
+    car.driveType,
+    car.fuelType
   ].filter(Boolean).join(" • ");
+
+  // Build full description from car fields
+  const fullDescription = [
+    specs,
+    car.description || "",
+  ].filter(Boolean).join(" ");
 
   return (
     <article className="group block bg-white border border-[#e8e2d9] hover:border-[#d8cec1] overflow-hidden transition-all duration-500 flex flex-col h-full">
-      <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-[#f4efe8] overflow-hidden shrink-0">
+      <Link href={`/cars/${car.id}`} className="relative aspect-[16/9] bg-[#f4efe8] overflow-hidden shrink-0">
         {img ? (
           <Image
             src={img}
@@ -479,30 +485,31 @@ function CarCard({ car }) {
         </div>
       </Link>
 
-      <div className="p-5 flex flex-col flex-1 gap-3">
-        <Link href={`/cars/${car.id}`} className="space-y-2">
+      <div className="p-6 flex flex-col flex-1 gap-4">
+        <Link href={`/cars/${car.id}`} className="space-y-3">
           <div className="flex items-baseline gap-2">
-            <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400">{car.year}</p>
-            <h3 className="font-bold text-slate-900 text-base leading-snug line-clamp-1 group-hover:text-black transition-colors">
-              {car.make} {car.model} {car.variant}
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400">{car.year}</p>
+            <h3 className="font-bold text-slate-900 text-base leading-tight group-hover:text-black transition-colors">
+              {car.make} {car.model} {car.variant && `(${car.variant})`}
             </h3>
           </div>
-          <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-            {specs}
+          
+          <p className="text-sm text-slate-700 line-clamp-4 leading-relaxed">
+            {fullDescription}
           </p>
         </Link>
 
         <div className="flex flex-wrap gap-2">
-          {car.bodyType && <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded-full uppercase tracking-wide">{car.bodyType.replace(/_/g, ' ')}</span>}
-          {car.fuelType && <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded-full uppercase tracking-wide">{car.fuelType}</span>}
-          {car.mileage && <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded-full uppercase tracking-wide">{Math.round(car.mileage)}km</span>}
+          {car.bodyType && <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-full uppercase tracking-wide">{car.bodyType.replace(/_/g, ' ')}</span>}
+          {car.fuelType && <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-full uppercase tracking-wide">{car.fuelType}</span>}
+          {car.mileage && <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-full uppercase tracking-wide">{Math.round(car.mileage)}km</span>}
         </div>
 
-        <div className="mt-auto flex items-end justify-between pt-3 border-t border-[#efe8df]">
+        <div className="mt-auto flex items-end justify-between pt-4 border-t border-[#efe8df] gap-3">
           <div>
             <p className="text-lg font-bold text-slate-900 leading-none">{formatPrice(car.price)}</p>
           </div>
-          <Link href={`/cars/${car.id}`} className="inline-flex px-4 py-2 text-xs font-bold uppercase text-slate-900 border border-slate-300 rounded hover:bg-slate-900 hover:text-white transition-all">
+          <Link href={`/cars/${car.id}`} className="inline-flex px-5 py-2.5 text-xs font-bold uppercase text-slate-900 border border-slate-300 rounded hover:bg-slate-900 hover:text-white transition-all whitespace-nowrap">
             View Offer
           </Link>
         </div>
