@@ -123,8 +123,8 @@ self.addEventListener("push", (event) => {
   const data = event.data ? event.data.json() : {};
   const options = {
     body: data.body || "You have a new notification from Motorke",
-    icon: "/symbol.jpeg",
-    badge: "/symbol.jpeg",
+    icon: "/headerlogo.png",
+    badge: "/favicon.svg",
     tag: "motorke-notification",
   };
 

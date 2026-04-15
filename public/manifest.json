@@ -10,15 +10,15 @@
   "theme_color": "#1e40af",
   "icons": [
     {
-      "src": "/symbol.jpeg",
-      "sizes": "512x512",
-      "type": "image/jpeg",
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "/symbol.jpeg",
+      "src": "/headerlogo.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "maskable"
     }
   ],
@@ -39,7 +39,7 @@
       "url": "/search?utm_source=pwa_menu",
       "icons": [
         {
-          "src": "/symbol.jpeg",
+          "src": "/favicon.svg",
           "sizes": "96x96"
         }
       ]
@@ -51,7 +51,7 @@
       "url": "/saved?utm_source=pwa_menu",
       "icons": [
         {
-          "src": "/symbol.jpeg",
+          "src": "/favicon.svg",
           "sizes": "96x96"
         }
       ]
