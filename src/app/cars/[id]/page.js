@@ -242,10 +242,10 @@ export default async function CarDetailPage({ params }) {
   }
 
   return (
-    <div className="w-full bg-[#f4f5f7]">
-      <div className="max-w-[1240px] mx-auto px-5 sm:px-7 lg:px-9 py-6 sm:py-8 lg:py-10 pb-36 sm:pb-28 lg:pb-16">
+    <div className="w-full bg-white">
+      <div className="max-w-full mx-auto px-5 sm:px-7 lg:px-12 py-6 sm:py-10 lg:py-12 pb-36 sm:pb-28 lg:pb-16">
         {/* Breadcrumb */}
-        <nav className="hidden sm:flex text-sm font-medium text-slate-500 mb-6 sm:mb-8 gap-2 sm:gap-3 items-center flex-wrap">
+        <nav className="hidden sm:flex text-sm font-medium text-slate-500 mb-8 sm:mb-10 gap-2 sm:gap-3 items-center flex-wrap">
           <Link href="/" className="hover:text-brand transition-colors">Home</Link>
           <ChevronRight className="w-3 h-3" />
           <Link href="/cars" className="hover:text-brand transition-colors">Vehicles</Link>
@@ -253,88 +253,92 @@ export default async function CarDetailPage({ params }) {
           <span className="text-slate-900 font-extrabold truncate max-w-full">{title}</span>
         </nav>
 
-        <div className="space-y-6 sm:space-y-8">
+        <div className="space-y-8">
           <ImageGallery images={car.images} title={title} />
 
-          <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_360px] gap-5 sm:gap-7 lg:gap-8 items-start">
-            <div className="space-y-5">
-              <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
-                <span className="inline-flex items-center px-2.5 py-1 rounded bg-emerald-100 text-emerald-700 text-[10px] font-extrabold uppercase tracking-[0.12em]">
-                  {car.available ? "Available" : "On Hold"}
-                </span>
-                <h1 className="mt-3 text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">{title}</h1>
-                <p className="mt-4 text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">{formatPrice(car.price)}</p>
-                <p className="mt-1 text-sm font-semibold text-slate-500">Price includes shipping</p>
-
-                <div className="mt-5 border-t border-slate-100 pt-4">
-                  <h2 className="text-sm font-extrabold uppercase tracking-[0.12em] text-slate-700 mb-2">Description</h2>
-                  <p className="text-base font-semibold text-slate-700 leading-relaxed">
-                    {descriptionBullets.length > 0 ? descriptionBullets.join(" • ") : "High-spec unit with verified dealer profile and direct enquiry support."}
-                  </p>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 lg:gap-12 items-start">
+            {/* Left: Main Content */}
+            <div className="space-y-8">
+              {/* Title & Price Section */}
+              <div className="space-y-6">
+                <div>
+                  <span className="inline-flex items-center px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-extrabold uppercase tracking-widest">
+                    {car.available ? "Available" : "On Hold"}
+                  </span>
+                  <h1 className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">{title}</h1>
                 </div>
-              </section>
 
-              <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
-                <h2 className="text-sm font-extrabold uppercase tracking-[0.12em] text-slate-700 mb-3">Vehicle Details</h2>
-                <div className="divide-y divide-slate-100 border-y border-slate-100">
-                  {specRows.map((row, idx) => (
-                    <div key={`${row[0]?.label || "row"}-${idx}`} className="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
-                      {[0, 1].map((rowIdx) => {
-                        const item = row[rowIdx];
-                        if (!item) return <div key={rowIdx} className="py-3 sm:py-3.5" />;
-                        return (
-                          <div key={item.label} className="py-3 sm:py-3.5 flex items-center justify-between gap-3 sm:border-r last:sm:border-r-0 sm:border-slate-100">
-                            <span className="text-sm font-semibold text-slate-500">{item.label}</span>
-                            <span className="text-sm font-extrabold text-slate-900 text-right">{item.value}</span>
-                          </div>
-                        );
-                      })}
+                <div>
+                  <p className="text-sm text-slate-600 font-semibold mb-2">Price</p>
+                  <p className="text-5xl sm:text-6xl font-extrabold text-slate-900">{formatPrice(car.price)}</p>
+                  <p className="text-sm text-slate-500 font-semibold mt-2">Shipping included to major ports</p>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="border-t border-slate-200 pt-6">
+                <h2 className="text-lg font-extrabold uppercase tracking-widest text-slate-900 mb-4">Description</h2>
+                <p className="text-base text-slate-700 leading-relaxed font-semibold">
+                  {descriptionBullets.length > 0 ? descriptionBullets.join(" • ") : "High-spec unit with verified dealer profile and direct enquiry support."}
+                </p>
+              </div>
+
+              {/* Vehicle Details */}
+              <div className="border-t border-slate-200 pt-6">
+                <h2 className="text-lg font-extrabold uppercase tracking-widest text-slate-900 mb-6">Vehicle Details</h2>
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
+                  {visibleSpecs.map((item) => (
+                    <div key={item.label}>
+                      <p className="text-sm text-slate-600 font-semibold mb-1">{item.label}</p>
+                      <p className="text-lg font-extrabold text-slate-900">{item.value}</p>
                     </div>
                   ))}
                 </div>
+              </div>
 
-                <div className="mt-4 flex flex-wrap items-center gap-2.5">
+              {/* Trust Badges */}
+              {trustBadges.length > 0 && (
+                <div className="border-t border-slate-200 pt-6 flex flex-wrap gap-3">
                   {trustBadges.map((badge) => (
                     <span
                       key={badge}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 text-[10px] font-extrabold uppercase tracking-[0.12em]"
+                      className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 text-xs font-extrabold uppercase tracking-widest"
                     >
-                      <ShieldCheck className="w-3.5 h-3.5" /> {badge}
+                      <ShieldCheck className="w-4 h-4" /> {badge}
                     </span>
                   ))}
                 </div>
+              )}
 
-                <div className="mt-4 flex flex-wrap items-center gap-2.5">
-                  <Link
-                    href={`/dealers/${dealer.slug}#dealer-gallery`}
-                    className="h-10 px-4 rounded-lg border border-slate-200 bg-white text-slate-700 text-[10px] font-extrabold uppercase tracking-[0.12em] inline-flex items-center justify-center"
-                  >
-                    View Dealer Gallery
-                  </Link>
-                  <div className="[&>button]:h-10 [&>button]:px-4 [&>button]:rounded-lg">
-                    <CompareButton car={compareCar} />
-                  </div>
-                  <div className="[&>button]:h-10 [&>button]:px-4 [&>button]:rounded-lg">
-                    <SaveButton carId={car.id} initialSaved={isSaved} isLoggedIn={isLoggedIn} />
-                  </div>
-                  <PrintButton carId={car.id} />
+              {/* Action Links */}
+              <div className="border-t border-slate-200 pt-6 flex flex-wrap items-center gap-3">
+                <Link
+                  href={`/dealers/${dealer.slug}#dealer-gallery`}
+                  className="px-5 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 text-xs font-extrabold uppercase tracking-widest hover:bg-slate-50 transition-all"
+                >
+                  View Dealer Gallery
+                </Link>
+                <div className="[&>button]:px-5 [&>button]:py-3">
+                  <CompareButton car={compareCar} />
                 </div>
+                <div className="[&>button]:px-5 [&>button]:py-3">
+                  <SaveButton carId={car.id} initialSaved={isSaved} isLoggedIn={isLoggedIn} />
+                </div>
+                <PrintButton carId={car.id} />
+              </div>
 
-                <div className="mt-3 flex flex-wrap items-center gap-3">
-                  <ShareButtons title={title} price={formatPrice(car.price)} />
-                </div>
-              </section>
+              <ShareButtons title={title} price={formatPrice(car.price)} />
 
               {/* Duty estimate */}
               {car.imported && !car.dutyPaid && (
-                <div className="bg-emerald-900 rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+                <div className="bg-gradient-to-br from-emerald-900 to-emerald-800 rounded-2xl p-8 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-800/50 blur-3xl -mr-32 -mt-32 rounded-full" />
                   <div className="relative z-10 space-y-3">
-                    <div className="flex items-center gap-3 text-emerald-400 font-extrabold text-xs uppercase tracking-widest">
+                    <div className="flex items-center gap-3 text-emerald-300 font-extrabold text-xs uppercase tracking-widest">
                       <Wallet className="w-4 h-4" /> Estimated Import Duty
                     </div>
                     <p className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">{formatPrice(duty)}</p>
-                    <p className="text-sm text-emerald-100/70 max-w-xl font-medium">
+                    <p className="text-sm text-emerald-100/80 max-w-xl font-medium">
                       This is a rough KRA estimate based on age and market value. Always verify with a licensed clearing agent.
                     </p>
                   </div>
@@ -342,15 +346,16 @@ export default async function CarDetailPage({ params }) {
               )}
             </div>
 
-            <aside className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 lg:sticky lg:top-24 space-y-4">
-              <div className="pb-3 border-b border-slate-100">
-                <p className="text-sm font-semibold text-slate-500">Price</p>
-                <p className="text-4xl font-extrabold text-slate-900 tracking-tight mt-1">{formatPrice(car.price)}</p>
-                <p className="text-xs font-semibold text-slate-500 mt-1">Shipping included to major ports</p>
+            {/* Right: Sidebar Form */}
+            <aside className="bg-slate-50 border border-slate-200 rounded-2xl p-6 lg:sticky lg:top-24 space-y-6">
+              <div className="pb-4 border-b border-slate-200">
+                <p className="text-sm text-slate-600 font-semibold mb-2">Price</p>
+                <p className="text-4xl font-extrabold text-slate-900 tracking-tight">{formatPrice(car.price)}</p>
+                <p className="text-xs text-slate-500 font-semibold mt-2">Shipping included to major ports</p>
               </div>
 
-              <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/70 p-3">
-                <div className="w-10 h-10 rounded-lg bg-brand-light flex items-center justify-center text-brand font-extrabold text-lg overflow-hidden">
+              <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3">
+                <div className="w-12 h-12 rounded-lg bg-brand-light flex items-center justify-center text-brand font-extrabold text-lg overflow-hidden shrink-0">
                   {dealerBrandImage ? (
                     <img src={dealerBrandImage} alt={dealer.name} className="w-full h-full object-cover" />
                   ) : (
@@ -359,13 +364,14 @@ export default async function CarDetailPage({ params }) {
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-extrabold text-slate-900 truncate">{dealer.name}</p>
-                  <p className="text-xs font-semibold text-slate-500 flex items-center gap-1 truncate">
+                  <p className="text-xs text-slate-500 flex items-center gap-1 truncate">
                     <MapPin className="w-3.5 h-3.5" /> {car.location || dealer.location || "Location on request"}
                   </p>
                 </div>
               </div>
 
-              <div className="pt-1">
+              <div className="space-y-4 pt-2 border-t border-slate-200">
+                <h3 className="text-sm font-extrabold uppercase tracking-widest text-slate-900">Send an Enquiry</h3>
                 <EnquiryForm
                   carId={car.id}
                   dealerId={dealer.id}
@@ -379,10 +385,10 @@ export default async function CarDetailPage({ params }) {
                 />
               </div>
 
-              <div className="pt-2 border-t border-slate-100">
+              <div className="pt-2 border-t border-slate-200">
                 <Link
                   href={`/dealers/${dealer.slug}`}
-                  className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-brand border border-brand-light rounded-lg py-3 hover:bg-brand-light transition-all"
+                  className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-slate-900 border border-slate-300 rounded-lg py-3 hover:bg-slate-100 transition-all"
                 >
                   Browse Dealer Inventory
                 </Link>
