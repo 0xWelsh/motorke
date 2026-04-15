@@ -229,53 +229,85 @@ export default async function HomePage() {
 
       {/* Hot This Week */}
       {hotSorted.length > 0 && (
-        <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-14 sm:py-20 text-white relative overflow-hidden">
+        <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-16 sm:py-24 text-white relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#ff5a2f]/10 rounded-full blur-3xl -z-0" />
           <div className="container mx-auto px-4 sm:px-6 max-w-7xl relative z-10">
-            <div className="flex items-end justify-between mb-12 gap-5">
-              <div>
-                <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-white/60 mb-3">Trending</p>
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2">Hot This Week</h2>
-                <p className="text-base text-white/70">Most viewed and inquired vehicles right now</p>
-              </div>
-              <Link href="/cars?sort=trending" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 border border-white/20 bg-white/10 backdrop-blur-sm px-5 py-3 text-xs uppercase text-white hover:bg-white/20 transition-colors">
-                View Trending <ChevronRight className="w-4 h-4" />
-              </Link>
+            <div className="mb-14">
+              <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-white/60 mb-3">Trending</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">Hot This Week</h2>
+              <p className="text-base text-white/70 mt-2">Most viewed and inquired vehicles right now</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
-              {hotSorted.slice(0, 4).map((car) => (
-                <Link
-                  key={car.id}
-                  href={`/cars/${car.id}`}
-                  className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/20 transition-all"
-                >
-                  <div className="aspect-[16/10] relative overflow-hidden bg-white/5">
-                    {car.images[0]?.url ? (
-                      <Image
-                        src={car.images[0].url}
-                        alt={`${car.year} ${car.make} ${car.model}`}
-                        fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-white/30">No Image</div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute top-3 right-3 bg-[#ff5a2f] text-white text-xs font-bold px-3 py-1 rounded-full">
-                      {car._count?.carViews || 0} views
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {hotSorted.slice(0, 5).map((car) => {
+                const carSpecs = [
+                  car.engine ? `${car.engine}` : null,
+                  car.transmission === "AUTOMATIC" ? "AT" : "MT",
+                  car.driveType,
+                  car.fuelType
+                ].filter(Boolean).join(" • ");
+
+                const carDescription = [
+                  carSpecs,
+                  car.description || "",
+                ].filter(Boolean).join(" ");
+
+                return (
+                  <Link
+                    key={car.id}
+                    href={`/cars/${car.id}`}
+                    className="group block bg-white/10 backdrop-blur-sm border border-white/10 hover:border-white/20 overflow-hidden rounded-xl transition-all duration-500 flex flex-col h-full"
+                  >
+                    <div className="relative aspect-[16/9] bg-white/5 overflow-hidden">
+                      {car.images[0]?.url ? (
+                        <Image
+                          src={car.images[0].url}
+                          alt={`${car.year} ${car.make} ${car.model}`}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-700"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-white/30 text-xs font-bold">No Image</div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                      
+                      <div className="absolute top-3 right-3 bg-[#ff5a2f] text-white text-xs font-bold px-3 py-1.5 rounded-full">
+                        {car._count?.carViews || 0} views
+                      </div>
                     </div>
-                  </div>
-                  <div className="p-4">
-                    <p className="text-xs font-bold text-white/60 uppercase tracking-wide mb-1">{car.make}</p>
-                    <h3 className="text-sm font-bold text-white mb-3 line-clamp-1">{car.year} {car.make} {car.model}</h3>
-                    <div className="flex items-center justify-between pt-3 border-t border-white/10">
-                      <p className="text-lg font-bold text-white">{formatPrice(car.price)}</p>
-                      <span className="text-white/60 group-hover:text-white transition-colors">→</span>
+
+                    <div className="p-6 flex flex-col flex-1 gap-4">
+                      <div className="space-y-3">
+                        <div className="flex items-baseline gap-2">
+                          <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-white/60">{car.year}</p>
+                          <h3 className="font-bold text-white text-base leading-tight group-hover:text-[#ff5a2f] transition-colors">
+                            {car.make} {car.model} {car.variant && `(${car.variant})`}
+                          </h3>
+                        </div>
+                        
+                        <p className="text-sm text-white/80 line-clamp-4 leading-relaxed">
+                          {carDescription}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        {car.bodyType && <span className="text-[10px] font-bold text-white/80 bg-white/10 px-2.5 py-1 rounded-full uppercase tracking-wide">{car.bodyType.replace(/_/g, ' ')}</span>}
+                        {car.fuelType && <span className="text-[10px] font-bold text-white/80 bg-white/10 px-2.5 py-1 rounded-full uppercase tracking-wide">{car.fuelType}</span>}
+                        {car.mileage && <span className="text-[10px] font-bold text-white/80 bg-white/10 px-2.5 py-1 rounded-full uppercase tracking-wide">{Math.round(car.mileage)}km</span>}
+                      </div>
+
+                      <div className="mt-auto flex items-end justify-between pt-4 border-t border-white/10 gap-3">
+                        <div>
+                          <p className="text-lg font-bold text-white leading-none">{formatPrice(car.price)}</p>
+                        </div>
+                        <span className="px-5 py-2.5 text-xs font-bold uppercase text-white border border-white/20 rounded hover:bg-white/10 transition-all whitespace-nowrap">
+                          View Offer
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
