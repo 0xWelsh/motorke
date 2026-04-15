@@ -104,7 +104,7 @@ export default function LoginForm({ error }) {
 
             {/* Email */}
             <div>
-              <label htmlFor="emailAddress" className="block text-sm font-semibold text-slate-900 mb-2">Email Address</label>
+              <label htmlFor="emailAddress" className="block text-sm sm:text-sm font-semibold text-slate-900 mb-2">Email Address</label>
               <input 
                 id="emailAddress"
                 name="email" 
@@ -114,7 +114,7 @@ export default function LoginForm({ error }) {
                 required 
                 autoComplete="email"
                 placeholder="you@dealership.com" 
-                className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
               />
             </div>
 
@@ -131,7 +131,7 @@ export default function LoginForm({ error }) {
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
                   placeholder="••••••••" 
-                  className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all pr-10"
+                  className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all pr-10"
                 />
                 <button 
                   type="button" 
@@ -164,7 +164,7 @@ export default function LoginForm({ error }) {
             <button 
               type="submit" 
               disabled={!canSubmit}
-              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg py-2.5 font-semibold transition-all"
+              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg py-3.5 sm:py-2.5 font-semibold transition-all text-base sm:text-sm"
             >
               Sign In
             </button>

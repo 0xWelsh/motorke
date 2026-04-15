@@ -208,14 +208,14 @@ export default function SignupForm({ error: initialError }) {
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+          <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-4 mb-6">
             <input type="hidden" name="captchaToken" value={captchaToken} readOnly />
             <input type="text" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
             <input type="hidden" name="role" value={role} />
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-slate-900 mb-2">Email Address</label>
+              <label htmlFor="email" className="block text-sm sm:text-sm font-semibold text-slate-900 mb-2">Email Address</label>
               <input 
                 id="email"
                 name="email" 
@@ -225,13 +225,13 @@ export default function SignupForm({ error: initialError }) {
                 required 
                 autoComplete="email"
                 placeholder="you@dealership.com" 
-                className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
               />
             </div>
 
             {/* Full Name */}
             <div>
-              <label htmlFor="name" className="block text-sm font-semibold text-slate-900 mb-2">Full Name</label>
+              <label htmlFor="name" className="block text-sm sm:text-sm font-semibold text-slate-900 mb-2">Full Name</label>
               <input 
                 id="name"
                 name="name" 
@@ -239,7 +239,7 @@ export default function SignupForm({ error: initialError }) {
                 required 
                 autoComplete="name"
                 placeholder="Your full name" 
-                className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
               />
             </div>
 
@@ -256,7 +256,7 @@ export default function SignupForm({ error: initialError }) {
                   required 
                   autoComplete="new-password"
                   placeholder="•••••••••" 
-                  className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all pr-10"
+                  className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all pr-10"
                 />
                 <button 
                   type="button" 
@@ -280,7 +280,7 @@ export default function SignupForm({ error: initialError }) {
                 required 
                 autoComplete="new-password"
                 placeholder="•••••••••" 
-                className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
               />
             </div>
 
@@ -293,8 +293,21 @@ export default function SignupForm({ error: initialError }) {
                     id="dealerName"
                     name="dealerName" 
                     type="text" 
+                    required
                     placeholder="Your dealership name" 
-                    className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                    className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-semibold text-slate-900 mb-2">Phone Number</label>
+                  <input 
+                    id="phone"
+                    name="phone" 
+                    type="tel" 
+                    required
+                    placeholder="+254 7__ ___ ___" 
+                    className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
                   />
                 </div>
 
@@ -304,7 +317,7 @@ export default function SignupForm({ error: initialError }) {
                     id="county"
                     name="county"
                     required
-                    className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                    className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
                   >
                     <option value="">Select a county</option>
                     {COUNTIES.map((c) => (
@@ -330,7 +343,7 @@ export default function SignupForm({ error: initialError }) {
             <button 
               type="submit" 
               disabled={loading}
-              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg py-2.5 font-semibold transition-all flex items-center justify-center gap-2"
+              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg py-3.5 sm:py-2.5 font-semibold transition-all flex items-center justify-center gap-2 text-base sm:text-sm"
             >
               {loading ? <Loader2 size={18} className="animate-spin" /> : null}
               {loading ? "Creating account..." : "Create Account"}

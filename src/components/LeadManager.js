@@ -110,11 +110,15 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
 
       {/* Leads list */}
       {leads.length === 0 ? (
-        <div className="bg-white border border-slate-200 rounded-lg p-24 text-center shadow-sm">
-           <div className="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-6">
-              <MessageSquare size={28} className="text-slate-400" />
+        <div className="bg-white border border-slate-200 rounded-lg p-8 sm:p-12 md:p-20 text-center shadow-sm">
+           <div className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
+              <MessageSquare size={32} className="text-slate-400" />
            </div>
-           <p className="text-lg font-bold text-slate-900">No enquiries match your criteria</p>
+           <p className="text-lg sm:text-xl font-bold text-slate-900 mb-2">No enquiries match your criteria</p>
+           <p className="text-sm text-slate-600 mb-6 max-w-xs mx-auto">Enquiries will appear here when customers express interest in your vehicles.</p>
+           <Link href="/portal/inventory" className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-lg transition-colors">
+              View Inventory →
+           </Link>
         </div>
       ) : (
         <div className="space-y-4">

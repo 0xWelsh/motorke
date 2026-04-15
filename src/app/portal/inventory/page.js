@@ -90,12 +90,15 @@ export default async function InventoryPage({ searchParams }) {
 
       {/* Grid */}
       {cars.length === 0 ? (
-        <div className="bg-white border border-slate-200 rounded-lg p-24 text-center shadow-sm">
-          <div className="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-6">
-             <CarIcon size={28} className="text-slate-400" />
+        <div className="bg-white border border-slate-200 rounded-lg p-8 sm:p-12 md:p-24 text-center shadow-sm">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
+             <CarIcon size={32} className="text-slate-400" />
           </div>
-          <h2 className="text-lg font-bold text-slate-900 mb-2">No units found</h2>
-          <p className="text-sm text-slate-600 max-w-xs mx-auto">Try adjusting your filters or add a new vehicle to your showroom.</p>
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">No vehicles listed</h2>
+          <p className="text-sm text-slate-600 max-w-xs mx-auto mb-6">Start building your inventory by adding your first vehicle.</p>
+          <Link href="/portal/cars/new" className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-lg transition-colors">
+            <Plus size={16} /> Add Your First Vehicle
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

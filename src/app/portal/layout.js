@@ -55,6 +55,14 @@ export default function PortalLayout({ children }) {
     setDrawerOpen(false);
   }, [path]);
 
+  // Prevent body scroll when drawer is open
+  useEffect(() => {
+    document.body.style.overflow = drawerOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [drawerOpen]);
+
   const handleNavClick = () => {
     setDrawerOpen(false);
   };

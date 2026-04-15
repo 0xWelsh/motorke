@@ -69,6 +69,14 @@ export default function AdminLayout({ children }) {
     setSidebarOpen(false);
   }, [path]);
 
+  // Prevent body scroll when sidebar is open on mobile
+  useEffect(() => {
+    document.body.style.overflow = sidebarOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [sidebarOpen]);
+
   const handleGlobalSearch = (e) => {
     if (e.key === "Enter" && searchQuery.trim()) {
       window.location.href = `/admin/cars?search=${encodeURIComponent(searchQuery.trim())}`;
