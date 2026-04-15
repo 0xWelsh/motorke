@@ -282,20 +282,20 @@ export default async function HomePage() {
       )}
             
       <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-24 max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
-          {/* Left: Description */}
-          <div>
-            <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Showcase</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Premium Selections</h2>
-            
+        <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Showcase</p>
+        <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-12">Premium Selections</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Info Card */}
+          <div className="group block bg-white border border-[#e8e2d9] overflow-hidden transition-all duration-500 flex flex-col h-full p-6 sm:p-8">
             <div className="flex gap-1 mb-6">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="w-5 h-5 text-slate-400" fill="currentColor" />
               ))}
             </div>
 
-            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-3">Explore our premium collection</h3>
-            <p className="text-sm sm:text-base text-slate-600 mb-8 leading-relaxed">
+            <h3 className="text-2xl font-bold text-slate-900 mb-3">Explore our premium collection</h3>
+            <p className="text-sm text-slate-600 mb-8 leading-relaxed flex-1">
               Browse our curated selection of premium vehicles imported directly from Japan. Quality assured with transparent pricing and full vehicle history.
             </p>
 
@@ -304,12 +304,8 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          {/* Right: Cars Grid */}
-          <div className="lg:col-span-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {spotlight.slice(0, 6).map((car) => <CarCard key={car.id} car={car} />)}
-            </div>
-          </div>
+          {/* Car Cards */}
+          {spotlight.slice(0, 5).map((car) => <CarCard key={car.id} car={car} />)}
         </div>
       </section>
 
@@ -446,6 +442,14 @@ function DealerCard({ dealer }) {
 function CarCard({ car }) {
   const img = car.images[0]?.url;
   const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
+  
+  // Build specs string
+  const specs = [
+    car.engine ? `${car.engine}` : null,
+    car.fuelType,
+    car.transmission === "AUTOMATIC" ? "Auto" : "Manual",
+    car.bodyType
+  ].filter(Boolean).join(" • ");
 
   return (
     <article className="group block bg-white border border-[#e8e2d9] hover:border-[#d8cec1] overflow-hidden transition-all duration-500 flex flex-col h-full">
@@ -469,33 +473,37 @@ function CarCard({ car }) {
             </span>
           ))}
         </div>
+
+        <div className="absolute top-3 right-3">
+          <span className="inline-block text-[11px] font-extrabold px-3 py-1.5 rounded-full bg-emerald-500 text-white">AVAILABLE</span>
+        </div>
       </Link>
 
-      <div className="p-5 flex flex-col flex-1 gap-4">
-        <Link href={`/cars/${car.id}`} className="space-y-1">
-          <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400">{car.make}</p>
-          <h3 className="font-bold text-slate-900 text-lg leading-snug line-clamp-2 group-hover:text-black transition-colors">
-            {title}
-          </h3>
+      <div className="p-5 flex flex-col flex-1 gap-3">
+        <Link href={`/cars/${car.id}`} className="space-y-2">
+          <div className="flex items-baseline gap-2">
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400">{car.year}</p>
+            <h3 className="font-bold text-slate-900 text-base leading-snug line-clamp-1 group-hover:text-black transition-colors">
+              {car.make} {car.model} {car.variant}
+            </h3>
+          </div>
+          <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+            {specs}
+          </p>
         </Link>
 
         <div className="flex flex-wrap gap-2">
-          {[car.fuelType, car.transmission === "AUTOMATIC" ? "Auto" : "Manual", car.bodyType].filter(Boolean).map((value) => (
-            <span key={value} className="text-[11px] font-bold text-slate-600 bg-[#faf7f2] border border-[#efe8df] px-2.5 py-1 rounded-full uppercase tracking-wide">
-              {value}
-            </span>
-          ))}
+          {car.bodyType && <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded-full uppercase tracking-wide">{car.bodyType.replace(/_/g, ' ')}</span>}
+          {car.fuelType && <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded-full uppercase tracking-wide">{car.fuelType}</span>}
+          {car.mileage && <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded-full uppercase tracking-wide">{Math.round(car.mileage)}km</span>}
         </div>
 
-        <div className="mt-auto flex items-end justify-between pt-4 border-t border-[#efe8df]">
+        <div className="mt-auto flex items-end justify-between pt-3 border-t border-[#efe8df]">
           <div>
-            <p className="text-xl font-bold text-slate-900 leading-none">{formatPrice(car.price)}</p>
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mt-1 flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5" /> {car.dealer?.name}
-            </p>
+            <p className="text-lg font-bold text-slate-900 leading-none">{formatPrice(car.price)}</p>
           </div>
-          <Link href={`/cars/${car.id}`} className="w-9 h-9 rounded-lg border border-[#e8e2d9] bg-white flex items-center justify-center text-slate-700 hover:bg-[#111111] hover:text-white transition-all">
-            <ChevronRight className="w-4 h-4" />
+          <Link href={`/cars/${car.id}`} className="inline-flex px-4 py-2 text-xs font-bold uppercase text-slate-900 border border-slate-300 rounded hover:bg-slate-900 hover:text-white transition-all">
+            View Offer
           </Link>
         </div>
       </div>
