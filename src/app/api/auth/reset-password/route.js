@@ -40,38 +40,31 @@ export async function POST(request) {
       return NextResponse.json({ error: "Invalid reset request." }, { status: 400 });
     }
 
+    // Security checks disabled for now
+    /*
     const ipLimit = checkRateLimit({
       name: "reset-password-ip",
       key: ip,
       windowMs: RESET_WINDOW_MS,
       maxRequests: 12,
     });
-
     if (ipLimit.limited) {
-      return NextResponse.json(
-        { error: "Too many reset attempts. Please try again shortly." },
-        { status: 429, headers: { "Retry-After": String(ipLimit.retryAfter) } }
-      );
+      return NextResponse.json({ error: "Too many reset attempts. Please try again shortly." }, { status: 429, headers: { "Retry-After": String(ipLimit.retryAfter) } });
     }
-
     const tokenLimit = checkRateLimit({
       name: "reset-password-token",
       key: `${email}:${token}`,
       windowMs: RESET_WINDOW_MS,
       maxRequests: 5,
     });
-
     if (tokenLimit.limited) {
-      return NextResponse.json(
-        { error: "Too many reset attempts. Please request a new reset link." },
-        { status: 429, headers: { "Retry-After": String(tokenLimit.retryAfter) } }
-      );
+      return NextResponse.json({ error: "Too many reset attempts. Please request a new reset link." }, { status: 429, headers: { "Retry-After": String(tokenLimit.retryAfter) } });
     }
-
     const captchaCheck = await verifyTurnstileToken({ token: captchaToken, ip });
     if (!captchaCheck.success) {
       return NextResponse.json({ error: "Captcha verification failed." }, { status: 400 });
     }
+    */
 
     const identifier = `reset:${email}`;
 

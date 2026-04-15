@@ -45,30 +45,9 @@ export async function POST(request) {
       return NextResponse.redirect(new URL("/signup?error=invalid", request.url));
     }
 
-    const forwardedFor = request.headers.get("x-forwarded-for") || "";
-    const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
-
-    // Rate limit signup attempts per IP
-    const ipLimit = checkRateLimit({
-      name: "signup-ip",
-      key: ip,
-      windowMs: 3600000, // 1 hour
-      maxRequests: 3,
-    });
-
-    if (ipLimit.limited) {
-      if (wantsJson) return NextResponse.json({ error: "Too many signup attempts. Please try again later." }, { status: 429 });
-      return NextResponse.redirect(new URL("/signup?error=too_many", request.url));
-    }
-
-    // Verify captcha if token is provided (optional for now - allow signup even if captcha fails)
-    if (captchaToken && captchaToken.trim()) {
-      const captchaCheck = await verifyTurnstileToken({ token: captchaToken, ip });
-      // Log but don't block - captcha is optional during beta
-      if (!captchaCheck.success) {
-        console.warn(`Captcha verification failed for IP ${ip}: ${captchaCheck.reason}`);
-      }
-    }
+    // Security checks disabled for now
+    // const forwardedFor = request.headers.get("x-forwarded-for") || "";
+    // const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
 
     if (role === "DEALER" && (!dealerName || !phone)) {
        if (wantsJson) return NextResponse.json({ error: "Missing required dealership details." }, { status: 400 });

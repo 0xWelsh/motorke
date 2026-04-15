@@ -134,13 +134,13 @@ function OnboardingTooltip({ step, onClose, onNext, currentStep, totalSteps }) {
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2 border border-slate-300 text-slate-900 font-medium rounded-lg hover:bg-slate-50 transition"
+            className="flex-1 px-4 py-3 sm:py-2 border border-slate-300 text-slate-900 font-medium rounded-lg hover:bg-slate-50 transition"
           >
             Skip
           </button>
           <button
             onClick={onNext}
-            className="flex-1 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-3 sm:py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2"
           >
             {currentStep === totalSteps ? "Done" : "Next"}
             <ChevronRight className="w-4 h-4" />

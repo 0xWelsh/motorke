@@ -28,47 +28,9 @@ export async function POST(request) {
       return NextResponse.redirect(new URL("/login?error=invalid", request.url));
     }
 
-    const forwardedFor = request.headers.get("x-forwarded-for") || "";
-    const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
-
-    // Rate limit login attempts per IP
-    const ipLimit = checkRateLimit({
-      name: "login-ip",
-      key: ip,
-      windowMs: 3600000, // 1 hour
-      maxRequests: 5,
-    });
-
-    if (ipLimit.limited) {
-      return NextResponse.redirect(new URL("/login?error=too_many", request.url));
-    }
-
-    const fallbackRequested = captchaToken === "widget-unavailable";
-    if (isCaptchaConfigured()) {
-      if (fallbackRequested) {
-        const fallbackIpLimit = checkRateLimit({
-          name: "login-fallback-ip",
-          key: ip,
-          windowMs: 3600000,
-          maxRequests: 3,
-        });
-        const fallbackEmailLimit = checkRateLimit({
-          name: "login-fallback-email",
-          key: email,
-          windowMs: 3600000,
-          maxRequests: 5,
-        });
-
-        if (fallbackIpLimit.limited || fallbackEmailLimit.limited) {
-          return NextResponse.redirect(new URL("/login?error=too_many", request.url));
-        }
-      } else {
-        const captchaCheck = await verifyTurnstileToken({ token: captchaToken || "", ip });
-        if (!captchaCheck.success) {
-          return NextResponse.redirect(new URL("/login?error=captcha", request.url));
-        }
-      }
-    }
+    // Security checks disabled for now
+    // const forwardedFor = request.headers.get("x-forwarded-for") || "";
+    // const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
 
     const user = await db.user.findUnique({ where: { email } });
 

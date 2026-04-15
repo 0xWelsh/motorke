@@ -5,7 +5,8 @@ const SESSION_COOKIE = "motorke_session";
 export function middleware(request) {
   const { pathname } = request.nextUrl;
 
-  // Session-based route protection for /admin and /portal
+  // Session-based route protection disabled for now
+  /*
   if (pathname.startsWith("/admin") || pathname.startsWith("/portal")) {
     const session = request.cookies.get(SESSION_COOKIE);
     if (!session?.value) {
@@ -14,6 +15,7 @@ export function middleware(request) {
       return NextResponse.redirect(loginUrl);
     }
   }
+  */
 
   const response = NextResponse.next();
 

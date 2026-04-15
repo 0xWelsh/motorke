@@ -81,7 +81,7 @@ export default function NearbyDealersList() {
             value={radius}
             onChange={(e) => setRadius(Number(e.target.value))}
             disabled={loading}
-            className="px-3 py-2 border border-slate-200 rounded-lg text-slate-900 bg-white disabled:opacity-50"
+            className="px-3 py-3 sm:py-2 border border-slate-200 rounded-lg text-slate-900 bg-white disabled:opacity-50"
           >
             <option value={5}>5 km</option>
             <option value={10}>10 km</option>
@@ -97,7 +97,7 @@ export default function NearbyDealersList() {
             <button
               onClick={() => handleFindNearby('saved')}
               disabled={loading}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-600 text-white rounded-lg font-medium hover:bg-slate-700 disabled:opacity-50 transition"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-slate-600 text-white rounded-lg font-medium hover:bg-slate-700 disabled:opacity-50 transition"
             >
               {loading && locationSource === 'saved' ? (
                 <>
@@ -114,7 +114,7 @@ export default function NearbyDealersList() {
             <button
               onClick={() => handleFindNearby('current')}
               disabled={loading}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition"
             >
               {loading && locationSource === 'current' ? (
                 <>
@@ -133,7 +133,7 @@ export default function NearbyDealersList() {
           <button
             onClick={() => handleFindNearby('current')}
             disabled={loading}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition"
+            className="inline-flex items-center gap-2 px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition"
           >
             {loading ? (
               <>

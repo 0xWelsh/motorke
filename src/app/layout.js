@@ -51,7 +51,7 @@ export default async function RootLayout({ children }) {
               <CompareBar />
             </ModalProvider>
           </CompareProvider>
-          <footer className="mt-20 border-t border-slate-200 bg-white py-12 px-6 transition-all duration-300 ease-out">
+          <footer className="mt-20 border-t border-slate-200 bg-white py-12 px-6 transition-all duration-300 ease-out" style={{ paddingBottom: 'max(3rem, calc(3rem + env(safe-area-inset-bottom)))' }}>
             <div className="container mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex flex-col items-center md:items-start">
                 <span className="mk-logo-shell mk-logo-shell-sm mb-2">

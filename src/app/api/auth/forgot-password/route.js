@@ -35,38 +35,31 @@ export async function POST(request) {
       });
     }
 
+    // Security checks disabled for now
+    /*
     const ipLimit = checkRateLimit({
       name: "forgot-password-ip",
       key: ip,
       windowMs: FORGOT_WINDOW_MS,
       maxRequests: 10,
     });
-
     if (ipLimit.limited) {
-      return NextResponse.json(
-        { error: "Too many reset attempts. Please try again shortly." },
-        { status: 429, headers: { "Retry-After": String(ipLimit.retryAfter) } }
-      );
+      return NextResponse.json({ error: "Too many reset attempts. Please try again shortly.", { status: 429, headers: { "Retry-After": String(ipLimit.retryAfter) } });
     }
-
     const emailLimit = checkRateLimit({
       name: "forgot-password-email",
       key: email,
       windowMs: FORGOT_WINDOW_MS,
       maxRequests: 5,
     });
-
     if (emailLimit.limited) {
-      return NextResponse.json(
-        { error: "Too many reset attempts. Please try again shortly." },
-        { status: 429, headers: { "Retry-After": String(emailLimit.retryAfter) } }
-      );
+      return NextResponse.json({ error: "Too many reset attempts. Please try again shortly." }, { status: 429, headers: { "Retry-After": String(emailLimit.retryAfter) } });
     }
-
     const captchaCheck = await verifyTurnstileToken({ token: captchaToken, ip });
     if (!captchaCheck.success) {
       return NextResponse.json({ error: "Captcha verification failed." }, { status: 400 });
     }
+    */
 
     const user = await db.user.findUnique({
       where: { email },

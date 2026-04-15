@@ -12,7 +12,7 @@ export function CompareBar() {
   const compareUrl = `/compare?${compareCars.map((c, i) => `${"abc"[i]}=${c.id}`).join("&")}`;
 
   return (
-    <div className="fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1rem)] sm:w-[95%] max-w-2xl animate-in fade-in slide-in-from-bottom-6 duration-700">
+    <div className="fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1rem)] sm:w-[95%] max-w-2xl animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
       <div className="bg-[var(--brand)]/90 backdrop-blur-3xl border border-white/10 rounded-2xl sm:rounded-full p-2 shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center justify-between gap-3 sm:gap-4">
         {/* Selected Cars Thumbnails */}
         <div className="hidden sm:flex items-center gap-2 px-2 overflow-x-auto no-scrollbar">

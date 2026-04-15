@@ -116,7 +116,7 @@ export default function BuyerLocationSettings({ initialLat, initialLng }) {
           <button
             onClick={handleClearLocation}
             disabled={loading}
-            className="w-full px-3 py-2 text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition disabled:opacity-50"
+            className="w-full px-3 py-3 sm:py-2 text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition disabled:opacity-50"
           >
             Remove Location
           </button>
