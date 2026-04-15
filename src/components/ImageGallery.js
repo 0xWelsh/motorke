@@ -71,7 +71,7 @@ export default function ImageGallery({ images, title }) {
               setActive(0);
               setLightbox(true);
             }}
-            className="relative lg:row-span-2 aspect-[4/3] lg:aspect-auto lg:h-full rounded-sm overflow-hidden bg-white/5 group"
+            className="relative lg:row-span-2 aspect-[4/3] lg:aspect-auto lg:h-full rounded-sm overflow-hidden bg-white/5 group border border-slate-200"
             aria-label="Open hero image"
           >
             <Image
@@ -104,7 +104,7 @@ export default function ImageGallery({ images, title }) {
                   setActive(idx);
                   setLightbox(true);
                 }}
-                className="hidden lg:block relative aspect-square rounded-sm overflow-hidden bg-white/5 group"
+                className="hidden lg:block relative aspect-square rounded-sm overflow-hidden bg-white/5 group border border-slate-200"
                 aria-label={`Open image ${idx + 1}`}
               >
                 <Image
@@ -126,7 +126,7 @@ export default function ImageGallery({ images, title }) {
       ) : (
         <>
           <div
-            className="relative aspect-[16/9] bg-white/5 rounded-2xl overflow-hidden group cursor-zoom-in"
+            className="relative aspect-[16/9] bg-white/5 rounded-2xl overflow-hidden group cursor-zoom-in border border-slate-200"
             onClick={() => setLightbox(true)}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}

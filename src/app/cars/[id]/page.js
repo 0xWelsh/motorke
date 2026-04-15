@@ -265,12 +265,12 @@ export default async function CarDetailPage({ params }) {
                   <span className="inline-flex items-center px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-extrabold uppercase tracking-widest">
                     {car.available ? "Available" : "On Hold"}
                   </span>
-                  <h1 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-slate-900 tracking-tight leading-snug">{title}</h1>
+                  <h1 className="mt-4 text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 tracking-tight leading-snug">{title}</h1>
                 </div>
 
                 <div>
                   <p className="text-[13px] text-slate-600 font-medium mb-2 tracking-wider">Price</p>
-                  <p className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-slate-900 tracking-tight">{formatPrice(car.price)}</p>
+                  <p className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-slate-900 tracking-tight">{formatPrice(car.price)}</p>
                   <p className="text-[13px] text-slate-500 font-medium mt-3 tracking-wider">Shipping included to major ports</p>
                 </div>
               </div>
@@ -350,7 +350,7 @@ export default async function CarDetailPage({ params }) {
             <aside className="bg-slate-50 border border-slate-200 rounded-2xl p-6 lg:sticky lg:top-24 space-y-6">
               <div className="pb-4 border-b border-slate-200">
                 <p className="text-[13px] text-slate-600 font-medium mb-2 tracking-wider">Price</p>
-                <p className="text-4xl font-serif font-bold text-slate-900 tracking-tight">{formatPrice(car.price)}</p>
+                <p className="text-3xl font-serif font-bold text-slate-900 tracking-tight">{formatPrice(car.price)}</p>
                 <p className="text-[13px] text-slate-500 font-medium mt-3 tracking-wider">Shipping included to major ports</p>
               </div>
 
