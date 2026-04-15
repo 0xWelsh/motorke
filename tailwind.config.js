@@ -32,6 +32,7 @@ module.exports = {
       },
       fontFamily: {
         sans:    ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
+        serif:   ["Lora", "ui-serif", "Georgia", "Cambria", "Times New Roman", "serif"],
         display: ["Satoshi", "Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
         mono:    ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "monospace"],
       },
