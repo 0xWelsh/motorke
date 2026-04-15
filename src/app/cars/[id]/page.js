@@ -267,10 +267,7 @@ export default async function CarDetailPage({ params }) {
                   <span className="inline-flex items-center px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-extrabold uppercase tracking-widest">
                     {car.available ? "Available" : "On Hold"}
                   </span>
-                  <div className="mt-4 flex items-baseline gap-3">
-                    <span className="text-sm font-serif font-bold text-slate-500 tracking-tight">{yearLabel}</span>
-                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-slate-900 tracking-tight leading-snug">{titleWithoutYear}</h1>
-                  </div>
+                  <h1 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-slate-900 tracking-tight leading-snug">{titleWithoutYear}</h1>
                 </div>
 
                 <div>
