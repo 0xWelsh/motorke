@@ -211,10 +211,10 @@ export default async function HomePage() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { icon: ShieldCheck, label: "Verified Dealers", desc: "100% verified profiles with trust signals" },
-            { icon: Lock, label: "Transparent Specs", desc: "Complete specs, condition photos, price clarity" },
-            { icon: Zap, label: "Fast Response", desc: "Direct dealer contact, average 2-hour reply" },
-            { icon: TrendingUp, label: "Best Selection", desc: "500+ cars from top dealerships daily" },
+            { icon: ShieldCheck, label: "Curated Stock", desc: "We focus on verified vehicles. Our listings are never scraped or recycled — each car is individually inspected before publishing." },
+            { icon: Lock, label: "Secure Payments", desc: "Multiple payment options including bank transfer, M-Pesa, and card payments through trusted financial partners." },
+            { icon: TrendingUp, label: "Transparent Pricing", desc: "All prices shown in USD with breakdown: vehicle cost, inspection fees, shipping, and duty estimates clearly displayed." },
+            { icon: Zap, label: "Direct Dealer Access", desc: "Connect directly with verified dealers. No middlemen — get instant responses and negotiate transparently." },
           ].map(({ icon: Icon, label, desc }) => (
             <div key={label} className="p-6 rounded-xl border border-[#e8e2d9] bg-white hover:shadow-md transition-all group">
               <div className="w-12 h-12 rounded-lg bg-[#ff5a2f]/10 flex items-center justify-center mb-4 group-hover:bg-[#ff5a2f]/20 transition-colors">
@@ -282,18 +282,34 @@ export default async function HomePage() {
       )}
             
       <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-24 max-w-7xl">
-        <div className="flex items-end justify-between mb-12 sm:mb-14 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
+          {/* Left: Description */}
           <div>
             <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Showcase</p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900">Featured Inventory</h2>
-          </div>
-          <Link href="/cars" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-5 py-3 text-xs font-bold uppercase transition-all shadow-md">
-            View All Cars <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Premium Selections</h2>
+            
+            <div className="flex gap-1 mb-6">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-5 h-5 text-slate-400" fill="currentColor" />
+              ))}
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-          {spotlight.slice(0, 8).map((car) => <CarCard key={car.id} car={car} />)}
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-3">Explore our premium collection</h3>
+            <p className="text-sm sm:text-base text-slate-600 mb-8 leading-relaxed">
+              Browse our curated selection of premium vehicles imported directly from Japan. Quality assured with transparent pricing and full vehicle history.
+            </p>
+
+            <Link href="/cars" className="inline-flex mk-pill-btn items-center justify-center w-full bg-slate-900 hover:bg-slate-800 text-white px-6 py-3.5 text-xs font-bold uppercase transition-all shadow-md">
+              View All Vehicles
+            </Link>
+          </div>
+
+          {/* Right: Cars Grid */}
+          <div className="lg:col-span-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {spotlight.slice(0, 6).map((car) => <CarCard key={car.id} car={car} />)}
+            </div>
+          </div>
         </div>
       </section>
 
