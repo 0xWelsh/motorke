@@ -152,51 +152,68 @@ export default async function CarsPage({ searchParams }) {
           </div>
         </div>
 
-        {/* Sidebar */}
-        <aside className="block w-full xl:w-1/4 2xl:w-1/4 xl:float-left xl:pr-3 lg:pr-3 mb-6 xl:mb-0 relative z-20">
-          <div className="xl:sticky xl:top-[84px]">
-            <CarsSearch
-              initialSearch={search}
-              initialMake={make}
-              initialBodyType={bodyType}
-              initialFuelType={fuelType}
-              initialTransmission={transmission}
-              initialCounty={county}
-              initialMinPrice={minPrice}
-              initialMaxPrice={maxPrice}
-              initialSort={sort}
-              allMakes={allMakes}
-              bodyTypeLabels={BODY_TYPE_LABELS}
-              counties={COUNTIES}
-            />
-          </div>
-        </aside>
-
-        {/* Floating Cars */}
-        {sortedCars.length === 0 ? (
-          <div className="block w-full xl:w-3/4 2xl:w-3/4 xl:float-left py-20 text-center border border-[#ddd4c8] rounded-none bg-white">
-            <div className="w-20 h-20 bg-[#faf7f2] rounded-none flex items-center justify-center mx-auto mb-6">
-              <Search className="w-8 h-8 text-slate-300" />
-            </div>
-            <h2 className="text-2xl text-slate-900 mb-3">No cars match these filters</h2>
-            <p className="text-base text-slate-600 font-medium mb-8 max-w-md mx-auto">Try broadening your search or resetting filters.</p>
-            <Link href="/cars" className="mk-pill-btn inline-flex items-center gap-2 bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 text-xs uppercase transition-colors">
-              Reset Search <ArrowUpRight className="w-4 h-4" />
-            </Link>
-          </div>
-        ) : (
-          <div className="block -mx-2">
-            {sortedCars.map((car, idx) => (
-              <div key={car.id} className="block float-left w-full md:w-1/2 xl:w-1/4 2xl:w-1/4 px-2 pb-4">
-                <InventoryCard car={car} userLat={userLat} userLng={userLng} priority={idx < 4} />
+        {/* Main Floating Matrix Container */}
+        <div className="block -mx-2 sm:-mx-3">
+          
+          {/* Sidebar */}
+          <aside className="block float-left w-full xl:w-1/4 px-2 sm:px-3 mb-6 xl:mb-0 relative z-20">
+            <div className="xl:sticky xl:top-[84px] space-y-6">
+              <CarsSearch
+                initialSearch={search}
+                initialMake={make}
+                initialBodyType={bodyType}
+                initialFuelType={fuelType}
+                initialTransmission={transmission}
+                initialCounty={county}
+                initialMinPrice={minPrice}
+                initialMaxPrice={maxPrice}
+                initialSort={sort}
+                allMakes={allMakes}
+                bodyTypeLabels={BODY_TYPE_LABELS}
+                counties={COUNTIES}
+              />
+              
+              {/* Promo Banner to "fill this empty space brooo" */}
+              <div className="hidden xl:block bg-white border border-[#ddd4c8] p-6 shadow-sm rounded-none">
+                <span className="inline-block bg-[#111111] text-white text-[10px] font-black uppercase tracking-widest px-2 py-1 mb-4">Concierge</span>
+                <h3 className="text-base font-black text-slate-900 tracking-tight leading-tight mb-3">
+                  Can't find the exact model you want?
+                </h3>
+                <p className="text-xs text-slate-600 font-medium leading-relaxed mb-5">
+                  Set up a vehicle alert or let our expert team import or source a direct match from our private verified dealership network.
+                </p>
+                <button className="w-full bg-white border border-[#111111] hover:bg-[#111111] text-slate-900 hover:text-white text-[11px] font-black uppercase tracking-widest py-3 transition-colors rounded-none">
+                  Request Vehicle
+                </button>
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          </aside>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="block w-full float-left mt-8 pb-4">
+          {/* Floating Cars */}
+          {sortedCars.length === 0 ? (
+            <div className="block float-left w-full xl:w-3/4 px-2 sm:px-3 py-20 text-center border border-[#ddd4c8] rounded-none bg-white">
+              <div className="w-20 h-20 bg-[#faf7f2] rounded-none flex items-center justify-center mx-auto mb-6">
+                <Search className="w-8 h-8 text-slate-300" />
+              </div>
+              <h2 className="text-2xl text-slate-900 mb-3">No cars match these filters</h2>
+              <p className="text-base text-slate-600 font-medium mb-8 max-w-md mx-auto">Try broadening your search or resetting filters.</p>
+              <Link href="/cars" className="mk-pill-btn inline-flex items-center gap-2 bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 text-xs uppercase transition-colors">
+                Reset Search <ArrowUpRight className="w-4 h-4" />
+              </Link>
+            </div>
+          ) : (
+            <>
+              {sortedCars.map((car, idx) => (
+                <div key={car.id} className="block float-left w-full md:w-1/2 xl:w-1/4 px-2 sm:px-3 pb-6">
+                  <InventoryCard car={car} userLat={userLat} userLng={userLng} priority={idx < 4} />
+                </div>
+              ))}
+            </>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="block float-left w-full px-2 sm:px-3 mt-4 pb-4">
             <div className="min-w-max flex justify-center items-center gap-2 sm:gap-3 mx-auto">
               {page > 1 && (
                 <Link href={getPageLink(page - 1)} className="w-10 h-10 sm:w-11 sm:h-11 rounded-none flex items-center justify-center bg-white border border-[#ddd4c8] text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
@@ -234,6 +251,7 @@ export default async function CarsPage({ searchParams }) {
             </div>
           </div>
         )}
+        </div>
 
         <div className="clear-both"></div>
       </div>
