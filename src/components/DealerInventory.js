@@ -54,8 +54,8 @@ export default function DealerInventory({ cars, dealerSlug }) {
                onClick={() => setActiveFilter(make)}
                className={`px-4 py-2.5 shrink-0 rounded-none text-[10px] font-black uppercase tracking-widest transition-all border shadow-sm ${
                  activeFilter === make
-                    ? "bg-slate-900 text-slate-900 border-slate-900"
-                    : "bg-white text-slate-600 border-[#ece6dd] hover:border-slate-400"
+                    ? "bg-slate-900 text-white border-slate-900"
+                    : "bg-white text-white border-[#ece6dd] hover:border-slate-400"
                }`}
              >
                {make === "ALL" ? "All Cars" : make}
@@ -138,7 +138,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
                        <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{formatPrice(car.price)}</p>
                        <p className="text-[9px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mt-1">Ready to go</p>
                     </div>
-                    <Link href={`/cars/${car.id}`} className="w-12 h-12 rounded-[1rem] bg-[#fbfcfe] border border-[#ece6dd] flex items-center justify-center text-slate-300 group-hover:bg-slate-900 group-hover:text-slate-900 group-hover:border-slate-900 transition-all shadow-sm">
+                    <Link href={`/cars/${car.id}`} className="w-12 h-12 rounded-[1rem] bg-[#fbfcfe] border border-[#ece6dd] flex items-center justify-center text-white group-hover:bg-slate-900 group-hover:text-white group-hover:border-slate-900 transition-all shadow-sm">
                        <ChevronRight className="w-5 h-5 pointer-events-none" />
                     </Link>
                   </div>

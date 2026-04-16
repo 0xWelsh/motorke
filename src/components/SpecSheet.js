@@ -101,7 +101,7 @@ export default function SpecSheet({ car, dealer }) {
           <p className="text-[10px] text-gray-400 font-medium">Generated on {new Date().toLocaleDateString('en-KE', { dateStyle: 'long' })}</p>
           <p className="text-[10px] text-gray-400 font-medium italic">Visit motorke.com for full listing and interactive comparison.</p>
         </div>
-        <div className="bg-black text-slate-900 px-4 py-2 text-[10px] font-black uppercase tracking-tighter">
+        <div className="bg-black text-white px-4 py-2 text-[10px] font-black uppercase tracking-tighter">
           Motorke Showcase Cert.
         </div>
       </div>

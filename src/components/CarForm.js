@@ -626,7 +626,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 type="button"
                 onClick={() => setSimpleMode(true)}
                 className={`px-4 py-2 rounded-none text-xs font-black uppercase tracking-wider border transition-colors ${
-                  simpleMode ? "bg-slate-900 text-slate-900 border-slate-900" : "bg-white text-slate-600 border-[#ddd4c8]"
+                  simpleMode ? "bg-slate-900 text-white border-slate-900" : "bg-white text-white border-[#ddd4c8]"
                 }`}
               >
                 Quick
@@ -635,7 +635,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 type="button"
                 onClick={() => setSimpleMode(false)}
                 className={`px-4 py-2 rounded-none text-xs font-black uppercase tracking-wider border transition-colors ${
-                  !simpleMode ? "bg-slate-900 text-slate-900 border-slate-900" : "bg-white text-slate-600 border-[#ddd4c8]"
+                  !simpleMode ? "bg-slate-900 text-white border-slate-900" : "bg-white text-white border-[#ddd4c8]"
                 }`}
               >
                 Advanced
@@ -920,7 +920,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   placeholder="Add custom feature"
                   className={inputCls}
                 />
-                <button type="button" onClick={addCustomFeature} className="px-4 py-3 rounded-none bg-slate-900 text-slate-900 text-xs font-black uppercase tracking-wider">
+                <button type="button" onClick={addCustomFeature} className="px-4 py-3 rounded-none bg-slate-900 text-white text-xs font-black uppercase tracking-wider">
                   Add Feature
                 </button>
               </div>
@@ -1066,7 +1066,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               </button>
             )}
             {isNew && step < 3 ? (
-              <button type="button" onClick={() => goToStep(step + 1)} className="px-6 py-3 rounded-none bg-slate-900 text-slate-900 text-xs font-black uppercase tracking-wider">
+              <button type="button" onClick={() => goToStep(step + 1)} className="px-6 py-3 rounded-none bg-slate-900 text-white text-xs font-black uppercase tracking-wider">
                 Continue
               </button>
             ) : (

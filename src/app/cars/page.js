@@ -182,7 +182,7 @@ export default async function CarsPage({ searchParams }) {
                 <p className="text-xs text-slate-600 font-medium leading-relaxed mb-5">
                   Set up a vehicle alert or let our expert team import or source a direct match from our private verified dealership network.
                 </p>
-                <button className="w-full bg-white border border-[#111111] hover:bg-[#111111] text-slate-900 hover:text-white text-[11px] font-black uppercase tracking-widest py-3 transition-colors rounded-none">
+                <button className="w-full bg-white border border-[#111111] hover:bg-[#111111] text-white hover:text-white text-[11px] font-black uppercase tracking-widest py-3 transition-colors rounded-none">
                   Request Vehicle
                 </button>
               </div>
@@ -230,7 +230,7 @@ export default async function CarsPage({ searchParams }) {
                         className={`w-10 h-10 sm:w-11 sm:h-11 rounded-none flex items-center justify-center text-xs font-extrabold transition-all ${
                           p === page
                             ? "bg-[#111111] text-white shadow-md"
-                            : "bg-white border border-[#ddd4c8] text-slate-600 hover:bg-[#faf7f2]"
+                            : "bg-white border border-[#ddd4c8] text-white hover:bg-[#faf7f2]"
                         }`}
                       >
                         {p}

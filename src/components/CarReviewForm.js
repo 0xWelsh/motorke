@@ -98,7 +98,7 @@ export default function CarReviewForm({ carId, onReviewSubmitted }) {
         <button
           type="submit"
           disabled={loading || !rating}
-          className="w-full bg-slate-900 text-slate-900 font-bold py-3 rounded-none hover:bg-slate-800 disabled:bg-slate-400 transition-colors"
+          className="w-full bg-slate-900 text-white font-bold py-3 rounded-none hover:bg-slate-800 disabled:bg-slate-400 transition-colors"
         >
           {loading ? "Submitting..." : "Submit Review"}
         </button>

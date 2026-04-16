@@ -147,7 +147,7 @@ export default function Navbar({ user }) {
                   onClick={() => setUserMenu(!userMenu)}
                   className="flex items-center gap-3 bg-white border border-[#ddd4c8] pl-2 pr-5 py-2 rounded-none hover:border-slate-900 transition-none"
                 >
-                  <div className="w-9 h-9 rounded-none flex items-center justify-center font-black text-sm uppercase text-slate-900 bg-[#ff5a2f]">
+                  <div className="w-9 h-9 rounded-none flex items-center justify-center font-black text-sm uppercase text-white bg-[#ff5a2f]">
                     {user.name?.[0]}
                   </div>
                   <span className="text-sm font-extrabold text-slate-900 tracking-tight">{user.name?.split(" ")[0]}</span>
@@ -167,7 +167,7 @@ export default function Navbar({ user }) {
                       <MenuDropdownItem href="/account?tab=saved"   label="Watchlist"        icon={<Heart className="w-5 h-5" />} />
                       <div className="hidden" />
                       <form action="/api/auth/logout" method="POST">
-                        <button type="submit" className="w-full flex items-center gap-4 px-5 py-4 text-[11px] font-black uppercase tracking-widest text-[#ff5a2f] hover:bg-[#111111] hover:text-slate-900 rounded-none transition-none">
+                        <button type="submit" className="w-full flex items-center gap-4 px-5 py-4 text-[11px] font-black uppercase tracking-widest text-[#ff5a2f] hover:bg-[#111111] hover:text-white rounded-none transition-none">
                           <LogOut className="w-5 h-5" /> Sign Out
                         </button>
                       </form>
@@ -181,7 +181,7 @@ export default function Navbar({ user }) {
                 <Link href="/login" className="text-sm font-extrabold text-slate-900 hover:text-black transition-colors px-4">
                   Sign In
                 </Link>
-                <Link href="/signup" className="mk-pill-btn text-slate-900 px-6 py-3 text-xs uppercase transition-all bg-[#111111] hover:bg-[#ff5a2f] active:scale-95 inline-flex items-center gap-2">
+                <Link href="/signup" className="mk-pill-btn text-white px-6 py-3 text-xs uppercase transition-all bg-[#111111] hover:bg-[#ff5a2f] active:scale-95 inline-flex items-center gap-2">
                   For Dealers <ArrowUpRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -311,7 +311,7 @@ export default function Navbar({ user }) {
                   </Link>
                   {user.role === "ADMIN" && (
                     <Link href="/admin" onClick={() => setOpen(false)} 
-                      className="flex items-center gap-3 px-3.5 py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-900 rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                       <Shield size={16} className="flex-shrink-0" />
                       <span>Administration</span>
                     </Link>
@@ -331,7 +331,7 @@ export default function Navbar({ user }) {
               {!user ? (
                 <>
                   <Link href="/signup" onClick={() => setOpen(false)}
-                    className="block py-3.5 text-center font-black uppercase tracking-widest text-slate-900 rounded-none bg-[#111111] hover:bg-black transition-colors">
+                    className="block py-3.5 text-center font-black uppercase tracking-widest text-white rounded-none bg-[#111111] hover:bg-black transition-colors">
                     For Dealers
                   </Link>
                   <Link href="/login" onClick={() => setOpen(false)}
@@ -343,7 +343,7 @@ export default function Navbar({ user }) {
                 <>
                   {(user.role === "DEALER" || user.role === "ADMIN") && (
                     <Link href="/portal/cars/new" onClick={() => setOpen(false)}
-                      className="block py-3.5 text-center font-black uppercase tracking-widest text-slate-900 rounded-none bg-[#111111] hover:bg-black transition-colors">
+                      className="block py-3.5 text-center font-black uppercase tracking-widest text-white rounded-none bg-[#111111] hover:bg-black transition-colors">
                       Post Unit
                     </Link>
                   )}

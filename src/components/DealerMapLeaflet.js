@@ -67,7 +67,7 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
       const customIcon = L.divIcon({
         html: `
           <div class="flex flex-col items-center">
-            <div class="bg-slate-900 text-slate-900 rounded-none font-bold text-xs shadow-lg border-2 border-white flex items-center justify-center w-9 h-9" style="line-height: 1;">
+            <div class="bg-[#111111] text-white rounded-none font-bold text-xs shadow-lg border-2 border-white flex items-center justify-center w-9 h-9" style="line-height: 1;">
               ${dealer.name?.[0]?.toUpperCase() || '?'}
             </div>
             ${

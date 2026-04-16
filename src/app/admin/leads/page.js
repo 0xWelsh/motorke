@@ -199,7 +199,7 @@ export default async function AdminLeadsPage({ searchParams }) {
               className={`w-10 h-10 rounded-none flex items-center justify-center text-sm font-bold transition-all ${
                 p === page 
                   ? "bg-[#ff5a2f] text-white shadow-none shadow-[#ff5a2f]/20" 
-                  : "bg-white dark:bg-slate-800 border border-[#ddd4c8] dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-[#ff5a2f] hover:text-[#ff5a2f]"
+                  : "bg-white dark:bg-slate-800 border border-[#ddd4c8] dark:border-slate-700 text-white dark:text-white hover:border-[#ff5a2f] hover:text-[#ff5a2f]"
               }`}
             >
               {p}

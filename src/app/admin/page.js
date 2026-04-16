@@ -127,7 +127,7 @@ export default async function AdminDashboard({ searchParams }) {
         ].map((m, i) => (
           <div key={i} className="bg-white border border-[#ddd4c8] p-6 rounded-none shadow-none hover:shadow-none hover:border-slate-300 transition-all relative overflow-hidden group">
             <div className="flex items-center justify-between mb-4 relative z-10">
-              <div className={`w-10 h-10 flex items-center justify-center rounded-[10px] bg-[#f7f6f3] border border-slate-100 ${m.color ? "text-[#ff5a2f] group-hover:bg-[#ff5a2f] group-hover:text-white" : "text-slate-500 group-hover:bg-slate-900 group-hover:text-white"} transition-colors`}>
+              <div className={`w-10 h-10 flex items-center justify-center rounded-[10px] bg-[#f7f6f3] border border-slate-100 ${m.color ? "text-[#ff5a2f] group-hover:bg-[#ff5a2f] group-hover:text-white" : "text-white group-hover:bg-slate-900 group-hover:text-white"} transition-colors`}>
                 {m.icon}
               </div>
             </div>

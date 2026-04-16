@@ -115,7 +115,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                   <label className={labelCls}>Contact Phone</label>
                   <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="+254 7XX XXX XXX" className={inputCls} />
                 </div>
-                <button type="submit" className="bg-slate-900 hover:bg-slate-800 text-slate-900 px-6 py-2.5 rounded-none text-xs font-bold uppercase tracking-wider transition">
+                <button type="submit" className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-none text-xs font-bold uppercase tracking-wider transition">
                   Save Changes
                 </button>
               </form>
@@ -185,7 +185,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                       }
                       {!car.available && (
                         <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center">
-                          <span className="bg-slate-900 text-slate-900 text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-none ring-1 ring-white/20">Sold Asset</span>
+                          <span className="bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-none ring-1 ring-white/20">Sold Asset</span>
                         </div>
                       )}
                       <button onClick={() => unsave(car.id)}
@@ -193,7 +193,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                         ✕
                       </button>
                       <div className="absolute bottom-4 left-4">
-                        <span className="bg-slate-900/80 backdrop-blur text-slate-900 px-3 py-1.5 rounded-none text-xs font-black shadow-sm">
+                        <span className="bg-slate-900/80 backdrop-blur text-white px-3 py-1.5 rounded-none text-xs font-black shadow-sm">
                           {fmt(car.price)}
                         </span>
                       </div>
@@ -251,7 +251,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                       
                       <div className="flex flex-wrap gap-2">
                         {e.dealer.phone && (
-                          <a href={`tel:${e.dealer.phone}`} className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-slate-900 px-4 py-2 rounded-none text-xs font-semibold transition">
+                          <a href={`tel:${e.dealer.phone}`} className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-none text-xs font-semibold transition">
                             <Phone size={14} /> Call
                           </a>
                         )}
@@ -324,7 +324,7 @@ function Empty({ icon, title, desc, href, cta }) {
       </div>
       <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2">{title}</h3>
       <p className="text-sm font-medium text-slate-500 mb-8">{desc}</p>
-      <Link href={href} className="bg-slate-900 hover:bg-black text-slate-900 px-8 py-4 rounded-none text-xs font-black uppercase tracking-widest shadow-lg transition-transform hover:-translate-y-0.5">
+      <Link href={href} className="bg-slate-900 hover:bg-black text-white px-8 py-4 rounded-none text-xs font-black uppercase tracking-widest shadow-lg transition-transform hover:-translate-y-0.5">
         {cta}
       </Link>
     </div>

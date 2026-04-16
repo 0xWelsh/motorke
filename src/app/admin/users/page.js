@@ -74,7 +74,7 @@ export default async function AdminUsersPage(props) {
               <tr key={user.id} className="group hover:bg-slate-50/50 transition-colors">
                 <td className="px-8 py-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-[1.25rem] bg-slate-100 border border-[#ddd4c8] text-slate-600 group-hover:bg-slate-900 group-hover:text-white flex items-center justify-center font-black text-lg transition-all duration-500 shadow-none">
+                    <div className="w-12 h-12 rounded-[1.25rem] bg-slate-100 border border-[#ddd4c8] text-white group-hover:bg-slate-900 group-hover:text-white flex items-center justify-center font-black text-lg transition-all duration-500 shadow-none">
                       {user.name[0]}
                     </div>
                     <div>

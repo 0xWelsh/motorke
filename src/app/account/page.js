@@ -62,7 +62,7 @@ export default async function AccountPage({ searchParams }) {
           <div className="bg-[#fbfcfe] border border-[#ddd4c8] rounded-none p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
               {/* Avatar */}
-              <div className="w-20 h-20 bg-[#111111] text-slate-900 rounded-none flex items-center justify-center font-bold text-3xl flex-shrink-0">
+              <div className="w-20 h-20 bg-[#111111] text-white rounded-none flex items-center justify-center font-bold text-3xl flex-shrink-0">
                 {user.name?.[0]?.toUpperCase()}
               </div>
 
@@ -89,7 +89,7 @@ export default async function AccountPage({ searchParams }) {
               </div>
 
               {/* Quick Link */}
-              <a href="/cars" className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#111111] text-slate-900 rounded-none font-semibold text-[11px] uppercase font-black tracking-[0.10em] hover:bg-[#111111] transition">
+              <a href="/cars" className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#111111] text-white rounded-none font-semibold text-[11px] uppercase font-black tracking-[0.10em] hover:bg-[#111111] transition">
                 Browse Cars <ArrowRight size={16} />
               </a>
             </div>

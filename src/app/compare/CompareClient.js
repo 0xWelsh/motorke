@@ -785,7 +785,7 @@ export default function CompareClient({ initialCars }) {
               className={`px-3 sm:px-4 h-9 sm:h-10 rounded-none text-[10px] font-black uppercase tracking-[0.14em] transition-all border ${
                 preset === option.id
                   ? "bg-[#111111] text-white border-[#111111]"
-                  : "bg-white text-slate-700 border-[#ddd4c8] hover:text-slate-900 hover:border-[#111111]/35"
+                  : "bg-white text-white border-[#ddd4c8] hover:text-white hover:border-[#111111]/35"
               }`}
             >
               {option.label}
@@ -796,7 +796,7 @@ export default function CompareClient({ initialCars }) {
             id="tour-diff"
             onClick={() => setShowDiffOnly(!showDiffOnly)}
             className={`w-full sm:w-auto justify-center px-5 sm:px-6 h-11 sm:h-12 rounded-none flex items-center gap-2 text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all ${
-              showDiffOnly ? "bg-[#111111] text-white border border-[#111111]" : "bg-white border border-[#ddd4c8] text-slate-700 hover:text-slate-900 hover:border-[#111111]/35"
+              showDiffOnly ? "bg-[#111111] text-white border border-[#111111]" : "bg-white border border-[#ddd4c8] text-white hover:text-white hover:border-[#111111]/35"
             }`}
           >
             {showDiffOnly ? <Check className="w-4 h-4" /> : <Minus className="w-4 h-4" />}

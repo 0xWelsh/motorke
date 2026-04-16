@@ -289,7 +289,7 @@ export default function CarsSearch({
           <div className="pt-2 border-t border-[#efe8df] grid grid-cols-2 gap-2">
             <button
               type="submit"
-              className="bg-[#111111] hover:bg-[#ff5a2f] text-slate-900 text-[11px] font-extrabold uppercase tracking-[0.12em] py-2.5 rounded-none transition-colors"
+              className="bg-[#111111] hover:bg-[#ff5a2f] text-white text-[11px] font-extrabold uppercase tracking-[0.12em] py-2.5 rounded-none transition-colors"
             >
               Apply
             </button>

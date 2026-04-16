@@ -116,7 +116,7 @@ export default async function AdminDealersPage() {
                       </div>
                     )}
                  </div>
-                 <Link href={`/admin/dealers/${dealer.id}/edit`} className="w-10 h-10 rounded-none border border-[#ddd4c8] flex items-center justify-center text-slate-600 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all shadow-none group-hover:scale-105">
+                 <Link href={`/admin/dealers/${dealer.id}/edit`} className="w-10 h-10 rounded-none border border-[#ddd4c8] flex items-center justify-center text-white hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all shadow-none group-hover:scale-105">
                     <ArrowUpRight size={18} />
                  </Link>
                </div>

@@ -73,7 +73,7 @@ const colorMap = {
     badge: "bg-[#fbfcfe] text-slate-700",
     icon: "bg-[#fbfcfe] text-slate-700",
     check: "text-slate-700",
-    btn: "bg-[#111111] hover:bg-[#111111] text-slate-900",
+    btn: "bg-[#111111] hover:bg-[#111111] text-white",
   },
 };
 
@@ -170,7 +170,7 @@ export default function SubscriptionPage() {
             <div key={plan.id} className={`relative bg-white border ${plan.borderColor} rounded-none p-6 flex flex-col transition-none duration-300 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]`}>
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-[#111111] text-slate-900 text-[10px] uppercase font-black tracking-[0.15em] font-semibold px-4 py-1.5 rounded-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
+                  <span className="bg-[#111111] text-white text-[10px] uppercase font-black tracking-[0.15em] font-semibold px-4 py-1.5 rounded-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
                     Most Popular
                   </span>
                 </div>
@@ -360,7 +360,7 @@ export default function SubscriptionPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#111111] hover:bg-[#111111] disabled:opacity-50 text-slate-900 rounded-none py-3 font-semibold tracking-wide transition-none flex items-center justify-center gap-2"
+                  className="w-full bg-[#111111] hover:bg-[#111111] disabled:opacity-50 text-white rounded-none py-3 font-semibold tracking-wide transition-none flex items-center justify-center gap-2"
                 >
                   {loading ? <Loader2 size={18} className="animate-spin" /> : <Banknote size={18} />}
                   {loading 

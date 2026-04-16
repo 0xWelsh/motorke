@@ -58,7 +58,7 @@ export default async function InventoryPage({ searchParams }) {
             <Plus size={14} className="sm:hidden" /> Bulk Upload
           </Link>
           <Link href="/portal/cars/new"
-            className="flex items-center justify-center sm:justify-start gap-2 bg-[#111111] hover:bg-[#111111] text-slate-900 text-[10px] uppercase font-black tracking-[0.15em] sm:text-[11px] uppercase font-black tracking-[0.10em] font-semibold px-4 sm:px-6 py-2.5 sm:py-2.5 rounded-none transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+            className="flex items-center justify-center sm:justify-start gap-2 bg-[#111111] hover:bg-[#111111] text-white text-[10px] uppercase font-black tracking-[0.15em] sm:text-[11px] uppercase font-black tracking-[0.10em] font-semibold px-4 sm:px-6 py-2.5 sm:py-2.5 rounded-none transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
             <Plus size={16} className="sm:block hidden" />
             <Plus size={14} className="sm:hidden" /> Add Vehicle
           </Link>
@@ -75,8 +75,8 @@ export default async function InventoryPage({ searchParams }) {
           <Link key={key} href={`/portal/inventory?filter=${key}`}
             className={`px-2 sm:px-4 py-2 rounded-none text-[10px] uppercase font-black tracking-[0.15em] sm:text-[11px] uppercase font-black tracking-[0.10em] font-semibold transition-none flex items-center gap-1 sm:gap-2 flex-shrink-0 ${
               filter === key 
-                ? "bg-[#111111] text-slate-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]" 
-                : "text-slate-700 hover:text-slate-900 hover:bg-[#fbfcfe]"
+                ? "bg-[#111111] text-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]" 
+                : "text-white hover:text-white hover:bg-[#fbfcfe]"
             }`}>
             {label} 
             <span className={`px-1.5 py-0.5 rounded text-[10px] sm:text-[10px] uppercase font-black tracking-[0.15em] font-medium ${
@@ -96,7 +96,7 @@ export default async function InventoryPage({ searchParams }) {
           </div>
           <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">No vehicles listed</h2>
           <p className="text-[11px] uppercase font-black tracking-[0.10em] text-slate-700 max-w-xs mx-auto mb-6">Start building your inventory by adding your first vehicle.</p>
-          <Link href="/portal/cars/new" className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#111111] hover:bg-[#111111] text-slate-900 text-[11px] uppercase font-black tracking-[0.10em] font-semibold rounded-none transition-colors">
+          <Link href="/portal/cars/new" className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#111111] hover:bg-[#111111] text-white text-[11px] uppercase font-black tracking-[0.10em] font-semibold rounded-none transition-colors">
             <Plus size={16} /> Add Your First Vehicle
           </Link>
         </div>
@@ -115,7 +115,7 @@ export default async function InventoryPage({ searchParams }) {
                 
                 {/* Overlay Badges */}
                 <div className="absolute top-3 left-3 flex flex-col gap-2">
-                  <span className={`text-[10px] uppercase font-black tracking-[0.15em] font-semibold px-3 py-1 rounded text-slate-900 ${
+                  <span className={`text-[10px] uppercase font-black tracking-[0.15em] font-semibold px-3 py-1 rounded text-white ${
                     car.available 
                       ? "bg-[#111111]" 
                       : "bg-slate-400"

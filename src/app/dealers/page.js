@@ -177,7 +177,7 @@ export default async function DealersPage() {
                             <span className="text-[#f59e0b]">★</span>
                             <span className="ml-1">(5.0)</span>
                           </div>
-                          <span className="text-[10px] font-black uppercase text-slate-900 tracking-widest flex items-center justify-center border border-slate-900 px-3 py-1.5 group-hover:bg-[#111111] group-hover:text-white transition-colors">
+                          <span className="text-[10px] font-black uppercase text-white tracking-widest flex items-center justify-center border border-slate-900 px-3 py-1.5 group-hover:bg-[#111111] group-hover:text-white transition-colors">
                             Enter Store <ArrowUpRight className="w-3 h-3 ml-1" />
                           </span>
                         </div>

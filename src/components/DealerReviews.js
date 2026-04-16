@@ -125,7 +125,7 @@ export default function DealerReviews({
         {!viewer && (
           <div className="space-y-3">
             <p className="text-sm text-slate-600 font-semibold">Sign in to rate this dealership and help other buyers choose confidently.</p>
-            <Link href="/login" className="inline-flex items-center rounded-none bg-slate-900 px-4 py-2.5 text-xs font-extrabold uppercase tracking-[0.12em] text-slate-900 hover:bg-black transition-colors">
+            <Link href="/login" className="inline-flex items-center rounded-none bg-slate-900 px-4 py-2.5 text-xs font-extrabold uppercase tracking-[0.12em] text-white hover:bg-black transition-colors">
               Log In to Review
             </Link>
           </div>

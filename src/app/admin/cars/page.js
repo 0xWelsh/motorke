@@ -171,7 +171,7 @@ export default async function AdminCarsPage({ searchParams }) {
                           className={`p-2 border rounded-none transition-all shadow-none ${
                             car.available 
                               ? "bg-white dark:bg-slate-800 border-emerald-200 dark:border-[#ff5a2f]/30 text-[#ff5a2f] dark:text-[#ff5a2f] hover:bg-[#ff5a2f]]/10 dark:hover:bg-[#ff5a2f]/10" 
-                              : "bg-[#f7f6f3] dark:bg-slate-800 border-[#ddd4c8] dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700"
+                              : "bg-[#f7f6f3] dark:bg-slate-800 border-[#ddd4c8] dark:border-slate-700 text-white dark:text-white hover:bg-white dark:hover:bg-slate-700"
                           }`}
                           title={car.available ? "Hide" : "Publish"}
                         >
@@ -208,7 +208,7 @@ export default async function AdminCarsPage({ searchParams }) {
               className={`w-10 h-10 rounded-none flex items-center justify-center text-sm font-bold transition-all ${
                 p === page 
                   ? "bg-[#ff5a2f] text-white shadow-none shadow-[#ff5a2f]/20" 
-                  : "bg-white dark:bg-slate-800 border border-[#ddd4c8] dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-[#ff5a2f] hover:text-[#ff5a2f]"
+                  : "bg-white dark:bg-slate-800 border border-[#ddd4c8] dark:border-slate-700 text-white dark:text-white hover:border-[#ff5a2f] hover:text-[#ff5a2f]"
               }`}
             >
               {p}

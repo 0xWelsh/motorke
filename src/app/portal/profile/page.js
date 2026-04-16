@@ -96,7 +96,7 @@ export default async function PortalProfilePage({ searchParams }) {
                   userName={user.name} 
                   size="xl" 
                 />
-                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#111111] rounded-none border-[3px] border-white flex items-center justify-center text-slate-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
+                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#111111] rounded-none border-[3px] border-white flex items-center justify-center text-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
                    <Plus size={14} strokeWidth={3} />
                 </div>
               </div>
@@ -123,7 +123,7 @@ export default async function PortalProfilePage({ searchParams }) {
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8">
                 <div className="relative">
                   <DealerLogoUpload currentUrl={user.dealer.logoUrl} dealerName={user.dealer.name} size="xl" />
-                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#111111] rounded-none border-[3px] border-white flex items-center justify-center text-slate-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
+                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#111111] rounded-none border-[3px] border-white flex items-center justify-center text-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
                     <Plus size={14} strokeWidth={3} />
                   </div>
                 </div>
@@ -222,7 +222,7 @@ export default async function PortalProfilePage({ searchParams }) {
                 </div>
 
                 <div className="pt-2">
-                  <button type="submit" className="bg-[#111111] hover:bg-[#111111] text-slate-900 rounded-none px-6 py-2.5 font-semibold text-[11px] uppercase font-black tracking-[0.10em] transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] uppercase">
+                  <button type="submit" className="bg-[#111111] hover:bg-[#111111] text-white rounded-none px-6 py-2.5 font-semibold text-[11px] uppercase font-black tracking-[0.10em] transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] uppercase">
                     Save Profile
                   </button>
                 </div>
@@ -250,7 +250,7 @@ export default async function PortalProfilePage({ searchParams }) {
               </div>
 
               <div className="pt-2">
-                <button type="submit" className="bg-[#111111] hover:bg-[#111111] text-slate-900 rounded-none px-6 py-2.5 font-semibold text-[11px] uppercase font-black tracking-[0.10em] transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] uppercase">
+                <button type="submit" className="bg-[#111111] hover:bg-[#111111] text-white rounded-none px-6 py-2.5 font-semibold text-[11px] uppercase font-black tracking-[0.10em] transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] uppercase">
                   Save Changes
                 </button>
               </div>

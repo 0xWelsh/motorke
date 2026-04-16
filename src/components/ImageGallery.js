@@ -158,7 +158,7 @@ export default function ImageGallery({ images, title }) {
                     e.stopPropagation();
                     prev();
                   }}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 text-slate-900 rounded-none flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 text-white rounded-none flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm"
                 >
                   ‹
                 </button>
@@ -169,7 +169,7 @@ export default function ImageGallery({ images, title }) {
                     e.stopPropagation();
                     next();
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 text-slate-900 rounded-none flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 text-white rounded-none flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm"
                 >
                   ›
                 </button>
@@ -177,12 +177,12 @@ export default function ImageGallery({ images, title }) {
             )}
 
             {images.length > 1 && (
-              <span className="absolute bottom-3 right-3 text-xs bg-black/60 text-slate-800 px-2.5 py-1 rounded-none backdrop-blur-sm">
+              <span className="absolute bottom-3 right-3 text-xs bg-black/60 text-white px-2.5 py-1 rounded-none backdrop-blur-sm">
                 {active + 1} / {images.length}
               </span>
             )}
 
-            <span className="absolute bottom-3 left-3 text-xs bg-black/50 text-slate-900/70 px-2 py-1 rounded-none opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="absolute bottom-3 left-3 text-xs bg-black/50 text-white/70 px-2 py-1 rounded-none opacity-0 group-hover:opacity-100 transition-opacity">
               Click to expand
             </span>
           </div>

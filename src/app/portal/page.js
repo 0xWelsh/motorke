@@ -70,7 +70,7 @@ export default async function PortalPage({ searchParams }) {
             <Plus size={14} className="sm:hidden" /> Bulk Upload
           </Link>
           <Link href="/portal/cars/new"
-            className="flex items-center justify-center sm:justify-start gap-2 bg-[#111111] hover:bg-[#111111] text-slate-900 text-[10px] uppercase font-black tracking-[0.15em] sm:text-[11px] uppercase font-black tracking-[0.10em] font-bold px-4 sm:px-6 py-2.5 sm:py-3 rounded-none sm:rounded-none transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)] transition-none transition-none tracking-wide">
+            className="flex items-center justify-center sm:justify-start gap-2 bg-[#111111] hover:bg-[#111111] text-white text-[10px] uppercase font-black tracking-[0.15em] sm:text-[11px] uppercase font-black tracking-[0.10em] font-bold px-4 sm:px-6 py-2.5 sm:py-3 rounded-none sm:rounded-none transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)] transition-none transition-none tracking-wide">
             <Plus size={16} className="sm:block hidden" />
             <Plus size={14} className="sm:hidden" /> New Listing
           </Link>
@@ -174,7 +174,7 @@ export default async function PortalPage({ searchParams }) {
                       <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded-none uppercase tracking-wider ${
                         car.available
                           ? "bg-emerald-50 dark:bg-#ff5a2f/10 text-#ff5a2f dark:text-emerald-400 border border-emerald-100 dark:border-#ff5a2f/20"
-                          : "bg-[#fbfcfe] dark:bg-[#111111] text-slate-700 dark:text-slate-700 border border-[#ddd4c8] dark:border-[#ddd4c8]"
+                          : "bg-[#fbfcfe] dark:bg-[#111111] text-white dark:text-white border border-[#ddd4c8] dark:border-[#ddd4c8]"
                       }`}>
                         <span className={`w-1.5 h-1.5 rounded-none ${car.available ? "bg-#ff5a2f animate-pulse" : "bg-slate-400"}`} />
                         {car.available ? "Live" : "Draft"}
@@ -183,16 +183,16 @@ export default async function PortalPage({ searchParams }) {
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Link href={`/portal/cars/${car.id}/edit`}
-                          className="p-2 bg-white dark:bg-[#111111] text-slate-700 dark:text-slate-700 hover:text-#ff5a2f dark:hover:text-emerald-400 rounded-none border border-[#ddd4c8] dark:border-[#ddd4c8] hover:border-[#ff5a2f] dark:hover:border-#ff5a2f/50 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+                          className="p-2 bg-white dark:bg-[#111111] text-white dark:text-white hover:text-#ff5a2f dark:hover:text-emerald-400 rounded-none border border-[#ddd4c8] dark:border-[#ddd4c8] hover:border-[#ff5a2f] dark:hover:border-#ff5a2f/50 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
                           <Edit3 size={16} />
                         </Link>
                         <Link href={`/cars/${car.id}`} target="_blank"
-                          className="p-2 bg-white dark:bg-[#111111] text-slate-700 dark:text-slate-700 hover:text-#ff5a2f dark:hover:text-emerald-400 rounded-none border border-[#ddd4c8] dark:border-[#ddd4c8] hover:border-[#ff5a2f] dark:hover:border-#ff5a2f/50 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+                          className="p-2 bg-white dark:bg-[#111111] text-white dark:text-white hover:text-#ff5a2f dark:hover:text-emerald-400 rounded-none border border-[#ddd4c8] dark:border-[#ddd4c8] hover:border-[#ff5a2f] dark:hover:border-#ff5a2f/50 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
                           <ExternalLink size={16} />
                         </Link>
                         <form action={`/api/admin/cars/${car.id}/toggle`} method="POST">
                           <button type="submit"
-                            className="p-2 bg-white dark:bg-[#111111] text-slate-700 dark:text-slate-700 hover:text-#ff5a2f dark:hover:text-emerald-400 rounded-none border border-[#ddd4c8] dark:border-[#ddd4c8] hover:border-[#ff5a2f] dark:hover:border-#ff5a2f/50 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+                            className="p-2 bg-white dark:bg-[#111111] text-white dark:text-white hover:text-#ff5a2f dark:hover:text-emerald-400 rounded-none border border-[#ddd4c8] dark:border-[#ddd4c8] hover:border-[#ff5a2f] dark:hover:border-#ff5a2f/50 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
                             {car.available ? <EyeOff size={16} /> : <Eye size={16} />}
                           </button>
                         </form>

@@ -164,7 +164,7 @@ export default function LoginForm({ error }) {
             <button 
               type="submit" 
               disabled={!canSubmit}
-              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-slate-900 rounded-none-lg py-3.5 sm:py-2.5 font-semibold transition-all text-base sm:text-sm"
+              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-none-lg py-3.5 sm:py-2.5 font-semibold transition-all text-base sm:text-sm"
             >
               Sign In
             </button>

@@ -37,7 +37,7 @@ function NavLink({ href, label, Icon, active, onClick }) {
       className={clsx(
         "flex items-center gap-3 px-4 py-3 rounded-none transition-none",
         active 
-          ? "bg-[#111111] text-slate-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]" 
+          ? "bg-[#111111] text-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]" 
           : "text-slate-700 hover:text-slate-900 hover:bg-[#fbfcfe]"
       )}
     >
@@ -168,7 +168,7 @@ export default function PortalLayout({ children }) {
           <Link 
             href="/portal/cars/new"
             onClick={handleNavClick}
-            className="flex items-center justify-center gap-2 w-full bg-[#111111] hover:bg-[#111111] text-slate-900 font-semibold py-2.5 rounded-none transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] text-[10px] uppercase font-black tracking-[0.15em]"
+            className="flex items-center justify-center gap-2 w-full bg-[#111111] hover:bg-[#111111] text-white font-semibold py-2.5 rounded-none transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] text-[10px] uppercase font-black tracking-[0.15em]"
           >
             <Plus size={14} /> Add Car
           </Link>

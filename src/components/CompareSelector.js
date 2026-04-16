@@ -27,7 +27,7 @@ export function CompareBar() {
               </div>
               <button
                 onClick={() => removeFromCompare(car.id)}
-                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-black border border-white/20 rounded-none flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-red-500/80 transition-all opacity-0 group-hover:opacity-100 shadow-xl"
+                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-black border border-white/20 rounded-none flex items-center justify-center text-white hover:text-white hover:bg-red-500/80 transition-all opacity-0 group-hover:opacity-100 shadow-xl"
               >
                 <span className="text-[10px] leading-none">×</span>
               </button>

@@ -37,7 +37,7 @@ export default async function PortalBulkUploadPage() {
             <p className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900">Start with the template</p>
             <p className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700 mt-1">Fill the sample columns, then import your file below.</p>
           </div>
-          <a href="/api/portal/cars/bulk/template" className="inline-flex rounded-none bg-[#111111] px-4 py-2.5 text-[10px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-slate-900 hover:bg-[#111111]">
+          <a href="/api/portal/cars/bulk/template" className="inline-flex rounded-none bg-[#111111] px-4 py-2.5 text-[10px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-white hover:bg-[#111111]">
             Download Template
           </a>
         </div>

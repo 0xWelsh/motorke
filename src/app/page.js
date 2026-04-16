@@ -537,7 +537,7 @@ function CarCard({ car }) {
           <div>
             <p className="text-lg font-black text-slate-900 leading-none">{formatPrice(car.price)}</p>
           </div>
-          <Link href={`/cars/${car.id}`} className="inline-flex px-5 py-2.5 text-xs font-black uppercase text-slate-900 border border-[#ddd4c8] rounded hover:bg-slate-900 hover:text-white transition-all whitespace-nowrap">
+          <Link href={`/cars/${car.id}`} className="inline-flex px-5 py-2.5 text-xs font-black uppercase text-white border border-[#ddd4c8] rounded hover:bg-slate-900 hover:text-white transition-all whitespace-nowrap">
             View Offer
           </Link>
         </div>

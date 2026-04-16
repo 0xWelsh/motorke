@@ -192,7 +192,7 @@ export default function SignupForm({ error: initialError }) {
               className={clsx(
                 "flex-1 py-2 px-3 rounded-none-md font-semibold text-sm transition-all",
                 role === "DEALER" 
-                  ? "bg-slate-900 text-slate-900 shadow-sm" 
+                  ? "bg-[#111111] text-white shadow-sm" 
                   : "text-slate-600 hover:text-slate-900"
               )}
             >
@@ -343,7 +343,7 @@ export default function SignupForm({ error: initialError }) {
             <button 
               type="submit" 
               disabled={loading}
-              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-slate-900 rounded-none-lg py-3.5 sm:py-2.5 font-semibold transition-all flex items-center justify-center gap-2 text-base sm:text-sm"
+              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-none-lg py-3.5 sm:py-2.5 font-semibold transition-all flex items-center justify-center gap-2 text-base sm:text-sm"
             >
               {loading ? <Loader2 size={18} className="animate-spin" /> : null}
               {loading ? "Creating account..." : "Create Account"}

@@ -80,8 +80,8 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
             <Link key={key} href={`/portal/leads?status=${key}&search=${currentSearch}`}
               className={`px-2 sm:px-4 py-2 rounded-none text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2 whitespace-nowrap flex-shrink-0 ${
                 currentStatus === key 
-                  ? "bg-slate-900 text-slate-900 shadow-sm" 
-                  : "text-slate-600 hover:text-slate-900 hover:bg-[#fbfcfe]"
+                  ? "bg-slate-900 text-white shadow-sm" 
+                  : "text-white hover:text-white hover:bg-[#fbfcfe]"
               }`}>
               {label}
               {count > 0 && (
@@ -116,7 +116,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
            </div>
            <p className="text-lg sm:text-xl font-bold text-slate-900 mb-2">No enquiries match your criteria</p>
            <p className="text-sm text-slate-600 mb-6 max-w-xs mx-auto">Enquiries will appear here when customers express interest in your vehicles.</p>
-           <Link href="/portal/inventory" className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-900 text-sm font-semibold rounded-none transition-colors">
+           <Link href="/portal/inventory" className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-none transition-colors">
               View Inventory →
            </Link>
         </div>
@@ -203,11 +203,11 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                         </div>
 
                         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                          <a href={`tel:${lead.phone}`} className="flex items-center justify-center gap-2 bg-slate-900 text-slate-900 text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-none hover:bg-slate-800 transition-all shadow-sm\">
+                          <a href={`tel:${lead.phone}`} className="flex items-center justify-center gap-2 bg-slate-900 text-white text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-none hover:bg-slate-800 transition-all shadow-sm\">
                             <Phone size={14} /> Call
                           </a>
                           {lead.phone && (
-                            <a href={`https://wa.me/${lead.phone.replace(/\\D/g,"")}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-slate-900 text-slate-900 text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-none hover:bg-slate-800 transition-all shadow-sm\">
+                            <a href={`https://wa.me/${lead.phone.replace(/\\D/g,"")}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-slate-900 text-white text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-none hover:bg-slate-800 transition-all shadow-sm\">
                               <MessageCircle size={14} /> WhatsApp
                             </a>
                           )}
@@ -244,7 +244,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                             onKeyDown={e => e.key === "Enter" && addNote(lead.id)}
                           />
                           <button onClick={() => addNote(lead.id)} disabled={saving[`note_${lead.id}`] || !noteInputs[lead.id]?.trim()}
-                            className="absolute right-2 px-2 sm:px-3 py-1.5 bg-slate-900 disabled:bg-slate-200 text-slate-900 disabled:text-slate-400 rounded-none text-xs font-semibold transition-all shadow-sm\">
+                            className="absolute right-2 px-2 sm:px-3 py-1.5 bg-slate-900 disabled:bg-slate-200 text-white disabled:text-white rounded-none text-xs font-semibold transition-all shadow-sm\">
                             {saving[`note_${lead.id}`] ? "…" : "Save"}
                           </button>
                         </div>

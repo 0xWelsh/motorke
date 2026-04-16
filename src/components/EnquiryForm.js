@@ -314,7 +314,7 @@ export default function EnquiryForm({
             <a
               href={callLink}
               onClick={handleCall}
-              className="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-slate-900 font-bold text-xs py-2.5 rounded-none transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white font-bold text-xs py-2.5 rounded-none transition-colors"
             >
               Call Now
             </a>

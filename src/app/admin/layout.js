@@ -84,7 +84,7 @@ export default function AdminLayout({ children }) {
   };
 
   return (
-    <div className="flex bg-[#fbfcfe] text-slate-900 selection:bg-[#ff5a2f]]/20 selection:text-slate-900 relative">
+    <div className="flex bg-[#fbfcfe] text-white selection:bg-[#ff5a2f]]/20 selection:text-white relative">
       
       {/* Mobile Backdrop */}
       {sidebarOpen && (
