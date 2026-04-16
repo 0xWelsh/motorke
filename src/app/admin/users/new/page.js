@@ -22,8 +22,8 @@ export default async function AdminNewUserPage(props) {
   const dealers = await db.dealer.findMany({ orderBy: { name: "asc" } });
   const error   = searchParams?.error;
 
-  const inputCls  = "w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
-  const selectCls = "w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-900 outline-none focus:border-slate-800 transition-all font-bold appearance-none";
+  const inputCls  = "w-full bg-white border border-[#ddd4c8] rounded-none px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
+  const selectCls = "w-full bg-white border border-[#ddd4c8] rounded-none px-4 py-3.5 text-sm text-slate-900 outline-none focus:border-slate-800 transition-all font-bold appearance-none";
   const labelCls  = "block text-[10px] font-black uppercase tracking-[0.15em] text-slate-500 mb-2";
 
   return (
@@ -33,16 +33,16 @@ export default async function AdminNewUserPage(props) {
           <ChevronLeft size={14} /> Back to Directory
         </Link>
         <h1 className="text-3xl font-black text-slate-900 tracking-tight">Provision Identity</h1>
-        <p className="text-slate-500 text-sm font-medium mt-2 max-w-xl">
+        <p className="text-slate-500 text-[11px] font-bold uppercase tracking-widest mt-2 max-w-xl">
           Create a secure login for a new dealership partner or another system administrator.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          <div className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm">
+          <div className="bg-white border border-[#ddd4c8] rounded-[2rem] p-8 shadow-none">
             <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100">
-               <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500">
+               <div className="w-10 h-10 rounded-none bg-[#f7f6f3] border border-slate-100 flex items-center justify-center text-slate-500">
                   <UserPlus size={18} />
                </div>
                <div>
@@ -52,7 +52,7 @@ export default async function AdminNewUserPage(props) {
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-100 text-red-600 text-sm font-bold rounded-xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
+              <div className="bg-red-50 border border-red-100 text-red-600 text-sm font-bold rounded-none px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
                 <AlertTriangle size={16} />
                 {error === "exists"   && "A user with that email already exists."}
                 {error === "mismatch" && "Passwords do not match."}
@@ -122,7 +122,7 @@ export default async function AdminNewUserPage(props) {
               </div>
 
               <div className="pt-8 mt-4 border-t border-slate-100 flex justify-end">
-                <button type="submit" className="bg-slate-900 border border-slate-900 text-white px-8 h-12 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-emerald-600 hover:border-emerald-600 transition-all shadow-sm flex items-center gap-2">
+                <button type="submit" className="bg-slate-900 border border-slate-900 text-white px-8 h-12 rounded-none text-[11px] font-black uppercase tracking-widest hover:bg-#ff5a2f hover:border-#ff5a2f transition-all shadow-none flex items-center gap-2">
                   Provision Identity
                 </button>
               </div>
@@ -132,9 +132,9 @@ export default async function AdminNewUserPage(props) {
 
         {/* SIDEBAR ONBOARDING TIP */}
         <div className="space-y-8">
-           <div className="bg-slate-50 border border-slate-200 rounded-[2rem] p-8 shadow-sm">
-              <div className="flex items-center gap-3 mb-6 pb-6 border-b border-slate-200/60">
-                 <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500 shadow-sm">
+           <div className="bg-[#f7f6f3] border border-[#ddd4c8] rounded-[2rem] p-8 shadow-none">
+              <div className="flex items-center gap-3 mb-6 pb-6 border-b border-[#ddd4c8]/60">
+                 <div className="w-10 h-10 rounded-none bg-[#f7f6f3] border border-slate-100 flex items-center justify-center text-slate-500 shadow-none">
                     <Lightbulb size={18} />
                  </div>
                  <div>
@@ -144,19 +144,19 @@ export default async function AdminNewUserPage(props) {
               
               <ol className="text-xs font-medium text-slate-600 space-y-4 mb-2 leading-relaxed">
                  <li className="flex gap-3 relative">
-                    <span className="w-5 h-5 shrink-0 rounded-full bg-slate-900 text-white flex items-center justify-center font-black text-[10px]">1</span>
+                    <span className="w-5 h-5 shrink-0 rounded-none bg-slate-900 text-white flex items-center justify-center font-black text-[10px]">1</span>
                     <span>Ensure the <Link href="/admin/dealers/new" className="text-slate-900 font-black underline">dealership profile</Link> is created first.</span>
                  </li>
                  <li className="flex gap-3 relative">
-                    <span className="w-5 h-5 shrink-0 rounded-full bg-slate-900 text-white flex items-center justify-center font-black text-[10px]">2</span>
+                    <span className="w-5 h-5 shrink-0 rounded-none bg-slate-900 text-white flex items-center justify-center font-black text-[10px]">2</span>
                     <span>Create their login identity here.</span>
                  </li>
                  <li className="flex gap-3 relative">
-                    <span className="w-5 h-5 shrink-0 rounded-full bg-slate-900 text-white flex items-center justify-center font-black text-[10px]">3</span>
+                    <span className="w-5 h-5 shrink-0 rounded-none bg-slate-900 text-white flex items-center justify-center font-black text-[10px]">3</span>
                     <span>Share the temporary credentials over a secure channel.</span>
                  </li>
                  <li className="flex gap-3 relative">
-                    <span className="w-5 h-5 shrink-0 rounded-full bg-slate-900 text-white flex items-center justify-center font-black text-[10px]">4</span>
+                    <span className="w-5 h-5 shrink-0 rounded-none bg-slate-900 text-white flex items-center justify-center font-black text-[10px]">4</span>
                     <span>The partner will log in at <code className="font-bold text-slate-900">/portal</code> and start uploading cars.</span>
                  </li>
               </ol>

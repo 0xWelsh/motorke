@@ -145,9 +145,9 @@ export default function Navbar({ user }) {
                 <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setUserMenu(!userMenu)}
-                  className="flex items-center gap-3 bg-white border border-slate-200 pl-2 pr-5 py-2 rounded-xl hover:border-slate-300 transition-all"
+                  className="flex items-center gap-3 bg-white border border-[#ddd4c8] pl-2 pr-5 py-2 rounded-none hover:border-slate-900 transition-none"
                 >
-                  <div className="w-9 h-9 rounded-full flex items-center justify-center font-extrabold text-sm uppercase text-white bg-[#111111]">
+                  <div className="w-9 h-9 rounded-none flex items-center justify-center font-black text-sm uppercase text-white bg-[#ff5a2f]">
                     {user.name?.[0]}
                   </div>
                   <span className="text-sm font-extrabold text-slate-900 tracking-tight">{user.name?.split(" ")[0]}</span>
@@ -155,19 +155,19 @@ export default function Navbar({ user }) {
                 </button>
 
                 {userMenu && (
-                  <div className="absolute right-0 top-full mt-4 w-72 bg-white border border-slate-200 rounded-3xl shadow-2xl overflow-hidden p-3 animate-in fade-in slide-in-from-top-2">
-                    <div className="px-5 py-4 bg-slate-50 rounded-2xl mb-3">
-                      <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-1">Signed in</p>
-                      <p className="text-sm font-extrabold text-slate-900 truncate">{user.email}</p>
+                  <div className="absolute right-0 top-full mt-4 w-72 bg-white border border-[#ddd4c8] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,0.05)] overflow-hidden p-0 animate-in fade-in slide-in-from-top-2">
+                    <div className="px-5 py-5 bg-[#f7f6f3] border-b border-[#ddd4c8] mb-0 rounded-none">
+                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1">Signed in</p>
+                      <p className="text-sm font-black text-slate-900 truncate">{user.email}</p>
                     </div>
-                    <div className="space-y-1">
+                    <div className="space-y-0 divide-y divide-[#ddd4c8]">
                       {user.role === "ADMIN"  && <MenuDropdownItem href="/admin"   label="Administration"  icon={<LayoutDashboard className="w-5 h-5" />} />}
                       {user.role === "DEALER" && <MenuDropdownItem href="/portal"  label="Dealer Portal"   icon={<Store className="w-5 h-5" />} />}
                       <MenuDropdownItem href="/account" label="Profile Settings" icon={<User className="w-5 h-5" />} />
                       <MenuDropdownItem href="/account?tab=saved"   label="Watchlist"        icon={<Heart className="w-5 h-5" />} />
-                      <div className="my-2 h-px bg-slate-100 mx-4" />
+                      <div className="hidden" />
                       <form action="/api/auth/logout" method="POST">
-                        <button type="submit" className="w-full flex items-center gap-4 px-5 py-4 text-[11px] font-extrabold uppercase tracking-widest text-rose-500 hover:bg-rose-50 rounded-2xl transition-all">
+                        <button type="submit" className="w-full flex items-center gap-4 px-5 py-4 text-[11px] font-black uppercase tracking-widest text-[#ff5a2f] hover:bg-[#111111] hover:text-white rounded-none transition-none">
                           <LogOut className="w-5 h-5" /> Sign Out
                         </button>
                       </form>
@@ -365,7 +365,7 @@ export default function Navbar({ user }) {
 
 function MenuDropdownItem({ href, label, icon }) {
   return (
-    <Link href={href} className="flex items-center gap-3 px-4 py-3 text-xs font-bold uppercase tracking-widest text-slate-900 hover:bg-[#faf7f2] rounded-xl transition-colors">
+    <Link href={href} className="flex items-center gap-3 px-5 py-4 text-[11px] font-black uppercase tracking-[0.15em] text-slate-900 hover:bg-[#fbfcfe] hover:text-[#ff5a2f] rounded-none transition-none">
       <span className="text-slate-400">{icon}</span>
       {label}
     </Link>

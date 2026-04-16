@@ -37,8 +37,8 @@ export default async function AdminEditUserPage(props) {
   const saved = searchParams?.saved;
   const error = searchParams?.error;
 
-  const inputCls  = "w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
-  const selectCls = "w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-900 outline-none focus:border-slate-800 transition-all font-bold appearance-none";
+  const inputCls  = "w-full bg-white border border-[#ddd4c8] rounded-none px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
+  const selectCls = "w-full bg-white border border-[#ddd4c8] rounded-none px-4 py-3.5 text-sm text-slate-900 outline-none focus:border-slate-800 transition-all font-bold appearance-none";
   const labelCls  = "block text-[10px] font-black uppercase tracking-[0.15em] text-slate-500 mb-2";
 
   return (
@@ -48,21 +48,21 @@ export default async function AdminEditUserPage(props) {
           <ChevronLeft size={14} /> Back to Directory
         </Link>
         
-        <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
-          <div className="shrink-0 flex items-center justify-center bg-slate-50 border border-dashed border-slate-200 rounded-3xl p-2 h-28 w-28">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-white p-8 rounded-[2rem] border border-[#ddd4c8] shadow-none">
+          <div className="shrink-0 flex items-center justify-center bg-[#f7f6f3] border border-dashed border-[#ddd4c8] rounded-3xl p-2 h-28 w-28">
              <AdminAvatarUpload currentUrl={user.avatarUrl} targetId={user.id} targetType="user" name={user.name} size="lg" />
           </div>
           <div>
             <h1 className="text-3xl font-black text-slate-900 tracking-tight">{user.name}</h1>
-            <p className="text-slate-500 text-sm font-medium mt-1 mb-3">{user.email}</p>
+            <p className="text-slate-500 text-[11px] font-bold uppercase tracking-widest mt-1 mb-3">{user.email}</p>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex px-3 py-1 rounded-lg bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-widest">
+              <span className="inline-flex px-3 py-1 rounded-none bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-widest">
                 ID: {user.id.slice(-8)}
               </span>
-              <span className={`inline-flex px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${user.active ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
+              <span className={`inline-flex px-3 py-1 rounded-none text-[10px] font-black uppercase tracking-widest ${user.active ? 'bg-#ff5a2f]/10 text-#ff5a2f' : 'bg-red-50 text-red-600'}`}>
                 {user.active ? 'Active' : 'Locked'}
               </span>
-              <span className="inline-flex px-3 py-1 rounded-lg bg-slate-100 text-slate-700 text-[10px] font-black uppercase tracking-widest">
+              <span className="inline-flex px-3 py-1 rounded-none bg-slate-100 text-slate-700 text-[10px] font-black uppercase tracking-widest">
                 {user.role}
               </span>
             </div>
@@ -73,9 +73,9 @@ export default async function AdminEditUserPage(props) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           {/* PROFILE EDIT FORM */}
-          <div className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm">
+          <div className="bg-white border border-[#ddd4c8] rounded-[2rem] p-8 shadow-none">
             <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100">
-               <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500">
+               <div className="w-10 h-10 rounded-none bg-[#f7f6f3] border border-slate-100 flex items-center justify-center text-slate-500">
                   <User size={18} />
                </div>
                <div>
@@ -85,12 +85,12 @@ export default async function AdminEditUserPage(props) {
             </div>
 
             {saved === "profile" && (
-              <div className="bg-emerald-50 border border-emerald-100 text-emerald-600 text-sm font-bold rounded-xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
+              <div className="bg-#ff5a2f]/10 border border-#ff5a2f]/20 text-#ff5a2f text-sm font-bold rounded-none px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
                 ✓ Profile saved successfully
               </div>
             )}
             {error && (
-              <div className="bg-red-50 border border-red-100 text-red-600 text-sm font-bold rounded-xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
+              <div className="bg-red-50 border border-red-100 text-red-600 text-sm font-bold rounded-none px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
                 <AlertTriangle size={16} /> 
                 {error === "exists" ? "That email is already in use." : 
                  error === "notallowed" ? "You cannot grant Admin rights." : 
@@ -141,7 +141,7 @@ export default async function AdminEditUserPage(props) {
                 </div>
               </div>
               <div className="pt-4 border-t border-slate-100 flex justify-end">
-                <button type="submit" className="bg-slate-900 border border-slate-900 text-white px-8 h-12 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-emerald-600 hover:border-emerald-600 transition-all shadow-sm">
+                <button type="submit" className="bg-slate-900 border border-slate-900 text-white px-8 h-12 rounded-none text-[11px] font-black uppercase tracking-widest hover:bg-#ff5a2f hover:border-#ff5a2f transition-all shadow-none">
                   Save Details
                 </button>
               </div>
@@ -149,9 +149,9 @@ export default async function AdminEditUserPage(props) {
           </div>
 
           {/* RESET PASSWORD */}
-          <div id="security" className="bg-white border border-slate-200 rounded-[2rem] p-8 shadow-sm">
+          <div id="security" className="bg-white border border-[#ddd4c8] rounded-[2rem] p-8 shadow-none">
             <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100">
-               <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500">
+               <div className="w-10 h-10 rounded-none bg-[#f7f6f3] border border-slate-100 flex items-center justify-center text-slate-500">
                   <Lock size={18} />
                </div>
                <div>
@@ -161,7 +161,7 @@ export default async function AdminEditUserPage(props) {
             </div>
 
             {saved === "password" && (
-              <div className="bg-emerald-50 border border-emerald-100 text-emerald-600 text-sm font-bold rounded-xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
+              <div className="bg-#ff5a2f]/10 border border-#ff5a2f]/20 text-#ff5a2f text-sm font-bold rounded-none px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
                 ✓ New password successfully set
               </div>
             )}
@@ -178,7 +178,7 @@ export default async function AdminEditUserPage(props) {
                 </p>
               </div>
               <div className="pt-4 flex justify-end">
-                <button type="submit" className="bg-white border border-slate-200 text-slate-700 px-8 h-12 rounded-xl text-[11px] font-black uppercase tracking-widest hover:border-slate-800 hover:text-slate-900 transition-all shadow-sm">
+                <button type="submit" className="bg-white border border-[#ddd4c8] text-slate-700 px-8 h-12 rounded-none text-[11px] font-black uppercase tracking-widest hover:border-slate-800 hover:text-slate-900 transition-all shadow-none">
                   Update Password
                 </button>
               </div>
@@ -190,7 +190,7 @@ export default async function AdminEditUserPage(props) {
         <div className="space-y-8">
            <div className="bg-red-50 border border-red-100 rounded-[2rem] p-8">
               <div className="flex items-center gap-3 mb-6 pb-6 border-b border-red-200/50">
-                 <div className="w-10 h-10 rounded-xl bg-red-100 border border-red-200 flex items-center justify-center text-red-600">
+                 <div className="w-10 h-10 rounded-none bg-red-100 border border-red-200 flex items-center justify-center text-red-600">
                     <AlertTriangle size={18} />
                  </div>
                  <div>
@@ -208,7 +208,7 @@ export default async function AdminEditUserPage(props) {
                 action={`/api/admin/users/${params.id}/delete`} 
                 message="Permanently delete this user's profile and revoke access? This cannot be undone." 
                 label="Delete Profile" 
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-[11px] h-12 rounded-xl transition-colors shadow-sm shadow-red-600/20"
+                className="w-full bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-[11px] h-12 rounded-none transition-colors shadow-none shadow-red-600/20"
               />
            </div>
         </div>

@@ -29,8 +29,8 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
   const saved  = sp.saved;
   const error  = sp.error;
 
-  const inputCls  = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
-  const selectCls = "w-full bg-surface border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
+  const inputCls  = "w-full bg-white/5 border border-white/10 rounded-none px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
+  const selectCls = "w-full bg-surface border border-white/10 rounded-none px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
   const labelCls  = "block text-xs text-white/40 uppercase tracking-wider mb-2";
 
   return (
@@ -46,14 +46,14 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
         </div>
       </div>
 
-      <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-7">
+      <div className="bg-[#1a1a1a] border border-white/10 rounded-none p-7">
         {saved && (
-          <div className="bg-green-500/10 border border-green-500/20 text-green-400 text-sm rounded-xl px-4 py-3 mb-5">
+          <div className="bg-green-500/10 border border-green-500/20 text-green-400 text-sm rounded-none px-4 py-3 mb-5">
             ✓ Changes saved
           </div>
         )}
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl px-4 py-3 mb-5">
+          <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-none px-4 py-3 mb-5">
             Something went wrong. Please try again.
           </div>
         )}
@@ -129,20 +129,20 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
           </div>
 
           <button type="submit"
-            className="w-full bg-[#f97316] hover:bg-[#ea6c0b] text-white font-bold py-3 rounded-xl transition-colors">
+            className="w-full bg-[#f97316] hover:bg-[#ea6c0b] text-white font-bold py-3 rounded-none transition-colors">
             Save changes
           </button>
         </form>
       </div>
 
       {/* Branch Management */}
-      <div className="mt-6 bg-[#1a1a1a] border border-white/10 rounded-2xl p-7">
+      <div className="mt-6 bg-[#1a1a1a] border border-white/10 rounded-none p-7">
         <div className="flex items-center justify-between mb-6">
            <div>
              <h2 className="font-black text-white">Branch Locations</h2>
              <p className="text-xs text-white/40 mt-1">Add additional map-pinned locations for this dealership.</p>
            </div>
-           <a href={`/admin/dealers/${dealer.id}/branches/new`} className="px-4 py-2 bg-orange-600/10 hover:bg-orange-600 text-orange-500 hover:text-white border border-orange-500/20 hover:border-orange-500 rounded-xl text-[10px] font-black uppercase tracking-widest transition-colors">
+           <a href={`/admin/dealers/${dealer.id}/branches/new`} className="px-4 py-2 bg-orange-600/10 hover:bg-orange-600 text-orange-500 hover:text-white border border-orange-500/20 hover:border-orange-500 rounded-none text-[10px] font-black uppercase tracking-widest transition-colors">
               + Add Branch
            </a>
         </div>
@@ -150,9 +150,9 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
         {dealer.branches && dealer.branches.length > 0 ? (
            <div className="space-y-3">
              {dealer.branches.map(b => (
-               <div key={b.id} className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-xl">
+               <div key={b.id} className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-none">
                  <div className="flex items-center gap-4">
-                   <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                   <div className="w-10 h-10 rounded-none bg-orange-500/10 text-orange-500 flex items-center justify-center">
                      <MapPin size={16} />
                    </div>
                    <div>
@@ -165,14 +165,14 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
              ))}
            </div>
         ) : (
-           <div className="py-8 text-center bg-white/[0.02] border border-white/5 rounded-xl border-dashed">
+           <div className="py-8 text-center bg-white/[0.02] border border-white/5 rounded-none border-dashed">
              <p className="text-xs font-bold text-white/30 uppercase tracking-widest">No branches added</p>
            </div>
         )}
       </div>
 
       {/* Danger zone */}
-      <div className="mt-6 bg-red-500/5 border border-red-500/20 rounded-2xl p-6">
+      <div className="mt-6 bg-red-500/5 border border-red-500/20 rounded-none p-6">
         <h3 className="font-bold text-red-400 mb-1">Danger zone</h3>
         <p className="text-xs text-white/30 mb-4">
           Deleting a dealership removes all their listings and portal accounts permanently.

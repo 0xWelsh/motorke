@@ -38,7 +38,7 @@ export default async function AdminEditCarPage({ params }) {
       />
 
       {/* Danger zone */}
-      <div className="mt-8 bg-red-500/5 border border-red-500/20 rounded-2xl p-6">
+      <div className="mt-8 bg-red-500/5 border border-red-500/20 rounded-none p-6">
         <h3 className="font-bold text-red-400 mb-1">Danger zone</h3>
         <p className="text-xs text-white/30 mb-4">
           Permanently deletes this listing, all its photos, and all buyer enquiries. Cannot be undone.
