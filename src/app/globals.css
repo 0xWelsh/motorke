@@ -348,7 +348,7 @@ p {
 .dark .bg-\[\#ff5a2f\] { background-color: #ff5a2f !important; color: #ffffff !important; }
 
 /* Logo Inversion */
-.dark img[src*="logo"], .dark img[alt*="Motorke"] {
+.dark img[src*="headerlogo"], .dark img[alt="Motorke Digital Showroom"] {
   filter: invert(1) brightness(2);
 }
 
@@ -393,3 +393,6 @@ p {
 .dark .border-\[\#f4f6fa\] { border-color: #333 !important; }
 .dark .border-\[\#e2e8f0\] { border-color: #333 !important; }
 .dark .bg-\[\#fbfcfe\] { background-color: #0a0a0a !important; color: #f7f6f3 !important; }
+.dark .bg-\[\#faf7f2\] { background-color: #111111 !important; color: #f7f6f3 !important; }
+.dark .border-\[\#ede6dd\] { border-color: #333 !important; }
+.dark .border-\[\#e8e2d9\] { border-color: #27272a !important; }
