@@ -138,7 +138,7 @@ export default async function CarsPage({ searchParams }) {
       <div className="w-full max-w-[2560px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-5 sm:py-6 lg:py-8 overflow-hidden">
         {/* Top Breadcrumb Bar */}
         <div className="block w-full mb-6 sm:mb-8 overflow-hidden text-[14px] font-medium">
-          <div className="block w-full xl:w-1/3 2xl:w-1/4 xl:float-left xl:pr-8 mb-4 xl:mb-0">
+          <div className="block w-full xl:w-1/3 2xl:w-1/4 xl:float-left xl:pr-5 mb-4 xl:mb-0">
             <div className="flex items-center gap-3 text-slate-800">
               <Link href="/" className="hover:text-black transition-colors">Home</Link>
               <span className="text-slate-400 text-xs mt-0.5">›</span>
@@ -147,13 +147,13 @@ export default async function CarsPage({ searchParams }) {
               <span className="text-slate-900">Available</span>
             </div>
           </div>
-          <div className="block w-full xl:w-2/3 2xl:w-3/4 xl:float-left text-slate-800">
+          <div className="block w-full xl:w-2/3 2xl:w-3/4 xl:float-left text-slate-800 xl:pl-1">
             Vehicles showing ({total.toLocaleString()})
           </div>
         </div>
 
         {/* Sidebar */}
-        <aside className="block w-full xl:w-1/3 2xl:w-1/4 xl:float-left xl:pr-8 lg:pr-6 mb-6 xl:mb-0 relative z-20">
+        <aside className="block w-full xl:w-1/3 2xl:w-1/4 xl:float-left xl:pr-5 lg:pr-4 mb-6 xl:mb-0 relative z-20">
           <div className="xl:sticky xl:top-[84px]">
             <CarsSearch
               initialSearch={search}
@@ -185,9 +185,9 @@ export default async function CarsPage({ searchParams }) {
             </Link>
           </div>
         ) : (
-          <div className="block -mx-4">
+          <div className="block -mx-3">
             {sortedCars.map((car, idx) => (
-              <div key={car.id} className="block float-left w-full md:w-1/2 xl:w-1/3 2xl:w-1/4 px-4 pb-8">
+              <div key={car.id} className="block float-left w-full md:w-1/2 xl:w-1/3 2xl:w-1/4 px-3 pb-6">
                 <InventoryCard car={car} userLat={userLat} userLng={userLng} priority={idx < 4} />
               </div>
             ))}
