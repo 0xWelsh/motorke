@@ -41,7 +41,7 @@ function PasswordMeter({ password }) {
     <div className="mt-3 space-y-2">
       <div className="flex gap-1.5 h-1">
         {segments.map((bg, i) => (
-          <div key={i} className={`flex-1 rounded-full ${bg} transition-all duration-500`} />
+          <div key={i} className={`flex-1 rounded-none ${bg} transition-all duration-500`} />
         ))}
       </div>
       <p className="text-[9px] font-black text-slate-700 uppercase tracking-[0.2em] text-right">{label}</p>
@@ -112,11 +112,11 @@ export default function SignupForm({ error: initialError }) {
     }
   };
 
-  const inputCls = "w-full bg-white border border-slate-100 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100";
+  const inputCls = "w-full bg-white border border-slate-100 rounded-none-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100";
   const labelCls = "text-[10px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1 flex items-center gap-2";
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#f7f6f3]">
       {hasGoogleAuth && (
         <Script
           src="https://accounts.google.com/gsi/client"
@@ -161,24 +161,24 @@ export default function SignupForm({ error: initialError }) {
       )}
 
       <section className="min-h-dvh px-4 py-8 sm:px-6 sm:py-12 flex items-center justify-center">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md bg-white border border-[#ddd4c8] p-8 sm:p-10 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
           {/* Header */}
           <div className="mb-8 text-center">
             <div className="flex items-center justify-center gap-2 mb-4">
               <img src="/headerlogo.png" alt="Motorke" className="h-8 w-8 object-contain" />
-              <h1 className="text-2xl font-bold text-slate-900">Motorke</h1>
+              <h1 className="text-2xl font-black uppercase tracking-widest text-slate-900">Motorke</h1>
             </div>
-            <h2 className="text-3xl font-bold text-slate-900 mb-2">Create Account</h2>
-            <p className="text-sm text-slate-600">Join as buyer or dealer to get started</p>
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tighter mb-2">Create Account</h2>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mt-2">Join as buyer or dealer to get started</p>
           </div>
 
           {/* Role Toggle */}
-          <div className="flex gap-2 mb-6 bg-slate-100 p-1 rounded-lg">
+          <div className="flex gap-2 mb-6 bg-[#fbfcfe] p-1 rounded-none border border-[#ddd4c8]">
             <button 
               type="button" 
               onClick={() => setRole("BUYER")}
               className={clsx(
-                "flex-1 py-2 px-3 rounded-md font-semibold text-sm transition-all",
+                "flex-1 py-2 px-3 rounded-none-md font-semibold text-sm transition-all",
                 role === "BUYER" 
                   ? "bg-white text-slate-900 shadow-sm" 
                   : "text-slate-600 hover:text-slate-900"
@@ -190,7 +190,7 @@ export default function SignupForm({ error: initialError }) {
               type="button" 
               onClick={() => setRole("DEALER")}
               className={clsx(
-                "flex-1 py-2 px-3 rounded-md font-semibold text-sm transition-all",
+                "flex-1 py-2 px-3 rounded-none-md font-semibold text-sm transition-all",
                 role === "DEALER" 
                   ? "bg-slate-900 text-white shadow-sm" 
                   : "text-slate-600 hover:text-slate-900"
@@ -202,8 +202,8 @@ export default function SignupForm({ error: initialError }) {
 
           {/* Error Message */}
           {errorMsg && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm font-semibold text-red-900">{errorMsg}</p>
+            <div className="mb-6 p-4 bg-[#111111] border border-red-500 rounded-none">
+              <p className="text-[10px] font-black uppercase tracking-[0.15em] text-red-500">{errorMsg}</p>
             </div>
           )}
 
@@ -215,7 +215,7 @@ export default function SignupForm({ error: initialError }) {
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm sm:text-sm font-semibold text-slate-900 mb-2">Email Address</label>
+              <label htmlFor="email" className="block text-[10px] font-black uppercase tracking-[0.16em] text-slate-900 mb-2">Email Address</label>
               <input 
                 id="email"
                 name="email" 
@@ -225,13 +225,13 @@ export default function SignupForm({ error: initialError }) {
                 required 
                 autoComplete="email"
                 placeholder="you@dealership.com" 
-                className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                className="w-full border border-[#ddd4c8] rounded-none bg-[#fbfcfe] px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-none"
               />
             </div>
 
             {/* Full Name */}
             <div>
-              <label htmlFor="name" className="block text-sm sm:text-sm font-semibold text-slate-900 mb-2">Full Name</label>
+              <label htmlFor="name" className="block text-[10px] font-black uppercase tracking-[0.16em] text-slate-900 mb-2">Full Name</label>
               <input 
                 id="name"
                 name="name" 
@@ -239,7 +239,7 @@ export default function SignupForm({ error: initialError }) {
                 required 
                 autoComplete="name"
                 placeholder="Your full name" 
-                className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                className="w-full border border-[#ddd4c8] rounded-none bg-[#fbfcfe] px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-none"
               />
             </div>
 
@@ -256,7 +256,7 @@ export default function SignupForm({ error: initialError }) {
                   required 
                   autoComplete="new-password"
                   placeholder="•••••••••" 
-                  className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all pr-10"
+                  className="w-full border border-[#ddd4c8] rounded-none bg-[#fbfcfe] px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-none pr-10"
                 />
                 <button 
                   type="button" 
@@ -280,7 +280,7 @@ export default function SignupForm({ error: initialError }) {
                 required 
                 autoComplete="new-password"
                 placeholder="•••••••••" 
-                className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                className="w-full border border-[#ddd4c8] rounded-none bg-[#fbfcfe] px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-none"
               />
             </div>
 
@@ -295,7 +295,7 @@ export default function SignupForm({ error: initialError }) {
                     type="text" 
                     required
                     placeholder="Your dealership name" 
-                    className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                    className="w-full border border-[#ddd4c8] rounded-none bg-[#fbfcfe] px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-none"
                   />
                 </div>
 
@@ -307,7 +307,7 @@ export default function SignupForm({ error: initialError }) {
                     type="tel" 
                     required
                     placeholder="+254 7__ ___ ___" 
-                    className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                    className="w-full border border-[#ddd4c8] rounded-none bg-[#fbfcfe] px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-none"
                   />
                 </div>
 
@@ -317,7 +317,7 @@ export default function SignupForm({ error: initialError }) {
                     id="county"
                     name="county"
                     required
-                    className="w-full border border-slate-200 rounded-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                    className="w-full border border-slate-200 rounded-none-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
                   >
                     <option value="">Select a county</option>
                     {COUNTIES.map((c) => (
@@ -343,7 +343,7 @@ export default function SignupForm({ error: initialError }) {
             <button 
               type="submit" 
               disabled={loading}
-              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg py-3.5 sm:py-2.5 font-semibold transition-all flex items-center justify-center gap-2 text-base sm:text-sm"
+              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-none-lg py-3.5 sm:py-2.5 font-semibold transition-all flex items-center justify-center gap-2 text-base sm:text-sm"
             >
               {loading ? <Loader2 size={18} className="animate-spin" /> : null}
               {loading ? "Creating account..." : "Create Account"}
@@ -365,7 +365,7 @@ export default function SignupForm({ error: initialError }) {
 
           {/* Footer */}
           <div className="text-center">
-            <p className="text-sm text-slate-600">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mt-2">
               Already have an account?{" "}
               <Link href="/login" className="font-semibold text-slate-900 hover:text-slate-700 transition-colors">
                 Sign in
