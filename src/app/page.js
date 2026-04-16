@@ -229,7 +229,7 @@ export default async function HomePage() {
 
       {/* Hot This Week */}
       {hotSorted.length > 0 && (
-        <section className="bg-[#f7f6f3] from-slate-900 via-slate-800 to-slate-900 py-16 sm:py-24 text-white relative overflow-hidden">
+        <section className="bg-[#111111] py-16 sm:py-24 text-white relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#ff5a2f]/10 rounded-none blur-3xl -z-0" />
           <div className="container mx-auto px-4 sm:px-6 max-w-7xl relative z-10">
             <div className="mb-14">
@@ -296,7 +296,7 @@ export default async function HomePage() {
                         <div>
                           <p className="text-lg font-black text-white leading-none">{formatPrice(car.price)}</p>
                         </div>
-                        <span className="px-5 py-2.5 text-xs font-black uppercase text-white border border-white/20 rounded hover:bg-white/10 transition-all whitespace-nowrap">
+                        <span className="px-5 py-2.5 text-xs font-black uppercase text-white border border-white/20 rounded-none hover:bg-white/10 transition-all whitespace-nowrap">
                           View Offer
                         </span>
                       </div>
