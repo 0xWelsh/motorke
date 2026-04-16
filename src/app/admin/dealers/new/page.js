@@ -6,7 +6,7 @@ export const metadata = { title: "Add Dealership — Admin" };
 
 const COUNTIES = [
   "Nairobi","Mombasa","Kisumu","Nakuru","Uasin Gishu","Kiambu","Machakos",
-  "Kajiado","Muranga","Nyeri","Meru","Embu","Kilifi","Kwale","Laikipia","Other"
+  "Kajiado","Muranga","Nyeri","Meru","Embu","Kilifi","Kwale","Laikipia","China (Import)", "Japan (Import)", "UK (Import)", "Other"
 ];
 
 export default async function AdminNewDealerPage(props) {
@@ -14,20 +14,20 @@ export default async function AdminNewDealerPage(props) {
   await requireAdmin();
   const error = searchParams?.error;
 
-  const inputCls  = "w-full bg-white/5 border border-white/10 rounded-none px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
-  const selectCls = "w-full bg-surface border border-white/10 rounded-none px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
-  const labelCls  = "block text-xs text-white/40 uppercase tracking-wider mb-2";
+  const inputCls  = "w-full border border-[#ddd4c8] rounded-none bg-[#fbfcfe] px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-none";
+  const selectCls = "w-full border border-[#ddd4c8] rounded-none bg-[#fbfcfe] px-4 py-3.5 text-sm text-slate-900 outline-none focus:border-slate-900 focus:ring-0 transition-none";
+  const labelCls  = "block text-[10px] font-black uppercase tracking-[0.16em] text-slate-900 mb-2";
 
   return (
-    <div className="p-8 max-w-2xl">
+    <div className="p-8 lg:p-12 max-w-3xl">
       <div className="mb-8">
-        <a href="/admin/dealers" className="text-xs text-white/40 hover:text-white transition-colors">← Dealerships</a>
-        <h1 className="text-3xl font-black mt-2">Add dealership</h1>
+        <a href="/admin/dealers" className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-500 hover:text-[#ff5a2f] transition-none">← Dealerships</a>
+        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tighter mt-2">Add dealership</h1>
       </div>
 
-      <div className="bg-[#1a1a1a] border border-white/10 rounded-none p-7">
+      <div className="bg-white border border-[#ddd4c8] p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-none px-4 py-3 mb-5">
+          <div className="bg-[#111111] border border-red-500 rounded-none p-4 text-[11px] font-bold text-red-400 mb-6">
             {error === "exists"  && "A dealership with that name already exists."}
             {error === "unknown" && "Something went wrong. Please try again."}
           </div>
@@ -65,7 +65,7 @@ export default async function AdminNewDealerPage(props) {
             <div>
               <label className={labelCls}>WhatsApp number</label>
               <input name="whatsapp" placeholder="254720100200" className={inputCls} />
-              <p className="text-xs text-white/20 mt-1">Country code, no +</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Country code, no +</p>
             </div>
           </div>
 
@@ -87,18 +87,18 @@ export default async function AdminNewDealerPage(props) {
               className={`${inputCls} resize-none`} />
           </div>
 
-          <div className="pt-2 border-t border-white/5">
+          <div className="pt-2 border-t border-[#ddd4c8]">
             <LocationPicker />
           </div>
 
           <div className="flex gap-6">
             <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" name="verified" className="w-4 h-4 accent-[#f97316]" />
-              <span className="text-sm text-white/60">Verified dealer</span>
+              <input type="checkbox" name="verified" className="w-4 h-4 border border-[#ddd4c8] rounded-none checked:bg-[#ff5a2f] checked:border-[#ff5a2f] cursor-pointer accent-[#ff5a2f]" />
+              <span className="text-[11px] font-bold uppercase tracking-widest text-slate-700">Verified dealer</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" name="featured" className="w-4 h-4 accent-[#f97316]" />
-              <span className="text-sm text-white/60">Featured on homepage</span>
+              <input type="checkbox" name="featured" className="w-4 h-4 border border-[#ddd4c8] rounded-none checked:bg-[#ff5a2f] checked:border-[#ff5a2f] cursor-pointer accent-[#ff5a2f]" />
+              <span className="text-[11px] font-bold uppercase tracking-widest text-slate-700">Featured on homepage</span>
             </label>
           </div>
 

@@ -35,7 +35,7 @@ export default async function AdminDealersPage() {
 
   const gradients = [
     "from-slate-100 to-slate-200",
-    "from-#ff5a2f]/10 to-#ff5a2f]/20",
+    "from-\[#ff5a2f\]/10 to-\[#ff5a2f\]/20",
     "from-blue-50 to-blue-100",
     "from-slate-50 to-slate-100",
   ];
