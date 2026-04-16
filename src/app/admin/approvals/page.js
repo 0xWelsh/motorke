@@ -74,18 +74,18 @@ export default async function AdminApprovalsPage() {
                         {dealer.name[0]?.toUpperCase()}
                       </div>
                       <div>
-                        <p className="text-lg font-black text-slate-900 tracking-tight leading-none mb-1.5 uppercase group-hover:text-#ff5a2f transition-colors">{dealer.name}</p>
+                        <p className="text-lg font-black text-slate-900 tracking-tight leading-none mb-1.5 uppercase group-hover:text-[#ff5a2f] transition-colors">{dealer.name}</p>
                         <div className="flex items-center gap-3">
                            <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{dealer.phone}</span>
                            <div className="w-1 h-1 rounded-none bg-slate-200" />
-                           <span className="text-[10px] font-bold text-#ff5a2f uppercase tracking-widest">Entry: {new Date(dealer.createdAt).toLocaleDateString()}</span>
+                           <span className="text-[10px] font-bold text-[#ff5a2f] uppercase tracking-widest">Entry: {new Date(dealer.createdAt).toLocaleDateString()}</span>
                         </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-10 py-7">
                      <div className="flex items-center gap-2.5 text-slate-700 mb-1">
-                        <MapPin size={14} className="text-#ff5a2f/40" />
+                        <MapPin size={14} className="text-[#ff5a2f]/40" />
                         <p className="text-xs font-bold uppercase tracking-widest">{dealer.county || "Unknown Territory"}</p>
                      </div>
                      <p className="text-[11px] font-medium text-slate-600 uppercase tracking-tighter">{dealer.location}</p>
@@ -106,7 +106,7 @@ export default async function AdminApprovalsPage() {
                       
                       <form action={`/api/admin/dealers/${dealer.id}/toggle-verified`} method="POST">
                         <button type="submit" 
-                          className="h-11 px-6 bg-slate-900 hover:bg-#ff5a2f text-white font-bold text-[10px] uppercase tracking-widest border border-transparent rounded-none transition-all shadow-none shadow-none flex items-center gap-2"
+                          className="h-11 px-6 bg-slate-900 hover:bg-[#ff5a2f] text-white font-bold text-[10px] uppercase tracking-widest border border-transparent rounded-none transition-all shadow-none shadow-none flex items-center gap-2"
                         >
                           <CheckCircle2 size={14} /> Authorize
                         </button>

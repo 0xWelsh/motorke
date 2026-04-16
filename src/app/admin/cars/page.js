@@ -66,7 +66,7 @@ export default async function AdminCarsPage({ searchParams }) {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-12 gap-8">
         <div>
            <div className="flex items-center gap-2 mb-2">
-             <div className="w-2 h-2 rounded-none bg-#ff5a2f shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+             <div className="w-2 h-2 rounded-none bg-[#ff5a2f] shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Inventory</span>
           </div>
           <h1 className="text-4xl font-black text-slate-900 tracking-tight">
@@ -94,7 +94,7 @@ export default async function AdminCarsPage({ searchParams }) {
             <Upload size={16} /> Bulk Import
           </Link>
           <ClearAllButton />
-          <Link href="/admin/cars/new" className="bg-#ff5a2f text-white px-5 py-2.5 rounded-none text-sm font-bold flex items-center gap-2 hover:bg-#e54a1f transition-all shadow-none">
+          <Link href="/admin/cars/new" className="bg-[#ff5a2f] text-white px-5 py-2.5 rounded-none text-sm font-bold flex items-center gap-2 hover:bg-#e54a1f transition-all shadow-none">
             <Plus size={16} /> New Car
           </Link>
         </div>
@@ -103,12 +103,12 @@ export default async function AdminCarsPage({ searchParams }) {
       {/* ── SEARCH & FILTERS ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-8 bg-white border border-[#ddd4c8] p-4 rounded-none shadow-none">
          <form className="lg:col-span-12 relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-#ff5a2f transition-colors" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-[#ff5a2f] transition-colors" />
             <input 
               name="search"
               defaultValue={search}
               placeholder="Search by Make, Model, VIN or Plate Number..."
-              className="w-full bg-[#f7f6f3] border border-[#ddd4c8] rounded-none pl-10 pr-4 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-900 outline-none focus:border-#ff5a2f/50 focus:ring-2 focus:ring-#ff5a2f/10 transition-all placeholder:text-slate-400"
+              className="w-full bg-[#f7f6f3] border border-[#ddd4c8] rounded-none pl-10 pr-4 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-900 outline-none focus:border-[#ff5a2f]/50 focus:ring-2 focus:ring-[#ff5a2f]/10 transition-all placeholder:text-slate-400"
             />
          </form>
       </div>
@@ -135,7 +135,7 @@ export default async function AdminCarsPage({ searchParams }) {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <p className="text-sm font-bold text-slate-900 mb-0.5 group-hover:text-#ff5a2f transition-colors">{car.year} {car.make} {car.model}</p>
+                    <p className="text-sm font-bold text-slate-900 mb-0.5 group-hover:text-[#ff5a2f] transition-colors">{car.year} {car.make} {car.model}</p>
                     <div className="flex items-center gap-2">
                        <span className="text-xs text-slate-600 uppercase">{car.plate || "No Plate"}</span>
                        <div className="w-1 h-1 rounded-none bg-slate-300" />
@@ -162,7 +162,7 @@ export default async function AdminCarsPage({ searchParams }) {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                      <Link href={`/admin/cars/${car.id}/edit`} className="p-2 bg-white dark:bg-slate-800 border border-[#ddd4c8] dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-#ff5a2f hover:border-#ff5a2f dark:hover:text-emerald-400 rounded-none transition-all shadow-none" title="Edit Car">
+                      <Link href={`/admin/cars/${car.id}/edit`} className="p-2 bg-white dark:bg-slate-800 border border-[#ddd4c8] dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-[#ff5a2f] hover:border-[#ff5a2f] dark:hover:text-emerald-400 rounded-none transition-all shadow-none" title="Edit Car">
                         <Edit3 size={16} />
                       </Link>
                       
@@ -170,7 +170,7 @@ export default async function AdminCarsPage({ searchParams }) {
                         <button type="submit" 
                           className={`p-2 border rounded-none transition-all shadow-none ${
                             car.available 
-                              ? "bg-white dark:bg-slate-800 border-emerald-200 dark:border-#ff5a2f/30 text-#ff5a2f dark:text-#ff5a2f hover:bg-#ff5a2f]/10 dark:hover:bg-#ff5a2f/10" 
+                              ? "bg-white dark:bg-slate-800 border-emerald-200 dark:border-[#ff5a2f]/30 text-[#ff5a2f] dark:text-[#ff5a2f] hover:bg-[#ff5a2f]]/10 dark:hover:bg-[#ff5a2f]/10" 
                               : "bg-[#f7f6f3] dark:bg-slate-800 border-[#ddd4c8] dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700"
                           }`}
                           title={car.available ? "Hide" : "Publish"}
@@ -207,8 +207,8 @@ export default async function AdminCarsPage({ searchParams }) {
               href={`/admin/cars?page=${p}&search=${search}`}
               className={`w-10 h-10 rounded-none flex items-center justify-center text-sm font-bold transition-all ${
                 p === page 
-                  ? "bg-#ff5a2f text-white shadow-none shadow-#ff5a2f/20" 
-                  : "bg-white dark:bg-slate-800 border border-[#ddd4c8] dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-#ff5a2f hover:text-#ff5a2f"
+                  ? "bg-[#ff5a2f] text-white shadow-none shadow-[#ff5a2f]/20" 
+                  : "bg-white dark:bg-slate-800 border border-[#ddd4c8] dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-[#ff5a2f] hover:text-[#ff5a2f]"
               }`}
             >
               {p}

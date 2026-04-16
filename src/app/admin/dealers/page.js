@@ -46,14 +46,14 @@ export default async function AdminDealersPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-8">
         <div>
            <div className="flex items-center gap-2 mb-2">
-             <div className="w-2 h-2 rounded-none bg-#ff5a2f shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+             <div className="w-2 h-2 rounded-none bg-[#ff5a2f] shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
              <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">Dealers</span>
           </div>
           <h1 className="text-4xl font-black text-slate-900 tracking-tight">
             Dealers <span className="text-slate-500 font-medium ml-3">/ {dealers.length} Total</span>
           </h1>
         </div>
-        <Link href="/admin/dealers/new" className="bg-#ff5a2f text-white px-6 py-3 rounded-none text-sm font-bold flex items-center gap-2 hover:bg-#e54a1f transition-all shadow-none">
+        <Link href="/admin/dealers/new" className="bg-[#ff5a2f] text-white px-6 py-3 rounded-none text-sm font-bold flex items-center gap-2 hover:bg-#e54a1f transition-all shadow-none">
           <UserPlus size={18} /> Add Dealer
         </Link>
       </div>
@@ -63,7 +63,7 @@ export default async function AdminDealersPage() {
         {dealers.map((dealer) => {
           const gradient = gradients[dealer.id.charCodeAt(0) % gradients.length];
           return (
-            <div key={dealer.id} className="bg-white border border-[#ddd4c8] rounded-none p-6 shadow-none hover:shadow-none hover:border-#ff5a2f transition-all duration-300 group relative overflow-hidden">
+            <div key={dealer.id} className="bg-white border border-[#ddd4c8] rounded-none p-6 shadow-none hover:shadow-none hover:border-[#ff5a2f] transition-all duration-300 group relative overflow-hidden">
                {/* Ambient Header */}
                <div className="flex items-start justify-between mb-8 relative z-10">
                   <div className="flex items-center gap-4">
@@ -71,7 +71,7 @@ export default async function AdminDealersPage() {
                       {dealer.name[0]?.toUpperCase()}
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-slate-900 leading-none mb-1 group-hover:text-#ff5a2f transition-colors capitalize">{dealer.name}</h3>
+                      <h3 className="text-lg font-bold text-slate-900 leading-none mb-1 group-hover:text-[#ff5a2f] transition-colors capitalize">{dealer.name}</h3>
                       <div className="flex items-center gap-1.5 text-slate-600">
                         <MapPin size={12} />
                         <span className="text-xs font-semibold capitalize">{dealer.county || "Unknown"}</span>
@@ -107,7 +107,7 @@ export default async function AdminDealersPage() {
                <div className="flex items-center justify-between pt-6 border-t border-slate-100 relative z-10">
                  <div className="flex items-center gap-2">
                     {dealer.verified ? (
-                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-none bg-#ff5a2f]/10 border border-#ff5a2f]/20 text-#ff5a2f text-xs font-bold shadow-none">
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-none bg-[#ff5a2f]]/10 border border-[#ff5a2f]]/20 text-[#ff5a2f] text-xs font-bold shadow-none">
                         <ShieldCheck size={14} /> Verified
                       </div>
                     ) : (

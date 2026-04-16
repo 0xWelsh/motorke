@@ -45,14 +45,14 @@ function NavLink({ href, label, Icon, active }) {
       href={href} 
       className={clsx(
         "flex items-center justify-between group px-5 py-3 rounded-none transition-all duration-300",
-        active 
-          ? "bg-#ff5a2f text-white shadow-none shadow-#ff5a2f/20" 
-          : "text-slate-700 hover:text-slate-900 hover:bg-slate-100"
+        active
+          ? "bg-[#111111] border border-[#111111] text-white shadow-none"
+          : "text-slate-900 bg-white border border-transparent hover:bg-[#fbfcfe] hover:border-[#ddd4c8]"
       )}
     >
       <div className="flex items-center gap-3">
-        <Icon size={18} className={clsx("transition-colors", active ? "text-white" : "group-hover:text-#ff5a2f")} />
-        <span className="text-[13px] font-bold uppercase tracking-wider">{label}</span>
+        <Icon size={18} className={clsx("transition-none", active ? "text-[#ff5a2f]" : "group-hover:text-[#ff5a2f]")} />
+        <span className="text-[11px] font-black uppercase tracking-[0.15em]">{label}</span>
       </div>
       {active && <div className="w-1.5 h-1.5 rounded-none bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />}
     </Link>
@@ -84,7 +84,7 @@ export default function AdminLayout({ children }) {
   };
 
   return (
-    <div className="flex bg-[#f7f6f3] text-slate-900 selection:bg-#ff5a2f]/20 selection:text-slate-900 relative">
+    <div className="flex bg-[#fbfcfe] text-slate-900 selection:bg-[#ff5a2f]]/20 selection:text-slate-900 relative">
       
       {/* Mobile Backdrop */}
       {sidebarOpen && (
@@ -102,12 +102,12 @@ export default function AdminLayout({ children }) {
         {/* Branding */}
         <div className="p-6 lg:p-8 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-4 group">
-            <div className="w-12 h-12 bg-slate-900 rounded-none flex items-center justify-center group-hover:bg-#ff5a2f transition-all duration-500 shadow-none shadow-none">
-              <img src="/headerlogo.png" alt="Motorke" className="w-7 h-7 object-contain rounded-none" />
+            <div className="w-12 h-12 bg-[#111111] rounded-none flex items-center justify-center group-hover:bg-[#ff5a2f] transition-all duration-500 shadow-none shadow-none">
+              <img src="/headerlogo.png" alt="Motorke" className="w-8 h-8 object-contain rounded-none filter invert brightness-200" />
             </div>
             <div>
               <span className="text-xl font-black text-slate-900 tracking-tighter block leading-none">
-                Motor<span className="text-#ff5a2f">ke</span>
+                Motor<span className="text-[#ff5a2f]">ke</span>
               </span>
               <span className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em] mt-1.5 block">
                 Admin Panel
@@ -122,14 +122,14 @@ export default function AdminLayout({ children }) {
         {/* Navigation */}
         <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto custom-scrollbar">
           <div className="px-4 mb-4">
-             <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">Core Operations</p>
+             <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.25em]">Core Operations</p>
           </div>
           {links.map(({ href, label, Icon }) => (
             <NavLink key={href} href={href} label={label} Icon={Icon} active={path === href} />
           ))}
           
           <div className="px-4 mb-4 mt-8">
-             <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">Management</p>
+             <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.25em]">Management</p>
           </div>
           {quickActions.map(({ href, label, Icon }) => (
             <NavLink key={href} href={href} label={label} Icon={Icon} active={path === href} />
@@ -160,7 +160,7 @@ export default function AdminLayout({ children }) {
               >
                  <Menu size={20} />
               </button>
-              <span className="hidden sm:inline hover:text-#ff5a2f transition-colors cursor-default">Admin</span>
+              <span className="hidden sm:inline hover:text-[#ff5a2f] transition-colors cursor-default">Admin</span>
               <ChevronRight size={12} className="hidden sm:block text-slate-400" />
               <span className="text-slate-900 font-black truncate max-w-[120px] sm:max-w-none">{links.find(l => l.href === path)?.label || "Overview"}</span>
            </div>
@@ -168,14 +168,14 @@ export default function AdminLayout({ children }) {
            <div className="flex items-center gap-8">
               {/* Search */}
               <div className="hidden lg:flex items-center relative group">
-                <Search className="absolute left-4 w-4 h-4 text-slate-500 group-focus-within:text-#ff5a2f transition-colors" />
+                <Search className="absolute left-4 w-4 h-4 text-slate-500 group-focus-within:text-[#ff5a2f] transition-colors" />
                 <input 
                   type="text"
                   placeholder="Search cars... (Enter)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleGlobalSearch}
-                  className="bg-[#f7f6f3] border border-[#ddd4c8] rounded-none pl-12 pr-4 py-2.5 text-[13px] font-medium w-64 focus:w-80 focus:border-#ff5a2f/50 focus:bg-white focus:outline-none transition-all placeholder:text-slate-600"
+                  className="bg-[#f7f6f3] border border-[#ddd4c8] rounded-none pl-12 pr-4 py-2.5 text-[13px] font-medium w-64 focus:w-80 focus:border-[#ff5a2f]/50 focus:bg-white focus:outline-none transition-all placeholder:text-slate-600"
                 />
               </div>
 
@@ -186,13 +186,13 @@ export default function AdminLayout({ children }) {
                  </button>
               </div>
 
-              <div className="flex items-center gap-3 bg-#ff5a2f]/10 border border-emerald-200 p-1.5 lg:pr-4 rounded-none group cursor-pointer hover:border-emerald-300 hover:bg-#ff5a2f]/20/40 transition-all">
-                <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-none bg-#ff5a2f text-white flex items-center justify-center font-black text-[10px] lg:text-xs shadow-none group-hover:bg-#e54a1f transition-all duration-300">
+              <div className="flex items-center gap-3 bg-[#ff5a2f]]/10 border border-emerald-200 p-1.5 lg:pr-4 rounded-none group cursor-pointer hover:border-emerald-300 hover:bg-[#ff5a2f]]/20/40 transition-all">
+                <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-none bg-[#ff5a2f] text-white flex items-center justify-center font-black text-[10px] lg:text-xs shadow-none group-hover:bg-#e54a1f transition-all duration-300">
                   AD
                 </div>
                 <div className="hidden lg:flex flex-col">
                   <p className="text-[11px] font-black text-slate-900 uppercase leading-none">Super Admin</p>
-                  <p className="text-[9px] font-bold text-#ff5a2f uppercase tracking-widest mt-1">Verified</p>
+                  <p className="text-[9px] font-bold text-[#ff5a2f] uppercase tracking-widest mt-1">Verified</p>
                 </div>
               </div>
            </div>

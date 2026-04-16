@@ -87,7 +87,7 @@ export default async function AdminDashboard({ searchParams }) {
       <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-8 gap-6">
         <div>
           <div className="flex items-center gap-2 mb-2">
-             <div className="w-2 h-2 rounded-none bg-#ff5a2f shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+             <div className="w-2 h-2 rounded-none bg-[#ff5a2f] shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">System Administration</span>
           </div>
           <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-1">
@@ -107,7 +107,7 @@ export default async function AdminDashboard({ searchParams }) {
               <Link 
                 key={opt.v} href={`?range=${opt.v}`} 
                 className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-none transition-all ${
-                  range === opt.v ? "bg-white text-#ff5a2f shadow-none border border-[#ddd4c8]/50" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
+                  range === opt.v ? "bg-white text-[#ff5a2f] shadow-none border border-[#ddd4c8]/50" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
                 }`}
               >
                 {opt.label}
@@ -127,7 +127,7 @@ export default async function AdminDashboard({ searchParams }) {
         ].map((m, i) => (
           <div key={i} className="bg-white border border-[#ddd4c8] p-6 rounded-none shadow-none hover:shadow-none hover:border-slate-300 transition-all relative overflow-hidden group">
             <div className="flex items-center justify-between mb-4 relative z-10">
-              <div className={`w-10 h-10 flex items-center justify-center rounded-[10px] bg-[#f7f6f3] border border-slate-100 ${m.color ? "text-#ff5a2f group-hover:bg-#ff5a2f group-hover:text-white" : "text-slate-500 group-hover:bg-slate-900 group-hover:text-white"} transition-colors`}>
+              <div className={`w-10 h-10 flex items-center justify-center rounded-[10px] bg-[#f7f6f3] border border-slate-100 ${m.color ? "text-[#ff5a2f] group-hover:bg-[#ff5a2f] group-hover:text-white" : "text-slate-500 group-hover:bg-slate-900 group-hover:text-white"} transition-colors`}>
                 {m.icon}
               </div>
             </div>
@@ -135,7 +135,7 @@ export default async function AdminDashboard({ searchParams }) {
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400 relative z-10 mb-1">{m.label}</p>
             <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider relative z-10 bg-[#f7f6f3] inline-flex px-2 py-0.5 rounded-none mt-2">{m.sub}</p>
             
-            {m.color && <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-#ff5a2f]/10 rounded-none blur-2xl opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none" />}
+            {m.color && <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#ff5a2f]]/10 rounded-none blur-2xl opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none" />}
           </div>
         ))}
       </div>
@@ -183,18 +183,18 @@ export default async function AdminDashboard({ searchParams }) {
             </div>
 
             {/* Billing Health Panel */}
-            <div className="bg-#ff5a2f]/10 border border-#ff5a2f]/20 p-6 rounded-none shadow-none">
-               <div className="flex items-center gap-2 mb-6 text-#ff5a2f">
+            <div className="bg-[#ff5a2f]]/10 border border-[#ff5a2f]]/20 p-6 rounded-none shadow-none">
+               <div className="flex items-center gap-2 mb-6 text-[#ff5a2f]">
                   <Activity size={16} strokeWidth={3} />
                   <span className="text-xs font-black uppercase tracking-widest text-#e54a1f">Billing Health</span>
                </div>
-               <div className="bg-white rounded-none p-6 border border-#ff5a2f]/20 shadow-none flex flex-col items-center text-center justify-center">
+               <div className="bg-white rounded-none p-6 border border-[#ff5a2f]]/20 shadow-none flex flex-col items-center text-center justify-center">
                   <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Estimated MRR</p>
                   <p className="text-4xl font-black text-slate-900 tracking-tighter mb-6">{formatCompact(mrr)}</p>
                   
                   <div className="w-full flex items-center gap-2 pt-5 border-t border-slate-100/60">
-                    <div className="flex-1 bg-#ff5a2f]/10 border border-#ff5a2f]/20/50 py-3 rounded-none flex flex-col items-center justify-center">
-                       <span className="text-[10px] font-black uppercase tracking-widest text-#ff5a2f mb-1">Premium</span>
+                    <div className="flex-1 bg-[#ff5a2f]]/10 border border-[#ff5a2f]]/20/50 py-3 rounded-none flex flex-col items-center justify-center">
+                       <span className="text-[10px] font-black uppercase tracking-widest text-[#ff5a2f] mb-1">Premium</span>
                        <span className="text-xl font-black text-#e54a1f">{premiumSubs}</span>
                     </div>
                     <div className="flex-1 bg-[#f7f6f3] border border-slate-100 py-3 rounded-none flex flex-col items-center justify-center">

@@ -122,7 +122,7 @@ export default async function AdminNewUserPage(props) {
               </div>
 
               <div className="pt-8 mt-4 border-t border-slate-100 flex justify-end">
-                <button type="submit" className="bg-slate-900 border border-slate-900 text-white px-8 h-12 rounded-none text-[11px] font-black uppercase tracking-widest hover:bg-#ff5a2f hover:border-#ff5a2f transition-all shadow-none flex items-center gap-2">
+                <button type="submit" className="bg-slate-900 border border-slate-900 text-white px-8 h-12 rounded-none text-[11px] font-black uppercase tracking-widest hover:bg-[#ff5a2f] hover:border-[#ff5a2f] transition-all shadow-none flex items-center gap-2">
                   Provision Identity
                 </button>
               </div>
