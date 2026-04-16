@@ -91,9 +91,9 @@ export default async function HomePage() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image src={HERO_TEXTURE} fill priority className="object-cover opacity-[0.04]" alt="" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,90,47,0.08),transparent_40%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_25%,rgba(17,17,17,0.05),transparent_38%)]" />
-          <div className="absolute -top-24 -right-20 h-80 w-80 rounded-full bg-[#ff5a2f]/5 blur-3xl" />
+          <div className="absolute inset-0 bg-[#f7f6f3]" />
+          <div className="absolute inset-0 bg-[#f7f6f3]" />
+          <div className="absolute -top-24 -right-20 h-80 w-80 rounded-none bg-[#ff5a2f]/5 blur-3xl" />
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-2 pb-14 sm:pt-3 sm:pb-20 md:pt-8 md:pb-24 relative z-10">
@@ -101,7 +101,7 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
             <div className="lg:col-span-7">
-              <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-slate-900 leading-[0.92] tracking-tight mb-6 sm:mb-7">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-slate-900 leading-[0.92] tracking-tight mb-6 sm:mb-7">
                 Buy cars with
                 <br />
                 <span className="text-[#ff5a2f]">dealer-level clarity.</span>
@@ -116,10 +116,10 @@ export default async function HomePage() {
               </div>
 
               <div className="flex flex-col sm:flex-row justify-center sm:justify-start items-stretch sm:items-center gap-4 sm:gap-3 mb-10">
-                <Link href="/cars" className="mk-pill-btn flex justify-center items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-7 py-3.5 text-xs font-bold uppercase transition-all shadow-lg hover:shadow-[#ff5a2f]/30 active:scale-95">
+                <Link href="/cars" className=" flex justify-center items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-7 py-3.5 text-xs font-black uppercase transition-all shadow-lg hover:shadow-[#ff5a2f]/30 active:scale-95">
                   Search Now <ArrowUpRight className="w-4 h-4" />
                 </Link>
-                <Link href="/dealers" className="mk-pill-btn flex justify-center items-center gap-2 bg-white border-2 border-[#111111] text-slate-900 px-7 py-3 text-xs font-bold uppercase hover:bg-[#f5f5f5] transition-all active:scale-95">
+                <Link href="/dealers" className=" flex justify-center items-center gap-2 bg-white border-2 border-[#111111] text-slate-900 px-7 py-3 text-xs font-black uppercase hover:bg-[#f5f5f5] transition-all active:scale-95">
                   View Dealers
                 </Link>
               </div>
@@ -129,22 +129,22 @@ export default async function HomePage() {
                   <Link
                     key={type}
                     href={`/cars?search=${encodeURIComponent(type)}`}
-                    className="px-4 py-2 rounded-full border border-[#e7e1d8] bg-white text-[11px] font-bold uppercase tracking-[0.12em] text-slate-700 hover:border-[#ff5a2f]/40 hover:text-slate-900"
+                    className="px-4 py-2 rounded-none border border-[#ddd4c8] bg-white text-[11px] font-black uppercase tracking-[0.12em] text-slate-700 hover:border-slate-400 hover:text-slate-900"
                   >
                     {type}
                   </Link>
                 ))}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-[#e7e1d8] max-w-2xl mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-[#ddd4c8] max-w-2xl mb-8">
                 {[
                   { label: "Verified Profiles", value: "Trust Signals" },
                   { label: "Transparent Specs", value: "No Guesswork" },
                   { label: "Direct Contact", value: "Fast Follow-up" },
                 ].map((item) => (
                   <div key={item.label}>
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-1">{item.label}</p>
-                    <p className="text-sm font-bold text-slate-800">{item.value}</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-400 mb-1">{item.label}</p>
+                    <p className="text-sm font-black text-slate-900">{item.value}</p>
                   </div>
                 ))}
               </div>
@@ -156,7 +156,7 @@ export default async function HomePage() {
                   { Icon: CheckCircle, label: "Verified Dealers" },
                   { Icon: Star, label: "5-Star Support" },
                 ].map(({ Icon, label }) => (
-                  <div key={label} className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-slate-50 border border-[#e7e1d8] text-xs font-bold text-slate-700">
+                  <div key={label} className="flex items-center gap-2 px-4 py-2.5 rounded-none bg-[#f7f6f3] border border-[#ddd4c8] text-xs font-black text-slate-700">
                     <Icon className="w-4 h-4 text-orange-600" />
                     {label}
                   </div>
@@ -180,7 +180,7 @@ export default async function HomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="bg-gradient-to-br from-slate-50 to-slate-100/50 border-b border-[#e7e1d8] py-12 sm:py-16 md:py-20">
+      <section className="bg-[#f7f6f3] from-[#f7f6f3] to-[#f7f6f3] border-b border-[#ddd4c8] py-12 sm:py-16 md:py-20">
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             {[
@@ -190,10 +190,10 @@ export default async function HomePage() {
               { label: "Avg Response", value: "< 2hrs", icon: Zap },
             ].map(({ label, value, icon: Icon }) => (
               <div key={label} className="text-center">
-                <div className="w-12 h-12 rounded-lg bg-white border border-[#e8e2d9] flex items-center justify-center mx-auto mb-3 shadow-sm">
+                <div className="w-12 h-12 rounded-none bg-white border border-[#e8e2d9] flex items-center justify-center mx-auto mb-3 shadow-sm">
                   <Icon className="w-6 h-6 text-[#ff5a2f]" />
                 </div>
-                <p className="text-2xl sm:text-3xl font-bold text-slate-900 mb-1">{value}</p>
+                <p className="text-2xl sm:text-3xl font-black text-slate-900 mb-1">{value}</p>
                 <p className="text-xs sm:text-sm font-semibold text-slate-600 uppercase tracking-wide">{label}</p>
               </div>
             ))}
@@ -204,8 +204,8 @@ export default async function HomePage() {
       {/* Why Us Section */}
       <section className="container mx-auto px-4 sm:px-6 py-12 sm:py-20 max-w-7xl">
         <div className="mb-12">
-          <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Platform</p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-4 max-w-2xl">Why buyers choose Motorke</h2>
+          <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 mb-3">Platform</p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 mb-4 max-w-2xl">Why buyers choose Motorke</h2>
           <p className="text-base sm:text-lg text-slate-600 max-w-2xl">Transparent pricing, verified sellers, and direct communication—no middlemen, no surprises.</p>
         </div>
         
@@ -216,11 +216,11 @@ export default async function HomePage() {
             { icon: TrendingUp, label: "Transparent Pricing", desc: "All prices shown in USD with breakdown: vehicle cost, inspection fees, shipping, and duty estimates clearly displayed." },
             { icon: Zap, label: "Direct Dealer Access", desc: "Connect directly with verified dealers. No middlemen — get instant responses and negotiate transparently." },
           ].map(({ icon: Icon, label, desc }) => (
-            <div key={label} className="p-6 rounded-xl border border-[#e8e2d9] bg-white hover:shadow-md transition-all group">
-              <div className="w-12 h-12 rounded-lg bg-[#ff5a2f]/10 flex items-center justify-center mb-4 group-hover:bg-[#ff5a2f]/20 transition-colors">
+            <div key={label} className="p-6 rounded-none border border-[#e8e2d9] bg-white hover:shadow-md transition-all group">
+              <div className="w-12 h-12 rounded-none bg-[#ff5a2f]/10 flex items-center justify-center mb-4 group-hover:bg-[#ff5a2f]/20 transition-colors">
                 <Icon className="w-6 h-6 text-[#ff5a2f]" />
               </div>
-              <h3 className="font-bold text-slate-900 mb-2">{label}</h3>
+              <h3 className="font-black text-slate-900 mb-2">{label}</h3>
               <p className="text-sm text-slate-600">{desc}</p>
             </div>
           ))}
@@ -229,12 +229,12 @@ export default async function HomePage() {
 
       {/* Hot This Week */}
       {hotSorted.length > 0 && (
-        <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-16 sm:py-24 text-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#ff5a2f]/10 rounded-full blur-3xl -z-0" />
+        <section className="bg-[#f7f6f3] from-slate-900 via-slate-800 to-slate-900 py-16 sm:py-24 text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#ff5a2f]/10 rounded-none blur-3xl -z-0" />
           <div className="container mx-auto px-4 sm:px-6 max-w-7xl relative z-10">
             <div className="mb-14">
-              <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-white/60 mb-3">Trending</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">Hot This Week</h2>
+              <p className="text-sm font-black uppercase tracking-[0.18em] text-white/60 mb-3">Trending</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black">Hot This Week</h2>
               <p className="text-base text-white/70 mt-2">Most viewed and inquired vehicles right now</p>
             </div>
 
@@ -256,7 +256,7 @@ export default async function HomePage() {
                   <Link
                     key={car.id}
                     href={`/cars/${car.id}`}
-                    className="group block bg-white/10 backdrop-blur-sm border border-white/10 hover:border-white/20 overflow-hidden rounded-xl transition-all duration-500 flex flex-col h-full"
+                    className="group block bg-white/10 backdrop-blur-sm border border-white/10 hover:border-white/20 overflow-hidden rounded-none transition-all duration-500 flex flex-col h-full"
                   >
                     <div className="relative aspect-[16/9] bg-white/5 overflow-hidden">
                       {car.images[0]?.url ? (
@@ -267,7 +267,7 @@ export default async function HomePage() {
                           className="object-cover group-hover:scale-105 transition-transform duration-700"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-white/30 text-xs font-bold">No Image</div>
+                        <div className="w-full h-full flex items-center justify-center text-white/30 text-xs font-black">No Image</div>
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                     </div>
@@ -275,8 +275,8 @@ export default async function HomePage() {
                     <div className="p-6 flex flex-col flex-1 gap-4">
                       <div className="space-y-3">
                         <div className="flex items-baseline gap-2">
-                          <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-white/60">{car.year}</p>
-                          <h3 className="font-bold text-white text-base leading-tight group-hover:text-[#ff5a2f] transition-colors">
+                          <p className="text-[10px] font-black uppercase tracking-[0.14em] text-white/60">{car.year}</p>
+                          <h3 className="font-black text-white text-base leading-tight group-hover:text-[#ff5a2f] transition-colors">
                             {car.make} {car.model} {car.variant && `(${car.variant})`}
                           </h3>
                         </div>
@@ -287,16 +287,16 @@ export default async function HomePage() {
                       </div>
 
                       <div className="flex flex-wrap gap-2">
-                        {car.bodyType && <span className="text-[10px] font-bold text-white/80 bg-white/10 px-2.5 py-1 rounded-full uppercase tracking-wide">{car.bodyType.replace(/_/g, ' ')}</span>}
-                        {car.fuelType && <span className="text-[10px] font-bold text-white/80 bg-white/10 px-2.5 py-1 rounded-full uppercase tracking-wide">{car.fuelType}</span>}
-                        {car.mileage && <span className="text-[10px] font-bold text-white/80 bg-white/10 px-2.5 py-1 rounded-full uppercase tracking-wide">{Math.round(car.mileage)}km</span>}
+                        {car.bodyType && <span className="text-[10px] font-black text-white/80 bg-white/10 px-2.5 py-1 rounded-none uppercase tracking-wide">{car.bodyType.replace(/_/g, ' ')}</span>}
+                        {car.fuelType && <span className="text-[10px] font-black text-white/80 bg-white/10 px-2.5 py-1 rounded-none uppercase tracking-wide">{car.fuelType}</span>}
+                        {car.mileage && <span className="text-[10px] font-black text-white/80 bg-white/10 px-2.5 py-1 rounded-none uppercase tracking-wide">{Math.round(car.mileage)}km</span>}
                       </div>
 
                       <div className="mt-auto flex items-end justify-between pt-4 border-t border-white/10 gap-3">
                         <div>
-                          <p className="text-lg font-bold text-white leading-none">{formatPrice(car.price)}</p>
+                          <p className="text-lg font-black text-white leading-none">{formatPrice(car.price)}</p>
                         </div>
-                        <span className="px-5 py-2.5 text-xs font-bold uppercase text-white border border-white/20 rounded hover:bg-white/10 transition-all whitespace-nowrap">
+                        <span className="px-5 py-2.5 text-xs font-black uppercase text-white border border-white/20 rounded hover:bg-white/10 transition-all whitespace-nowrap">
                           View Offer
                         </span>
                       </div>
@@ -310,8 +310,8 @@ export default async function HomePage() {
       )}
             
       <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-24 max-w-7xl">
-        <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Showcase</p>
-        <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-12">Premium Selections</h2>
+        <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 mb-3">Showcase</p>
+        <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-12">Premium Selections</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Info Card */}
@@ -322,12 +322,12 @@ export default async function HomePage() {
               ))}
             </div>
 
-            <h3 className="text-2xl font-bold text-slate-900 mb-3">Explore our premium collection</h3>
+            <h3 className="text-2xl font-black text-slate-900 mb-3">Explore our premium collection</h3>
             <p className="text-sm text-slate-600 mb-8 leading-relaxed flex-1">
               Browse our curated selection of premium vehicles imported directly from Japan. Quality assured with transparent pricing and full vehicle history.
             </p>
 
-            <Link href="/cars" className="inline-flex mk-pill-btn items-center justify-center w-full bg-slate-900 hover:bg-slate-800 text-white px-6 py-3.5 text-xs font-bold uppercase transition-all shadow-md">
+            <Link href="/cars" className="inline-flex  items-center justify-center w-full bg-slate-900 hover:bg-slate-800 text-white px-6 py-3.5 text-xs font-black uppercase transition-all shadow-md">
               View All Vehicles
             </Link>
           </div>
@@ -337,15 +337,15 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-gradient-to-br from-slate-50 to-slate-100 py-14 sm:py-20 border-t border-[#e7e1d8]">
+      <section className="bg-[#f7f6f3] from-[#f7f6f3] to-slate-100 py-14 sm:py-20 border-t border-[#ddd4c8]">
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
           <div className="py-8 md:py-10">
             <div className="flex items-center justify-between mb-10 gap-4">
               <div>
-                <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Network</p>
-                <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">Verified Dealerships</h2>
+                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 mb-3">Network</p>
+                <h2 className="text-3xl sm:text-4xl font-black text-slate-900">Verified Dealerships</h2>
               </div>
-              <Link href="/dealers" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-5 py-3 text-xs font-bold uppercase transition-all shadow-md">
+              <Link href="/dealers" className="hidden sm:inline-flex  items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-5 py-3 text-xs font-black uppercase transition-all shadow-md">
                 View All Dealers <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
@@ -360,13 +360,13 @@ export default async function HomePage() {
       </section>
 
       {newArrivals.length > 0 && (
-        <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-24 max-w-7xl border-t border-[#e7e1d8]">
+        <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-24 max-w-7xl border-t border-[#ddd4c8]">
           <div className="flex items-end justify-between mb-12 sm:mb-14 gap-4">
             <div>
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-slate-400 mb-3">Fresh</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900">New Arrivals</h2>
+              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 mb-3">Fresh</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900">New Arrivals</h2>
             </div>
-            <Link href="/cars?sort=newest" className="hidden sm:inline-flex mk-pill-btn items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-5 py-3 text-xs font-bold uppercase transition-all shadow-md">
+            <Link href="/cars?sort=newest" className="hidden sm:inline-flex  items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-5 py-3 text-xs font-black uppercase transition-all shadow-md">
               Latest Cars <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -377,19 +377,19 @@ export default async function HomePage() {
       )}
 
       <section className="container mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-20 max-w-7xl">
-        <div className="rounded-3xl overflow-hidden border border-slate-200 bg-gradient-to-br from-[#111111] via-slate-900 to-[#1a1a1a] p-6 sm:p-10 md:p-16 text-white relative shadow-2xl">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#ff5a2f]/20 blur-3xl" />
-          <div className="absolute -left-32 -bottom-20 h-80 w-80 rounded-full bg-[#ff5a2f]/10 blur-3xl" />
+        <div className="rounded-none overflow-hidden border border-[#ddd4c8] bg-[#f7f6f3] from-[#111111] via-slate-900 to-[#1a1a1a] p-6 sm:p-10 md:p-16 text-white relative shadow-2xl">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-none bg-[#ff5a2f]/20 blur-3xl" />
+          <div className="absolute -left-32 -bottom-20 h-80 w-80 rounded-none bg-[#ff5a2f]/10 blur-3xl" />
           
           <div className="relative z-10 max-w-2xl">
-            <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-white/60 mb-4">For Dealerships</p>
-            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-6">
+            <p className="text-sm font-black uppercase tracking-[0.18em] text-white/60 mb-4">For Dealerships</p>
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight mb-6">
               Your cars deserve better than a social media album.
             </h3>
             <p className="text-base sm:text-lg text-white/80 mb-10 font-medium">
               Get a modern digital storefront, profile your brand, reach verified buyers, and capture leads in one clean system. No fees. No middlemen.
             </p>
-            <Link href="/signup" className="mk-pill-btn inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-8 py-4 text-xs font-bold uppercase transition-all shadow-lg hover:shadow-[#ff5a2f]/40 active:scale-95">
+            <Link href="/signup" className=" inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-8 py-4 text-xs font-black uppercase transition-all shadow-lg hover:shadow-[#ff5a2f]/40 active:scale-95">
               Create Dealer Account <ArrowUpRight className="w-4 h-4" />
             </Link>
           </div>
@@ -418,9 +418,9 @@ function HeroCarPanel({ car, tall = false }) {
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
       <div className="absolute left-4 right-4 bottom-4 text-white">
-        <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-white/80 mb-1">{car.dealer?.name}</p>
-        <p className="font-bold leading-tight">{title}</p>
-        <p className="text-sm font-bold mt-1 text-white/90">{formatPrice(car.price)}</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.16em] text-white/80 mb-1">{car.dealer?.name}</p>
+        <p className="font-black leading-tight">{title}</p>
+        <p className="text-sm font-black mt-1 text-white/90">{formatPrice(car.price)}</p>
       </div>
     </Link>
   );
@@ -435,7 +435,7 @@ function DealerCard({ dealer }) {
       className="group border-y border-[#e8e2d9] py-5 transition-all"
     >
       <div className="flex items-start justify-between mb-4">
-        <div className="w-14 h-14 rounded-xl bg-[#faf7f2] border border-[#ede6dd] flex items-center justify-center text-xl font-black text-slate-900 overflow-hidden">
+        <div className="w-14 h-14 rounded-none bg-[#faf7f2] border border-[#ede6dd] flex items-center justify-center text-xl font-black text-slate-900 overflow-hidden">
           {brandImage ? (
             <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover" />
           ) : (
@@ -443,21 +443,21 @@ function DealerCard({ dealer }) {
           )}
         </div>
         {dealer.verified && (
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-emerald-700">
+          <span className="inline-flex items-center gap-1.5 rounded-none border border-emerald-200 bg-emerald-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-emerald-700">
             <ShieldCheck className="w-3.5 h-3.5" /> Verified
           </span>
         )}
       </div>
 
-      <h3 className="text-lg font-bold text-slate-900 group-hover:text-black mb-2 line-clamp-1">{dealer.name}</h3>
-      <p className="text-xs text-slate-500 font-bold uppercase tracking-[0.12em] flex items-center gap-1.5 mb-6">
+      <h3 className="text-lg font-black text-slate-900 group-hover:text-black mb-2 line-clamp-1">{dealer.name}</h3>
+      <p className="text-xs text-slate-500 font-black uppercase tracking-[0.12em] flex items-center gap-1.5 mb-6">
         <MapPin className="w-3.5 h-3.5" /> {dealer.location}
       </p>
 
       <div className="flex items-center justify-between border-t border-[#efe8df] pt-4">
         <div>
-          <p className="text-2xl font-bold text-slate-900 leading-none">{dealer._count?.cars || 0}</p>
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mt-1">Live Cars</p>
+          <p className="text-2xl font-black text-slate-900 leading-none">{dealer._count?.cars || 0}</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-400 mt-1">Live Cars</p>
         </div>
         <span className="mk-inline-action inline-flex items-center gap-1">
           View <ChevronRight className="w-4 h-4" />
@@ -497,27 +497,27 @@ function CarCard({ car }) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs font-bold uppercase tracking-widest">No Image</div>
+          <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs font-black uppercase tracking-widest">No Image</div>
         )}
 
         <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
           {car.badges?.slice(0, 2).map((b) => (
-            <span key={b} className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full backdrop-blur-md ${BADGE_OPTIONS[b]?.color || "bg-white/95 text-slate-700"}`}>
+            <span key={b} className={`text-[10px] font-black px-2.5 py-1 rounded-none backdrop-blur-md ${BADGE_OPTIONS[b]?.color || "bg-white/95 text-slate-700"}`}>
               {b}
             </span>
           ))}
         </div>
 
         <div className="absolute top-3 right-3">
-          <span className="inline-block text-[11px] font-extrabold px-3 py-1.5 rounded-full bg-emerald-500 text-white">AVAILABLE</span>
+          <span className="inline-block text-[11px] font-black px-3 py-1.5 rounded-none bg-emerald-500 text-white">AVAILABLE</span>
         </div>
       </Link>
 
       <div className="p-6 flex flex-col flex-1 gap-4">
         <Link href={`/cars/${car.id}`} className="space-y-3">
           <div className="flex items-baseline gap-2">
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400">{car.year}</p>
-            <h3 className="font-bold text-slate-900 text-base leading-tight group-hover:text-black transition-colors">
+            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">{car.year}</p>
+            <h3 className="font-black text-slate-900 text-base leading-tight group-hover:text-black transition-colors">
               {car.make} {car.model} {car.variant && `(${car.variant})`}
             </h3>
           </div>
@@ -528,16 +528,16 @@ function CarCard({ car }) {
         </Link>
 
         <div className="flex flex-wrap gap-2">
-          {car.bodyType && <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-full uppercase tracking-wide">{car.bodyType.replace(/_/g, ' ')}</span>}
-          {car.fuelType && <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-full uppercase tracking-wide">{car.fuelType}</span>}
-          {car.mileage && <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-full uppercase tracking-wide">{Math.round(car.mileage)}km</span>}
+          {car.bodyType && <span className="text-[10px] font-black text-slate-700 bg-slate-100 px-2.5 py-1 rounded-none uppercase tracking-wide">{car.bodyType.replace(/_/g, ' ')}</span>}
+          {car.fuelType && <span className="text-[10px] font-black text-slate-700 bg-slate-100 px-2.5 py-1 rounded-none uppercase tracking-wide">{car.fuelType}</span>}
+          {car.mileage && <span className="text-[10px] font-black text-slate-700 bg-slate-100 px-2.5 py-1 rounded-none uppercase tracking-wide">{Math.round(car.mileage)}km</span>}
         </div>
 
         <div className="mt-auto flex items-end justify-between pt-4 border-t border-[#efe8df] gap-3">
           <div>
-            <p className="text-lg font-bold text-slate-900 leading-none">{formatPrice(car.price)}</p>
+            <p className="text-lg font-black text-slate-900 leading-none">{formatPrice(car.price)}</p>
           </div>
-          <Link href={`/cars/${car.id}`} className="inline-flex px-5 py-2.5 text-xs font-bold uppercase text-slate-900 border border-slate-300 rounded hover:bg-slate-900 hover:text-white transition-all whitespace-nowrap">
+          <Link href={`/cars/${car.id}`} className="inline-flex px-5 py-2.5 text-xs font-black uppercase text-slate-900 border border-[#ddd4c8] rounded hover:bg-slate-900 hover:text-white transition-all whitespace-nowrap">
             View Offer
           </Link>
         </div>
