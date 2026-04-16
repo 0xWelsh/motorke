@@ -127,17 +127,6 @@ export default async function CarsPage({ searchParams }) {
 
   const totalPages = Math.ceil(total / limit);
 
-  const activeFilterPills = [
-    search ? `Search: ${search}` : null,
-    make ? `Make: ${make}` : null,
-    bodyType ? `Type: ${BODY_TYPE_LABELS[bodyType] || bodyType}` : null,
-    fuelType ? `Fuel: ${FUEL_LABELS[fuelType] || fuelType}` : null,
-    transmission ? `Gearbox: ${transmission}` : null,
-    county ? `County: ${county}` : null,
-    minPrice ? `Min: ${formatPrice(minPrice)}` : null,
-    maxPrice ? `Max: ${formatPrice(maxPrice)}` : null,
-  ].filter(Boolean);
-
   const getPageLink = (p) => {
     const params = new URLSearchParams(sp);
     params.set("page", p);
@@ -146,9 +135,25 @@ export default async function CarsPage({ searchParams }) {
 
   return (
     <div className="min-h-screen bg-[#f7f6f3]">
-      <div className="max-w-[1520px] mx-auto px-5 sm:px-8 lg:px-12 py-5 sm:py-6 lg:py-8 overflow-hidden">
+      <div className="w-full max-w-[2560px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-5 sm:py-6 lg:py-8 overflow-hidden">
+        {/* Top Breadcrumb Bar */}
+        <div className="block w-full mb-6 sm:mb-8 overflow-hidden text-[14px] font-medium">
+          <div className="block w-full xl:w-1/4 2xl:w-1/5 xl:float-left xl:pr-8 mb-4 xl:mb-0">
+            <div className="flex items-center gap-3 text-slate-800">
+              <Link href="/" className="hover:text-black transition-colors">Home</Link>
+              <span className="text-slate-400 text-xs mt-0.5">›</span>
+              <Link href="/cars" className="hover:text-black transition-colors">Vehicles</Link>
+              <span className="text-slate-400 text-xs mt-0.5">›</span>
+              <span className="text-slate-900">Available</span>
+            </div>
+          </div>
+          <div className="block w-full xl:w-3/4 2xl:w-4/5 xl:float-left text-slate-800">
+            Vehicles showing ({total.toLocaleString()})
+          </div>
+        </div>
+
         {/* Sidebar */}
-        <aside className="block w-full xl:w-1/4 xl:float-left xl:pr-8 mb-6 xl:mb-0 relative z-20">
+        <aside className="block w-full xl:w-1/4 2xl:w-1/5 xl:float-left xl:pr-8 mb-6 xl:mb-0 relative z-20">
           <div className="xl:sticky xl:top-[84px]">
             <CarsSearch
               initialSearch={search}
@@ -167,41 +172,9 @@ export default async function CarsPage({ searchParams }) {
           </div>
         </aside>
 
-        {/* Header Block */}
-        <section className="block w-full xl:w-3/4 xl:float-left relative z-10 mb-6 sm:mb-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6">
-            <div>
-              <div className="inline-flex items-center gap-2 mb-2 border-b border-[#e7e1d8] pb-1">
-                <span className="h-2 w-2 rounded-full bg-[#ff5a2f] animate-pulse" />
-                <span className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-500">Live Cars</span>
-              </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl text-slate-900 tracking-tight leading-tight">
-                {search ? `Results for ${search}` : county ? `${county} Inventory` : "Explore Cars"}
-              </h1>
-              <p className="text-sm sm:text-base text-slate-600 font-medium mt-2">
-                {total.toLocaleString()} active listings from verified dealerships.
-              </p>
-            </div>
-            <div className="hidden md:flex items-center gap-2.5 rounded-xl border border-[#e7e1d8] bg-white px-3 py-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-600">Dealer-Verified Listings</p>
-            </div>
-          </div>
-
-          {activeFilterPills.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-6">
-              {activeFilterPills.map((pill) => (
-                <span key={pill} className="rounded-lg border border-[#ddd4c8] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-slate-600">
-                  {pill}
-                </span>
-              ))}
-            </div>
-          )}
-        </section>
-
         {/* Floating Cars */}
         {sortedCars.length === 0 ? (
-          <div className="block w-full xl:w-3/4 xl:float-left py-20 text-center border border-[#ddd4c8] rounded-none bg-white">
+          <div className="block w-full xl:w-3/4 2xl:w-4/5 xl:float-left py-20 text-center border border-[#ddd4c8] rounded-none bg-white">
             <div className="w-20 h-20 bg-[#faf7f2] rounded-none flex items-center justify-center mx-auto mb-6">
               <Search className="w-8 h-8 text-slate-300" />
             </div>
@@ -214,7 +187,7 @@ export default async function CarsPage({ searchParams }) {
         ) : (
           <div className="block -mx-3">
             {sortedCars.map((car, idx) => (
-              <div key={car.id} className="block float-left w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-3 pb-6">
+              <div key={car.id} className="block float-left w-full md:w-1/2 lg:w-1/3 xl:w-1/4 2xl:w-1/5 px-3 pb-6">
                 <InventoryCard car={car} userLat={userLat} userLng={userLng} priority={idx < 4} />
               </div>
             ))}
