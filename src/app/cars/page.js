@@ -135,68 +135,68 @@ export default async function CarsPage({ searchParams }) {
 
   return (
     <div className="min-h-screen bg-[#f7f6f3]">
-      <div className="w-full max-w-[2560px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-5 sm:py-6 lg:py-8 overflow-hidden">
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 lg:py-8">
         {/* Top Breadcrumb Bar */}
-        <div className="block w-full mb-6 sm:mb-8 overflow-hidden text-[14px] font-medium">
-          <div className="block w-full xl:w-1/3 2xl:w-1/4 xl:float-left xl:pr-5 mb-4 xl:mb-0">
-            <div className="flex items-center gap-3 text-slate-800">
-              <Link href="/" className="hover:text-black transition-colors">Home</Link>
-              <span className="text-slate-400 text-xs mt-0.5">›</span>
-              <Link href="/cars" className="hover:text-black transition-colors">Vehicles</Link>
-              <span className="text-slate-400 text-xs mt-0.5">›</span>
-              <span className="text-slate-900">Available</span>
-            </div>
+        <div className="flex items-center justify-between mb-6 sm:mb-8 text-[14px] font-medium">
+          <div className="flex items-center gap-3 text-slate-800">
+            <Link href="/" className="hover:text-black transition-colors">Home</Link>
+            <span className="text-slate-400 text-xs mt-0.5">›</span>
+            <Link href="/cars" className="hover:text-black transition-colors">Vehicles</Link>
+            <span className="text-slate-400 text-xs mt-0.5">›</span>
+            <span className="text-slate-900">Available</span>
           </div>
-          <div className="block w-full xl:w-2/3 2xl:w-3/4 xl:float-left text-slate-800 xl:pl-1">
+          <div className="text-slate-800">
             Vehicles showing ({total.toLocaleString()})
           </div>
         </div>
 
-        {/* Sidebar */}
-        <aside className="block w-full xl:w-1/3 2xl:w-1/4 xl:float-left xl:pr-5 lg:pr-4 mb-6 xl:mb-0 relative z-20">
-          <div className="xl:sticky xl:top-[84px]">
-            <CarsSearch
-              initialSearch={search}
-              initialMake={make}
-              initialBodyType={bodyType}
-              initialFuelType={fuelType}
-              initialTransmission={transmission}
-              initialCounty={county}
-              initialMinPrice={minPrice}
-              initialMaxPrice={maxPrice}
-              initialSort={sort}
-              allMakes={allMakes}
-              bodyTypeLabels={BODY_TYPE_LABELS}
-              counties={COUNTIES}
-            />
-          </div>
-        </aside>
-
-        {/* Floating Cars */}
-        {sortedCars.length === 0 ? (
-          <div className="block w-full xl:w-3/4 2xl:w-4/5 xl:float-left py-20 text-center border border-[#ddd4c8] rounded-none bg-white">
-            <div className="w-20 h-20 bg-[#faf7f2] rounded-none flex items-center justify-center mx-auto mb-6">
-              <Search className="w-8 h-8 text-slate-300" />
+        <div className="flex flex-col xl:flex-row items-start gap-4 sm:gap-4">
+          {/* Sidebar */}
+          <aside className="w-full xl:w-[280px] shrink-0 relative z-20 mb-6 xl:mb-0">
+            <div className="xl:sticky xl:top-[84px]">
+              <CarsSearch
+                initialSearch={search}
+                initialMake={make}
+                initialBodyType={bodyType}
+                initialFuelType={fuelType}
+                initialTransmission={transmission}
+                initialCounty={county}
+                initialMinPrice={minPrice}
+                initialMaxPrice={maxPrice}
+                initialSort={sort}
+                allMakes={allMakes}
+                bodyTypeLabels={BODY_TYPE_LABELS}
+                counties={COUNTIES}
+              />
             </div>
-            <h2 className="text-2xl text-slate-900 mb-3">No cars match these filters</h2>
-            <p className="text-base text-slate-600 font-medium mb-8 max-w-md mx-auto">Try broadening your search or resetting filters.</p>
-            <Link href="/cars" className="mk-pill-btn inline-flex items-center gap-2 bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 text-xs uppercase transition-colors">
-              Reset Search <ArrowUpRight className="w-4 h-4" />
-            </Link>
-          </div>
-        ) : (
-          <div className="block -mx-3">
-            {sortedCars.map((car, idx) => (
-              <div key={car.id} className="block float-left w-full md:w-1/2 xl:w-1/3 2xl:w-1/4 px-3 pb-6">
-                <InventoryCard car={car} userLat={userLat} userLng={userLng} priority={idx < 4} />
-              </div>
-            ))}
-          </div>
-        )}
+          </aside>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="block w-full float-left mt-8 pb-4">
+          {/* Grid Content */}
+          <div className="flex-1 w-full min-w-0">
+            {sortedCars.length === 0 ? (
+              <div className="py-20 text-center border border-[#ddd4c8] rounded-none bg-white">
+                <div className="w-20 h-20 bg-[#faf7f2] rounded-none flex items-center justify-center mx-auto mb-6">
+                  <Search className="w-8 h-8 text-slate-300" />
+                </div>
+                <h2 className="text-2xl text-slate-900 mb-3">No cars match these filters</h2>
+                <p className="text-base text-slate-600 font-medium mb-8 max-w-md mx-auto">Try broadening your search or resetting filters.</p>
+                <Link href="/cars" className="mk-pill-btn inline-flex items-center gap-2 bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 text-xs uppercase transition-colors">
+                  Reset Search <ArrowUpRight className="w-4 h-4" />
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+                {sortedCars.map((car, idx) => (
+                  <div key={car.id} className="block w-full">
+                    <InventoryCard car={car} userLat={userLat} userLng={userLng} priority={idx < 4} />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="w-full mt-8 pb-4">
             <div className="min-w-max flex justify-center items-center gap-2 sm:gap-3 mx-auto">
               {page > 1 && (
                 <Link href={getPageLink(page - 1)} className="w-10 h-10 sm:w-11 sm:h-11 rounded-none flex items-center justify-center bg-white border border-[#ddd4c8] text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
@@ -234,8 +234,8 @@ export default async function CarsPage({ searchParams }) {
             </div>
           </div>
         )}
-
-        <div className="clear-both"></div>
+        </div>
+        </div>
       </div>
     </div>
   );
