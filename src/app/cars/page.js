@@ -318,7 +318,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
         <div className="space-y-3">
           <div className="flex items-baseline gap-2">
             <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500">{car.year}</p>
-            <Link href={`/cars/${car.id}`} className="font-bold text-slate-900 text-base leading-tight group-hover:text-[#ff5a2f] transition-colors font-serif">
+            <Link href={`/cars/${car.id}`} className="font-bold text-slate-900 text-base sm:text-lg leading-tight group-hover:text-[#ff5a2f] transition-colors font-serif">
               {title}
             </Link>
           </div>
@@ -337,7 +337,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
         <div className="mt-auto flex items-end justify-between pt-4 border-t border-slate-200 gap-3">
           <div>
             <p className="text-[10px] font-medium text-slate-500 mb-1">Price</p>
-            <p className="text-2xl sm:text-3xl font-serif font-bold text-slate-900">KSh {(car.price / 1000000).toFixed(1)}M</p>
+            <p className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900">KSh {(car.price / 1000000).toFixed(1)}M</p>
           </div>
           <div className="flex items-center gap-2">
             <CompareButton car={compareCar} />
