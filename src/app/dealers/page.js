@@ -23,68 +23,70 @@ export default async function DealersPage() {
   const totalCars = dealers.reduce((sum, dealer) => sum + (dealer._count?.cars || 0), 0);
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-16 max-w-7xl">
+    <div className="min-h-screen bg-[#f7f6f3]">
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header */}
-        <header className="mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-3">Trusted Dealers</h1>
-          <p className="text-base text-slate-600 font-medium max-w-3xl mb-10">
-            Browse verified dealer profiles by county and find your next car.
+        <header className="mb-12">
+          <h1 className="text-5xl lg:text-7xl font-black text-slate-900 tracking-tight leading-none mb-4">TRUSTED DEALERS</h1>
+          <p className="text-base text-slate-600 font-medium max-w-3xl mb-12">
+            Browse verified dealer profiles by county and find your next car from Kenya's top-tier inventory.
           </p>
 
           {/* Stats Grid */}
-          <div className="border-t border-b border-slate-200 py-8 grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { label: "Dealerships", value: dealers.length },
               { label: "Verified", value: verifiedCount },
               { label: "Featured", value: featuredCount },
               { label: "Live Cars", value: totalCars },
             ].map((item) => (
-              <div key={item.label}>
-                <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">{item.label}</p>
-                <p className="text-3xl font-bold text-slate-900">{item.value}</p>
+              <div key={item.label} className="bg-white border border-[#ddd4c8] p-6 rounded-none">
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">{item.label}</p>
+                <p className="text-4xl font-black text-slate-900">{item.value}</p>
               </div>
             ))}
           </div>
         </header>
 
-        {/* Find Nearby Section */}
-        <section className="mb-16 p-6 border border-slate-200 rounded-lg bg-slate-50">
-          <div className="mb-4">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-2">
-              <MapPin className="w-5 h-5 text-blue-600" />
-              Find Nearby Dealers
-            </h2>
-            <p className="text-sm text-slate-600">
-              Search for dealers within your preferred radius using your current location.
-            </p>
-          </div>
-          <NearbyDealersList />
-        </section>
+        {/* Content Flex */}
+        <div className="flex flex-col xl:flex-row gap-4 mb-12">
+          {/* Find Nearby Section */}
+          <section className="xl:w-1/2 p-6 border border-[#ddd4c8] bg-white rounded-none">
+            <div className="mb-8">
+              <h2 className="text-lg font-black text-slate-900 flex items-center gap-2 mb-1 uppercase tracking-wider">
+                Find Nearby
+              </h2>
+              <p className="text-[13px] font-medium text-slate-600">
+                Search for dealers within your preferred radius using your precise current location.
+              </p>
+            </div>
+            <NearbyDealersList />
+          </section>
 
-        {/* Map View */}
-        <section className="mb-16">
-          <div className="mb-4">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-2">
-              <MapPin className="w-5 h-5 text-slate-600" />
-              View on Map
-            </h2>
-            <p className="text-sm text-slate-600">
-              Explore dealership locations across Kenya. Click markers to view details.
-            </p>
-          </div>
-          <div className="h-[300px] sm:h-[400px] md:h-[500px] rounded-lg overflow-hidden border border-slate-200 shadow-sm">
-            <DealersMapView dealers={dealers} />
-          </div>
-        </section>
+          {/* Map View */}
+          <section className="xl:w-1/2 p-6 border border-[#ddd4c8] bg-white rounded-none">
+            <div className="mb-8">
+              <h2 className="text-lg font-black text-slate-900 flex items-center gap-2 mb-1 uppercase tracking-wider">
+                Map Terminal
+              </h2>
+              <p className="text-[13px] font-medium text-slate-600">
+                A top-down view of all verified and featured vehicle hubs across the country.
+              </p>
+            </div>
+            <div className="h-[300px] border border-[#ddd4c8] shadow-none bg-[#fbfcfd]">
+              <DealersMapView dealers={dealers} />
+            </div>
+          </section>
+        </div>
 
         {/* County Navigation */}
-        <nav className="flex items-center gap-2 mb-12 overflow-x-auto pb-2">
+        <nav className="flex items-center gap-2 mb-12 overflow-x-auto pb-4 border-b border-[#ddd4c8] no-scrollbar">
+          <span className="text-[10px] font-black uppercase tracking-widest text-[#ff5a2f] mr-2 shrink-0">Terminal:</span>
           {counties.map((county) => (
             <a
               key={county}
               href={`#county-${encodeURIComponent(county)}`}
-              className="text-sm font-semibold text-slate-600 hover:text-slate-900 whitespace-nowrap transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-100"
+              className="text-[11px] font-black uppercase tracking-widest text-slate-600 hover:text-slate-900 bg-white border border-[#ddd4c8] hover:border-slate-400 whitespace-nowrap transition-colors px-4 py-2"
             >
               {county}
             </a>
@@ -93,8 +95,8 @@ export default async function DealersPage() {
 
         {/* Empty State */}
         {dealers.length === 0 && (
-          <div className="border-y border-slate-200 py-16">
-            <p className="text-sm text-slate-600">No dealers available yet.</p>
+          <div className="py-20 text-center border border-[#ddd4c8] bg-white">
+            <p className="text-sm font-black uppercase tracking-widest text-slate-500">No dealers available yet.</p>
           </div>
         )}
 
@@ -103,10 +105,14 @@ export default async function DealersPage() {
           const countyDealers = dealers.filter((d) => d.county === county);
 
           return (
-            <section key={county} id={`county-${encodeURIComponent(county)}`} className="mb-16 last:mb-0 scroll-mt-40">
-              <h2 className="text-lg font-bold text-slate-900 mb-6">{county}</h2>
+            <section key={county} id={`county-${encodeURIComponent(county)}`} className="mb-16 last:mb-0 scroll-mt-32">
+              <div className="flex items-center gap-4 mb-6">
+                <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight">{county}</h2>
+                <span className="h-[1px] bg-[#ddd4c8] flex-1"></span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{countyDealers.length} Stations</span>
+              </div>
 
-              <div className="space-y-4 border-b border-slate-200 pb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {countyDealers.map((dealer) => {
                   const brandImage = dealer.logoUrl || dealer.users?.[0]?.avatarUrl;
 
@@ -114,40 +120,77 @@ export default async function DealersPage() {
                   <Link
                     key={dealer.id}
                     href={`/dealers/${dealer.slug}`}
-                    className="group block p-5 rounded-lg border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all"
+                    className="group bg-white flex flex-col p-6 rounded-none border border-[#ddd4c8] hover:border-slate-400 transition-all h-full"
                   >
-                    <div className="flex items-start gap-5">
+                    <div className="flex items-start gap-4 mb-6">
                       {/* Logo */}
-                      <div className="w-16 h-16 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden shrink-0">
+                      <div className="w-[64px] h-[64px] rounded-none bg-[#f7f6f3] border border-[#ddd4c8] flex items-center justify-center overflow-hidden shrink-0">
                         {brandImage ? (
-                          <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover" />
+                          <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all" />
                         ) : (
-                          <span className="text-slate-900 font-bold text-lg">{dealer.name?.[0] || '?'}</span>
+                          <span className="text-slate-400 font-black text-xl">{dealer.name?.[0] || '?'}</span>
                         )}
                       </div>
 
                       {/* Info */}
-                      <div className="flex-1 min-w-0">
+                      <div className="flex-1 min-w-0 pt-1">
                         <div className="flex flex-wrap items-center gap-2 mb-2">
-                          <h3 className="text-lg font-bold text-slate-900 group-hover:text-slate-700 transition-colors truncate">{dealer.name}</h3>
-                          {dealer.verified && (
-                            <span className="text-xs font-semibold text-slate-700 bg-slate-100 px-2 py-1 rounded">
-                              Verified
-                            </span>
-                          )}
-                          {dealer.featured && (
-                            <span className="text-xs font-semibold text-slate-700 bg-slate-100 px-2 py-1 rounded">Featured</span>
-                          )}
+                          <h3 className="text-[15px] font-black text-slate-900 group-hover:text-[#ff5a2f] transition-colors truncate uppercase tracking-wide leading-none">{dealer.name}</h3>
+                          
                         </div>
 
-                        <p className="text-sm text-slate-600 flex items-center gap-1.5 mb-2">
-                          <MapPin size={14} className="text-slate-400" /> {dealer.location || 'Location not set'}
+                        <p className="text-[12px] font-medium text-slate-500 flex items-center gap-1.5 uppercase tracking-wide truncate">
+                          <MapPin size={12} className="text-slate-400 shrink-0" /> {dealer.location || 'Terminal Not Set'}
                         </p>
+                      </div>
+                    </div>
+                    
+                    {/* Tags */}
+                    <div className="flex flex-wrap items-center gap-2 mb-4">
+                      {dealer.verified && (
+                        <span className="bg-emerald-400 text-white text-[9px] font-black uppercase tracking-widest px-2 py-1">
+                          Verified
+                        </span>
+                      )}
+                      {dealer.featured && (
+                        <span className="bg-[#111111] text-white text-[9px] font-black uppercase tracking-widest px-2 py-1">
+                          Featured
+                        </span>
+                      )}
+                    </div>
 
-                        {dealer.description && (
-                          <p className="text-sm text-slate-600 line-clamp-2">
-                            {dealer.description}
-                          </p>
+                    {/* Description */}
+                    {dealer.description ? (
+                      <p className="text-[13px] text-slate-600 line-clamp-2 leading-relaxed font-medium mb-8">
+                        {dealer.description}
+                      </p>
+                    ) : (
+                      <p className="text-[13px] text-slate-400 italic line-clamp-2 mb-8">
+                        No description provided.
+                      </p>
+                    )}
+                    
+                    {/* Stats */}
+                    <div className="mt-auto border-t border-[#f0f0f0] pt-4 flex items-center justify-between">
+                      <div>
+                        <p className="text-xl font-black text-slate-900 leading-none mb-1">{dealer._count.cars}</p>
+                        <p className="text-[10px] uppercase font-black tracking-widest text-[#ff5a2f] leading-none">Live Cars</p>
+                      </div>
+                      <span className="text-slate-300 group-hover:text-slate-900 transition-colors">
+                        <ArrowUpRight className="w-5 h-5" />
+                      </span>
+                    </div>
+                  </Link>
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
                         )}
                       </div>
 
