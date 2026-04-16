@@ -214,23 +214,3 @@ export default async function DealersPage() {
     </div>
   );
 }
-                        )}
-                      </div>
-
-                      {/* Stats */}
-                      <div className="text-right shrink-0">
-                        <p className="text-2xl font-bold text-slate-900">{dealer._count.cars}</p>
-                        <p className="text-xs text-slate-500 font-medium">Live Cars</p>
-                      </div>
-                    </div>
-                  </Link>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
