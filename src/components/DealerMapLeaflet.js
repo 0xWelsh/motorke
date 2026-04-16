@@ -67,12 +67,12 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
       const customIcon = L.divIcon({
         html: `
           <div class="flex flex-col items-center">
-            <div class="bg-slate-900 text-white rounded-full font-bold text-xs shadow-lg border-2 border-white flex items-center justify-center w-9 h-9" style="line-height: 1;">
+            <div class="bg-slate-900 text-slate-900 rounded-none font-bold text-xs shadow-lg border-2 border-white flex items-center justify-center w-9 h-9" style="line-height: 1;">
               ${dealer.name?.[0]?.toUpperCase() || '?'}
             </div>
             ${
               dealer.distance
-                ? `<div class="text-white text-[10px] font-bold bg-blue-600 px-1.5 py-0.5 rounded-full mt-1 shadow-md whitespace-nowrap">
+                ? `<div class="text-slate-900 text-[10px] font-bold bg-#ff5a2f px-1.5 py-0.5 rounded-none mt-1 shadow-md whitespace-nowrap">
                      ${formatDistance(dealer.distance)}
                    </div>`
                 : ''
@@ -91,7 +91,7 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
           <p class="text-xs text-slate-600">${dealer.location}</p>
           ${
             dealer.distance
-              ? `<div class="flex items-center gap-1.5 text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded">
+              ? `<div class="flex items-center gap-1.5 text-xs font-semibold text-#ff5a2f bg-blue-50 px-2 py-1 rounded">
                    <span>📍</span> ${formatDistance(dealer.distance)}
                  </div>`
               : ''
@@ -101,8 +101,8 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
               ? `<p class="text-xs text-slate-600"><strong>${dealer._count.cars}</strong> car${dealer._count.cars !== 1 ? 's' : ''} available</p>`
               : ''
           }
-          ${dealer.verified ? '<p class="text-xs text-emerald-600 font-semibold">✓ Verified Dealer</p>' : ''}
-          <a href="/dealers/${dealer.slug}" class="inline-block mt-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded transition">
+          ${dealer.verified ? '<p class="text-xs text-#ff5a2f font-semibold">✓ Verified Dealer</p>' : ''}
+          <a href="/dealers/${dealer.slug}" class="inline-block mt-2 text-xs font-bold text-slate-900 bg-#ff5a2f hover:bg-blue-700 px-3 py-1.5 rounded transition">
             View Profile
           </a>
         </div>

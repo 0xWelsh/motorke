@@ -49,15 +49,15 @@ export default function ClientRecentSection() {
   if (loading || (recent.length === 0 && recommended.length === 0)) return null;
 
   return (
-    <section className="bg-white border-y border-slate-100 py-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+    <section className="bg-white border-y border-[#ddd4c8] py-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
       <div className="container mx-auto px-6 max-w-7xl">
         
         {/* PERSONALIZED HEADER */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center shadow-sm">
+            <div className="w-14 h-14 bg-[#fbfcfe] border border-[#ddd4c8] rounded-none flex items-center justify-center shadow-sm">
               {user ? (
-                <div className="w-10 h-10 bg-[var(--brand)] rounded-xl flex items-center justify-center text-white font-bold">
+                <div className="w-10 h-10 bg-[var(--brand)] rounded-none flex items-center justify-center text-slate-900 font-bold">
                   {user.name.charAt(0)}
                 </div>
               ) : (
@@ -71,7 +71,7 @@ export default function ClientRecentSection() {
               <p className="text-slate-700 text-sm font-medium">Picking up where you left off...</p>
             </div>
           </div>
-          <Link href="/account?tab=saved" className="bg-slate-50 border border-slate-100 px-6 py-3 rounded-xl text-sm font-bold text-slate-900 hover:border-[var(--brand-accent)]/30 hover:text-[var(--brand)] transition-all shadow-sm flex items-center gap-2">
+          <Link href="/account?tab=saved" className="bg-[#fbfcfe] border border-[#ddd4c8] px-6 py-3 rounded-none text-sm font-bold text-slate-900 hover:border-[var(--brand-accent)]/30 hover:text-[var(--brand)] transition-all shadow-sm flex items-center gap-2">
             My Saved Collection <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
@@ -120,8 +120,8 @@ export default function ClientRecentSection() {
 
 function CarMiniCard({ car }) {
   return (
-    <Link href={`/cars/${car.id}`} className="group bg-white border border-slate-100 overflow-hidden hover:border-[var(--brand-accent)]/30 hover:shadow-xl transition-all duration-500 shadow-sm">
-      <div className="aspect-[16/10] overflow-hidden bg-slate-50 relative">
+    <Link href={`/cars/${car.id}`} className="group bg-white border border-[#ddd4c8] overflow-hidden hover:border-[var(--brand-accent)]/30 hover:shadow-xl transition-all duration-500 shadow-sm">
+      <div className="aspect-[16/10] overflow-hidden bg-[#fbfcfe] relative">
         {car.image ? (
           <img src={car.image} alt={car.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
         ) : (

@@ -43,7 +43,7 @@ export default function MapComponent({ defaultLat, defaultLng, onChange }) {
   if (typeof window === "undefined") return null;
 
   return (
-    <div className="w-full h-full rounded-xl overflow-hidden border border-slate-200 z-0">
+    <div className="w-full h-full rounded-none overflow-hidden border border-[#ddd4c8] z-0">
       <MapContainer 
         center={initialPosition} 
         zoom={defaultLat && defaultLng ? 15 : 12} 

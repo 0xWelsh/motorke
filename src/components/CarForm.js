@@ -285,8 +285,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const saveTimeoutRef = useRef(null);
   const score = qualityScore(formSeed, images, selectedFeatures);
 
-  const inputCls = "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-400 outline-none focus:border-emerald-500 transition-all";
-  const selectCls = "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:border-emerald-500 transition-all appearance-none";
+  const inputCls = "w-full bg-[#fbfcfe] border border-[#ddd4c8] rounded-none px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-400 outline-none focus:border-#ff5a2f transition-all";
+  const selectCls = "w-full bg-[#fbfcfe] border border-[#ddd4c8] rounded-none px-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:border-#ff5a2f transition-all appearance-none";
   const labelCls = "block text-[11px] font-bold uppercase tracking-wider text-slate-500 ml-1 mb-2";
 
   const saveDraft = useCallback(() => {
@@ -611,7 +611,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   return (
     <form key={formVersion} ref={formRef} onSubmit={handleSubmit} className="space-y-10 animate-in fade-in duration-700">
       {isNew && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
+        <div className="bg-white border border-[#ddd4c8] rounded-none p-6 space-y-5">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">Upload Flow</p>
@@ -625,8 +625,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               <button
                 type="button"
                 onClick={() => setSimpleMode(true)}
-                className={`px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider border transition-colors ${
-                  simpleMode ? "bg-slate-900 text-white border-slate-900" : "bg-white text-slate-600 border-slate-200"
+                className={`px-4 py-2 rounded-none text-xs font-black uppercase tracking-wider border transition-colors ${
+                  simpleMode ? "bg-slate-900 text-slate-900 border-slate-900" : "bg-white text-slate-600 border-[#ddd4c8]"
                 }`}
               >
                 Quick
@@ -634,8 +634,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               <button
                 type="button"
                 onClick={() => setSimpleMode(false)}
-                className={`px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider border transition-colors ${
-                  !simpleMode ? "bg-slate-900 text-white border-slate-900" : "bg-white text-slate-600 border-slate-200"
+                className={`px-4 py-2 rounded-none text-xs font-black uppercase tracking-wider border transition-colors ${
+                  !simpleMode ? "bg-slate-900 text-slate-900 border-slate-900" : "bg-white text-slate-600 border-[#ddd4c8]"
                 }`}
               >
                 Advanced
@@ -649,10 +649,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 key={wizardStep.id}
                 type="button"
                 onClick={() => goToStep(wizardStep.id)}
-                className={`rounded-xl border px-3 py-2.5 text-left transition-colors ${
+                className={`rounded-none border px-3 py-2.5 text-left transition-colors ${
                   step === wizardStep.id
-                    ? "border-emerald-500 bg-emerald-50"
-                    : "border-slate-200 bg-white hover:bg-slate-50"
+                    ? "border-#ff5a2f bg-emerald-50"
+                    : "border-[#ddd4c8] bg-white hover:bg-[#fbfcfe]"
                 }`}
               >
                 <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Step {wizardStep.id}</p>
@@ -662,7 +662,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           </div>
 
           {draftLoaded && (
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-none border border-amber-200 bg-amber-50 px-4 py-3">
               <p className="text-[11px] font-bold text-amber-800">Draft restored from previous session.</p>
               <button type="button" onClick={clearDraft} className="text-[11px] font-black uppercase tracking-wider text-amber-700 hover:text-amber-900">
                 Clear Draft
@@ -673,14 +673,14 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       )}
 
       {error && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-black uppercase tracking-widest rounded-2xl px-6 py-4 flex items-center gap-3">
+        <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-black uppercase tracking-widest rounded-none px-6 py-4 flex items-center gap-3">
           <Info size={16} />
           {error}
         </div>
       )}
 
       {dealers.length > 1 && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-8">
+        <div className="bg-white border border-[#ddd4c8] rounded-none p-8">
           <label className={labelCls}>Assigned Dealer *</label>
           <select name="dealerId" defaultValue={formSeed.dealerId || ""} required className={selectCls}>
             <option value="">Select dealer</option>
@@ -693,9 +693,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       {dealers.length === 1 && dealers[0] && <input type="hidden" name="dealerId" value={dealers[0].id} />}
 
       <div className={isNew && step !== 1 ? "hidden" : "block"}>
-        <div className="bg-white border border-slate-200 rounded-2xl p-8">
+        <div className="bg-white border border-[#ddd4c8] rounded-none p-8">
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+            <div className="w-1.5 h-1.5 rounded-none bg-#ff5a2f" />
             <h3 className="text-lg font-bold text-slate-900 tracking-tight">Vehicle Basics</h3>
           </div>
 
@@ -848,17 +848,17 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
 
           <div className={isNew && step !== 2 ? "hidden" : "block"}>
-            <div className="bg-white border border-slate-200 rounded-2xl p-8">
+            <div className="bg-white border border-[#ddd4c8] rounded-none p-8">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <div className="w-1.5 h-1.5 rounded-none bg-#ff5a2f" />
                 <h3 className="text-lg font-bold text-slate-900 tracking-tight">Photos</h3>
               </div>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">3+ photos recommended</p>
             </div>
             {uploading && (
-              <div className="text-center mb-8 p-6 bg-slate-50 border border-slate-200 rounded-2xl">
-                <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+              <div className="text-center mb-8 p-6 bg-[#fbfcfe] border border-[#ddd4c8] rounded-none">
+                <div className="w-10 h-10 border-4 border-#ff5a2f border-t-transparent rounded-none animate-spin mx-auto mb-4" />
                 <p className="text-sm font-bold text-slate-900 uppercase">Uploading Images...</p>
                 <p className="text-[10px] font-bold text-slate-500 mt-2">Image {uploadProgress.done} of {uploadProgress.total}</p>
               </div>
@@ -867,7 +867,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               <MediaUploader initialImages={images} onFilesSelected={handleFilesSelected} maxFiles={15} />
             </div>
             <div className="mt-4 flex items-center gap-2 text-[11px] font-semibold text-slate-500">
-              <UploadCloud size={14} className="text-emerald-500" />
+              <UploadCloud size={14} className="text-#ff5a2f" />
               Upload starts immediately so dealers can continue filling details while photos process.
             </div>
           </div>
@@ -875,20 +875,20 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
         <div className={isNew && step !== 3 ? "hidden" : "block"}>
           <div className="space-y-6">
-            <div className="bg-white border border-slate-200 rounded-2xl p-8">
+            <div className="bg-white border border-[#ddd4c8] rounded-none p-8">
               <div className="flex items-center gap-3 mb-8">
-                <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                <div className="w-1.5 h-1.5 rounded-none bg-purple-500" />
                 <h3 className="text-lg font-bold text-slate-900 tracking-tight">Description</h3>
               </div>
               <textarea name="description" rows={5} defaultValue={formSeed.description} placeholder="Share condition, service history, and key selling points..." className={`${inputCls} resize-none`} />
             </div>
-            <div className="bg-white border border-slate-200 rounded-2xl p-8">
+            <div className="bg-white border border-[#ddd4c8] rounded-none p-8">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <p className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">Feature Checklist</p>
                   <h3 className="text-lg font-bold text-slate-900">Tap to select car features</h3>
                 </div>
-                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full">{selectedFeatures.length} selected</span>
+                <span className="text-xs font-bold text-#ff5a2f bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-none">{selectedFeatures.length} selected</span>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5">
                 {FEATURE_CHECKLIST.map((feature) => {
@@ -898,8 +898,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                       key={feature}
                       type="button"
                       onClick={() => toggleFeature(feature)}
-                      className={`text-left text-[11px] font-bold px-3 py-2.5 rounded-lg border transition-all ${
-                        active ? "bg-emerald-500 text-white border-emerald-500" : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                      className={`text-left text-[11px] font-bold px-3 py-2.5 rounded-none border transition-all ${
+                        active ? "bg-#ff5a2f text-slate-900 border-#ff5a2f" : "bg-[#fbfcfe] text-slate-700 border-[#ddd4c8] hover:bg-slate-100"
                       }`}
                     >
                       {feature}
@@ -920,13 +920,13 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   placeholder="Add custom feature"
                   className={inputCls}
                 />
-                <button type="button" onClick={addCustomFeature} className="px-4 py-3 rounded-xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider">
+                <button type="button" onClick={addCustomFeature} className="px-4 py-3 rounded-none bg-slate-900 text-slate-900 text-xs font-black uppercase tracking-wider">
                   Add Feature
                 </button>
               </div>
             </div>
             {!simpleMode && (
-              <div className="bg-white border border-slate-200 rounded-2xl p-8">
+              <div className="bg-white border border-[#ddd4c8] rounded-none p-8">
                 <div className="flex items-center gap-3 mb-8">
                   <Sparkles size={16} className="text-amber-500" />
                   <h3 className="text-lg font-bold text-slate-900 tracking-tight">Advanced Specs</h3>
@@ -986,18 +986,18 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   </div>
                   <div className="pt-8 space-y-3">
                     <label className="flex items-center gap-3 cursor-pointer">
-                      <input type="checkbox" name="turbo" defaultChecked={!!formSeed.turbo} className="w-4 h-4 accent-emerald-500" />
+                      <input type="checkbox" name="turbo" defaultChecked={!!formSeed.turbo} className="w-4 h-4 accent-#ff5a2f" />
                       <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">Turbo</span>
                     </label>
                     <label className="flex items-center gap-3 cursor-pointer">
-                      <input type="checkbox" name="sunroof" defaultChecked={!!formSeed.sunroof} className="w-4 h-4 accent-emerald-500" />
+                      <input type="checkbox" name="sunroof" defaultChecked={!!formSeed.sunroof} className="w-4 h-4 accent-#ff5a2f" />
                       <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">Sunroof</span>
                     </label>
                   </div>
                 </div>
               </div>
             )}
-            <div className="bg-white border border-slate-200 rounded-2xl p-8">
+            <div className="bg-white border border-[#ddd4c8] rounded-none p-8">
               <label className={labelCls}>Tags</label>
               <div className="flex flex-wrap gap-2 mt-3">
                 {Object.keys(BADGE_OPTIONS).map((name) => {
@@ -1007,8 +1007,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                       key={name}
                       type="button"
                       onClick={() => setBadges((prev) => (active ? prev.filter((b) => b !== name) : [...prev, name]))}
-                      className={`text-[10px] font-bold uppercase tracking-wider px-4 py-2 rounded-lg border transition-all ${
-                        active ? "bg-emerald-500 border-emerald-500 text-white" : "bg-slate-50 border-slate-200 text-slate-600"
+                      className={`text-[10px] font-bold uppercase tracking-wider px-4 py-2 rounded-none border transition-all ${
+                        active ? "bg-#ff5a2f border-#ff5a2f text-slate-900" : "bg-[#fbfcfe] border-[#ddd4c8] text-slate-600"
                       }`}
                     >
                       {active && <Check size={10} className="inline-block mr-1.5" />} {name}
@@ -1017,21 +1017,21 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 })}
               </div>
             </div>
-            <div className="bg-white border border-slate-200 rounded-2xl p-8">
+            <div className="bg-white border border-[#ddd4c8] rounded-none p-8">
               <div className="flex items-center justify-between gap-4 flex-wrap">
                 <div>
                   <p className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">Listing Quality</p>
                   <h3 className="text-lg font-bold text-slate-900">Score: {score}/100</h3>
                 </div>
-                <div className="w-full sm:w-60 h-3 rounded-full bg-slate-100 overflow-hidden">
-                  <div className="h-full bg-emerald-500 transition-all" style={{ width: `${score}%` }} />
+                <div className="w-full sm:w-60 h-3 rounded-none bg-slate-100 overflow-hidden">
+                  <div className="h-full bg-#ff5a2f transition-all" style={{ width: `${score}%` }} />
                 </div>
               </div>
               <p className="text-xs text-slate-500 font-semibold mt-3">
                 Add 3+ photos, a clear description, and more features for better visibility.
               </p>
             </div>
-            <div className="bg-white border border-slate-200 rounded-2xl p-8">
+            <div className="bg-white border border-[#ddd4c8] rounded-none p-8">
               <div className="flex items-center gap-8 flex-wrap">
                 {[
                   { name: "negotiable", label: "Accepting Offers", defaultChecked: !!formSeed.negotiable },
@@ -1045,7 +1045,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                       name={name}
                       defaultChecked={name === "featured" && isPortal ? false : defaultChecked}
                       disabled={name === "featured" && isPortal}
-                      className="w-5 h-5 accent-emerald-500 rounded-md"
+                      className="w-5 h-5 accent-#ff5a2f rounded-none"
                     />
                     <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">{label}</span>
                   </label>
@@ -1056,24 +1056,24 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
 
         <div className="flex flex-wrap justify-between items-center gap-3 pt-2">
-          <a href={isPortal ? "/portal" : "/admin"} className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase tracking-wider transition-all">
+          <a href={isPortal ? "/portal" : "/admin"} className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-none text-xs uppercase tracking-wider transition-all">
             Cancel
           </a>
           <div className="flex items-center gap-2">
             {isNew && step > 1 && (
-              <button type="button" onClick={() => goToStep(step - 1)} className="px-5 py-3 rounded-xl border border-slate-200 text-slate-700 text-xs font-black uppercase tracking-wider">
+              <button type="button" onClick={() => goToStep(step - 1)} className="px-5 py-3 rounded-none border border-[#ddd4c8] text-slate-700 text-xs font-black uppercase tracking-wider">
                 Back
               </button>
             )}
             {isNew && step < 3 ? (
-              <button type="button" onClick={() => goToStep(step + 1)} className="px-6 py-3 rounded-xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider">
+              <button type="button" onClick={() => goToStep(step + 1)} className="px-6 py-3 rounded-none bg-slate-900 text-slate-900 text-xs font-black uppercase tracking-wider">
                 Continue
               </button>
             ) : (
               <button
                 type="submit"
                 disabled={submitting || uploading}
-                className="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold rounded-xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2"
+                className="px-8 py-3 bg-#ff5a2f hover:bg-emerald-700 disabled:opacity-50 text-slate-900 font-bold rounded-none text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2"
               >
                 {submitting ? "Saving..." : isEdit ? "Save Changes" : "Publish Listing"}
                 {!submitting && <Check size={16} />}

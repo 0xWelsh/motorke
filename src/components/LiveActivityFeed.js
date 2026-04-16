@@ -28,16 +28,16 @@ export default function LiveActivityFeed() {
   }, []);
 
   return (
-    <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-xl shadow-slate-200/40 h-full flex flex-col">
+    <div className="bg-white border border-[#ddd4c8] rounded-3xl p-8 shadow-xl shadow-slate-200/40 h-full flex flex-col">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-brand-light rounded-xl flex items-center justify-center text-brand">
+          <div className="w-10 h-10 bg-brand-light rounded-none flex items-center justify-center text-brand">
             <Zap className="w-5 h-5 fill-brand" />
           </div>
           <div>
             <h3 className="text-lg font-extrabold text-slate-900 tracking-tight leading-none">Market Pulse</h3>
             <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mt-1.5 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" /> Live Now
+              <span className="w-1.5 h-1.5 rounded-none bg-brand animate-pulse" /> Live Now
             </p>
           </div>
         </div>
@@ -53,15 +53,15 @@ export default function LiveActivityFeed() {
         {activities.map((a, i) => (
           <div key={`${a.id}-${i}`} className="flex gap-4 group animate-in slide-in-from-right-4 duration-700">
             <div className="relative shrink-0">
-               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-sm ${
-                 a.type === 'VIEW' ? 'bg-blue-50 text-blue-500' : 
-                 a.type === 'INQUIRY' ? 'bg-emerald-50 text-emerald-500' : 'bg-orange-50 text-orange-500'
+               <div className={`w-12 h-12 rounded-none flex items-center justify-center text-xl shadow-sm ${
+                 a.type === 'VIEW' ? 'bg-blue-50 text-#ff5a2f' : 
+                 a.type === 'INQUIRY' ? 'bg-emerald-50 text-#ff5a2f' : 'bg-orange-50 text-#ff5a2f'
                }`}>
                  {a.type === 'VIEW' ? <Eye className="w-5 h-5" /> : 
                   a.type === 'INQUIRY' ? <ShoppingBag className="w-5 h-5" /> : <Zap className="w-5 h-5" />}
                </div>
                {i === 0 && (
-                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-brand rounded-full border-2 border-white" />
+                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-brand rounded-none border-2 border-white" />
                )}
             </div>
             <div className="flex-1 min-w-0 border-b border-slate-50 pb-6 group-last:border-0">
@@ -79,15 +79,15 @@ export default function LiveActivityFeed() {
         ))}
       </div>
 
-      <div className="mt-8 pt-8 border-t border-slate-100">
+      <div className="mt-8 pt-8 border-t border-[#ddd4c8]">
         <Link href="/dealers" className="flex items-center justify-between group">
            <div className="flex -space-x-3">
               {[1,2,3,4].map(i => (
-                <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-400">
+                <div key={i} className="w-8 h-8 rounded-none border-2 border-white bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-400">
                   {i}
                 </div>
               ))}
-              <div className="w-8 h-8 rounded-full border-2 border-white bg-brand text-white flex items-center justify-center text-[10px] font-bold">
+              <div className="w-8 h-8 rounded-none border-2 border-white bg-brand text-slate-900 flex items-center justify-center text-[10px] font-bold">
                 +12
               </div>
            </div>

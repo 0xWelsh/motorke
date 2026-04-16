@@ -9,8 +9,8 @@ export default function AvatarUpload({ currentUrl, userName, size = "lg" }) {
   const fileRef = useRef(null);
 
   const sizeMap = {
-    sm: "w-10 h-10 text-sm rounded-xl",
-    md: "w-14 h-14 text-lg rounded-2xl",
+    sm: "w-10 h-10 text-sm rounded-none",
+    md: "w-14 h-14 text-lg rounded-none",
     lg: "w-24 h-24 text-3xl rounded-[2rem]",
     xl: "w-32 h-32 text-4xl rounded-[2.5rem]",
   };
@@ -58,7 +58,7 @@ export default function AvatarUpload({ currentUrl, userName, size = "lg" }) {
           className={`${sizeMap[size]} object-cover border-4 border-white shadow-xl shadow-emerald-900/5 group-hover:border-emerald-100 transition-all`}
         />
       ) : (
-        <div className={`${sizeMap[size]} bg-emerald-50 border-4 border-white text-emerald-600 flex items-center justify-center font-black shadow-xl shadow-emerald-900/5 group-hover:border-emerald-100 transition-all`}>
+        <div className={`${sizeMap[size]} bg-emerald-50 border-4 border-white text-#ff5a2f flex items-center justify-center font-black shadow-xl shadow-emerald-900/5 group-hover:border-emerald-100 transition-all`}>
           {initial}
         </div>
       )}
@@ -66,9 +66,9 @@ export default function AvatarUpload({ currentUrl, userName, size = "lg" }) {
       {/* Hover overlay */}
       <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center" style={{ borderRadius: "inherit" }}>
         {uploading ? (
-          <Loader2 size={size === "lg" ? 24 : 14} className="animate-spin text-white" />
+          <Loader2 size={size === "lg" ? 24 : 14} className="animate-spin text-slate-900" />
         ) : (
-          <Camera size={size === "lg" ? 24 : 14} className="text-white" />
+          <Camera size={size === "lg" ? 24 : 14} className="text-slate-900" />
         )}
       </div>
     </div>

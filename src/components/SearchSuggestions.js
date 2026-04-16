@@ -15,7 +15,7 @@ export default function SearchSuggestions({
   if (!suggestions.length && !loading) return null;
 
   const suggestionTypes = {
-    make: { icon: <Tag className="w-4 h-4 text-blue-600" />, label: "Make" },
+    make: { icon: <Tag className="w-4 h-4 text-#ff5a2f" />, label: "Make" },
     model: { icon: <Car className="w-4 h-4 text-amber-600" />, label: "Model" },
     variant: { icon: <Tag className="w-4 h-4 text-slate-400" />, label: "Variant" },
     car: { icon: <Car className="w-4 h-4 text-green-600" />, label: "Car" },
@@ -26,7 +26,7 @@ export default function SearchSuggestions({
   const attributeSuggestions = suggestions.filter(s => s.type !== "car");
 
   return (
-    <div className={`absolute left-0 right-0 top-full mt-2 bg-white border border-slate-100 rounded-xl sm:rounded-2xl shadow-2xl z-50 overflow-hidden ${className}`}>
+    <div className={`absolute left-0 right-0 top-full mt-2 bg-white border border-[#ddd4c8] rounded-none sm:rounded-none shadow-2xl z-50 overflow-hidden ${className}`}>
       {loading ? (
         <div className="p-6 text-center">
           <div className="animate-pulse flex items-center justify-center gap-2">
@@ -39,7 +39,7 @@ export default function SearchSuggestions({
           {/* Cars Section */}
           {carSuggestions.length > 0 && (
             <>
-              <div className="px-4 sm:px-6 py-3 bg-slate-50 border-b border-slate-100">
+              <div className="px-4 sm:px-6 py-3 bg-[#fbfcfe] border-b border-[#ddd4c8]">
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-slate-500">
                   Available Cars
                 </p>
@@ -49,12 +49,12 @@ export default function SearchSuggestions({
                   key={`car-${car.id}`}
                   href={`/cars/${car.id}`}
                   onClick={() => onClose?.()}
-                  className="block px-4 sm:px-6 py-4 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group"
+                  className="block px-4 sm:px-6 py-4 hover:bg-[#fbfcfe] transition-colors border-b border-slate-50 last:border-0 group"
                 >
                   <div className="flex gap-4">
                     {/* Image */}
                     {car.image && (
-                      <div className="w-16 h-16 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0">
+                      <div className="w-16 h-16 rounded-none bg-slate-100 overflow-hidden flex-shrink-0">
                         <Image
                           src={car.image}
                           alt={car.value}
@@ -68,11 +68,11 @@ export default function SearchSuggestions({
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2 mb-1">
-                        <h3 className="font-bold text-slate-900 text-sm group-hover:text-blue-600 transition">
+                        <h3 className="font-bold text-slate-900 text-sm group-hover:text-#ff5a2f transition">
                           {car.value}
                         </h3>
                         {car.dealerVerified && (
-                          <ShieldCheck className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                          <ShieldCheck className="w-4 h-4 text-#ff5a2f flex-shrink-0 mt-0.5" />
                         )}
                       </div>
 
@@ -112,7 +112,7 @@ export default function SearchSuggestions({
           {attributeSuggestions.length > 0 && (
             <>
               {carSuggestions.length > 0 && (
-                <div className="px-4 sm:px-6 py-3 bg-slate-50 border-b border-slate-100">
+                <div className="px-4 sm:px-6 py-3 bg-[#fbfcfe] border-b border-[#ddd4c8]">
                   <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-slate-500">
                     Makes & Models
                   </p>
@@ -142,7 +142,7 @@ export default function SearchSuggestions({
                   <button
                     key={`${suggestion.type}-${index}`}
                     onClick={() => onSelect(suggestion.value)}
-                    className="w-full flex items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-3 hover:bg-slate-50 transition-colors group border-b border-slate-50 last:border-0"
+                    className="w-full flex items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-3 hover:bg-[#fbfcfe] transition-colors group border-b border-slate-50 last:border-0"
                   >
                     <div className="shrink-0">{typeInfo.icon}</div>
                     <div className="flex-1 text-left min-w-0">

@@ -35,14 +35,14 @@ function NavLink({ href, label, Icon, active, onClick }) {
       href={href}
       onClick={onClick}
       className={clsx(
-        "flex items-center gap-3 px-4 py-3 rounded-lg transition-all",
+        "flex items-center gap-3 px-4 py-3 rounded-none transition-none",
         active 
-          ? "bg-slate-900 text-white shadow-sm" 
-          : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+          ? "bg-[#111111] text-slate-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]" 
+          : "text-slate-700 hover:text-slate-900 hover:bg-[#fbfcfe]"
       )}
     >
       <Icon size={18} />
-      <span className="font-semibold text-sm">{label}</span>
+      <span className="font-semibold text-[11px] uppercase font-black tracking-[0.10em]">{label}</span>
     </Link>
   );
 }
@@ -73,23 +73,23 @@ export default function PortalLayout({ children }) {
       {/* Backdrop Overlay */}
       {drawerOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/50 z-40"
+          className="fixed inset-0 bg-[#111111]/50 z-40"
           onClick={() => setDrawerOpen(false)}
         />
       )}
 
       {/* Top Header */}
-      <header className="sticky top-0 z-30 bg-white border-b border-slate-200 px-3 sm:px-4 lg:px-8 py-3 sm:py-4 flex items-center justify-between shadow-sm">
+      <header className="sticky top-0 z-30 bg-white border-b border-[#ddd4c8] px-3 sm:px-4 lg:px-8 py-3 sm:py-4 flex items-center justify-between shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
          <div className="flex items-center gap-3">
            <button 
              onClick={() => setDrawerOpen(!drawerOpen)}
-             className="p-2 -ml-2 text-slate-600 hover:text-slate-900 transition-colors"
+             className="p-2 -ml-2 text-slate-700 hover:text-slate-900 transition-colors"
            >
              <Menu size={20} />
            </button>
            <div className="hidden lg:flex flex-col">
-              <span className="text-sm font-bold text-slate-900">Motorske</span>
-              <p className="text-xs font-semibold text-emerald-600 mt-0.5 flex items-center gap-1">
+              <span className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900">Motorske</span>
+              <p className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-#ff5a2f mt-0.5 flex items-center gap-1">
                  <ShieldCheck size={11} /> Active Subscription
               </p>
            </div>
@@ -97,7 +97,7 @@ export default function PortalLayout({ children }) {
          
          <div className="flex items-center gap-4">
             <NotificationsBell variant="portal" />
-            <div className="w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 text-slate-600 flex items-center justify-center font-bold shadow-sm">
+            <div className="w-10 h-10 rounded-none bg-[#fbfcfe] border border-[#ddd4c8] text-slate-700 flex items-center justify-center font-bold shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
               D
             </div>
          </div>
@@ -105,15 +105,15 @@ export default function PortalLayout({ children }) {
 
       {/* Floating Drawer */}
       <aside className={clsx(
-        "fixed left-0 top-0 h-screen w-72 bg-white border-r border-slate-200 shadow-lg z-50 flex flex-col transition-transform duration-300",
+        "fixed left-0 top-0 h-screen w-72 bg-white border-r border-[#ddd4c8] shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)] z-50 flex flex-col transition-transform duration-300",
         drawerOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         {/* Close Button */}
-        <div className="p-4 flex items-center justify-between border-b border-slate-200">
-          <span className="text-sm font-bold text-slate-900">Navigation</span>
+        <div className="p-4 flex items-center justify-between border-b border-[#ddd4c8]">
+          <span className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900">Navigation</span>
           <button 
             onClick={() => setDrawerOpen(false)}
-            className="p-1 text-slate-400 hover:text-slate-900 transition-colors"
+            className="p-1 text-slate-700 hover:text-slate-900 transition-colors"
           >
             <X size={18} />
           </button>
@@ -123,7 +123,7 @@ export default function PortalLayout({ children }) {
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar">
           {/* OVERVIEW Section */}
           <div className="mb-4">
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wide px-4 py-2 mb-2">Overview</p>
+            <p className="text-[10px] uppercase font-black tracking-[0.15em] font-bold text-slate-700 uppercase tracking-wide px-4 py-2 mb-2">Overview</p>
             <div className="space-y-1">
               {links.slice(0, 3).map(({ href, label, Icon }) => (
                 <NavLink 
@@ -140,7 +140,7 @@ export default function PortalLayout({ children }) {
 
           {/* MANAGEMENT Section */}
           <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wide px-4 py-2 mb-2">Management</p>
+            <p className="text-[10px] uppercase font-black tracking-[0.15em] font-bold text-slate-700 uppercase tracking-wide px-4 py-2 mb-2">Management</p>
             <div className="space-y-1">
               {links.slice(3).map(({ href, label, Icon }) => (
                 <NavLink 
@@ -157,34 +157,34 @@ export default function PortalLayout({ children }) {
         </nav>
 
         {/* Drawer Footer */}
-        <div className="p-4 border-t border-slate-200 space-y-2">
+        <div className="p-4 border-t border-[#ddd4c8] space-y-2">
           <Link 
             href="/portal/cars/bulk"
             onClick={handleNavClick}
-            className="flex items-center justify-center gap-2 w-full bg-slate-100 hover:bg-slate-200 text-slate-900 font-semibold py-2.5 rounded-lg transition-all text-xs"
+            className="flex items-center justify-center gap-2 w-full bg-[#fbfcfe] hover:bg-slate-200 text-slate-900 font-semibold py-2.5 rounded-none transition-none text-[10px] uppercase font-black tracking-[0.15em]"
           >
             <Plus size={14} /> Bulk Upload
           </Link>
           <Link 
             href="/portal/cars/new"
             onClick={handleNavClick}
-            className="flex items-center justify-center gap-2 w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2.5 rounded-lg transition-all shadow-sm text-xs"
+            className="flex items-center justify-center gap-2 w-full bg-[#111111] hover:bg-[#111111] text-slate-900 font-semibold py-2.5 rounded-none transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] text-[10px] uppercase font-black tracking-[0.15em]"
           >
             <Plus size={14} /> Add Car
           </Link>
           
-          <div className="pt-2 border-t border-slate-200 space-y-1">
+          <div className="pt-2 border-t border-[#ddd4c8] space-y-1">
             <Link 
               href="/"
               onClick={handleNavClick}
-              className="flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:text-slate-900 text-xs font-semibold rounded-lg transition-all"
+              className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-slate-900 text-[10px] uppercase font-black tracking-[0.15em] font-semibold rounded-none transition-none"
             >
               <ExternalLink size={14} /> Marketplace
             </Link>
             <form action="/api/auth/logout" method="POST">
               <button 
                 type="submit" 
-                className="flex items-center gap-3 w-full px-4 py-2.5 text-slate-600 hover:text-rose-600 text-xs font-semibold rounded-lg transition-all"
+                className="flex items-center gap-3 w-full px-4 py-2.5 text-slate-700 hover:text-rose-600 text-[10px] uppercase font-black tracking-[0.15em] font-semibold rounded-none transition-none"
               >
                 <LogOut size={14} /> Sign Out
               </button>

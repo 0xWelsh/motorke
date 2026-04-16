@@ -91,7 +91,7 @@ export default function Navbar({ user }) {
     <nav className={clsx(
       "sticky top-0 z-[100] transition-all duration-300 w-full",
       scrolled
-        ? "bg-white/95 backdrop-blur-xl border-b border-slate-200 py-3 shadow-sm"
+        ? "bg-white/95 backdrop-blur-xl border-b border-[#ddd4c8] py-3 shadow-sm"
         : "bg-transparent py-5"
     )}>
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
@@ -103,7 +103,7 @@ export default function Navbar({ user }) {
           </Link>
 
           {/* NAV LINKS */}
-          <div className="hidden lg:flex items-center gap-5 border-b border-slate-200 pb-2">
+          <div className="hidden lg:flex items-center gap-5 border-b border-[#ddd4c8] pb-2">
             {links.map(({ href, label, icon }) => (
               <Link key={href} href={href}
                 className="flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-[0.16em] text-slate-700 hover:text-black transition-all">
@@ -122,7 +122,7 @@ export default function Navbar({ user }) {
                 onChange={e => setSearch(e.target.value)}
                 onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                 placeholder="Search cars, e.g. Prado, X5, CX-5"
-                className="w-full bg-white border border-slate-200 focus:border-[#ff5a2f]/40 focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-xl py-3 pl-12 pr-6 text-sm font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900"
+                className="w-full bg-white border border-[#ddd4c8] focus:border-[#ff5a2f]/40 focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-none py-3 pl-12 pr-6 text-sm font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900"
               />
             </form>
             {showSuggestions && (
@@ -147,7 +147,7 @@ export default function Navbar({ user }) {
                   onClick={() => setUserMenu(!userMenu)}
                   className="flex items-center gap-3 bg-white border border-[#ddd4c8] pl-2 pr-5 py-2 rounded-none hover:border-slate-900 transition-none"
                 >
-                  <div className="w-9 h-9 rounded-none flex items-center justify-center font-black text-sm uppercase text-white bg-[#ff5a2f]">
+                  <div className="w-9 h-9 rounded-none flex items-center justify-center font-black text-sm uppercase text-slate-900 bg-[#ff5a2f]">
                     {user.name?.[0]}
                   </div>
                   <span className="text-sm font-extrabold text-slate-900 tracking-tight">{user.name?.split(" ")[0]}</span>
@@ -167,7 +167,7 @@ export default function Navbar({ user }) {
                       <MenuDropdownItem href="/account?tab=saved"   label="Watchlist"        icon={<Heart className="w-5 h-5" />} />
                       <div className="hidden" />
                       <form action="/api/auth/logout" method="POST">
-                        <button type="submit" className="w-full flex items-center gap-4 px-5 py-4 text-[11px] font-black uppercase tracking-widest text-[#ff5a2f] hover:bg-[#111111] hover:text-white rounded-none transition-none">
+                        <button type="submit" className="w-full flex items-center gap-4 px-5 py-4 text-[11px] font-black uppercase tracking-widest text-[#ff5a2f] hover:bg-[#111111] hover:text-slate-900 rounded-none transition-none">
                           <LogOut className="w-5 h-5" /> Sign Out
                         </button>
                       </form>
@@ -181,7 +181,7 @@ export default function Navbar({ user }) {
                 <Link href="/login" className="text-sm font-extrabold text-slate-900 hover:text-black transition-colors px-4">
                   Sign In
                 </Link>
-                <Link href="/signup" className="mk-pill-btn text-white px-6 py-3 text-xs uppercase transition-all bg-[#111111] hover:bg-[#ff5a2f] active:scale-95 inline-flex items-center gap-2">
+                <Link href="/signup" className="mk-pill-btn text-slate-900 px-6 py-3 text-xs uppercase transition-all bg-[#111111] hover:bg-[#ff5a2f] active:scale-95 inline-flex items-center gap-2">
                   For Dealers <ArrowUpRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -227,7 +227,7 @@ export default function Navbar({ user }) {
                   </p>
                 </div>
               </div>
-              <button onClick={() => setOpen(false)} className="w-10 h-10 bg-white border border-[#e7e1d8] text-slate-700 rounded-xl flex items-center justify-center">
+              <button onClick={() => setOpen(false)} className="w-10 h-10 bg-white border border-[#e7e1d8] text-slate-700 rounded-none flex items-center justify-center">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -239,7 +239,7 @@ export default function Navbar({ user }) {
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search cars"
-                  className="w-full bg-white border border-[#e7e1d8] rounded-xl py-3.5 pl-12 pr-4 text-sm font-semibold outline-none"
+                  className="w-full bg-white border border-[#e7e1d8] rounded-none py-3.5 pl-12 pr-4 text-sm font-semibold outline-none"
                 />
               </div>
             </form>
@@ -259,66 +259,66 @@ export default function Navbar({ user }) {
               <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-3">Help & Resources</p>
               <div className="space-y-2">
                 <Link href="/faq" onClick={() => setOpen(false)}
-                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors">
+                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-none transition-colors">
                   FAQ
                 </Link>
                 <Link href="/mission" onClick={() => setOpen(false)}
-                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors">
+                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-none transition-colors">
                   Our Mission
                 </Link>
                 <Link href="/contact" onClick={() => setOpen(false)}
-                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors">
+                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-none transition-colors">
                   Contact Support
                 </Link>
               </div>
             </div>
 
             {user && (
-              <div className="rounded-2xl border border-[#e7e1d8] bg-white p-4 mb-6">
+              <div className="rounded-none border border-[#e7e1d8] bg-white p-4 mb-6">
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-2">Signed in</p>
                 <p className="text-sm font-bold text-slate-900 mb-4 truncate">{user.email}</p>
                 <div className="space-y-2">
                   {user.role === "BUYER" && (
                     <Link href="/account?tab=enquiries" onClick={() => setOpen(false)} 
-                      className="flex items-center gap-3 px-3.5 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                       <Bell size={16} className="flex-shrink-0" />
                       <span>Enquiry Alerts</span>
                     </Link>
                   )}
                   {user.role === "DEALER" && (
                     <Link href="/portal/leads" onClick={() => setOpen(false)} 
-                      className="flex items-center gap-3 px-3.5 py-2.5 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-lg text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                       <Bell size={16} className="flex-shrink-0" />
                       <span>Lead Alerts</span>
                     </Link>
                   )}
                   {user.role === "ADMIN" && (
                     <Link href="/admin/leads" onClick={() => setOpen(false)} 
-                      className="flex items-center gap-3 px-3.5 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                       <Bell size={16} className="flex-shrink-0" />
                       <span>Lead Alerts</span>
                     </Link>
                   )}
                   <Link href="/account" onClick={() => setOpen(false)} 
-                    className="flex items-center gap-3 px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                    className="flex items-center gap-3 px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                     <Settings size={16} className="flex-shrink-0" />
                     <span>Profile Settings</span>
                   </Link>
                   <Link href="/account?tab=saved" onClick={() => setOpen(false)} 
-                    className="flex items-center gap-3 px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                    className="flex items-center gap-3 px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                     <Heart size={16} className="flex-shrink-0" />
                     <span>Watchlist</span>
                   </Link>
                   {user.role === "ADMIN" && (
                     <Link href="/admin" onClick={() => setOpen(false)} 
-                      className="flex items-center gap-3 px-3.5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-900 rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                       <Shield size={16} className="flex-shrink-0" />
                       <span>Administration</span>
                     </Link>
                   )}
                   {user.role === "DEALER" && (
                     <Link href="/portal" onClick={() => setOpen(false)} 
-                      className="flex items-center gap-3 px-3.5 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                       <Store size={16} className="flex-shrink-0" />
                       <span>Dealer Portal</span>
                     </Link>
@@ -331,11 +331,11 @@ export default function Navbar({ user }) {
               {!user ? (
                 <>
                   <Link href="/signup" onClick={() => setOpen(false)}
-                    className="block py-3.5 text-center font-black uppercase tracking-widest text-white rounded-xl bg-[#111111] hover:bg-black transition-colors">
+                    className="block py-3.5 text-center font-black uppercase tracking-widest text-slate-900 rounded-none bg-[#111111] hover:bg-black transition-colors">
                     For Dealers
                   </Link>
                   <Link href="/login" onClick={() => setOpen(false)}
-                    className="block py-3.5 text-center font-black uppercase tracking-widest text-slate-700 bg-white border border-[#e7e1d8] rounded-xl hover:bg-slate-50 transition-colors">
+                    className="block py-3.5 text-center font-black uppercase tracking-widest text-slate-700 bg-white border border-[#e7e1d8] rounded-none hover:bg-[#fbfcfe] transition-colors">
                     Sign In
                   </Link>
                 </>
@@ -343,12 +343,12 @@ export default function Navbar({ user }) {
                 <>
                   {(user.role === "DEALER" || user.role === "ADMIN") && (
                     <Link href="/portal/cars/new" onClick={() => setOpen(false)}
-                      className="block py-3.5 text-center font-black uppercase tracking-widest text-white rounded-xl bg-[#111111] hover:bg-black transition-colors">
+                      className="block py-3.5 text-center font-black uppercase tracking-widest text-slate-900 rounded-none bg-[#111111] hover:bg-black transition-colors">
                       Post Unit
                     </Link>
                   )}
                   <form action="/api/auth/logout" method="POST">
-                    <button type="submit" className="w-full flex items-center justify-center gap-2 py-3.5 text-center font-black uppercase tracking-widest text-rose-600 bg-white border border-rose-300 hover:bg-rose-50 rounded-xl transition-colors">
+                    <button type="submit" className="w-full flex items-center justify-center gap-2 py-3.5 text-center font-black uppercase tracking-widest text-rose-600 bg-white border border-rose-300 hover:bg-rose-50 rounded-none transition-colors">
                       <LogOut size={18} strokeWidth={2.5} />
                       <span>Sign Out</span>
                     </button>

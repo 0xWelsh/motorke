@@ -20,7 +20,7 @@ export default function HotThisWeek({ trending = [] }) {
       </div>
 
       {/* Radiant glow effect */}
-      <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-yellow-200/40 blur-3xl" />
+      <div className="absolute -right-20 -top-20 h-40 w-40 rounded-none bg-yellow-200/40 blur-3xl" />
 
       <div className="relative z-10">
         <div className="flex items-center gap-2 mb-6">
@@ -35,7 +35,7 @@ export default function HotThisWeek({ trending = [] }) {
           {trendData.map((item, idx) => (
             <div
               key={idx}
-              className="flex items-center justify-between p-3 rounded-lg bg-white/80 border border-yellow-100 hover:border-yellow-300 transition-colors"
+              className="flex items-center justify-between p-3 rounded-none bg-white/80 border border-yellow-100 hover:border-yellow-300 transition-colors"
             >
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-slate-900 truncate">{item.make}</p>

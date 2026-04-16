@@ -102,7 +102,7 @@ export default function LocationSearch() {
       <form 
         ref={formRef}
         onSubmit={handleSubmit} 
-        className="flex flex-col sm:flex-row sm:items-center bg-white border border-slate-100 rounded-xl p-2.5 sm:p-2 focus-within:border-[var(--brand-accent)]/30 transition-all duration-300"
+        className="flex flex-col sm:flex-row sm:items-center bg-white border border-[#ddd4c8] rounded-none p-2.5 sm:p-2 focus-within:border-[var(--brand-accent)]/30 transition-all duration-300"
       >
         <div className="flex-1 flex items-center px-3 sm:px-4 gap-3 min-w-0">
           <Search className="w-5 h-5 dark:text-slate-400 text-slate-600 shrink-0" />
@@ -119,8 +119,8 @@ export default function LocationSearch() {
           <button
             type="button"
             onClick={detectLocation}
-            className={`h-11 px-3 sm:px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 group w-full sm:w-auto ${
-              location ? "bg-[var(--brand-light)] text-[var(--brand)]" : "bg-transparent border border-slate-200 text-slate-400 hover:text-slate-900"
+            className={`h-11 px-3 sm:px-4 rounded-none transition-all duration-200 flex items-center justify-center gap-2 group w-full sm:w-auto ${
+              location ? "bg-[var(--brand-light)] text-[var(--brand)]" : "bg-transparent border border-[#ddd4c8] text-slate-400 hover:text-slate-900"
             }`}
             title="Use my location"
           >
@@ -134,7 +134,7 @@ export default function LocationSearch() {
 
           <button 
             type="submit" 
-            className="h-11 bg-[var(--brand)] hover:bg-[var(--brand-accent)] text-white px-5 sm:px-8 rounded-lg font-black text-sm transition-all duration-300 w-full sm:w-auto"
+            className="h-11 bg-[var(--brand)] hover:bg-[var(--brand-accent)] text-slate-900 px-5 sm:px-8 rounded-none font-black text-sm transition-all duration-300 w-full sm:w-auto"
           >
             Search
           </button>
@@ -154,7 +154,7 @@ export default function LocationSearch() {
 
       {location && (
         <div className="flex items-center gap-3 mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full border border-slate-200">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-none border border-[#ddd4c8]">
             <MapPin className="w-3 h-3 dark:text-slate-500 text-slate-600" />
             <span className="text-[10px] font-black dark:text-slate-500 text-slate-600 uppercase tracking-widest">
               Searching near you

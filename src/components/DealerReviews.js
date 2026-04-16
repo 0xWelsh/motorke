@@ -97,13 +97,13 @@ export default function DealerReviews({
         </div>
 
         {reviews.length === 0 ? (
-          <div className="mt-6 rounded-2xl border border-[#ece6dd] bg-[#fcfbf8] px-5 py-5">
+          <div className="mt-6 rounded-none border border-[#ece6dd] bg-[#fcfbf8] px-5 py-5">
             <p className="text-sm font-semibold text-slate-600">No buyer reviews have been posted yet. Be the first to share your experience.</p>
           </div>
         ) : (
           <div className="mt-6 space-y-4">
             {reviews.map((review) => (
-              <article key={review.id} className="rounded-2xl border border-[#ece6dd] px-4 py-4 sm:px-5 sm:py-5">
+              <article key={review.id} className="rounded-none border border-[#ece6dd] px-4 py-4 sm:px-5 sm:py-5">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-sm font-bold text-slate-900 truncate">{review.user?.name || "Verified Buyer"}</p>
@@ -125,7 +125,7 @@ export default function DealerReviews({
         {!viewer && (
           <div className="space-y-3">
             <p className="text-sm text-slate-600 font-semibold">Sign in to rate this dealership and help other buyers choose confidently.</p>
-            <Link href="/login" className="inline-flex items-center rounded-lg bg-slate-900 px-4 py-2.5 text-xs font-extrabold uppercase tracking-[0.12em] text-white hover:bg-black transition-colors">
+            <Link href="/login" className="inline-flex items-center rounded-none bg-slate-900 px-4 py-2.5 text-xs font-extrabold uppercase tracking-[0.12em] text-slate-900 hover:bg-black transition-colors">
               Log In to Review
             </Link>
           </div>
@@ -142,7 +142,7 @@ export default function DealerReviews({
               <select
                 value={rating}
                 onChange={(event) => setRating(parseInt(event.target.value, 10))}
-                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-900 outline-none focus:border-emerald-500"
+                className="mt-1 w-full rounded-none border border-[#ddd4c8] bg-white px-3 py-2 text-sm font-semibold text-slate-900 outline-none focus:border-#ff5a2f"
               >
                 <option value={5}>5 - Excellent</option>
                 <option value={4}>4 - Very good</option>
@@ -160,17 +160,17 @@ export default function DealerReviews({
                 maxLength={500}
                 rows={4}
                 placeholder="How was your experience with this dealer?"
-                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-emerald-500 resize-none"
+                className="mt-1 w-full rounded-none border border-[#ddd4c8] bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-#ff5a2f resize-none"
               />
               <p className="mt-1 text-[11px] font-bold text-slate-400">{comment.trim().length}/500</p>
             </div>
 
-            {error && <p className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700">{error}</p>}
+            {error && <p className="rounded-none border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700">{error}</p>}
 
             <button
               type="submit"
               disabled={submitting}
-              className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2.5 text-xs font-extrabold uppercase tracking-[0.12em] text-white hover:bg-emerald-500 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
+              className="inline-flex items-center justify-center rounded-none bg-#ff5a2f px-4 py-2.5 text-xs font-extrabold uppercase tracking-[0.12em] text-slate-900 hover:bg-#ff5a2f disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
             >
               {submitting ? "Saving..." : viewerReview ? "Update Review" : "Post Review"}
             </button>

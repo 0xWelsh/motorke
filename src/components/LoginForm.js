@@ -146,7 +146,7 @@ export default function LoginForm({ error }) {
 
             {/* Remember Me */}
             <label htmlFor="rememberMe" className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" id="rememberMe" name="remember" className="w-4 h-4 border border-slate-200 rounded-none checked:bg-[#ff5a2f] checked:border-[#ff5a2f] cursor-pointer accent-[#ff5a2f] outline-none cursor-pointer" />
+              <input type="checkbox" id="rememberMe" name="remember" className="w-4 h-4 border border-[#ddd4c8] rounded-none checked:bg-[#ff5a2f] checked:border-[#ff5a2f] cursor-pointer accent-[#ff5a2f] outline-none cursor-pointer" />
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Keep me signed in</span>
             </label>
 
@@ -164,7 +164,7 @@ export default function LoginForm({ error }) {
             <button 
               type="submit" 
               disabled={!canSubmit}
-              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-none-lg py-3.5 sm:py-2.5 font-semibold transition-all text-base sm:text-sm"
+              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-slate-900 rounded-none-lg py-3.5 sm:py-2.5 font-semibold transition-all text-base sm:text-sm"
             >
               Sign In
             </button>
@@ -172,7 +172,7 @@ export default function LoginForm({ error }) {
             {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200"></div>
+                <div className="w-full border-t border-[#ddd4c8]"></div>
               </div>
               <div className="relative flex justify-center">
                 <span className="bg-white px-3 text-xs text-slate-600">or continue with</span>
@@ -186,7 +186,7 @@ export default function LoginForm({ error }) {
           </form>
 
           {/* Footer */}
-          <div className="mt-8 pt-6 border-t border-slate-200 text-center">
+          <div className="mt-8 pt-6 border-t border-[#ddd4c8] text-center">
             <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mt-2">
               Don't have an account?{" "}
               <Link href="/signup" className="font-semibold text-slate-900 hover:text-slate-700 transition-colors">

@@ -18,9 +18,9 @@ export default function DealerDiscovery({ dealers }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {dealers.map((dealer) => (
           <Link key={dealer.id} href={`/dealers/${dealer.slug}`}
-            className="group bg-white border border-slate-200 rounded-[2rem] p-8 transition-all duration-300 hover:shadow-xl hover:border-brand-accent/30 flex flex-col items-center text-center">
+            className="group bg-white border border-[#ddd4c8] rounded-[2rem] p-8 transition-all duration-300 hover:shadow-xl hover:border-brand-accent/30 flex flex-col items-center text-center">
             <div className="relative mb-6">
-              <div className="w-20 h-20 rounded-3xl bg-slate-50 border border-slate-100 flex items-center justify-center text-brand font-black text-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm">
+              <div className="w-20 h-20 rounded-3xl bg-[#fbfcfe] border border-[#ddd4c8] flex items-center justify-center text-brand font-black text-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm">
                 {dealer.logoUrl ? (
                   <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-contain p-2" />
                 ) : (
@@ -28,8 +28,8 @@ export default function DealerDiscovery({ dealers }) {
                 )}
               </div>
               {dealer.verified && (
-                <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-md">
-                  <ShieldCheck className="w-5 h-5 text-emerald-500 fill-emerald-50" />
+                <div className="absolute -bottom-1 -right-1 bg-white rounded-none p-1 shadow-md">
+                  <ShieldCheck className="w-5 h-5 text-#ff5a2f fill-emerald-50" />
                 </div>
               )}
             </div>
@@ -40,11 +40,11 @@ export default function DealerDiscovery({ dealers }) {
             </p>
 
             <div className="mt-auto w-full grid grid-cols-2 gap-2">
-               <div className="bg-slate-50 rounded-2xl py-3 px-2">
+               <div className="bg-[#fbfcfe] rounded-none py-3 px-2">
                   <p className="text-lg font-black text-slate-800 leading-none mb-1">{dealer._count?.cars || 0}</p>
                   <p className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest">Live Units</p>
                </div>
-               <div className="bg-brand-light rounded-2xl py-3 px-2 flex flex-col items-center justify-center group-hover:bg-brand group-hover:text-white transition-colors">
+               <div className="bg-brand-light rounded-none py-3 px-2 flex flex-col items-center justify-center group-hover:bg-brand group-hover:text-slate-900 transition-colors">
                   <Store className="w-4 h-4 mb-1" />
                   <p className="text-[9px] font-extrabold uppercase tracking-widest">Visit Yard</p>
                </div>

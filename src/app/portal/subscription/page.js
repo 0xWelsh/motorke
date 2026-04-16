@@ -11,7 +11,7 @@ const PLANS = [
     period: "Forever Free",
     icon: Zap,
     color: "slate",
-    borderColor: "border-slate-200",
+    borderColor: "border-[#ddd4c8]",
     features: [
       "Up to 5 vehicle listings",
       "Basic dealer profile page",
@@ -28,7 +28,7 @@ const PLANS = [
     period: "/month",
     icon: Sparkles,
     color: "slate",
-    borderColor: "border-slate-200",
+    borderColor: "border-[#ddd4c8]",
     popular: true,
     features: [
       "Unlimited vehicle listings",
@@ -47,7 +47,7 @@ const PLANS = [
     period: "/month",
     icon: Crown,
     color: "slate",
-    borderColor: "border-slate-200",
+    borderColor: "border-[#ddd4c8]",
     features: [
       "Everything in Pro",
       "API access & webhooks",
@@ -63,17 +63,17 @@ const PLANS = [
 ];
 
 const PAYMENT_METHODS = [
-  { id: "mpesa", label: "M-Pesa", icon: Smartphone, color: "text-emerald-500", desc: "Pay via Safaricom STK Push" },
-  { id: "card", label: "Card", icon: CreditCard, color: "text-blue-500", desc: "Visa / Mastercard" },
+  { id: "mpesa", label: "M-Pesa", icon: Smartphone, color: "text-#ff5a2f", desc: "Pay via Safaricom STK Push" },
+  { id: "card", label: "Card", icon: CreditCard, color: "text-#ff5a2f", desc: "Visa / Mastercard" },
   { id: "bank", label: "Bank Transfer", icon: Building2, color: "text-amber-500", desc: "Direct EFT / SWIFT" },
 ];
 
 const colorMap = {
   slate: {
-    badge: "bg-slate-100 text-slate-700",
-    icon: "bg-slate-100 text-slate-700",
+    badge: "bg-[#fbfcfe] text-slate-700",
+    icon: "bg-[#fbfcfe] text-slate-700",
     check: "text-slate-700",
-    btn: "bg-slate-900 hover:bg-slate-800 text-white",
+    btn: "bg-[#111111] hover:bg-[#111111] text-slate-900",
   },
 };
 
@@ -158,7 +158,7 @@ export default function SubscriptionPage() {
     <div className="w-full">
       <div className="mb-6">
         <h1 className="text-4xl font-bold text-slate-900 mb-2">Billing & Subscriptions</h1>
-        <p className="text-slate-600 font-medium">Choose the plan that fits your dealership. Upgrade or downgrade anytime.</p>
+        <p className="text-slate-700 font-medium">Choose the plan that fits your dealership. Upgrade or downgrade anytime.</p>
       </div>
 
       {/* Pricing Cards */}
@@ -167,16 +167,16 @@ export default function SubscriptionPage() {
           const colors = colorMap[plan.color];
           const Icon = plan.icon;
           return (
-            <div key={plan.id} className={`relative bg-white border ${plan.borderColor} rounded-lg p-6 flex flex-col transition-all duration-300 hover:shadow-md`}>
+            <div key={plan.id} className={`relative bg-white border ${plan.borderColor} rounded-none p-6 flex flex-col transition-none duration-300 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]`}>
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-slate-900 text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-md">
+                  <span className="bg-[#111111] text-slate-900 text-[10px] uppercase font-black tracking-[0.15em] font-semibold px-4 py-1.5 rounded-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
                     Most Popular
                   </span>
                 </div>
               )}
               <div className="flex items-center gap-3 mb-4">
-                <div className={`w-10 h-10 rounded-lg ${colors.icon} flex items-center justify-center`}>
+                <div className={`w-10 h-10 rounded-none ${colors.icon} flex items-center justify-center`}>
                   <Icon size={20} />
                 </div>
                 <h3 className="text-lg font-bold text-slate-900">{plan.name}</h3>
@@ -187,25 +187,25 @@ export default function SubscriptionPage() {
                     <span className="text-3xl font-bold text-slate-900">Free</span>
                   ) : (
                     <>
-                      <span className="text-xs font-medium text-slate-500 mb-1">KES</span>
+                      <span className="text-[10px] uppercase font-black tracking-[0.15em] font-medium text-slate-700 mb-1">KES</span>
                       <span className="text-3xl font-bold text-slate-900">{plan.price.toLocaleString()}</span>
                     </>
                   )}
-                  <span className="text-xs font-medium text-slate-500 mb-1 ml-1">{plan.period}</span>
+                  <span className="text-[10px] uppercase font-black tracking-[0.15em] font-medium text-slate-700 mb-1 ml-1">{plan.period}</span>
                 </div>
               </div>
               <div className="space-y-2 mb-6 flex-1">
                 {plan.features.map((feature, i) => (
                   <div key={i} className="flex items-start gap-2">
                     <CheckCircle2 size={14} className={`${colors.check} shrink-0 mt-0.5`} />
-                    <span className="text-sm text-slate-700 font-medium">{feature}</span>
+                    <span className="text-[11px] uppercase font-black tracking-[0.10em] text-slate-700 font-medium">{feature}</span>
                   </div>
                 ))}
               </div>
               <button
                 disabled={plan.disabled}
                 onClick={() => !plan.disabled && setSelectedPlan(plan.id)}
-                className={`w-full rounded-lg py-3 font-semibold text-sm transition-all border border-transparent ${plan.disabled ? 'bg-slate-100 text-slate-400 cursor-default' : colors.btn}`}
+                className={`w-full rounded-none py-3 font-semibold text-[11px] uppercase font-black tracking-[0.10em] transition-none border border-transparent ${plan.disabled ? 'bg-[#fbfcfe] text-slate-700 cursor-default' : colors.btn}`}
               >
                 {plan.cta}
               </button>
@@ -216,22 +216,22 @@ export default function SubscriptionPage() {
 
       {/* ─── Payment Checkout Modal ─── */}
       {selectedPlan && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-          <div className="w-full max-w-lg bg-white border border-slate-200 rounded-lg p-6 relative max-h-[90vh] overflow-y-auto">
-            <button onClick={() => { setSelectedPlan(null); setStatus("idle"); setLoading(false); setPayMethod("mpesa"); }} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors">
+        <div className="fixed inset-0 bg-[#111111]/50 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+          <div className="w-full max-w-lg bg-white border border-[#ddd4c8] rounded-none p-6 relative max-h-[90vh] overflow-y-auto">
+            <button onClick={() => { setSelectedPlan(null); setStatus("idle"); setLoading(false); setPayMethod("mpesa"); }} className="absolute top-6 right-6 text-slate-700 hover:text-slate-700 transition-colors">
               <X size={20} />
             </button>
 
             {status === "success" ? (
               <div className="text-center">
-                <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle2 size={48} className="text-emerald-600" />
+                <div className="w-24 h-24 bg-emerald-50 rounded-none flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle2 size={48} className="text-#ff5a2f" />
                 </div>
                 <h2 className="text-2xl font-bold text-slate-900 mb-2">Payment Received!</h2>
-                <p className="text-sm text-slate-600 font-medium">
+                <p className="text-[11px] uppercase font-black tracking-[0.10em] text-slate-700 font-medium">
                   Your {planObj?.name} subscription is now active. Welcome to the next level!
                 </p>
-                <button onClick={() => { setSelectedPlan(null); setStatus("idle"); }} className="mt-6 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-lg px-8 py-3 font-semibold text-sm transition-all">
+                <button onClick={() => { setSelectedPlan(null); setStatus("idle"); }} className="mt-6 bg-[#fbfcfe] hover:bg-slate-200 text-slate-900 rounded-none px-8 py-3 font-semibold text-[11px] uppercase font-black tracking-[0.10em] transition-none">
                   Close
                 </button>
               </div>
@@ -240,22 +240,22 @@ export default function SubscriptionPage() {
               <div className="text-center">
                 <Loader2 size={48} className="animate-spin text-slate-700 mx-auto mb-4" />
                 <h2 className="text-xl font-bold text-slate-900 mb-2">Processing Payment</h2>
-                <p className="text-sm text-slate-600">{message}</p>
-                <div className="mt-6 bg-slate-50 p-4 rounded-lg border border-slate-200 mx-auto max-w-[220px]">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Awaiting Confirmation...</p>
+                <p className="text-[11px] uppercase font-black tracking-[0.10em] text-slate-700">{message}</p>
+                <div className="mt-6 bg-[#fbfcfe] p-4 rounded-none border border-[#ddd4c8] mx-auto max-w-[220px]">
+                  <p className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold uppercase tracking-wider text-slate-700">Awaiting Confirmation...</p>
                 </div>
               </div>
 
             ) : status === "bank_details" ? (
               <div>
                 <div className="text-center mb-6">
-                  <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 bg-[#fbfcfe] rounded-none flex items-center justify-center mx-auto mb-3">
                     <Building2 size={24} className="text-slate-700" />
                   </div>
                   <h3 className="text-xl font-bold text-slate-900 mb-1">Bank Transfer Details</h3>
-                  <p className="text-xs text-slate-600">Transfer <span className="text-slate-900 font-bold">KES {planObj?.price.toLocaleString()}</span> to the following account</p>
+                  <p className="text-[10px] uppercase font-black tracking-[0.15em] text-slate-700">Transfer <span className="text-slate-900 font-bold">KES {planObj?.price.toLocaleString()}</span> to the following account</p>
                 </div>
-                <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 space-y-3 mb-4">
+                <div className="bg-[#fbfcfe] border border-[#ddd4c8] rounded-none p-6 space-y-3 mb-4">
                   {[
                     ["Bank Name", "Equity Bank"],
                     ["Account Name", "Motorske Ltd"],
@@ -265,16 +265,16 @@ export default function SubscriptionPage() {
                     ["Reference", `MOTORSKE-${selectedPlan}`],
                   ].map(([label, value]) => (
                     <div key={label} className="flex items-center justify-between">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">{label}</span>
-                      <span className="text-sm font-bold text-slate-900">{value}</span>
+                      <span className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold uppercase tracking-wider text-slate-700">{label}</span>
+                      <span className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900">{value}</span>
                     </div>
                   ))}
                 </div>
-                <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-                  <p className="text-xs font-semibold text-amber-900 uppercase tracking-wider mb-1">Important</p>
-                  <p className="text-xs text-slate-700">After transferring, send your payment confirmation screenshot to <span className="text-slate-900 font-bold">billing@motorske.com</span> or WhatsApp <span className="text-slate-900 font-bold">+254 700 000 000</span>. Your plan will be activated within 24 hours.</p>
+                <div className="p-4 bg-amber-50 border border-amber-200 rounded-none">
+                  <p className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-amber-900 uppercase tracking-wider mb-1">Important</p>
+                  <p className="text-[10px] uppercase font-black tracking-[0.15em] text-slate-700">After transferring, send your payment confirmation screenshot to <span className="text-slate-900 font-bold">billing@motorske.com</span> or WhatsApp <span className="text-slate-900 font-bold">+254 700 000 000</span>. Your plan will be activated within 24 hours.</p>
                 </div>
-                <button onClick={() => { setSelectedPlan(null); setStatus("idle"); }} className="w-full mt-4 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-lg py-3 font-semibold text-sm transition-all">
+                <button onClick={() => { setSelectedPlan(null); setStatus("idle"); }} className="w-full mt-4 bg-[#fbfcfe] hover:bg-slate-200 text-slate-900 rounded-none py-3 font-semibold text-[11px] uppercase font-black tracking-[0.10em] transition-none">
                   Done
                 </button>
               </div>
@@ -284,7 +284,7 @@ export default function SubscriptionPage() {
                 {/* Header */}
                 <div className="text-center mb-1">
                   <h3 className="text-xl font-bold text-slate-900 mb-1">Choose Payment Method</h3>
-                  <p className="text-xs text-slate-600">
+                  <p className="text-[10px] uppercase font-black tracking-[0.15em] text-slate-700">
                     Upgrade to <span className="text-slate-900 font-bold">{planObj?.name}</span> — <span className="text-slate-900 font-bold">KES {planObj?.price.toLocaleString()}/mo</span>
                   </p>
                 </div>
@@ -299,16 +299,16 @@ export default function SubscriptionPage() {
                         type="button"
                         key={method.id}
                         onClick={() => setPayMethod(method.id)}
-                        className={`flex items-center gap-3 p-4 rounded-lg border text-left transition-all duration-200 ${
+                        className={`flex items-center gap-3 p-4 rounded-none border text-left transition-none duration-200 ${
                           active 
-                            ? "bg-slate-100 border-slate-300" 
-                            : "bg-slate-50 border-slate-200 hover:bg-slate-100"
+                            ? "bg-[#fbfcfe] border-[#ddd4c8]" 
+                            : "bg-[#fbfcfe] border-[#ddd4c8] hover:bg-[#fbfcfe]"
                         }`}
                       >
-                        <MIcon size={18} className={active ? "text-slate-700" : "text-slate-400"} />
+                        <MIcon size={18} className={active ? "text-slate-700" : "text-slate-700"} />
                         <div>
-                          <p className={`text-sm font-semibold ${active ? "text-slate-900" : "text-slate-700"}`}>{method.label}</p>
-                          <p className="text-xs font-medium text-slate-500">{method.desc}</p>
+                          <p className={`text-[11px] uppercase font-black tracking-[0.10em] font-semibold ${active ? "text-slate-900" : "text-slate-700"}`}>{method.label}</p>
+                          <p className="text-[10px] uppercase font-black tracking-[0.15em] font-medium text-slate-700">{method.desc}</p>
                         </div>
                       </button>
                     );
@@ -317,7 +317,7 @@ export default function SubscriptionPage() {
 
                 {/* Error */}
                 {status === "error" && (
-                  <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-xs font-semibold text-red-700">
+                  <div className="p-4 bg-red-50 border border-red-200 rounded-none text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-red-700">
                     {message}
                   </div>
                 )}
@@ -325,7 +325,7 @@ export default function SubscriptionPage() {
                 {/* Dynamic Input based on method */}
                 {payMethod === "mpesa" && (
                   <div className="space-y-2">
-                    <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-700">
+                    <label className="flex items-center gap-2 text-[10px] uppercase font-black tracking-[0.15em] font-semibold uppercase tracking-wider text-slate-700">
                       <Smartphone size={14} className="text-slate-700" />
                       Safaricom Number
                     </label>
@@ -335,24 +335,24 @@ export default function SubscriptionPage() {
                       placeholder="e.g. 0712 345 678"
                       value={phone}
                       onChange={e => setPhone(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-slate-900 font-medium outline-none focus:border-slate-400 transition-colors"
+                      className="w-full bg-[#fbfcfe] border border-[#ddd4c8] rounded-none px-4 py-3 text-slate-900 font-medium outline-none focus:border-slate-400 transition-colors"
                     />
                   </div>
                 )}
 
                 {payMethod === "card" && (
-                  <div className="p-6 bg-blue-50 border border-blue-200 rounded-lg text-center">
-                    <CreditCard size={32} className="text-blue-600 mx-auto mb-3" />
-                    <p className="text-sm font-medium text-slate-700">You will be redirected to a secure payment page to enter your card details.</p>
-                    <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider mt-2">Powered by Pesapal</p>
+                  <div className="p-6 bg-blue-50 border border-blue-200 rounded-none text-center">
+                    <CreditCard size={32} className="text-#ff5a2f mx-auto mb-3" />
+                    <p className="text-[11px] uppercase font-black tracking-[0.10em] font-medium text-slate-700">You will be redirected to a secure payment page to enter your card details.</p>
+                    <p className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-#ff5a2f uppercase tracking-wider mt-2">Powered by Pesapal</p>
                   </div>
                 )}
 
                 {payMethod === "bank" && (
-                  <div className="p-6 bg-amber-50 border border-amber-200 rounded-lg text-center">
+                  <div className="p-6 bg-amber-50 border border-amber-200 rounded-none text-center">
                     <Building2 size={32} className="text-amber-600 mx-auto mb-3" />
-                    <p className="text-sm font-medium text-slate-700">Click below to view our bank account details for direct transfer.</p>
-                    <p className="text-xs font-semibold text-amber-600 uppercase tracking-wider mt-2">Manual activation within 24hrs</p>
+                    <p className="text-[11px] uppercase font-black tracking-[0.10em] font-medium text-slate-700">Click below to view our bank account details for direct transfer.</p>
+                    <p className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-amber-600 uppercase tracking-wider mt-2">Manual activation within 24hrs</p>
                   </div>
                 )}
 
@@ -360,7 +360,7 @@ export default function SubscriptionPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white rounded-lg py-3 font-semibold tracking-wide transition-all flex items-center justify-center gap-2"
+                  className="w-full bg-[#111111] hover:bg-[#111111] disabled:opacity-50 text-slate-900 rounded-none py-3 font-semibold tracking-wide transition-none flex items-center justify-center gap-2"
                 >
                   {loading ? <Loader2 size={18} className="animate-spin" /> : <Banknote size={18} />}
                   {loading 

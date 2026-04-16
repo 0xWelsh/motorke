@@ -32,10 +32,10 @@ export default function NotificationsBell({ variant = "portal" }) {
   const dropdownClassName = useMemo(
     () =>
       clsx(
-        "absolute right-0 top-full mt-3 w-[360px] max-w-[90vw] rounded-2xl border shadow-2xl z-50 overflow-hidden",
+        "absolute right-0 top-full mt-3 w-[360px] max-w-[90vw] rounded-none border shadow-2xl z-50 overflow-hidden",
         isAdmin || isNavbar
-          ? "bg-white border-slate-200 text-slate-900"
-          : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
+          ? "bg-white border-[#ddd4c8] text-slate-900"
+          : "bg-white dark:bg-slate-900 border-[#ddd4c8] dark:border-[#ddd4c8] text-slate-900 dark:text-slate-900"
       ),
     [isAdmin, isNavbar]
   );
@@ -135,10 +135,10 @@ export default function NotificationsBell({ variant = "portal" }) {
         className={clsx(
           "transition-all relative",
           isAdmin
-            ? "text-slate-600 hover:text-emerald-600"
+            ? "text-slate-600 hover:text-#ff5a2f"
             : isNavbar
-              ? "w-10 h-10 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#ff5a2f] hover:border-slate-300 flex items-center justify-center"
-            : "w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center justify-center"
+              ? "w-10 h-10 rounded-none bg-white border border-[#ddd4c8] text-slate-600 hover:text-[#ff5a2f] hover:border-slate-300 flex items-center justify-center"
+            : "w-10 h-10 rounded-none bg-slate-100 dark:bg-slate-800 border border-[#ddd4c8] dark:border-[#ddd4c8] text-slate-600 dark:text-slate-300 hover:text-#ff5a2f dark:hover:text-emerald-400 flex items-center justify-center"
         )}
         title="Notifications"
         aria-label="Notifications"
@@ -146,10 +146,10 @@ export default function NotificationsBell({ variant = "portal" }) {
         <Bell size={20} />
         {unreadCount > 0 && (
           <span className={clsx(
-            "absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-bold flex items-center justify-center",
+            "absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-none text-[10px] font-bold flex items-center justify-center",
             isAdmin || isNavbar
-              ? "bg-emerald-600 text-white border-2 border-white"
-              : "bg-emerald-600 text-white border-2 border-slate-50 dark:border-slate-900"
+              ? "bg-#ff5a2f text-slate-900 border-2 border-white"
+              : "bg-#ff5a2f text-slate-900 border-2 border-slate-50 dark:border-slate-900"
           )}>
             {Math.min(unreadCount, 99)}
           </span>
@@ -160,7 +160,7 @@ export default function NotificationsBell({ variant = "portal" }) {
         <div className={dropdownClassName}>
           <div className={clsx(
             "px-4 py-3 border-b flex items-center justify-between",
-            isAdmin || isNavbar ? "border-slate-200" : "border-slate-200 dark:border-slate-800"
+            isAdmin || isNavbar ? "border-[#ddd4c8]" : "border-[#ddd4c8] dark:border-[#ddd4c8]"
           )}>
             <div>
               <p className="text-sm font-bold">Notifications</p>
@@ -172,7 +172,7 @@ export default function NotificationsBell({ variant = "portal" }) {
               <button
                 type="button"
                 onClick={markAllRead}
-                className="text-xs font-semibold text-emerald-600 hover:text-emerald-500 inline-flex items-center gap-1"
+                className="text-xs font-semibold text-#ff5a2f hover:text-#ff5a2f inline-flex items-center gap-1"
                 disabled={busy}
               >
                 <CheckCheck size={14} /> Mark all
@@ -194,8 +194,8 @@ export default function NotificationsBell({ variant = "portal" }) {
                 const itemClass = clsx(
                   "block px-4 py-3 border-b transition-colors",
                   isAdmin || isNavbar
-                    ? "border-slate-100 hover:bg-slate-50"
-                    : "border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/70",
+                    ? "border-[#ddd4c8] hover:bg-[#fbfcfe]"
+                    : "border-[#ddd4c8] dark:border-[#ddd4c8] hover:bg-[#fbfcfe] dark:hover:bg-slate-800/70",
                   item.read ? "opacity-80" : ""
                 );
 
@@ -203,7 +203,7 @@ export default function NotificationsBell({ variant = "portal" }) {
                   <>
                     <div className="flex items-start justify-between gap-3">
                       <p className="text-sm font-semibold leading-tight">{item.title}</p>
-                      {!item.read && <span className="mt-1 w-2 h-2 rounded-full bg-emerald-500 shrink-0" />}
+                      {!item.read && <span className="mt-1 w-2 h-2 rounded-none bg-#ff5a2f shrink-0" />}
                     </div>
                     <p className={clsx("text-xs mt-1", isAdmin || isNavbar ? "text-slate-600" : "text-slate-600 dark:text-slate-300")}>
                       {item.message}

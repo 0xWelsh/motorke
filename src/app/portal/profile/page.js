@@ -32,31 +32,31 @@ export default async function PortalProfilePage({ searchParams }) {
 
   if (!user) return null;
 
-  const inputCls = "w-full bg-white border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium text-slate-900 outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all placeholder:text-slate-500 shadow-sm";
-  const labelCls = "text-xs font-bold uppercase tracking-wide text-slate-600 mb-2 block";
-  const selectCls = "w-full bg-white border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium text-slate-900 outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all shadow-sm";
+  const inputCls = "w-full bg-white border border-[#ddd4c8] rounded-none px-4 py-2.5 text-[11px] uppercase font-black tracking-[0.10em] font-medium text-slate-900 outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-none placeholder:text-slate-700 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]";
+  const labelCls = "text-[10px] uppercase font-black tracking-[0.15em] font-bold uppercase tracking-wide text-slate-700 mb-2 block";
+  const selectCls = "w-full bg-white border border-[#ddd4c8] rounded-none px-4 py-2.5 text-[11px] uppercase font-black tracking-[0.10em] font-medium text-slate-900 outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]";
 
   return (
     <div className="w-full max-w-4xl">
       <div className="mb-8 sm:mb-10">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-1 sm:mb-2\">Account Settings</h1>
-        <p className="text-xs sm:text-sm text-slate-600 font-medium\">Manage your dealer profile and account details.</p>
+        <p className="text-[10px] uppercase font-black tracking-[0.15em] sm:text-[11px] uppercase font-black tracking-[0.10em] text-slate-700 font-medium\">Manage your dealer profile and account details.</p>
       </div>
 
       {saved && (
-        <div className="mb-6 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold text-slate-700\">
+        <div className="mb-6 rounded-none border border-[#ddd4c8] bg-[#fbfcfe] px-4 py-3 text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700\">
           Profile saved successfully.
         </div>
       )}
       {error && (
-        <div className="mb-6 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold text-slate-700\">
+        <div className="mb-6 rounded-none border border-[#ddd4c8] bg-[#fbfcfe] px-4 py-3 text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700\">
           Something went wrong. Please try again.
         </div>
       )}
 
       {/* Account Overview - Top Section */}
-      <div className="bg-white border border-slate-200 rounded-lg p-4 sm:p-6 md:p-8 shadow-sm mb-8 sm:mb-10\">
-        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wide mb-4 sm:mb-6\">Account Overview</h3>
+      <div className="bg-white border border-[#ddd4c8] rounded-none p-4 sm:p-6 md:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] mb-8 sm:mb-10\">
+        <h3 className="text-[10px] uppercase font-black tracking-[0.15em] font-bold text-slate-900 uppercase tracking-wide mb-4 sm:mb-6\">Account Overview</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6\">
           {[
             { icon: User, label: "Role", value: user.role },
@@ -70,16 +70,16 @@ export default async function PortalProfilePage({ searchParams }) {
           ].map(({ icon: Icon, label, value }) => (
             <div key={label}>
               <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
-                <Icon size={12} className="text-slate-400" />
-                <span className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wide">{label}</span>
+                <Icon size={12} className="text-slate-700" />
+                <span className="text-[10px] sm:text-[10px] uppercase font-black tracking-[0.15em] font-bold text-slate-700 uppercase tracking-wide">{label}</span>
               </div>
-              <p className="text-xs sm:text-sm font-semibold text-slate-900 truncate">{value}</p>
+              <p className="text-[10px] uppercase font-black tracking-[0.15em] sm:text-[11px] uppercase font-black tracking-[0.10em] font-semibold text-slate-900 truncate">{value}</p>
             </div>
           ))}
         </div>
         
-        <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-slate-200">
-          <p className="text-xs text-slate-500 leading-relaxed">
+        <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-[#ddd4c8]">
+          <p className="text-[10px] uppercase font-black tracking-[0.15em] text-slate-700 leading-relaxed">
              Need to change your registered email or dealership name? Contact partner support.
            </p>
         </div>
@@ -88,7 +88,7 @@ export default async function PortalProfilePage({ searchParams }) {
       {/* Settings Sections */}
       <div className="space-y-8">
           {/* Personal Avatar Section */}
-          <div className="bg-white border border-slate-200 rounded-lg p-8 shadow-sm">
+          <div className="bg-white border border-[#ddd4c8] rounded-none p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
             <div className="flex flex-col sm:flex-row items-center gap-8">
               <div className="relative">
                 <AvatarUpload 
@@ -96,19 +96,19 @@ export default async function PortalProfilePage({ searchParams }) {
                   userName={user.name} 
                   size="xl" 
                 />
-                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-slate-900 rounded-full border-[3px] border-white flex items-center justify-center text-white shadow-md">
+                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#111111] rounded-none border-[3px] border-white flex items-center justify-center text-slate-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
                    <Plus size={14} strokeWidth={3} />
                 </div>
               </div>
               <div className="text-center sm:text-left">
                 <h2 className="text-2xl font-bold text-slate-900">{user.name}</h2>
-                <p className="text-sm text-slate-600 mt-0.5">{user.email}</p>
+                <p className="text-[11px] uppercase font-black tracking-[0.10em] text-slate-700 mt-0.5">{user.email}</p>
                 <div className="flex items-center justify-center sm:justify-start gap-2 mt-4">
-                  <span className="text-xs font-semibold bg-slate-100 text-slate-700 px-3 py-1 rounded border border-slate-200">
+                  <span className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold bg-[#fbfcfe] text-slate-700 px-3 py-1 rounded border border-[#ddd4c8]">
                     {user.role}
                   </span>
                   {user.dealer?.verified && (
-                    <span className="text-xs font-semibold bg-slate-100 text-slate-700 px-3 py-1 rounded border border-slate-200 flex items-center gap-1">
+                    <span className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold bg-[#fbfcfe] text-slate-700 px-3 py-1 rounded border border-[#ddd4c8] flex items-center gap-1">
                       <Shield size={10} /> Verified
                     </span>
                   )}
@@ -119,27 +119,27 @@ export default async function PortalProfilePage({ searchParams }) {
 
           {/* Dealership Brand Section */}
           {user.dealer && (
-            <div className="bg-white border border-slate-200 rounded-lg p-8 shadow-sm">
+            <div className="bg-white border border-[#ddd4c8] rounded-none p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8">
                 <div className="relative">
                   <DealerLogoUpload currentUrl={user.dealer.logoUrl} dealerName={user.dealer.name} size="xl" />
-                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-slate-900 rounded-full border-[3px] border-white flex items-center justify-center text-white shadow-md">
+                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#111111] rounded-none border-[3px] border-white flex items-center justify-center text-slate-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
                     <Plus size={14} strokeWidth={3} />
                   </div>
                 </div>
 
                 <div className="text-center sm:text-left">
                   <h2 className="text-2xl font-bold text-slate-900">{user.dealer.name}</h2>
-                  <p className="text-sm text-slate-600 mt-0.5">Brand image shown to buyers on your dealer page.</p>
+                  <p className="text-[11px] uppercase font-black tracking-[0.10em] text-slate-700 mt-0.5">Brand image shown to buyers on your dealer page.</p>
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-4">
-                    <span className="text-xs font-semibold bg-slate-100 text-slate-700 px-3 py-1 rounded border border-slate-200">
+                    <span className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold bg-[#fbfcfe] text-slate-700 px-3 py-1 rounded border border-[#ddd4c8]">
                       {user.dealer.county}
                     </span>
-                    <span className="text-xs font-semibold bg-slate-100 text-slate-700 px-3 py-1 rounded border border-slate-200">
+                    <span className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold bg-[#fbfcfe] text-slate-700 px-3 py-1 rounded border border-[#ddd4c8]">
                       {user.dealer._count?.cars || 0} Live
                     </span>
                     {user.dealer.verified && (
-                      <span className="text-xs font-semibold bg-slate-100 text-slate-700 px-3 py-1 rounded border border-slate-200">
+                      <span className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold bg-[#fbfcfe] text-slate-700 px-3 py-1 rounded border border-[#ddd4c8]">
                         Verified
                       </span>
                     )}
@@ -147,9 +147,9 @@ export default async function PortalProfilePage({ searchParams }) {
                 </div>
               </div>
 
-              <div className="mt-8 pt-8 border-t border-slate-200">
-                <p className="text-xs font-bold uppercase tracking-wide text-slate-600 mb-3">Banner Photo</p>
-                <p className="text-sm text-slate-600 mb-4">
+              <div className="mt-8 pt-8 border-t border-[#ddd4c8]">
+                <p className="text-[10px] uppercase font-black tracking-[0.15em] font-bold uppercase tracking-wide text-slate-700 mb-3">Banner Photo</p>
+                <p className="text-[11px] uppercase font-black tracking-[0.10em] text-slate-700 mb-4">
                   Upload a wide photo to display at the top of your dealer page.
                 </p>
                 <DealerBannerUpload currentUrl={user.dealer.bannerUrl} dealerName={user.dealer.name} />
@@ -159,7 +159,7 @@ export default async function PortalProfilePage({ searchParams }) {
 
           {/* Dealership Details */}
           {user.dealer && (
-            <div className="bg-white border border-slate-200 rounded-lg p-8 shadow-sm">
+            <div className="bg-white border border-[#ddd4c8] rounded-none p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
               <h3 className="text-lg font-bold text-slate-900 mb-8">Dealer Profile</h3>
 
               <form action="/api/portal/profile" method="POST" className="space-y-8">
@@ -222,7 +222,7 @@ export default async function PortalProfilePage({ searchParams }) {
                 </div>
 
                 <div className="pt-2">
-                  <button type="submit" className="bg-slate-900 hover:bg-slate-800 text-white rounded-lg px-6 py-2.5 font-semibold text-sm transition-all shadow-sm uppercase">
+                  <button type="submit" className="bg-[#111111] hover:bg-[#111111] text-slate-900 rounded-none px-6 py-2.5 font-semibold text-[11px] uppercase font-black tracking-[0.10em] transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] uppercase">
                     Save Profile
                   </button>
                 </div>
@@ -231,7 +231,7 @@ export default async function PortalProfilePage({ searchParams }) {
           )}
 
           {/* Account Details */}
-          <div className="bg-white border border-slate-200 rounded-lg p-8 shadow-sm">
+          <div className="bg-white border border-[#ddd4c8] rounded-none p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
             <h3 className="text-lg font-bold text-slate-900 mb-8">Account Details</h3>
             
             <form action="/api/profile/update" method="POST" className="space-y-8">
@@ -243,14 +243,14 @@ export default async function PortalProfilePage({ searchParams }) {
                 <div>
                   <label className={labelCls}>Registered Email (Locked)</label>
                   <div className="relative">
-                    <input name="email" type="email" defaultValue={user.email} className={`${inputCls} bg-slate-100 text-slate-600 cursor-not-allowed`} disabled />
-                    <Shield className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                    <input name="email" type="email" defaultValue={user.email} className={`${inputCls} bg-[#fbfcfe] text-slate-700 cursor-not-allowed`} disabled />
+                    <Shield className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-700" size={16} />
                   </div>
                 </div>
               </div>
 
               <div className="pt-2">
-                <button type="submit" className="bg-slate-900 hover:bg-slate-800 text-white rounded-lg px-6 py-2.5 font-semibold text-sm transition-all shadow-sm uppercase">
+                <button type="submit" className="bg-[#111111] hover:bg-[#111111] text-slate-900 rounded-none px-6 py-2.5 font-semibold text-[11px] uppercase font-black tracking-[0.10em] transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] uppercase">
                   Save Changes
                 </button>
               </div>

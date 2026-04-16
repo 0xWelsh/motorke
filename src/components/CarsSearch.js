@@ -169,7 +169,7 @@ export default function CarsSearch({
                 onChange={(e) => setSearch(e.target.value)}
                 onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                 placeholder="Prado, CX-5, X-Trail"
-                className="w-full bg-[#fbfcfd] border border-[#e2e8f0] rounded-xl pl-10 pr-3 py-3 text-[13px] font-bold text-slate-900 outline-none focus:border-[#0f172a]/35 focus:ring-4 focus:ring-[#0f172a]/5 transition-all placeholder:text-slate-400 focus:bg-white"
+                className="w-full bg-[#fbfcfd] border border-[#e2e8f0] rounded-none pl-10 pr-3 py-3 text-[13px] font-bold text-slate-900 outline-none focus:border-[#0f172a]/35 focus:ring-4 focus:ring-[#0f172a]/5 transition-all placeholder:text-slate-400 focus:bg-white"
               />
 
               {showSuggestions && (
@@ -194,7 +194,7 @@ export default function CarsSearch({
             <select
               value={make}
               onChange={(e) => setMake(e.target.value)}
-              className="w-full bg-white border border-[#e7e1d8] rounded-xl px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all"
+              className="w-full bg-white border border-[#e7e1d8] rounded-none px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all"
             >
               <option value="">All Makes</option>
               {allMakes.map((m) => <option key={m.make} value={m.make}>{m.make}</option>)}
@@ -207,7 +207,7 @@ export default function CarsSearch({
               <select
                 value={bodyType}
                 onChange={(e) => setBodyType(e.target.value)}
-                className="w-full bg-white border border-[#e7e1d8] rounded-xl px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all"
+                className="w-full bg-white border border-[#e7e1d8] rounded-none px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all"
               >
                 <option value="">All Types</option>
                 {Object.entries(bodyTypeLabels).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
@@ -219,7 +219,7 @@ export default function CarsSearch({
               <select
                 value={fuelType}
                 onChange={(e) => setFuelType(e.target.value)}
-                className="w-full bg-white border border-[#e7e1d8] rounded-xl px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all"
+                className="w-full bg-white border border-[#e7e1d8] rounded-none px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all"
               >
                 <option value="">Any Fuel</option>
                 {Object.entries(FUEL_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
@@ -231,7 +231,7 @@ export default function CarsSearch({
               <select
                 value={transmission}
                 onChange={(e) => setTransmission(e.target.value)}
-                className="w-full bg-white border border-[#e7e1d8] rounded-xl px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all"
+                className="w-full bg-white border border-[#e7e1d8] rounded-none px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all"
               >
                 <option value="">Any Gearbox</option>
                 {Object.entries(TRANSMISSION_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
@@ -243,7 +243,7 @@ export default function CarsSearch({
               <select
                 value={county}
                 onChange={(e) => setCounty(e.target.value)}
-                className="w-full bg-white border border-[#e7e1d8] rounded-xl px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all"
+                className="w-full bg-white border border-[#e7e1d8] rounded-none px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all"
               >
                 <option value="">Any County</option>
                 {counties.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -259,14 +259,14 @@ export default function CarsSearch({
                 placeholder="Min"
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
-                className="w-full bg-white border border-[#e7e1d8] rounded-xl px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all placeholder:text-slate-400"
+                className="w-full bg-white border border-[#e7e1d8] rounded-none px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all placeholder:text-slate-400"
               />
               <input
                 type="number"
                 placeholder="Max"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
-                className="w-full bg-white border border-[#e7e1d8] rounded-xl px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all placeholder:text-slate-400"
+                className="w-full bg-white border border-[#e7e1d8] rounded-none px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all placeholder:text-slate-400"
               />
             </div>
           </div>
@@ -276,7 +276,7 @@ export default function CarsSearch({
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="w-full bg-white border border-[#e7e1d8] rounded-xl px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all"
+              className="w-full bg-white border border-[#e7e1d8] rounded-none px-3 py-2.5 text-[12px] font-semibold text-slate-800 outline-none focus:border-[#ff5a2f]/35 transition-all"
             >
               <option value="newest">Newest First</option>
               <option value="price_asc">Lowest Price</option>
@@ -289,14 +289,14 @@ export default function CarsSearch({
           <div className="pt-2 border-t border-[#efe8df] grid grid-cols-2 gap-2">
             <button
               type="submit"
-              className="bg-[#111111] hover:bg-[#ff5a2f] text-white text-[11px] font-extrabold uppercase tracking-[0.12em] py-2.5 rounded-xl transition-colors"
+              className="bg-[#111111] hover:bg-[#ff5a2f] text-slate-900 text-[11px] font-extrabold uppercase tracking-[0.12em] py-2.5 rounded-none transition-colors"
             >
               Apply
             </button>
             <button
               type="button"
               onClick={clearFilters}
-              className="inline-flex items-center justify-center gap-1.5 bg-white border border-[#e7e1d8] text-slate-700 hover:text-black text-[11px] font-extrabold uppercase tracking-[0.12em] py-2.5 rounded-xl transition-colors"
+              className="inline-flex items-center justify-center gap-1.5 bg-white border border-[#e7e1d8] text-slate-700 hover:text-black text-[11px] font-extrabold uppercase tracking-[0.12em] py-2.5 rounded-none transition-colors"
             >
               <X className="w-3.5 h-3.5" /> Reset
             </button>

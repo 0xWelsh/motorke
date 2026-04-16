@@ -41,7 +41,7 @@ export default function SpecSheet({ car, dealer }) {
       <div className="grid grid-cols-2 gap-8 mb-10">
         <div>
            {primaryImg && (
-             <div className="aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+             <div className="aspect-[4/3] bg-gray-100 rounded-none overflow-hidden border border-gray-200">
                <img src={primaryImg.url} alt={title} className="w-full h-full object-cover" />
              </div>
            )}
@@ -101,7 +101,7 @@ export default function SpecSheet({ car, dealer }) {
           <p className="text-[10px] text-gray-400 font-medium">Generated on {new Date().toLocaleDateString('en-KE', { dateStyle: 'long' })}</p>
           <p className="text-[10px] text-gray-400 font-medium italic">Visit motorke.com for full listing and interactive comparison.</p>
         </div>
-        <div className="bg-black text-white px-4 py-2 text-[10px] font-black uppercase tracking-tighter">
+        <div className="bg-black text-slate-900 px-4 py-2 text-[10px] font-black uppercase tracking-tighter">
           Motorke Showcase Cert.
         </div>
       </div>

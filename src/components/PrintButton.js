@@ -14,7 +14,7 @@ export default function PrintButton({ carId }) {
   return (
     <button
       onClick={handlePrint}
-      className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white/70 hover:text-white rounded-xl transition-all text-xs font-bold uppercase tracking-widest no-print"
+      className="flex items-center gap-2 px-4 py-2 bg-[#fbfcfe] border border-[#ddd4c8] hover:bg-white text-slate-900/70 hover:text-slate-900 rounded-none transition-all text-xs font-bold uppercase tracking-widest no-print"
     >
       <Printer size={14} />
       <span>Print Spec Sheet</span>

@@ -6,7 +6,7 @@ import { useState } from "react";
 const DynamicMap = dynamic(() => import("./MapComponent"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full rounded-xl flex items-center justify-center bg-slate-50 border border-slate-200 text-slate-500 text-sm font-black uppercase tracking-widest animate-pulse">
+    <div className="w-full h-full rounded-none flex items-center justify-center bg-[#fbfcfe] border border-[#ddd4c8] text-slate-500 text-sm font-black uppercase tracking-widest animate-pulse">
       Loading Map Engine...
     </div>
   ),

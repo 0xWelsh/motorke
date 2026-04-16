@@ -81,7 +81,7 @@ export default function NearbyDealersList() {
             value={radius}
             onChange={(e) => setRadius(Number(e.target.value))}
             disabled={loading}
-            className="px-3 py-3 sm:py-2 border border-slate-200 rounded-lg text-slate-900 bg-white disabled:opacity-50"
+            className="px-3 py-3 sm:py-2 border border-[#ddd4c8] rounded-none text-slate-900 bg-white disabled:opacity-50"
           >
             <option value={5}>5 km</option>
             <option value={10}>10 km</option>
@@ -97,7 +97,7 @@ export default function NearbyDealersList() {
             <button
               onClick={() => handleFindNearby('saved')}
               disabled={loading}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-slate-600 text-white rounded-lg font-medium hover:bg-slate-700 disabled:opacity-50 transition"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-slate-600 text-slate-900 rounded-none font-medium hover:bg-slate-700 disabled:opacity-50 transition"
             >
               {loading && locationSource === 'saved' ? (
                 <>
@@ -114,7 +114,7 @@ export default function NearbyDealersList() {
             <button
               onClick={() => handleFindNearby('current')}
               disabled={loading}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-#ff5a2f text-slate-900 rounded-none font-medium hover:bg-blue-700 disabled:opacity-50 transition"
             >
               {loading && locationSource === 'current' ? (
                 <>
@@ -133,7 +133,7 @@ export default function NearbyDealersList() {
           <button
             onClick={() => handleFindNearby('current')}
             disabled={loading}
-            className="inline-flex items-center gap-2 px-4 py-3 sm:py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition"
+            className="inline-flex items-center gap-2 px-4 py-3 sm:py-2 bg-#ff5a2f text-slate-900 rounded-none font-medium hover:bg-blue-700 disabled:opacity-50 transition"
           >
             {loading ? (
               <>
@@ -152,7 +152,7 @@ export default function NearbyDealersList() {
 
       {/* Error State */}
       {error && (
-        <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+        <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-none">
           <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-red-700">{error}</p>
         </div>
@@ -172,7 +172,7 @@ export default function NearbyDealersList() {
                 <Link
                   key={dealer.id}
                   href={`/dealers/${dealer.slug}`}
-                  className="flex items-center justify-between p-4 border border-slate-200 rounded-lg hover:bg-slate-50 transition"
+                  className="flex items-center justify-between p-4 border border-[#ddd4c8] rounded-none hover:bg-[#fbfcfe] transition"
                 >
                   <div className="flex-1">
                     <h3 className="font-medium text-slate-900">{dealer.name}</h3>
@@ -186,7 +186,7 @@ export default function NearbyDealersList() {
 
                   <div className="flex items-center gap-3 ml-4">
                     <div className="text-right">
-                      <div className="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                      <div className="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-100 text-blue-700 rounded-none text-sm font-medium">
                         <MapPin className="w-4 h-4" />
                         {formatDistance(dealer.distance)}
                       </div>

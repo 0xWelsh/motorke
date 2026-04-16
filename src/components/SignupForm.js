@@ -24,10 +24,10 @@ function PasswordMeter({ password }) {
   }
   
   const segments = [
-    score >= 1 ? (score < 3 ? "bg-rose-400" : (score === 3 ? "bg-amber-400" : "bg-emerald-500")) : "bg-slate-100",
-    score >= 2 ? (score < 3 ? "bg-rose-400" : (score === 3 ? "bg-amber-400" : "bg-emerald-500")) : "bg-slate-100",
-    score >= 3 ? (score === 3 ? "bg-amber-400" : "bg-emerald-500") : "bg-slate-100",
-    score >= 4 ? "bg-emerald-500" : "bg-slate-100"
+    score >= 1 ? (score < 3 ? "bg-rose-400" : (score === 3 ? "bg-amber-400" : "bg-#ff5a2f")) : "bg-slate-100",
+    score >= 2 ? (score < 3 ? "bg-rose-400" : (score === 3 ? "bg-amber-400" : "bg-#ff5a2f")) : "bg-slate-100",
+    score >= 3 ? (score === 3 ? "bg-amber-400" : "bg-#ff5a2f") : "bg-slate-100",
+    score >= 4 ? "bg-#ff5a2f" : "bg-slate-100"
   ];
   
   let label = "Security Level";
@@ -112,7 +112,7 @@ export default function SignupForm({ error: initialError }) {
     }
   };
 
-  const inputCls = "w-full bg-white border border-slate-100 rounded-none-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-emerald-500 transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100";
+  const inputCls = "w-full bg-white border border-[#ddd4c8] rounded-none-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-#ff5a2f transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100";
   const labelCls = "text-[10px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1 flex items-center gap-2";
 
   return (
@@ -192,7 +192,7 @@ export default function SignupForm({ error: initialError }) {
               className={clsx(
                 "flex-1 py-2 px-3 rounded-none-md font-semibold text-sm transition-all",
                 role === "DEALER" 
-                  ? "bg-slate-900 text-white shadow-sm" 
+                  ? "bg-slate-900 text-slate-900 shadow-sm" 
                   : "text-slate-600 hover:text-slate-900"
               )}
             >
@@ -286,7 +286,7 @@ export default function SignupForm({ error: initialError }) {
 
             {/* Dealer Fields */}
             {role === "DEALER" && (
-              <div className="space-y-4 pt-2 border-t border-slate-200">
+              <div className="space-y-4 pt-2 border-t border-[#ddd4c8]">
                 <div>
                   <label htmlFor="dealerName" className="block text-sm font-semibold text-slate-900 mb-2">Dealership Name</label>
                   <input 
@@ -317,7 +317,7 @@ export default function SignupForm({ error: initialError }) {
                     id="county"
                     name="county"
                     required
-                    className="w-full border border-slate-200 rounded-none-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                    className="w-full border border-[#ddd4c8] rounded-none-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
                   >
                     <option value="">Select a county</option>
                     {COUNTIES.map((c) => (
@@ -343,7 +343,7 @@ export default function SignupForm({ error: initialError }) {
             <button 
               type="submit" 
               disabled={loading}
-              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-none-lg py-3.5 sm:py-2.5 font-semibold transition-all flex items-center justify-center gap-2 text-base sm:text-sm"
+              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-slate-900 rounded-none-lg py-3.5 sm:py-2.5 font-semibold transition-all flex items-center justify-center gap-2 text-base sm:text-sm"
             >
               {loading ? <Loader2 size={18} className="animate-spin" /> : null}
               {loading ? "Creating account..." : "Create Account"}
@@ -352,7 +352,7 @@ export default function SignupForm({ error: initialError }) {
             {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200"></div>
+                <div className="w-full border-t border-[#ddd4c8]"></div>
               </div>
               <div className="relative flex justify-center">
                 <span className="bg-white px-3 text-xs text-slate-600">or sign up with</span>
