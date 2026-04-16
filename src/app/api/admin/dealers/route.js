@@ -64,6 +64,8 @@ export async function POST(request) {
           },
         });
         break;
+
+
       } catch (err) {
         const isSlugConflict =
           err?.code === "P2002" &&
@@ -76,6 +78,56 @@ export async function POST(request) {
     if (!created) {
       throw new Error("Unable to create dealer. Please try again.");
     }
+
+    // CREATE USER IF EMAIL IS PROVIDED
+    if (email) {
+      const existingUser = await db.user.findUnique({ where: { email } });
+      if (!existingUser) {
+        const { hash } = require("bcryptjs");
+        const defaultPasswordHash = await hash("Motorke123!", 10);
+        await db.user.create({
+          data: {
+            email,
+            passwordHash: defaultPasswordHash,
+            name: name,
+            role: "DEALER",
+            dealerId: created.id,
+            active: true
+          }
+        });
+      } else if (!existingUser.dealerId) {
+        await db.user.update({
+          where: { id: existingUser.id },
+          data: { dealerId: created.id, role: "DEALER" }
+        });
+      }
+    }
+
+
+    // CREATE USER IF EMAIL IS PROVIDED
+    if (email) {
+      const existingUser = await db.user.findUnique({ where: { email } });
+      if (!existingUser) {
+        const { hash } = require("bcryptjs");
+        const defaultPasswordHash = await hash("Motorke123!", 10);
+        await db.user.create({
+          data: {
+            email,
+            passwordHash: defaultPasswordHash,
+            name: name,
+            role: "DEALER",
+            dealerId: created.id,
+            active: true
+          }
+        });
+      } else if (!existingUser.dealerId) {
+        await db.user.update({
+          where: { id: existingUser.id },
+          data: { dealerId: created.id, role: "DEALER" }
+        });
+      }
+    }
+
 
     return NextResponse.redirect(new URL("/admin/dealers?created=1", request.url));
   } catch (err) {

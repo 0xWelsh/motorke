@@ -14,10 +14,14 @@ export async function POST(request, { params }) {
   const formData = await request.formData();
 
   try {
+    
+    const email = formData.get("email")?.toString().trim() || null;
+    const name = formData.get("name")?.toString().trim();
+
     await db.dealer.update({
       where: { id: id },
       data: {
-        name:        formData.get("name")?.toString().trim(),
+        name,
         county:      formData.get("county")?.toString()         || "Nairobi",
         location:    formData.get("location")?.toString().trim(),
         address:     formData.get("address")?.toString().trim() || null,
@@ -25,13 +29,37 @@ export async function POST(request, { params }) {
         lng:         formData.get("lng") ? parseFloat(formData.get("lng")) : null,
         phone:       formData.get("phone")?.toString().trim(),
         whatsapp:    formData.get("whatsapp")?.toString().trim() || null,
-        email:       formData.get("email")?.toString().trim()    || null,
+        email,
         website:     formData.get("website")?.toString().trim()  || null,
         description: formData.get("description")?.toString().trim() || null,
         verified:    formData.get("verified") === "on",
         featured:    formData.get("featured") === "on",
       },
     });
+
+    if (email) {
+      const existingUser = await db.user.findUnique({ where: { email } });
+      if (!existingUser) {
+        const { hash } = require("bcryptjs");
+        const defaultPasswordHash = await hash("Motorke123!", 10);
+        await db.user.create({
+          data: {
+            email,
+            passwordHash: defaultPasswordHash,
+            name: name,
+            role: "DEALER",
+            dealerId: id,
+            active: true
+          }
+        });
+      } else if (!existingUser.dealerId) {
+        await db.user.update({
+          where: { id: existingUser.id },
+          data: { dealerId: id, role: "DEALER" }
+        });
+      }
+    }
+
 
     return NextResponse.redirect(
       new URL(`/admin/dealers/${id}/edit?saved=1`, request.url)
