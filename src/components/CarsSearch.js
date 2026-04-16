@@ -143,7 +143,7 @@ export default function CarsSearch({
       <button
         type="button"
         onClick={() => setMobileOpen((prev) => !prev)}
-        className="lg:hidden w-full mb-3 rounded-xl border border-[#ddd4c8] bg-white px-4 py-3 inline-flex items-center justify-between text-[11px] font-extrabold uppercase tracking-[0.12em] text-slate-800"
+        className="lg:hidden w-full mb-3 rounded-none border border-[#ddd4c8] bg-white px-4 py-3 inline-flex items-center justify-between text-[11px] font-extrabold uppercase tracking-[0.12em] text-slate-800"
       >
         <span className="inline-flex items-center gap-2">
           <SlidersHorizontal className="w-4 h-4" />
@@ -152,15 +152,15 @@ export default function CarsSearch({
         <span>{mobileOpen ? "Hide" : "Show"}</span>
       </button>
 
-      <aside className={`${mobileOpen ? "block" : "hidden"} lg:block rounded-2xl border border-[#ddd4c8] bg-white p-4 sm:p-5 shadow-[0_8px_24px_rgba(15,23,42,0.05)]`}>
-        <div className="mb-4 pb-3 border-b border-[#efe8df]">
-          <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-slate-500">Filter Inventory</p>
-          <h2 className="text-xl font-extrabold tracking-tight text-slate-900 mt-1">Find Your Match</h2>
+      <aside className={`${mobileOpen ? "block" : "hidden"} lg:block rounded-none border border-[#ddd4c8] bg-white p-4 sm:p-5 shadow-none`}>
+        <div className="mb-6 pb-2">
+          <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">Filter Inventory</p>
+          <h2 className="text-xl font-black tracking-tight text-slate-900 mt-1">Find Your Match</h2>
         </div>
 
-        <form method="GET" onSubmit={handleSubmit} className="space-y-3.5">
+        <form method="GET" onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5 relative">
-            <label className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-slate-500">Search</label>
+            <label className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Search</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
@@ -169,7 +169,7 @@ export default function CarsSearch({
                 onChange={(e) => setSearch(e.target.value)}
                 onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                 placeholder="Prado, CX-5, X-Trail"
-                className="w-full bg-white border border-[#e7e1d8] rounded-xl pl-10 pr-3 py-2.5 text-sm font-semibold text-slate-900 outline-none focus:border-[#ff5a2f]/35 focus:ring-4 focus:ring-[#ff5a2f]/10 transition-all placeholder:text-slate-400"
+                className="w-full bg-[#fbfcfd] border border-[#e2e8f0] rounded-xl pl-10 pr-3 py-3 text-[13px] font-bold text-slate-900 outline-none focus:border-[#0f172a]/35 focus:ring-4 focus:ring-[#0f172a]/5 transition-all placeholder:text-slate-400 focus:bg-white"
               />
 
               {showSuggestions && (

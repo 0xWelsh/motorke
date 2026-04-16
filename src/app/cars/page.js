@@ -138,7 +138,7 @@ export default async function CarsPage({ searchParams }) {
       <div className="w-full max-w-[2560px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-5 sm:py-6 lg:py-8 overflow-hidden">
         {/* Top Breadcrumb Bar */}
         <div className="block w-full mb-6 sm:mb-8 overflow-hidden text-[14px] font-medium">
-          <div className="block w-full xl:w-1/3 2xl:w-1/4 xl:float-left xl:pr-3 mb-4 xl:mb-0">
+          <div className="block w-full xl:w-1/4 2xl:w-1/4 xl:float-left xl:pr-3 mb-4 xl:mb-0">
             <div className="flex items-center gap-3 text-slate-800">
               <Link href="/" className="hover:text-black transition-colors">Home</Link>
               <span className="text-slate-400 text-xs mt-0.5">›</span>
@@ -147,13 +147,13 @@ export default async function CarsPage({ searchParams }) {
               <span className="text-slate-900">Available</span>
             </div>
           </div>
-          <div className="block w-full xl:w-2/3 2xl:w-3/4 xl:float-left text-slate-800 xl:pl-1 mt-1">
+          <div className="block w-full xl:w-3/4 2xl:w-3/4 xl:float-left text-slate-800 xl:pl-1 mt-1">
             Vehicles showing ({total.toLocaleString()})
           </div>
         </div>
 
         {/* Sidebar */}
-        <aside className="block w-full xl:w-1/3 2xl:w-1/4 xl:float-left xl:pr-3 lg:pr-3 mb-6 xl:mb-0 relative z-20">
+        <aside className="block w-full xl:w-1/4 2xl:w-1/4 xl:float-left xl:pr-3 lg:pr-3 mb-6 xl:mb-0 relative z-20">
           <div className="xl:sticky xl:top-[84px]">
             <CarsSearch
               initialSearch={search}
@@ -174,7 +174,7 @@ export default async function CarsPage({ searchParams }) {
 
         {/* Floating Cars */}
         {sortedCars.length === 0 ? (
-          <div className="block w-full xl:w-3/4 2xl:w-4/5 xl:float-left py-20 text-center border border-[#ddd4c8] rounded-none bg-white">
+          <div className="block w-full xl:w-3/4 2xl:w-3/4 xl:float-left py-20 text-center border border-[#ddd4c8] rounded-none bg-white">
             <div className="w-20 h-20 bg-[#faf7f2] rounded-none flex items-center justify-center mx-auto mb-6">
               <Search className="w-8 h-8 text-slate-300" />
             </div>
@@ -187,7 +187,7 @@ export default async function CarsPage({ searchParams }) {
         ) : (
           <div className="block -mx-2">
             {sortedCars.map((car, idx) => (
-              <div key={car.id} className="block float-left w-full md:w-1/2 xl:w-1/3 2xl:w-1/4 px-2 pb-4">
+              <div key={car.id} className="block float-left w-full md:w-1/2 xl:w-1/4 2xl:w-1/4 px-2 pb-4">
                 <InventoryCard car={car} userLat={userLat} userLng={userLng} priority={idx < 4} />
               </div>
             ))}
