@@ -365,7 +365,7 @@ export default function Navbar({ user }) {
 
 function MenuDropdownItem({ href, label, icon }) {
   return (
-    <Link href={href} className="flex items-center gap-3 px-5 py-4 text-[11px] font-black uppercase tracking-[0.15em] text-slate-900 hover:bg-[#fbfcfe] hover:text-[#ff5a2f] rounded-none transition-none">
+    <Link href={href} className="flex items-center gap-3 px-5 py-4 text-[11px] font-black uppercase tracking-[0.15em] text-slate-900 hover:bg-[#fbfcfe] dark:hover:bg-[#111111] hover:text-[#ff5a2f] dark:hover:text-[#ff5a2f] rounded-none transition-none">
       <span className="text-slate-400">{icon}</span>
       {label}
     </Link>

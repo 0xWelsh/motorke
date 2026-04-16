@@ -396,3 +396,9 @@ p {
 .dark .bg-\[\#faf7f2\] { background-color: #111111 !important; color: #f7f6f3 !important; }
 .dark .border-\[\#ede6dd\] { border-color: #333 !important; }
 .dark .border-\[\#e8e2d9\] { border-color: #27272a !important; }
+
+/* Fix Dropdown hover states where bg turns white but text is also white */
+.dark .hover\:bg-\[\#fbfcfe\]:hover { background-color: #1a1a1a !important; }
+.dark .hover\:text-\[\#ff5a2f\]:hover { color: #ff5a2f !important; }
+.dark .hover\:bg-slate-100:hover { background-color: #1a1a1a !important; }
+.dark .hover\:bg-white:hover { background-color: #1a1a1a !important; }
