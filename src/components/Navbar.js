@@ -88,7 +88,7 @@ export default function Navbar({ user }) {
 
   return (
     <nav className={clsx(
-      "sticky top-0 z-[100] transition-all duration-300",
+      "sticky top-0 z-[100] transition-all duration-300 w-full",
       scrolled
         ? "bg-white/95 backdrop-blur-xl border-b border-slate-200 py-3 shadow-sm"
         : "bg-transparent py-5"

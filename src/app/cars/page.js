@@ -207,7 +207,7 @@ export default async function CarsPage({ searchParams }) {
                 </Link>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
                 {sortedCars.map((car, idx) => (
                   <InventoryCard key={car.id} car={car} userLat={userLat} userLng={userLng} priority={idx < 4} />
                 ))}
@@ -337,7 +337,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
         <div className="mt-auto flex items-end justify-between pt-4 border-t border-slate-200 gap-3">
           <div>
             <p className="text-[10px] font-medium text-slate-500 mb-1">Price</p>
-            <p className="text-3xl font-serif font-bold text-slate-900">{formatPrice(car.price)}</p>
+            <p className="text-2xl sm:text-3xl font-serif font-bold text-slate-900">KSh {(car.price / 1000000).toFixed(1)}M</p>
           </div>
           <div className="flex items-center gap-2">
             <CompareButton car={compareCar} />
