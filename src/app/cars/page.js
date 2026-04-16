@@ -93,6 +93,23 @@ export default async function CarsPage({ searchParams }) {
           },
         },
       },
+      select: {
+        id: true,
+        make: true,
+        model: true,
+        variant: true,
+        year: true,
+        price: true,
+        mileage: true,
+        bodyType: true,
+        fuelType: true,
+        transmission: true,
+        featured: true,
+        badges: true,
+        description: true,
+        images: true,
+        dealer: true,
+      },
       orderBy,
       skip: (page - 1) * limit,
       take: limit,
@@ -298,41 +315,32 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
         )}
       </Link>
 
-      <div className="p-4 sm:p-6 flex flex-col flex-1 gap-4">
-        <div className="flex items-center justify-between gap-3">
-          <Link href={`/dealers/${car.dealer?.slug}`} className="inline-flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500 hover:text-black">
-            {car.dealer?.verified && <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />}
-            <span className="truncate max-w-[150px]">{car.dealer?.name}</span>
-          </Link>
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em] inline-flex items-center gap-1">
-            <MapPin className="w-3 h-3" /> {car.dealer?.county || car.dealer?.location}
-          </span>
-        </div>
-
-        <Link href={`/cars/${car.id}`} className="space-y-1.5">
-          <h3 className="font-bold text-slate-900 text-lg leading-snug line-clamp-2 group-hover:text-black transition-colors">
-            {title}
-          </h3>
-          <p className="text-xs text-slate-500 font-semibold uppercase tracking-[0.08em]">{car.year}</p>
-        </Link>
-
-        <div className="flex flex-wrap gap-2">
-          {specs.slice(0, 4).map((s) => (
-            <span key={s} className="text-[11px] font-semibold text-slate-600 bg-[#faf7f2] border border-[#efe8df] px-2.5 py-1 rounded-full">
-              {s}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-auto space-y-3 pt-4 border-t border-[#efe8df]">
-          <div className="flex items-end justify-between">
-            <p className="text-2xl font-bold text-slate-900 leading-none">{formatPrice(car.price)}</p>
-            <Link href={`/cars/${car.id}`} className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-slate-600 hover:text-black transition-colors">
-              Details <ChevronRight className="w-3.5 h-3.5" />
+      <div className="p-6 flex flex-col flex-1 gap-4">
+        <div className="space-y-3">
+          <div className="flex items-baseline gap-2">
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-500">{car.year}</p>
+            <Link href={`/cars/${car.id}`} className="font-bold text-slate-900 text-base leading-tight group-hover:text-[#ff5a2f] transition-colors font-serif">
+              {title}
             </Link>
           </div>
+          
+          <p className="text-sm text-slate-600 line-clamp-3 leading-relaxed">
+            {car.description || `${car.make} ${car.model} - A quality ${car.bodyType?.toLowerCase() || 'vehicle'} with ${car.fuelType?.toLowerCase()} engine and ${car.transmission?.toLowerCase()} transmission.`}
+          </p>
+        </div>
 
-          <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-wrap gap-2">
+          {car.bodyType && <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full uppercase tracking-wide">{car.bodyType.replace(/_/g, ' ')}</span>}
+          {car.fuelType && <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full uppercase tracking-wide">{car.fuelType}</span>}
+          {car.mileage && <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full uppercase tracking-wide">{Math.round(car.mileage)}km</span>}
+        </div>
+
+        <div className="mt-auto flex items-end justify-between pt-4 border-t border-slate-200 gap-3">
+          <div>
+            <p className="text-[10px] font-medium text-slate-500 mb-1">Price</p>
+            <p className="text-3xl font-serif font-bold text-slate-900">{formatPrice(car.price)}</p>
+          </div>
+          <div className="flex items-center gap-2">
             <CompareButton car={compareCar} />
             {car.dealer?.whatsapp && (
               <a
