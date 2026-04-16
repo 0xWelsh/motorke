@@ -112,73 +112,96 @@ export default async function DealersPage() {
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{countyDealers.length} Stations</span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
                 {countyDealers.map((dealer) => {
                   const brandImage = dealer.logoUrl || dealer.users?.[0]?.avatarUrl;
+                  const bannerImage = dealer.bannerUrl || "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=1200";
 
                   return (
                   <Link
                     key={dealer.id}
                     href={`/dealers/${dealer.slug}`}
-                    className="group bg-white flex flex-col p-6 rounded-none border border-[#ddd4c8] hover:border-slate-400 transition-all h-full"
+                    className="group bg-white flex flex-col rounded-none border border-[#ddd4c8] hover:border-slate-400 transition-all h-full overflow-hidden"
                   >
-                    <div className="flex items-start gap-4 mb-6">
-                      {/* Logo */}
-                      <div className="w-[64px] h-[64px] rounded-none bg-[#f7f6f3] border border-[#ddd4c8] flex items-center justify-center overflow-hidden shrink-0">
-                        {brandImage ? (
-                          <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all" />
-                        ) : (
-                          <span className="text-slate-400 font-black text-xl">{dealer.name?.[0] || '?'}</span>
+                    {/* Banner Image Area */}
+                    <div className="relative aspect-[16/10] bg-slate-100 border-b border-[#ddd4c8] overflow-hidden shrink-0">
+                      <img 
+                        src={bannerImage} 
+                        alt={`${dealer.name} showroom`} 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      
+                      {/* Top Badges */}
+                      <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+                        {dealer.verified && (
+                          <span className="bg-emerald-400 text-white text-[10px] font-black px-2 py-1 shadow-sm uppercase tracking-wider self-start">
+                            VERIFIED
+                          </span>
+                        )}
+                        {dealer.featured && (
+                          <span className="bg-[#111111] text-white text-[10px] font-black px-2 py-1 shadow-sm uppercase tracking-wider self-start">
+                            FEATURED
+                          </span>
                         )}
                       </div>
 
-                      {/* Info */}
-                      <div className="flex-1 min-w-0 pt-1">
-                        <div className="flex flex-wrap items-center gap-2 mb-2">
-                          <h3 className="text-[15px] font-black text-slate-900 group-hover:text-[#ff5a2f] transition-colors truncate uppercase tracking-wide leading-none">{dealer.name}</h3>
-                          
-                        </div>
+                      {/* Distance Tag - Will be hydrated by client component later if needed, hardcoded logic can go here if we extract to Client component, for now placeholder like cars page */}
+                      <span className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md text-slate-900 text-[10px] font-extrabold px-3 py-1.5 border border-white">
+                        VIEW LOT
+                      </span>
+                    </div>
 
-                        <p className="text-[12px] font-medium text-slate-500 flex items-center gap-1.5 uppercase tracking-wide truncate">
+                    <div className="p-5 flex flex-col flex-1">
+                      <div className="flex justify-between items-start gap-4 mb-4 -mt-10 relative z-10">
+                        {/* Logo */}
+                        <div className="w-[64px] h-[64px] rounded-none bg-white border border-[#ddd4c8] flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
+                          {brandImage ? (
+                            <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-slate-400 font-black text-xl">{dealer.name?.[0] || '?'}</span>
+                          )}
+                        </div>
+                        
+                        <div className="bg-[#111111] text-white px-2.5 py-1 text-[10px] uppercase font-black tracking-widest mt-6">
+                            {dealer._count.cars} LIVE
+                        </div>
+                      </div>
+
+                      {/* Info */}
+                      <div className="mb-2">
+                        <h3 className="text-lg font-black text-slate-900 group-hover:text-[#ff5a2f] transition-colors truncate uppercase tracking-widest leading-none mb-2">{dealer.name}</h3>
+                        <p className="text-[11px] font-bold text-slate-500 flex items-center gap-1.5 uppercase tracking-wide truncate">
                           <MapPin size={12} className="text-slate-400 shrink-0" /> {dealer.location || 'Terminal Not Set'}
                         </p>
                       </div>
-                    </div>
-                    
-                    {/* Tags */}
-                    <div className="flex flex-wrap items-center gap-2 mb-4">
-                      {dealer.verified && (
-                        <span className="bg-emerald-400 text-white text-[9px] font-black uppercase tracking-widest px-2 py-1">
-                          Verified
-                        </span>
-                      )}
-                      {dealer.featured && (
-                        <span className="bg-[#111111] text-white text-[9px] font-black uppercase tracking-widest px-2 py-1">
-                          Featured
-                        </span>
-                      )}
-                    </div>
 
-                    {/* Description */}
-                    {dealer.description ? (
-                      <p className="text-[13px] text-slate-600 line-clamp-2 leading-relaxed font-medium mb-8">
-                        {dealer.description}
-                      </p>
-                    ) : (
-                      <p className="text-[13px] text-slate-400 italic line-clamp-2 mb-8">
-                        No description provided.
-                      </p>
-                    )}
-                    
-                    {/* Stats */}
-                    <div className="mt-auto border-t border-[#f0f0f0] pt-4 flex items-center justify-between">
-                      <div>
-                        <p className="text-xl font-black text-slate-900 leading-none mb-1">{dealer._count.cars}</p>
-                        <p className="text-[10px] uppercase font-black tracking-widest text-[#ff5a2f] leading-none">Live Cars</p>
+                      {/* Description */}
+                      <div className="flex-1 mt-2">
+                        {dealer.description ? (
+                          <p className="text-[13px] text-slate-600 line-clamp-2 leading-relaxed font-medium">
+                            {dealer.description}
+                          </p>
+                        ) : (
+                          <p className="text-[13px] text-slate-400 italic line-clamp-2">
+                            A premium vehicle dealership offering tailored import and local models.
+                          </p>
+                        )}
                       </div>
-                      <span className="text-slate-300 group-hover:text-slate-900 transition-colors">
-                        <ArrowUpRight className="w-5 h-5" />
-                      </span>
+                      
+                      {/* View Button Row */}
+                      <div className="mt-6 pt-4 border-t border-[#f0f0f0] flex justify-between items-center">
+                        <div className="flex items-center gap-1 text-[11px] font-black uppercase text-slate-400 tracking-widest">
+                          <span className="text-[#f59e0b]">★</span>
+                          <span className="text-[#f59e0b]">★</span>
+                          <span className="text-[#f59e0b]">★</span>
+                          <span className="text-[#f59e0b]">★</span>
+                          <span className="text-[#f59e0b]">★</span>
+                          <span className="ml-1">(5.0)</span>
+                        </div>
+                        <span className="text-[10px] font-black uppercase text-slate-900 tracking-widest flex items-center justify-center border border-slate-900 px-3 py-1.5 group-hover:bg-[#111111] group-hover:text-white transition-colors">
+                          Enter Store <ArrowUpRight className="w-3 h-3 ml-1" />
+                        </span>
+                      </div>
                     </div>
                   </Link>
                   );
