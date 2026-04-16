@@ -77,22 +77,6 @@ export default async function CarsPage({ searchParams }) {
   const [cars, total, allMakes] = await Promise.all([
     db.car.findMany({
       where,
-      include: {
-        images: { where: { isPrimary: true }, take: 1 },
-        dealer: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            location: true,
-            verified: true,
-            lat: true,
-            lng: true,
-            county: true,
-            whatsapp: true,
-          },
-        },
-      },
       select: {
         id: true,
         make: true,
@@ -107,8 +91,23 @@ export default async function CarsPage({ searchParams }) {
         featured: true,
         badges: true,
         description: true,
-        images: true,
-        dealer: true,
+        images: {
+          where: { isPrimary: true },
+          take: 1,
+        },
+        dealer: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            location: true,
+            verified: true,
+            lat: true,
+            lng: true,
+            county: true,
+            whatsapp: true,
+          },
+        },
       },
       orderBy,
       skip: (page - 1) * limit,
