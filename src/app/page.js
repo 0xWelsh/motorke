@@ -377,7 +377,7 @@ export default async function HomePage() {
       )}
 
       <section className="container mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-20 max-w-7xl">
-        <div className="rounded-none overflow-hidden border border-[#ddd4c8] bg-[#f7f6f3] from-[#111111] via-slate-900 to-[#1a1a1a] p-6 sm:p-10 md:p-16 text-white relative shadow-2xl">
+        <div className="rounded-none overflow-hidden border border-[#ddd4c8] bg-[#111111] p-6 sm:p-10 md:p-16 text-white relative shadow-none">
           <div className="absolute -right-20 -top-20 h-64 w-64 rounded-none bg-[#ff5a2f]/20 blur-3xl" />
           <div className="absolute -left-32 -bottom-20 h-80 w-80 rounded-none bg-[#ff5a2f]/10 blur-3xl" />
           

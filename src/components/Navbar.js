@@ -11,6 +11,7 @@ import { clsx } from "clsx";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
 import SearchSuggestions from "@/components/SearchSuggestions";
 import NotificationsBell from "@/components/NotificationsBell";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Navbar({ user }) {
   const [open,      setOpen]      = useState(false);
@@ -137,6 +138,7 @@ export default function Navbar({ user }) {
 
           {/* USER ACTIONS */}
           <div className="hidden lg:flex items-center gap-4">
+            <ThemeToggle />
             {user ? (
               <div className="flex items-center gap-4">
                 <NotificationsBell variant="navbar" />
@@ -196,10 +198,11 @@ export default function Navbar({ user }) {
           </div>
 
           {/* MOBILE TOGGLE */}
-          <div className="lg:hidden">
+          <div className="lg:hidden flex items-center gap-3">
+            <ThemeToggle />
             <button
               onClick={() => setOpen(!open)}
-              className="w-11 h-11 flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-700 rounded-xl hover:bg-[#faf7f2] transition-colors"
+              className="w-11 h-11 flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-700 rounded-none hover:bg-[#faf7f2] transition-colors"
             >
               {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>

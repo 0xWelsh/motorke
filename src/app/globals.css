@@ -296,3 +296,39 @@ p {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   @page { size: A4; margin: 1cm; }
 }
+
+/* Dark Mode Extrusions */
+.dark {
+  --bg:           #0a0a0a;
+  --surface:      #111111;
+  --text:         #f7f6f3;
+  --text-muted:   #a1a1aa;
+  --text-faint:   #71717a;
+  
+  --border:       #27272a;
+  --border-light: #18181b;
+  
+  color-scheme: dark;
+}
+
+/* Base override for hardcoded utility inversions since we stripped tailwind dynamically */
+.dark body { background: #0a0a0a !important; color: #f7f6f3 !important; }
+.dark .bg-\[\#f7f6f3\] { background-color: #0a0a0a !important; }
+.dark .bg-white { background-color: #111111 !important; color: #f7f6f3 !important; }
+.dark .border-\[\#ddd4c8\] { border-color: #27272a !important; }
+.dark .text-slate-900 { color: #f7f6f3 !important; }
+.dark .text-slate-800 { color: #e5e5e5 !important; }
+.dark .text-slate-700 { color: #d4d4d8 !important; }
+.dark .text-slate-600 { color: #a1a1aa !important; }
+.dark .text-slate-500 { color: #71717a !important; }
+.dark .border-slate-200 { border-color: #27272a !important; }
+.dark .bg-\[\#111111\] {
+  background-color: #f7f6f3 !important;
+  color: #111111 !important;
+}
+.dark .text-white { color: #111111 !important; }
+.dark .bg-slate-50 { background-color: #18181b !important; }
+
+/* Keep Neon Orange Native */
+.dark .text-\[\#ff5a2f\] { color: #ff5a2f !important; }
+.dark .bg-\[\#ff5a2f\] { background-color: #ff5a2f !important; color: #ffffff !important; }
