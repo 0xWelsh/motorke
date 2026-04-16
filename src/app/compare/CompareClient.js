@@ -768,7 +768,7 @@ export default function CompareClient({ initialCars }) {
   };
 
   return (
-    <div className="mk-compare-page min-h-screen bg-[radial-gradient(circle_at_12%_10%,rgba(15,23,42,0.07),transparent_34%),radial-gradient(circle_at_88%_12%,rgba(148,163,184,0.14),transparent_38%),linear-gradient(180deg,#ffffff_0%,#f8fafc_100%)]">
+    <div className="mk-compare-page min-h-screen bg-[#f7f6f3]">
     <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12 text-slate-900">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-6 sm:gap-8">
         <div>
@@ -782,10 +782,10 @@ export default function CompareClient({ initialCars }) {
               id={option.id === "all" ? "tour-presets" : undefined}
               key={option.id}
               onClick={() => setPreset(option.id)}
-              className={`px-3 sm:px-4 h-9 sm:h-10 rounded-xl text-[10px] font-black uppercase tracking-[0.14em] transition-all border ${
+              className={`px-3 sm:px-4 h-9 sm:h-10 rounded-none text-[10px] font-black uppercase tracking-[0.14em] transition-all border ${
                 preset === option.id
-                  ? "bg-[#111827] text-white border-[#111827]"
-                  : "bg-white text-slate-700 border-[#cbd5e1] hover:text-slate-900 hover:border-[#111827]/35"
+                  ? "bg-[#111111] text-white border-[#111111]"
+                  : "bg-white text-slate-700 border-[#ddd4c8] hover:text-slate-900 hover:border-[#111111]/35"
               }`}
             >
               {option.label}
@@ -795,8 +795,8 @@ export default function CompareClient({ initialCars }) {
           <button
             id="tour-diff"
             onClick={() => setShowDiffOnly(!showDiffOnly)}
-            className={`w-full sm:w-auto justify-center px-5 sm:px-6 h-11 sm:h-12 rounded-2xl flex items-center gap-2 text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all ${
-              showDiffOnly ? "bg-[#111827] text-white border border-[#111827]" : "bg-white border border-[#cbd5e1] text-slate-700 hover:text-slate-900 hover:border-[#111827]/35"
+            className={`w-full sm:w-auto justify-center px-5 sm:px-6 h-11 sm:h-12 rounded-none flex items-center gap-2 text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all ${
+              showDiffOnly ? "bg-[#111111] text-white border border-[#111111]" : "bg-white border border-[#ddd4c8] text-slate-700 hover:text-slate-900 hover:border-[#111111]/35"
             }`}
           >
             {showDiffOnly ? <Check className="w-4 h-4" /> : <Minus className="w-4 h-4" />}
@@ -804,7 +804,7 @@ export default function CompareClient({ initialCars }) {
           </button>
           <button
             onClick={clearCompare}
-            className="w-full sm:w-auto px-5 sm:px-6 h-11 sm:h-12 rounded-2xl bg-white border border-[#cbd5e1] text-slate-700 hover:text-slate-900 hover:border-slate-500 text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all"
+            className="w-full sm:w-auto px-5 sm:px-6 h-11 sm:h-12 rounded-none bg-white border border-[#ddd4c8] text-slate-700 hover:text-slate-900 hover:border-slate-400 text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all"
           >
             Clear All
           </button>
@@ -813,15 +813,15 @@ export default function CompareClient({ initialCars }) {
 
       {kenyaLensSummary && (
         <div className="mb-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="border border-[#d7dee8] bg-white rounded-xl px-4 py-3">
+          <div className="border border-[#ddd4c8] bg-white rounded-none px-4 py-3">
             <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">Annual TCO Gap</p>
             <p className="text-lg font-black text-slate-900 mt-1">{formatKesCompact(kenyaLensSummary.annualTcoSpread)}/yr</p>
           </div>
-          <div className="border border-[#d7dee8] bg-white rounded-xl px-4 py-3">
+          <div className="border border-[#ddd4c8] bg-white rounded-none px-4 py-3">
             <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">Top Road Score</p>
             <p className="text-lg font-black text-slate-900 mt-1">{kenyaLensSummary.bestRoadScore}/100</p>
           </div>
-          <div className="border border-[#d7dee8] bg-white rounded-xl px-4 py-3">
+          <div className="border border-[#ddd4c8] bg-white rounded-none px-4 py-3">
             <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">Import Eligible</p>
             <p className="text-lg font-black text-slate-900 mt-1">{kenyaLensSummary.eligibleCount}/{fullComparedCars.length} cars</p>
           </div>
@@ -831,7 +831,7 @@ export default function CompareClient({ initialCars }) {
       <div className="mb-8 sm:sticky sm:top-[84px] sm:z-40">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
           {winnerRail.map((item) => (
-            <div key={item.title} className="border border-[#d7dee8] bg-white rounded-xl p-4">
+            <div key={item.title} className="border border-[#ddd4c8] bg-white rounded-none p-4">
               <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 mb-2">{item.title}</p>
               {item.car ? (
                 <Link href={`/cars/${item.car.id}`} className="block group">
@@ -846,12 +846,12 @@ export default function CompareClient({ initialCars }) {
         </div>
       </div>
 
-      <div className="relative border border-[#d7dee8] rounded-[2rem] overflow-x-auto bg-white">
+      <div className="relative border border-[#ddd4c8] rounded-none overflow-x-auto bg-white">
         <div className="min-w-[980px]">
         {/* Table Header (Sticky) */}
-        <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-2xl border-b border-[#d7dee8]">
+        <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-2xl border-b border-[#ddd4c8]">
           <div className="grid grid-cols-[160px_1fr_1fr_1fr] md:grid-cols-[240px_1fr_1fr_1fr]">
-            <div className="sticky left-0 z-40 p-6 md:p-8 flex items-center justify-center border-r border-[#e2e8f0] bg-[#f8fafc]">
+            <div className="sticky left-0 z-40 p-6 md:p-8 flex items-center justify-center border-r border-[#ddd4c8] bg-white">
               <span className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 -rotate-90">Model View ⚖️</span>
             </div>
             {SLOT_KEYS.map((_, idx) => {
@@ -859,16 +859,16 @@ export default function CompareClient({ initialCars }) {
               const hydrated = !!(car && initialCarsById.has(car.id));
               const imageUrl = car?.images?.[0]?.url || car?.image || null;
               return (
-                <div key={idx} className={`p-4 md:p-5 flex flex-col gap-4 border-r border-[#e2e8f0] last:border-r-0 relative transition-all ${!car ? "bg-[#f8fafc]" : ""}`}>
+                <div key={idx} className={`p-4 md:p-5 flex flex-col gap-4 border-r border-[#ddd4c8] last:border-r-0 relative transition-all ${!car ? "bg-white" : ""}`}>
                   {car ? (
-                    <div className="relative h-full rounded-2xl border border-[#e2e8f0] bg-white p-4 md:p-5">
+                    <div className="relative h-full rounded-none border border-[#ddd4c8] bg-white p-4 md:p-5">
                       <button
                         onClick={() => removeFromCompare(car.id)}
                         className="absolute top-3 right-3 text-slate-400 hover:text-slate-900 transition-colors"
                       >
                         <X className="w-4 h-4" />
                       </button>
-                      <div className="relative aspect-[16/10] rounded-xl overflow-hidden border border-[#d7dee8] bg-[#f8fafc]">
+                      <div className="relative aspect-[16/10] rounded-none overflow-hidden border border-[#ddd4c8] bg-white">
                         {imageUrl ? (
                           <Image src={imageUrl} alt={car.model} fill className="object-cover" />
                         ) : (
@@ -881,19 +881,19 @@ export default function CompareClient({ initialCars }) {
                          <p className="text-slate-600 text-[10px] truncate">{car.variant || "Standard Variant"}</p>
                          {hydrated && (
                            <div className="mt-2 flex flex-wrap gap-1.5">
-                             <span className={`inline-flex px-2 py-0.5 rounded-full border text-[8px] font-black uppercase tracking-[0.12em] ${roadTone(getInsights(car)?.roadSuitabilityScore)}`}>
+                             <span className={`inline-flex px-2 py-0.5 rounded-noneull border text-[8px] font-black uppercase tracking-[0.12em] ${roadTone(getInsights(car)?.roadSuitabilityScore)}`}>
                                Road {getInsights(car)?.roadSuitabilityScore || "N/A"}
                              </span>
-                             <span className="inline-flex px-2 py-0.5 rounded-full border border-zinc-400 bg-zinc-200 text-zinc-800 text-[8px] font-black uppercase tracking-[0.12em]">
+                             <span className="inline-flex px-2 py-0.5 rounded-noneull border border-zinc-400 bg-zinc-200 text-zinc-800 text-[8px] font-black uppercase tracking-[0.12em]">
                                TCO {formatKesCompact(getInsights(car)?.tco?.annualTotal || 0)}/yr
                              </span>
-                             <span className={`inline-flex px-2 py-0.5 rounded-full border text-[8px] font-black uppercase tracking-[0.12em] ${importTone(getInsights(car)?.importEligibility)}`}>
+                             <span className={`inline-flex px-2 py-0.5 rounded-noneull border text-[8px] font-black uppercase tracking-[0.12em] ${importTone(getInsights(car)?.importEligibility)}`}>
                                {getInsights(car)?.importEligibility ? "Import OK" : getInsights(car)?.importEligibility === false ? "Over-age" : "Eligibility N/A"}
                              </span>
                            </div>
                          )}
-                         <div className="mt-2 h-1.5 w-full bg-[#e5e7eb] rounded-full overflow-hidden">
-                           <div className="h-full bg-gradient-to-r from-[#111827] to-[#334155]" style={{ width: `${hydrated ? calcCoverage(car, allSpecs) : 0}%` }} />
+                         <div className="mt-2 h-1.5 w-full bg-[#e5e7eb] rounded-noneull overflow-hidden">
+                           <div className="h-full bg-gradient-to-r from-[#111111] to-[#ff5a2f]" style={{ width: `${hydrated ? calcCoverage(car, allSpecs) : 0}%` }} />
                          </div>
                          <p className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.1em] mt-2">
                            Spec Coverage: {hydrated ? `${calcCoverage(car, allSpecs)}%` : "Loading"}
@@ -901,18 +901,18 @@ export default function CompareClient({ initialCars }) {
                       </div>
                     </div>
                   ) : (
-                    <div className="relative h-full rounded-2xl border border-[#e2e8f0] bg-[#fbfcfe] flex flex-col items-center justify-center gap-4 p-4 md:p-5">
+                    <div className="relative h-full rounded-none border border-[#ddd4c8] bg-[#fbfcfe] flex flex-col items-center justify-center gap-4 p-4 md:p-5">
                        <button
                          id={idx === 1 ? "tour-add-slot" : undefined}
                          onClick={() => setActiveSlot(idx)}
-                         className="w-16 h-16 rounded-3xl bg-white border border-dashed border-[#cbd5e1] flex items-center justify-center text-slate-500 hover:text-slate-900 hover:border-slate-500 transition-all group"
+                         className="w-16 h-16 rounded-none bg-white border border-dashed border-[#ddd4c8] flex items-center justify-center text-slate-500 hover:text-slate-900 hover:border-slate-400 transition-all group"
                        >
                          <Search className="w-6 h-6 group-hover:scale-110 transition-transform" />
                        </button>
                        <span className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Empty Slot</span>
                        
                        {activeSlot === idx && (
-                         <div className="absolute inset-0 rounded-2xl border border-[#e2e8f0] bg-white z-40 p-4 transition-all animate-in fade-in zoom-in-95">
+                         <div className="absolute inset-0 rounded-none border border-[#ddd4c8] bg-white z-40 p-4 transition-all animate-in fade-in zoom-in-95">
                            <div className="relative">
                              <input
                                autoFocus
@@ -920,7 +920,7 @@ export default function CompareClient({ initialCars }) {
                                placeholder="Search car..."
                                value={searchQuery}
                                onChange={(e) => setSearchQuery(e.target.value)}
-                               className="w-full bg-white border border-[#cbd5e1] rounded-2xl px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#111827]/45 transition-all font-bold"
+                               className="w-full bg-white border border-[#ddd4c8] rounded-none px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#111111]/45 transition-all font-bold"
                              />
                              <button onClick={() => setActiveSlot(null)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-900">
                                <X className="w-4 h-4" />
@@ -934,9 +934,9 @@ export default function CompareClient({ initialCars }) {
                                <button
                                  key={res.id}
                                  onClick={() => onAddCarSearch(res)}
-                                 className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-[#f8fafc] border border-transparent hover:border-[#d7dee8] transition-all text-left"
+                                 className="w-full flex items-center gap-3 p-3 rounded-none hover:bg-white border border-transparent hover:border-[#ddd4c8] transition-all text-left"
                                >
-                                 <div className="w-12 h-12 rounded-xl overflow-hidden bg-[#eef2f7] shrink-0 relative">
+                                 <div className="w-12 h-12 rounded-none overflow-hidden bg-[#eef2f7] shrink-0 relative">
                                    {res.image && <Image src={res.image} alt={res.model} fill className="object-cover" />}
                                  </div>
                                  <div className="flex-1 min-w-0">
@@ -964,8 +964,8 @@ export default function CompareClient({ initialCars }) {
         <div className="divide-y divide-[#e5e7eb]">
           {specGroups.map((group) => (
             <div key={group.name} className="bg-white">
-              <div className="grid grid-cols-[160px_1fr] md:grid-cols-[240px_1fr] py-4 px-8 items-center bg-[#f8fafc]">
-                <h2 className="sticky left-0 z-30 bg-[#f8fafc] text-[10px] font-black uppercase tracking-[0.22em] text-slate-500">{group.name}</h2>
+              <div className="grid grid-cols-[160px_1fr] md:grid-cols-[240px_1fr] py-4 px-8 items-center bg-white">
+                <h2 className="sticky left-0 z-30 bg-white text-[10px] font-black uppercase tracking-[0.22em] text-slate-500">{group.name}</h2>
                 <div className="h-px bg-[#e2e8f0]" />
               </div>
               <div className="divide-y divide-[#eef2f7]">
@@ -981,11 +981,11 @@ export default function CompareClient({ initialCars }) {
 
                   return (
                     <div key={spec.label} className={`grid grid-cols-[160px_1fr_1fr_1fr] md:grid-cols-[240px_1fr_1fr_1fr] transition-colors ${rowTone}`}>
-                      <div className="sticky left-0 z-20 p-5 md:p-6 flex items-center border-r border-[#e2e8f0] bg-[#f9fafb]">
+                      <div className="sticky left-0 z-20 p-5 md:p-6 flex items-center border-r border-[#ddd4c8] bg-[#f9fafb]">
                         <div className="space-y-2">
                           <span className="text-[11px] font-bold text-slate-900 uppercase tracking-widest block">{spec.label}</span>
                           {severity !== "none" && fullComparedCars.length > 1 && (
-                            <span className={`inline-flex px-2 py-0.5 rounded-full border text-[8px] font-black uppercase tracking-[0.12em] ${SEVERITY_STYLES[severity]}`}>
+                            <span className={`inline-flex px-2 py-0.5 rounded-noneull border text-[8px] font-black uppercase tracking-[0.12em] ${SEVERITY_STYLES[severity]}`}>
                               {severity}
                             </span>
                           )}
@@ -993,10 +993,10 @@ export default function CompareClient({ initialCars }) {
                       </div>
                       {SLOT_KEYS.map((_, idx) => {
                         const car = comparedSlots[idx];
-                        if (!car) return <div key={idx} className="p-5 md:p-6 border-r border-[#e2e8f0] last:border-r-0" />;
+                        if (!car) return <div key={idx} className="p-5 md:p-6 border-r border-[#ddd4c8] last:border-r-0" />;
                         if (!initialCarsById.has(car.id)) {
                           return (
-                            <div key={idx} className="p-5 md:p-6 flex items-center justify-center border-r border-[#e2e8f0] last:border-r-0">
+                            <div key={idx} className="p-5 md:p-6 flex items-center justify-center border-r border-[#ddd4c8] last:border-r-0">
                               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Loading...</span>
                             </div>
                           );
@@ -1012,10 +1012,10 @@ export default function CompareClient({ initialCars }) {
                         const trafficDelta = spec.id === "trafficFactor" ? (getInsights(car)?.tco?.trafficMultiplier || 1) : null;
 
                         return (
-                          <div key={idx} className="p-5 md:p-6 flex items-center justify-center border-r border-[#e2e8f0] last:border-r-0">
+                          <div key={idx} className="p-5 md:p-6 flex items-center justify-center border-r border-[#ddd4c8] last:border-r-0">
                             <div className="w-full text-center space-y-1.5">
                               {gaugePercent !== null && (
-                                <div className="h-1.5 w-full bg-[#e5e7eb] rounded-full overflow-hidden">
+                                <div className="h-1.5 w-full bg-[#e5e7eb] rounded-noneull overflow-hidden">
                                   <div
                                     className={`h-full ${isBestValue ? "bg-black" : "bg-slate-500"}`}
                                     style={{ width: `${Math.max(8, gaugePercent)}%` }}
@@ -1039,7 +1039,7 @@ export default function CompareClient({ initialCars }) {
                                 )}
                                 {missing && <span className="block text-[8px] mt-1 uppercase tracking-[0.12em]">Missing data</span>}
                                 {isBestValue && !missing && (
-                                  <span className="inline-flex mt-1 px-2 py-0.5 rounded-sm bg-black text-white text-[8px] font-black uppercase tracking-[0.12em]">
+                                  <span className="inline-flex mt-1 px-2 py-0.5 rounded-nonem bg-black text-white text-[8px] font-black uppercase tracking-[0.12em]">
                                     Best Spec
                                   </span>
                                 )}
@@ -1059,18 +1059,18 @@ export default function CompareClient({ initialCars }) {
       </div>
       
       {/* Compare Page Bottom CTA */}
-      <div className="no-print mt-10 sm:mt-12 flex flex-col items-center gap-5 sm:gap-6 p-6 sm:p-12 bg-white border border-[#d7dee8] rounded-[2rem] text-center">
+      <div className="no-print mt-10 sm:mt-12 flex flex-col items-center gap-5 sm:gap-6 p-6 sm:p-12 bg-white border border-[#ddd4c8] rounded-none text-center">
         <p className="text-slate-600 text-sm font-medium">Move from comparison to action</p>
 
         <div className="flex flex-wrap justify-center gap-3 w-full">
           {overallWinner && (
-            <Link href={`/cars/${overallWinner.id}`} className="w-full sm:w-auto justify-center px-6 h-12 rounded-2xl bg-[#111827] text-white border border-[#111827] hover:bg-black transition-all flex items-center gap-2 font-black text-[11px] uppercase tracking-[0.14em]">
+            <Link href={`/cars/${overallWinner.id}`} className="w-full sm:w-auto justify-center px-6 h-12 rounded-none bg-[#111111] text-white border border-[#111111] hover:bg-black transition-all flex items-center gap-2 font-black text-[11px] uppercase tracking-[0.14em]">
               Shortlist Winner <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           )}
 
           {topTwo.map((car, idx) => (
-            <Link key={car.id} href={`/cars/${car.id}`} className="px-6 h-12 rounded-2xl bg-white border border-[#cbd5e1] hover:border-[#111827]/35 hover:bg-[#f8fafc] transition-all flex items-center gap-2 group">
+            <Link key={car.id} href={`/cars/${car.id}`} className="px-6 h-12 rounded-none bg-white border border-[#ddd4c8] hover:border-[#111111]/35 hover:bg-white transition-all flex items-center gap-2 group">
               <span className="text-[11px] font-black text-slate-700 group-hover:text-slate-900 uppercase tracking-widest">Enquire Top {idx + 1}</span>
               <ArrowRight className="w-3 h-3 text-slate-700" />
             </Link>
@@ -1078,7 +1078,7 @@ export default function CompareClient({ initialCars }) {
 
           <button
             onClick={handleSaveComparison}
-            className="px-6 h-12 rounded-2xl bg-white border border-[#cbd5e1] hover:border-[#111827]/35 hover:bg-[#f8fafc] transition-all flex items-center gap-2"
+            className="px-6 h-12 rounded-none bg-white border border-[#ddd4c8] hover:border-[#111111]/35 hover:bg-white transition-all flex items-center gap-2"
           >
             <span className="text-[11px] font-black text-slate-700 uppercase tracking-widest">
               {saveState === "copied" ? "Saved" : saveState === "failed" ? "Save Failed" : "Save Comparison"}
@@ -1088,7 +1088,7 @@ export default function CompareClient({ initialCars }) {
           <button
             onClick={handleDownloadPdf}
             disabled={fullComparedCars.length === 0}
-            className="px-6 h-12 rounded-2xl bg-white border border-[#111827]/25 text-[#0f172a] hover:bg-[#f8fafc] transition-all flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-6 h-12 rounded-none bg-white border border-[#111111]/25 text-[#0f172a] hover:bg-white transition-all flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Download className="w-4 h-4" />
             <span className="text-[11px] font-black uppercase tracking-widest">
@@ -1101,7 +1101,7 @@ export default function CompareClient({ initialCars }) {
 
       {showTutorial && (
         <div className="fixed inset-0 z-[100] bg-[#0f172a]/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-[2rem] p-8 max-w-lg w-full shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
+          <div className="bg-white rounded-none p-8 max-w-lg w-full shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
             <div className="absolute top-0 left-0 w-full h-2 bg-slate-100">
               <div 
                 className="h-full bg-slate-900 transition-all duration-300"
@@ -1148,7 +1148,7 @@ export default function CompareClient({ initialCars }) {
                 </button>
                 <button 
                   onClick={nextStep}
-                  className="px-6 h-12 flex items-center justify-center rounded-2xl bg-[#111827] text-white hover:bg-black text-[11px] font-black uppercase tracking-widest transition-all"
+                  className="px-6 h-12 flex items-center justify-center rounded-none bg-[#111111] text-white hover:bg-black text-[11px] font-black uppercase tracking-widest transition-all"
                 >
                   {tutorialStep === 2 ? "Start Comp" : "Next Step"}
                 </button>
