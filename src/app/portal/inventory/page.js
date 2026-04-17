@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { requireDealer } from "@/lib/auth";
 import Link from "next/link";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, formatCarPrice } from "@/lib/utils";
 import InventoryToggle from "@/components/InventoryToggle";
 import { 
   Plus, 
@@ -143,7 +143,7 @@ export default async function InventoryPage({ searchParams }) {
 
                 <div className="flex items-center justify-between mb-5">
                   <p className="text-lg font-bold text-slate-900">
-                    {formatPrice(car.price)}
+                    {formatCarPrice(car)}
                   </p>
                   <div className="flex flex-col items-end text-right">
                     <div className="flex items-center gap-1 text-slate-700">

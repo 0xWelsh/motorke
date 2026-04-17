@@ -1,7 +1,7 @@
 // src/app/page.js
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
-import { formatPrice, BADGE_OPTIONS } from "@/lib/utils";
+import { formatPrice, formatCarPrice, BADGE_OPTIONS } from "@/lib/utils";
 import Link from "next/link";
 import LocationSearch from "@/components/LocationSearch";
 import NewsRibbon from "@/components/NewsRibbon";
@@ -294,7 +294,7 @@ export default async function HomePage() {
 
                       <div className="mt-auto flex items-end justify-between pt-4 border-t border-white/10 gap-3">
                         <div>
-                          <p className="text-lg font-black text-white leading-none">{formatPrice(car.price)}</p>
+                          <p className="text-lg font-black text-white leading-none">{formatCarPrice(car)}</p>
                         </div>
                         <span className="px-5 py-2.5 text-xs font-black uppercase text-white border border-white/20 rounded-none hover:bg-white/10 transition-all whitespace-nowrap">
                           View Offer
@@ -420,7 +420,7 @@ function HeroCarPanel({ car, tall = false }) {
       <div className="absolute left-4 right-4 bottom-4 text-white">
         <p className="text-[10px] font-black uppercase tracking-[0.16em] text-white/80 mb-1">{car.dealer?.name}</p>
         <p className="font-black leading-tight">{title}</p>
-        <p className="text-sm font-black mt-1 text-white/90">{formatPrice(car.price)}</p>
+        <p className="text-sm font-black mt-1 text-white/90">{formatCarPrice(car)}</p>
       </div>
     </Link>
   );
@@ -535,7 +535,7 @@ function CarCard({ car }) {
 
         <div className="mt-auto flex items-end justify-between pt-4 border-t border-[#efe8df] gap-3">
           <div>
-            <p className="text-lg font-black text-slate-900 leading-none">{formatPrice(car.price)}</p>
+            <p className="text-lg font-black text-slate-900 leading-none">{formatCarPrice(car)}</p>
           </div>
           <Link href={`/cars/${car.id}`} className="inline-flex px-5 py-2.5 text-xs font-black uppercase text-white border border-[#ddd4c8] rounded hover:bg-slate-900 hover:text-white transition-all whitespace-nowrap">
             View Offer

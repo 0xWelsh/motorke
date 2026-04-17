@@ -2,7 +2,7 @@
 export const dynamic = "force-dynamic";
 import { requireDealer } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { formatPrice, formatMileage } from "@/lib/utils";
+import { formatPrice, formatCarPrice, formatMileage } from "@/lib/utils";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { 
@@ -167,7 +167,7 @@ export default async function PortalPage({ searchParams }) {
                       </div>
                     </td>
                     <td className="px-6 py-4 hidden sm:table-cell">
-                      <p className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900 dark:text-slate-900">{formatPrice(car.price)}</p>
+                      <p className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900 dark:text-slate-900">{formatCarPrice(car)}</p>
                       <p className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700 dark:text-slate-700 capitalize">{formatMileage(car.mileage)} · {car.fuelType}</p>
                     </td>
                     <td className="px-6 py-4">

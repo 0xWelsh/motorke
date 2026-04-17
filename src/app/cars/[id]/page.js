@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { unstable_cache } from "next/cache";
 import { computeComparisonInsights } from "@/lib/comparison";
-import { formatPrice, formatMileage, estimateDuty, whatsappLink,
+import { formatPrice, formatCarPrice, formatMileage, estimateDuty, whatsappLink,
          BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/utils";
 import { MessageCircle, ChevronRight, MapPin, Wallet, ShieldCheck, Phone, Star } from "lucide-react";
 import EnquiryForm from "@/components/EnquiryForm";
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }) {
   if (!car) return {};
 
   const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} - Motorke Kenya`;
-  const description = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatPrice(car.price)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Motorke.`;
+  const description = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Motorke.`;
   const image = car.images[0]?.url || "/headerlogo.png";
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke";
   const url = `${baseUrl}/cars/${id}`;
@@ -264,7 +264,7 @@ export default async function CarDetailPage({ params }) {
 
                 <div>
                   <p className="text-xs text-slate-500 font-medium mb-1 tracking-wider">Price</p>
-                  <p className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-slate-900 tracking-tight">{formatPrice(car.price)}</p>
+                  <p className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-slate-900 tracking-tight">{formatCarPrice(car)}</p>
                   <p className="text-xs text-slate-500 font-medium mt-2 tracking-wider">Shipping included to major ports</p>
                 </div>
               </div>
@@ -321,7 +321,7 @@ export default async function CarDetailPage({ params }) {
                 <PrintButton carId={car.id} />
               </div>
 
-              <ShareButtons title={title} price={formatPrice(car.price)} />
+              <ShareButtons title={title} price={formatCarPrice(car)} />
 
               {/* Duty estimate */}
               {car.imported && !car.dutyPaid && (
@@ -344,7 +344,7 @@ export default async function CarDetailPage({ params }) {
             <aside className="bg-slate-50 border border-slate-200 rounded-2xl p-6 lg:sticky lg:top-24 space-y-6">
               <div className="pb-4 border-b border-slate-200">
                 <p className="text-xs text-slate-500 font-medium mb-1 tracking-wider">Price</p>
-                <p className="text-3xl font-serif font-bold text-slate-900 tracking-tight">{formatPrice(car.price)}</p>
+                <p className="text-3xl font-serif font-bold text-slate-900 tracking-tight">{formatCarPrice(car)}</p>
                 <p className="text-xs text-slate-500 font-medium mt-2 tracking-wider">Shipping included to major ports</p>
               </div>
 
@@ -460,7 +460,7 @@ export default async function CarDetailPage({ params }) {
                       </div>
                     </div>
                     <div className="flex items-center justify-between pt-4 border-t border-slate-50">
-                      <p className="text-xl font-extrabold text-slate-900">{formatPrice(c.price)}</p>
+                      <p className="text-xl font-extrabold text-slate-900">{formatCarPrice(c)}</p>
                       <span className="text-xs font-bold text-slate-400">{c.dealer?.name}</span>
                   </div>
                   </div>

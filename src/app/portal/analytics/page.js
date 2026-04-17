@@ -2,7 +2,7 @@
 export const dynamic = "force-dynamic";
 import { requireDealer } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, formatCarPrice } from "@/lib/utils";
 import { 
   TrendingUp, 
   Users, 
@@ -213,7 +213,7 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[11px] uppercase font-black tracking-[0.10em] text-slate-700">List Price</span>
-                  <span className="font-bold text-slate-900">{formatPrice(topCar.price)}</span>
+                  <span className="font-bold text-slate-900">{formatCarPrice(topCar)}</span>
                 </div>
               </div>
             </div>
@@ -251,7 +251,7 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
                  <tr key={car.id} className="hover:bg-[#fbfcfe] transition-none">
                     <td className="px-6 py-4">
                       <p className="font-semibold text-slate-900">{car.make} {car.model}</p>
-                      <p className="text-[10px] uppercase font-black tracking-[0.15em] text-slate-700">{formatPrice(car.price)}</p>
+                      <p className="text-[10px] uppercase font-black tracking-[0.15em] text-slate-700">{formatCarPrice(car)}</p>
                     </td>
                     <td className="px-6 py-4 text-center text-[11px] uppercase font-black tracking-[0.10em] font-medium text-slate-900">{daysListed}</td>
                     <td className="px-6 py-4 text-center text-[11px] uppercase font-black tracking-[0.10em] font-medium text-slate-900">{car.views.toLocaleString()}</td>
@@ -283,7 +283,7 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <div>
                     <p className="font-semibold text-[11px] uppercase font-black tracking-[0.10em] text-slate-900">{car.make} {car.model}</p>
-                    <p className="text-[10px] uppercase font-black tracking-[0.15em] text-slate-700">{formatPrice(car.price)}</p>
+                    <p className="text-[10px] uppercase font-black tracking-[0.15em] text-slate-700">{formatCarPrice(car)}</p>
                   </div>
                   <span className={`inline-flex px-2 py-1 rounded text-[10px] uppercase font-black tracking-[0.15em] font-semibold flex-shrink-0 ${
                     convRate > 5 

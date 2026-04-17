@@ -1,9 +1,36 @@
 // src/lib/utils.js
-import { estimateDuty as estimateDutyCore } from "./duty";
+import { estimateDuty as estimateDutyCore, calculateDutyBreakdown, getAgeYearsFromYear, getDefaultDutyRates } from "./duty";
 
 /** Format KES price → "KSh 4,200,000" */
 export function formatPrice(amount) {
   return `KSh ${Number(amount).toLocaleString("en-KE")}`;
+}
+
+export function estimateLandedCost(price, year, options = {}) {
+  const ageYears = getAgeYearsFromYear(year);
+  const breakdown = calculateDutyBreakdown({
+    cifKes: Number(price) || 0,
+    ageYears,
+    engineCC: options.engineCC ?? 1500,
+    isElectric: options.isElectric ?? false,
+    rates: options.rates || getDefaultDutyRates(),
+  });
+  return Math.round(breakdown.landed);
+}
+
+export function formatCarPrice(car, dutyRates = null) {
+  if (!car || car.price == null) return "N/A";
+  if (car.dutyPaid !== false) {
+    return formatPrice(car.price);
+  }
+  
+  const landedCost = estimateLandedCost(car.price, car.year, {
+    engineCC: car.engineCC,
+    isElectric: car.fuelType === "ELECTRIC",
+    rates: dutyRates || getDefaultDutyRates(),
+  });
+
+  return formatPrice(landedCost);
 }
 
 /** Format mileage → "38,000 km" */

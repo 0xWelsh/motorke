@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { formatPrice, formatMileage, FUEL_LABELS, BADGE_OPTIONS } from "@/lib/utils";
+import { formatPrice, formatCarPrice, formatMileage, FUEL_LABELS, BADGE_OPTIONS } from "@/lib/utils";
 import { Search, SlidersHorizontal, ChevronRight, X } from "lucide-react";
 import { CompareButton } from "@/components/CompareSelector";
 
@@ -135,7 +135,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
 
                   <div className="flex items-center justify-between md:flex-col md:items-end md:justify-center md:h-full gap-4">
                     <div className="text-left md:text-right">
-                       <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{formatPrice(car.price)}</p>
+                       <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{formatCarPrice(car)}</p>
                        <p className="text-[9px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mt-1">Ready to go</p>
                     </div>
                     <Link href={`/cars/${car.id}`} className="w-12 h-12 rounded-[1rem] bg-[#fbfcfe] border border-[#ece6dd] flex items-center justify-center text-white group-hover:bg-slate-900 group-hover:text-white group-hover:border-slate-900 transition-all shadow-sm">

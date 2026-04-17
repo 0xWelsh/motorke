@@ -1,4 +1,4 @@
-import { formatPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/utils";
+import { formatPrice, formatCarPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/utils";
 
 export default function SpecSheet({ car, dealer }) {
   const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
@@ -59,7 +59,7 @@ export default function SpecSheet({ car, dealer }) {
         <div className="flex flex-col">
           <h2 className="text-3xl font-black mb-2 leading-tight">{title}</h2>
           <div className="flex items-baseline gap-2 mb-8">
-             <p className="text-4xl font-black text-orange-600">{formatPrice(car.price)}</p>
+             <p className="text-4xl font-black text-orange-600">{formatCarPrice(car)}</p>
              {car.negotiable && <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">(Negotiable)</span>}
           </div>
 

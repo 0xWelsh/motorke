@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useCompare } from "@/components/CompareContext";
 import {
-  formatPrice,
+  formatPrice, formatCarPrice,
   formatMileage,
   BODY_TYPE_LABELS,
   FUEL_LABELS,
@@ -246,7 +246,7 @@ export default function CompareClient({ initialCars }) {
     {
       name: "Core",
       specs: [
-        { id: "price", label: "Price", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: c?.price != null ? formatPrice(c.price) : "N/A", raw: c?.price }), rank: "min" },
+        { id: "price", label: "Price", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: c?.price != null ? formatCarPrice(c) : "N/A", raw: c?.price }), rank: "min" },
         { id: "year", label: "Year", tags: ["all", "city", "family", "longtrip", "performance"], pick: (c) => ({ value: toDisplay(c?.year), raw: c?.year }), rank: "max" },
         { id: "mileage", label: "Mileage", tags: ["all", "city", "longtrip", "family"], pick: (c) => ({ value: c?.mileage != null ? formatMileage(c.mileage) : "N/A", raw: c?.mileage }), rank: "min" },
         { id: "condition", label: "Condition", tags: ["all", "family", "longtrip"], pick: (c) => ({ value: toDisplay(c?.condition), raw: c?.condition }) },
@@ -466,7 +466,7 @@ export default function CompareClient({ initialCars }) {
     {
       title: "Best Price",
       car: winnerByPrice,
-      sub: winnerByPrice?.price != null ? formatPrice(winnerByPrice.price) : "N/A",
+      sub: winnerByPrice?.price != null ? formatCarPrice(winnerByPrice) : "N/A",
     },
     {
       title: "Best Performance",
@@ -573,7 +573,7 @@ export default function CompareClient({ initialCars }) {
           return `
             <tr>
               <td>${escapeHtml(`${car.year} ${car.make} ${car.model}`)}</td>
-              <td>${escapeHtml(formatPrice(car.price || 0))}</td>
+              <td>${escapeHtml(formatCarPrice(car))}</td>
               <td>${escapeHtml(formatPrice(annualTco))}</td>
               <td>${escapeHtml(String(road))}</td>
               <td>${escapeHtml(importStatus)}</td>
@@ -941,7 +941,7 @@ export default function CompareClient({ initialCars }) {
                                  </div>
                                  <div className="flex-1 min-w-0">
                                    <p className="text-xs font-black text-slate-900">{res.year} {res.make} {res.model}</p>
-                                   <p className="text-[10px] text-slate-700 font-bold">{formatPrice(res.price)}</p>
+                                   <p className="text-[10px] text-slate-700 font-bold">{formatCarPrice(res)}</p>
                                  </div>
                                  <ArrowRight className="w-4 h-4 text-slate-500" />
                                </button>

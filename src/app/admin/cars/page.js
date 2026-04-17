@@ -2,7 +2,7 @@
 export const dynamic = "force-dynamic";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, formatCarPrice } from "@/lib/utils";
 import Link from "next/link";
 import DeleteButton from "@/components/DeleteButton";
 import ClearAllButton from "@/components/ClearAllButton";
@@ -158,7 +158,7 @@ export default async function AdminCarsPage({ searchParams }) {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                     <p className="text-sm font-bold text-slate-900 dark:text-white">{formatPrice(car.price)}</p>
+                     <p className="text-sm font-bold text-slate-900 dark:text-white">{formatCarPrice(car)}</p>
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">

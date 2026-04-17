@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Clock, ChevronRight, Sparkles, User } from "lucide-react";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, formatCarPrice } from "@/lib/utils";
 
 export default function ClientRecentSection() {
   const [recent, setRecent] = useState([]);
@@ -131,7 +131,7 @@ function CarMiniCard({ car }) {
       </div>
       <div className="p-5">
         <h3 className="font-bold text-slate-900 text-sm truncate group-hover:text-[var(--brand)] transition-colors mb-1">{car.title}</h3>
-        <p className="text-[var(--brand-accent)] font-black text-base">{formatPrice(car.price)}</p>
+        <p className="text-[var(--brand-accent)] font-black text-base">{formatCarPrice(car)}</p>
       </div>
     </Link>
   );
