@@ -2,10 +2,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Settings, Bookmark, MessageSquare, History, Phone, ShieldCheck, Clock, MapPin, Eye, EyeOff } from "lucide-react";
+import { formatCarPrice } from "@/lib/utils";
+import { formatCarPrice } from "@/lib/utils";
 import { clsx } from "clsx";
 import BuyerLocationSettings from "./BuyerLocationSettings";
 
-const fmt = (n) => "KSh " + Number(n).toLocaleString("en-KE");
+
 const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" });
 
 export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
@@ -194,7 +196,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                       </button>
                       <div className="absolute bottom-4 left-4">
                         <span className="bg-slate-900/80 backdrop-blur text-white px-3 py-1.5 rounded-none text-xs font-black shadow-sm">
-                          {fmt(car.price)}
+                          {formatCarPrice(car)}
                         </span>
                       </div>
                     </div>
@@ -292,7 +294,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                     </div>
                     <div className="p-4">
                       <p className="font-bold text-slate-900 text-sm tracking-tight leading-tight line-clamp-1 group-hover:text-amber-600 transition-colors">{car.title}</p>
-                      <p className="font-black text-slate-500 text-xs mt-1">{fmt(car.price)}</p>
+                      <p className="font-black text-slate-500 text-xs mt-1">{formatCarPrice(car)}</p>
                     </div>
                   </Link>
                 ))}

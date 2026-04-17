@@ -9,13 +9,16 @@ export function formatPrice(amount) {
 export function estimateLandedCost(price, year, options = {}) {
   const ageYears = getAgeYearsFromYear(year);
   const breakdown = calculateDutyBreakdown({
-    cifKes: Number(price) || 0,
+    // By default, add standard Export ($450) and Shipping ($2300) = $2750 USD to the FOB price to estimate CIF.
+    // Assuming 135 KES/USD for foreign cars.
+    cifKes: (Number(price) || 0) + (2750 * 135),
     ageYears,
     engineCC: options.engineCC ?? 1500,
     isElectric: options.isElectric ?? false,
     rates: options.rates || getDefaultDutyRates(),
   });
-  return Math.round(breakdown.landed);
+  // Include standard localized Clearing & Agent fees
+  return Math.round(breakdown.landed + 200000);
 }
 
 export function formatCarPrice(car, dutyRates = null) {

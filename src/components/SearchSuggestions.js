@@ -1,6 +1,8 @@
 "use client";
 // src/components/SearchSuggestions.js
 import { Search, Car, Tag, Check, ShieldCheck, MapPin } from "lucide-react";
+import { formatCarPrice } from "@/lib/utils";
+import { formatCarPrice } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -78,7 +80,7 @@ export default function SearchSuggestions({
 
                       <div className="flex items-center justify-between mb-2">
                         <p className="text-sm font-bold text-green-600">
-                          KSh {car.price?.toLocaleString() || "—"}
+                          {formatCarPrice(car)}
                         </p>
                         {car.mileage && (
                           <p className="text-xs text-slate-500">

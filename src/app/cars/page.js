@@ -1,6 +1,6 @@
 // src/app/cars/page.js
 import { db } from "@/lib/db";
-import { formatPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS, BADGE_OPTIONS, whatsappLink } from "@/lib/utils";
+import { formatPrice, formatCarPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS, BADGE_OPTIONS, whatsappLink } from "@/lib/utils";
 import Link from "next/link";
 import { ChevronRight, Search, MessageCircle, ShieldCheck, MapPin, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
@@ -327,7 +327,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
         </div>
 
         <div className="mt-auto flex items-end justify-between pt-4 border-t border-slate-200 gap-3">
-          <p className="text-lg lg:text-xl font-bold text-slate-900">KSh {car.price.toLocaleString("en-US")}</p>
+          <p className="text-lg lg:text-xl font-bold text-slate-900">{formatCarPrice(car)}</p>
           <div className="flex items-center gap-1.5">
             <Link href={`/cars/${car.id}`} className="bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200 px-4 py-2 text-[11px] font-bold transition-colors">
               View Offer

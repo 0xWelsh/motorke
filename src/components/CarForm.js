@@ -849,7 +849,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               {currency === "USD" && Boolean(priceInput) && !isNaN(parseInt(priceInput, 10)) && (
                 <p className="mt-1.5 text-[11px] font-bold text-slate-500 dark:text-slate-400">
                   ≈ {new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES', maximumFractionDigits: 0 }).format(parseInt(priceInput, 10) * EXCHANGE_RATE)}
-                  <span className="font-medium text-slate-400 ml-1">(Estimated at 1 USD = {EXCHANGE_RATE} KES)</span>
+                  <span className="font-medium text-slate-400 ml-1">(Purchase Price base. Taxes will be automatically added up later)</span>
                 </p>
               )}
             </div>

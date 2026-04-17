@@ -178,7 +178,7 @@ export default function BulkUpload({ dealers, mode = "ADMIN" }) {
                     <td style={{ padding: "10px 14px", color: "#333" }}>{row.model}</td>
                     <td style={{ padding: "10px 14px", color: "#999" }}>{row.variant || "—"}</td>
                     <td style={{ padding: "10px 14px", color: "#E8490F", fontWeight: 700 }}>
-                      {row.price ? "KSh " + Number(row.price).toLocaleString() : "—"}
+                      {row.price ? formatCarPrice(row) : "—"}
                     </td>
                     <td style={{ padding: "10px 14px", color: "#333" }}>{row.fueltype || row.fuelType}</td>
                     <td style={{ padding: "10px 14px", color: "#333" }}>{row.transmission}</td>
