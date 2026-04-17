@@ -268,6 +268,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [badges, setBadges] = useState(car?.badges || []);
+  const [currency, setCurrency] = useState("KES");
+  const EXCHANGE_RATE = 135; 
+  const [priceInput, setPriceInput] = useState(formSeed.price || "");
   const [selectedFeatures, setSelectedFeatures] = useState(car?.features || []);
   const [customFeature, setCustomFeature] = useState("");
   const [draftLoaded, setDraftLoaded] = useState(false);
@@ -556,7 +559,14 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     data.badges = badges;
 
     data.year = parseInt(data.year, 10);
-    data.price = parseInt(data.price, 10);
+    
+    // Currency resolution: if the user inputted USD, convert to KES before saving.
+    let basePrice = parseInt(data.price, 10);
+    if (currency === "USD") {
+      basePrice = Math.round(basePrice * EXCHANGE_RATE);
+    }
+    data.price = basePrice;
+
     data.mileage = data.mileage ? parseInt(data.mileage, 10) : null;
     data.engineCC = data.engineCC ? parseInt(data.engineCC, 10) : null;
     data.groundClearanceMm = data.groundClearanceMm ? parseInt(data.groundClearanceMm, 10) : null;
@@ -626,7 +636,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 type="button"
                 onClick={() => setSimpleMode(true)}
                 className={`px-4 py-2 rounded-none text-xs font-black uppercase tracking-wider border transition-colors ${
-                  simpleMode ? "bg-slate-900 text-white border-slate-900" : "bg-white text-white border-[#ddd4c8]"
+                  simpleMode 
+                    ? "bg-slate-900 border-slate-900 text-white dark:bg-white dark:text-slate-900 dark:border-white" 
+                    : "bg-white border-[#ddd4c8] text-slate-500 hover:text-slate-900 dark:bg-[#111111] dark:border-[#27272a] dark:text-slate-400 dark:hover:text-white"
                 }`}
               >
                 Quick
@@ -635,7 +647,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 type="button"
                 onClick={() => setSimpleMode(false)}
                 className={`px-4 py-2 rounded-none text-xs font-black uppercase tracking-wider border transition-colors ${
-                  !simpleMode ? "bg-slate-900 text-white border-slate-900" : "bg-white text-white border-[#ddd4c8]"
+                  !simpleMode 
+                    ? "bg-slate-900 border-slate-900 text-white dark:bg-white dark:text-slate-900 dark:border-white" 
+                    : "bg-white border-[#ddd4c8] text-slate-500 hover:text-slate-900 dark:bg-[#111111] dark:border-[#27272a] dark:text-slate-400 dark:hover:text-white"
                 }`}
               >
                 Advanced
@@ -651,12 +665,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 onClick={() => goToStep(wizardStep.id)}
                 className={`rounded-none border px-3 py-2.5 text-left transition-colors ${
                   step === wizardStep.id
-                    ? "border-#ff5a2f bg-emerald-50"
-                    : "border-[#ddd4c8] bg-white hover:bg-[#fbfcfe]"
+                    ? "border-[#ff5a2f] bg-emerald-50 dark:bg-[#18181b] dark:border-[#ff5a2f]"
+                    : "border-[#ddd4c8] bg-white hover:bg-[#fbfcfe] dark:bg-[#111111] dark:border-[#27272a] dark:hover:bg-[#1a1a1a]"
                 }`}
               >
-                <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Step {wizardStep.id}</p>
-                <p className="text-sm font-bold text-slate-900 mt-0.5">{wizardStep.label}</p>
+                <p className={`text-[10px] font-black uppercase tracking-[0.12em] ${step === wizardStep.id ? "text-emerald-700 dark:text-[#ff5a2f]" : "text-slate-500 dark:text-slate-400"}`}>Step {wizardStep.id}</p>
+                <p className={`text-sm font-bold mt-0.5 ${step === wizardStep.id ? "text-emerald-900 dark:text-white" : "text-slate-900 dark:text-slate-300"}`}>{wizardStep.label}</p>
               </button>
             ))}
           </div>
@@ -804,8 +818,40 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               </select>
             </div>
             <div>
-              <label className={labelCls}>Price (KES) *</label>
-              <input name="price" type="number" required defaultValue={formSeed.price} placeholder="e.g. 2500000" className={inputCls} />
+              <div className="flex flex-wrap items-end justify-between mb-2">
+                <label className={labelCls} style={{ marginBottom: 0 }}>Price *</label>
+                <div className="flex items-center bg-[#f0f3f5] dark:bg-[#111111] border border-[#ddd4c8] dark:border-[#27272a] rounded-none overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setCurrency("KES")}
+                    className={`px-3 py-1 text-[10px] font-black tracking-widest uppercase transition-colors ${currency === "KES" ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900" : "text-slate-500 hover:text-slate-800 dark:hover:text-white"}`}
+                  >
+                    KES
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCurrency("USD")}
+                    className={`px-3 py-1 text-[10px] font-black tracking-widest uppercase transition-colors ${currency === "USD" ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900" : "text-slate-500 hover:text-slate-800 dark:hover:text-white"}`}
+                  >
+                    USD
+                  </button>
+                </div>
+              </div>
+              <input 
+                name="price" 
+                type="number" 
+                required 
+                value={priceInput}
+                onChange={(e) => setPriceInput(e.target.value)}
+                placeholder={currency === "KES" ? "e.g. 2500000" : "e.g. 18500"} 
+                className={inputCls} 
+              />
+              {currency === "USD" && Boolean(priceInput) && !isNaN(parseInt(priceInput, 10)) && (
+                <p className="mt-1.5 text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                  ≈ {new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES', maximumFractionDigits: 0 }).format(parseInt(priceInput, 10) * EXCHANGE_RATE)}
+                  <span className="font-medium text-slate-400 ml-1">(Estimated at 1 USD = {EXCHANGE_RATE} KES)</span>
+                </p>
+              )}
             </div>
 
             <div>
