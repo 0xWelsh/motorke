@@ -112,3 +112,25 @@ export function estimateDuty(price, year, options = {}) {
 
   return Math.round(breakdown.total + 200000);
 }
+
+import { getDutyRates } from "./duty-rates";
+
+export async function computeLandedPriceForDb(price, dutyPaid, year, engineCC, fuelType) {
+  // Normalize dutyPaid to an actual boolean
+  let isDutyPaid = true;
+  if (dutyPaid === false || dutyPaid === "false" || dutyPaid === 0) {
+    isDutyPaid = false;
+  }
+  
+  if (isDutyPaid) return Number(price);
+  
+  const rates = await getDutyRates();
+  const options = {
+    engineCC: engineCC ? Number(engineCC) : 1500,
+    isElectric: fuelType === "ELECTRIC",
+    rates,
+  };
+  
+  const { estimateLandedCost } = await import("./utils");
+  return Number(estimateLandedCost(price, year, options));
+}

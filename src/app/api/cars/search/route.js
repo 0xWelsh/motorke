@@ -25,7 +25,7 @@ const getSearchResults = unstable_cache(
       make: car.make,
       model: car.model,
       year: car.year,
-      price: car.price, dutyPaid: car.dutyPaid, engineCC: car.engineCC, fuelType: car.fuelType, dutyPaid: car.dutyPaid, engineCC: car.engineCC, fuelType: car.fuelType,
+      price: car.price, dutyPaid: car.dutyPaid, engineCC: car.engineCC, fuelType: car.fuelType,
       image: car.images[0]?.url || null,
     }));
   },

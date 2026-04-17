@@ -23,6 +23,11 @@ export function estimateLandedCost(price, year, options = {}) {
 
 export function formatCarPrice(car, dutyRates = null) {
   if (!car || car.price == null) return "N/A";
+  
+  if (car.computedLandedPrice) {
+    return formatPrice(car.computedLandedPrice);
+  }
+  
   if (car.dutyPaid !== false) {
     return formatPrice(car.price);
   }

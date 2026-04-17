@@ -142,6 +142,7 @@ model Car {
   year           Int
   condition      Condition     @default(USED)
   price          Int
+  computedLandedPrice Int?
   negotiable     Boolean       @default(true)
   mileage        Int?
   fuelType       FuelType      @default(PETROL)
@@ -189,6 +190,7 @@ model Car {
   @@index([make, model])
   @@index([dealerId])
   @@index([price])
+  @@index([computedLandedPrice])
   @@index([year])
   @@index([available])
   @@index([bodyType])

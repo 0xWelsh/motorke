@@ -246,7 +246,7 @@ export default function CompareClient({ initialCars }) {
     {
       name: "Core",
       specs: [
-        { id: "price", label: "Price", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: c?.price != null ? formatCarPrice(c) : "N/A", raw: c?.price }), rank: "min" },
+        { id: "price", label: "Price", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: (c?.computedLandedPrice ?? c?.price) != null ? formatCarPrice(c) : "N/A", raw: c?.computedLandedPrice ?? c?.price }), rank: "min" },
         { id: "year", label: "Year", tags: ["all", "city", "family", "longtrip", "performance"], pick: (c) => ({ value: toDisplay(c?.year), raw: c?.year }), rank: "max" },
         { id: "mileage", label: "Mileage", tags: ["all", "city", "longtrip", "family"], pick: (c) => ({ value: c?.mileage != null ? formatMileage(c.mileage) : "N/A", raw: c?.mileage }), rank: "min" },
         { id: "condition", label: "Condition", tags: ["all", "family", "longtrip"], pick: (c) => ({ value: toDisplay(c?.condition), raw: c?.condition }) },
@@ -399,9 +399,9 @@ export default function CompareClient({ initialCars }) {
   const topTwo = rankedCars.slice(0, 2).map((entry) => entry.car);
 
   const winnerByPrice = useMemo(() => {
-    const priced = fullComparedCars.filter((car) => typeof car.price === "number");
+    const priced = fullComparedCars.filter((car) => typeof (car.computedLandedPrice ?? car.price) === "number");
     if (priced.length === 0) return null;
-    return [...priced].sort((a, b) => a.price - b.price)[0];
+    return [...priced].sort((a, b) => (a.computedLandedPrice ?? a.price) - (b.computedLandedPrice ?? b.price))[0];
   }, [fullComparedCars]);
 
   function winnerFromMap(scoreMap) {

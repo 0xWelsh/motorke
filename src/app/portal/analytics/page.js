@@ -24,7 +24,7 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
   const [cars, views, leads] = await Promise.all([
     db.car.findMany({
       where:   { dealerId: user.dealerId },
-      select:  { id: true, make: true, model: true, views: true, whatsappClicks: true, printCount: true, price: true, createdAt: true },
+      select:  { id: true, make: true, model: true, views: true, whatsappClicks: true, printCount: true, price: true, dutyPaid: true, engineCC: true, year: true, fuelType: true, createdAt: true },
     }),
     db.carView.findMany({
       where: { 

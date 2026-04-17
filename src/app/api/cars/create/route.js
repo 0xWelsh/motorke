@@ -1,3 +1,4 @@
+import { computeLandedPriceForDb } from "@/lib/duty";
 // src/app/api/cars/create/route.js
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
@@ -33,7 +34,8 @@ export async function POST(request) {
         model:        get("model").trim(),
         variant:      get("variant")?.trim() || null,
         year:         getInt("year"),
-        price:        getInt("price"),
+        price: getInt("price"),
+      computedLandedPrice: await computeLandedPriceForDb(getInt("price"), dutyPaid, year, engineCC, fuelType),
         mileage:      getInt("mileage"),
         fuelType:     get("fuelType"),
         transmission: get("transmission"),
