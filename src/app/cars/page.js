@@ -84,6 +84,8 @@ export default async function CarsPage({ searchParams }) {
         variant: true,
         year: true,
         price: true,
+        dutyPaid: true,
+        engineCC: true,
         mileage: true,
         bodyType: true,
         fuelType: true,
