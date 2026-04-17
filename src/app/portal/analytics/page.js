@@ -108,7 +108,7 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
                 <kpi.icon size={14} className="sm:block hidden" />
                 <kpi.icon size={12} className="sm:hidden" />
               </div>
-              <div className={`text-[10px] sm:text-[10px] uppercase font-black tracking-[0.15em] font-semibold flex items-center gap-0.5 flex-shrink-0 ${kpi.up ? 'text-#ff5a2f' : 'text-rose-600'}`}>
+              <div className={`text-[10px] sm:text-[10px] uppercase font-black tracking-[0.15em] font-semibold flex items-center gap-0.5 flex-shrink-0 ${kpi.up ? 'text-[#ff5a2f]' : 'text-rose-600'}`}>
                 {kpi.up ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
                 {Math.abs(kpi.trend)}%
               </div>
@@ -133,7 +133,7 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
                 <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-none bg-[#111111]" /> Views
               </div>
               <div className="flex items-center gap-1">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-none bg-#ff5a2f" /> Leads
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-none bg-[#ff5a2f]" /> Leads
               </div>
             </div>
           </div>

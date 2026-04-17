@@ -24,10 +24,10 @@ function PasswordMeter({ password }) {
   }
   
   const segments = [
-    score >= 1 ? (score < 3 ? "bg-rose-400" : (score === 3 ? "bg-amber-400" : "bg-#ff5a2f")) : "bg-slate-100",
-    score >= 2 ? (score < 3 ? "bg-rose-400" : (score === 3 ? "bg-amber-400" : "bg-#ff5a2f")) : "bg-slate-100",
-    score >= 3 ? (score === 3 ? "bg-amber-400" : "bg-#ff5a2f") : "bg-slate-100",
-    score >= 4 ? "bg-#ff5a2f" : "bg-slate-100"
+    score >= 1 ? (score < 3 ? "bg-rose-400" : (score === 3 ? "bg-amber-400" : "bg-[#ff5a2f]")) : "bg-slate-100",
+    score >= 2 ? (score < 3 ? "bg-rose-400" : (score === 3 ? "bg-amber-400" : "bg-[#ff5a2f]")) : "bg-slate-100",
+    score >= 3 ? (score === 3 ? "bg-amber-400" : "bg-[#ff5a2f]") : "bg-slate-100",
+    score >= 4 ? "bg-[#ff5a2f]" : "bg-slate-100"
   ];
   
   let label = "Security Level";
@@ -112,7 +112,7 @@ export default function SignupForm({ error: initialError }) {
     }
   };
 
-  const inputCls = "w-full bg-white border border-[#ddd4c8] rounded-none-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-#ff5a2f transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100";
+  const inputCls = "w-full bg-white border border-[#ddd4c8] rounded-xl px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-[#ff5a2f] transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100";
   const labelCls = "text-[10px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1 flex items-center gap-2";
 
   return (

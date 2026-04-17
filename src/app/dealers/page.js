@@ -62,7 +62,7 @@ export default async function DealersPage() {
                     <span className="text-xs font-black uppercase tracking-widest text-slate-700">Verified Only</span>
                   </label>
 
-                  <button className="w-full bg-[#111111] hover:bg-[#ff5a2f] text-white text-[11px] font-black uppercase tracking-widest py-3 transition-colors rounded-none">
+                  <button className="w-full bg-[#111111] hover:bg-[#ff5a2f] text-white text-[11px] font-black uppercase tracking-widest py-3 rounded-full transition-colors">
                     Update Radar
                   </button>
                 </div>

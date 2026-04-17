@@ -35,11 +35,11 @@ export default function AuthCarousel() {
     <section className="hidden lg:flex lg:w-[55%] xl:w-[45%] relative flex-col justify-center p-20 overflow-hidden bg-slate-900 border-r border-[#ddd4c8]">
       
       {/* Background aesthetics without images */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-#ff5a2f/10 rounded-none blur-[120px] -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-#ff5a2f/10 rounded-none blur-[100px] translate-y-1/2 -translate-x-1/4" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#ff5a2f]/10 rounded-none blur-[120px] -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#ff5a2f]/10 rounded-none blur-[100px] translate-y-1/2 -translate-x-1/4" />
 
       <div className="relative z-10 max-w-lg my-auto">
-        <Quote className="text-#ff5a2f/30 w-16 h-16 mb-8 -ml-2" strokeWidth={1} />
+        <Quote className="text-[#ff5a2f]/30 w-16 h-16 mb-8 -ml-2" strokeWidth={1} />
         
         <AnimatePresence mode="wait">
           <motion.div
@@ -62,7 +62,7 @@ export default function AuthCarousel() {
             <button
               key={idx}
               onClick={() => setCurrent(idx)}
-              className={`h-1 rounded-none transition-all duration-500 ${current === idx ? "w-8 bg-#ff5a2f" : "w-2 bg-white/20 hover:bg-white/40"}`}
+              className={`h-1 rounded-none transition-all duration-500 ${current === idx ? "w-8 bg-[#ff5a2f]" : "w-2 bg-white/20 hover:bg-white/40"}`}
             />
           ))}
         </div>

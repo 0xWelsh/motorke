@@ -58,7 +58,7 @@ export default function AvatarUpload({ currentUrl, userName, size = "lg" }) {
           className={`${sizeMap[size]} object-cover border-4 border-white shadow-xl shadow-emerald-900/5 group-hover:border-emerald-100 transition-all`}
         />
       ) : (
-        <div className={`${sizeMap[size]} bg-emerald-50 border-4 border-white text-#ff5a2f flex items-center justify-center font-black shadow-xl shadow-emerald-900/5 group-hover:border-emerald-100 transition-all`}>
+        <div className={`${sizeMap[size]} bg-emerald-50 border-4 border-white text-[#ff5a2f] flex items-center justify-center font-black shadow-xl shadow-emerald-900/5 group-hover:border-emerald-100 transition-all`}>
           {initial}
         </div>
       )}

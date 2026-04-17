@@ -197,7 +197,7 @@ export default function ImageGallery({ images, title }) {
                   onClick={() => setActive(i)}
                   className={`flex-shrink-0 w-20 h-14 rounded-none overflow-hidden border-2 transition-all ${
                     i === active
-                      ? "border-#ff5a2f opacity-100"
+                      ? "border-[#ff5a2f] opacity-100"
                       : "border-transparent opacity-50 hover:opacity-80"
                   } relative`}
                 >
@@ -283,7 +283,7 @@ export default function ImageGallery({ images, title }) {
                   setActive(i);
                 }}
                 className={`w-1.5 h-1.5 rounded-none transition-all ${
-                  i === active ? "bg-#ff5a2f w-4" : "bg-white/30"
+                  i === active ? "bg-[#ff5a2f] w-4" : "bg-white/30"
                 }`}
               />
             ))}

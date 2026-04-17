@@ -54,8 +54,8 @@ export default function LiveActivityFeed() {
           <div key={`${a.id}-${i}`} className="flex gap-4 group animate-in slide-in-from-right-4 duration-700">
             <div className="relative shrink-0">
                <div className={`w-12 h-12 rounded-none flex items-center justify-center text-xl shadow-sm ${
-                 a.type === 'VIEW' ? 'bg-blue-50 text-#ff5a2f' : 
-                 a.type === 'INQUIRY' ? 'bg-emerald-50 text-#ff5a2f' : 'bg-orange-50 text-#ff5a2f'
+                 a.type === 'VIEW' ? 'bg-blue-50 text-[#ff5a2f]' : 
+                 a.type === 'INQUIRY' ? 'bg-emerald-50 text-[#ff5a2f]' : 'bg-orange-50 text-[#ff5a2f]'
                }`}>
                  {a.type === 'VIEW' ? <Eye className="w-5 h-5" /> : 
                   a.type === 'INQUIRY' ? <ShoppingBag className="w-5 h-5" /> : <Zap className="w-5 h-5" />}

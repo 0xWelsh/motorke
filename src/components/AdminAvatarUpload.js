@@ -56,10 +56,10 @@ export default function AdminAvatarUpload({ currentUrl, targetId, targetType, na
         <img
           src={imageUrl}
           alt={name}
-          className={`${sizeMap[size]} object-cover border-2 border-[#ddd4c8] group-hover:border-#ff5a2f/50 transition-all`}
+          className={`${sizeMap[size]} object-cover border-2 border-[#ddd4c8] group-hover:border-[#ff5a2f]/50 transition-all`}
         />
       ) : (
-        <div className={`${sizeMap[size]} bg-white border-2 border-[#ddd4c8] group-hover:border-#ff5a2f/50 text-slate-500 group-hover:text-slate-900 flex items-center justify-center font-black transition-all`}>
+        <div className={`${sizeMap[size]} bg-white border-2 border-[#ddd4c8] group-hover:border-[#ff5a2f]/50 text-slate-500 group-hover:text-slate-900 flex items-center justify-center font-black transition-all`}>
           {initial}
         </div>
       )}

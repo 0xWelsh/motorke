@@ -99,11 +99,6 @@ p {
   border-color: var(--brand-accent);
 }
 
-.mk-pill-btn {
-  border-radius: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
 
 .mk-inline-action {
   font-size: 11px;

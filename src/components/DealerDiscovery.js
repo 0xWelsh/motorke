@@ -29,7 +29,7 @@ export default function DealerDiscovery({ dealers }) {
               </div>
               {dealer.verified && (
                 <div className="absolute -bottom-1 -right-1 bg-white rounded-none p-1 shadow-md">
-                  <ShieldCheck className="w-5 h-5 text-#ff5a2f fill-emerald-50" />
+                  <ShieldCheck className="w-5 h-5 text-[#ff5a2f] fill-emerald-50" />
                 </div>
               )}
             </div>

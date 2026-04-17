@@ -116,10 +116,10 @@ export default async function HomePage() {
               </div>
 
               <div className="flex flex-col sm:flex-row justify-center sm:justify-start items-stretch sm:items-center gap-4 sm:gap-3 mb-10">
-                <Link href="/cars" className=" flex justify-center items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-7 py-3.5 text-xs font-black uppercase transition-all shadow-lg hover:shadow-[#ff5a2f]/30 active:scale-95">
+                <Link href="/cars" className=" flex justify-center items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-7 py-3.5 text-xs font-black uppercase rounded-full transition-all shadow-lg hover:shadow-[#ff5a2f]/30 active:scale-95">
                   Search Now <ArrowUpRight className="w-4 h-4" />
                 </Link>
-                <Link href="/dealers" className=" flex justify-center items-center gap-2 bg-white border-2 border-[#111111] text-slate-900 px-7 py-3 text-xs font-black uppercase hover:bg-[#f5f5f5] transition-all active:scale-95">
+                <Link href="/dealers" className=" flex justify-center items-center gap-2 bg-white border-2 border-slate-200 text-slate-900 px-7 py-3 text-xs font-black rounded-full uppercase hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-95">
                   View Dealers
                 </Link>
               </div>
@@ -296,7 +296,7 @@ export default async function HomePage() {
                         <div>
                           <p className="text-lg font-black text-white leading-none">{formatCarPrice(car)}</p>
                         </div>
-                        <span className="px-5 py-2.5 text-xs font-black uppercase text-white border border-white/20 rounded-none hover:bg-white/10 transition-all whitespace-nowrap">
+                        <span className="px-5 py-2.5 text-xs font-black uppercase text-white border border-white/20 rounded-full hover:bg-white hover:text-slate-900 transition-all whitespace-nowrap">
                           View Offer
                         </span>
                       </div>
@@ -327,7 +327,7 @@ export default async function HomePage() {
               Browse our curated selection of premium vehicles imported directly from Japan. Quality assured with transparent pricing and full vehicle history.
             </p>
 
-            <Link href="/cars" className="inline-flex  items-center justify-center w-full bg-slate-900 hover:bg-slate-800 text-white px-6 py-3.5 text-xs font-black uppercase transition-all shadow-md">
+            <Link href="/cars" className="inline-flex  items-center justify-center w-full bg-slate-900 hover:bg-slate-800 text-white px-6 py-3.5 text-xs font-black rounded-full uppercase transition-all shadow-md">
               View All Vehicles
             </Link>
           </div>
@@ -345,7 +345,7 @@ export default async function HomePage() {
                 <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 mb-3">Network</p>
                 <h2 className="text-3xl sm:text-4xl font-black text-slate-900">Verified Dealerships</h2>
               </div>
-              <Link href="/dealers" className="hidden sm:inline-flex  items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-5 py-3 text-xs font-black uppercase transition-all shadow-md">
+              <Link href="/dealers" className="hidden sm:inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-6 py-3 text-xs font-black uppercase rounded-full transition-all shadow-md">
                 View All Dealers <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
@@ -366,7 +366,7 @@ export default async function HomePage() {
               <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 mb-3">Fresh</p>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900">New Arrivals</h2>
             </div>
-            <Link href="/cars?sort=newest" className="hidden sm:inline-flex  items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-5 py-3 text-xs font-black uppercase transition-all shadow-md">
+            <Link href="/cars?sort=newest" className="hidden sm:inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-6 py-3 text-xs font-black uppercase rounded-full transition-all shadow-md">
               Latest Cars <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -389,7 +389,7 @@ export default async function HomePage() {
             <p className="text-base sm:text-lg text-white/80 mb-10 font-medium">
               Get a modern digital storefront, profile your brand, reach verified buyers, and capture leads in one clean system. No fees. No middlemen.
             </p>
-            <Link href="/signup" className=" inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-8 py-4 text-xs font-black uppercase transition-all shadow-lg hover:shadow-[#ff5a2f]/40 active:scale-95">
+            <Link href="/signup" className=" inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-8 py-4 text-xs font-black rounded-full uppercase transition-all shadow-lg hover:shadow-[#ff5a2f]/40 active:scale-95">
               Create Dealer Account <ArrowUpRight className="w-4 h-4" />
             </Link>
           </div>
@@ -537,7 +537,7 @@ function CarCard({ car }) {
           <div>
             <p className="text-lg font-black text-slate-900 leading-none">{formatCarPrice(car)}</p>
           </div>
-          <Link href={`/cars/${car.id}`} className="inline-flex px-5 py-2.5 text-xs font-black uppercase text-white border border-[#ddd4c8] rounded hover:bg-slate-900 hover:text-white transition-all whitespace-nowrap">
+          <Link href={`/cars/${car.id}`} className="inline-flex px-5 py-2.5 text-xs font-black uppercase text-slate-900 border border-[#ddd4c8] rounded-full hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all whitespace-nowrap">
             View Offer
           </Link>
         </div>

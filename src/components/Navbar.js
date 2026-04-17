@@ -182,7 +182,7 @@ export default function Navbar({ user }) {
                 <Link href="/login" className="text-sm font-extrabold text-slate-900 hover:text-black transition-colors px-4">
                   Sign In
                 </Link>
-                <Link href="/signup" className="mk-pill-btn text-white px-6 py-3 text-xs uppercase transition-all bg-[#111111] hover:bg-[#ff5a2f] active:scale-95 inline-flex items-center gap-2">
+                <Link href="/signup" className="rounded-full font-black text-white px-6 py-3 text-xs uppercase transition-all bg-[#111111] hover:bg-[#ff5a2f] active:scale-95 inline-flex items-center gap-2">
                   For Dealers <ArrowUpRight className="w-4 h-4" />
                 </Link>
               </div>

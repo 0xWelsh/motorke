@@ -60,7 +60,7 @@ export default async function PortalPage({ searchParams }) {
       
       <div className="flex flex-col gap-6 sm:gap-8 mb-8 sm:mb-12">
         <div>
-          <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-#ff5a2f mb-1 sm:mb-2 block">Dealer Dashboard</span>
+          <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#ff5a2f] mb-1 sm:mb-2 block">Dealer Dashboard</span>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight\">Overview</h1>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
@@ -94,16 +94,16 @@ export default async function PortalPage({ searchParams }) {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {[
-          { label: "Live Inventory", value: live,   icon: <CheckCircle2 className="text-#ff5a2f" />, sub: "Publicly visible units" },
+          { label: "Live Inventory", value: live,   icon: <CheckCircle2 className="text-[#ff5a2f]" />, sub: "Publicly visible units" },
           { label: "Drafts / Hidden",   value: hidden, icon: <EyeOff className="text-slate-700 dark:text-slate-700" />, sub: "Private units" },
-          { label: "Buyer Leads", value: leads,  icon: <MessageSquare className="text-#ff5a2f" />, sub: "New enquiries today" },
+          { label: "Buyer Leads", value: leads,  icon: <MessageSquare className="text-[#ff5a2f]" />, sub: "New enquiries today" },
         ].map((stat, i) => (
-          <div key={i} className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-[#ddd4c8] rounded-none p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)] hover:border-#ff5a2f dark:hover:border-#ff5a2f/50 transition-none duration-300 group">
+          <div key={i} className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-[#ddd4c8] rounded-none p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)] hover:border-[#ff5a2f] dark:hover:border-[#ff5a2f]/50 transition-none duration-300 group">
             <div className="flex items-center justify-between mb-6">
-              <div className="w-12 h-12 bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-[#ddd4c8] rounded-none flex items-center justify-center group-hover:bg-emerald-50 dark:group-hover:bg-#ff5a2f/10 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+              <div className="w-12 h-12 bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-[#ddd4c8] rounded-none flex items-center justify-center group-hover:bg-emerald-50 dark:group-hover:bg-[#ff5a2f]/10 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
                 {stat.icon}
               </div>
-              <ArrowUpRight className="text-slate-300 dark:text-slate-700 group-hover:text-#ff5a2f transition-colors" size={20} />
+              <ArrowUpRight className="text-slate-300 dark:text-slate-700 group-hover:text-[#ff5a2f] transition-colors" size={20} />
             </div>
             <p className="text-4xl font-black text-slate-900 dark:text-slate-900 mb-2 tracking-tighter">{stat.value.toString().padStart(2, '0')}</p>
             <p className="text-[10px] uppercase font-black tracking-[0.15em] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-700 mb-1">{stat.label}</p>
@@ -116,10 +116,10 @@ export default async function PortalPage({ searchParams }) {
       <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-[#ddd4c8] rounded-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] overflow-hidden mb-12">
         <div className="px-8 py-6 border-b border-[#ddd4c8] dark:border-[#ddd4c8] flex items-center justify-between bg-[#fbfcfe] dark:bg-[#111111]/50">
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-900 flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-none bg-#ff5a2f" />
+            <div className="w-1.5 h-1.5 rounded-none bg-[#ff5a2f]" />
             Recent Vehicles
           </h2>
-          <Link href="/portal/inventory" className="text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-700 hover:text-#ff5a2f transition-colors">
+          <Link href="/portal/inventory" className="text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-700 hover:text-[#ff5a2f] transition-colors">
             View All →
           </Link>
         </div>
@@ -134,7 +134,7 @@ export default async function PortalPage({ searchParams }) {
               Your inventory is currently empty. Start reaching thousands of buyers by adding your first vehicle.
             </p>
             <Link href="/portal/cars/new"
-              className="inline-flex items-center gap-2 bg-#ff5a2f hover:bg-emerald-700 text-slate-900 font-bold px-6 py-3 rounded-none transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
+              className="inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-emerald-700 text-slate-900 font-bold px-6 py-3 rounded-none transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
               Add Your First Car
             </Link>
           </div>
@@ -173,26 +173,26 @@ export default async function PortalPage({ searchParams }) {
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded-none uppercase tracking-wider ${
                         car.available
-                          ? "bg-emerald-50 dark:bg-#ff5a2f/10 text-#ff5a2f dark:text-emerald-400 border border-emerald-100 dark:border-#ff5a2f/20"
+                          ? "bg-emerald-50 dark:bg-[#ff5a2f]/10 text-[#ff5a2f] dark:text-emerald-400 border border-emerald-100 dark:border-[#ff5a2f]/20"
                           : "bg-[#fbfcfe] dark:bg-[#111111] text-white dark:text-white border border-[#ddd4c8] dark:border-[#ddd4c8]"
                       }`}>
-                        <span className={`w-1.5 h-1.5 rounded-none ${car.available ? "bg-#ff5a2f animate-pulse" : "bg-slate-400"}`} />
+                        <span className={`w-1.5 h-1.5 rounded-none ${car.available ? "bg-[#ff5a2f] animate-pulse" : "bg-slate-400"}`} />
                         {car.available ? "Live" : "Draft"}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Link href={`/portal/cars/${car.id}/edit`}
-                          className="p-2 bg-white dark:bg-[#111111] text-white dark:text-white hover:text-#ff5a2f dark:hover:text-emerald-400 rounded-none border border-[#ddd4c8] dark:border-[#ddd4c8] hover:border-[#ff5a2f] dark:hover:border-#ff5a2f/50 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+                          className="p-2 bg-white dark:bg-[#111111] text-white dark:text-white hover:text-[#ff5a2f] dark:hover:text-emerald-400 rounded-none border border-[#ddd4c8] dark:border-[#ddd4c8] hover:border-[#ff5a2f] dark:hover:border-[#ff5a2f]/50 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
                           <Edit3 size={16} />
                         </Link>
                         <Link href={`/cars/${car.id}`} target="_blank"
-                          className="p-2 bg-white dark:bg-[#111111] text-white dark:text-white hover:text-#ff5a2f dark:hover:text-emerald-400 rounded-none border border-[#ddd4c8] dark:border-[#ddd4c8] hover:border-[#ff5a2f] dark:hover:border-#ff5a2f/50 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+                          className="p-2 bg-white dark:bg-[#111111] text-white dark:text-white hover:text-[#ff5a2f] dark:hover:text-emerald-400 rounded-none border border-[#ddd4c8] dark:border-[#ddd4c8] hover:border-[#ff5a2f] dark:hover:border-[#ff5a2f]/50 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
                           <ExternalLink size={16} />
                         </Link>
                         <form action={`/api/admin/cars/${car.id}/toggle`} method="POST">
                           <button type="submit"
-                            className="p-2 bg-white dark:bg-[#111111] text-white dark:text-white hover:text-#ff5a2f dark:hover:text-emerald-400 rounded-none border border-[#ddd4c8] dark:border-[#ddd4c8] hover:border-[#ff5a2f] dark:hover:border-#ff5a2f/50 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+                            className="p-2 bg-white dark:bg-[#111111] text-white dark:text-white hover:text-[#ff5a2f] dark:hover:text-emerald-400 rounded-none border border-[#ddd4c8] dark:border-[#ddd4c8] hover:border-[#ff5a2f] dark:hover:border-[#ff5a2f]/50 transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
                             {car.available ? <EyeOff size={16} /> : <Eye size={16} />}
                           </button>
                         </form>

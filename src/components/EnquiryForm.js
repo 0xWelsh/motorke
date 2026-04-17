@@ -160,9 +160,9 @@ export default function EnquiryForm({
     return (
       <div className="text-center py-8">
         <div className="w-12 h-12 bg-emerald-50 rounded-none flex items-center justify-center mx-auto mb-3">
-          <span className="text-#ff5a2f text-xl">✓</span>
+          <span className="text-[#ff5a2f] text-xl">✓</span>
         </div>
-        <p className="font-bold text-#ff5a2f mb-1">Enquiry sent!</p>
+        <p className="font-bold text-[#ff5a2f] mb-1">Enquiry sent!</p>
         <p className="text-xs text-slate-500">
           {dealer.name} will contact you on <span className="text-slate-800 font-semibold">{phone}</span> shortly.
         </p>
@@ -288,7 +288,7 @@ export default function EnquiryForm({
         {showSafetyBadge && (
           <div className="flex items-center justify-center gap-1.5 pt-2">
             <div className="w-3.5 h-3.5 rounded-none bg-emerald-100 flex items-center justify-center">
-              <span className="text-#ff5a2f text-[8px]">✓</span>
+              <span className="text-[#ff5a2f] text-[8px]">✓</span>
             </div>
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Safe & Secure Enquiry</span>
           </div>

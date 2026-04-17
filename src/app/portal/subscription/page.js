@@ -63,8 +63,8 @@ const PLANS = [
 ];
 
 const PAYMENT_METHODS = [
-  { id: "mpesa", label: "M-Pesa", icon: Smartphone, color: "text-#ff5a2f", desc: "Pay via Safaricom STK Push" },
-  { id: "card", label: "Card", icon: CreditCard, color: "text-#ff5a2f", desc: "Visa / Mastercard" },
+  { id: "mpesa", label: "M-Pesa", icon: Smartphone, color: "text-[#ff5a2f]", desc: "Pay via Safaricom STK Push" },
+  { id: "card", label: "Card", icon: CreditCard, color: "text-[#ff5a2f]", desc: "Visa / Mastercard" },
   { id: "bank", label: "Bank Transfer", icon: Building2, color: "text-amber-500", desc: "Direct EFT / SWIFT" },
 ];
 
@@ -225,7 +225,7 @@ export default function SubscriptionPage() {
             {status === "success" ? (
               <div className="text-center">
                 <div className="w-24 h-24 bg-emerald-50 rounded-none flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle2 size={48} className="text-#ff5a2f" />
+                  <CheckCircle2 size={48} className="text-[#ff5a2f]" />
                 </div>
                 <h2 className="text-2xl font-bold text-slate-900 mb-2">Payment Received!</h2>
                 <p className="text-[11px] uppercase font-black tracking-[0.10em] text-slate-700 font-medium">
@@ -342,9 +342,9 @@ export default function SubscriptionPage() {
 
                 {payMethod === "card" && (
                   <div className="p-6 bg-blue-50 border border-blue-200 rounded-none text-center">
-                    <CreditCard size={32} className="text-#ff5a2f mx-auto mb-3" />
+                    <CreditCard size={32} className="text-[#ff5a2f] mx-auto mb-3" />
                     <p className="text-[11px] uppercase font-black tracking-[0.10em] font-medium text-slate-700">You will be redirected to a secure payment page to enter your card details.</p>
-                    <p className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-#ff5a2f uppercase tracking-wider mt-2">Powered by Pesapal</p>
+                    <p className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-[#ff5a2f] uppercase tracking-wider mt-2">Powered by Pesapal</p>
                   </div>
                 )}
 

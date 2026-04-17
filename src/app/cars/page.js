@@ -185,7 +185,7 @@ export default async function CarsPage({ searchParams }) {
                 <p className="text-xs text-slate-600 font-medium leading-relaxed mb-5">
                   Set up a vehicle alert or let our expert team import or source a direct match from our private verified dealership network.
                 </p>
-                <button className="w-full bg-white border border-[#111111] hover:bg-[#111111] text-white hover:text-white text-[11px] font-black uppercase tracking-widest py-3 transition-colors rounded-none">
+                <button className="w-full bg-white border border-[#111111] hover:bg-[#111111] text-white hover:text-white text-[11px] font-black uppercase tracking-widest py-3 transition-colors rounded-full">
                   Request Vehicle
                 </button>
               </div>
@@ -200,7 +200,7 @@ export default async function CarsPage({ searchParams }) {
               </div>
               <h2 className="text-2xl text-slate-900 mb-3">No cars match these filters</h2>
               <p className="text-base text-slate-600 font-medium mb-8 max-w-md mx-auto">Try broadening your search or resetting filters.</p>
-              <Link href="/cars" className="mk-pill-btn inline-flex items-center gap-2 bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 text-xs uppercase transition-colors">
+              <Link href="/cars" className="rounded-full font-black inline-flex items-center gap-2 bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 text-xs uppercase transition-colors">
                 Reset Search <ArrowUpRight className="w-4 h-4" />
               </Link>
             </div>
@@ -332,10 +332,10 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
         <div className="mt-auto flex items-end justify-between pt-4 border-t border-slate-200 gap-3">
           <p className="text-lg lg:text-xl font-bold text-slate-900">{formatCarPrice(car)}</p>
           <div className="flex items-center gap-1.5">
-            <Link href={`/cars/${car.id}`} className="bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200 px-4 py-2 text-[11px] font-bold transition-colors">
+            <Link href={`/cars/${car.id}`} className="flex items-center justify-center px-5 py-2.5 bg-slate-900 hover:bg-[#ff5a2f] text-white text-[11px] font-black uppercase tracking-widest rounded-full transition-all shadow-sm">
               View Offer
             </Link>
-            <CompareButton car={compareCar} className="!rounded-none h-full" />
+            <CompareButton car={compareCar} className=" h-full" />
           </div>
         </div>
       </div>

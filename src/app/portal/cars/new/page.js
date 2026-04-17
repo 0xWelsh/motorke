@@ -53,7 +53,7 @@ export default async function PortalNewCarPage({ searchParams }) {
   return (
     <div className="animate-in fade-in duration-1000 max-w-4xl">
       <div className="mb-12">
-        <a href="/portal" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-700 hover:text-#ff5a2f transition-colors mb-6">
+        <a href="/portal" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-700 hover:text-[#ff5a2f] transition-colors mb-6">
           <span className="text-lg">←</span> Back to Showroom
         </a>
         <h1 className="text-4xl font-black text-slate-900 tracking-tight">Add Car</h1>

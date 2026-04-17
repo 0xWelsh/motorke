@@ -114,7 +114,7 @@ export default function NearbyDealersList() {
             <button
               onClick={() => handleFindNearby('current')}
               disabled={loading}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-#ff5a2f text-slate-900 rounded-none font-medium hover:bg-blue-700 disabled:opacity-50 transition"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-[#ff5a2f] text-slate-900 rounded-none font-medium hover:bg-blue-700 disabled:opacity-50 transition"
             >
               {loading && locationSource === 'current' ? (
                 <>
@@ -133,7 +133,7 @@ export default function NearbyDealersList() {
           <button
             onClick={() => handleFindNearby('current')}
             disabled={loading}
-            className="inline-flex items-center gap-2 px-4 py-3 sm:py-2 bg-#ff5a2f text-slate-900 rounded-none font-medium hover:bg-blue-700 disabled:opacity-50 transition"
+            className="inline-flex items-center gap-2 px-4 py-3 sm:py-2 bg-[#ff5a2f] text-slate-900 rounded-none font-medium hover:bg-blue-700 disabled:opacity-50 transition"
           >
             {loading ? (
               <>

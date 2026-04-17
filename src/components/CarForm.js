@@ -288,8 +288,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const saveTimeoutRef = useRef(null);
   const score = qualityScore(formSeed, images, selectedFeatures);
 
-  const inputCls = "w-full bg-[#fbfcfe] border border-[#ddd4c8] rounded-none px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-400 outline-none focus:border-#ff5a2f transition-all";
-  const selectCls = "w-full bg-[#fbfcfe] border border-[#ddd4c8] rounded-none px-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:border-#ff5a2f transition-all appearance-none";
+  const inputCls = "w-full bg-[#fbfcfe] border border-[#ddd4c8] rounded-none px-4 py-3 text-sm font-semibold text-slate-900 placeholder:text-slate-400 outline-none focus:border-[#ff5a2f] transition-all";
+  const selectCls = "w-full bg-[#fbfcfe] border border-[#ddd4c8] rounded-none px-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:border-[#ff5a2f] transition-all appearance-none";
   const labelCls = "block text-[11px] font-bold uppercase tracking-wider text-slate-500 ml-1 mb-2";
 
   const saveDraft = useCallback(() => {
@@ -709,7 +709,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       <div className={isNew && step !== 1 ? "hidden" : "block"}>
         <div className="bg-white border border-[#ddd4c8] rounded-none p-8">
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-1.5 h-1.5 rounded-none bg-#ff5a2f" />
+            <div className="w-1.5 h-1.5 rounded-none bg-[#ff5a2f]" />
             <h3 className="text-lg font-bold text-slate-900 tracking-tight">Vehicle Basics</h3>
           </div>
 
@@ -897,14 +897,14 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             <div className="bg-white border border-[#ddd4c8] rounded-none p-8">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-none bg-#ff5a2f" />
+                <div className="w-1.5 h-1.5 rounded-none bg-[#ff5a2f]" />
                 <h3 className="text-lg font-bold text-slate-900 tracking-tight">Photos</h3>
               </div>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">3+ photos recommended</p>
             </div>
             {uploading && (
               <div className="text-center mb-8 p-6 bg-[#fbfcfe] border border-[#ddd4c8] rounded-none">
-                <div className="w-10 h-10 border-4 border-#ff5a2f border-t-transparent rounded-none animate-spin mx-auto mb-4" />
+                <div className="w-10 h-10 border-4 border-[#ff5a2f] border-t-transparent rounded-none animate-spin mx-auto mb-4" />
                 <p className="text-sm font-bold text-slate-900 uppercase">Uploading Images...</p>
                 <p className="text-[10px] font-bold text-slate-500 mt-2">Image {uploadProgress.done} of {uploadProgress.total}</p>
               </div>
@@ -913,7 +913,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               <MediaUploader initialImages={images} onFilesSelected={handleFilesSelected} maxFiles={15} />
             </div>
             <div className="mt-4 flex items-center gap-2 text-[11px] font-semibold text-slate-500">
-              <UploadCloud size={14} className="text-#ff5a2f" />
+              <UploadCloud size={14} className="text-[#ff5a2f]" />
               Upload starts immediately so dealers can continue filling details while photos process.
             </div>
           </div>
@@ -934,7 +934,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   <p className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">Feature Checklist</p>
                   <h3 className="text-lg font-bold text-slate-900">Tap to select car features</h3>
                 </div>
-                <span className="text-xs font-bold text-#ff5a2f bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-none">{selectedFeatures.length} selected</span>
+                <span className="text-xs font-bold text-[#ff5a2f] bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-none">{selectedFeatures.length} selected</span>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5">
                 {FEATURE_CHECKLIST.map((feature) => {
@@ -945,7 +945,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                       type="button"
                       onClick={() => toggleFeature(feature)}
                       className={`text-left text-[11px] font-bold px-3 py-2.5 rounded-none border transition-all ${
-                        active ? "bg-#ff5a2f text-slate-900 border-#ff5a2f" : "bg-[#fbfcfe] text-slate-700 border-[#ddd4c8] hover:bg-slate-100"
+                        active ? "bg-[#ff5a2f] text-slate-900 border-[#ff5a2f]" : "bg-[#fbfcfe] text-slate-700 border-[#ddd4c8] hover:bg-slate-100"
                       }`}
                     >
                       {feature}
@@ -1032,11 +1032,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   </div>
                   <div className="pt-8 space-y-3">
                     <label className="flex items-center gap-3 cursor-pointer">
-                      <input type="checkbox" name="turbo" defaultChecked={!!formSeed.turbo} className="w-4 h-4 accent-#ff5a2f" />
+                      <input type="checkbox" name="turbo" defaultChecked={!!formSeed.turbo} className="w-4 h-4 accent-[#ff5a2f]" />
                       <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">Turbo</span>
                     </label>
                     <label className="flex items-center gap-3 cursor-pointer">
-                      <input type="checkbox" name="sunroof" defaultChecked={!!formSeed.sunroof} className="w-4 h-4 accent-#ff5a2f" />
+                      <input type="checkbox" name="sunroof" defaultChecked={!!formSeed.sunroof} className="w-4 h-4 accent-[#ff5a2f]" />
                       <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">Sunroof</span>
                     </label>
                   </div>
@@ -1054,7 +1054,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                       type="button"
                       onClick={() => setBadges((prev) => (active ? prev.filter((b) => b !== name) : [...prev, name]))}
                       className={`text-[10px] font-bold uppercase tracking-wider px-4 py-2 rounded-none border transition-all ${
-                        active ? "bg-#ff5a2f border-#ff5a2f text-slate-900" : "bg-[#fbfcfe] border-[#ddd4c8] text-slate-600"
+                        active ? "bg-[#ff5a2f] border-[#ff5a2f] text-slate-900" : "bg-[#fbfcfe] border-[#ddd4c8] text-slate-600"
                       }`}
                     >
                       {active && <Check size={10} className="inline-block mr-1.5" />} {name}
@@ -1070,7 +1070,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   <h3 className="text-lg font-bold text-slate-900">Score: {score}/100</h3>
                 </div>
                 <div className="w-full sm:w-60 h-3 rounded-none bg-slate-100 overflow-hidden">
-                  <div className="h-full bg-#ff5a2f transition-all" style={{ width: `${score}%` }} />
+                  <div className="h-full bg-[#ff5a2f] transition-all" style={{ width: `${score}%` }} />
                 </div>
               </div>
               <p className="text-xs text-slate-500 font-semibold mt-3">
@@ -1091,7 +1091,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                       name={name}
                       defaultChecked={name === "featured" && isPortal ? false : defaultChecked}
                       disabled={name === "featured" && isPortal}
-                      className="w-5 h-5 accent-#ff5a2f rounded-none"
+                      className="w-5 h-5 accent-[#ff5a2f] rounded-none"
                     />
                     <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">{label}</span>
                   </label>
@@ -1119,7 +1119,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               <button
                 type="submit"
                 disabled={submitting || uploading}
-                className="px-8 py-3 bg-#ff5a2f hover:bg-emerald-700 disabled:opacity-50 text-slate-900 font-bold rounded-none text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2"
+                className="px-8 py-3 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-50 text-slate-900 font-bold rounded-none text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2"
               >
                 {submitting ? "Saving..." : isEdit ? "Save Changes" : "Publish Listing"}
                 {!submitting && <Check size={16} />}

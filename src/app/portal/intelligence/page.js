@@ -39,7 +39,7 @@ export default async function IntelligencePage() {
         </div>
         <div className="flex items-center gap-4">
            <div className="flex items-center gap-3 px-6 py-4 bg-white border border-[#ddd4c8] rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
-              <div className="w-2 h-2 rounded-none bg-#ff5a2f animate-pulse" />
+              <div className="w-2 h-2 rounded-none bg-[#ff5a2f] animate-pulse" />
               <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest whitespace-nowrap">
                 Live Feed
               </span>
@@ -57,7 +57,7 @@ export default async function IntelligencePage() {
             <p className="text-slate-700 text-[11px] uppercase font-black tracking-[0.10em] font-bold max-w-sm mx-auto leading-relaxed">
               We are currently loading automotive news from trusted global sources.
             </p>
-            <div className="mt-10 inline-flex items-center gap-2 text-[10px] font-black text-#ff5a2f uppercase tracking-widest">
+            <div className="mt-10 inline-flex items-center gap-2 text-[10px] font-black text-[#ff5a2f] uppercase tracking-widest">
                <Clock size={14} /> Expected refresh: &lt; 2 minutes
             </div>
         </div>
@@ -93,7 +93,7 @@ export default async function IntelligencePage() {
                 {/* Source Badge */}
                 <div className="absolute top-6 left-6">
                    <div className="px-4 py-2 bg-white/95 backdrop-blur-xl rounded-none text-[9px] font-black uppercase tracking-[0.15em] shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-black/5 text-slate-900 flex items-center gap-2 border border-white/20">
-                      <div className="w-1.5 h-1.5 rounded-none bg-#ff5a2f" />
+                      <div className="w-1.5 h-1.5 rounded-none bg-[#ff5a2f]" />
                       {article.sourceName}
                    </div>
                 </div>
@@ -102,8 +102,8 @@ export default async function IntelligencePage() {
               {/* Sophisticated Content Block */}
               <div className="p-10 flex-1 flex flex-col">
                 <div className="flex items-center gap-3 mb-6">
-                   <TrendingUp size={14} className="text-#ff5a2f" />
-                   <span className="text-[10px] font-black text-#ff5a2f uppercase tracking-widest">
+                   <TrendingUp size={14} className="text-[#ff5a2f]" />
+                   <span className="text-[10px] font-black text-[#ff5a2f] uppercase tracking-widest">
                      Auto News
                    </span>
                 </div>
@@ -124,7 +124,7 @@ export default async function IntelligencePage() {
                         {new Date(article.publishedAt).toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </span>
                    </div>
-                   <Link href={article.url} target="_blank" className="w-12 h-12 rounded-none bg-[#fbfcfe] hover:bg-emerald-50 text-slate-300 hover:text-#ff5a2f flex items-center justify-center transition-none border border-[#ddd4c8]">
+                   <Link href={article.url} target="_blank" className="w-12 h-12 rounded-none bg-[#fbfcfe] hover:bg-emerald-50 text-slate-300 hover:text-[#ff5a2f] flex items-center justify-center transition-none border border-[#ddd4c8]">
                       <ExternalLink size={18} />
                    </Link>
                 </div>

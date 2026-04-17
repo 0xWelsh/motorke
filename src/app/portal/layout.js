@@ -89,7 +89,7 @@ export default function PortalLayout({ children }) {
            </button>
            <div className="hidden lg:flex flex-col">
               <span className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900">Motorske</span>
-              <p className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-#ff5a2f mt-0.5 flex items-center gap-1">
+              <p className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-[#ff5a2f] mt-0.5 flex items-center gap-1">
                  <ShieldCheck size={11} /> Active Subscription
               </p>
            </div>

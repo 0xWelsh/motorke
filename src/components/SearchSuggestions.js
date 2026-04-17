@@ -16,7 +16,7 @@ export default function SearchSuggestions({
   if (!suggestions.length && !loading) return null;
 
   const suggestionTypes = {
-    make: { icon: <Tag className="w-4 h-4 text-#ff5a2f" />, label: "Make" },
+    make: { icon: <Tag className="w-4 h-4 text-[#ff5a2f]" />, label: "Make" },
     model: { icon: <Car className="w-4 h-4 text-amber-600" />, label: "Model" },
     variant: { icon: <Tag className="w-4 h-4 text-slate-400" />, label: "Variant" },
     car: { icon: <Car className="w-4 h-4 text-green-600" />, label: "Car" },
@@ -69,11 +69,11 @@ export default function SearchSuggestions({
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2 mb-1">
-                        <h3 className="font-bold text-slate-900 text-sm group-hover:text-#ff5a2f transition">
+                        <h3 className="font-bold text-slate-900 text-sm group-hover:text-[#ff5a2f] transition">
                           {car.value}
                         </h3>
                         {car.dealerVerified && (
-                          <ShieldCheck className="w-4 h-4 text-#ff5a2f flex-shrink-0 mt-0.5" />
+                          <ShieldCheck className="w-4 h-4 text-[#ff5a2f] flex-shrink-0 mt-0.5" />
                         )}
                       </div>
 

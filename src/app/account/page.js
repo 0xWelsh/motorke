@@ -82,7 +82,7 @@ export default async function AccountPage({ searchParams }) {
                     {savedCars.length} Saved
                   </div>
                   <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-[#ddd4c8] rounded text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700">
-                    <MessageSquare size={14} className="text-#ff5a2f" />
+                    <MessageSquare size={14} className="text-[#ff5a2f]" />
                     {enquiries.length} Enquiries
                   </div>
                 </div>

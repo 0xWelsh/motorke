@@ -63,7 +63,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
     setSaved(prev => prev.filter(c => c.id !== carId));
   }
 
-  const inputCls = "w-full bg-white border border-[#ddd4c8] focus:border-#ff5a2f focus:ring-1 focus:ring-blue-100 rounded-none py-2.5 px-4 text-sm font-medium text-slate-900 outline-none transition-colors placeholder:text-slate-400";
+  const inputCls = "w-full bg-white border border-[#ddd4c8] focus:border-[#ff5a2f] focus:ring-1 focus:ring-blue-100 rounded-none py-2.5 px-4 text-sm font-medium text-slate-900 outline-none transition-colors placeholder:text-slate-400";
   const labelCls = "text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5 block";
 
   return (
@@ -95,7 +95,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
             <div className="space-y-6">
               <div>
                 <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-none bg-#ff5a2f" /> General Details
+                  <span className="w-1.5 h-1.5 rounded-none bg-[#ff5a2f]" /> General Details
                 </h2>
                 <p className="text-sm font-medium text-slate-500 mt-1 mb-8">Ensure your contact details are accurate so sellers can reach you.</p>
               </div>
@@ -217,26 +217,26 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
         {/* ── ENQUIRIES ── */}
         {tab === "enquiries" && (
           enquiries.length === 0
-            ? <Empty icon={<MessageSquare size={32} className="text-#ff5a2f" />} title="No Messages Yet" desc="Messages and inquiries you send to dealers will appear here." href="/cars" cta="Browse Cars" />
+            ? <Empty icon={<MessageSquare size={32} className="text-[#ff5a2f]" />} title="No Messages Yet" desc="Messages and inquiries you send to dealers will appear here." href="/cars" cta="Browse Cars" />
             : (
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {enquiries.map(e => (
-                  <div key={e.id} className="bg-white border border-[#ddd4c8] rounded-none p-6 sm:p-8 flex flex-col sm:flex-row gap-6 shadow-sm group hover:border-#ff5a2f/30 transition-colors">
-                    <div className="w-14 h-14 rounded-none bg-blue-50 border border-blue-100 flex items-center justify-center font-black text-xl text-#ff5a2f shrink-0">
+                  <div key={e.id} className="bg-white border border-[#ddd4c8] rounded-none p-6 sm:p-8 flex flex-col sm:flex-row gap-6 shadow-sm group hover:border-[#ff5a2f]/30 transition-colors">
+                    <div className="w-14 h-14 rounded-none bg-blue-50 border border-blue-100 flex items-center justify-center font-black text-xl text-[#ff5a2f] shrink-0">
                       {e.dealer.name[0]}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                         <div>
                           <h3 className="font-black text-slate-900 text-lg tracking-tight leading-tight">{e.dealer.name}</h3>
-                          <Link href={`/cars/${e.car.id}`} className="text-xs font-bold text-#ff5a2f hover:text-blue-800 transition-colors line-clamp-1 block mt-1">
+                          <Link href={`/cars/${e.car.id}`} className="text-xs font-bold text-[#ff5a2f] hover:text-blue-800 transition-colors line-clamp-1 block mt-1">
                             Regarding: {e.car.year} {e.car.make} {e.car.model} — {fmt(e.car.price)}
                           </Link>
                         </div>
                         <div className="flex items-center gap-3">
                           <span className={clsx(
                             "px-3 py-1 rounded-none text-[10px] font-black uppercase tracking-widest border",
-                            e.channel === "whatsapp" ? "bg-emerald-50 text-#ff5a2f border-emerald-100" : "bg-[#fbfcfe] text-slate-500 border-[#ddd4c8]"
+                            e.channel === "whatsapp" ? "bg-emerald-50 text-[#ff5a2f] border-emerald-100" : "bg-[#fbfcfe] text-slate-500 border-[#ddd4c8]"
                           )}>
                             {e.channel === "whatsapp" ? "WhatsApp Sent" : "Form Sent"}
                           </span>
@@ -257,7 +257,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                           </a>
                         )}
                         {e.dealer.whatsapp && (
-                          <a href={`https://wa.me/${e.dealer.whatsapp}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-#ff5a2f hover:bg-emerald-700 text-slate-900 px-4 py-2 rounded-none text-xs font-semibold transition">
+                          <a href={`https://wa.me/${e.dealer.whatsapp}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-emerald-700 text-slate-900 px-4 py-2 rounded-none text-xs font-semibold transition">
                             <MessageSquare size={14} className="fill-white" /> WhatsApp
                           </a>
                         )}
@@ -311,7 +311,7 @@ function Alert({ type, children }) {
       "flex items-center gap-3 px-5 py-4 rounded-none border mb-6",
       type === "success" ? "bg-emerald-50 border-emerald-100 text-emerald-800" : "bg-rose-50 border-rose-100 text-rose-800"
     )}>
-      {type === "success" ? <ShieldCheck size={18} className="text-#ff5a2f" /> : <div className="text-rose-500 font-bold">⚠</div>}
+      {type === "success" ? <ShieldCheck size={18} className="text-[#ff5a2f]" /> : <div className="text-rose-500 font-bold">⚠</div>}
       <span className="text-xs font-bold">{children}</span>
     </div>
   );

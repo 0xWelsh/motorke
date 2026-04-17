@@ -142,7 +142,7 @@ export default function DealerReviews({
               <select
                 value={rating}
                 onChange={(event) => setRating(parseInt(event.target.value, 10))}
-                className="mt-1 w-full rounded-none border border-[#ddd4c8] bg-white px-3 py-2 text-sm font-semibold text-slate-900 outline-none focus:border-#ff5a2f"
+                className="mt-1 w-full rounded-none border border-[#ddd4c8] bg-white px-3 py-2 text-sm font-semibold text-slate-900 outline-none focus:border-[#ff5a2f]"
               >
                 <option value={5}>5 - Excellent</option>
                 <option value={4}>4 - Very good</option>
@@ -160,7 +160,7 @@ export default function DealerReviews({
                 maxLength={500}
                 rows={4}
                 placeholder="How was your experience with this dealer?"
-                className="mt-1 w-full rounded-none border border-[#ddd4c8] bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-#ff5a2f resize-none"
+                className="mt-1 w-full rounded-none border border-[#ddd4c8] bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-[#ff5a2f] resize-none"
               />
               <p className="mt-1 text-[11px] font-bold text-slate-400">{comment.trim().length}/500</p>
             </div>
@@ -170,7 +170,7 @@ export default function DealerReviews({
             <button
               type="submit"
               disabled={submitting}
-              className="inline-flex items-center justify-center rounded-none bg-#ff5a2f px-4 py-2.5 text-xs font-extrabold uppercase tracking-[0.12em] text-slate-900 hover:bg-#ff5a2f disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
+              className="inline-flex items-center justify-center rounded-none bg-[#ff5a2f] px-4 py-2.5 text-xs font-extrabold uppercase tracking-[0.12em] text-slate-900 hover:bg-[#ff5a2f] disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
             >
               {submitting ? "Saving..." : viewerReview ? "Update Review" : "Post Review"}
             </button>

@@ -121,7 +121,7 @@ function OnboardingTooltip({ step, onClose, onNext, currentStep, totalSteps }) {
         <div className="mb-4">
           <div className="h-1 bg-slate-200 rounded-none overflow-hidden">
             <div
-              className="h-full bg-#ff5a2f transition-all"
+              className="h-full bg-[#ff5a2f] transition-all"
               style={{ width: `${(currentStep / totalSteps) * 100}%` }}
             />
           </div>
@@ -140,7 +140,7 @@ function OnboardingTooltip({ step, onClose, onNext, currentStep, totalSteps }) {
           </button>
           <button
             onClick={onNext}
-            className="flex-1 px-4 py-3 sm:py-2 bg-#ff5a2f text-slate-900 font-medium rounded-none hover:bg-blue-700 transition flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-3 sm:py-2 bg-[#ff5a2f] text-slate-900 font-medium rounded-none hover:bg-blue-700 transition flex items-center justify-center gap-2"
           >
             {currentStep === totalSteps ? "Done" : "Next"}
             <ChevronRight className="w-4 h-4" />

@@ -70,7 +70,7 @@ export default function BuyerLocationSettings({ initialLat, initialLng }) {
     <div className="space-y-5">
       <div>
         <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 mb-2">
-          <MapPin className="w-4 h-4 text-#ff5a2f" />
+          <MapPin className="w-4 h-4 text-[#ff5a2f]" />
           Your Location
         </h3>
         <p className="text-xs text-slate-600 mb-4">
@@ -125,7 +125,7 @@ export default function BuyerLocationSettings({ initialLat, initialLng }) {
         <button
           onClick={handleUseCurrentLocation}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-#ff5a2f text-slate-900 rounded-none font-bold text-sm hover:bg-blue-700 disabled:opacity-50 transition"
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#ff5a2f] text-slate-900 rounded-none font-bold text-sm hover:bg-blue-700 disabled:opacity-50 transition"
         >
           {loading ? (
             <>
