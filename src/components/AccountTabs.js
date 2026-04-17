@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Settings, Bookmark, MessageSquare, History, Phone, ShieldCheck, Clock, MapPin, Eye, EyeOff } from "lucide-react";
 import { formatCarPrice } from "@/lib/utils";
-import { formatCarPrice } from "@/lib/utils";
 import { clsx } from "clsx";
 import BuyerLocationSettings from "./BuyerLocationSettings";
 

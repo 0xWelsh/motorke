@@ -2,7 +2,6 @@
 // src/components/SearchSuggestions.js
 import { Search, Car, Tag, Check, ShieldCheck, MapPin } from "lucide-react";
 import { formatCarPrice } from "@/lib/utils";
-import { formatCarPrice } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 
