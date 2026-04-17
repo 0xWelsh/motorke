@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { DEFAULT_DUTY_RATES, getDefaultDutyRates } from "./duty";
-
-const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+import { db } from "@/lib/db";
+import { unstable_cache } from "next/cache";
 
 function clone(obj) {
   return JSON.parse(JSON.stringify(obj));
@@ -39,13 +39,6 @@ const dutyRatesSchema = z.object({
   }),
 });
 
-let cache = {
-  fetchedAt: 0,
-  url: null,
-  rates: null,
-  meta: null,
-};
-
 function normalizeRates(rawRates) {
   const parsed = dutyRatesSchema.parse(rawRates);
 
@@ -76,75 +69,30 @@ function normalizeRates(rawRates) {
   };
 }
 
-export async function getDutyRates() {
-  const url = process.env.DUTY_RATES_URL;
+export const getDutyRates = unstable_cache(
+  async () => {
+    try {
+      const customRatesStr = await db.setting.findUnique({
+        where: { key: "advanced_duty_json" },
+      });
 
-  if (!url) {
-    return {
-      rates: getDefaultDutyRates(),
-      meta: {
-        source: "local-default",
-        effectiveFrom: null,
-        lastUpdated: null,
-        fallback: true,
-        stale: false,
-      },
-    };
-  }
-
-  if (cache.url === url && cache.rates && Date.now() - cache.fetchedAt < CACHE_TTL_MS) {
-    return {
-      rates: clone(cache.rates),
-      meta: { ...cache.meta, fromCache: true },
-    };
-  }
-
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: { accept: "application/json" },
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch duty rates (${response.status})`);
-    }
-
-    const payload = await response.json();
-    const normalized = normalizeRates(payload);
-
-    const meta = {
-      source: normalized.metadata.source || url,
-      effectiveFrom: normalized.metadata.effectiveFrom || null,
-      lastUpdated: normalized.metadata.fetchedAt || new Date().toISOString(),
-      fallback: false,
-      stale: false,
-      fromCache: false,
-    };
-
-    cache = {
-      fetchedAt: Date.now(),
-      url,
-      rates: normalized,
-      meta,
-    };
-
-    return {
-      rates: clone(normalized),
-      meta,
-    };
-  } catch (error) {
-    if (cache.url === url && cache.rates) {
-      return {
-        rates: clone(cache.rates),
-        meta: {
-          ...cache.meta,
-          fallback: true,
-          stale: true,
-          error: error?.message || "Remote rates fetch failed",
-          fromCache: true,
-        },
-      };
+      if (customRatesStr && customRatesStr.value && customRatesStr.value.trim() !== "") {
+        const payload = JSON.parse(customRatesStr.value);
+        const normalized = normalizeRates(payload);
+        
+        return {
+          rates: clone(normalized),
+          meta: {
+            source: "admin-settings",
+            effectiveFrom: null,
+            lastUpdated: new Date().toISOString(),
+            fallback: false,
+            stale: false,
+          },
+        };
+      }
+    } catch (error) {
+      console.warn("Failed to parse custom duty rates:", error.message);
     }
 
     return {
@@ -155,8 +103,10 @@ export async function getDutyRates() {
         lastUpdated: null,
         fallback: true,
         stale: false,
-        error: error?.message || "Remote rates fetch failed",
       },
     };
-  }
-}
+  },
+  ["duty-rates-config"],
+  { tags: ["duty-rates-config"], revalidate: 3600 }
+);
+

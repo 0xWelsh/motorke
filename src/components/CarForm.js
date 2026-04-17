@@ -637,7 +637,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 onClick={() => setSimpleMode(true)}
                 className={`px-4 py-2 rounded-none text-xs font-black uppercase tracking-wider border transition-colors ${
                   simpleMode 
-                    ? "bg-slate-900 border-slate-900 text-white dark:bg-white dark:text-slate-900 dark:border-white" 
+                    ? "bg-slate-900 border-slate-900 text-white dark:bg-[#3f3f46] dark:text-white dark:border-[#3f3f46]" 
                     : "bg-white border-[#ddd4c8] text-slate-500 hover:text-slate-900 dark:bg-[#111111] dark:border-[#27272a] dark:text-slate-400 dark:hover:text-white"
                 }`}
               >
@@ -648,7 +648,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 onClick={() => setSimpleMode(false)}
                 className={`px-4 py-2 rounded-none text-xs font-black uppercase tracking-wider border transition-colors ${
                   !simpleMode 
-                    ? "bg-slate-900 border-slate-900 text-white dark:bg-white dark:text-slate-900 dark:border-white" 
+                    ? "bg-slate-900 border-slate-900 text-white dark:bg-[#3f3f46] dark:text-white dark:border-[#3f3f46]" 
                     : "bg-white border-[#ddd4c8] text-slate-500 hover:text-slate-900 dark:bg-[#111111] dark:border-[#27272a] dark:text-slate-400 dark:hover:text-white"
                 }`}
               >
@@ -824,14 +824,14 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   <button
                     type="button"
                     onClick={() => setCurrency("KES")}
-                    className={`px-3 py-1 text-[10px] font-black tracking-widest uppercase transition-colors ${currency === "KES" ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900" : "text-slate-500 hover:text-slate-800 dark:hover:text-white"}`}
+                    className={`px-3 py-1 text-[10px] font-black tracking-widest uppercase transition-colors ${currency === "KES" ? "bg-slate-900 text-white dark:bg-[#3f3f46] dark:text-white" : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"}`}
                   >
                     KES
                   </button>
                   <button
                     type="button"
                     onClick={() => setCurrency("USD")}
-                    className={`px-3 py-1 text-[10px] font-black tracking-widest uppercase transition-colors ${currency === "USD" ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900" : "text-slate-500 hover:text-slate-800 dark:hover:text-white"}`}
+                    className={`px-3 py-1 text-[10px] font-black tracking-widest uppercase transition-colors ${currency === "USD" ? "bg-slate-900 text-white dark:bg-[#3f3f46] dark:text-white" : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"}`}
                   >
                     USD
                   </button>

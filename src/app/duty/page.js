@@ -24,8 +24,11 @@ export default function DutyCalculatorPage() {
   });
   const [ratesLoading, setRatesLoading] = useState(true);
 
-  const [cifUsd,      setCifUsd]      = useState(15000);
-  const [exchangeRate, setExchangeRate] = useState(130);
+  const [purchaseUsd, setPurchaseUsd] = useState(7500);
+  const [exportUsd,   setExportUsd]   = useState(450);
+  const [shippingUsd, setShippingUsd] = useState(2300);
+  const [clearingKes, setClearingKes] = useState(200000);
+  const [exchangeRate, setExchangeRate] = useState(135);
   const [year,        setYear]        = useState(2020);
   const [engineCC,    setEngineCC]    = useState(2000);
   const [isElectric,  setIsElectric]  = useState(false);
@@ -63,22 +66,28 @@ export default function DutyCalculatorPage() {
     };
   }, []);
 
+  const cifUsd = purchaseUsd + exportUsd + shippingUsd;
   const cifKes  = cifUsd * exchangeRate;
   const ageYears = getAgeYearsFromYear(year);
   const result = useMemo(
     () => calculateDutyBreakdown({ cifKes, ageYears, engineCC, isElectric, rates }),
     [cifKes, ageYears, engineCC, isElectric, rates]
   );
+  const totalLandedCost = result.landed + clearingKes;
 
   const rows = [
-    { label: "CIF value (purchase + freight + insurance)", value: fmt(cifKes), note: null, highlight: false },
+    { label: "Purchase Price (FOB)", value: fmt(purchaseUsd * exchangeRate), note: `$${purchaseUsd}`, highlight: false },
+    { label: "Vehicle & Export Costs", value: fmt(exportUsd * exchangeRate), note: `$${exportUsd}`, highlight: false },
+    { label: "Shipping (to Mombasa)", value: fmt(shippingUsd * exchangeRate), note: `$${shippingUsd}`, highlight: false },
+    { label: "Total CIF Value", value: fmt(cifKes), note: `$${cifUsd}`, highlight: true },
     { label: "Customs value after depreciation", value: fmt(result.customsValue), note: `${ageYears} year${ageYears !== 1 ? "s" : ""} old`, highlight: false },
     { label: `Import Declaration Fee (IDF) ${(rates.idfRate * 100).toFixed(2)}%`, value: fmt(result.idf), note: null, highlight: false },
     { label: `Excise Duty ${(result.exciseRate * 100).toFixed(0)}%`, value: fmt(result.excise), note: result.exciseLabel, highlight: false },
     { label: `VAT ${(rates.vatRate * 100).toFixed(0)}% (on customs + IDF + excise)`, value: fmt(result.vat), note: null, highlight: false },
     { label: "Railway Development Levy (RDL)", value: fmt(result.rdl), note: "flat rate", highlight: false },
     { label: "Total import duties", value: fmt(result.total), note: null, highlight: true },
-    { label: "Estimated landed cost", value: fmt(result.landed), note: "purchase price + all duties", highlight: true },
+    { label: "Clearing Agent, Registration & Other Fees", value: fmt(clearingKes), note: "IDF, NTSA, Agent etc.", highlight: false },
+    { label: "Final Estimated Landed Cost", value: fmt(totalLandedCost), note: "depends on exact agent fees", highlight: true },
   ];
 
   const inputCls = "bg-white border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all w-full";
@@ -106,26 +115,59 @@ export default function DutyCalculatorPage() {
           <div className="space-y-6">
             <div>
               <label className="block text-xs font-black text-slate-700 uppercase tracking-widest mb-2">
-                Purchase Price (USD, CIF)
+                Purchase Price (USD, FOB)
               </label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">$</span>
-                <input type="number" value={cifUsd} onChange={e => setCifUsd(+e.target.value)}
-                  className={`${inputCls} pl-10`} min="500" step="500" />
+                <input type="number" value={purchaseUsd} onChange={e => setPurchaseUsd(+e.target.value)}
+                  className={`${inputCls} pl-10`} min="0" step="100" />
               </div>
-              <p className="text-xs text-slate-500 font-medium mt-2 px-1">Includes purchase price, insurance, and freight to Mombasa.</p>
+              <p className="text-xs text-slate-500 font-medium mt-2 px-1">Base cost of the vehicle in the exporting country.</p>
             </div>
 
-            <div>
-              <label className="block text-xs font-black text-slate-700 uppercase tracking-widest mb-2">
-                USD → KES Exchange Rate
-              </label>
-              <input type="number" value={exchangeRate} onChange={e => setExchangeRate(+e.target.value)}
-                className={inputCls} min="50" step="1" />
-              <p className="text-xs text-slate-600 font-medium mt-2 px-1">
-                Converted CIF: <span className="text-slate-900 font-black">{fmt(cifUsd * exchangeRate)}</span>
-              </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-black text-slate-700 uppercase tracking-widest mb-2">
+                  Vehicle & Export Costs (USD)
+                </label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">$</span>
+                  <input type="number" value={exportUsd} onChange={e => setExportUsd(+e.target.value)}
+                    className={`${inputCls} pl-10`} min="0" step="50" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-black text-slate-700 uppercase tracking-widest mb-2">
+                  Shipping to Mombasa (USD)
+                </label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">$</span>
+                  <input type="number" value={shippingUsd} onChange={e => setShippingUsd(+e.target.value)}
+                    className={`${inputCls} pl-10`} min="0" step="50" />
+                </div>
+              </div>
             </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-black text-slate-700 uppercase tracking-widest mb-2">
+                  USD → KES Exchange Rate
+                </label>
+                <input type="number" value={exchangeRate} onChange={e => setExchangeRate(+e.target.value)}
+                  className={inputCls} min="50" step="1" />
+              </div>
+              <div>
+                <label className="block text-xs font-black text-slate-700 uppercase tracking-widest mb-2">
+                  Clearing & Other Fees (KES)
+                </label>
+                <input type="number" value={clearingKes} onChange={e => setClearingKes(+e.target.value)}
+                  className={inputCls} min="0" step="5000" />
+              </div>
+            </div>
+            
+            <p className="text-xs text-slate-600 font-medium px-1">
+              Calculated CIF: <span className="text-slate-900 font-black">{fmt(cifUsd * exchangeRate)}</span> (Purchase + Export + Shipping)
+            </p>
 
             <div className="grid grid-cols-2 gap-4">
               <div>

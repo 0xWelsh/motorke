@@ -1,5 +1,5 @@
 // src/app/cars/[id]/page.js
-export const revalidate = 600; // Revalidate every 10 minutes
+export const dynamic = 'force-dynamic';
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
@@ -57,19 +57,6 @@ export async function generateMetadata({ params }) {
   };
 }
 
-// Pre-render top 100 most recent cars at build time
-export async function generateStaticParams() {
-  const cars = await db.car.findMany({
-    where: { available: true },
-    orderBy: { createdAt: "desc" },
-    take: 100,
-    select: { id: true },
-  });
-
-  return cars.map((car) => ({
-    id: car.id,
-  }));
-}
 
 const getCarData = unstable_cache(
   async (id) => {

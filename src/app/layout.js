@@ -1,4 +1,5 @@
 // src/app/layout.js
+import { Work_Sans, Inter } from "next/font/google";
 import "./globals.css";
 import { CompareProvider } from "@/components/CompareContext";
 import Navbar from "@/components/Navbar";
@@ -24,6 +25,9 @@ export const metadata = {
   },
 };
 
+const workSans = Work_Sans({ subsets: ["latin"], variable: "--font-work-sans", display: "swap", weight: ["400", "500", "600", "700", "800"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+
 export const viewport = {
   width: "device-width",
   initialScale: 1,
@@ -42,7 +46,7 @@ export default async function RootLayout({ children }) {
   } : null;
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${workSans.variable} ${inter.variable}`}>
       <body className="bg-background text-slate-900 min-h-screen antialiased flex flex-col font-sans transition-colors duration-300">
         <PWARegister />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>

@@ -75,6 +75,18 @@ export default async function AdminSettingsPage({ searchParams }) {
               />
               <p className="text-xs text-slate-400 mt-2">Where default notifications and automated customer inquiries are CC'ed.</p>
             </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Advanced Duty Rates (JSON)</label>
+              <textarea 
+                name="advanced_duty_json" 
+                defaultValue={settings.advanced_duty_json || ""} 
+                rows={12}
+                className="w-full bg-[#f7f6f3] border border-[#ddd4c8] rounded-none px-5 py-4 focus:ring-2 focus:ring-slate-900 font-mono text-xs" 
+                placeholder='{"idfRate":0.0225,"vatRate":0.16...}'
+              />
+              <p className="text-xs text-slate-400 mt-2">Override KRA Duty calculation baseline. Must be perfectly valid JSON with identical schema to DEFAULT_DUTY_RATES. If empty, the system defaults will be applied.</p>
+            </div>
          </div>
 
          <button type="submit" className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-none px-6 py-4 font-bold transition-colors flex items-center justify-center gap-2">
