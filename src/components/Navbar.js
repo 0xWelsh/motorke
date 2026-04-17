@@ -5,7 +5,8 @@ import Link from "next/link";
 import { 
   Search, User, Menu, X, ChevronDown, LogOut, Heart,
   LayoutDashboard, Store, PlusCircle, ShieldCheck, Compass,
-  ArrowUpRight, Bell, Settings, BarChart2, Shield
+  ArrowUpRight, Bell, Settings, BarChart2, Shield,
+  CarFront, BadgeCheck, GitCompare
 } from "lucide-react";
 import { clsx } from "clsx";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
@@ -82,9 +83,9 @@ export default function Navbar({ user }) {
   }
 
   const links = [
-    { href: "/cars",    label: "Cars", icon: <Store className="w-4 h-4" /> },
-    { href: "/dealers", label: "Dealers",   icon: <ShieldCheck className="w-4 h-4" /> },
-    { href: "/compare", label: "Compare",   icon: <Compass className="w-4 h-4" /> },
+    { href: "/cars",    label: "Cars",      icon: <CarFront className="w-[18px] h-[18px]" /> },
+    { href: "/dealers", label: "Dealers",   icon: <BadgeCheck className="w-[18px] h-[18px]" /> },
+    { href: "/compare", label: "Compare",   icon: <GitCompare className="w-[18px] h-[18px]" /> },
   ];
 
   return (
@@ -103,7 +104,7 @@ export default function Navbar({ user }) {
           </Link>
 
           {/* NAV LINKS */}
-          <div className="hidden lg:flex items-center gap-5 border-b border-[#ddd4c8] pb-2">
+          <div className="hidden lg:flex items-center gap-5 ">
             {links.map(({ href, label, icon }) => (
               <Link key={href} href={href}
                 className="flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-[0.16em] text-slate-700 hover:text-black transition-all">
@@ -121,8 +122,8 @@ export default function Navbar({ user }) {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
-                placeholder="Search cars, e.g. Prado, X5, CX-5"
-                className="w-full bg-white border border-[#ddd4c8] focus:border-[#ff5a2f]/40 focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-none py-3 pl-12 pr-6 text-sm font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900"
+                placeholder="Search cars, e.g. Prado..."
+                className="w-full bg-slate-50/50 hover:bg-slate-100 border border-transparent focus:border-[#ff5a2f]/40 focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-full py-2.5 pl-11 pr-5 text-sm font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900"
               />
             </form>
             {showSuggestions && (
@@ -145,9 +146,9 @@ export default function Navbar({ user }) {
                 <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setUserMenu(!userMenu)}
-                  className="flex items-center gap-3 bg-white border border-[#ddd4c8] pl-2 pr-5 py-2 rounded-none hover:border-slate-900 transition-none"
+                  className="flex items-center gap-2.5 bg-white border border-[#ddd4c8] pl-1.5 pr-4 py-1.5 rounded-full hover:border-[#ff5a2f] hover:shadow-sm transition-all"
                 >
-                  <div className="w-9 h-9 rounded-none flex items-center justify-center font-black text-sm uppercase text-white bg-[#ff5a2f]">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm uppercase text-white bg-[#ff5a2f]">
                     {user.name?.[0]}
                   </div>
                   <span className="text-sm font-extrabold text-slate-900 tracking-tight">{user.name?.split(" ")[0]}</span>
@@ -155,8 +156,8 @@ export default function Navbar({ user }) {
                 </button>
 
                 {userMenu && (
-                  <div className="absolute right-0 top-full mt-4 w-72 bg-white border border-[#ddd4c8] rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,0.05)] overflow-hidden p-0 animate-in fade-in slide-in-from-top-2">
-                    <div className="px-5 py-5 bg-[#f7f6f3] border-b border-[#ddd4c8] mb-0 rounded-none">
+                  <div className="absolute right-0 top-full mt-3 w-72 bg-white border border-[#ddd4c8] rounded-2xl shadow-xl overflow-hidden p-0 animate-in fade-in slide-in-from-top-2">
+                    <div className="px-5 py-5 bg-slate-50 border-b border-[#ddd4c8] mb-0 rounded-t-2xl">
                       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1">Signed in</p>
                       <p className="text-sm font-black text-slate-900 truncate">{user.email}</p>
                     </div>
@@ -167,7 +168,7 @@ export default function Navbar({ user }) {
                       <MenuDropdownItem href="/account?tab=saved"   label="Watchlist"        icon={<Heart className="w-5 h-5" />} />
                       <div className="hidden" />
                       <form action="/api/auth/logout" method="POST">
-                        <button type="submit" className="w-full flex items-center gap-4 px-5 py-4 text-[11px] font-black uppercase tracking-widest text-[#ff5a2f] hover:bg-[#111111] hover:text-white rounded-none transition-none">
+                        <button type="submit" className="w-full flex items-center gap-4 px-5 py-4 text-[11px] font-black uppercase tracking-widest text-[#ff5a2f] hover:bg-slate-50 hover:text-rose-600 rounded-b-2xl transition-colors">
                           <LogOut className="w-5 h-5" /> Sign Out
                         </button>
                       </form>
