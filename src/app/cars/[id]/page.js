@@ -257,21 +257,21 @@ export default async function CarDetailPage({ params }) {
                     </span>
                   </div>
                   <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-xs font-serif font-semibold text-slate-500 tracking-tight">{yearLabel}</span>
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 dark:text-white tracking-tight leading-snug">{titleWithoutYear}</h1>
+                    <span className="text-xs font-semibold text-slate-500 tracking-tight">{yearLabel}</span>
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-snug">{titleWithoutYear}</h1>
                   </div>
                 </div>
 
                 <div>
                   <p className="text-xs text-slate-500 font-medium mb-1 tracking-wider">Price</p>
-                  <p className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-slate-900 dark:text-white tracking-tight">{formatCarPrice(car)}</p>
+                  <p className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight">{formatCarPrice(car)}</p>
                   <p className="text-xs text-slate-500 font-medium mt-2 tracking-wider">Shipping included to major ports</p>
                 </div>
               </div>
 
               {/* Description */}
               <div className="border-t border-slate-200 dark:border-slate-800 pt-6">
-                <h2 className="text-base font-serif font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-4">Description</h2>
+                <h2 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-white mb-4">Description</h2>
                 <p className="text-[15px] text-slate-700 leading-relaxed font-medium">
                   {descriptionBullets.length > 0 ? descriptionBullets.join(" • ") : "High-spec unit with verified dealer profile and direct enquiry support."}
                 </p>
@@ -279,7 +279,7 @@ export default async function CarDetailPage({ params }) {
 
               {/* Vehicle Details */}
               <div className="border-t border-slate-200 dark:border-slate-800 pt-6">
-                <h2 className="text-base font-serif font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-6">Vehicle Details</h2>
+                <h2 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-white mb-6">Vehicle Details</h2>
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
                   {visibleSpecs.map((item) => (
                     <div key={item.label}>
@@ -344,7 +344,7 @@ export default async function CarDetailPage({ params }) {
             <aside className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 lg:sticky lg:top-24 space-y-6">
               <div className="pb-4 border-b border-slate-200">
                 <p className="text-xs text-slate-500 font-medium mb-1 tracking-wider">Price</p>
-                <p className="text-3xl font-serif font-bold text-slate-900 dark:text-white tracking-tight">{formatCarPrice(car)}</p>
+                <p className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{formatCarPrice(car)}</p>
                 <p className="text-xs text-slate-500 font-medium mt-2 tracking-wider">Shipping included to major ports</p>
               </div>
 
@@ -365,7 +365,7 @@ export default async function CarDetailPage({ params }) {
               </div>
 
               <div className="space-y-4 pt-2 border-t border-slate-200">
-                <h3 className="text-base font-serif font-bold uppercase tracking-wider text-slate-900 dark:text-white">Send an Enquiry</h3>
+                <h3 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-white">Send an Enquiry</h3>
                 <EnquiryForm
                   carId={car.id}
                   dealerId={dealer.id}
