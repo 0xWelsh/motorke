@@ -92,7 +92,7 @@ export default function CarReviewForm({ carId, onReviewSubmitted }) {
 
         {/* Messages */}
         {error && <p className="text-sm text-red-600 font-semibold bg-red-50 p-3 rounded">{error}</p>}
-        {success && <p className="text-sm text-[#ff5a2f] font-semibold bg-emerald-50 p-3 rounded">Review submitted! Thank you.</p>}
+        {success && <p className="text-sm text-emerald-700 font-semibold bg-emerald-50 p-3 rounded-2xl border border-emerald-200">Review submitted! Thank you.</p>}
 
         {/* Submit */}
         <button

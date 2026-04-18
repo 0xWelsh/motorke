@@ -1,30 +1,20 @@
-"use client";
-
+import { db } from "@/lib/db";
 import { Star } from "lucide-react";
 
-export default function HeroReviews({ reviews = [] }) {
-  const defaultReviews = [
-    {
-      text: "Found my dream Prado in 2 days. Process was smooth and dealer was genuine.",
-      author: "Sarah M.",
-      role: "Nairobi, Kenya",
-      rating: 5,
-    },
-    {
-      text: "Finally, a marketplace where specs are actually accurate. No surprises.",
-      author: "James K.",
-      role: "Mombasa, Kenya",
-      rating: 5,
-    },
-    {
-      text: "Saved hours comparing cars. The side-by-side tool is a game changer.",
-      author: "Ahmed L.",
-      role: "Kisumu, Kenya",
-      rating: 5,
-    },
-  ];
+// Fetches up to 3 real dealer reviews that have a comment
+async function getHighlightReviews() {
+  return db.dealerReview.findMany({
+    where: { comment: { not: null } },
+    include: { user: { select: { name: true } }, dealer: { select: { county: true } } },
+    orderBy: { rating: "desc" },
+    take: 3,
+  });
+}
 
-  const displayReviews = reviews.length > 0 ? reviews : defaultReviews;
+export default async function HeroReviews() {
+  const reviews = await getHighlightReviews();
+
+  if (reviews.length === 0) return null;
 
   return (
     <div className="space-y-3 py-2 border-y border-[#e8e2d9]">
@@ -34,32 +24,23 @@ export default function HeroReviews({ reviews = [] }) {
       </div>
 
       <div className="space-y-2">
-        {displayReviews.slice(0, 2).map((review, idx) => (
-          <div
-            key={idx}
-            className="bg-white dark:bg-[#111111] border border-slate-50 p-2.5 text-xs"
-          >
+        {reviews.slice(0, 2).map((review) => (
+          <div key={review.id} className="bg-white dark:bg-[#111111] border border-slate-50 p-2.5 text-xs">
             <div className="flex gap-0.5 mb-1">
               {Array.from({ length: review.rating }).map((_, i) => (
-                <Star
-                  key={i}
-                  className="w-3 h-3 fill-yellow-400 text-yellow-400"
-                />
+                <Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />
               ))}
             </div>
             <p className="text-xs font-semibold text-slate-700 line-clamp-2 mb-1">
-              "{review.text}"
+              &ldquo;{review.comment}&rdquo;
             </p>
             <p className="text-[9px] font-bold text-slate-600">
-              {review.author}
+              {review.user?.name || "Verified Buyer"}
+              {review.dealer?.county ? ` · ${review.dealer.county}` : ""}
             </p>
           </div>
         ))}
       </div>
-
-      <p className="text-[9px] text-slate-400 font-semibold pt-1">
-        Trusted by 2,300+ verified buyers
-      </p>
     </div>
   );
 }

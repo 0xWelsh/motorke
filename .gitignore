@@ -32,3 +32,17 @@ yarn-error.log*
 .vscode/
 .idea/
 .vercel
+
+# One-off dev/debug scripts at project root (keep local, don't commit)
+/fix*.js
+/fix*.sh
+/fix*.py
+/test*.js
+/test*.py
+/query*.js
+/debug*.js
+/parse*.js
+/backfill*.js
+/update_auth_forms*.py
+/adjust-*.js
+/cjs_duty.js

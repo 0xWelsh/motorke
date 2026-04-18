@@ -31,7 +31,7 @@ export default async function AdminDashboard({ searchParams }) {
   const [
     totalCars, totalDealers, totalLeads, totalUsers,
     carsInRange, leadsInRange, 
-    inventoryValueAgg, pendingDealers, recentFlagged,
+    inventoryValueAgg, pendingDealers, carsToday,
     premiumSubs, freeSubs,
     rawCarsForChart, rawLeadsForChart
   ] = await Promise.all([
@@ -43,7 +43,7 @@ export default async function AdminDashboard({ searchParams }) {
     db.lead.count({ where: { createdAt: { gte: startDate } } }),
     db.car.aggregate({ _sum: { price: true }, where: { available: true } }),
     db.dealer.findMany({ where: { verified: false }, take: 4, select: { id: true, name: true, createdAt: true } }),
-    db.car.findMany({ where: { available: true, condition: "USED" }, take: 3, select: { id: true, make: true, model: true } }), // Mocking flagged/reported items for now
+    db.car.count({ where: { createdAt: { gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) } } }), // cars added today
     db.subscription.count({ where: { plan: "PRO", status: "ACTIVE" } }),
     db.subscription.count({ where: { plan: "FREE", status: "ACTIVE" } }),
     db.car.findMany({ where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } }, select: { createdAt: true } }),

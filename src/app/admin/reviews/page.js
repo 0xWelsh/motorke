@@ -1,0 +1,183 @@
+export const dynamic = "force-dynamic";
+import { requireAdmin } from "@/lib/auth";
+import { db } from "@/lib/db";
+import DeleteButton from "@/components/DeleteButton";
+import { Star, MessageSquare, Building2, Car, ShieldAlert } from "lucide-react";
+
+export const metadata = { title: "Review Moderation — Motorske Admin" };
+
+function StarDisplay({ rating }) {
+  return (
+    <div className="flex items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map((i) => (
+        <Star
+          key={i}
+          size={13}
+          className={i <= rating ? "fill-amber-400 text-amber-400" : "text-slate-200"}
+        />
+      ))}
+    </div>
+  );
+}
+
+export default async function AdminReviewsPage() {
+  await requireAdmin();
+
+  const [dealerReviews, carReviews] = await Promise.all([
+    db.dealerReview.findMany({
+      include: {
+        user:   { select: { id: true, name: true, email: true } },
+        dealer: { select: { id: true, name: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+    db.carReview.findMany({
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        car:  { select: { id: true, make: true, model: true, year: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+  ]);
+
+  const formatDate = (d) =>
+    new Date(d).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" });
+
+  return (
+    <div className="animate-in fade-in slide-in-from-bottom-2 duration-700 max-w-6xl">
+      {/* Header */}
+      <div className="mb-12">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="w-2 h-2 rounded-full bg-amber-500" />
+          <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Moderation</span>
+        </div>
+        <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+          Review Moderation
+        </h1>
+        <p className="text-sm text-slate-500 mt-2 font-medium">
+          {dealerReviews.length + carReviews.length} total reviews &mdash; remove any that violate community guidelines.
+        </p>
+      </div>
+
+      {/* Dealer Reviews */}
+      <section className="mb-16">
+        <div className="flex items-center gap-3 mb-6">
+          <Building2 size={16} className="text-[#ff5a2f]" />
+          <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-700">
+            Dealer Reviews <span className="text-slate-400 font-semibold">({dealerReviews.length})</span>
+          </h2>
+        </div>
+
+        {dealerReviews.length === 0 ? (
+          <div className="bg-white border border-[#ddd4c8] rounded-2xl p-8 text-center">
+            <p className="text-sm text-slate-500 font-semibold">No dealer reviews yet.</p>
+          </div>
+        ) : (
+          <div className="bg-white border border-[#ddd4c8] rounded-2xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse min-w-[700px]">
+                <thead>
+                  <tr className="border-b border-slate-100 bg-slate-50/60">
+                    {["Reviewer", "Dealer", "Rating", "Comment", "Date", ""].map((h) => (
+                      <th key={h} className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {dealerReviews.map((r) => (
+                    <tr key={r.id} className="group hover:bg-slate-50/50 transition-colors">
+                      <td className="px-6 py-4">
+                        <p className="text-sm font-bold text-slate-900 dark:text-white">{r.user.name}</p>
+                        <p className="text-[11px] text-slate-500">{r.user.email}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm font-semibold text-slate-700 capitalize">{r.dealer.name}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <StarDisplay rating={r.rating} />
+                        <p className="text-[10px] font-bold text-slate-400 mt-0.5">{r.rating}/5</p>
+                      </td>
+                      <td className="px-6 py-4 max-w-[280px]">
+                        <p className="text-sm text-slate-600 line-clamp-2">{r.comment || <span className="text-slate-300 italic">No comment</span>}</p>
+                      </td>
+                      <td className="px-6 py-4 text-[11px] text-slate-500 font-semibold whitespace-nowrap">
+                        {formatDate(r.createdAt)}
+                      </td>
+                      <td className="px-6 py-4">
+                        <DeleteButton
+                          action={`/api/admin/reviews/dealer/${r.id}/delete`}
+                          message="Permanently delete this dealer review?"
+                          label="Delete"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* Car Reviews */}
+      <section>
+        <div className="flex items-center gap-3 mb-6">
+          <Car size={16} className="text-[#ff5a2f]" />
+          <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-700">
+            Car Reviews <span className="text-slate-400 font-semibold">({carReviews.length})</span>
+          </h2>
+        </div>
+
+        {carReviews.length === 0 ? (
+          <div className="bg-white border border-[#ddd4c8] rounded-2xl p-8 text-center">
+            <p className="text-sm text-slate-500 font-semibold">No car reviews yet.</p>
+          </div>
+        ) : (
+          <div className="bg-white border border-[#ddd4c8] rounded-2xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse min-w-[700px]">
+                <thead>
+                  <tr className="border-b border-slate-100 bg-slate-50/60">
+                    {["Reviewer", "Vehicle", "Rating", "Comment", "Date", ""].map((h) => (
+                      <th key={h} className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {carReviews.map((r) => (
+                    <tr key={r.id} className="group hover:bg-slate-50/50 transition-colors">
+                      <td className="px-6 py-4">
+                        <p className="text-sm font-bold text-slate-900 dark:text-white">{r.user.name}</p>
+                        <p className="text-[11px] text-slate-500">{r.user.email}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm font-semibold text-slate-700">{r.car.year} {r.car.make} {r.car.model}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <StarDisplay rating={r.rating} />
+                        <p className="text-[10px] font-bold text-slate-400 mt-0.5">{r.rating}/5</p>
+                      </td>
+                      <td className="px-6 py-4 max-w-[280px]">
+                        <p className="text-sm text-slate-600 line-clamp-2">{r.comment || <span className="text-slate-300 italic">No comment</span>}</p>
+                      </td>
+                      <td className="px-6 py-4 text-[11px] text-slate-500 font-semibold whitespace-nowrap">
+                        {formatDate(r.createdAt)}
+                      </td>
+                      <td className="px-6 py-4">
+                        <DeleteButton
+                          action={`/api/admin/reviews/car/${r.id}/delete`}
+                          message="Permanently delete this car review?"
+                          label="Delete"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}

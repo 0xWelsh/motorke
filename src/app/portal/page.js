@@ -46,14 +46,14 @@ export default async function PortalPage({ searchParams }) {
   return (
     <div className="animate-in fade-in duration-700">
       {user.dealer && !user.dealer.verified && (
-        <div className="mb-8 sm:mb-10 p-4 sm:p-6 bg-amber-50 border border-amber-200 rounded-2xl sm:rounded-2xl flex items-start gap-3 sm:gap-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl sm:rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
+        <div className="mb-8 sm:mb-10 p-4 sm:p-6 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3 sm:gap-4">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
               <ShieldCheck size={18} className="sm:block hidden" />
               <ShieldCheck size={16} className="sm:hidden" />
             </div>
             <div>
-              <h3 className="text-[11px] uppercase font-black tracking-[0.15em] sm:text-[11px] uppercase font-black tracking-[0.10em] font-bold text-amber-800 tracking-tight mb-1">Account Under Review</h3>
-              <p className="text-[11px] uppercase font-black tracking-[0.15em] font-medium text-amber-700/80 leading-tight">Dealer pending verification. Inventory visible after approval.</p>
+              <h3 className="text-[11px] uppercase font-black tracking-[0.10em] text-amber-800 mb-1">Account Under Review</h3>
+              <p className="text-[11px] uppercase font-black tracking-[0.10em] text-amber-700/80 leading-tight">Dealer pending verification. Inventory visible after approval.</p>
             </div>
         </div>
       )}
@@ -61,7 +61,7 @@ export default async function PortalPage({ searchParams }) {
       <div className="flex flex-col gap-6 sm:gap-8 mb-8 sm:mb-12">
         <div>
           <span className="text-[11px] sm:text-[11px] font-bold uppercase tracking-wider text-[#ff5a2f] mb-1 sm:mb-2 block">Dealer Dashboard</span>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight\">Overview</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">Overview</h1>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
           <Link href="/portal/cars/bulk"
@@ -96,7 +96,7 @@ export default async function PortalPage({ searchParams }) {
         {[
           { label: "Live Inventory", value: live,   icon: <CheckCircle2 className="text-[#ff5a2f]" />, sub: "Publicly visible units" },
           { label: "Drafts / Hidden",   value: hidden, icon: <EyeOff className="text-slate-700 dark:text-slate-700" />, sub: "Private units" },
-          { label: "Buyer Leads", value: leads,  icon: <MessageSquare className="text-[#ff5a2f]" />, sub: "New enquiries today" },
+          { label: "Buyer Leads", value: leads,  icon: <MessageSquare className="text-[#ff5a2f]" />, sub: "Total enquiries" },
         ].map((stat, i) => (
           <div key={i} className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8 hover:border-[#ff5a2f] dark:hover:border-[#ff5a2f]/50 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-6">
