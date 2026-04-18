@@ -280,11 +280,11 @@ export default async function CarDetailPage({ params }) {
               {/* Vehicle Details */}
               <div className="border-t border-slate-200 dark:border-slate-800 pt-6">
                 <h2 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-white mb-6">Vehicle Details</h2>
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12">
                   {visibleSpecs.map((item) => (
-                    <div key={item.label}>
-                      <p className="text-[13px] text-slate-600 font-medium mb-1.5 tracking-wider">{item.label}</p>
-                      <p className="text-[15px] font-semibold text-slate-900 dark:text-white">{item.value}</p>
+                    <div key={item.label} className="py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
+                      <span className="text-[13px] text-slate-500 font-medium tracking-wide">{item.label}</span>
+                      <span className="text-[14px] font-medium text-slate-900 dark:text-white text-right">{item.value}</span>
                     </div>
                   ))}
                 </div>
