@@ -179,27 +179,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="bg-[#f7f6f3] from-[#f7f6f3] to-[#f7f6f3] border-b border-[#ddd4c8] dark:border-slate-800 py-12 sm:py-16 md:py-20">
-        <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
-            {[
-              { label: "Total Cars", value: "500+", icon: TrendingUp },
-              { label: "Verified Dealers", value: "50+", icon: ShieldCheck },
-              { label: "Happy Buyers", value: "10K+", icon: Users },
-              { label: "Avg Response", value: "< 2hrs", icon: Zap },
-            ].map(({ label, value, icon: Icon }) => (
-              <div key={label} className="text-center">
-                <div className="w-12 h-12 rounded-2xl bg-white dark:bg-[#111111] border border-[#e8e2d9] flex items-center justify-center mx-auto mb-3 shadow-sm">
-                  <Icon className="w-6 h-6 text-[#ff5a2f]" />
-                </div>
-                <p className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-1">{value}</p>
-                <p className="text-xs sm:text-sm font-semibold text-slate-600 uppercase tracking-wide">{label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Why Us Section */}
       <section className="container mx-auto px-4 sm:px-6 py-12 sm:py-20 max-w-7xl">

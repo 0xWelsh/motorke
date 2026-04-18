@@ -129,11 +129,11 @@ export default async function AdminReviewsPage() {
         </div>
 
         {carReviews.length === 0 ? (
-          <div className="bg-white border border-[#ddd4c8] rounded-2xl p-8 text-center">
+          <div className="bg-white border border-[#ddd4c8] rounded p-8 text-center">
             <p className="text-sm text-slate-500 font-semibold">No car reviews yet.</p>
           </div>
         ) : (
-          <div className="bg-white border border-[#ddd4c8] rounded-2xl overflow-hidden">
+          <div className="bg-white border border-[#ddd4c8] rounded overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[700px]">
                 <thead>

@@ -89,7 +89,7 @@ export default function DealerReviewForm({ dealerSlug, onReviewSubmitted }) {
 
         {/* Messages */}
         {error && <p className="text-sm text-red-600 font-semibold bg-red-50 p-3 rounded">{error}</p>}
-        {success && <p className="text-sm text-emerald-700 font-semibold bg-emerald-50 p-3 rounded-2xl border border-emerald-200">Thank you for your review!</p>}
+        {success && <p className="text-sm text-emerald-700 font-semibold bg-emerald-50 p-3 rounded border border-emerald-200">Thank you for your review!</p>}
 
         {/* Submit */}
         <button
