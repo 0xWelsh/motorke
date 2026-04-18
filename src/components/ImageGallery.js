@@ -217,7 +217,7 @@ export default function ImageGallery({ images, title }) {
 
       {lightbox && (
         <div
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           onClick={() => setLightbox(false)}
@@ -225,7 +225,7 @@ export default function ImageGallery({ images, title }) {
           <button
             type="button"
             aria-label="Close lightbox"
-            className="absolute top-4 right-4 sm:top-6 sm:right-6 w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-sm flex items-center justify-center text-2xl transition-colors z-50"
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-sm flex items-center justify-center text-2xl transition-colors z-[110]"
             onClick={() => setLightbox(false)}
           >
             ×
