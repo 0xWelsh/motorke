@@ -84,7 +84,7 @@ export default function AdminLayout({ children }) {
   };
 
   return (
-    <div className="flex bg-[#fbfcfe] dark:bg-[#111111] text-white selection:bg-[#ff5a2f]]/20 selection:text-white relative">
+    <div className="flex bg-[#fbfcfe] dark:bg-[#111111] text-white selection:bg-[#ff5a2f]/20 selection:text-white relative">
       
       {/* Mobile Backdrop */}
       {sidebarOpen && (
@@ -186,8 +186,8 @@ export default function AdminLayout({ children }) {
                  </button>
               </div>
 
-              <div className="flex items-center gap-3 bg-[#ff5a2f]]/10 border border-emerald-200 p-1.5 lg:pr-4 rounded-2xl group cursor-pointer hover:border-emerald-300 hover:bg-[#ff5a2f]]/20/40 transition-all">
-                <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-2xl bg-[#ff5a2f] text-white flex items-center justify-center font-black text-[11px] lg:text-xs group-hover:bg-#e54a1f transition-all duration-300">
+              <div className="flex items-center gap-3 bg-[#ff5a2f]/10 border border-emerald-200 p-1.5 lg:pr-4 rounded-2xl group cursor-pointer hover:border-emerald-300 hover:bg-[#ff5a2f]/20 transition-all">
+                <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-2xl bg-[#ff5a2f] text-white flex items-center justify-center font-black text-[11px] lg:text-xs group-hover:bg-[#e54a1f] transition-all duration-300">
                   AD
                 </div>
                 <div className="hidden lg:flex flex-col">

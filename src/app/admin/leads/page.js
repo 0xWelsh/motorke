@@ -145,7 +145,7 @@ export default async function AdminLeadsPage({ searchParams }) {
                   </td>
                   <td className="px-6 py-4">
                      <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-2xl text-xs font-semibold ${
-                        lead.channel === 'whatsapp' ? 'bg-[#ff5a2f]]/10 dark:bg-[#ff5a2f]/10 text-[#ff5a2f] dark:text-emerald-400' : 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400'
+                        lead.channel === 'whatsapp' ? 'bg-[#ff5a2f]/10 dark:bg-[#ff5a2f]/10 text-[#ff5a2f] dark:text-emerald-400' : 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400'
                      }`}>
                         {lead.channel === 'whatsapp' ? <Smartphone size={14} /> : <Globe size={14} />}
                         <span className="capitalize">{lead.channel}</span>

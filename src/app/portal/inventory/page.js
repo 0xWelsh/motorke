@@ -73,14 +73,14 @@ export default async function InventoryPage({ searchParams }) {
           { key: "sold", label: "Sold/Drafts",    count: soldCount },
         ].map(({ key, label, count }) => (
           <Link key={key} href={`/portal/inventory?filter=${key}`}
-            className={`px-2 sm:px-4 py-2 rounded-2xl text-[11px] uppercase font-black tracking-[0.15em] sm:text-[11px] uppercase font-black tracking-[0.10em] font-semibold transition-all flex items-center gap-1 sm:gap-2 flex-shrink-0 ${
+            className={`px-2 sm:px-4 py-2 rounded-2xl text-[11px] uppercase font-black tracking-[0.10em] transition-all flex items-center gap-1 sm:gap-2 flex-shrink-0 ${
               filter === key 
-                ? "bg-[#111111] text-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]" 
-                : "text-white hover:text-white hover:bg-[#fbfcfe] dark:bg-[#111111]"
+                ? "bg-[#111111] text-white" 
+                : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10"
             }`}>
             {label} 
-            <span className={`px-1.5 py-0.5 rounded text-[11px] sm:text-[11px] uppercase font-black tracking-[0.15em] font-medium ${
-              filter === key ? "bg-white/20" : "bg-[#fbfcfe] dark:bg-[#111111] text-slate-700"
+            <span className={`px-1.5 py-0.5 rounded text-[11px] font-bold ${
+              filter === key ? "bg-white/20 text-white" : "bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400"
             }`}>
               {count}
             </span>

@@ -135,7 +135,7 @@ export default async function AdminDashboard({ searchParams }) {
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400 relative z-10 mb-1">{m.label}</p>
             <p className="text-[11px] uppercase font-bold text-slate-400 tracking-wider relative z-10 bg-[#f7f6f3] inline-flex px-2 py-0.5 rounded-2xl mt-2">{m.sub}</p>
             
-            {m.color && <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#ff5a2f]]/10 rounded-2xl blur-2xl opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none" />}
+            {m.color && <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#ff5a2f]/10 rounded-2xl blur-2xl opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none" />}
           </div>
         ))}
       </div>
@@ -183,19 +183,19 @@ export default async function AdminDashboard({ searchParams }) {
             </div>
 
             {/* Billing Health Panel */}
-            <div className="bg-[#ff5a2f]]/10 border border-[#ff5a2f]]/20 p-6 rounded-2xl shadow-none">
+            <div className="bg-[#ff5a2f]/10 border border-[#ff5a2f]/20 p-6 rounded-2xl shadow-none">
                <div className="flex items-center gap-2 mb-6 text-[#ff5a2f]">
                   <Activity size={16} strokeWidth={3} />
-                  <span className="text-xs font-black uppercase tracking-widest text-#e54a1f">Billing Health</span>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#e54a1f]">Billing Health</span>
                </div>
-               <div className="bg-white rounded-2xl p-6 border border-[#ff5a2f]]/20 flex flex-col items-center text-center justify-center">
+               <div className="bg-white rounded-2xl p-6 border border-[#ff5a2f]/20 flex flex-col items-center text-center justify-center">
                   <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Estimated MRR</p>
                   <p className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter mb-6">{formatCompact(mrr)}</p>
                   
                   <div className="w-full flex items-center gap-2 pt-5 border-t border-slate-100/60">
-                    <div className="flex-1 bg-[#ff5a2f]]/10 border border-[#ff5a2f]]/20/50 py-3 rounded-2xl flex flex-col items-center justify-center">
+                    <div className="flex-1 bg-[#ff5a2f]/10 border border-[#ff5a2f]/20 py-3 rounded-2xl flex flex-col items-center justify-center">
                        <span className="text-[11px] font-black uppercase tracking-widest text-[#ff5a2f] mb-1">Premium</span>
-                       <span className="text-xl font-black text-#e54a1f">{premiumSubs}</span>
+                       <span className="text-xl font-black text-[#e54a1f]">{premiumSubs}</span>
                     </div>
                     <div className="flex-1 bg-[#f7f6f3] border border-slate-100 py-3 rounded-2xl flex flex-col items-center justify-center">
                        <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1">Free</span>

@@ -30,7 +30,7 @@ export default async function AdminSettingsPage({ searchParams }) {
       </div>
 
       {isSaved && (
-        <div className="bg-[#ff5a2f]]/10 text-#e54a1f p-4 rounded-2xl mb-8 font-semibold flex items-center gap-2 text-sm border border-[#ff5a2f]]/20">
+        <div className="bg-[#ff5a2f]/10 text-[#e54a1f] p-4 rounded-2xl mb-8 font-semibold flex items-center gap-2 text-sm border border-[#ff5a2f]/20">
            <Save size={16} /> Update applied successfully
         </div>
       )}

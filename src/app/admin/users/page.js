@@ -30,7 +30,7 @@ export default async function AdminUsersPage(props) {
 
   const roleStyles = {
     ADMIN:  "bg-slate-900 text-white border-slate-900",
-    DEALER: "bg-[#ff5a2f]]/10 text-[#ff5a2f] border-[#ff5a2f]]/20",
+    DEALER: "bg-[#ff5a2f]/10 text-[#ff5a2f] border-[#ff5a2f]/20",
     BUYER:  "bg-[#f7f6f3] text-slate-600 border-[#ddd4c8] dark:border-slate-800",
   };
 
@@ -54,7 +54,7 @@ export default async function AdminUsersPage(props) {
       </div>
 
       {deleted && (
-        <div className="bg-[#ff5a2f]]/10 border border-[#ff5a2f]]/20 text-[#ff5a2f] text-sm rounded-2xl px-4 py-3 mb-8">
+        <div className="bg-[#ff5a2f]/10 border border-[#ff5a2f]/20 text-[#ff5a2f] text-sm rounded-2xl px-4 py-3 mb-8">
           ✓ Profile deleted successfully
         </div>
       )}
@@ -114,7 +114,7 @@ export default async function AdminUsersPage(props) {
                     </Link>
                     
                     <form action={`/api/admin/users/${user.id}/toggle`} method="POST">
-                      <button type="submit" className={`p-2 transition-colors ${user.active ? "text-slate-400 hover:text-slate-900 dark:text-white" : "text-[#ff5a2f] hover:text-#e54a1f"}`} title={user.active ? "Lock Account" : "Unlock Account"}>
+                      <button type="submit" className={`p-2 transition-colors ${user.active ? "text-slate-400 hover:text-slate-900 dark:text-white" : "text-[#ff5a2f] hover:text-[#e54a1f]"}`} title={user.active ? "Lock Account" : "Unlock Account"}>
                         {user.active ? <Ban size={18} /> : <CheckCircle2 size={18} />}
                       </button>
                     </form>

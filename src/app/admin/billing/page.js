@@ -44,7 +44,7 @@ export default async function AdminBillingPage() {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-700 max-w-6xl mx-auto py-10">
       <div className="text-center mb-16">
-         <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-[#ff5a2f]]/10 border border-[#ff5a2f]]/20 rounded-2xl text-[11px] font-black uppercase tracking-widest text-[#ff5a2f]">
+         <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-[#ff5a2f]/10 border border-[#ff5a2f]/20 rounded-2xl text-[11px] font-black uppercase tracking-widest text-[#ff5a2f]">
             <ShieldCheck size={14} /> Subscription Management
          </div>
         <h1 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-4">Choose a Plan.</h1>
@@ -56,7 +56,7 @@ export default async function AdminBillingPage() {
            <div key={i} className={`bg-white rounded-[2.5rem] p-10 border-2 transition-all duration-500 relative overflow-hidden ${i === 1 ? 'border-[#ff5a2f] scale-[1.02]' : 'border-slate-100 shadow-none'}`}>
               
               {i === 1 && (
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#ff5a2f]]/10 rounded-2xl blur-3xl pointer-events-none" />
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#ff5a2f]/10 rounded-2xl blur-3xl pointer-events-none" />
               )}
               
               <div className="flex items-center justify-between mb-8 relative z-10">
@@ -76,7 +76,7 @@ export default async function AdminBillingPage() {
               <ul className="space-y-4 mb-10 relative z-10">
                 {t.features.map((f, idx) => (
                   <li key={idx} className="flex items-start gap-4">
-                     <div className="w-5 h-5 rounded-2xl bg-[#ff5a2f]]/10 text-[#ff5a2f] flex items-center justify-center shrink-0 mt-0.5">
+                     <div className="w-5 h-5 rounded-2xl bg-[#ff5a2f]/10 text-[#ff5a2f] flex items-center justify-center shrink-0 mt-0.5">
                        <Check size={12} strokeWidth={3} />
                      </div>
                      <span className="text-sm font-semibold text-slate-700">{f}</span>

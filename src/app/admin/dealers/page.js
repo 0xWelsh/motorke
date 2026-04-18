@@ -53,7 +53,7 @@ export default async function AdminDealersPage() {
             Dealers <span className="text-slate-500 font-medium ml-3">/ {dealers.length} Total</span>
           </h1>
         </div>
-        <Link href="/admin/dealers/new" className="bg-[#ff5a2f] text-white px-6 py-3 rounded-2xl text-sm font-bold flex items-center gap-2 hover:bg-#e54a1f transition-all shadow-none">
+        <Link href="/admin/dealers/new" className="bg-[#ff5a2f] text-white px-6 py-3 rounded-2xl text-sm font-bold flex items-center gap-2 hover:bg-[#e54a1f] transition-all shadow-none">
           <UserPlus size={18} /> Add Dealer
         </Link>
       </div>
@@ -80,7 +80,7 @@ export default async function AdminDealersPage() {
                   </div>
                   <form action="/api/auth/impersonate" method="POST">
                     <input type="hidden" name="dealerId" value={dealer.id} />
-                    <button type="submit" title="Login as Dealer" className="text-slate-600 hover:text-#e54a1f transition-colors p-2 bg-[#f7f6f3] rounded-2xl border border-[#ddd4c8] dark:border-slate-800 font-bold text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                    <button type="submit" title="Login as Dealer" className="text-slate-600 hover:text-[#e54a1f] transition-colors p-2 bg-[#f7f6f3] rounded-2xl border border-[#ddd4c8] dark:border-slate-800 font-bold text-[11px] uppercase tracking-wider flex items-center gap-1.5">
                        <LogIn size={14} /> <span>Login</span>
                     </button>
                   </form>
@@ -107,7 +107,7 @@ export default async function AdminDealersPage() {
                <div className="flex items-center justify-between pt-6 border-t border-slate-100 relative z-10">
                  <div className="flex items-center gap-2">
                     {dealer.verified ? (
-                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-2xl bg-[#ff5a2f]]/10 border border-[#ff5a2f]]/20 text-[#ff5a2f] text-xs font-bold shadow-none">
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-2xl bg-[#ff5a2f]/10 border border-[#ff5a2f]/20 text-[#ff5a2f] text-xs font-bold shadow-none">
                         <ShieldCheck size={14} /> Verified
                       </div>
                     ) : (

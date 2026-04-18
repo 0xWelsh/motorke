@@ -98,16 +98,16 @@ export default async function PortalPage({ searchParams }) {
           { label: "Drafts / Hidden",   value: hidden, icon: <EyeOff className="text-slate-700 dark:text-slate-700" />, sub: "Private units" },
           { label: "Buyer Leads", value: leads,  icon: <MessageSquare className="text-[#ff5a2f]" />, sub: "New enquiries today" },
         ].map((stat, i) => (
-          <div key={i} className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)] hover:border-[#ff5a2f] dark:hover:border-[#ff5a2f]/50 transition-all duration-300 group">
+          <div key={i} className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8 hover:border-[#ff5a2f] dark:hover:border-[#ff5a2f]/50 transition-all duration-300 group">
             <div className="flex items-center justify-between mb-6">
-              <div className="w-12 h-12 bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-[#ddd4c8] dark:border-slate-800 rounded-2xl flex items-center justify-center group-hover:bg-emerald-50 dark:group-hover:bg-[#ff5a2f]/10 transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+              <div className="w-12 h-12 bg-[#fbfcfe] dark:bg-[#1a1a1a] border border-[#ddd4c8] dark:border-slate-700 rounded-2xl flex items-center justify-center group-hover:bg-orange-50 dark:group-hover:bg-[#ff5a2f]/10 transition-all">
                 {stat.icon}
               </div>
-              <ArrowUpRight className="text-slate-300 dark:text-slate-700 group-hover:text-[#ff5a2f] transition-colors" size={20} />
+              <ArrowUpRight className="text-slate-300 dark:text-slate-600 group-hover:text-[#ff5a2f] transition-colors" size={20} />
             </div>
-            <p className="text-4xl font-black text-slate-900 dark:text-white dark:text-slate-900 dark:text-white mb-2 tracking-tighter">{stat.value.toString().padStart(2, '0')}</p>
-            <p className="text-[11px] uppercase font-black tracking-[0.15em] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-700 mb-1">{stat.label}</p>
-            <p className="text-[11px] font-semibold text-slate-700 dark:text-slate-700">{stat.sub}</p>
+            <p className="text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter">{stat.value.toString().padStart(2, '0')}</p>
+            <p className="text-[11px] uppercase font-black tracking-[0.15em] text-slate-600 dark:text-slate-400 mb-1">{stat.label}</p>
+            <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-500">{stat.sub}</p>
           </div>
         ))}
       </div>
