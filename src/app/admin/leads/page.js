@@ -167,7 +167,7 @@ export default async function AdminLeadsPage({ searchParams }) {
                         href={`https://wa.me/${lead.phone.replace(/\D/g, '').replace(/^0/, '254')}?text=${encodeURIComponent(`Hello ${lead.name.split(' ')[0]}, I'm reaching out from ${lead.dealer.name} regarding your inquiry on the ${lead.car.year} ${lead.car.make} ${lead.car.model}.`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-800 text-[#ff5a2f] dark:text-emerald-400 hover:bg-[#ff5a2f] hover:text-white dark:hover:bg-[#ff5a2f] dark:hover:text-white rounded-2xl text-xs font-bold transition-all border border-[#ddd4c8] dark:border-slate-700 opacity-0 group-hover:opacity-100"
+                        className="inline-flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-800 text-[#ff5a2f] dark:text-emerald-400 hover:bg-[#ff5a2f] hover:text-white dark:hover:bg-[#ff5a2f] dark:hover:text-white rounded-2xl text-xs font-bold transition-all border border-[#ddd4c8] dark:border-slate-700 sm:opacity-0 sm:group-hover:opacity-100"
                       >
                         <Smartphone size={14} /> Message
                       </a>

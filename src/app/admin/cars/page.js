@@ -161,7 +161,7 @@ export default async function AdminCarsPage({ searchParams }) {
                      <p className="text-sm font-bold text-slate-900 dark:text-white dark:text-white">{formatCarPrice(car)}</p>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <div className="flex items-center justify-end gap-2 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300">
                       <Link href={`/admin/cars/${car.id}/edit`} className="p-2 bg-white dark:bg-slate-800 border border-[#ddd4c8] dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-[#ff5a2f] hover:border-[#ff5a2f] dark:hover:text-emerald-400 rounded-2xl transition-all shadow-none" title="Edit Car">
                         <Edit3 size={16} />
                       </Link>

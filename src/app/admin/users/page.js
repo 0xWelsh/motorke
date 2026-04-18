@@ -108,7 +108,7 @@ export default async function AdminUsersPage(props) {
                    {new Date(user.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" })}
                 </td>
                 <td className="px-8 py-6 text-right">
-                  <div className="flex items-center justify-end gap-3 transition-all duration-300 opacity-0 group-hover:opacity-100">
+                  <div className="flex items-center justify-end gap-3 transition-all duration-300 sm:opacity-0 sm:group-hover:opacity-100">
                     <Link href={`/admin/users/${user.id}/edit`} className="flex items-center gap-2 px-4 py-2 bg-white hover:border-emerald-200 hover:text-[#ff5a2f] text-slate-700 font-black text-[11px] uppercase tracking-widest rounded-2xl transition-all border border-[#ddd4c8] dark:border-slate-800 shadow-none" title="Manage Profile">
                       <Edit3 size={14} /> Manage
                     </Link>

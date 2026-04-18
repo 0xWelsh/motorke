@@ -99,7 +99,7 @@ export default async function AdminApprovalsPage() {
                      </div>
                   </td>
                   <td className="px-10 py-7 text-right">
-                    <div className="flex items-center justify-end gap-3 opacity-0 lg:group-hover:opacity-100 transition-all duration-300">
+                    <div className="flex items-center justify-end gap-3 sm:opacity-0 lg:group-hover:opacity-100 transition-all duration-300">
                       <Link href={`/admin/dealers/${dealer.id}/edit`} className="h-11 px-6 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-700 hover:text-slate-900 dark:text-white hover:border-slate-300 font-bold text-[11px] uppercase tracking-widest rounded-2xl transition-all flex items-center gap-2 shadow-none" title="Audit Profile">
                         <Edit3 size={14} /> Inspect
                       </Link>

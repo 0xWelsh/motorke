@@ -181,7 +181,7 @@ export default async function PortalPage({ searchParams }) {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center justify-end gap-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                         <Link href={`/portal/cars/${car.id}/edit`}
                           className="p-2 bg-white dark:bg-[#111111] text-white dark:text-white hover:text-[#ff5a2f] dark:hover:text-emerald-400 rounded-2xl border border-[#ddd4c8] dark:border-[#ddd4c8] dark:border-slate-800 hover:border-[#ff5a2f] dark:hover:border-[#ff5a2f]/50 transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
                           <Edit3 size={16} />

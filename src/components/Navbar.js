@@ -233,13 +233,14 @@ export default function Navbar({ user }) {
               </button>
             </div>
 
-            <form onSubmit={(e) => { handleSearch(e); setOpen(false); }} className="mb-6">
+            {/* Mobile Search — top of drawer */}
+            <form onSubmit={(e) => { handleSearch(e); setOpen(false); }} className="mb-5">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  placeholder="Search cars"
+                  placeholder="Search cars, e.g. Prado…"
                   className="w-full bg-white dark:bg-[#111111] border border-[#e7e1d8] rounded-2xl py-3.5 pl-12 pr-4 text-sm font-semibold outline-none"
                 />
               </div>
