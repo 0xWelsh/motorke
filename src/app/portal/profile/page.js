@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import AvatarUpload from "@/components/AvatarUpload";
 import DealerLogoUpload from "@/components/DealerLogoUpload";
 import DealerBannerUpload from "@/components/DealerBannerUpload";
+import LocationPicker from "@/components/LocationPicker";
 import { User, Mail, Shield, Calendar, Plus, Building2, MapPin, Globe, Phone } from "lucide-react";
 
 export const metadata = { title: "Profile Settings — Motorke Dealer Portal" };
@@ -221,7 +222,11 @@ export default async function PortalProfilePage({ searchParams }) {
                   />
                 </div>
 
-                <div className="pt-2">
+                <div className="pt-4 border-t border-[#ddd4c8] dark:border-slate-800">
+                  <LocationPicker defaultLat={user.dealer.lat} defaultLng={user.dealer.lng} />
+                </div>
+
+                <div className="pt-4">
                   <button type="submit" className="bg-[#111111] hover:bg-[#111111] text-white rounded-2xl px-6 py-2.5 font-semibold text-[11px] uppercase font-black tracking-[0.10em] transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] uppercase">
                     Save Profile
                   </button>

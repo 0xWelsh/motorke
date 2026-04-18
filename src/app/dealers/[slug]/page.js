@@ -6,6 +6,7 @@ import { MapPin, Phone, Mail, Globe, ShieldCheck, MessageCircle } from "lucide-r
 import { getSession } from "@/lib/auth";
 import DealerReviews from "@/components/DealerReviews";
 import DealerInventory from "@/components/DealerInventory";
+import DealerLocationMap from "@/components/DealerLocationMap";
 
 // Force dynamic and no-cache
 export const dynamic = "force-dynamic";
@@ -295,34 +296,9 @@ export default async function DealerPage(props) {
           </div>
 
           <aside className="space-y-6 sm:space-y-8">
-            {/* 4. INTERACTIVE LOCATION & BRANCH MAPS BOX */}
-            <div className="rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-white p-6 sm:p-8 shadow-sm">
-              <h2 className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-6">Showroom Locations</h2>
-              <div className="space-y-6">
-                <div className="flex gap-4">
-                  <div className="w-10 h-10 shrink-0 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-black text-slate-900 dark:text-white mb-1">Headquarters</h3>
-                    <p className="text-xs font-bold text-slate-600 uppercase tracking-widest leading-relaxed mb-1">{dealer.address || dealer.location}</p>
-                    {dealer.county && <p className="text-[11px] font-black text-slate-400 tracking-wide">{dealer.county} County</p>}
-                  </div>
-                </div>
+            {/* Embedded Location Map */}
+            <DealerLocationMap dealer={dealer} />
 
-                {dealer.branches && dealer.branches.map((branch, i) => (
-                  <div key={branch.id} className="flex gap-4 pt-6 border-t border-slate-100">
-                    <div className="w-10 h-10 shrink-0 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-100 flex items-center justify-center text-slate-400">
-                      <MapPin className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-black text-slate-900 dark:text-white mb-1">{branch.name}</h3>
-                      <p className="text-xs font-bold text-slate-600 uppercase tracking-widest leading-relaxed">{branch.location}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
 
             <div className="rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-6 sm:p-8 text-center pb-8 sm:pb-8 hidden lg:block">
               <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto shadow-sm border border-slate-200 dark:border-slate-800 mb-4">

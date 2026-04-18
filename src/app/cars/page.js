@@ -7,6 +7,7 @@ import Image from "next/image";
 import CarsSearch from "@/components/CarsSearch";
 import { unstable_cache } from "next/cache";
 import { CompareButton } from "@/components/CompareSelector";
+import SearchMapToggle from "@/components/SearchMapToggle";
 
 
 export const metadata = { title: "Inventory — Motorke Standard" };
@@ -191,6 +192,13 @@ export default async function CarsPage({ searchParams }) {
               </div>
             </div>
           </aside>
+
+          {/* Map toggle — client island, shown above the car grid */}
+          {sortedCars.length > 0 && (
+            <div className="block float-left w-full xl:w-3/4 px-2 sm:px-3 mb-3">
+              <SearchMapToggle cars={sortedCars} />
+            </div>
+          )}
 
           {/* Floating Cars */}
           {sortedCars.length === 0 ? (
