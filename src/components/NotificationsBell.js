@@ -35,7 +35,7 @@ export default function NotificationsBell({ variant = "portal" }) {
         "absolute right-0 top-full mt-3 w-[360px] max-w-[90vw] rounded-full border shadow-2xl z-50 overflow-hidden",
         isAdmin || isNavbar
           ? "bg-white border-[#ddd4c8] dark:border-slate-800 text-slate-900 dark:text-white"
-          : "bg-white dark:bg-slate-900 border-[#ddd4c8] dark:border-[#ddd4c8] dark:border-slate-800 text-slate-900 dark:text-white dark:text-slate-900 dark:text-white"
+          : "bg-white dark:bg-slate-900 border-[#ddd4c8] dark:border-slate-800 text-slate-900 dark:text-white"
       ),
     [isAdmin, isNavbar]
   );
@@ -138,7 +138,7 @@ export default function NotificationsBell({ variant = "portal" }) {
             ? "text-slate-600 hover:text-[#ff5a2f]"
             : isNavbar
               ? "w-10 h-10 rounded-full bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-600 hover:text-[#ff5a2f] hover:border-slate-300 flex items-center justify-center"
-            : "w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 border border-[#ddd4c8] dark:border-[#ddd4c8] dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-[#ff5a2f] dark:hover:text-emerald-400 flex items-center justify-center"
+            : "w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 border border-[#ddd4c8] dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-[#ff5a2f] flex items-center justify-center"
         )}
         title="Notifications"
         aria-label="Notifications"

@@ -178,10 +178,10 @@ export default function SignupForm({ error: initialError }) {
               type="button" 
               onClick={() => setRole("BUYER")}
               className={clsx(
-                "flex-1 py-2 px-3 rounded-2xl-md font-semibold text-sm transition-all",
+                "flex-1 py-2 px-3 rounded-xl font-semibold text-sm transition-all",
                 role === "BUYER" 
-                  ? "bg-white text-slate-900 dark:text-white shadow-sm" 
-                  : "text-slate-600 hover:text-slate-900 dark:text-white"
+                  ? "bg-white dark:bg-[#222] text-slate-900 dark:text-white shadow-sm" 
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               )}
             >
               Personal
@@ -190,10 +190,10 @@ export default function SignupForm({ error: initialError }) {
               type="button" 
               onClick={() => setRole("DEALER")}
               className={clsx(
-                "flex-1 py-2 px-3 rounded-2xl-md font-semibold text-sm transition-all",
+                "flex-1 py-2 px-3 rounded-xl font-semibold text-sm transition-all",
                 role === "DEALER" 
-                  ? "bg-[#111111] text-white shadow-sm" 
-                  : "text-slate-600 hover:text-slate-900 dark:text-white"
+                  ? "bg-slate-900 dark:bg-[#222] text-white shadow-sm" 
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               )}
             >
               Dealership

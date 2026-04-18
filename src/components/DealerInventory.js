@@ -54,8 +54,8 @@ export default function DealerInventory({ cars, dealerSlug }) {
                onClick={() => setActiveFilter(make)}
                className={`px-4 py-2.5 shrink-0 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all border shadow-sm ${
                  activeFilter === make
-                    ? "bg-slate-900 text-white border-slate-900"
-                    : "bg-white text-white border-[#ece6dd] hover:border-slate-400"
+                    ? "bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900"
+                    : "bg-white text-slate-600 dark:bg-[#111111] dark:text-slate-400 border-[#ece6dd] dark:border-slate-800 hover:border-slate-400"
                }`}
              >
                {make === "ALL" ? "All Cars" : make}
