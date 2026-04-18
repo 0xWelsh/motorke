@@ -231,7 +231,7 @@ export default function ImageGallery({ images, title }) {
             ×
           </button>
 
-          <span className="absolute top-4 left-1/2 -translate-x-1/2 text-sm text-slate-900 dark:text-white/50">
+          <span className="absolute top-4 left-1/2 -translate-x-1/2 text-sm font-bold text-white/70 tracking-widest">
             {active + 1} / {images.length}
           </span>
 
@@ -254,7 +254,7 @@ export default function ImageGallery({ images, title }) {
                   e.stopPropagation();
                   prev();
                 }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white hover:bg-white/20 text-slate-900 dark:text-white text-2xl rounded-2xl flex items-center justify-center transition-colors"
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/15 hover:bg-white/25 text-white text-2xl rounded flex items-center justify-center transition-colors"
               >
                 ‹
               </button>
@@ -265,7 +265,7 @@ export default function ImageGallery({ images, title }) {
                   e.stopPropagation();
                   next();
                 }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white hover:bg-white/20 text-slate-900 dark:text-white text-2xl rounded-2xl flex items-center justify-center transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/15 hover:bg-white/25 text-white text-2xl rounded flex items-center justify-center transition-colors"
               >
                 ›
               </button>

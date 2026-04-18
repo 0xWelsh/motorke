@@ -782,10 +782,10 @@ export default function CompareClient({ initialCars }) {
               id={option.id === "all" ? "tour-presets" : undefined}
               key={option.id}
               onClick={() => setPreset(option.id)}
-              className={`px-3 sm:px-4 h-9 sm:h-10 rounded-2xl text-[11px] font-black uppercase tracking-[0.14em] transition-all border ${
+              className={`px-3 sm:px-4 h-9 sm:h-10 text-[11px] font-black uppercase tracking-[0.14em] transition-all border ${
                 preset === option.id
                   ? "bg-[#111111] text-white border-[#111111]"
-                  : "bg-white text-white border-[#ddd4c8] dark:border-slate-800 hover:text-white hover:border-[#111111]/35"
+                  : "bg-white text-slate-700 border-[#ddd4c8] hover:border-[#111111]/40 hover:text-slate-900"
               }`}
             >
               {option.label}
@@ -824,6 +824,93 @@ export default function CompareClient({ initialCars }) {
           <div className="border border-[#ddd4c8] dark:border-slate-800 bg-white rounded-2xl px-4 py-3">
             <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Import Eligible</p>
             <p className="text-lg font-black text-slate-900 dark:text-white mt-1">{kenyaLensSummary.eligibleCount}/{fullComparedCars.length} cars</p>
+          </div>
+        </div>
+      )}
+
+      {/* Radar Chart */}
+      {fullComparedCars.length >= 2 && (
+        <div className="mb-8 bg-white border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-6">
+          <p className="text-[11px] font-black uppercase tracking-[0.22em] text-slate-500 mb-6">Dimension Analysis</p>
+          <div className="flex flex-wrap justify-center gap-10">
+            {(() => {
+              const DIMS = ["Performance", "Comfort", "Economy", "Value"];
+              const getDimScore = (car) => [
+                Math.round((scoreMaps.performanceMap.get(car.id) || 0) * 100),
+                Math.round((scoreMaps.comfortMap.get(car.id) || 0) * 100),
+                Math.round((scoreMaps.economyMap.get(car.id) || 0) * 100),
+                Math.round((scoreMaps.valueMap.get(car.id) || 0) * 100),
+              ];
+              const COLORS = ["#111111", "#ff5a2f", "#6366f1"];
+              const N = DIMS.length;
+              const R = 80; // radius
+              const CX = 110, CY = 110;
+              const toXY = (i, val) => {
+                const angle = (Math.PI * 2 * i) / N - Math.PI / 2;
+                const r = (val / 100) * R;
+                return [CX + r * Math.cos(angle), CY + r * Math.sin(angle)];
+              };
+              const axisPoints = DIMS.map((_, i) => toXY(i, 100));
+              const rings = [25, 50, 75, 100];
+
+              return (
+                <div className="flex flex-col items-center gap-4">
+                  <svg width={220} height={220} viewBox="0 0 220 220">
+                    {/* Grid rings */}
+                    {rings.map(r => (
+                      <polygon key={r}
+                        points={DIMS.map((_, i) => toXY(i, r).join(",")).join(" ")}
+                        fill="none" stroke="#e5e7eb" strokeWidth="1"
+                      />
+                    ))}
+                    {/* Axis spokes */}
+                    {axisPoints.map(([x, y], i) => (
+                      <line key={i} x1={CX} y1={CY} x2={x} y2={y} stroke="#e5e7eb" strokeWidth="1" />
+                    ))}
+                    {/* Axis labels */}
+                    {DIMS.map((dim, i) => {
+                      const [x, y] = toXY(i, 118);
+                      return (
+                        <text key={dim} x={x} y={y}
+                          textAnchor="middle" dominantBaseline="middle"
+                          className="fill-slate-500" style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", fill: "#64748b" }}
+                        >{dim}</text>
+                      );
+                    })}
+                    {/* Car polygons */}
+                    {fullComparedCars.map((car, ci) => {
+                      const scores = getDimScore(car);
+                      const pts = scores.map((s, i) => toXY(i, s).join(",")).join(" ");
+                      return (
+                        <polygon key={car.id} points={pts}
+                          fill={COLORS[ci % COLORS.length]}
+                          fillOpacity={0.12}
+                          stroke={COLORS[ci % COLORS.length]}
+                          strokeWidth={2}
+                          strokeLinejoin="round"
+                        />
+                      );
+                    })}
+                    {/* Dot markers */}
+                    {fullComparedCars.map((car, ci) =>
+                      getDimScore(car).map((s, i) => {
+                        const [x, y] = toXY(i, s);
+                        return <circle key={`${car.id}-${i}`} cx={x} cy={y} r={3} fill={COLORS[ci % COLORS.length]} />;
+                      })
+                    )}
+                  </svg>
+                  {/* Legend */}
+                  <div className="flex flex-wrap justify-center gap-4">
+                    {fullComparedCars.map((car, ci) => (
+                      <div key={car.id} className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-sm" style={{ background: COLORS[ci % COLORS.length] }} />
+                        <span className="text-[11px] font-black text-slate-700 uppercase tracking-wide">{car.year} {car.make} {car.model}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}
