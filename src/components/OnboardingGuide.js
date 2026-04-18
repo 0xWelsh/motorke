@@ -99,14 +99,14 @@ function OnboardingTooltip({ step, onClose, onNext, currentStep, totalSteps }) {
 
       {/* Tooltip */}
       <div
-        className="fixed z-50 bg-white rounded-none shadow-2xl p-6 w-80 border border-blue-200"
+        className="fixed z-50 bg-white rounded-2xl shadow-2xl p-6 w-80 border border-blue-200"
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
         }}
       >
         <div className="flex items-start justify-between mb-3">
-          <h3 className="font-bold text-slate-900 pr-4">{step.title}</h3>
+          <h3 className="font-bold text-slate-900 dark:text-white pr-4">{step.title}</h3>
           <button
             onClick={onClose}
             className="text-slate-400 hover:text-slate-600 flex-shrink-0"
@@ -119,7 +119,7 @@ function OnboardingTooltip({ step, onClose, onNext, currentStep, totalSteps }) {
 
         {/* Progress */}
         <div className="mb-4">
-          <div className="h-1 bg-slate-200 rounded-none overflow-hidden">
+          <div className="h-1 bg-slate-200 rounded-2xl overflow-hidden">
             <div
               className="h-full bg-[#ff5a2f] transition-all"
               style={{ width: `${(currentStep / totalSteps) * 100}%` }}
@@ -134,13 +134,13 @@ function OnboardingTooltip({ step, onClose, onNext, currentStep, totalSteps }) {
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-3 sm:py-2 border border-slate-300 text-slate-900 font-medium rounded-none hover:bg-[#fbfcfe] transition"
+            className="flex-1 px-4 py-3 sm:py-2 border border-slate-300 text-slate-900 dark:text-white font-medium rounded-2xl hover:bg-[#fbfcfe] dark:bg-[#111111] transition"
           >
             Skip
           </button>
           <button
             onClick={onNext}
-            className="flex-1 px-4 py-3 sm:py-2 bg-[#ff5a2f] text-slate-900 font-medium rounded-none hover:bg-blue-700 transition flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-3 sm:py-2 bg-[#ff5a2f] text-slate-900 dark:text-white font-medium rounded-2xl hover:bg-blue-700 transition flex items-center justify-center gap-2"
           >
             {currentStep === totalSteps ? "Done" : "Next"}
             <ChevronRight className="w-4 h-4" />

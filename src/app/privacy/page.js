@@ -150,13 +150,13 @@ export default function PrivacyPage() {
         {/* Header */}
         <div className="mb-12">
           <p className="text-sm font-bold text-slate-500 uppercase tracking-wide mb-2">We Take Privacy Seriously</p>
-          <h1 className="text-5xl font-bold text-slate-900 mb-3">Privacy Policy</h1>
+          <h1 className="text-5xl font-bold text-slate-900 dark:text-white mb-3">Privacy Policy</h1>
           <p className="text-slate-600">Last updated April 7, 2026 — Plain language about how your data is used, protected, and shared</p>
         </div>
 
         {/* Quick Summary */}
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 mb-12">
-          <h2 className="font-bold text-slate-900 mb-3">The Short Version</h2>
+        <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 mb-12">
+          <h2 className="font-bold text-slate-900 dark:text-white mb-3">The Short Version</h2>
           <ul className="space-y-2 text-sm text-slate-700">
             <li>✓ We collect only what's needed to run the platform</li>
             <li>✓ We never sell or rent your data to marketers or brokers</li>
@@ -168,11 +168,11 @@ export default function PrivacyPage() {
 
         {/* Data Categories */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">What We Collect</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">What We Collect</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {dataCategories.map((cat) => (
               <div key={cat.label} className={`border ${cat.color} rounded-lg p-5 space-y-3`}>
-                <h3 className="font-bold text-slate-900">{cat.label}</h3>
+                <h3 className="font-bold text-slate-900 dark:text-white">{cat.label}</h3>
                 <ul className="space-y-1 text-sm text-slate-700">
                   {cat.items.map((item) => (
                     <li key={item} className="flex items-center gap-2">
@@ -188,21 +188,21 @@ export default function PrivacyPage() {
 
         {/* Third-Party Services */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">Who We Share Data With</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Who We Share Data With</h2>
           <p className="text-slate-600 mb-4">These providers are contractually bound to protect your data and use it only for the stated purpose—not for their own marketing.</p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-slate-200">
-                  <th className="text-left py-3 px-4 font-bold text-slate-900">Service</th>
-                  <th className="text-left py-3 px-4 font-bold text-slate-900">Purpose</th>
-                  <th className="text-left py-3 px-4 font-bold text-slate-900">Data Shared</th>
+                  <th className="text-left py-3 px-4 font-bold text-slate-900 dark:text-white">Service</th>
+                  <th className="text-left py-3 px-4 font-bold text-slate-900 dark:text-white">Purpose</th>
+                  <th className="text-left py-3 px-4 font-bold text-slate-900 dark:text-white">Data Shared</th>
                 </tr>
               </thead>
               <tbody>
                 {thirdParties.map((party, idx) => (
                   <tr key={idx} className={idx % 2 === 0 ? "bg-slate-50" : ""}>
-                    <td className="py-3 px-4 text-slate-900 font-semibold">{party.name}</td>
+                    <td className="py-3 px-4 text-slate-900 dark:text-white font-semibold">{party.name}</td>
                     <td className="py-3 px-4 text-slate-600">{party.purpose}</td>
                     <td className="py-3 px-4 text-slate-600">{party.data}</td>
                   </tr>
@@ -216,7 +216,7 @@ export default function PrivacyPage() {
         <div className="space-y-10 mb-16">
           {sections.map((section) => (
             <section key={section.title} id={section.title.replace(/\s+/g, '-').toLowerCase()} className="scroll-mt-20">
-              <h2 className="text-2xl font-bold text-slate-900 mb-5">{section.title}</h2>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-5">{section.title}</h2>
               
               {section.content && (
                 <p className="text-slate-700 text-sm leading-relaxed mb-4">{section.content}</p>
@@ -225,8 +225,8 @@ export default function PrivacyPage() {
               {section.subsections && (
                 <div className="space-y-4">
                   {section.subsections.map((subsection, idx) => (
-                    <div key={idx} className="border-l-4 border-slate-200 pl-5">
-                      <h3 className="font-bold text-slate-900 text-base mb-2">{subsection.heading}</h3>
+                    <div key={idx} className="border-l-4 border-slate-200 dark:border-slate-800 pl-5">
+                      <h3 className="font-bold text-slate-900 dark:text-white text-base mb-2">{subsection.heading}</h3>
                       
                       {subsection.content && (
                         <p className="text-slate-700 text-sm leading-relaxed">{subsection.content}</p>
@@ -270,15 +270,15 @@ export default function PrivacyPage() {
         <div className="pt-12 border-t border-slate-200">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div>
-              <h3 className="font-bold text-slate-900 text-sm mb-2">Questions?</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-2">Questions?</h3>
               <p className="text-xs text-slate-600">privacy@motorke.com</p>
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-sm mb-2">General Support</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-2">General Support</h3>
               <p className="text-xs text-slate-600">support@motorke.com</p>
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-sm mb-2">Legal Requests</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-2">Legal Requests</h3>
               <p className="text-xs text-slate-600">legal@motorke.com</p>
             </div>
           </div>

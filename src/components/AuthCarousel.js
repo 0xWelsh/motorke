@@ -32,11 +32,11 @@ export default function AuthCarousel() {
   }, []);
 
   return (
-    <section className="hidden lg:flex lg:w-[55%] xl:w-[45%] relative flex-col justify-center p-20 overflow-hidden bg-slate-900 border-r border-[#ddd4c8]">
+    <section className="hidden lg:flex lg:w-[55%] xl:w-[45%] relative flex-col justify-center p-20 overflow-hidden bg-slate-900 border-r border-[#ddd4c8] dark:border-slate-800">
       
       {/* Background aesthetics without images */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#ff5a2f]/10 rounded-none blur-[120px] -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#ff5a2f]/10 rounded-none blur-[100px] translate-y-1/2 -translate-x-1/4" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#ff5a2f]/10 rounded-2xl blur-[120px] -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#ff5a2f]/10 rounded-2xl blur-[100px] translate-y-1/2 -translate-x-1/4" />
 
       <div className="relative z-10 max-w-lg my-auto">
         <Quote className="text-[#ff5a2f]/30 w-16 h-16 mb-8 -ml-2" strokeWidth={1} />
@@ -49,20 +49,20 @@ export default function AuthCarousel() {
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <p className="text-2xl xl:text-3xl font-medium text-slate-900 leading-relaxed tracking-tight">
+            <p className="text-2xl xl:text-3xl font-medium text-slate-900 dark:text-white leading-relaxed tracking-tight">
               "{quotes[current].text}"
             </p>
           </motion.div>
         </AnimatePresence>
       </div>
 
-      <div className="relative z-10 mt-auto pt-12 flex justify-between items-end border-t border-[#ddd4c8]/50 w-full max-w-lg">
+      <div className="relative z-10 mt-auto pt-12 flex justify-between items-end border-t border-[#ddd4c8] dark:border-slate-800/50 w-full max-w-lg">
         <div className="flex gap-2">
           {quotes.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrent(idx)}
-              className={`h-1 rounded-none transition-all duration-500 ${current === idx ? "w-8 bg-[#ff5a2f]" : "w-2 bg-white/20 hover:bg-white/40"}`}
+              className={`h-1 rounded-2xl transition-all duration-500 ${current === idx ? "w-8 bg-[#ff5a2f]" : "w-2 bg-white/20 hover:bg-white/40"}`}
             />
           ))}
         </div>

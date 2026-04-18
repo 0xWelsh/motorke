@@ -90,13 +90,13 @@ export default function DutyCalculatorPage() {
     { label: "Final Estimated Landed Cost", value: fmt(totalLandedCost), note: "depends on exact agent fees", highlight: true },
   ];
 
-  const inputCls = "bg-white border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all w-full";
+  const inputCls = "bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all w-full";
 
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
         <div className="mb-12 sm:mb-16 space-y-4">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Import Duty Calculator</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight">Import Duty Calculator</h1>
           <p className="text-base sm:text-lg text-slate-600 font-medium max-w-3xl leading-relaxed">
             Estimate Kenya Revenue Authority import duties for vehicles. Calculate landed costs from Japan, UK, and other markets.
           </p>
@@ -104,8 +104,8 @@ export default function DutyCalculatorPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 mb-12">
         {/* Inputs */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-10 space-y-8 shadow-sm">
-          <h2 className="font-black text-xl text-slate-900 flex items-center gap-3">
+        <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-10 space-y-8 shadow-sm">
+          <h2 className="font-black text-xl text-slate-900 dark:text-white flex items-center gap-3">
              <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
                <Car className="w-5 h-5" />
              </div>
@@ -166,7 +166,7 @@ export default function DutyCalculatorPage() {
             </div>
             
             <p className="text-xs text-slate-600 font-medium px-1">
-              Calculated CIF: <span className="text-slate-900 font-black">{fmt(cifUsd * exchangeRate)}</span> (Purchase + Export + Shipping)
+              Calculated CIF: <span className="text-slate-900 dark:text-white font-black">{fmt(cifUsd * exchangeRate)}</span> (Purchase + Export + Shipping)
             </p>
 
             <div className="grid grid-cols-2 gap-4">
@@ -192,11 +192,11 @@ export default function DutyCalculatorPage() {
               </div>
             </div>
 
-            <label className="flex items-center gap-3 cursor-pointer p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition-all">
+            <label className="flex items-center gap-3 cursor-pointer p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-blue-300 hover:bg-blue-50/50 transition-all">
               <input type="checkbox" checked={isElectric} onChange={e => setIsElectric(e.target.checked)}
                 className="w-5 h-5 accent-blue-600 rounded" />
               <div className="space-y-0.5 flex-1">
-                <span className="text-sm font-bold text-slate-900">Electric Vehicle</span>
+                <span className="text-sm font-bold text-slate-900 dark:text-white">Electric Vehicle</span>
                 <p className="text-xs text-slate-500 font-medium">Excise duty reduced to 10%</p>
               </div>
             </label>
@@ -204,8 +204,8 @@ export default function DutyCalculatorPage() {
         </div>
 
         {/* Summary */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-10 space-y-8 shadow-sm">
-          <h2 className="font-black text-xl text-slate-900 flex items-center gap-3">
+        <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-10 space-y-8 shadow-sm">
+          <h2 className="font-black text-xl text-slate-900 dark:text-white flex items-center gap-3">
              <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
                <Banknote className="w-5 h-5" />
              </div>
@@ -216,17 +216,17 @@ export default function DutyCalculatorPage() {
             {rows.map(({ label, value, note, highlight }) => (
               <div key={label} className={`flex justify-between items-start gap-4 py-3 ${
                 highlight
-                  ? "border-t-2 border-slate-200 pt-4 mt-2"
+                  ? "border-t-2 border-slate-200 dark:border-slate-800 pt-4 mt-2"
                   : "border-b border-slate-100 pb-3"
               }`}>
                 <div className="space-y-1 flex-1 min-w-0">
-                  <p className={`text-xs font-bold uppercase tracking-widest ${highlight ? "text-slate-900" : "text-slate-600"}`}>
+                  <p className={`text-xs font-bold uppercase tracking-widest ${highlight ? "text-slate-900 dark:text-white" : "text-slate-600"}`}>
                     {label}
                   </p>
                   {note && <p className="text-xs text-slate-500 font-medium">{note}</p>}
                 </div>
                 <p className={`text-base font-black tabular-nums text-right ${
-                  highlight ? "text-slate-900 text-lg" : "text-slate-700"
+                  highlight ? "text-slate-900 dark:text-white text-lg" : "text-slate-700"
                 }`}>
                   {value}
                 </p>
@@ -237,7 +237,7 @@ export default function DutyCalculatorPage() {
         </div>
 
         {/* Disclaimer */}
-        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-4 mb-12">
+        <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 space-y-4 mb-12">
           <div className="flex items-center gap-2 text-slate-700 font-black text-xs uppercase tracking-widest">
              <ShieldCheck className="w-4 h-4 text-blue-600 flex-shrink-0" /> Important Disclaimer
           </div>

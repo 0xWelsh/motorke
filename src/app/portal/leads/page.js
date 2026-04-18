@@ -45,8 +45,8 @@ export default async function PortalLeadsPage({ searchParams }) {
   return (
     <div className="w-full">
       <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900\">Leads</h1>
-        <p className="text-[10px] uppercase font-black tracking-[0.15em] sm:text-[11px] uppercase font-black tracking-[0.10em] text-slate-700 font-medium mt-1 sm:mt-2\">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white\">Leads</h1>
+        <p className="text-[11px] uppercase font-black tracking-[0.15em] sm:text-[11px] uppercase font-black tracking-[0.10em] text-slate-700 font-medium mt-1 sm:mt-2\">
           {total} active lead{total !== 1 ? "s" : ""}
         </p>
       </div>

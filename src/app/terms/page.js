@@ -125,16 +125,16 @@ export default function TermsPage() {
         {/* Header */}
         <div className="mb-10">
           <p className="text-sm font-bold text-slate-500 uppercase tracking-wide mb-2">Legal</p>
-          <h1 className="text-5xl font-bold text-slate-900 mb-3">Terms of Service</h1>
+          <h1 className="text-5xl font-bold text-slate-900 dark:text-white mb-3">Terms of Service</h1>
           <p className="text-slate-600">Motorke Kenya Ltd &bull; Effective April 7, 2026</p>
         </div>
 
         {/* Table of Contents */}
-        <nav className="bg-slate-50 border border-slate-200 rounded-lg p-6 mb-12">
-          <h2 className="font-bold text-slate-900 text-sm mb-4">Table of Contents</h2>
+        <nav className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 mb-12">
+          <h2 className="font-bold text-slate-900 dark:text-white text-sm mb-4">Table of Contents</h2>
           <ol className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-slate-700">
             {sections.map((section, idx) => (
-              <li key={idx} className="text-slate-600 hover:text-slate-900">
+              <li key={idx} className="text-slate-600 hover:text-slate-900 dark:text-white">
                 <a href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`} className="hover:underline">
                   {section.title}
                 </a>
@@ -147,13 +147,13 @@ export default function TermsPage() {
         <div className="space-y-8">
           {sections.map((section) => (
             <section key={section.title} id={section.title.replace(/\s+/g, '-').toLowerCase()} className="scroll-mt-20">
-              <h2 className="text-2xl font-bold text-slate-900 mb-4">{section.title}</h2>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{section.title}</h2>
               
               {section.subsections ? (
                 <div className="space-y-4">
                   {section.subsections.map((subsection, idx) => (
-                    <div key={idx} className="border-l-4 border-slate-200 pl-5">
-                      <h3 className="font-bold text-slate-900 text-base mb-1">{subsection.heading}</h3>
+                    <div key={idx} className="border-l-4 border-slate-200 dark:border-slate-800 pl-5">
+                      <h3 className="font-bold text-slate-900 dark:text-white text-base mb-1">{subsection.heading}</h3>
                       <p className="text-slate-700 text-sm leading-relaxed">{subsection.content}</p>
                     </div>
                   ))}
@@ -169,15 +169,15 @@ export default function TermsPage() {
         <div className="mt-16 pt-8 border-t border-slate-200">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div>
-              <h3 className="font-bold text-slate-900 text-sm mb-2">Support</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-2">Support</h3>
               <p className="text-xs text-slate-600">support@motorke.com</p>
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-sm mb-2">Legal</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-2">Legal</h3>
               <p className="text-xs text-slate-600">legal@motorke.com</p>
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-sm mb-2">Billing</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-2">Billing</h3>
               <p className="text-xs text-slate-600">billing@motorke.com</p>
             </div>
           </div>

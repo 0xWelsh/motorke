@@ -51,7 +51,7 @@ export default function ImageGallery({ images, title }) {
 
   if (!images?.length) {
     return (
-      <div className="aspect-[16/9] bg-[#fbfcfe] rounded-none flex items-center justify-center text-sm font-bold uppercase tracking-widest text-slate-500">
+      <div className="aspect-[16/9] bg-[#fbfcfe] dark:bg-[#111111] rounded-2xl flex items-center justify-center text-sm font-bold uppercase tracking-widest text-slate-500">
         No image
       </div>
     );
@@ -71,7 +71,7 @@ export default function ImageGallery({ images, title }) {
               setActive(0);
               setLightbox(true);
             }}
-            className="relative lg:row-span-2 aspect-[4/3] lg:aspect-auto lg:h-full rounded-sm overflow-hidden bg-[#fbfcfe] group border border-[#ddd4c8]"
+            className="relative lg:row-span-2 aspect-[4/3] lg:aspect-auto lg:h-full rounded-sm overflow-hidden bg-[#fbfcfe] dark:bg-[#111111] group border border-[#ddd4c8] dark:border-slate-800"
             aria-label="Open hero image"
           >
             <Image
@@ -83,7 +83,7 @@ export default function ImageGallery({ images, title }) {
               sizes="(max-width: 1024px) 100vw, 66vw"
             />
             {images.length > 1 && (
-               <span className="absolute bottom-2.5 right-2.5 lg:hidden bg-white/95 text-slate-800 text-[10px] font-extrabold uppercase tracking-[0.12em] px-2.5 py-1 rounded-sm shadow">
+               <span className="absolute bottom-2.5 right-2.5 lg:hidden bg-white/95 text-slate-800 dark:text-slate-200 text-[11px] font-extrabold uppercase tracking-[0.12em] px-2.5 py-1 rounded-sm shadow">
                  {images.length} Photos
                </span>
             )}
@@ -104,7 +104,7 @@ export default function ImageGallery({ images, title }) {
                   setActive(idx);
                   setLightbox(true);
                 }}
-                className="hidden lg:block relative aspect-square rounded-sm overflow-hidden bg-[#fbfcfe] group border border-[#ddd4c8]"
+                className="hidden lg:block relative aspect-square rounded-sm overflow-hidden bg-[#fbfcfe] dark:bg-[#111111] group border border-[#ddd4c8] dark:border-slate-800"
                 aria-label={`Open image ${idx + 1}`}
               >
                 <Image
@@ -115,7 +115,7 @@ export default function ImageGallery({ images, title }) {
                   sizes="(max-width: 1024px) 50vw, 18vw"
                 />
                 {isLastVisible && remainingCount > 0 && (
-                  <span className="absolute bottom-2 right-2 bg-white/95 text-slate-800 text-[10px] font-extrabold uppercase tracking-[0.12em] px-2.5 py-1 rounded-sm">
+                  <span className="absolute bottom-2 right-2 bg-white/95 text-slate-800 dark:text-slate-200 text-[11px] font-extrabold uppercase tracking-[0.12em] px-2.5 py-1 rounded-sm">
                     {remainingCount}+ Photos
                   </span>
                 )}
@@ -126,7 +126,7 @@ export default function ImageGallery({ images, title }) {
       ) : (
         <>
           <div
-            className="relative aspect-[16/9] bg-[#fbfcfe] rounded-none overflow-hidden group cursor-zoom-in border border-[#ddd4c8]"
+            className="relative aspect-[16/9] bg-[#fbfcfe] dark:bg-[#111111] rounded-2xl overflow-hidden group cursor-zoom-in border border-[#ddd4c8] dark:border-slate-800"
             onClick={() => setLightbox(true)}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
@@ -158,7 +158,7 @@ export default function ImageGallery({ images, title }) {
                     e.stopPropagation();
                     prev();
                   }}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 text-white rounded-none flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 text-white rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm"
                 >
                   ‹
                 </button>
@@ -169,7 +169,7 @@ export default function ImageGallery({ images, title }) {
                     e.stopPropagation();
                     next();
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 text-white rounded-none flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 text-white rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm"
                 >
                   ›
                 </button>
@@ -177,12 +177,12 @@ export default function ImageGallery({ images, title }) {
             )}
 
             {images.length > 1 && (
-              <span className="absolute bottom-3 right-3 text-xs bg-black/60 text-white px-2.5 py-1 rounded-none backdrop-blur-sm">
+              <span className="absolute bottom-3 right-3 text-xs bg-black/60 text-white px-2.5 py-1 rounded-2xl backdrop-blur-sm">
                 {active + 1} / {images.length}
               </span>
             )}
 
-            <span className="absolute bottom-3 left-3 text-xs bg-black/50 text-white/70 px-2 py-1 rounded-none opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="absolute bottom-3 left-3 text-xs bg-black/50 text-white/70 px-2 py-1 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity">
               Click to expand
             </span>
           </div>
@@ -195,7 +195,7 @@ export default function ImageGallery({ images, title }) {
                   aria-label={`View image ${i + 1}`}
                   key={`${img.url}-${i}`}
                   onClick={() => setActive(i)}
-                  className={`flex-shrink-0 w-20 h-14 rounded-none overflow-hidden border-2 transition-all ${
+                  className={`flex-shrink-0 w-20 h-14 rounded-2xl overflow-hidden border-2 transition-all ${
                     i === active
                       ? "border-[#ff5a2f] opacity-100"
                       : "border-transparent opacity-50 hover:opacity-80"
@@ -225,13 +225,13 @@ export default function ImageGallery({ images, title }) {
           <button
             type="button"
             aria-label="Close lightbox"
-            className="absolute top-4 right-4 w-10 h-10 bg-white hover:bg-white/20 text-slate-900 rounded-none flex items-center justify-center text-xl transition-colors z-10"
+            className="absolute top-4 right-4 w-10 h-10 bg-white hover:bg-white/20 text-slate-900 dark:text-white rounded-2xl flex items-center justify-center text-xl transition-colors z-10"
             onClick={() => setLightbox(false)}
           >
             ×
           </button>
 
-          <span className="absolute top-4 left-1/2 -translate-x-1/2 text-sm text-slate-900/50">
+          <span className="absolute top-4 left-1/2 -translate-x-1/2 text-sm text-slate-900 dark:text-white/50">
             {active + 1} / {images.length}
           </span>
 
@@ -240,7 +240,7 @@ export default function ImageGallery({ images, title }) {
               src={current.url}
               alt={current.alt || title}
               fill
-              className="object-contain rounded-none"
+              className="object-contain rounded-2xl"
               onClick={(e) => e.stopPropagation()}
             />
           </div>
@@ -254,7 +254,7 @@ export default function ImageGallery({ images, title }) {
                   e.stopPropagation();
                   prev();
                 }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white hover:bg-white/20 text-slate-900 text-2xl rounded-none flex items-center justify-center transition-colors"
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white hover:bg-white/20 text-slate-900 dark:text-white text-2xl rounded-2xl flex items-center justify-center transition-colors"
               >
                 ‹
               </button>
@@ -265,7 +265,7 @@ export default function ImageGallery({ images, title }) {
                   e.stopPropagation();
                   next();
                 }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white hover:bg-white/20 text-slate-900 text-2xl rounded-none flex items-center justify-center transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white hover:bg-white/20 text-slate-900 dark:text-white text-2xl rounded-2xl flex items-center justify-center transition-colors"
               >
                 ›
               </button>
@@ -282,7 +282,7 @@ export default function ImageGallery({ images, title }) {
                   e.stopPropagation();
                   setActive(i);
                 }}
-                className={`w-1.5 h-1.5 rounded-none transition-all ${
+                className={`w-1.5 h-1.5 rounded-2xl transition-all ${
                   i === active ? "bg-[#ff5a2f] w-4" : "bg-white/30"
                 }`}
               />

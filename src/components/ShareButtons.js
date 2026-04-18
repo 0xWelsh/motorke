@@ -30,13 +30,13 @@ export default function ShareButtons({ title, price }) {
         href={waUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center gap-1.5 text-xs bg-[#25D366]/10 border border-[#25D366]/20 text-[#25D366] hover:bg-[#25D366]/20 rounded-none px-3 py-2 transition-colors"
+        className="flex items-center gap-1.5 text-xs bg-[#25D366]/10 border border-[#25D366]/20 text-[#25D366] hover:bg-[#25D366]/20 rounded-2xl px-3 py-2 transition-colors"
       >
         💬 Share on WhatsApp
       </a>
       <button
         onClick={copyLink}
-        className="flex items-center gap-1.5 text-xs bg-[#fbfcfe] border border-[#ddd4c8] text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-none px-3 py-2 transition-colors"
+        className="flex items-center gap-1.5 text-xs bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-700 hover:text-slate-900 dark:text-white hover:bg-slate-100 rounded-2xl px-3 py-2 transition-colors"
       >
         {copied ? "✓ Copied!" : "🔗 Copy link"}
       </button>

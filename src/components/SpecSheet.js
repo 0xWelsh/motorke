@@ -27,7 +27,7 @@ export default function SpecSheet({ car, dealer }) {
           <h1 className="text-4xl font-black uppercase tracking-tighter text-black">
             Motor<span className="text-orange-600">ke</span>
           </h1>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mt-1">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mt-1">
             Premium Secondary Marketplace · Kenya
           </p>
         </div>
@@ -41,7 +41,7 @@ export default function SpecSheet({ car, dealer }) {
       <div className="grid grid-cols-2 gap-8 mb-10">
         <div>
            {primaryImg && (
-             <div className="aspect-[4/3] bg-gray-100 rounded-none overflow-hidden border border-gray-200">
+             <div className="aspect-[4/3] bg-gray-100 rounded-2xl overflow-hidden border border-gray-200">
                <img src={primaryImg.url} alt={title} className="w-full h-full object-cover" />
              </div>
            )}
@@ -74,7 +74,7 @@ export default function SpecSheet({ car, dealer }) {
 
           {car.description && (
             <div className="mt-8">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Technical Description</p>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-2">Technical Description</p>
               <p className="text-xs text-gray-700 leading-relaxed line-clamp-[12]">{car.description}</p>
             </div>
           )}
@@ -87,7 +87,7 @@ export default function SpecSheet({ car, dealer }) {
           <h3 className="text-xs font-bold uppercase tracking-widest text-orange-600 mb-4">Included Features</h3>
           <div className="grid grid-cols-4 gap-2">
             {car.features.slice(0, 16).map((f) => (
-              <div key={f} className="text-[10px] font-bold bg-gray-50 border border-gray-100 px-3 py-2 text-gray-700">
+              <div key={f} className="text-[11px] font-bold bg-gray-50 border border-gray-100 px-3 py-2 text-gray-700">
                 • {f}
               </div>
             ))}
@@ -98,10 +98,10 @@ export default function SpecSheet({ car, dealer }) {
       {/* Footer */}
       <div className="mt-auto pt-8 border-t border-gray-100 flex justify-between items-end">
         <div>
-          <p className="text-[10px] text-gray-400 font-medium">Generated on {new Date().toLocaleDateString('en-KE', { dateStyle: 'long' })}</p>
-          <p className="text-[10px] text-gray-400 font-medium italic">Visit motorke.com for full listing and interactive comparison.</p>
+          <p className="text-[11px] text-gray-400 font-medium">Generated on {new Date().toLocaleDateString('en-KE', { dateStyle: 'long' })}</p>
+          <p className="text-[11px] text-gray-400 font-medium italic">Visit motorke.com for full listing and interactive comparison.</p>
         </div>
-        <div className="bg-black text-white px-4 py-2 text-[10px] font-black uppercase tracking-tighter">
+        <div className="bg-black text-white px-4 py-2 text-[11px] font-black uppercase tracking-tighter">
           Motorke Showcase Cert.
         </div>
       </div>

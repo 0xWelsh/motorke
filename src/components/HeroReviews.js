@@ -30,14 +30,14 @@ export default function HeroReviews({ reviews = [] }) {
     <div className="space-y-3 py-2 border-y border-[#e8e2d9]">
       <div>
         <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-slate-400 mb-2">Buyer Reviews</p>
-        <h3 className="text-sm font-black text-slate-900">Real Feedback</h3>
+        <h3 className="text-sm font-black text-slate-900 dark:text-white">Real Feedback</h3>
       </div>
 
       <div className="space-y-2">
         {displayReviews.slice(0, 2).map((review, idx) => (
           <div
             key={idx}
-            className="bg-white border border-slate-50 p-2.5 text-xs"
+            className="bg-white dark:bg-[#111111] border border-slate-50 p-2.5 text-xs"
           >
             <div className="flex gap-0.5 mb-1">
               {Array.from({ length: review.rating }).map((_, i) => (

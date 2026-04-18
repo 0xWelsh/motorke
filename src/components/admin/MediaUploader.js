@@ -126,7 +126,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
     <div className="w-full space-y-6">
       <div 
         className={`relative w-full h-64 border-2 border-dashed rounded-3xl flex flex-col items-center justify-center p-6 transition-all duration-300 ${
-          dragActive ? "border-emerald-500 bg-emerald-50 scale-[1.02]" : "border-slate-200 bg-slate-50 hover:bg-white hover:border-slate-300"
+          dragActive ? "border-emerald-500 bg-emerald-50 scale-[1.02]" : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 hover:bg-white hover:border-slate-300"
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -153,7 +153,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
         <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 text-emerald-600 border border-slate-100">
           <UploadCloud size={32} />
         </div>
-        <p className="text-lg font-black text-slate-900 tracking-tight">Drag & Drop Media Assets</p>
+        <p className="text-lg font-black text-slate-900 dark:text-white tracking-tight">Drag & Drop Media Assets</p>
         <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-2 block">Or click to browse standard files</p>
         
         {/* Camera button for mobile */}
@@ -175,15 +175,15 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
       </div>
 
       {files.length > 0 && (
-        <div className="bg-white border border-slate-200 p-6 rounded-[2rem] shadow-sm">
+        <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 p-6 rounded-[2rem] shadow-sm">
           <div className="flex items-center justify-between mb-4">
              <div className="flex items-center gap-2">
-                <ImageIcon size={16} className="text-slate-900" />
-                <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Asset Queue</h3>
+                <ImageIcon size={16} className="text-slate-900 dark:text-white" />
+                <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest">Asset Queue</h3>
              </div>
-             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{files.length} / {maxFiles} Attached</p>
+             <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{files.length} / {maxFiles} Attached</p>
           </div>
-           <p className="mb-4 text-[10px] font-bold uppercase tracking-widest text-slate-500">Drag thumbnails to set the listing photo order</p>
+           <p className="mb-4 text-[11px] font-bold uppercase tracking-widest text-slate-500">Drag thumbnails to set the listing photo order</p>
           
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {files.map((file, i) => (
@@ -205,7 +205,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
                       <button 
                         type="button"
                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); setPrimary(i); }}
-                        className="w-full bg-white hover:bg-emerald-50 text-slate-900 text-[9px] font-black uppercase tracking-widest py-3 rounded-xl transition-all shadow-xl active:scale-95"
+                        className="w-full bg-white hover:bg-emerald-50 text-slate-900 dark:text-white text-[9px] font-black uppercase tracking-widest py-3 rounded-xl transition-all shadow-xl active:scale-95"
                       >
                         Main Hub
                       </button>

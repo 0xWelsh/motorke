@@ -90,8 +90,8 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
   return (
     <div className="w-full">
       <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900">Analytics</h1>
-        <p className="text-[10px] uppercase font-black tracking-[0.15em] sm:text-[11px] uppercase font-black tracking-[0.10em] text-slate-700 font-medium mt-1 sm:mt-2">Performance over 14 days</p>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">Analytics</h1>
+        <p className="text-[11px] uppercase font-black tracking-[0.15em] sm:text-[11px] uppercase font-black tracking-[0.10em] text-slate-700 font-medium mt-1 sm:mt-2">Performance over 14 days</p>
       </div>
 
       {/* KPI Grid */}
@@ -102,38 +102,38 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
           { label: "Conversion Rate", value: `${convRate}%`, icon: TrendingUp, trend: leadsTrend, up: leadsTrend >= 0 },
           { label: "Leads Generated", value: totalLeads, icon: Award, trend: leadsTrend, up: leadsTrend >= 0 },
         ].map((kpi, i) => (
-          <div key={i} className="bg-white border border-[#ddd4c8] rounded-none p-3 sm:p-4 md:p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+          <div key={i} className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-3 sm:p-4 md:p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
             <div className="flex items-start justify-between mb-2 sm:mb-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#fbfcfe] text-slate-700 rounded-none flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#fbfcfe] dark:bg-[#111111] text-slate-700 rounded-2xl flex items-center justify-center flex-shrink-0">
                 <kpi.icon size={14} className="sm:block hidden" />
                 <kpi.icon size={12} className="sm:hidden" />
               </div>
-              <div className={`text-[10px] sm:text-[10px] uppercase font-black tracking-[0.15em] font-semibold flex items-center gap-0.5 flex-shrink-0 ${kpi.up ? 'text-[#ff5a2f]' : 'text-rose-600'}`}>
+              <div className={`text-[11px] sm:text-[11px] uppercase font-black tracking-[0.15em] font-semibold flex items-center gap-0.5 flex-shrink-0 ${kpi.up ? 'text-[#ff5a2f]' : 'text-rose-600'}`}>
                 {kpi.up ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
                 {Math.abs(kpi.trend)}%
               </div>
             </div>
-            <p className="text-lg sm:text-2xl md:text-3xl font-bold text-slate-900 mb-0.5 sm:mb-1 line-clamp-1">{typeof kpi.value === 'number' ? kpi.value.toLocaleString() : kpi.value}</p>
-            <p className="text-[10px] sm:text-[10px] uppercase font-black tracking-[0.15em] font-medium text-slate-700 line-clamp-1">{kpi.label}</p>
+            <p className="text-lg sm:text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-0.5 sm:mb-1 line-clamp-1">{typeof kpi.value === 'number' ? kpi.value.toLocaleString() : kpi.value}</p>
+            <p className="text-[11px] sm:text-[11px] uppercase font-black tracking-[0.15em] font-medium text-slate-700 line-clamp-1">{kpi.label}</p>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-10">
         {/* Trend Chart */}
-        <div className="xl:col-span-2 bg-white border border-[#ddd4c8] rounded-none p-4 sm:p-6 md:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] overflow-hidden">
+        <div className="xl:col-span-2 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4 sm:p-6 md:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] overflow-hidden">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3">
-            <h2 className="text-[11px] uppercase font-black tracking-[0.10em] sm:text-base md:text-lg font-bold text-slate-900 flex items-center gap-2 flex-shrink-0">
+            <h2 className="text-[11px] uppercase font-black tracking-[0.10em] sm:text-base md:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 flex-shrink-0">
               <BarChart3 size={16} className="sm:block hidden text-slate-700" />
               <BarChart3 size={14} className="sm:hidden text-slate-700" />
               <span className="truncate">Trends</span>
             </h2>
-            <div className="flex items-center gap-3 flex-shrink-0 text-[10px] sm:text-[10px] uppercase font-black tracking-[0.15em] font-medium text-slate-700">
+            <div className="flex items-center gap-3 flex-shrink-0 text-[11px] sm:text-[11px] uppercase font-black tracking-[0.15em] font-medium text-slate-700">
               <div className="flex items-center gap-1">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-none bg-[#111111]" /> Views
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-2xl bg-[#111111]" /> Views
               </div>
               <div className="flex items-center gap-1">
-                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-none bg-[#ff5a2f]" /> Leads
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-2xl bg-[#ff5a2f]" /> Leads
               </div>
             </div>
           </div>
@@ -176,9 +176,9 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
                 );
               })}
             </svg>
-            <div className="flex justify-between mt-8 border-t border-[#ddd4c8] pt-4 px-2">
+            <div className="flex justify-between mt-8 border-t border-[#ddd4c8] dark:border-slate-800 pt-4 px-2">
                {chartData.filter((_, i) => i % 3 === 0).map(d => (
-                 <span key={d.date} className="text-[10px] uppercase font-black tracking-[0.15em] font-medium text-slate-700">
+                 <span key={d.date} className="text-[11px] uppercase font-black tracking-[0.15em] font-medium text-slate-700">
                    {new Date(d.date).toLocaleDateString('en-KE', { day: '2-digit', month: 'short' })}
                  </span>
                ))}
@@ -187,33 +187,33 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
         </div>
 
         {/* Top Performer */}
-        <div className="bg-white border border-[#ddd4c8] rounded-none p-4 sm:p-6 md:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+        <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4 sm:p-6 md:p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
           <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#fbfcfe] rounded-none flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#fbfcfe] dark:bg-[#111111] rounded-2xl flex items-center justify-center flex-shrink-0">
               <Award size={16} className="sm:block hidden text-slate-700" />
               <Award size={14} className="sm:hidden text-slate-700" />
             </div>
-            <h3 className="font-bold text-[11px] uppercase font-black tracking-[0.10em] sm:text-base text-slate-900 truncate">Top Car</h3>
+            <h3 className="font-bold text-[11px] uppercase font-black tracking-[0.10em] sm:text-base text-slate-900 dark:text-white truncate">Top Car</h3>
           </div>
           {topCar ? (
             <div className="space-y-4">
               <div>
-                <p className="text-2xl font-bold text-slate-900">{topCar.make}</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-white">{topCar.make}</p>
                 <p className="text-[11px] uppercase font-black tracking-[0.10em] text-slate-700">{topCar.model}</p>
               </div>
               
-              <div className="space-y-3 pt-4 border-t border-[#ddd4c8]">
+              <div className="space-y-3 pt-4 border-t border-[#ddd4c8] dark:border-slate-800">
                 <div className="flex justify-between">
                   <span className="text-[11px] uppercase font-black tracking-[0.10em] text-slate-700">Views</span>
-                  <span className="font-bold text-slate-900">{topCar.views.toLocaleString()}</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{topCar.views.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[11px] uppercase font-black tracking-[0.10em] text-slate-700">Conversion Rate</span>
-                  <span className="font-bold text-slate-900">{((topCar.whatsappClicks / (topCar.views || 1)) * 100).toFixed(1)}%</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{((topCar.whatsappClicks / (topCar.views || 1)) * 100).toFixed(1)}%</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[11px] uppercase font-black tracking-[0.10em] text-slate-700">List Price</span>
-                  <span className="font-bold text-slate-900">{formatCarPrice(topCar)}</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{formatCarPrice(topCar)}</span>
                 </div>
               </div>
             </div>
@@ -224,22 +224,22 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
       </div>
 
       {/* Inventory Performance */}
-      <div className="bg-white border border-[#ddd4c8] rounded-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] overflow-hidden">
-        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-[#ddd4c8] bg-[#fbfcfe] flex items-center justify-between">
-          <h2 className="font-bold text-[11px] uppercase font-black tracking-[0.10em] sm:text-base text-slate-900">Inventory Performance</h2>
-          <span className="text-[10px] uppercase font-black tracking-[0.15em] text-slate-700">{cars.length} listed</span>
+      <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] overflow-hidden">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-[#ddd4c8] dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#111111] flex items-center justify-between">
+          <h2 className="font-bold text-[11px] uppercase font-black tracking-[0.10em] sm:text-base text-slate-900 dark:text-white">Inventory Performance</h2>
+          <span className="text-[11px] uppercase font-black tracking-[0.15em] text-slate-700">{cars.length} listed</span>
         </div>
         
         {/* Desktop Table */}
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-left border-b border-[#ddd4c8] bg-[#fbfcfe]">
-                <th className="px-6 py-3 text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700">Vehicle</th>
-                <th className="px-6 py-3 text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700 text-center">Days Listed</th>
-                <th className="px-6 py-3 text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700 text-center">Views</th>
-                <th className="px-6 py-3 text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700 text-center">Leads</th>
-                <th className="px-6 py-3 text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700 text-right">Conversion</th>
+              <tr className="text-left border-b border-[#ddd4c8] dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#111111]">
+                <th className="px-6 py-3 text-[11px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700">Vehicle</th>
+                <th className="px-6 py-3 text-[11px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700 text-center">Days Listed</th>
+                <th className="px-6 py-3 text-[11px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700 text-center">Views</th>
+                <th className="px-6 py-3 text-[11px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700 text-center">Leads</th>
+                <th className="px-6 py-3 text-[11px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700 text-right">Conversion</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -248,19 +248,19 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
                  const carLeads = leads.filter(l => l.carId === car.id).length;
                  const convRate = car.views > 0 ? ((carLeads / car.views) * 100).toFixed(1) : 0;
                  return (
-                 <tr key={car.id} className="hover:bg-[#fbfcfe] transition-none">
+                 <tr key={car.id} className="hover:bg-[#fbfcfe] dark:bg-[#111111] transition-all">
                     <td className="px-6 py-4">
-                      <p className="font-semibold text-slate-900">{car.make} {car.model}</p>
-                      <p className="text-[10px] uppercase font-black tracking-[0.15em] text-slate-700">{formatCarPrice(car)}</p>
+                      <p className="font-semibold text-slate-900 dark:text-white">{car.make} {car.model}</p>
+                      <p className="text-[11px] uppercase font-black tracking-[0.15em] text-slate-700">{formatCarPrice(car)}</p>
                     </td>
-                    <td className="px-6 py-4 text-center text-[11px] uppercase font-black tracking-[0.10em] font-medium text-slate-900">{daysListed}</td>
-                    <td className="px-6 py-4 text-center text-[11px] uppercase font-black tracking-[0.10em] font-medium text-slate-900">{car.views.toLocaleString()}</td>
-                    <td className="px-6 py-4 text-center text-[11px] uppercase font-black tracking-[0.10em] font-medium text-slate-900">{carLeads}</td>
+                    <td className="px-6 py-4 text-center text-[11px] uppercase font-black tracking-[0.10em] font-medium text-slate-900 dark:text-white">{daysListed}</td>
+                    <td className="px-6 py-4 text-center text-[11px] uppercase font-black tracking-[0.10em] font-medium text-slate-900 dark:text-white">{car.views.toLocaleString()}</td>
+                    <td className="px-6 py-4 text-center text-[11px] uppercase font-black tracking-[0.10em] font-medium text-slate-900 dark:text-white">{carLeads}</td>
                     <td className="px-6 py-4 text-right">
-                      <span className={`inline-flex px-3 py-1 rounded-none text-[10px] uppercase font-black tracking-[0.15em] font-semibold ${
+                      <span className={`inline-flex px-3 py-1 rounded-2xl text-[11px] uppercase font-black tracking-[0.15em] font-semibold ${
                         convRate > 5 
                           ? 'bg-emerald-50 text-[#ff5a2f]' 
-                          : 'bg-[#fbfcfe] text-slate-700'
+                          : 'bg-[#fbfcfe] dark:bg-[#111111] text-slate-700'
                       }`}>
                         {convRate}%
                       </span>
@@ -279,32 +279,32 @@ export const metadata = { title: "Analytics — Motorke Dealer Portal" };export 
             const carLeads = leads.filter(l => l.carId === car.id).length;
             const convRate = car.views > 0 ? ((carLeads / car.views) * 100).toFixed(1) : 0;
             return (
-              <div key={car.id} className="p-4 hover:bg-[#fbfcfe] transition-none">
+              <div key={car.id} className="p-4 hover:bg-[#fbfcfe] dark:bg-[#111111] transition-all">
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <div>
-                    <p className="font-semibold text-[11px] uppercase font-black tracking-[0.10em] text-slate-900">{car.make} {car.model}</p>
-                    <p className="text-[10px] uppercase font-black tracking-[0.15em] text-slate-700">{formatCarPrice(car)}</p>
+                    <p className="font-semibold text-[11px] uppercase font-black tracking-[0.10em] text-slate-900 dark:text-white">{car.make} {car.model}</p>
+                    <p className="text-[11px] uppercase font-black tracking-[0.15em] text-slate-700">{formatCarPrice(car)}</p>
                   </div>
-                  <span className={`inline-flex px-2 py-1 rounded text-[10px] uppercase font-black tracking-[0.15em] font-semibold flex-shrink-0 ${
+                  <span className={`inline-flex px-2 py-1 rounded text-[11px] uppercase font-black tracking-[0.15em] font-semibold flex-shrink-0 ${
                     convRate > 5 
                       ? 'bg-emerald-50 text-[#ff5a2f]' 
-                      : 'bg-[#fbfcfe] text-slate-700'
+                      : 'bg-[#fbfcfe] dark:bg-[#111111] text-slate-700'
                   }`}>
                     {convRate}%
                   </span>
                 </div>
-                <div className="grid grid-cols-3 gap-2 text-center text-[10px] uppercase font-black tracking-[0.15em]">
+                <div className="grid grid-cols-3 gap-2 text-center text-[11px] uppercase font-black tracking-[0.15em]">
                   <div>
                     <p className="text-slate-700 mb-0.5">Days</p>
-                    <p className="font-semibold text-slate-900">{daysListed}</p>
+                    <p className="font-semibold text-slate-900 dark:text-white">{daysListed}</p>
                   </div>
                   <div>
                     <p className="text-slate-700 mb-0.5">Views</p>
-                    <p className="font-semibold text-slate-900">{car.views.toLocaleString()}</p>
+                    <p className="font-semibold text-slate-900 dark:text-white">{car.views.toLocaleString()}</p>
                   </div>
                   <div>
                     <p className="text-slate-700 mb-0.5">Leads</p>
-                    <p className="font-semibold text-slate-900">{carLeads}</p>
+                    <p className="font-semibold text-slate-900 dark:text-white">{carLeads}</p>
                   </div>
                 </div>
               </div>

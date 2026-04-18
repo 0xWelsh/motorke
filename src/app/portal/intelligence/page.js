@@ -31,16 +31,16 @@ export default async function IntelligencePage() {
       {/* Header section with high-contrast typography */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--brand)] mb-3 block">Market Updates</span>
-          <h1 className="text-5xl font-black text-slate-900 tracking-tight leading-[1.1]">Market Updates</h1>
+          <span className="text-[11px] font-black uppercase tracking-[0.25em] text-[var(--brand)] mb-3 block">Market Updates</span>
+          <h1 className="text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.1]">Market Updates</h1>
           <p className="text-slate-700 font-bold mt-4 text-base max-w-2xl">
             Follow the latest automotive news, price shifts, and product launches from trusted sources.
           </p>
         </div>
         <div className="flex items-center gap-4">
-           <div className="flex items-center gap-3 px-6 py-4 bg-white border border-[#ddd4c8] rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
-              <div className="w-2 h-2 rounded-none bg-[#ff5a2f] animate-pulse" />
-              <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest whitespace-nowrap">
+           <div className="flex items-center gap-3 px-6 py-4 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+              <div className="w-2 h-2 rounded-2xl bg-[#ff5a2f] animate-pulse" />
+              <span className="text-[11px] font-black text-slate-700 uppercase tracking-widest whitespace-nowrap">
                 Live Feed
               </span>
            </div>
@@ -49,15 +49,15 @@ export default async function IntelligencePage() {
 
       {/* Articles Grid Implementation */}
       {articles.length === 0 ? (
-        <div className="bg-white border-2 border-dashed border-[#ddd4c8] rounded-[4rem] py-48 text-center px-10 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
-            <div className="w-24 h-24 bg-[#fbfcfe] rounded-none flex items-center justify-center mx-auto mb-8">
+        <div className="bg-white border-2 border-dashed border-[#ddd4c8] dark:border-slate-800 rounded-[4rem] py-48 text-center px-10 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+            <div className="w-24 h-24 bg-[#fbfcfe] dark:bg-[#111111] rounded-2xl flex items-center justify-center mx-auto mb-8">
               <Newspaper className="text-slate-300" size={48} />
             </div>
-            <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-tight">Loading Latest Updates...</h3>
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3 tracking-tight">Loading Latest Updates...</h3>
             <p className="text-slate-700 text-[11px] uppercase font-black tracking-[0.10em] font-bold max-w-sm mx-auto leading-relaxed">
               We are currently loading automotive news from trusted global sources.
             </p>
-            <div className="mt-10 inline-flex items-center gap-2 text-[10px] font-black text-[#ff5a2f] uppercase tracking-widest">
+            <div className="mt-10 inline-flex items-center gap-2 text-[11px] font-black text-[#ff5a2f] uppercase tracking-widest">
                <Clock size={14} /> Expected refresh: &lt; 2 minutes
             </div>
         </div>
@@ -66,25 +66,25 @@ export default async function IntelligencePage() {
           {articles.map((article) => (
             <div 
               key={article.id} 
-              className="group bg-white border border-[#ddd4c8] rounded-[3rem] overflow-hidden hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-2xl hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-emerald-950/5 transition-none duration-700 flex flex-col shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]"
+              className="group bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-[3rem] overflow-hidden hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-2xl hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-emerald-950/5 transition-all duration-700 flex flex-col shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]"
             >
               {/* Premium Image Container */}
-              <div className="aspect-[16/11] overflow-hidden relative bg-[#fbfcfe] border-b border-slate-50">
+              <div className="aspect-[16/11] overflow-hidden relative bg-[#fbfcfe] dark:bg-[#111111] border-b border-slate-50">
                 <img 
                   src={article.urlToImage} 
                   alt={article.title}
-                  className="w-full h-full object-cover group-transition-none transition-transform duration-[2000ms] ease-out" 
+                  className="w-full h-full object-cover group-transition-all transition-transform duration-[2000ms] ease-out" 
                   onError={(e) => {
                     e.target.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1200";
                   }}
                 />
                 
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-emerald-950/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-none duration-500 flex items-center justify-center">
+                <div className="absolute inset-0 bg-emerald-950/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
                    <Link 
                      href={article.url} 
                      target="_blank"
-                     className="bg-white text-black text-[10px] font-black uppercase tracking-widest px-10 py-4 rounded-none flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-none duration-500 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-2xl"
+                     className="bg-white text-black text-[11px] font-black uppercase tracking-widest px-10 py-4 rounded-2xl flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-2xl"
                    >
                      Read Article <ArrowRight size={14} />
                    </Link>
@@ -92,8 +92,8 @@ export default async function IntelligencePage() {
 
                 {/* Source Badge */}
                 <div className="absolute top-6 left-6">
-                   <div className="px-4 py-2 bg-white/95 backdrop-blur-xl rounded-none text-[9px] font-black uppercase tracking-[0.15em] shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-black/5 text-slate-900 flex items-center gap-2 border border-white/20">
-                      <div className="w-1.5 h-1.5 rounded-none bg-[#ff5a2f]" />
+                   <div className="px-4 py-2 bg-white/95 backdrop-blur-xl rounded-2xl text-[9px] font-black uppercase tracking-[0.15em] shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-black/5 text-slate-900 dark:text-white flex items-center gap-2 border border-white/20">
+                      <div className="w-1.5 h-1.5 rounded-2xl bg-[#ff5a2f]" />
                       {article.sourceName}
                    </div>
                 </div>
@@ -103,12 +103,12 @@ export default async function IntelligencePage() {
               <div className="p-10 flex-1 flex flex-col">
                 <div className="flex items-center gap-3 mb-6">
                    <TrendingUp size={14} className="text-[#ff5a2f]" />
-                   <span className="text-[10px] font-black text-[#ff5a2f] uppercase tracking-widest">
+                   <span className="text-[11px] font-black text-[#ff5a2f] uppercase tracking-widest">
                      Auto News
                    </span>
                 </div>
                 
-                <h3 className="text-xl font-black text-slate-900 leading-[1.25] mb-6 mb-6 group-hover:text-[var(--brand)] transition-colors line-clamp-3 tracking-tight">
+                <h3 className="text-xl font-black text-slate-900 dark:text-white leading-[1.25] mb-6 mb-6 group-hover:text-[var(--brand)] transition-colors line-clamp-3 tracking-tight">
                   {article.title}
                 </h3>
                 
@@ -124,7 +124,7 @@ export default async function IntelligencePage() {
                         {new Date(article.publishedAt).toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </span>
                    </div>
-                   <Link href={article.url} target="_blank" className="w-12 h-12 rounded-none bg-[#fbfcfe] hover:bg-emerald-50 text-slate-300 hover:text-[#ff5a2f] flex items-center justify-center transition-none border border-[#ddd4c8]">
+                   <Link href={article.url} target="_blank" className="w-12 h-12 rounded-2xl bg-[#fbfcfe] dark:bg-[#111111] hover:bg-emerald-50 text-slate-300 hover:text-[#ff5a2f] flex items-center justify-center transition-all border border-[#ddd4c8] dark:border-slate-800">
                       <ExternalLink size={18} />
                    </Link>
                 </div>

@@ -29,31 +29,31 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
   const saved  = sp.saved;
   const error  = sp.error;
 
-  const inputCls  = "w-full border border-[#ddd4c8] rounded-none bg-[#fbfcfe] px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-none";
-  const selectCls = "w-full border border-[#ddd4c8] rounded-none bg-[#fbfcfe] px-4 py-3.5 text-sm text-slate-900 outline-none focus:border-slate-900 focus:ring-0 transition-none";
-  const labelCls  = "block text-[10px] font-black uppercase tracking-[0.16em] text-slate-900 mb-2";
+  const inputCls  = "w-full border border-[#ddd4c8] dark:border-slate-800 rounded-2xl bg-[#fbfcfe] dark:bg-[#111111] px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-all";
+  const selectCls = "w-full border border-[#ddd4c8] dark:border-slate-800 rounded-2xl bg-[#fbfcfe] dark:bg-[#111111] px-4 py-3.5 text-sm text-slate-900 dark:text-white outline-none focus:border-slate-900 focus:ring-0 transition-all";
+  const labelCls  = "block text-[11px] font-black uppercase tracking-[0.16em] text-slate-900 dark:text-white mb-2";
 
   return (
     <div className="p-8 lg:p-12 max-w-3xl">
       <div className="mb-8">
-        <a href="/admin/dealers" className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-500 hover:text-[#ff5a2f] transition-none">← Dealerships</a>
+        <a href="/admin/dealers" className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 hover:text-[#ff5a2f] transition-all">← Dealerships</a>
         <div className="flex items-center gap-5 mt-4">
           <AdminAvatarUpload currentUrl={dealer.logoUrl} targetId={dealer.id} targetType="dealer" name={dealer.name} size="lg" />
           <div>
-            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tighter">{dealer.name}</h1>
+            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">{dealer.name}</h1>
             <p className="text-xs text-white/40 mt-1">Click the logo to upload or change it</p>
           </div>
         </div>
       </div>
 
-      <div className="bg-white border border-[#ddd4c8] p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
+      <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
         {saved && (
-          <div className="bg-green-500/10 border border-green-500/20 text-green-400 text-sm rounded-none px-4 py-3 mb-5">
+          <div className="bg-green-500/10 border border-green-500/20 text-green-400 text-sm rounded-2xl px-4 py-3 mb-5">
             ✓ Changes saved
           </div>
         )}
         {error && (
-          <div className="bg-[#111111] border border-red-500 rounded-none p-4 text-[11px] font-bold text-red-400 mb-6">
+          <div className="bg-[#111111] border border-red-500 rounded-2xl p-4 text-[11px] font-bold text-red-400 mb-6">
             Something went wrong. Please try again.
           </div>
         )}
@@ -111,38 +111,38 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
               className={`${inputCls} resize-none`} />
           </div>
 
-          <div className="pt-2 border-t border-[#ddd4c8]">
+          <div className="pt-2 border-t border-[#ddd4c8] dark:border-slate-800">
             <LocationPicker defaultLat={dealer.lat} defaultLng={dealer.lng} />
           </div>
 
           <div className="flex gap-6">
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" name="verified" defaultChecked={dealer.verified}
-                className="w-4 h-4 border border-[#ddd4c8] rounded-none checked:bg-[#ff5a2f] checked:border-[#ff5a2f] cursor-pointer accent-[#ff5a2f]" />
+                className="w-4 h-4 border border-[#ddd4c8] dark:border-slate-800 rounded-2xl checked:bg-[#ff5a2f] checked:border-[#ff5a2f] cursor-pointer accent-[#ff5a2f]" />
               <span className="text-[11px] font-bold uppercase tracking-widest text-slate-700">Verified dealer</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" name="featured" defaultChecked={dealer.featured}
-                className="w-4 h-4 border border-[#ddd4c8] rounded-none checked:bg-[#ff5a2f] checked:border-[#ff5a2f] cursor-pointer accent-[#ff5a2f]" />
+                className="w-4 h-4 border border-[#ddd4c8] dark:border-slate-800 rounded-2xl checked:bg-[#ff5a2f] checked:border-[#ff5a2f] cursor-pointer accent-[#ff5a2f]" />
               <span className="text-[11px] font-bold uppercase tracking-widest text-slate-700">Featured on homepage</span>
             </label>
           </div>
 
           <button type="submit"
-            className="w-full bg-[#f97316] hover:bg-[#ea6c0b] text-white font-bold py-3 rounded-none transition-colors">
+            className="w-full bg-[#f97316] hover:bg-[#ea6c0b] text-white font-bold py-3 rounded-2xl transition-colors">
             Save changes
           </button>
         </form>
       </div>
 
       {/* Branch Management */}
-      <div className="mt-6 bg-[#1a1a1a] border border-white/10 rounded-none p-7">
+      <div className="mt-6 bg-[#1a1a1a] border border-white/10 rounded-2xl p-7">
         <div className="flex items-center justify-between mb-6">
            <div>
              <h2 className="font-black text-white">Branch Locations</h2>
              <p className="text-xs text-white/40 mt-1">Add additional map-pinned locations for this dealership.</p>
            </div>
-           <a href={`/admin/dealers/${dealer.id}/branches/new`} className="px-4 py-2 bg-orange-600/10 hover:bg-orange-600 text-orange-500 hover:text-white border border-orange-500/20 hover:border-orange-500 rounded-none text-[10px] font-black uppercase tracking-widest transition-colors">
+           <a href={`/admin/dealers/${dealer.id}/branches/new`} className="px-4 py-2 bg-orange-600/10 hover:bg-orange-600 text-orange-500 hover:text-white border border-orange-500/20 hover:border-orange-500 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-colors">
               + Add Branch
            </a>
         </div>
@@ -150,9 +150,9 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
         {dealer.branches && dealer.branches.length > 0 ? (
            <div className="space-y-3">
              {dealer.branches.map(b => (
-               <div key={b.id} className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-none">
+               <div key={b.id} className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl">
                  <div className="flex items-center gap-4">
-                   <div className="w-10 h-10 rounded-none bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                   <div className="w-10 h-10 rounded-2xl bg-orange-500/10 text-orange-500 flex items-center justify-center">
                      <MapPin size={16} />
                    </div>
                    <div>
@@ -165,14 +165,14 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
              ))}
            </div>
         ) : (
-           <div className="py-8 text-center bg-white/[0.02] border border-white/5 rounded-none border-dashed">
+           <div className="py-8 text-center bg-white/[0.02] border border-white/5 rounded-2xl border-dashed">
              <p className="text-xs font-bold text-white/30 uppercase tracking-widest">No branches added</p>
            </div>
         )}
       </div>
 
       {/* Danger zone */}
-      <div className="mt-6 bg-red-500/5 border border-red-500/20 rounded-none p-6">
+      <div className="mt-6 bg-red-500/5 border border-red-500/20 rounded-2xl p-6">
         <h3 className="font-bold text-red-400 mb-1">Danger zone</h3>
         <p className="text-xs text-white/30 mb-4">
           Deleting a dealership removes all their listings and portal accounts permanently.

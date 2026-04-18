@@ -52,7 +52,7 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
       })
         .bindPopup(
           L.popup({ autoClose: false }).setContent(
-            '<div class="text-center"><p class="font-bold text-slate-900">📍 Your Location</p></div>'
+            '<div class="text-center"><p class="font-bold text-slate-900 dark:text-white">📍 Your Location</p></div>'
           )
         )
         .addTo(leafletMap);
@@ -67,12 +67,12 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
       const customIcon = L.divIcon({
         html: `
           <div class="flex flex-col items-center">
-            <div class="bg-[#111111] text-white rounded-none font-bold text-xs shadow-lg border-2 border-white flex items-center justify-center w-9 h-9" style="line-height: 1;">
+            <div class="bg-[#111111] text-white rounded-2xl font-bold text-xs shadow-lg border-2 border-white flex items-center justify-center w-9 h-9" style="line-height: 1;">
               ${dealer.name?.[0]?.toUpperCase() || '?'}
             </div>
             ${
               dealer.distance
-                ? `<div class="text-slate-900 text-[10px] font-bold bg-[#ff5a2f] px-1.5 py-0.5 rounded-none mt-1 shadow-md whitespace-nowrap">
+                ? `<div class="text-slate-900 dark:text-white text-[11px] font-bold bg-[#ff5a2f] px-1.5 py-0.5 rounded-2xl mt-1 shadow-md whitespace-nowrap">
                      ${formatDistance(dealer.distance)}
                    </div>`
                 : ''
@@ -87,7 +87,7 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
 
       const popupContent = `
         <div class="space-y-2 min-w-[220px]">
-          <h3 class="font-bold text-slate-900 text-sm">${dealer.name}</h3>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm">${dealer.name}</h3>
           <p class="text-xs text-slate-600">${dealer.location}</p>
           ${
             dealer.distance
@@ -102,7 +102,7 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
               : ''
           }
           ${dealer.verified ? '<p class="text-xs text-[#ff5a2f] font-semibold">✓ Verified Dealer</p>' : ''}
-          <a href="/dealers/${dealer.slug}" class="inline-block mt-2 text-xs font-bold text-slate-900 bg-[#ff5a2f] hover:bg-blue-700 px-3 py-1.5 rounded transition">
+          <a href="/dealers/${dealer.slug}" class="inline-block mt-2 text-xs font-bold text-slate-900 dark:text-white bg-[#ff5a2f] hover:bg-blue-700 px-3 py-1.5 rounded transition">
             View Profile
           </a>
         </div>

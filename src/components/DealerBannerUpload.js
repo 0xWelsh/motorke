@@ -36,7 +36,7 @@ export default function DealerBannerUpload({ currentUrl, dealerName }) {
 
   return (
     <div
-      className="relative group cursor-pointer rounded-none overflow-hidden border border-[#ddd4c8] bg-[#fbfcfe]"
+      className="relative group cursor-pointer rounded-2xl overflow-hidden border border-[#ddd4c8] dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#111111]"
       onClick={() => fileRef.current?.click()}
     >
       <input
@@ -66,9 +66,9 @@ export default function DealerBannerUpload({ currentUrl, dealerName }) {
 
       <div className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
         {uploading ? (
-          <Loader2 size={18} className="animate-spin text-slate-900" />
+          <Loader2 size={18} className="animate-spin text-slate-900 dark:text-white" />
         ) : (
-          <span className="inline-flex items-center gap-2 text-slate-900 text-xs font-black uppercase tracking-[0.14em]">
+          <span className="inline-flex items-center gap-2 text-slate-900 dark:text-white text-xs font-black uppercase tracking-[0.14em]">
             <Camera size={16} />
             Change Banner
           </span>

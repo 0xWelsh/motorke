@@ -152,20 +152,20 @@ function FAQCategory({ category, items }) {
     <div className="mb-12">
       <div className="flex items-center gap-3 mb-6">
         {icons[category]}
-        <h2 className="text-2xl font-bold text-slate-900">{category}</h2>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{category}</h2>
       </div>
 
       <div className="space-y-3">
         {items.map((item, idx) => (
           <div
             key={idx}
-            className="border border-slate-200 rounded-lg overflow-hidden hover:border-slate-300 transition"
+            className="border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden hover:border-slate-300 transition"
           >
             <button
               onClick={() => setOpenId(openId === idx ? null : idx)}
-              className="w-full px-6 py-4 flex items-start justify-between gap-4 bg-white hover:bg-slate-50 transition"
+              className="w-full px-6 py-4 flex items-start justify-between gap-4 bg-white hover:bg-slate-50 dark:bg-slate-900 transition"
             >
-              <span className="text-left font-semibold text-slate-900 text-sm md:text-base">
+              <span className="text-left font-semibold text-slate-900 dark:text-white text-sm md:text-base">
                 {item.q}
               </span>
               <ChevronDown
@@ -176,7 +176,7 @@ function FAQCategory({ category, items }) {
             </button>
 
             {openId === idx && (
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200">
                 <p className="text-slate-700 text-sm leading-relaxed">{item.a}</p>
               </div>
             )}
@@ -212,7 +212,7 @@ export default function FAQPage() {
 
           {/* Still Have Questions */}
           <div className="mt-16 bg-blue-50 border border-blue-200 rounded-lg p-8 text-center">
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Didn't find your answer?</h3>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Didn't find your answer?</h3>
             <p className="text-slate-700 mb-6">
               Reach out to our support team. We're here to help.
             </p>

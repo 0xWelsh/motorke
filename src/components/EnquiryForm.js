@@ -154,22 +154,22 @@ export default function EnquiryForm({
     });
   }
 
-  const inputCls = "w-full bg-[#fbfcfe] border border-[#ddd4c8] rounded-none px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none focus:border-[var(--brand-accent)]/30 focus:bg-white transition-all shadow-sm";
+  const inputCls = "w-full bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 outline-none focus:border-[var(--brand-accent)]/30 focus:bg-white transition-all shadow-sm";
 
   if (state === "sent") {
     return (
       <div className="text-center py-8">
-        <div className="w-12 h-12 bg-emerald-50 rounded-none flex items-center justify-center mx-auto mb-3">
+        <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
           <span className="text-[#ff5a2f] text-xl">✓</span>
         </div>
         <p className="font-bold text-[#ff5a2f] mb-1">Enquiry sent!</p>
         <p className="text-xs text-slate-500">
-          {dealer.name} will contact you on <span className="text-slate-800 font-semibold">{phone}</span> shortly.
+          {dealer.name} will contact you on <span className="text-slate-800 dark:text-slate-200 font-semibold">{phone}</span> shortly.
         </p>
         {waLink && (
           <a href={waLink} target="_blank" rel="noopener noreferrer"
             onClick={handleWhatsApp}
-            className="mt-4 inline-flex items-center gap-2 bg-[#25D366]/10 border border-[#25D366]/20 text-[#25D366] text-xs font-semibold px-4 py-2.5 rounded-none hover:bg-[#25D366]/20 transition-colors">
+            className="mt-4 inline-flex items-center gap-2 bg-[#25D366]/10 border border-[#25D366]/20 text-[#25D366] text-xs font-semibold px-4 py-2.5 rounded-2xl hover:bg-[#25D366]/20 transition-colors">
             💬 Also message on WhatsApp
           </a>
         )}
@@ -186,7 +186,7 @@ export default function EnquiryForm({
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleWhatsApp}
-          className="flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1fb558] text-slate-900 font-bold text-sm py-3.5 rounded-none transition-all w-full shadow-lg shadow-[#25D366]/10 active:scale-[0.98]"
+          className="flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1fb558] text-slate-900 dark:text-white font-bold text-sm py-3.5 rounded-2xl transition-all w-full shadow-lg shadow-[#25D366]/10 active:scale-[0.98]"
         >
           💬 WhatsApp {dealer.name}
         </a>
@@ -195,13 +195,13 @@ export default function EnquiryForm({
       {waLink && whatsAppFirst && (
         <div className="flex items-center gap-3 my-1">
           <div className="flex-1 h-px bg-slate-100" />
-          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">or send a message</span>
+          <span className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">or send a message</span>
           <div className="flex-1 h-px bg-slate-100" />
         </div>
       )}
 
       {state === "error" && (
-        <p className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-none px-3 py-2">
+        <p className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-2xl px-3 py-2">
           {errorText || "Something went wrong. Please try WhatsApp instead."}
         </p>
       )}
@@ -246,7 +246,7 @@ export default function EnquiryForm({
                 key={preset}
                 type="button"
                 onClick={() => setMessage(preset)}
-                className="text-[10px] font-bold uppercase tracking-[0.08em] px-2.5 py-1.5 rounded-none border border-[#ddd4c8] text-slate-600 hover:bg-[#fbfcfe] hover:text-slate-900 transition-colors"
+                className="text-[11px] font-bold uppercase tracking-[0.08em] px-2.5 py-1.5 rounded-2xl border border-[#ddd4c8] dark:border-slate-800 text-slate-600 hover:bg-[#fbfcfe] dark:bg-[#111111] hover:text-slate-900 dark:text-white transition-colors"
               >
                 {preset}
               </button>
@@ -269,7 +269,7 @@ export default function EnquiryForm({
         <button
           type="submit"
           disabled={state === "sending"}
-          className="w-full bg-slate-700 hover:bg-slate-800 disabled:opacity-50 text-slate-900 font-bold py-3 rounded-none text-xs uppercase tracking-widest transition-all active:scale-[0.98]"
+          className="w-full bg-slate-700 hover:bg-slate-800 disabled:opacity-50 text-slate-900 dark:text-white font-bold py-3 rounded-2xl text-xs uppercase tracking-widest transition-all active:scale-[0.98]"
         >
           {state === "sending" ? "Sending..." : "Submit Enquiry"}
         </button>
@@ -287,39 +287,39 @@ export default function EnquiryForm({
         
         {showSafetyBadge && (
           <div className="flex items-center justify-center gap-1.5 pt-2">
-            <div className="w-3.5 h-3.5 rounded-none bg-emerald-100 flex items-center justify-center">
+            <div className="w-3.5 h-3.5 rounded-2xl bg-emerald-100 flex items-center justify-center">
               <span className="text-[#ff5a2f] text-[8px]">✓</span>
             </div>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Safe & Secure Enquiry</span>
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Safe & Secure Enquiry</span>
           </div>
         )}
       </form>
 
       {!whatsAppFirst && (waLink || callLink) && (
-        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#ddd4c8]">
+        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#ddd4c8] dark:border-slate-800">
           {waLink ? (
             <a
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleWhatsApp}
-              className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1fb558] text-slate-900 font-bold text-xs py-2.5 rounded-none transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1fb558] text-slate-900 dark:text-white font-bold text-xs py-2.5 rounded-2xl transition-colors"
             >
               WhatsApp
             </a>
           ) : (
-            <span className="inline-flex items-center justify-center text-xs font-bold py-2.5 rounded-none bg-slate-100 text-slate-400">WhatsApp</span>
+            <span className="inline-flex items-center justify-center text-xs font-bold py-2.5 rounded-2xl bg-slate-100 text-slate-400">WhatsApp</span>
           )}
           {callLink ? (
             <a
               href={callLink}
               onClick={handleCall}
-              className="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white font-bold text-xs py-2.5 rounded-none transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white font-bold text-xs py-2.5 rounded-2xl transition-colors"
             >
               Call Now
             </a>
           ) : (
-            <span className="inline-flex items-center justify-center text-xs font-bold py-2.5 rounded-none bg-slate-100 text-slate-400">Call</span>
+            <span className="inline-flex items-center justify-center text-xs font-bold py-2.5 rounded-2xl bg-slate-100 text-slate-400">Call</span>
           )}
         </div>
       )}

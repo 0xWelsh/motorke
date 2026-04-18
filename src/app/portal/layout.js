@@ -35,10 +35,10 @@ function NavLink({ href, label, Icon, active, onClick }) {
       href={href}
       onClick={onClick}
       className={clsx(
-        "flex items-center gap-3 px-4 py-3 rounded-none transition-none",
+        "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all",
         active 
           ? "bg-[#111111] text-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]" 
-          : "text-slate-700 hover:text-slate-900 hover:bg-[#fbfcfe]"
+          : "text-slate-700 hover:text-slate-900 dark:text-white hover:bg-[#fbfcfe] dark:bg-[#111111]"
       )}
     >
       <Icon size={18} />
@@ -79,17 +79,17 @@ export default function PortalLayout({ children }) {
       )}
 
       {/* Top Header */}
-      <header className="sticky top-0 z-30 bg-white border-b border-[#ddd4c8] px-3 sm:px-4 lg:px-8 py-3 sm:py-4 flex items-center justify-between shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+      <header className="sticky top-0 z-30 bg-white border-b border-[#ddd4c8] dark:border-slate-800 px-3 sm:px-4 lg:px-8 py-3 sm:py-4 flex items-center justify-between shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
          <div className="flex items-center gap-3">
            <button 
              onClick={() => setDrawerOpen(!drawerOpen)}
-             className="p-2 -ml-2 text-slate-700 hover:text-slate-900 transition-colors"
+             className="p-2 -ml-2 text-slate-700 hover:text-slate-900 dark:text-white transition-colors"
            >
              <Menu size={20} />
            </button>
            <div className="hidden lg:flex flex-col">
-              <span className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900">Motorske</span>
-              <p className="text-[10px] uppercase font-black tracking-[0.15em] font-semibold text-[#ff5a2f] mt-0.5 flex items-center gap-1">
+              <span className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900 dark:text-white">Motorske</span>
+              <p className="text-[11px] uppercase font-black tracking-[0.15em] font-semibold text-[#ff5a2f] mt-0.5 flex items-center gap-1">
                  <ShieldCheck size={11} /> Active Subscription
               </p>
            </div>
@@ -97,7 +97,7 @@ export default function PortalLayout({ children }) {
          
          <div className="flex items-center gap-4">
             <NotificationsBell variant="portal" />
-            <div className="w-10 h-10 rounded-none bg-[#fbfcfe] border border-[#ddd4c8] text-slate-700 flex items-center justify-center font-bold shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+            <div className="w-10 h-10 rounded-2xl bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-700 flex items-center justify-center font-bold shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
               D
             </div>
          </div>
@@ -105,15 +105,15 @@ export default function PortalLayout({ children }) {
 
       {/* Floating Drawer */}
       <aside className={clsx(
-        "fixed left-0 top-0 h-screen w-72 bg-white border-r border-[#ddd4c8] shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)] z-50 flex flex-col transition-transform duration-300",
+        "fixed left-0 top-0 h-screen w-72 bg-white border-r border-[#ddd4c8] dark:border-slate-800 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)] z-50 flex flex-col transition-transform duration-300",
         drawerOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         {/* Close Button */}
-        <div className="p-4 flex items-center justify-between border-b border-[#ddd4c8]">
-          <span className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900">Navigation</span>
+        <div className="p-4 flex items-center justify-between border-b border-[#ddd4c8] dark:border-slate-800">
+          <span className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900 dark:text-white">Navigation</span>
           <button 
             onClick={() => setDrawerOpen(false)}
-            className="p-1 text-slate-700 hover:text-slate-900 transition-colors"
+            className="p-1 text-slate-700 hover:text-slate-900 dark:text-white transition-colors"
           >
             <X size={18} />
           </button>
@@ -123,7 +123,7 @@ export default function PortalLayout({ children }) {
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar">
           {/* OVERVIEW Section */}
           <div className="mb-4">
-            <p className="text-[10px] uppercase font-black tracking-[0.15em] font-bold text-slate-700 uppercase tracking-wide px-4 py-2 mb-2">Overview</p>
+            <p className="text-[11px] uppercase font-black tracking-[0.15em] font-bold text-slate-700 uppercase tracking-wide px-4 py-2 mb-2">Overview</p>
             <div className="space-y-1">
               {links.slice(0, 3).map(({ href, label, Icon }) => (
                 <NavLink 
@@ -140,7 +140,7 @@ export default function PortalLayout({ children }) {
 
           {/* MANAGEMENT Section */}
           <div>
-            <p className="text-[10px] uppercase font-black tracking-[0.15em] font-bold text-slate-700 uppercase tracking-wide px-4 py-2 mb-2">Management</p>
+            <p className="text-[11px] uppercase font-black tracking-[0.15em] font-bold text-slate-700 uppercase tracking-wide px-4 py-2 mb-2">Management</p>
             <div className="space-y-1">
               {links.slice(3).map(({ href, label, Icon }) => (
                 <NavLink 
@@ -157,34 +157,34 @@ export default function PortalLayout({ children }) {
         </nav>
 
         {/* Drawer Footer */}
-        <div className="p-4 border-t border-[#ddd4c8] space-y-2">
+        <div className="p-4 border-t border-[#ddd4c8] dark:border-slate-800 space-y-2">
           <Link 
             href="/portal/cars/bulk"
             onClick={handleNavClick}
-            className="flex items-center justify-center gap-2 w-full bg-[#fbfcfe] hover:bg-slate-200 text-slate-900 font-semibold py-2.5 rounded-none transition-none text-[10px] uppercase font-black tracking-[0.15em]"
+            className="flex items-center justify-center gap-2 w-full bg-[#fbfcfe] dark:bg-[#111111] hover:bg-slate-200 text-slate-900 dark:text-white font-semibold py-2.5 rounded-2xl transition-all text-[11px] uppercase font-black tracking-[0.15em]"
           >
             <Plus size={14} /> Bulk Upload
           </Link>
           <Link 
             href="/portal/cars/new"
             onClick={handleNavClick}
-            className="flex items-center justify-center gap-2 w-full bg-[#111111] hover:bg-[#111111] text-white font-semibold py-2.5 rounded-none transition-none shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] text-[10px] uppercase font-black tracking-[0.15em]"
+            className="flex items-center justify-center gap-2 w-full bg-[#111111] hover:bg-[#111111] text-white font-semibold py-2.5 rounded-2xl transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] text-[11px] uppercase font-black tracking-[0.15em]"
           >
             <Plus size={14} /> Add Car
           </Link>
           
-          <div className="pt-2 border-t border-[#ddd4c8] space-y-1">
+          <div className="pt-2 border-t border-[#ddd4c8] dark:border-slate-800 space-y-1">
             <Link 
               href="/"
               onClick={handleNavClick}
-              className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-slate-900 text-[10px] uppercase font-black tracking-[0.15em] font-semibold rounded-none transition-none"
+              className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-slate-900 dark:text-white text-[11px] uppercase font-black tracking-[0.15em] font-semibold rounded-2xl transition-all"
             >
               <ExternalLink size={14} /> Marketplace
             </Link>
             <form action="/api/auth/logout" method="POST">
               <button 
                 type="submit" 
-                className="flex items-center gap-3 w-full px-4 py-2.5 text-slate-700 hover:text-rose-600 text-[10px] uppercase font-black tracking-[0.15em] font-semibold rounded-none transition-none"
+                className="flex items-center gap-3 w-full px-4 py-2.5 text-slate-700 hover:text-rose-600 text-[11px] uppercase font-black tracking-[0.15em] font-semibold rounded-2xl transition-all"
               >
                 <LogOut size={14} /> Sign Out
               </button>

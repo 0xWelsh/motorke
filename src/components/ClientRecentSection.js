@@ -49,15 +49,15 @@ export default function ClientRecentSection() {
   if (loading || (recent.length === 0 && recommended.length === 0)) return null;
 
   return (
-    <section className="bg-white border-y border-[#ddd4c8] py-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+    <section className="bg-white border-y border-[#ddd4c8] dark:border-slate-800 py-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
       <div className="container mx-auto px-6 max-w-7xl">
         
         {/* PERSONALIZED HEADER */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-[#fbfcfe] border border-[#ddd4c8] rounded-none flex items-center justify-center shadow-sm">
+            <div className="w-14 h-14 bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl flex items-center justify-center shadow-sm">
               {user ? (
-                <div className="w-10 h-10 bg-[var(--brand)] rounded-none flex items-center justify-center text-slate-900 font-bold">
+                <div className="w-10 h-10 bg-[var(--brand)] rounded-2xl flex items-center justify-center text-slate-900 dark:text-white font-bold">
                   {user.name.charAt(0)}
                 </div>
               ) : (
@@ -65,13 +65,13 @@ export default function ClientRecentSection() {
               )}
             </div>
             <div>
-              <h2 className="text-3xl font-black text-slate-900 tracking-tight">
+              <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                 {user ? `Welcome back, ${user.name.split(' ')[0]}!` : "Welcome back!"}
               </h2>
               <p className="text-slate-700 text-sm font-medium">Picking up where you left off...</p>
             </div>
           </div>
-          <Link href="/account?tab=saved" className="bg-[#fbfcfe] border border-[#ddd4c8] px-6 py-3 rounded-none text-sm font-bold text-slate-900 hover:border-[var(--brand-accent)]/30 hover:text-[var(--brand)] transition-all shadow-sm flex items-center gap-2">
+          <Link href="/account?tab=saved" className="bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 px-6 py-3 rounded-2xl text-sm font-bold text-slate-900 dark:text-white hover:border-[var(--brand-accent)]/30 hover:text-[var(--brand)] transition-all shadow-sm flex items-center gap-2">
             My Saved Collection <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
@@ -80,7 +80,7 @@ export default function ClientRecentSection() {
         {recent.length > 0 && (
           <div className="mb-16">
             <div className="flex items-center gap-2 mb-6">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Recently Viewed</span>
+              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white">Recently Viewed</span>
               <div className="h-px flex-1 bg-slate-100" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -97,7 +97,7 @@ export default function ClientRecentSection() {
             <div className="flex items-center gap-3 mb-6">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[var(--brand-accent)] fill-[var(--brand-accent)]" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Recommended for You</span>
+                <span className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white">Recommended for You</span>
               </div>
               <div className="h-px flex-1 bg-slate-100" />
             </div>
@@ -120,17 +120,17 @@ export default function ClientRecentSection() {
 
 function CarMiniCard({ car }) {
   return (
-    <Link href={`/cars/${car.id}`} className="group bg-white border border-[#ddd4c8] overflow-hidden hover:border-[var(--brand-accent)]/30 hover:shadow-xl transition-all duration-500 shadow-sm">
-      <div className="aspect-[16/10] overflow-hidden bg-[#fbfcfe] relative">
+    <Link href={`/cars/${car.id}`} className="group bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 overflow-hidden hover:border-[var(--brand-accent)]/30 hover:shadow-xl transition-all duration-500 shadow-sm">
+      <div className="aspect-[16/10] overflow-hidden bg-[#fbfcfe] dark:bg-[#111111] relative">
         {car.image ? (
           <img src={car.image} alt={car.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-500 text-[10px] font-black uppercase tracking-widest">No Image</div>
+          <div className="w-full h-full flex items-center justify-center text-slate-500 text-[11px] font-black uppercase tracking-widest">No Image</div>
         )}
         <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/5 transition-colors duration-500" />
       </div>
       <div className="p-5">
-        <h3 className="font-bold text-slate-900 text-sm truncate group-hover:text-[var(--brand)] transition-colors mb-1">{car.title}</h3>
+        <h3 className="font-bold text-slate-900 dark:text-white text-sm truncate group-hover:text-[var(--brand)] transition-colors mb-1">{car.title}</h3>
         <p className="text-[var(--brand-accent)] font-black text-base">{formatCarPrice(car)}</p>
       </div>
     </Link>

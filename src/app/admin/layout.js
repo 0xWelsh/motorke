@@ -44,17 +44,17 @@ function NavLink({ href, label, Icon, active }) {
     <Link 
       href={href} 
       className={clsx(
-        "flex items-center justify-between group px-5 py-3 rounded-none transition-all duration-300",
+        "flex items-center justify-between group px-5 py-3 rounded-2xl transition-all duration-300",
         active
           ? "bg-[#111111] border border-[#111111] text-white shadow-none"
-          : "text-slate-900 bg-white border border-transparent hover:bg-[#fbfcfe] hover:border-[#ddd4c8]"
+          : "text-slate-900 dark:text-white bg-white dark:bg-[#111111] border border-transparent hover:bg-[#fbfcfe] dark:bg-[#111111] hover:border-[#ddd4c8] dark:border-slate-800"
       )}
     >
       <div className="flex items-center gap-3">
-        <Icon size={18} className={clsx("transition-none", active ? "text-[#ff5a2f]" : "group-hover:text-[#ff5a2f]")} />
+        <Icon size={18} className={clsx("transition-all", active ? "text-[#ff5a2f]" : "group-hover:text-[#ff5a2f]")} />
         <span className="text-[11px] font-black uppercase tracking-[0.15em]">{label}</span>
       </div>
-      {active && <div className="w-1.5 h-1.5 rounded-none bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />}
+      {active && <div className="w-1.5 h-1.5 rounded-2xl bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />}
     </Link>
   );
 }
@@ -84,7 +84,7 @@ export default function AdminLayout({ children }) {
   };
 
   return (
-    <div className="flex bg-[#fbfcfe] text-white selection:bg-[#ff5a2f]]/20 selection:text-white relative">
+    <div className="flex bg-[#fbfcfe] dark:bg-[#111111] text-white selection:bg-[#ff5a2f]]/20 selection:text-white relative">
       
       {/* Mobile Backdrop */}
       {sidebarOpen && (
@@ -96,25 +96,25 @@ export default function AdminLayout({ children }) {
 
       {/* Sidebar */}
       <aside className={clsx(
-        "w-72 bg-white border-r border-[#ddd4c8] flex flex-col shrink-0 h-screen z-50 fixed transition-transform duration-300 shadow-none lg:shadow-none lg:border-r lg:sticky lg:top-0 lg:translate-x-0",
+        "w-72 bg-white border-r border-[#ddd4c8] dark:border-slate-800 flex flex-col shrink-0 h-screen z-50 fixed transition-transform duration-300 lg:lg:border-r lg:sticky lg:top-0 lg:translate-x-0",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         {/* Branding */}
         <div className="p-6 lg:p-8 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-4 group">
-            <div className="w-12 h-12 bg-[#111111] rounded-none flex items-center justify-center group-hover:bg-[#ff5a2f] transition-all duration-500 shadow-none shadow-none">
-              <img src="/headerlogo.png" alt="Motorke" className="w-8 h-8 object-contain rounded-none filter invert brightness-200" />
+            <div className="w-12 h-12 bg-[#111111] rounded-2xl flex items-center justify-center group-hover:bg-[#ff5a2f] transition-all duration-500 shadow-none">
+              <img src="/headerlogo.png" alt="Motorke" className="w-8 h-8 object-contain rounded-2xl filter invert brightness-200" />
             </div>
             <div>
-              <span className="text-xl font-black text-slate-900 tracking-tighter block leading-none">
+              <span className="text-xl font-black text-slate-900 dark:text-white tracking-tighter block leading-none">
                 Motor<span className="text-[#ff5a2f]">ke</span>
               </span>
-              <span className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em] mt-1.5 block">
+              <span className="text-[11px] font-bold text-slate-600 uppercase tracking-[0.2em] mt-1.5 block">
                 Admin Panel
               </span>
             </div>
           </Link>
-          <button className="lg:hidden p-2 text-slate-400 hover:bg-slate-100 rounded-none" onClick={() => setSidebarOpen(false)}>
+          <button className="lg:hidden p-2 text-slate-400 hover:bg-slate-100 rounded-2xl" onClick={() => setSidebarOpen(false)}>
             <X size={20} />
           </button>
         </div>
@@ -138,11 +138,11 @@ export default function AdminLayout({ children }) {
 
         {/* Footer */}
         <div className="p-6 border-t border-slate-100 bg-slate-50/50">
-          <Link href="/" className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:text-slate-900 text-[11px] font-bold uppercase tracking-widest rounded-none transition-all hover:bg-white border border-transparent hover:border-[#ddd4c8]">
+          <Link href="/" className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:text-slate-900 dark:text-white text-[11px] font-bold uppercase tracking-widest rounded-2xl transition-all hover:bg-white dark:bg-[#111111] border border-transparent hover:border-[#ddd4c8] dark:border-slate-800">
             <ExternalLink size={14} /> View Site
           </Link>
           <form action="/api/auth/logout" method="POST" className="mt-1">
-            <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 text-slate-700 hover:text-rose-600 text-[11px] font-bold uppercase tracking-widest rounded-none transition-all hover:bg-rose-50 hover:border-rose-100 border border-transparent">
+            <button type="submit" className="flex items-center gap-3 w-full px-4 py-3 text-slate-700 hover:text-rose-600 text-[11px] font-bold uppercase tracking-widest rounded-2xl transition-all hover:bg-rose-50 hover:border-rose-100 border border-transparent">
               <LogOut size={14} /> Log Out
             </button>
           </form>
@@ -152,17 +152,17 @@ export default function AdminLayout({ children }) {
       {/* Main Content */}
       <main className="flex-1 min-w-0 min-h-screen relative flex flex-col">
         {/* Header */}
-        <header className="sticky top-0 z-30 bg-white border-b border-[#ddd4c8] px-4 lg:px-10 py-4 lg:py-5 flex items-center justify-between shadow-none">
+        <header className="sticky top-0 z-30 bg-white border-b border-[#ddd4c8] dark:border-slate-800 px-4 lg:px-10 py-4 lg:py-5 flex items-center justify-between shadow-none">
            <div className="flex items-center gap-3 lg:gap-4 text-[11px] font-bold text-slate-600 uppercase tracking-widest shrink-0">
               <button 
-                className="lg:hidden p-2 -ml-2 text-slate-400 hover:text-slate-900 transition-colors"
+                className="lg:hidden p-2 -ml-2 text-slate-400 hover:text-slate-900 dark:text-white transition-colors"
                 onClick={() => setSidebarOpen(true)}
               >
                  <Menu size={20} />
               </button>
               <span className="hidden sm:inline hover:text-[#ff5a2f] transition-colors cursor-default">Admin</span>
               <ChevronRight size={12} className="hidden sm:block text-slate-400" />
-              <span className="text-slate-900 font-black truncate max-w-[120px] sm:max-w-none">{links.find(l => l.href === path)?.label || "Overview"}</span>
+              <span className="text-slate-900 dark:text-white font-black truncate max-w-[120px] sm:max-w-none">{links.find(l => l.href === path)?.label || "Overview"}</span>
            </div>
            
            <div className="flex items-center gap-8">
@@ -175,23 +175,23 @@ export default function AdminLayout({ children }) {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleGlobalSearch}
-                  className="bg-[#f7f6f3] border border-[#ddd4c8] rounded-none pl-12 pr-4 py-2.5 text-[13px] font-medium w-64 focus:w-80 focus:border-[#ff5a2f]/50 focus:bg-white focus:outline-none transition-all placeholder:text-slate-600"
+                  className="bg-[#f7f6f3] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl pl-12 pr-4 py-2.5 text-[13px] font-medium w-64 focus:w-80 focus:border-[#ff5a2f]/50 focus:bg-white focus:outline-none transition-all placeholder:text-slate-600"
                 />
               </div>
 
-              <div className="flex items-center gap-3 lg:gap-4 border-l border-[#ddd4c8] pl-4 lg:pl-8">
+              <div className="flex items-center gap-3 lg:gap-4 border-l border-[#ddd4c8] dark:border-slate-800 pl-4 lg:pl-8">
                   <NotificationsBell variant="admin" />
-                 <button className="hidden sm:block text-slate-600 hover:text-slate-900 transition-all" title="Configuration">
+                 <button className="hidden sm:block text-slate-600 hover:text-slate-900 dark:text-white transition-all" title="Configuration">
                     <Settings size={20} />
                  </button>
               </div>
 
-              <div className="flex items-center gap-3 bg-[#ff5a2f]]/10 border border-emerald-200 p-1.5 lg:pr-4 rounded-none group cursor-pointer hover:border-emerald-300 hover:bg-[#ff5a2f]]/20/40 transition-all">
-                <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-none bg-[#ff5a2f] text-white flex items-center justify-center font-black text-[10px] lg:text-xs shadow-none group-hover:bg-#e54a1f transition-all duration-300">
+              <div className="flex items-center gap-3 bg-[#ff5a2f]]/10 border border-emerald-200 p-1.5 lg:pr-4 rounded-2xl group cursor-pointer hover:border-emerald-300 hover:bg-[#ff5a2f]]/20/40 transition-all">
+                <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-2xl bg-[#ff5a2f] text-white flex items-center justify-center font-black text-[11px] lg:text-xs group-hover:bg-#e54a1f transition-all duration-300">
                   AD
                 </div>
                 <div className="hidden lg:flex flex-col">
-                  <p className="text-[11px] font-black text-slate-900 uppercase leading-none">Super Admin</p>
+                  <p className="text-[11px] font-black text-slate-900 dark:text-white uppercase leading-none">Super Admin</p>
                   <p className="text-[9px] font-bold text-[#ff5a2f] uppercase tracking-widest mt-1">Verified</p>
                 </div>
               </div>

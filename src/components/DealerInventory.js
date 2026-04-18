@@ -36,23 +36,23 @@ export default function DealerInventory({ cars, dealerSlug }) {
             placeholder="Search this dealer's inventory..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full bg-white border border-[#ece6dd] rounded-none px-11 py-3.5 text-sm font-bold placeholder:text-slate-400 outline-none focus:border-[#ddd4c8] transition-all shadow-sm"
+            className="w-full bg-white dark:bg-[#111111] border border-[#ece6dd] rounded-2xl px-11 py-3.5 text-sm font-bold placeholder:text-slate-400 outline-none focus:border-[#ddd4c8] dark:border-slate-800 transition-all shadow-sm"
           />
           {query && (
-            <button onClick={() => setQuery("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-900">
+            <button onClick={() => setQuery("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-900 dark:text-white">
                <X className="w-4 h-4" />
             </button>
           )}
         </div>
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 sm:pb-0 hide-scrollbar">
-          <div className="flex items-center justify-center w-10 h-10 shrink-0 bg-[#fbfcfe] border border-[#ece6dd] rounded-none text-slate-500">
+          <div className="flex items-center justify-center w-10 h-10 shrink-0 bg-[#fbfcfe] dark:bg-[#111111] border border-[#ece6dd] rounded-2xl text-slate-500">
              <SlidersHorizontal className="w-4 h-4" />
           </div>
           {makes.map((make) => (
              <button
                key={make}
                onClick={() => setActiveFilter(make)}
-               className={`px-4 py-2.5 shrink-0 rounded-none text-[10px] font-black uppercase tracking-widest transition-all border shadow-sm ${
+               className={`px-4 py-2.5 shrink-0 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all border shadow-sm ${
                  activeFilter === make
                     ? "bg-slate-900 text-white border-slate-900"
                     : "bg-white text-white border-[#ece6dd] hover:border-slate-400"
@@ -65,9 +65,9 @@ export default function DealerInventory({ cars, dealerSlug }) {
       </div>
 
       {filteredCars.length === 0 ? (
-        <div className="border border-dashed border-[#ece6dd] bg-[#fbfcfe] rounded-[2rem] p-12 text-center">
+        <div className="border border-dashed border-[#ece6dd] bg-[#fbfcfe] dark:bg-[#111111] rounded-[2rem] p-12 text-center">
            <Search className="w-8 h-8 mx-auto text-slate-300 mb-4" />
-           <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-1">No matches found</h3>
+           <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest mb-1">No matches found</h3>
            <p className="text-xs font-medium text-slate-500">Try adjusting your filters or search query.</p>
         </div>
       ) : (
@@ -91,7 +91,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
             return (
               <article key={car.id} className="py-6 group">
                 <div className="grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)_170px] gap-4 md:gap-5 items-start">
-                  <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-[#fbfcfe] overflow-hidden border border-[#ece6dd] rounded-[1.25rem]">
+                  <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-[#fbfcfe] dark:bg-[#111111] overflow-hidden border border-[#ece6dd] rounded-[1.25rem]">
                     {img ? (
                       <Image
                         src={img}
@@ -101,13 +101,13 @@ export default function DealerInventory({ cars, dealerSlug }) {
                         sizes="(max-width: 768px) 100vw, 220px"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-slate-400 text-[10px] font-bold uppercase tracking-widest">No Image</div>
+                      <div className="w-full h-full flex items-center justify-center text-slate-400 text-[11px] font-bold uppercase tracking-widest">No Image</div>
                     )}
 
                     {car.badges?.length > 0 && (
                       <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
                         {car.badges.slice(0, 2).map((b) => (
-                          <span key={b} className={`text-[9px] font-extrabold px-2 py-1 rounded-none shadow-sm ${BADGE_OPTIONS[b]?.color || "bg-white/90 text-slate-700"}`}>
+                          <span key={b} className={`text-[9px] font-extrabold px-2 py-1 rounded-2xl shadow-sm ${BADGE_OPTIONS[b]?.color || "bg-white/90 text-slate-700"}`}>
                             {b}
                           </span>
                         ))}
@@ -117,13 +117,13 @@ export default function DealerInventory({ cars, dealerSlug }) {
 
                   <div className="min-w-0 flex flex-col h-full justify-center">
                     <Link href={`/cars/${car.id}`}>
-                      <h3 className="text-lg sm:text-xl font-bold text-slate-900 leading-tight mb-2 group-hover:text-amber-600 transition-colors line-clamp-1">{title}</h3>
+                      <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-tight mb-2 group-hover:text-amber-600 transition-colors line-clamp-1">{title}</h3>
                     </Link>
 
                     <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-extrabold uppercase tracking-[0.12em] text-slate-500 mb-5">
                       {specs.map((s, idx) => (
                         <span key={idx} className="flex items-center gap-4">
-                           {s} {idx !== specs.length - 1 && <span className="w-1 h-1 rounded-none bg-slate-200" />}
+                           {s} {idx !== specs.length - 1 && <span className="w-1 h-1 rounded-2xl bg-slate-200" />}
                         </span>
                       ))}
                     </div>
@@ -135,10 +135,10 @@ export default function DealerInventory({ cars, dealerSlug }) {
 
                   <div className="flex items-center justify-between md:flex-col md:items-end md:justify-center md:h-full gap-4">
                     <div className="text-left md:text-right">
-                       <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{formatCarPrice(car)}</p>
+                       <p className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">{formatCarPrice(car)}</p>
                        <p className="text-[9px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mt-1">Ready to go</p>
                     </div>
-                    <Link href={`/cars/${car.id}`} className="w-12 h-12 rounded-[1rem] bg-[#fbfcfe] border border-[#ece6dd] flex items-center justify-center text-white group-hover:bg-slate-900 group-hover:text-white group-hover:border-slate-900 transition-all shadow-sm">
+                    <Link href={`/cars/${car.id}`} className="w-12 h-12 rounded-[1rem] bg-[#fbfcfe] dark:bg-[#111111] border border-[#ece6dd] flex items-center justify-center text-white group-hover:bg-slate-900 group-hover:text-white group-hover:border-slate-900 transition-all shadow-sm">
                        <ChevronRight className="w-5 h-5 pointer-events-none" />
                     </Link>
                   </div>

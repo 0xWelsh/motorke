@@ -9,8 +9,8 @@ export default function DealerLogoUpload({ currentUrl, dealerName, size = "xl" }
   const fileRef = useRef(null);
 
   const sizeMap = {
-    md: "w-16 h-16 rounded-none text-2xl",
-    lg: "w-20 h-20 rounded-none text-3xl",
+    md: "w-16 h-16 rounded-2xl text-2xl",
+    lg: "w-20 h-20 rounded-2xl text-3xl",
     xl: "w-28 h-28 rounded-3xl text-4xl",
   };
 
@@ -57,7 +57,7 @@ export default function DealerLogoUpload({ currentUrl, dealerName, size = "xl" }
           className={`${sizeMap[size]} object-cover border-4 border-white shadow-xl shadow-slate-900/5`}
         />
       ) : (
-        <div className={`${sizeMap[size]} bg-[#faf7f2] border-4 border-white text-slate-900 flex items-center justify-center font-black shadow-xl shadow-slate-900/5`}>
+        <div className={`${sizeMap[size]} bg-[#faf7f2] border-4 border-white text-slate-900 dark:text-white flex items-center justify-center font-black shadow-xl shadow-slate-900/5`}>
           {dealerName?.[0]?.toUpperCase() || "D"}
         </div>
       )}
@@ -67,9 +67,9 @@ export default function DealerLogoUpload({ currentUrl, dealerName, size = "xl" }
         style={{ borderRadius: "inherit" }}
       >
         {uploading ? (
-          <Loader2 size={18} className="animate-spin text-slate-900" />
+          <Loader2 size={18} className="animate-spin text-slate-900 dark:text-white" />
         ) : (
-          <Camera size={18} className="text-slate-900" />
+          <Camera size={18} className="text-slate-900 dark:text-white" />
         )}
       </div>
     </div>

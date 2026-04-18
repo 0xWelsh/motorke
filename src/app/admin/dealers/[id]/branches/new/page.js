@@ -21,8 +21,8 @@ export default async function AdminNewBranchPage({ params, searchParams }) {
   const sp = await searchParams;
   const error = sp.error;
 
-  const inputCls  = "w-full bg-white/5 border border-white/10 rounded-none px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
-  const selectCls = "w-full bg-surface border border-white/10 rounded-none px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
+  const inputCls  = "w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
+  const selectCls = "w-full bg-surface border border-white/10 rounded-2xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
   const labelCls  = "block text-xs text-white/40 uppercase tracking-wider mb-2";
 
   return (
@@ -33,9 +33,9 @@ export default async function AdminNewBranchPage({ params, searchParams }) {
         <p className="text-white/40 uppercase tracking-widest text-[9px] mt-1 font-bold">For {dealer.name}</p>
       </div>
 
-      <div className="bg-[#1a1a1a] border border-white/10 rounded-none p-7">
+      <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-7">
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-none px-4 py-3 mb-5">
+          <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-2xl px-4 py-3 mb-5">
             {error === "missing" ? "Branch name is required." : "Something went wrong. Please try again."}
           </div>
         )}
@@ -80,7 +80,7 @@ export default async function AdminNewBranchPage({ params, searchParams }) {
           </div>
 
           <button type="submit"
-            className="w-full bg-[#f97316] hover:bg-[#ea6c0b] text-white font-bold py-3 rounded-none transition-colors">
+            className="w-full bg-[#f97316] hover:bg-[#ea6c0b] text-white font-bold py-3 rounded-2xl transition-colors">
             Create Branch
           </button>
         </form>

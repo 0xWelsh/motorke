@@ -120,7 +120,7 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
   // No provider configured
   if (!provider) {
     return (
-      <div className="rounded-none border border-[#ddd4c8] bg-[#fbfcfe] px-4 py-3 text-xs font-semibold text-slate-500">
+      <div className="rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#111111] px-4 py-3 text-xs font-semibold text-slate-500">
         Security verification disabled (development mode)
       </div>
     );
@@ -145,21 +145,21 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
       />
 
       {!scriptReady && !scriptTimeout && !scriptError && (
-        <div className="rounded-none border border-[#ddd4c8] bg-[#fbfcfe] px-4 py-6 flex items-center justify-center gap-3">
+        <div className="rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#111111] px-4 py-6 flex items-center justify-center gap-3">
           <Loader2 size={16} className="animate-spin text-slate-400" />
           <p className="text-xs font-semibold text-slate-600">Loading security check...</p>
         </div>
       )}
 
       {(scriptTimeout || scriptError) && !scriptReady && (
-        <div className="space-y-3 rounded-none border border-amber-200 bg-amber-50 px-4 py-3">
+        <div className="space-y-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3">
           <p className="text-xs font-semibold text-amber-900">
             Security check unavailable. You can continue without it.
           </p>
           <button
             type="button"
             onClick={useFallback}
-            className="text-xs font-bold text-slate-900 hover:text-black underline underline-offset-2 transition-colors"
+            className="text-xs font-bold text-slate-900 dark:text-white hover:text-black underline underline-offset-2 transition-colors"
           >
             Continue anyway
           </button>
@@ -167,7 +167,7 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
       )}
 
       {scriptReady && !scriptError && (
-        <div className="flex justify-center rounded-none border border-[#ddd4c8] bg-white p-3">
+        <div className="flex justify-center rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-white p-3">
           <div ref={widgetRef} className="inline-block" />
         </div>
       )}

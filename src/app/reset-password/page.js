@@ -17,7 +17,7 @@ function PasswordStrength({ password }) {
   const label = score > 0 ? labels[score - 1] : "Set a password";
 
   return (
-    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">Strength: {label}</p>
+    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">Strength: {label}</p>
   );
 }
 
@@ -81,17 +81,17 @@ export default function ResetPasswordPage() {
       <div className="mx-auto w-full max-w-md">
         <Link
           href="/login"
-          className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-700 hover:text-slate-900"
+          className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-700 hover:text-slate-900 dark:text-white"
         >
           <ArrowLeft size={14} /> Back to Sign In
         </Link>
 
-        <div className="mt-6 rounded-[1.75rem] border border-slate-200 bg-white p-6 sm:p-8 shadow-xl shadow-slate-200/50">
+        <div className="mt-6 rounded-[1.75rem] border border-slate-200 dark:border-slate-800 bg-white p-6 sm:p-8 shadow-xl shadow-slate-200/50">
           <div className="mb-6">
             <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 text-white">
               <LockKeyhole size={20} />
             </div>
-            <h1 className="mt-4 text-2xl font-black tracking-tight text-slate-900">Create a new password</h1>
+            <h1 className="mt-4 text-2xl font-black tracking-tight text-slate-900 dark:text-white">Create a new password</h1>
             <p className="mt-2 text-sm font-medium text-slate-600">Use a strong password to secure your account access.</p>
           </div>
 
@@ -116,7 +116,7 @@ export default function ResetPasswordPage() {
               name="website"
             />
 
-            <label className="block text-[10px] font-black uppercase tracking-[0.22em] text-slate-700" htmlFor="password">
+            <label className="block text-[11px] font-black uppercase tracking-[0.22em] text-slate-700" htmlFor="password">
               New Password
             </label>
             <div className="relative">
@@ -129,7 +129,7 @@ export default function ResetPasswordPage() {
                 required
                 autoComplete="new-password"
                 placeholder="At least 8 characters"
-                className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-4 pr-11 text-sm font-semibold text-slate-900 outline-none transition focus:border-emerald-500"
+                className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white py-3 pl-4 pr-11 text-sm font-semibold text-slate-900 dark:text-white outline-none transition focus:border-emerald-500"
               />
               <button
                 type="button"
@@ -143,7 +143,7 @@ export default function ResetPasswordPage() {
 
             <PasswordStrength password={password} />
 
-            <label className="block text-[10px] font-black uppercase tracking-[0.22em] text-slate-700" htmlFor="confirm">
+            <label className="block text-[11px] font-black uppercase tracking-[0.22em] text-slate-700" htmlFor="confirm">
               Confirm Password
             </label>
             <div className="relative">
@@ -156,7 +156,7 @@ export default function ResetPasswordPage() {
                 required
                 autoComplete="new-password"
                 placeholder="Re-enter password"
-                className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-4 pr-11 text-sm font-semibold text-slate-900 outline-none transition focus:border-emerald-500"
+                className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white py-3 pl-4 pr-11 text-sm font-semibold text-slate-900 dark:text-white outline-none transition focus:border-emerald-500"
               />
               <button
                 type="button"

@@ -239,7 +239,7 @@ export default async function CarDetailPage({ params }) {
           <ChevronRight className="w-3 h-3" />
           <Link href="/cars" className="hover:text-brand transition-colors">Vehicles</Link>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-slate-900 font-extrabold truncate max-w-full">{title}</span>
+          <span className="text-slate-900 dark:text-white font-extrabold truncate max-w-full">{title}</span>
         </nav>
 
         <div className="space-y-8">
@@ -258,33 +258,33 @@ export default async function CarDetailPage({ params }) {
                   </div>
                   <div className="flex items-baseline gap-2 mb-1">
                     <span className="text-xs font-serif font-semibold text-slate-500 tracking-tight">{yearLabel}</span>
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 tracking-tight leading-snug">{titleWithoutYear}</h1>
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 dark:text-white tracking-tight leading-snug">{titleWithoutYear}</h1>
                   </div>
                 </div>
 
                 <div>
                   <p className="text-xs text-slate-500 font-medium mb-1 tracking-wider">Price</p>
-                  <p className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-slate-900 tracking-tight">{formatCarPrice(car)}</p>
+                  <p className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-slate-900 dark:text-white tracking-tight">{formatCarPrice(car)}</p>
                   <p className="text-xs text-slate-500 font-medium mt-2 tracking-wider">Shipping included to major ports</p>
                 </div>
               </div>
 
               {/* Description */}
-              <div className="border-t border-slate-200 pt-6">
-                <h2 className="text-base font-serif font-bold uppercase tracking-wider text-slate-900 mb-4">Description</h2>
+              <div className="border-t border-slate-200 dark:border-slate-800 pt-6">
+                <h2 className="text-base font-serif font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-4">Description</h2>
                 <p className="text-[15px] text-slate-700 leading-relaxed font-medium">
                   {descriptionBullets.length > 0 ? descriptionBullets.join(" • ") : "High-spec unit with verified dealer profile and direct enquiry support."}
                 </p>
               </div>
 
               {/* Vehicle Details */}
-              <div className="border-t border-slate-200 pt-6">
-                <h2 className="text-base font-serif font-bold uppercase tracking-wider text-slate-900 mb-6">Vehicle Details</h2>
+              <div className="border-t border-slate-200 dark:border-slate-800 pt-6">
+                <h2 className="text-base font-serif font-bold uppercase tracking-wider text-slate-900 dark:text-white mb-6">Vehicle Details</h2>
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
                   {visibleSpecs.map((item) => (
                     <div key={item.label}>
                       <p className="text-[13px] text-slate-600 font-medium mb-1.5 tracking-wider">{item.label}</p>
-                      <p className="text-[15px] font-semibold text-slate-900">{item.value}</p>
+                      <p className="text-[15px] font-semibold text-slate-900 dark:text-white">{item.value}</p>
                     </div>
                   ))}
                 </div>
@@ -292,7 +292,7 @@ export default async function CarDetailPage({ params }) {
 
               {/* Trust Badges */}
               {trustBadges.length > 0 && (
-                <div className="border-t border-slate-200 pt-6 flex flex-wrap gap-3">
+                <div className="border-t border-slate-200 dark:border-slate-800 pt-6 flex flex-wrap gap-3">
                   {trustBadges.map((badge) => (
                     <span
                       key={badge}
@@ -305,10 +305,10 @@ export default async function CarDetailPage({ params }) {
               )}
 
               {/* Action Links */}
-              <div className="border-t border-slate-200 pt-6 flex flex-wrap items-center gap-3">
+              <div className="border-t border-slate-200 dark:border-slate-800 pt-6 flex flex-wrap items-center gap-3">
                 <Link
                   href={`/dealers/${dealer.slug}#dealer-gallery`}
-                  className="px-5 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 text-xs font-extrabold uppercase tracking-widest hover:bg-slate-50 transition-all"
+                  className="px-5 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 dark:text-white text-xs font-extrabold uppercase tracking-widest hover:bg-slate-50 dark:bg-slate-900 transition-all"
                 >
                   View Dealer Gallery
                 </Link>
@@ -341,14 +341,14 @@ export default async function CarDetailPage({ params }) {
             </div>
 
             {/* Right: Sidebar Form */}
-            <aside className="bg-slate-50 border border-slate-200 rounded-2xl p-6 lg:sticky lg:top-24 space-y-6">
+            <aside className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 lg:sticky lg:top-24 space-y-6">
               <div className="pb-4 border-b border-slate-200">
                 <p className="text-xs text-slate-500 font-medium mb-1 tracking-wider">Price</p>
-                <p className="text-3xl font-serif font-bold text-slate-900 tracking-tight">{formatCarPrice(car)}</p>
+                <p className="text-3xl font-serif font-bold text-slate-900 dark:text-white tracking-tight">{formatCarPrice(car)}</p>
                 <p className="text-xs text-slate-500 font-medium mt-2 tracking-wider">Shipping included to major ports</p>
               </div>
 
-              <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3">
+              <div className="flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white p-3">
                 <div className="w-12 h-12 rounded-lg bg-brand-light flex items-center justify-center text-brand font-extrabold text-lg overflow-hidden shrink-0">
                   {dealerBrandImage ? (
                     <img src={dealerBrandImage} alt={dealer.name} className="w-full h-full object-cover" />
@@ -357,7 +357,7 @@ export default async function CarDetailPage({ params }) {
                   )}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-extrabold text-slate-900 truncate">{dealer.name}</p>
+                  <p className="text-sm font-extrabold text-slate-900 dark:text-white truncate">{dealer.name}</p>
                   <p className="text-xs text-slate-500 flex items-center gap-1 truncate">
                     <MapPin className="w-3.5 h-3.5" /> {car.location || dealer.location || "Location on request"}
                   </p>
@@ -365,7 +365,7 @@ export default async function CarDetailPage({ params }) {
               </div>
 
               <div className="space-y-4 pt-2 border-t border-slate-200">
-                <h3 className="text-base font-serif font-bold uppercase tracking-wider text-slate-900">Send an Enquiry</h3>
+                <h3 className="text-base font-serif font-bold uppercase tracking-wider text-slate-900 dark:text-white">Send an Enquiry</h3>
                 <EnquiryForm
                   carId={car.id}
                   dealerId={dealer.id}
@@ -382,7 +382,7 @@ export default async function CarDetailPage({ params }) {
               <div className="pt-2 border-t border-slate-200">
                 <Link
                   href={`/dealers/${dealer.slug}`}
-                  className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-slate-900 border border-slate-300 rounded-lg py-3 hover:bg-slate-100 transition-all"
+                  className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-slate-900 dark:text-white border border-slate-300 rounded-lg py-3 hover:bg-slate-100 transition-all"
                 >
                   Browse Dealer Inventory
                 </Link>
@@ -394,7 +394,7 @@ export default async function CarDetailPage({ params }) {
 
           {/* Mobile sticky quick actions */}
           <div className="lg:hidden fixed bottom-3 inset-x-0 z-40 px-3 sm:px-6">
-            <div className="rounded-2xl border border-slate-200 bg-white/95 backdrop-blur p-2 shadow-[0_14px_30px_rgba(15,23,42,0.16)] flex items-center gap-2">
+            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/95 backdrop-blur p-2 shadow-[0_14px_30px_rgba(15,23,42,0.16)] flex items-center gap-2">
               {dealer.whatsapp && (
                 <a
                   href={whatsappLink(dealer.whatsapp, title, dealer.name)}
@@ -415,7 +415,7 @@ export default async function CarDetailPage({ params }) {
               )}
               <Link
                 href={`/dealers/${dealer.slug}`}
-                className="hidden sm:inline-flex h-12 px-4 rounded-xl border border-slate-200 bg-white text-slate-700 text-[10px] font-extrabold uppercase tracking-[0.12em] items-center justify-center"
+                className="hidden sm:inline-flex h-12 px-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white text-slate-700 text-[11px] font-extrabold uppercase tracking-[0.12em] items-center justify-center"
               >
                 Dealer
               </Link>
@@ -428,7 +428,7 @@ export default async function CarDetailPage({ params }) {
         <div className="mt-16 sm:mt-24 lg:mt-32 space-y-8 sm:space-y-12">
           <div className="flex items-end justify-between">
             <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Similar units you might like</h2>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Similar units you might like</h2>
               <p className="text-base sm:text-lg text-slate-500 font-medium">Hand-picked alternatives from our verified inventory.</p>
             </div>
           </div>
@@ -438,8 +438,8 @@ export default async function CarDetailPage({ params }) {
               const title = `${c.make} ${c.model}`;
               return (
                 <Link key={c.id} href={`/cars/${c.id}`}
-                  className="group block bg-white border border-slate-200 hover:border-brand-accent/40 overflow-hidden transition-all duration-500">
-                  <div className="relative aspect-[16/10] bg-slate-50 overflow-hidden">
+                  className="group block bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 hover:border-brand-accent/40 overflow-hidden transition-all duration-500">
+                  <div className="relative aspect-[16/10] bg-slate-50 dark:bg-slate-900 overflow-hidden">
                     {img ? (
                       <Image 
                         src={img} 
@@ -456,11 +456,11 @@ export default async function CarDetailPage({ params }) {
                     <div className="space-y-1.5">
                       <div className="flex items-center gap-2.5">
                         <span className="text-[11px] font-extrabold bg-brand-light text-brand px-2 py-0.5 rounded-md tracking-tight">{c.year}</span>
-                        <h3 className="font-extrabold text-slate-800 text-lg leading-tight truncate group-hover:text-brand transition-colors">{title}</h3>
+                        <h3 className="font-extrabold text-slate-800 dark:text-slate-200 text-lg leading-tight truncate group-hover:text-brand transition-colors">{title}</h3>
                       </div>
                     </div>
                     <div className="flex items-center justify-between pt-4 border-t border-slate-50">
-                      <p className="text-xl font-extrabold text-slate-900">{formatCarPrice(c)}</p>
+                      <p className="text-xl font-extrabold text-slate-900 dark:text-white">{formatCarPrice(c)}</p>
                       <span className="text-xs font-bold text-slate-400">{c.dealer?.name}</span>
                   </div>
                   </div>
@@ -475,7 +475,7 @@ export default async function CarDetailPage({ params }) {
       <div className="mt-16 sm:mt-24 lg:mt-32 space-y-8 sm:space-y-12">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Customer reviews</h2>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Customer reviews</h2>
             {reviewsData.avgRating && (
               <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-50 border border-amber-200">
                 <div className="flex">
@@ -490,7 +490,7 @@ export default async function CarDetailPage({ params }) {
                     />
                   ))}
                 </div>
-                <p className="text-sm font-extrabold text-slate-900">{reviewsData.avgRating} <span className="text-slate-500 font-semibold">({reviewsData.count})</span></p>
+                <p className="text-sm font-extrabold text-slate-900 dark:text-white">{reviewsData.avgRating} <span className="text-slate-500 font-semibold">({reviewsData.count})</span></p>
               </div>
             )}
           </div>
@@ -507,7 +507,7 @@ export default async function CarDetailPage({ params }) {
           <div className="space-y-4">
             {reviewsData.reviews.length > 0 ? (
               reviewsData.reviews.map((review) => (
-                <div key={review.id} className="border border-slate-200 rounded-lg p-5 bg-white">
+                <div key={review.id} className="border border-slate-200 dark:border-slate-800 rounded-lg p-5 bg-white">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
                       {review.user.avatarUrl ? (
@@ -518,7 +518,7 @@ export default async function CarDetailPage({ params }) {
                         </div>
                       )}
                       <div>
-                        <p className="font-extrabold text-slate-900 text-sm">{review.user.name}</p>
+                        <p className="font-extrabold text-slate-900 dark:text-white text-sm">{review.user.name}</p>
                         <p className="text-xs text-slate-500">{new Date(review.createdAt).toLocaleDateString()}</p>
                       </div>
                     </div>
@@ -539,7 +539,7 @@ export default async function CarDetailPage({ params }) {
                 </div>
               ))
             ) : (
-              <div className="border border-slate-200 rounded-lg p-8 bg-slate-50 text-center">
+              <div className="border border-slate-200 dark:border-slate-800 rounded-lg p-8 bg-slate-50 dark:bg-slate-900 text-center">
                 <p className="text-sm text-slate-500 font-medium">No reviews yet. Be the first to share your experience!</p>
               </div>
             )}

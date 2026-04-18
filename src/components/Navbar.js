@@ -92,7 +92,7 @@ export default function Navbar({ user }) {
     <nav className={clsx(
       "sticky top-0 z-[100] transition-all duration-300 w-full",
       scrolled
-        ? "bg-white/95 backdrop-blur-xl border-b border-[#ddd4c8] py-3 shadow-sm"
+        ? "bg-white/95 backdrop-blur-xl border-b border-[#ddd4c8] dark:border-slate-800 py-3 shadow-sm"
         : "bg-transparent py-5"
     )}>
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
@@ -123,7 +123,7 @@ export default function Navbar({ user }) {
                 onChange={e => setSearch(e.target.value)}
                 onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                 placeholder="Search cars, e.g. Prado..."
-                className="w-full bg-slate-50/50 hover:bg-slate-100 border border-transparent focus:border-[#ff5a2f]/40 focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-full py-2.5 pl-11 pr-5 text-sm font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900"
+                className="w-full bg-slate-50/50 hover:bg-slate-100 border border-transparent focus:border-[#ff5a2f]/40 focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-full py-2.5 pl-11 pr-5 text-sm font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white"
               />
             </form>
             {showSuggestions && (
@@ -146,20 +146,20 @@ export default function Navbar({ user }) {
                 <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setUserMenu(!userMenu)}
-                  className="flex items-center gap-2.5 bg-white border border-[#ddd4c8] pl-1.5 pr-4 py-1.5 rounded-full hover:border-[#ff5a2f] hover:shadow-sm transition-all"
+                  className="flex items-center gap-2.5 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 pl-1.5 pr-4 py-1.5 rounded-full hover:border-[#ff5a2f] hover:shadow-sm transition-all"
                 >
                   <div className="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm uppercase text-white bg-[#ff5a2f]">
                     {user.name?.[0]}
                   </div>
-                  <span className="text-sm font-extrabold text-slate-900 tracking-tight">{user.name?.split(" ")[0]}</span>
+                  <span className="text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">{user.name?.split(" ")[0]}</span>
                   <ChevronDown className={clsx("w-4 h-4 text-slate-400 transition-transform duration-500", userMenu && "rotate-180")} />
                 </button>
 
                 {userMenu && (
-                  <div className="absolute right-0 top-full mt-3 w-72 bg-white border border-[#ddd4c8] rounded-2xl shadow-xl overflow-hidden p-0 animate-in fade-in slide-in-from-top-2">
-                    <div className="px-5 py-5 bg-slate-50 border-b border-[#ddd4c8] mb-0 rounded-t-2xl">
-                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1">Signed in</p>
-                      <p className="text-sm font-black text-slate-900 truncate">{user.email}</p>
+                  <div className="absolute right-0 top-full mt-3 w-72 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl shadow-xl overflow-hidden p-0 animate-in fade-in slide-in-from-top-2">
+                    <div className="px-5 py-5 bg-slate-50 dark:bg-slate-900 border-b border-[#ddd4c8] dark:border-slate-800 mb-0 rounded-t-2xl">
+                      <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1">Signed in</p>
+                      <p className="text-sm font-black text-slate-900 dark:text-white truncate">{user.email}</p>
                     </div>
                     <div className="space-y-0 divide-y divide-[#ddd4c8]">
                       {user.role === "ADMIN"  && <MenuDropdownItem href="/admin"   label="Administration"  icon={<LayoutDashboard className="w-5 h-5" />} />}
@@ -168,7 +168,7 @@ export default function Navbar({ user }) {
                       <MenuDropdownItem href="/account?tab=saved"   label="Watchlist"        icon={<Heart className="w-5 h-5" />} />
                       <div className="hidden" />
                       <form action="/api/auth/logout" method="POST">
-                        <button type="submit" className="w-full flex items-center gap-4 px-5 py-4 text-[11px] font-black uppercase tracking-widest text-[#ff5a2f] hover:bg-slate-50 hover:text-rose-600 rounded-b-2xl transition-colors">
+                        <button type="submit" className="w-full flex items-center gap-4 px-5 py-4 text-[11px] font-black uppercase tracking-widest text-[#ff5a2f] hover:bg-slate-50 dark:bg-slate-900 hover:text-rose-600 rounded-b-2xl transition-colors">
                           <LogOut className="w-5 h-5" /> Sign Out
                         </button>
                       </form>
@@ -179,7 +179,7 @@ export default function Navbar({ user }) {
               </div>
             ) : (
               <div className="flex items-center gap-4">
-                <Link href="/login" className="text-sm font-extrabold text-slate-900 hover:text-black transition-colors px-4">
+                <Link href="/login" className="text-sm font-extrabold text-slate-900 dark:text-white hover:text-black transition-colors px-4">
                   Sign In
                 </Link>
                 <Link href="/signup" className="rounded-full font-black text-white px-6 py-3 text-xs uppercase transition-all bg-[#111111] hover:bg-[#ff5a2f] active:scale-95 inline-flex items-center gap-2">
@@ -191,7 +191,7 @@ export default function Navbar({ user }) {
             {user && (user.role === "DEALER" || user.role === "ADMIN") && (
               <>
                 <div className="h-8 w-px bg-[#e5ddd2]" />
-                <Link href="/portal/cars/new" className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-slate-900 hover:text-[#ff5a2f] transition-colors">
+                <Link href="/portal/cars/new" className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-slate-900 dark:text-white hover:text-[#ff5a2f] transition-colors">
                   <PlusCircle className="w-5 h-5" /> Post Unit
                 </Link>
               </>
@@ -203,7 +203,7 @@ export default function Navbar({ user }) {
             <ThemeToggle />
             <button
               onClick={() => setOpen(!open)}
-              className="w-11 h-11 flex items-center justify-center bg-white border border-[#e7e1d8] text-slate-700 rounded-none hover:bg-[#faf7f2] transition-colors"
+              className="w-11 h-11 flex items-center justify-center bg-white dark:bg-[#111111] border border-[#e7e1d8] text-slate-700 rounded-2xl hover:bg-[#faf7f2] transition-colors"
             >
               {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -220,7 +220,7 @@ export default function Navbar({ user }) {
                 <img src="/headerlogo.png" alt="Motorke Digital Showroom" className="h-10 object-contain" />
                 <div className="flex flex-col">
                   <span className="inline-flex items-center">
-                    <span className="text-[16px] leading-none font-black uppercase tracking-[0.16em] text-slate-900">MOTOR</span>
+                    <span className="text-[16px] leading-none font-black uppercase tracking-[0.16em] text-slate-900 dark:text-white">MOTOR</span>
                     <span className="text-[16px] leading-none font-black uppercase tracking-[0.16em] text-[#ff5a2f]">KE</span>
                   </span>
                   <p className="text-[9px] font-extrabold uppercase tracking-[0.18em] text-slate-600 mt-1 leading-none">
@@ -228,7 +228,7 @@ export default function Navbar({ user }) {
                   </p>
                 </div>
               </div>
-              <button onClick={() => setOpen(false)} className="w-10 h-10 bg-white border border-[#e7e1d8] text-slate-700 rounded-none flex items-center justify-center">
+              <button onClick={() => setOpen(false)} className="w-10 h-10 bg-white dark:bg-[#111111] border border-[#e7e1d8] text-slate-700 rounded-2xl flex items-center justify-center">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -240,7 +240,7 @@ export default function Navbar({ user }) {
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search cars"
-                  className="w-full bg-white border border-[#e7e1d8] rounded-none py-3.5 pl-12 pr-4 text-sm font-semibold outline-none"
+                  className="w-full bg-white dark:bg-[#111111] border border-[#e7e1d8] rounded-2xl py-3.5 pl-12 pr-4 text-sm font-semibold outline-none"
                 />
               </div>
             </form>
@@ -248,7 +248,7 @@ export default function Navbar({ user }) {
             <div className="space-y-1 mb-6">
               {links.map(({ href, label, icon }) => (
                 <Link key={href} href={href} onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 text-lg font-black text-slate-800 py-3 px-2 border-b border-[#e7e1d8] hover:text-black transition-colors">
+                  className="flex items-center gap-3 text-lg font-black text-slate-800 dark:text-slate-200 py-3 px-2 border-b border-[#e7e1d8] hover:text-black transition-colors">
                   <span className="text-slate-400">{icon}</span>
                   {label}
                 </Link>
@@ -257,69 +257,69 @@ export default function Navbar({ user }) {
 
             {/* Help & Resources */}
             <div className="px-2 py-4 border-b border-[#e7e1d8] mb-6">
-              <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-3">Help & Resources</p>
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-3">Help & Resources</p>
               <div className="space-y-2">
                 <Link href="/faq" onClick={() => setOpen(false)}
-                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-none transition-colors">
+                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 dark:text-white hover:bg-slate-100 rounded-2xl transition-colors">
                   FAQ
                 </Link>
                 <Link href="/mission" onClick={() => setOpen(false)}
-                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-none transition-colors">
+                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 dark:text-white hover:bg-slate-100 rounded-2xl transition-colors">
                   Our Mission
                 </Link>
                 <Link href="/contact" onClick={() => setOpen(false)}
-                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-none transition-colors">
+                  className="block px-3 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 dark:text-white hover:bg-slate-100 rounded-2xl transition-colors">
                   Contact Support
                 </Link>
               </div>
             </div>
 
             {user && (
-              <div className="rounded-none border border-[#e7e1d8] bg-white p-4 mb-6">
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-2">Signed in</p>
-                <p className="text-sm font-bold text-slate-900 mb-4 truncate">{user.email}</p>
+              <div className="rounded-2xl border border-[#e7e1d8] bg-white p-4 mb-6">
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mb-2">Signed in</p>
+                <p className="text-sm font-bold text-slate-900 dark:text-white mb-4 truncate">{user.email}</p>
                 <div className="space-y-2">
                   {user.role === "BUYER" && (
                     <Link href="/account?tab=enquiries" onClick={() => setOpen(false)} 
-                      className="flex items-center gap-3 px-3.5 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-2xl text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                       <Bell size={16} className="flex-shrink-0" />
                       <span>Enquiry Alerts</span>
                     </Link>
                   )}
                   {user.role === "DEALER" && (
                     <Link href="/portal/leads" onClick={() => setOpen(false)} 
-                      className="flex items-center gap-3 px-3.5 py-2.5 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-2xl text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                       <Bell size={16} className="flex-shrink-0" />
                       <span>Lead Alerts</span>
                     </Link>
                   )}
                   {user.role === "ADMIN" && (
                     <Link href="/admin/leads" onClick={() => setOpen(false)} 
-                      className="flex items-center gap-3 px-3.5 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-2xl text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                       <Bell size={16} className="flex-shrink-0" />
                       <span>Lead Alerts</span>
                     </Link>
                   )}
                   <Link href="/account" onClick={() => setOpen(false)} 
-                    className="flex items-center gap-3 px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                    className="flex items-center gap-3 px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                     <Settings size={16} className="flex-shrink-0" />
                     <span>Profile Settings</span>
                   </Link>
                   <Link href="/account?tab=saved" onClick={() => setOpen(false)} 
-                    className="flex items-center gap-3 px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                    className="flex items-center gap-3 px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-2xl text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                     <Heart size={16} className="flex-shrink-0" />
                     <span>Watchlist</span>
                   </Link>
                   {user.role === "ADMIN" && (
                     <Link href="/admin" onClick={() => setOpen(false)} 
-                      className="flex items-center gap-3 px-3.5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                       <Shield size={16} className="flex-shrink-0" />
                       <span>Administration</span>
                     </Link>
                   )}
                   {user.role === "DEALER" && (
                     <Link href="/portal" onClick={() => setOpen(false)} 
-                      className="flex items-center gap-3 px-3.5 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-none text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
+                      className="flex items-center gap-3 px-3.5 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-2xl text-xs font-extrabold uppercase tracking-[0.08em] transition-colors">
                       <Store size={16} className="flex-shrink-0" />
                       <span>Dealer Portal</span>
                     </Link>
@@ -332,11 +332,11 @@ export default function Navbar({ user }) {
               {!user ? (
                 <>
                   <Link href="/signup" onClick={() => setOpen(false)}
-                    className="block py-3.5 text-center font-black uppercase tracking-widest text-white rounded-none bg-[#111111] hover:bg-black transition-colors">
+                    className="block py-3.5 text-center font-black uppercase tracking-widest text-white rounded-2xl bg-[#111111] hover:bg-black transition-colors">
                     For Dealers
                   </Link>
                   <Link href="/login" onClick={() => setOpen(false)}
-                    className="block py-3.5 text-center font-black uppercase tracking-widest text-slate-700 bg-white border border-[#e7e1d8] rounded-none hover:bg-[#fbfcfe] transition-colors">
+                    className="block py-3.5 text-center font-black uppercase tracking-widest text-slate-700 bg-white dark:bg-[#111111] border border-[#e7e1d8] rounded-2xl hover:bg-[#fbfcfe] dark:bg-[#111111] transition-colors">
                     Sign In
                   </Link>
                 </>
@@ -344,12 +344,12 @@ export default function Navbar({ user }) {
                 <>
                   {(user.role === "DEALER" || user.role === "ADMIN") && (
                     <Link href="/portal/cars/new" onClick={() => setOpen(false)}
-                      className="block py-3.5 text-center font-black uppercase tracking-widest text-white rounded-none bg-[#111111] hover:bg-black transition-colors">
+                      className="block py-3.5 text-center font-black uppercase tracking-widest text-white rounded-2xl bg-[#111111] hover:bg-black transition-colors">
                       Post Unit
                     </Link>
                   )}
                   <form action="/api/auth/logout" method="POST">
-                    <button type="submit" className="w-full flex items-center justify-center gap-2 py-3.5 text-center font-black uppercase tracking-widest text-rose-600 bg-white border border-rose-300 hover:bg-rose-50 rounded-none transition-colors">
+                    <button type="submit" className="w-full flex items-center justify-center gap-2 py-3.5 text-center font-black uppercase tracking-widest text-rose-600 bg-white dark:bg-[#111111] border border-rose-300 hover:bg-rose-50 rounded-2xl transition-colors">
                       <LogOut size={18} strokeWidth={2.5} />
                       <span>Sign Out</span>
                     </button>
@@ -366,7 +366,7 @@ export default function Navbar({ user }) {
 
 function MenuDropdownItem({ href, label, icon }) {
   return (
-    <Link href={href} className="flex items-center gap-3 px-5 py-4 text-[11px] font-black uppercase tracking-[0.15em] text-slate-900 hover:bg-[#fbfcfe] dark:hover:bg-[#111111] hover:text-[#ff5a2f] dark:hover:text-[#ff5a2f] rounded-none transition-none">
+    <Link href={href} className="flex items-center gap-3 px-5 py-4 text-[11px] font-black uppercase tracking-[0.15em] text-slate-900 dark:text-white hover:bg-[#fbfcfe] dark:bg-[#111111] dark:hover:bg-[#111111] hover:text-[#ff5a2f] dark:hover:text-[#ff5a2f] rounded-2xl transition-all">
       <span className="text-slate-400">{icon}</span>
       {label}
     </Link>

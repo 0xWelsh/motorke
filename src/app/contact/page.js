@@ -58,7 +58,7 @@ export default function ContactPage() {
               <div className="flex gap-4">
                 <Mail className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-bold text-slate-900 mb-1">Email</h3>
+                  <h3 className="font-bold text-slate-900 dark:text-white mb-1">Email</h3>
                   <a
                     href="mailto:sec@welsh.co.ke"
                     className="text-blue-600 hover:underline font-semibold"
@@ -75,7 +75,7 @@ export default function ContactPage() {
               <div className="flex gap-4">
                 <Clock className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-bold text-slate-900 mb-1">Support Hours</h3>
+                  <h3 className="font-bold text-slate-900 dark:text-white mb-1">Support Hours</h3>
                   <p className="text-slate-700 text-sm">
                     Monday – Friday: 9 AM – 6 PM EAT
                   </p>
@@ -89,14 +89,14 @@ export default function ContactPage() {
               <div className="flex gap-4">
                 <MapPin className="w-6 h-6 text-rose-600 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-bold text-slate-900 mb-1">Based In</h3>
+                  <h3 className="font-bold text-slate-900 dark:text-white mb-1">Based In</h3>
                   <p className="text-slate-700 text-sm">Nairobi, Kenya</p>
                 </div>
               </div>
 
               {/* Quick Links */}
               <div className="pt-6 border-t border-slate-200">
-                <h3 className="font-bold text-slate-900 mb-4">Quick Links</h3>
+                <h3 className="font-bold text-slate-900 dark:text-white mb-4">Quick Links</h3>
                 <div className="space-y-2">
                   <a href="/faq" className="block text-blue-600 hover:underline">
                     → FAQ
@@ -131,7 +131,7 @@ export default function ContactPage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Name */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-900 mb-2">
+                  <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                     Your Name
                   </label>
                   <input
@@ -146,7 +146,7 @@ export default function ContactPage() {
 
                 {/* Email */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-900 mb-2">
+                  <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                     Email Address
                   </label>
                   <input
@@ -161,7 +161,7 @@ export default function ContactPage() {
 
                 {/* Subject */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-900 mb-2">
+                  <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                     Subject
                   </label>
                   <select
@@ -182,7 +182,7 @@ export default function ContactPage() {
 
                 {/* Message */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-900 mb-2">
+                  <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                     Message
                   </label>
                   <textarea
@@ -213,11 +213,11 @@ export default function ContactPage() {
       {/* Additional Info */}
       <section className="py-16 px-4 bg-slate-50">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-slate-900 mb-8">Before You Contact Us</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-8">Before You Contact Us</h2>
 
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="font-bold text-slate-900 mb-3">For Buyer Questions</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white mb-3">For Buyer Questions</h3>
               <ul className="space-y-2 text-slate-700 text-sm">
                 <li>✓ Check our <a href="/faq" className="text-blue-600 hover:underline">FAQ page</a></li>
                 <li>✓ Contact the dealer directly (number on listing)</li>
@@ -227,7 +227,7 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <h3 className="font-bold text-slate-900 mb-3">For Dealer Support</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white mb-3">For Dealer Support</h3>
               <ul className="space-y-2 text-slate-700 text-sm">
                 <li>✓ Check dashboard tutorials</li>
                 <li>✓ Review settings and options first</li>
@@ -237,7 +237,7 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <h3 className="font-bold text-slate-900 mb-3">For Security/Fraud Reports</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white mb-3">For Security/Fraud Reports</h3>
               <ul className="space-y-2 text-slate-700 text-sm">
                 <li>✓ Include dealer profile link</li>
                 <li>✓ Describe the issue with detail</li>
@@ -247,7 +247,7 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <h3 className="font-bold text-slate-900 mb-3">For Partnerships/Press</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white mb-3">For Partnerships/Press</h3>
               <ul className="space-y-2 text-slate-700 text-sm">
                 <li>✓ Email subject: "Partnership Inquiry"</li>
                 <li>✓ Include your proposal/media outlet</li>

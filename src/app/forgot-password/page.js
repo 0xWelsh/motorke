@@ -48,17 +48,17 @@ export default function ForgotPasswordPage() {
       <div className="mx-auto w-full max-w-md">
         <Link
           href="/login"
-          className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-700 hover:text-slate-900"
+          className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-700 hover:text-slate-900 dark:text-white"
         >
           <ArrowLeft size={14} /> Back to Sign In
         </Link>
 
-        <div className="mt-6 rounded-[1.75rem] border border-slate-200 bg-white p-6 sm:p-8 shadow-xl shadow-slate-200/50">
+        <div className="mt-6 rounded-[1.75rem] border border-slate-200 dark:border-slate-800 bg-white p-6 sm:p-8 shadow-xl shadow-slate-200/50">
           <div className="mb-6">
             <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
               <ShieldCheck size={20} />
             </div>
-            <h1 className="mt-4 text-2xl font-black tracking-tight text-slate-900">Forgot your password?</h1>
+            <h1 className="mt-4 text-2xl font-black tracking-tight text-slate-900 dark:text-white">Forgot your password?</h1>
             <p className="mt-2 text-sm font-medium text-slate-600">
               Enter your account email and we will send a secure reset link.
             </p>
@@ -79,7 +79,7 @@ export default function ForgotPasswordPage() {
               name="website"
             />
 
-            <label className="block text-[10px] font-black uppercase tracking-[0.22em] text-slate-700" htmlFor="email">
+            <label className="block text-[11px] font-black uppercase tracking-[0.22em] text-slate-700" htmlFor="email">
               Email Address
             </label>
             <div className="relative">
@@ -92,7 +92,7 @@ export default function ForgotPasswordPage() {
                 required
                 autoComplete="email"
                 placeholder="you@example.com"
-                className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm font-semibold text-slate-900 outline-none transition focus:border-emerald-500"
+                className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white py-3 pl-11 pr-4 text-sm font-semibold text-slate-900 dark:text-white outline-none transition focus:border-emerald-500"
               />
             </div>
 
@@ -109,7 +109,7 @@ export default function ForgotPasswordPage() {
           </form>
 
           <p className="mt-5 text-xs font-semibold text-slate-600">
-            Need help now? Contact <a href="mailto:support@motorke.com" className="text-slate-900 underline underline-offset-2">support@motorke.com</a>
+            Need help now? Contact <a href="mailto:support@motorke.com" className="text-slate-900 dark:text-white underline underline-offset-2">support@motorke.com</a>
           </p>
         </div>
       </div>

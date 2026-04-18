@@ -9,8 +9,8 @@ export default function AdminAvatarUpload({ currentUrl, targetId, targetType, na
   const fileRef = useRef(null);
 
   const sizeMap = {
-    sm: "w-10 h-10 text-sm rounded-none",
-    md: "w-14 h-14 text-lg rounded-none",
+    sm: "w-10 h-10 text-sm rounded-2xl",
+    md: "w-14 h-14 text-lg rounded-2xl",
     lg: "w-24 h-24 text-3xl rounded-[2rem]",
   };
 
@@ -56,19 +56,19 @@ export default function AdminAvatarUpload({ currentUrl, targetId, targetType, na
         <img
           src={imageUrl}
           alt={name}
-          className={`${sizeMap[size]} object-cover border-2 border-[#ddd4c8] group-hover:border-[#ff5a2f]/50 transition-all`}
+          className={`${sizeMap[size]} object-cover border-2 border-[#ddd4c8] dark:border-slate-800 group-hover:border-[#ff5a2f]/50 transition-all`}
         />
       ) : (
-        <div className={`${sizeMap[size]} bg-white border-2 border-[#ddd4c8] group-hover:border-[#ff5a2f]/50 text-slate-500 group-hover:text-slate-900 flex items-center justify-center font-black transition-all`}>
+        <div className={`${sizeMap[size]} bg-white border-2 border-[#ddd4c8] dark:border-slate-800 group-hover:border-[#ff5a2f]/50 text-slate-500 group-hover:text-slate-900 dark:text-white flex items-center justify-center font-black transition-all`}>
           {initial}
         </div>
       )}
 
       <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center" style={{ borderRadius: "inherit" }}>
         {uploading ? (
-          <Loader2 size={size === "lg" ? 24 : 14} className="animate-spin text-slate-900" />
+          <Loader2 size={size === "lg" ? 24 : 14} className="animate-spin text-slate-900 dark:text-white" />
         ) : (
-          <Camera size={size === "lg" ? 24 : 14} className="text-slate-900" />
+          <Camera size={size === "lg" ? 24 : 14} className="text-slate-900 dark:text-white" />
         )}
       </div>
     </div>

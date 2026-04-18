@@ -120,7 +120,7 @@ export default async function DealerPage(props) {
   const hasHeroBanner = Boolean(dealer.bannerUrl) || dealerGallery.length >= 3;
 
   return (
-    <div className="min-h-screen bg-[#fbfcfe]">
+    <div className="min-h-screen bg-[#fbfcfe] dark:bg-[#111111]">
       {/* 1. HERO COVER BANNER */}
       {hasHeroBanner && (
         <div className="w-full h-[240px] sm:h-[320px] lg:h-[400px] relative overflow-hidden bg-slate-900">
@@ -147,11 +147,11 @@ export default async function DealerPage(props) {
       <div className={`max-w-7xl mx-auto px-4 sm:px-6 pb-24 ${hasHeroBanner ? "-mt-24 sm:-mt-32 relative z-10" : "pt-8 sm:pt-12"}`}>
         
         {/* Dealership Info Card */}
-        <section className="bg-white rounded-2xl p-6 sm:p-10 shadow-sm border border-slate-200 mb-10">
+        <section className="bg-white rounded-2xl p-6 sm:p-10 shadow-sm border border-slate-200 dark:border-slate-800 mb-10">
           <div className="grid grid-cols-1 lg:grid-cols-[140px_minmax(0,1fr)_auto] gap-6 sm:gap-8 lg:gap-12 items-start">
             
             {/* Logo */}
-            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center font-black text-4xl sm:text-5xl overflow-hidden -mt-16 sm:-mt-20 shadow-md">
+            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl bg-slate-100 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white flex items-center justify-center font-black text-4xl sm:text-5xl overflow-hidden -mt-16 sm:-mt-20 shadow-md">
               {dealer.logoUrl ? (
                 <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" />
               ) : (
@@ -162,9 +162,9 @@ export default async function DealerPage(props) {
             {/* Title & Details */}
             <div className="min-w-0 pt-2 lg:pt-0">
               <div className="flex flex-wrap items-center gap-3 mb-4">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight font-times">{dealer.name}</h1>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight font-times">{dealer.name}</h1>
                 {dealer.verified && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[10px] font-black uppercase tracking-[0.14em] text-emerald-700 border border-emerald-100">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[11px] font-black uppercase tracking-[0.14em] text-emerald-700 border border-emerald-100">
                     <ShieldCheck className="w-3.5 h-3.5" /> Verified Profile
                   </span>
                 )}
@@ -175,9 +175,9 @@ export default async function DealerPage(props) {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+                <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-4 py-3">
                   <p className="text-xs font-semibold text-slate-600 mb-1">Verification</p>
-                  <p className="text-sm font-bold text-slate-900">
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">
                     {dealer.verified ? "MotorKE Verified" : "Verification pending"}
                   </p>
                 </div>
@@ -186,15 +186,15 @@ export default async function DealerPage(props) {
                   href={googleMapsHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 hover:bg-slate-100 transition-colors"
+                  className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-4 py-3 hover:bg-slate-100 transition-colors"
                 >
                   <p className="text-xs font-semibold text-slate-600 mb-1">Location</p>
-                  <p className="text-sm font-bold text-slate-900">View on map →</p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">View on map →</p>
                 </a>
 
-                <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+                <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-4 py-3">
                   <p className="text-xs font-semibold text-slate-600 mb-1">Operating since</p>
-                  <p className="text-sm font-bold text-slate-900">{startedYear}</p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">{startedYear}</p>
                 </div>
               </div>
 
@@ -227,7 +227,7 @@ export default async function DealerPage(props) {
               </div>
 
               {whatsappChatHref && (
-                <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600">
+                <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-1.5 text-xs font-medium text-slate-600">
                   <MessageCircle className="w-3.5 h-3.5" />
                   Usually replies within 15 minutes
                 </p>
@@ -238,7 +238,7 @@ export default async function DealerPage(props) {
                   {dealerRatingTags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-700"
+                      className="inline-flex rounded-full border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-1 text-xs font-medium text-slate-700"
                     >
                       {tag}
                     </span>
@@ -248,13 +248,13 @@ export default async function DealerPage(props) {
             </div>
 
             {/* Stats Sidebar inside Header */}
-              <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:border-l lg:border-slate-200 lg:pl-10 w-full pt-4 lg:pt-0">
+              <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:border-l lg:border-slate-200 dark:border-slate-800 lg:pl-10 w-full pt-4 lg:pt-0">
               <div>
-                <p className="text-slate-900 font-bold text-3xl leading-none">{dealer.cars.length}</p>
+                <p className="text-slate-900 dark:text-white font-bold text-3xl leading-none">{dealer.cars.length}</p>
                 <p className="text-xs text-slate-500 font-medium mt-2">Cars in stock</p>
               </div>
               <a href="#reviews" className="group block">
-                <span className="flex items-center gap-1.5 text-slate-900 font-bold text-3xl leading-none group-hover:text-amber-600 transition-colors">
+                <span className="flex items-center gap-1.5 text-slate-900 dark:text-white font-bold text-3xl leading-none group-hover:text-amber-600 transition-colors">
                    {averageRating > 0 ? averageRating.toFixed(1) : "—"} <span className="text-lg text-amber-500">★</span>
                 </span>
                 <p className="text-xs text-slate-500 font-medium mt-2 group-hover:text-slate-700 transition-colors">{totalReviews} {totalReviews === 1 ? "review" : "reviews"}</p>
@@ -271,7 +271,7 @@ export default async function DealerPage(props) {
             <section className="mb-16">
               <div className="flex items-end justify-between gap-4 mb-6">
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Dealership Showroom</h2>
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">Dealership Showroom</h2>
                   <p className="text-xs font-medium text-slate-500 mt-1">Explore all {dealer.cars.length} vehicles currently in stock</p>
                 </div>
               </div>
@@ -296,7 +296,7 @@ export default async function DealerPage(props) {
 
           <aside className="space-y-6 sm:space-y-8">
             {/* 4. INTERACTIVE LOCATION & BRANCH MAPS BOX */}
-            <div className="rounded-[2rem] border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
+            <div className="rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-white p-6 sm:p-8 shadow-sm">
               <h2 className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-6">Showroom Locations</h2>
               <div className="space-y-6">
                 <div className="flex gap-4">
@@ -304,19 +304,19 @@ export default async function DealerPage(props) {
                     <MapPin className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-black text-slate-900 mb-1">Headquarters</h3>
+                    <h3 className="text-sm font-black text-slate-900 dark:text-white mb-1">Headquarters</h3>
                     <p className="text-xs font-bold text-slate-600 uppercase tracking-widest leading-relaxed mb-1">{dealer.address || dealer.location}</p>
-                    {dealer.county && <p className="text-[10px] font-black text-slate-400 tracking-wide">{dealer.county} County</p>}
+                    {dealer.county && <p className="text-[11px] font-black text-slate-400 tracking-wide">{dealer.county} County</p>}
                   </div>
                 </div>
 
                 {dealer.branches && dealer.branches.map((branch, i) => (
                   <div key={branch.id} className="flex gap-4 pt-6 border-t border-slate-100">
-                    <div className="w-10 h-10 shrink-0 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400">
+                    <div className="w-10 h-10 shrink-0 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-100 flex items-center justify-center text-slate-400">
                       <MapPin className="w-4 h-4" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-black text-slate-900 mb-1">{branch.name}</h3>
+                      <h3 className="text-sm font-black text-slate-900 dark:text-white mb-1">{branch.name}</h3>
                       <p className="text-xs font-bold text-slate-600 uppercase tracking-widest leading-relaxed">{branch.location}</p>
                     </div>
                   </div>
@@ -324,17 +324,17 @@ export default async function DealerPage(props) {
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-slate-200 bg-slate-50 p-6 sm:p-8 text-center pb-8 sm:pb-8 hidden lg:block">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto shadow-sm border border-slate-200 mb-4">
+            <div className="rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-6 sm:p-8 text-center pb-8 sm:pb-8 hidden lg:block">
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto shadow-sm border border-slate-200 dark:border-slate-800 mb-4">
                  <ShieldCheck className="w-5 h-5 text-emerald-600" />
               </div>
-              <h3 className="text-sm font-black text-slate-900 mb-2">Buy with Confidence</h3>
+              <h3 className="text-sm font-black text-slate-900 dark:text-white mb-2">Buy with Confidence</h3>
               <p className="text-xs font-medium text-slate-500 leading-relaxed">
                 Connect directly with the dealer. Motorke verified this partner's business details to ensure a safe shopping experience.
               </p>
             </div>
 
-            <div className="rounded-[2rem] border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
+            <div className="rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-white p-6 sm:p-8 shadow-sm">
               <h2 className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-5">Dealership Services</h2>
               <div className="space-y-3">
                 {[
@@ -342,8 +342,8 @@ export default async function DealerPage(props) {
                   { name: "Bank Financing Partners", value: "Ask dealer for partner banks" },
                   { name: "Insurance Facilitation", value: "Paperwork support available" },
                 ].map((item) => (
-                  <div key={item.name} className="rounded-xl border border-slate-100 bg-slate-50 px-3 py-3">
-                    <p className="text-xs font-black text-slate-900">{item.name}</p>
+                  <div key={item.name} className="rounded-xl border border-slate-100 bg-slate-50 dark:bg-slate-900 px-3 py-3">
+                    <p className="text-xs font-black text-slate-900 dark:text-white">{item.name}</p>
                     <p className="text-[11px] font-bold text-slate-500 mt-1">{item.value}</p>
                   </div>
                 ))}
@@ -355,7 +355,7 @@ export default async function DealerPage(props) {
       </div>
 
       {/* 2. STICKY ACTION BAR (MOBILE UX) */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 p-4 lg:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.05)] transform transition-transform duration-300">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 p-4 lg:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.05)] transform transition-transform duration-300">
         <div className="flex gap-3 max-w-lg mx-auto">
            {contactLinks.map((item) => (
              <a
@@ -368,7 +368,7 @@ export default async function DealerPage(props) {
              </a>
            ))}
            {contactLinks.length === 0 && (
-             <span className="flex-1 h-12 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center text-[10px] font-black uppercase tracking-widest">
+             <span className="flex-1 h-12 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center text-[11px] font-black uppercase tracking-widest">
                No Contact Available
              </span>
            )}

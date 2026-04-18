@@ -19,7 +19,7 @@ export default function MissionPage() {
       <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="bg-blue-50 border-l-4 border-blue-600 p-8 rounded-lg mb-12">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">The Problem We Solve</h2>
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">The Problem We Solve</h2>
             <p className="text-lg text-slate-700 leading-relaxed">
               Buying a car in Kenya was broken. You'd visit 50 dealer websites (if they existed), 
               see outdated listings, get scammed by inflated prices, or meet dealers with 
@@ -30,7 +30,7 @@ export default function MissionPage() {
           <div className="grid md:grid-cols-2 gap-12 mb-16">
             {/* Left: What We Do */}
             <div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-6">What We Do</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">What We Do</h3>
               <p className="text-slate-700 leading-relaxed mb-6">
                 We curate a high-quality selection of vehicles from Kenya's dealer network 
                 and certified auction platforms. Every car listing includes:
@@ -61,32 +61,32 @@ export default function MissionPage() {
 
             {/* Right: Our Values */}
             <div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-6">Our Values</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Our Values</h3>
 
               <div className="space-y-6">
                 <div>
-                  <h4 className="font-bold text-slate-900 mb-2">🔍 Clarity First</h4>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-2">🔍 Clarity First</h4>
                   <p className="text-slate-700 text-sm">
                     No BS. Every listing is honest. Every dealer is vetted. Buyers deserve to know what they're getting.
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="font-bold text-slate-900 mb-2">🤝 Trust Matters</h4>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-2">🤝 Trust Matters</h4>
                   <p className="text-slate-700 text-sm">
                     We're not a broker. We don't take commissions on sales. We make money only when dealers subscribe and buyers trust us. Our incentives are aligned.
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="font-bold text-slate-900 mb-2">⚡ Efficiency</h4>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-2">⚡ Efficiency</h4>
                   <p className="text-slate-700 text-sm">
                     Shopping for a car should be fast, not painful. One search. 1000+ options. Save cars. Compare. Done.
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="font-bold text-slate-900 mb-2">🌍 For Kenya</h4>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-2">🌍 For Kenya</h4>
                   <p className="text-slate-700 text-sm">
                     We're built for Kenya's market—currency in KSh, duty calculators for imports, mobile-first design for 3G networks.
                   </p>
@@ -100,17 +100,17 @@ export default function MissionPage() {
       {/* The Numbers */}
       <section className="py-16 px-4 bg-slate-50">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center">Our Impact</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-12 text-center">Our Impact</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-lg border border-slate-200 text-center">
+            <div className="bg-white p-8 rounded-lg border border-slate-200 dark:border-slate-800 text-center">
               <div className="text-4xl font-bold text-blue-600 mb-2">1000+</div>
               <p className="text-slate-700">Vehicles listed (growing daily)</p>
             </div>
-            <div className="bg-white p-8 rounded-lg border border-slate-200 text-center">
+            <div className="bg-white p-8 rounded-lg border border-slate-200 dark:border-slate-800 text-center">
               <div className="text-4xl font-bold text-blue-600 mb-2">50+</div>
               <p className="text-slate-700">Verified dealers on platform</p>
             </div>
-            <div className="bg-white p-8 rounded-lg border border-slate-200 text-center">
+            <div className="bg-white p-8 rounded-lg border border-slate-200 dark:border-slate-800 text-center">
               <div className="text-4xl font-bold text-blue-600 mb-2">0</div>
               <p className="text-slate-700">Listing fees (for buyers)</p>
             </div>
@@ -121,7 +121,7 @@ export default function MissionPage() {
       {/* Vision */}
       <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 mb-8">Our Vision (5 Years)</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Our Vision (5 Years)</h2>
 
           <div className="space-y-6">
             <div className="flex gap-4">
@@ -131,7 +131,7 @@ export default function MissionPage() {
                 </div>
               </div>
               <div>
-                <h3 className="font-bold text-slate-900 mb-2">The Largest Vehicle Marketplace in East Africa</h3>
+                <h3 className="font-bold text-slate-900 dark:text-white mb-2">The Largest Vehicle Marketplace in East Africa</h3>
                 <p className="text-slate-700">
                   Not just Kenya—we'll expand to Uganda, Tanzania, and Rwanda. One platform for the entire region.
                 </p>
@@ -145,7 +145,7 @@ export default function MissionPage() {
                 </div>
               </div>
               <div>
-                <h3 className="font-bold text-slate-900 mb-2">End Odometer Fraud Completely</h3>
+                <h3 className="font-bold text-slate-900 dark:text-white mb-2">End Odometer Fraud Completely</h3>
                 <p className="text-slate-700">
                   Partner with NTSA and auction houses to verify every car's history digitally. Make fraud impossible.
                 </p>
@@ -159,7 +159,7 @@ export default function MissionPage() {
                 </div>
               </div>
               <div>
-                <h3 className="font-bold text-slate-900 mb-2">Financing Available for Everyone</h3>
+                <h3 className="font-bold text-slate-900 dark:text-white mb-2">Financing Available for Everyone</h3>
                 <p className="text-slate-700">
                   Build lending partnerships so buyers can finance through Motorke (not just dealers).
                 </p>
@@ -173,7 +173,7 @@ export default function MissionPage() {
                 </div>
               </div>
               <div>
-                <h3 className="font-bold text-slate-900 mb-2">Insurance Integration</h3>
+                <h3 className="font-bold text-slate-900 dark:text-white mb-2">Insurance Integration</h3>
                 <p className="text-slate-700">
                   One-click insurance at checkout. Buyers get their car fully covered before driving home.
                 </p>
@@ -210,7 +210,7 @@ export default function MissionPage() {
       {/* Team/Contact */}
       <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">Questions About Our Mission?</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Questions About Our Mission?</h2>
           <p className="text-slate-700 mb-6">
             Reach out anytime. We love hearing from people who care about fixing this industry.
           </p>

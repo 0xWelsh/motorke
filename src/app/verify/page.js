@@ -91,7 +91,7 @@ function VerifyForm() {
     );
   }
 
-  const inputCls = "w-full bg-white border border-slate-200 rounded-xl px-5 py-3.5 sm:py-4 text-2xl sm:text-3xl tracking-[0.3em] font-black text-center text-slate-900 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all placeholder:text-slate-300";
+  const inputCls = "w-full bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 rounded-xl px-5 py-3.5 sm:py-4 text-2xl sm:text-3xl tracking-[0.3em] font-black text-center text-slate-900 dark:text-white outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all placeholder:text-slate-300";
 
   return (
     <>
@@ -111,15 +111,15 @@ function VerifyForm() {
         <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto mb-5 sm:mb-6 shadow-lg shadow-orange-500/30">
           <ShieldCheck size={32} className="text-white" />
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mb-2">Verify Your Email</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">Verify Your Email</h1>
         <p className="text-sm text-slate-600 font-medium">We sent a 6-digit code to your email address</p>
       </div>
 
       {/* Email Display */}
-      <div className="mb-8 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+      <div className="mb-8 p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl">
         <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Verification Email</p>
         <div className="flex items-center justify-between">
-          <p className="text-sm sm:text-base font-semibold text-slate-900 break-all">{email}</p>
+          <p className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white break-all">{email}</p>
           <button
             type="button"
             onClick={copyEmailToClipboard}
@@ -214,7 +214,7 @@ function VerifyForm() {
       </div>
 
       {/* Help Section */}
-      <div className="mt-6 pt-6 border-t border-slate-200 space-y-3">
+      <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 space-y-3">
         <p className="text-xs font-bold text-slate-600 uppercase tracking-wide">Having issues?</p>
         <div className="space-y-2 text-xs text-slate-600">
           <p>• Check your spam/junk folder for the verification email</p>
@@ -239,7 +239,7 @@ export default function VerifyPage() {
       <div className="absolute top-0 right-0 w-96 h-96 bg-orange-100 rounded-full blur-3xl opacity-20 -z-10" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-50 rounded-full blur-3xl opacity-20 -z-10" />
       
-      <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-slate-900/5 relative z-10 animate-in slide-in-from-bottom-8 fade-in duration-500">
+      <div className="w-full max-w-md bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-slate-900/5 relative z-10 animate-in slide-in-from-bottom-8 fade-in duration-500">
         <Suspense fallback={
           <div className="flex flex-col items-center justify-center py-12">
             <Loader2 className="animate-spin text-orange-600 mb-4" size={40} />

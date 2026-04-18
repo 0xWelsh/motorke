@@ -14,10 +14,10 @@ import {
 export default function AdminTrendsChart({ data, rangeLabel = "Last 30 Days" }) {
   // data should be an array of objects: { date: "Mon", leads: 12, cars: 5 }
   return (
-    <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm mb-16 relative">
+    <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm mb-16 relative">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h3 className="text-xl font-black text-slate-900 tracking-tight">Platform Engagement</h3>
+          <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">Platform Engagement</h3>
           <p className="text-sm font-medium text-slate-500 mt-1">Leads vs Cars Listed ({rangeLabel})</p>
         </div>
         <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-wider">

@@ -26,13 +26,13 @@ export default async function DealersPage() {
         {/* Top Breadcrumb Bar */}
         <div className="block w-full mb-6 sm:mb-8 overflow-hidden text-[14px] font-medium">
           <div className="block w-full xl:w-1/4 2xl:w-1/4 xl:float-left xl:pr-3 mb-4 xl:mb-0">
-            <div className="flex items-center gap-3 text-slate-800">
+            <div className="flex items-center gap-3 text-slate-800 dark:text-slate-200">
               <Link href="/" className="hover:text-black transition-colors">Home</Link>
               <span className="text-slate-400 text-xs mt-0.5">›</span>
-              <span className="text-slate-900">Dealers</span>
+              <span className="text-slate-900 dark:text-white">Dealers</span>
             </div>
           </div>
-          <div className="block w-full xl:w-3/4 2xl:w-3/4 xl:float-left text-slate-800 xl:pl-1 mt-1 font-black uppercase tracking-widest text-[10px]">
+          <div className="block w-full xl:w-3/4 2xl:w-3/4 xl:float-left text-slate-800 dark:text-slate-200 xl:pl-1 mt-1 font-black uppercase tracking-widest text-[11px]">
             {dealers.length} Verified Stations
           </div>
         </div>
@@ -45,12 +45,12 @@ export default async function DealersPage() {
             <div className="xl:sticky xl:top-[84px] space-y-6">
               
               {/* Dummy Filter Block */}
-              <div className="bg-white border border-[#ddd4c8] p-6 shadow-sm rounded-none">
-                <span className="inline-block bg-[#111111] text-white text-[10px] font-black uppercase tracking-widest px-2 py-1 mb-4">Terminal Filter</span>
+              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 p-6 shadow-sm rounded-2xl">
+                <span className="inline-block bg-[#111111] text-white text-[11px] font-black uppercase tracking-widest px-2 py-1 mb-4">Terminal Filter</span>
                 <div className="space-y-4">
-                  <input type="text" placeholder="Search by name..." className="w-full border border-[#ddd4c8] text-sm p-3 rounded-none focus:outline-none focus:border-slate-900 transition-colors" />
+                  <input type="text" placeholder="Search by name..." className="w-full border border-[#ddd4c8] dark:border-slate-800 text-sm p-3 rounded-2xl focus:outline-none focus:border-slate-900 transition-colors" />
                   
-                  <select className="w-full border border-[#ddd4c8] text-sm p-3 rounded-none focus:outline-none focus:border-slate-900 transition-colors bg-white">
+                  <select className="w-full border border-[#ddd4c8] dark:border-slate-800 text-sm p-3 rounded-2xl focus:outline-none focus:border-slate-900 transition-colors bg-white">
                     <option value="">All Regions</option>
                     {counties.map(county => (
                       <option key={county} value={county}>{county}</option>
@@ -58,7 +58,7 @@ export default async function DealersPage() {
                   </select>
 
                   <label className="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" className="form-checkbox text-[#111111] border-[#ddd4c8] rounded-none focus:ring-0 w-4 h-4" />
+                    <input type="checkbox" className="form-checkbox text-[#111111] border-[#ddd4c8] dark:border-slate-800 rounded-2xl focus:ring-0 w-4 h-4" />
                     <span className="text-xs font-black uppercase tracking-widest text-slate-700">Verified Only</span>
                   </label>
 
@@ -69,10 +69,10 @@ export default async function DealersPage() {
               </div>
 
               {/* Find Nearby Block */}
-              <div className="bg-white border border-[#ddd4c8] p-6 shadow-sm rounded-none">
+              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 p-6 shadow-sm rounded-2xl">
                 <div className="mb-4 text-center">
                   <MapPin className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                  <h3 className="text-[11px] font-black text-slate-900 uppercase tracking-widest leading-tight">
+                  <h3 className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest leading-tight">
                     Proximity Radar
                   </h3>
                 </div>
@@ -85,7 +85,7 @@ export default async function DealersPage() {
           <div className="block float-left w-full xl:w-3/4 px-2 sm:px-3">
             
             {dealers.length === 0 ? (
-              <div className="py-20 text-center border border-[#ddd4c8] bg-white">
+              <div className="py-20 text-center border border-[#ddd4c8] dark:border-slate-800 bg-white">
                 <p className="text-sm font-black uppercase tracking-widest text-slate-500">No dealers available yet.</p>
               </div>
             ) : (
@@ -98,10 +98,10 @@ export default async function DealersPage() {
                     <Link
                       key={dealer.id}
                       href={`/dealers/${dealer.slug}`}
-                      className="group bg-white flex flex-col rounded-none border border-[#ddd4c8] hover:border-slate-400 transition-all h-full overflow-hidden"
+                      className="group bg-white flex flex-col rounded-2xl border border-[#ddd4c8] dark:border-slate-800 hover:border-slate-400 transition-all h-full overflow-hidden"
                     >
                       {/* Banner Image Area */}
-                      <div className="relative aspect-[16/10] bg-slate-100 border-b border-[#ddd4c8] overflow-hidden shrink-0">
+                      <div className="relative aspect-[16/10] bg-slate-100 border-b border-[#ddd4c8] dark:border-slate-800 overflow-hidden shrink-0">
                         <img 
                           src={bannerImage} 
                           alt={`${dealer.name} showroom`} 
@@ -111,12 +111,12 @@ export default async function DealersPage() {
                         {/* Top Badges */}
                         <div className="absolute top-3 left-3 flex flex-col gap-1.5">
                           {dealer.verified && (
-                            <span className="bg-emerald-400 text-white text-[10px] font-black px-2 py-1 shadow-sm uppercase tracking-wider self-start">
+                            <span className="bg-emerald-400 text-white text-[11px] font-black px-2 py-1 shadow-sm uppercase tracking-wider self-start">
                               VERIFIED
                             </span>
                           )}
                           {dealer.featured && (
-                            <span className="bg-[#111111] text-white text-[10px] font-black px-2 py-1 shadow-sm uppercase tracking-wider self-start">
+                            <span className="bg-[#111111] text-white text-[11px] font-black px-2 py-1 shadow-sm uppercase tracking-wider self-start">
                               FEATURED
                             </span>
                           )}
@@ -124,7 +124,7 @@ export default async function DealersPage() {
 
                         {/* County Tag */}
                         {dealer.county && (
-                          <span className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md text-slate-900 text-[10px] font-black px-3 py-1.5 border border-white uppercase tracking-widest">
+                          <span className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md text-slate-900 dark:text-white text-[11px] font-black px-3 py-1.5 border border-white uppercase tracking-widest">
                             {dealer.county}
                           </span>
                         )}
@@ -133,7 +133,7 @@ export default async function DealersPage() {
                       <div className="p-5 flex flex-col flex-1">
                         <div className="flex justify-between items-start gap-4 mb-4 -mt-10 relative z-10">
                           {/* Logo */}
-                          <div className="w-[64px] h-[64px] rounded-none bg-white border border-[#ddd4c8] flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
+                          <div className="w-[64px] h-[64px] rounded-2xl bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
                             {brandImage ? (
                               <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover" />
                             ) : (
@@ -141,14 +141,14 @@ export default async function DealersPage() {
                             )}
                           </div>
                           
-                          <div className="bg-[#111111] text-white px-2.5 py-1 text-[10px] uppercase font-black tracking-widest mt-6">
+                          <div className="bg-[#111111] text-white px-2.5 py-1 text-[11px] uppercase font-black tracking-widest mt-6">
                               {dealer._count?.cars || 0} LIVE
                           </div>
                         </div>
 
                         {/* Info */}
                         <div className="mb-2">
-                          <h3 className="text-lg font-black text-slate-900 group-hover:text-[#ff5a2f] transition-colors truncate uppercase tracking-widest leading-none mb-2">{dealer.name}</h3>
+                          <h3 className="text-lg font-black text-slate-900 dark:text-white group-hover:text-[#ff5a2f] transition-colors truncate uppercase tracking-widest leading-none mb-2">{dealer.name}</h3>
                           <p className="text-[11px] font-bold text-slate-500 flex items-center gap-1.5 uppercase tracking-wide truncate">
                             <MapPin size={12} className="text-slate-400 shrink-0" /> {dealer.location || 'Terminal Not Set'}
                           </p>
@@ -177,7 +177,7 @@ export default async function DealersPage() {
                             <span className="text-[#f59e0b]">★</span>
                             <span className="ml-1">(5.0)</span>
                           </div>
-                          <span className="text-[10px] font-black uppercase text-white tracking-widest flex items-center justify-center border border-slate-900 px-3 py-1.5 group-hover:bg-[#111111] group-hover:text-white transition-colors">
+                          <span className="text-[11px] font-black uppercase text-white tracking-widest flex items-center justify-center border border-slate-900 px-3 py-1.5 group-hover:bg-[#111111] group-hover:text-white transition-colors">
                             Enter Store <ArrowUpRight className="w-3 h-3 ml-1" />
                           </span>
                         </div>
@@ -189,12 +189,12 @@ export default async function DealersPage() {
             )}
 
             {/* General Maps - moved to bottom */}
-            <div className="w-full border border-[#ddd4c8] bg-white p-6 rounded-none mb-12 shadow-sm">
+            <div className="w-full border border-[#ddd4c8] dark:border-slate-800 bg-white p-6 rounded-2xl mb-12 shadow-sm">
               <div className="mb-6 flex items-center gap-3">
-                <span className="bg-[#111111] text-white p-2 rounded-none"><MapPin size={18} /></span>
-                <h2 className="text-[15px] font-black text-slate-900 uppercase tracking-widest">National Grid Array</h2>
+                <span className="bg-[#111111] text-white p-2 rounded-2xl"><MapPin size={18} /></span>
+                <h2 className="text-[15px] font-black text-slate-900 dark:text-white uppercase tracking-widest">National Grid Array</h2>
               </div>
-              <div className="h-[400px] border border-[#ddd4c8] shadow-none bg-[#fbfcfd]">
+              <div className="h-[400px] border border-[#ddd4c8] dark:border-slate-800 bg-[#fbfcfd]">
                 <DealersMapView dealers={dealers} />
               </div>
             </div>

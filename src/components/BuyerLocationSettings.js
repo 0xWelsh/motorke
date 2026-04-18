@@ -69,7 +69,7 @@ export default function BuyerLocationSettings({ initialLat, initialLng }) {
   return (
     <div className="space-y-5">
       <div>
-        <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 mb-2">
+        <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-2">
           <MapPin className="w-4 h-4 text-[#ff5a2f]" />
           Your Location
         </h3>
@@ -79,35 +79,35 @@ export default function BuyerLocationSettings({ initialLat, initialLng }) {
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-none">
+        <div className="p-3 bg-red-50 border border-red-200 rounded-2xl">
           <p className="text-xs text-red-700">{error}</p>
         </div>
       )}
 
       {saved && (
-        <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-none">
+        <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-2xl">
           <CheckCircle className="w-4 h-4 text-green-600" />
           <p className="text-xs font-medium text-green-700">Location saved successfully</p>
         </div>
       )}
 
       {lat && lng ? (
-        <div className="p-4 bg-blue-50 border border-blue-200 rounded-none">
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded-2xl">
           <div className="flex items-start justify-between mb-3">
             <div>
               <p className="text-xs font-bold text-slate-700 uppercase mb-2">Current Location</p>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <p className="text-[10px] text-slate-600 uppercase font-semibold">Latitude</p>
-                  <p className="text-sm font-mono text-slate-900">{lat.toFixed(6)}</p>
+                  <p className="text-[11px] text-slate-600 uppercase font-semibold">Latitude</p>
+                  <p className="text-sm font-mono text-slate-900 dark:text-white">{lat.toFixed(6)}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] text-slate-600 uppercase font-semibold">Longitude</p>
-                  <p className="text-sm font-mono text-slate-900">{lng.toFixed(6)}</p>
+                  <p className="text-[11px] text-slate-600 uppercase font-semibold">Longitude</p>
+                  <p className="text-sm font-mono text-slate-900 dark:text-white">{lng.toFixed(6)}</p>
                 </div>
               </div>
             </div>
-            <span className="inline-flex items-center gap-1.5 bg-blue-100 text-blue-700 px-2.5 py-1 rounded-none text-[10px] font-bold uppercase">
+            <span className="inline-flex items-center gap-1.5 bg-blue-100 text-blue-700 px-2.5 py-1 rounded-2xl text-[11px] font-bold uppercase">
               <MapPin className="w-3 h-3" />
               Set
             </span>
@@ -116,7 +116,7 @@ export default function BuyerLocationSettings({ initialLat, initialLng }) {
           <button
             onClick={handleClearLocation}
             disabled={loading}
-            className="w-full px-3 py-3 sm:py-2 text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-none transition disabled:opacity-50"
+            className="w-full px-3 py-3 sm:py-2 text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-2xl transition disabled:opacity-50"
           >
             Remove Location
           </button>
@@ -125,7 +125,7 @@ export default function BuyerLocationSettings({ initialLat, initialLng }) {
         <button
           onClick={handleUseCurrentLocation}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#ff5a2f] text-slate-900 rounded-none font-bold text-sm hover:bg-blue-700 disabled:opacity-50 transition"
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#ff5a2f] text-slate-900 dark:text-white rounded-2xl font-bold text-sm hover:bg-blue-700 disabled:opacity-50 transition"
         >
           {loading ? (
             <>
