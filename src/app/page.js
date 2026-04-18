@@ -89,10 +89,8 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen pb-28">
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image src={HERO_TEXTURE} fill priority className="object-cover opacity-[0.04]" alt="" />
-          <div className="absolute inset-0 bg-[#f7f6f3]" />
-          <div className="absolute inset-0 bg-[#f7f6f3]" />
+        <div className="absolute inset-0 z-0 bg-[#f7f6f3] dark:bg-[#0a0a0a]">
+          <Image src={HERO_TEXTURE} fill priority className="object-cover opacity-[0.04] dark:opacity-[0.08]" alt="" />
           <div className="absolute -top-24 -right-20 h-80 w-80 rounded-2xl bg-[#ff5a2f]/5 blur-3xl" />
         </div>
 

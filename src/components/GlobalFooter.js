@@ -10,7 +10,7 @@ export default function GlobalFooter() {
   }
 
   return (
-    <footer className="bg-[#f0f3f5] pt-16 pb-6 px-6 sm:px-8 border-t border-[#e5e9ea] transition-all duration-300 ease-out" style={{ paddingBottom: 'max(3rem, calc(2rem + env(safe-area-inset-bottom)))' }}>
+    <footer className="bg-[#f0f3f5] dark:bg-[#111111] pt-16 pb-6 px-6 sm:px-8 border-t border-[#e5e9ea] dark:border-slate-800 transition-all duration-300 ease-out" style={{ paddingBottom: 'max(3rem, calc(2rem + env(safe-area-inset-bottom)))' }}>
       <div className="container mx-auto max-w-[1440px]">
         {/* Top Section */}
         <div className="flex flex-col md:flex-row justify-between gap-12 lg:gap-8 mb-16">
@@ -18,7 +18,7 @@ export default function GlobalFooter() {
           <div className="md:w-5/12 xl:w-4/12 flex flex-col">
             <h2 className="text-2xl font-black tracking-[0.2em] uppercase text-slate-900 dark:text-white mb-6">MOTORSKE</h2>
             
-            <h3 className="text-2xl sm:text-[28px] font-serif text-[#1e293b] mb-4 leading-snug">
+            <h3 className="text-2xl sm:text-[28px] font-serif text-[#1e293b] dark:text-white mb-4 leading-snug">
               Driving Kenya forward, one car at a time
             </h3>
             <p className="text-[13px] text-slate-600 leading-relaxed font-medium mb-10 max-w-md">
@@ -26,7 +26,7 @@ export default function GlobalFooter() {
             </p>
             
             <div>
-              <h4 className="text-[15px] font-serif text-[#1e293b] mb-3">Mailing Address</h4>
+              <h4 className="text-[15px] font-serif text-[#1e293b] dark:text-white mb-3">Mailing Address</h4>
               <div className="flex items-start gap-2.5 text-slate-600 text-[13px] font-medium">
                 <svg className="w-4 h-4 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 <span>00614 Wangige,<br/>Kabete</span>
@@ -36,7 +36,7 @@ export default function GlobalFooter() {
 
           {/* Middle Column - Links */}
           <div className="md:w-3/12 xl:w-2/12">
-            <h4 className="text-[17px] font-serif text-[#1e293b] mb-6">Company</h4>
+            <h4 className="text-[17px] font-serif text-[#1e293b] dark:text-white mb-6">Company</h4>
             <ul className="flex flex-col gap-4 text-[13px] font-medium text-slate-600">
               <li><a href="/about" className="hover:text-slate-900 dark:text-white transition-colors">About Us</a></li>
               <li><a href="/cars" className="hover:text-slate-900 dark:text-white transition-colors">Vehicles</a></li>
@@ -48,7 +48,7 @@ export default function GlobalFooter() {
 
           {/* Right Column - Contact */}
           <div className="md:w-4/12 xl:w-3/12">
-            <h4 className="text-[17px] font-serif text-[#1e293b] mb-6">Contact Us</h4>
+            <h4 className="text-[17px] font-serif text-[#1e293b] dark:text-white mb-6">Contact Us</h4>
             <div className="flex flex-col">
               <a href="https://wa.me/254717303587" className="flex items-center gap-3 py-3.5 border-b border-[#e2e6ea] text-[13px] font-medium text-slate-600 hover:text-slate-900 dark:text-white transition-colors">
                 <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>

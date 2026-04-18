@@ -134,7 +134,7 @@ export default function LocationSearch() {
 
           <button 
             type="submit" 
-            className="h-11 bg-[var(--brand)] hover:bg-[var(--brand-accent)] text-slate-900 dark:text-white px-5 sm:px-8 rounded-2xl font-black text-sm transition-all duration-300 w-full sm:w-auto"
+            className="h-11 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-5 sm:px-8 rounded-2xl font-black text-sm transition-all duration-300 w-full sm:w-auto"
           >
             Search
           </button>
