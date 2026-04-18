@@ -177,7 +177,7 @@ export default async function CarsPage({ searchParams }) {
               />
               
               {/* Promo Banner to "fill this empty space brooo" */}
-              <div className="hidden xl:block bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 p-6 shadow-sm rounded-2xl">
+              <div className="hidden xl:block bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 p-6 shadow-sm rounded-none">
                 <span className="inline-block bg-[#111111] text-white text-[11px] font-black uppercase tracking-widest px-2 py-1 mb-4">Concierge</span>
                 <h3 className="text-base font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-3">
                   Can't find the exact model you want?
@@ -185,7 +185,7 @@ export default async function CarsPage({ searchParams }) {
                 <p className="text-xs text-slate-600 font-medium leading-relaxed mb-5">
                   Set up a vehicle alert or let our expert team import or source a direct match from our private verified dealership network.
                 </p>
-                <button className="w-full bg-white dark:bg-[#111111] border border-[#111111] hover:bg-[#111111] text-white hover:text-white text-[11px] font-black uppercase tracking-widest py-3 transition-colors rounded-full">
+                <button className="w-full bg-white dark:bg-[#111111] border border-[#111111] hover:bg-[#111111] text-white hover:text-white text-[11px] font-black uppercase tracking-widest py-3 transition-colors rounded-none">
                   Request Vehicle
                 </button>
               </div>
@@ -194,13 +194,13 @@ export default async function CarsPage({ searchParams }) {
 
           {/* Floating Cars */}
           {sortedCars.length === 0 ? (
-            <div className="block float-left w-full xl:w-3/4 px-2 sm:px-3 py-20 text-center border border-[#ddd4c8] dark:border-slate-800 rounded-2xl bg-white">
-              <div className="w-20 h-20 bg-[#faf7f2] rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="block float-left w-full xl:w-3/4 px-2 sm:px-3 py-20 text-center border border-[#ddd4c8] dark:border-slate-800 rounded-none bg-white">
+              <div className="w-20 h-20 bg-[#faf7f2] rounded-none flex items-center justify-center mx-auto mb-6">
                 <Search className="w-8 h-8 text-slate-300" />
               </div>
               <h2 className="text-2xl text-slate-900 dark:text-white mb-3">No cars match these filters</h2>
               <p className="text-base text-slate-600 font-medium mb-8 max-w-md mx-auto">Try broadening your search or resetting filters.</p>
-              <Link href="/cars" className="rounded-full font-black inline-flex items-center gap-2 bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 text-xs uppercase transition-colors">
+              <Link href="/cars" className="rounded-none font-black inline-flex items-center gap-2 bg-[#111111] hover:bg-[#ff5a2f] text-white px-6 py-3 text-xs uppercase transition-colors">
                 Reset Search <ArrowUpRight className="w-4 h-4" />
               </Link>
             </div>
@@ -219,7 +219,7 @@ export default async function CarsPage({ searchParams }) {
             <div className="block float-left w-full px-2 sm:px-3 mt-4 pb-4">
             <div className="min-w-max flex justify-center items-center gap-2 sm:gap-3 mx-auto">
               {page > 1 && (
-                <Link href={getPageLink(page - 1)} className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
+                <Link href={getPageLink(page - 1)} className="w-10 h-10 sm:w-11 sm:h-11 rounded-none flex items-center justify-center bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
                   <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 rotate-180" />
                 </Link>
               )}
@@ -230,7 +230,7 @@ export default async function CarsPage({ searchParams }) {
                     return (
                       <Link key={p}
                         href={getPageLink(p)}
-                        className={`w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center text-xs font-extrabold transition-all ${
+                        className={`w-10 h-10 sm:w-11 sm:h-11 rounded-none flex items-center justify-center text-xs font-extrabold transition-all ${
                           p === page
                             ? "bg-[#111111] text-white shadow-md"
                             : "bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-white hover:bg-[#faf7f2]"
@@ -247,7 +247,7 @@ export default async function CarsPage({ searchParams }) {
               </div>
 
               {page < totalPages && (
-                <Link href={getPageLink(page + 1)} className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
+                <Link href={getPageLink(page + 1)} className="w-10 h-10 sm:w-11 sm:h-11 rounded-none flex items-center justify-center bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-500 hover:text-black hover:bg-[#faf7f2] transition-all">
                   <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Link>
               )}
@@ -281,7 +281,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
   };
 
   return (
-    <article className="group block bg-white dark:bg-[#111111] border border-[#e8e2d9] hover:border-slate-300 overflow-hidden transition-all duration-500 flex flex-col h-full rounded-2xl">
+    <article className="group block bg-white dark:bg-[#111111] border border-[#e8e2d9] hover:border-slate-300 overflow-hidden transition-all duration-500 flex flex-col h-full rounded-none">
       <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-slate-50 dark:bg-slate-900 overflow-hidden shrink-0">
         {img ? (
             <Image 
@@ -332,7 +332,7 @@ function InventoryCard({ car, userLat, userLng, priority = false }) {
         <div className="mt-auto flex items-end justify-between pt-4 border-t border-slate-200 dark:border-slate-800 gap-3">
           <p className="text-lg lg:text-xl font-bold text-slate-900 dark:text-white">{formatCarPrice(car)}</p>
           <div className="flex items-center gap-1.5">
-            <Link href={`/cars/${car.id}`} className="flex items-center justify-center px-5 py-2.5 bg-slate-900 hover:bg-[#ff5a2f] text-white text-[11px] font-black uppercase tracking-widest rounded-full transition-all shadow-sm">
+            <Link href={`/cars/${car.id}`} className="flex items-center justify-center px-6 h-11 sm:h-10 bg-slate-900 hover:bg-[#ff5a2f] text-white text-[11px] font-black uppercase tracking-widest rounded-none transition-all shadow-sm">
               View Offer
             </Link>
             <CompareButton car={compareCar} className=" h-full" />

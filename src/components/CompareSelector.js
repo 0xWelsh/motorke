@@ -75,7 +75,7 @@ export function CompareBar() {
 }
 
 // Button to add/remove a single car from the compare list
-export function CompareButton({ car }) {
+export function CompareButton({ car, className = "" }) {
   const { isInCompare, addToCompare, removeFromCompare, isFull } = useCompare();
   const selected = isInCompare(car.id);
 
@@ -93,13 +93,13 @@ export function CompareButton({ car }) {
     <button
       onClick={handleToggle}
       disabled={!selected && isFull}
-      className={`relative h-11 sm:h-10 rounded-full text-[11px] font-black uppercase tracking-widest transition-all duration-500 overflow-hidden group ${
+      className={`relative h-11 sm:h-10 rounded-none text-[11px] font-black uppercase tracking-widest transition-all duration-500 overflow-hidden group ${
         selected
           ? "bg-[var(--brand-light)] border border-[var(--brand-accent)]/30 text-[var(--brand)] px-6"
           : isFull 
             ? "bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-300 cursor-not-allowed px-4"
             : "bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-500 hover:text-[var(--brand)] hover:border-[var(--brand-accent)]/20 hover:bg-[var(--brand-light)] px-6 active:scale-95"
-      }`}
+      } ${className}`}
     >
       <span className="relative z-10 flex items-center gap-2">
         {selected ? (
