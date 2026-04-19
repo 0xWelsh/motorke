@@ -106,7 +106,7 @@ export default async function HomePage() {
               </h1>
 
               <p className="text-base sm:text-lg md:text-xl text-slate-600 mb-6 sm:mb-7 leading-relaxed max-w-2xl font-medium">
-                Explore inventory from verified showrooms, compare units side by side, and reach real dealership teams without noisy listings.
+                Browse inventory from trusted dealerships, compare cars side by side, and connect directly with real teams—no hidden fees, no noise. Experience a new level of transparency in car buying: every listing is verified, every dealer is real.
               </p>
 
               <div className="w-full max-w-lg mb-6">
