@@ -102,7 +102,7 @@ export default async function HomePage() {
               <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-[0.92] tracking-tight mb-6 sm:mb-7">
                 Buy cars with
                 <br />
-                <span className="text-[#ff5a2f]">dealer-level clarity.</span>
+                <span className="text-[#FF8559]">dealer-level clarity.</span>
               </h1>
 
               <p className="text-base sm:text-lg md:text-xl text-slate-600 mb-6 sm:mb-7 leading-relaxed max-w-2xl font-medium">
