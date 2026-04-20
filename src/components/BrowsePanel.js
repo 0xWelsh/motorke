@@ -48,7 +48,7 @@ function BrandLogo({ name, img }) {
           <img
             src={src}
             alt={name}
-            className="w-full h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-sm dark:invert"
+            className="w-full h-full object-contain drop-shadow-sm group-hover:scale-105 transition-transform"
             onError={() => setFailed(true)}
           />
         )}
