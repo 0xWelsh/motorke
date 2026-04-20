@@ -230,11 +230,13 @@ export default async function CarDetailPage({ params }) {
     specRows.push([visibleSpecs[i], visibleSpecs[i + 1] || null]);
   }
 
+  const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Motorke.`;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: title,
-    description: description,
+    description: seoDescription,
     image: car.images[0]?.url || "https://motorke.co.ke/headerlogo.png",
     brand: { "@type": "Brand", name: car.make },
     offers: {
