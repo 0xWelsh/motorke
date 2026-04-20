@@ -112,6 +112,14 @@ export default async function HomePage() {
               <div className="w-full max-w-lg mb-6">
                 <BrowsePanel />
               </div>
+              
+              {/* For Sellers Funnel */}
+              <div className="flex flex-wrap items-center gap-2 mt-6 p-4 rounded-xl border border-dashed border-[#e8e2d9] dark:border-slate-800 w-full max-w-lg bg-white/40 dark:bg-[#111111]/40">
+                <span className="text-[11px] font-black uppercase text-slate-500 tracking-widest">Are you a licensed dealership?</span>
+                <Link href="/signup" className="group flex items-center gap-1 text-[11px] font-black uppercase text-[#ff5a2f] hover:text-black dark:hover:text-white transition-colors tracking-widest">
+                  Partner with us <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </Link>
+              </div>
             </div>
 
             <div className="lg:col-span-5 hidden lg:flex flex-col gap-4">
@@ -123,6 +131,41 @@ export default async function HomePage() {
                   {heroSecondary && <HeroCarPanel car={heroSecondary} />}
                   <HeroReviews />
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Trust Marquee */}
+          <div className="mt-16 sm:mt-24 border-t border-b border-[#e8e2d9] dark:border-slate-800 py-6 relative overflow-hidden -mx-4 sm:mx-0 px-4 sm:px-0 bg-white/40 dark:bg-[#111111]/40 w-full">
+            <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#f7f6f3] dark:from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#f7f6f3] dark:from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+            
+            <div className="flex items-center whitespace-nowrap opacity-60">
+              <style dangerouslySetInnerHTML={{__html: `
+                @keyframes marquee-infinite {
+                  0% { transform: translateX(0%); }
+                  100% { transform: translateX(-50%); }
+                }
+                .marquee-infinite-scroll {
+                  animation: marquee-infinite 35s linear infinite;
+                  display: flex;
+                  width: max-content;
+                }
+              `}} />
+              <div className="marquee-infinite-scroll gap-8 sm:gap-16 items-center flex-nowrap min-w-full hover:[animation-play-state:paused]">
+                {/* 2 Sets of items for infinite loop illusion */}
+                {[...Array(2)].map((_, loopIdx) => (
+                  <div key={loopIdx} className="flex items-center gap-8 sm:gap-16">
+                    <span className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200"><ShieldCheck className="w-4 h-4 text-[#ff5a2f]" /> 100% Verified Dealers</span>
+                    <span className="text-xl font-black text-slate-300 dark:text-slate-700 mx-2">·</span>
+                    <span className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200"><ShieldCheck className="w-4 h-4 text-blue-500" /> Croton Motors</span>
+                    <span className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200"><ShieldCheck className="w-4 h-4 text-blue-500" /> Motors Hub Ke</span>
+                    <span className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200"><ShieldCheck className="w-4 h-4 text-blue-500" /> Kai & Karo</span>
+                    <span className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200"><ShieldCheck className="w-4 h-4 text-blue-500" /> Hajimmy Used Car Export</span>
+                    <span className="text-xl font-black text-slate-300 dark:text-slate-700 mx-2">·</span>
+                    <span className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200"><ShieldCheck className="w-4 h-4 text-[#ff5a2f]" /> No Private Scams</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

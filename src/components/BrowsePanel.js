@@ -2,7 +2,7 @@
 // src/components/BrowsePanel.js
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 
 const BRANDS = [
   { name: "Toyota",     img: "logo_toyota.png" },
@@ -18,6 +18,8 @@ const BRANDS = [
   { name: "Volkswagen", img: "logo_volkswagen.png" },
   { name: "Mercedes",   img: "logo_mercedes.png" },
 ];
+
+const COUNTIES = ["Nairobi", "Mombasa", "Nakuru", "Kisumu", "Uasin Gishu", "Kiambu", "Machakos", "Meru"];
 
 // Body type entries — label, query value, and a top-view silhouette emoji / icon URL
 const BODY_TYPES = [
@@ -155,6 +157,20 @@ function BodyTypeCard({ label, value, img }) {
   );
 }
 
+function LocationCard({ name }) {
+  return (
+    <Link
+      href={`/cars?county=${encodeURIComponent(name)}`}
+      className="group flex items-center justify-center gap-2 px-4 py-3 min-w-[120px] rounded-2xl border border-[#e8e2d9] dark:border-slate-800 bg-white dark:bg-[#111111] hover:border-[#ddd4c8] hover:shadow-md transition-all duration-300 whitespace-nowrap drop-shadow-sm"
+    >
+      <MapPin className="w-4 h-4 text-slate-400 group-hover:text-[#ff5a2f] transition-colors" />
+      <span className="text-[11px] font-black text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+        {name}
+      </span>
+    </Link>
+  );
+}
+
 export default function BrowsePanel() {
   return (
     <div className="w-full space-y-6 pt-2">
@@ -191,6 +207,22 @@ export default function BrowsePanel() {
           {BODY_TYPES.map((bt) => (
             <div key={bt.value} className="snap-start shrink-0">
               <BodyTypeCard {...bt} />
+            </div>
+          ))}
+        </ScrollableRow>
+      </div>
+
+      {/* Shop by County */}
+      <div>
+        <div className="flex items-center justify-between mb-3 px-2">
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+            Shop by location
+          </p>
+        </div>
+        <ScrollableRow>
+          {COUNTIES.map((c) => (
+            <div key={c} className="snap-start shrink-0">
+              <LocationCard name={c} />
             </div>
           ))}
         </ScrollableRow>
