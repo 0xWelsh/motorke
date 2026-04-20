@@ -91,7 +91,7 @@ function ScrollableRow({ children }) {
     <div className="relative group/row">
       {/* Left Fade + Button */}
       {canScrollLeft && (
-        <div className="absolute left-0 top-0 bottom-6 w-24 bg-gradient-to-r from-[#f7f6f3] via-[#f7f6f3]/80 dark:from-[#0a0a0a] dark:via-[#0a0a0a]/80 to-transparent z-10 pointer-events-none flex items-center pr-2 -ml-2">
+        <div className="absolute left-0 top-0 bottom-6 w-16 z-10 pointer-events-none flex items-center pr-2 -ml-2">
           <button 
             onClick={() => scroll("left")}
             className="w-10 h-10 ml-2 sm:ml-4 flex items-center justify-center bg-white/90 dark:bg-[#111111]/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-slate-900 dark:text-white hover:bg-white dark:hover:bg-[#111111] hover:scale-110"
@@ -104,6 +104,10 @@ function ScrollableRow({ children }) {
       <div 
         ref={scrollRef}
         onScroll={checkScroll}
+        style={{
+          maskImage: `linear-gradient(to right, ${canScrollLeft ? 'transparent' : 'black'} 0%, black 48px, black calc(100% - 48px), ${canScrollRight ? 'transparent' : 'black'} 100%)`,
+          WebkitMaskImage: `linear-gradient(to right, ${canScrollLeft ? 'transparent' : 'black'} 0%, black 48px, black calc(100% - 48px), ${canScrollRight ? 'transparent' : 'black'} 100%)`
+        }}
         className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-6 -mx-4 px-4 scroll-smooth [&::-webkit-scrollbar]:hidden"
       >
         {children}
@@ -111,7 +115,7 @@ function ScrollableRow({ children }) {
 
       {/* Right Fade + Button */}
       {canScrollRight && (
-        <div className="absolute right-0 top-0 bottom-6 w-24 bg-gradient-to-l from-[#f7f6f3] via-[#f7f6f3]/80 dark:from-[#0a0a0a] dark:via-[#0a0a0a]/80 to-transparent z-10 pointer-events-none flex items-center justify-end pl-2 -mr-2">
+        <div className="absolute right-0 top-0 bottom-6 w-16 z-10 pointer-events-none flex items-center justify-end pl-2 -mr-2">
           <button 
             onClick={() => scroll("right")}
             className="w-10 h-10 mr-2 sm:mr-4 flex items-center justify-center bg-white/90 dark:bg-[#111111]/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-slate-900 dark:text-white hover:bg-white dark:hover:bg-[#111111] hover:scale-110"
