@@ -1,7 +1,8 @@
 "use client";
 // src/components/BrowsePanel.js
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const BRANDS = [
   { name: "Toyota",     img: "logo_toyota.png" },
@@ -60,6 +61,69 @@ function BrandLogo({ name, img }) {
   );
 }
 
+function ScrollableRow({ children }) {
+  const scrollRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(Math.ceil(scrollLeft + clientWidth) < scrollWidth);
+    }
+  };
+
+  useEffect(() => {
+    checkScroll();
+    window.addEventListener('resize', checkScroll);
+    return () => window.removeEventListener('resize', checkScroll);
+  }, []);
+
+  const scroll = (dir) => {
+    if (scrollRef.current) {
+      const amount = scrollRef.current.clientWidth * 0.75;
+      scrollRef.current.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
+    }
+  };
+
+  return (
+    <div className="relative group/row">
+      {/* Left Fade + Button */}
+      {canScrollLeft && (
+        <div className="absolute left-0 top-0 bottom-4 w-16 bg-gradient-to-r from-[#f7f6f3] dark:from-[#0a0a0a] to-transparent z-10 pointer-events-none flex items-center pr-2">
+          <button 
+            onClick={() => scroll("left")}
+            className="w-8 h-8 ml-0 sm:ml-2 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm rounded-full opacity-0 sm:group-hover/row:opacity-100 transition-opacity pointer-events-auto text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 pointer-events-auto"
+          >
+            <ChevronLeft className="w-4 h-4 ml-[-1px]" />
+          </button>
+        </div>
+      )}
+
+      <div 
+        ref={scrollRef}
+        onScroll={checkScroll}
+        className="flex overflow-x-auto snap-x snap-mandatory gap-2 pb-5 -mx-2 px-2 scroll-smooth [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full"
+      >
+        {children}
+      </div>
+
+      {/* Right Fade + Button */}
+      {canScrollRight && (
+        <div className="absolute right-0 top-0 bottom-4 w-16 bg-gradient-to-l from-[#f7f6f3] dark:from-[#0a0a0a] to-transparent z-10 pointer-events-none flex items-center justify-end pl-2">
+          <button 
+            onClick={() => scroll("right")}
+            className="w-8 h-8 mr-0 sm:mr-2 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm rounded-full opacity-0 sm:group-hover/row:opacity-100 transition-opacity pointer-events-auto text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 pointer-events-auto"
+          >
+            <ChevronRight className="w-4 h-4 mr-[-1px]" />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function BodyTypeCard({ label, value, img }) {
   const [failed, setFailed] = useState(false);
 
@@ -103,13 +167,13 @@ export default function BrowsePanel() {
             All Makes →
           </Link>
         </div>
-        <div className="flex overflow-x-auto snap-x snap-mandatory gap-2 pb-4 [&::-webkit-scrollbar]:hidden -mx-2 px-2">
+        <ScrollableRow>
           {BRANDS.map((b) => (
             <div key={b.name} className="snap-start shrink-0">
               <BrandLogo name={b.name} img={b.img} />
             </div>
           ))}
-        </div>
+        </ScrollableRow>
       </div>
 
       {/* Body Types */}
@@ -119,13 +183,13 @@ export default function BrowsePanel() {
             Body Types
           </p>
         </div>
-        <div className="flex overflow-x-auto snap-x snap-mandatory gap-2 pb-4 [&::-webkit-scrollbar]:hidden -mx-2 px-2">
+        <ScrollableRow>
           {BODY_TYPES.map((bt) => (
             <div key={bt.value} className="snap-start shrink-0">
               <BodyTypeCard {...bt} />
             </div>
           ))}
-        </div>
+        </ScrollableRow>
       </div>
     </div>
   );
