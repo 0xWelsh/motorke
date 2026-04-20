@@ -60,11 +60,11 @@ export default async function AccountPage({ searchParams }) {
           </div>
 
           {/* User Profile Card */}
-          <div className="bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 rounded-2xl p-4 sm:p-8 shadow-sm">
+          <div className="bg-white dark:bg-[#111111] p-4 sm:p-8 shadow-sm">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
               {/* Avatar */}
               <div className="flex items-center gap-4 w-full sm:w-auto">
-                <div className="w-14 h-14 sm:w-20 sm:h-20 bg-slate-100 dark:bg-[#222222] text-slate-900 dark:text-white rounded-2xl flex items-center justify-center font-bold text-xl sm:text-3xl flex-shrink-0">
+                <div className="w-14 h-14 sm:w-20 sm:h-20 bg-slate-100 dark:bg-[#222222] text-slate-900 dark:text-white rounded-none flex items-center justify-center font-bold text-xl sm:text-3xl flex-shrink-0">
                   {user.name?.[0]?.toUpperCase()}
                 </div>
                 
@@ -78,20 +78,20 @@ export default async function AccountPage({ searchParams }) {
 
               {/* User Info */}
               <div className="flex-1 w-full min-w-0">
-                <div className="hidden sm:flex flex-row items-center gap-2 mb-2">
+                <div className="hidden sm:flex flex-row items-center gap-3 mb-2">
                   <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{user.name}</h2>
-                  <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded text-[11px] font-bold uppercase tracking-wider">
+                  <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 px-2.5 py-1 rounded-none text-[11px] font-bold uppercase tracking-wider">
                     <ShieldCheck size={12} /> Verified
                   </span>
                 </div>
                 <p className="hidden sm:block text-[11px] uppercase font-black tracking-[0.10em] text-slate-700 mb-3">{user.email}</p>
                 
-                <div className="flex flex-wrap items-center gap-2 mt-2 sm:mt-0">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 bg-[#fbfcfe] dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 rounded text-[10px] sm:text-[11px] uppercase font-black tracking-[0.10em] sm:tracking-[0.15em] font-semibold text-slate-700">
+                <div className="flex flex-wrap items-center gap-3 mt-2 sm:mt-0">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 bg-slate-50 dark:bg-[#111111] rounded-none text-[10px] sm:text-[11px] uppercase font-black tracking-[0.10em] sm:tracking-[0.15em] font-semibold text-slate-700">
                     <Heart size={14} className="text-red-500" />
                     {savedCars.length} Saved
                   </div>
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 bg-[#fbfcfe] dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 rounded text-[10px] sm:text-[11px] uppercase font-black tracking-[0.10em] sm:tracking-[0.15em] font-semibold text-slate-700">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 bg-slate-50 dark:bg-[#111111] rounded-none text-[10px] sm:text-[11px] uppercase font-black tracking-[0.10em] sm:tracking-[0.15em] font-semibold text-slate-700">
                     <MessageSquare size={14} className="text-[#ff5a2f]" />
                     {enquiries.length} Enquiries
                   </div>
@@ -99,7 +99,7 @@ export default async function AccountPage({ searchParams }) {
               </div>
 
               {/* Quick Link */}
-              <a href="/cars" className="inline-flex items-center justify-center gap-2 w-full sm:w-auto mt-2 sm:mt-0 px-4 py-3 sm:py-2.5 bg-slate-900 text-white rounded-xl font-semibold text-[11px] uppercase font-black tracking-[0.15em] hover:bg-[#ff5a2f] transition-colors border border-transparent">
+              <a href="/cars" className="inline-flex items-center justify-center gap-2 w-full sm:w-auto mt-2 sm:mt-0 px-6 py-3 sm:py-3 bg-slate-900 text-white rounded-none font-semibold text-[11px] uppercase font-black tracking-[0.15em] hover:bg-[#ff5a2f] transition-colors">
                 Browse <ArrowRight size={16} className="hidden sm:block" />
               </a>
             </div>
@@ -107,7 +107,7 @@ export default async function AccountPage({ searchParams }) {
         </header>
 
         {/* Tabbed Interface */}
-        <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl overflow-hidden min-h-[600px]">
+        <div className="bg-white dark:bg-[#111111] rounded-none overflow-hidden min-h-[600px] shadow-sm">
           <AccountTabs
             tab={tab}
             user={{ id: user.id, name: user.name, email: user.email }}

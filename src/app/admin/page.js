@@ -87,7 +87,7 @@ export default async function AdminDashboard({ searchParams }) {
       <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-6 sm:mb-8 gap-4 sm:gap-6">
         <div>
           <div className="flex items-center gap-2 mb-2">
-             <div className="w-2 h-2 rounded-2xl bg-[#ff5a2f] shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+             <div className="w-2 h-2 rounded-none bg-[#ff5a2f] shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">System Administration</span>
           </div>
           <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-1">
@@ -98,7 +98,7 @@ export default async function AdminDashboard({ searchParams }) {
         
         {/* Date Range Toggle */}
         <div className="flex items-center justify-between lg:justify-end w-full lg:w-auto">
-          <div className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-2xl border border-[#ddd4c8] dark:border-slate-800/60 shadow-inner">
+          <div className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-none shadow-inner">
             {[
               { v: "7", label: "7 DAYS" },
               { v: "30", label: "30 DAYS" },
@@ -106,8 +106,8 @@ export default async function AdminDashboard({ searchParams }) {
             ].map(opt => (
               <Link 
                 key={opt.v} href={`?range=${opt.v}`} 
-                className={`px-4 py-2 text-[11px] font-black uppercase tracking-widest rounded-2xl transition-all ${
-                  range === opt.v ? "bg-white text-[#ff5a2f] border border-[#ddd4c8] dark:border-slate-800/50" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
+                className={`px-4 py-2 text-[11px] font-black uppercase tracking-widest rounded-none transition-all ${
+                  range === opt.v ? "bg-white text-[#ff5a2f]" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
                 }`}
               >
                 {opt.label}
@@ -125,17 +125,17 @@ export default async function AdminDashboard({ searchParams }) {
           { label: "Total Value",  val: formatCompact(totalValue), sub: "Listed Active Inventory Value", icon: <Bolt size={20} /> },
           { label: "Active Users", val: totalUsers,   sub: `Current Marketplace Shoppers`, icon: <Users size={20} /> }
         ].map((m, i) => (
-          <div key={i} className="bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 p-5 sm:p-6 rounded-2xl hover:border-slate-300 transition-all relative overflow-hidden group shadow-sm">
+          <div key={i} className="bg-white dark:bg-[#111111] p-5 sm:p-6 rounded-none transition-all relative overflow-hidden group shadow-sm hover:shadow-md">
             <div className="flex items-center justify-between mb-4 relative z-10">
-              <div className={`w-10 h-10 flex items-center justify-center rounded-[10px] bg-[#f7f6f3] border border-slate-100 ${m.color ? "text-[#ff5a2f] group-hover:bg-[#ff5a2f] group-hover:text-white" : "text-white group-hover:bg-slate-900 group-hover:text-white"} transition-colors`}>
+              <div className={`w-10 h-10 flex items-center justify-center rounded-none bg-[#f7f6f3] ${m.color ? "text-[#ff5a2f] group-hover:bg-[#ff5a2f] group-hover:text-white" : "text-slate-400 group-hover:bg-slate-900 group-hover:text-white"} transition-colors`}>
                 {m.icon}
               </div>
             </div>
             <h3 className="text-3xl font-black text-slate-900 dark:text-white mb-1 relative z-10">{m.val}</h3>
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400 relative z-10 mb-1">{m.label}</p>
-            <p className="text-[11px] uppercase font-bold text-slate-400 tracking-wider relative z-10 bg-[#f7f6f3] inline-flex px-2 py-0.5 rounded-2xl mt-2">{m.sub}</p>
+            <p className="text-[11px] uppercase font-bold text-slate-400 tracking-wider relative z-10 bg-[#f7f6f3] dark:bg-slate-800 inline-flex px-2 py-0.5 rounded-none mt-2">{m.sub}</p>
             
-            {m.color && <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#ff5a2f]/10 rounded-2xl blur-2xl opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none" />}
+            {m.color && <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#ff5a2f]/10 rounded-none blur-2xl opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none" />}
           </div>
         ))}
       </div>
@@ -152,26 +152,26 @@ export default async function AdminDashboard({ searchParams }) {
          <div className="flex flex-col gap-4 sm:gap-6">
             
             {/* Inbox Panel */}
-            <div className="bg-red-50 border border-red-100 p-5 sm:p-6 rounded-2xl shadow-none">
+            <div className="bg-red-50 p-5 sm:p-6 rounded-none shadow-none">
                <div className="flex items-center gap-2 mb-4 sm:mb-6">
                   <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-2xl bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-2xl h-2 w-2 bg-red-500"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-none h-2 w-2 bg-red-500"></span>
                   </span>
                   <span className="text-xs font-black uppercase tracking-widest text-red-600">Needs Action</span>
                </div>
 
                <div className="space-y-3">
                  {pendingDealers.length === 0 ? (
-                   <div className="text-sm font-semibold text-red-700 bg-red-100/50 p-4 rounded-2xl flex items-center justify-between gap-2 border border-red-100">
+                   <div className="text-sm font-semibold text-red-700 bg-red-100/50 p-4 rounded-none flex items-center justify-between gap-2 border border-red-100">
                      <span className="flex items-center gap-2"><BadgeCheck size={16} /> Inbox Zero! All clear.</span>
                    </div>
                  ) : (
                    pendingDealers.map(d => (
-                     <Link key={d.id} href={`/admin/dealers/${d.id}`} className="bg-white hover:bg-white/80 border border-red-100/50 p-4 rounded-2xl flex items-center justify-between group transition-colors shadow-none">
+                     <Link key={d.id} href={`/admin/dealers/${d.id}`} className="bg-white hover:bg-white/80 p-4 rounded-none flex items-center justify-between group transition-colors shadow-sm">
                         <div className="flex flex-col gap-1.5">
                           <p className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-red-700 transition-colors uppercase tracking-tight">{d.name}</p>
-                          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-2xl bg-red-100/50 border border-red-100/80 self-start text-red-600 font-bold uppercase tracking-wider text-[8px]">
+                          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-red-100/50 border border-red-100/80 self-start text-red-600 font-bold uppercase tracking-wider text-[8px]">
                              <AlertCircle size={10} /> Pending Approval
                           </div>
                         </div>
@@ -183,21 +183,21 @@ export default async function AdminDashboard({ searchParams }) {
             </div>
 
             {/* Billing Health Panel */}
-            <div className="bg-[#ff5a2f]/10 border border-[#ff5a2f]/20 p-5 sm:p-6 rounded-2xl shadow-none">
+            <div className="bg-[#ff5a2f]/10 p-5 sm:p-6 rounded-none shadow-none">
                <div className="flex items-center gap-2 mb-4 sm:mb-6 text-[#ff5a2f]">
                   <Activity size={16} strokeWidth={3} />
                   <span className="text-xs font-black uppercase tracking-widest text-[#e54a1f]">Billing Health</span>
                </div>
-               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-[#e8e2d9] dark:border-slate-800 flex flex-col items-center text-center justify-center shadow-sm">
+               <div className="bg-white rounded-none p-5 sm:p-6 flex flex-col items-center text-center justify-center shadow-sm">
                   <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Estimated MRR</p>
                   <p className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter mb-6">{formatCompact(mrr)}</p>
                   
                   <div className="w-full flex items-center gap-2 pt-5 border-t border-slate-100/60">
-                    <div className="flex-1 bg-[#ff5a2f]/10 border border-[#ff5a2f]/20 py-3 rounded-2xl flex flex-col items-center justify-center">
+                    <div className="flex-1 bg-[#ff5a2f]/10 py-3 rounded-none flex flex-col items-center justify-center">
                        <span className="text-[11px] font-black uppercase tracking-widest text-[#ff5a2f] mb-1">Premium</span>
                        <span className="text-xl font-black text-[#e54a1f]">{premiumSubs}</span>
                     </div>
-                    <div className="flex-1 bg-[#f7f6f3] border border-slate-100 py-3 rounded-2xl flex flex-col items-center justify-center">
+                    <div className="flex-1 bg-[#f7f6f3] py-3 rounded-none flex flex-col items-center justify-center">
                        <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1">Free</span>
                        <span className="text-xl font-black text-slate-600">{freeSubs}</span>
                     </div>

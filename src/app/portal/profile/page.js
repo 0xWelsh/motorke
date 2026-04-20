@@ -33,9 +33,9 @@ export default async function PortalProfilePage({ searchParams }) {
 
   if (!user) return null;
 
-  const inputCls = "w-full bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none focus:border-slate-900 dark:focus:border-white transition-all placeholder:text-slate-400 shadow-sm";
+  const inputCls = "w-full bg-slate-50 dark:bg-[#111111] border-b-2 border-slate-200 dark:border-slate-800 rounded-none px-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none focus:border-slate-900 dark:focus:border-white transition-all placeholder:text-slate-400";
   const labelCls = "text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 block";
-  const selectCls = "w-full bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none focus:border-slate-900 dark:focus:border-white transition-all shadow-sm";
+  const selectCls = "w-full bg-slate-50 dark:bg-[#111111] border-b-2 border-slate-200 dark:border-slate-800 rounded-none px-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none focus:border-slate-900 dark:focus:border-white transition-all";
 
   return (
     <div className="w-full max-w-4xl pt-4 pb-12">
@@ -45,18 +45,18 @@ export default async function PortalProfilePage({ searchParams }) {
       </div>
 
       {saved && (
-        <div className="mb-6 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700">
+        <div className="mb-6 rounded-none bg-green-50 px-4 py-3 text-sm font-semibold text-green-700">
           Profile saved successfully.
         </div>
       )}
       {error && (
-        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+        <div className="mb-6 rounded-none bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
           Something went wrong. Please try again.
         </div>
       )}
 
       {/* Account Overview - Top Section */}
-      <div className="bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 rounded-2xl p-4 sm:p-8 shadow-sm mb-6 sm:mb-10">
+      <div className="bg-white dark:bg-[#111111] rounded-none p-4 sm:p-8 shadow-sm mb-6 sm:mb-10">
         <h3 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4 sm:mb-6">Account Overview</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6\">
           {[
@@ -89,7 +89,7 @@ export default async function PortalProfilePage({ searchParams }) {
       {/* Settings Sections */}
       <div className="space-y-6 sm:space-y-8">
           {/* Personal Avatar Section */}
-          <div className="bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 rounded-2xl p-4 sm:p-8 shadow-sm">
+          <div className="bg-white dark:bg-[#111111] rounded-none p-4 sm:p-8 shadow-sm">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
               <div className="relative">
                 <AvatarUpload 
@@ -102,11 +102,11 @@ export default async function PortalProfilePage({ searchParams }) {
                 <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">{user.name}</h2>
                 <p className="text-xs font-semibold tracking-widest uppercase text-slate-500 mt-1">{user.email}</p>
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-4">
-                  <span className="text-[10px] font-black tracking-[0.15em] uppercase bg-slate-100 dark:bg-[#222222] text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded">
+                  <span className="text-[10px] font-black tracking-[0.15em] uppercase bg-slate-100 dark:bg-[#222222] text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-none">
                     {user.role}
                   </span>
                   {user.dealer?.verified && (
-                    <span className="text-[10px] font-black tracking-[0.15em] uppercase text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded flex items-center gap-1">
+                    <span className="text-[10px] font-black tracking-[0.15em] uppercase text-blue-700 bg-blue-50 px-2.5 py-1 rounded-none flex items-center gap-1">
                       <Shield size={12} /> Verified
                     </span>
                   )}
@@ -117,7 +117,7 @@ export default async function PortalProfilePage({ searchParams }) {
 
           {/* Dealership Brand Section */}
           {user.dealer && (
-            <div className="bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 rounded-2xl p-4 sm:p-8 shadow-sm">
+            <div className="bg-white dark:bg-[#111111] rounded-none p-4 sm:p-8 shadow-sm">
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
                 <div className="relative">
                   <DealerLogoUpload currentUrl={user.dealer.logoUrl} dealerName={user.dealer.name} size="lg" />
@@ -127,10 +127,10 @@ export default async function PortalProfilePage({ searchParams }) {
                   <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">{user.dealer.name}</h2>
                   <p className="text-sm font-medium text-slate-500 mt-1">Brand image shown to buyers on your dealer page.</p>
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-4">
-                    <span className="text-[10px] font-black tracking-[0.15em] uppercase bg-slate-100 dark:bg-[#222222] text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded">
+                    <span className="text-[10px] font-black tracking-[0.15em] uppercase bg-slate-100 dark:bg-[#222222] text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-none">
                       {user.dealer.county}
                     </span>
-                    <span className="text-[10px] font-black tracking-[0.15em] uppercase bg-slate-100 dark:bg-[#222222] text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded">
+                    <span className="text-[10px] font-black tracking-[0.15em] uppercase bg-slate-100 dark:bg-[#222222] text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-none">
                       {user.dealer._count?.cars || 0} Live Cars
                     </span>
                   </div>
@@ -149,7 +149,7 @@ export default async function PortalProfilePage({ searchParams }) {
 
           {/* Dealership Details */}
           {user.dealer && (
-            <div className="bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 rounded-2xl p-4 sm:p-8 shadow-sm">
+            <div className="bg-white dark:bg-[#111111] rounded-none p-4 sm:p-8 shadow-sm">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Dealer Profile</h3>
 
               <form action="/api/portal/profile" method="POST" className="space-y-6">
@@ -216,7 +216,7 @@ export default async function PortalProfilePage({ searchParams }) {
                 </div>
 
                 <div className="pt-2">
-                  <button type="submit" className="w-full sm:w-auto bg-[#111111] hover:bg-slate-800 text-white rounded-xl px-8 py-3.5 sm:py-3 font-bold text-xs uppercase tracking-widest transition-all">
+                  <button type="submit" className="w-full sm:w-auto bg-[#111111] hover:bg-slate-800 text-white rounded-none px-8 py-3.5 sm:py-3 font-bold text-xs uppercase tracking-widest transition-all">
                     Save Profile
                   </button>
                 </div>
@@ -225,7 +225,7 @@ export default async function PortalProfilePage({ searchParams }) {
           )}
 
           {/* Account Details */}
-          <div className="bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 rounded-2xl p-4 sm:p-8 shadow-sm">
+          <div className="bg-white dark:bg-[#111111] rounded-none p-4 sm:p-8 shadow-sm">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Account Details</h3>
             
             <form action="/api/profile/update" method="POST" className="space-y-6">
@@ -244,7 +244,7 @@ export default async function PortalProfilePage({ searchParams }) {
               </div>
 
               <div className="pt-2">
-                <button type="submit" className="w-full sm:w-auto bg-[#111111] hover:bg-slate-800 text-white rounded-xl px-8 py-3.5 sm:py-3 font-bold text-xs uppercase tracking-widest transition-all">
+                <button type="submit" className="w-full sm:w-auto bg-[#111111] hover:bg-slate-800 text-white rounded-none px-8 py-3.5 sm:py-3 font-bold text-xs uppercase tracking-widest transition-all">
                   Save Changes
                 </button>
               </div>
@@ -252,7 +252,7 @@ export default async function PortalProfilePage({ searchParams }) {
           </div>
 
           {/* Security & Password */}
-          <div className="bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 rounded-2xl p-4 sm:p-8 shadow-sm">
+          <div className="bg-white dark:bg-[#111111] rounded-none p-4 sm:p-8 shadow-sm">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Security & Password</h3>
             
             <form action="/api/profile/password" method="POST" className="space-y-6">
@@ -268,7 +268,7 @@ export default async function PortalProfilePage({ searchParams }) {
               </div>
 
               <div className="pt-2">
-                <button type="submit" className="w-full sm:w-auto bg-[#111111] hover:bg-[#ff5a2f] text-white rounded-xl px-8 py-3.5 sm:py-3 font-bold text-xs uppercase tracking-widest transition-all">
+                <button type="submit" className="w-full sm:w-auto bg-[#111111] hover:bg-[#ff5a2f] text-white rounded-none px-8 py-3.5 sm:py-3 font-bold text-xs uppercase tracking-widest transition-all">
                   Update Password
                 </button>
               </div>
