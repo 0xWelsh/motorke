@@ -99,7 +99,7 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
             <div className="lg:col-span-7">
-              <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-[0.92] tracking-tight mb-6 sm:mb-7">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-slate-900 dark:text-white leading-[0.92] tracking-tight mb-6 sm:mb-7">
                 Buy cars with
                 <br />
                 <span className="text-[#305CDE]">dealer-level clarity.</span>
