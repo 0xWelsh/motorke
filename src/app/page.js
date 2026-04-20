@@ -7,7 +7,7 @@ import NewsRibbon from "@/components/NewsRibbon";
 import HeroReviews from "@/components/HeroReviews";
 import BrowsePanel from "@/components/BrowsePanel";
 import {
-  ArrowUpRight, ChevronRight, MapPin, ShieldCheck
+  ArrowUpRight, ChevronRight, MapPin, ShieldCheck, Star
 } from "lucide-react";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
