@@ -4,18 +4,18 @@ import Link from "next/link";
 import { useState } from "react";
 
 const BRANDS = [
-  { name: "Toyota",     slug: "toyota" },
-  { name: "Nissan",     slug: "nissan" },
-  { name: "Honda",      slug: "honda" },
-  { name: "Mitsubishi", slug: "mitsubishi" },
-  { name: "Isuzu",      slug: "isuzu" },
-  { name: "Subaru",     slug: "subaru" },
-  { name: "Suzuki",     slug: "suzuki" },
-  { name: "Mazda",      slug: "mazda" },
-  { name: "Daihatsu",   slug: "daihatsu" },
-  { name: "BMW",        slug: "bmw" },
-  { name: "Volkswagen", slug: "volkswagen" },
-  { name: "Mercedes",   slug: "mercedes-benz" },
+  { name: "Toyota",     img: "toyota.png" },
+  { name: "Nissan",     img: "nissan.png" },
+  { name: "Honda",      img: "honda.png" },
+  { name: "Mitsubishi", img: "mitsubishi.jpg" },
+  { name: "Isuzu",      img: "isuzu.jpg" },
+  { name: "Subaru",     img: "subaru.png" },
+  { name: "Suzuki",     img: "suzuki.jpg" },
+  { name: "Mazda",      img: "mazda.png" },
+  { name: "Daihatsu",   img: "daihatsu.png" },
+  { name: "BMW",        img: "BMW.png" },
+  { name: "Volkswagen", img: "volkswagen.jpg" },
+  { name: "Mercedes",   img: "mercedes-benz.jpg" },
 ];
 
 // Body type entries — label, query value, and a top-view silhouette emoji / icon URL
@@ -32,9 +32,9 @@ const BODY_TYPES = [
   { label: "Truck",      value: "TRUCK",      img: "/images/bodies/truck.png"      },
 ];
 
-function BrandLogo({ name, slug }) {
+function BrandLogo({ name, img }) {
   const [failed, setFailed] = useState(false);
-  const src = `https://www.carlogos.org/car-logos/${slug}-logo.png`;
+  const src = `/images/logos/${img}`;
 
   return (
     <Link
@@ -42,13 +42,13 @@ function BrandLogo({ name, slug }) {
       className="group flex flex-col items-center justify-center gap-2 p-3 w-24 rounded-2xl border border-transparent hover:border-[#ddd4c8] dark:hover:border-slate-800 hover:bg-white dark:hover:bg-white/5 transition-all duration-300"
     >
       <div className="w-12 h-12 flex items-center justify-center">
-        {failed ? (
+        {failed ?
           <span className="text-lg font-black text-slate-700 dark:text-slate-300">{name[0]}</span>
-        ) : (
+        : (
           <img
             src={src}
             alt={name}
-            className="w-full h-full object-contain dark:brightness-200 dark:contrast-200"
+            className="w-full h-full object-contain dark:brightness-200 dark:contrast-200 opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-sm"
             onError={() => setFailed(true)}
           />
         )}
@@ -105,8 +105,8 @@ export default function BrowsePanel() {
         </div>
         <div className="flex overflow-x-auto snap-x snap-mandatory gap-2 pb-4 [&::-webkit-scrollbar]:hidden -mx-2 px-2">
           {BRANDS.map((b) => (
-            <div key={b.slug} className="snap-start shrink-0">
-              <BrandLogo name={b.name} slug={b.slug} />
+            <div key={b.name} className="snap-start shrink-0">
+              <BrandLogo name={b.name} img={b.img} />
             </div>
           ))}
         </div>
