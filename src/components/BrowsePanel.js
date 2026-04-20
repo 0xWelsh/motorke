@@ -2,7 +2,8 @@
 // src/components/BrowsePanel.js
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const BRANDS = [
   { name: "Toyota",     img: "logo_toyota.png" },
@@ -172,8 +173,54 @@ function LocationCard({ name }) {
 }
 
 export default function BrowsePanel() {
+  const router = useRouter();
+  const [query, setQuery] = useState("");
+  const [loadingLoc, setLoadingLoc] = useState(false);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!query.trim()) return;
+    
+    setLoadingLoc(true);
+    if (typeof window !== "undefined" && "geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLoadingLoc(false);
+          const { latitude, longitude } = position.coords;
+          router.push(`/cars?search=${encodeURIComponent(query)}&lat=${latitude}&lng=${longitude}`);
+        },
+        () => {
+          setLoadingLoc(false);
+          router.push(`/cars?search=${encodeURIComponent(query)}`);
+        },
+        { timeout: 4000 }
+      );
+    } else {
+      setLoadingLoc(false);
+      router.push(`/cars?search=${encodeURIComponent(query)}`);
+    }
+  };
+
   return (
     <div className="w-full space-y-6 pt-2">
+      {/* Search Bar with Geolocation */}
+      <form onSubmit={handleSearch} className="relative mb-10 w-full">
+        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+        <input 
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="What car are you looking for?"
+          className="w-full bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 text-slate-900 dark:text-white rounded-full py-4 pl-14 pr-[120px] font-bold text-base shadow-sm focus:outline-none focus:ring-4 focus:ring-[#ff5a2f]/10 focus:border-[#ff5a2f]/40 transition-all placeholder:font-normal placeholder:text-slate-400"
+        />
+        <button 
+          type="submit" 
+          disabled={loadingLoc}
+          className="absolute right-2 top-2 bottom-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-6 rounded-full font-black text-xs uppercase tracking-widest transition-all disabled:opacity-70 flex items-center justify-center min-w-[100px]"
+        >
+          {loadingLoc ? "Locating..." : "Explore"}
+        </button>
+      </form>
+
       {/* Popular Brands */}
       <div>
         <div className="flex items-center justify-between mb-3 px-2">

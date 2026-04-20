@@ -49,7 +49,7 @@ function PasswordMeter({ password }) {
   );
 }
 
-export default function SignupForm({ error: initialError }) {
+export default function SignupForm({ error: initialError, initialRole }) {
   const initialErrorMessage =
     initialError === "invalid"
       ? "Please fill all required fields correctly."
@@ -59,7 +59,7 @@ export default function SignupForm({ error: initialError }) {
           ? "Please complete the security check and try again."
           : initialError || "";
 
-  const [role, setRole] = useState("BUYER");
+  const [role, setRole] = useState(initialRole === "DEALER" ? "DEALER" : "BUYER");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);

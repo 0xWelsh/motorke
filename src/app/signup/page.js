@@ -15,10 +15,11 @@ export default async function SignupPage({ searchParams }) {
   }
 
   const error = sp.error;
+  const role = sp.role;
 
   return (
     <div className="min-h-screen w-full bg-[#FCFCFD]">
-      <SignupForm error={error} />
+      <SignupForm error={error} initialRole={role} />
     </div>
   );
 }
