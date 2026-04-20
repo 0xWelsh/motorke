@@ -84,7 +84,7 @@ export default async function AdminDashboard({ searchParams }) {
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-1000 max-w-[1400px]">
       
       {/* ── HEADER ── */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-8 gap-6">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-6 sm:mb-8 gap-4 sm:gap-6">
         <div>
           <div className="flex items-center gap-2 mb-2">
              <div className="w-2 h-2 rounded-2xl bg-[#ff5a2f] shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
@@ -118,14 +118,14 @@ export default async function AdminDashboard({ searchParams }) {
       </div>
 
       {/* ── METRICS ROW ── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
         {[
           { label: "Total Cars",   val: totalCars,    sub: `+${carsInRange} listings in ${rangeLabel}`, icon: <Car size={20} /> },
           { label: "Total Leads",  val: totalLeads,   sub: `+${leadsInRange} leads in ${rangeLabel}`, icon: <MessageSquare size={20} />, color: "emerald" },
           { label: "Total Value",  val: formatCompact(totalValue), sub: "Listed Active Inventory Value", icon: <Bolt size={20} /> },
           { label: "Active Users", val: totalUsers,   sub: `Current Marketplace Shoppers`, icon: <Users size={20} /> }
         ].map((m, i) => (
-          <div key={i} className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 p-6 rounded-2xl hover:hover:border-slate-300 transition-all relative overflow-hidden group">
+          <div key={i} className="bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 p-5 sm:p-6 rounded-2xl hover:border-slate-300 transition-all relative overflow-hidden group shadow-sm">
             <div className="flex items-center justify-between mb-4 relative z-10">
               <div className={`w-10 h-10 flex items-center justify-center rounded-[10px] bg-[#f7f6f3] border border-slate-100 ${m.color ? "text-[#ff5a2f] group-hover:bg-[#ff5a2f] group-hover:text-white" : "text-white group-hover:bg-slate-900 group-hover:text-white"} transition-colors`}>
                 {m.icon}
@@ -141,7 +141,7 @@ export default async function AdminDashboard({ searchParams }) {
       </div>
 
       {/* ── CHARTS & ALERTS ROW ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
       
          {/* Main Chart (Takes up 2/3 width) */}
          <div className="lg:col-span-2 flex flex-col items-stretch">
@@ -149,11 +149,11 @@ export default async function AdminDashboard({ searchParams }) {
          </div>
 
          {/* Needs Action Inbox and Health (Takes 1/3) */}
-         <div className="flex flex-col gap-6">
+         <div className="flex flex-col gap-4 sm:gap-6">
             
             {/* Inbox Panel */}
-            <div className="bg-red-50 border border-red-100 p-6 rounded-2xl shadow-none">
-               <div className="flex items-center gap-2 mb-6">
+            <div className="bg-red-50 border border-red-100 p-5 sm:p-6 rounded-2xl shadow-none">
+               <div className="flex items-center gap-2 mb-4 sm:mb-6">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-2xl bg-red-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-2xl h-2 w-2 bg-red-500"></span>
@@ -183,12 +183,12 @@ export default async function AdminDashboard({ searchParams }) {
             </div>
 
             {/* Billing Health Panel */}
-            <div className="bg-[#ff5a2f]/10 border border-[#ff5a2f]/20 p-6 rounded-2xl shadow-none">
-               <div className="flex items-center gap-2 mb-6 text-[#ff5a2f]">
+            <div className="bg-[#ff5a2f]/10 border border-[#ff5a2f]/20 p-5 sm:p-6 rounded-2xl shadow-none">
+               <div className="flex items-center gap-2 mb-4 sm:mb-6 text-[#ff5a2f]">
                   <Activity size={16} strokeWidth={3} />
                   <span className="text-xs font-black uppercase tracking-widest text-[#e54a1f]">Billing Health</span>
                </div>
-               <div className="bg-white rounded-2xl p-6 border border-[#ff5a2f]/20 flex flex-col items-center text-center justify-center">
+               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-[#e8e2d9] dark:border-slate-800 flex flex-col items-center text-center justify-center shadow-sm">
                   <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Estimated MRR</p>
                   <p className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter mb-6">{formatCompact(mrr)}</p>
                   
