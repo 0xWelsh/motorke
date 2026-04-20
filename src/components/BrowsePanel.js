@@ -91,12 +91,12 @@ function ScrollableRow({ children }) {
     <div className="relative group/row">
       {/* Left Fade + Button */}
       {canScrollLeft && (
-        <div className="absolute left-0 top-0 bottom-4 w-16 bg-gradient-to-r from-[#f7f6f3] dark:from-[#0a0a0a] to-transparent z-10 pointer-events-none flex items-center pr-2">
+        <div className="absolute left-0 top-0 bottom-6 w-24 bg-gradient-to-r from-[#f7f6f3] via-[#f7f6f3]/80 dark:from-[#0a0a0a] dark:via-[#0a0a0a]/80 to-transparent z-10 pointer-events-none flex items-center pr-2 -ml-2">
           <button 
             onClick={() => scroll("left")}
-            className="w-8 h-8 ml-0 sm:ml-2 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm rounded-full opacity-0 sm:group-hover/row:opacity-100 transition-opacity pointer-events-auto text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 pointer-events-auto"
+            className="w-10 h-10 ml-2 sm:ml-4 flex items-center justify-center bg-white/90 dark:bg-[#111111]/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-slate-900 dark:text-white hover:bg-white dark:hover:bg-[#111111] hover:scale-110"
           >
-            <ChevronLeft className="w-4 h-4 ml-[-1px]" />
+            <ChevronLeft className="w-5 h-5 ml-[-2px]" />
           </button>
         </div>
       )}
@@ -104,19 +104,19 @@ function ScrollableRow({ children }) {
       <div 
         ref={scrollRef}
         onScroll={checkScroll}
-        className="flex overflow-x-auto snap-x snap-mandatory gap-2 pb-5 -mx-2 px-2 scroll-smooth [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full"
+        className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-6 -mx-4 px-4 scroll-smooth [&::-webkit-scrollbar]:hidden"
       >
         {children}
       </div>
 
       {/* Right Fade + Button */}
       {canScrollRight && (
-        <div className="absolute right-0 top-0 bottom-4 w-16 bg-gradient-to-l from-[#f7f6f3] dark:from-[#0a0a0a] to-transparent z-10 pointer-events-none flex items-center justify-end pl-2">
+        <div className="absolute right-0 top-0 bottom-6 w-24 bg-gradient-to-l from-[#f7f6f3] via-[#f7f6f3]/80 dark:from-[#0a0a0a] dark:via-[#0a0a0a]/80 to-transparent z-10 pointer-events-none flex items-center justify-end pl-2 -mr-2">
           <button 
             onClick={() => scroll("right")}
-            className="w-8 h-8 mr-0 sm:mr-2 flex items-center justify-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm rounded-full opacity-0 sm:group-hover/row:opacity-100 transition-opacity pointer-events-auto text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 pointer-events-auto"
+            className="w-10 h-10 mr-2 sm:mr-4 flex items-center justify-center bg-white/90 dark:bg-[#111111]/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-slate-900 dark:text-white hover:bg-white dark:hover:bg-[#111111] hover:scale-110"
           >
-            <ChevronRight className="w-4 h-4 mr-[-1px]" />
+            <ChevronRight className="w-5 h-5 mr-[-2px]" />
           </button>
         </div>
       )}

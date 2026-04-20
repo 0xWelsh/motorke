@@ -89,13 +89,14 @@ export default function Navbar({ user }) {
   ];
 
   return (
-    <nav className={clsx(
-      "sticky top-0 z-[100] transition-all duration-300 w-full",
-      scrolled
-        ? "bg-white/95 backdrop-blur-xl border-b border-[#ddd4c8] dark:border-slate-800 py-3 shadow-sm"
-        : "bg-transparent py-5"
-    )}>
-      <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+    <>
+      <nav className={clsx(
+        "sticky top-0 z-50 transition-all duration-300 w-full",
+        scrolled
+          ? "bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-[#ddd4c8] dark:border-slate-800 py-3 shadow-sm"
+          : "bg-transparent py-5"
+      )}>
+        <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
         <div className="flex items-center justify-between gap-4 sm:gap-8">
 
           {/* LOGO */}
@@ -210,6 +211,7 @@ export default function Navbar({ user }) {
           </div>
         </div>
       </div>
+      </nav>
 
       {/* MOBILE MENU */}
       {open && (
@@ -361,7 +363,7 @@ export default function Navbar({ user }) {
           </div>
         </div>
       )}
-    </nav>
+    </>
   );
 }
 
