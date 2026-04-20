@@ -39,21 +39,21 @@ function BrandLogo({ name, slug }) {
   return (
     <Link
       href={`/cars?make=${encodeURIComponent(name)}`}
-      className="group flex flex-col items-center gap-2 p-3 rounded-xl border border-transparent hover:border-[#e8e2d9] hover:bg-white transition-all duration-200"
+      className="group flex flex-col items-center justify-center gap-2 p-3 w-24 rounded-2xl border border-transparent hover:border-[#ddd4c8] dark:hover:border-slate-800 hover:bg-white dark:hover:bg-white/5 transition-all duration-300"
     >
       <div className="w-12 h-12 flex items-center justify-center">
         {failed ? (
-          <span className="text-lg font-black text-slate-700">{name[0]}</span>
+          <span className="text-lg font-black text-slate-700 dark:text-slate-300">{name[0]}</span>
         ) : (
           <img
             src={src}
             alt={name}
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain dark:brightness-200 dark:contrast-200"
             onError={() => setFailed(true)}
           />
         )}
       </div>
-      <span className="text-[11px] font-black text-slate-600 group-hover:text-slate-900 transition-colors">
+      <span className="text-[11px] font-black text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
         {name}
       </span>
     </Link>
@@ -66,21 +66,21 @@ function BodyTypeCard({ label, value, img }) {
   return (
     <Link
       href={`/cars?bodyType=${value}`}
-      className="group flex flex-col items-center gap-1.5 p-2 rounded-xl border border-transparent hover:border-[#e8e2d9] hover:bg-white transition-all duration-200"
+      className="group flex flex-col items-center justify-center gap-2 p-2 w-28 rounded-2xl border border-transparent hover:border-[#ddd4c8] dark:hover:border-slate-800 hover:bg-white dark:hover:bg-white/5 transition-all duration-300"
     >
-      <div className="w-16 h-10 flex items-center justify-center">
+      <div className="w-20 h-10 flex items-center justify-center">
         {!failed ? (
           <img
             src={img}
             alt={label}
-            className="max-h-full max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity"
+            className="max-h-full max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-md"
             onError={() => setFailed(true)}
           />
         ) : (
           <span className="text-2xl">🚗</span>
         )}
       </div>
-      <span className="text-[11px] font-black text-slate-600 group-hover:text-slate-900 transition-colors text-center leading-tight">
+      <span className="text-[11px] font-black text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight">
         {label}
       </span>
     </Link>
@@ -89,10 +89,10 @@ function BodyTypeCard({ label, value, img }) {
 
 export default function BrowsePanel() {
   return (
-    <div className="w-full rounded-2xl bg-[#faf9f7] border border-[#e8e2d9] overflow-hidden shadow-sm">
+    <div className="w-full space-y-6 pt-2">
       {/* Popular Brands */}
-      <div className="p-5 border-b border-[#e8e2d9]">
-        <div className="flex items-center justify-between mb-4">
+      <div>
+        <div className="flex items-center justify-between mb-3 px-2">
           <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
             Popular Brands
           </p>
@@ -103,23 +103,27 @@ export default function BrowsePanel() {
             All Makes →
           </Link>
         </div>
-        <div className="grid grid-cols-4 gap-1">
+        <div className="flex overflow-x-auto snap-x snap-mandatory gap-2 pb-4 [&::-webkit-scrollbar]:hidden -mx-2 px-2">
           {BRANDS.map((b) => (
-            <BrandLogo key={b.slug} name={b.name} slug={b.slug} />
+            <div key={b.slug} className="snap-start shrink-0">
+              <BrandLogo name={b.name} slug={b.slug} />
+            </div>
           ))}
         </div>
       </div>
 
       {/* Body Types */}
-      <div className="p-5">
-        <div className="flex items-center justify-between mb-4">
+      <div>
+        <div className="flex items-center justify-between mb-3 px-2">
           <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
             Body Types
           </p>
         </div>
-        <div className="grid grid-cols-5 gap-1">
+        <div className="flex overflow-x-auto snap-x snap-mandatory gap-2 pb-4 [&::-webkit-scrollbar]:hidden -mx-2 px-2">
           {BODY_TYPES.map((bt) => (
-            <BodyTypeCard key={bt.value} {...bt} />
+            <div key={bt.value} className="snap-start shrink-0">
+              <BodyTypeCard {...bt} />
+            </div>
           ))}
         </div>
       </div>

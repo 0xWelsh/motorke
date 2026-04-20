@@ -97,25 +97,21 @@ export default async function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-2 pb-14 sm:pt-3 sm:pb-20 md:pt-8 md:pb-24 relative z-10">
           <NewsRibbon initialNews={newsItems} />
 
-          {/* Hero headline + CTA row */}
-          <div className="mb-8">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white leading-[0.92] tracking-tight mb-4">
-              Buy cars with
-              <span className="text-[#305CDE]"> dealer-level clarity.</span>
-            </h1>
-            <div className="flex flex-wrap gap-3 items-center mt-5">
-              <Link href="/cars" className="flex items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-6 py-3 text-xs font-black uppercase rounded-full transition-all shadow-lg hover:shadow-[#ff5a2f]/30 active:scale-95">
-                Search Now <ArrowUpRight className="w-4 h-4" />
-              </Link>
-              <Link href="/dealers" className="flex items-center gap-2 bg-white border-2 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white px-6 py-3 text-xs font-black rounded-full uppercase hover:bg-slate-50 transition-all active:scale-95">
-                View Dealers
-              </Link>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
             <div className="lg:col-span-7">
-              <BrowsePanel />
+              <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-[0.92] tracking-tight mb-6 sm:mb-7">
+                Buy cars with
+                <br />
+                <span className="text-[#305CDE]">dealer-level clarity.</span>
+              </h1>
+
+              <p className="text-base sm:text-lg md:text-xl text-slate-600 mb-8 sm:mb-10 leading-relaxed max-w-2xl font-medium">
+                Browse inventory from trusted dealerships, compare cars side by side, and connect directly with real teams. No hidden fees, No noise. Experience a new level of transparency in car buying: every listing is verified, every dealer is real.
+              </p>
+
+              <div className="w-full max-w-lg mb-6">
+                <BrowsePanel />
+              </div>
             </div>
 
             <div className="lg:col-span-5 hidden lg:flex flex-col gap-4">
