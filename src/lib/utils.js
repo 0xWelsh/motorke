@@ -3,7 +3,18 @@ import { estimateDuty as estimateDutyCore, calculateDutyBreakdown, getAgeYearsFr
 
 /** Format KES price → "KSh 4,200,000" */
 export function formatPrice(amount) {
-  return `KSh ${Number(amount).toLocaleString("en-KE")}`;
+  let numAmount = Number(amount);
+  if (isNaN(numAmount)) return "N/A";
+  
+  if (numAmount >= 1000000) {
+    numAmount = Math.round(numAmount / 10000) * 10000;
+  } else if (numAmount >= 100000) {
+    numAmount = Math.round(numAmount / 5000) * 5000;
+  } else if (numAmount > 1000) {
+    numAmount = Math.round(numAmount / 100) * 100;
+  }
+  
+  return `KSh ${numAmount.toLocaleString("en-KE")}`;
 }
 
 export function estimateLandedCost(price, year, options = {}) {
@@ -28,7 +39,7 @@ export function formatCarPrice(car, dutyRates = null) {
     return formatPrice(car.computedLandedPrice);
   }
   
-  if (car.dutyPaid !== false) {
+  if (car.dutyPaid === true || car.imported === true) {
     return formatPrice(car.price);
   }
   
