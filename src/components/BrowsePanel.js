@@ -158,7 +158,7 @@ export default function BrowsePanel() {
       <div>
         <div className="flex items-center justify-between mb-3 px-2">
           <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
-            Popular Brands
+            Shop by brand
           </p>
           <Link
             href="/cars"
@@ -180,7 +180,7 @@ export default function BrowsePanel() {
       <div>
         <div className="flex items-center justify-between mb-3 px-2">
           <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
-            Body Types
+            Shop by shape
           </p>
         </div>
         <ScrollableRow>
