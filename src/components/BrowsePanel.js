@@ -4,32 +4,32 @@ import Link from "next/link";
 import { useState } from "react";
 
 const BRANDS = [
-  { name: "Toyota",     img: "toyota.png" },
-  { name: "Nissan",     img: "nissan.png" },
-  { name: "Honda",      img: "honda.png" },
-  { name: "Mitsubishi", img: "mitsubishi.jpg" },
-  { name: "Isuzu",      img: "isuzu.jpg" },
-  { name: "Subaru",     img: "subaru.png" },
-  { name: "Suzuki",     img: "suzuki.jpg" },
-  { name: "Mazda",      img: "mazda.png" },
-  { name: "Daihatsu",   img: "daihatsu.png" },
-  { name: "BMW",        img: "BMW.png" },
-  { name: "Volkswagen", img: "volkswagen.jpg" },
-  { name: "Mercedes",   img: "mercedes-benz.jpg" },
+  { name: "Toyota",     img: "logo_toyota.png" },
+  { name: "Nissan",     img: "logo_nissan.png" },
+  { name: "Honda",      img: "logo_honda.png" },
+  { name: "Mitsubishi", img: "logo_mitsubishi.png" },
+  { name: "Isuzu",      img: "logo_isuzu.png" },
+  { name: "Subaru",     img: "logo_subaru.png" },
+  { name: "Suzuki",     img: "logo_suzuki.png" },
+  { name: "Mazda",      img: "logo_mazda.png" },
+  { name: "Daihatsu",   img: "logo_daihatsu.png" },
+  { name: "BMW",        img: "logo_bmw.png" },
+  { name: "Volkswagen", img: "logo_volkswagen.png" },
+  { name: "Mercedes",   img: "logo_mercedes.png" },
 ];
 
 // Body type entries — label, query value, and a top-view silhouette emoji / icon URL
 const BODY_TYPES = [
-  { label: "Sedan",      value: "SEDAN",     img: "/images/bodies/sedan.png"      },
-  { label: "Hatchback",  value: "HATCHBACK",  img: "/images/bodies/hatchback.png"  },
-  { label: "SUV",        value: "SUV",        img: "/images/bodies/suv.png"        },
-  { label: "Pickup",     value: "PICKUP",     img: "/images/bodies/pickup.png"     },
-  { label: "Convertible",value: "CONVERTIBLE",img: "/images/bodies/convertible.png"},
-  { label: "Coupe",      value: "COUPE",      img: "/images/bodies/coupe.png"      },
-  { label: "Minivan",    value: "MINIVAN",    img: "/images/bodies/minivan.png"    },
-  { label: "Wagon",      value: "WAGON",      img: "/images/bodies/wagon.png"      },
-  { label: "Bus",        value: "BUS",        img: "/images/bodies/bus.png"        },
-  { label: "Truck",      value: "TRUCK",      img: "/images/bodies/truck.png"      },
+  { label: "Sedan",      value: "SEDAN",     img: "/images/bodies/icon_type-sedan.svg"      },
+  { label: "Hatchback",  value: "HATCHBACK",  img: "/images/bodies/icon_type-hatchback.svg"  },
+  { label: "SUV",        value: "SUV",        img: "/images/bodies/icon_type-suv.svg"        },
+  { label: "Pickup",     value: "PICKUP",     img: "/images/bodies/icon_type-pick-up.svg"     },
+  { label: "Convertible",value: "CONVERTIBLE",img: "/images/bodies/icon_type-convertible.svg"},
+  { label: "Coupe",      value: "COUPE",      img: "/images/bodies/icon_type-coupe.svg"      },
+  { label: "Minivan",    value: "MINIVAN",    img: "/images/bodies/icon_type-mini-van.svg"    },
+  { label: "Wagon",      value: "WAGON",      img: "/images/bodies/icon_type-station-wagon.svg"      },
+  { label: "Bus",        value: "BUS",        img: "/images/bodies/icon_type-bus.svg"        },
+  { label: "Truck",      value: "TRUCK",      img: "/images/bodies/icon_type-truck.svg"      },
 ];
 
 function BrandLogo({ name, img }) {
@@ -48,7 +48,7 @@ function BrandLogo({ name, img }) {
           <img
             src={src}
             alt={name}
-            className="w-full h-full object-contain dark:brightness-200 dark:contrast-200 opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-sm"
+            className="w-full h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-sm dark:invert"
             onError={() => setFailed(true)}
           />
         )}
@@ -73,7 +73,7 @@ function BodyTypeCard({ label, value, img }) {
           <img
             src={img}
             alt={label}
-            className="max-h-full max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-md"
+            className="max-h-full max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-md dark:invert"
             onError={() => setFailed(true)}
           />
         ) : (
