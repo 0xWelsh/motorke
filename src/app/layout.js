@@ -17,11 +17,8 @@ export const metadata = {
   description: "Compare cars from top dealerships across Kenya.",
   manifest: "/manifest.json",
   icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/headerlogo.png", type: "image/png" },
-    ],
-    shortcut: "/favicon.svg",
+    icon: "/favicon.svg",
+    apple: "/favicon.png",
   },
 };
 
