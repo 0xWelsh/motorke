@@ -92,22 +92,19 @@ export default async function PortalPage({ searchParams }) {
       )}
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
+      <div className="flex flex-col md:flex-row bg-white dark:bg-[#111111] shadow-sm mb-8 sm:mb-12">
         {[
-          { label: "Live Inventory", value: live,   icon: <CheckCircle2 className="text-[#ff5a2f]" />, sub: "Publicly visible units" },
-          { label: "Drafts / Hidden",   value: hidden, icon: <EyeOff className="text-slate-700 dark:text-slate-400" />, sub: "Private units" },
-          { label: "Buyer Leads", value: leads,  icon: <MessageSquare className="text-[#ff5a2f]" />, sub: "Total enquiries" },
+          { label: "Live Inventory", value: live,   icon: <CheckCircle2 size={16} className="text-[#ff5a2f]" />, sub: "Publicly visible units" },
+          { label: "Drafts / Hidden",   value: hidden, icon: <EyeOff size={16} className="text-slate-500" />, sub: "Private units" },
+          { label: "Buyer Leads", value: leads,  icon: <MessageSquare size={16} className="text-[#ff5a2f]" />, sub: "Total enquiries" },
         ].map((stat, i) => (
-          <div key={i} className="bg-white dark:bg-[#111111] rounded-none p-5 sm:p-6 hover:bg-slate-50 dark:hover:bg-[#151515] transition-all duration-300 group shadow-sm">
-            <div className="flex items-center justify-between mb-4 sm:mb-6">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-slate-50 dark:bg-[#1a1a1a] rounded-none flex items-center justify-center group-hover:bg-orange-50 dark:group-hover:bg-[#ff5a2f]/10 transition-all">
-                {stat.icon}
-              </div>
-              <ArrowUpRight className="text-slate-300 dark:text-slate-600 group-hover:text-[#ff5a2f] transition-colors" size={20} />
+          <div key={i} className="flex-1 p-5 sm:p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-800/80 last:border-0 hover:bg-slate-50 dark:hover:bg-[#151515] transition-colors group">
+            <div className="flex items-center gap-2 mb-3">
+              {stat.icon}
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">{stat.label}</p>
             </div>
-            <p className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter">{stat.value.toString().padStart(2, '0')}</p>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">{stat.label}</p>
-            <p className="text-xs font-medium text-slate-500 dark:text-slate-500">{stat.sub}</p>
+            <p className="text-3xl font-black text-slate-900 dark:text-white mb-1 tracking-tighter">{stat.value.toString().padStart(2, '0')}</p>
+            <p className="text-xs font-medium text-slate-400">{stat.sub}</p>
           </div>
         ))}
       </div>

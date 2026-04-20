@@ -80,18 +80,18 @@ function VerifyForm() {
   if (!email) {
     return (
       <div className="text-center">
-        <div className="w-14 h-14 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-          <AlertCircle className="w-7 h-7 text-red-400" />
+        <div className="w-14 h-14 bg-red-50 dark:bg-red-500/10 rounded-none flex items-center justify-center mx-auto mb-4 border border-red-100">
+          <AlertCircle className="w-7 h-7 text-red-500" />
         </div>
-        <p className="text-slate-600 mb-6 font-medium">Invalid verification request. Missing credentials.</p>
-        <Link href="/signup" className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wide transition-all">
+        <p className="text-slate-600 dark:text-slate-400 mb-6 font-medium">Invalid verification request. Missing credentials.</p>
+        <Link href="/signup" className="inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-emerald-600 text-white px-5 py-2.5 rounded-none font-bold text-xs uppercase tracking-widest transition-all">
           Return to Signup
         </Link>
       </div>
     );
   }
 
-  const inputCls = "w-full bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 rounded-xl px-5 py-3.5 sm:py-4 text-2xl sm:text-3xl tracking-[0.3em] font-black text-center text-slate-900 dark:text-white outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all placeholder:text-slate-300";
+  const inputCls = "w-full bg-slate-50 dark:bg-[#151515] border-b-2 border-slate-200 dark:border-slate-800 rounded-none px-5 py-4 text-2xl sm:text-3xl tracking-[0.3em] font-black text-center text-slate-900 dark:text-white outline-none focus:border-[#ff5a2f] transition-all placeholder:text-slate-300 dark:placeholder:text-slate-600";
 
   return (
     <>
@@ -101,35 +101,35 @@ function VerifyForm() {
           <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Setup Progress</p>
           <p className="text-xs font-bold text-slate-600">Step 2 of 2</p>
         </div>
-        <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-orange-500 to-orange-600 w-1/2 transition-all"></div>
+        <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-none h-1.5 overflow-hidden">
+          <div className="h-full bg-[#ff5a2f] w-1/2 transition-all"></div>
         </div>
       </div>
 
       {/* Header */}
       <div className="text-center mb-8 sm:mb-10">
-        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto mb-5 sm:mb-6 shadow-lg shadow-orange-500/30">
-          <ShieldCheck size={32} className="text-white" />
+        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-50 dark:bg-[#1a1a1a] rounded-none flex items-center justify-center mx-auto mb-5 sm:mb-6">
+          <ShieldCheck size={32} className="text-[#ff5a2f]" />
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">Verify Your Email</h1>
-        <p className="text-sm text-slate-600 font-medium">We sent a 6-digit code to your email address</p>
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-2 uppercase">Verify Your Email</h1>
+        <p className="text-sm text-slate-500 font-bold uppercase tracking-widest">We sent a 6-digit code to your email address</p>
       </div>
 
       {/* Email Display */}
-      <div className="mb-8 p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl">
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Verification Email</p>
+      <div className="mb-8 p-4 bg-white dark:bg-[#111111] shadow-sm rounded-none">
+        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Verification Email</p>
         <div className="flex items-center justify-between">
-          <p className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white break-all">{email}</p>
+          <p className="text-sm font-black tracking-wide text-slate-900 dark:text-white break-all">{email}</p>
           <button
             type="button"
             onClick={copyEmailToClipboard}
-            className="ml-2 p-2 hover:bg-slate-200 rounded-lg transition-colors"
+            className="ml-2 p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-none transition-colors"
             title="Copy email"
           >
             {copied ? (
-              <Check size={18} className="text-green-600" />
+              <Check size={18} className="text-emerald-500" />
             ) : (
-              <Copy size={18} className="text-slate-400 hover:text-slate-600" />
+              <Copy size={18} className="text-slate-400 hover:text-slate-600 dark:hover:text-white" />
             )}
           </button>
         </div>
@@ -137,29 +137,29 @@ function VerifyForm() {
 
       {/* Success Message */}
       {successMsg && (
-        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
-          <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center text-white shrink-0 mt-0.5">
+        <div className="mb-6 p-4 bg-emerald-50 rounded-none flex items-start gap-3 animate-in fade-in slide-in-from-top-2 shadow-sm">
+          <div className="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center text-white shrink-0 mt-0.5">
             <Check size={14} strokeWidth={3} />
           </div>
-          <p className="text-sm font-semibold text-green-700">{successMsg}</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">{successMsg}</p>
         </div>
       )}
 
       {/* Error Message */}
       {errorMsg && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
-          <div className="w-5 h-5 bg-red-500/20 rounded-full flex items-center justify-center text-red-600 shrink-0 mt-0.5">
+        <div className="mb-6 p-4 bg-red-50 rounded-none flex items-start gap-3 animate-in fade-in slide-in-from-top-2 shadow-sm">
+          <div className="w-5 h-5 bg-red-500/20 rounded-none flex items-center justify-center text-red-600 shrink-0 mt-0.5">
             <AlertCircle size={14} />
           </div>
-          <p className="text-sm font-semibold text-red-700">{errorMsg}</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-red-700">{errorMsg}</p>
         </div>
       )}
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-slate-600 mb-3">
-            <Mail size={14} className="text-orange-600" /> Enter 6-Digit Code
+          <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#ff5a2f] mb-3">
+            <Mail size={14} /> Enter 6-Digit Code
           </label>
           <input 
             required 
@@ -178,7 +178,7 @@ function VerifyForm() {
         <button 
           type="submit" 
           disabled={loading || emailOtp.length !== 6}
-          className="w-full bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl py-3.5 sm:py-4 font-bold text-sm tracking-wider uppercase transition-all shadow-lg hover:shadow-xl hover:shadow-orange-600/30 flex items-center justify-center gap-2 group"
+          className="w-full bg-[#111111] hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-none py-4 font-bold text-xs tracking-widest uppercase transition-all shadow-sm flex items-center justify-center gap-2 group"
         >
           {loading ? (
             <>
@@ -195,13 +195,13 @@ function VerifyForm() {
       </form>
 
       {/* Resend Section */}
-      <div className="mt-8 pt-6 border-t border-slate-200">
-        <p className="text-xs text-slate-600 text-center mb-4">Didn't receive the code?</p>
+      <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 text-center mb-4">Didn't receive the code?</p>
         <button
           type="button"
           onClick={handleResendCode}
           disabled={resendCooldown > 0 || resendLoading}
-          className="w-full px-4 py-3 text-sm font-bold uppercase tracking-wider text-orange-600 bg-orange-50 hover:bg-orange-100 disabled:opacity-50 disabled:cursor-not-allowed border border-orange-200 rounded-xl transition-all"
+          className="w-full px-4 py-3 text-[10px] font-black uppercase tracking-widest text-[#ff5a2f] bg-orange-50 hover:bg-orange-100 dark:bg-[#ff5a2f]/10 dark:hover:bg-[#ff5a2f]/20 disabled:opacity-50 disabled:cursor-not-allowed rounded-none transition-all"
         >
           {resendLoading ? (
             <Loader2 className="w-4 h-4 animate-spin mx-auto" />
@@ -214,16 +214,16 @@ function VerifyForm() {
       </div>
 
       {/* Help Section */}
-      <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 space-y-3">
-        <p className="text-xs font-bold text-slate-600 uppercase tracking-wide">Having issues?</p>
-        <div className="space-y-2 text-xs text-slate-600">
+      <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 space-y-3 pb-8">
+        <p className="text-[10px] font-black tracking-widest uppercase text-slate-500">Having issues?</p>
+        <div className="space-y-2 text-xs font-medium text-slate-500 dark:text-slate-400">
           <p>• Check your spam/junk folder for the verification email</p>
           <p>• Enter only the 6-digit code (no spaces or dashes)</p>
           <p>• Code expires in 10 minutes</p>
         </div>
         <Link 
           href="/contact" 
-          className="inline-block text-xs font-bold text-orange-600 hover:text-orange-700 uppercase tracking-wide mt-3"
+          className="inline-block text-[10px] font-black tracking-widest uppercase text-[#ff5a2f] hover:text-emerald-500 transition-colors mt-3"
         >
           Contact Support →
         </Link>
@@ -234,12 +234,8 @@ function VerifyForm() {
 
 export default function VerifyPage() {
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
-      {/* Background Decorations */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-orange-100 rounded-full blur-3xl opacity-20 -z-10" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-50 rounded-full blur-3xl opacity-20 -z-10" />
-      
-      <div className="w-full max-w-md bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-slate-900/5 relative z-10 animate-in slide-in-from-bottom-8 fade-in duration-500">
+    <div className="min-h-screen w-full bg-slate-50 dark:bg-[#0a0a0a] flex items-start sm:items-center justify-center p-0 sm:p-6 relative overflow-hidden">
+      <div className="w-full max-w-md bg-[#fbfcfe] dark:bg-[#111111] sm:border border-[#e8e2d9] dark:border-slate-800 rounded-none p-6 sm:p-10 shadow-sm relative z-10 animate-in slide-in-from-bottom-8 fade-in duration-500 min-h-screen sm:min-h-0">
         <Suspense fallback={
           <div className="flex flex-col items-center justify-center py-12">
             <Loader2 className="animate-spin text-orange-600 mb-4" size={40} />

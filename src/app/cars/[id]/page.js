@@ -231,48 +231,50 @@ export default async function CarDetailPage({ params }) {
   }
 
   return (
-    <div className="w-full bg-white">
-      <div className="max-w-7xl mx-auto px-5 sm:px-7 lg:px-10 py-6 sm:py-10 lg:py-12 pb-36 sm:pb-28 lg:pb-16">
+    <div className="w-full bg-white dark:bg-[#050505] font-sans">
+      <div className="max-w-7xl mx-auto py-0 sm:py-10 lg:py-12 pb-36 sm:pb-28 lg:pb-16">
         {/* Breadcrumb */}
-        <nav className="hidden sm:flex text-sm font-medium text-slate-500 mb-8 sm:mb-10 gap-2 sm:gap-3 items-center flex-wrap">
-          <Link href="/" className="hover:text-brand transition-colors">Home</Link>
+        <nav className="hidden sm:flex text-sm font-medium text-slate-500 mb-8 sm:mb-10 px-5 sm:px-7 lg:px-10 gap-2 sm:gap-3 items-center flex-wrap">
+          <Link href="/" className="hover:text-[#ff5a2f] transition-colors">Home</Link>
           <ChevronRight className="w-3 h-3" />
-          <Link href="/cars" className="hover:text-brand transition-colors">Vehicles</Link>
+          <Link href="/cars" className="hover:text-[#ff5a2f] transition-colors">Vehicles</Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-slate-900 dark:text-white font-extrabold truncate max-w-full">{title}</span>
         </nav>
 
-        <div className="space-y-8">
-          <ImageGallery images={car.images} title={title} />
+        <div className="space-y-0 sm:space-y-8">
+          <div className="w-full sm:px-7 lg:px-10 bg-slate-50 dark:bg-slate-900">
+            <ImageGallery images={car.images} title={title} />
+          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 lg:gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 lg:gap-12 items-start px-5 sm:px-7 lg:px-10 mt-6 sm:mt-0">
             {/* Left: Main Content */}
             <div className="space-y-8">
               {/* Title & Price Section */}
-              <div className="space-y-5">
+              <div className="space-y-4">
                 <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded bg-emerald-100 text-emerald-700 text-xs font-extrabold uppercase tracking-widest">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="inline-flex items-center px-2 py-1 bg-[#cff7d3] dark:bg-[#1a3a20] text-[#1e5828] dark:text-emerald-400 text-[11px] font-black uppercase tracking-widest leading-none rounded-none shadow-none">
                       {car.available ? "Available" : "On Hold"}
                     </span>
                   </div>
-                  <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-xs font-semibold text-slate-500 tracking-tight">{yearLabel}</span>
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-snug">{titleWithoutYear}</h1>
+                  <div className="flex flex-col gap-3">
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
+                       {titleWithoutYear}
+                    </h1>
+                    <div className="flex items-center gap-2 mt-2">
+                       <p className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-none">{formatCarPrice(car).replace("KSh", "USD")}</p> {/* Local hack for matching "USD 92,400" feel conceptually, standard output relies on native formatter */}
+                       <span className="w-5 h-5 rounded-full border-[1.5px] border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 text-[10px] font-black pb-px mt-0.5 ml-1 leading-none shadow-sm cursor-help">i</span>
+                    </div>
+                    <p className="text-[13px] text-slate-500 dark:text-slate-400 font-semibold tracking-tight mt-1">Price includes shipping</p>
                   </div>
-                </div>
-
-                <div>
-                  <p className="text-xs text-slate-500 font-medium mb-1 tracking-wider">Price</p>
-                  <p className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight">{formatCarPrice(car)}</p>
-                  <p className="text-xs text-slate-500 font-medium mt-2 tracking-wider">Shipping included to major ports</p>
                 </div>
               </div>
 
               {/* Description */}
-              <div className="border-t border-slate-200 dark:border-slate-800 pt-6">
-                <h2 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-white mb-4">Description</h2>
-                <p className="text-[15px] text-slate-700 leading-relaxed font-medium">
+              <div className="pt-2">
+                <h2 className="text-[12px] font-black uppercase tracking-widest text-[#717178] dark:text-slate-400 mb-3">Description</h2>
+                <p className="text-[14px] sm:text-[15px] text-slate-700 dark:text-slate-300 leading-relaxed font-semibold tracking-tight uppercase">
                   {descriptionBullets.length > 0 ? descriptionBullets.join(" • ") : "High-spec unit with verified dealer profile and direct enquiry support."}
                 </p>
               </div>

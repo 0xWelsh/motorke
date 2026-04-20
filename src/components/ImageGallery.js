@@ -4,6 +4,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
+import { Share2, X } from "lucide-react";
 
 export default function ImageGallery({ images, title }) {
   const primaryIdx = images?.findIndex((img) => img.isPrimary) ?? -1;
@@ -48,6 +49,16 @@ export default function ImageGallery({ images, title }) {
       document.body.style.overflow = "";
     };
   }, [lightbox]);
+
+  const handleShare = async (e) => {
+    e.stopPropagation();
+    if (navigator.share) {
+      try { await navigator.share({ title, url: window.location.href }); } catch (err) {}
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert("Link copied to clipboard!");
+    }
+  };
 
   if (!images?.length) {
     return (
@@ -101,10 +112,10 @@ export default function ImageGallery({ images, title }) {
                 type="button"
                 key={`${img.url}-${idx}`}
                 onClick={() => {
-                  setActive(idx);
                   setLightbox(true);
+                  // scroll to image later if necessary
                 }}
-                className="hidden lg:block relative aspect-square rounded-sm overflow-hidden bg-[#fbfcfe] dark:bg-[#111111] group border border-[#ddd4c8] dark:border-slate-800"
+                className="hidden lg:block relative aspect-[4/3] rounded-sm overflow-hidden bg-[#fbfcfe] dark:bg-[#111111] group"
                 aria-label={`Open image ${idx + 1}`}
               >
                 <Image
@@ -126,65 +137,38 @@ export default function ImageGallery({ images, title }) {
       ) : (
         <>
           <div
-            className="relative aspect-[16/9] bg-[#fbfcfe] dark:bg-[#111111] rounded-none overflow-hidden group cursor-zoom-in border border-[#ddd4c8] dark:border-slate-800"
+            className="relative aspect-[4/3] sm:aspect-[16/9] w-full bg-[#fbfcfe] dark:bg-[#111111] overflow-hidden cursor-pointer"
             onClick={() => setLightbox(true)}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setLightbox(true);
-              }
-            }}
             role="button"
             tabIndex={0}
             aria-label="Open image gallery"
           >
             <Image
-              src={current.url}
-              alt={current.alt || title}
+              src={images[0].url}
+              alt={images[0].alt || title}
               fill
               priority
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+              className="w-full h-full object-cover"
               sizes="(max-width: 1024px) 100vw, 66vw"
             />
+            {/* Mobile overlays matching the screenshot */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+
+            <button 
+              onClick={handleShare}
+              className="absolute bottom-4 left-4 w-10 h-10 bg-white shadow-md flex items-center justify-center hover:bg-slate-50 transition-colors pointer-events-auto"
+            >
+              <Share2 className="text-slate-900 w-4 h-4" />
+            </button>
 
             {images.length > 1 && (
-              <>
-                <button
-                  type="button"
-                  aria-label="Previous image"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    prev();
-                  }}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/80 backdrop-blur-sm text-white rounded-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm"
-                >
-                  ‹
-                </button>
-                <button
-                  type="button"
-                  aria-label="Next image"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    next();
-                  }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/80 backdrop-blur-sm text-white rounded-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-sm"
-                >
-                  ›
-                </button>
-              </>
+              <button 
+                onClick={(e) => { e.stopPropagation(); setLightbox(true); }}
+                className="absolute bottom-4 right-4 bg-white px-4 py-2 text-[11px] font-black tracking-widest text-slate-900 shadow-md uppercase pointer-events-auto hover:bg-slate-50 transition-colors"
+              >
+                {images.length}+ PHOTOS
+              </button>
             )}
-
-            {images.length > 1 && (
-              <span className="absolute bottom-3 right-3 text-[11px] font-black uppercase tracking-widest bg-black/60 text-white px-2.5 py-1 rounded-sm backdrop-blur-sm">
-                {active + 1} / {images.length}
-              </span>
-            )}
-
-            <span className="absolute bottom-3 left-3 text-[10px] font-black uppercase tracking-widest bg-black/50 text-white/70 px-2.5 py-1 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
-              Click to expand
-            </span>
           </div>
 
           {images.length > 1 && (
@@ -216,77 +200,51 @@ export default function ImageGallery({ images, title }) {
       )}
 
       {lightbox && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          onClick={() => setLightbox(false)}
-        >
-          <button
-            type="button"
-            aria-label="Close lightbox"
-            className="absolute top-4 right-4 sm:top-6 sm:right-6 w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-sm flex items-center justify-center text-2xl transition-colors z-[110]"
-            onClick={() => setLightbox(false)}
-          >
-            ×
-          </button>
-
-          <span className="absolute top-4 left-1/2 -translate-x-1/2 text-sm font-bold text-white/70 tracking-widest">
-            {active + 1} / {images.length}
-          </span>
-
-          <div className="relative w-[90vw] h-[85vh]">
-            <Image
-              src={current.url}
-              alt={current.alt || title}
-              fill
-              className="object-contain"
-              onClick={(e) => e.stopPropagation()}
-            />
+        <div className="fixed inset-0 z-[100] bg-white dark:bg-[#111111] overflow-y-auto">
+          {/* Header */}
+          <div className="sticky top-0 z-10 w-full bg-white dark:bg-[#111111] border-b border-slate-100 dark:border-slate-800 flex items-center justify-between px-4 py-3">
+            <button
+              onClick={() => setLightbox(false)}
+              className="p-2 -ml-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <h2 className="text-[13px] font-black tracking-widest uppercase text-slate-900 dark:text-white truncate px-4 max-w-[200px] sm:max-w-[400px]">
+              {title}
+            </h2>
+            <button
+              onClick={handleShare}
+              className="p-2 -mr-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
+            >
+              <Share2 className="w-5 h-5" />
+            </button>
           </div>
 
-          {images.length > 1 && (
-            <>
-              <button
-                type="button"
-                aria-label="Previous image"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  prev();
-                }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur text-white text-2xl rounded-sm flex items-center justify-center transition-colors"
-              >
-                ‹
-              </button>
-              <button
-                type="button"
-                aria-label="Next image"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  next();
-                }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur text-white text-2xl rounded-sm flex items-center justify-center transition-colors"
-              >
-                ›
-              </button>
-            </>
-          )}
+          {/* Mosaic Grid scrollable area */}
+          <div className="w-full flex justify-center pb-20">
+            <div className="w-full max-w-4xl grid grid-cols-2 gap-1 p-1">
+              {images.map((img, idx) => {
+                // Let's create a predictable mosaic pattern:
+                // Full width (col-span-2) for idx: 0, 3, 6, 9...
+                // Half width (col-span-1) for everything else.
+                const isFullWidth = idx % 3 === 0;
 
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5">
-            {images.map((_, i) => (
-              <button
-                type="button"
-                aria-label={`Go to image ${i + 1}`}
-                key={i}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActive(i);
-                }}
-                className={`h-[3px] transition-all rounded-[1px] ${
-                  i === active ? "bg-[#ff5a2f] w-8 shadow-sm shadow-[#ff5a2f]/20" : "bg-white/30 w-4 hover:bg-white/50"
-                }`}
-              />
-            ))}
+                return (
+                  <div 
+                    key={idx} 
+                    className={`relative ${isFullWidth ? 'col-span-2 aspect-[4/3] sm:aspect-[16/9]' : 'col-span-1 aspect-square'} bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800`}
+                  >
+                    <Image
+                      src={img.url}
+                      alt={img.alt || `${title} photo ${idx + 1}`}
+                      fill
+                      className="object-cover"
+                      sizes={isFullWidth ? "100vw" : "50vw"}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

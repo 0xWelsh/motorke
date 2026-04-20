@@ -53,17 +53,17 @@ export async function sendVerificationEmail(email, name, otp) {
   }
 
   const htmlContent = `
-    <div style="font-family: 'Inter', 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #1A1A1A;">
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #1A1A1A;">
       <div style="margin-bottom: 40px; text-align: center;">
-        <span style="font-weight: 800; font-size: 24px; text-transform: uppercase;">Motor<span style="color: #E8490F;">ke</span></span>
+        <span style="font-weight: 900; font-size: 24px; text-transform: uppercase; letter-spacing: -0.05em;">MOTOR<span style="color: #ff5a2f;">SKE</span></span>
         <p style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3em; color: #999; margin-top: 5px;">Standard</p>
       </div>
       <h1 style="font-size: 28px; font-weight: 800; margin-bottom: 20px;">Welcome, ${name.split(' ')[0]}.</h1>
       <p style="font-size: 16px; color: #666; margin-bottom: 30px;">
         Use the following 6-digit confirmation code to verify your email address.
       </p>
-      <div style="background: #f4f4f5; padding: 30px; text-align: center; border-radius: 16px; margin-bottom: 30px;">
-         <span style="font-size: 42px; font-weight: 900; letter-spacing: 0.25em; color: #E8490F;">${otp}</span>
+      <div style="background: #f4f4f5; padding: 30px; text-align: center; border-radius: 0px; margin-bottom: 30px;">
+         <span style="font-size: 42px; font-weight: 900; letter-spacing: 0.25em; color: #ff5a2f;">${otp}</span>
       </div>
       <p style="font-size: 12px; color: #999; margin-top: 40px;">
         This code expires in 30 minutes. If you did not create a Motorske account, you can safely ignore this.
@@ -133,23 +133,23 @@ export async function sendLeadAlertEmail({
   }
 
   const htmlContent = `
-    <div style="font-family: 'Inter', 'Segoe UI', Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 28px; color: #111827;">
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 28px; color: #111827;">
       <h1 style="margin: 0 0 8px; font-size: 24px; font-weight: 800;">New Buyer Enquiry</h1>
       <p style="margin: 0 0 20px; color: #475569; font-size: 14px;">
         A potential buyer has reached out on Motorke.
       </p>
 
-      <div style="border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; margin-bottom: 14px;">
+      <div style="border: 1px solid #e2e8f0; border-radius: 0px; padding: 18px; margin-bottom: 14px;">
         <p style="margin: 0 0 8px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: .08em; font-weight: 700;">Dealer</p>
         <p style="margin: 0; font-weight: 700;">${safeDealerName}</p>
       </div>
 
-      <div style="border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; margin-bottom: 14px;">
+      <div style="border: 1px solid #e2e8f0; border-radius: 0px; padding: 18px; margin-bottom: 14px;">
         <p style="margin: 0 0 8px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: .08em; font-weight: 700;">Vehicle</p>
         <p style="margin: 0; font-weight: 700;">${safeCarTitle}</p>
       </div>
 
-      <div style="border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; margin-bottom: 18px;">
+      <div style="border: 1px solid #e2e8f0; border-radius: 0px; padding: 18px; margin-bottom: 18px;">
         <p style="margin: 0 0 8px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: .08em; font-weight: 700;">Buyer</p>
         <p style="margin: 0 0 6px;"><strong>Name:</strong> ${safeBuyerName}</p>
         <p style="margin: 0 0 6px;"><strong>Phone:</strong> ${safeBuyerPhone}</p>
@@ -158,7 +158,7 @@ export async function sendLeadAlertEmail({
         <p style="margin: 10px 0 0;"><strong>Message:</strong> ${safeBuyerMessage}</p>
       </div>
 
-      <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke"}/portal/leads" style="display:inline-block;background:#0f172a;color:#fff;text-decoration:none;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:700;">Open Leads Dashboard</a>
+      <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke"}/portal/leads" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;border-radius:0px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Open Leads Dashboard</a>
 
       <p style="margin-top: 20px; color: #94a3b8; font-size: 12px;">Lead Ref: ${safeLeadId}</p>
       ${buildEmailFooter()}
@@ -218,15 +218,15 @@ export async function sendPasswordResetEmail({ email, name, resetToken }) {
 
   const safeName = escapeHtml((name || "there").toString().split(" ")[0]);
   const htmlContent = `
-    <div style="font-family: 'Inter', 'Segoe UI', Arial, sans-serif; max-width: 620px; margin: 0 auto; padding: 30px; color: #0f172a;">
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 620px; margin: 0 auto; padding: 30px; color: #0f172a;">
       <h1 style="margin: 0 0 8px; font-size: 26px; font-weight: 800;">Reset your password</h1>
       <p style="margin: 0 0 22px; font-size: 15px; color: #475569;">Hi ${safeName}, we received a request to reset your Motorke account password.</p>
 
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; margin-bottom: 20px;">
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0px; padding: 18px; margin-bottom: 20px;">
         <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1.6;">For your security, this link expires in 30 minutes. If you did not request this reset, you can ignore this email.</p>
       </div>
 
-      <a href="${resetUrl}" style="display:inline-block; background:#0f172a; color:#ffffff; text-decoration:none; padding:12px 18px; border-radius:10px; font-size:13px; font-weight:700;">Reset Password</a>
+      <a href="${resetUrl}" style="display:inline-block; background:#111111; color:#ffffff; text-decoration:none; padding:12px 18px; border-radius:0px; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Reset Password</a>
 
       <p style="margin-top: 20px; font-size: 12px; color: #64748b; word-break: break-all;">${resetUrl}</p>
       ${buildEmailFooter()}
@@ -263,8 +263,8 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
   const savingsPercent = ((savings / previousCar.price) * 100).toFixed(1);
 
   const htmlContent = `
-    <div style="max-width: 600px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1f2937;">
-      <div style="background: linear-gradient(135deg, #111111 0%, #1f2937 100%); padding: 32px; border-radius: 16px; color: white; text-align: center;">
+    <div style="max-width: 600px; margin: 0 auto; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1f2937;">
+      <div style="background: #111111; padding: 32px; border-radius: 0px; color: white; text-align: center;">
         <h1 style="margin: 0; font-size: 24px; font-weight: 900;">Better Deal Found! 🎯</h1>
         <p style="margin: 8px 0 0; font-size: 14px; opacity: 0.9;">We found something even better for you</p>
       </div>
@@ -277,9 +277,9 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
           We found an even better option that just arrived in our inventory!
         </p>
 
-        <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 24px 0;">
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0px; padding: 20px; margin: 24px 0;">
           <div style="display: flex; align-items: center; gap: 16px;">
-            ${newCar.primaryImage ? `<img src="${newCar.primaryImage}" alt="${newCar.year} ${newCar.make}" style="width: 100px; height: 75px; object-fit: cover; border-radius: 8px;" />` : ''}
+            ${newCar.primaryImage ? `<img src="${newCar.primaryImage}" alt="${newCar.year} ${newCar.make}" style="width: 100px; height: 75px; object-fit: cover; border-radius: 0px;" />` : ''}
             <div style="flex: 1;">
               <h3 style="margin: 0 0 4px; font-size: 18px; font-weight: 900; color: #111111;">
                 ${newCar.year} ${newCar.make} ${newCar.model}
@@ -294,7 +294,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
           </div>
         </div>
 
-        <div style="background: #ecfdf5; border-left: 4px solid #10b981; padding: 16px; border-radius: 8px; margin: 24px 0;">
+        <div style="background: #ecfdf5; border-left: 4px solid #10b981; padding: 16px; border-radius: 0px; margin: 24px 0;">
           <p style="margin: 0; font-size: 14px; font-weight: 600; color: #047857;">
             💰 Save KSh ${parseInt(savings).toLocaleString("en-KE")} (${savingsPercent}%)
           </p>
@@ -303,7 +303,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
           </p>
         </div>
 
-        <a href="${newCarUrl}" style="display: inline-block; width: 100%; text-align: center; background: #111111; color: white; padding: 14px 24px; border-radius: 8px; font-size: 14px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em; margin: 24px 0; transition: background 0.2s;">
+        <a href="${newCarUrl}" style="display: inline-block; width: 100%; text-align: center; background: #111111; color: white; padding: 14px 24px; border-radius: 0px; font-size: 14px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em; margin: 24px 0; transition: background 0.2s;">
           View This Car
         </a>
 
