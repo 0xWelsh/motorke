@@ -329,3 +329,115 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
     return { success: false, error };
   }
 }
+
+export async function sendEngagementFollowUpEmail({ userEmail, userName, carTitle, dealerName }) {
+  if (!SMTP_USER || !SMTP_PASS) {
+    console.log("✉️ ======================================");
+    console.log(`✉️ MOCK ENGAGEMENT EMAIL TO: ${userEmail}`);
+    console.log("✉️ ======================================");
+    return { success: true };
+  }
+
+  const escapeHtml = (value) =>
+    (value || "")
+      .toString()
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  const safeName = escapeHtml((userName || "there").split(" ")[0]);
+  const safeCar = escapeHtml(carTitle);
+  const safeDealer = escapeHtml(dealerName);
+
+  const htmlContent = `
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #111111;">
+      <div style="background: #111111; padding: 40px; border-radius: 0px; text-align: center;">
+        <span style="font-weight: 900; font-size: 24px; text-transform: uppercase; letter-spacing: -0.05em; color: white;">MOTOR<span style="color: #ff5a2f;">SKE</span></span>
+      </div>
+      <div style="padding: 40px; border: 1px solid #e2e8f0; border-top: none;">
+        <h1 style="margin: 0 0 16px; font-size: 24px; font-weight: 900;">Still interested in the ${safeCar}?</h1>
+        <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">Hi ${safeName},</p>
+        <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">
+          You reached out to <strong>${safeDealer}</strong> a few days ago regarding the <strong>${safeCar}</strong>. 
+          Vehicles move incredibly fast on Motorke, so we wanted to check in to see if you are still looking to buy or if you've already found your dream car.
+        </p>
+
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke"}/cars" style="display: inline-block; background: #ff5a2f; color: white; padding: 16px 32px; border-radius: 0px; font-size: 13px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;">
+            Browse More Vehicles
+          </a>
+        </div>
+        
+        <p style="margin: 0; font-size: 14px; color: #64748b; line-height: 1.6;">
+          If the dealer hasn't responded yet, you can browse other verified inventory matching this profile instantly.
+        </p>
+
+        ${buildEmailFooter()}
+      </div>
+    </div>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: '"Motorke Team" <hello@motorke.com>',
+      to: userEmail,
+      subject: `Still looking for the ${safeCar}?`,
+      html: htmlContent,
+    });
+    return { success: true };
+  } catch (error) {
+    return { success: false, error };
+  }
+}
+
+export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName }) {
+   if (!SMTP_USER || !SMTP_PASS) {
+      console.log("✉️ ======================================");
+      console.log(`✉️ MOCK FEEDBACK EMAIL TO: ${userEmail}`);
+      console.log("✉️ ======================================");
+      return { success: true };
+   }
+
+  const escapeHtml = (value) =>
+    (value || "").toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  const safeName = escapeHtml((userName || "there").split(" ")[0]);
+  const safeDealer = escapeHtml(dealerName);
+
+  const htmlContent = `
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #111111;">
+      <div style="background: #111111; padding: 40px; border-radius: 0px; text-align: center;">
+        <span style="font-weight: 900; font-size: 24px; text-transform: uppercase; letter-spacing: -0.05em; color: white;">MOTOR<span style="color: #ff5a2f;">SKE</span></span>
+      </div>
+      <div style="padding: 40px; border: 1px solid #e2e8f0; border-top: none;">
+        <h1 style="margin: 0 0 16px; font-size: 24px; font-weight: 900;">How was the service?</h1>
+        <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">Hi ${safeName},</p>
+        <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">
+          You recently contacted <strong>${safeDealer}</strong> through Motorke. We carefully vet all our partners to ensure the highest quality experience, and your feedback is vital.
+        </p>
+        
+        <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">
+          Were they responsive? Was the vehicle exactly as described? Let us know below:
+        </p>
+
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke"}/contact" style="display: inline-block; background: #111111; color: white; padding: 16px 32px; border-radius: 0px; font-size: 13px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;">
+            Leave Feedback
+          </a>
+        </div>
+
+        ${buildEmailFooter()}
+      </div>
+    </div>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: '"Motorke Quality" <quality@motorke.com>',
+      to: userEmail,
+      subject: `How was your experience with ${safeDealer}?`,
+      html: htmlContent,
+    });
+    return { success: true };
+  } catch (error) {
+    return { success: false, error };
+  }
+}

@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import ScrollToTop from "@/components/ScrollToTop";
 import { PWARegister } from "@/components/PWARegister";
 import { getSession } from "@/lib/auth";
+import CookieConsent from "@/components/CookieConsent";
 
 import GlobalFooter from "@/components/GlobalFooter";
 
@@ -55,6 +56,7 @@ export default async function RootLayout({ children }) {
           </CompareProvider>
           <GlobalFooter />
           <ScrollToTop />
+          <CookieConsent />
         </ThemeProvider>
       </body>
     </html>
