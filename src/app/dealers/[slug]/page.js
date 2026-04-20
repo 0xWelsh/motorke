@@ -120,8 +120,23 @@ export default async function DealerPage(props) {
     .slice(0, 3);
   const hasHeroBanner = Boolean(dealer.bannerUrl) || dealerGallery.length >= 3;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "AutoDealer",
+    name: dealer.name,
+    image: dealer.logoUrl || "https://motorke.co.ke/headerlogo.png",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: dealer.location,
+      addressRegion: dealer.county,
+      addressCountry: "KE"
+    },
+    telephone: dealer.phone || dealer.whatsapp || undefined,
+  };
+
   return (
     <div className="min-h-screen bg-[#fbfcfe] dark:bg-[#111111]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* 1. HERO COVER BANNER */}
       {hasHeroBanner && (
         <div className="w-full h-[240px] sm:h-[320px] lg:h-[400px] relative overflow-hidden bg-slate-900">

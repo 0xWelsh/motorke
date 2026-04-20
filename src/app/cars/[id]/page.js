@@ -230,8 +230,25 @@ export default async function CarDetailPage({ params }) {
     specRows.push([visibleSpecs[i], visibleSpecs[i + 1] || null]);
   }
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: title,
+    description: description,
+    image: car.images[0]?.url || "https://motorke.co.ke/headerlogo.png",
+    brand: { "@type": "Brand", name: car.make },
+    offers: {
+      "@type": "Offer",
+      price: car.price,
+      priceCurrency: "KES",
+      availability: car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      seller: { "@type": "AutoDealer", name: car.dealer?.name || "Motorske Dealer" }
+    }
+  };
+
   return (
     <div className="w-full bg-white dark:bg-[#050505] font-sans">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="max-w-7xl mx-auto py-0 sm:py-10 lg:py-12 pb-36 sm:pb-28 lg:pb-16">
         {/* Breadcrumb */}
         <nav className="hidden sm:flex text-sm font-medium text-slate-500 mb-8 sm:mb-10 px-5 sm:px-7 lg:px-10 gap-2 sm:gap-3 items-center flex-wrap">
