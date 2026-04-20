@@ -3,11 +3,11 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { formatPrice, formatCarPrice, BADGE_OPTIONS } from "@/lib/utils";
 import Link from "next/link";
-import LocationSearch from "@/components/LocationSearch";
 import NewsRibbon from "@/components/NewsRibbon";
 import HeroReviews from "@/components/HeroReviews";
+import BrowsePanel from "@/components/BrowsePanel";
 import {
-  ArrowUpRight, ChevronRight, MapPin, ShieldCheck, Sparkles, TrendingUp, Users, Zap, Lock, CheckCircle, Star
+  ArrowUpRight, ChevronRight, MapPin, ShieldCheck
 } from "lucide-react";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
@@ -97,69 +97,25 @@ export default async function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-2 pb-14 sm:pt-3 sm:pb-20 md:pt-8 md:pb-24 relative z-10">
           <NewsRibbon initialNews={newsItems} />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
+          {/* Hero headline + CTA row */}
+          <div className="mb-8">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 dark:text-white leading-[0.92] tracking-tight mb-4">
+              Buy cars with
+              <span className="text-[#305CDE]"> dealer-level clarity.</span>
+            </h1>
+            <div className="flex flex-wrap gap-3 items-center mt-5">
+              <Link href="/cars" className="flex items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-6 py-3 text-xs font-black uppercase rounded-full transition-all shadow-lg hover:shadow-[#ff5a2f]/30 active:scale-95">
+                Search Now <ArrowUpRight className="w-4 h-4" />
+              </Link>
+              <Link href="/dealers" className="flex items-center gap-2 bg-white border-2 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white px-6 py-3 text-xs font-black rounded-full uppercase hover:bg-slate-50 transition-all active:scale-95">
+                View Dealers
+              </Link>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-start">
             <div className="lg:col-span-7">
-              <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-[0.92] tracking-tight mb-6 sm:mb-7">
-                Buy cars with
-                <br />
-                <span className="text-[#305CDE]">dealer-level clarity.</span>
-              </h1>
-
-              <p className="text-base sm:text-lg md:text-xl text-slate-600 mb-6 sm:mb-7 leading-relaxed max-w-2xl font-medium">
-                Browse inventory from trusted dealerships, compare cars side by side, and connect directly with real teams. No hidden fees, No noise. Experience a new level of transparency in car buying: every listing is verified, every dealer is real.
-              </p>
-
-              <div className="w-full max-w-lg mb-6">
-                <LocationSearch />
-              </div>
-
-              <div className="flex flex-col sm:flex-row justify-center sm:justify-start items-stretch sm:items-center gap-4 sm:gap-3 mb-10">
-                <Link href="/cars" className=" flex justify-center items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-7 py-3.5 text-xs font-black uppercase rounded-full transition-all shadow-lg hover:shadow-[#ff5a2f]/30 active:scale-95">
-                  Search Now <ArrowUpRight className="w-4 h-4" />
-                </Link>
-                <Link href="/dealers" className=" flex justify-center items-center gap-2 bg-white border-2 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white px-7 py-3 text-xs font-black rounded-full uppercase hover:bg-slate-50 dark:bg-slate-900 hover:border-slate-300 transition-all active:scale-95">
-                  View Dealers
-                </Link>
-              </div>
-
-              <div className="flex flex-wrap gap-2.5 mb-8">
-                {["SUV", "Pickup", "Sedan", "Hybrid", "Electric"].map((type) => (
-                  <Link
-                    key={type}
-                    href={`/cars?search=${encodeURIComponent(type)}`}
-                    className="px-4 py-2 rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-white text-[11px] font-black uppercase tracking-[0.12em] text-slate-700 hover:border-slate-400 hover:text-slate-900 dark:text-white"
-                  >
-                    {type}
-                  </Link>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-[#ddd4c8] dark:border-slate-800 max-w-2xl mb-8">
-                {[
-                  { label: "Verified Profiles", value: "Trust Signals" },
-                  { label: "Transparent Specs", value: "No Guesswork" },
-                  { label: "Direct Contact", value: "Fast Follow-up" },
-                ].map((item) => (
-                  <div key={item.label}>
-                    <p className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-400 mb-1">{item.label}</p>
-                    <p className="text-sm font-black text-slate-900 dark:text-white">{item.value}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Trust Badges */}
-              <div className="flex flex-wrap gap-3 items-center">
-                {[
-                  { Icon: Lock, label: "SSL Secured" },
-                  { Icon: CheckCircle, label: "Verified Dealers" },
-                  { Icon: Star, label: "5-Star Support" },
-                ].map(({ Icon, label }) => (
-                  <div key={label} className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#f7f6f3] border border-[#ddd4c8] dark:border-slate-800 text-xs font-black text-slate-700">
-                    <Icon className="w-4 h-4 text-orange-600" />
-                    {label}
-                  </div>
-                ))}
-              </div>
+              <BrowsePanel />
             </div>
 
             <div className="lg:col-span-5 hidden lg:flex flex-col gap-4">
