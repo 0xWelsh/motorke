@@ -31,9 +31,9 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans:    ["var(--font-work-sans)", "var(--font-inter)", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
+        sans:    ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
         serif:   ["Lora", "ui-serif", "Georgia", "Cambria", "Times New Roman", "serif"],
-        display: ["Satoshi", "var(--font-work-sans)", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
+        display: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
         mono:    ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "monospace"],
       },
       fontSize: {
