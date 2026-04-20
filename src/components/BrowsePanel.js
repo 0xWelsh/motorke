@@ -202,20 +202,20 @@ export default function BrowsePanel() {
   };
 
   return (
-    <div className="w-full space-y-6 pt-2">
+    <div className="w-full space-y-4 sm:space-y-6 pt-2">
       {/* Search Bar with Geolocation */}
-      <form onSubmit={handleSearch} className="relative mb-10 w-full">
-        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+      <form onSubmit={handleSearch} className="relative mb-6 sm:mb-8 w-full group">
+        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#ff5a2f] transition-colors" />
         <input 
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="What car are you looking for?"
-          className="w-full bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 text-slate-900 dark:text-white rounded-full py-4 pl-14 pr-[120px] font-bold text-base shadow-sm focus:outline-none focus:ring-4 focus:ring-[#ff5a2f]/10 focus:border-[#ff5a2f]/40 transition-all placeholder:font-normal placeholder:text-slate-400"
+          className="w-full bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 text-slate-900 dark:text-white rounded-none py-4 pl-14 pr-[120px] font-bold text-base shadow-sm focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all placeholder:font-normal placeholder:text-slate-400"
         />
         <button 
           type="submit" 
           disabled={loadingLoc}
-          className="absolute right-2 top-2 bottom-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-6 rounded-full font-black text-xs uppercase tracking-widest transition-all disabled:opacity-70 flex items-center justify-center min-w-[100px]"
+          className="absolute right-2 top-2 bottom-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-6 rounded-none font-black text-xs uppercase tracking-widest transition-all disabled:opacity-70 flex items-center justify-center min-w-[100px]"
         >
           {loadingLoc ? "Locating..." : "Explore"}
         </button>
