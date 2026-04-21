@@ -108,11 +108,11 @@ export default function Navbar({ user }) {
           <div className="hidden lg:flex items-center gap-7 ">
             {links.map(({ href, label }) => (
               <Link key={href} href={href}
-                className="flex items-center justify-center h-12 text-[16px] font-black uppercase tracking-[0.16em] text-[#23272b] dark:text-white hover:text-black dark:hover:text-white transition-all px-3">
+                className="flex items-center justify-center h-12 text-[13px] font-black uppercase tracking-[0.14em] text-[#23272b] dark:text-white hover:text-black dark:hover:text-white transition-all px-3">
                 {label}
               </Link>
             ))}
-            <Link href="/contact" className="flex items-center justify-center h-12 ml-4 text-[16px] font-black uppercase tracking-[0.16em] text-[#23272b] dark:text-white hover:text-black dark:hover:text-white transition-all px-6 border border-[#23272b] dark:border-white hover:border-black dark:hover:border-white rounded-none bg-transparent">Contact Us</Link>
+            <Link href="/contact" className="flex items-center justify-center h-12 ml-4 text-[13px] font-black uppercase tracking-[0.14em] text-[#23272b] dark:text-white hover:text-black dark:hover:text-white transition-all px-6 border border-[#23272b] dark:border-white hover:border-black dark:hover:border-white rounded-none bg-transparent">Contact Us</Link>
           </div>
 
           {/* SEARCH */}
@@ -124,7 +124,7 @@ export default function Navbar({ user }) {
                 onChange={e => setSearch(e.target.value)}
                 onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                 placeholder="Search cars, e.g. Prado..."
-                className="w-full h-full bg-white dark:bg-[#23272b] border border-[#23272b] dark:border-white focus:border-black dark:focus:border-white rounded-none pl-11 pr-5 text-base font-semibold outline-none transition-all placeholder:text-[#6b7280] text-[#23272b] dark:text-white"
+                className="w-full h-full bg-white dark:bg-[#23272b] border border-[#23272b] dark:border-white focus:border-black dark:focus:border-white rounded-none pl-11 pr-5 text-[13px] font-semibold outline-none transition-all placeholder:text-[#6b7280] text-[#23272b] dark:text-white"
               />
             </form>
             {showSuggestions && (
