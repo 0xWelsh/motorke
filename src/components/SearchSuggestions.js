@@ -27,7 +27,7 @@ export default function SearchSuggestions({
   const attributeSuggestions = suggestions.filter(s => s.type !== "car");
 
   return (
-    <div className={`absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl sm:rounded-2xl shadow-2xl z-50 overflow-hidden ${className}`}>
+    <div className={`absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-lg shadow-2xl z-50 overflow-hidden max-w-[340px] min-w-[220px] ${className}`} style={{fontSize:'13px'}}>
       {loading ? (
         <div className="p-6 text-center">
           <div className="animate-pulse flex items-center justify-center gap-2">
@@ -40,8 +40,8 @@ export default function SearchSuggestions({
           {/* Cars Section */}
           {carSuggestions.length > 0 && (
             <>
-              <div className="px-4 sm:px-6 py-3 bg-[#fbfcfe] dark:bg-[#111111] border-b border-[#ddd4c8] dark:border-slate-800">
-                <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-slate-500">
+              <div className="px-3 py-2 bg-[#fbfcfe] dark:bg-[#111111] border-b border-[#ddd4c8] dark:border-slate-800">
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-slate-500">
                   Available Cars
                 </p>
               </div>
@@ -50,17 +50,18 @@ export default function SearchSuggestions({
                   key={`car-${car.id}`}
                   href={`/cars/${car.id}`}
                   onClick={() => onClose?.()}
-                  className="block px-4 sm:px-6 py-4 hover:bg-[#fbfcfe] dark:bg-[#111111] transition-colors border-b border-slate-50 last:border-0 group"
+                  className="block px-3 py-2 hover:bg-[#fbfcfe] dark:bg-[#111111] transition-colors border-b border-slate-50 last:border-0 group"
+                  style={{fontSize:'13px'}}
                 >
-                  <div className="flex gap-4">
+                  <div className="flex gap-2 items-center">
                     {/* Image */}
                     {car.image && (
-                      <div className="w-16 h-16 rounded-2xl bg-slate-100 overflow-hidden flex-shrink-0">
+                      <div className="w-10 h-10 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0">
                         <Image
                           src={car.image}
                           alt={car.value}
-                          width={64}
-                          height={64}
+                          width={40}
+                          height={40}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                         />
                       </div>
@@ -68,27 +69,27 @@ export default function SearchSuggestions({
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2 mb-1">
-                        <h3 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-[#ff5a2f] transition">
+                      <div className="flex items-start justify-between gap-2 mb-0.5">
+                        <h3 className="font-bold text-slate-900 dark:text-white text-xs group-hover:text-[#ff5a2f] transition truncate">
                           {car.value}
                         </h3>
                         {car.dealerVerified && (
-                          <ShieldCheck className="w-4 h-4 text-[#ff5a2f] flex-shrink-0 mt-0.5" />
+                          <ShieldCheck className="w-3 h-3 text-[#ff5a2f] flex-shrink-0 mt-0.5" />
                         )}
                       </div>
 
-                      <div className="flex items-center justify-between mb-2">
-                        <p className="text-sm font-bold text-green-600">
+                      <div className="flex items-center justify-between mb-0.5">
+                        <p className="text-xs font-bold text-green-600">
                           {formatCarPrice(car)}
                         </p>
                         {car.mileage && (
-                          <p className="text-xs text-slate-500">
+                          <p className="text-[11px] text-slate-500">
                             {car.mileage.toLocaleString()} km
                           </p>
                         )}
                       </div>
 
-                      <div className="flex items-center gap-1.5 text-xs text-slate-600">
+                      <div className="flex items-center gap-1 text-[11px] text-slate-600">
                         {car.dealerName && (
                           <>
                             <span className="truncate">{car.dealerName}</span>
@@ -143,11 +144,11 @@ export default function SearchSuggestions({
                   <button
                     key={`${suggestion.type}-${index}`}
                     onClick={() => onSelect(suggestion.value)}
-                    className="w-full flex items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-3 hover:bg-[#fbfcfe] dark:bg-[#111111] transition-colors group border-b border-slate-50 last:border-0"
+                    className="w-full flex items-center gap-2 px-3 py-2 hover:bg-[#fbfcfe] dark:bg-[#111111] transition-colors group border-b border-slate-50 last:border-0 text-xs"
                   >
                     <div className="shrink-0">{typeInfo.icon}</div>
                     <div className="flex-1 text-left min-w-0">
-                      <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                      <p className="text-xs font-semibold text-slate-900 dark:text-white">
                         {matchIndex >= 0 ? (
                           <>
                             {beforeMatch}
@@ -158,7 +159,7 @@ export default function SearchSuggestions({
                           suggestion.value
                         )}
                       </p>
-                      <p className="text-xs text-slate-500 mt-0.5">{typeInfo.label}</p>
+                      <p className="text-[11px] text-slate-500 mt-0.5">{typeInfo.label}</p>
                     </div>
                     <Check className="w-4 h-4 text-slate-300 group-hover:text-slate-500 shrink-0" />
                   </button>

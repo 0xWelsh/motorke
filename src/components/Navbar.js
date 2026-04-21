@@ -91,13 +91,13 @@ export default function Navbar({ user }) {
   return (
     <>
       <nav className={clsx(
-        "sticky top-0 z-50 transition-all duration-300 w-full",
+        "sticky top-0 z-50 transition-all duration-300 w-full min-h-[64px] h-[64px] flex items-center",
         scrolled
-          ? "bg-[#f5f6f7] dark:bg-[#0a0a0a] border-b border-[#d1d5db] dark:border-slate-800 py-3"
-          : "bg-[#f5f6f7] dark:bg-[#0a0a0a] py-5"
+          ? "bg-[#f5f6f7] dark:bg-[#0a0a0a] border-b border-[#d1d5db] dark:border-slate-800 py-0"
+          : "bg-[#f5f6f7] dark:bg-[#0a0a0a] py-0"
       )}>
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
-        <div className="flex items-center justify-between gap-4 sm:gap-8">
+        <div className="flex items-center justify-between gap-2 sm:gap-4 w-full h-[64px] min-h-[64px]">
 
           {/* LOGO */}
           <Link href="/" className="flex items-center gap-2 shrink-0 group transition-transform active:scale-95">
@@ -105,18 +105,18 @@ export default function Navbar({ user }) {
           </Link>
 
           {/* NAV LINKS */}
-          <div className="hidden lg:flex items-center gap-7 ">
+          <div className="hidden lg:flex items-center gap-4 h-[64px] min-h-[64px]">
             {links.map(({ href, label }) => (
               <Link key={href} href={href}
                 className="flex items-center justify-center h-12 text-[13px] font-black uppercase tracking-[0.14em] text-[#23272b] dark:text-white hover:text-black dark:hover:text-white transition-all px-3">
                 {label}
               </Link>
             ))}
-            <Link href="/contact" className="flex items-center justify-center h-12 ml-4 text-[13px] font-black uppercase tracking-[0.14em] text-[#23272b] dark:text-white hover:text-black dark:hover:text-white transition-all px-6 border border-[#23272b] dark:border-white hover:border-black dark:hover:border-white rounded-none bg-transparent">Contact Us</Link>
+            <Link href="/contact" className="flex items-center justify-center h-[44px] ml-2 text-[13px] font-black uppercase tracking-[0.14em] text-[#23272b] dark:text-white hover:text-black dark:hover:text-white transition-all px-6 border border-[#23272b] dark:border-white hover:border-black dark:hover:border-white rounded-none bg-transparent">Contact Us</Link>
           </div>
 
           {/* SEARCH */}
-          <div ref={searchRef} className="flex flex-1 max-w-md relative group h-12">
+          <div ref={searchRef} className="flex flex-1 max-w-md relative group h-[44px]">
             <form onSubmit={handleSearch} className="w-full h-full">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#23272b] dark:text-white transition-colors" />
               <input
@@ -183,11 +183,11 @@ export default function Navbar({ user }) {
               </div>
               </div>
             ) : (
-              <div className="flex items-center gap-4">
-                <Link href="/login" className="text-sm font-extrabold text-slate-900 dark:text-white hover:text-black transition-colors px-4">
+              <div className="flex items-center gap-2 h-[64px]">
+                <Link href="/login" className="text-sm font-extrabold text-slate-900 dark:text-white hover:text-black transition-colors px-3 h-[44px] flex items-center">
                   Sign In
                 </Link>
-                <Link href="/signup" className="rounded-full font-black text-white px-6 py-3 text-xs uppercase transition-all bg-[#111111] hover:bg-[#ff5a2f] active:scale-95 inline-flex items-center gap-2">
+                <Link href="/signup" className="rounded-full font-black text-white px-6 h-[44px] flex items-center text-xs uppercase transition-all bg-[#111111] hover:bg-[#ff5a2f] active:scale-95 gap-2" style={{minWidth:'140px'}}>
                   For Dealers <ArrowUpRight className="w-4 h-4" />
                 </Link>
               </div>

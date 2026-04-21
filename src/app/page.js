@@ -379,27 +379,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#f7f6f3] from-[#f7f6f3] to-slate-100 py-14 sm:py-20 border-t border-[#ddd4c8] dark:border-slate-800">
-        <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
-          <div className="py-8 md:py-10">
-            <div className="flex items-center justify-between mb-10 gap-4">
-              <div>
-                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 mb-3">Network</p>
-                <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">Verified Dealerships</h2>
-              </div>
-              <Link href="/dealers" className="hidden sm:inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-6 py-3 text-xs font-black uppercase rounded-full transition-all shadow-md">
-                View All Dealers <ChevronRight className="w-4 h-4" />
-              </Link>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-              {dealers.slice(0, 8).map((dealer) => (
-                <DealerCard key={dealer.id} dealer={dealer} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {newArrivals.length > 0 && (
         <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-24 max-w-7xl border-t border-[#ddd4c8] dark:border-slate-800">
@@ -418,25 +398,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      <section className="container mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-20 max-w-7xl">
-        <div className="rounded-2xl overflow-hidden border border-[#ddd4c8] dark:border-slate-800 bg-[#111111] p-6 sm:p-10 md:p-16 text-white relative shadow-none">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-2xl bg-[#ff5a2f]/20 blur-3xl" />
-          <div className="absolute -left-32 -bottom-20 h-80 w-80 rounded-2xl bg-[#ff5a2f]/10 blur-3xl" />
-          
-          <div className="relative z-10 max-w-2xl">
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-white/60 mb-4">For Dealerships</p>
-            <h3 className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight mb-6">
-              Your cars deserve better than a social media album.
-            </h3>
-            <p className="text-base sm:text-lg text-white/80 mb-10 font-medium">
-              Get a modern digital storefront, profile your brand, reach verified buyers, and capture leads in one clean system. No fees. No middlemen.
-            </p>
-            <Link href="/signup" className=" inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-8 py-4 text-xs font-black rounded-full uppercase transition-all shadow-lg hover:shadow-[#ff5a2f]/40 active:scale-95">
-              Create Dealer Account <ArrowUpRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
+
     </div>
   );
 }

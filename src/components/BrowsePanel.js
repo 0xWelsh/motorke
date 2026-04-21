@@ -260,21 +260,16 @@ export default function BrowsePanel() {
         </div>
       </div>
 
-      {/* Shop by County */}
+      {/* Find Dealerships Near You (Geolocation) */}
       <div>
         <div className="flex items-center justify-between mb-3 px-2">
           <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
-            Shop by location
+            Find Dealerships Near You
           </p>
         </div>
-        <ScrollableRow>
-          {COUNTIES.map((c) => (
-            <div key={c} className="snap-start shrink-0">
-              <LocationCard name={c} />
-            </div>
-          ))}
-        </ScrollableRow>
+        <NearbyDealersList />
       </div>
+    import NearbyDealersList from "./NearbyDealersList";
     </div>
   );
 }
