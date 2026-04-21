@@ -5,6 +5,7 @@ import AvatarUpload from "@/components/AvatarUpload";
 import DealerLogoUpload from "@/components/DealerLogoUpload";
 import DealerBannerUpload from "@/components/DealerBannerUpload";
 import LocationPicker from "@/components/LocationPicker";
+import ImageGallery from "@/components/ImageGallery";
 import { User, Mail, Shield, Calendar, Plus, Building2, MapPin, Globe, Phone } from "lucide-react";
 
 export const metadata = { title: "Profile Settings — Motorke Dealer Portal" };
@@ -26,6 +27,7 @@ export default async function PortalProfilePage({ searchParams }) {
       dealer: {
         include: {
           _count: { select: { cars: { where: { available: true } } } },
+          gallery: true,
         },
       },
     },
@@ -143,6 +145,44 @@ export default async function PortalProfilePage({ searchParams }) {
                   Upload a wide photo to display at the top of your dealer page.
                 </p>
                 <DealerBannerUpload currentUrl={user.dealer.bannerUrl} dealerName={user.dealer.name} />
+              </div>
+
+              {/* Dealership Gallery Section */}
+              <div className="mt-8 pt-8 border-t border-[#e8e2d9] dark:border-slate-800">
+                <p className="text-sm font-bold text-slate-900 dark:text-white mb-1">Dealership Gallery</p>
+                <p className="text-sm text-slate-500 mb-6">
+                  Show off your dealership, staff, and environment. Add images and videos for a complete profile.
+                </p>
+                {/* Images */}
+                {user.dealer.gallery?.filter(m => m.type === 'image').length > 0 && (
+                  <div className="mb-6">
+                    <ImageGallery
+                      images={user.dealer.gallery.filter(m => m.type === 'image').map(img => ({ url: img.url, alt: img.caption }))}
+                      title={user.dealer.name + " Gallery"}
+                    />
+                  </div>
+                )}
+                {/* Videos */}
+                {user.dealer.gallery?.filter(m => m.type === 'video').length > 0 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {user.dealer.gallery.filter(m => m.type === 'video').map((vid, i) => (
+                      <div key={vid.id} className="aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center">
+                        {vid.url.match(/(youtube.com|youtu.be)/) ? (
+                          <iframe
+                            src={vid.url.replace('watch?v=', 'embed/')}
+                            title={vid.caption || `Video ${i+1}`}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            className="w-full h-full"
+                          />
+                        ) : (
+                          <video src={vid.url} controls className="w-full h-full object-cover" title={vid.caption || `Video ${i+1}`}></video>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}
