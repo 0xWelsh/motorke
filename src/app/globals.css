@@ -189,12 +189,14 @@ p {
   box-shadow: none !important;
 }
 
+/* Remove border radius for all card containers to make sharp corners */
 [class*="bg-white"][class*="border"][class*="rounded-2xl"],
 [class*="bg-white"][class*="border"][class*="rounded-3xl"],
 [class*="bg-white"][class*="border"][class*="rounded-[2rem]"],
 [class*="bg-white"][class*="border"][class*="rounded-[2.5rem]"],
 [class*="bg-white"][class*="border"][class*="rounded-[3rem]"] {
   box-shadow: none !important;
+  border-radius: 0 !important;
 }
 
 .mk-logo-shell {
