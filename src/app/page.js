@@ -249,18 +249,18 @@ export default async function HomePage() {
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-slate-300 text-xs font-black">No Banner</div>
                     )}
-                    {/* Logo overlaps bottom of banner */}
-                    <div className="absolute left-6 -bottom-8 w-16 h-16 rounded-xl bg-white border border-[#ddd4c8] dark:border-slate-800 flex items-center justify-center overflow-hidden shadow-md">
+                    {/* Centered logo overlaps bottom of banner */}
+                    <div className="absolute left-1/2 -bottom-12 transform -translate-x-1/2 w-24 h-24 rounded-2xl bg-white border-2 border-[#ddd4c8] dark:border-slate-800 flex items-center justify-center overflow-hidden shadow-lg z-10">
                       {dealer.logoUrl ? (
                         <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-contain p-2" />
                       ) : (
-                        <span className="text-lg font-black text-slate-700 dark:text-slate-300">{dealer.name[0]}</span>
+                        <span className="text-2xl font-black text-slate-700 dark:text-slate-300">{dealer.name[0]}</span>
                       )}
                     </div>
                   </div>
-                  <div className="flex flex-col gap-1 px-6 pt-10 pb-0">
-                    <h3 className="font-black text-slate-900 dark:text-white text-lg leading-tight group-hover:text-[#ff5a2f] transition-colors truncate">{dealer.name}</h3>
-                    <p className="text-xs text-slate-400 font-bold flex items-center gap-1.5 uppercase tracking-widest truncate">
+                  <div className="flex flex-col items-center gap-1 px-6 pt-16 pb-0">
+                    <h3 className="font-black text-slate-900 dark:text-white text-lg leading-tight group-hover:text-[#ff5a2f] transition-colors truncate text-center">{dealer.name}</h3>
+                    <p className="text-xs text-slate-400 font-bold flex items-center gap-1.5 uppercase tracking-widest truncate text-center">
                       <MapPin className="w-3 h-3" /> {dealer.location}
                     </p>
                   </div>
