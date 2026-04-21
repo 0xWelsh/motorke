@@ -1,3 +1,4 @@
+import MediaUploader from "@/components/admin/MediaUploader";
 export const dynamic = "force-dynamic";
 import { requireDealer } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -153,6 +154,47 @@ export default async function PortalProfilePage({ searchParams }) {
                 <p className="text-sm text-slate-500 mb-6">
                   Show off your dealership, staff, and environment. Add images and videos for a complete profile.
                 </p>
+
+                {/* Upload Images */}
+                <form
+                  className="mb-6"
+                  action="/api/portal/gallery"
+                  method="POST"
+                  encType="multipart/form-data"
+                  onChange={e => e.currentTarget.submit()}
+                >
+                  <input type="hidden" name="type" value="image" />
+                  <MediaUploader maxFiles={5} onFilesSelected={files => {
+                    // Only submit if at least one file
+                    if (files.length > 0) {
+                      // For demo: just use the first file's preview as url
+                      // In production, upload to S3 or similar and use the returned URL
+                      const file = files[0];
+                      const form = e.currentTarget;
+                      const input = document.createElement('input');
+                      input.type = 'hidden';
+                      input.name = 'url';
+                      input.value = file.preview;
+                      form.appendChild(input);
+                      form.submit();
+                    }
+                  }} />
+                </form>
+
+                {/* Upload Video */}
+                <form
+                  className="mb-6"
+                  action="/api/portal/gallery"
+                  method="POST"
+                  encType="multipart/form-data"
+                  style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}
+                >
+                  <input type="hidden" name="type" value="video" />
+                  <input type="url" name="url" placeholder="YouTube or video URL" className="border px-2 py-1 rounded" required />
+                  <input type="text" name="caption" placeholder="Caption (optional)" className="border px-2 py-1 rounded" />
+                  <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Add Video</button>
+                </form>
+
                 {/* Images */}
                 {user.dealer.gallery?.filter(m => m.type === 'image').length > 0 && (
                   <div className="mb-6">
