@@ -4,17 +4,33 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ simple = false }) {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
-  // useEffect only runs on the client, so now we can safely show the UI
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) {
     return <div className="w-8 h-8" />;
+  }
+
+  if (simple) {
+    return (
+      <button
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        className="w-8 h-8 flex items-center justify-center text-slate-600 dark:text-slate-300 bg-transparent border-none shadow-none hover:bg-transparent hover:text-[#ff5a2f] transition-colors shrink-0"
+        aria-label="Toggle Dark Mode"
+        style={{ boxShadow: "none", border: "none", background: "none" }}
+      >
+        {theme === "dark" ? (
+          <Sun className="w-5 h-5" />
+        ) : (
+          <Moon className="w-5 h-5" />
+        )}
+      </button>
+    );
   }
 
   return (

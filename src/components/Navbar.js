@@ -83,9 +83,9 @@ export default function Navbar({ user }) {
   }
 
   const links = [
-    { href: "/cars",    label: "Cars",      icon: <CarFront className="w-[18px] h-[18px]" /> },
-    { href: "/dealers", label: "Dealers",   icon: <BadgeCheck className="w-[18px] h-[18px]" /> },
-    { href: "/compare", label: "Compare",   icon: <GitCompare className="w-[18px] h-[18px]" /> },
+    { href: "/cars",    label: "Cars" },
+    { href: "/dealers", label: "Dealers" },
+    { href: "/compare", label: "Compare" },
   ];
 
   return (
@@ -105,18 +105,18 @@ export default function Navbar({ user }) {
           </Link>
 
           {/* NAV LINKS */}
-          <div className="hidden lg:flex items-center gap-5 ">
-            {links.map(({ href, label, icon }) => (
+          <div className="hidden lg:flex items-center gap-7 ">
+            {links.map(({ href, label }) => (
               <Link key={href} href={href}
-                className="flex items-center gap-2 text-[12px] font-extrabold uppercase tracking-[0.16em] text-slate-700 hover:text-black transition-all">
-                <span className="text-slate-400">{icon}</span>
+                className="text-[16px] font-black uppercase tracking-[0.16em] text-slate-700 hover:text-black transition-all px-1 py-1">
                 {label}
               </Link>
             ))}
+            <Link href="/contact" className="ml-4 text-[16px] font-black uppercase tracking-[0.16em] text-[#ff5a2f] hover:text-black transition-all px-3 py-1 border border-[#ff5a2f] hover:border-black rounded-none">Contact Us</Link>
           </div>
 
           {/* SEARCH */}
-          <div ref={searchRef} className="hidden xl:flex flex-1 max-w-md relative group">
+          <div ref={searchRef} className="flex flex-1 max-w-md relative group">
             <form onSubmit={handleSearch} className="w-full">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 transition-colors" />
               <input
@@ -124,7 +124,7 @@ export default function Navbar({ user }) {
                 onChange={e => setSearch(e.target.value)}
                 onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                 placeholder="Search cars, e.g. Prado..."
-                className="w-full bg-slate-50/50 hover:bg-slate-100 border border-transparent focus:border-[#ff5a2f]/40 focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-full py-2.5 pl-11 pr-5 text-sm font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white"
+                className="w-full bg-slate-50/50 hover:bg-slate-100 border border-[#ff5a2f] focus:border-[#ff5a2f] focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-none py-2.5 pl-11 pr-5 text-base font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white"
               />
             </form>
             {showSuggestions && (
@@ -140,18 +140,22 @@ export default function Navbar({ user }) {
 
           {/* USER ACTIONS */}
           <div className="hidden lg:flex items-center gap-4">
-            <ThemeToggle />
+            <ThemeToggle simple />
             {user ? (
               <div className="flex items-center gap-4">
                 <NotificationsBell variant="navbar" />
                 <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setUserMenu(!userMenu)}
-                  className="flex items-center gap-2.5 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 pl-1.5 pr-4 py-1.5 rounded-full hover:border-[#ff5a2f] hover:shadow-sm transition-all"
+                  className="flex items-center gap-2.5 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 pl-1.5 pr-4 py-1.5 rounded-none hover:border-[#ff5a2f] hover:shadow-sm transition-all"
                 >
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center font-black text-sm uppercase text-white bg-[#ff5a2f]">
-                    {user.name?.[0]}
-                  </div>
+                  {user.avatarUrl ? (
+                    <img src={user.avatarUrl} alt={user.name} className="w-8 h-8 object-cover rounded-none border border-[#ddd4c8]" />
+                  ) : (
+                    <div className="w-8 h-8 flex items-center justify-center font-black text-sm uppercase text-white bg-[#ff5a2f] rounded-none">
+                      {user.name?.[0]}
+                    </div>
+                  )}
                   <span className="text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">{user.name?.split(" ")[0]}</span>
                   <ChevronDown className={clsx("w-4 h-4 text-slate-400 transition-transform duration-500", userMenu && "rotate-180")} />
                 </button>
@@ -189,14 +193,7 @@ export default function Navbar({ user }) {
               </div>
             )}
 
-            {user && (user.role === "DEALER" || user.role === "ADMIN") && (
-              <>
-                <div className="h-8 w-px bg-[#e5ddd2]" />
-                <Link href="/portal/cars/new" className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-slate-900 dark:text-white hover:text-[#ff5a2f] transition-colors">
-                  <PlusCircle className="w-5 h-5" /> Post Unit
-                </Link>
-              </>
-            )}
+
           </div>
 
           {/* MOBILE TOGGLE */}
