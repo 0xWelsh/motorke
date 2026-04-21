@@ -221,42 +221,43 @@ export default function BrowsePanel() {
         </button>
       </form>
 
-      {/* Popular Brands */}
-      <div>
-        <div className="flex items-center justify-between mb-3 px-2">
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
-            Shop by brand
-          </p>
-          <Link
-            href="/cars"
-            className="text-[11px] font-black uppercase tracking-[0.12em] text-[#ff5a2f] hover:underline"
-          >
-            All Makes →
-          </Link>
-        </div>
-        <ScrollableRow>
-          {BRANDS.map((b) => (
-            <div key={b.name} className="snap-start shrink-0">
-              <BrandLogo name={b.name} img={b.img} />
-            </div>
-          ))}
-        </ScrollableRow>
-      </div>
 
-      {/* Body Types */}
-      <div>
-        <div className="flex items-center justify-between mb-3 px-2">
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
-            Shop by shape
-          </p>
+      {/* Popular Brands & Body Types - tighter grouping */}
+      <div className="flex flex-col gap-1">
+        <div>
+          <div className="flex items-center justify-between px-2 mb-1">
+            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+              Shop by brand
+            </p>
+            <Link
+              href="/cars"
+              className="text-[11px] font-black uppercase tracking-[0.12em] text-[#ff5a2f] hover:underline"
+            >
+              All Makes →
+            </Link>
+          </div>
+          <ScrollableRow>
+            {BRANDS.map((b) => (
+              <div key={b.name} className="snap-start shrink-0">
+                <BrandLogo name={b.name} img={b.img} />
+              </div>
+            ))}
+          </ScrollableRow>
         </div>
-        <ScrollableRow>
-          {BODY_TYPES.map((bt) => (
-            <div key={bt.value} className="snap-start shrink-0">
-              <BodyTypeCard {...bt} />
-            </div>
-          ))}
-        </ScrollableRow>
+        <div className="mt-1">
+          <div className="flex items-center justify-between px-2 mb-1">
+            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+              Shop by shape
+            </p>
+          </div>
+          <ScrollableRow>
+            {BODY_TYPES.map((bt) => (
+              <div key={bt.value} className="snap-start shrink-0">
+                <BodyTypeCard {...bt} />
+              </div>
+            ))}
+          </ScrollableRow>
+        </div>
       </div>
 
       {/* Shop by County */}
