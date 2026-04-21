@@ -108,23 +108,23 @@ export default function Navbar({ user }) {
           <div className="hidden lg:flex items-center gap-7 ">
             {links.map(({ href, label }) => (
               <Link key={href} href={href}
-                className="text-[16px] font-black uppercase tracking-[0.16em] text-slate-700 hover:text-black transition-all px-1 py-1">
+                className="flex items-center justify-center h-12 text-[16px] font-black uppercase tracking-[0.16em] text-slate-700 hover:text-black transition-all px-3">
                 {label}
               </Link>
             ))}
-            <Link href="/contact" className="ml-4 text-[16px] font-black uppercase tracking-[0.16em] text-[#ff5a2f] hover:text-black transition-all px-3 py-1 border border-[#ff5a2f] hover:border-black rounded-none">Contact Us</Link>
+            <Link href="/contact" className="flex items-center justify-center h-12 ml-4 text-[16px] font-black uppercase tracking-[0.16em] text-[#ff5a2f] hover:text-black transition-all px-6 border border-[#ff5a2f] hover:border-black rounded-none">Contact Us</Link>
           </div>
 
           {/* SEARCH */}
-          <div ref={searchRef} className="flex flex-1 max-w-md relative group">
-            <form onSubmit={handleSearch} className="w-full">
+          <div ref={searchRef} className="flex flex-1 max-w-md relative group h-12">
+            <form onSubmit={handleSearch} className="w-full h-full">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 transition-colors" />
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                 placeholder="Search cars, e.g. Prado..."
-                className="w-full bg-slate-50/50 hover:bg-slate-100 border border-[#ff5a2f] focus:border-[#ff5a2f] focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-none py-2.5 pl-11 pr-5 text-base font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white"
+                className="w-full h-full bg-slate-50/50 hover:bg-slate-100 border border-[#ff5a2f] focus:border-[#ff5a2f] focus:bg-white focus:ring-4 focus:ring-[#ff5a2f]/10 rounded-none pl-11 pr-5 text-base font-semibold outline-none transition-all placeholder:text-slate-400 text-slate-900 dark:text-white"
               />
             </form>
             {showSuggestions && (
@@ -147,7 +147,7 @@ export default function Navbar({ user }) {
                 <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setUserMenu(!userMenu)}
-                  className="flex items-center gap-2.5 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 pl-1.5 pr-4 py-1.5 rounded-none hover:border-[#ff5a2f] hover:shadow-sm transition-all"
+                  className="flex items-center gap-2.5 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 pl-1.5 pr-4 h-12 rounded-none hover:border-[#ff5a2f] hover:shadow-sm transition-all"
                 >
                   {user.avatarUrl ? (
                     <img src={user.avatarUrl} alt={user.name} className="w-8 h-8 object-cover rounded-none border border-[#ddd4c8]" />
