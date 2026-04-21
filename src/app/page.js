@@ -249,21 +249,20 @@ export default async function HomePage() {
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-slate-300 text-xs font-black">No Banner</div>
                     )}
-                  </div>
-                  <div className="flex items-center gap-4 -mt-8 px-6">
-                    <div className="w-16 h-16 rounded-xl bg-white border border-[#ddd4c8] dark:border-slate-800 flex items-center justify-center overflow-hidden shadow-md">
+                    {/* Logo overlaps bottom of banner */}
+                    <div className="absolute left-6 -bottom-8 w-16 h-16 rounded-xl bg-white border border-[#ddd4c8] dark:border-slate-800 flex items-center justify-center overflow-hidden shadow-md">
                       {dealer.logoUrl ? (
                         <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-contain p-2" />
                       ) : (
                         <span className="text-lg font-black text-slate-700 dark:text-slate-300">{dealer.name[0]}</span>
                       )}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-black text-slate-900 dark:text-white text-lg leading-tight group-hover:text-[#ff5a2f] transition-colors truncate">{dealer.name}</h3>
-                      <p className="text-xs text-slate-400 font-bold flex items-center gap-1.5 uppercase tracking-widest truncate">
-                        <MapPin className="w-3 h-3" /> {dealer.location}
-                      </p>
-                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1 px-6 pt-10 pb-0">
+                    <h3 className="font-black text-slate-900 dark:text-white text-lg leading-tight group-hover:text-[#ff5a2f] transition-colors truncate">{dealer.name}</h3>
+                    <p className="text-xs text-slate-400 font-bold flex items-center gap-1.5 uppercase tracking-widest truncate">
+                      <MapPin className="w-3 h-3" /> {dealer.location}
+                    </p>
                   </div>
                   <div className="px-6 pt-4 pb-6 flex flex-col flex-1">
                     <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 line-clamp-3">{dealer.description || 'Verified dealership on Motorke.'}</p>
