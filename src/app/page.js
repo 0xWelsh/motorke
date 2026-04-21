@@ -138,79 +138,6 @@ export default async function HomePage() {
       </section>
 
 
-      {/* Why Motorke — Editorial Split Layout */}
-      <section className="border-y border-[#e8e2d9] bg-white">
-
-        {/* Top: Statement + numbered features */}
-        <div className="container mx-auto px-4 sm:px-6 max-w-7xl grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-0 divide-y lg:divide-y-0 lg:divide-x divide-[#e8e2d9]">
-
-          {/* Left — Bold statement */}
-          <div className="py-16 sm:py-24 lg:pr-16 flex flex-col justify-between gap-12">
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#ff5a2f] mb-6">Why Motorke</p>
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white leading-[1.0] tracking-tight">
-                The market<br />
-                <span className="italic font-serif font-semibold text-slate-400">without</span><br />
-                the noise.
-              </h2>
-            </div>
-            <p className="text-base sm:text-lg text-slate-500 max-w-sm leading-relaxed font-medium">
-              Kenya&rsquo;s automotive market is cluttered with recycled listings, inflated prices, and unreachable sellers. We built Motorke to cut through all of it.
-            </p>
-          </div>
-
-          {/* Right — Numbered features */}
-          <div className="py-16 sm:py-24 lg:pl-16 flex flex-col justify-center divide-y divide-[#e8e2d9]">
-            {[
-              {
-                n: "01",
-                title: "Every listing is dealer-verified",
-                body: "No scraped classifieds. No private listings dressed up as dealer stock. Every car on Motorke is tied to a verified dealership — with a real phone number, physical location, and accountability.",
-              },
-              {
-                n: "02",
-                title: "Prices that include the full picture",
-                body: "We show landed cost estimates, duty breakdowns, and import eligibility — so you're never surprised at the port. What you see is as close to what you pay as possible.",
-              },
-              {
-                n: "03",
-                title: "You talk directly to the dealer",
-                body: "No Motorke agent in between. Your enquiry goes straight to the dealer via WhatsApp or our message form. Negotiate on your terms.",
-              },
-              {
-                n: "04",
-                title: "Built for the Kenyan buyer",
-                body: "KES pricing, local county filtering, M-Pesa-ready dealers, import age compliance checks — designed around how cars actually change hands here.",
-              },
-            ].map(({ n, title, body }) => (
-              <div key={n} className="py-8 flex gap-6 group">
-                <span className="text-[11px] font-black text-[#ff5a2f] tracking-widest pt-1 w-8 shrink-0">{n}</span>
-                <div>
-                  <h3 className="text-base font-black text-slate-900 dark:text-white mb-2 group-hover:text-[#ff5a2f] transition-colors">{title}</h3>
-                  <p className="text-sm text-slate-500 leading-relaxed font-medium">{body}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom accent strip */}
-        <div className="bg-[#111111] border-t border-[#e8e2d9]">
-          <div className="container mx-auto px-4 sm:px-6 max-w-7xl grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/10">
-            {[
-              { stat: "Real-time",  label: "Stock availability — listings go offline the moment a car is sold." },
-              { stat: "One-click",  label: "WhatsApp access to every verified dealer on the platform." },
-              { stat: "Zero",       label: "Listing fees for buyers. Free to browse, compare, and enquire." },
-            ].map(({ stat, label }) => (
-              <div key={stat} className="px-8 py-8 flex items-start gap-5">
-                <p className="text-2xl sm:text-3xl font-black text-[#ff5a2f] whitespace-nowrap">{stat}</p>
-                <p className="text-sm text-white/60 font-medium leading-relaxed">{label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-      </section>
 
 
       {/* Hot This Week */}
@@ -294,6 +221,136 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {/* Browse Dealerships */}
+      {dealers.length > 0 && (
+        <section className="bg-[#f7f6f3] py-16 sm:py-24 border-b border-[#e8e2d9] dark:border-slate-800">
+          <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+            <div className="mb-14">
+              <p className="text-sm font-black uppercase tracking-[0.18em] text-slate-400 mb-3">Browse</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white">Dealerships</h2>
+              <p className="text-base text-slate-600 mt-2">Meet our verified partners and explore their inventory.</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {dealers.slice(0, 6).map((dealer) => (
+                <Link
+                  key={dealer.id}
+                  href={`/dealers/${dealer.slug}`}
+                  className="group block bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-none transition-all duration-500 flex flex-col h-full overflow-hidden"
+                >
+                  <div className="relative aspect-[16/6] bg-white/10 overflow-hidden">
+                    {dealer.bannerUrl ? (
+                      <Image
+                        src={dealer.bannerUrl}
+                        alt={dealer.name + ' banner'}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-300 text-xs font-black">No Banner</div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-4 -mt-8 px-6">
+                    <div className="w-16 h-16 rounded-xl bg-white border border-[#ddd4c8] dark:border-slate-800 flex items-center justify-center overflow-hidden shadow-md">
+                      {dealer.logoUrl ? (
+                        <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-contain p-2" />
+                      ) : (
+                        <span className="text-lg font-black text-slate-700 dark:text-slate-300">{dealer.name[0]}</span>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-black text-slate-900 dark:text-white text-lg leading-tight group-hover:text-[#ff5a2f] transition-colors truncate">{dealer.name}</h3>
+                      <p className="text-xs text-slate-400 font-bold flex items-center gap-1.5 uppercase tracking-widest truncate">
+                        <MapPin className="w-3 h-3" /> {dealer.location}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="px-6 pt-4 pb-6 flex flex-col flex-1">
+                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 line-clamp-3">{dealer.description || 'Verified dealership on Motorke.'}</p>
+                    <div className="mt-auto flex items-end justify-between pt-4 border-t border-[#e8e2d9] dark:border-slate-800 gap-3">
+                      <div>
+                        <p className="text-[13px] font-black text-slate-900 dark:text-white leading-none">{dealer._count?.cars || 0} cars</p>
+                      </div>
+                      <span className="px-5 py-2.5 text-xs font-black uppercase text-slate-900 dark:text-white border border-[#e8e2d9] dark:border-slate-800 rounded-full hover:bg-[#ff5a2f] hover:text-white transition-all whitespace-nowrap">
+                        View Dealer
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Why Motorke — Editorial Split Layout */}
+      <section className="border-y border-[#e8e2d9] bg-white">
+        {/* Top: Statement + numbered features */}
+        <div className="container mx-auto px-4 sm:px-6 max-w-7xl grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-0 divide-y lg:divide-y-0 lg:divide-x divide-[#e8e2d9]">
+          {/* Left — Bold statement */}
+          <div className="py-16 sm:py-24 lg:pr-16 flex flex-col justify-between gap-12">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#ff5a2f] mb-6">Why Motorke</p>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white leading-[1.0] tracking-tight">
+                The market<br />
+                <span className="italic font-serif font-semibold text-slate-400">without</span><br />
+                the noise.
+              </h2>
+            </div>
+            <p className="text-base sm:text-lg text-slate-500 max-w-sm leading-relaxed font-medium">
+              Kenya&rsquo;s automotive market is cluttered with recycled listings, inflated prices, and unreachable sellers. We built Motorke to cut through all of it.
+            </p>
+          </div>
+          {/* Right — Numbered features */}
+          <div className="py-16 sm:py-24 lg:pl-16 flex flex-col justify-center divide-y divide-[#e8e2d9]">
+            {[
+              {
+                n: "01",
+                title: "Every listing is dealer-verified",
+                body: "No scraped classifieds. No private listings dressed up as dealer stock. Every car on Motorke is tied to a verified dealership — with a real phone number, physical location, and accountability.",
+              },
+              {
+                n: "02",
+                title: "Prices that include the full picture",
+                body: "We show landed cost estimates, duty breakdowns, and import eligibility — so you're never surprised at the port. What you see is as close to what you pay as possible.",
+              },
+              {
+                n: "03",
+                title: "You talk directly to the dealer",
+                body: "No Motorke agent in between. Your enquiry goes straight to the dealer via WhatsApp or our message form. Negotiate on your terms.",
+              },
+              {
+                n: "04",
+                title: "Built for the Kenyan buyer",
+                body: "KES pricing, local county filtering, M-Pesa-ready dealers, import age compliance checks — designed around how cars actually change hands here.",
+              },
+            ].map(({ n, title, body }) => (
+              <div key={n} className="py-8 flex gap-6 group">
+                <span className="text-[11px] font-black text-[#ff5a2f] tracking-widest pt-1 w-8 shrink-0">{n}</span>
+                <div>
+                  <h3 className="text-base font-black text-slate-900 dark:text-white mb-2 group-hover:text-[#ff5a2f] transition-colors">{title}</h3>
+                  <p className="text-sm text-slate-500 leading-relaxed font-medium">{body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Bottom accent strip */}
+        <div className="bg-[#111111] border-t border-[#e8e2d9]">
+          <div className="container mx-auto px-4 sm:px-6 max-w-7xl grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/10">
+            {[
+              { stat: "Real-time",  label: "Stock availability — listings go offline the moment a car is sold." },
+              { stat: "One-click",  label: "WhatsApp access to every verified dealer on the platform." },
+              { stat: "Zero",       label: "Listing fees for buyers. Free to browse, compare, and enquire." },
+            ].map(({ stat, label }) => (
+              <div key={stat} className="px-8 py-8 flex items-start gap-5">
+                <p className="text-2xl sm:text-3xl font-black text-[#ff5a2f] whitespace-nowrap">{stat}</p>
+                <p className="text-sm text-white/60 font-medium leading-relaxed">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
             
       <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-24 max-w-7xl">
         <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 mb-3">Showcase</p>
