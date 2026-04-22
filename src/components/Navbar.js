@@ -7,7 +7,7 @@ import {
   Search, User, Menu, X, ChevronDown, LogOut, Heart,
   LayoutDashboard, Store, PlusCircle, ShieldCheck, Compass,
   ArrowUpRight, Bell, Settings, BarChart2, Shield,
-  CarFront, BadgeCheck, GitCompare
+  CarFront, GitCompare
 } from "lucide-react";
 import { clsx } from "clsx";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";

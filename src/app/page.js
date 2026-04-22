@@ -1,7 +1,7 @@
 // src/app/page.js
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
-import { formatPrice, formatCarPrice, BADGE_OPTIONS } from "@/lib/utils";
+import { formatPrice, formatCarPrice } from "@/lib/utils";
 import Link from "next/link";
 import NewsRibbon from "@/components/NewsRibbon";
 import HeroReviews from "@/components/HeroReviews";
