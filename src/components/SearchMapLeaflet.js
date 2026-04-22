@@ -107,6 +107,11 @@ export default function SearchMapLeaflet({ dealers }) {
 
     instanceRef.current = map;
 
+    // FIX: Ensure map tiles load correctly
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 100);
+
     return () => {
       map.remove();
       instanceRef.current = null;

@@ -75,6 +75,11 @@ export default function DealerLocationMapLeaflet({ lat, lng, name, address, coun
 
     instanceRef.current = map;
 
+    // FIX: Ensure map renders correctly after initialization
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 100);
+
     return () => {
       map.remove();
       instanceRef.current = null;

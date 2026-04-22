@@ -136,6 +136,11 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
 
     setMap(leafletMap);
 
+    // FIX: Delay invalidateSize to ensure container is fully rendered
+    setTimeout(() => {
+      leafletMap.invalidateSize();
+    }, 100);
+
     return () => {
       leafletMap.remove();
     };

@@ -28,18 +28,19 @@ export default function DealerInventory({ cars, dealerSlug }) {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-10">
         <div className="relative flex-1">
           <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
-            placeholder="Search this dealer's inventory..."
+            placeholder="Search showroom..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full bg-white dark:bg-[#111111] border border-[#ece6dd] rounded-2xl px-11 py-3.5 text-sm font-bold placeholder:text-slate-400 outline-none focus:border-[#ddd4c8] dark:border-slate-800 transition-all shadow-sm"
+            className="w-full bg-[#F7FAFC] dark:bg-[#0a0a0a] border border-slate-100 dark:border-slate-800 text-sm font-medium placeholder:text-slate-400 outline-none focus:border-[#38A169] transition-all py-3.5 px-11"
+            style={{ borderRadius: 'var(--radius)' }}
           />
           {query && (
-            <button onClick={() => setQuery("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-900 dark:text-white">
+            <button onClick={() => setQuery("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#111827] dark:hover:text-white">
                <X className="w-4 h-4" />
             </button>
           )}
@@ -52,26 +53,27 @@ export default function DealerInventory({ cars, dealerSlug }) {
              <button
                key={make}
                onClick={() => setActiveFilter(make)}
-               className={`px-4 py-2.5 shrink-0 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all border shadow-sm ${
+               className={`px-4 py-2.5 shrink-0 text-[10px] font-bold uppercase tracking-widest transition-all border ${
                  activeFilter === make
-                    ? "bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900"
-                    : "bg-white text-slate-600 dark:bg-[#111111] dark:text-slate-400 border-[#ece6dd] dark:border-slate-800 hover:border-slate-400"
+                    ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:text-black dark:border-white"
+                    : "bg-white dark:bg-[#111111] text-[#718096] dark:text-slate-400 border-slate-100 dark:border-slate-800 hover:border-[#111827] dark:hover:border-white"
                }`}
+               style={{ borderRadius: 'var(--radius)' }}
              >
-               {make === "ALL" ? "All Cars" : make}
+               {make === "ALL" ? "All Units" : make}
              </button>
           ))}
         </div>
       </div>
 
       {filteredCars.length === 0 ? (
-        <div className="border border-dashed border-[#ece6dd] bg-[#fbfcfe] dark:bg-[#111111] rounded-[2rem] p-12 text-center">
-           <Search className="w-8 h-8 mx-auto text-slate-300 mb-4" />
-           <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest mb-1">No matches found</h3>
-           <p className="text-xs font-medium text-slate-500">Try adjusting your filters or search query.</p>
+        <div className="border border-dashed border-slate-200 dark:border-slate-800 bg-[#F7FAFC] dark:bg-[#111111] p-16 text-center" style={{ borderRadius: 'var(--radius)' }}>
+           <Search className="w-10 h-10 mx-auto text-slate-300 dark:text-slate-700 mb-6" />
+           <h3 className="text-xs font-bold text-[#111827] dark:text-white uppercase tracking-widest mb-2">No units found</h3>
+           <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Try adjusting your filters or search query.</p>
         </div>
       ) : (
-        <div className="border-y border-[#ece6dd] divide-y divide-[#ece6dd]">
+        <div className="border-t border-slate-100 dark:border-slate-800 divide-y divide-slate-50 dark:divide-slate-900">
           {filteredCars.map((car) => {
             const img = car.images?.[0]?.url;
             const title = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
@@ -89,25 +91,25 @@ export default function DealerInventory({ cars, dealerSlug }) {
             };
 
             return (
-              <article key={car.id} className="py-6 group">
-                <div className="grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)_170px] gap-4 md:gap-5 items-start">
-                  <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-[#fbfcfe] dark:bg-[#111111] overflow-hidden border border-[#ece6dd] rounded-[1.25rem]">
+              <article key={car.id} className="py-8 group">
+                <div className="grid grid-cols-1 md:grid-cols-[200px_minmax(0,1fr)_180px] gap-8 md:gap-12 items-center">
+                  <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-slate-100 dark:bg-slate-900 overflow-hidden border border-slate-100 dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
                     {img ? (
                       <Image
                         src={img}
                         alt={title}
                         fill
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        sizes="(max-width: 768px) 100vw, 220px"
+                        sizes="(max-width: 768px) 100vw, 200px"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-slate-400 text-[11px] font-bold uppercase tracking-widest">No Image</div>
+                      <div className="w-full h-full flex items-center justify-center text-slate-400 text-[10px] font-bold uppercase tracking-widest">No Image</div>
                     )}
 
                     {car.badges?.length > 0 && (
                       <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
                         {car.badges.slice(0, 2).map((b) => (
-                          <span key={b} className={`text-[9px] font-extrabold px-2 py-1 rounded-2xl shadow-sm ${BADGE_OPTIONS[b]?.color || "bg-white/90 text-slate-700"}`}>
+                          <span key={b} className={`text-[8px] font-bold px-2 py-1 uppercase tracking-widest shadow-sm rounded-[2px] ${BADGE_OPTIONS[b]?.color || "bg-white/90 text-[#111827]"}`}>
                             {b}
                           </span>
                         ))}
@@ -117,13 +119,13 @@ export default function DealerInventory({ cars, dealerSlug }) {
 
                   <div className="min-w-0 flex flex-col h-full justify-center">
                     <Link href={`/cars/${car.id}`}>
-                      <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-tight mb-2 group-hover:text-amber-600 transition-colors line-clamp-1">{title}</h3>
+                      <h3 className="text-xl sm:text-2xl font-bold text-[#111827] dark:text-white leading-tight mb-2 group-hover:text-[#38A169] transition-colors line-clamp-1">{title}</h3>
                     </Link>
 
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-extrabold uppercase tracking-[0.12em] text-slate-500 mb-5">
+                    <div className="flex flex-wrap gap-x-4 gap-y-2 text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400 mb-6">
                       {specs.map((s, idx) => (
                         <span key={idx} className="flex items-center gap-4">
-                           {s} {idx !== specs.length - 1 && <span className="w-1 h-1 rounded-2xl bg-slate-200" />}
+                           {s} {idx !== specs.length - 1 && <span className="w-1 h-1 rounded-full bg-slate-200 dark:bg-slate-800" />}
                         </span>
                       ))}
                     </div>
@@ -135,10 +137,10 @@ export default function DealerInventory({ cars, dealerSlug }) {
 
                   <div className="flex items-center justify-between md:flex-col md:items-end md:justify-center md:h-full gap-4">
                     <div className="text-left md:text-right">
-                       <p className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">{formatCarPrice(car)}</p>
-                       <p className="text-[9px] font-extrabold uppercase tracking-[0.14em] text-slate-400 mt-1">Ready to go</p>
+                       <p className="text-2xl sm:text-3xl font-bold text-[#111827] dark:text-white tracking-tight">{formatCarPrice(car)}</p>
+                       <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mt-1">Direct from Showroom</p>
                     </div>
-                    <Link href={`/cars/${car.id}`} className="w-12 h-12 rounded-[1rem] bg-[#fbfcfe] dark:bg-[#111111] border border-[#ece6dd] flex items-center justify-center text-white group-hover:bg-slate-900 group-hover:text-white group-hover:border-slate-900 transition-all shadow-sm">
+                    <Link href={`/cars/${car.id}`} className="w-12 h-12 bg-[#F7FAFC] dark:bg-[#111111] border border-slate-100 dark:border-slate-800 flex items-center justify-center text-[#111827] dark:text-white hover:bg-[#111827] dark:hover:bg-white hover:text-white dark:hover:text-black transition-all shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
                        <ChevronRight className="w-5 h-5 pointer-events-none" />
                     </Link>
                   </div>

@@ -81,7 +81,7 @@ export default function NearbyDealersList() {
             value={radius}
             onChange={(e) => setRadius(Number(e.target.value))}
             disabled={loading}
-            className="px-3 py-3 sm:py-2 border border-[#ddd4c8] dark:border-slate-800 rounded-2xl text-slate-900 dark:text-white bg-white disabled:opacity-50"
+            className="px-3 py-3 sm:py-2 border border-[#ddd4c8] dark:border-slate-800 rounded-lg text-slate-900 dark:text-white bg-white dark:bg-[#111111] disabled:opacity-50"
           >
             <option value={5}>5 km</option>
             <option value={10}>10 km</option>
@@ -97,7 +97,7 @@ export default function NearbyDealersList() {
             <button
               onClick={() => handleFindNearby('saved')}
               disabled={loading}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-slate-600 text-slate-900 dark:text-white rounded-2xl font-medium hover:bg-slate-700 disabled:opacity-50 transition"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg font-bold text-[10px] uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-50 transition"
             >
               {loading && locationSource === 'saved' ? (
                 <>
@@ -114,7 +114,7 @@ export default function NearbyDealersList() {
             <button
               onClick={() => handleFindNearby('current')}
               disabled={loading}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-[#ff5a2f] text-slate-900 dark:text-white rounded-2xl font-medium hover:bg-blue-700 disabled:opacity-50 transition"
+              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-[#ff5a2f] text-white dark:bg-white dark:!text-black rounded-lg font-bold text-[10px] uppercase tracking-widest hover:opacity-80 disabled:opacity-50 transition"
             >
               {loading && locationSource === 'current' ? (
                 <>
@@ -133,7 +133,7 @@ export default function NearbyDealersList() {
           <button
             onClick={() => handleFindNearby('current')}
             disabled={loading}
-            className="inline-flex items-center gap-2 px-4 py-3 sm:py-2 bg-[#ff5a2f] text-slate-900 dark:text-white rounded-2xl font-medium hover:bg-blue-700 disabled:opacity-50 transition"
+            className="inline-flex items-center gap-2 px-6 py-3 sm:py-2 bg-[#ff5a2f] text-white dark:bg-white dark:!text-black rounded-lg font-bold text-[10px] uppercase tracking-widest hover:opacity-80 disabled:opacity-50 transition"
           >
             {loading ? (
               <>
@@ -172,7 +172,7 @@ export default function NearbyDealersList() {
                 <Link
                   key={dealer.id}
                   href={`/dealers/${dealer.slug}`}
-                  className="flex items-center justify-between p-4 border border-[#ddd4c8] dark:border-slate-800 rounded-2xl hover:bg-[#fbfcfe] dark:bg-[#111111] transition"
+                  className="flex items-center justify-between p-5 border border-[#ddd4c8] dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:bg-white/5 transition shadow-sm"
                 >
                   <div className="flex-1">
                     <h3 className="font-medium text-slate-900 dark:text-white">{dealer.name}</h3>
