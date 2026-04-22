@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight, MapPin, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
+import NearbyDealersList from "./NearbyDealersList.js";
 
 const BRANDS = [
   { name: "Toyota",     img: "logo_toyota.png" },
