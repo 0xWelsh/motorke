@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
+import HeroShowcase from "@/components/HeroShowcase";
 
 const HERO_BACKGROUND = "/images/mercedes.jpg";
 
@@ -18,7 +19,7 @@ const HERO_BACKGROUND = "/images/mercedes.jpg";
 const getCachedData = unstable_cache(
   async () => {
     const week = new Date(); week.setDate(week.getDate() - 7);
-    const [featured, hotThisWeek, newArrivals, dealers, newsItems] = await Promise.all([
+    const [featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews] = await Promise.all([
       db.car.findMany({
         where: { available: true, featured: true },
         include: {
@@ -66,8 +67,17 @@ const getCachedData = unstable_cache(
           publishedAt: true,
         },
       }),
+      db.dealerReview.findMany({
+        where: { comment: { not: null }, rating: { gte: 4 } },
+        include: { 
+          user: { select: { name: true, avatarUrl: true } }, 
+          dealer: { select: { name: true, county: true } } 
+        },
+        take: 10,
+        orderBy: { createdAt: "desc" },
+      }),
     ]);
-    return { featured, hotThisWeek, newArrivals, dealers, newsItems };
+    return { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews };
   },
   ["homepage-minimal-v5"],
   { revalidate: 900, tags: ["homepage"] }
@@ -75,7 +85,12 @@ const getCachedData = unstable_cache(
 
 
 export default async function HomePage() {
-  const { featured, hotThisWeek, newArrivals, dealers, newsItems } = await getCachedData();
+  const { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews } = await getCachedData();
+  
+  const showcaseItems = [
+    ...(featured || []).slice(0, 4).map(c => ({ ...c, type: 'car' })),
+    ...(highlightReviews || []).slice(0, 4).map(r => ({ ...r, type: 'review' }))
+  ].sort(() => Math.random() - 0.5);
   
   // Sort hot cars by view count and take top 8
   const hotSorted = (hotThisWeek || [])
@@ -92,28 +107,34 @@ export default async function HomePage() {
       {/* Dynamic Hero Section */}
       <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-gray-100">
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
-          <div className="max-w-4xl">
-            <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold text-[#111827] dark:text-[#b9c5e0] leading-[0.95] tracking-tight mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-              Moving the world<br />
-              <span className="editorial-heading text-[#38A169]">with transparency.</span>
-            </h1>
-            
-            <p className="text-lg md:text-xl text-[#2D3748] leading-relaxed max-w-2xl font-medium mb-12">
-              Experience a minimalist approach to car buying. We connect verified dealerships 
-              directly to savvy buyers, removing the noise and clutter of traditional marketplaces.
-            </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="max-w-4xl">
+              <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold text-[#111827] dark:text-[#b9c5e0] leading-[0.95] tracking-tight mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+                Moving the world<br />
+                <span className="editorial-heading text-[#38A169]">with transparency.</span>
+              </h1>
+              
+              <p className="text-lg md:text-xl text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-2xl font-medium mb-12">
+                Experience a minimalist approach to car buying. We connect verified dealerships 
+                directly to savvy buyers, removing the noise and clutter of traditional marketplaces.
+              </p>
 
-            <div className="w-full max-w-2xl">
-              <BrowsePanel />
+              <div className="w-full max-w-2xl">
+                <BrowsePanel />
+              </div>
+
+              <div className="flex flex-wrap items-center gap-6 mt-12">
+                <Link href="/cars" className="bg-[#1A202C] text-white px-8 py-4 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95" style={{ borderRadius: 'var(--radius)' }}>
+                  Explore Inventory
+                </Link>
+                <Link href="/signup?role=DEALER" className="text-[#1A202C] text-xs font-bold uppercase tracking-widest border border-[#1A202C] px-8 py-4 transition-all hover:bg-[#1A202C] hover:text-white" style={{ borderRadius: 'var(--radius)' }}>
+                  Partner With Us
+                </Link>
+              </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-6 mt-12">
-              <Link href="/cars" className="bg-[#1A202C] text-white px-8 py-4 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95" style={{ borderRadius: 'var(--radius)' }}>
-                Explore Inventory
-              </Link>
-              <Link href="/signup?role=DEALER" className="text-[#1A202C] text-xs font-bold uppercase tracking-widest border border-[#1A202C] px-8 py-4 transition-all hover:bg-[#1A202C] hover:text-white" style={{ borderRadius: 'var(--radius)' }}>
-                Partner With Us
-              </Link>
+            <div className="hidden lg:block animate-in fade-in slide-in-from-right-12 duration-1000 delay-300">
+              <HeroShowcase items={showcaseItems} />
             </div>
           </div>
         </div>
@@ -140,10 +161,10 @@ export default async function HomePage() {
           <div className="container mx-auto px-6 max-w-7xl">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                <div className="max-w-xl">
-                 <h2 className="text-3xl sm:text-5xl font-bold text-[#1A202C] mb-4">Spotlight</h2>
+                 <h2 className="text-4xl sm:text-6xl font-normal editorial-heading text-[#111827] mb-4">Spotlight</h2>
                  <p className="text-[#718096] text-lg font-medium">Verified listings currently receiving the most interest from our network.</p>
                </div>
-               <Link href="/cars?sort=popular" className="text-[#1A202C] text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:opacity-70 transition-opacity">
+               <Link href="/cars?sort=popular" className="text-[#111827] text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:opacity-70 transition-opacity">
                  View Trending <ArrowUpRight className="w-4 h-4" />
                </Link>
             </div>
@@ -269,11 +290,11 @@ export default async function HomePage() {
 
 function CarCard({ car }) {
   const img = car.images?.[0]?.url;
-  const title = `${car.year} ${car.make} ${car.model}`;
+  const title = `${car.make} ${car.model}`;
   
   return (
-    <article className="group flex flex-col h-full transition-all">
-      <Link href={`/cars/${car.id}`} className="relative aspect-[4/3] bg-[#EDF2F7] overflow-hidden mb-6 block" style={{ borderRadius: 'var(--radius)' }}>
+    <article className="group flex flex-col h-full bg-white border border-slate-100 transition-all hover:shadow-xl overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
+      <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-[#EDF2F7] overflow-hidden block">
         {img ? (
           <Image
             src={img}
@@ -284,27 +305,47 @@ function CarCard({ car }) {
         ) : (
           <div className="w-full h-full flex items-center justify-center text-[#718096] text-[10px] font-bold uppercase tracking-widest">No Image Available</div>
         )}
-        <div className="absolute top-4 left-4">
-          <span className="bg-white/90 backdrop-blur-md text-[#1A202C] text-[9px] font-bold px-2 py-1 uppercase tracking-widest shadow-sm" style={{ borderRadius: '2px' }}>
-            {car.condition || "VERIFIED"}
+        <div className="absolute top-4 right-4">
+          <span className="bg-[#38A169] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest shadow-sm" style={{ borderRadius: '1px' }}>
+            {car.available ? "AVAILABLE" : "SOLD"}
           </span>
         </div>
       </Link>
 
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 p-5">
         <div className="mb-4">
-          <p className="text-[10px] font-bold text-[#718096] uppercase tracking-widest mb-1">{car.dealer?.name || "Verified Dealer"}</p>
-          <Link href={`/cars/${car.id}`}>
-            <h3 className="text-base font-bold text-[#1A202C] group-hover:text-[#38A169] transition-colors line-clamp-1">{title}</h3>
-          </Link>
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <span className="bg-slate-100 text-slate-500 text-[10px] font-bold px-1.5 py-0.5" style={{ borderRadius: '1px' }}>{car.year}</span>
+            <Link href={`/cars/${car.id}`}>
+              <h3 className="text-lg font-bold text-[#111827] group-hover:text-[#38A169] transition-colors line-clamp-1">{title}</h3>
+            </Link>
+          </div>
+          
+          {/* Specs Summary Row */}
+          <p className="text-[11px] text-[#718096] font-medium mb-4 flex flex-wrap items-center gap-x-1.5">
+             {car.horsepower && <span>{car.horsepower} HP</span>}
+             {car.horsepower && car.torque && <span>•</span>}
+             {car.torque && <span>{car.torque} Nm</span>}
+             {(car.horsepower || car.torque) && car.fuelType && <span>•</span>}
+             {car.fuelType && <span className="capitalize">{car.fuelType.toLowerCase()}</span>}
+             {car.transmission && <span>•</span>}
+             {car.transmission && <span className="capitalize">{car.transmission.toLowerCase()}</span>}
+          </p>
+
+          {/* Detailed Tags Row */}
+          <div className="flex flex-wrap gap-2 mb-2">
+            <span className="bg-slate-50 text-slate-500 text-[9px] font-bold px-2 py-1 uppercase tracking-wider">{car.steering || "RHD"}</span>
+            <span className="bg-slate-50 text-slate-500 text-[9px] font-bold px-2 py-1 uppercase tracking-wider">{car.engineCC ? `${car.engineCC} CC` : "N/A"}</span>
+            <span className="bg-slate-50 text-slate-500 text-[9px] font-bold px-2 py-1 uppercase tracking-wider">{car.fuelType || "PETROL"}</span>
+          </div>
         </div>
         
-        <div className="mt-auto pt-4 flex items-center justify-between border-t border-[#EDF2F7]">
+        <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-50">
           <div>
-            <p className="text-lg font-bold text-[#1A202C]">{formatCarPrice(car)}</p>
+            <p className="text-lg font-bold text-[#111827]">{formatCarPrice(car)}</p>
           </div>
-          <Link href={`/cars/${car.id}`} className="text-[#38A169] text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 hover:opacity-70 transition-opacity">
-            Details <ArrowUpRight className="w-3 h-3" />
+          <Link href={`/cars/${car.id}`} className="bg-slate-50 text-[#111827] text-[10px] font-bold uppercase tracking-widest px-4 py-2 hover:bg-slate-200 transition-colors" style={{ borderRadius: '2px' }}>
+            View Offer
           </Link>
         </div>
       </div>
