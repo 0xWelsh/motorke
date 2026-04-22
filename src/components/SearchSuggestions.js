@@ -40,8 +40,8 @@ export default function SearchSuggestions({
           {/* Cars Section */}
           {carSuggestions.length > 0 && (
             <>
-              <div className="px-3 py-2 bg-[#fbfcfe] dark:bg-[#111111] border-b border-[#ddd4c8] dark:border-slate-800">
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-slate-500">
+              <div className="px-3 py-2 bg-[#fbfcfe] dark:bg-white/5 border-b border-slate-100 dark:border-slate-800">
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
                   Available Cars
                 </p>
               </div>
@@ -89,7 +89,7 @@ export default function SearchSuggestions({
                         )}
                       </div>
 
-                      <div className="flex items-center gap-1 text-[11px] text-slate-600">
+                      <div className="flex items-center gap-1 text-[11px] text-slate-600 dark:text-slate-400">
                         {car.dealerName && (
                           <>
                             <span className="truncate">{car.dealerName}</span>
@@ -114,8 +114,8 @@ export default function SearchSuggestions({
           {attributeSuggestions.length > 0 && (
             <>
               {carSuggestions.length > 0 && (
-                <div className="px-4 sm:px-6 py-3 bg-[#fbfcfe] dark:bg-[#111111] border-b border-[#ddd4c8] dark:border-slate-800">
-                  <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-slate-500">
+                <div className="px-4 sm:px-6 py-3 bg-[#fbfcfe] dark:bg-white/5 border-b border-slate-100 dark:border-slate-800">
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
                     Makes & Models
                   </p>
                 </div>

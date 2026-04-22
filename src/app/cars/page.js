@@ -143,16 +143,16 @@ export default async function CarsPage({ searchParams }) {
         
         {/* Header Section */}
         <div className="mb-16">
-          <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-4">
-            <Link href="/" className="hover:text-[#1A202C] transition-colors">Home</Link>
+          <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-400 mb-4">
+            <Link href="/" className="hover:text-[#111827] dark:hover:text-white transition-colors">Home</Link>
             <span>/</span>
-            <span className="text-[#1A202C]">Inventory</span>
+            <span className="text-[#111827] dark:text-white">Inventory</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold text-[#1A202C] tracking-tight leading-[1.1] mb-6">
+          <h1 className="text-4xl sm:text-6xl font-bold text-[#111827] dark:text-white tracking-tight leading-[1.1] mb-6">
             Explore the <br />
-            <span className="editorial-heading text-[#718096]">Available Network.</span>
+            <span className="editorial-heading text-[#38A169]">Available Network.</span>
           </h1>
-          <p className="text-[#718096] text-lg font-medium max-w-2xl">
+          <p className="text-[#718096] dark:text-slate-400 text-lg font-medium max-w-2xl">
             Currently listing {total.toLocaleString()} verified vehicles across East Africa.
             Every unit is checked for compliance and duty transparency.
           </p>
@@ -178,12 +178,12 @@ export default async function CarsPage({ searchParams }) {
             />
             
             {/* Context Card */}
-            <div className="bg-[#F7FAFC] border border-[#E2E8F0] p-8" style={{ borderRadius: 'var(--radius)' }}>
-              <h3 className="text-sm font-bold text-[#1A202C] uppercase tracking-widest mb-4">Concierge</h3>
-              <p className="text-sm text-[#718096] leading-relaxed mb-6 font-medium">
+            <div className="bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-8" style={{ borderRadius: 'var(--radius)' }}>
+              <h3 className="text-sm font-bold text-[#111827] dark:text-white uppercase tracking-widest mb-4">Concierge</h3>
+              <p className="text-sm text-[#718096] dark:text-slate-400 leading-relaxed mb-6 font-medium">
                 Can't find it? Our network has access to off-market inventory and direct Japan imports.
               </p>
-              <Link href="/contact" className="block text-center bg-[#1A202C] text-white py-3 text-[10px] font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
+              <Link href="/contact" className="block text-center bg-[#111827] dark:bg-white dark:text-[#111827] text-white py-3 text-[10px] font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
                 Request Sourcing
               </Link>
             </div>
@@ -202,11 +202,11 @@ export default async function CarsPage({ searchParams }) {
 
             {/* Results Grid */}
             {sortedCars.length === 0 ? (
-              <div className="py-32 text-center bg-[#F7FAFC] border border-[#EDF2F7]" style={{ borderRadius: 'var(--radius)' }}>
-                <Search className="w-12 h-12 text-[#CBD5E0] mx-auto mb-6" />
-                <h2 className="text-2xl font-bold text-[#1A202C] mb-2">No matches found</h2>
-                <p className="text-[#718096] font-medium mb-8">Try adjusting your filters or resetting your search.</p>
-                <Link href="/cars" className="inline-flex bg-[#1A202C] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
+              <div className="py-32 text-center bg-[#F7FAFC] dark:bg-[#111111] border border-[#EDF2F7] dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
+                <Search className="w-12 h-12 text-[#CBD5E0] dark:text-slate-700 mx-auto mb-6" />
+                <h2 className="text-2xl font-bold text-[#111827] dark:text-white mb-2">No matches found</h2>
+                <p className="text-[#718096] dark:text-slate-400 font-medium mb-8">Try adjusting your filters or resetting your search.</p>
+                <Link href="/cars" className="inline-flex bg-[#111827] dark:bg-white dark:text-[#111827] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
                   Clear All Filters
                 </Link>
               </div>
@@ -262,7 +262,7 @@ export default async function CarsPage({ searchParams }) {
 
 function InventoryCard({ car, userLat, userLng }) {
   const img   = car.images?.[0]?.url;
-  const title = `${car.year} ${car.make} ${car.model}`;
+  const title = `${car.make} ${car.model}`;
   const dist  = userLat && car.dealer?.lat ? Math.round(distance(userLat, userLng, car.dealer.lat, car.dealer.lng)) : null;
 
   const compareCar = {
@@ -272,46 +272,63 @@ function InventoryCard({ car, userLat, userLng }) {
   };
 
   return (
-    <article className="group flex flex-col h-full bg-white transition-all border-b border-transparent hover:border-[#38A169]">
-      <Link href={`/cars/${car.id}`} className="relative aspect-[4/3] bg-[#EDF2F7] overflow-hidden mb-6 block" style={{ borderRadius: 'var(--radius)' }}>
+    <article className="group flex flex-col h-full bg-white dark:bg-[#111111] border border-slate-100 dark:border-slate-800 transition-all hover:border-[#38A169] dark:hover:border-[#38A169] shadow-sm hover:shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
+      <Link href={`/cars/${car.id}`} className="relative aspect-[16/11] bg-slate-100 dark:bg-slate-900 overflow-hidden block" style={{ borderTopLeftRadius: 'var(--radius)', borderTopRightRadius: 'var(--radius)' }}>
         {img ? (
             <Image src={img} alt={title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-[#718096] text-[10px] font-bold uppercase tracking-widest">No Image Available</div>
+          <div className="w-full h-full flex items-center justify-center text-slate-400 text-[10px] font-bold uppercase tracking-widest">No Image Available</div>
         )}
 
         <div className="absolute top-4 left-4">
-          <span className="bg-white/90 backdrop-blur-md text-[#1A202C] text-[9px] font-bold px-2 py-1 uppercase tracking-widest shadow-sm" style={{ borderRadius: '2px' }}>
+          <span className="bg-white/90 dark:bg-[#111111]/90 backdrop-blur-md text-[#111827] dark:text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest shadow-sm" style={{ borderRadius: '2px' }}>
             {car.dutyPaid ? "DUTY PAID" : "DIRECT IMPORT"}
           </span>
         </div>
 
         {dist !== null && (
-          <span className="absolute bottom-4 right-4 bg-[#1A202C]/80 backdrop-blur-md text-white text-[9px] font-bold px-3 py-1.5 uppercase tracking-widest" style={{ borderRadius: '2px' }}>
+          <span className="absolute bottom-4 right-4 bg-[#111827]/80 backdrop-blur-md text-white text-[9px] font-bold px-3 py-1.5 uppercase tracking-widest" style={{ borderRadius: '2px' }}>
             {dist}km away
           </span>
         )}
       </Link>
 
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 p-5">
         <div className="mb-4">
-          <p className="text-[10px] font-bold text-[#718096] uppercase tracking-widest mb-1">{car.dealer?.name || "Verified Dealer"}</p>
-          <Link href={`/cars/${car.id}`}>
-            <h3 className="text-base font-bold text-[#1A202C] group-hover:text-[#38A169] transition-colors line-clamp-1">{title}</h3>
-          </Link>
-          <p className="text-xs text-[#718096] mt-2 line-clamp-2 leading-relaxed font-medium">
-            {car.bodyType?.replace(/_/g, ' ')} • {car.fuelType} • {car.transmission?.toLowerCase()} {car.mileage && `• ${Math.round(car.mileage).toLocaleString()} km`}
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <span className="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-bold px-1.5 py-0.5" style={{ borderRadius: '1px' }}>{car.year}</span>
+            <Link href={`/cars/${car.id}`}>
+              <h3 className="text-base font-bold text-[#111827] dark:text-white group-hover:text-[#38A169] transition-colors line-clamp-1">{title}</h3>
+            </Link>
+          </div>
+          
+          <p className="text-[11px] text-[#718096] dark:text-slate-400 font-medium mb-4 flex flex-wrap items-center gap-x-1.5">
+             {car.horsepower && <span>{car.horsepower} HP</span>}
+             {car.horsepower && car.torque && <span>•</span>}
+             {car.torque && <span>{car.torque} Nm</span>}
+             {(car.horsepower || car.torque) && car.fuelType && <span>•</span>}
+             {car.fuelType && <span className="capitalize">{car.fuelType.toLowerCase()}</span>}
+             {car.transmission && <span>•</span>}
+             {car.transmission && <span className="capitalize">{car.transmission.toLowerCase()}</span>}
+             {(!car.horsepower && !car.torque) && (
+                <>
+                   <span>{car.bodyType?.replace(/_/g, ' ')}</span>
+                   {car.mileage && <span>• {Math.round(car.mileage).toLocaleString()} km</span>}
+                </>
+             )}
           </p>
+          
+          <p className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{car.dealer?.name || "Verified Dealer"}</p>
         </div>
 
-        <div className="mt-auto pt-6 flex items-center justify-between border-t border-[#EDF2F7]">
+        <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-50 dark:border-slate-800">
           <div>
-            <p className="text-lg font-bold text-[#1A202C]">{formatCarPrice(car)}</p>
+            <p className="text-lg font-bold text-[#111827] dark:text-white">{formatCarPrice(car)}</p>
           </div>
-          <div className="flex items-center gap-4">
-            <CompareButton car={compareCar} className="w-5 h-5 text-[#718096] hover:text-[#1A202C] transition-colors" />
-            <Link href={`/cars/${car.id}`} className="text-[#38A169] text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 hover:opacity-70 transition-opacity">
-              Details <ArrowUpRight className="w-3 h-3" />
+          <div className="flex items-center gap-3">
+            <CompareButton car={compareCar} className="w-4 h-4 text-slate-400 hover:text-[#111827] dark:hover:text-white transition-colors" />
+            <Link href={`/cars/${car.id}`} className="bg-slate-50 dark:bg-slate-800 text-[#111827] dark:text-white text-[9px] font-bold uppercase tracking-widest px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" style={{ borderRadius: '2px' }}>
+              View Offer
             </Link>
           </div>
         </div>
