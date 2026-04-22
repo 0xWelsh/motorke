@@ -143,42 +143,49 @@ function FAQCategory({ category, items }) {
   const [openId, setOpenId] = useState(null);
 
   const icons = {
-    "For Buyers": <Shield className="w-5 h-5 text-blue-600" />,
-    "For Dealers": <Zap className="w-5 h-5 text-amber-600" />,
-    "Technical & Logistics": <MapPin className="w-5 h-5 text-green-600" />,
-    "Trust & Security": <CreditCard className="w-5 h-5 text-rose-600" />,
+    "For Buyers": <Shield className="w-5 h-5 text-[#38A169]" />,
+    "For Dealers": <Zap className="w-5 h-5 text-[#111827] dark:text-white" />,
+    "Technical & Logistics": <MapPin className="w-5 h-5 text-[#718096]" />,
+    "Trust & Security": <CreditCard className="w-5 h-5 text-[#111827] dark:text-white" />,
   };
 
   return (
     <div className="mb-12">
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex items-center gap-3 mb-8">
         {icons[category]}
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{category}</h2>
+        <h2 className="text-[10px] font-bold text-[#111827] dark:text-white uppercase tracking-[0.2em]">{category}</h2>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {items.map((item, idx) => (
           <div
             key={idx}
-            className="border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden hover:border-slate-300 transition"
+            className={`border transition-all duration-300 ${
+              openId === idx 
+                ? "border-[#38A169]/30 bg-slate-50 dark:bg-[#111111]/40" 
+                : "border-slate-100 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-600"
+            }`}
+            style={{ borderRadius: 'var(--radius)' }}
           >
             <button
               onClick={() => setOpenId(openId === idx ? null : idx)}
-              className="w-full px-6 py-4 flex items-start justify-between gap-4 bg-white hover:bg-slate-50 dark:bg-slate-900 transition"
+              className="w-full px-8 py-6 flex items-start justify-between gap-4 bg-transparent transition"
             >
-              <span className="text-left font-semibold text-slate-900 dark:text-white text-sm md:text-base">
+              <span className={`text-left font-bold uppercase tracking-tight text-[11px] sm:text-xs leading-relaxed ${
+                openId === idx ? "text-[#111827] dark:text-white" : "text-[#718096] dark:text-slate-500"
+              }`}>
                 {item.q}
               </span>
               <ChevronDown
-                className={`w-5 h-5 text-slate-600 flex-shrink-0 transition-transform ${
-                  openId === idx ? "rotate-180" : ""
+                className={`w-5 h-5 transition-transform ${
+                  openId === idx ? "rotate-180 text-[#38A169]" : "text-slate-400 dark:text-slate-600"
                 }`}
               />
             </button>
 
             {openId === idx && (
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200">
-                <p className="text-slate-700 text-sm leading-relaxed">{item.a}</p>
+              <div className="px-8 pb-8 animate-in fade-in slide-in-from-top-2 duration-300">
+                <p className="text-sm font-medium text-[#718096] dark:text-slate-400 leading-relaxed max-w-3xl">{item.a}</p>
               </div>
             )}
           </div>
@@ -190,20 +197,20 @@ function FAQCategory({ category, items }) {
 
 export default function FAQPage() {
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white dark:bg-[#0a0a0a] min-h-screen transition-colors duration-300">
       {/* Header */}
-      <section className="bg-white pt-32 sm:pt-40 pb-20 px-6 border-b border-[#EDF2F7]">
+      <section className="bg-white dark:bg-[#0a0a0a] pt-32 sm:pt-40 pb-20 px-6 border-b border-slate-100 dark:border-slate-800">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-8">
+          <div className="flex items-center justify-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-8">
             <span>Resources</span>
             <span>/</span>
-            <span className="text-[#1A202C]">Knowledge Base</span>
+            <span className="text-[#111827] dark:text-white">Knowledge Base</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold text-[#1A202C] tracking-tight leading-[1.1] mb-6">
+          <h1 className="text-4xl sm:text-6xl font-bold text-[#111827] dark:text-white tracking-tight leading-[1.1] mb-6">
             Frequently <br />
-            <span className="editorial-heading text-[#718096]">Asked Questions.</span>
+            <span className="editorial-heading text-[#718096] dark:text-slate-400">Asked Questions.</span>
           </h1>
-          <p className="text-[#718096] text-lg font-medium max-w-2xl mx-auto">
+          <p className="text-[#718096] dark:text-slate-400 text-lg font-medium max-w-2xl mx-auto leading-relaxed">
             Everything you need to know about buying, selling, and trusting the Motorke network. 
             Direct, transparent, and verified.
           </p>
@@ -218,10 +225,10 @@ export default function FAQPage() {
           ))}
 
           {/* Need Support */}
-          <div className="mt-32 pt-20 border-t border-[#EDF2F7] text-center">
-             <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-6">Still have questions?</h3>
-             <h4 className="text-3xl font-bold text-[#1A202C] mb-8">Reach our support terminal.</h4>
-             <Link href="/contact" className="inline-block bg-[#1A202C] text-white px-10 py-5 text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
+          <div className="mt-32 pt-20 border-t border-slate-100 dark:border-slate-800 text-center">
+             <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-6">Still have questions?</h3>
+             <h4 className="text-3xl font-bold text-[#111827] dark:text-white mb-10">Reach our support terminal.</h4>
+             <Link href="/contact" className="inline-block bg-[#111827] dark:bg-white text-white dark:!text-black px-12 py-5 text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98] shadow-2xl" style={{ borderRadius: 'var(--radius)' }}>
                 Contact Support Hub
              </Link>
           </div>
