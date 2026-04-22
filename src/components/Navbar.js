@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { 
@@ -16,27 +16,18 @@ import NotificationsBell from "@/components/NotificationsBell";
 import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Navbar({ user }) {
+  const router    = useRouter();
+
+  const { debouncedTerm } = useDebouncedSearch(search, 300);
+
   const [open,      setOpen]      = useState(false);
   const [userMenu,  setUserMenu]  = useState(false);
   const [search,    setSearch]    = useState("");
-  const [scrolled,  setScrolled]  = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const menuRef   = useRef(null);
   const searchRef = useRef(null);
-  const router    = useRouter();
-  const pathname  = usePathname();
-  const isHome    = pathname === "/";
-  const isOpaque  = scrolled || !isHome;
-
-  const { debouncedTerm } = useDebouncedSearch(search, 300);
-
-  useEffect(() => {
-    const s = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", s);
-    return () => window.removeEventListener("scroll", s);
-  }, []);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -46,6 +37,7 @@ export default function Navbar({ user }) {
   }, [open]);
 
   useEffect(() => {
+    // Standard effect for clicking outside
     const h = (e) => { if (menuRef.current && !menuRef.current.contains(e.target)) setUserMenu(false); };
     document.addEventListener("mousedown", h);
     return () => document.removeEventListener("mousedown", h);
@@ -94,35 +86,20 @@ export default function Navbar({ user }) {
 
   return (
     <>
-      <nav className={clsx(
-        "fixed top-0 z-50 transition-all duration-300 w-full flex items-center h-16 md:h-20",
-        isOpaque
-          ? "bg-white border-b border-gray-100 shadow-sm"
-          : "bg-transparent text-white"
-      )}>
+      <nav className="fixed top-0 z-50 w-full flex items-center h-16 md:h-20 bg-white border-b border-gray-100 shadow-sm">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="flex items-center justify-between gap-8 h-full">
 
             {/* LOGO */}
             <Link href="/" className="flex items-center gap-2 shrink-0 transition-transform active:scale-95">
               <div className="relative h-8 md:h-10 w-32 md:w-40">
-                {isOpaque ? (
-                  <Image
-                    src="/logos/logo-light.png"
-                    alt="Motorske"
-                    fill
-                    className="object-contain"
-                    priority
-                  />
-                ) : (
-                  <Image
-                    src="/logos/logo-dark.png"
-                    alt="Motorske"
-                    fill
-                    className="object-contain"
-                    priority
-                  />
-                )}
+                <Image
+                  src="/logos/logo-light.png"
+                  alt="Motorske"
+                  fill
+                  className="object-contain"
+                  priority
+                />
               </div>
             </Link>
 
@@ -130,20 +107,12 @@ export default function Navbar({ user }) {
             <div className="hidden lg:flex items-center gap-6">
               {links.map(({ href, label }) => (
                 <Link key={href} href={href}
-                  className={clsx(
-                    "text-[13px] font-bold uppercase tracking-widest transition-all hover:opacity-70",
-                    isOpaque ? "text-[#1A202C]" : "text-white"
-                  )}>
+                  className="text-[13px] font-bold uppercase tracking-widest text-[#1A202C] transition-all hover:opacity-70">
                   {label}
                 </Link>
               ))}
               <Link href="/contact" 
-                className={clsx(
-                  "px-6 py-2 text-[13px] font-bold uppercase tracking-widest border transition-all hover:scale-[0.98]",
-                  isOpaque 
-                    ? "border-[#1A202C] text-[#1A202C] hover:bg-[#1A202C] hover:text-white" 
-                    : "border-white text-white hover:bg-white hover:text-[#1A202C]"
-                )}
+                className="px-6 py-2 text-[13px] font-bold uppercase tracking-widest border border-[#1A202C] text-[#1A202C] transition-all hover:bg-[#1A202C] hover:text-white"
                 style={{ borderRadius: 'var(--radius)' }}>
                 Contact
               </Link>
@@ -152,21 +121,13 @@ export default function Navbar({ user }) {
             {/* SEARCH (Minimalist) */}
             <div ref={searchRef} className="hidden md:flex flex-1 max-w-sm relative group">
               <form onSubmit={handleSearch} className="w-full relative">
-                <Search className={clsx(
-                  "absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors",
-                  isOpaque ? "text-[#718096]" : "text-white/70"
-                )} />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#718096]" />
                 <input
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                   placeholder="Search vehicles..."
-                  className={clsx(
-                    "w-full h-11 pl-11 pr-5 text-sm font-medium outline-none transition-all",
-                    isOpaque 
-                      ? "bg-[#EDF2F7] focus:bg-white border focus:border-[#1A202C]" 
-                      : "bg-white/10 backdrop-blur-md border border-white/20 focus:bg-white/20 text-white placeholder:text-white/60"
-                  )}
+                  className="w-full h-11 pl-11 pr-5 text-sm font-medium outline-none transition-all bg-[#EDF2F7] focus:bg-white border focus:border-[#1A202C]"
                   style={{ borderRadius: 'var(--radius)' }}
                 />
               </form>
@@ -193,10 +154,7 @@ export default function Navbar({ user }) {
                   <div className="relative" ref={menuRef}>
                     <button
                       onClick={() => setUserMenu(!userMenu)}
-                      className={clsx(
-                        "flex items-center gap-3 h-11 px-3 transition-all",
-                        isOpaque ? "bg-[#EDF2F7] hover:bg-[#E2E8F0]" : "bg-white/10 hover:bg-white/20"
-                      )}
+                      className="flex items-center gap-3 h-11 px-3 transition-all bg-[#EDF2F7] hover:bg-[#E2E8F0]"
                       style={{ borderRadius: 'var(--radius)' }}
                     >
                       {user.avatarUrl ? (
@@ -206,10 +164,10 @@ export default function Navbar({ user }) {
                           {user.name?.[0]}
                         </div>
                       )}
-                      <span className={clsx("text-sm font-bold", isOpaque ? "text-[#1A202C]" : "text-white")}>
+                      <span className="text-sm font-bold text-[#1A202C]">
                         Menu
                       </span>
-                      <ChevronDown className={clsx("w-3 h-3 transition-transform duration-300", userMenu && "rotate-180", isOpaque ? "text-gray-400" : "text-white/60")} />
+                      <ChevronDown className={clsx("w-3 h-3 transition-transform duration-300", userMenu && "rotate-180", "text-gray-400")} />
                     </button>
 
                     {userMenu && (
@@ -236,7 +194,7 @@ export default function Navbar({ user }) {
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
-                  <Link href="/login" className={clsx("text-sm font-bold transition-opacity hover:opacity-70", isOpaque ? "text-[#1A202C]" : "text-white")}>
+                  <Link href="/login" className="text-sm font-bold text-[#1A202C] transition-opacity hover:opacity-70">
                     Sign In
                   </Link>
                   <Link href="/signup" 
@@ -250,10 +208,7 @@ export default function Navbar({ user }) {
               {/* MOBILE MENU TOGGLE */}
               <button
                 onClick={() => setOpen(!open)}
-                className={clsx(
-                  "lg:hidden w-11 h-11 flex items-center justify-center transition-all",
-                  isOpaque ? "bg-[#EDF2F7] text-[#1A202C]" : "bg-white/10 text-white"
-                )}
+                className="lg:hidden w-11 h-11 flex items-center justify-center transition-all bg-[#EDF2F7] text-[#1A202C]"
                 style={{ borderRadius: 'var(--radius)' }}
               >
                 {open ? <X size={24} /> : <Menu size={24} />}
