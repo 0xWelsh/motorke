@@ -88,8 +88,8 @@ export default async function HomePage() {
   const { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews } = await getCachedData();
   
   const showcaseItems = [
-    ...(featured || []).slice(0, 4).map(c => ({ ...c, type: 'car' })),
-    ...(highlightReviews || []).slice(0, 4).map(r => ({ ...r, type: 'review' }))
+    ...(featured || hotThisWeek || newArrivals || []).slice(0, 6).map(c => ({ ...c, type: 'car' })),
+    ...(highlightReviews || []).slice(0, 6).map(r => ({ ...r, type: 'review' }))
   ].sort(() => Math.random() - 0.5);
   
   // Sort hot cars by view count and take top 8
@@ -107,8 +107,8 @@ export default async function HomePage() {
       {/* Dynamic Hero Section */}
       <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-gray-100">
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="max-w-4xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-7 xl:col-span-8">
               <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold text-[#111827] dark:text-[#b9c5e0] leading-[0.95] tracking-tight mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
                 Moving the world<br />
                 <span className="editorial-heading text-[#38A169]">with transparency.</span>
@@ -133,7 +133,7 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="hidden lg:block animate-in fade-in slide-in-from-right-12 duration-1000 delay-300">
+            <div className="hidden lg:block lg:col-span-5 xl:col-span-4 lg:pl-12 animate-in fade-in slide-in-from-right-12 duration-1000 delay-300">
               <HeroShowcase items={showcaseItems} />
             </div>
           </div>
