@@ -101,7 +101,10 @@ export default function Navbar({ user }) {
 
           {/* LOGO */}
           <Link href="/" className="flex items-center gap-2 shrink-0 group transition-transform active:scale-95">
-            <img src="/headerlogo.png" alt="Motorke Digital Showroom" className="h-10 sm:h-12 object-contain" />
+            <picture>
+              <source srcSet="/logos/white_on_black.png" media="(prefers-color-scheme: dark)" />
+              <img src="/logos/black_on_white.png" alt="Welsh Motors Digital Showroom" className="h-10 sm:h-12 object-contain" />
+            </picture>
           </Link>
 
           {/* NAV LINKS */}
@@ -216,7 +219,10 @@ export default function Navbar({ user }) {
           <div className="ml-auto h-full w-full max-w-sm bg-[#f5f3ef] border-l border-[#e7e1d8] p-5 sm:p-6 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div className="inline-flex items-center gap-2.5">
-                <img src="/headerlogo.png" alt="Motorke Digital Showroom" className="h-10 object-contain" />
+                <picture>
+                  <source srcSet="/logos/white_on_black.png" media="(prefers-color-scheme: dark)" />
+                  <img src="/logos/black_on_white.png" alt="Welsh Motors Digital Showroom" className="h-10 object-contain" />
+                </picture>
                 <div className="flex flex-col">
                   <span className="inline-flex items-center">
                     <span className="text-[16px] leading-none font-black uppercase tracking-[0.16em] text-slate-900 dark:text-white">MOTOR</span>
