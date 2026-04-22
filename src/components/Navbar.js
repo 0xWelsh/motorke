@@ -18,8 +18,6 @@ import ThemeToggle from "@/components/ThemeToggle";
 export default function Navbar({ user }) {
   const router    = useRouter();
 
-  const { debouncedTerm } = useDebouncedSearch(search, 300);
-
   const [open,      setOpen]      = useState(false);
   const [userMenu,  setUserMenu]  = useState(false);
   const [search,    setSearch]    = useState("");
@@ -28,6 +26,8 @@ export default function Navbar({ user }) {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const menuRef   = useRef(null);
   const searchRef = useRef(null);
+
+  const { debouncedTerm } = useDebouncedSearch(search, 300);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
