@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import Image from "next/image";
 import { 
@@ -17,6 +18,8 @@ import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Navbar({ user }) {
   const router    = useRouter();
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
   const [open,      setOpen]      = useState(false);
   const [userMenu,  setUserMenu]  = useState(false);
@@ -28,6 +31,10 @@ export default function Navbar({ user }) {
   const searchRef = useRef(null);
 
   const { debouncedTerm } = useDebouncedSearch(search, 300);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -84,9 +91,12 @@ export default function Navbar({ user }) {
     { href: "/compare", label: "Compare" },
   ];
 
+  // Logic to determine which logo to show
+  const activeLogo = (mounted && theme === "dark") ? "/logos/logo-dark.png" : "/logos/logo-light.png";
+
   return (
     <>
-      <nav className="fixed top-0 z-50 w-full flex items-center h-16 md:h-20 bg-white border-b border-gray-100 shadow-sm">
+      <nav className="fixed top-0 z-50 w-full flex items-center h-16 md:h-20 bg-white dark:bg-[#0a0a0a] border-b border-gray-100 dark:border-zinc-900 shadow-sm transition-colors duration-300">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="flex items-center justify-between gap-8 h-full">
 
@@ -94,7 +104,7 @@ export default function Navbar({ user }) {
             <Link href="/" className="flex items-center gap-2 shrink-0 transition-transform active:scale-95">
               <div className="relative h-8 md:h-10 w-32 md:w-40">
                 <Image
-                  src="/logos/logo-light.png"
+                  src={activeLogo}
                   alt="Motorske"
                   fill
                   className="object-contain"
@@ -107,12 +117,12 @@ export default function Navbar({ user }) {
             <div className="hidden lg:flex items-center gap-6">
               {links.map(({ href, label }) => (
                 <Link key={href} href={href}
-                  className="text-[13px] font-bold uppercase tracking-widest text-[#1A202C] transition-all hover:opacity-70">
+                  className="text-[13px] font-bold uppercase tracking-widest text-slate-900 dark:text-white transition-all hover:opacity-70">
                   {label}
                 </Link>
               ))}
               <Link href="/contact" 
-                className="px-6 py-2 text-[13px] font-bold uppercase tracking-widest border border-[#1A202C] text-[#1A202C] transition-all hover:bg-[#1A202C] hover:text-white"
+                className="px-6 py-2 text-[13px] font-bold uppercase tracking-widest border border-slate-900 dark:border-white text-slate-900 dark:text-white transition-all hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black"
                 style={{ borderRadius: 'var(--radius)' }}>
                 Contact
               </Link>
@@ -127,7 +137,7 @@ export default function Navbar({ user }) {
                   onChange={e => setSearch(e.target.value)}
                   onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                   placeholder="Search vehicles..."
-                  className="w-full h-11 pl-11 pr-5 text-sm font-medium outline-none transition-all bg-[#EDF2F7] focus:bg-white border focus:border-[#1A202C]"
+                  className="w-full h-11 pl-11 pr-5 text-sm font-medium outline-none transition-all bg-[#EDF2F7] dark:bg-zinc-900 focus:bg-white dark:focus:bg-black border border-transparent focus:border-slate-900 dark:focus:border-white text-slate-900 dark:text-white"
                   style={{ borderRadius: 'var(--radius)' }}
                 />
               </form>
@@ -154,7 +164,7 @@ export default function Navbar({ user }) {
                   <div className="relative" ref={menuRef}>
                     <button
                       onClick={() => setUserMenu(!userMenu)}
-                      className="flex items-center gap-3 h-11 px-3 transition-all bg-[#EDF2F7] hover:bg-[#E2E8F0]"
+                      className="flex items-center gap-3 h-11 px-3 transition-all bg-[#EDF2F7] dark:bg-zinc-900 hover:bg-[#E2E8F0] dark:hover:bg-zinc-800"
                       style={{ borderRadius: 'var(--radius)' }}
                     >
                       {user.avatarUrl ? (
@@ -164,26 +174,26 @@ export default function Navbar({ user }) {
                           {user.name?.[0]}
                         </div>
                       )}
-                      <span className="text-sm font-bold text-[#1A202C]">
+                      <span className="text-sm font-bold text-slate-900 dark:text-white">
                         Menu
                       </span>
                       <ChevronDown className={clsx("w-3 h-3 transition-transform duration-300", userMenu && "rotate-180", "text-gray-400")} />
                     </button>
 
                     {userMenu && (
-                      <div className="absolute right-0 top-full mt-3 w-64 bg-white border border-gray-100 shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2" style={{ borderRadius: 'var(--radius)' }}>
-                        <div className="px-5 py-4 bg-[#F7FAFC] border-b border-gray-100">
+                      <div className="absolute right-0 top-full mt-3 w-64 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2" style={{ borderRadius: 'var(--radius)' }}>
+                        <div className="px-5 py-4 bg-[#F7FAFC] dark:bg-black border-b border-gray-100 dark:border-zinc-800">
                           <p className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Signed in as</p>
-                          <p className="text-sm font-bold text-[#1A202C] truncate">{user.name}</p>
+                          <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{user.name}</p>
                         </div>
                         <div className="py-2">
                           {user.role === "ADMIN"  && <MenuDropdownItem href="/admin" label="Dashboard" icon={<LayoutDashboard size={18} />} />}
                           {user.role === "DEALER" && <MenuDropdownItem href="/portal" label="Portal" icon={<Store size={18} />} />}
                           <MenuDropdownItem href="/account" label="Account" icon={<User size={18} />} />
                           <MenuDropdownItem href="/account?tab=saved" label="Watchlist" icon={<Heart size={18} />} />
-                          <div className="my-2 border-t border-gray-50" />
+                          <div className="my-2 border-t border-gray-50 dark:border-zinc-800" />
                           <form action="/api/auth/logout" method="POST">
-                            <button type="submit" className="w-full flex items-center gap-3 px-5 py-3 text-sm font-bold text-rose-500 hover:bg-rose-50 transition-colors">
+                            <button type="submit" className="w-full flex items-center gap-3 px-5 py-3 text-sm font-bold text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors">
                               <LogOut size={18} /> Sign Out
                             </button>
                           </form>
@@ -194,7 +204,7 @@ export default function Navbar({ user }) {
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
-                  <Link href="/login" className="text-sm font-bold text-[#1A202C] transition-opacity hover:opacity-70">
+                  <Link href="/login" className="text-sm font-bold text-slate-900 dark:text-white transition-opacity hover:opacity-70">
                     Sign In
                   </Link>
                   <Link href="/signup" 
@@ -208,7 +218,7 @@ export default function Navbar({ user }) {
               {/* MOBILE MENU TOGGLE */}
               <button
                 onClick={() => setOpen(!open)}
-                className="lg:hidden w-11 h-11 flex items-center justify-center transition-all bg-[#EDF2F7] text-[#1A202C]"
+                className="lg:hidden w-11 h-11 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
                 style={{ borderRadius: 'var(--radius)' }}
               >
                 {open ? <X size={24} /> : <Menu size={24} />}
@@ -221,17 +231,17 @@ export default function Navbar({ user }) {
       {/* MOBILE MENU */}
       {open && (
         <div className="lg:hidden fixed inset-0 z-[200] bg-[#1A202C]/40 backdrop-blur-sm animate-in fade-in" onClick={() => setOpen(false)}>
-          <div className="ml-auto h-full w-full max-w-xs bg-white p-8 flex flex-col shadow-2xl animate-in slide-in-from-right duration-300" onClick={(e) => e.stopPropagation()}>
+          <div className="ml-auto h-full w-full max-w-xs bg-white dark:bg-[#0a0a0a] p-8 flex flex-col shadow-2xl animate-in slide-in-from-right duration-300" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-12">
               <div className="relative h-8 w-28">
                 <Image
-                  src="/logos/logo-light.png"
+                  src={activeLogo}
                   alt="Motorske"
                   fill
                   className="object-contain"
                 />
               </div>
-              <button onClick={() => setOpen(false)} className="text-[#718096] hover:text-[#1A202C] transition-colors">
+              <button onClick={() => setOpen(false)} className="text-[#718096] hover:text-slate-900 dark:hover:text-white transition-colors">
                 <X size={28} />
               </button>
             </div>
@@ -239,12 +249,12 @@ export default function Navbar({ user }) {
             <div className="flex flex-col gap-6 mb-12">
               {links.map(({ href, label }) => (
                 <Link key={href} href={href} onClick={() => setOpen(false)}
-                  className="text-lg font-bold uppercase tracking-widest text-[#1A202C] hover:text-[#38A169] transition-colors">
+                  className="text-lg font-bold uppercase tracking-widest text-slate-900 dark:text-white hover:text-[#38A169] transition-colors">
                   {label}
                 </Link>
               ))}
               <Link href="/contact" onClick={() => setOpen(false)}
-                className="text-lg font-bold uppercase tracking-widest text-[#1A202C] hover:text-[#38A169] transition-colors">
+                className="text-lg font-bold uppercase tracking-widest text-slate-900 dark:text-white hover:text-[#38A169] transition-colors">
                 Contact
               </Link>
             </div>
@@ -253,7 +263,7 @@ export default function Navbar({ user }) {
               {!user ? (
                 <>
                   <Link href="/login" onClick={() => setOpen(false)}
-                    className="block w-full py-4 text-center text-sm font-bold uppercase tracking-widest border border-[#1A202C] text-[#1A202C] hover:bg-[#1A202C] hover:text-white transition-all"
+                    className="block w-full py-4 text-center text-sm font-bold uppercase tracking-widest border border-slate-900 dark:border-white text-slate-900 dark:text-white hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
                     style={{ borderRadius: 'var(--radius)' }}>
                     Sign In
                   </Link>
@@ -265,7 +275,7 @@ export default function Navbar({ user }) {
                 </>
               ) : (
                 <Link href="/account" onClick={() => setOpen(false)}
-                  className="block w-full py-4 text-center text-sm font-bold uppercase tracking-widest bg-[#EDF2F7] text-[#1A202C] hover:bg-[#E2E8F0] transition-all"
+                  className="block w-full py-4 text-center text-sm font-bold uppercase tracking-widest bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white hover:bg-[#E2E8F0] dark:hover:bg-zinc-800 transition-all"
                   style={{ borderRadius: 'var(--radius)' }}>
                   My Account
                 </Link>
@@ -280,7 +290,7 @@ export default function Navbar({ user }) {
 
 function MenuDropdownItem({ href, label, icon }) {
   return (
-    <Link href={href} className="flex items-center gap-3 px-5 py-3 text-sm font-bold text-[#1A202C] hover:bg-[#EDF2F7] transition-all">
+    <Link href={href} className="flex items-center gap-3 px-5 py-3 text-sm font-bold text-slate-900 dark:text-white hover:bg-[#EDF2F7] dark:hover:bg-zinc-800 transition-all">
       <span className="text-[#718096]">{icon}</span>
       {label}
     </Link>
