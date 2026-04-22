@@ -199,25 +199,25 @@ export default async function HomePage() {
                   style={{ borderRadius: 'var(--radius)' }}
                 >
                   <div className="flex items-center gap-5 mb-8">
-                    <div className="w-16 h-16 shrink-0 border border-[#EDF2F7] overflow-hidden flex items-center justify-center p-2" style={{ borderRadius: 'var(--radius)' }}>
+                    <div className="w-16 h-16 shrink-0 border border-[#EDF2F7] dark:border-slate-800 overflow-hidden flex items-center justify-center p-2" style={{ borderRadius: 'var(--radius)' }}>
                       {dealer.logoUrl ? (
                          <img src={dealer.logoUrl} className="w-full h-full object-contain" alt="" />
                       ) : (
-                         <span className="text-xl font-bold text-[#1A202C]">{dealer.name[0]}</span>
+                         <span className="text-xl font-bold text-[#111827] dark:text-white">{dealer.name[0]}</span>
                       )}
                     </div>
                     <div>
-                      <h3 className="font-bold text-[#1A202C] text-lg mb-1 group-hover:text-[#38A169] transition-colors">{dealer.name}</h3>
-                      <p className="text-xs font-bold text-[#718096] uppercase tracking-widest flex items-center gap-1.5">
+                      <h3 className="font-bold text-[#111827] dark:text-white text-lg mb-1 group-hover:text-[#38A169] transition-colors">{dealer.name}</h3>
+                      <p className="text-xs font-bold text-[#718096] dark:text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
                         <MapPin className="w-3 h-3" /> {dealer.location}
                       </p>
                     </div>
                   </div>
-                  <p className="text-sm text-[#4A5568] leading-relaxed mb-10 line-clamp-2">
+                  <p className="text-sm text-[#4A5568] dark:text-slate-300 leading-relaxed mb-10 line-clamp-2">
                     {dealer.description || "Partnering with Motorske to provide premium verified vehicles."}
                   </p>
-                  <div className="pt-6 border-t border-[#EDF2F7] flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#1A202C] uppercase tracking-widest">{dealer._count?.cars || 0} Units</span>
+                  <div className="pt-6 border-t border-[#EDF2F7] dark:border-slate-800 flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#111827] dark:text-slate-300 uppercase tracking-widest">{dealer._count?.cars || 0} Units</span>
                     <span className="text-xs font-bold text-[#38A169] uppercase tracking-widest">Visit Showroom ›</span>
                   </div>
                 </Link>
