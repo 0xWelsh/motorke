@@ -161,10 +161,10 @@ export default async function HomePage() {
           <div className="container mx-auto px-6 max-w-7xl">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                <div className="max-w-xl">
-                 <h2 className="text-4xl sm:text-6xl font-normal editorial-heading text-[#111827] mb-4">Spotlight</h2>
-                 <p className="text-[#718096] text-lg font-medium">Verified listings currently receiving the most interest from our network.</p>
+                 <h2 className="text-4xl sm:text-6xl font-normal editorial-heading text-[#111827] dark:text-white mb-4">Spotlight</h2>
+                 <p className="text-[#718096] dark:text-slate-400 text-lg font-medium">Verified listings currently receiving the most interest from our network.</p>
                </div>
-               <Link href="/cars?sort=popular" className="text-[#111827] text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:opacity-70 transition-opacity">
+               <Link href="/cars?sort=popular" className="text-[#111827] dark:text-white text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:opacity-70 transition-opacity">
                  View Trending <ArrowUpRight className="w-4 h-4" />
                </Link>
             </div>
@@ -180,11 +180,11 @@ export default async function HomePage() {
 
       {/* Featured Dealerships */}
       {dealers.length > 0 && (
-        <section className="py-24 sm:py-32 bg-[#F7FAFC]">
+        <section className="py-24 sm:py-32 bg-[#F7FAFC] dark:bg-[#111111]">
           <div className="container mx-auto px-6 max-w-7xl">
             <div className="mb-20 text-center max-w-3xl mx-auto">
-              <h2 className="text-3xl sm:text-5xl font-bold text-[#1A202C] mb-6">Partner Dealerships</h2>
-              <p className="text-[#718096] text-lg font-medium leading-relaxed">
+              <h2 className="text-3xl sm:text-5xl font-bold text-[#111827] dark:text-white mb-6">Partner Dealerships</h2>
+              <p className="text-[#718096] dark:text-slate-400 text-lg font-medium leading-relaxed">
                 We work exclusively with certified dealerships that meet our strict standards for 
                 pricing transparency and vehicle verification.
               </p>
@@ -268,10 +268,10 @@ export default async function HomePage() {
           <div className="container mx-auto px-6 max-w-7xl">
             <div className="flex items-end justify-between mb-16">
               <div>
-                <h2 className="text-3xl sm:text-5xl font-bold text-[#1A202C] mb-4">Fresh Arrivals</h2>
-                <p className="text-[#718096] text-lg font-medium">The latest units added to our network within the last 7 days.</p>
+                <h2 className="text-3xl sm:text-5xl font-bold text-[#111827] dark:text-white mb-4">Fresh Arrivals</h2>
+                <p className="text-[#718096] dark:text-slate-400 text-lg font-medium">The latest units added to our network within the last 7 days.</p>
               </div>
-              <Link href="/cars?sort=newest" className="hidden sm:block text-xs font-bold uppercase tracking-widest bg-[#EDF2F7] text-[#1A202C] px-8 py-4 transition-all hover:bg-[#E2E8F0]" style={{ borderRadius: 'var(--radius)' }}>
+              <Link href="/cars?sort=newest" className="hidden sm:block text-xs font-bold uppercase tracking-widest bg-[#EDF2F7] dark:bg-[#111111] text-[#111827] dark:text-white px-8 py-4 transition-all hover:bg-[#E2E8F0]" style={{ borderRadius: 'var(--radius)' }}>
                 See All Arrivals
               </Link>
             </div>
@@ -315,14 +315,14 @@ function CarCard({ car }) {
       <div className="flex flex-col flex-1 p-5">
         <div className="mb-4">
           <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className="bg-slate-100 text-slate-500 text-[10px] font-bold px-1.5 py-0.5" style={{ borderRadius: '1px' }}>{car.year}</span>
+            <span className="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 text-[10px] font-bold px-1.5 py-0.5" style={{ borderRadius: '1px' }}>{car.year}</span>
             <Link href={`/cars/${car.id}`}>
-              <h3 className="text-lg font-bold text-[#111827] group-hover:text-[#38A169] transition-colors line-clamp-1">{title}</h3>
+              <h3 className="text-lg font-bold text-[#111827] dark:text-white group-hover:text-[#38A169] transition-colors line-clamp-1">{title}</h3>
             </Link>
           </div>
           
           {/* Specs Summary Row */}
-          <p className="text-[11px] text-[#718096] font-medium mb-4 flex flex-wrap items-center gap-x-1.5">
+          <p className="text-[11px] text-[#718096] dark:text-slate-400 font-medium mb-4 flex flex-wrap items-center gap-x-1.5">
              {car.horsepower && <span>{car.horsepower} HP</span>}
              {car.horsepower && car.torque && <span>•</span>}
              {car.torque && <span>{car.torque} Nm</span>}
@@ -334,17 +334,17 @@ function CarCard({ car }) {
 
           {/* Detailed Tags Row */}
           <div className="flex flex-wrap gap-2 mb-2">
-            <span className="bg-slate-50 text-slate-500 text-[9px] font-bold px-2 py-1 uppercase tracking-wider">{car.steering || "RHD"}</span>
-            <span className="bg-slate-50 text-slate-500 text-[9px] font-bold px-2 py-1 uppercase tracking-wider">{car.engineCC ? `${car.engineCC} CC` : "N/A"}</span>
-            <span className="bg-slate-50 text-slate-500 text-[9px] font-bold px-2 py-1 uppercase tracking-wider">{car.fuelType || "PETROL"}</span>
+            <span className="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 text-[9px] font-bold px-2 py-1 uppercase tracking-wider">{car.steering || "RHD"}</span>
+            <span className="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 text-[9px] font-bold px-2 py-1 uppercase tracking-wider">{car.engineCC ? `${car.engineCC} CC` : "N/A"}</span>
+            <span className="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 text-[9px] font-bold px-2 py-1 uppercase tracking-wider">{car.fuelType || "PETROL"}</span>
           </div>
         </div>
         
-        <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-50">
+        <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-50 dark:border-slate-800">
           <div>
-            <p className="text-lg font-bold text-[#111827]">{formatCarPrice(car)}</p>
+            <p className="text-lg font-bold text-[#111827] dark:text-white">{formatCarPrice(car)}</p>
           </div>
-          <Link href={`/cars/${car.id}`} className="bg-slate-50 text-[#111827] text-[10px] font-bold uppercase tracking-widest px-4 py-2 hover:bg-slate-200 transition-colors" style={{ borderRadius: '2px' }}>
+          <Link href={`/cars/${car.id}`} className="bg-slate-50 dark:bg-slate-800 text-[#111827] dark:text-white text-[10px] font-bold uppercase tracking-widest px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" style={{ borderRadius: '2px' }}>
             View Offer
           </Link>
         </div>

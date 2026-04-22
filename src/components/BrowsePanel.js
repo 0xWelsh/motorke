@@ -227,7 +227,7 @@ export default function BrowsePanel() {
       <div className="flex flex-col gap-1">
         <div>
           <div className="flex items-center justify-between px-2 mb-1">
-            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-300">
               Shop by brand
             </p>
             <Link
@@ -247,7 +247,7 @@ export default function BrowsePanel() {
         </div>
         <div className="mt-1">
           <div className="flex items-center justify-between px-2 mb-1">
-            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-300">
               Shop by shape
             </p>
           </div>
@@ -264,7 +264,7 @@ export default function BrowsePanel() {
       {/* Find Dealerships Near You (Geolocation) */}
       <div>
         <div className="flex items-center justify-between mb-3 px-2">
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-300">
             Find Dealerships Near You
           </p>
         </div>
