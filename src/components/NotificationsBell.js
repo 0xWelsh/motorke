@@ -32,12 +32,11 @@ export default function NotificationsBell({ variant = "portal" }) {
   const dropdownClassName = useMemo(
     () =>
       clsx(
-        "absolute right-0 top-full mt-3 w-[360px] max-w-[90vw] rounded-full border shadow-2xl z-50 overflow-hidden",
-        isAdmin || isNavbar
-          ? "bg-white border-[#ddd4c8] dark:border-slate-800 text-slate-900 dark:text-white"
-          : "bg-white dark:bg-slate-900 border-[#ddd4c8] dark:border-slate-800 text-slate-900 dark:text-white"
+        "absolute right-0 top-full mt-3 w-[400px] max-w-[90vw] border shadow-[0_20px_50px_rgba(0,0,0,0.2)] z-50 overflow-hidden",
+        "bg-white dark:bg-[#0a0a0a] border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white",
+        "rounded-[6px]"
       ),
-    [isAdmin, isNavbar]
+    []
   );
 
   const fetchNotifications = async () => {
@@ -158,13 +157,10 @@ export default function NotificationsBell({ variant = "portal" }) {
 
       {open && (
         <div className={dropdownClassName}>
-          <div className={clsx(
-            "px-4 py-3 border-b flex items-center justify-between",
-            isAdmin || isNavbar ? "border-[#ddd4c8] dark:border-slate-800" : "border-[#ddd4c8] dark:border-[#ddd4c8] dark:border-slate-800"
-          )}>
+          <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-white/5">
             <div>
-              <p className="text-sm font-bold">Notifications</p>
-              <p className={clsx("text-xs", isAdmin || isNavbar ? "text-slate-500" : "text-slate-500 dark:text-slate-400")}>
+              <p className="text-sm font-bold uppercase tracking-widest text-[#111827] dark:text-white">Notifications</p>
+              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
                 {unreadCount > 0 ? `${unreadCount} unread` : "All caught up"}
               </p>
             </div>
@@ -172,45 +168,43 @@ export default function NotificationsBell({ variant = "portal" }) {
               <button
                 type="button"
                 onClick={markAllRead}
-                className="text-xs font-semibold text-[#ff5a2f] hover:text-[#ff5a2f] inline-flex items-center gap-1"
+                className="text-[10px] font-bold text-[#ff5a2f] uppercase tracking-widest hover:opacity-70 transition-opacity flex items-center gap-1.5"
                 disabled={busy}
               >
-                <CheckCheck size={14} /> Mark all
+                <CheckCheck size={12} /> Mark all
               </button>
             )}
           </div>
 
-          <div className="max-h-96 overflow-auto">
+          <div className="max-h-[450px] overflow-auto divide-y divide-slate-50 dark:divide-slate-800/50">
             {loading ? (
-              <p className={clsx("px-4 py-6 text-sm", isAdmin || isNavbar ? "text-slate-500" : "text-slate-500 dark:text-slate-400")}>
+              <p className="px-6 py-10 text-xs font-medium text-slate-400 text-center uppercase tracking-widest">
                 Loading notifications...
               </p>
             ) : notifications.length === 0 ? (
-              <p className={clsx("px-4 py-6 text-sm", isAdmin || isNavbar ? "text-slate-500" : "text-slate-500 dark:text-slate-400")}>
+              <p className="px-6 py-10 text-xs font-medium text-slate-400 text-center uppercase tracking-widest">
                 No notifications yet.
               </p>
             ) : (
               notifications.map((item) => {
                 const itemClass = clsx(
-                  "block px-4 py-3 border-b transition-colors",
-                  isAdmin || isNavbar
-                    ? "border-[#ddd4c8] dark:border-slate-800 hover:bg-[#fbfcfe] dark:bg-[#111111]"
-                    : "border-[#ddd4c8] dark:border-[#ddd4c8] dark:border-slate-800 hover:bg-[#fbfcfe] dark:bg-[#111111] dark:hover:bg-slate-800/70",
-                  item.read ? "opacity-80" : ""
+                  "block px-6 py-5 transition-all duration-300",
+                  item.read ? "opacity-60 grayscale-[0.5]" : "bg-white dark:bg-transparent hover:bg-slate-50 dark:hover:bg-white/5"
                 );
 
                 const content = (
                   <>
-                    <div className="flex items-start justify-between gap-3">
-                      <p className="text-sm font-semibold leading-tight">{item.title}</p>
-                      {!item.read && <span className="mt-1 w-2 h-2 rounded-full bg-[#ff5a2f] shrink-0" />}
+                    <div className="flex items-start justify-between gap-4">
+                      <p className="text-[13px] font-bold leading-snug text-[#111827] dark:text-white">{item.title}</p>
+                      {!item.read && <span className="mt-1 w-2 h-2 rounded-full bg-[#ff5a2f] shrink-0 shadow-[0_0_8px_rgba(255,90,47,0.5)]" />}
                     </div>
-                    <p className={clsx("text-xs mt-1", isAdmin || isNavbar ? "text-slate-600" : "text-slate-600 dark:text-slate-300")}>
-                      {item.message}
+                    <p className="text-[12px] text-slate-600 dark:text-slate-400 leading-relaxed mt-1.5 line-clamp-2">
+                       {item.message}
                     </p>
-                    <p className={clsx("text-[11px] mt-1", isAdmin || isNavbar ? "text-slate-500" : "text-slate-500 dark:text-slate-400")}>
-                      {formatRelativeTime(item.createdAt)}
-                    </p>
+                    <div className="flex items-center gap-2 mt-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                       <span>{formatRelativeTime(item.createdAt)}</span>
+                       {item.dealership && <span>• {item.dealership}</span>}
+                    </div>
                   </>
                 );
 
@@ -221,9 +215,7 @@ export default function NotificationsBell({ variant = "portal" }) {
                       href={item.link}
                       className={itemClass}
                       onClick={() => {
-                        if (!item.read) {
-                          markRead(item.id);
-                        }
+                        if (!item.read) markRead(item.id);
                         setOpen(false);
                       }}
                     >
@@ -237,17 +229,18 @@ export default function NotificationsBell({ variant = "portal" }) {
                     key={item.id}
                     type="button"
                     className={clsx(itemClass, "w-full text-left")}
-                    onClick={() => {
-                      if (!item.read) {
-                        markRead(item.id);
-                      }
-                    }}
+                    onClick={() => { if (!item.read) markRead(item.id); }}
                   >
                     {content}
                   </button>
                 );
               })
             )}
+          </div>
+          <div className="p-4 bg-slate-50 dark:bg-white/5 border-t border-slate-100 dark:border-slate-800">
+            <Link href="/notifications" className="block text-center text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest hover:text-[#111827] dark:hover:text-white transition-colors">
+              View All Notifications
+            </Link>
           </div>
         </div>
       )}
