@@ -12,6 +12,9 @@ import {
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
 
+const HERO_BACKGROUND = "/images/mercedes.jpg";
+
+
 const getCachedData = unstable_cache(
   async () => {
     const week = new Date(); week.setDate(week.getDate() - 7);
@@ -70,7 +73,6 @@ const getCachedData = unstable_cache(
   { revalidate: 900, tags: ["homepage"] }
 );
 
-const HERO_TEXTURE = "/images/mercedes.jpg";
 
 export default async function HomePage() {
   const { featured, hotThisWeek, newArrivals, dealers, newsItems } = await getCachedData();
@@ -119,20 +121,21 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Decorative Background Element */}
-        <div className="absolute top-0 right-0 w-1/2 h-full hidden lg:block -z-0">
-          <div className="absolute inset-0 bg-[#F7FAFC] dark:bg-zinc-900/50" 
-               style={{ clipPath: 'polygon(20% 0, 100% 0, 100% 100%, 0% 100%)' }} />
-          {heroPrimary?.images?.[0]?.url && (
-             <Image 
-               src={heroPrimary.images[0].url} 
-               fill 
-               className="object-cover mix-blend-overlay grayscale opacity-20" 
-               alt="" 
-             />
-          )}
+        {/* Mercedes Brand Background Texture */}
+        <div className="absolute inset-0 -z-0 overflow-hidden pointer-events-none">
+          <Image 
+            src={HERO_BACKGROUND} 
+            fill 
+            className="object-cover" 
+            style={{ opacity: 0.06 }}
+            alt="" 
+            priority
+          />
+          {/* Subtle gradient overlay to ensure text contrast on mobile if needed */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent lg:hidden" />
         </div>
       </section>
+
 
       {/* Spotlight / Trending Section */}
       {hotSorted.length > 0 && (
