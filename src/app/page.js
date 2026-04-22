@@ -121,7 +121,7 @@ export default async function HomePage() {
 
         {/* Decorative Background Element */}
         <div className="absolute top-0 right-0 w-1/2 h-full hidden lg:block -z-0">
-          <div className="absolute inset-0 bg-[#F7FAFC]" 
+          <div className="absolute inset-0 bg-[#F7FAFC] dark:bg-zinc-900/50" 
                style={{ clipPath: 'polygon(20% 0, 100% 0, 100% 100%, 0% 100%)' }} />
           {heroPrimary?.images?.[0]?.url && (
              <Image 
