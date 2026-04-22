@@ -17,7 +17,7 @@ export const metadata = {
   description: "Compare cars from top dealerships across Kenya.",
   manifest: "/manifest.json",
   icons: {
-    icon: "/favicon.svg",
+    icon: "/favicon.png",
     apple: "/favicon.png",
   },
 };

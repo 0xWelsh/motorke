@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { MessageCircle, Send, Camera, Share2, Mail, MapPin } from "lucide-react";
 
 export default function GlobalFooter() {
@@ -50,10 +51,15 @@ export default function GlobalFooter() {
           
           {/* Brand Info */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-block mb-6">
-              <span className="text-2xl font-bold tracking-tight uppercase">
-                MOTOR<span className="text-[#38A169]">SKE</span>
-              </span>
+            <Link href="/" className="inline-block mb-6 transition-transform active:scale-95">
+              <div className="relative h-8 w-32">
+                <Image
+                  src="/logos/logo-dark.png"
+                  alt="Motorske"
+                  fill
+                  className="object-contain"
+                />
+              </div>
             </Link>
             <p className="text-[#A0AEC0] text-sm leading-relaxed max-w-sm mb-8">
               Experience the future of automotive digital showrooms. Premium vehicles, 
