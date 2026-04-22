@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin } from "lucide-react";
+import { MessageCircle, Send, Camera, Share2, Mail, MapPin } from "lucide-react";
 
 export default function GlobalFooter() {
   const pathname = usePathname() || "";
@@ -60,7 +60,7 @@ export default function GlobalFooter() {
               verified dealers, and a seamless buying journey across East Africa.
             </p>
             <div className="flex gap-4">
-              {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
+              {[MessageCircle, Send, Camera, Share2].map((Icon, i) => (
                 <a key={i} href="#" className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-[#38A169] text-white transition-all" style={{ borderRadius: 'var(--radius)' }}>
                   <Icon size={18} />
                 </a>
