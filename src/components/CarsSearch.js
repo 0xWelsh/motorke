@@ -274,7 +274,7 @@ export default function CarsSearch({
           <div className="pt-8 border-t border-[#EDF2F7] dark:border-slate-800 flex flex-col gap-4">
             <button
               type="submit"
-              className="bg-[#111827] dark:bg-white text-white dark:text-[#111827] text-[10px] font-bold uppercase tracking-widest py-4 transition-transform hover:scale-[0.98] active:scale-95"
+              className="bg-[#111827] text-white dark:bg-white dark:!text-black text-[10px] font-bold uppercase tracking-widest py-4 transition-transform hover:scale-[0.98] active:scale-95"
               style={{ borderRadius: 'var(--radius)' }}
             >
               Apply Selection

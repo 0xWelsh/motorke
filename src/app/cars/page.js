@@ -183,7 +183,7 @@ export default async function CarsPage({ searchParams }) {
               <p className="text-sm text-[#718096] dark:text-slate-400 leading-relaxed mb-6 font-medium">
                 Can't find it? Our network has access to off-market inventory and direct Japan imports.
               </p>
-              <Link href="/contact" className="block text-center bg-[#111827] dark:bg-white dark:text-[#111827] text-white py-3 text-[10px] font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
+              <Link href="/contact" className="block text-center bg-[#111827] text-white dark:bg-white dark:!text-black py-3 text-[10px] font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
                 Request Sourcing
               </Link>
             </div>
@@ -222,7 +222,7 @@ export default async function CarsPage({ searchParams }) {
             {totalPages > 1 && (
               <div className="mt-20 flex justify-center items-center gap-2">
                 {page > 1 && (
-                  <Link href={getPageLink(page - 1)} className="w-12 h-12 flex items-center justify-center border border-[#EDF2F7] text-[#1A202C] hover:bg-[#F7FAFC] transition-colors" style={{ borderRadius: 'var(--radius)' }}>
+                  <Link href={getPageLink(page - 1)} className="w-12 h-12 flex items-center justify-center border border-[#EDF2F7] dark:border-slate-800 text-[#111827] dark:text-white hover:bg-[#F7FAFC] dark:hover:bg-white/5 transition-colors" style={{ borderRadius: 'var(--radius)' }}>
                     <ChevronRight className="w-4 h-4 rotate-180" />
                   </Link>
                 )}
@@ -232,7 +232,9 @@ export default async function CarsPage({ searchParams }) {
                       return (
                         <Link key={p} href={getPageLink(p)} 
                           className={`w-12 h-12 flex items-center justify-center text-xs font-bold transition-all ${
-                            p === page ? "bg-[#1A202C] text-white" : "border border-[#EDF2F7] text-[#718096] hover:bg-[#F7FAFC]"
+                            p === page 
+                              ? "bg-[#111827] dark:bg-white text-white dark:!text-black shadow-lg" 
+                              : "border border-[#EDF2F7] dark:border-slate-800 text-[#718096] dark:text-slate-400 hover:bg-[#F7FAFC] dark:hover:bg-white/5"
                           }`}
                           style={{ borderRadius: 'var(--radius)' }}
                         >
@@ -241,13 +243,13 @@ export default async function CarsPage({ searchParams }) {
                       );
                     }
                     if ((p === 2 && page > 3) || (p === totalPages - 1 && page < totalPages - 2)) {
-                       return <span key={p} className="w-12 h-12 flex items-end justify-center text-[#CBD5E0] pb-3">...</span>;
+                       return <span key={p} className="w-12 h-12 flex items-end justify-center text-[#CBD5E0] dark:text-slate-700 pb-3">...</span>;
                     }
                     return null;
                   })}
                 </div>
                 {page < totalPages && (
-                  <Link href={getPageLink(page + 1)} className="w-12 h-12 flex items-center justify-center border border-[#EDF2F7] text-[#1A202C] hover:bg-[#F7FAFC] transition-colors" style={{ borderRadius: 'var(--radius)' }}>
+                  <Link href={getPageLink(page + 1)} className="w-12 h-12 flex items-center justify-center border border-[#EDF2F7] dark:border-slate-800 text-[#111827] dark:text-white hover:bg-[#F7FAFC] dark:hover:bg-white/5 transition-colors" style={{ borderRadius: 'var(--radius)' }}>
                     <ChevronRight className="w-4 h-4" />
                   </Link>
                 )}
