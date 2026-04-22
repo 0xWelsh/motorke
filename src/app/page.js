@@ -93,15 +93,12 @@ export default async function HomePage() {
       <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-gray-100">
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           <div className="max-w-4xl">
-            <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#38A169] mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-              Premium Automotive Market
-            </p>
-            <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold text-[#1A202C] leading-[0.95] tracking-tight mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold text-[#111827] leading-[0.95] tracking-tight mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
               Moving the world<br />
-              <span className="editorial-heading text-[#718096]">with transparency.</span>
+              <span className="editorial-heading text-[#38A169]">with transparency.</span>
             </h1>
             
-            <p className="text-lg md:text-xl text-[#4A5568] leading-relaxed max-w-2xl font-medium mb-12 opacity-80">
+            <p className="text-lg md:text-xl text-[#2D3748] leading-relaxed max-w-2xl font-medium mb-12">
               Experience a minimalist approach to car buying. We connect verified dealerships 
               directly to savvy buyers, removing the noise and clutter of traditional marketplaces.
             </p>
