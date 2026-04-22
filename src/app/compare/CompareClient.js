@@ -176,17 +176,17 @@ function estimateMonthlyLoan(price) {
 }
 
 function roadTone(score) {
-  if (typeof score !== "number") return "border-zinc-300 bg-zinc-100 text-zinc-600";
-  if (score >= 80) return "border-black bg-black text-white";
-  if (score >= 65) return "border-zinc-700 bg-zinc-800 text-zinc-100";
-  if (score >= 50) return "border-zinc-400 bg-zinc-200 text-zinc-800";
-  return "border-zinc-500 bg-zinc-300 text-zinc-900";
+  if (typeof score !== "number") return "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-500";
+  if (score >= 80) return "border-[#111827] dark:border-white bg-[#111827] dark:bg-white text-white dark:text-black";
+  if (score >= 65) return "border-slate-700 bg-slate-800 text-slate-100";
+  if (score >= 50) return "border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200";
+  return "border-slate-300 dark:border-slate-700 bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white";
 }
 
 function importTone(eligible) {
-  if (eligible === true) return "border-black bg-black text-white";
-  if (eligible === false) return "border-zinc-500 bg-zinc-200 text-zinc-800";
-  return "border-zinc-300 bg-zinc-100 text-zinc-600";
+  if (eligible === true) return "border-[#111827] dark:border-white bg-[#111827] dark:bg-white text-white dark:text-black";
+  if (eligible === false) return "border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200";
+  return "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-500";
 }
 
 export default function CompareClient({ initialCars }) {
@@ -779,22 +779,22 @@ export default function CompareClient({ initialCars }) {
   };
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white dark:bg-[#0a0a0a] min-h-screen">
       <div className="max-w-7xl mx-auto px-6 py-32 sm:py-40">
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-12">
           <div className="max-w-3xl">
-            <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-8">
+            <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-8">
               <span>Terminal</span>
               <span>/</span>
-              <span className="text-[#1A202C]">Technical Comparison</span>
+              <span className="text-[#111827] dark:text-white">Technical Comparison</span>
             </div>
-            <h1 className="text-5xl sm:text-7xl font-bold text-[#1A202C] tracking-tight leading-[1.05] mb-8">
+            <h1 className="text-5xl sm:text-7xl font-bold text-[#111827] dark:text-white tracking-tight leading-[1.05] mb-8">
               Spec <br />
-              <span className="editorial-heading text-[#718096]">Synthesis.</span>
+              <span className="editorial-heading text-[#718096] dark:text-slate-400">Synthesis.</span>
             </h1>
-            <p className="text-xl text-[#718096] font-medium leading-relaxed">
+            <p className="text-xl text-[#718096] dark:text-slate-400 font-medium leading-relaxed">
               Side-by-side mechanical analysis with architectural precision. 
               Integrating Kenya-specific operational data: TCO models, road suitability, 
               and central parts availability.
@@ -808,8 +808,8 @@ export default function CompareClient({ initialCars }) {
                 onClick={() => setPreset(option.id)}
                 className={`px-6 h-12 text-[10px] font-bold uppercase tracking-widest transition-all border ${
                   preset === option.id
-                    ? "bg-[#1A202C] text-white border-[#1A202C]"
-                    : "bg-white text-[#718096] border-[#EDF2F7] hover:border-[#1A202C] hover:text-[#1A202C]"
+                    ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:!text-black dark:border-white shadow-xl"
+                    : "bg-white dark:bg-[#111111] text-[#718096] dark:text-slate-400 border-slate-100 dark:border-slate-800 hover:border-[#111827] dark:hover:border-white"
                 }`}
                 style={{ borderRadius: 'var(--radius)' }}
               >
@@ -820,7 +820,7 @@ export default function CompareClient({ initialCars }) {
             <button
               onClick={() => setShowDiffOnly(!showDiffOnly)}
               className={`px-6 h-12 flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest transition-all border ${
-                showDiffOnly ? "bg-[#38A169] text-white border-[#38A169]" : "bg-white text-[#718096] border-[#EDF2F7] hover:border-[#1A202C]"
+                showDiffOnly ? "bg-[#38A169] text-white border-[#38A169]" : "bg-white dark:bg-[#111111] text-[#718096] dark:text-slate-400 border-slate-100 dark:border-slate-800 hover:border-[#38A169]"
               }`}
               style={{ borderRadius: 'var(--radius)' }}
             >
@@ -830,7 +830,7 @@ export default function CompareClient({ initialCars }) {
             
             <button
               onClick={clearCompare}
-              className="px-6 h-12 bg-white border border-[#EDF2F7] text-[#718096] hover:text-[#1A202C] hover:border-[#1A202C] text-[10px] font-bold uppercase tracking-widest transition-all"
+              className="px-6 h-12 bg-white dark:bg-[#111111] border border-slate-100 dark:border-slate-800 text-[#718096] dark:text-slate-400 hover:text-[#111827] dark:hover:text-white hover:border-[#111827] dark:hover:border-white text-[10px] font-bold uppercase tracking-widest transition-all"
               style={{ borderRadius: 'var(--radius)' }}
             >
               Reset Terminal
@@ -846,11 +846,11 @@ export default function CompareClient({ initialCars }) {
               { label: 'Top Road Score', value: `${kenyaLensSummary.bestRoadScore}/100`, sub: 'Highest Readiness' },
               { label: 'Import Eligible', value: `${kenyaLensSummary.eligibleCount}/${fullComparedCars.length} Assets`, sub: 'Fiscal Approval' }
             ].map((stat, i) => (
-              <div key={i} className="bg-[#F7FAFC] border border-[#E2E8F0] p-10" style={{ borderRadius: 'var(--radius)' }}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-4">{stat.label}</p>
+              <div key={i} className="bg-[#F7FAFC] dark:bg-[#111111] border border-slate-100 dark:border-slate-800 p-10 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-4">{stat.label}</p>
                 <div className="flex items-baseline gap-3">
-                  <p className="text-3xl font-bold text-[#1A202C] tabular-nums">{stat.value}</p>
-                  <p className="text-[10px] font-bold text-[#A0AEC0] uppercase tracking-wide">{stat.sub}</p>
+                  <p className="text-3xl font-bold text-[#111827] dark:text-white tabular-nums">{stat.value}</p>
+                  <p className="text-[10px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-wide">{stat.sub}</p>
                 </div>
               </div>
             ))}
@@ -859,7 +859,7 @@ export default function CompareClient({ initialCars }) {
 
         {/* Analytics Engine (Radar) */}
         {fullComparedCars.length >= 2 && (
-          <div className="mb-24 bg-[#1A202C] p-12 sm:p-20 overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
+          <div className="mb-32 bg-[#111827] dark:bg-[#111111] p-12 sm:p-20 overflow-hidden shadow-2xl" style={{ borderRadius: 'var(--radius)' }}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
               <div>
                 <h2 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-8">Performance Dimensions</h2>
@@ -867,11 +867,11 @@ export default function CompareClient({ initialCars }) {
                    Vector analysis of four critical mechanical pillars. The synthesis highlights 
                    how each unit balances fiscal efficiency against high-performance dynamics.
                 </p>
-                <div className="space-y-4">
+                <div className="space-y-6">
                    {fullComparedCars.map((car, ci) => (
                       <div key={car.id} className="flex items-center gap-4 group">
                          <div className="w-12 h-[2px] transition-all" style={{ background: ci === 0 ? '#38A169' : ci === 1 ? '#FFFFFF' : '#718096' }} />
-                         <span className="text-[11px] font-bold text-white uppercase tracking-widest group-hover:text-white transition-colors">
+                         <span className="text-[11px] font-bold text-white uppercase tracking-widest group-hover:text-[#38A169] transition-colors">
                             {car.year} {car.make} {car.model}
                          </span>
                       </div>
@@ -930,74 +930,75 @@ export default function CompareClient({ initialCars }) {
         {/* Winner Rail */}
         <div className="mb-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {winnerRail.map((item) => (
-            <div key={item.title} className="p-8 border border-[#EDF2F7]" style={{ borderRadius: 'var(--radius)' }}>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#A0AEC0] mb-4">{item.title}</p>
+            <div key={item.title} className="p-8 border border-slate-100 dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#A0AEC0] dark:text-slate-600 mb-4">{item.title}</p>
               {item.car ? (
                 <Link href={`/cars/${item.car.id}`} className="group block">
-                  <h3 className="text-lg font-bold text-[#1A202C] mb-1 group-hover:text-[#38A169] transition-colors">{item.car.year} {item.car.make}</h3>
-                  <p className="text-[10px] font-bold text-[#718096] uppercase tracking-widest">{item.sub}</p>
+                  <h3 className="text-lg font-bold text-[#111827] dark:text-white mb-1 group-hover:text-[#38A169] transition-colors">{item.car.year} {item.car.make}</h3>
+                  <p className="text-[10px] font-bold text-[#718096] dark:text-slate-500 uppercase tracking-widest">{item.sub}</p>
                 </Link>
               ) : (
-                <p className="text-sm font-medium text-[#A0AEC0]">Insufficient Data</p>
+                <p className="text-sm font-medium text-slate-300 dark:text-slate-700">Insufficient Data</p>
               )}
             </div>
           ))}
         </div>
 
         {/* Comparison Terminal (Table) */}
-        <div className="relative border border-[#EDF2F7] overflow-x-auto bg-white mb-32" style={{ borderRadius: 'var(--radius)' }}>
+        <div className="relative border border-slate-100 dark:border-slate-800 overflow-x-auto bg-white dark:bg-[#0a0a0a] mb-32 shadow-2xl" style={{ borderRadius: 'var(--radius)' }}>
           <div className="min-w-[1100px]">
              {/* Header Row */}
-             <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-[#EDF2F7]">
+             <div className="sticky top-0 z-40 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-slate-100 dark:border-slate-800">
                 <div className="grid grid-cols-[300px_1fr_1fr_1fr]">
-                   <div className="p-12 border-r border-[#EDF2F7] flex items-center">
-                      <span className="text-[10px] font-bold text-[#A0AEC0] uppercase tracking-[0.2em] transform -rotate-180 [writing-mode:vertical-lr]">Spec Matrix</span>
+                   <div className="p-12 border-r border-slate-100 dark:border-slate-800 flex items-center">
+                      <span className="text-[10px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-[0.2em] transform -rotate-180 [writing-mode:vertical-lr]">Spec Matrix</span>
                    </div>
                    {SLOT_KEYS.map((_, idx) => {
                       const car = comparedSlots[idx];
                       const hydrated = !!(car && initialCarsById.has(car.id));
                       return (
-                        <div key={idx} className="p-10 border-r border-[#EDF2F7] last:border-r-0">
+                        <div key={idx} className="p-10 border-r border-slate-100 dark:border-slate-800 last:border-r-0">
                            {car ? (
                               <div className="relative group">
-                                <button onClick={() => removeFromCompare(car.id)} className="absolute -top-4 -right-4 w-8 h-8 bg-white border border-[#EDF2F7] flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-all hover:border-[#1A202C]">
-                                   <X className="w-3.5 h-3.5" />
+                                <button onClick={() => removeFromCompare(car.id)} className="absolute -top-4 -right-4 w-8 h-8 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-all hover:border-[#111827] dark:hover:border-white z-10">
+                                   <X className="w-3.5 h-3.5 dark:text-white" />
                                 </button>
-                                <div className="aspect-[16/10] bg-[#F7FAFC] overflow-hidden mb-6" style={{ borderRadius: 'var(--radius)' }}>
+                                <div className="aspect-[16/10] bg-slate-50 dark:bg-slate-900 overflow-hidden mb-6 border border-slate-100 dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
                                    {(car?.images?.[0]?.url || car?.image) ? <Image src={car?.images?.[0]?.url || car?.image} alt={car.model} fill className="object-cover" /> : null}
                                 </div>
-                                <p className="text-[10px] font-bold text-[#A0AEC0] uppercase tracking-widest mb-1">{car.year}</p>
-                                <h3 className="text-xl font-bold text-[#1A202C] leading-snug line-clamp-2">{car.make} {car.model}</h3>
+                                <p className="text-[10px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-widest mb-1">{car.year}</p>
+                                <h3 className="text-xl font-bold text-[#111827] dark:text-white leading-snug line-clamp-2">{car.make} {car.model}</h3>
                                 {hydrated && (
                                    <div className="mt-4 flex flex-wrap gap-2">
-                                      <span className="px-2 py-1 bg-[#F7FAFC] border border-[#E2E8F0] text-[8px] font-bold text-[#718096] uppercase tracking-widest" style={{ borderRadius: '4px' }}>ROAD {getInsights(car)?.roadSuitabilityScore}</span>
+                                      <span className="px-2 py-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[8px] font-bold text-[#718096] dark:text-slate-400 uppercase tracking-widest" style={{ borderRadius: '4px' }}>ROAD {getInsights(car)?.roadSuitabilityScore}</span>
                                       <span className="px-2 py-1 bg-[#38A169]/5 border border-[#38A169]/20 text-[8px] font-bold text-[#38A169] uppercase tracking-widest" style={{ borderRadius: '4px' }}>{getInsights(car)?.importEligibility ? 'ELIGIBLE' : 'NOT ELIGIBLE'}</span>
                                    </div>
                                 )}
                               </div>
                            ) : (
-                              <div className="relative group flex flex-col items-center justify-center py-12 border-2 border-dashed border-[#EDF2F7] transition-colors hover:border-[#38A169]/40" style={{ borderRadius: 'var(--radius)' }}>
-                                 <button onClick={() => setActiveSlot(idx)} className="w-14 h-14 bg-white border border-[#EDF2F7] flex items-center justify-center transition-transform group-hover:scale-110" style={{ borderRadius: 'var(--radius)' }}>
-                                    <Search className="w-5 h-5 text-[#A0AEC0]" />
+                              <div className="relative group flex flex-col items-center justify-center py-12 border-2 border-dashed border-slate-100 dark:border-slate-800 transition-colors hover:border-[#38A169]/40" style={{ borderRadius: 'var(--radius)' }}>
+                                 <button onClick={() => setActiveSlot(idx)} className="w-14 h-14 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+                                    <Search className="w-5 h-5 text-[#A0AEC0] dark:text-slate-600" />
                                  </button>
-                                 <p className="mt-6 text-[10px] font-bold text-[#A0AEC0] uppercase tracking-widest">Awaiting Data</p>
+                                 <p className="mt-6 text-[10px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-widest">Awaiting Data</p>
                                  
                                  {activeSlot === idx && (
-                                    <div className="absolute inset-0 bg-white z-50 p-6 shadow-2xl animate-in fade-in slide-in-from-top-2" style={{ borderRadius: 'var(--radius)' }}>
+                                    <div className="absolute inset-0 bg-white dark:bg-[#111111] z-50 p-6 shadow-2xl animate-in fade-in slide-in-from-top-2" style={{ borderRadius: 'var(--radius)' }}>
                                        <input autoFocus type="text" placeholder="Search parameters..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                                          className="w-full bg-[#F7FAFC] border border-[#EDF2F7] px-5 py-4 text-sm font-bold text-[#1A202C] outline-none" style={{ borderRadius: 'var(--radius)' }} />
+                                          className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 px-5 py-4 text-sm font-bold text-[#111827] dark:text-white outline-none focus:border-[#38A169]" style={{ borderRadius: 'var(--radius)' }} />
                                        <div className="mt-6 space-y-2 max-h-[300px] overflow-y-auto no-scrollbar">
                                           {searchResults.map(res => (
-                                             <button key={res.id} onClick={() => onAddCarSearch(res)} className="w-full flex items-center gap-4 p-4 transition-colors hover:bg-[#F7FAFC]">
-                                                <div className="w-12 h-12 bg-[#EDF2F7] overflow-hidden relative" style={{ borderRadius: '4px' }}>
+                                             <button key={res.id} onClick={() => onAddCarSearch(res)} className="w-full flex items-center gap-4 p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900">
+                                                <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 overflow-hidden relative" style={{ borderRadius: 'var(--radius)' }}>
                                                    {res.image && <Image src={res.image} alt={res.model} fill className="object-cover" />}
                                                 </div>
-                                                <div className="flex-1">
-                                                   <p className="text-xs font-bold text-[#1A202C]">{res.year} {res.make} {res.model}</p>
-                                                   <p className="text-[10px] font-bold text-[#718096] uppercase">{formatCarPrice(res)}</p>
+                                                <div className="flex-1 text-left">
+                                                   <p className="text-xs font-bold text-[#111827] dark:text-white">{res.year} {res.make} {res.model}</p>
+                                                   <p className="text-[10px] font-bold text-[#718096] dark:text-slate-500 uppercase">{formatCarPrice(res)}</p>
                                                 </div>
                                              </button>
                                           ))}
+                                          {loadingSearch && <div className="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Loading Data...</div>}
                                        </div>
                                     </div>
                                  )}
@@ -1010,34 +1011,34 @@ export default function CompareClient({ initialCars }) {
              </div>
 
              {/* Matrix Rows */}
-             <div className="divide-y divide-[#F7FAFC]">
+             <div className="divide-y divide-slate-50 dark:divide-slate-900 border-t border-slate-100 dark:border-slate-800">
                 {specGroups.map(group => (
-                   <div key={group.name}>
-                      <div className="grid grid-cols-[300px_1fr] px-12 py-8 bg-[#F7FAFC] items-center">
-                         <h4 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-[0.25em]">{group.name} System</h4>
-                         <div className="h-px bg-[#E2E8F0] ml-8" />
+                   <div key={group.name} className="border-b border-slate-100 dark:border-slate-800 last:border-b-0">
+                      <div className="grid grid-cols-[300px_1fr] px-12 py-8 bg-slate-50 dark:bg-slate-900/50 items-center">
+                         <h4 className="text-[10px] font-bold text-[#111827] dark:text-white uppercase tracking-[0.25em]">{group.name} System</h4>
+                         <div className="h-px bg-slate-100 dark:bg-slate-800 ml-8" />
                       </div>
-                      <div className="divide-y divide-[#F7FAFC]">
+                      <div className="divide-y divide-slate-50 dark:divide-slate-900">
                          {group.specs.map(spec => {
                             if (!shouldShowSpec(spec)) return null;
                             const diff = isDifferent(spec, fullComparedCars);
                             if (showDiffOnly && !diff && fullComparedCars.length > 1) return null;
 
                             return (
-                               <div key={spec.label} className={`grid grid-cols-[300px_1fr_1fr_1fr] transition-colors ${diff ? 'bg-[#38A169]/5' : 'hover:bg-[#F7FAFC]'}`}>
-                                  <div className="p-8 border-r border-[#EDF2F7] flex items-center justify-between">
-                                     <span className="text-[11px] font-bold text-[#718096] uppercase tracking-widest">{spec.label}</span>
+                               <div key={spec.label} className={`grid grid-cols-[300px_1fr_1fr_1fr] transition-colors ${diff ? 'bg-[#38A169]/5' : 'hover:bg-slate-50 dark:hover:bg-slate-900'}`}>
+                                  <div className="p-8 border-r border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                     <span className="text-[11px] font-bold text-[#718096] dark:text-slate-500 uppercase tracking-widest">{spec.label}</span>
                                      {diff && <span className="w-1 h-1 bg-[#38A169] rounded-full" />}
                                   </div>
                                   {SLOT_KEYS.map((_, idx) => {
                                      const car = comparedSlots[idx];
-                                     if (!car) return <div key={idx} className="p-8 border-r border-[#EDF2F7] last:border-r-0" />;
+                                     if (!car) return <div key={idx} className="p-8 border-r border-slate-100 dark:border-slate-800 last:border-r-0" />;
                                      const { value, raw } = spec.pick(car);
                                      const best = getBest(spec, fullComparedCars);
                                      const isBest = best != null && raw === best;
                                      return (
-                                        <div key={idx} className="p-8 border-r border-[#EDF2F7] last:border-r-0 text-center font-bold tabular-nums">
-                                           <span className={`text-sm ${isBest ? 'text-[#1A202C]' : 'text-[#718096]'}`}>{value}</span>
+                                        <div key={idx} className="p-8 border-r border-slate-100 dark:border-slate-800 last:border-r-0 text-center font-bold tabular-nums">
+                                           <span className={`text-sm ${isBest ? 'text-[#111827] dark:text-white' : 'text-[#718096] dark:text-slate-500'}`}>{value}</span>
                                            {isBest && <div className="mt-2 text-[8px] font-bold text-[#38A169] uppercase tracking-widest">Optimized</div>}
                                         </div>
                                      );
@@ -1053,20 +1054,20 @@ export default function CompareClient({ initialCars }) {
         </div>
 
         {/* Action Center */}
-        <div className="pt-24 border-t border-[#EDF2F7]">
+        <div className="pt-24 border-t border-slate-100 dark:border-slate-800">
            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
               <div>
-                 <h3 className="text-2xl font-bold text-[#1A202C] mb-4">Export Result Matrix</h3>
-                 <p className="text-sm font-medium text-[#718096] leading-relaxed">
+                 <h3 className="text-2xl font-bold text-[#111827] dark:text-white mb-4">Export Result Matrix</h3>
+                 <p className="text-sm font-medium text-[#718096] dark:text-slate-400 leading-relaxed">
                     Generate a high-fidelity documentation set for your comparison. 
                     Includes full mechanical specs and regional operational scoring.
                  </p>
               </div>
               <div className="flex flex-wrap gap-4 md:justify-end">
-                 <button onClick={handleDownloadPdf} className="h-14 px-8 bg-[#1A202C] text-white text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
+                 <button onClick={handleDownloadPdf} className="h-14 px-8 bg-[#111827] dark:bg-white text-white dark:!text-black text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
                     Download Technical PDF
                  </button>
-                 <button onClick={handleSaveComparison} className="h-14 px-8 bg-white border border-[#E2E8F0] text-[#1A202C] text-xs font-bold uppercase tracking-widest hover:border-[#1A202C] transition-all" style={{ borderRadius: 'var(--radius)' }}>
+                 <button onClick={handleSaveComparison} className="h-14 px-8 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white text-xs font-bold uppercase tracking-widest hover:border-[#111827] dark:hover:border-white transition-all shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
                     {saveState === "copied" ? "URL Copied" : "Share Comparison"}
                  </button>
               </div>

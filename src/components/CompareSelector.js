@@ -13,12 +13,12 @@ export function CompareBar() {
 
   return (
     <div className="fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1rem)] sm:w-[95%] max-w-2xl animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
-      <div className="bg-[var(--brand)]/90 backdrop-blur-3xl border border-[#ddd4c8] dark:border-slate-800 rounded-full sm:rounded-full p-2 shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center justify-between gap-3 sm:gap-4">
+      <div className="bg-[#111827]/90 dark:bg-[#111111]/90 backdrop-blur-3xl border border-slate-700 dark:border-slate-800 p-2 shadow-2xl flex items-center justify-between gap-3 sm:gap-4" style={{ borderRadius: 'var(--radius)' }}>
         {/* Selected Cars Thumbnails */}
         <div className="hidden sm:flex items-center gap-2 px-2 overflow-x-auto no-scrollbar">
           {compareCars.map((car) => (
             <div key={car.id} className="relative group shrink-0">
-              <div className="w-12 h-12 rounded-full overflow-hidden bg-white dark:bg-[#111111] border border-white/20 shadow-lg transition-transform hover:scale-110">
+              <div className="w-12 h-12 overflow-hidden bg-white dark:bg-slate-900 border border-white/20 shadow-lg transition-transform hover:scale-110" style={{ borderRadius: 'var(--radius)' }}>
                 {car.image ? (
                   <Image src={car.image} alt={car.model} fill className="object-cover" />
                 ) : (
@@ -27,7 +27,7 @@ export function CompareBar() {
               </div>
               <button
                 onClick={() => removeFromCompare(car.id)}
-                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-black border border-white/20 rounded-full flex items-center justify-center text-white hover:text-white hover:bg-red-500/80 transition-all opacity-0 group-hover:opacity-100 shadow-xl"
+                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#111827] dark:bg-white border border-white/20 rounded-full flex items-center justify-center text-white dark:text-black hover:bg-red-500 dark:hover:bg-red-500 transition-all opacity-0 group-hover:opacity-100 shadow-xl"
               >
                 <span className="text-[11px] leading-none">×</span>
               </button>
@@ -36,7 +36,7 @@ export function CompareBar() {
 
           {/* Empty Slots */}
           {Array.from({ length: 3 - compareCars.length }).map((_, i) => (
-            <div key={`empty-${i}`} className="w-12 h-12 rounded-full border border-dashed border-white/20 flex items-center justify-center text-slate-900 dark:text-white/20 select-none">
+            <div key={`empty-${i}`} className="w-12 h-12 border border-dashed border-white/10 flex items-center justify-center text-white/20 select-none" style={{ borderRadius: 'var(--radius)' }}>
               <span className="text-xl">+</span>
             </div>
           ))}
@@ -45,25 +45,26 @@ export function CompareBar() {
         {/* Info + Actions */}
         <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 pr-1 sm:pr-4 w-full sm:w-auto">
           <div className="sm:hidden text-left">
-            <p className="text-[11px] font-black uppercase tracking-widest text-[var(--brand-accent)]">Compare</p>
-            <p className="text-[11px] font-bold text-slate-900 dark:text-white/70">{compareCars.length}/3 selected</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[#38A169]">Compare</p>
+            <p className="text-[10px] font-bold text-white/70">{compareCars.length}/3 selected</p>
           </div>
 
           <div className="hidden sm:block text-right">
-            <p className="text-[11px] font-black uppercase tracking-widest text-[var(--brand-accent)]">Comparison Tool</p>
-            <p className="text-xs font-bold text-slate-900 dark:text-white/70">{compareCars.length}/3 selected</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[#38A169]">Comparison Tool</p>
+            <p className="text-xs font-bold text-white/70">{compareCars.length}/3 selected</p>
           </div>
 
           <div className="flex items-center gap-2">
             <button
                onClick={clearCompare}
-               className="text-[11px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 dark:text-white transition-colors px-2 sm:px-3 h-10 flex items-center"
+               className="text-[10px] font-bold uppercase tracking-widest text-white/40 hover:text-white transition-colors px-2 sm:px-3 h-10 flex items-center"
             >
                Clear
             </button>
             <Link 
               href={compareUrl}
-              className="bg-white text-[var(--brand)] hover:bg-[var(--brand-light)] text-[11px] font-black uppercase tracking-widest px-4 sm:px-6 h-10 rounded-full sm:rounded-full flex items-center shadow-lg transition-all active:scale-95"
+              className="bg-[#38A169] text-white text-[10px] font-bold uppercase tracking-widest px-4 sm:px-6 h-10 flex items-center shadow-lg transition-all active:scale-95"
+              style={{ borderRadius: 'var(--radius)' }}
             >
               Compare
             </Link>
@@ -93,13 +94,14 @@ export function CompareButton({ car, className = "" }) {
     <button
       onClick={handleToggle}
       disabled={!selected && isFull}
-      className={`relative h-11 sm:h-10 rounded-none text-[11px] font-black uppercase tracking-widest transition-all duration-500 overflow-hidden group ${
+      className={`relative h-11 sm:h-10 text-[10px] font-bold uppercase tracking-widest transition-all duration-500 overflow-hidden group ${
         selected
-          ? "bg-[var(--brand-light)] border border-[var(--brand-accent)]/30 text-[var(--brand)] px-6"
+          ? "bg-[#38A169] text-white px-6"
           : isFull 
-            ? "bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-300 cursor-not-allowed px-4"
-            : "bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-500 hover:text-[var(--brand)] hover:border-[var(--brand-accent)]/20 hover:bg-[var(--brand-light)] px-6 active:scale-95"
+            ? "bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-slate-300 dark:text-slate-700 cursor-not-allowed px-4"
+            : "bg-white dark:bg-[#111111] border border-slate-100 dark:border-slate-800 text-[#718096] dark:text-slate-400 hover:text-[#111827] dark:hover:text-white hover:border-[#111827] dark:hover:border-white px-6 active:scale-95"
       } ${className}`}
+      style={{ borderRadius: 'var(--radius)' }}
     >
       <span className="relative z-10 flex items-center gap-2">
         {selected ? (
