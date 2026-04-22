@@ -37,224 +37,134 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white min-h-screen">
       {/* Header */}
-      <section className="bg-gradient-to-r from-slate-900 to-slate-800 text-white py-16 px-4">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Get in Touch</h1>
-          <p className="text-slate-300 text-lg">
-            Questions? Issues? We'd love to hear from you.
+      <section className="bg-white pt-32 sm:pt-40 pb-20 px-6 border-b border-[#EDF2F7]">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-8">
+            <span>Home</span>
+            <span>/</span>
+            <span className="text-[#1A202C]">Contact</span>
+          </div>
+          <h1 className="text-4xl sm:text-6xl font-bold text-[#1A202C] tracking-tight leading-[1.1] mb-6">
+            Get in <br />
+            <span className="editorial-heading text-[#718096]">Direct Touch.</span>
+          </h1>
+          <p className="text-[#718096] text-lg font-medium max-w-2xl">
+            Questions? Issues? Our network is built on transparency. Reach out via the channel that suits you best.
           </p>
         </div>
       </section>
 
       {/* Main Content */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-12">
+      <section className="py-24 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-20">
           {/* Contact Info */}
-          <div className="md:col-span-1">
-            <div className="space-y-8">
-              {/* Email */}
-              <div className="flex gap-4">
-                <Mail className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white mb-1">Email</h3>
-                  <a
-                    href="mailto:sec@welsh.co.ke"
-                    className="text-blue-600 hover:underline font-semibold"
-                  >
-                    sec@welsh.co.ke
-                  </a>
-                  <p className="text-sm text-slate-600 mt-2">
-                    Response time: 24-48 hours
-                  </p>
-                </div>
-              </div>
-
-              {/* Hours */}
-              <div className="flex gap-4">
-                <Clock className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white mb-1">Support Hours</h3>
-                  <p className="text-slate-700 text-sm">
-                    Monday – Friday: 9 AM – 6 PM EAT
-                  </p>
-                  <p className="text-slate-700 text-sm">
-                    Saturday – Sunday: 10 AM – 4 PM EAT
-                  </p>
-                </div>
-              </div>
-
-              {/* Location */}
-              <div className="flex gap-4">
-                <MapPin className="w-6 h-6 text-rose-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white mb-1">Based In</h3>
-                  <p className="text-slate-700 text-sm">Nairobi, Kenya</p>
-                </div>
-              </div>
-
-              {/* Quick Links */}
-              <div className="pt-6 border-t border-slate-200">
-                <h3 className="font-bold text-slate-900 dark:text-white mb-4">Quick Links</h3>
+          <div className="lg:col-span-4 space-y-16">
+            <div className="space-y-12">
+              {/* Channel 1 */}
+              <div>
+                <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-6">Digital Correspondence</h3>
                 <div className="space-y-2">
-                  <a href="/faq" className="block text-blue-600 hover:underline">
-                    → FAQ
-                  </a>
-                  <a href="/privacy" className="block text-blue-600 hover:underline">
-                    → Privacy Policy
-                  </a>
-                  <a href="/terms" className="block text-blue-600 hover:underline">
-                    → Terms & Conditions
-                  </a>
-                  <a href="/mission" className="block text-blue-600 hover:underline">
-                    → Our Mission
-                  </a>
+                   <a href="mailto:sec@welsh.co.ke" className="text-2xl font-bold text-[#1A202C] hover:text-[#38A169] transition-colors">sec@welsh.co.ke</a>
+                   <p className="text-sm font-medium text-[#718096]">Verified Response Time: 24h</p>
                 </div>
               </div>
+
+              {/* Channel 2 */}
+               <div>
+                <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-6">Operational Hours</h3>
+                <div className="space-y-3">
+                   <div className="flex justify-between items-center text-sm font-medium">
+                      <span className="text-[#718096]">Mon – Fri</span>
+                      <span className="text-[#1A202C]">09:00 – 18:00 EAT</span>
+                   </div>
+                   <div className="flex justify-between items-center text-sm font-medium">
+                      <span className="text-[#718096]">Sat – Sun</span>
+                      <span className="text-[#1A202C]">10:00 – 16:00 EAT</span>
+                   </div>
+                </div>
+              </div>
+
+              {/* Channel 3 */}
+              <div>
+                <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-6">HQ Terminal</h3>
+                <p className="text-lg font-bold text-[#1A202C]">Nairobi Tech Hub, Kenya</p>
+              </div>
+            </div>
+
+            {/* Quick Navigation */}
+            <div className="pt-12 border-t border-[#EDF2F7]">
+               <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-6">Self-Service Terminal</h3>
+               <div className="grid grid-cols-2 gap-4">
+                  <Link href="/faq" className="bg-[#F7FAFC] p-4 text-[10px] font-bold uppercase tracking-widest text-[#1A202C] hover:bg-[#EDF2F7]" style={{ borderRadius: 'var(--radius)' }}>Query FAQ</Link>
+                  <Link href="/mission" className="bg-[#F7FAFC] p-4 text-[10px] font-bold uppercase tracking-widest text-[#1A202C] hover:bg-[#EDF2F7]" style={{ borderRadius: 'var(--radius)' }}>Our Mission</Link>
+               </div>
             </div>
           </div>
 
           {/* Contact Form */}
-          <div className="md:col-span-2">
+          <div className="lg:col-span-8">
             {submitted ? (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-8 text-center">
-                <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-green-900 mb-2">
-                  Message Received! ✓
-                </h3>
-                <p className="text-green-700">
-                  Thanks for reaching out. We'll get back to you within 24-48 hours.
+              <div className="bg-[#F7FAFC] p-12 text-center" style={{ borderRadius: 'var(--radius)' }}>
+                <CheckCircle className="w-12 h-12 text-[#38A169] mx-auto mb-6" />
+                <h3 className="text-3xl font-bold text-[#1A202C] mb-4">Transmission Successful.</h3>
+                <p className="text-[#718096] font-medium text-lg">
+                  We've received your data packet. A representative will contact you shortly.
                 </p>
+                <button onClick={() => setSubmitted(false)} className="mt-8 text-[10px] font-bold uppercase tracking-widest text-[#38A169] hover:underline">Send another enquiry</button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Name */}
-                <div>
-                  <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
-                    Your Name
-                  </label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="John Doe"
-                  />
+              <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-2">
+                   <label className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Identity Name</label>
+                   <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Full Name" className="w-full bg-[#F7FAFC] border border-transparent px-5 py-4 text-sm font-medium outline-none focus:bg-white focus:border-[#E2E8F0] transition-all" style={{ borderRadius: 'var(--radius)' }} />
                 </div>
-
-                {/* Email */}
-                <div>
-                  <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="john@example.com"
-                  />
+                <div className="space-y-2">
+                   <label className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Email Address</label>
+                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="your@email.com" className="w-full bg-[#F7FAFC] border border-transparent px-5 py-4 text-sm font-medium outline-none focus:bg-white focus:border-[#E2E8F0] transition-all" style={{ borderRadius: 'var(--radius)' }} />
                 </div>
-
-                {/* Subject */}
-                <div>
-                  <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
-                    Subject
-                  </label>
-                  <select
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="">Select a reason...</option>
-                    <option value="bug">Report a Bug</option>
-                    <option value="fraud">Report Fraud</option>
-                    <option value="dealer-issue">Dealer Issue</option>
-                    <option value="feature-request">Feature Request</option>
-                    <option value="partnership">Partnership Inquiry</option>
-                    <option value="general">General Question</option>
-                  </select>
+                <div className="md:col-span-2 space-y-2">
+                   <label className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Query Class</label>
+                   <select value={subject} onChange={(e) => setSubject(e.target.value)} required className="w-full bg-[#F7FAFC] border border-transparent px-5 py-4 text-sm font-medium outline-none appearance-none cursor-pointer focus:bg-white focus:border-[#E2E8F0] transition-all" style={{ borderRadius: 'var(--radius)' }}>
+                      <option value="">Select a reason...</option>
+                      <option value="bug">Terminal Bug</option>
+                      <option value="partnership">Partnership</option>
+                      <option value="dealer">Dealer Listing</option>
+                      <option value="general">General Support</option>
+                   </select>
                 </div>
-
-                {/* Message */}
-                <div>
-                  <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
-                    Message
-                  </label>
-                  <textarea
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    required
-                    rows={6}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Tell us what's on your mind..."
-                  ></textarea>
+                <div className="md:col-span-2 space-y-2">
+                   <label className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Transmission Content</label>
+                   <textarea value={message} onChange={(e) => setMessage(e.target.value)} required rows={6} placeholder="Detailed message..." className="w-full bg-[#F7FAFC] border border-transparent px-5 py-4 text-sm font-medium outline-none focus:bg-white focus:border-[#E2E8F0] transition-all resize-none" style={{ borderRadius: 'var(--radius)' }}></textarea>
                 </div>
-
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 text-white font-semibold rounded-lg transition flex items-center justify-center gap-2"
-                >
-                  <Send className="w-4 h-4" />
-                  {loading ? "Sending..." : "Send Message"}
-                </button>
+                <div className="md:col-span-2">
+                   <button type="submit" disabled={loading} className="group w-full bg-[#1A202C] text-white py-5 text-xs font-bold uppercase tracking-[0.2em] transition-transform hover:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-3" style={{ borderRadius: 'var(--radius)' }}>
+                      {loading ? "Transmitting..." : "Send Data Packet"}
+                      <Send className="w-3 h-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                   </button>
+                </div>
               </form>
             )}
           </div>
         </div>
       </section>
 
-      {/* Additional Info */}
-      <section className="py-16 px-4 bg-slate-50">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-8">Before You Contact Us</h2>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="font-bold text-slate-900 dark:text-white mb-3">For Buyer Questions</h3>
-              <ul className="space-y-2 text-slate-700 text-sm">
-                <li>✓ Check our <a href="/faq" className="text-blue-600 hover:underline">FAQ page</a></li>
-                <li>✓ Contact the dealer directly (number on listing)</li>
-                <li>✓ Review other buyer feedback on dealer profile</li>
-                <li>✓ Then email us if still unresolved</li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-slate-900 dark:text-white mb-3">For Dealer Support</h3>
-              <ul className="space-y-2 text-slate-700 text-sm">
-                <li>✓ Check dashboard tutorials</li>
-                <li>✓ Review settings and options first</li>
-                <li>✓ Try logging out/in (clears cache)</li>
-                <li>✓ Then contact us with screenshots</li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-slate-900 dark:text-white mb-3">For Security/Fraud Reports</h3>
-              <ul className="space-y-2 text-slate-700 text-sm">
-                <li>✓ Include dealer profile link</li>
-                <li>✓ Describe the issue with detail</li>
-                <li>✓ Attach screenshots/evidence if possible</li>
-                <li>✓ Send to: <a href="mailto:sec@welsh.co.ke" className="text-blue-600 hover:underline">sec@welsh.co.ke</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-slate-900 dark:text-white mb-3">For Partnerships/Press</h3>
-              <ul className="space-y-2 text-slate-700 text-sm">
-                <li>✓ Email subject: "Partnership Inquiry"</li>
-                <li>✓ Include your proposal/media outlet</li>
-                <li>✓ Links to your work (if relevant)</li>
-                <li>✓ We typically respond within 3 days</li>
-              </ul>
-            </div>
+      {/* Advisory Section */}
+      <section className="py-24 px-6 bg-[#F7FAFC]">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-12 text-center">Operational Protocols</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+             {[
+               { title: "Direct Contact", detail: "For specific vehicle queries, use the 'WhatsApp' link on the car detail page to reach the dealer directly." },
+               { title: "Escalations", detail: "For listing disputes or fraud reports, include the Reference ID and email sec@welsh.co.ke immediately." },
+               { title: "Business Inquiries", detail: "Seeking to join the network? Include your KRA compliance and physical yard location in the proposal." }
+             ].map((item, i) => (
+               <div key={i} className="text-center md:text-left">
+                  <h3 className="text-sm font-bold text-[#1A202C] uppercase tracking-widest mb-4">{item.title}</h3>
+                  <p className="text-sm font-medium text-[#718096] leading-relaxed">{item.detail}</p>
+               </div>
+             ))}
           </div>
         </div>
       </section>

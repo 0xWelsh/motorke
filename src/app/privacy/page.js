@@ -145,38 +145,54 @@ const sections = [
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-white">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-16">
+    <div className="bg-white min-h-screen">
+      <div className="mx-auto max-w-7xl px-6 py-32 sm:py-40">
+        
         {/* Header */}
-        <div className="mb-12">
-          <p className="text-sm font-bold text-slate-500 uppercase tracking-wide mb-2">We Take Privacy Seriously</p>
-          <h1 className="text-5xl font-bold text-slate-900 dark:text-white mb-3">Privacy Policy</h1>
-          <p className="text-slate-600">Last updated April 7, 2026 — Plain language about how your data is used, protected, and shared</p>
+        <div className="mb-24">
+          <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-8">
+            <span>Legal</span>
+            <span>/</span>
+            <span className="text-[#1A202C]">Privacy Protocol</span>
+          </div>
+          <h1 className="text-4xl sm:text-6xl font-bold text-[#1A202C] tracking-tight mb-8">
+            Data <br />
+            <span className="editorial-heading text-[#718096]">Governance.</span>
+          </h1>
+          <p className="text-lg text-[#718096] font-medium max-w-2xl">
+            Effective as of April 7, 2026. This protocol outlines how Motorske Ltd manages, encrypts, and secures your digital assets and identity.
+          </p>
         </div>
 
-        {/* Quick Summary */}
-        <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 mb-12">
-          <h2 className="font-bold text-slate-900 dark:text-white mb-3">The Short Version</h2>
-          <ul className="space-y-2 text-sm text-slate-700">
-            <li>✓ We collect only what's needed to run the platform</li>
-            <li>✓ We never sell or rent your data to marketers or brokers</li>
-            <li>✓ Your contact info is shared with dealers only when YOU make an enquiry</li>
-            <li>✓ Data is encrypted in transit and at rest</li>
-            <li>✓ You can access, correct, or delete your data anytime</li>
-          </ul>
+        {/* Quick Summary Terminal */}
+        <div className="bg-[#F7FAFC] border border-[#E2E8F0] p-8 sm:p-12 mb-24" style={{ borderRadius: 'var(--radius)' }}>
+          <h2 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-widest mb-8">Executive Summary</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+             {[
+               "Encryption at rest and in transit.",
+               "Zero third-party monetization.",
+               "Authorized peer-to-peer data flow.",
+               "User-governed data deletion.",
+               "Verified dealer access control."
+             ].map((line, i) => (
+               <div key={i} className="flex gap-4 items-start">
+                  <div className="w-2 h-2 bg-[#38A169] shrink-0 mt-1.5" style={{ borderRadius: '1px' }}></div>
+                  <p className="text-sm font-bold text-[#1A202C] leading-relaxed">{line}</p>
+               </div>
+             ))}
+          </div>
         </div>
 
-        {/* Data Categories */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">What We Collect</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Categories Grid */}
+        <div className="mb-32">
+          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-12">Asset Classification</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {dataCategories.map((cat) => (
-              <div key={cat.label} className={`border ${cat.color} rounded-lg p-5 space-y-3`}>
-                <h3 className="font-bold text-slate-900 dark:text-white">{cat.label}</h3>
-                <ul className="space-y-1 text-sm text-slate-700">
+              <div key={cat.label} className="bg-white border border-[#E2E8F0] p-8 space-y-6 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+                <h3 className="text-sm font-bold text-[#1A202C] uppercase tracking-widest">{cat.label}</h3>
+                <ul className="space-y-3">
                   {cat.items.map((item) => (
-                    <li key={item} className="flex items-center gap-2">
-                      <span className="w-1 h-1 bg-slate-400 rounded-full"></span>
+                    <li key={item} className="text-xs font-medium text-[#718096] whitespace-nowrap">
                       {item}
                     </li>
                   ))}
@@ -186,25 +202,24 @@ export default function PrivacyPage() {
           </div>
         </div>
 
-        {/* Third-Party Services */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Who We Share Data With</h2>
-          <p className="text-slate-600 mb-4">These providers are contractually bound to protect your data and use it only for the stated purpose—not for their own marketing.</p>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+        {/* Processor Registry */}
+        <div className="mb-32">
+          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-12">Authorized Sub-Processors</h2>
+          <div className="border border-[#E2E8F0] overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
+            <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-slate-200">
-                  <th className="text-left py-3 px-4 font-bold text-slate-900 dark:text-white">Service</th>
-                  <th className="text-left py-3 px-4 font-bold text-slate-900 dark:text-white">Purpose</th>
-                  <th className="text-left py-3 px-4 font-bold text-slate-900 dark:text-white">Data Shared</th>
+                <tr className="bg-[#F7FAFC] border-b border-[#E2E8F0]">
+                  <th className="py-5 px-8 text-[10px] font-bold text-[#1A202C] uppercase tracking-widest">Entity</th>
+                  <th className="py-5 px-8 text-[10px] font-bold text-[#1A202C] uppercase tracking-widest">Protocol Purpose</th>
+                  <th className="py-5 px-8 text-[10px] font-bold text-[#1A202C] uppercase tracking-widest">Data Variable</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-[#EDF2F7]">
                 {thirdParties.map((party, idx) => (
-                  <tr key={idx} className={idx % 2 === 0 ? "bg-slate-50" : ""}>
-                    <td className="py-3 px-4 text-slate-900 dark:text-white font-semibold">{party.name}</td>
-                    <td className="py-3 px-4 text-slate-600">{party.purpose}</td>
-                    <td className="py-3 px-4 text-slate-600">{party.data}</td>
+                  <tr key={idx} className="hover:bg-[#F7FAFC] transition-colors">
+                    <td className="py-6 px-8 text-sm font-bold text-[#1A202C]">{party.name}</td>
+                    <td className="py-6 px-8 text-sm font-medium text-[#718096]">{party.purpose}</td>
+                    <td className="py-6 px-8 text-sm font-medium text-[#718096]">{party.data}</td>
                   </tr>
                 ))}
               </tbody>
@@ -212,32 +227,35 @@ export default function PrivacyPage() {
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="space-y-10 mb-16">
+        {/* Detailed Sections */}
+        <div className="max-w-4xl space-y-24 mb-32">
           {sections.map((section) => (
-            <section key={section.title} id={section.title.replace(/\s+/g, '-').toLowerCase()} className="scroll-mt-20">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-5">{section.title}</h2>
+            <section key={section.title} className="scroll-mt-40">
+              <h2 className="text-2xl font-bold text-[#1A202C] mb-8 lg:text-3xl">{section.title}</h2>
               
               {section.content && (
-                <p className="text-slate-700 text-sm leading-relaxed mb-4">{section.content}</p>
+                <p className="text-lg text-[#718096] leading-relaxed font-medium mb-8">{section.content}</p>
               )}
               
               {section.subsections && (
-                <div className="space-y-4">
+                <div className="space-y-12">
                   {section.subsections.map((subsection, idx) => (
-                    <div key={idx} className="border-l-4 border-slate-200 dark:border-slate-800 pl-5">
-                      <h3 className="font-bold text-slate-900 dark:text-white text-base mb-2">{subsection.heading}</h3>
+                    <div key={idx} className="group">
+                      <h3 className="text-xs font-bold text-[#1A202C] uppercase tracking-widest mb-4 group-hover:text-[#38A169] transition-colors">{subsection.heading}</h3>
                       
                       {subsection.content && (
-                        <p className="text-slate-700 text-sm leading-relaxed">{subsection.content}</p>
+                        <p className="text-sm font-medium text-[#718096] leading-relaxed">{subsection.content}</p>
                       )}
                       
                       {subsection.items && (
-                        <ul className="text-slate-700 text-sm space-y-1.5 mt-2 list-disc list-inside">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-3 mt-4">
                           {subsection.items.map((item, i) => (
-                            <li key={i}>{item}</li>
+                            <div key={i} className="flex items-center gap-3 text-xs font-bold text-[#718096]">
+                               <div className="w-1 h-1 bg-[#E2E8F0] shrink-0" />
+                               {item}
+                            </div>
                           ))}
-                        </ul>
+                        </div>
                       )}
                     </div>
                   ))}
@@ -247,44 +265,20 @@ export default function PrivacyPage() {
           ))}
         </div>
 
-        {/* Trust Badges */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-          <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-5 text-center">
-            <p className="text-emerald-900 font-bold text-lg mb-1">🔒</p>
-            <p className="text-sm font-semibold text-emerald-900">Data Encrypted</p>
-            <p className="text-xs text-emerald-800 mt-1">All data in transit and at rest</p>
+        {/* Support Grid */}
+        <div className="pt-24 border-t border-[#EDF2F7] grid grid-cols-1 md:grid-cols-3 gap-16">
+          <div>
+            <h3 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-[0.2em] mb-4">Privacy Terminal</h3>
+            <a href="mailto:privacy@motorke.com" className="text-sm font-bold text-[#718096] hover:text-[#38A169]">privacy@motorke.com</a>
           </div>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 text-center">
-            <p className="text-blue-900 font-bold text-lg mb-1">🚫</p>
-            <p className="text-sm font-semibold text-blue-900">Never Sold</p>
-            <p className="text-xs text-blue-800 mt-1">Your data is never sold to third parties</p>
+          <div>
+            <h3 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-[0.2em] mb-4">Legal Hub</h3>
+            <a href="mailto:legal@motorke.com" className="text-sm font-bold text-[#718096] hover:text-[#38A169]">legal@motorke.com</a>
           </div>
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-5 text-center">
-            <p className="text-purple-900 font-bold text-lg mb-1">👤</p>
-            <p className="text-sm font-semibold text-purple-900">You Control It</p>
-            <p className="text-xs text-purple-800 mt-1">Access, update, or delete anytime</p>
+          <div>
+            <h3 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-[0.2em] mb-4">Station HQ</h3>
+            <p className="text-sm font-bold text-[#718096]">Nairobi Terminal, Kenya</p>
           </div>
-        </div>
-
-        {/* Footer */}
-        <div className="pt-12 border-t border-slate-200">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div>
-              <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-2">Questions?</h3>
-              <p className="text-xs text-slate-600">privacy@motorke.com</p>
-            </div>
-            <div>
-              <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-2">General Support</h3>
-              <p className="text-xs text-slate-600">support@motorke.com</p>
-            </div>
-            <div>
-              <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-2">Legal Requests</h3>
-              <p className="text-xs text-slate-600">legal@motorke.com</p>
-            </div>
-          </div>
-          <p className="text-xs text-slate-500">
-            Motorske Ltd, Nairobi, Kenya. This policy is our commitment to your privacy. We believe technology should be trustworthy.
-          </p>
         </div>
       </div>
     </div>

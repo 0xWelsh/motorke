@@ -779,483 +779,300 @@ export default function CompareClient({ initialCars }) {
   };
 
   return (
-    <div className="mk-compare-page min-h-screen bg-[#f7f6f3]">
-    <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12 text-slate-900 dark:text-white">
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-6 sm:gap-8">
-        <div>
-          <p className="text-[11px] font-black uppercase tracking-[0.22em] text-slate-500 mb-3">Dyno Console - Spec Heavy Mode</p>
-          <h1 className="text-3xl sm:text-5xl font-black mb-3 sm:mb-4 tracking-tighter">Comparison Engine</h1>
-          <p className="text-slate-600 max-w-2xl font-medium text-sm sm:text-base">Mechanical-grade side-by-side analysis with Kenya buyer signals: annual operating cost, road readiness, import eligibility, and parts availability.</p>
-        </div>
-        <div className="no-print flex items-center gap-2 sm:gap-3 flex-wrap md:justify-end">
-          {PRESETS.map((option) => (
+    <div className="bg-white min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 py-32 sm:py-40">
+        
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-12">
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-8">
+              <span>Terminal</span>
+              <span>/</span>
+              <span className="text-[#1A202C]">Technical Comparison</span>
+            </div>
+            <h1 className="text-5xl sm:text-7xl font-bold text-[#1A202C] tracking-tight leading-[1.05] mb-8">
+              Spec <br />
+              <span className="editorial-heading text-[#718096]">Synthesis.</span>
+            </h1>
+            <p className="text-xl text-[#718096] font-medium leading-relaxed">
+              Side-by-side mechanical analysis with architectural precision. 
+              Integrating Kenya-specific operational data: TCO models, road suitability, 
+              and central parts availability.
+            </p>
+          </div>
+          
+          <div className="no-print flex items-center gap-3 flex-wrap md:justify-end">
+            {PRESETS.map((option) => (
+              <button
+                key={option.id}
+                onClick={() => setPreset(option.id)}
+                className={`px-6 h-12 text-[10px] font-bold uppercase tracking-widest transition-all border ${
+                  preset === option.id
+                    ? "bg-[#1A202C] text-white border-[#1A202C]"
+                    : "bg-white text-[#718096] border-[#EDF2F7] hover:border-[#1A202C] hover:text-[#1A202C]"
+                }`}
+                style={{ borderRadius: 'var(--radius)' }}
+              >
+                {option.label}
+              </button>
+            ))}
+
             <button
-              id={option.id === "all" ? "tour-presets" : undefined}
-              key={option.id}
-              onClick={() => setPreset(option.id)}
-              className={`px-3 sm:px-4 h-9 sm:h-10 text-[11px] font-black uppercase tracking-[0.14em] transition-all border ${
-                preset === option.id
-                  ? "bg-[#111111] text-white border-[#111111]"
-                  : "bg-white text-slate-700 border-[#ddd4c8] hover:border-[#111111]/40 hover:text-slate-900"
+              onClick={() => setShowDiffOnly(!showDiffOnly)}
+              className={`px-6 h-12 flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest transition-all border ${
+                showDiffOnly ? "bg-[#38A169] text-white border-[#38A169]" : "bg-white text-[#718096] border-[#EDF2F7] hover:border-[#1A202C]"
               }`}
+              style={{ borderRadius: 'var(--radius)' }}
             >
-              {option.label}
+              {showDiffOnly ? <Check className="w-3.5 h-3.5" /> : <Minus className="w-3.5 h-3.5" />}
+              Differences
             </button>
-          ))}
-
-          <button
-            id="tour-diff"
-            onClick={() => setShowDiffOnly(!showDiffOnly)}
-            className={`w-full sm:w-auto justify-center px-5 sm:px-6 h-11 sm:h-12 rounded-none flex items-center gap-2 text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all ${
-              showDiffOnly ? "bg-[#111111] text-white border border-[#111111]" : "bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-white hover:text-white hover:border-[#111111]/35"
-            }`}
-          >
-            {showDiffOnly ? <Check className="w-4 h-4" /> : <Minus className="w-4 h-4" />}
-            Differences Only
-          </button>
-          <button
-            onClick={clearCompare}
-            className="w-full sm:w-auto px-5 sm:px-6 h-11 sm:h-12 rounded-none bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-700 hover:text-slate-900 dark:text-white hover:border-slate-400 text-[11px] sm:text-xs font-black uppercase tracking-widest transition-all"
-          >
-            Clear All
-          </button>
-        </div>
-      </div>
-
-      {kenyaLensSummary && (
-        <div className="mb-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="border border-[#ddd4c8] dark:border-slate-800 bg-white rounded-none px-4 py-3">
-            <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Annual TCO Gap</p>
-            <p className="text-lg font-black text-slate-900 dark:text-white mt-1">{formatKesCompact(kenyaLensSummary.annualTcoSpread)}/yr</p>
-          </div>
-          <div className="border border-[#ddd4c8] dark:border-slate-800 bg-white rounded-none px-4 py-3">
-            <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Top Road Score</p>
-            <p className="text-lg font-black text-slate-900 dark:text-white mt-1">{kenyaLensSummary.bestRoadScore}/100</p>
-          </div>
-          <div className="border border-[#ddd4c8] dark:border-slate-800 bg-white rounded-none px-4 py-3">
-            <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Import Eligible</p>
-            <p className="text-lg font-black text-slate-900 dark:text-white mt-1">{kenyaLensSummary.eligibleCount}/{fullComparedCars.length} cars</p>
+            
+            <button
+              onClick={clearCompare}
+              className="px-6 h-12 bg-white border border-[#EDF2F7] text-[#718096] hover:text-[#1A202C] hover:border-[#1A202C] text-[10px] font-bold uppercase tracking-widest transition-all"
+              style={{ borderRadius: 'var(--radius)' }}
+            >
+              Reset Terminal
+            </button>
           </div>
         </div>
-      )}
 
-      {/* Radar Chart */}
-      {fullComparedCars.length >= 2 && (
-        <div className="mb-8 bg-white border border-[#ddd4c8] dark:border-slate-800 rounded-none p-6">
-          <p className="text-[11px] font-black uppercase tracking-[0.22em] text-slate-500 mb-6">Dimension Analysis</p>
-          <div className="flex flex-wrap justify-center gap-10">
-            {(() => {
-              const DIMS = ["Performance", "Comfort", "Economy", "Value"];
-              const getDimScore = (car) => [
-                Math.round((scoreMaps.performanceMap.get(car.id) || 0) * 100),
-                Math.round((scoreMaps.comfortMap.get(car.id) || 0) * 100),
-                Math.round((scoreMaps.economyMap.get(car.id) || 0) * 100),
-                Math.round((scoreMaps.valueMap.get(car.id) || 0) * 100),
-              ];
-              const COLORS = ["#111111", "#ff5a2f", "#6366f1"];
-              const N = DIMS.length;
-              const R = 80; // radius
-              const CX = 110, CY = 110;
-              const toXY = (i, val) => {
-                const angle = (Math.PI * 2 * i) / N - Math.PI / 2;
-                const r = (val / 100) * R;
-                return [CX + r * Math.cos(angle), CY + r * Math.sin(angle)];
-              };
-              const axisPoints = DIMS.map((_, i) => toXY(i, 100));
-              const rings = [25, 50, 75, 100];
-
-              return (
-                <div className="flex flex-col items-center gap-4">
-                  <svg width={220} height={220} viewBox="0 0 220 220">
-                    {/* Grid rings */}
-                    {rings.map(r => (
-                      <polygon key={r}
-                        points={DIMS.map((_, i) => toXY(i, r).join(",")).join(" ")}
-                        fill="none" stroke="#e5e7eb" strokeWidth="1"
-                      />
-                    ))}
-                    {/* Axis spokes */}
-                    {axisPoints.map(([x, y], i) => (
-                      <line key={i} x1={CX} y1={CY} x2={x} y2={y} stroke="#e5e7eb" strokeWidth="1" />
-                    ))}
-                    {/* Axis labels */}
-                    {DIMS.map((dim, i) => {
-                      const [x, y] = toXY(i, 118);
-                      return (
-                        <text key={dim} x={x} y={y}
-                          textAnchor="middle" dominantBaseline="middle"
-                          className="fill-slate-500" style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", fill: "#64748b" }}
-                        >{dim}</text>
-                      );
-                    })}
-                    {/* Car polygons */}
-                    {fullComparedCars.map((car, ci) => {
-                      const scores = getDimScore(car);
-                      const pts = scores.map((s, i) => toXY(i, s).join(",")).join(" ");
-                      return (
-                        <polygon key={car.id} points={pts}
-                          fill={COLORS[ci % COLORS.length]}
-                          fillOpacity={0.12}
-                          stroke={COLORS[ci % COLORS.length]}
-                          strokeWidth={2}
-                          strokeLinejoin="round"
-                        />
-                      );
-                    })}
-                    {/* Dot markers */}
-                    {fullComparedCars.map((car, ci) =>
-                      getDimScore(car).map((s, i) => {
-                        const [x, y] = toXY(i, s);
-                        return <circle key={`${car.id}-${i}`} cx={x} cy={y} r={3} fill={COLORS[ci % COLORS.length]} />;
-                      })
-                    )}
-                  </svg>
-                  {/* Legend */}
-                  <div className="flex flex-wrap justify-center gap-4">
-                    {fullComparedCars.map((car, ci) => (
-                      <div key={car.id} className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-sm" style={{ background: COLORS[ci % COLORS.length] }} />
-                        <span className="text-[11px] font-black text-slate-700 uppercase tracking-wide">{car.year} {car.make} {car.model}</span>
-                      </div>
-                    ))}
-                  </div>
+        {/* Global Summary Stats */}
+        {kenyaLensSummary && (
+          <div className="mb-24 grid grid-cols-1 sm:grid-cols-3 gap-8">
+            {[
+              { label: 'Annual TCO Gap', value: `${formatKesCompact(kenyaLensSummary.annualTcoSpread)}/yr`, sub: 'Set Variance' },
+              { label: 'Top Road Score', value: `${kenyaLensSummary.bestRoadScore}/100`, sub: 'Highest Readiness' },
+              { label: 'Import Eligible', value: `${kenyaLensSummary.eligibleCount}/${fullComparedCars.length} Assets`, sub: 'Fiscal Approval' }
+            ].map((stat, i) => (
+              <div key={i} className="bg-[#F7FAFC] border border-[#E2E8F0] p-10" style={{ borderRadius: 'var(--radius)' }}>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-4">{stat.label}</p>
+                <div className="flex items-baseline gap-3">
+                  <p className="text-3xl font-bold text-[#1A202C] tabular-nums">{stat.value}</p>
+                  <p className="text-[10px] font-bold text-[#A0AEC0] uppercase tracking-wide">{stat.sub}</p>
                 </div>
-              );
-            })()}
-          </div>
-        </div>
-      )}
-
-      <div className="mb-8 sm:sticky sm:top-[84px] sm:z-40">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
-          {winnerRail.map((item) => (
-            <div key={item.title} className="border border-[#ddd4c8] dark:border-slate-800 bg-white rounded-none p-4">
-              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-2">{item.title}</p>
-              {item.car ? (
-                <Link href={`/cars/${item.car.id}`} className="block group">
-                  <p className="text-sm font-black text-slate-900 dark:text-white group-hover:text-black line-clamp-1">{item.car.year} {item.car.make} {item.car.model}</p>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-700 mt-1">{item.sub}</p>
-                </Link>
-              ) : (
-                <p className="text-xs font-bold text-slate-500">Add more cars to compute winner</p>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="relative border border-[#ddd4c8] dark:border-slate-800 rounded-none overflow-x-auto bg-white">
-        <div className="min-w-[980px]">
-        {/* Table Header (Sticky) */}
-        <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-2xl border-b border-[#ddd4c8] dark:border-slate-800">
-          <div className="grid grid-cols-[160px_1fr_1fr_1fr] md:grid-cols-[240px_1fr_1fr_1fr]">
-            <div className="sticky left-0 z-40 p-6 md:p-8 flex items-center justify-center border-r border-[#ddd4c8] dark:border-slate-800 bg-white">
-              <span className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400 -rotate-90">Model View ⚖️</span>
-            </div>
-            {SLOT_KEYS.map((_, idx) => {
-              const car = comparedSlots[idx];
-              const hydrated = !!(car && initialCarsById.has(car.id));
-              const imageUrl = car?.images?.[0]?.url || car?.image || null;
-              return (
-                <div key={idx} className={`p-4 md:p-5 flex flex-col gap-4 border-r border-[#ddd4c8] dark:border-slate-800 last:border-r-0 relative transition-all ${!car ? "bg-white" : ""}`}>
-                  {car ? (
-                    <div className="relative h-full rounded-none border border-[#ddd4c8] dark:border-slate-800 bg-white p-4 md:p-5">
-                      <button
-                        onClick={() => removeFromCompare(car.id)}
-                        className="absolute top-3 right-3 text-slate-400 hover:text-slate-900 dark:text-white transition-colors"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                      <div className="relative aspect-[16/10] rounded-none overflow-hidden border border-[#ddd4c8] dark:border-slate-800 bg-white">
-                        {imageUrl ? (
-                          <Image src={imageUrl} alt={car.model} fill className="object-cover" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold uppercase tracking-widest text-[11px]">No Image</div>
-                        )}
-                      </div>
-                      <div className="mt-3">
-                         <p className="text-[11px] font-black uppercase tracking-[0.1em] text-slate-500 mb-1">{car.year}</p>
-                         <h3 className="font-black text-sm md:text-base leading-tight text-slate-900 dark:text-white mb-1 line-clamp-2">{car.make} {car.model}</h3>
-                         <p className="text-slate-600 text-[11px] truncate">{car.variant || "Standard Variant"}</p>
-                         {hydrated && (
-                           <div className="mt-2 flex flex-wrap gap-1.5">
-                             <span className={`inline-flex px-2 py-0.5 rounded-none border text-[8px] font-black uppercase tracking-[0.12em] ${roadTone(getInsights(car)?.roadSuitabilityScore)}`}>
-                               Road {getInsights(car)?.roadSuitabilityScore || "N/A"}
-                             </span>
-                             <span className="inline-flex px-2 py-0.5 rounded-none border border-zinc-400 bg-zinc-200 text-zinc-800 text-[8px] font-black uppercase tracking-[0.12em]">
-                               TCO {formatKesCompact(getInsights(car)?.tco?.annualTotal || 0)}/yr
-                             </span>
-                             <span className={`inline-flex px-2 py-0.5 rounded-none border text-[8px] font-black uppercase tracking-[0.12em] ${importTone(getInsights(car)?.importEligibility)}`}>
-                               {getInsights(car)?.importEligibility ? "Import OK" : getInsights(car)?.importEligibility === false ? "Over-age" : "Eligibility N/A"}
-                             </span>
-                           </div>
-                         )}
-                         <div className="mt-2 h-1.5 w-full bg-[#e5e7eb] rounded-none overflow-hidden">
-                           <div className="h-full bg-gradient-to-r from-[#111111] to-[#ff5a2f]" style={{ width: `${hydrated ? calcCoverage(car, allSpecs) : 0}%` }} />
-                         </div>
-                         <p className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.1em] mt-2">
-                           Spec Coverage: {hydrated ? `${calcCoverage(car, allSpecs)}%` : "Loading"}
-                         </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="relative h-full rounded-none border border-[#ddd4c8] dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#111111] flex flex-col items-center justify-center gap-4 p-4 md:p-5">
-                       <button
-                         id={idx === 1 ? "tour-add-slot" : undefined}
-                         onClick={() => setActiveSlot(idx)}
-                         className="w-16 h-16 rounded-none bg-white dark:bg-[#111111] border border-dashed border-[#ddd4c8] dark:border-slate-800 flex items-center justify-center text-slate-500 hover:text-slate-900 dark:text-white hover:border-slate-400 transition-all group"
-                       >
-                         <Search className="w-6 h-6 group-hover:scale-110 transition-transform" />
-                       </button>
-                       <span className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-500">Empty Slot</span>
-                       
-                       {activeSlot === idx && (
-                         <div className="absolute inset-0 rounded-none border border-[#ddd4c8] dark:border-slate-800 bg-white z-40 p-4 transition-all animate-in fade-in zoom-in-95">
-                           <div className="relative">
-                             <input
-                               autoFocus
-                               type="text"
-                               placeholder="Search car..."
-                               value={searchQuery}
-                               onChange={(e) => setSearchQuery(e.target.value)}
-                               className="w-full bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-none px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-[#111111]/45 transition-all font-bold"
-                             />
-                             <button onClick={() => setActiveSlot(null)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-900 dark:text-white">
-                               <X className="w-4 h-4" />
-                             </button>
-                           </div>
-                           <div className="mt-4 space-y-2 max-h-[300px] overflow-y-auto no-scrollbar">
-                             {loadingSearch && (
-                               <p className="text-center py-6 text-xs text-slate-400 font-bold">Searching inventory...</p>
-                             )}
-                             {searchResults.map((res) => (
-                               <button
-                                 key={res.id}
-                                 onClick={() => onAddCarSearch(res)}
-                                 className="w-full flex items-center gap-3 p-3 rounded-none hover:bg-white dark:bg-[#111111] border border-transparent hover:border-[#ddd4c8] dark:border-slate-800 transition-all text-left"
-                               >
-                                 <div className="w-12 h-12 rounded-none overflow-hidden bg-[#eef2f7] shrink-0 relative">
-                                   {res.image && <Image src={res.image} alt={res.model} fill className="object-cover" />}
-                                 </div>
-                                 <div className="flex-1 min-w-0">
-                                   <p className="text-xs font-black text-slate-900 dark:text-white">{res.year} {res.make} {res.model}</p>
-                                   <p className="text-[11px] text-slate-700 font-bold">{formatCarPrice(res)}</p>
-                                 </div>
-                                 <ArrowRight className="w-4 h-4 text-slate-500" />
-                               </button>
-                             ))}
-                             {!loadingSearch && searchQuery.length >= 2 && searchResults.length === 0 && (
-                               <p className="text-center py-8 text-xs text-slate-500 font-bold">No units found matching "{searchQuery}"</p>
-                             )}
-                           </div>
-                         </div>
-                       )}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Table Content */}
-        <div className="divide-y divide-[#e5e7eb]">
-          {specGroups.map((group) => (
-            <div key={group.name} className="bg-white">
-              <div className="grid grid-cols-[160px_1fr] md:grid-cols-[240px_1fr] py-4 px-8 items-center bg-white">
-                <h2 className="sticky left-0 z-30 bg-white text-[11px] font-black uppercase tracking-[0.22em] text-slate-500">{group.name}</h2>
-                <div className="h-px bg-[#e2e8f0]" />
               </div>
-              <div className="divide-y divide-[#eef2f7]">
-                {group.specs.map((spec, specIndex) => {
-                  if (!shouldShowSpec(spec)) return null;
+            ))}
+          </div>
+        )}
 
-                  const diff = isDifferent(spec, fullComparedCars);
-                  const severity = getDiffSeverity(spec, fullComparedCars);
-                  if (showDiffOnly && !diff && fullComparedCars.length > 1) return null;
-
-                  const zebra = specIndex % 2 === 0 ? "bg-white" : "bg-[#fbfcfe] dark:bg-[#111111]";
-                  const rowTone = diff ? "bg-[#f4f6fa]" : `${zebra} hover:bg-[#f6f8fb]`;
+        {/* Analytics Engine (Radar) */}
+        {fullComparedCars.length >= 2 && (
+          <div className="mb-24 bg-[#1A202C] p-12 sm:p-20 overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+              <div>
+                <h2 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-8">Performance Dimensions</h2>
+                <p className="text-xl text-white/60 font-medium leading-relaxed mb-12">
+                   Vector analysis of four critical mechanical pillars. The synthesis highlights 
+                   how each unit balances fiscal efficiency against high-performance dynamics.
+                </p>
+                <div className="space-y-4">
+                   {fullComparedCars.map((car, ci) => (
+                      <div key={car.id} className="flex items-center gap-4 group">
+                         <div className="w-12 h-[2px] transition-all" style={{ background: ci === 0 ? '#38A169' : ci === 1 ? '#FFFFFF' : '#718096' }} />
+                         <span className="text-[11px] font-bold text-white uppercase tracking-widest group-hover:text-white transition-colors">
+                            {car.year} {car.make} {car.model}
+                         </span>
+                      </div>
+                   ))}
+                </div>
+              </div>
+              
+              <div className="flex justify-center">
+                {(() => {
+                  const DIMS = ["Performance", "Comfort", "Economy", "Value"];
+                  const getDimScore = (car) => [
+                    Math.round((scoreMaps.performanceMap.get(car.id) || 0) * 100),
+                    Math.round((scoreMaps.comfortMap.get(car.id) || 0) * 100),
+                    Math.round((scoreMaps.economyMap.get(car.id) || 0) * 100),
+                    Math.round((scoreMaps.valueMap.get(car.id) || 0) * 100),
+                  ];
+                  const COLORS = ["#38A169", "#FFFFFF", "#718096"];
+                  const N = DIMS.length;
+                  const R = 120;
+                  const CX = 160, CY = 160;
+                  const toXY = (i, val) => {
+                    const angle = (Math.PI * 2 * i) / N - Math.PI / 2;
+                    const r = (val / 100) * R;
+                    return [CX + r * Math.cos(angle), CY + r * Math.sin(angle)];
+                  };
+                  const rings = [25, 50, 75, 100];
 
                   return (
-                    <div key={spec.label} className={`grid grid-cols-[160px_1fr_1fr_1fr] md:grid-cols-[240px_1fr_1fr_1fr] transition-colors ${rowTone}`}>
-                      <div className="sticky left-0 z-20 p-5 md:p-6 flex items-center border-r border-[#ddd4c8] dark:border-slate-800 bg-[#f9fafb]">
-                        <div className="space-y-2">
-                          <span className="text-[11px] font-bold text-slate-900 dark:text-white uppercase tracking-widest block">{spec.label}</span>
-                          {severity !== "none" && fullComparedCars.length > 1 && (
-                            <span className={`inline-flex px-2 py-0.5 rounded-none border text-[8px] font-black uppercase tracking-[0.12em] ${SEVERITY_STYLES[severity]}`}>
-                              {severity}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      {SLOT_KEYS.map((_, idx) => {
-                        const car = comparedSlots[idx];
-                        if (!car) return <div key={idx} className="p-5 md:p-6 border-r border-[#ddd4c8] dark:border-slate-800 last:border-r-0" />;
-                        if (!initialCarsById.has(car.id)) {
-                          return (
-                            <div key={idx} className="p-5 md:p-6 flex items-center justify-center border-r border-[#ddd4c8] dark:border-slate-800 last:border-r-0">
-                              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Loading...</span>
-                            </div>
-                          );
-                        }
-                        
-                        const { value, raw } = spec.pick(car);
-                        const best = getBest(spec, fullComparedCars);
-                        const isBestValue = best != null && raw === best;
-                        const gaugePercent = getGaugePercent(spec, fullComparedCars, raw);
-                        const missing = isMissing(raw);
-                        const annualTcoSavings = spec.id === "annualTco" ? (tcoStats.savingsByCarId.get(car.id) || 0) : 0;
-                        const isAnnualTcoWinner = spec.id === "annualTco" && annualTcoSavings > 0 && typeof tcoStats.max === "number";
-                        const trafficDelta = spec.id === "trafficFactor" ? (getInsights(car)?.tco?.trafficMultiplier || 1) : null;
-
+                    <svg width={320} height={320} viewBox="0 0 320 320" className="overflow-visible">
+                      {rings.map(r => (
+                        <polygon key={r} points={DIMS.map((_, i) => toXY(i, r).join(",")).join(" ")} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+                      ))}
+                      {DIMS.map((_, i) => {
+                        const [x, y] = toXY(i, 100);
+                        return <line key={i} x1={CX} y1={CY} x2={x} y2={y} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />;
+                      })}
+                      {DIMS.map((dim, i) => {
+                        const [x, y] = toXY(i, 118);
                         return (
-                          <div key={idx} className="p-5 md:p-6 flex items-center justify-center border-r border-[#ddd4c8] dark:border-slate-800 last:border-r-0">
-                            <div className="w-full text-center space-y-1.5">
-                              {gaugePercent !== null && (
-                                <div className="h-1.5 w-full bg-[#e5e7eb] rounded-none overflow-hidden">
-                                  <div
-                                    className={`h-full ${isBestValue ? "bg-black" : "bg-slate-500"}`}
-                                    style={{ width: `${Math.max(8, gaugePercent)}%` }}
-                                  />
-                                </div>
-                              )}
-
-                              <span className={`text-[13px] font-black leading-relaxed text-center block ${
-                                missing ? "text-slate-400" : isBestValue ? "text-black" : "text-slate-800 dark:text-slate-200"
-                              }`}>
-                                {value}
-                                {spec.id === "annualTco" && !missing && (
-                                  <span className={`block text-[8px] mt-1 uppercase tracking-[0.12em] ${isAnnualTcoWinner ? "text-black/90" : "text-slate-500"}`}>
-                                    {annualTcoSavings > 0 ? `Saves ${formatKesCompact(annualTcoSavings)}/yr vs highest` : "Highest annual operating cost in this set"}
-                                  </span>
-                                )}
-                                {spec.id === "trafficFactor" && typeof trafficDelta === "number" && !missing && (
-                                  <span className="block text-[8px] mt-1 uppercase tracking-[0.12em] text-slate-600">
-                                    {trafficDelta <= 1.12 ? "Traffic efficient" : trafficDelta <= 1.25 ? "Moderate traffic penalty" : "Heavy traffic penalty"}
-                                  </span>
-                                )}
-                                {missing && <span className="block text-[8px] mt-1 uppercase tracking-[0.12em]">Missing data</span>}
-                                {isBestValue && !missing && (
-                                  <span className="inline-flex mt-1 px-2 py-0.5 rounded-none bg-black text-white text-[8px] font-black uppercase tracking-[0.12em]">
-                                    Best Spec
-                                  </span>
-                                )}
-                              </span>
-                            </div>
-                          </div>
+                          <text key={dim} x={x} y={y} textAnchor="middle" dominantBaseline="middle" className="fill-white/40 text-[9px] font-bold uppercase tracking-widest">{dim}</text>
                         );
                       })}
-                    </div>
+                      {fullComparedCars.map((car, ci) => {
+                        const scores = getDimScore(car);
+                        const pts = scores.map((s, i) => toXY(i, s).join(",")).join(" ");
+                        return <polygon key={car.id} points={pts} fill={COLORS[ci % COLORS.length]} fillOpacity={0.08} stroke={COLORS[ci % COLORS.length]} strokeWidth={2} strokeLinejoin="round" />;
+                      })}
+                    </svg>
                   );
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
-        </div>
-      </div>
-      
-      {/* Compare Page Bottom CTA */}
-      <div className="no-print mt-10 sm:mt-12 flex flex-col items-center gap-5 sm:gap-6 p-6 sm:p-12 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-none text-center">
-        <p className="text-slate-600 text-sm font-medium">Move from comparison to action</p>
-
-        <div className="flex flex-wrap justify-center gap-3 w-full">
-          {overallWinner && (
-            <Link href={`/cars/${overallWinner.id}`} className="w-full sm:w-auto justify-center px-6 h-12 rounded-none bg-[#111111] text-white border border-[#111111] hover:bg-black transition-all flex items-center gap-2 font-black text-[11px] uppercase tracking-[0.14em]">
-              Shortlist Winner <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          )}
-
-          {topTwo.map((car, idx) => (
-            <Link key={car.id} href={`/cars/${car.id}`} className="px-6 h-12 rounded-none bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 hover:border-[#111111]/35 hover:bg-white transition-all flex items-center gap-2 group">
-              <span className="text-[11px] font-black text-slate-700 group-hover:text-slate-900 dark:text-white uppercase tracking-widest">Enquire Top {idx + 1}</span>
-              <ArrowRight className="w-3 h-3 text-slate-700" />
-            </Link>
-          ))}
-
-          <button
-            onClick={handleSaveComparison}
-            className="px-6 h-12 rounded-none bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 hover:border-[#111111]/35 hover:bg-white transition-all flex items-center gap-2"
-          >
-            <span className="text-[11px] font-black text-slate-700 uppercase tracking-widest">
-              {saveState === "copied" ? "Saved" : saveState === "failed" ? "Save Failed" : "Save Comparison"}
-            </span>
-          </button>
-
-          <button
-            onClick={handleDownloadPdf}
-            disabled={fullComparedCars.length === 0}
-            className="px-6 h-12 rounded-none bg-white dark:bg-[#111111] border border-[#111111]/25 text-[#0f172a] hover:bg-white transition-all flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <Download className="w-4 h-4" />
-            <span className="text-[11px] font-black uppercase tracking-widest">
-              {pdfState === "printing" ? "Preparing PDF" : pdfState === "done" ? "PDF Ready" : pdfState === "failed" ? "PDF Failed" : "Download PDF"}
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-      {showTutorial && (
-        <div className="fixed inset-0 z-[100] bg-[#0f172a]/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-none p-8 max-w-lg w-full shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
-            <div className="absolute top-0 left-0 w-full h-2 bg-slate-100">
-              <div 
-                className="h-full bg-slate-900 transition-all duration-300"
-                style={{ width: `${((tutorialStep + 1) / 3) * 100}%` }}
-              />
-            </div>
-            
-            <div className="mt-4">
-              <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">
-                Dyno Overview &bull; Step {tutorialStep + 1} of 3
-              </p>
-              
-              {tutorialStep === 0 && (
-                <>
-                  <h3 className="text-2xl font-black mb-3 tracking-tighter">Compare Your Finalists</h3>
-                  <p className="text-slate-600 font-medium text-sm leading-relaxed mb-6">
-                    Start by searching our inventory for the cars you're considering. Click the <strong className="text-slate-900 dark:text-white font-black">Empty Slot</strong> magnifying glass below to add a vehicle to the Dyno Console.
-                  </p>
-                </>
-              )}
-              {tutorialStep === 1 && (
-                <>
-                  <h3 className="text-2xl font-black mb-3 tracking-tighter">Pinpoint Differences</h3>
-                  <p className="text-slate-600 font-medium text-sm leading-relaxed mb-6">
-                    Toggle <strong className="text-slate-900 dark:text-white font-black">Differences Only</strong> at the top right to instantly hide matching specs. We also highlight critical Kenya buyer signals like Duty, Clearances, and Parts Cost.
-                  </p>
-                </>
-              )}
-              {tutorialStep === 2 && (
-                <>
-                  <h3 className="text-2xl font-black mb-3 tracking-tighter">Contextual Views</h3>
-                  <p className="text-slate-600 font-medium text-sm leading-relaxed mb-6">
-                    Switch between our preset modes (like <strong className="text-slate-900 dark:text-white font-black">Family</strong>, <strong className="text-slate-900 dark:text-white font-black">City</strong>, or <strong className="text-slate-900 dark:text-white font-black">Long Trip</strong>) to filter noise and only see the mechanical traits relevant to your exact use case.
-                  </p>
-                </>
-              )}
-
-              <div className="flex items-center justify-between mt-8 pt-2">
-                <button 
-                  onClick={closeTutorial}
-                  className="text-[11px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 dark:text-white transition-colors"
-                >
-                  Skip Tour
-                </button>
-                <button 
-                  onClick={nextStep}
-                  className="px-6 h-12 flex items-center justify-center rounded-none bg-[#111111] text-white hover:bg-black text-[11px] font-black uppercase tracking-widest transition-all"
-                >
-                  {tutorialStep === 2 ? "Start Comp" : "Next Step"}
-                </button>
+                })()}
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
+        {/* Winner Rail */}
+        <div className="mb-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {winnerRail.map((item) => (
+            <div key={item.title} className="p-8 border border-[#EDF2F7]" style={{ borderRadius: 'var(--radius)' }}>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#A0AEC0] mb-4">{item.title}</p>
+              {item.car ? (
+                <Link href={`/cars/${item.car.id}`} className="group block">
+                  <h3 className="text-lg font-bold text-[#1A202C] mb-1 group-hover:text-[#38A169] transition-colors">{item.car.year} {item.car.make}</h3>
+                  <p className="text-[10px] font-bold text-[#718096] uppercase tracking-widest">{item.sub}</p>
+                </Link>
+              ) : (
+                <p className="text-sm font-medium text-[#A0AEC0]">Insufficient Data</p>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Comparison Terminal (Table) */}
+        <div className="relative border border-[#EDF2F7] overflow-x-auto bg-white mb-32" style={{ borderRadius: 'var(--radius)' }}>
+          <div className="min-w-[1100px]">
+             {/* Header Row */}
+             <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-[#EDF2F7]">
+                <div className="grid grid-cols-[300px_1fr_1fr_1fr]">
+                   <div className="p-12 border-r border-[#EDF2F7] flex items-center">
+                      <span className="text-[10px] font-bold text-[#A0AEC0] uppercase tracking-[0.2em] transform -rotate-180 [writing-mode:vertical-lr]">Spec Matrix</span>
+                   </div>
+                   {SLOT_KEYS.map((_, idx) => {
+                      const car = comparedSlots[idx];
+                      const hydrated = !!(car && initialCarsById.has(car.id));
+                      return (
+                        <div key={idx} className="p-10 border-r border-[#EDF2F7] last:border-r-0">
+                           {car ? (
+                              <div className="relative group">
+                                <button onClick={() => removeFromCompare(car.id)} className="absolute -top-4 -right-4 w-8 h-8 bg-white border border-[#EDF2F7] flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-all hover:border-[#1A202C]">
+                                   <X className="w-3.5 h-3.5" />
+                                </button>
+                                <div className="aspect-[16/10] bg-[#F7FAFC] overflow-hidden mb-6" style={{ borderRadius: 'var(--radius)' }}>
+                                   {(car?.images?.[0]?.url || car?.image) ? <Image src={car?.images?.[0]?.url || car?.image} alt={car.model} fill className="object-cover" /> : null}
+                                </div>
+                                <p className="text-[10px] font-bold text-[#A0AEC0] uppercase tracking-widest mb-1">{car.year}</p>
+                                <h3 className="text-xl font-bold text-[#1A202C] leading-snug line-clamp-2">{car.make} {car.model}</h3>
+                                {hydrated && (
+                                   <div className="mt-4 flex flex-wrap gap-2">
+                                      <span className="px-2 py-1 bg-[#F7FAFC] border border-[#E2E8F0] text-[8px] font-bold text-[#718096] uppercase tracking-widest" style={{ borderRadius: '4px' }}>ROAD {getInsights(car)?.roadSuitabilityScore}</span>
+                                      <span className="px-2 py-1 bg-[#38A169]/5 border border-[#38A169]/20 text-[8px] font-bold text-[#38A169] uppercase tracking-widest" style={{ borderRadius: '4px' }}>{getInsights(car)?.importEligibility ? 'ELIGIBLE' : 'NOT ELIGIBLE'}</span>
+                                   </div>
+                                )}
+                              </div>
+                           ) : (
+                              <div className="relative group flex flex-col items-center justify-center py-12 border-2 border-dashed border-[#EDF2F7] transition-colors hover:border-[#38A169]/40" style={{ borderRadius: 'var(--radius)' }}>
+                                 <button onClick={() => setActiveSlot(idx)} className="w-14 h-14 bg-white border border-[#EDF2F7] flex items-center justify-center transition-transform group-hover:scale-110" style={{ borderRadius: 'var(--radius)' }}>
+                                    <Search className="w-5 h-5 text-[#A0AEC0]" />
+                                 </button>
+                                 <p className="mt-6 text-[10px] font-bold text-[#A0AEC0] uppercase tracking-widest">Awaiting Data</p>
+                                 
+                                 {activeSlot === idx && (
+                                    <div className="absolute inset-0 bg-white z-50 p-6 shadow-2xl animate-in fade-in slide-in-from-top-2" style={{ borderRadius: 'var(--radius)' }}>
+                                       <input autoFocus type="text" placeholder="Search parameters..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                                          className="w-full bg-[#F7FAFC] border border-[#EDF2F7] px-5 py-4 text-sm font-bold text-[#1A202C] outline-none" style={{ borderRadius: 'var(--radius)' }} />
+                                       <div className="mt-6 space-y-2 max-h-[300px] overflow-y-auto no-scrollbar">
+                                          {searchResults.map(res => (
+                                             <button key={res.id} onClick={() => onAddCarSearch(res)} className="w-full flex items-center gap-4 p-4 transition-colors hover:bg-[#F7FAFC]">
+                                                <div className="w-12 h-12 bg-[#EDF2F7] overflow-hidden relative" style={{ borderRadius: '4px' }}>
+                                                   {res.image && <Image src={res.image} alt={res.model} fill className="object-cover" />}
+                                                </div>
+                                                <div className="flex-1">
+                                                   <p className="text-xs font-bold text-[#1A202C]">{res.year} {res.make} {res.model}</p>
+                                                   <p className="text-[10px] font-bold text-[#718096] uppercase">{formatCarPrice(res)}</p>
+                                                </div>
+                                             </button>
+                                          ))}
+                                       </div>
+                                    </div>
+                                 )}
+                              </div>
+                           )}
+                        </div>
+                      );
+                   })}
+                </div>
+             </div>
+
+             {/* Matrix Rows */}
+             <div className="divide-y divide-[#F7FAFC]">
+                {specGroups.map(group => (
+                   <div key={group.name}>
+                      <div className="grid grid-cols-[300px_1fr] px-12 py-8 bg-[#F7FAFC] items-center">
+                         <h4 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-[0.25em]">{group.name} System</h4>
+                         <div className="h-px bg-[#E2E8F0] ml-8" />
+                      </div>
+                      <div className="divide-y divide-[#F7FAFC]">
+                         {group.specs.map(spec => {
+                            if (!shouldShowSpec(spec)) return null;
+                            const diff = isDifferent(spec, fullComparedCars);
+                            if (showDiffOnly && !diff && fullComparedCars.length > 1) return null;
+
+                            return (
+                               <div key={spec.label} className={`grid grid-cols-[300px_1fr_1fr_1fr] transition-colors ${diff ? 'bg-[#38A169]/5' : 'hover:bg-[#F7FAFC]'}`}>
+                                  <div className="p-8 border-r border-[#EDF2F7] flex items-center justify-between">
+                                     <span className="text-[11px] font-bold text-[#718096] uppercase tracking-widest">{spec.label}</span>
+                                     {diff && <span className="w-1 h-1 bg-[#38A169] rounded-full" />}
+                                  </div>
+                                  {SLOT_KEYS.map((_, idx) => {
+                                     const car = comparedSlots[idx];
+                                     if (!car) return <div key={idx} className="p-8 border-r border-[#EDF2F7] last:border-r-0" />;
+                                     const { value, raw } = spec.pick(car);
+                                     const best = getBest(spec, fullComparedCars);
+                                     const isBest = best != null && raw === best;
+                                     return (
+                                        <div key={idx} className="p-8 border-r border-[#EDF2F7] last:border-r-0 text-center font-bold tabular-nums">
+                                           <span className={`text-sm ${isBest ? 'text-[#1A202C]' : 'text-[#718096]'}`}>{value}</span>
+                                           {isBest && <div className="mt-2 text-[8px] font-bold text-[#38A169] uppercase tracking-widest">Optimized</div>}
+                                        </div>
+                                     );
+                                  })}
+                               </div>
+                            );
+                         })}
+                      </div>
+                   </div>
+                ))}
+             </div>
+          </div>
+        </div>
+
+        {/* Action Center */}
+        <div className="pt-24 border-t border-[#EDF2F7]">
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+              <div>
+                 <h3 className="text-2xl font-bold text-[#1A202C] mb-4">Export Result Matrix</h3>
+                 <p className="text-sm font-medium text-[#718096] leading-relaxed">
+                    Generate a high-fidelity documentation set for your comparison. 
+                    Includes full mechanical specs and regional operational scoring.
+                 </p>
+              </div>
+              <div className="flex flex-wrap gap-4 md:justify-end">
+                 <button onClick={handleDownloadPdf} className="h-14 px-8 bg-[#1A202C] text-white text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
+                    Download Technical PDF
+                 </button>
+                 <button onClick={handleSaveComparison} className="h-14 px-8 bg-white border border-[#E2E8F0] text-[#1A202C] text-xs font-bold uppercase tracking-widest hover:border-[#1A202C] transition-all" style={{ borderRadius: 'var(--radius)' }}>
+                    {saveState === "copied" ? "URL Copied" : "Share Comparison"}
+                 </button>
+              </div>
+           </div>
+        </div>
+      </div>
     </div>
   );
 }

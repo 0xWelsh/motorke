@@ -120,69 +120,80 @@ const sections = [
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-white">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-16">
+    <div className="bg-white min-h-screen">
+      <div className="mx-auto max-w-7xl px-6 py-32 sm:py-40">
+        
         {/* Header */}
-        <div className="mb-10">
-          <p className="text-sm font-bold text-slate-500 uppercase tracking-wide mb-2">Legal</p>
-          <h1 className="text-5xl font-bold text-slate-900 dark:text-white mb-3">Terms of Service</h1>
-          <p className="text-slate-600">Motorke Kenya Ltd &bull; Effective April 7, 2026</p>
+        <div className="mb-24">
+          <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-8">
+            <span>Corporate</span>
+            <span>/</span>
+            <span className="text-[#1A202C]">Operational Terms</span>
+          </div>
+          <h1 className="text-4xl sm:text-6xl font-bold text-[#1A202C] tracking-tight mb-8">
+            Service <br />
+            <span className="editorial-heading text-[#718096]">Framework.</span>
+          </h1>
+          <p className="text-lg text-[#718096] font-medium max-w-2xl leading-relaxed">
+            Motors Kenya Ltd Operational Standards. Last updated April 7, 2026. 
+            By utilizing the Motorske terminal, you agree to these commercial and legal protocols.
+          </p>
         </div>
 
-        {/* Table of Contents */}
-        <nav className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 mb-12">
-          <h2 className="font-bold text-slate-900 dark:text-white text-sm mb-4">Table of Contents</h2>
-          <ol className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-slate-700">
+        {/* Tactical Nav */}
+        <div className="bg-[#F7FAFC] border border-[#E2E8F0] p-10 sm:p-12 mb-24" style={{ borderRadius: 'var(--radius)' }}>
+          <h2 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-widest mb-8">Protocol Repository</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-4">
             {sections.map((section, idx) => (
-              <li key={idx} className="text-slate-600 hover:text-slate-900 dark:text-white">
-                <a href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`} className="hover:underline">
-                  {section.title}
-                </a>
-              </li>
+              <a 
+                key={idx} 
+                href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`}
+                className="text-sm font-bold text-[#718096] hover:text-[#38A169] flex items-center gap-4 transition-colors group"
+              >
+                <span className="text-[10px] text-[#E2E8F0] group-hover:text-[#38A169] transition-colors">{idx + 1}.</span>
+                {section.title}
+              </a>
             ))}
-          </ol>
-        </nav>
+          </div>
+        </div>
 
-        {/* Content */}
-        <div className="space-y-8">
+        {/* Content Layers */}
+        <div className="max-w-4xl space-y-32 mb-40">
           {sections.map((section) => (
-            <section key={section.title} id={section.title.replace(/\s+/g, '-').toLowerCase()} className="scroll-mt-20">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{section.title}</h2>
+            <section key={section.title} id={section.title.replace(/\s+/g, '-').toLowerCase()} className="scroll-mt-40">
+              <h2 className="text-3xl font-bold text-[#1A202C] mb-12 tracking-tight">{section.title}</h2>
               
-              {section.subsections ? (
-                <div className="space-y-4">
-                  {section.subsections.map((subsection, idx) => (
-                    <div key={idx} className="border-l-4 border-slate-200 dark:border-slate-800 pl-5">
-                      <h3 className="font-bold text-slate-900 dark:text-white text-base mb-1">{subsection.heading}</h3>
-                      <p className="text-slate-700 text-sm leading-relaxed">{subsection.content}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-slate-700 text-sm leading-relaxed">{section.content}</p>
-              )}
+              <div className="space-y-16">
+                {section.subsections && section.subsections.map((subsection, idx) => (
+                  <div key={idx} className="group border-l border-[#EDF2F7] pl-8 hover:border-[#38A169] transition-colors">
+                    <h3 className="text-xs font-bold text-[#1A202C] uppercase tracking-widest mb-4">{subsection.heading}</h3>
+                    <p className="text-lg text-[#718096] leading-relaxed font-medium">{subsection.content}</p>
+                  </div>
+                ))}
+              </div>
             </section>
           ))}
         </div>
 
-        {/* Footer */}
-        <div className="mt-16 pt-8 border-t border-slate-200">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div>
-              <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-2">Support</h3>
-              <p className="text-xs text-slate-600">support@motorke.com</p>
-            </div>
-            <div>
-              <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-2">Legal</h3>
-              <p className="text-xs text-slate-600">legal@motorke.com</p>
-            </div>
-            <div>
-              <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-2">Billing</h3>
-              <p className="text-xs text-slate-600">billing@motorke.com</p>
-            </div>
+        {/* Legal Footer Station */}
+        <div className="pt-24 border-t border-[#EDF2F7]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
+             <div>
+                <h4 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-[0.2em] mb-4">Support Direct</h4>
+                <p className="text-sm font-bold text-[#718096]">support@motorke.com</p>
+             </div>
+             <div>
+                <h4 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-[0.2em] mb-4">Compliance Hub</h4>
+                <p className="text-sm font-bold text-[#718096]">legal@motorke.com</p>
+             </div>
+             <div>
+                <h4 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-[0.2em] mb-4">Financial Terminal</h4>
+                <p className="text-sm font-bold text-[#718096]">billing@motorke.com</p>
+             </div>
           </div>
-          <p className="text-xs text-slate-500">
-            Last updated April 7, 2026. Previous versions available upon request. These Terms apply to all users accessing Motorke as of the effective date.
+          <p className="text-xs font-medium text-[#A0AEC0] max-w-2xl">
+            These terms are governed by the laws of the Republic of Kenya. Any unauthorized use of the Motorske 
+            infrastructure may result in protocol suspension and legal action.
           </p>
         </div>
       </div>

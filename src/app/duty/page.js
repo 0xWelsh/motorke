@@ -93,176 +93,124 @@ export default function DutyCalculatorPage() {
   const inputCls = "bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all w-full";
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
-        <div className="mb-12 sm:mb-16 space-y-4">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight">Import Duty Calculator</h1>
-          <p className="text-base sm:text-lg text-slate-600 font-medium max-w-3xl leading-relaxed">
-            Estimate Kenya Revenue Authority import duties for vehicles. Calculate landed costs from Japan, UK, and other markets.
+    <div className="bg-white min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 py-32 sm:py-40">
+        
+        {/* Header */}
+        <div className="mb-20">
+          <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-8">
+            <span>Terminal</span>
+            <span>/</span>
+            <span className="text-[#1A202C]">Import Duty Engine</span>
+          </div>
+          <h1 className="text-5xl sm:text-7xl font-bold text-[#1A202C] tracking-tight leading-[1.05] mb-8">
+            Fiscal <br />
+            <span className="editorial-heading text-[#718096]">Forecasting.</span>
+          </h1>
+          <p className="text-xl text-[#718096] font-medium max-w-2xl leading-relaxed">
+            Direct integration with regional tax protocols. Estimate KRA import duties, 
+            depreciation schedules, and final landed costs with architectural precision.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 mb-12">
-        {/* Inputs */}
-        <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-10 space-y-8 shadow-sm">
-          <h2 className="font-black text-xl text-slate-900 dark:text-white flex items-center gap-3">
-             <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
-               <Car className="w-5 h-5" />
-             </div>
-             <span>Vehicle Details</span>
-          </h2>
-
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+          {/* Controls */}
+          <div className="lg:col-span-5 space-y-12">
             <div>
-              <label className="block text-xs font-black text-slate-700 uppercase tracking-widest mb-2">
-                Purchase Price (USD, FOB)
-              </label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">$</span>
-                <input type="number" value={purchaseUsd} onChange={e => setPurchaseUsd(+e.target.value)}
-                  className={`${inputCls} pl-10`} min="0" step="100" />
-              </div>
-              <p className="text-xs text-slate-500 font-medium mt-2 px-1">Base cost of the vehicle in the exporting country.</p>
-            </div>
+               <h2 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-widest mb-8">Asset Parameters</h2>
+               <div className="space-y-8">
+                  <div>
+                    <label className="block text-[10px] font-bold text-[#718096] uppercase tracking-widest mb-4">
+                      Purchase Price (USD, FOB)
+                    </label>
+                    <div className="relative group">
+                      <span className="absolute left-0 bottom-3 text-[#1A202C] font-bold text-lg">$</span>
+                      <input type="number" value={purchaseUsd} onChange={e => setPurchaseUsd(+e.target.value)}
+                        className="w-full bg-transparent border-b-2 border-[#EDF2F7] focus:border-[#38A169] py-3 pl-6 text-2xl font-bold text-[#1A202C] outline-none transition-colors tabular-nums" />
+                    </div>
+                  </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-black text-slate-700 uppercase tracking-widest mb-2">
-                  Vehicle & Export Costs (USD)
-                </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">$</span>
-                  <input type="number" value={exportUsd} onChange={e => setExportUsd(+e.target.value)}
-                    className={`${inputCls} pl-10`} min="0" step="50" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-black text-slate-700 uppercase tracking-widest mb-2">
-                  Shipping to Mombasa (USD)
-                </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">$</span>
-                  <input type="number" value={shippingUsd} onChange={e => setShippingUsd(+e.target.value)}
-                    className={`${inputCls} pl-10`} min="0" step="50" />
-                </div>
-              </div>
-            </div>
+                  <div className="grid grid-cols-2 gap-10">
+                    <div>
+                      <label className="block text-[10px] font-bold text-[#718096] uppercase tracking-widest mb-4">Export Variable (USD)</label>
+                      <input type="number" value={exportUsd} onChange={e => setExportUsd(+e.target.value)}
+                        className="w-full bg-transparent border-b border-[#EDF2F7] focus:border-[#38A169] py-2 text-lg font-bold text-[#1A202C] outline-none transition-colors tabular-nums" />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-[#718096] uppercase tracking-widest mb-4">Logistics (USD)</label>
+                      <input type="number" value={shippingUsd} onChange={e => setShippingUsd(+e.target.value)}
+                        className="w-full bg-transparent border-b border-[#EDF2F7] focus:border-[#38A169] py-2 text-lg font-bold text-[#1A202C] outline-none transition-colors tabular-nums" />
+                    </div>
+                  </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-black text-slate-700 uppercase tracking-widest mb-2">
-                  USD → KES Exchange Rate
-                </label>
-                <input type="number" value={exchangeRate} onChange={e => setExchangeRate(+e.target.value)}
-                  className={inputCls} min="50" step="1" />
-              </div>
-              <div>
-                <label className="block text-xs font-black text-slate-700 uppercase tracking-widest mb-2">
-                  Clearing & Other Fees (KES)
-                </label>
-                <input type="number" value={clearingKes} onChange={e => setClearingKes(+e.target.value)}
-                  className={inputCls} min="0" step="5000" />
-              </div>
-            </div>
-            
-            <p className="text-xs text-slate-600 font-medium px-1">
-              Calculated CIF: <span className="text-slate-900 dark:text-white font-black">{fmt(cifUsd * exchangeRate)}</span> (Purchase + Export + Shipping)
-            </p>
+                  <div className="grid grid-cols-2 gap-10">
+                    <div>
+                      <label className="block text-[10px] font-bold text-[#718096] uppercase tracking-widest mb-4">FX Rate (USD:KES)</label>
+                      <input type="number" value={exchangeRate} onChange={e => setExchangeRate(+e.target.value)}
+                        className="w-full bg-transparent border-b border-[#EDF2F7] focus:border-[#38A169] py-2 text-lg font-bold text-[#1A202C] outline-none transition-colors tabular-nums" />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-[#718096] uppercase tracking-widest mb-4">Asset Year</label>
+                      <select value={year} onChange={e => setYear(+e.target.value)} 
+                        className="w-full bg-transparent border-b border-[#EDF2F7] focus:border-[#38A169] py-2 text-lg font-bold text-[#1A202C] outline-none transition-colors">
+                        {Array.from({ length: 20 }, (_, i) => currentYear - i).map(y => (
+                          <option key={y} value={y}>{y}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-black text-slate-700 uppercase tracking-widest mb-2">
-                  Year
-                </label>
-                <select value={year} onChange={e => setYear(+e.target.value)} className={inputCls}>
-                  {Array.from({ length: 20 }, (_, i) => currentYear - i).map(y => (
-                    <option key={y} value={y}>{y}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-black text-slate-700 uppercase tracking-widest mb-2">
-                  Engine CC
-                </label>
-                <select value={engineCC} onChange={e => setEngineCC(+e.target.value)} className={inputCls} disabled={isElectric}>
-                  {[660, 1000, 1200, 1300, 1500, 1600, 1800, 2000, 2400, 2700, 3000, 3500, 4000, 4500].map(cc => (
-                    <option key={cc} value={cc}>{cc}cc</option>
-                  ))}
-                </select>
-              </div>
+                  <div className="pt-6">
+                    <label className="flex items-center gap-4 cursor-pointer group">
+                      <div className={`w-6 h-6 border-2 transition-colors flex items-center justify-center ${isElectric ? 'bg-[#38A169] border-[#38A169]' : 'border-[#EDF2F7] group-hover:border-[#38A169]'}`} style={{ borderRadius: '4px' }}>
+                        {isElectric && <div className="w-2 h-2 bg-white rounded-full" />}
+                      </div>
+                      <input type="checkbox" checked={isElectric} onChange={e => setIsElectric(e.target.checked)} className="hidden" />
+                      <div className="space-y-0.5">
+                        <span className="text-sm font-bold text-[#1A202C]">EV Protocol</span>
+                        <p className="text-[10px] text-[#718096] font-bold uppercase tracking-widest">Reduced Excise (10%)</p>
+                      </div>
+                    </label>
+                  </div>
+               </div>
             </div>
-
-            <label className="flex items-center gap-3 cursor-pointer p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-blue-300 hover:bg-blue-50/50 transition-all">
-              <input type="checkbox" checked={isElectric} onChange={e => setIsElectric(e.target.checked)}
-                className="w-5 h-5 accent-blue-600 rounded" />
-              <div className="space-y-0.5 flex-1">
-                <span className="text-sm font-bold text-slate-900 dark:text-white">Electric Vehicle</span>
-                <p className="text-xs text-slate-500 font-medium">Excise duty reduced to 10%</p>
-              </div>
-            </label>
           </div>
-        </div>
 
-        {/* Summary */}
-        <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-10 space-y-8 shadow-sm">
-          <h2 className="font-black text-xl text-slate-900 dark:text-white flex items-center gap-3">
-             <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
-               <Banknote className="w-5 h-5" />
+          {/* Breakdown List */}
+          <div className="lg:col-span-7">
+             <div className="bg-[#F7FAFC] border border-[#E2E8F0] p-10 sm:p-12" style={{ borderRadius: 'var(--radius)' }}>
+                <h2 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-widest mb-12">Fiscal Breakdown</h2>
+                <div className="space-y-6">
+                  {rows.map(({ label, value, note, highlight }) => (
+                    <div key={label} className={`flex justify-between items-baseline gap-8 ${highlight ? 'pt-6 border-t border-[#E2E8F0] mt-6' : ''}`}>
+                       <div className="space-y-1">
+                          <p className={`text-[10px] font-bold uppercase tracking-widest ${highlight ? 'text-[#1A202C]' : 'text-[#718096]'}`}>{label}</p>
+                          {note && <p className="text-[10px] font-bold text-[#A0AEC0] uppercase">{note}</p>}
+                       </div>
+                       <p className={`text-xl font-bold tabular-nums ${highlight ? 'text-[#38A169] text-2xl' : 'text-[#1A202C]'}`}>{value}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-16 pt-12 border-t border-[#E2E8F0]">
+                   <div className="flex items-center gap-2 text-[10px] font-bold text-[#A0AEC0] uppercase tracking-widest mb-4">
+                      <ShieldCheck className="w-3 h-3" /> Source: {ratesMeta.source || "central-index"} 
+                   </div>
+                   <p className="text-xs font-semibold text-[#718096] leading-relaxed italic">
+                      Disclaimer: These values are generated as estimates based on current Central Revenue System schedules. 
+                      Final port assessment may fluctuate based on unit-specific CRSP classification.
+                   </p>
+                </div>
              </div>
-             <span>Tax Breakdown</span>
-          </h2>
-
-          <div className="space-y-5">
-            {rows.map(({ label, value, note, highlight }) => (
-              <div key={label} className={`flex justify-between items-start gap-4 py-3 ${
-                highlight
-                  ? "border-t-2 border-slate-200 dark:border-slate-800 pt-4 mt-2"
-                  : "border-b border-slate-100 pb-3"
-              }`}>
-                <div className="space-y-1 flex-1 min-w-0">
-                  <p className={`text-xs font-bold uppercase tracking-widest ${highlight ? "text-slate-900 dark:text-white" : "text-slate-600"}`}>
-                    {label}
-                  </p>
-                  {note && <p className="text-xs text-slate-500 font-medium">{note}</p>}
-                </div>
-                <p className={`text-base font-black tabular-nums text-right ${
-                  highlight ? "text-slate-900 dark:text-white text-lg" : "text-slate-700"
-                }`}>
-                  {value}
-                </p>
-              </div>
-            ))}
           </div>
-        </div>
-        </div>
-
-        {/* Disclaimer */}
-        <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 space-y-4 mb-12">
-          <div className="flex items-center gap-2 text-slate-700 font-black text-xs uppercase tracking-widest">
-             <ShieldCheck className="w-4 h-4 text-blue-600 flex-shrink-0" /> Important Disclaimer
-          </div>
-          <p className="text-xs text-slate-600 font-medium uppercase tracking-wide">
-            Rate source: {ratesMeta.source || "local-default"}
-            {ratesMeta.effectiveFrom ? ` · effective ${ratesMeta.effectiveFrom}` : ""}
-            {ratesMeta.lastUpdated ? ` · updated ${new Date(ratesMeta.lastUpdated).toLocaleString("en-KE")}` : ""}
-          </p>
-          {ratesMeta.error && (
-            <p className="text-xs text-amber-700 font-semibold bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-              Online rates are unavailable. Using safe fallback values.
-            </p>
-          )}
-          <p className="text-sm text-slate-600 font-medium leading-relaxed">
-            This calculator provides estimates based on publicly available KRA duty rates and depreciation schedules. Actual duties may vary based on classification, CRSP values, and port assessment. Always consult a licensed clearing agent before importing.
-          </p>
         </div>
 
         {/* CTA */}
-        <div className="text-center space-y-6">
-          <p className="text-slate-600 font-bold uppercase tracking-widest text-xs">Ready to start your search?</p>
-          <Link href="/cars"
-            className="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-8 py-3.5 rounded-lg text-xs uppercase tracking-widest transition-colors">
-            Browse Live Inventory <ChevronRight className="w-4 h-4" />
-          </Link>
+        <div className="mt-32 pt-20 border-t border-[#EDF2F7] text-center">
+           <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-8">Ready to originate an import?</h3>
+           <Link href="/cars" className="inline-block bg-[#1A202C] text-white px-12 py-5 text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
+              Explore Verified Inventory
+           </Link>
         </div>
       </div>
     </div>

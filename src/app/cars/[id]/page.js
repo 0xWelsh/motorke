@@ -249,328 +249,229 @@ export default async function CarDetailPage({ params }) {
   };
 
   return (
-    <div className="w-full bg-white dark:bg-[#050505] font-sans">
+    <div className="bg-white min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <div className="max-w-7xl mx-auto py-0 sm:py-10 lg:py-12 pb-36 sm:pb-28 lg:pb-16">
+      
+      <div className="container mx-auto px-6 max-w-7xl pt-32 sm:pt-40 pb-20">
         {/* Breadcrumb */}
-        <nav className="hidden sm:flex text-sm font-medium text-slate-500 mb-8 sm:mb-10 px-5 sm:px-7 lg:px-10 gap-2 sm:gap-3 items-center flex-wrap">
-          <Link href="/" className="hover:text-[#ff5a2f] transition-colors">Home</Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link href="/cars" className="hover:text-[#ff5a2f] transition-colors">Vehicles</Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-slate-900 dark:text-white font-extrabold truncate max-w-full">{title}</span>
+        <nav className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-12">
+          <Link href="/" className="hover:text-[#1A202C] transition-colors">Home</Link>
+          <span>/</span>
+          <Link href="/cars" className="hover:text-[#1A202C] transition-colors">Inventory</Link>
+          <span>/</span>
+          <span className="text-[#1A202C] truncate max-w-[200px]">{car.make} {car.model}</span>
         </nav>
 
-        <div className="space-y-0 sm:space-y-8">
-          <div className="w-full sm:px-7 lg:px-10 bg-slate-50 dark:bg-slate-900">
-            <ImageGallery images={car.images} title={title} />
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+          {/* Left Column: Visuals & Core Specs */}
+          <div className="lg:col-span-8 space-y-16">
+            <div className="overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
+               <ImageGallery images={car.images} title={title} />
+            </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 lg:gap-12 items-start px-5 sm:px-7 lg:px-10 mt-6 sm:mt-0">
-            {/* Left: Main Content */}
-            <div className="space-y-8">
-              {/* Title & Price Section */}
-              <div className="space-y-4">
-                <div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="inline-flex items-center px-2 py-1 bg-[#cff7d3] dark:bg-[#1a3a20] text-[#1e5828] dark:text-emerald-400 text-[11px] font-black uppercase tracking-widest leading-none rounded-none shadow-none">
-                      {car.available ? "Available" : "On Hold"}
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-slate-900 dark:text-white tracking-normal leading-tight">
-                       {titleWithoutYear}
-                    </h1>
-                    <div className="flex items-center gap-2 mt-2">
-                       <p className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-none">{formatCarPrice(car).replace("KSh", "USD")}</p> {/* Local hack for matching "USD 92,400" feel conceptually, standard output relies on native formatter */}
-                       <span className="w-5 h-5 rounded-full border-[1.5px] border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 text-[10px] font-black pb-px mt-0.5 ml-1 leading-none shadow-sm cursor-help">i</span>
-                    </div>
-                    <p className="text-[13px] text-slate-500 dark:text-slate-400 font-semibold tracking-tight mt-1">Price includes shipping</p>
-                  </div>
-                </div>
+            {/* Title & Core Meta */}
+            <div>
+              <div className="flex items-center gap-4 mb-4">
+                 <span className="bg-[#38A169] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>
+                    {car.available ? "VERIFIED LISTING" : "RESERVED"}
+                 </span>
+                 {car.dutyPaid && (
+                   <span className="bg-[#1A202C] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>
+                     LOCAL UNIT
+                   </span>
+                 )}
               </div>
+              
+              <h1 className="text-4xl sm:text-6xl font-bold text-[#1A202C] tracking-tight leading-[1.1] mb-6">
+                {car.year} <span className="editorial-heading text-[#718096]">{car.make} {car.model}</span>
+              </h1>
 
-              {/* Description */}
-              <div className="pt-2">
-                <h2 className="text-[12px] font-black uppercase tracking-widest text-[#717178] dark:text-slate-400 mb-3">Description</h2>
-                <p className="text-[14px] sm:text-[15px] text-slate-700 dark:text-slate-300 leading-relaxed font-semibold tracking-tight uppercase">
-                  {descriptionBullets.length > 0 ? descriptionBullets.join(" • ") : "High-spec unit with verified dealer profile and direct enquiry support."}
-                </p>
+              <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+                 <div className="flex flex-col">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-1">List Price</span>
+                    <span className="text-3xl font-bold text-[#1A202C]">{formatCarPrice(car)}</span>
+                 </div>
+                 <div className="w-px h-10 bg-[#EDF2F7] hidden sm:block"></div>
+                 <div className="flex flex-col">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-1">Mileage</span>
+                    <span className="text-lg font-bold text-[#1A202C]">{formatMileage(car.mileage) || "N/A"}</span>
+                 </div>
+                 <div className="w-px h-10 bg-[#EDF2F7] hidden sm:block"></div>
+                 <div className="flex flex-col">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-1">Transmission</span>
+                    <span className="text-lg font-bold text-[#1A202C]">{TRANSMISSION_LABELS[car.transmission] || "N/A"}</span>
+                 </div>
               </div>
+            </div>
 
-              {/* Vehicle Details */}
-              <div className="border-t border-slate-200 dark:border-slate-800 pt-6">
-                <h2 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-white mb-6">Vehicle Details</h2>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12">
+            {/* Narrative / About */}
+            <div className="pt-16 border-t border-[#EDF2F7]">
+               <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-8">Vehicle Overview</h2>
+               <div className="text-xl text-[#1A202C] leading-relaxed font-medium editorial-heading">
+                  {car.description || "Representing excellence in engineering, this unit undergoes a rigorous 150-point inspection before listing. Our network ensures every vehicle meets stringent quality and performance benchmarks."}
+               </div>
+            </div>
+
+            {/* Detailed Specs Grid */}
+            <div className="pt-16 border-t border-[#EDF2F7]">
+               <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-10">Technical Specifications</h2>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-6">
                   {visibleSpecs.map((item) => (
-                    <div key={item.label} className="py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
-                      <span className="text-[13px] text-slate-500 font-medium tracking-wide">{item.label}</span>
-                      <span className="text-[14px] font-medium text-slate-900 dark:text-white text-right">{item.value}</span>
+                    <div key={item.label} className="flex justify-between items-center py-4 border-b border-[#EDF2F7]">
+                       <span className="text-sm font-bold text-[#718096]">{item.label}</span>
+                       <span className="text-sm font-bold text-[#1A202C]">{item.value}</span>
                     </div>
                   ))}
-                </div>
-              </div>
-
-              {/* Trust Badges */}
-              {trustBadges.length > 0 && (
-                <div className="border-t border-slate-200 dark:border-slate-800 pt-6 flex flex-wrap gap-3">
-                  {trustBadges.map((badge) => (
-                    <span
-                      key={badge}
-                      className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 text-xs font-extrabold uppercase tracking-widest"
-                    >
-                      <ShieldCheck className="w-4 h-4" /> {badge}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              {/* Action Links */}
-              <div className="border-t border-slate-200 dark:border-slate-800 pt-6 flex flex-wrap items-center gap-3">
-                <Link
-                  href={`/dealers/${dealer.slug}#dealer-gallery`}
-                  className="px-5 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 dark:text-white text-xs font-extrabold uppercase tracking-widest hover:bg-slate-50 dark:bg-slate-900 transition-all"
-                >
-                  View Dealer Gallery
-                </Link>
-                <div className="[&>button]:px-5 [&>button]:py-3">
-                  <CompareButton car={compareCar} />
-                </div>
-                <div className="[&>button]:px-5 [&>button]:py-3">
-                  <SaveButton carId={car.id} initialSaved={isSaved} isLoggedIn={isLoggedIn} />
-                </div>
-                <PrintButton carId={car.id} />
-              </div>
-
-              <ShareButtons title={title} price={formatCarPrice(car)} />
-
-              {/* Duty estimate */}
-              {car.imported && !car.dutyPaid && (
-                <div className="bg-gradient-to-br from-emerald-900 to-emerald-800 rounded-2xl p-8 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-800/50 blur-3xl -mr-32 -mt-32 rounded-full" />
-                  <div className="relative z-10 space-y-3">
-                    <div className="flex items-center gap-3 text-emerald-300 font-extrabold text-xs uppercase tracking-widest">
-                      <Wallet className="w-4 h-4" /> Estimated Import Duty
-                    </div>
-                    <p className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">{formatPrice(duty)}</p>
-                    <p className="text-sm text-emerald-100/80 max-w-xl font-medium">
-                      This is a rough KRA estimate based on age and market value. Always verify with a licensed clearing agent.
-                    </p>
-                  </div>
-                </div>
-              )}
+               </div>
             </div>
 
-            {/* Right: Sidebar Form */}
-            <aside className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 lg:sticky lg:top-24 space-y-6">
-              <div className="pb-4 border-b border-slate-200">
-                <p className="text-xs text-slate-500 font-medium mb-1 tracking-wider">Price</p>
-                <p className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{formatCarPrice(car)}</p>
-                <p className="text-xs text-slate-500 font-medium mt-2 tracking-wider">Shipping included to major ports</p>
-              </div>
-
-              <div className="flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white p-3">
-                <div className="w-12 h-12 rounded-lg bg-brand-light flex items-center justify-center text-brand font-extrabold text-lg overflow-hidden shrink-0">
-                  {dealerBrandImage ? (
-                    <img src={dealerBrandImage} alt={dealer.name} className="w-full h-full object-cover" />
-                  ) : (
-                    dealer.name[0]
-                  )}
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-extrabold text-slate-900 dark:text-white truncate">{dealer.name}</p>
-                  <p className="text-xs text-slate-500 flex items-center gap-1 truncate">
-                    <MapPin className="w-3.5 h-3.5" /> {car.location || dealer.location || "Location on request"}
+            {/* Support / Trust Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
+               <div className="bg-[#F7FAFC] p-8" style={{ borderRadius: 'var(--radius)' }}>
+                  <ShieldCheck className="w-6 h-6 text-[#38A169] mb-4" />
+                  <h3 className="text-sm font-bold text-[#1A202C] uppercase tracking-widest mb-3">Certified Dealer</h3>
+                  <p className="text-sm text-[#718096] leading-relaxed font-medium">
+                     This unit is listed by {dealer.name}, a verified partner with a track record of transparency and reliable logistics.
                   </p>
-                </div>
-              </div>
-
-              <div className="space-y-4 pt-2 border-t border-slate-200">
-                <h3 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-white">Send an Enquiry</h3>
-                <EnquiryForm
-                  carId={car.id}
-                  dealerId={dealer.id}
-                  carTitle={title}
-                  dealer={dealer}
-                  userName={session?.user?.name || ""}
-                  userEmail={session?.user?.email || ""}
-                  whatsAppFirst={false}
-                  showQuickMessages={false}
-                  showSafetyBadge={false}
-                />
-              </div>
-
-              <div className="pt-2 border-t border-slate-200">
-                <Link
-                  href={`/dealers/${dealer.slug}`}
-                  className="flex items-center justify-center gap-2 w-full text-xs font-extrabold uppercase tracking-widest text-slate-900 dark:text-white border border-slate-300 rounded-lg py-3 hover:bg-slate-100 transition-all"
-                >
-                  Browse Dealer Inventory
-                </Link>
-              </div>
-            </aside>
+               </div>
+               <div className="bg-[#F7FAFC] p-8" style={{ borderRadius: 'var(--radius)' }}>
+                  <Wallet className="w-6 h-6 text-[#38A169] mb-4" />
+                  <h3 className="text-sm font-bold text-[#1A202C] uppercase tracking-widest mb-3">Finance Eligible</h3>
+                  <p className="text-sm text-[#718096] leading-relaxed font-medium">
+                     Flexible asset financing available via our partner banks. Standard asset age limits apply.
+                  </p>
+               </div>
+            </div>
           </div>
 
-          <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
+          {/* Right Column: Sticky Enquiry Sidebar */}
+          <div className="lg:col-span-4 lg:sticky lg:top-32 h-fit">
+            <div className="bg-white border border-[#E2E8F0] p-8 lg:p-10 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+              <div className="flex items-center gap-3 mb-10 pb-8 border-b border-[#EDF2F7]">
+                 <div className="w-12 h-12 bg-[#F7FAFC] flex items-center justify-center overflow-hidden shrink-0" style={{ borderRadius: 'var(--radius)' }}>
+                    {dealer.logoUrl ? <img src={dealer.logoUrl} className="w-full h-full object-cover" /> : <span className="text-[#1A202C] font-bold">{dealer.name[0]}</span>}
+                 </div>
+                 <div>
+                    <h4 className="text-sm font-bold text-[#1A202C]">{dealer.name}</h4>
+                    <p className="text-[10px] text-[#718096] font-bold uppercase tracking-widest">Verified Multi-Asset Dealer</p>
+                 </div>
+              </div>
 
-          {/* Mobile sticky quick actions */}
-          <div className="lg:hidden fixed bottom-3 inset-x-0 z-40 px-3 sm:px-6">
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/95 backdrop-blur p-2 shadow-[0_14px_30px_rgba(15,23,42,0.16)] flex items-center gap-2">
-              {dealer.whatsapp && (
-                <a
-                  href={whatsappLink(dealer.whatsapp, title, dealer.name)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 h-12 rounded-xl bg-emerald-500 text-white text-[11px] font-extrabold uppercase tracking-[0.12em] flex items-center justify-center gap-1.5"
-                >
-                  <MessageCircle className="w-4 h-4 fill-current" /> WhatsApp
-                </a>
-              )}
-              {dealer.phone && (
-                <a
-                  href={`tel:${dealer.phone}`}
-                  className="flex-1 h-12 rounded-xl bg-slate-900 text-white text-[11px] font-extrabold uppercase tracking-[0.12em] flex items-center justify-center gap-1.5"
-                >
-                  <Phone className="w-4 h-4" /> Call
-                </a>
-              )}
-              <Link
-                href={`/dealers/${dealer.slug}`}
-                className="hidden sm:inline-flex h-12 px-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white text-slate-700 text-[11px] font-extrabold uppercase tracking-[0.12em] items-center justify-center"
-              >
-                Dealer
-              </Link>
+              <div className="space-y-8">
+                 <h3 className="text-lg font-bold text-[#1A202C]">Interest Enquiry</h3>
+                 <EnquiryForm
+                    carId={car.id}
+                    dealerId={dealer.id}
+                    carTitle={title}
+                    dealer={dealer}
+                    userName={session?.user?.name || ""}
+                    userEmail={session?.user?.email || ""}
+                  />
+              </div>
+
+              <div className="mt-10 pt-8 border-t border-[#EDF2F7] flex flex-col gap-4">
+                 <div className="flex items-center justify-between text-xs font-bold text-[#718096] uppercase tracking-widest">
+                    <span>Reference ID</span>
+                    <span className="text-[#1A202C]">{car.id.slice(-8).toUpperCase()}</span>
+                 </div>
+                 <div className="py-2">
+                   <ShareButtons title={title} price={formatCarPrice(car)} />
+                 </div>
+              </div>
+            </div>
+
+            {/* Comparison Tool Shortcut */}
+            <div className="mt-8 flex items-center justify-between px-6 py-4 border border-[#E2E8F0]" style={{ borderRadius: 'var(--radius)' }}>
+               <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Add to comparison</span>
+               <div className="flex items-center gap-4">
+                  <CompareButton car={compareCar} className="w-5 h-5 text-[#718096] hover:text-[#1A202C]" />
+               </div>
             </div>
           </div>
         </div>
 
-        {/* Similar cars */}
-      {similar.length > 0 && (
-        <div className="mt-16 sm:mt-24 lg:mt-32 space-y-8 sm:space-y-12">
-          <div className="flex items-end justify-between">
-            <div className="space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Similar units you might like</h2>
-              <p className="text-base sm:text-lg text-slate-500 font-medium">Hand-picked alternatives from our verified inventory.</p>
+        {/* Similar Cars Section */}
+        {similar.length > 0 && (
+          <div className="mt-32 pt-32 border-t border-[#EDF2F7]">
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-16">Recommendation Engine</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+               {similar.map((sc) => (
+                 <Link key={sc.id} href={`/cars/${sc.id}`} className="group block">
+                    <div className="relative aspect-[4/3] bg-[#EDF2F7] overflow-hidden mb-6" style={{ borderRadius: 'var(--radius)' }}>
+                       {sc.images?.[0]?.url && <Image src={sc.images[0].url} alt={sc.model} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />}
+                    </div>
+                    <div className="space-y-2">
+                       <h3 className="text-lg font-bold text-[#1A202C] group-hover:text-[#38A169] transition-colors">{sc.year} {sc.make} {sc.model}</h3>
+                       <p className="text-sm font-bold text-[#718096]">{formatCarPrice(sc)}</p>
+                    </div>
+                 </Link>
+               ))}
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
-            {similar.map((c) => {
-              const img = c.images[0]?.url;
-              const title = `${c.make} ${c.model}`;
-              return (
-                <Link key={c.id} href={`/cars/${c.id}`}
-                  className="group block bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 hover:border-brand-accent/40 overflow-hidden transition-all duration-500">
-                  <div className="relative aspect-[16/10] bg-slate-50 dark:bg-slate-900 overflow-hidden">
-                    {img ? (
-                      <Image 
-                        src={img} 
-                        alt={title} 
-                        fill 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full text-slate-300 text-xs font-bold uppercase tracking-widest">No Image</div>
-                    )}
-                  </div>
-                  <div className="p-6 flex flex-col gap-4">
-                    <div className="space-y-1.5">
-                      <div className="flex items-center gap-2.5">
-                        <span className="text-[11px] font-extrabold bg-brand-light text-brand px-2 py-0.5 rounded-md tracking-tight">{c.year}</span>
-                        <h3 className="font-extrabold text-slate-800 dark:text-slate-200 text-lg leading-tight truncate group-hover:text-brand transition-colors">{title}</h3>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between pt-4 border-t border-slate-50">
-                      <p className="text-xl font-extrabold text-slate-900 dark:text-white">{formatCarPrice(c)}</p>
-                      <span className="text-xs font-bold text-slate-400">{c.dealer?.name}</span>
-                  </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      )}
+        )}
 
-      {/* Reviews Section */}
-      <div className="mt-16 sm:mt-24 lg:mt-32 space-y-8 sm:space-y-12">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Customer reviews</h2>
-            {reviewsData.avgRating && (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-50 border border-amber-200">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-4 h-4 ${
-                        i < Math.round(parseFloat(reviewsData.avgRating))
-                          ? 'fill-amber-400 text-amber-400'
-                          : 'text-slate-300'
-                      }`}
-                    />
-                  ))}
+        {/* Reviews Section */}
+        <div className="mt-32 pt-32 border-t border-[#EDF2F7]">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
+             <div>
+                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-6">User Feedback</h2>
+                <h3 className="text-3xl sm:text-4xl font-bold text-[#1A202C]">Experience Shared.</h3>
+             </div>
+             {reviewsData.avgRating && (
+                <div className="flex items-center gap-4 px-6 py-4 bg-[#F7FAFC]" style={{ borderRadius: 'var(--radius)' }}>
+                   <div className="flex text-amber-400">
+                      {[...Array(5)].map((_, i) => <Star key={i} className={`w-4 h-4 ${i < Math.round(parseFloat(reviewsData.avgRating)) ? 'fill-current' : 'text-[#CBD5E0]'}`} />)}
+                   </div>
+                   <span className="text-lg font-bold text-[#1A202C]">{reviewsData.avgRating} / 5.0</span>
                 </div>
-                <p className="text-sm font-extrabold text-slate-900 dark:text-white">{reviewsData.avgRating} <span className="text-slate-500 font-semibold">({reviewsData.count})</span></p>
-              </div>
-            )}
-          </div>
-          <p className="text-base sm:text-lg text-slate-500 font-medium">Real feedback from verified buyers.</p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Review Form */}
-          <div>
-            <CarReviewForm carId={car.id} />
+             )}
           </div>
 
-          {/* Reviews List */}
-          <div className="space-y-4">
-            {reviewsData.reviews.length > 0 ? (
-              reviewsData.reviews.map((review) => (
-                <div key={review.id} className="border border-slate-200 dark:border-slate-800 rounded-lg p-5 bg-white">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      {review.user.avatarUrl ? (
-                        <img src={review.user.avatarUrl} alt={review.user.name} className="w-10 h-10 rounded-full object-cover" />
-                      ) : (
-                        <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-sm font-bold text-slate-600">
-                          {review.user.name[0]}
-                        </div>
-                      )}
-                      <div>
-                        <p className="font-extrabold text-slate-900 dark:text-white text-sm">{review.user.name}</p>
-                        <p className="text-xs text-slate-500">{new Date(review.createdAt).toLocaleDateString()}</p>
-                      </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+             <div className="lg:col-span-4">
+                <CarReviewForm carId={car.id} />
+             </div>
+             <div className="lg:col-span-8 space-y-8">
+                {reviewsData.reviews.length > 0 ? (
+                  reviewsData.reviews.map((r) => (
+                    <div key={r.id} className="pb-8 border-b border-[#EDF2F7]">
+                       <div className="flex justify-between items-center mb-4">
+                          <div className="flex items-center gap-3">
+                             <div className="w-8 h-8 rounded-full bg-[#EDF2F7] flex items-center justify-center overflow-hidden">
+                                {r.user.avatarUrl ? <img src={r.user.avatarUrl} className="w-full h-full object-cover" /> : <span className="text-[10px] font-bold">{r.user.name[0]}</span>}
+                             </div>
+                             <span className="text-sm font-bold text-[#1A202C]">{r.user.name}</span>
+                          </div>
+                          <div className="flex text-amber-400">
+                             {[...Array(5)].map((_, i) => <Star key={i} className={`w-3 h-3 ${i < r.rating ? 'fill-current' : 'text-[#CBD5E0]'}`} />)}
+                          </div>
+                       </div>
+                       <p className="text-base text-[#718096] leading-relaxed font-medium">{r.comment}</p>
                     </div>
-                    <div className="flex gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < review.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  {review.comment && (
-                    <p className="text-sm text-slate-700 font-medium leading-relaxed">{review.comment}</p>
-                  )}
-                </div>
-              ))
-            ) : (
-              <div className="border border-slate-200 dark:border-slate-800 rounded-lg p-8 bg-slate-50 dark:bg-slate-900 text-center">
-                <p className="text-sm text-slate-500 font-medium">No reviews yet. Be the first to share your experience!</p>
-              </div>
-            )}
+                  ))
+                ) : (
+                  <p className="text-[#718096] font-medium italic">No reviews yet for this unit.</p>
+                )}
+             </div>
           </div>
         </div>
       </div>
 
-      {/* Hidden Spec Sheet for Printing */}
+      {/* Persistent Mobile Bottom Bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-[#EDF2F7] px-6 py-5 flex items-center gap-4">
+         <div className="flex-1">
+            <p className="text-[10px] font-bold text-[#718096] uppercase tracking-widest mb-1">List Price</p>
+            <p className="text-lg font-bold text-[#1A202C]">{formatCarPrice(car)}</p>
+         </div>
+         {dealer.whatsapp && (
+           <a href={whatsappLink(dealer.whatsapp, title, dealer.name)} className="bg-[#38A169] text-white px-6 py-4 text-xs font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
+              WhatsApp
+           </a>
+         )}
+      </div>
+
       <SpecSheet car={car} dealer={dealer} />
-    </div>
+      <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
     </div>
   );
 }

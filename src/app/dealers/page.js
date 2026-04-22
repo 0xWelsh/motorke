@@ -20,188 +20,124 @@ export default async function DealersPage() {
   const counties = [...new Set(dealers.map((d) => d.county))].sort();
 
   return (
-    <div className="min-h-screen bg-[#f7f6f3]">
-      <div className="w-full max-w-[2560px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-5 sm:py-6 lg:py-8 overflow-hidden">
+    <div className="bg-white min-h-screen pb-20">
+      <div className="container mx-auto px-6 max-w-7xl pt-32 sm:pt-40">
         
-        {/* Top Breadcrumb Bar */}
-        <div className="block w-full mb-6 sm:mb-8 overflow-hidden text-[14px] font-medium">
-          <div className="block w-full xl:w-1/4 2xl:w-1/4 xl:float-left xl:pr-3 mb-4 xl:mb-0">
-            <div className="flex items-center gap-3 text-slate-800 dark:text-slate-200">
-              <Link href="/" className="hover:text-black transition-colors">Home</Link>
-              <span className="text-slate-400 text-xs mt-0.5">›</span>
-              <span className="text-slate-900 dark:text-white">Dealers</span>
-            </div>
+        {/* Header Section */}
+        <div className="mb-16">
+          <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-4">
+            <Link href="/" className="hover:text-[#1A202C] transition-colors">Home</Link>
+            <span>/</span>
+            <span className="text-[#1A202C]">Dealers</span>
           </div>
-          <div className="block w-full xl:w-3/4 2xl:w-3/4 xl:float-left text-slate-800 dark:text-slate-200 xl:pl-1 mt-1 font-black uppercase tracking-widest text-[11px]">
-            {dealers.length} Verified Stations
-          </div>
+          <h1 className="text-4xl sm:text-6xl font-bold text-[#1A202C] tracking-tight leading-[1.1] mb-6">
+            Our Trusted <br />
+            <span className="editorial-heading text-[#718096]">Station Network.</span>
+          </h1>
+          <p className="text-[#718096] text-lg font-medium max-w-2xl">
+            Connecting you with {dealers.length} verified dealerships across the region.
+            Every partner is vetted for compliance and service excellence.
+          </p>
         </div>
 
-        {/* Main Floating Matrix Container */}
-        <div className="block -mx-2 sm:-mx-3">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           
-          {/* Sidebar Area */}
-          <aside className="block float-left w-full xl:w-1/4 px-2 sm:px-3 mb-6 xl:mb-0 relative z-20">
-            <div className="xl:sticky xl:top-[84px] space-y-6">
-              
-              {/* Dummy Filter Block */}
-              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 p-6 shadow-sm rounded-2xl">
-                <span className="inline-block bg-[#111111] text-white text-[11px] font-black uppercase tracking-widest px-2 py-1 mb-4">Terminal Filter</span>
-                <div className="space-y-4">
-                  <input type="text" placeholder="Search by name..." className="w-full border border-[#ddd4c8] dark:border-slate-800 text-sm p-3 rounded-2xl focus:outline-none focus:border-slate-900 transition-colors" />
-                  
-                  <select className="w-full border border-[#ddd4c8] dark:border-slate-800 text-sm p-3 rounded-2xl focus:outline-none focus:border-slate-900 transition-colors bg-white">
-                    <option value="">All Regions</option>
-                    {counties.map(county => (
-                      <option key={county} value={county}>{county}</option>
-                    ))}
-                  </select>
-
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" className="form-checkbox text-[#111111] border-[#ddd4c8] dark:border-slate-800 rounded-2xl focus:ring-0 w-4 h-4" />
-                    <span className="text-xs font-black uppercase tracking-widest text-slate-700">Verified Only</span>
-                  </label>
-
-                  <button className="w-full bg-[#111111] hover:bg-[#ff5a2f] text-white text-[11px] font-black uppercase tracking-widest py-3 rounded-full transition-colors">
-                    Update Radar
-                  </button>
+          {/* Sidebar */}
+          <aside className="lg:col-span-3 lg:sticky lg:top-32 space-y-10">
+            <div className="bg-[#F7FAFC] border border-[#E2E8F0] p-8" style={{ borderRadius: 'var(--radius)' }}>
+              <h3 className="text-xs font-bold text-[#1A202C] uppercase tracking-widest mb-6">Refine Network</h3>
+              <div className="space-y-6">
+                <div className="space-y-2">
+                   <label className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Search</label>
+                   <input type="text" placeholder="Dealer name..." className="w-full bg-white border border-[#E2E8F0] px-4 py-3 text-sm font-medium outline-none focus:border-[#1A202C] transition-all" style={{ borderRadius: 'var(--radius)' }} />
                 </div>
-              </div>
-
-              {/* Find Nearby Block */}
-              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 p-6 shadow-sm rounded-2xl">
-                <div className="mb-4 text-center">
-                  <MapPin className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                  <h3 className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest leading-tight">
-                    Proximity Radar
-                  </h3>
+                <div className="space-y-2">
+                   <label className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Region</label>
+                   <select className="w-full bg-white border border-[#E2E8F0] px-4 py-3 text-sm font-medium outline-none focus:border-[#1A202C] transition-all appearance-none cursor-pointer" style={{ borderRadius: 'var(--radius)' }}>
+                      <option value="">All Regions</option>
+                      {counties.map(c => <option key={c} value={c}>{c}</option>)}
+                   </select>
                 </div>
-                <NearbyDealersList />
+                <button className="w-full bg-[#1A202C] text-white py-4 text-[10px] font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
+                   Apply Filters
+                </button>
               </div>
+            </div>
+
+            <div className="bg-[#F7FAFC] border border-[#E2E8F0] p-8" style={{ borderRadius: 'var(--radius)' }}>
+               <h3 className="text-xs font-bold text-[#1A202C] uppercase tracking-widest mb-6">Proximity Radar</h3>
+               <NearbyDealersList />
             </div>
           </aside>
 
-          {/* Dealership Grid (Right Side) */}
-          <div className="block float-left w-full xl:w-3/4 px-2 sm:px-3">
-            
+          {/* Grid */}
+          <main className="lg:col-span-9">
             {dealers.length === 0 ? (
-              <div className="py-20 text-center border border-[#ddd4c8] dark:border-slate-800 bg-white">
-                <p className="text-sm font-black uppercase tracking-widest text-slate-500">No dealers available yet.</p>
+              <div className="py-32 text-center bg-[#F7FAFC] border border-[#E2E8F0]" style={{ borderRadius: 'var(--radius)' }}>
+                <Building2 className="w-12 h-12 text-[#CBD5E0] mx-auto mb-6" />
+                <h2 className="text-2xl font-bold text-[#1A202C] mb-2">Network offline</h2>
+                <p className="text-[#718096] font-medium">We couldn't find any active dealers matching your criteria.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-4 mb-16">
-                {dealers.map((dealer) => {
-                  const brandImage = dealer.logoUrl || dealer.users?.[0]?.avatarUrl;
-                  const bannerImage = dealer.bannerUrl || "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=1200";
-
-                  return (
-                    <Link
-                      key={dealer.id}
-                      href={`/dealers/${dealer.slug}`}
-                      className="group bg-white flex flex-col rounded-2xl border border-[#ddd4c8] dark:border-slate-800 hover:border-slate-400 transition-all h-full overflow-hidden"
-                    >
-                      {/* Banner Image Area */}
-                      <div className="relative aspect-[16/10] bg-slate-100 border-b border-[#ddd4c8] dark:border-slate-800 overflow-hidden shrink-0">
-                        <img 
-                          src={bannerImage} 
-                          alt={`${dealer.name} showroom`} 
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                        
-                        {/* Top Badges */}
-                        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-                          {dealer.verified && (
-                            <span className="bg-emerald-400 text-white text-[11px] font-black px-2 py-1 shadow-sm uppercase tracking-wider self-start">
-                              VERIFIED
-                            </span>
-                          )}
-                          {dealer.featured && (
-                            <span className="bg-[#111111] text-white text-[11px] font-black px-2 py-1 shadow-sm uppercase tracking-wider self-start">
-                              FEATURED
-                            </span>
-                          )}
-                        </div>
-
-                        {/* County Tag */}
-                        {dealer.county && (
-                          <span className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md text-slate-900 dark:text-white text-[11px] font-black px-3 py-1.5 border border-white uppercase tracking-widest">
-                            {dealer.county}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="p-5 flex flex-col flex-1">
-                        <div className="flex justify-between items-start gap-4 mb-4 -mt-10 relative z-10">
-                          {/* Logo */}
-                          <div className="w-[64px] h-[64px] rounded-2xl bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
-                            {brandImage ? (
-                              <img src={brandImage} alt={dealer.name} className="w-full h-full object-cover" />
-                            ) : (
-                              <span className="text-slate-400 font-black text-xl">{dealer.name?.[0] || '?'}</span>
-                            )}
-                          </div>
-                          
-                          <div className="bg-[#111111] text-white px-2.5 py-1 text-[11px] uppercase font-black tracking-widest mt-6">
-                              {dealer._count?.cars || 0} LIVE
-                          </div>
-                        </div>
-
-                        {/* Info */}
-                        <div className="mb-2">
-                          <h3 className="text-lg font-black text-slate-900 dark:text-white group-hover:text-[#ff5a2f] transition-colors truncate uppercase tracking-widest leading-none mb-2">{dealer.name}</h3>
-                          <p className="text-[11px] font-bold text-slate-500 flex items-center gap-1.5 uppercase tracking-wide truncate">
-                            <MapPin size={12} className="text-slate-400 shrink-0" /> {dealer.location || 'Terminal Not Set'}
-                          </p>
-                        </div>
-
-                        {/* Description */}
-                        <div className="flex-1 mt-2">
-                          {dealer.description ? (
-                            <p className="text-[13px] text-slate-600 line-clamp-2 leading-relaxed font-medium">
-                              {dealer.description}
-                            </p>
-                          ) : (
-                            <p className="text-[13px] text-slate-400 italic line-clamp-2">
-                              A premium vehicle dealership offering tailored import and local models.
-                            </p>
-                          )}
-                        </div>
-                        
-                        {/* View Button Row */}
-                        <div className="mt-6 pt-4 border-t border-[#f0f0f0] flex justify-between items-center">
-                          <div className="flex items-center gap-1 text-[11px] font-black uppercase text-slate-400 tracking-widest">
-                            <span className="text-[#f59e0b]">★</span>
-                            <span className="text-[#f59e0b]">★</span>
-                            <span className="text-[#f59e0b]">★</span>
-                            <span className="text-[#f59e0b]">★</span>
-                            <span className="text-[#f59e0b]">★</span>
-                            <span className="ml-1">(5.0)</span>
-                          </div>
-                          <span className="text-[11px] font-black uppercase text-white tracking-widest flex items-center justify-center border border-slate-900 px-3 py-1.5 group-hover:bg-[#111111] group-hover:text-white transition-colors">
-                            Enter Store <ArrowUpRight className="w-3 h-3 ml-1" />
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                {dealers.map((dealer) => (
+                  <DealerCard key={dealer.id} dealer={dealer} />
+                ))}
               </div>
             )}
 
-            {/* General Maps - moved to bottom */}
-            <div className="w-full border border-[#ddd4c8] dark:border-slate-800 bg-white p-6 rounded-2xl mb-12 shadow-sm">
-              <div className="mb-6 flex items-center gap-3">
-                <span className="bg-[#111111] text-white p-2 rounded-2xl"><MapPin size={18} /></span>
-                <h2 className="text-[15px] font-black text-slate-900 dark:text-white uppercase tracking-widest">National Grid Array</h2>
-              </div>
-              <div className="h-[400px] border border-[#ddd4c8] dark:border-slate-800 bg-[#fbfcfd]">
-                <DealersMapView dealers={dealers} />
-              </div>
+            {/* National Grid Map */}
+            <div className="mt-20 pt-20 border-t border-[#EDF2F7]">
+               <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-10">National Grid Array</h2>
+               <div className="h-[500px] bg-[#F7FAFC] border border-[#E2E8F0] overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
+                  <DealersMapView dealers={dealers} />
+               </div>
             </div>
-
-          </div>
+          </main>
         </div>
       </div>
     </div>
+  );
+}
+
+function DealerCard({ dealer }) {
+  const brandImage = dealer.logoUrl || dealer.users?.[0]?.avatarUrl;
+  const bannerImage = dealer.bannerUrl || "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=1200";
+
+  return (
+    <Link href={`/dealers/${dealer.slug}`} className="group flex flex-col bg-white border-b border-transparent hover:border-[#38A169] transition-all pb-4">
+      <div className="relative aspect-[16/10] bg-[#F7FAFC] overflow-hidden mb-8" style={{ borderRadius: 'var(--radius)' }}>
+        <img src={bannerImage} alt={dealer.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+        <div className="absolute top-4 left-4 flex flex-col gap-2">
+           {dealer.verified && <span className="bg-[#38A169] text-white text-[8px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>VERIFIED</span>}
+           {dealer.featured && <span className="bg-[#1A202C] text-white text-[8px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>PREMIUM</span>}
+        </div>
+      </div>
+
+      <div className="flex-1 flex flex-col">
+        <div className="flex items-start justify-between gap-4 mb-4">
+           <div>
+              <h3 className="text-lg font-bold text-[#1A202C] group-hover:text-[#38A169] transition-colors">{dealer.name}</h3>
+              <p className="text-[10px] font-bold text-[#718096] uppercase tracking-widest mt-1 flex items-center gap-1">
+                 <MapPin className="w-3 h-3 text-[#38A169]" /> {dealer.location || dealer.county}
+              </p>
+           </div>
+           <div className="w-10 h-10 border border-[#E2E8F0] flex items-center justify-center shrink-0 overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
+              {brandImage ? <img src={brandImage} className="w-full h-full object-cover" /> : <span className="text-xs font-bold text-[#CBD5E0]">{dealer.name[0]}</span>}
+           </div>
+        </div>
+
+        <p className="text-xs text-[#718096] font-medium line-clamp-2 leading-relaxed mb-6">
+           {dealer.description || "A cornerstone of our verified network, offering premium logistics and asset transparency."}
+        </p>
+
+        <div className="mt-auto pt-4 flex items-center justify-between border-t border-[#EDF2F7]">
+           <span className="text-[10px] font-bold text-[#1A202C] uppercase tracking-widest">{dealer._count?.cars || 0} Listed Units</span>
+           <span className="text-[10px] font-bold text-[#38A169] uppercase tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all">
+              Visit Station <ArrowUpRight className="w-3 h-3" />
+           </span>
+        </div>
+      </div>
+    </Link>
   );
 }

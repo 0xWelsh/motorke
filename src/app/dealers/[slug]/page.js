@@ -135,169 +135,89 @@ export default async function DealerPage(props) {
   };
 
   return (
-    <div className="min-h-screen bg-[#fbfcfe] dark:bg-[#111111]">
+    <div className="bg-white min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      {/* 1. HERO COVER BANNER */}
-      {hasHeroBanner && (
-        <div className="w-full h-[240px] sm:h-[320px] lg:h-[400px] relative overflow-hidden bg-slate-900">
-           {dealer.bannerUrl ? (
-             <img
-               src={dealer.bannerUrl}
-               alt={`${dealer.name} banner`}
-               className="absolute inset-0 h-full w-full object-cover opacity-80"
-             />
-           ) : (
-             <div className="absolute inset-0 grid grid-cols-3 gap-1 opacity-70">
-                {dealerGallery.slice(0, 3).map((car, i) => (
-                  <div key={i} className="relative h-full w-full">
-                    <Image src={car.image} alt={car.title} fill className="object-cover" />
-                  </div>
-                ))}
-             </div>
-           )}
-           <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
-        </div>
-      )}
+      
+      {/* Hero Banner */}
+      <div className="w-full h-[40vh] sm:h-[50vh] relative bg-[#1A202C] overflow-hidden">
+         {dealer.bannerUrl ? (
+           <img src={dealer.bannerUrl} alt={dealer.name} className="absolute inset-0 w-full h-full object-cover opacity-60" />
+         ) : (
+           <div className="absolute inset-0 grid grid-cols-3 gap-1 opacity-40">
+              {dealerGallery.map((car, i) => (
+                <div key={i} className="relative h-full w-full">
+                  <Image src={car.image} alt={car.title} fill className="object-cover" />
+                </div>
+              ))}
+           </div>
+         )}
+         <div className="absolute inset-0 bg-gradient-to-t from-[#1A202C] via-transparent to-transparent" />
+      </div>
 
-      {/* Adjust container based on presence of hero banner */}
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 pb-24 ${hasHeroBanner ? "-mt-24 sm:-mt-32 relative z-10" : "pt-8 sm:pt-12"}`}>
+      <div className="container mx-auto px-6 max-w-7xl -mt-32 relative z-10 pb-20">
         
         {/* Dealership Info Card */}
-        <section className="bg-white rounded-2xl p-6 sm:p-10 shadow-sm border border-slate-200 dark:border-slate-800 mb-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[140px_minmax(0,1fr)_auto] gap-6 sm:gap-8 lg:gap-12 items-start">
+        <div className="bg-white border border-[#E2E8F0] p-8 sm:p-12 shadow-sm mb-16" style={{ borderRadius: 'var(--radius)' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             
-            {/* Logo */}
-            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl bg-slate-100 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white flex items-center justify-center font-black text-4xl sm:text-5xl overflow-hidden -mt-16 sm:-mt-20 shadow-md">
-              {dealer.logoUrl ? (
-                <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" />
-              ) : (
-                dealer.name?.[0] || "D"
-              )}
+            {/* Logo & Identity */}
+            <div className="lg:col-span-8 flex flex-col sm:flex-row gap-8 items-start sm:items-center">
+               <div className="w-32 h-32 bg-white border border-[#E2E8F0] p-4 flex items-center justify-center shrink-0 overflow-hidden shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+                  {dealer.logoUrl ? <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" /> : <span className="text-4xl font-bold text-[#CBD5E0]">{dealer.name[0]}</span>}
+               </div>
+               <div>
+                  <div className="flex items-center gap-4 mb-4">
+                     <h1 className="text-4xl sm:text-5xl font-bold text-[#1A202C] leading-tight tracking-tight">{dealer.name}</h1>
+                     {dealer.verified && <span className="bg-[#38A169] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>VERIFIED STATION</span>}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-[#718096]">
+                     <span className="flex items-center gap-2"><MapPin className="w-3 h-3 text-[#38A169]" /> {dealer.location || dealer.county}</span>
+                     <span className="flex items-center gap-2"><ShieldCheck className="w-3 h-3 text-[#38A169]" /> Member since {startedYear}</span>
+                  </div>
+               </div>
             </div>
 
-            {/* Title & Details */}
-            <div className="min-w-0 pt-2 lg:pt-0">
-              <div className="flex flex-wrap items-center gap-3 mb-4">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight font-times">{dealer.name}</h1>
-                {dealer.verified && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[11px] font-black uppercase tracking-[0.14em] text-emerald-700 border border-emerald-100">
-                    <ShieldCheck className="w-3.5 h-3.5" /> Verified Profile
-                  </span>
-                )}
-              </div>
-
-              <p className="text-slate-500 font-extrabold text-xs mb-5 flex items-center gap-2 uppercase tracking-[0.12em]">
-                <MapPin className="w-4 h-4" /> {dealer.address || dealer.location}
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-4 py-3">
-                  <p className="text-xs font-semibold text-slate-600 mb-1">Verification</p>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">
-                    {dealer.verified ? "MotorKE Verified" : "Verification pending"}
-                  </p>
-                </div>
-
-                <a
-                  href={googleMapsHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-4 py-3 hover:bg-slate-100 transition-colors"
-                >
-                  <p className="text-xs font-semibold text-slate-600 mb-1">Location</p>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">View on map →</p>
-                </a>
-
-                <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-4 py-3">
-                  <p className="text-xs font-semibold text-slate-600 mb-1">Operating since</p>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">{startedYear}</p>
-                </div>
-              </div>
-
-              <p className="text-slate-600 text-sm leading-relaxed max-w-3xl mb-6 font-medium">
-                {dealer.description || `${dealer.name} maintains a curated selection of vehicles for buyers who want trusted listings, clear pricing, and direct contact with a real dealership team.`}
-              </p>
-
-              <div className="flex flex-wrap items-center gap-3">
-                {contactLinks.length > 0 ? (
-                  contactLinks.map((item) => {
-                    const isWhatsApp = item.label === "WhatsApp";
-                    return (
-                      <a
-                        key={item.label}
-                        href={item.href}
-                        target={item.external ? "_blank" : undefined}
-                        rel={item.external ? "noopener noreferrer" : undefined}
-                        className={isWhatsApp
-                          ? "inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 text-xs font-semibold text-white hover:bg-green-700 transition-colors"
-                          : "inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-slate-200 transition-colors"
-                        }
-                      >
-                        {item.icon} {item.label}
-                      </a>
-                    );
-                  })
-                ) : (
-                  <p className="text-xs text-slate-400">Contact info not available</p>
-                )}
-              </div>
-
-              {whatsappChatHref && (
-                <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-1.5 text-xs font-medium text-slate-600">
-                  <MessageCircle className="w-3.5 h-3.5" />
-                  Usually replies within 15 minutes
-                </p>
-              )}
-
-              {dealerRatingTags.length > 0 && (
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {dealerRatingTags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex rounded-full border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-1 text-xs font-medium text-slate-700"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Stats Sidebar inside Header */}
-              <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 lg:border-l lg:border-slate-200 dark:border-slate-800 lg:pl-10 w-full pt-4 lg:pt-0">
-              <div>
-                <p className="text-slate-900 dark:text-white font-bold text-3xl leading-none">{dealer.cars.length}</p>
-                <p className="text-xs text-slate-500 font-medium mt-2">Cars in stock</p>
-              </div>
-              <a href="#reviews" className="group block">
-                <span className="flex items-center gap-1.5 text-slate-900 dark:text-white font-bold text-3xl leading-none group-hover:text-amber-600 transition-colors">
-                   {averageRating > 0 ? averageRating.toFixed(1) : "—"} <span className="text-lg text-amber-500">★</span>
-                </span>
-                <p className="text-xs text-slate-500 font-medium mt-2 group-hover:text-slate-700 transition-colors">{totalReviews} {totalReviews === 1 ? "review" : "reviews"}</p>
-              </a>
+            {/* Quick Actions */}
+            <div className="lg:col-span-4 flex flex-col gap-4">
+               {dealer.whatsapp && (
+                 <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="bg-[#38A169] text-white py-4 text-center text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
+                    Start Live Enquiry
+                 </a>
+               )}
+               <div className="grid grid-cols-2 gap-4">
+                  {dealer.phone && <a href={`tel:${dealer.phone}`} className="bg-[#EDF2F7] text-[#1A202C] py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-[#E2E8F0]" style={{ borderRadius: 'var(--radius)' }}>Call Direct</a>}
+                  {dealer.website && <a href={dealer.website.startsWith('http') ? dealer.website : `https://${dealer.website}`} target="_blank" rel="noopener noreferrer" className="bg-[#EDF2F7] text-[#1A202C] py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-[#E2E8F0]" style={{ borderRadius: 'var(--radius)' }}>Visit Site</a>}
+               </div>
             </div>
           </div>
-        </section>
+
+          <div className="mt-12 pt-12 border-t border-[#EDF2F7]">
+             <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-6">About the Station</h2>
+             <div className="text-lg text-[#1A202C] leading-relaxed font-medium max-w-4xl editorial-heading">
+                {dealer.description || `${dealer.name} is a cornerstone of our verified network, committed to operational excellence and transparency in asset logistics.`}
+             </div>
+          </div>
+        </div>
 
         {/* Content Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 sm:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
           
-          <div className="min-w-0">
-            {/* 3. INLINE INVENTORY SEARCH & FILTERS */}
-            <section className="mb-16">
-              <div className="flex items-end justify-between gap-4 mb-6">
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">Dealership Showroom</h2>
-                  <p className="text-xs font-medium text-slate-500 mt-1">Explore all {dealer.cars.length} vehicles currently in stock</p>
-                </div>
+          {/* Main Content */}
+          <div className="lg:col-span-8 space-y-20">
+            {/* Inventory */}
+            <section>
+              <div className="flex items-end justify-between mb-12">
+                 <div>
+                    <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-4">Showroom Inventory</h2>
+                    <h3 className="text-3xl font-bold text-[#1A202C]">Live Listings.</h3>
+                 </div>
+                 <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">{dealer.cars.length} Units Available</span>
               </div>
-              
               <DealerInventory cars={dealer.cars} dealerSlug={dealer.slug} />
-
             </section>
 
             {/* Reviews Section */}
-            <section id="reviews">
+            <section id="reviews" className="pt-20 border-t border-[#EDF2F7]">
               <DealerReviews
                 dealerSlug={dealer.slug}
                 dealerName={dealer.name}
@@ -310,75 +230,65 @@ export default async function DealerPage(props) {
             </section>
           </div>
 
-          <aside className="space-y-6 sm:space-y-8">
-            {/* Embedded Location Map */}
-            <DealerLocationMap dealer={dealer} />
-
-
-            <div className="rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-6 sm:p-8 text-center pb-8 sm:pb-8 hidden lg:block">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto shadow-sm border border-slate-200 dark:border-slate-800 mb-4">
-                 <ShieldCheck className="w-5 h-5 text-emerald-600" />
-              </div>
-              <h3 className="text-sm font-black text-slate-900 dark:text-white mb-2">Buy with Confidence</h3>
-              <p className="text-xs font-medium text-slate-500 leading-relaxed">
-                Connect directly with the dealer. Motorke verified this partner's business details to ensure a safe shopping experience.
-              </p>
+          {/* Sidebar */}
+          <aside className="lg:col-span-4 space-y-12">
+            {/* Map */}
+            <div className="bg-white border border-[#E2E8F0] p-1 overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
+               <div className="h-[300px] bg-[#F7FAFC]">
+                  <DealerLocationMap dealer={dealer} />
+               </div>
+               <div className="p-6">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-2">Station Address</h4>
+                  <p className="text-sm font-bold text-[#1A202C]">{dealer.address || dealer.location || "Nairobi, Kenya"}</p>
+               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-white p-6 sm:p-8 shadow-sm">
-              <h2 className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-5">Dealership Services</h2>
-              <div className="space-y-3">
-                {[
-                  { name: "Trade-in Available", value: "Available on request" },
-                  { name: "Bank Financing Partners", value: "Ask dealer for partner banks" },
-                  { name: "Insurance Facilitation", value: "Paperwork support available" },
-                ].map((item) => (
-                  <div key={item.name} className="rounded-xl border border-slate-100 bg-slate-50 dark:bg-slate-900 px-3 py-3">
-                    <p className="text-xs font-black text-slate-900 dark:text-white">{item.name}</p>
-                    <p className="text-[11px] font-bold text-slate-500 mt-1">{item.value}</p>
+            {/* Stats / Badges */}
+            <div className="bg-[#F7FAFC] p-8 space-y-8" style={{ borderRadius: 'var(--radius)' }}>
+               <div>
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-4">Service Metrics</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                     <div className="bg-white p-4 border border-[#E2E8F0]" style={{ borderRadius: 'var(--radius)' }}>
+                        <p className="text-2xl font-bold text-[#1A202C]">{dealer.cars.length}</p>
+                        <p className="text-[9px] font-bold text-[#718096] uppercase tracking-widest mt-1">Stock</p>
+                     </div>
+                     <div className="bg-white p-4 border border-[#E2E8F0]" style={{ borderRadius: 'var(--radius)' }}>
+                        <p className="text-2xl font-bold text-[#1A202C]">{averageRating > 0 ? averageRating.toFixed(1) : "—"}</p>
+                        <p className="text-[9px] font-bold text-[#718096] uppercase tracking-widest mt-1">Rating</p>
+                     </div>
                   </div>
-                ))}
-              </div>
+               </div>
+
+               <div className="space-y-4">
+                  {[
+                    "Verified Assets",
+                    "Direct Logistics",
+                    "Bank Finance Ready"
+                  ].map((tag) => (
+                    <div key={tag} className="flex items-center gap-3 text-xs font-bold text-[#1A202C] uppercase tracking-widest">
+                       <ShieldCheck className="w-4 h-4 text-[#38A169]" /> {tag}
+                    </div>
+                  ))}
+               </div>
             </div>
           </aside>
 
         </div>
       </div>
 
-      {/* 2. STICKY ACTION BAR (MOBILE UX) */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 p-4 lg:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.05)] transform transition-transform duration-300">
-        <div className="flex gap-3 max-w-lg mx-auto">
-           {contactLinks.map((item) => (
-             <a
-                key={item.label}
-                href={item.href}
-                target={item.external ? "_blank" : undefined}
-                className="flex-1 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center gap-2 text-[11px] font-black uppercase tracking-[0.14em]"
-             >
-                {item.icon} {item.label}
-             </a>
-           ))}
-           {contactLinks.length === 0 && (
-             <span className="flex-1 h-12 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center text-[11px] font-black uppercase tracking-widest">
-               No Contact Available
-             </span>
-           )}
-        </div>
+      {/* Persistent Mobile Action Bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-[#EDF2F7] px-6 py-5 flex items-center gap-4">
+         {dealer.phone && (
+           <a href={`tel:${dealer.phone}`} className="flex-1 bg-[#1A202C] text-white py-4 text-center text-xs font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
+              Call
+           </a>
+         )}
+         {dealer.whatsapp && (
+           <a href={whatsappChatHref} className="flex-1 bg-[#38A169] text-white py-4 text-center text-xs font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
+              WhatsApp
+           </a>
+         )}
       </div>
-
-      {whatsappChatHref && (
-        <div className="fixed bottom-24 sm:bottom-6 right-4 sm:right-6 z-[60]">
-          <a
-            href={whatsappChatHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-lg shadow-emerald-900/20 hover:brightness-95 transition-all"
-          >
-            <MessageCircle className="w-4 h-4" />
-            Chat with {dealer.name}
-          </a>
-        </div>
-      )}
 
     </div>
   );
