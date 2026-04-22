@@ -269,7 +269,7 @@ export default function BrowsePanel() {
         </div>
         <NearbyDealersList />
       </div>
-    import NearbyDealersList from "./NearbyDealersList";
+    import NearbyDealersList from "./NearbyDealersList.js";
     </div>
   );
 }
