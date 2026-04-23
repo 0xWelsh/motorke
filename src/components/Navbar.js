@@ -218,43 +218,16 @@ export default function Navbar({ user }) {
 
             {/* MOBILE ACTIONS */}
             <div className="flex lg:hidden items-center gap-1">
-              <button
-                onClick={() => setMobileSearch(!mobileSearch)}
-                className="w-9 h-9 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
-                style={{ borderRadius: 'var(--radius)' }}
-              >
-                <Search size={16} />
-              </button>
-
-              {user ? (
-                <>
-                  <div className="h-9 px-0.5 flex items-center bg-[#EDF2F7] dark:bg-zinc-900" style={{ borderRadius: 'var(--radius)' }}>
-                    <NotificationsBell variant="navbar" />
-                  </div>
-                  <Link href="/account" className="w-9 h-9 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white" style={{ borderRadius: 'var(--radius)' }}>
-                    {user.avatarUrl ? (
-                      <img src={user.avatarUrl} alt={user.name} className="w-6 h-6 object-cover rounded-full" />
-                    ) : (
-                      <User size={16} />
-                    )}
-                  </Link>
-                </>
-              ) : (
-                <Link href="/login" className="w-9 h-9 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white" style={{ borderRadius: 'var(--radius)' }}>
-                  <User size={16} />
-                </Link>
-              )}
-
-              <div className="h-9 px-0.5 flex items-center bg-[#EDF2F7] dark:bg-zinc-900" style={{ borderRadius: 'var(--radius)' }}>
+              <div className="h-10 px-0.5 flex items-center bg-[#EDF2F7] dark:bg-zinc-900" style={{ borderRadius: 'var(--radius)' }}>
                 <ThemeToggle simple />
               </div>
 
               <button
                 onClick={() => setOpen(!open)}
-                className="w-9 h-9 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
+                className="w-10 h-10 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
                 style={{ borderRadius: 'var(--radius)' }}
               >
-                {open ? <X size={20} /> : <Menu size={20} />}
+                {open ? <X size={22} /> : <Menu size={22} />}
               </button>
             </div>
           </div>
@@ -332,6 +305,13 @@ export default function Navbar({ user }) {
             </div>
 
             <div className="flex flex-col gap-6 mb-12">
+              <button 
+                onClick={() => { setOpen(false); setMobileSearch(true); }}
+                className="flex items-center gap-4 text-lg font-bold uppercase tracking-widest text-[#38A169]">
+                <Search size={22} />
+                Search
+              </button>
+
               {links.map(({ href, label }) => (
                 <Link key={href} href={href} onClick={() => setOpen(false)}
                   className="text-lg font-bold uppercase tracking-widest text-slate-900 dark:text-white hover:text-[#38A169] transition-colors">
@@ -344,6 +324,19 @@ export default function Navbar({ user }) {
               </Link>
             </div>
             
+            {user && (
+              <div className="mb-12 pt-8 border-t border-gray-100 dark:border-zinc-800 space-y-6">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Notifications</span>
+                  <NotificationsBell variant="navbar" />
+                </div>
+                <Link href="/account" onClick={() => setOpen(false)} className="flex items-center gap-4 text-lg font-bold uppercase tracking-widest text-slate-900 dark:text-white">
+                  <User size={22} className="text-[#718096]" />
+                  Dashboard
+                </Link>
+              </div>
+            )}
+
             <div className="mt-auto space-y-4 pt-8 border-t border-gray-100 dark:border-zinc-800">
               {!user ? (
                 <>
