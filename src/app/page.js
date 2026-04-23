@@ -12,6 +12,7 @@ import {
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
 import HeroShowcase from "@/components/HeroShowcase";
+import CarCard from "@/components/CarCard";
 
 const HERO_BACKGROUND = "/images/mercedes.jpg";
 
@@ -285,70 +286,5 @@ export default async function HomePage() {
       )}
 
     </div>
-  );
-}
-
-function CarCard({ car }) {
-  const img = car.images?.[0]?.url;
-  const title = `${car.make} ${car.model}`;
-  
-  return (
-    <article className="group flex flex-col h-full bg-white dark:bg-zinc-900 border border-slate-100 dark:border-slate-800 transition-all hover:shadow-xl overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
-      <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-[#EDF2F7] dark:bg-zinc-800 overflow-hidden block">
-        {img ? (
-          <Image
-            src={img}
-            alt={title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-[#718096] text-[10px] font-bold uppercase tracking-widest">No Image Available</div>
-        )}
-        <div className="absolute top-4 right-4">
-          <span className="bg-[#38A169] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest shadow-sm" style={{ borderRadius: '1px' }}>
-            {car.available ? "AVAILABLE" : "SOLD"}
-          </span>
-        </div>
-      </Link>
-
-      <div className="flex flex-col flex-1 p-5">
-        <div className="mb-4">
-          <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 text-[10px] font-bold px-1.5 py-0.5" style={{ borderRadius: '1px' }}>{car.year}</span>
-            <Link href={`/cars/${car.id}`}>
-              <h3 className="text-lg font-bold text-[#111827] dark:text-white group-hover:text-[#38A169] transition-colors line-clamp-1">{title}</h3>
-            </Link>
-          </div>
-          
-          {/* Specs Summary Row */}
-          <p className="text-[11px] text-[#718096] dark:text-slate-400 font-medium mb-4 flex flex-wrap items-center gap-x-1.5">
-             {car.horsepower && <span>{car.horsepower} HP</span>}
-             {car.horsepower && car.torque && <span>•</span>}
-             {car.torque && <span>{car.torque} Nm</span>}
-             {(car.horsepower || car.torque) && car.fuelType && <span>•</span>}
-             {car.fuelType && <span className="capitalize">{car.fuelType.toLowerCase()}</span>}
-             {car.transmission && <span>•</span>}
-             {car.transmission && <span className="capitalize">{car.transmission.toLowerCase()}</span>}
-          </p>
-
-          {/* Detailed Tags Row */}
-          <div className="flex flex-wrap gap-2 mb-2">
-            <span className="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 text-[9px] font-bold px-2 py-1 uppercase tracking-wider">{car.steering || "RHD"}</span>
-            <span className="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 text-[9px] font-bold px-2 py-1 uppercase tracking-wider">{car.engineCC ? `${car.engineCC} CC` : "N/A"}</span>
-            <span className="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 text-[9px] font-bold px-2 py-1 uppercase tracking-wider">{car.fuelType || "PETROL"}</span>
-          </div>
-        </div>
-        
-        <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-50 dark:border-slate-800">
-          <div>
-            <p className="text-lg font-bold text-[#111827] dark:text-white">{formatCarPrice(car)}</p>
-          </div>
-          <Link href={`/cars/${car.id}`} className="bg-slate-50 dark:bg-slate-800 text-[#111827] dark:text-white text-[10px] font-bold uppercase tracking-widest px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" style={{ borderRadius: '2px' }}>
-            View Offer
-          </Link>
-        </div>
-      </div>
-    </article>
   );
 }
