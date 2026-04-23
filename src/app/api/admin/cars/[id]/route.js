@@ -19,7 +19,7 @@ export async function PUT(request, { params }) {
       fuelType, transmission, bodyType, engineCC, drivetrain, steering,
       cylinders, horsepower, torque, turbo, sunroof, airbags,
       color, seats, description, features, badges, images,
-      negotiable, dutyPaid, imported, featured, dealerId,
+      negotiable, dutyPaid, imported, featured, dealerId, videoUrl,
     } = body;
     console.log("🏁 UPDATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
@@ -52,6 +52,7 @@ export async function PUT(request, { params }) {
         description:  description?.trim() || null,
         features:     Array.isArray(features) ? features : [],
         badges:       Array.isArray(badges) ? badges : [],
+        videoUrl:     videoUrl?.trim() || null,
         negotiable:   Boolean(negotiable),
         dutyPaid:     Boolean(dutyPaid),
         imported:     Boolean(imported),

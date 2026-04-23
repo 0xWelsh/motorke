@@ -27,7 +27,7 @@ export async function createCar(body) {
     dealerId, make, model, variant, year, price, mileage,
     fuelType, transmission, bodyType, engineCC, drivetrain, steering,
     cylinders, horsepower, torque, turbo, sunroof, airbags,
-    color, seats, description, features, badges, images,
+    color, seats, description, features, badges, images, videoUrl,
     negotiable, dutyPaid, imported, featured,
   } = body;
   console.log("🏁 CREATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
@@ -59,6 +59,7 @@ export async function createCar(body) {
       description:  description?.trim() || null,
       features:     Array.isArray(features) ? features : [],
       badges:       Array.isArray(badges) ? badges : [],
+      videoUrl:     videoUrl?.trim() || null,
       negotiable:   Boolean(negotiable),
       dutyPaid:     Boolean(dutyPaid),
       imported:     Boolean(imported),

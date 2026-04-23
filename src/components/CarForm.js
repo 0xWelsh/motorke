@@ -199,6 +199,7 @@ function buildBaseSeed(car, currentYear) {
     turbo: car?.turbo ?? false,
     sunroof: car?.sunroof ?? false,
     featured: car?.featured ?? false,
+    videoUrl: car?.videoUrl || "",
   };
 }
 
@@ -279,6 +280,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [variantSources, setVariantSources] = useState(["inventory"]);
   const [smartFillText, setSmartFillText] = useState("");
   const [parsing, setParsing] = useState(false);
+  const [videoUrl, setVideoUrl] = useState(formSeed.videoUrl || "");
 
   const formRef = useRef(null);
   const saveTimeoutRef = useRef(null);
@@ -596,44 +598,53 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setError("");
 
     try {
-      // 1. Identify Year (4 digits 19xx or 20xx)
+      // 1. Reset target fields to "empty" state first
+      const resetState = {
+        make: "",
+        model: "",
+        year: "",
+        price: "",
+        mileage: "",
+        engineCC: "",
+        variant: ""
+      };
+      
+      let detectedYear = "";
+      let detectedMake = "";
+      let detectedModel = "";
+      let detectedPrice = "";
+      let detectedMileage = "";
+      let detectedCC = "";
+
+      // Detection 1: Year (4 digits 19xx or 20xx)
       const yearMatch = smartFillText.match(/\b(19|20)\d{2}\b/);
       if (yearMatch) {
-        setSelectedYear(yearMatch[0]);
-        setFormSeed(prev => ({ ...prev, year: parseInt(yearMatch[0], 10) }));
+        detectedYear = parseInt(yearMatch[0], 10);
       }
 
-      // 2. Identify Make (from our MAKES list)
-      let detectedMake = "";
+      // Detection 2: Make (from our MAKES list)
       for (const make of MAKES) {
         if (new RegExp(`\\b${make}\\b`, 'i').test(smartFillText)) {
           detectedMake = make;
           break;
         }
       }
-      if (detectedMake) {
-        setSelectedMake(detectedMake);
-        setFormSeed(prev => ({ ...prev, make: detectedMake }));
 
-        // 3. Identify Model (look for words right after Year or Make)
-        // This is a simple heuristic: the model is often the word following the make or year
-        // We'll also cross-reference with modelOptions if we had them, but for now we look for the next capitalized word
+      // Detection 3: Model
+      if (detectedMake) {
         const words = smartFillText.split(/[\s,]+/);
         const makeIdx = words.findIndex(w => w.toLowerCase() === detectedMake.toLowerCase());
         if (makeIdx !== -1 && words[makeIdx + 1]) {
           const potModel = words[makeIdx + 1].replace(/[^a-zA-Z0-9]/g, '');
           if (potModel && potModel.length > 2) {
-            setSelectedModel(potModel);
-            setFormSeed(prev => ({ ...prev, model: potModel }));
+            detectedModel = potModel;
           }
         }
       }
 
-      // 4. Identify Price
-      // Look for KSh 2.4M, 2,400,000, 2.4 million, etc.
+      // Detection 4: Price
       const priceRegex = /(?:ksh|price|cost)?\s*([\d,.]+)\s*(?:m|million|k)?\b/i;
       const matches = smartFillText.matchAll(new RegExp(priceRegex, 'gi'));
-      let bestPrice = null;
       for (const match of matches) {
         let val = match[1].replace(/,/g, '');
         let num = parseFloat(val);
@@ -648,18 +659,13 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           if (num < 10000) num = num * 1000;
         }
 
-        // Reasonable car price range in KES (50k to 100M)
         if (num > 50000 && num < 100000000) {
-          bestPrice = num;
+          detectedPrice = num;
           break;
         }
       }
-      if (bestPrice) {
-        setPriceInput(String(bestPrice));
-        setFormSeed(prev => ({ ...prev, price: bestPrice }));
-      }
 
-      // 5. Identify Mileage
+      // Detection 5: Mileage
       const mileageRegex = /([\d,.]+)\s*(?:km|km's|miles|mileage|k)\b/i;
       const mileageMatch = smartFillText.match(mileageRegex);
       if (mileageMatch) {
@@ -669,15 +675,33 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         if (context.includes('k') && num < 1000) num = num * 1000;
         
         if (num > 0 && num < 1000000) {
-          setFormSeed(prev => ({ ...prev, mileage: num }));
+          detectedMileage = num;
         }
       }
 
-      // 6. Identify Engine CC
+      // Detection 6: Engine CC
       const ccMatch = smartFillText.match(/(\d{3,4})\s*(?:cc)\b/i);
       if (ccMatch) {
-        setFormSeed(prev => ({ ...prev, engineCC: parseInt(ccMatch[1], 10) }));
+        detectedCC = parseInt(ccMatch[1], 10);
       }
+
+      // Final State Application
+      // Only set detected values, keep others empty as per request
+      setSelectedYear(detectedYear ? String(detectedYear) : "");
+      setSelectedMake(detectedMake || "");
+      setSelectedModel(detectedModel || "");
+      setPriceInput(detectedPrice ? String(detectedPrice) : "");
+
+      setFormSeed(prev => ({
+        ...prev,
+        ...resetState, // Clear target fields first
+        make: detectedMake || "",
+        model: detectedModel || "",
+        year: detectedYear || "",
+        price: detectedPrice || "",
+        mileage: detectedMileage || "",
+        engineCC: detectedCC || ""
+      }));
 
       // Visual feedback
       setFormVersion(v => v + 1);
@@ -1011,6 +1035,49 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             <div className="mt-4 flex items-center gap-2 text-[11px] font-semibold text-slate-500">
               <UploadCloud size={14} className="text-[#ff5a2f]" />
               Upload starts immediately so dealers can continue filling details while photos process.
+            </div>
+            
+            <div className="mt-10 pt-10 border-t border-slate-100 dark:border-slate-800">
+               <div className="flex items-center gap-3 mb-6">
+                  <div className="w-1.5 h-1.5 rounded-2xl bg-indigo-500" />
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Listing Video</h3>
+               </div>
+               
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                  <div className="space-y-4">
+                      <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">
+                          Increase engagement by adding a YouTube or Vimeo link. A preview will appear on the right if the link is valid.
+                      </p>
+                      <input 
+                        name="videoUrl" 
+                        value={videoUrl}
+                        onChange={(e) => setVideoUrl(e.target.value)}
+                        placeholder="e.g. https://www.youtube.com/watch?v=..." 
+                        className={inputCls} 
+                      />
+                  </div>
+                  
+                  <div className="aspect-video bg-slate-100 dark:bg-[#111111] rounded-[2rem] border border-slate-200 dark:border-slate-800 overflow-hidden flex items-center justify-center relative group">
+                      {videoUrl ? (
+                         <iframe 
+                            className="w-full h-full"
+                            src={(() => {
+                               if (videoUrl.includes("youtube.com/watch?v=")) return videoUrl.replace("watch?v=", "embed/");
+                               if (videoUrl.includes("youtu.be/")) return `https://www.youtube.com/embed/${videoUrl.split("youtu.be/")[1]}`;
+                               if (videoUrl.includes("vimeo.com/")) return `https://player.vimeo.com/video/${videoUrl.split("vimeo.com/")[1]}`;
+                               return videoUrl;
+                            })()}
+                            title="Video preview"
+                            allowFullScreen
+                         />
+                      ) : (
+                        <div className="text-center p-6">
+                            <UploadCloud size={40} className="mx-auto mb-3 text-slate-300 dark:text-slate-700" />
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">No Video Attached</p>
+                        </div>
+                      )}
+                  </div>
+               </div>
             </div>
           </div>
         </div>

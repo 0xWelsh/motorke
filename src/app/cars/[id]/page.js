@@ -312,6 +312,27 @@ export default async function CarDetailPage({ params }) {
                </div>
             </div>
 
+            {/* Video Section */}
+            {car.videoUrl && (
+              <div className="pt-16 border-t border-[#EDF2F7]">
+                 <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-8">Listing Video</h2>
+                 <div className="aspect-video bg-[#F7FAFC] overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
+                    <iframe 
+                        className="w-full h-full"
+                        src={(() => {
+                            const url = car.videoUrl;
+                            if (url.includes("youtube.com/watch?v=")) return url.replace("watch?v=", "embed/");
+                            if (url.includes("youtu.be/")) return `https://www.youtube.com/embed/${url.split("youtu.be/")[1]}`;
+                            if (url.includes("vimeo.com/")) return `https://player.vimeo.com/video/${url.split("vimeo.com/")[1]}`;
+                            return url;
+                        })()}
+                        title="Listing video"
+                        allowFullScreen
+                    />
+                 </div>
+              </div>
+            )}
+
             {/* Detailed Specs Grid */}
             <div className="pt-16 border-t border-[#EDF2F7]">
                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-10">Technical Specifications</h2>
