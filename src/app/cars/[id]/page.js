@@ -275,24 +275,10 @@ export default async function CarDetailPage({ params }) {
         </nav>
 
         <div className="space-y-16">
-          {/* TOP SECTION: Gallery + Price Recap */}
+          {/* TOP SECTION: Full-Width Gallery */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-             <div className="lg:col-span-8 overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
+             <div className="lg:col-span-12 overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
                 <ImageGallery images={car.images} title={title} />
-             </div>
-             <div className="lg:col-span-4">
-                <div className="bg-white dark:bg-[#0a0a0a] border border-slate-100 dark:border-zinc-900 p-10 h-full flex flex-col justify-center" style={{ borderRadius: '2px' }}>
-                   <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#A0AEC0] dark:text-slate-600 mb-4">Price</p>
-                   <div className="flex items-center gap-3 mb-2">
-                      <span className="text-3xl font-extrabold text-[#111827] dark:text-white">
-                         {car.currency || "USD"} {formatCarPrice(car).replace("KSh", "").trim()}
-                      </span>
-                      <div className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-[11px] text-slate-400 font-bold italic">
-                         i
-                      </div>
-                   </div>
-                   <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500">Shipping included to major ports</p>
-                </div>
              </div>
           </div>
 
