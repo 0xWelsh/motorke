@@ -58,7 +58,7 @@ export default function ContactPage() {
       </section>
 
       {/* Main Content */}
-      <section className="py-24 px-6">
+      <section className="py-16 sm:py-24 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-20">
           {/* Contact Info */}
           <div className="lg:col-span-4 space-y-16">
@@ -157,10 +157,10 @@ export default function ContactPage() {
       </section>
 
       {/* Advisory Section */}
-      <section className="py-24 px-6 bg-slate-50 dark:bg-[#0a0a0a] border-t border-slate-100 dark:border-slate-900 transition-colors">
+      <section className="py-16 sm:py-24 px-6 bg-slate-50 dark:bg-[#0a0a0a] border-t border-slate-100 dark:border-slate-900 transition-colors">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#718096] dark:text-slate-500 mb-16 text-center">Operational Protocols</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#718096] dark:text-slate-500 mb-12 sm:mb-16 text-center">Operational Protocols</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 sm:gap-16">
              {[
                { title: "Direct Contact", detail: "For specific vehicle queries, use the 'WhatsApp' link on the car detail page to reach the dealer directly." },
                { title: "Escalations", detail: "For listing disputes or fraud reports, include the Reference ID and email sec@welsh.co.ke immediately." },

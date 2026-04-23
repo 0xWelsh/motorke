@@ -840,16 +840,16 @@ export default function CompareClient({ initialCars }) {
 
         {/* Global Summary Stats */}
         {kenyaLensSummary && (
-          <div className="mb-24 grid grid-cols-1 sm:grid-cols-3 gap-8">
+          <div className="mb-24 grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { label: 'Annual TCO Gap', value: `${formatKesCompact(kenyaLensSummary.annualTcoSpread)}/yr`, sub: 'Set Variance' },
               { label: 'Top Road Score', value: `${kenyaLensSummary.bestRoadScore}/100`, sub: 'Highest Readiness' },
               { label: 'Import Eligible', value: `${kenyaLensSummary.eligibleCount}/${fullComparedCars.length} Assets`, sub: 'Fiscal Approval' }
             ].map((stat, i) => (
-              <div key={i} className="bg-[#F7FAFC] dark:bg-[#111111] border border-slate-100 dark:border-slate-800 p-10 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+              <div key={i} className="bg-[#F7FAFC] dark:bg-[#111111] border border-slate-100 dark:border-slate-800 p-8 sm:p-10 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-4">{stat.label}</p>
                 <div className="flex items-baseline gap-3">
-                  <p className="text-3xl font-bold text-[#111827] dark:text-white tabular-nums">{stat.value}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-[#111827] dark:text-white tabular-nums">{stat.value}</p>
                   <p className="text-[10px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-wide">{stat.sub}</p>
                 </div>
               </div>
@@ -879,7 +879,7 @@ export default function CompareClient({ initialCars }) {
                 </div>
               </div>
               
-              <div className="flex justify-center">
+              <div className="flex justify-center scale-90 sm:scale-100">
                 {(() => {
                   const DIMS = ["Performance", "Comfort", "Economy", "Value"];
                   const getDimScore = (car) => [
@@ -900,7 +900,7 @@ export default function CompareClient({ initialCars }) {
                   const rings = [25, 50, 75, 100];
 
                   return (
-                    <svg width={320} height={320} viewBox="0 0 320 320" className="overflow-visible">
+                    <svg width={320} height={320} viewBox="0 0 320 320" className="overflow-visible max-w-full">
                       {rings.map(r => (
                         <polygon key={r} points={DIMS.map((_, i) => toXY(i, r).join(",")).join(" ")} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
                       ))}
@@ -945,19 +945,19 @@ export default function CompareClient({ initialCars }) {
         </div>
 
         {/* Comparison Terminal (Table) */}
-        <div className="relative border border-slate-100 dark:border-slate-800 overflow-x-auto bg-white dark:bg-[#0a0a0a] mb-32 shadow-2xl" style={{ borderRadius: 'var(--radius)' }}>
-          <div className="min-w-[1100px]">
+        <div className="relative border border-slate-100 dark:border-slate-800 overflow-x-auto bg-white dark:bg-[#0a0a0a] mb-32 shadow-2xl no-scrollbar" style={{ borderRadius: 'var(--radius)' }}>
+          <div className="min-w-[900px] sm:min-w-[1100px]">
              {/* Header Row */}
              <div className="sticky top-0 z-40 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-slate-100 dark:border-slate-800">
-                <div className="grid grid-cols-[300px_1fr_1fr_1fr]">
-                   <div className="p-12 border-r border-slate-100 dark:border-slate-800 flex items-center">
+                <div className="grid grid-cols-[180px_1fr_1fr_1fr] sm:grid-cols-[300px_1fr_1fr_1fr]">
+                   <div className="p-8 sm:p-12 border-r border-slate-100 dark:border-slate-800 flex items-center bg-white dark:bg-[#0a0a0a] sticky left-0 z-50">
                       <span className="text-[10px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-[0.2em] transform -rotate-180 [writing-mode:vertical-lr]">Spec Matrix</span>
                    </div>
                    {SLOT_KEYS.map((_, idx) => {
                       const car = comparedSlots[idx];
                       const hydrated = !!(car && initialCarsById.has(car.id));
                       return (
-                        <div key={idx} className="p-10 border-r border-slate-100 dark:border-slate-800 last:border-r-0">
+                        <div key={idx} className="p-6 sm:p-10 border-r border-slate-100 dark:border-slate-800 last:border-r-0">
                            {car ? (
                               <div className="relative group">
                                 <button onClick={() => removeFromCompare(car.id)} className="absolute -top-4 -right-4 w-8 h-8 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-all hover:border-[#111827] dark:hover:border-white z-10">
@@ -967,7 +967,7 @@ export default function CompareClient({ initialCars }) {
                                    {(car?.images?.[0]?.url || car?.image) ? <Image src={car?.images?.[0]?.url || car?.image} alt={car.model} fill className="object-cover" /> : null}
                                 </div>
                                 <p className="text-[10px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-widest mb-1">{car.year}</p>
-                                <h3 className="text-xl font-bold text-[#111827] dark:text-white leading-snug line-clamp-2">{car.make} {car.model}</h3>
+                                <h3 className="text-base sm:text-xl font-bold text-[#111827] dark:text-white leading-snug line-clamp-2">{car.make} {car.model}</h3>
                                 {hydrated && (
                                    <div className="mt-4 flex flex-wrap gap-2">
                                       <span className="px-2 py-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[8px] font-bold text-[#718096] dark:text-slate-400 uppercase tracking-widest" style={{ borderRadius: '4px' }}>ROAD {getInsights(car)?.roadSuitabilityScore}</span>
@@ -1014,7 +1014,7 @@ export default function CompareClient({ initialCars }) {
              <div className="divide-y divide-slate-50 dark:divide-slate-900 border-t border-slate-100 dark:border-slate-800">
                 {specGroups.map(group => (
                    <div key={group.name} className="border-b border-slate-100 dark:border-slate-800 last:border-b-0">
-                      <div className="grid grid-cols-[300px_1fr] px-12 py-8 bg-slate-50 dark:bg-slate-900/50 items-center">
+                      <div className="grid grid-cols-[180px_1fr] sm:grid-cols-[300px_1fr] px-8 sm:px-12 py-6 sm:py-8 bg-slate-50 dark:bg-slate-900/50 items-center sticky left-0">
                          <h4 className="text-[10px] font-bold text-[#111827] dark:text-white uppercase tracking-[0.25em]">{group.name} System</h4>
                          <div className="h-px bg-slate-100 dark:bg-slate-800 ml-8" />
                       </div>
@@ -1025,9 +1025,9 @@ export default function CompareClient({ initialCars }) {
                             if (showDiffOnly && !diff && fullComparedCars.length > 1) return null;
 
                             return (
-                               <div key={spec.label} className={`grid grid-cols-[300px_1fr_1fr_1fr] transition-colors ${diff ? 'bg-[#38A169]/5' : 'hover:bg-slate-50 dark:hover:bg-slate-900'}`}>
-                                  <div className="p-8 border-r border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                                     <span className="text-[11px] font-bold text-[#718096] dark:text-slate-500 uppercase tracking-widest">{spec.label}</span>
+                               <div key={spec.label} className={`grid grid-cols-[180px_1fr_1fr_1fr] sm:grid-cols-[300px_1fr_1fr_1fr] transition-colors ${diff ? 'bg-[#38A169]/5' : 'hover:bg-slate-50 dark:hover:bg-slate-900'}`}>
+                                  <div className="p-6 sm:p-8 border-r border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-[#0a0a0a] sticky left-0 z-30">
+                                     <span className="text-[10px] sm:text-[11px] font-bold text-[#718096] dark:text-slate-500 uppercase tracking-widest">{spec.label}</span>
                                      {diff && <span className="w-1 h-1 bg-[#38A169] rounded-full" />}
                                   </div>
                                   {SLOT_KEYS.map((_, idx) => {
@@ -1037,9 +1037,9 @@ export default function CompareClient({ initialCars }) {
                                      const best = getBest(spec, fullComparedCars);
                                      const isBest = best != null && raw === best;
                                      return (
-                                        <div key={idx} className="p-8 border-r border-slate-100 dark:border-slate-800 last:border-r-0 text-center font-bold tabular-nums">
-                                           <span className={`text-sm ${isBest ? 'text-[#111827] dark:text-white' : 'text-[#718096] dark:text-slate-500'}`}>{value}</span>
-                                           {isBest && <div className="mt-2 text-[8px] font-bold text-[#38A169] uppercase tracking-widest">Optimized</div>}
+                                        <div key={idx} className="p-6 sm:p-8 border-r border-slate-100 dark:border-slate-800 last:border-r-0 text-center font-bold tabular-nums">
+                                           <span className={`text-xs sm:text-sm ${isBest ? 'text-[#111827] dark:text-white' : 'text-[#718096] dark:text-slate-500'}`}>{value}</span>
+                                           {isBest && <div className="mt-1 sm:mt-2 text-[8px] font-bold text-[#38A169] uppercase tracking-widest">Optimized</div>}
                                         </div>
                                      );
                                   })}

@@ -109,7 +109,7 @@ export default async function HomePage() {
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-7 xl:col-span-8">
-              <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold text-[#111827] dark:text-[#b9c5e0] leading-[0.95] tracking-tight mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+              <h1 className="text-4xl sm:text-7xl md:text-8xl font-bold text-[#111827] dark:text-[#b9c5e0] leading-[0.95] tracking-tight mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
                 Moving the world<br />
                 <span className="editorial-heading text-[#38A169]">with transparency.</span>
               </h1>
@@ -195,7 +195,7 @@ export default async function HomePage() {
                 <Link
                   key={dealer.id}
                   href={`/dealers/${dealer.slug}`}
-                  className="group block bg-white border border-[#E2E8F0] p-8 transition-all hover:shadow-xl"
+                  className="group block bg-white border border-[#E2E8F0] p-6 sm:p-8 transition-all hover:shadow-xl"
                   style={{ borderRadius: 'var(--radius)' }}
                 >
                   <div className="flex items-center gap-5 mb-8">

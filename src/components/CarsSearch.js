@@ -113,6 +113,7 @@ export default function CarsSearch({
     const params = buildParams(next);
     const query = params.toString();
     setShowSuggestions(false);
+    setMobileOpen(false); // Close mobile filters on push
     router.push(query ? `/cars?${query}` : "/cars");
   }
 
@@ -140,20 +141,22 @@ export default function CarsSearch({
 
   return (
     <div ref={formRef} className="w-full">
-      <button
-        type="button"
-        onClick={() => setMobileOpen((prev) => !prev)}
-        className="lg:hidden w-full mb-6 border border-[#E2E8F0] dark:border-slate-800 bg-white dark:bg-[#111111] px-6 py-4 inline-flex items-center justify-between text-xs font-bold uppercase tracking-widest text-[#111827] dark:text-white"
-        style={{ borderRadius: 'var(--radius)' }}
-      >
-        <span className="inline-flex items-center gap-3">
-          <SlidersHorizontal className="w-4 h-4 text-[#38A169]" />
-          Filter Inventory {activeCount > 0 ? `(${activeCount})` : ""}
-        </span>
-        <span className="text-[10px] text-[#718096]">{mobileOpen ? "Collapse" : "Expand"}</span>
-      </button>
+      <div className="lg:hidden sticky top-16 sm:top-20 z-40 -mx-6 px-6 py-4 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-[#EDF2F7] dark:border-slate-800 transition-all duration-300">
+        <button
+          type="button"
+          onClick={() => setMobileOpen((prev) => !prev)}
+          className="w-full border border-[#E2E8F0] dark:border-slate-800 bg-white dark:bg-[#111111] px-6 py-4 inline-flex items-center justify-between text-xs font-bold uppercase tracking-widest text-[#111827] dark:text-white shadow-sm"
+          style={{ borderRadius: 'var(--radius)' }}
+        >
+          <span className="inline-flex items-center gap-3">
+            <SlidersHorizontal className="w-4 h-4 text-[#38A169]" />
+            Filter Inventory {activeCount > 0 ? `(${activeCount})` : ""}
+          </span>
+          <span className="text-[10px] text-[#718096]">{mobileOpen ? "Collapse" : "Expand"}</span>
+        </button>
+      </div>
 
-      <aside className={`${mobileOpen ? "block" : "hidden"} lg:block bg-white dark:bg-transparent space-y-8`}>
+      <aside className={`${mobileOpen ? "block" : "hidden"} lg:block bg-white dark:bg-transparent space-y-8 mt-8 lg:mt-0`}>
         <div className="mb-8 hidden lg:block">
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#38A169] mb-3">Refine Results</p>
           <h2 className="text-2xl font-bold tracking-tight text-[#111827] dark:text-white">Filters</h2>

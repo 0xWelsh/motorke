@@ -24,19 +24,18 @@ export default async function DealersPage() {
       <div className="container mx-auto px-6 max-w-7xl pt-32 sm:pt-40">
         
         {/* Header Section */}
-        <div className="mb-16">
+        <div className="mb-12 sm:mb-16">
           <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-400 mb-4">
             <Link href="/" className="hover:text-[#111827] dark:hover:text-white transition-colors">Home</Link>
             <span>/</span>
             <span className="text-[#111827] dark:text-white">Dealers</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold text-[#111827] dark:text-white tracking-tight leading-[1.1] mb-6">
+          <h1 className="text-3xl sm:text-6xl font-bold text-[#111827] dark:text-white tracking-tight leading-[1.1] mb-6">
             Our Trusted <br />
             <span className="editorial-heading text-[#38A169]">Station Network.</span>
           </h1>
-          <p className="text-[#718096] dark:text-slate-400 text-lg font-medium max-w-2xl">
+          <p className="text-[#718096] dark:text-slate-400 text-base sm:text-lg font-medium max-w-2xl">
             Connecting you with {dealers.length} verified dealerships across the region.
-            Every partner is vetted for compliance and service excellence.
           </p>
         </div>
 

@@ -22,6 +22,7 @@ export default function Navbar({ user }) {
   const [mounted, setMounted] = useState(false);
 
   const [open,      setOpen]      = useState(false);
+  const [mobileSearch, setMobileSearch] = useState(false);
   const [userMenu,  setUserMenu]  = useState(false);
   const [search,    setSearch]    = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -29,6 +30,7 @@ export default function Navbar({ user }) {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const menuRef   = useRef(null);
   const searchRef = useRef(null);
+  const mobileSearchRef = useRef(null);
 
   const { debouncedTerm } = useDebouncedSearch(search, 300);
 
@@ -215,23 +217,85 @@ export default function Navbar({ user }) {
                 </div>
               )}
 
-              {/* MOBILE MENU TOGGLE */}
-              <button
-                onClick={() => setOpen(!open)}
-                className="lg:hidden w-11 h-11 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
-                style={{ borderRadius: 'var(--radius)' }}
-              >
-                {open ? <X size={24} /> : <Menu size={24} />}
-              </button>
+              {/* MOBILE ACTIONS */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setMobileSearch(!mobileSearch)}
+                  className="lg:hidden w-11 h-11 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
+                  style={{ borderRadius: 'var(--radius)' }}
+                >
+                  <Search size={20} />
+                </button>
+
+                <button
+                  onClick={() => setOpen(!open)}
+                  className="lg:hidden w-11 h-11 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
+                  style={{ borderRadius: 'var(--radius)' }}
+                >
+                  {open ? <X size={24} /> : <Menu size={24} />}
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </nav>
 
+      {/* MOBILE SEARCH OVERLAY */}
+      {mobileSearch && (
+        <div className="fixed inset-0 z-[200] bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl animate-in fade-in duration-200">
+          <div className="container mx-auto px-6 pt-6">
+            <div className="flex items-center justify-between mb-12">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#38A169]">Search Inventory</span>
+              <button onClick={() => setMobileSearch(false)} className="w-10 h-10 flex items-center justify-center bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white" style={{ borderRadius: 'var(--radius)' }}>
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div ref={mobileSearchRef} className="relative">
+              <form onSubmit={handleSearch} className="relative">
+                <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-[#38A169]" />
+                <input
+                  autoFocus
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
+                  placeholder="Type car make or model..."
+                  className="w-full h-16 pl-16 pr-6 text-lg font-bold outline-none bg-[#EDF2F7] dark:bg-zinc-900 border-b-2 border-transparent focus:border-[#38A169] text-slate-900 dark:text-white transition-all"
+                  style={{ borderRadius: 'var(--radius)' }}
+                />
+              </form>
+              {showSuggestions && (
+                <SearchSuggestions
+                  suggestions={suggestions}
+                  loading={loadingSuggestions}
+                  onSelect={(val) => {
+                    handleSuggestionSelect(val);
+                    setMobileSearch(false);
+                  }}
+                  inputValue={search}
+                  className="mt-4"
+                />
+              )}
+            </div>
+
+            <div className="mt-12">
+               <p className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-6">Quick Links</p>
+               <div className="grid grid-cols-2 gap-4">
+                  {links.map(({ href, label }) => (
+                    <Link key={href} href={href} onClick={() => setMobileSearch(false)} className="px-6 py-4 bg-[#F7FAFC] dark:bg-zinc-900 text-sm font-bold text-slate-900 dark:text-white text-center" style={{ borderRadius: 'var(--radius)' }}>
+                      {label}
+                    </Link>
+                  ))}
+               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* MOBILE MENU */}
       {open && (
-        <div className="lg:hidden fixed inset-0 z-[200] bg-[#1A202C]/40 backdrop-blur-sm animate-in fade-in" onClick={() => setOpen(false)}>
-          <div className="ml-auto h-full w-full max-w-xs bg-white dark:bg-[#0a0a0a] p-8 flex flex-col shadow-2xl animate-in slide-in-from-right duration-300" onClick={(e) => e.stopPropagation()}>
+        <div className="lg:hidden fixed inset-0 z-[200] bg-[#1A202C]/40 backdrop-blur-md animate-in fade-in" onClick={() => setOpen(false)}>
+          <div className="ml-auto h-full w-full max-w-xs bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl p-8 flex flex-col shadow-2xl animate-in slide-in-from-right duration-300" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-12">
               <div className="relative h-8 w-28">
                 <Image
@@ -257,6 +321,13 @@ export default function Navbar({ user }) {
                 className="text-lg font-bold uppercase tracking-widest text-slate-900 dark:text-white hover:text-[#38A169] transition-colors">
                 Contact
               </Link>
+            </div>
+            
+            <div className="mb-12 pt-8 border-t border-gray-100 dark:border-zinc-800">
+               <div className="flex items-center justify-between mb-4">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Appearance</span>
+                  <ThemeToggle simple />
+               </div>
             </div>
 
             <div className="mt-auto space-y-4">
