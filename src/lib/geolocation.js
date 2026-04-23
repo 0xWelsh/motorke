@@ -51,5 +51,5 @@ export function calculateDistance(lat1, lng1, lat2, lng2) {
  */
 export function formatDistance(km) {
   if (km < 1) return `${Math.round(km * 1000)}m`;
-  return `${km.toFixed(1)}km`;
+  return `${km.toFixed(2)}km`;
 }

@@ -124,7 +124,7 @@ export default function NearbyDealersList() {
               ) : (
                 <>
                   <MapPin className="w-4 h-4" />
-                  Current Location
+                  LOAD DEALERSHIPS NEAR YOU
                 </>
               )}
             </button>
@@ -138,12 +138,12 @@ export default function NearbyDealersList() {
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Finding...
+                Loading...
               </>
             ) : (
               <>
                 <MapPin className="w-4 h-4" />
-                Find Nearby
+                LOAD DEALERSHIPS NEAR YOU
               </>
             )}
           </button>
