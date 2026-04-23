@@ -165,11 +165,6 @@ const FEATURE_CHECKLIST = [
   "Alarm System", "Child Lock", "ISOFIX", "Tinted Windows", "Rear Spoiler",
 ];
 
-const WIZARD_STEPS = [
-  { id: 1, label: "Basics" },
-  { id: 2, label: "Photos" },
-  { id: 3, label: "Details" },
-];
 
 function buildBaseSeed(car, currentYear) {
   return {
@@ -257,7 +252,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   const [formSeed, setFormSeed] = useState(baseSeed);
   const [formVersion, setFormVersion] = useState(0);
-  const [step, setStep] = useState(1);
   const [simpleMode, setSimpleMode] = useState(initialSimpleMode);
 
   const [uploading, setUploading] = useState(false);
@@ -305,7 +299,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         images,
         badges,
         selectedFeatures,
-        step,
         simpleMode,
         updatedAt: Date.now(),
       })
@@ -323,7 +316,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         setImages(Array.isArray(parsed.images) ? parsed.images : []);
         setBadges(Array.isArray(parsed.badges) ? parsed.badges : []);
         setSelectedFeatures(Array.isArray(parsed.selectedFeatures) ? parsed.selectedFeatures : []);
-        setStep(parsed.step || 1);
         setSimpleMode(typeof parsed.simpleMode === "boolean" ? parsed.simpleMode : initialSimpleMode);
         setDraftLoaded(true);
         setFormVersion((v) => v + 1);
@@ -368,7 +360,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   useEffect(() => {
     if (isNew) saveDraft();
-  }, [images, badges, selectedFeatures, step, simpleMode, isNew, saveDraft]);
+  }, [images, badges, selectedFeatures, simpleMode, isNew, saveDraft]);
 
   useEffect(() => {
     const currentMake =
@@ -521,32 +513,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setDraftLoaded(false);
   }
 
-  function validateStep(nextStep) {
-    if (!formRef.current) return false;
-    const fd = new FormData(formRef.current);
-
-    if (step === 1 && nextStep > 1) {
-      const required = ["make", "model", "year", "price"];
-      const missing = required.filter((field) => !(fd.get(field) || "").toString().trim());
-      if (missing.length > 0) {
-        setError("Please fill make, model, year and price before continuing.");
-        return false;
-      }
-    }
-
-    if (step === 2 && nextStep > 2 && images.length === 0) {
-      setError("Please upload at least one image before continuing.");
-      return false;
-    }
-
-    setError("");
-    return true;
-  }
-
-  function goToStep(next) {
-    if (next > step && !validateStep(next)) return;
-    setStep(next);
-  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -612,7 +578,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         })
       );
 
-      if (draftKey) localStorage.removeItem(draftKey);
+      if (draftKey) {
+        localStorage.removeItem(draftKey);
+        setDraftLoaded(false);
+      }
+      
       window.location.href = result.redirectTo || (isPortal ? "/portal" : "/admin/cars");
     } catch (err) {
       setError(err.message);
@@ -710,7 +680,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       }
 
       // Visual feedback
-      setStep(1); 
       setFormVersion(v => v + 1);
       
     } catch (err) {
@@ -760,32 +729,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
-            {WIZARD_STEPS.map((wizardStep) => (
-              <button
-                key={wizardStep.id}
-                type="button"
-                onClick={() => goToStep(wizardStep.id)}
-                className={`rounded-2xl border px-3 py-2.5 text-left transition-colors ${
-                  step === wizardStep.id
-                    ? "border-[#ff5a2f] bg-emerald-50 dark:bg-[#18181b] dark:border-[#ff5a2f]"
-                    : "border-[#ddd4c8] dark:border-slate-800 bg-white hover:bg-[#fbfcfe] dark:bg-[#111111] dark:border-[#27272a] dark:hover:bg-[#1a1a1a]"
-                }`}
-              >
-                <p className={`text-[11px] font-black uppercase tracking-[0.12em] ${step === wizardStep.id ? "text-emerald-700 dark:text-[#ff5a2f]" : "text-slate-500 dark:text-slate-400"}`}>Step {wizardStep.id}</p>
-                <p className={`text-sm font-bold mt-0.5 ${step === wizardStep.id ? "text-emerald-900 dark:text-white" : "text-slate-900 dark:text-white dark:text-slate-300"}`}>{wizardStep.label}</p>
-              </button>
-            ))}
-          </div>
-
-          {draftLoaded && (
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3">
-              <p className="text-[11px] font-bold text-amber-800">Draft restored from previous session.</p>
-              <button type="button" onClick={clearDraft} className="text-[11px] font-black uppercase tracking-wider text-amber-700 hover:text-amber-900">
-                Clear Draft
-              </button>
-            </div>
-          )}
         </div>
       )}
 
@@ -860,8 +803,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
       )}
 
-      <div className={isNew && step !== 1 ? "hidden" : "block"}>
-        <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8">
+      <div className="space-y-10">
+        <div>
           <div className="flex items-center gap-3 mb-8">
             <div className="w-1.5 h-1.5 rounded-2xl bg-[#ff5a2f]" />
             <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Vehicle Basics</h3>
@@ -1043,12 +986,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 {Object.entries(STEERING_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
               </select>
             </div>
-            </div>
           </div>
         </div>
 
-          <div className={isNew && step !== 2 ? "hidden" : "block"}>
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8">
+        <div>
+          <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
                 <div className="w-1.5 h-1.5 rounded-2xl bg-[#ff5a2f]" />
@@ -1073,7 +1015,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           </div>
         </div>
 
-        <div className={isNew && step !== 3 ? "hidden" : "block"}>
+        <div>
           <div className="space-y-6">
             <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8">
               <div className="flex items-center gap-3 mb-8">
@@ -1260,27 +1202,17 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             Cancel
           </a>
           <div className="flex items-center gap-2">
-            {isNew && step > 1 && (
-              <button type="button" onClick={() => goToStep(step - 1)} className="px-5 py-3 rounded-2xl border border-[#ddd4c8] dark:border-slate-800 text-slate-700 text-xs font-black uppercase tracking-wider">
-                Back
-              </button>
-            )}
-            {isNew && step < 3 ? (
-              <button type="button" onClick={() => goToStep(step + 1)} className="px-6 py-3 rounded-2xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider">
-                Continue
-              </button>
-            ) : (
-              <button
-                type="submit"
-                disabled={submitting || uploading}
-                className="px-8 py-3 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-50 text-slate-900 dark:text-white font-bold rounded-2xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2"
-              >
-                {submitting ? "Saving..." : isEdit ? "Save Changes" : "Publish Listing"}
-                {!submitting && <Check size={16} />}
-              </button>
-            )}
+            <button
+              type="submit"
+              disabled={submitting || uploading}
+              className="px-8 py-3 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-50 text-slate-900 dark:text-white font-bold rounded-2xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2"
+            >
+              {submitting ? "Saving..." : isEdit ? "Save Changes" : "Publish Listing"}
+              {!submitting && <Check size={16} />}
+            </button>
           </div>
         </div>
-      </form>
+      </div>
+    </form>
     );
   }
