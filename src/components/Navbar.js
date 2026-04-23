@@ -218,16 +218,14 @@ export default function Navbar({ user }) {
 
             {/* MOBILE ACTIONS */}
             <div className="flex lg:hidden items-center gap-1">
-              <div className="h-10 px-0.5 flex items-center bg-[#EDF2F7] dark:bg-zinc-900" style={{ borderRadius: 'var(--radius)' }}>
-                <ThemeToggle simple />
-              </div>
+              <ThemeToggle simple />
 
               <button
                 onClick={() => setOpen(!open)}
-                className="w-10 h-10 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
+                className="w-10 h-10 flex items-center justify-center transition-all text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-zinc-800"
                 style={{ borderRadius: 'var(--radius)' }}
               >
-                {open ? <X size={22} /> : <Menu size={22} />}
+                {open ? <X size={24} /> : <Menu size={24} />}
               </button>
             </div>
           </div>
@@ -324,7 +322,7 @@ export default function Navbar({ user }) {
               </Link>
             </div>
             
-            {user && (
+            {user ? (
               <div className="mb-12 pt-8 border-t border-gray-100 dark:border-zinc-800 space-y-6">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Notifications</span>
@@ -335,16 +333,18 @@ export default function Navbar({ user }) {
                   Dashboard
                 </Link>
               </div>
+            ) : (
+              <div className="mb-12 pt-8 border-t border-gray-100 dark:border-zinc-800">
+                <Link href="/login" onClick={() => setOpen(false)} className="flex items-center gap-4 text-lg font-bold uppercase tracking-widest text-slate-900 dark:text-white">
+                  <User size={22} className="text-[#718096]" />
+                  Sign In
+                </Link>
+              </div>
             )}
 
             <div className="mt-auto space-y-4 pt-8 border-t border-gray-100 dark:border-zinc-800">
               {!user ? (
                 <>
-                  <Link href="/login" onClick={() => setOpen(false)}
-                    className="block w-full py-4 text-center text-sm font-bold uppercase tracking-widest border border-slate-900 dark:border-white text-slate-900 dark:text-white hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:!text-[#0a0a0a] transition-all"
-                    style={{ borderRadius: 'var(--radius)' }}>
-                    Sign In
-                  </Link>
                   <Link href="/signup" onClick={() => setOpen(false)}
                     className="block w-full py-4 text-center text-sm font-bold uppercase tracking-widest bg-[#38A169] text-white hover:opacity-90 transition-all"
                     style={{ borderRadius: 'var(--radius)' }}>
@@ -352,11 +352,11 @@ export default function Navbar({ user }) {
                   </Link>
                 </>
               ) : (
-                <Link href="/account" onClick={() => setOpen(false)}
-                  className="block w-full py-4 text-center text-sm font-bold uppercase tracking-widest bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white hover:bg-[#E2E8F0] dark:hover:bg-zinc-800 transition-all"
-                  style={{ borderRadius: 'var(--radius)' }}>
-                  My Account
-                </Link>
+                <form action="/api/auth/logout" method="POST">
+                   <button type="submit" className="w-full py-4 text-center text-sm font-bold uppercase tracking-widest border border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-white transition-all shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+                    Sign Out
+                   </button>
+                </form>
               )}
             </div>
           </div>

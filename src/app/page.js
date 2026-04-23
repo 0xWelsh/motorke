@@ -103,13 +103,13 @@ export default async function HomePage() {
   const heroPrimary = spotlight?.[0] || null;
 
   return (
-    <div className="min-h-screen pb-20 bg-white">
+    <div className="min-h-screen pb-20 bg-white dark:bg-[#0a0a0a]">
       {/* Dynamic Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-gray-100">
+      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-7 xl:col-span-8">
-              <h1 className="text-4xl sm:text-7xl md:text-8xl font-bold text-[#111827] dark:text-[#b9c5e0] leading-[0.95] tracking-tight mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+              <h1 className="text-4xl sm:text-7xl md:text-8xl font-bold text-[#111827] dark:text-white leading-[0.95] tracking-tight mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
                 Moving the world<br />
                 <span className="editorial-heading text-[#38A169]">with transparency.</span>
               </h1>
@@ -150,7 +150,7 @@ export default async function HomePage() {
             priority
           />
           {/* Subtle gradient overlay to ensure text contrast on mobile if needed */}
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent lg:hidden" />
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 dark:from-[#0a0a0a] dark:via-[#0a0a0a]/80 to-transparent lg:hidden" />
         </div>
       </section>
 
@@ -195,7 +195,7 @@ export default async function HomePage() {
                 <Link
                   key={dealer.id}
                   href={`/dealers/${dealer.slug}`}
-                  className="group block bg-white border border-[#E2E8F0] p-6 sm:p-8 transition-all hover:shadow-xl"
+                  className="group block bg-white dark:bg-zinc-900 border border-[#E2E8F0] dark:border-slate-800 p-6 sm:p-8 transition-all hover:shadow-xl"
                   style={{ borderRadius: 'var(--radius)' }}
                 >
                   <div className="flex items-center gap-5 mb-8">
@@ -293,8 +293,8 @@ function CarCard({ car }) {
   const title = `${car.make} ${car.model}`;
   
   return (
-    <article className="group flex flex-col h-full bg-white border border-slate-100 transition-all hover:shadow-xl overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
-      <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-[#EDF2F7] overflow-hidden block">
+    <article className="group flex flex-col h-full bg-white dark:bg-zinc-900 border border-slate-100 dark:border-slate-800 transition-all hover:shadow-xl overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
+      <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-[#EDF2F7] dark:bg-zinc-800 overflow-hidden block">
         {img ? (
           <Image
             src={img}

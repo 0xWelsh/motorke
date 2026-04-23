@@ -27,7 +27,7 @@ export default function SearchSuggestions({
   const attributeSuggestions = suggestions.filter(s => s.type !== "car");
 
   return (
-    <div className={`absolute left-0 right-0 top-full mt-2 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-lg shadow-2xl z-50 overflow-hidden max-w-[340px] min-w-[220px] ${className}`} style={{fontSize:'13px'}}>
+    <div className={`absolute left-0 right-0 top-full mt-2 bg-white dark:bg-zinc-900 border border-[#ddd4c8] dark:border-zinc-800 rounded-lg shadow-2xl z-50 overflow-hidden max-w-[340px] min-w-[220px] ${className}`} style={{fontSize:'13px'}}>
       {loading ? (
         <div className="p-6 text-center">
           <div className="animate-pulse flex items-center justify-center gap-2">
@@ -50,7 +50,7 @@ export default function SearchSuggestions({
                   key={`car-${car.id}`}
                   href={`/cars/${car.id}`}
                   onClick={() => onClose?.()}
-                  className="block px-3 py-2 hover:bg-[#fbfcfe] dark:bg-[#111111] transition-colors border-b border-slate-50 last:border-0 group"
+                  className="block px-3 py-2 hover:bg-[#fbfcfe] dark:hover:bg-zinc-800 transition-colors border-b border-slate-50 dark:border-zinc-800 last:border-0 group"
                   style={{fontSize:'13px'}}
                 >
                   <div className="flex gap-2 items-center">
@@ -144,7 +144,7 @@ export default function SearchSuggestions({
                   <button
                     key={`${suggestion.type}-${index}`}
                     onClick={() => onSelect(suggestion.value)}
-                    className="w-full flex items-center gap-2 px-3 py-2 hover:bg-[#fbfcfe] dark:bg-[#111111] transition-colors group border-b border-slate-50 last:border-0 text-xs"
+                    className="w-full flex items-center gap-2 px-3 py-2 hover:bg-[#fbfcfe] dark:hover:bg-zinc-800 transition-colors group border-b border-slate-50 dark:border-zinc-800 last:border-0 text-xs"
                   >
                     <div className="shrink-0">{typeInfo.icon}</div>
                     <div className="flex-1 text-left min-w-0">

@@ -44,7 +44,7 @@ function BrandLogo({ name, img }) {
   return (
     <Link
       href={`/cars?make=${encodeURIComponent(name)}`}
-      className="group flex flex-col items-center justify-center gap-2 p-3 w-24 rounded-2xl border border-transparent hover:border-[#ddd4c8] dark:hover:border-slate-800 hover:bg-white dark:hover:bg-white/5 transition-all duration-300"
+      className="group flex flex-col items-center justify-center gap-2 p-3 w-24 rounded-2xl border border-transparent hover:border-[#ddd4c8] dark:hover:border-zinc-700 hover:bg-white dark:hover:bg-zinc-800 transition-all duration-300"
     >
       <div className="w-12 h-12 flex items-center justify-center">
         {failed ?
@@ -98,7 +98,7 @@ function ScrollableRow({ children }) {
         <div className="absolute left-0 top-0 bottom-6 w-16 z-10 pointer-events-none flex items-center pr-2 -ml-2">
           <button 
             onClick={() => scroll("left")}
-            className="w-10 h-10 ml-2 sm:ml-4 flex items-center justify-center bg-white/90 dark:bg-[#111111]/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-slate-900 dark:text-white hover:bg-white dark:hover:bg-[#111111] hover:scale-110"
+            className="w-10 h-10 ml-2 sm:ml-4 flex items-center justify-center bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-slate-900 dark:text-white hover:bg-white dark:hover:bg-zinc-800 hover:scale-110"
           >
             <ChevronLeft className="w-5 h-5 ml-[-2px]" />
           </button>
@@ -122,7 +122,7 @@ function ScrollableRow({ children }) {
         <div className="absolute right-0 top-0 bottom-6 w-16 z-10 pointer-events-none flex items-center justify-end pl-2 -mr-2">
           <button 
             onClick={() => scroll("right")}
-            className="w-10 h-10 mr-2 sm:mr-4 flex items-center justify-center bg-white/90 dark:bg-[#111111]/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-slate-900 dark:text-white hover:bg-white dark:hover:bg-[#111111] hover:scale-110"
+            className="w-10 h-10 mr-2 sm:mr-4 flex items-center justify-center bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-slate-900 dark:text-white hover:bg-white dark:hover:bg-zinc-800 hover:scale-110"
           >
             <ChevronRight className="w-5 h-5 mr-[-2px]" />
           </button>
@@ -138,7 +138,7 @@ function BodyTypeCard({ label, value, img }) {
   return (
     <Link
       href={`/cars?bodyType=${value}`}
-      className="group flex flex-col items-center justify-center gap-2 p-2 w-28 rounded-2xl border border-transparent hover:border-[#ddd4c8] dark:hover:border-slate-800 hover:bg-white dark:hover:bg-white/5 transition-all duration-300"
+      className="group flex flex-col items-center justify-center gap-2 p-2 w-28 rounded-2xl border border-transparent hover:border-[#ddd4c8] dark:hover:border-zinc-700 hover:bg-white dark:hover:bg-zinc-800 transition-all duration-300"
     >
       <div className="w-20 h-10 flex items-center justify-center">
         {!failed ? (
@@ -163,7 +163,7 @@ function LocationCard({ name }) {
   return (
     <Link
       href={`/cars?county=${encodeURIComponent(name)}`}
-      className="group flex items-center justify-center gap-2 px-4 py-3 min-w-[120px] rounded-2xl border border-[#e8e2d9] dark:border-slate-800 bg-white dark:bg-[#111111] hover:border-[#ddd4c8] hover:shadow-md transition-all duration-300 whitespace-nowrap drop-shadow-sm"
+      className="group flex items-center justify-center gap-2 px-4 py-3 min-w-[120px] rounded-2xl border border-[#e8e2d9] dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-[#ddd4c8] dark:hover:border-zinc-700 hover:shadow-md transition-all duration-300 whitespace-nowrap drop-shadow-sm"
     >
       <MapPin className="w-4 h-4 text-slate-400 group-hover:text-[#ff5a2f] transition-colors" />
       <span className="text-[11px] font-black text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
@@ -211,7 +211,7 @@ export default function BrowsePanel() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="What car are you looking for?"
-          className="w-full bg-white dark:bg-[#111111] border border-[#e8e2d9] dark:border-slate-800 text-slate-900 dark:text-white rounded-none py-4 pl-14 pr-[120px] font-bold text-base shadow-sm focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all placeholder:font-normal placeholder:text-slate-400"
+          className="w-full bg-white dark:bg-[#0a0a0a] border border-[#e8e2d9] dark:border-zinc-800 text-slate-900 dark:text-white rounded-none py-4 pl-14 pr-[120px] font-bold text-base shadow-sm focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all placeholder:font-normal placeholder:text-slate-400"
         />
         <button 
           type="submit" 

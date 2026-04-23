@@ -136,8 +136,8 @@ export default function NotificationsBell({ variant = "portal" }) {
           isAdmin
             ? "text-slate-600 hover:text-[#ff5a2f]"
             : isNavbar
-              ? "w-10 h-10 rounded-full bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-600 hover:text-[#ff5a2f] hover:border-slate-300 flex items-center justify-center"
-            : "w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 border border-[#ddd4c8] dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-[#ff5a2f] flex items-center justify-center"
+              ? "w-10 h-10 rounded-full bg-white dark:bg-zinc-900 border border-[#ddd4c8] dark:border-zinc-800 text-slate-600 hover:text-[#ff5a2f] hover:border-slate-300 flex items-center justify-center"
+            : "w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-800 border border-[#ddd4c8] dark:border-zinc-800 text-slate-600 dark:text-slate-300 hover:text-[#ff5a2f] flex items-center justify-center"
         )}
         title="Notifications"
         aria-label="Notifications"

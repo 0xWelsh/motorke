@@ -81,7 +81,7 @@ export default function NearbyDealersList() {
             value={radius}
             onChange={(e) => setRadius(Number(e.target.value))}
             disabled={loading}
-            className="px-3 py-3 sm:py-2 border border-[#ddd4c8] dark:border-slate-800 rounded-lg text-slate-900 dark:text-white bg-white dark:bg-[#111111] disabled:opacity-50"
+            className="px-3 py-3 sm:py-2 border border-[#ddd4c8] dark:border-zinc-800 rounded-lg text-slate-900 dark:text-white bg-white dark:bg-zinc-900 disabled:opacity-50"
           >
             <option value={5}>5 km</option>
             <option value={10}>10 km</option>
