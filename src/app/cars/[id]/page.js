@@ -307,9 +307,9 @@ export default async function CarDetailPage({ params }) {
                      i
                   </div>
                 </div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-16">Price includes shipping</p>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-10">Price includes shipping</p>
 
-                <div className="pt-16 border-t border-slate-100 dark:border-zinc-900">
+                <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
                    <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#A0AEC0] dark:text-slate-600 mb-8">Description</h2>
                    <div className="text-[15px] text-[#4A5568] dark:text-slate-400 leading-[1.8] font-medium">
                       {specString && <span className="text-[#111827] dark:text-white font-bold">{specString}</span>}
@@ -318,8 +318,8 @@ export default async function CarDetailPage({ params }) {
                    </div>
                 </div>
 
-                <div className="pt-16 border-t border-slate-100 dark:border-zinc-900">
-                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#A0AEC0] dark:text-slate-600 mb-12">Vehicle Details</h2>
+                <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
+                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#A0AEC0] dark:text-slate-600 mb-6">Vehicle Details</h2>
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-0 text-[13px]">
                       {specs.map((item, idx) => (
                         <div key={item.label} className={`flex justify-between items-center py-4 border-b border-slate-50 dark:border-zinc-900/50 ${idx < 2 ? 'border-t' : ''}`}>
