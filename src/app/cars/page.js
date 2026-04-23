@@ -212,7 +212,7 @@ export default async function CarsPage({ searchParams }) {
                 </Link>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-8">
                 {sortedCars.map((car) => (
                   <CarCard 
                     key={car.id} 

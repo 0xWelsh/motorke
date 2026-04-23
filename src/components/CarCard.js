@@ -39,9 +39,9 @@ export default function CarCard({ car, distance = null }) {
   const specString = specItems.join(" • ");
 
   return (
-    <article className="group flex flex-col h-full bg-white dark:bg-[#0f0f0f] border border-slate-100 dark:border-slate-800 transition-all hover:shadow-2xl overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
+    <article className="group flex flex-col h-full bg-white dark:bg-[#0f0f0f] border border-black dark:border-white transition-all hover:shadow-2xl overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
       {/* Image Container */}
-      <Link href={`/cars/${car.id}`} className="relative aspect-[16/11] bg-slate-50 dark:bg-[#111111] overflow-hidden block">
+      <Link href={`/cars/${car.id}`} className="relative aspect-[16/9] bg-slate-50 dark:bg-[#111111] overflow-hidden block border-b border-black dark:border-white">
         {primaryImg ? (
           <Image
             src={primaryImg}
