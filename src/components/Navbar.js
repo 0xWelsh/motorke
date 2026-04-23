@@ -154,11 +154,9 @@ export default function Navbar({ user }) {
               )}
             </div>
 
-            {/* ACTIONS */}
-            <div className="flex items-center gap-4">
-              <div className="hidden lg:block">
-                 <ThemeToggle simple />
-              </div>
+            {/* ACTIONS (Desktop) */}
+            <div className="hidden lg:flex items-center gap-4">
+              <ThemeToggle simple />
               
               {user ? (
                 <div className="flex items-center gap-4">
@@ -216,48 +214,48 @@ export default function Navbar({ user }) {
                   </Link>
                 </div>
               )}
+            </div>
 
-              {/* MOBILE ACTIONS */}
-              <div className="flex lg:hidden items-center gap-1 sm:gap-2">
-                <button
-                  onClick={() => setMobileSearch(!mobileSearch)}
-                  className="w-10 h-10 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
-                  style={{ borderRadius: 'var(--radius)' }}
-                >
-                  <Search size={18} />
-                </button>
+            {/* MOBILE ACTIONS */}
+            <div className="flex lg:hidden items-center gap-1">
+              <button
+                onClick={() => setMobileSearch(!mobileSearch)}
+                className="w-9 h-9 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
+                style={{ borderRadius: 'var(--radius)' }}
+              >
+                <Search size={16} />
+              </button>
 
-                {user ? (
-                  <>
-                    <div className="h-10 px-0.5 flex items-center bg-[#EDF2F7] dark:bg-zinc-900" style={{ borderRadius: 'var(--radius)' }}>
-                      <NotificationsBell variant="navbar" />
-                    </div>
-                    <Link href="/account" className="w-10 h-10 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white" style={{ borderRadius: 'var(--radius)' }}>
-                      {user.avatarUrl ? (
-                        <img src={user.avatarUrl} alt={user.name} className="w-6 h-6 object-cover rounded-full" />
-                      ) : (
-                        <User size={18} />
-                      )}
-                    </Link>
-                  </>
-                ) : (
-                  <Link href="/login" className="w-10 h-10 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white" style={{ borderRadius: 'var(--radius)' }}>
-                    <User size={18} />
+              {user ? (
+                <>
+                  <div className="h-9 px-0.5 flex items-center bg-[#EDF2F7] dark:bg-zinc-900" style={{ borderRadius: 'var(--radius)' }}>
+                    <NotificationsBell variant="navbar" />
+                  </div>
+                  <Link href="/account" className="w-9 h-9 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white" style={{ borderRadius: 'var(--radius)' }}>
+                    {user.avatarUrl ? (
+                      <img src={user.avatarUrl} alt={user.name} className="w-6 h-6 object-cover rounded-full" />
+                    ) : (
+                      <User size={16} />
+                    )}
                   </Link>
-                )}
+                </>
+              ) : (
+                <Link href="/login" className="w-9 h-9 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white" style={{ borderRadius: 'var(--radius)' }}>
+                  <User size={16} />
+                </Link>
+              )}
 
-                <div className="h-10 px-0.5 flex items-center bg-[#EDF2F7] dark:bg-zinc-900" style={{ borderRadius: 'var(--radius)' }}>
-                  <ThemeToggle simple />
-                </div>
-
-                <button
-                  onClick={() => setOpen(!open)}
-                  className="w-10 h-10 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
-                  style={{ borderRadius: 'var(--radius)' }}
-                >
-                  {open ? <X size={22} /> : <Menu size={22} />}
-                </button>
+              <div className="h-9 px-0.5 flex items-center bg-[#EDF2F7] dark:bg-zinc-900" style={{ borderRadius: 'var(--radius)' }}>
+                <ThemeToggle simple />
               </div>
+
+              <button
+                onClick={() => setOpen(!open)}
+                className="w-9 h-9 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
+                style={{ borderRadius: 'var(--radius)' }}
+              >
+                {open ? <X size={20} /> : <Menu size={20} />}
+              </button>
             </div>
           </div>
         </div>
