@@ -685,12 +685,31 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         detectedCC = parseInt(ccMatch[1], 10);
       }
 
+      // Detection 7: Features (from FEATURE_CHECKLIST)
+      const detectedFeatures = [];
+      const lowerText = smartFillText.toLowerCase();
+      FEATURE_CHECKLIST.forEach(feature => {
+        const featureLower = feature.toLowerCase();
+        // Simple word match, but also handle some common variations
+        if (lowerText.includes(featureLower)) {
+          detectedFeatures.push(feature);
+        } else if (featureLower.includes("camera") && lowerText.includes("camera")) {
+          // If "Reverse Camera" is in checklist and text has "camera", but maybe user said "rear camera"
+          if (!detectedFeatures.includes(feature)) detectedFeatures.push(feature);
+        } else if (featureLower === "leather seats" && lowerText.includes("leather")) {
+          if (!detectedFeatures.includes(feature)) detectedFeatures.push(feature);
+        } else if (featureLower === "keyless entry" && (lowerText.includes("keyless") || lowerText.includes("push start"))) {
+           if (!detectedFeatures.includes(feature)) detectedFeatures.push(feature);
+        }
+      });
+
       // Final State Application
       // Only set detected values, keep others empty as per request
       setSelectedYear(detectedYear ? String(detectedYear) : "");
       setSelectedMake(detectedMake || "");
       setSelectedModel(detectedModel || "");
       setPriceInput(detectedPrice ? String(detectedPrice) : "");
+      setSelectedFeatures(detectedFeatures);
 
       setFormSeed(prev => ({
         ...prev,
