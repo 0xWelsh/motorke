@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search, X, SlidersHorizontal } from "lucide-react";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
 import SearchSuggestions from "@/components/SearchSuggestions";
-import { FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/utils";
+import { FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/constants";
 
 export default function CarsSearch({ 
   initialSearch = "",

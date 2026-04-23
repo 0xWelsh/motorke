@@ -3,7 +3,8 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Info, MapPin, ImageOff } from "lucide-react";
-import { formatCarPrice, formatMileage, FUEL_LABELS } from "@/lib/utils";
+import { formatCarPrice, formatMileage } from "@/lib/utils";
+import { FUEL_LABELS } from "@/lib/constants";
 import { CompareButton } from "./CompareSelector";
 
 /**

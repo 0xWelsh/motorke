@@ -1,6 +1,7 @@
 // src/app/cars/page.js
 import { db } from "@/lib/db";
-import { formatPrice, formatCarPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS, BADGE_OPTIONS, whatsappLink } from "@/lib/utils";
+import { formatPrice, formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
+import { BODY_TYPE_LABELS, FUEL_LABELS, BADGE_OPTIONS } from "@/lib/constants";
 import Link from "next/link";
 import { ChevronRight, Search, MessageCircle, ShieldCheck, MapPin, ArrowUpRight } from "lucide-react";
 import Image from "next/image";

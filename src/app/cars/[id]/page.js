@@ -5,8 +5,8 @@ import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { unstable_cache } from "next/cache";
 import { computeComparisonInsights } from "@/lib/comparison";
-import { formatPrice, formatCarPrice, formatMileage, estimateDuty, whatsappLink,
-         BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/utils";
+import { formatPrice, formatCarPrice, formatMileage, estimateDuty, whatsappLink } from "@/lib/utils";
+import { BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/constants";
 import { MessageCircle, ChevronRight, MapPin, Wallet, ShieldCheck, Phone, Star } from "lucide-react";
 import EnquiryForm from "@/components/EnquiryForm";
 import ImageGallery from "@/components/ImageGallery";
