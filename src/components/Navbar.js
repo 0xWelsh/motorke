@@ -218,21 +218,44 @@ export default function Navbar({ user }) {
               )}
 
               {/* MOBILE ACTIONS */}
-              <div className="flex items-center gap-2">
+              <div className="flex lg:hidden items-center gap-1 sm:gap-2">
                 <button
                   onClick={() => setMobileSearch(!mobileSearch)}
-                  className="lg:hidden w-11 h-11 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
+                  className="w-10 h-10 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
                   style={{ borderRadius: 'var(--radius)' }}
                 >
-                  <Search size={20} />
+                  <Search size={18} />
                 </button>
+
+                {user ? (
+                  <>
+                    <div className="h-10 px-0.5 flex items-center bg-[#EDF2F7] dark:bg-zinc-900" style={{ borderRadius: 'var(--radius)' }}>
+                      <NotificationsBell variant="navbar" />
+                    </div>
+                    <Link href="/account" className="w-10 h-10 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white" style={{ borderRadius: 'var(--radius)' }}>
+                      {user.avatarUrl ? (
+                        <img src={user.avatarUrl} alt={user.name} className="w-6 h-6 object-cover rounded-full" />
+                      ) : (
+                        <User size={18} />
+                      )}
+                    </Link>
+                  </>
+                ) : (
+                  <Link href="/login" className="w-10 h-10 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white" style={{ borderRadius: 'var(--radius)' }}>
+                    <User size={18} />
+                  </Link>
+                )}
+
+                <div className="h-10 px-0.5 flex items-center bg-[#EDF2F7] dark:bg-zinc-900" style={{ borderRadius: 'var(--radius)' }}>
+                  <ThemeToggle simple />
+                </div>
 
                 <button
                   onClick={() => setOpen(!open)}
-                  className="lg:hidden w-11 h-11 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
+                  className="w-10 h-10 flex items-center justify-center transition-all bg-[#EDF2F7] dark:bg-zinc-900 text-slate-900 dark:text-white"
                   style={{ borderRadius: 'var(--radius)' }}
                 >
-                  {open ? <X size={24} /> : <Menu size={24} />}
+                  {open ? <X size={22} /> : <Menu size={22} />}
                 </button>
               </div>
             </div>
@@ -323,14 +346,7 @@ export default function Navbar({ user }) {
               </Link>
             </div>
             
-            <div className="mb-12 pt-8 border-t border-gray-100 dark:border-zinc-800">
-               <div className="flex items-center justify-between mb-4">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Appearance</span>
-                  <ThemeToggle simple />
-               </div>
-            </div>
-
-            <div className="mt-auto space-y-4">
+            <div className="mt-auto space-y-4 pt-8 border-t border-gray-100 dark:border-zinc-800">
               {!user ? (
                 <>
                   <Link href="/login" onClick={() => setOpen(false)}
