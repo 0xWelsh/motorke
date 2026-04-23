@@ -176,6 +176,18 @@ export default async function CarDetailPage({ params }) {
   const duty     = estimateDuty(car.price, car.year);
   const primaryImg = car.images.find((i) => i.isPrimary) || car.images[0];
   const dealerBrandImage = dealer.logoUrl || dealer.users?.[0]?.avatarUrl || null;
+  const specItems = [
+    car.horsepower ? `${car.horsepower} HP` : null,
+    car.torque ? `${car.torque} Nm` : null,
+    car.engineCC ? `${(car.engineCC / 1000).toFixed(1)}L V${car.cylinders || 8} Twin Turbo` : null,
+    car.transmission ? (car.transmission === "AUTOMATIC" ? "AT" : "MT") : null,
+    car.drivetrain || null,
+    car.fuelType ? (FUEL_LABELS[car.fuelType] || car.fuelType) : null,
+    car.sunroof ? "Panoramic glass roof" : null,
+    car.description?.toLowerCase().includes("leather") ? "Leather interior" : null,
+  ].filter(Boolean);
+  const specString = specItems.join(" • ");
+
   const compareCar = {
     id: car.id,
     year: car.year,
@@ -272,75 +284,44 @@ export default async function CarDetailPage({ params }) {
             {/* Title & Core Meta */}
             <div>
               <div className="flex items-center gap-4 mb-4">
-                 <span className="bg-[#38A169] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>
-                    {car.available ? "VERIFIED LISTING" : "RESERVED"}
+                 <span className="bg-[#E2E8F0] dark:bg-zinc-800 text-slate-500 dark:text-slate-400 text-[10px] font-black px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>
+                    {car.available ? "AVAILABLE" : "RESERVED"}
                  </span>
-                 {car.dutyPaid && (
-                   <span className="bg-[#1A202C] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>
-                     LOCAL UNIT
-                   </span>
-                 )}
               </div>
               
-              <h1 className="text-4xl sm:text-6xl font-bold text-[#1A202C] tracking-tight leading-[1.1] mb-6">
-                {car.year} <span className="editorial-heading text-[#718096]">{car.make} {car.model}</span>
+              <h1 className="text-4xl sm:text-5xl font-extrabold text-[#111827] dark:text-white tracking-tight leading-[1.1] mb-6">
+                {car.make} {car.model} {car.variant ? `( ${car.variant} )` : ""}
               </h1>
 
-              <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
-                 <div className="flex flex-col">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-1">List Price</span>
-                    <span className="text-3xl font-bold text-[#1A202C]">{formatCarPrice(car)}</span>
-                 </div>
-                 <div className="w-px h-10 bg-[#EDF2F7] hidden sm:block"></div>
-                 <div className="flex flex-col">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-1">Mileage</span>
-                    <span className="text-lg font-bold text-[#1A202C]">{formatMileage(car.mileage) || "N/A"}</span>
-                 </div>
-                 <div className="w-px h-10 bg-[#EDF2F7] hidden sm:block"></div>
-                 <div className="flex flex-col">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] mb-1">Transmission</span>
-                    <span className="text-lg font-bold text-[#1A202C]">{TRANSMISSION_LABELS[car.transmission] || "N/A"}</span>
-                 </div>
+              <div className="flex items-center gap-3 mb-8">
+                <span className="text-2xl font-extrabold text-[#111827] dark:text-white">
+                  {car.currency || "USD"} {formatCarPrice(car).replace("KSh", "").trim()}
+                </span>
+                <div className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-[11px] text-slate-400 font-bold italic">
+                   i
+                </div>
               </div>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-16">Price includes shipping</p>
             </div>
 
-            {/* Narrative / About */}
-            <div className="pt-16 border-t border-[#EDF2F7]">
-               <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-8">Vehicle Overview</h2>
-               <div className="text-xl text-[#1A202C] leading-relaxed font-medium editorial-heading">
+            {/* DESCRIPTION Section */}
+            <div className="pt-16 border-t border-slate-100 dark:border-zinc-900">
+               <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#A0AEC0] dark:text-slate-600 mb-8">Description</h2>
+               <div className="text-[15px] text-[#4A5568] dark:text-slate-400 leading-[1.8] font-medium">
+                  {specString && <span className="text-[#111827] dark:text-white font-bold">{specString}</span>}
+                  {specString && " • "}
                   {car.description || "Representing excellence in engineering, this unit undergoes a rigorous 150-point inspection before listing. Our network ensures every vehicle meets stringent quality and performance benchmarks."}
                </div>
             </div>
 
-            {/* Video Section */}
-            {car.videoUrl && (
-              <div className="pt-16 border-t border-[#EDF2F7]">
-                 <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-8">Listing Video</h2>
-                 <div className="aspect-video bg-[#F7FAFC] overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
-                    <iframe 
-                        className="w-full h-full"
-                        src={(() => {
-                            const url = car.videoUrl;
-                            if (url.includes("youtube.com/watch?v=")) return url.replace("watch?v=", "embed/");
-                            if (url.includes("youtu.be/")) return `https://www.youtube.com/embed/${url.split("youtu.be/")[1]}`;
-                            if (url.includes("vimeo.com/")) return `https://player.vimeo.com/video/${url.split("vimeo.com/")[1]}`;
-                            return url;
-                        })()}
-                        title="Listing video"
-                        allowFullScreen
-                    />
-                 </div>
-              </div>
-            )}
-
-            {/* Detailed Specs Grid */}
-            <div className="pt-16 border-t border-[#EDF2F7]">
-               <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-10">Technical Specifications</h2>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-6">
-                  {visibleSpecs.map((item) => (
-                    <div key={item.label} className="flex justify-between items-center py-4 border-b border-[#EDF2F7]">
-                       <span className="text-sm font-bold text-[#718096]">{item.label}</span>
-                       <span className="text-sm font-bold text-[#1A202C]">{item.value}</span>
+            {/* VEHICLE DETAILS section */}
+            <div className="pt-16 border-t border-slate-100 dark:border-zinc-900">
+               <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#A0AEC0] dark:text-slate-600 mb-12">Vehicle Details</h2>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-0 text-[13px]">
+                  {specs.map((item, idx) => (
+                    <div key={item.label} className={`flex justify-between items-center py-4 border-b border-slate-50 dark:border-zinc-900/50 ${idx < 2 ? 'border-t' : ''}`}>
+                       <span className="font-bold text-slate-400 dark:text-slate-600">{item.label}</span>
+                       <span className="font-extrabold text-[#111827] dark:text-white">{item.value || "N/A"}</span>
                     </div>
                   ))}
                </div>
@@ -367,45 +348,49 @@ export default async function CarDetailPage({ params }) {
 
           {/* Right Column: Sticky Enquiry Sidebar */}
           <div className="lg:col-span-4 lg:sticky lg:top-32 h-fit">
-            <div className="bg-white border border-[#E2E8F0] p-8 lg:p-10 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
-              <div className="flex items-center gap-3 mb-10 pb-8 border-b border-[#EDF2F7]">
-                 <div className="w-12 h-12 bg-[#F7FAFC] flex items-center justify-center overflow-hidden shrink-0" style={{ borderRadius: 'var(--radius)' }}>
-                    {dealer.logoUrl ? <img src={dealer.logoUrl} className="w-full h-full object-cover" /> : <span className="text-[#1A202C] font-bold">{dealer.name[0]}</span>}
+            <div className="bg-white dark:bg-[#0a0a0a] border border-slate-100 dark:border-zinc-900 p-10 shadow-sm" style={{ borderRadius: '2px' }}>
+              {/* Sidebar Price Header */}
+              <div className="mb-12 pb-10 border-b border-slate-50 dark:border-zinc-900/50">
+                 <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#A0AEC0] dark:text-slate-600 mb-4">Price</p>
+                 <div className="flex items-center gap-3 mb-2">
+                    <span className="text-3xl font-extrabold text-[#111827] dark:text-white">
+                       {car.currency || "USD"} {formatCarPrice(car).replace("KSh", "").trim()}
+                    </span>
+                    <div className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-[11px] text-slate-400 font-bold italic">
+                       i
+                    </div>
                  </div>
-                 <div>
-                    <h4 className="text-sm font-bold text-[#1A202C]">{dealer.name}</h4>
-                    <p className="text-[10px] text-[#718096] font-bold uppercase tracking-widest">Verified Multi-Asset Dealer</p>
-                 </div>
+                 <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500">Shipping included to major ports</p>
               </div>
 
-              <div className="space-y-8">
-                 <h3 className="text-lg font-bold text-[#1A202C]">Interest Enquiry</h3>
+              <div className="space-y-10">
+                 <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-[#A0AEC0] dark:text-slate-600">Send an Enquiry</h3>
                  <EnquiryForm
                     carId={car.id}
                     dealerId={dealer.id}
-                    carTitle={title}
+                    carTitle={titleWithoutYear}
                     dealer={dealer}
                     userName={session?.user?.name || ""}
                     userEmail={session?.user?.email || ""}
                   />
               </div>
 
-              <div className="mt-10 pt-8 border-t border-[#EDF2F7] flex flex-col gap-4">
-                 <div className="flex items-center justify-between text-xs font-bold text-[#718096] uppercase tracking-widest">
-                    <span>Reference ID</span>
-                    <span className="text-[#1A202C]">{car.id.slice(-8).toUpperCase()}</span>
+              <div className="mt-12 pt-10 border-t border-slate-50 dark:border-zinc-900/50 flex flex-col gap-6">
+                 <div className="px-5 py-3 bg-[#fbfcfe] dark:bg-zinc-900 border border-[#e2e8f0] dark:border-zinc-800 flex items-center justify-between" style={{ borderRadius: '2px' }}>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[#A0AEC0] dark:text-slate-600">Reference ID</span>
+                    <span className="text-[10px] font-extrabold text-[#111827] dark:text-white">{car.id.slice(-8).toUpperCase()}</span>
                  </div>
-                 <div className="py-2">
-                   <ShareButtons title={title} price={formatCarPrice(car)} />
+                 <div className="py-2 flex items-center justify-center">
+                    <ShareButtons title={title} price={formatCarPrice(car)} />
                  </div>
               </div>
             </div>
 
             {/* Comparison Tool Shortcut */}
-            <div className="mt-8 flex items-center justify-between px-6 py-4 border border-[#E2E8F0]" style={{ borderRadius: 'var(--radius)' }}>
-               <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Add to comparison</span>
+            <div className="mt-8 flex items-center justify-between px-8 py-6 bg-white dark:bg-[#0a0a0a] border border-slate-100 dark:border-zinc-900" style={{ borderRadius: '2px' }}>
+               <span className="text-[11px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-600">Match & Compare</span>
                <div className="flex items-center gap-4">
-                  <CompareButton car={compareCar} className="w-5 h-5 text-[#718096] hover:text-[#1A202C]" />
+                  <CompareButton car={compareCar} className="w-5 h-5 text-slate-400 hover:text-black dark:text-slate-600 dark:hover:text-white transition-colors" />
                </div>
             </div>
           </div>

@@ -154,59 +154,28 @@ export default function EnquiryForm({
     });
   }
 
-  const inputCls = "w-full bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 outline-none focus:border-[var(--brand-accent)]/30 focus:bg-white transition-all shadow-sm";
+  const inputCls = "w-full bg-[#fbfcfe] dark:bg-zinc-900 border border-[#e2e8f0] dark:border-zinc-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-400 outline-none focus:border-black dark:focus:border-white transition-all";
 
   if (state === "sent") {
     return (
-      <div className="text-center py-8">
-        <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
-          <span className="text-[#ff5a2f] text-xl">✓</span>
-        </div>
-        <p className="font-bold text-[#ff5a2f] mb-1">Enquiry sent!</p>
-        <p className="text-xs text-slate-500">
-          {dealer.name} will contact you on <span className="text-slate-800 dark:text-slate-200 font-semibold">{phone}</span> shortly.
+      <div className="text-center py-12 px-6 bg-slate-50 dark:bg-zinc-900 border border-emerald-100 dark:border-emerald-900/30" style={{ borderRadius: '2px' }}>
+        <p className="font-extrabold text-[#111827] dark:text-white mb-2 uppercase tracking-widest text-xs">Enquiry Sent</p>
+        <p className="text-xs text-slate-500 leading-relaxed">
+          {dealer.name} will contact you shortly regarding the <span className="font-bold text-slate-900 dark:text-white">{carTitle}</span>.
         </p>
-        {waLink && (
-          <a href={waLink} target="_blank" rel="noopener noreferrer"
-            onClick={handleWhatsApp}
-            className="mt-4 inline-flex items-center gap-2 bg-[#25D366]/10 border border-[#25D366]/20 text-[#25D366] text-xs font-semibold px-4 py-2.5 rounded-2xl hover:bg-[#25D366]/20 transition-colors">
-            💬 Also message on WhatsApp
-          </a>
-        )}
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
-      {/* WhatsApp button — primary CTA */}
-      {waLink && whatsAppFirst && (
-        <a
-          href={waLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={handleWhatsApp}
-          className="flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1fb558] text-slate-900 dark:text-white font-bold text-sm py-3.5 rounded-2xl transition-all w-full shadow-lg shadow-[#25D366]/10 active:scale-[0.98]"
-        >
-          💬 WhatsApp {dealer.name}
-        </a>
-      )}
-
-      {waLink && whatsAppFirst && (
-        <div className="flex items-center gap-3 my-1">
-          <div className="flex-1 h-px bg-slate-100" />
-          <span className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">or send a message</span>
-          <div className="flex-1 h-px bg-slate-100" />
-        </div>
-      )}
-
+    <div className="space-y-6">
       {state === "error" && (
-        <p className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-2xl px-3 py-2">
-          {errorText || "Something went wrong. Please try WhatsApp instead."}
+        <p className="text-[11px] font-bold text-rose-600 bg-rose-50 dark:bg-rose-900/10 border border-rose-100 dark:border-rose-900/30 px-4 py-3">
+          {errorText || "Submission failed. Please try WhatsApp."}
         </p>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-2.5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
           tabIndex={-1}
           autoComplete="off"
@@ -215,114 +184,102 @@ export default function EnquiryForm({
           className="hidden"
           aria-hidden="true"
         />
-        <input
-          value={name} onChange={(e) => setName(e.target.value)}
-          required placeholder="Your name"
-          className={inputCls}
-        />
-        <input
-          type="tel"
-          value={phone} onChange={(e) => setPhone(e.target.value)}
-          required placeholder="Phone number (07xx or +2547xx...)"
-          className={inputCls}
-        />
-        <p className="text-[11px] text-slate-500 -mt-1">We will use this number for dealer callback and WhatsApp updates.</p>
-        <input
-          value={email} onChange={(e) => setEmail(e.target.value)}
-          type="email" placeholder="Email (optional)"
-          className={inputCls}
-        />
-        <textarea
-          value={message} onChange={(e) => setMessage(e.target.value)}
-          rows={3}
-          placeholder="Any questions about this car?"
-          className={`${inputCls} resize-none`}
-        />
-
-        {showQuickMessages && (
-          <div className="flex flex-wrap gap-2 pt-1">
-            {quickMessages.map((preset) => (
-              <button
-                key={preset}
-                type="button"
-                onClick={() => setMessage(preset)}
-                className="text-[11px] font-bold uppercase tracking-[0.08em] px-2.5 py-1.5 rounded-2xl border border-[#ddd4c8] dark:border-slate-800 text-slate-600 hover:bg-[#fbfcfe] dark:bg-[#111111] hover:text-slate-900 dark:text-white transition-colors"
-              >
-                {preset}
-              </button>
-            ))}
+        
+        <div className="space-y-4">
+          <input
+            value={name} onChange={(e) => setName(e.target.value)}
+            required placeholder="Your name *"
+            className={inputCls}
+            style={{ borderRadius: '2px' }}
+          />
+          <input
+            value={email} onChange={(e) => setEmail(e.target.value)}
+            type="email" required placeholder="Email address *"
+            className={inputCls}
+            style={{ borderRadius: '2px' }}
+          />
+          <div className="relative">
+             <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
+                <span className="text-xs">🇰🇪</span>
+                <span className="text-[11px] font-bold text-slate-400">+254</span>
+             </div>
+             <input
+               type="tel"
+               value={phone} onChange={(e) => setPhone(e.target.value)}
+               placeholder="Phone (optional)"
+               className={`${inputCls} !pl-20`}
+               style={{ borderRadius: '2px' }}
+             />
           </div>
-        )}
+          
+          <textarea
+            value={message} onChange={(e) => setMessage(e.target.value)}
+            rows={5}
+            placeholder="Hi, I'm interested..."
+            className={`${inputCls} resize-none`}
+            style={{ borderRadius: '2px' }}
+          />
+        </div>
 
-        {!showQuickMessages && (
-          <label className="flex items-start gap-2.5 text-[11px] text-slate-500 pt-0.5">
+        <div className="space-y-4 pt-2">
+          <label className="flex items-start gap-3 text-[11px] text-slate-500 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={notifySimilar}
               onChange={(e) => setNotifySimilar(e.target.checked)}
-              className="mt-0.5"
+              className="mt-1 accent-black"
             />
             Notify me when similar listings appear
           </label>
-        )}
-
-        <button
-          type="submit"
-          disabled={state === "sending"}
-          className="w-full bg-slate-700 hover:bg-slate-800 disabled:opacity-50 text-slate-900 dark:text-white font-bold py-3 rounded-2xl text-xs uppercase tracking-widest transition-all active:scale-[0.98]"
-        >
-          {state === "sending" ? "Sending..." : "Submit Enquiry"}
-        </button>
-
-        <label className="flex items-start gap-2.5 text-[11px] text-slate-500 pt-1">
-          <input
-            type="checkbox"
-            checked={consent}
-            onChange={(e) => setConsent(e.target.checked)}
-            className="mt-0.5"
-            required
-          />
-          I agree to the <Link href="/terms" className="underline underline-offset-2">Terms of Use</Link> and <Link href="/privacy" className="underline underline-offset-2">Privacy Policy</Link>.
-        </label>
-        
-        {showSafetyBadge && (
-          <div className="flex items-center justify-center gap-1.5 pt-2">
-            <div className="w-3.5 h-3.5 rounded-2xl bg-emerald-100 flex items-center justify-center">
-              <span className="text-[#ff5a2f] text-[8px]">✓</span>
-            </div>
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Safe & Secure Enquiry</span>
-          </div>
-        )}
-      </form>
-
-      {!whatsAppFirst && (waLink || callLink) && (
-        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#ddd4c8] dark:border-slate-800">
-          {waLink ? (
-            <a
-              href={waLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleWhatsApp}
-              className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1fb558] text-slate-900 dark:text-white font-bold text-xs py-2.5 rounded-2xl transition-colors"
-            >
-              WhatsApp
-            </a>
-          ) : (
-            <span className="inline-flex items-center justify-center text-xs font-bold py-2.5 rounded-2xl bg-slate-100 text-slate-400">WhatsApp</span>
-          )}
-          {callLink ? (
-            <a
-              href={callLink}
-              onClick={handleCall}
-              className="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-black text-white font-bold text-xs py-2.5 rounded-2xl transition-colors"
-            >
-              Call Now
-            </a>
-          ) : (
-            <span className="inline-flex items-center justify-center text-xs font-bold py-2.5 rounded-2xl bg-slate-100 text-slate-400">Call</span>
-          )}
+          
+          <label className="flex items-start gap-3 text-[11px] text-slate-500 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="mt-1 accent-black"
+              required
+            />
+            <span>I agree to the <Link href="/terms" className="underline">Terms of Use</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link></span>
+          </label>
         </div>
-      )}
+
+        <div className="pt-4 space-y-4">
+          <button
+            type="submit"
+            disabled={state === "sending"}
+            className="w-full bg-[#64748b] hover:bg-slate-600 disabled:opacity-50 text-white font-bold py-4 text-[11px] uppercase tracking-[0.15em] transition-all shadow-sm"
+            style={{ borderRadius: '2px' }}
+          >
+            {state === "sending" ? "Processing..." : "Submit Enquiry"}
+          </button>
+
+          <div className="grid grid-cols-2 gap-3">
+            {waLink && (
+              <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleWhatsApp}
+                className="flex items-center justify-center gap-2 bg-[#1cb558] hover:bg-emerald-600 text-white font-bold text-[10px] py-4 uppercase tracking-widest transition-all"
+                style={{ borderRadius: '2px' }}
+              >
+                WhatsApp
+              </a>
+            )}
+            {callLink && (
+              <a
+                href={callLink}
+                onClick={handleCall}
+                className="flex items-center justify-center gap-2 bg-[#111827] dark:bg-white hover:bg-black dark:hover:bg-slate-200 text-white dark:text-black font-bold text-[10px] py-4 uppercase tracking-widest transition-all"
+                style={{ borderRadius: '2px' }}
+              >
+                Call Now
+              </a>
+            )}
+          </div>
+        </div>
+      </form>
     </div>
   );
 }
