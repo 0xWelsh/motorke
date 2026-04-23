@@ -10,7 +10,14 @@ import { PWARegister } from "@/components/PWARegister";
 import { getSession } from "@/lib/auth";
 import CookieConsent from "@/components/CookieConsent";
 
+import { Playfair_Display } from "next/font/google";
 import GlobalFooter from "@/components/GlobalFooter";
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  weight: ["400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata = {
   title: "Motorke — Find Your Car in Kenya",
@@ -22,7 +29,7 @@ export const metadata = {
   },
 };
 
-// Removed Google Fonts here to utilize standard Helvetica stack
+// Layout utilizes standard Helvetica stack for sans-serif
 
 export const viewport = {
   width: "device-width",
@@ -41,7 +48,7 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-background text-slate-900 dark:text-white min-h-screen antialiased flex flex-col font-sans transition-colors duration-300">
+      <body className={`${playfair.variable} bg-background text-slate-900 dark:text-white min-h-screen antialiased flex flex-col font-sans transition-colors duration-300`}>
         <PWARegister />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <CompareProvider>
