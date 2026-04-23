@@ -283,6 +283,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [variantOptions, setVariantOptions] = useState([]);
   const [loadingVariants, setLoadingVariants] = useState(false);
   const [variantSources, setVariantSources] = useState(["inventory"]);
+  const [smartFillText, setSmartFillText] = useState("");
+  const [parsing, setParsing] = useState(false);
 
   const formRef = useRef(null);
   const saveTimeoutRef = useRef(null);
@@ -618,6 +620,107 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     }
   }
 
+  const handleSmartFill = async () => {
+    if (!smartFillText.trim()) return;
+    setParsing(true);
+    setError("");
+
+    try {
+      // 1. Identify Year (4 digits 19xx or 20xx)
+      const yearMatch = smartFillText.match(/\b(19|20)\d{2}\b/);
+      if (yearMatch) {
+        setSelectedYear(yearMatch[0]);
+        setFormSeed(prev => ({ ...prev, year: parseInt(yearMatch[0], 10) }));
+      }
+
+      // 2. Identify Make (from our MAKES list)
+      let detectedMake = "";
+      for (const make of MAKES) {
+        if (new RegExp(`\\b${make}\\b`, 'i').test(smartFillText)) {
+          detectedMake = make;
+          break;
+        }
+      }
+      if (detectedMake) {
+        setSelectedMake(detectedMake);
+        setFormSeed(prev => ({ ...prev, make: detectedMake }));
+
+        // 3. Identify Model (look for words right after Year or Make)
+        // This is a simple heuristic: the model is often the word following the make or year
+        // We'll also cross-reference with modelOptions if we had them, but for now we look for the next capitalized word
+        const words = smartFillText.split(/[\s,]+/);
+        const makeIdx = words.findIndex(w => w.toLowerCase() === detectedMake.toLowerCase());
+        if (makeIdx !== -1 && words[makeIdx + 1]) {
+          const potModel = words[makeIdx + 1].replace(/[^a-zA-Z0-9]/g, '');
+          if (potModel && potModel.length > 2) {
+            setSelectedModel(potModel);
+            setFormSeed(prev => ({ ...prev, model: potModel }));
+          }
+        }
+      }
+
+      // 4. Identify Price
+      // Look for KSh 2.4M, 2,400,000, 2.4 million, etc.
+      const priceRegex = /(?:ksh|price|cost)?\s*([\d,.]+)\s*(?:m|million|k)?\b/i;
+      const matches = smartFillText.matchAll(new RegExp(priceRegex, 'gi'));
+      let bestPrice = null;
+      for (const match of matches) {
+        let val = match[1].replace(/,/g, '');
+        let num = parseFloat(val);
+        if (isNaN(num)) continue;
+
+        const context = smartFillText.toLowerCase();
+        const snippet = context.substring(Math.max(0, match.index - 10), match.index + 20);
+        
+        if (snippet.includes('m') || snippet.includes('million')) {
+          if (num < 100) num = num * 1000000;
+        } else if (snippet.includes('k') && !snippet.includes('km')) {
+          if (num < 10000) num = num * 1000;
+        }
+
+        // Reasonable car price range in KES (50k to 100M)
+        if (num > 50000 && num < 100000000) {
+          bestPrice = num;
+          break;
+        }
+      }
+      if (bestPrice) {
+        setPriceInput(String(bestPrice));
+        setFormSeed(prev => ({ ...prev, price: bestPrice }));
+      }
+
+      // 5. Identify Mileage
+      const mileageRegex = /([\d,.]+)\s*(?:km|km's|miles|mileage|k)\b/i;
+      const mileageMatch = smartFillText.match(mileageRegex);
+      if (mileageMatch) {
+        let val = mileageMatch[1].replace(/,/g, '');
+        let num = parseFloat(val);
+        const context = smartFillText.toLowerCase().substring(mileageMatch.index, mileageMatch.index + 20);
+        if (context.includes('k') && num < 1000) num = num * 1000;
+        
+        if (num > 0 && num < 1000000) {
+          setFormSeed(prev => ({ ...prev, mileage: num }));
+        }
+      }
+
+      // 6. Identify Engine CC
+      const ccMatch = smartFillText.match(/(\d{3,4})\s*(?:cc)\b/i);
+      if (ccMatch) {
+        setFormSeed(prev => ({ ...prev, engineCC: parseInt(ccMatch[1], 10) }));
+      }
+
+      // Visual feedback
+      setStep(1); 
+      setFormVersion(v => v + 1);
+      
+    } catch (err) {
+      console.error("Smart Fill Error:", err);
+      setError("Failed to parse some details. Please review fields manually.");
+    } finally {
+      setParsing(false);
+    }
+  };
+
   return (
     <form key={formVersion} ref={formRef} onSubmit={handleSubmit} className="space-y-10 animate-in fade-in duration-700">
       {isNew && (
@@ -705,6 +808,57 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
       )}
       {dealers.length === 1 && dealers[0] && <input type="hidden" name="dealerId" value={dealers[0].id} />}
+
+      {isNew && (
+        <div className="bg-gradient-to-br from-indigo-50 to-emerald-50 dark:from-zinc-900/50 dark:to-zinc-800/50 border border-indigo-100 dark:border-zinc-800 rounded-2xl p-8 mb-10 overflow-hidden relative group">
+          <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
+             <Sparkles size={120} className="text-indigo-500" />
+          </div>
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-200 dark:shadow-none">
+                <Sparkles size={20} />
+              </div>
+              <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">AI Smart Fill</h3>
+            </div>
+            
+            <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-6 max-w-xl">
+              Paste a description from WhatsApp, a website, or a draft. We'll pick out the Year, Make, Model, Price, and Mileage for you instantly.
+            </p>
+
+            <div className="space-y-4">
+              <textarea
+                value={smartFillText}
+                onChange={(e) => setSmartFillText(e.target.value)}
+                placeholder="e.g. 2017 Toyota Rav4, White, 45,000 km, Price: 3.2M, clean car..."
+                className="w-full h-32 bg-white/60 dark:bg-zinc-900/40 backdrop-blur-sm border border-indigo-200 dark:border-zinc-700 rounded-2xl px-6 py-4 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-indigo-500 transition-all resize-none shadow-inner"
+              />
+              
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleSmartFill}
+                  disabled={parsing || !smartFillText.trim()}
+                  className="px-8 py-3.5 bg-indigo-600 hover:bg-slate-900 dark:hover:bg-white dark:hover:text-black disabled:opacity-50 text-white font-black uppercase tracking-wider rounded-2xl text-xs transition-all flex items-center gap-2 shadow-xl shadow-indigo-100 dark:shadow-none"
+                >
+                  {parsing ? "Analyzing..." : "Apply Magic"}
+                  {!parsing && <Sparkles size={16} />}
+                </button>
+                {smartFillText && (
+                   <button 
+                    type="button" 
+                    onClick={() => setSmartFillText("")}
+                    className="text-xs font-bold text-slate-500 hover:text-rose-600 uppercase tracking-widest px-4"
+                   >
+                     Clear
+                   </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className={isNew && step !== 1 ? "hidden" : "block"}>
         <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8">
