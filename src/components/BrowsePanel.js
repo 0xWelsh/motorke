@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight, MapPin, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import NearbyDealersList from "./NearbyDealersList.js";
 
 const BRANDS = [
   { name: "Toyota",     img: "logo_toyota.png" },
@@ -261,15 +260,6 @@ export default function BrowsePanel() {
         </div>
       </div>
 
-      {/* Find Dealerships Near You (Geolocation) */}
-      <div>
-        <div className="flex items-center justify-between mb-3 px-2">
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-300">
-            Find Dealerships Near You
-          </p>
-        </div>
-        <NearbyDealersList />
-      </div>
     </div>
   );
 }
