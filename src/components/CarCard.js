@@ -10,8 +10,9 @@ import { CompareButton } from "./CompareSelector";
  * Universal premium CarCard matching the G99 reference design.
  * @param {Object} car - The car data object.
  * @param {number} distance - Pre-calculated distance in km (optional).
+ * @param {function} onRemove - Optional callback for a remove action.
  */
-export default function CarCard({ car, distance = null }) {
+export default function CarCard({ car, distance = null, onRemove = null }) {
   const primaryImg = car.images?.[0]?.url;
   const title = `${car.make} ${car.model}${car.variant ? ` ( ${car.variant} )` : ""}`;
   
@@ -62,6 +63,20 @@ export default function CarCard({ car, distance = null }) {
             {car.available ? "AVAILABLE" : "RESERVED"}
           </span>
         </div>
+
+        {/* Remove Button: top left (optional) */}
+        {onRemove && (
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onRemove(car.id);
+            }}
+            className="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/90 dark:bg-black/80 backdrop-blur-md flex items-center justify-center text-[#111827] dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all shadow-xl z-10"
+          >
+            <span className="text-sm font-bold">×</span>
+          </button>
+        )}
 
         {/* Distance: bottom right (if available) */}
         {distance !== null && (

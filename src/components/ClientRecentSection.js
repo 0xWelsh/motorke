@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Clock, ChevronRight, Sparkles, User } from "lucide-react";
 import { formatPrice, formatCarPrice } from "@/lib/utils";
+import CarCard from "@/components/CarCard";
 
 export default function ClientRecentSection() {
   const [recent, setRecent] = useState([]);
@@ -83,9 +84,9 @@ export default function ClientRecentSection() {
               <span className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white">Recently Viewed</span>
               <div className="h-px flex-1 bg-slate-100" />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {recent.map((car) => (
-                <CarMiniCard key={car.id} car={car} />
+                <CarCard key={car.id} car={car} />
               ))}
             </div>
           </div>
@@ -101,38 +102,14 @@ export default function ClientRecentSection() {
               </div>
               <div className="h-px flex-1 bg-slate-100" />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {recommended.map((car) => (
-                <CarMiniCard key={car.id} car={{
-                  id: car.id,
-                  title: `${car.year} ${car.make} ${car.model}`,
-                  price: car.price,
-                  image: car.images?.[0]?.url
-                }} />
+                <CarCard key={car.id} car={car} />
               ))}
             </div>
           </div>
         )}
       </div>
     </section>
-  );
-}
-
-function CarMiniCard({ car }) {
-  return (
-    <Link href={`/cars/${car.id}`} className="group bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 overflow-hidden hover:border-[var(--brand-accent)]/30 hover:shadow-xl transition-all duration-500 shadow-sm">
-      <div className="aspect-[16/10] overflow-hidden bg-[#fbfcfe] dark:bg-[#111111] relative">
-        {car.image ? (
-          <img src={car.image} alt={car.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-500 text-[11px] font-black uppercase tracking-widest">No Image</div>
-        )}
-        <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/5 transition-colors duration-500" />
-      </div>
-      <div className="p-5">
-        <h3 className="font-bold text-slate-900 dark:text-white text-sm truncate group-hover:text-[var(--brand)] transition-colors mb-1">{car.title}</h3>
-        <p className="text-[var(--brand-accent)] font-black text-base">{formatCarPrice(car)}</p>
-      </div>
-    </Link>
   );
 }

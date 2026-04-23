@@ -963,7 +963,7 @@ export default function CompareClient({ initialCars }) {
                                 <button onClick={() => removeFromCompare(car.id)} className="absolute -top-4 -right-4 w-8 h-8 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-all hover:border-[#111827] dark:hover:border-white z-10">
                                    <X className="w-3.5 h-3.5 dark:text-white" />
                                 </button>
-                                <div className="aspect-[16/10] bg-slate-50 dark:bg-slate-900 overflow-hidden mb-6 border border-slate-100 dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
+                                <div className="aspect-[16/9] bg-slate-50 dark:bg-slate-900 overflow-hidden mb-6 border border-black dark:border-white" style={{ borderRadius: 'var(--radius)' }}>
                                    {(car?.images?.[0]?.url || car?.image) ? <Image src={car?.images?.[0]?.url || car?.image} alt={car.model} fill className="object-cover" /> : null}
                                 </div>
                                 <p className="text-[10px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-widest mb-1">{car.year}</p>
@@ -989,7 +989,7 @@ export default function CompareClient({ initialCars }) {
                                        <div className="mt-6 space-y-2 max-h-[300px] overflow-y-auto no-scrollbar">
                                           {searchResults.map(res => (
                                              <button key={res.id} onClick={() => onAddCarSearch(res)} className="w-full flex items-center gap-4 p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900">
-                                                <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 overflow-hidden relative" style={{ borderRadius: 'var(--radius)' }}>
+                                                <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 overflow-hidden relative border border-black dark:border-white" style={{ borderRadius: 'var(--radius)' }}>
                                                    {res.image && <Image src={res.image} alt={res.model} fill className="object-cover" />}
                                                 </div>
                                                 <div className="flex-1 text-left">

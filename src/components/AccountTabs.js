@@ -5,6 +5,7 @@ import { Settings, Bookmark, MessageSquare, History, Phone, ShieldCheck, Clock, 
 import { formatCarPrice } from "@/lib/utils";
 import { clsx } from "clsx";
 import BuyerLocationSettings from "./BuyerLocationSettings";
+import CarCard from "./CarCard";
 
 
 const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" });
@@ -176,37 +177,15 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
           saved.length === 0
             ? <Empty icon={<Bookmark size={32} className="text-amber-500" />} title="No Watchlist Assets" desc="You haven't bookmarked any listings yet. When you find an interesting unit, save it to track price changes." href="/cars" cta="Explore Inventory Drop" />
             : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {saved.map(car => (
-                  <div key={car.id} className="group bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 relative flex flex-col">
-                    <div className="relative aspect-[4/3] bg-[#fbfcfe] dark:bg-[#111111] overflow-hidden">
-                      {car.image
-                        ? <img src={car.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                        : <div className="flex items-center justify-center h-full text-slate-300"><Eye size={32} /></div>
-                      }
-                      {!car.available && (
-                        <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center">
-                          <span className="bg-slate-900 text-white text-[11px] font-black uppercase tracking-widest px-4 py-2 rounded-2xl ring-1 ring-white/20">Sold Asset</span>
-                        </div>
-                      )}
-                      <button onClick={() => unsave(car.id)}
-                        className="absolute top-4 right-4 w-8 h-8 rounded-2xl bg-white/90 backdrop-blur flex items-center justify-center text-slate-900 dark:text-white hover:bg-rose-500 hover:text-slate-900 dark:text-white transition-colors shadow-sm">
-                        ✕
-                      </button>
-                      <div className="absolute bottom-4 left-4">
-                        <span className="bg-slate-900/80 backdrop-blur text-white px-3 py-1.5 rounded-2xl text-xs font-black shadow-sm">
-                          {formatCarPrice(car)}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="p-5 flex-1 flex flex-col">
-                      <Link href={`/cars/${car.id}`} className="block flex-1 group-hover:text-amber-500 transition-colors">
-                        <h3 className="font-black text-slate-900 dark:text-white text-base tracking-tight leading-tight">{car.year} {car.make} {car.model}</h3>
-                        <p className="text-xs font-bold text-slate-400 mt-1">{car.dealer?.name}</p>
-                      </Link>
-                      <div className="flex items-center justify-between mt-4 border-t border-slate-50 pt-4">
-                         <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">Tracked {fmtDate(car.savedAt)}</span>
-                      </div>
+                  <div key={car.id} className="relative flex flex-col h-full">
+                    <CarCard 
+                      car={car} 
+                      onRemove={unsave}
+                    />
+                    <div className="mt-4 px-2">
+                       <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">Tracked {fmtDate(car.savedAt)}</span>
                     </div>
                   </div>
                 ))}
@@ -279,23 +258,16 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
           recent.length === 0
             ? <Empty icon={<History size={32} className="text-indigo-500" />} title="Blank Horizon" desc="Cars you examine will automatically be cached here for rapid access." href="/cars" cta="Scan Marketplace" />
             : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {recent.map(car => (
-                  <Link key={car.id} href={`/cars/${car.id}`} className="group bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
-                    <div className="aspect-[4/3] bg-[#fbfcfe] dark:bg-[#111111] overflow-hidden relative">
-                      {car.image
-                        ? <img src={car.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                        : <div className="flex items-center justify-center h-full text-slate-300"><Eye size={24} /></div>
-                      }
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span className="text-[11px] font-black uppercase tracking-widest text-slate-900 dark:text-white">Re-examine</span>
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <p className="font-bold text-slate-900 dark:text-white text-sm tracking-tight leading-tight line-clamp-1 group-hover:text-amber-600 transition-colors">{car.title}</p>
-                      <p className="font-black text-slate-500 text-xs mt-1">{formatCarPrice(car)}</p>
-                    </div>
-                  </Link>
+                  <CarCard 
+                    key={car.id} 
+                    car={{
+                      ...car,
+                      // Ensure images is an array for CarCard
+                      images: car.image ? [{ url: car.image }] : (car.images || [])
+                    }} 
+                  />
                 ))}
               </div>
             )

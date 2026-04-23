@@ -56,7 +56,7 @@ export default function SearchSuggestions({
                   <div className="flex gap-2 items-center">
                     {/* Image */}
                     {car.image && (
-                      <div className="w-10 h-10 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0">
+                      <div className="w-10 h-10 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0 border border-black dark:border-white">
                         <Image
                           src={car.image}
                           alt={car.value}
