@@ -122,7 +122,7 @@ export default function Navbar({ user }) {
                 </Link>
               ))}
               <Link href="/contact" 
-                className="px-6 py-2 text-[13px] font-bold uppercase tracking-widest border border-slate-900 dark:border-white text-slate-900 dark:text-white transition-all hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black"
+                className="px-6 py-2 text-[13px] font-bold uppercase tracking-widest border border-slate-900 dark:border-white text-slate-900 dark:text-white transition-all hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:!text-[#0a0a0a]"
                 style={{ borderRadius: 'var(--radius)' }}>
                 Contact
               </Link>
@@ -263,7 +263,7 @@ export default function Navbar({ user }) {
               {!user ? (
                 <>
                   <Link href="/login" onClick={() => setOpen(false)}
-                    className="block w-full py-4 text-center text-sm font-bold uppercase tracking-widest border border-slate-900 dark:border-white text-slate-900 dark:text-white hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
+                    className="block w-full py-4 text-center text-sm font-bold uppercase tracking-widest border border-slate-900 dark:border-white text-slate-900 dark:text-white hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:!text-[#0a0a0a] transition-all"
                     style={{ borderRadius: 'var(--radius)' }}>
                     Sign In
                   </Link>
