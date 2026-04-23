@@ -303,7 +303,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         updatedAt: Date.now(),
       })
     );
-  }, [badges, draftKey, images, isNew, selectedFeatures, simpleMode, step]);
+  }, [badges, draftKey, images, isNew, selectedFeatures, simpleMode]);
 
   useEffect(() => {
     if (!isNew || !formRef.current) return;
