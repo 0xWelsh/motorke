@@ -106,7 +106,7 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen pb-20 bg-white dark:bg-[#0a0a0a]">
       {/* Dynamic Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
+      <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-7 xl:col-span-8">
