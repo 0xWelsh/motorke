@@ -164,7 +164,7 @@ function LocationCard({ name }) {
       href={`/cars?county=${encodeURIComponent(name)}`}
       className="group flex items-center justify-center gap-2 px-4 py-3 min-w-[120px] rounded-2xl border border-[#e8e2d9] dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-[#ddd4c8] dark:hover:border-zinc-700 hover:shadow-md transition-all duration-300 whitespace-nowrap drop-shadow-sm"
     >
-      <MapPin className="w-4 h-4 text-slate-400 group-hover:text-[#ff5a2f] transition-colors" />
+      <MapPin className="w-4 h-4 text-slate-400 group-hover:text-[#38A169] transition-colors" />
       <span className="text-[11px] font-black text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
         {name}
       </span>
@@ -205,7 +205,7 @@ export default function BrowsePanel() {
     <div className="w-full space-y-4 sm:space-y-6 pt-2">
       {/* Search Bar with Geolocation */}
       <form onSubmit={handleSearch} className="relative mb-6 sm:mb-8 w-full group">
-        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#ff5a2f] transition-colors" />
+        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#38A169] transition-colors" />
         <input 
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -215,7 +215,7 @@ export default function BrowsePanel() {
         <button 
           type="submit" 
           disabled={loadingLoc}
-          className="absolute right-2 top-2 bottom-2 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-6 rounded-none font-black text-xs uppercase tracking-widest transition-all disabled:opacity-70 flex items-center justify-center min-w-[100px]"
+          className="absolute right-2 top-2 bottom-2 bg-[#38A169] hover:bg-[#2F855A] text-white px-6 rounded-none font-black text-xs uppercase tracking-widest transition-all disabled:opacity-70 flex items-center justify-center min-w-[100px]"
         >
           {loadingLoc ? "Locating..." : "Explore"}
         </button>
@@ -231,7 +231,7 @@ export default function BrowsePanel() {
             </p>
             <Link
               href="/cars"
-              className="text-[11px] font-black uppercase tracking-[0.12em] text-[#ff5a2f] hover:underline"
+              className="text-[11px] font-black uppercase tracking-[0.12em] text-[#38A169] hover:underline"
             >
               All Makes →
             </Link>

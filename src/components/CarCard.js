@@ -129,7 +129,10 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
             <span className="text-[15px] font-extrabold text-[#111827] dark:text-white uppercase tracking-tight">
                {car.currency || "KSh"} {formatCarPrice(car).replace("KSh", "").trim()}
             </span>
-            <div className="w-4 h-4 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-[10px] text-slate-400 font-bold italic">
+            <div 
+              className="w-4 h-4 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-[10px] text-slate-400 font-bold italic cursor-help"
+              title="Price includes estimated import duty and registration fees."
+            >
                i
             </div>
           </div>
