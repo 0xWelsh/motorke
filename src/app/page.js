@@ -179,7 +179,7 @@ export default async function HomePage() {
                 </p>
                 <Link
                   href="/cars"
-                  className="mt-auto w-full bg-[#111827] dark:bg-white text-white dark:text-[#111827] py-4 text-[11px] font-black uppercase tracking-widest hover:scale-[0.98] transition-transform"
+                  className="mt-auto w-full bg-[#111827] dark:!bg-white text-white dark:!text-[#111827] py-4 text-[11px] font-black uppercase tracking-widest hover:scale-[0.98] transition-transform"
                   style={{ borderRadius: '4px' }}
                 >
                   View All Vehicles
