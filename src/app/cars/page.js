@@ -183,7 +183,7 @@ export default async function CarsPage({ searchParams }) {
             <div className="bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-8" style={{ borderRadius: 'var(--radius)' }}>
               <h3 className="text-sm font-bold text-[#111827] dark:text-white uppercase tracking-widest mb-4">Concierge</h3>
               <p className="text-sm text-[#718096] dark:text-slate-400 leading-relaxed mb-6 font-medium">
-                Can't find it? Our network has access to off-market inventory and direct Japan imports.
+                Can't find it? Our network has access to off-market inventory and premium stock from the best dealerships in the country.
               </p>
               <Link href="/contact" className="block text-center bg-[#111827] text-white dark:bg-white dark:!text-black py-3 text-[10px] font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
                 Request Sourcing
