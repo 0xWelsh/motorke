@@ -74,7 +74,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
             {car.year}
           </span>
           <Link href={`/cars/${car.id}`}>
-            <h3 className="text-lg font-black text-slate-900 dark:text-white tracking-tighter leading-snug hover:text-[#38A169] transition-colors uppercase italic truncate" title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}>
+            <h3 className="text-lg font-black font-sans text-slate-900 dark:text-white tracking-tighter leading-snug hover:text-[#38A169] transition-colors uppercase italic truncate" title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}>
               {car.make} {car.model} {car.variant ? `(${car.variant})` : ""}
             </h3>
           </Link>
