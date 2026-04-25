@@ -307,7 +307,7 @@ export default async function CarDetailPage({ params }) {
             <div className="lg:col-span-8 space-y-16">
               <div>
                 <div className="flex items-center gap-4 mb-4">
-                   <span className="bg-[#E2E8F0] dark:bg-zinc-800 text-slate-500 dark:text-slate-400 text-[10px] font-black px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>
+                   <span className="bg-[#38A169]/10 text-[#38A169] text-[10px] font-black px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>
                       {car.available ? "AVAILABLE" : "RESERVED"}
                    </span>
                 </div>
@@ -329,7 +329,7 @@ export default async function CarDetailPage({ params }) {
                 </div>
 
                 <div className="pt-8 border-t border-slate-100 dark:border-zinc-900 mt-8">
-                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#A0AEC0] dark:text-slate-600 mb-6">Description</h2>
+                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-6">Description</h2>
                    <div className="text-[15px] text-[#4A5568] dark:text-slate-400 leading-[1.8] font-medium">
                       {specString && <span className="text-[#111827] dark:text-white font-bold">{specString}</span>}
                       {specString && " • "}
@@ -338,7 +338,7 @@ export default async function CarDetailPage({ params }) {
                 </div>
 
                 <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
-                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#A0AEC0] dark:text-slate-600 mb-6">Vehicle Details</h2>
+                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-6">Vehicle Details</h2>
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-0 text-[13px]">
                       {specs.map((item, idx) => (
                         <div key={item.label} className={`flex justify-between items-center py-4 border-b border-slate-50 dark:border-zinc-900/50 ${idx < 2 ? 'border-t' : ''}`}>
@@ -355,7 +355,7 @@ export default async function CarDetailPage({ params }) {
             <div className="lg:col-span-4">
                <div className="bg-white dark:bg-[#0a0a0a] border border-slate-100 dark:border-zinc-900 p-10 shadow-sm" style={{ borderRadius: '2px' }}>
                   <div className="space-y-10">
-                    <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-[#A0AEC0] dark:text-slate-600">Send an Enquiry</h3>
+                    <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-[#38A169]">Send an Enquiry</h3>
                     <EnquiryForm
                         carId={car.id}
                         dealerId={dealer.id}
@@ -368,7 +368,7 @@ export default async function CarDetailPage({ params }) {
 
                   <div className="mt-12 pt-10 border-t border-slate-50 dark:border-zinc-900/50 flex flex-col gap-6">
                     <div className="px-5 py-3 bg-[#fbfcfe] dark:bg-zinc-900 border border-[#e2e8f0] dark:border-zinc-800 flex items-center justify-between" style={{ borderRadius: '2px' }}>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-[#A0AEC0] dark:text-slate-600">Reference ID</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-[#38A169]">Reference ID</span>
                         <span className="text-[10px] font-extrabold text-[#111827] dark:text-white">{car.id.slice(-8).toUpperCase()}</span>
                     </div>
                     <div className="py-2 flex items-center justify-center">
@@ -379,7 +379,7 @@ export default async function CarDetailPage({ params }) {
 
                {/* Comparison Tool Shortcut */}
                <div className="mt-8 flex items-center justify-between px-8 py-6 bg-white dark:bg-[#0a0a0a] border border-slate-100 dark:border-zinc-900" style={{ borderRadius: '2px' }}>
-                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-600">Match & Compare</span>
+                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#38A169]">Match & Compare</span>
                   <div className="flex items-center gap-4">
                       <CompareButton car={compareCar} className="w-5 h-5 text-slate-400 hover:text-black dark:text-slate-600 dark:hover:text-white transition-colors" />
                   </div>
@@ -391,7 +391,7 @@ export default async function CarDetailPage({ params }) {
         {/* Similar Cars Section */}
         {similar.length > 0 && (
           <div className="mt-32 pt-32 border-t border-[#EDF2F7]">
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-16">Recommendation Engine</h2>
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-16">Recommendation Engine</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                {similar.map((sc) => (
                  <Link key={sc.id} href={`/cars/${sc.id}`} className="group block">
@@ -412,7 +412,7 @@ export default async function CarDetailPage({ params }) {
         <div className="mt-32 pt-32 border-t border-[#EDF2F7]">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
              <div>
-                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-6">User Feedback</h2>
+                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-6">User Feedback</h2>
                 <h3 className="text-3xl sm:text-4xl font-bold text-[#1A202C]">Experience Shared.</h3>
              </div>
              {reviewsData.avgRating && (
@@ -458,7 +458,7 @@ export default async function CarDetailPage({ params }) {
       {/* Persistent Mobile Bottom Bar */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-[#EDF2F7] px-6 py-5 flex items-center gap-4">
          <div className="flex-1">
-            <p className="text-[10px] font-bold text-[#718096] uppercase tracking-widest mb-1">List Price</p>
+            <p className="text-[10px] font-bold text-[#38A169] uppercase tracking-widest mb-1">List Price</p>
             <p className="text-lg font-bold text-[#1A202C]">{formatCarPrice(car)}</p>
          </div>
          {dealer.whatsapp && (
