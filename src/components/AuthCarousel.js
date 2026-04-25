@@ -32,11 +32,21 @@ export default function AuthCarousel() {
   }, []);
 
   return (
-    <section className="hidden lg:flex lg:w-[55%] xl:w-[45%] relative flex-col justify-center p-20 overflow-hidden bg-slate-900 border-r border-[#ddd4c8] dark:border-slate-800">
+    <section className="hidden lg:flex lg:w-[55%] xl:w-[45%] relative flex-col justify-center p-20 overflow-hidden border-r border-[#ddd4c8] dark:border-slate-800">
       
-      {/* Background aesthetics without images */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#ff5a2f]/10 rounded-2xl blur-[120px] -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#ff5a2f]/10 rounded-2xl blur-[100px] translate-y-1/2 -translate-x-1/4" />
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 z-0">
+        <motion.img
+          src="/images/backgrounds/pexels-mikebirdy-10123994.jpg"
+          alt="Premium Car Background"
+          className="w-full h-full object-cover"
+          initial={{ scale: 1.1, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+        />
+        <div className="absolute inset-0 bg-white/40 dark:bg-slate-900/40 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-white via-white/80 to-transparent dark:from-slate-900 dark:via-slate-900/80 dark:to-transparent" />
+      </div>
 
       <div className="relative z-10 max-w-lg my-auto">
         <Quote className="text-[#ff5a2f]/30 w-16 h-16 mb-8 -ml-2" strokeWidth={1} />

@@ -14,7 +14,8 @@ import { unstable_cache } from "next/cache";
 import HeroShowcase from "@/components/HeroShowcase";
 import CarCard from "@/components/CarCard";
 
-const HERO_BACKGROUND = "/images/mercedes.jpg";
+const HERO_BACKGROUND = "/images/backgrounds/pexels-mikebirdy-10123985.jpg";
+const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
 
 
 const getCachedData = unstable_cache(
@@ -143,7 +144,7 @@ export default async function HomePage() {
             src={HERO_BACKGROUND}
             fill
             className="object-cover"
-            style={{ opacity: 0.06 }}
+            style={{ opacity: 0.12 }}
             alt=""
             priority
           />
@@ -244,8 +245,17 @@ export default async function HomePage() {
       )}
 
       {/* Editorial Information Block */}
-      <section className="py-24 sm:py-48 bg-[#1A202C] text-white">
-        <div className="container mx-auto px-6 max-w-7xl">
+      <section className="relative py-24 sm:py-48 bg-[#1A202C] text-white overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={DIFFERENCE_BACKGROUND}
+            fill
+            className="object-cover opacity-20"
+            alt=""
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1A202C] via-[#1A202C]/80 to-transparent" />
+        </div>
+        <div className="container mx-auto px-6 max-w-7xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
             <div>
               <p className="text-[#38A169] text-xs font-bold uppercase tracking-[0.4em] mb-8">The Difference</p>

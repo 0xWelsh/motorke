@@ -24,7 +24,16 @@ export default function LoginForm({ error }) {
   const isValidEmail = email.includes("@") && email.includes(".");
 
   return (
-    <div className="min-h-screen bg-[#f7f6f3]">
+    <div className="min-h-screen relative flex items-center justify-center overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/images/backgrounds/pexels-criticalimagery-36840206.jpg"
+          alt="Login Background"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[4px]" />
+      </div>
       {/* Google Script */}
       {hasGoogleAuth && (
         <Script 
@@ -71,8 +80,8 @@ export default function LoginForm({ error }) {
         />
       )}
 
-      <section className="min-h-dvh px-4 py-8 sm:px-6 sm:py-12 flex items-center justify-center">
-        <div className="w-full max-w-md bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 p-8 sm:p-10 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
+      <section className="relative z-10 w-full px-4 py-8 sm:px-6 sm:py-12 flex items-center justify-center">
+        <div className="w-full max-w-md bg-white/90 dark:bg-[#111111]/90 backdrop-blur-md border border-white/20 dark:border-slate-800 p-8 sm:p-10 shadow-2xl rounded-3xl">
           {/* Header */}
           <div className="mb-8 text-center">
             <div className="flex items-center justify-center gap-2 mb-4">
@@ -175,7 +184,7 @@ export default function LoginForm({ error }) {
                 <div className="w-full border-t border-[#ddd4c8] dark:border-slate-800"></div>
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-white px-3 text-xs text-slate-600">or continue with</span>
+                <span className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-3 text-xs text-slate-600">or continue with</span>
               </div>
             </div>
 
