@@ -75,7 +75,7 @@ export default function HeroShowcase({ items }) {
                 <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
               ))}
             </div>
-            <p className="text-base font-medium text-slate-700 dark:text-slate-200 italic leading-relaxed mb-6">
+            <p className="text-base font-medium text-slate-700 dark:text-slate-200 leading-relaxed mb-6">
               &ldquo;{current.comment}&rdquo;
             </p>
             <div className="mt-auto">

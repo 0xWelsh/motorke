@@ -74,7 +74,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
             {car.year}
           </span>
           <Link href={`/cars/${car.id}`}>
-            <h3 className="text-lg font-black font-playfair text-slate-900 dark:text-white tracking-tighter leading-snug hover:text-[#38A169] transition-colors uppercase italic truncate" title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}>
+            <h3 className="text-lg font-black font-playfair text-slate-900 dark:text-white tracking-tighter leading-snug hover:text-[#38A169] transition-colors uppercase truncate" title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}>
               {car.make} {car.model} {car.variant ? `(${car.variant})` : ""}
             </h3>
           </Link>
@@ -108,7 +108,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
                USD {formatCarPrice(car).replace("KSh", "").trim()}
             </span>
             <div 
-              className="w-4 h-4 rounded-full border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-[10px] text-slate-400 font-bold italic cursor-help"
+              className="w-4 h-4 rounded-full border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-[10px] text-slate-400 font-bold cursor-help"
               title={car.dutyPaid ? "Locally available. Price inclusive of registration and all duties." : "Direct import. Price includes shipping, tax, and clearing fees to Nairobi."}
             >
                i

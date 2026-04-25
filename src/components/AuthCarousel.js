@@ -39,7 +39,7 @@ export default function AuthCarousel() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-md"
         >
-          <h3 className="text-4xl md:text-5xl font-black italic tracking-tighter leading-[1.1] mb-6">
+          <h3 className="text-4xl md:text-5xl font-black tracking-tighter leading-[1.1] mb-6">
             {SLIDES[index].title}
           </h3>
           <p className="text-lg text-white/70 font-medium leading-relaxed">

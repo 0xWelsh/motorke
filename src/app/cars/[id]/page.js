@@ -319,7 +319,7 @@ export default async function CarDetailPage({ params }) {
                     {car.currency || "USD"} {formatCarPrice(car).replace("KSh", "").trim()}
                   </span>
                   <div 
-                    className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-[11px] text-slate-400 font-bold italic cursor-help"
+                    className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-[11px] text-slate-400 font-bold cursor-help"
                     title={car.dutyPaid ? "Locally available. Price inclusive of registration and all duties." : "Direct import. Price includes shipping, tax, and clearing fees to Nairobi."}
                   >
                      i
@@ -446,7 +446,7 @@ export default async function CarDetailPage({ params }) {
                     </div>
                   ))
                 ) : (
-                  <p className="text-[#718096] font-medium italic">No reviews yet for this unit.</p>
+                  <p className="text-[#718096] font-medium">No reviews yet for this unit.</p>
                 )}
              </div>
           </div>

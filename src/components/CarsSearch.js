@@ -167,7 +167,7 @@ export default function CarsSearch({
       <aside className={`${mobileOpen ? "block" : "hidden"} lg:block bg-white dark:bg-transparent space-y-8 mt-8 lg:mt-0`}>
         <div className="mb-10 hidden lg:block border-b border-slate-100 dark:border-zinc-900 pb-6">
           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#38A169] mb-2">Inventory</p>
-          <h2 className="text-xl font-black tracking-tighter text-[#111827] dark:text-white uppercase italic">Refine Results</h2>
+          <h2 className="text-xl font-black tracking-tighter text-[#111827] dark:text-white uppercase">Refine Results</h2>
         </div>
 
         <form method="GET" onSubmit={handleSubmit} className="space-y-8">

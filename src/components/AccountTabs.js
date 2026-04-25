@@ -229,7 +229,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                       
                       {e.message && (
                         <div className="bg-[#fbfcfe] dark:bg-[#111111] rounded-2xl p-5 mb-5 border border-[#ddd4c8] dark:border-slate-800">
-                          <p className="text-sm font-medium text-slate-600 italic">"{e.message}"</p>
+                          <p className="text-sm font-medium text-slate-600">"{e.message}"</p>
                         </div>
                       )}
                       

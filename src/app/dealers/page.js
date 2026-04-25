@@ -64,7 +64,7 @@ export default async function DealersPage() {
             </div>
 
             <div className="bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-8" style={{ borderRadius: 'var(--radius)' }}>
-               <h3 className="text-xs font-bold uppercase tracking-widest mb-6 divider-line italic text-[#718096]">Proximity Radar</h3>
+               <h3 className="text-xs font-bold uppercase tracking-widest mb-6 divider-line text-[#718096]">Proximity Radar</h3>
                <NearbyDealersList />
             </div>
           </aside>

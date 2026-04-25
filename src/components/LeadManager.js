@@ -198,7 +198,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                            </div>
                            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 p-3 sm:p-5 rounded-2xl\">
                               <p className="text-xs font-bold text-slate-500 uppercase mb-2 flex items-center gap-2\"><MessageSquare size={10} /> Message</p>
-                              <p className="text-xs sm:text-sm font-medium text-slate-700 leading-relaxed italic\">"{lead.message || "Enquiry regarding listing."}"</p>
+                              <p className="text-xs sm:text-sm font-medium text-slate-700 leading-relaxed\">"{lead.message || "Enquiry regarding listing."}"</p>
                            </div>
                         </div>
 

@@ -196,7 +196,7 @@ export default function DutyCalculatorPage() {
                    <div className="flex items-center gap-2 text-[10px] font-bold text-[#A0AEC0] uppercase tracking-widest mb-4">
                       <ShieldCheck className="w-3 h-3" /> Source: {ratesMeta.source || "central-index"} 
                    </div>
-                   <p className="text-xs font-semibold text-[#718096] leading-relaxed italic">
+                   <p className="text-xs font-semibold text-[#718096] leading-relaxed">
                       Disclaimer: These values are generated as estimates based on current Central Revenue System schedules. 
                       Final port assessment may fluctuate based on unit-specific CRSP classification.
                    </p>

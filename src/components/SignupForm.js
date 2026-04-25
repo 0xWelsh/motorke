@@ -184,7 +184,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
              <div className="w-10 h-10 bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center group-hover:bg-[#38A169] transition-all">
                 <img src="/headerlogo.png" alt="Logo" className="w-6 h-6 object-contain" />
              </div>
-             <span className="text-xl font-black uppercase tracking-widest text-white italic">Welsh Motors</span>
+             <span className="text-xl font-black uppercase tracking-widest text-white">Welsh Motors</span>
           </Link>
           <AuthCarousel />
           <div className="mt-auto p-10 text-[10px] font-bold uppercase tracking-[0.3em] text-white/30">
@@ -199,11 +199,11 @@ export default function SignupForm({ error: initialError, initialRole }) {
           {/* Mobile Logo */}
           <Link href="/" className="lg:hidden flex items-center justify-center gap-2 mb-6">
              <img src="/headerlogo.png" alt="Logo" className="w-6 h-6 object-contain" />
-             <span className="text-lg font-black uppercase tracking-widest text-slate-900 dark:text-white italic">Welsh Motors</span>
+             <span className="text-lg font-black uppercase tracking-widest text-slate-900 dark:text-white">Welsh Motors</span>
           </Link>
 
           <header className="mb-6 text-left">
-            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-2 italic">
+            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-2">
               Sign Up.
             </h2>
             <p className="text-xs font-medium text-slate-400">Enter your details below to create your account.</p>

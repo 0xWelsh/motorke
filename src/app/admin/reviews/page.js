@@ -98,7 +98,7 @@ export default async function AdminReviewsPage() {
                         <p className="text-[10px] font-bold text-slate-400 mt-0.5">{r.rating}/5</p>
                       </td>
                       <td className="px-6 py-4 max-w-[280px]">
-                        <p className="text-sm text-slate-600 line-clamp-2">{r.comment || <span className="text-slate-300 italic">No comment</span>}</p>
+                        <p className="text-sm text-slate-600 line-clamp-2">{r.comment || <span className="text-slate-300">No comment</span>}</p>
                       </td>
                       <td className="px-6 py-4 text-[11px] text-slate-500 font-semibold whitespace-nowrap">
                         {formatDate(r.createdAt)}
@@ -158,7 +158,7 @@ export default async function AdminReviewsPage() {
                         <p className="text-[10px] font-bold text-slate-400 mt-0.5">{r.rating}/5</p>
                       </td>
                       <td className="px-6 py-4 max-w-[280px]">
-                        <p className="text-sm text-slate-600 line-clamp-2">{r.comment || <span className="text-slate-300 italic">No comment</span>}</p>
+                        <p className="text-sm text-slate-600 line-clamp-2">{r.comment || <span className="text-slate-300">No comment</span>}</p>
                       </td>
                       <td className="px-6 py-4 text-[11px] text-slate-500 font-semibold whitespace-nowrap">
                         {formatDate(r.createdAt)}
