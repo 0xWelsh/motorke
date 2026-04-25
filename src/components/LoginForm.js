@@ -57,7 +57,7 @@ export default function LoginForm({ error }) {
             window.google.accounts.id.renderButton(
               googleButtonContainer,
               { 
-                theme: "outline", 
+                theme: "filled_black", 
                 size: "large", 
                 width: "full", 
                 text: "signin_with",
@@ -127,7 +127,7 @@ export default function LoginForm({ error }) {
             <input type="text" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
             <div>
-              <label htmlFor="emailAddress" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Email</label>
+              <label htmlFor="emailAddress" className="block text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-3">Email</label>
               <input 
                 id="emailAddress"
                 name="email" 
@@ -136,12 +136,13 @@ export default function LoginForm({ error }) {
                 onChange={(e) => setEmail(e.target.value)}
                 required 
                 placeholder="dealership@welshmotors.co.ke" 
-                className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-4 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
+                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
+                style={{ borderRadius: '2px' }}
               />
             </div>
 
             <div className="relative">
-              <label htmlFor="securePassword" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Password</label>
+              <label htmlFor="securePassword" className="block text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-3">Password</label>
               <input 
                 id="securePassword"
                 name="password" 
@@ -150,23 +151,25 @@ export default function LoginForm({ error }) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••" 
-                className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-4 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700 pr-12"
+                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700 pr-12"
+                style={{ borderRadius: '2px' }}
               />
               <button 
                 type="button" 
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-0 bottom-4 text-slate-300 hover:text-[#38A169] transition-colors"
+                className="absolute right-4 bottom-4 text-slate-300 hover:text-[#38A169] transition-colors"
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
 
             <div className="flex items-center justify-between pt-2">
               <label className="flex items-center gap-3 cursor-pointer group">
-                <input type="checkbox" name="remember" className="w-5 h-5 border-2 border-slate-200 dark:border-zinc-800 rounded-none checked:bg-[#38A169] checked:border-[#38A169] transition-all accent-[#38A169]" />
-                <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Remember me</span>
+                <input type="checkbox" name="remember" className="w-4 h-4 border-2 border-slate-200 dark:border-zinc-800 rounded-none checked:bg-[#38A169] checked:border-[#38A169] transition-all accent-[#38A169]" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Remember me</span>
               </label>
-              <Link href="/forgot-password" size="sm" className="text-[11px] font-black uppercase tracking-widest text-[#38A169] hover:underline underline-offset-4 decoration-2">
+              <Link href="/forgot-password" size="sm" className="text-[10px] font-black uppercase tracking-widest text-[#38A169] hover:underline underline-offset-4 decoration-2">
                 Forgot password?
               </Link>
             </div>
@@ -179,14 +182,24 @@ export default function LoginForm({ error }) {
               type="submit" 
               disabled={!canSubmit}
               className="w-full bg-[#38A169] hover:bg-[#2F855A] disabled:bg-slate-100 dark:disabled:bg-zinc-900 disabled:text-slate-400 text-white py-5 px-6 font-black uppercase tracking-[0.2em] text-xs transition-all hover:scale-[0.98] active:scale-95 flex items-center justify-center gap-3 group"
+              style={{ borderRadius: '2px' }}
             >
               Sign In
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
 
             {hasGoogleAuth && (
-              <div className="pt-4">
-                <div id="google-button-container" className="w-full" />
+              <div className="pt-6 relative">
+                <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                  <div className="w-full border-t border-slate-100 dark:border-zinc-900"></div>
+                </div>
+                <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.2em]">
+                  <span className="bg-white dark:bg-[#0a0a0a] px-4 text-slate-400">or connect with</span>
+                </div>
+                
+                <div className="mt-8 flex justify-center">
+                  <div id="google-button-container" className="w-full flex justify-center min-h-[44px]" />
+                </div>
               </div>
             )}
           </form>

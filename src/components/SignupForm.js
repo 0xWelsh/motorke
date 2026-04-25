@@ -140,7 +140,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
             if (!googleSignupContainer) return;
 
             window.google.accounts.id.renderButton(googleSignupContainer, {
-              theme: "outline",
+              theme: "filled_black",
               size: "large",
               width: "full",
               text: "signup_with",
@@ -232,7 +232,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
             <input type="hidden" name="role" value={role} />
 
             <div className={role === "DEALER" ? "md:col-span-1" : "md:col-span-2"}>
-              <label htmlFor="email" className="block text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Email</label>
+              <label htmlFor="email" className="block text-[10px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-2">Email</label>
               <input 
                 id="email"
                 name="email" 
@@ -241,24 +241,26 @@ export default function SignupForm({ error: initialError, initialRole }) {
                 onChange={(e) => setEmail(e.target.value)}
                 required 
                 placeholder="you@email.com" 
-                className="w-full border-b border-slate-100 dark:border-zinc-800 bg-transparent py-2 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
+                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
+                style={{ borderRadius: '2px' }}
               />
             </div>
 
             <div className={role === "DEALER" ? "md:col-span-1" : "md:col-span-2"}>
-              <label htmlFor="name" className="block text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Full Name</label>
+              <label htmlFor="name" className="block text-[10px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-2">Full Name</label>
               <input 
                 id="name"
                 name="name" 
                 type="text" 
                 required 
                 placeholder="John Doe" 
-                className="w-full border-b border-slate-100 dark:border-zinc-800 bg-transparent py-2 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
+                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
+                style={{ borderRadius: '2px' }}
               />
             </div>
 
             <div className="md:col-span-1">
-              <label htmlFor="password" className="block text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Password</label>
+              <label htmlFor="password" className="block text-[10px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-2">Password</label>
               <div className="relative">
                 <input 
                   id="password"
@@ -268,28 +270,30 @@ export default function SignupForm({ error: initialError, initialRole }) {
                   onChange={(e) => setPassword(e.target.value)}
                   required 
                   placeholder="••••••••" 
-                  className="w-full border-b border-slate-100 dark:border-zinc-800 bg-transparent py-2 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all pr-10"
+                  className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700 pr-12"
+                  style={{ borderRadius: '2px' }}
                 />
                 <button 
                   type="button" 
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-0 bottom-2 text-slate-300 hover:text-[#38A169]"
+                  className="absolute right-4 bottom-4 text-slate-300 hover:text-[#38A169]"
                 >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               {password && <PasswordMeter password={password} />}
             </div>
 
             <div className="md:col-span-1">
-              <label htmlFor="confirm" className="block text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Confirm Password</label>
+              <label htmlFor="confirm" className="block text-[10px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-2">Confirm Password</label>
               <input 
                 id="confirm"
                 name="confirm" 
                 type={showPassword ? "text" : "password"}
                 required 
                 placeholder="••••••••" 
-                className="w-full border-b border-slate-100 dark:border-zinc-800 bg-transparent py-2 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
+                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
+                style={{ borderRadius: '2px' }}
               />
             </div>
 
@@ -301,36 +305,39 @@ export default function SignupForm({ error: initialError, initialRole }) {
                 </div>
                 
                 <div className="md:col-span-1">
-                  <label htmlFor="dealerName" className="block text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Dealership Title</label>
+                  <label htmlFor="dealerName" className="block text-[10px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-2">Dealership Title</label>
                   <input 
                     id="dealerName"
                     name="dealerName" 
                     type="text" 
                     required
                     placeholder="Japanese Car Exports" 
-                    className="w-full border-b border-slate-100 dark:border-zinc-800 bg-transparent py-2 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
+                    className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
+                    style={{ borderRadius: '2px' }}
                   />
                 </div>
 
                 <div className="md:col-span-1">
-                  <label htmlFor="phone" className="block text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Primary Phone</label>
+                  <label htmlFor="phone" className="block text-[10px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-2">Primary Phone</label>
                   <input 
                     id="phone"
                     name="phone" 
                     type="tel" 
                     required
                     placeholder="+254 7__ ___ ___" 
-                    className="w-full border-b border-slate-100 dark:border-zinc-800 bg-transparent py-2 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
+                    className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
+                    style={{ borderRadius: '2px' }}
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label htmlFor="county" className="block text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Base County</label>
+                  <label htmlFor="county" className="block text-[10px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-2">Base County</label>
                   <select 
                     id="county"
                     name="county"
                     required
-                    className="w-full border-b border-slate-100 dark:border-zinc-800 bg-transparent py-2 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all appearance-none cursor-pointer"
+                    className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all appearance-none cursor-pointer"
+                    style={{ borderRadius: '2px' }}
                   >
                     <option value="" className="text-slate-900 dark:text-white dark:bg-[#0a0a0a]">Select a county</option>
                     {COUNTIES.map((c) => (
@@ -346,13 +353,25 @@ export default function SignupForm({ error: initialError, initialRole }) {
                 type="submit" 
                 disabled={loading}
                 className="w-full bg-[#38A169] hover:bg-[#2F855A] disabled:bg-slate-100 dark:disabled:bg-zinc-900 disabled:text-slate-400 text-white py-4 px-6 font-black uppercase tracking-[0.2em] text-xs transition-all hover:scale-[0.98] active:scale-95 flex items-center justify-center gap-3 group mb-2"
+                style={{ borderRadius: '2px' }}
               >
                 {loading ? <Loader2 size={16} className="animate-spin" /> : "Sign Up"}
                 {!loading && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
               </button>
               
               {hasGoogleAuth && (
-                 <div id="google-signup-button" className="w-full" />
+                 <div className="pt-6 relative">
+                   <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                     <div className="w-full border-t border-slate-100 dark:border-zinc-900"></div>
+                   </div>
+                   <div className="relative flex justify-center text-[8px] font-black uppercase tracking-[0.2em]">
+                     <span className="bg-white dark:bg-[#0a0a0a] px-4 text-slate-400 font-bold">or join with</span>
+                   </div>
+                   
+                   <div className="mt-6 flex justify-center min-h-[44px]">
+                     <div id="google-signup-button" className="w-full flex justify-center" />
+                   </div>
+                 </div>
               )}
             </div>
           </form>
