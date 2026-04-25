@@ -189,8 +189,14 @@ export default function Navbar({ user }) {
                         <div className="py-2">
                           {user.role === "ADMIN"  && <MenuDropdownItem href="/admin" label="Dashboard" icon={<LayoutDashboard size={18} />} />}
                           {user.role === "DEALER" && <MenuDropdownItem href="/portal" label="Portal" icon={<Store size={18} />} />}
-                          <MenuDropdownItem href="/account" label="Account" icon={<User size={18} />} />
-                          <MenuDropdownItem href="/account?tab=saved" label="Watchlist" icon={<Heart size={18} />} />
+                          <MenuDropdownItem
+                            href={user.role === "DEALER" ? "/portal/profile" : "/account"}
+                            label="Account"
+                            icon={<User size={18} />}
+                          />
+                          {user.role !== "DEALER" && (
+                            <MenuDropdownItem href="/account?tab=saved" label="Watchlist" icon={<Heart size={18} />} />
+                          )}
                           <div className="my-2 border-t border-gray-50 dark:border-zinc-800" />
                           <form action="/api/auth/logout" method="POST">
                             <button type="submit" className="w-full flex items-center gap-3 px-5 py-3 text-sm font-bold text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors">
@@ -328,9 +334,13 @@ export default function Navbar({ user }) {
                   <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Notifications</span>
                   <NotificationsBell variant="navbar" />
                 </div>
-                <Link href="/account" onClick={() => setOpen(false)} className="flex items-center gap-4 text-lg font-bold uppercase tracking-widest text-slate-900 dark:text-white">
+                <Link
+                  href={user.role === "DEALER" ? "/portal/profile" : "/account"}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-4 text-lg font-bold uppercase tracking-widest text-slate-900 dark:text-white"
+                >
                   <User size={22} className="text-[#718096]" />
-                  Dashboard
+                  Account
                 </Link>
               </div>
             ) : (
