@@ -12,7 +12,6 @@ import CookieConsent from "@/components/CookieConsent";
 
 import { Playfair_Display } from "next/font/google";
 import GlobalFooter from "@/components/GlobalFooter";
-import LiveActivityFeed from "@/components/LiveActivityFeed";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -62,7 +61,6 @@ export default async function RootLayout({ children }) {
           <GlobalFooter />
           <ScrollToTop />
           <CookieConsent />
-          <LiveActivityFeed />
         </ThemeProvider>
       </body>
     </html>

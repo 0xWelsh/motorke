@@ -24,10 +24,10 @@ function PasswordMeter({ password }) {
   }
   
   const segments = [
-    score >= 1 ? (score < 3 ? "bg-rose-400" : (score === 3 ? "bg-amber-400" : "bg-[#ff5a2f]")) : "bg-slate-100",
-    score >= 2 ? (score < 3 ? "bg-rose-400" : (score === 3 ? "bg-amber-400" : "bg-[#ff5a2f]")) : "bg-slate-100",
-    score >= 3 ? (score === 3 ? "bg-amber-400" : "bg-[#ff5a2f]") : "bg-slate-100",
-    score >= 4 ? "bg-[#ff5a2f]" : "bg-slate-100"
+    score >= 1 ? (score < 3 ? "bg-rose-400" : (score === 3 ? "bg-amber-400" : "bg-[#38A169]")) : "bg-slate-100",
+    score >= 2 ? (score < 3 ? "bg-rose-400" : (score === 3 ? "bg-amber-400" : "bg-[#38A169]")) : "bg-slate-100",
+    score >= 3 ? (score === 3 ? "bg-amber-400" : "bg-[#38A169]") : "bg-slate-100",
+    score >= 4 ? "bg-[#38A169]" : "bg-slate-100"
   ];
   
   let label = "Security Level";
@@ -49,6 +49,9 @@ function PasswordMeter({ password }) {
   );
 }
 
+import AuthCarousel from "./AuthCarousel";
+import { ArrowRight } from "lucide-react";
+
 export default function SignupForm({ error: initialError, initialRole }) {
   const initialErrorMessage =
     initialError === "invalid"
@@ -63,22 +66,14 @@ export default function SignupForm({ error: initialError, initialRole }) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showMapPin, setShowMapPin] = useState(false);
   const [errorMsg, setErrorMsg] = useState(initialErrorMessage);
   const [loading, setLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState("");
   const [website, setWebsite] = useState("");
   
-  // Google OAuth only available if client ID is configured
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
   const hasGoogleAuth = Boolean(googleClientId);
   const requiresHumanCheck = Boolean(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
-
-  const isValidEmail = email.includes("@") && email.includes(".");
-
-  const handleAutoFillLocation = () => {
-    alert("Location automatically filled using device Geolocation.");
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -112,20 +107,8 @@ export default function SignupForm({ error: initialError, initialRole }) {
     }
   };
 
-  const inputCls = "w-full bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#ff5a2f] transition-all placeholder:text-slate-400 shadow-sm shadow-slate-100";
-  const labelCls = "text-[11px] font-black text-slate-700 uppercase tracking-[0.25em] ml-1 flex items-center gap-2";
-
   return (
-    <div className="min-h-screen relative flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="/images/backgrounds/pexels-matreding-11692836.jpg"
-          alt="Signup Background"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[4px]" />
-      </div>
+    <div className="min-h-screen flex overflow-hidden bg-white dark:bg-[#0a0a0a]">
       {hasGoogleAuth && (
         <Script
           src="https://accounts.google.com/gsi/client"
@@ -160,7 +143,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
             window.google.accounts.id.renderButton(googleSignupContainer, {
               theme: "outline",
               size: "large",
-              width: "100%",
+              width: "full",
               text: "signup_with",
               shape: "rectangular",
               logo_alignment: "center",
@@ -169,28 +152,56 @@ export default function SignupForm({ error: initialError, initialRole }) {
         />
       )}
 
-      <section className="relative z-10 w-full px-4 py-8 sm:px-6 sm:py-12 flex items-center justify-center">
-        <div className="w-full max-w-md bg-white/90 dark:bg-[#111111]/90 backdrop-blur-md border border-white/20 dark:border-slate-800 p-8 sm:p-10 shadow-2xl rounded-3xl">
-          {/* Header */}
-          <div className="mb-8 text-center">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <img src="/headerlogo.png" alt="Welsh Motors" className="h-8 w-8 object-contain" />
-              <h1 className="text-2xl font-black uppercase tracking-widest text-slate-900 dark:text-white">Welsh Motors</h1>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tighter mb-2">Create Account</h2>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mt-2">Join as buyer or dealer to get started</p>
+      {/* Left: Cinematic Benefit Side (Hidden on Mobile) */}
+      <div className="hidden lg:flex lg:w-2/5 relative bg-[#0a0a0a] overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/images/backgrounds/pexels-matreding-11692836.jpg"
+            alt="Signup Concept"
+            className="w-full h-full object-cover opacity-50 scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-tr from-black via-black/40 to-transparent" />
+        </div>
+        <div className="relative z-10 w-full h-full flex flex-col">
+          <Link href="/" className="p-10 flex items-center gap-3 group">
+             <div className="w-10 h-10 bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center group-hover:bg-[#38A169] transition-all">
+                <img src="/headerlogo.png" alt="Logo" className="w-6 h-6 object-contain" />
+             </div>
+             <span className="text-xl font-black uppercase tracking-widest text-white italic">Welsh Motors</span>
+          </Link>
+          <AuthCarousel />
+          <div className="mt-auto p-10 text-[10px] font-bold uppercase tracking-[0.3em] text-white/30">
+            © 2026 Welsh Motors Kenya • Professional Network
           </div>
+        </div>
+      </div>
+
+      {/* Right: Form Side */}
+      <div className="w-full lg:w-3/5 flex items-center justify-center p-6 sm:p-12 lg:p-16 relative bg-white dark:bg-[#0a0a0a] overflow-y-auto">
+        <div className="w-full max-w-lg">
+          {/* Mobile Logo */}
+          <Link href="/" className="lg:hidden flex items-center justify-center gap-3 mb-10">
+             <img src="/headerlogo.png" alt="Logo" className="w-8 h-8 object-contain" />
+             <span className="text-xl font-black uppercase tracking-widest text-slate-900 dark:text-white italic">Welsh Motors</span>
+          </Link>
+
+          <header className="mb-8 text-left">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-3 italic">
+              Join the Network.
+            </h2>
+            <p className="text-sm font-medium text-slate-400">Establish your presence in Kenya's premier automotive ecosystem.</p>
+          </header>
 
           {/* Role Toggle */}
-          <div className="flex gap-2 mb-6 bg-[#fbfcfe] dark:bg-[#111111] p-1 rounded-2xl border border-[#ddd4c8] dark:border-slate-800">
+          <div className="flex gap-2 mb-8 bg-slate-50 dark:bg-zinc-900 p-1 border border-slate-100 dark:border-zinc-800">
             <button 
               type="button" 
               onClick={() => setRole("BUYER")}
               className={clsx(
-                "flex-1 py-2 px-3 rounded-xl font-semibold text-sm transition-all",
+                "flex-1 py-3 px-4 font-black uppercase tracking-widest text-[10px] transition-all",
                 role === "BUYER" 
-                  ? "bg-white dark:bg-[#222] text-slate-900 dark:text-white shadow-sm" 
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  ? "bg-white dark:bg-[#111] text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-zinc-700" 
+                  : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
               )}
             >
               Personal
@@ -199,32 +210,30 @@ export default function SignupForm({ error: initialError, initialRole }) {
               type="button" 
               onClick={() => setRole("DEALER")}
               className={clsx(
-                "flex-1 py-2 px-3 rounded-xl font-semibold text-sm transition-all",
+                "flex-1 py-3 px-4 font-black uppercase tracking-widest text-[10px] transition-all",
                 role === "DEALER" 
-                  ? "bg-slate-900 dark:bg-[#222] text-white shadow-sm" 
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  ? "bg-[#38A169] text-white shadow-md shadow-[#38A169]/20" 
+                  : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
               )}
             >
               Dealership
             </button>
           </div>
 
-          {/* Error Message */}
           {errorMsg && (
-            <div className="mb-6 p-4 bg-[#111111] border border-red-500 rounded-2xl">
-              <p className="text-[11px] font-black uppercase tracking-[0.15em] text-red-500">{errorMsg}</p>
+            <div className="mb-8 p-5 bg-rose-50 dark:bg-rose-950/20 border-l-4 border-rose-500">
+               <p className="text-[10px] font-black uppercase tracking-widest text-rose-500 mb-1">Validation Error</p>
+               <p className="text-sm font-bold text-slate-600 dark:text-rose-200">{errorMsg}</p>
             </div>
           )}
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-4 mb-6">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <input type="hidden" name="captchaToken" value={captchaToken} readOnly />
             <input type="text" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
             <input type="hidden" name="role" value={role} />
 
-            {/* Email */}
-            <div>
-              <label htmlFor="email" className="block text-[11px] font-black uppercase tracking-[0.16em] text-slate-900 dark:text-white mb-2">Email Address</label>
+            <div className={role === "DEALER" ? "md:col-span-1" : "md:col-span-2"}>
+              <label htmlFor="email" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Identifier (Email)</label>
               <input 
                 id="email"
                 name="email" 
@@ -232,29 +241,25 @@ export default function SignupForm({ error: initialError, initialRole }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required 
-                autoComplete="email"
-                placeholder="you@dealership.com" 
-                className="w-full border border-[#ddd4c8] dark:border-slate-800 rounded-2xl bg-[#fbfcfe] dark:bg-[#111111] px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-all"
+                placeholder="you@email.com" 
+                className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-3 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
               />
             </div>
 
-            {/* Full Name */}
-            <div>
-              <label htmlFor="name" className="block text-[11px] font-black uppercase tracking-[0.16em] text-slate-900 dark:text-white mb-2">Full Name</label>
+            <div className={role === "DEALER" ? "md:col-span-1" : "md:col-span-2"}>
+              <label htmlFor="name" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Full Name</label>
               <input 
                 id="name"
                 name="name" 
                 type="text" 
                 required 
-                autoComplete="name"
-                placeholder="Your full name" 
-                className="w-full border border-[#ddd4c8] dark:border-slate-800 rounded-2xl bg-[#fbfcfe] dark:bg-[#111111] px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-all"
+                placeholder="John Doe" 
+                className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-3 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
               />
             </div>
 
-            {/* Password */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Password</label>
+            <div className="md:col-span-1">
+              <label htmlFor="password" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Secure Key</label>
               <div className="relative">
                 <input 
                   id="password"
@@ -263,15 +268,13 @@ export default function SignupForm({ error: initialError, initialRole }) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required 
-                  autoComplete="new-password"
-                  placeholder="•••••••••" 
-                  className="w-full border border-[#ddd4c8] dark:border-slate-800 rounded-2xl bg-[#fbfcfe] dark:bg-[#111111] px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-all pr-10"
+                  placeholder="••••••••" 
+                  className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-3 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all pr-10"
                 />
                 <button 
                   type="button" 
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
-                  tabIndex={-1}
+                  className="absolute right-0 bottom-3 text-slate-300 hover:text-[#38A169]"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -279,120 +282,98 @@ export default function SignupForm({ error: initialError, initialRole }) {
               {password && <PasswordMeter password={password} />}
             </div>
 
-            {/* Confirm Password */}
-            <div>
-              <label htmlFor="confirm" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Confirm Password</label>
+            <div className="md:col-span-1">
+              <label htmlFor="confirm" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Confirm Key</label>
               <input 
                 id="confirm"
                 name="confirm" 
                 type={showPassword ? "text" : "password"}
                 required 
-                autoComplete="new-password"
-                placeholder="•••••••••" 
-                className="w-full border border-[#ddd4c8] dark:border-slate-800 rounded-2xl bg-[#fbfcfe] dark:bg-[#111111] px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-all"
+                placeholder="••••••••" 
+                className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-3 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
               />
             </div>
 
-            {/* Dealer Fields */}
             {role === "DEALER" && (
-              <div className="space-y-4 pt-2 border-t border-[#ddd4c8] dark:border-slate-800">
-                <div>
-                  <label htmlFor="dealerName" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Dealership Name</label>
+              <>
+                <div className="md:col-span-2 pt-4">
+                   <div className="h-px bg-slate-100 dark:bg-zinc-900 w-full mb-6" />
+                   <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#38A169] mb-6">Business Intelligence</h4>
+                </div>
+                
+                <div className="md:col-span-1">
+                  <label htmlFor="dealerName" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Dealership Title</label>
                   <input 
                     id="dealerName"
                     name="dealerName" 
                     type="text" 
                     required
-                    placeholder="Your dealership name" 
-                    className="w-full border border-[#ddd4c8] dark:border-slate-800 rounded-2xl bg-[#fbfcfe] dark:bg-[#111111] px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-all"
+                    placeholder="Japanese Car Exports" 
+                    className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-3 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
                   />
                 </div>
 
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Phone Number</label>
+                <div className="md:col-span-1">
+                  <label htmlFor="phone" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Primary Phone</label>
                   <input 
                     id="phone"
                     name="phone" 
                     type="tel" 
                     required
                     placeholder="+254 7__ ___ ___" 
-                    className="w-full border border-[#ddd4c8] dark:border-slate-800 rounded-2xl bg-[#fbfcfe] dark:bg-[#111111] px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-0 transition-all"
+                    className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-3 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
                   />
                 </div>
 
-                <div>
-                  <label htmlFor="county" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">County</label>
+                <div className="md:col-span-2">
+                  <label htmlFor="county" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Base County</label>
                   <select 
                     id="county"
                     name="county"
                     required
-                    className="w-full border border-[#ddd4c8] dark:border-slate-800 rounded-2xl-lg px-5 py-3.5 sm:py-2.5 text-base sm:text-sm text-slate-900 dark:text-white outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-200 transition-all"
+                    className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-3 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all appearance-none cursor-pointer"
                   >
-                    <option value="">Select a county</option>
+                    <option value="" className="text-slate-900 dark:text-white dark:bg-[#0a0a0a]">Select a county</option>
                     {COUNTIES.map((c) => (
-                      <option key={c} value={c}>{c}</option>
+                      <option key={c} value={c} className="text-slate-900 dark:text-white dark:bg-[#0a0a0a]">{c}</option>
                     ))}
                   </select>
                 </div>
-              </div>
+              </>
             )}
 
-            {/* Security Check (Optional for Beta) */}
-            {requiresHumanCheck && (
-              <div>
-                <label className="text-xs font-medium text-slate-500 mb-2 block">Security (Optional)</label>
-                <HumanCheck
-                  value={captchaToken}
-                  onChange={setCaptchaToken}
-                />
-              </div>
-            )}
-
-            {/* Submit Button */}
-            <button 
-              type="submit" 
-              disabled={loading}
-              className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-2xl-lg py-3.5 sm:py-2.5 font-semibold transition-all flex items-center justify-center gap-2 text-base sm:text-sm"
-            >
-              {loading ? <Loader2 size={18} className="animate-spin" /> : null}
-              {loading ? "Creating account..." : "Create Account"}
-            </button>
-
-            {/* Divider */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-[#ddd4c8] dark:border-slate-800"></div>
-              </div>
-              <div className="relative flex justify-center">
-                <span className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-3 text-xs text-slate-600">or sign up with</span>
-              </div>
+            <div className="md:col-span-2 pt-4">
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="w-full bg-[#38A169] hover:bg-[#2F855A] disabled:bg-slate-100 dark:disabled:bg-zinc-900 disabled:text-slate-400 text-white py-5 px-6 font-black uppercase tracking-[0.2em] text-xs transition-all hover:scale-[0.98] active:scale-95 flex items-center justify-center gap-3 group mb-4"
+              >
+                {loading ? <Loader2 size={18} className="animate-spin" /> : "Verify & Create Account"}
+                {!loading && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
+              </button>
+              
+              {hasGoogleAuth && (
+                 <div id="google-signup-button" className="w-full" />
+              )}
             </div>
-
-            {/* Google Button */}
-            <div id="google-signup-button" className="w-full" />
           </form>
 
-          {/* Footer */}
-          <div className="text-center">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mt-2">
+          <footer className="mt-10 pt-8 border-t border-slate-100 dark:border-zinc-900 text-center">
+            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
               Already have an account?{" "}
-              <Link href="/login" className="font-semibold text-slate-900 dark:text-white hover:text-slate-700 transition-colors">
-                Sign in
+              <Link href="/login" className="text-[#38A169] hover:underline underline-offset-4 decoration-2">
+                Sign In
               </Link>
             </p>
-            <p className="text-xs text-slate-500 mt-4">
-              By signing up you agree to our{" "}
-              <Link href="/terms" className="underline underline-offset-2 hover:text-slate-700">
-                Terms
-              </Link>
+            <p className="text-[10px] text-slate-400 mt-6 leading-relaxed">
+              By joining the network, you agree to our{" "}
+              <Link href="/terms" className="underline underline-offset-2 hover:text-[#38A169]">Terms</Link>
               {" "}and{" "}
-              <Link href="/privacy" className="underline underline-offset-2 hover:text-slate-700">
-                Privacy Policy
-              </Link>
+              <Link href="/privacy" className="underline underline-offset-2 hover:text-[#38A169]">Privacy Protocol</Link>.
             </p>
-          </div>
+          </footer>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
