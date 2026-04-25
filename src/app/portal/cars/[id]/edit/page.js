@@ -30,7 +30,7 @@ export default async function PortalEditCarPage({ params }) {
         <h1 className="text-4xl font-black text-slate-950 tracking-tight">
           Modify Entry
         </h1>
-        <p className="text-slate-700 font-medium mt-2 font-playfair">
+        <p className="text-slate-700 font-medium mt-2 font-sans">
           {car.year} {car.make} {car.model} — System Ref: {car.id.slice(-8)}
         </p>
       </div>

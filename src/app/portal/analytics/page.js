@@ -198,8 +198,8 @@ export const metadata = { title: "Analytics — Welsh Motors Dealer Portal" };ex
           {topCar ? (
             <div className="space-y-4">
               <div>
-                <p className="text-2xl font-bold font-playfair text-slate-900 dark:text-white">{topCar.make}</p>
-                <p className="text-[11px] uppercase font-playfair font-semibold tracking-[0.10em] text-slate-700">{topCar.model}</p>
+                <p className="text-2xl font-bold font-sans text-slate-900 dark:text-white">{topCar.make}</p>
+                <p className="text-[11px] font-sans font-semibold tracking-[0.10em] text-slate-700">{topCar.model}</p>
               </div>
               
               <div className="space-y-3 pt-4 border-t border-[#ddd4c8] dark:border-slate-800">
@@ -250,7 +250,7 @@ export const metadata = { title: "Analytics — Welsh Motors Dealer Portal" };ex
                  return (
                  <tr key={car.id} className="hover:bg-[#fbfcfe] dark:bg-[#111111] transition-all">
                     <td className="px-6 py-4">
-                      <p className="font-semibold font-playfair text-slate-900 dark:text-white">{car.make} {car.model}</p>
+                      <p className="font-semibold font-sans text-slate-900 dark:text-white">{car.make} {car.model}</p>
                       <p className="text-[11px] uppercase font-black tracking-[0.15em] text-slate-700">{formatCarPrice(car)}</p>
                     </td>
                     <td className="px-6 py-4 text-center text-[11px] uppercase font-black tracking-[0.10em] font-medium text-slate-900 dark:text-white">{daysListed}</td>
@@ -282,7 +282,7 @@ export const metadata = { title: "Analytics — Welsh Motors Dealer Portal" };ex
               <div key={car.id} className="p-4 hover:bg-[#fbfcfe] dark:bg-[#111111] transition-all">
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <div>
-                    <p className="font-semibold font-playfair text-[11px] uppercase tracking-[0.10em] text-slate-900 dark:text-white">{car.make} {car.model}</p>
+                    <p className="font-semibold font-sans text-[11px] tracking-[0.10em] text-slate-900 dark:text-white">{car.make} {car.model}</p>
                     <p className="text-[11px] uppercase font-black tracking-[0.15em] text-slate-700">{formatCarPrice(car)}</p>
                   </div>
                   <span className={`inline-flex px-2 py-1 rounded text-[11px] uppercase font-black tracking-[0.15em] font-semibold flex-shrink-0 ${

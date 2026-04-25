@@ -134,10 +134,10 @@ export default async function AdminLeadsPage({ searchParams }) {
                   </td>
                   <td className="px-6 py-4">
                      <Link href={`/cars/${lead.car.id}`} target="_blank" className="group/link block">
-                        <p className="text-sm font-semibold font-playfair text-slate-900 dark:text-white dark:text-white group-hover/link:text-[#ff5a2f] transition-colors mb-0.5">
+                        <p className="text-sm font-semibold font-sans text-slate-900 dark:text-white dark:text-white group-hover/link:text-[#ff5a2f] transition-colors mb-0.5">
                            {lead.car.year} {lead.car.make}
                         </p>
-                        <p className="text-xs font-playfair text-slate-500 dark:text-slate-400">{lead.car.model}</p>
+                        <p className="text-xs font-sans text-slate-500 dark:text-slate-400">{lead.car.model}</p>
                      </Link>
                   </td>
                   <td className="px-6 py-4">

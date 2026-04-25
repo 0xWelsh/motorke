@@ -210,7 +210,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                           <h3 className="font-black text-slate-900 dark:text-white text-lg tracking-tight leading-tight">{e.dealer.name}</h3>
                           <Link href={`/cars/${e.car.id}`} className="text-xs font-bold text-[#ff5a2f] hover:text-blue-800 transition-colors line-clamp-1 block mt-1">
                             Regarding:{" "}
-                            <span className="font-playfair font-semibold text-[#ff5a2f]">
+                            <span className="font-sans font-semibold text-[#ff5a2f]">
                               {e.car.year} {e.car.make} {e.car.model}
                             </span>{" "}
                             — {fmt(e.car.price)}

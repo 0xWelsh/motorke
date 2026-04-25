@@ -592,6 +592,21 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     }
   }
 
+  const normalizeModelToken = (token = "") =>
+    token
+      .replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9+-]+$/g, "")
+      .trim();
+
+  const toTitleCase = (value = "") =>
+    value
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((part) => {
+        if (/^[A-Z0-9-]{2,}$/.test(part)) return part;
+        return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+      })
+      .join(" ");
+
   const handleSmartFill = async () => {
     if (!smartFillText.trim()) return;
     setParsing(true);
@@ -622,40 +637,54 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         detectedYear = parseInt(yearMatch[0], 10);
       }
 
-      // Detection 2: Make (from our MAKES list)
-      for (const make of MAKES) {
-        if (new RegExp(`\\b${make}\\b`, 'i').test(smartFillText)) {
+      // Detection 2: Make (from our MAKES list, longest first to avoid partial clashes)
+      const makesByLength = [...MAKES].sort((a, b) => b.length - a.length);
+      for (const make of makesByLength) {
+        if (new RegExp(`\\b${make.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(smartFillText)) {
           detectedMake = make;
           break;
         }
       }
 
-      // Detection 3: Model
+      // Detection 3: Model (supports multi-word model tokens after make)
       if (detectedMake) {
-        const words = smartFillText.split(/[\s,]+/);
+        const words = smartFillText.split(/[\s,]+/).filter(Boolean);
         const makeIdx = words.findIndex(w => w.toLowerCase() === detectedMake.toLowerCase());
-        if (makeIdx !== -1 && words[makeIdx + 1]) {
-          const potModel = words[makeIdx + 1].replace(/[^a-zA-Z0-9]/g, '');
-          if (potModel && potModel.length > 2) {
-            detectedModel = potModel;
+        if (makeIdx !== -1) {
+          const stopTokens = new Set([
+            "price", "ksh", "kes", "usd", "km", "mileage", "cc", "litre", "liter",
+            "automatic", "manual", "petrol", "diesel", "hybrid", "engine", "color", "colour",
+          ]);
+          const modelParts = [];
+          for (let i = makeIdx + 1; i < Math.min(words.length, makeIdx + 4); i += 1) {
+            const cleaned = normalizeModelToken(words[i]);
+            if (!cleaned) break;
+            if (stopTokens.has(cleaned.toLowerCase())) break;
+            modelParts.push(cleaned);
+          }
+          if (modelParts.length > 0) {
+            detectedModel = toTitleCase(modelParts.join(" "));
           }
         }
       }
 
       // Detection 4: Price
-      const priceRegex = /(?:ksh|price|cost)?\s*([\d,.]+)\s*(?:m|million|k)?\b/i;
+      const priceRegex = /(?:ksh|kes|usd|price|cost|asking|@)\s*[:\-]?\s*([\d,.]+)\s*(m|million|k)?\b|([\d,.]+)\s*(m|million)\b/gi;
       const matches = smartFillText.matchAll(new RegExp(priceRegex, 'gi'));
       for (const match of matches) {
-        let val = match[1].replace(/,/g, '');
+        const raw = (match[1] || match[3] || "").replace(/,/g, "");
+        if (!raw) continue;
+        let val = raw;
         let num = parseFloat(val);
         if (isNaN(num)) continue;
 
         const context = smartFillText.toLowerCase();
-        const snippet = context.substring(Math.max(0, match.index - 10), match.index + 20);
+        const snippet = context.substring(Math.max(0, (match.index || 0) - 18), (match.index || 0) + 28);
+        const suffix = (match[2] || match[4] || "").toLowerCase();
         
-        if (snippet.includes('m') || snippet.includes('million')) {
+        if (suffix === "m" || suffix === "million" || snippet.includes(" million")) {
           if (num < 100) num = num * 1000000;
-        } else if (snippet.includes('k') && !snippet.includes('km')) {
+        } else if ((suffix === "k" || snippet.includes(" k")) && !snippet.includes('km')) {
           if (num < 10000) num = num * 1000;
         }
 
@@ -666,23 +695,29 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       }
 
       // Detection 5: Mileage
-      const mileageRegex = /([\d,.]+)\s*(?:km|km's|miles|mileage|k)\b/i;
+      const mileageRegex = /(?:mileage[:\s-]*)?([\d,.]+)\s*(k)?\s*(?:km|km's|miles)?\b/i;
       const mileageMatch = smartFillText.match(mileageRegex);
       if (mileageMatch) {
         let val = mileageMatch[1].replace(/,/g, '');
         let num = parseFloat(val);
-        const context = smartFillText.toLowerCase().substring(mileageMatch.index, mileageMatch.index + 20);
-        if (context.includes('k') && num < 1000) num = num * 1000;
+        if (mileageMatch[2] && num < 1000) num = num * 1000;
+        const context = smartFillText.toLowerCase().substring(mileageMatch.index, mileageMatch.index + 24);
+        if (context.includes(" km") && context.includes("k") && num < 1000) num = num * 1000;
         
         if (num > 0 && num < 1000000) {
           detectedMileage = num;
         }
       }
 
-      // Detection 6: Engine CC
+      // Detection 6: Engine CC (supports both 1490cc and 1.5L)
       const ccMatch = smartFillText.match(/(\d{3,4})\s*(?:cc)\b/i);
       if (ccMatch) {
         detectedCC = parseInt(ccMatch[1], 10);
+      } else {
+        const litresMatch = smartFillText.match(/(\d(?:\.\d)?)\s*(?:l|litre|liter)\b/i);
+        if (litresMatch) {
+          detectedCC = Math.round(parseFloat(litresMatch[1]) * 1000);
+        }
       }
 
       // Detection 7: Features (from FEATURE_CHECKLIST)
@@ -724,6 +759,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
       // Visual feedback
       setFormVersion(v => v + 1);
+      if (!detectedMake && !detectedModel && !detectedPrice && !detectedMileage && !detectedYear) {
+        setError("No key fields detected. Try adding year, make, model, price, and mileage in the text.");
+      }
       
     } catch (err) {
       console.error("Smart Fill Error:", err);

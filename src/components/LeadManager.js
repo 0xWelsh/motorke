@@ -154,7 +154,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                       )}
                     </div>
                     <p className="text-xs text-slate-600 line-clamp-1">
-                      <span className="text-slate-900 dark:text-white font-playfair font-semibold">{lead.car.year} {lead.car.make} {lead.car.model}</span> · {fmt(lead.createdAt)}
+                      <span className="text-slate-900 dark:text-white font-sans font-semibold">{lead.car.year} {lead.car.make} {lead.car.model}</span> · {fmt(lead.createdAt)}
                     </p>
                     <p className="md:hidden text-xs text-slate-500 mt-1 flex items-center gap-1">
                       <span>{lead.phone}</span> · <span>{fmtDate(lead.createdAt)}</span>

@@ -51,10 +51,10 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
           </div>
           
           <div className="mt-auto">
-             <p className="text-[10px] font-playfair font-semibold text-white/60 uppercase tracking-[0.35em] mb-2">
+             <p className="text-[10px] font-sans font-semibold text-white/60 tracking-[0.35em] mb-2">
                {mainCar.year} {mainCar.make}
              </p>
-             <h4 className="text-2xl md:text-3xl font-playfair font-bold text-white mb-4 tracking-tight leading-[0.8] group-hover:text-[#38A169] transition-colors line-clamp-1">
+             <h4 className="text-2xl md:text-3xl font-sans font-bold text-white mb-4 tracking-tight leading-[0.8] group-hover:text-[#38A169] transition-colors line-clamp-1">
                {mainCar.model}
              </h4>
              
@@ -95,7 +95,7 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
             <span className="bg-[#38A169]/20 text-[#38A169] text-[8px] font-black px-3 py-1 uppercase tracking-widest self-start border border-[#38A169]/30 mb-2">
               Hot Deal
             </span>
-            <h4 className="text-lg font-playfair font-bold text-white tracking-tight mb-0.5 line-clamp-1">{secondaryCar.year} {secondaryCar.model}</h4>
+            <h4 className="text-lg font-sans font-bold text-white tracking-tight mb-0.5 line-clamp-1">{secondaryCar.year} {secondaryCar.model}</h4>
             <p className="text-base font-black text-[#38A169]">KSh {(secondaryCar.price/1000000).toFixed(2)}M</p>
             
             <div className="mt-auto pt-1 flex items-center gap-2 text-slate-400 group-hover:text-white transition-colors duration-300">

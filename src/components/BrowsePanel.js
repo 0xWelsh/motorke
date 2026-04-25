@@ -57,7 +57,7 @@ function BrandLogo({ name, img }) {
           />
         )}
       </div>
-      <span className="text-[11px] font-playfair font-semibold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+      <span className="text-[11px] font-sans font-semibold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
         {name}
       </span>
     </Link>

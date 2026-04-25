@@ -57,7 +57,7 @@ export default function SpecSheet({ car, dealer }) {
         </div>
 
         <div className="flex flex-col">
-          <h2 className="text-3xl font-playfair font-bold mb-2 leading-tight">{title}</h2>
+          <h2 className="text-3xl font-sans font-bold mb-2 leading-tight">{title}</h2>
           <div className="flex items-baseline gap-2 mb-8">
              <p className="text-4xl font-black text-orange-600">{formatCarPrice(car)}</p>
              {car.negotiable && <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">(Negotiable)</span>}

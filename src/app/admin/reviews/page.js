@@ -151,7 +151,7 @@ export default async function AdminReviewsPage() {
                         <p className="text-[11px] text-slate-500">{r.user.email}</p>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-sm font-semibold font-playfair text-slate-700">{r.car.year} {r.car.make} {r.car.model}</p>
+                        <p className="text-sm font-semibold font-sans text-slate-700">{r.car.year} {r.car.make} {r.car.model}</p>
                       </td>
                       <td className="px-6 py-4">
                         <StarDisplay rating={r.rating} />

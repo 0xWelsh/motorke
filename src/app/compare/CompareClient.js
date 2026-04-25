@@ -599,9 +599,6 @@ export default function CompareClient({ initialCars }) {
           <head>
             <meta charset="utf-8" />
             <title>Welsh Motors Comparison PDF</title>
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-            <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet" />
             <style>
               body {
                 font-family: Arial, sans-serif;
@@ -639,7 +636,7 @@ export default function CompareClient({ initialCars }) {
                 background: #f8fafc;
               }
               .car-name {
-                font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
                 font-weight: 700;
               }
               .section-title {
@@ -878,7 +875,7 @@ export default function CompareClient({ initialCars }) {
                    {fullComparedCars.map((car, ci) => (
                       <div key={car.id} className="flex items-center gap-4 group">
                          <div className="w-12 h-[2px] transition-all" style={{ background: ci === 0 ? '#38A169' : ci === 1 ? '#FFFFFF' : '#718096' }} />
-                         <span className="text-[11px] font-playfair font-semibold text-white uppercase tracking-widest group-hover:text-[#38A169] transition-colors">
+                         <span className="text-[11px] font-sans font-semibold text-white tracking-widest group-hover:text-[#38A169] transition-colors">
                             {car.year} {car.make} {car.model}
                          </span>
                       </div>
@@ -941,7 +938,7 @@ export default function CompareClient({ initialCars }) {
               <p className="text-[10px] font-bold uppercase tracking-widest text-[#A0AEC0] dark:text-slate-600 mb-4">{item.title}</p>
               {item.car ? (
                 <Link href={`/cars/${item.car.id}`} className="group block">
-                  <h3 className="text-lg font-bold font-playfair text-[#111827] dark:text-white mb-1 group-hover:text-[#38A169] transition-colors">{item.car.year} {item.car.make}</h3>
+                  <h3 className="text-lg font-bold font-sans text-[#111827] dark:text-white mb-1 group-hover:text-[#38A169] transition-colors">{item.car.year} {item.car.make}</h3>
                   <p className="text-[10px] font-bold text-[#718096] dark:text-slate-500 uppercase tracking-widest">{item.sub}</p>
                 </Link>
               ) : (
@@ -974,7 +971,7 @@ export default function CompareClient({ initialCars }) {
                                    {(car?.images?.[0]?.url || car?.image) ? <Image src={car?.images?.[0]?.url || car?.image} alt={car.model} fill className="object-cover" /> : null}
                                 </div>
                                 <p className="text-[10px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-widest mb-1">{car.year}</p>
-                                <h3 className="text-base sm:text-xl font-bold font-playfair text-[#111827] dark:text-white leading-snug line-clamp-2">{car.make} {car.model}</h3>
+                                <h3 className="text-base sm:text-xl font-bold font-sans text-[#111827] dark:text-white leading-snug line-clamp-2">{car.make} {car.model}</h3>
                                 {hydrated && (
                                    <div className="mt-4 flex flex-wrap gap-2">
                                       <span className="px-2 py-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[8px] font-bold text-[#718096] dark:text-slate-400 uppercase tracking-widest" style={{ borderRadius: '4px' }}>ROAD {getInsights(car)?.roadSuitabilityScore}</span>
@@ -1000,7 +997,7 @@ export default function CompareClient({ initialCars }) {
                                                    {res.image && <Image src={res.image} alt={res.model} fill className="object-cover" />}
                                                 </div>
                                                 <div className="flex-1 text-left">
-                                                   <p className="text-xs font-bold font-playfair text-[#111827] dark:text-white">{res.year} {res.make} {res.model}</p>
+                                                   <p className="text-xs font-bold font-sans text-[#111827] dark:text-white">{res.year} {res.make} {res.model}</p>
                                                    <p className="text-[10px] font-bold text-[#718096] dark:text-slate-500 uppercase">{formatCarPrice(res)}</p>
                                                 </div>
                                              </button>

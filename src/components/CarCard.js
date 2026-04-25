@@ -59,9 +59,11 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
 
         {/* Status Badge: Top Right */}
         <div className="absolute top-4 right-4">
-          <span className="bg-[#38A169] text-white text-[9px] font-black px-3 py-1.5 uppercase tracking-widest shadow-xl flex items-center gap-1.5" style={{ borderRadius: '2px' }}>
-            <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-            {car.available ? "AVAILABLE" : "RESERVED"}
+          <span
+            className="bg-[#38A169] text-white text-[9px] font-bold px-2.5 py-1 uppercase tracking-[0.12em] border border-white/20"
+            style={{ borderRadius: "2px" }}
+          >
+            {car.available ? "Available" : "Reserved"}
           </span>
         </div>
       </Link>
@@ -74,7 +76,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
             {car.year}
           </span>
           <Link href={`/cars/${car.id}`}>
-            <h3 className="text-lg font-black font-playfair text-slate-900 dark:text-white tracking-tighter leading-snug hover:text-[#38A169] transition-colors uppercase truncate" title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}>
+            <h3 className="text-lg font-black font-sans text-slate-900 dark:text-white tracking-tighter leading-snug hover:text-[#38A169] transition-colors truncate" title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}>
               {car.make} {car.model} {car.variant ? `(${car.variant})` : ""}
             </h3>
           </Link>

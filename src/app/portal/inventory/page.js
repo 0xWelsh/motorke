@@ -133,7 +133,7 @@ export default async function InventoryPage({ searchParams }) {
               {/* Info Body */}
               <div className="p-5 flex flex-col flex-1">
                 <div className="mb-4">
-                  <h3 className="text-base font-bold font-playfair text-slate-900 dark:text-white truncate">
+                  <h3 className="text-base font-bold font-sans text-slate-900 dark:text-white truncate">
                     {car.year} {car.make} {car.model}
                   </h3>
                   <p className="text-[11px] uppercase font-black tracking-[0.15em] text-slate-700 capitalize mt-1 truncate">

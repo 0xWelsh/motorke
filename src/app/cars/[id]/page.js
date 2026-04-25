@@ -288,7 +288,7 @@ export default async function CarDetailPage({ params }) {
           <span className="opacity-40">/</span>
           <Link href="/cars" className="hover:opacity-70 transition-opacity">Inventory</Link>
           <span className="opacity-40">/</span>
-          <span className="font-playfair text-slate-900 dark:text-white truncate max-w-[200px] opacity-60 group-hover:opacity-100 transition-opacity">{car.make} {car.model}</span>
+          <span className="font-sans text-slate-900 dark:text-white truncate max-w-[200px] opacity-60 group-hover:opacity-100 transition-opacity">{car.make} {car.model}</span>
         </nav>
 
         <div className="space-y-10">
@@ -310,7 +310,7 @@ export default async function CarDetailPage({ params }) {
                    </span>
                 </div>
                 
-                <h1 className="text-4xl sm:text-5xl font-extrabold font-playfair text-[#111827] dark:text-white tracking-tight leading-[1.1] mb-6">
+                <h1 className="text-4xl sm:text-5xl font-extrabold font-sans text-[#111827] dark:text-white tracking-tight leading-[1.1] mb-6">
                   {car.make} {car.model} {car.variant ? `( ${car.variant} )` : ""}
                 </h1>
 
@@ -397,7 +397,7 @@ export default async function CarDetailPage({ params }) {
                        {sc.images?.[0]?.url && <Image src={sc.images[0].url} alt={sc.model} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />}
                     </div>
                     <div className="space-y-2">
-                       <h3 className="text-lg font-bold font-playfair text-[#1A202C] group-hover:text-[#38A169] transition-colors">{sc.year} {sc.make} {sc.model}</h3>
+                       <h3 className="text-lg font-bold font-sans text-[#1A202C] group-hover:text-[#38A169] transition-colors">{sc.year} {sc.make} {sc.model}</h3>
                        <p className="text-sm font-bold text-[#718096]">{formatCarPrice(sc)}</p>
                     </div>
                  </Link>

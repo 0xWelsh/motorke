@@ -135,7 +135,7 @@ export default async function AdminCarsPage({ searchParams }) {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <p className="text-sm font-bold font-playfair text-slate-900 dark:text-white mb-0.5 group-hover:text-[#ff5a2f] transition-colors">{car.year} {car.make} {car.model}</p>
+                    <p className="text-sm font-bold font-sans text-slate-900 dark:text-white mb-0.5 group-hover:text-[#ff5a2f] transition-colors">{car.year} {car.make} {car.model}</p>
                     <div className="flex items-center gap-2">
                        <span className="text-xs text-slate-600 uppercase">{car.plate || "No Plate"}</span>
                        <div className="w-1 h-1 rounded-2xl bg-slate-300" />
