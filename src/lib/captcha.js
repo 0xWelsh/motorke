@@ -64,12 +64,35 @@ export async function verifyTurnstileToken({ token, ip }) {
     return { success: false, reason: "missing-token" };
   }
 
+  // HumanCheck exposes an explicit fallback path ("Continue anyway")
+  // when third-party captcha scripts fail to load.
+  if (token === "human-checked" || token === "widget-unavailable") {
+    return { success: true, skipped: true, provider: "fallback" };
+  }
+
+  // If both providers are configured, accept whichever one validates the token.
+  // This avoids false failures when client picks Turnstile and server checks reCAPTCHA first (or vice versa).
+  const checks = [];
+
   if (RECAPTCHA_SECRET) {
-    return verifyRecaptchaToken({ token, ip });
+    checks.push(await verifyRecaptchaToken({ token, ip }));
   }
 
   if (TURNSTILE_SECRET) {
-    return verifyCloudflareTurnstileToken({ token, ip });
+    checks.push(await verifyCloudflareTurnstileToken({ token, ip }));
+  }
+
+  const successResult = checks.find((result) => result?.success);
+  if (successResult) {
+    return successResult;
+  }
+
+  if (checks.length > 0) {
+    return {
+      success: false,
+      reason: checks.map((result) => `${result.provider}:${result.reason || "failed"}`).join(";"),
+      provider: "multi",
+    };
   }
 
   return { success: token === "human-checked", skipped: true, provider: "fallback" };
