@@ -1,5 +1,5 @@
-const rateLimitStores = globalThis.__welsh-motorsRateLimitStores || new Map();
-globalThis.__welsh-motorsRateLimitStores = rateLimitStores;
+const rateLimitStores = globalThis.__welsh_motorsRateLimitStores || new Map();
+globalThis.__welsh_motorsRateLimitStores = rateLimitStores;
 
 function getStore(name) {
   if (!rateLimitStores.has(name)) {

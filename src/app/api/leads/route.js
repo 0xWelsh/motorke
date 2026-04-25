@@ -7,8 +7,8 @@ import { NextResponse } from "next/server";
 
 const RATE_LIMIT_MS = 15000;
 const RATE_LIMIT_MAX_WINDOW = 8000;
-const leadRateLimitStore = globalThis.__welsh-motorsLeadRateLimit || new Map();
-globalThis.__welsh-motorsLeadRateLimit = leadRateLimitStore;
+const leadRateLimitStore = globalThis.__welsh_motorsLeadRateLimit || new Map();
+globalThis.__welsh_motorsLeadRateLimit = leadRateLimitStore;
 
 function normalizeKenyanPhone(value) {
   const digits = (value || "").toString().replace(/\D/g, "");
