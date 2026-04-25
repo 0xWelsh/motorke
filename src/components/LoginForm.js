@@ -194,11 +194,11 @@ export default function LoginForm({ error }) {
                   <div className="w-full border-t border-slate-100 dark:border-zinc-900"></div>
                 </div>
                 <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.2em]">
-                  <span className="bg-white dark:bg-[#0a0a0a] px-4 text-slate-400">or connect with</span>
+                  <span className="bg-transparent px-4 text-slate-400">or connect with</span>
                 </div>
                 
                 <div className="mt-8 flex justify-center">
-                  <div id="google-button-container" className="w-full flex justify-center min-h-[44px]" />
+                  <div id="google-button-container" className="w-full flex justify-center min-h-[44px] bg-transparent" />
                 </div>
               </div>
             )}

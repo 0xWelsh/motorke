@@ -365,11 +365,11 @@ export default function SignupForm({ error: initialError, initialRole }) {
                      <div className="w-full border-t border-slate-100 dark:border-zinc-900"></div>
                    </div>
                    <div className="relative flex justify-center text-[8px] font-black uppercase tracking-[0.2em]">
-                     <span className="bg-white dark:bg-[#0a0a0a] px-4 text-slate-400 font-bold">or join with</span>
+                     <span className="bg-transparent px-4 text-slate-400 font-bold">or join with</span>
                    </div>
                    
                    <div className="mt-6 flex justify-center min-h-[44px]">
-                     <div id="google-signup-button" className="w-full flex justify-center" />
+                     <div id="google-signup-button" className="w-full flex justify-center bg-transparent" />
                    </div>
                  </div>
               )}
