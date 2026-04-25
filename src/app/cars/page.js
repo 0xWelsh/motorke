@@ -44,6 +44,10 @@ export default async function CarsPage({ searchParams }) {
   const limit = 12;
   const search = sp.search || "";
   const make = sp.make || "";
+  const model = sp.model || "";
+  const steering = sp.steering || "";
+  const minYOM = sp.minYOM ? parseInt(sp.minYOM, 10) : undefined;
+  const maxYOM = sp.maxYOM ? parseInt(sp.maxYOM, 10) : undefined;
   const bodyType = sp.bodyType || "";
   const fuelType = sp.fuelType || "";
   const transmission = sp.transmission || "";
@@ -58,6 +62,9 @@ export default async function CarsPage({ searchParams }) {
   const where = {
     available: true,
     ...(make         && { make: { equals: make, mode: "insensitive" } }),
+    ...(model        && { model: { equals: model, mode: "insensitive" } }),
+    ...(steering     && { steering }),
+    ...(minYOM || maxYOM ? { year: { ...(minYOM && { gte: minYOM }), ...(maxYOM && { lte: maxYOM }) } } : {}),
     ...(bodyType     && { bodyType }),
     ...(fuelType     && { fuelType }),
     ...(transmission && { transmission }),
@@ -143,21 +150,19 @@ export default async function CarsPage({ searchParams }) {
     <div className="min-h-screen bg-white pb-20">
       <div className="container mx-auto px-6 max-w-7xl pt-32 sm:pt-40">
         
-        {/* Header Section */}
-        <div className="mb-16">
-          <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-400 mb-4">
+        {/* Adjusted Top Bar with Breadcrumbs and Count */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4">
+          <div className="flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.2em] text-[#718096] dark:text-slate-400">
             <Link href="/" className="hover:text-[#111827] dark:hover:text-white transition-colors">Home</Link>
-            <span>/</span>
-            <span className="text-[#111827] dark:text-white">Inventory</span>
+            <ChevronRight className="w-3 h-3" />
+            <Link href="/cars" className="hover:text-[#111827] dark:hover:text-white transition-colors">Vehicles</Link>
+            <ChevronRight className="w-3 h-3" />
+            <span className="text-[#111827] dark:text-white">Available</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold text-[#111827] dark:text-white tracking-tight leading-[1.1] mb-6">
-            Explore the <br />
-            <span className="editorial-heading text-[#38A169]">Available Network.</span>
-          </h1>
-          <p className="text-[#718096] dark:text-slate-400 text-lg font-medium max-w-2xl">
-            Currently listing {total.toLocaleString()} verified vehicles across East Africa.
-            Every unit is checked for compliance and duty transparency.
-          </p>
+          
+          <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[#718096] dark:text-slate-400">
+            Vehicles showing ({total})
+          </div>
         </div>
 
         {/* Search and Filters Bar - Sticky on Desktop */}
