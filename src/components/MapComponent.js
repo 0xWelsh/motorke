@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
@@ -23,6 +23,32 @@ function LocationMarker({ position, setPosition }) {
   return position === null ? null : (
     <Marker position={position}></Marker>
   );
+}
+
+function MapResizer() {
+  const map = useMap();
+
+  useEffect(() => {
+    const refresh = () => map.invalidateSize();
+
+    // Initial delayed refresh handles hidden/animated containers.
+    const t1 = setTimeout(refresh, 100);
+    const t2 = setTimeout(refresh, 400);
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", refresh);
+    }
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      if (typeof window !== "undefined") {
+        window.removeEventListener("resize", refresh);
+      }
+    };
+  }, [map]);
+
+  return null;
 }
 
 export default function MapComponent({ defaultLat, defaultLng, onChange }) {
@@ -50,6 +76,7 @@ export default function MapComponent({ defaultLat, defaultLng, onChange }) {
         scrollWheelZoom={true} 
         style={{ width: "100%", height: "100%" }}
       >
+        <MapResizer />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
