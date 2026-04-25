@@ -1,4 +1,3 @@
-import MediaUploader from "@/components/admin/MediaUploader";
 export const dynamic = "force-dynamic";
 import { requireDealer } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -157,28 +156,27 @@ export default async function PortalProfilePage({ searchParams }) {
 
                 {/* Upload Images */}
                 <form
-                  className="mb-6"
+                  className="mb-6 grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-3"
                   action="/api/portal/gallery"
                   method="POST"
-                  encType="multipart/form-data"
-                  onChange={e => e.currentTarget.submit()}
                 >
                   <input type="hidden" name="type" value="image" />
-                  <MediaUploader maxFiles={5} onFilesSelected={files => {
-                    // Only submit if at least one file
-                    if (files.length > 0) {
-                      // For demo: just use the first file's preview as url
-                      // In production, upload to S3 or similar and use the returned URL
-                      const file = files[0];
-                      const form = e.currentTarget;
-                      const input = document.createElement('input');
-                      input.type = 'hidden';
-                      input.name = 'url';
-                      input.value = file.preview;
-                      form.appendChild(input);
-                      form.submit();
-                    }
-                  }} />
+                  <input
+                    type="url"
+                    name="url"
+                    placeholder="Image URL (https://...)"
+                    className="border px-3 py-2 rounded"
+                    required
+                  />
+                  <input
+                    type="text"
+                    name="caption"
+                    placeholder="Caption (optional)"
+                    className="border px-3 py-2 rounded"
+                  />
+                  <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+                    Add Image
+                  </button>
                 </form>
 
                 {/* Upload Video */}

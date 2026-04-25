@@ -83,7 +83,7 @@ export default function PortalLayout({ children }) {
          <div className="flex items-center gap-3">
            <button 
              onClick={() => setDrawerOpen(!drawerOpen)}
-             className="inline-flex items-center gap-2 px-3 py-2 -ml-1 border border-[#ddd4c8] dark:border-slate-800 bg-white dark:bg-[#111111] text-slate-700 hover:text-slate-900 dark:text-white transition-colors"
+             className="inline-flex items-center gap-2 px-3 py-2 border border-[#2F855A] bg-[#38A169] text-white hover:bg-[#2F855A] transition-colors shadow-sm"
              style={{ borderRadius: "10px" }}
              aria-label="Open navigation menu"
            >
