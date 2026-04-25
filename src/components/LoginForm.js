@@ -1,6 +1,6 @@
 "use client";
 // src/components/LoginForm.js
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Lock, ArrowLeft, ArrowRight, ShieldCheck, ChevronRight, Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import Script from "next/script";
@@ -21,50 +21,65 @@ export default function LoginForm({ error }) {
   const requiresHumanCheck = Boolean(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
   const canSubmit = email.trim().length > 0 && password.length > 0 && (!requiresHumanCheck || captchaToken.length > 0 || usingSecurityFallback);
   
+  useEffect(() => {
+    if (!hasGoogleAuth || !googleClientId) return;
+
+    const initGoogle = () => {
+      if (!window.google) return;
+      
+      window.google.accounts.id.initialize({
+        client_id: googleClientId,
+        use_fedcm_for_prompt: false,
+        callback: async (response) => {
+          try {
+            const res = await fetch("/api/auth/google", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ token: response.credential }),
+            });
+            const data = await res.json();
+            if (data.success) {
+              window.location.href = data.destination || "/";
+            } else {
+              window.location.href = "/login?error=unknown";
+            }
+          } catch (err) {
+            window.location.href = "/login?error=unknown";
+          }
+        },
+      });
+
+      const container = document.getElementById("google-button-container");
+      if (container) {
+        window.google.accounts.id.renderButton(container, {
+          theme: "filled_black",
+          size: "large",
+          width: "360",
+          text: "signin_with",
+          shape: "rectangular",
+          logo_alignment: "center",
+        });
+      }
+    };
+
+    if (window.google) {
+      initGoogle();
+    } else {
+      window.addEventListener("google-script-loaded", initGoogle);
+    }
+    
+    return () => window.removeEventListener("google-script-loaded", initGoogle);
+  }, [hasGoogleAuth, googleClientId]);
+
   return (
     <div className="min-h-screen flex overflow-hidden bg-white dark:bg-[#0a0a0a]">
-      {/* Google Script */}
       {hasGoogleAuth && (
         <Script 
           src="https://accounts.google.com/gsi/client" 
           strategy="afterInteractive"
           onLoad={() => {
-            if (!window.google || !googleClientId) return;
-            window.google.accounts.id.initialize({
-              client_id: googleClientId,
-              use_fedcm_for_prompt: false,
-              callback: async (response) => {
-                try {
-                  const res = await fetch("/api/auth/google", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ token: response.credential }),
-                  });
-                  const data = await res.json();
-                  if (data.success) {
-                    window.location.href = data.destination || "/";
-                  } else {
-                    window.location.href = "/login?error=unknown";
-                  }
-                } catch (err) {
-                  window.location.href = "/login?error=unknown";
-                }
-              },
-            });
-            const googleButtonContainer = document.getElementById("google-button-container");
-            if (!googleButtonContainer) return;
-
-            window.google.accounts.id.renderButton(
-              googleButtonContainer,
-              { 
-                theme: "filled_black", 
-                size: "large", 
-                width: "full", 
-                text: "signin_with",
-                shape: "rectangular",
-                logo_alignment: "center"
-              }
-            );
+            window.google_script_loaded = true;
+            window.dispatchEvent(new Event("google-script-loaded"));
           }}
         />
       )}
@@ -94,7 +109,7 @@ export default function LoginForm({ error }) {
       </div>
 
       {/* Right: Form Side */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 lg:p-20 relative bg-white dark:bg-[#0a0a0a]">
+      <div className="w-full lg:w-1/2 flex flex-col items-center p-8 sm:p-12 lg:p-20 lg:pt-32 relative bg-white dark:bg-[#0a0a0a] overflow-y-auto">
         <div className="w-full max-w-sm">
           {/* Mobile Logo */}
           <Link href="/" className="lg:hidden flex items-center justify-center gap-3 mb-12">

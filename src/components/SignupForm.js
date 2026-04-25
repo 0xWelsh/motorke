@@ -1,6 +1,6 @@
 "use client";
 // src/components/SignupForm.js
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserPlus, Building2, User, Loader2, ArrowLeft, ArrowRight, ShieldCheck, Eye, EyeOff, MapPin, CheckCircle2 } from "lucide-react";
 import { clsx } from "clsx";
 import LocationPicker from "./LocationPicker";
@@ -70,9 +70,58 @@ export default function SignupForm({ error: initialError, initialRole }) {
   const [captchaToken, setCaptchaToken] = useState("");
   const [website, setWebsite] = useState("");
   
-  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
   const hasGoogleAuth = Boolean(googleClientId);
   const requiresHumanCheck = Boolean(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+
+  useEffect(() => {
+    if (!hasGoogleAuth || !googleClientId) return;
+
+    const initGoogle = () => {
+      if (!window.google) return;
+      
+      window.google.accounts.id.initialize({
+        client_id: googleClientId,
+        use_fedcm_for_prompt: false,
+        callback: async (response) => {
+          try {
+            const res = await fetch("/api/auth/google", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ token: response.credential, action: "signup" }),
+            });
+            const data = await res.json();
+            if (data.success) {
+              window.location.href = data.destination || "/";
+            } else {
+              setErrorMsg("Google signup failed.");
+            }
+          } catch (err) {
+            setErrorMsg("Network error during Google signup.");
+          }
+        },
+      });
+
+      const container = document.getElementById("google-signup-button");
+      if (container) {
+        window.google.accounts.id.renderButton(container, {
+          theme: "filled_black",
+          size: "large",
+          width: "360", // Explicit width often works better than "full" in some iFrames
+          text: "signup_with",
+          shape: "rectangular",
+          logo_alignment: "center",
+        });
+      }
+    };
+
+    if (window.google) {
+      initGoogle();
+    } else {
+      window.addEventListener("google-script-loaded", initGoogle);
+    }
+    
+    return () => window.removeEventListener("google-script-loaded", initGoogle);
+  }, [hasGoogleAuth, googleClientId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -113,40 +162,8 @@ export default function SignupForm({ error: initialError, initialRole }) {
           src="https://accounts.google.com/gsi/client"
           strategy="afterInteractive"
           onLoad={() => {
-            if (!window.google || !googleClientId) return;
-            window.google.accounts.id.initialize({
-              client_id: googleClientId,
-              use_fedcm_for_prompt: false,
-              callback: async (response) => {
-                try {
-                  const res = await fetch("/api/auth/google", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ token: response.credential, action: "signup" }),
-                  });
-                  const data = await res.json();
-                  if (data.success) {
-                    window.location.href = data.destination || "/";
-                  } else {
-                    setErrorMsg("Google signup failed.");
-                  }
-                } catch (err) {
-                  setErrorMsg("Network error during Google signup.");
-                }
-              },
-            });
-
-            const googleSignupContainer = document.getElementById("google-signup-button");
-            if (!googleSignupContainer) return;
-
-            window.google.accounts.id.renderButton(googleSignupContainer, {
-              theme: "filled_black",
-              size: "large",
-              width: "full",
-              text: "signup_with",
-              shape: "rectangular",
-              logo_alignment: "center",
-            });
+            window.google_script_loaded = true;
+            window.dispatchEvent(new Event("google-script-loaded"));
           }}
         />
       )}
@@ -176,7 +193,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
       </div>
 
       {/* Right: Form Side */}
-      <div className="w-full lg:w-3/5 flex items-center justify-center p-6 sm:p-12 lg:p-16 relative bg-white dark:bg-[#0a0a0a] overflow-y-auto">
+      <div className="w-full lg:w-3/5 flex flex-col items-center p-6 sm:p-12 lg:p-16 lg:pt-24 relative bg-white dark:bg-[#0a0a0a] overflow-y-auto">
         <div className="w-full max-w-lg">
           {/* Mobile Logo */}
           <Link href="/" className="lg:hidden flex items-center justify-center gap-2 mb-6">
