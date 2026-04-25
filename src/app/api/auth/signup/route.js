@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { hashPassword } from "@/lib/auth";
 import { createEmailOTP, sendVerificationEmail } from "@/lib/mail";
-import { verifyTurnstileToken } from "@/lib/captcha";
+import { isCaptchaConfigured, verifyTurnstileToken } from "@/lib/captcha";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { NextResponse } from "next/server";
 import { z } from "zod";
@@ -45,9 +45,38 @@ export async function POST(request) {
       return NextResponse.redirect(new URL("/signup?error=invalid", request.url));
     }
 
-    // Security checks disabled for now
-    // const forwardedFor = request.headers.get("x-forwarded-for") || "";
-    // const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+    const forwardedFor = request.headers.get("x-forwarded-for") || "";
+    const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+
+    const ipLimit = checkRateLimit({
+      name: "signup-ip",
+      key: ip,
+      windowMs: 10 * 60 * 1000,
+      maxRequests: 10,
+    });
+    if (ipLimit.limited) {
+      if (wantsJson) return NextResponse.json({ error: "Too many signup attempts. Please try again shortly." }, { status: 429 });
+      return NextResponse.redirect(new URL("/signup?error=too_many", request.url));
+    }
+
+    const emailLimit = checkRateLimit({
+      name: "signup-email",
+      key: email,
+      windowMs: 10 * 60 * 1000,
+      maxRequests: 5,
+    });
+    if (emailLimit.limited) {
+      if (wantsJson) return NextResponse.json({ error: "Too many signup attempts. Please try again shortly." }, { status: 429 });
+      return NextResponse.redirect(new URL("/signup?error=too_many", request.url));
+    }
+
+    if (isCaptchaConfigured()) {
+      const captchaCheck = await verifyTurnstileToken({ token: captchaToken, ip });
+      if (!captchaCheck.success) {
+        if (wantsJson) return NextResponse.json({ error: "Captcha verification failed." }, { status: 400 });
+        return NextResponse.redirect(new URL("/signup?error=captcha", request.url));
+      }
+    }
 
     if (role === "DEALER" && (!dealerName || !phone)) {
        if (wantsJson) return NextResponse.json({ error: "Missing required dealership details." }, { status: 400 });

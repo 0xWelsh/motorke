@@ -1,6 +1,8 @@
 import { OAuth2Client } from "google-auth-library";
 
-const client = new OAuth2Client(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+const googleClientId =
+  process.env.GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+const client = googleClientId ? new OAuth2Client(googleClientId) : null;
 
 /**
  * Verifies a Google ID token and returns the user payload.
@@ -9,9 +11,13 @@ const client = new OAuth2Client(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
  */
 export async function verifyGoogleToken(token) {
   try {
+    if (!client || !googleClientId) {
+      return null;
+    }
+
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,
+      audience: googleClientId,
     });
     return ticket.getPayload();
   } catch (error) {

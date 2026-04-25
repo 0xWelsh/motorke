@@ -35,8 +35,6 @@ export async function POST(request) {
       });
     }
 
-    // Security checks disabled for now
-    /*
     const ipLimit = checkRateLimit({
       name: "forgot-password-ip",
       key: ip,
@@ -44,8 +42,12 @@ export async function POST(request) {
       maxRequests: 10,
     });
     if (ipLimit.limited) {
-      return NextResponse.json({ error: "Too many reset attempts. Please try again shortly.", { status: 429, headers: { "Retry-After": String(ipLimit.retryAfter) } });
+      return NextResponse.json(
+        { error: "Too many reset attempts. Please try again shortly." },
+        { status: 429, headers: { "Retry-After": String(ipLimit.retryAfter) } }
+      );
     }
+
     const emailLimit = checkRateLimit({
       name: "forgot-password-email",
       key: email,
@@ -59,7 +61,6 @@ export async function POST(request) {
     if (!captchaCheck.success) {
       return NextResponse.json({ error: "Captcha verification failed." }, { status: 400 });
     }
-    */
 
     const user = await db.user.findUnique({
       where: { email },

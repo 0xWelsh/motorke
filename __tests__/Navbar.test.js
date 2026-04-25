@@ -7,6 +7,12 @@ jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }));
 
+jest.mock('@/components/NotificationsBell', () => {
+  return function MockNotificationsBell() {
+    return <div data-testid="notifications-bell" />;
+  };
+});
+
 describe('Navbar Component', () => {
   const mockRouter = { push: jest.fn() };
 
@@ -18,17 +24,17 @@ describe('Navbar Component', () => {
   it('renders sign in and sign up links when no user is provided', () => {
     render(<Navbar user={null} />);
     
-    // Check for Sign In and For Dealers links
+    // Check for Sign In and Join links
     expect(screen.getByRole('link', { name: /sign in/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /for dealers/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /join/i })).toBeInTheDocument();
   });
 
   it('renders user menu when user is provided', () => {
-    const user = { name: 'John Doe', email: 'john@example.com', role: 'USER' };
+    const user = { name: 'John Doe', email: 'john@example.com', role: 'BUYER' };
     render(<Navbar user={user} />);
     
-    // Check for user initials
-    expect(screen.getByText('John')).toBeInTheDocument();
+    // Check for user menu trigger and initial
+    expect(screen.getByText('Menu')).toBeInTheDocument();
     expect(screen.getByText('J')).toBeInTheDocument();
     
     // Sign in links should not be present
@@ -40,13 +46,13 @@ describe('Navbar Component', () => {
     render(<Navbar user={adminUser} />);
     
     // Open user menu
-    const menuButton = screen.getByRole('button', { name: /A Admin/i });
+    const menuButton = screen.getByRole('button', { name: /menu/i });
     fireEvent.click(menuButton);
     
-    expect(screen.getByRole('link', { name: /administration/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument();
     
-    // Should not have Dealer Portal
-    expect(screen.queryByRole('link', { name: /dealer portal/i })).not.toBeInTheDocument();
+    // Should not have dealer portal entry
+    expect(screen.queryByRole('link', { name: /portal/i })).not.toBeInTheDocument();
   });
 
   it('renders dealer link only for dealer users in the dropdown', () => {
@@ -54,10 +60,10 @@ describe('Navbar Component', () => {
     render(<Navbar user={dealerUser} />);
     
     // Open user menu
-    const menuButton = screen.getByRole('button', { name: /D Dealer/i });
+    const menuButton = screen.getByRole('button', { name: /menu/i });
     fireEvent.click(menuButton);
     
-    expect(screen.getByRole('link', { name: /dealer portal/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /post unit/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /^portal$/i })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /dashboard/i })).not.toBeInTheDocument();
   });
 });

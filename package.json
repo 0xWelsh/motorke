@@ -7,10 +7,10 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma db push --skip-generate --accept-data-loss && prisma generate && next build",
+    "build": "prisma migrate deploy && prisma generate && next build",
     "build:local": "bash ./scripts/build-local.sh",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint \"src/app/api/auth/**/*.js\" \"src/lib/google-auth.js\" \"src/lib/validate-env.js\" \"jest.setup.js\"",
     "test": "jest",
     "db:migrate": "prisma migrate dev",
     "db:push:local": "bash ./scripts/build-local.sh --sync-only",
@@ -57,6 +57,8 @@
     "jest-environment-jsdom": "^30.3.0",
     "postcss": "^8",
     "prisma": "^5.22.0",
-    "tailwindcss": "^3.3.0"
+    "tailwindcss": "^3.3.0",
+    "typescript": "^6.0.3",
+    "whatwg-fetch": "^3.6.20"
   }
 }

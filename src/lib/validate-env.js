@@ -35,6 +35,7 @@ const REQUIRED_ENV = [
 
 const OPTIONAL_ENV = [
   // Google OAuth (optional - can be frontend only)
+  "GOOGLE_CLIENT_ID",
   "NEXT_PUBLIC_GOOGLE_CLIENT_ID",
   "GOOGLE_CLIENT_SECRET",
 
@@ -66,6 +67,14 @@ export function validateEnv(options = {}) {
     if (!process.env[key] && key.includes("GOOGLE")) {
       warnings.push(`${key} not set - Google OAuth will be disabled`);
     }
+  }
+
+  if (
+    process.env.GOOGLE_CLIENT_ID &&
+    process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID &&
+    process.env.GOOGLE_CLIENT_ID !== process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+  ) {
+    warnings.push("GOOGLE_CLIENT_ID and NEXT_PUBLIC_GOOGLE_CLIENT_ID do not match");
   }
 
   if (missing.length > 0) {

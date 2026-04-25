@@ -28,9 +28,35 @@ export async function POST(request) {
       return NextResponse.redirect(new URL("/login?error=invalid", request.url));
     }
 
-    // Security checks disabled for now
-    // const forwardedFor = request.headers.get("x-forwarded-for") || "";
-    // const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+    const forwardedFor = request.headers.get("x-forwarded-for") || "";
+    const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+
+    const ipLimit = checkRateLimit({
+      name: "login-ip",
+      key: ip,
+      windowMs: 10 * 60 * 1000,
+      maxRequests: 20,
+    });
+    if (ipLimit.limited) {
+      return NextResponse.redirect(new URL("/login?error=too_many", request.url));
+    }
+
+    const emailLimit = checkRateLimit({
+      name: "login-email",
+      key: email,
+      windowMs: 10 * 60 * 1000,
+      maxRequests: 10,
+    });
+    if (emailLimit.limited) {
+      return NextResponse.redirect(new URL("/login?error=too_many", request.url));
+    }
+
+    if (isCaptchaConfigured()) {
+      const captchaCheck = await verifyTurnstileToken({ token: captchaToken, ip });
+      if (!captchaCheck.success) {
+        return NextResponse.redirect(new URL("/login?error=captcha", request.url));
+      }
+    }
 
     const user = await db.user.findUnique({ where: { email } });
 

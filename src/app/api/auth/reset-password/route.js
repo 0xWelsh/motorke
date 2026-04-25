@@ -40,8 +40,6 @@ export async function POST(request) {
       return NextResponse.json({ error: "Invalid reset request." }, { status: 400 });
     }
 
-    // Security checks disabled for now
-    /*
     const ipLimit = checkRateLimit({
       name: "reset-password-ip",
       key: ip,
@@ -64,7 +62,6 @@ export async function POST(request) {
     if (!captchaCheck.success) {
       return NextResponse.json({ error: "Captcha verification failed." }, { status: 400 });
     }
-    */
 
     const identifier = `reset:${email}`;
 
