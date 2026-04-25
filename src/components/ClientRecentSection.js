@@ -20,7 +20,7 @@ export default function ClientRecentSection() {
         if (userData.user) setUser(userData.user);
 
         // 2. Get Recent from LocalStorage
-        const localData = JSON.parse(localStorage.getItem("motorke_recent") || "[]");
+        const localData = JSON.parse(localStorage.getItem("welsh-motors_recent") || "[]");
         setRecent(localData.slice(0, 4));
 
         // 3. Get Recommendations based on most frequent make in history

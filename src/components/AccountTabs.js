@@ -24,7 +24,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
   const [showNew, setShowNew] = useState(false);
 
   useEffect(() => {
-    try { setRecent(JSON.parse(localStorage.getItem("motorke_recent") || "[]")); } catch {}
+    try { setRecent(JSON.parse(localStorage.getItem("welsh-motors_recent") || "[]")); } catch {}
   }, []);
 
   const tabs = [

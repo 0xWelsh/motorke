@@ -8,7 +8,7 @@ export default function CookieConsent() {
 
   useEffect(() => {
     // Only show if not previously accepted or declined
-    if (!localStorage.getItem("motorske-cookies")) {
+    if (!localStorage.getItem("welsh-motors-cookies")) {
       setShow(true);
     }
   }, []);
@@ -16,12 +16,12 @@ export default function CookieConsent() {
   if (!show) return null;
 
   const accept = () => {
-    localStorage.setItem("motorske-cookies", "accepted");
+    localStorage.setItem("welsh-motors-cookies", "accepted");
     setShow(false);
   };
 
   const decline = () => {
-    localStorage.setItem("motorske-cookies", "declined");
+    localStorage.setItem("welsh-motors-cookies", "declined");
     setShow(false);
   };
 

@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import DeleteButton from "@/components/DeleteButton";
 import { Star, MessageSquare, Building2, Car, ShieldAlert } from "lucide-react";
 
-export const metadata = { title: "Review Moderation — Motorske Admin" };
+export const metadata = { title: "Review Moderation — Welsh Motors Admin" };
 
 function StarDisplay({ rating }) {
   return (

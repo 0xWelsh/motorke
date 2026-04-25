@@ -10,7 +10,7 @@ export function CompareProvider({ children }) {
 
   // Load from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem("motorke_compare");
+    const saved = localStorage.getItem("welsh-motors_compare");
     if (saved) {
       try {
         setCompareCars(JSON.parse(saved));
@@ -24,7 +24,7 @@ export function CompareProvider({ children }) {
   // Save to localStorage when compareCars changes
   useEffect(() => {
     if (isInitialized) {
-      localStorage.setItem("motorke_compare", JSON.stringify(compareCars));
+      localStorage.setItem("welsh-motors_compare", JSON.stringify(compareCars));
     }
   }, [compareCars, isInitialized]);
 

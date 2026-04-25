@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const SESSION_COOKIE = "motorke_session";
+const SESSION_COOKIE = "welsh-motors_session";
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;

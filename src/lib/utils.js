@@ -82,7 +82,7 @@ export function clamp(val, min, max) {
 /** Build WhatsApp link for a car enquiry */
 export function whatsappLink(whatsapp, carTitle, dealerName) {
   const msg = encodeURIComponent(
-    `Hi ${dealerName}, I'm interested in the ${carTitle} listed on Motorke. Is it still available?`
+    `Hi ${dealerName}, I'm interested in the ${carTitle} listed on Welsh Motors. Is it still available?`
   );
   return `https://wa.me/${whatsapp}?text=${msg}`;
 }

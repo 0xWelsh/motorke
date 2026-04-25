@@ -6,7 +6,7 @@ import { ArrowUpRight, Building2, CarFront, MapPin, ShieldCheck } from "lucide-r
 import NearbyDealersList from "@/components/NearbyDealersList";
 import DealersMapView from "@/components/DealersMapView";
 
-export const metadata = { title: "Dealers — Motorke Kenya" };
+export const metadata = { title: "Dealers — Welsh Motors Kenya" };
 
 export default async function DealersPage() {
   const dealers = await db.dealer.findMany({

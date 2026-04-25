@@ -1,6 +1,6 @@
 export const metadata = {
-  title: "Privacy Policy - Motorke",
-  description: "How Motorke collects, uses, and protects your personal data.",
+  title: "Privacy Policy - Welsh Motors",
+  description: "How Welsh Motors collects, uses, and protects your personal data.",
 };
 
 const dataCategories = [
@@ -22,7 +22,7 @@ const thirdParties = [
 const sections = [
   {
     title: "1. Who We Are",
-    content: "Motorke (\"we\", \"us\", \"our\") is operated by Motorske Ltd, a Kenyan automotive marketplace. This Privacy Policy describes how we collect, use, protect, and share your personal data when you use our platform at motorke.com (\"Platform\").",
+    content: "Welsh Motors (\"we\", \"us\", \"our\") is operated by Welsh Motors Ltd, a Kenyan automotive marketplace. This Privacy Policy describes how we collect, use, protect, and share your personal data when you use our platform at welsh-motors.com (\"Platform\").",
   },
   {
     title: "2. What Data We Collect",
@@ -57,7 +57,7 @@ const sections = [
       { heading: "5.1 The Core Rule", content: "We never sell, rent, or trade your personal data to third parties for marketing purposes. Full stop." },
       { heading: "5.2 Service Providers (Data Processors)", content: "We share limited data with essential service providers who are contractually bound to protect it and use it only for specified purposes (see list below)." },
       { heading: "5.3 Legal Requirements", content: "We may disclose data if required by Kenyan law, court order, or government agency request. We will notify you unless legally prohibited." },
-      { heading: "5.4 Business Transfers", content: "If Motorke is acquired or merged, your data may transfer to the successor company under the same privacy obligations." },
+      { heading: "5.4 Business Transfers", content: "If Welsh Motors is acquired or merged, your data may transfer to the successor company under the same privacy obligations." },
     ],
   },
   {
@@ -65,7 +65,7 @@ const sections = [
     subsections: [
       { heading: "6.1 What Dealers See", content: "When you (as a buyer) send an enquiry, the dealer receives your name, phone number, email, and enquiry message. This is necessary to facilitate the transaction." },
       { heading: "6.2 Your Control", content: "You can opt out of receiving dealer contact via your account settings. Dealers will still see your enquiry but will not be able to call/message you directly." },
-      { heading: "6.3 Dealer Responsibilities", content: "Dealers are responsible for using your contact info only to respond to your enquiry. Motorke is not liable for dealer misuse of your data. Report abuse to support@motorke.com." },
+      { heading: "6.3 Dealer Responsibilities", content: "Dealers are responsible for using your contact info only to respond to your enquiry. Welsh Motors is not liable for dealer misuse of your data. Report abuse to support@welsh-motors.com." },
     ],
   },
   {
@@ -73,7 +73,7 @@ const sections = [
     subsections: [
       { heading: "7.1 Session Cookies", content: "We use session cookies to keep you logged in and maintain security. These are deleted when you close your browser." },
       { heading: "7.2 Analytics Cookies", content: "Tools like Google Analytics track page views and user behavior to help us improve the platform. These data are anonymized and aggregated." },
-      { heading: "7.3 Opt-Out", content: "Most browsers allow you to disable cookies via settings. Some platform features may not work without cookies (like login). You can also opt out of analytics tracking—contact support@motorke.com." },
+      { heading: "7.3 Opt-Out", content: "Most browsers allow you to disable cookies via settings. Some platform features may not work without cookies (like login). You can also opt out of analytics tracking—contact support@welsh-motors.com." },
     ],
   },
   {
@@ -81,7 +81,7 @@ const sections = [
     subsections: [
       { heading: "8.1 Encryption", content: "Data in transit is encrypted using HTTPS/TLS. Sensitive data at rest (passwords, payment info) is hashed or tokenized—we never store raw credit card or full M-Pesa data." },
       { heading: "8.2 Access Controls", content: "Only authorized employees with a business need can access personal data. Access is logged and monitored." },
-      { heading: "8.3 Limitations", content: "While we implement industry-standard security, no system is 100% risk-free. Motorke is not liable for breaches caused by factors beyond our reasonable control (e.g., zero-day exploits, stolen credentials shared with third parties)." },
+      { heading: "8.3 Limitations", content: "While we implement industry-standard security, no system is 100% risk-free. Welsh Motors is not liable for breaches caused by factors beyond our reasonable control (e.g., zero-day exploits, stolen credentials shared with third parties)." },
       { heading: "8.4 Incident Response", content: "If we discover a breach affecting your data, we will notify affected users within 30 days and describe the breach, data involved, and remediation steps." },
     ],
   },
@@ -97,7 +97,7 @@ const sections = [
   {
     title: "10. Your Rights (GDPR-Inspired)",
     subsections: [
-      { heading: "10.1 Access", content: "You can request a copy of all personal data we hold about you. Contact support@motorke.com with \"Data Subject Access Request.\" We will respond within 30 days." },
+      { heading: "10.1 Access", content: "You can request a copy of all personal data we hold about you. Contact support@welsh-motors.com with \"Data Subject Access Request.\" We will respond within 30 days." },
       { heading: "10.2 Correction", content: "You can update your profile information directly in your account settings. Contact support if you need help correcting locked fields." },
       { heading: "10.3 Deletion", content: "You can request deletion of your account and associated data. Some data (transaction records) may be retained for legal/audit purposes but will be anonymized." },
       { heading: "10.4 Portability", content: "You can request your data in a portable format (CSV). We will provide it within 30 days." },
@@ -107,7 +107,7 @@ const sections = [
   {
     title: "11. International Data Transfers",
     subsections: [
-      { heading: "11.1 Kenya-Based Operations", content: "Motorke primarily operates from Kenya and stores data in Kenyan and regional African data centers. Some backup copies may be stored in secure international locations for redundancy." },
+      { heading: "11.1 Kenya-Based Operations", content: "Welsh Motors primarily operates from Kenya and stores data in Kenyan and regional African data centers. Some backup copies may be stored in secure international locations for redundancy." },
       { heading: "11.2 GDPR Compliance", content: "If you are in the EU, we comply with GDPR requirements including data processing agreements and legitimate interest assessments." },
     ],
   },
@@ -135,9 +135,9 @@ const sections = [
   {
     title: "15. Contact & Requests",
     subsections: [
-      { heading: "15.1 Privacy Officer", content: "Motorske Ltd Privacy Officer: privacy@motorke.com" },
-      { heading: "15.2 Support", content: "General inquiries: support@motorke.com" },
-      { heading: "15.3 Legal Requests", content: "Formal data requests or legal matters: legal@motorke.com" },
+      { heading: "15.1 Privacy Officer", content: "Welsh Motors Ltd Privacy Officer: privacy@welsh-motors.com" },
+      { heading: "15.2 Support", content: "General inquiries: support@welsh-motors.com" },
+      { heading: "15.3 Legal Requests", content: "Formal data requests or legal matters: legal@welsh-motors.com" },
       { heading: "15.4 Response Time", content: "We will respond to data requests within 30 days. Complex requests may require more time." },
     ],
   },
@@ -160,7 +160,7 @@ export default function PrivacyPage() {
             <span className="editorial-heading text-[#718096]">Governance.</span>
           </h1>
           <p className="text-lg text-[#718096] font-medium max-w-2xl">
-            Effective as of April 7, 2026. This protocol outlines how Motorske Ltd manages, encrypts, and secures your digital assets and identity.
+            Effective as of April 7, 2026. This protocol outlines how Welsh Motors Ltd manages, encrypts, and secures your digital assets and identity.
           </p>
         </div>
 
@@ -269,11 +269,11 @@ export default function PrivacyPage() {
         <div className="pt-24 border-t border-[#EDF2F7] grid grid-cols-1 md:grid-cols-3 gap-16">
           <div>
             <h3 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-[0.2em] mb-4">Privacy Terminal</h3>
-            <a href="mailto:privacy@motorke.com" className="text-sm font-bold text-[#718096] hover:text-[#38A169]">privacy@motorke.com</a>
+            <a href="mailto:privacy@welsh-motors.com" className="text-sm font-bold text-[#718096] hover:text-[#38A169]">privacy@welsh-motors.com</a>
           </div>
           <div>
             <h3 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-[0.2em] mb-4">Legal Hub</h3>
-            <a href="mailto:legal@motorke.com" className="text-sm font-bold text-[#718096] hover:text-[#38A169]">legal@motorke.com</a>
+            <a href="mailto:legal@welsh-motors.com" className="text-sm font-bold text-[#718096] hover:text-[#38A169]">legal@welsh-motors.com</a>
           </div>
           <div>
             <h3 className="text-[10px] font-bold text-[#1A202C] uppercase tracking-[0.2em] mb-4">Station HQ</h3>

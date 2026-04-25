@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import ExportButton from "@/components/admin/ExportButton";
 
-export const metadata = { title: "Leads Dashboard — Motorske Admin" };
+export const metadata = { title: "Leads Dashboard — Welsh Motors Admin" };
 
 export default async function AdminLeadsPage({ searchParams }) {
   await requireAdmin();
@@ -64,7 +64,7 @@ export default async function AdminLeadsPage({ searchParams }) {
         </div>
         
         <ExportButton 
-          filename="motorske-leads.csv"
+          filename="welsh-motors-leads.csv"
           data={leads.map(l => ({
             ID: l.id,
             Buyer: l.name,

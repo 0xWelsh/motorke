@@ -4,7 +4,7 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 
-const BASE = process.env.NEXT_PUBLIC_APP_URL || "https://motorke.co.ke";
+const BASE = process.env.NEXT_PUBLIC_APP_URL || "https://welsh-motors.co.ke";
 
 export default async function sitemap() {
   const [cars, dealers] = await Promise.all([

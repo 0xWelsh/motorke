@@ -45,7 +45,8 @@ export async function POST(request) {
     // Add brand watermark before upload.
     let processedBuffer = buffer;
     try {
-      processedBuffer = await applyListingWatermark(buffer, file.type);
+      const dealerName = session.user?.dealer?.name;
+      processedBuffer = await applyListingWatermark(buffer, file.type, dealerName);
     } catch (watermarkError) {
       console.error("Watermark processing failed:", watermarkError);
       // Keep upload flow resilient even if watermarking fails unexpectedly.

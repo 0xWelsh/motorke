@@ -28,7 +28,7 @@ export async function GET() {
   return new NextResponse(csv, {
     headers: {
       "Content-Type":        "text/csv",
-      "Content-Disposition": 'attachment; filename="motorke-cars-template.csv"',
+      "Content-Disposition": 'attachment; filename="welsh-motors-cars-template.csv"',
     },
   });
 }

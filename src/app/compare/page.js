@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import CompareClient from "./CompareClient";
 
-export const metadata = { title: "Compare Cars — Motorke Kenya" };
+export const metadata = { title: "Compare Cars — Welsh Motors Kenya" };
 
 export default async function ComparePage({ searchParams }) {
   const sp = await searchParams;

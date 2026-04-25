@@ -7,20 +7,20 @@ import { ChevronDown, HelpCircle, Shield, Zap, MapPin, CreditCard } from "lucide
 const faqs = {
   "For Buyers": [
     {
-      q: "How does Motorke guarantee vehicle quality?",
-      a: "Every car listed on Motorke comes from verified dealers or certified auction platforms. All vehicles include a detailed inspection history, mileage verification, and ownership records. We vet dealers for credibility before they list.",
+      q: "How does Welsh Motors guarantee vehicle quality?",
+      a: "Every car listed on Welsh Motors comes from verified dealers or certified auction platforms. All vehicles include a detailed inspection history, mileage verification, and ownership records. We vet dealers for credibility before they list.",
     },
     {
-      q: "Why should I buy through Motorke instead of going direct to a dealer?",
-      a: "Motorke gives you choice and clarity. Compare 1000+ curated vehicles from Kenya's best dealers in one place. You see real mileage, verified pricing, and can filter by what matters (price, condition, fuel type, location). Plus, our transparent dealer reviews help you make informed decisions.",
+      q: "Why should I buy through Welsh Motors instead of going direct to a dealer?",
+      a: "Welsh Motors gives you choice and clarity. Compare 1000+ curated vehicles from Kenya's best dealers in one place. You see real mileage, verified pricing, and can filter by what matters (price, condition, fuel type, location). Plus, our transparent dealer reviews help you make informed decisions.",
     },
     {
       q: "How do I know the car I'm buying is actually available?",
       a: "Every listing is live and tied to the dealer's inventory system. If a car is sold, the dealer must update their inventory immediately. Our 'Mark as Sold' feature ensures no ghost listings. If you find a car marked available but it's sold, contact us immediately—we'll investigate.",
     },
     {
-      q: "Can I negotiate the price on Motorke?",
-      a: "Yes! Use the enquiry form or call the dealer directly (phone numbers are on every listing). Motorke connects you; the final negotiation happens between you and the dealer. Some dealers are more flexible on price, especially for cash buyers or bulk purchases.",
+      q: "Can I negotiate the price on Welsh Motors?",
+      a: "Yes! Use the enquiry form or call the dealer directly (phone numbers are on every listing). Welsh Motors connects you; the final negotiation happens between you and the dealer. Some dealers are more flexible on price, especially for cash buyers or bulk purchases.",
     },
     {
       q: "What if I have a bad experience with a dealer?",
@@ -40,28 +40,28 @@ const faqs = {
     },
     {
       q: "How do I get better deal notifications?",
-      a: "When you save a car, Motorke learns your preferences. If a similar car appears at a lower price, we'll email you. Check your notifications regularly—sometimes deals move fast.",
+      a: "When you save a car, Welsh Motors learns your preferences. If a similar car appears at a lower price, we'll email you. Check your notifications regularly—sometimes deals move fast.",
     },
     {
-      q: "Is my personal data safe on Motorke?",
+      q: "Is my personal data safe on Welsh Motors?",
       a: "Yes. We use industry-standard encryption, don't sell your data to third parties, and comply with Kenya data protection laws. See our Privacy Policy for full details.",
     },
   ],
   "For Dealers": [
     {
-      q: "How much does it cost to list on Motorke?",
-      a: "Motorke offers a FREE tier (list up to 20 vehicles) and a PRO tier (unlimited listings + analytics + lead prioritization). PRO is KSh 3,999/month or KSh 39,990/year. Cancel anytime.",
+      q: "How much does it cost to list on Welsh Motors?",
+      a: "Welsh Motors offers a FREE tier (list up to 20 vehicles) and a PRO tier (unlimited listings + analytics + lead prioritization). PRO is KSh 3,999/month or KSh 39,990/year. Cancel anytime.",
     },
     {
-      q: "Why list on Motorke instead of managing my own website?",
-      a: "Motorke brings 1000s of verified buyers to you monthly. You skip building a website, handling payments, or managing leads manually. Our platform does it—you focus on selling.",
+      q: "Why list on Welsh Motors instead of managing my own website?",
+      a: "Welsh Motors brings 1000s of verified buyers to you monthly. You skip building a website, handling payments, or managing leads manually. Our platform does it—you focus on selling.",
     },
     {
       q: "How do I upload my inventory quickly?",
       a: "Use our bulk upload feature (CSV/Excel). Add up to 500 cars at once. Or add manually, one car at a time. Mobile app lets you photograph and upload on the spot.",
     },
     {
-      q: "Will Motorke help me negotiate with buyers?",
+      q: "Will Welsh Motors help me negotiate with buyers?",
       a: "No. We connect you; you handle the sale. Buyers use the enquiry form or call you directly. We recommend responding within 2 hours for best conversion rates.",
     },
     {
@@ -81,11 +81,11 @@ const faqs = {
       a: "Yes, as long as you have legal authority to sell them (trading license, auction certificate, etc.). We verify dealer credibility before approval.",
     },
     {
-      q: "What's the contract between Motorke and me as a dealer?",
-      a: "You keep 100% of sale price. Motorke makes money from PRO subscriptions, not commissions. We're aligned: we only win when you win.",
+      q: "What's the contract between Welsh Motors and me as a dealer?",
+      a: "You keep 100% of sale price. Welsh Motors makes money from PRO subscriptions, not commissions. We're aligned: we only win when you win.",
     },
     {
-      q: "Will Motorke help me handle customer service?",
+      q: "Will Welsh Motors help me handle customer service?",
       a: "You're responsible for your customers. But we provide tools: messaging integration, lead assignment, customer history. Premium dealers get dedicated support.",
     },
   ],
@@ -96,18 +96,18 @@ const faqs = {
     },
     {
       q: "Can I save my location to find cars nearby?",
-      a: "Yes! Enable location on your profile. Motorke shows distance from your saved location to each vehicle. 'Nearby Dealers' feature highlights cars close to you. Update your location anytime.",
+      a: "Yes! Enable location on your profile. Welsh Motors shows distance from your saved location to each vehicle. 'Nearby Dealers' feature highlights cars close to you. Update your location anytime.",
     },
     {
       q: "What phone numbers do I call if I have questions?",
       a: "Support: email sec@welsh.co.ke or visit our contact page. Response time: 24-48 hours.",
     },
     {
-      q: "Does Motorke work on mobile?",
+      q: "Does Welsh Motors work on mobile?",
       a: "100%. Fully responsive web app. Add to homescreen to use like a native app. Photos upload via camera. Optimized for 3G+.",
     },
     {
-      q: "Can I use Motorke offline?",
+      q: "Can I use Welsh Motors offline?",
       a: "Partially. Basic features (saved cars, recent views) work offline. New searches and live updates require internet. When you're online again, data syncs.",
     },
     {
@@ -122,14 +122,14 @@ const faqs = {
     },
     {
       q: "What if a dealer lists a stolen car?",
-      a: "Report it immediately at sec@welsh.co.ke with proof. We work with law enforcement and will remove the car and ban the dealer. Motorke has zero tolerance.",
+      a: "Report it immediately at sec@welsh.co.ke with proof. We work with law enforcement and will remove the car and ban the dealer. Welsh Motors has zero tolerance.",
     },
     {
       q: "Do you facilitate payment?",
       a: "No. Payment happens between you and the dealer. We recommend cash or M-Pesa at vehicle handover with ownership transfer paperwork signed. Use a lawyer if the deal is large (>2M KSh).",
     },
     {
-      q: "Is it safe to call a dealer from Motorke?",
+      q: "Is it safe to call a dealer from Welsh Motors?",
       a: "Yes. Phone numbers are from verified dealer profiles. If a number seems fake or scammy, report it—we investigate and may ban the dealer.",
     },
     {
@@ -211,7 +211,7 @@ export default function FAQPage() {
             <span className="editorial-heading text-[#718096] dark:text-slate-400">Asked Questions.</span>
           </h1>
           <p className="text-[#718096] dark:text-slate-400 text-lg font-medium max-w-2xl mx-auto leading-relaxed">
-            Everything you need to know about buying, selling, and trusting the Motorke network. 
+            Everything you need to know about buying, selling, and trusting the Welsh Motors network. 
             Direct, transparent, and verified.
           </p>
         </div>

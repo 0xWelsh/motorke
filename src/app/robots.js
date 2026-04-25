@@ -8,6 +8,6 @@ export default function robots() {
         disallow:  ["/admin", "/portal", "/login", "/api", "/dashboard"],
       },
     ],
-    sitemap: `${process.env.NEXT_PUBLIC_APP_URL || "https://motorke.co.ke"}/sitemap.xml`,
+    sitemap: `${process.env.NEXT_PUBLIC_APP_URL || "https://welsh-motors.co.ke"}/sitemap.xml`,
   };
 }

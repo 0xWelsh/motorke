@@ -105,7 +105,7 @@ export default function AdminLayout({ children }) {
         <div className="p-6 lg:p-8 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-4 group">
             <div className="w-12 h-12 bg-[#111111] rounded-2xl flex items-center justify-center group-hover:bg-[#ff5a2f] transition-all duration-500 shadow-none">
-              <img src="/headerlogo.png" alt="Motorke" className="w-8 h-8 object-contain rounded-2xl filter invert brightness-200" />
+              <img src="/headerlogo.png" alt="Welsh Motors" className="w-8 h-8 object-contain rounded-2xl filter invert brightness-200" />
             </div>
             <div>
               <span className="text-xl font-black text-slate-900 dark:text-white tracking-tighter block leading-none">

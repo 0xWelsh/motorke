@@ -24,7 +24,7 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
   const currentReview = reviews[reviewIndex];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full h-full min-h-[450px] animate-in fade-in slide-in-from-right-8 duration-1000">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full h-full min-h-[320px] max-h-[440px] animate-in fade-in slide-in-from-right-8 duration-1000">
       
       {/* Primary Hot Deal - Large Vertical Card with Full Frame Image */}
       <Link 
@@ -42,31 +42,31 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90" />
         </div>
 
-        <div className="relative z-10 flex flex-col h-full p-8 md:p-10">
+        <div className="relative z-10 flex flex-col h-full p-4 md:p-5">
           <div className="self-start">
-            <span className="bg-[#ff5a2f] text-white text-[10px] font-black px-4 py-2 uppercase tracking-[0.2em] flex items-center gap-2 shadow-2xl">
-              <Flame className="w-4 h-4 fill-white" />
+            <span className="bg-[#ff5a2f] text-white text-[9px] font-black px-3 py-1.5 uppercase tracking-[0.2em] flex items-center gap-2 shadow-2xl">
+              <Flame className="w-3.5 h-3.5 fill-white" />
               Hot Deal
             </span>
           </div>
           
           <div className="mt-auto">
-             <p className="text-[11px] font-black text-white/60 uppercase tracking-[0.35em] mb-3">
+             <p className="text-[10px] font-black text-white/60 uppercase tracking-[0.35em] mb-2">
                {mainCar.year} {mainCar.make}
              </p>
-             <h4 className="text-5xl font-black text-white mb-8 italic tracking-tighter leading-[0.8] group-hover:text-[#38A169] transition-colors">
-               {mainCar.model.split(' ')[0]}...
+             <h4 className="text-2xl md:text-3xl font-black text-white mb-4 italic tracking-tighter leading-[0.8] group-hover:text-[#38A169] transition-colors line-clamp-1">
+               {mainCar.model}
              </h4>
              
-             <div className="h-px bg-white/10 w-full mb-8" />
+             <div className="h-px bg-white/10 w-full mb-4" />
              
              <div className="flex items-center justify-between">
                <div className="flex flex-col">
-                 <span className="text-[10px] text-white/40 font-black uppercase tracking-[0.2em] mb-1">Asking Price</span>
-                 <span className="text-3xl font-black text-[#38A169]">KSh {(mainCar.price/1000000).toFixed(2)}M</span>
+                 <span className="text-[8px] text-white/40 font-black uppercase tracking-[0.2em] mb-0.5">Asking Price</span>
+                 <span className="text-xl font-black text-[#38A169]">KSh {(mainCar.price/1000000).toFixed(2)}M</span>
                </div>
-               <div className="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[#38A169] group-hover:border-[#38A169] transition-all duration-300">
-                  <ArrowRight className="w-7 h-7 text-white" />
+               <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[#38A169] group-hover:border-[#38A169] transition-all duration-300">
+                  <ArrowRight className="w-5 h-5 text-white" />
                </div>
              </div>
           </div>
@@ -91,23 +91,23 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
             <div className="absolute inset-0 bg-gradient-to-tr from-black via-black/80 to-transparent" />
           </div>
           
-          <div className="relative z-10 p-8 flex flex-col h-full">
-            <span className="bg-[#38A169]/20 text-[#38A169] text-[9px] font-black px-3 py-1 uppercase tracking-widest self-start border border-[#38A169]/30 mb-3">
+          <div className="relative z-10 p-4 flex flex-col h-full">
+            <span className="bg-[#38A169]/20 text-[#38A169] text-[8px] font-black px-3 py-1 uppercase tracking-widest self-start border border-[#38A169]/30 mb-2">
               Hot Deal
             </span>
-            <h4 className="text-2xl font-black text-white tracking-tighter mb-2 italic">{secondaryCar.year} {secondaryCar.model}</h4>
-            <p className="text-xl font-black text-[#38A169]">KSh {(secondaryCar.price/1000000).toFixed(2)}M</p>
+            <h4 className="text-lg font-black text-white tracking-tighter mb-0.5 italic line-clamp-1">{secondaryCar.year} {secondaryCar.model}</h4>
+            <p className="text-base font-black text-[#38A169]">KSh {(secondaryCar.price/1000000).toFixed(2)}M</p>
             
-            <div className="mt-auto pt-4 flex items-center gap-3 text-slate-400 group-hover:text-white transition-colors duration-300">
-              <span className="text-[11px] font-black uppercase tracking-[0.3em]">View Unit</span>
-              <ArrowRight className="w-4 h-4 text-[#38A169]" />
+            <div className="mt-auto pt-1 flex items-center gap-2 text-slate-400 group-hover:text-white transition-colors duration-300">
+              <span className="text-[9px] font-black uppercase tracking-[0.25em]">View Unit</span>
+              <ArrowRight className="w-3 h-3 text-[#38A169]" />
             </div>
           </div>
         </Link>
 
         {/* Reviews Slideshow */}
-        <div className="relative bg-[#111111] border border-zinc-900 shadow-lg rounded-none overflow-hidden p-8 flex flex-col">
-          <Quote className="absolute top-6 right-8 w-20 h-20 text-white/5 pointer-events-none" />
+        <div className="relative bg-[#111111] border border-zinc-900 shadow-lg rounded-none overflow-hidden p-4 md:p-5 flex flex-col">
+          <Quote className="absolute top-4 right-5 w-12 h-12 text-white/5 pointer-events-none" />
           <div className="relative z-10 flex flex-col h-full">
             <AnimatePresence mode="wait">
               <motion.div
@@ -118,17 +118,17 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
                 transition={{ duration: 0.5, ease: "circOut" }}
                 className="h-full flex flex-col"
               >
-                <div className="flex gap-1 mb-6">
+                <div className="flex gap-1 mb-4">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className={`w-4 h-4 ${i < (currentReview?.rating || 5) ? 'fill-yellow-500 text-yellow-500' : 'text-zinc-800'}`} />
+                    <Star key={i} className={`w-3.5 h-3.5 ${i < (currentReview?.rating || 5) ? 'fill-yellow-500 text-yellow-500' : 'text-zinc-800'}`} />
                   ))}
                 </div>
-                <p className="text-base font-bold text-slate-200 line-clamp-3 italic mb-8 leading-relaxed">
+                <p className="text-xs font-bold text-slate-200 line-clamp-2 italic mb-3 leading-relaxed">
                   &ldquo;{currentReview?.comment || "Expert consultation and a very transparent buying process."}&rdquo;
                 </p>
                 <div className="mt-auto">
-                  <p className="text-[12px] font-black text-white uppercase tracking-[0.4em] mb-1">{currentReview?.user?.name || "Verified Client"}</p>
-                  <p className="text-[10px] font-black text-[#38A169] uppercase tracking-[0.2em]">Purchased from {currentReview?.dealer?.name || "Premium Dealer"}</p>
+                  <p className="text-[9px] font-black text-white uppercase tracking-[0.3em] mb-0.5">{currentReview?.user?.name || "Verified Client"}</p>
+                  <p className="text-[8px] font-black text-[#38A169] uppercase tracking-[0.15em]">Purchased from {currentReview?.dealer?.name || "Premium Dealer"}</p>
                 </div>
               </motion.div>
             </AnimatePresence>

@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Info, MapPin, ImageOff } from "lucide-react";
+import { Info, MapPin, ImageOff, Sparkles } from "lucide-react";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
 import { FUEL_LABELS } from "@/lib/constants";
 import { CompareButton } from "./CompareSelector";
@@ -57,11 +57,17 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
           </div>
         )}
 
-        {/* Badge: top right */}
-        <div className="absolute top-4 right-4">
+        {/* Badges: top right */}
+        <div className="absolute top-4 right-4 flex flex-col gap-2 items-end">
           <span className="bg-[#38A169] text-white text-[9px] font-black px-2.5 py-1.5 uppercase tracking-widest shadow-xl" style={{ borderRadius: '2px' }}>
             {car.available ? "AVAILABLE" : "RESERVED"}
           </span>
+          {car.marketAnalysis && (
+            <span className={`bg-${car.marketAnalysis.color}-500 text-white text-[9px] font-black px-2.5 py-1.5 uppercase tracking-widest shadow-xl flex items-center gap-1`} style={{ borderRadius: '2px' }}>
+              <Sparkles className="w-3 h-3" />
+              {car.marketAnalysis.label}
+            </span>
+          )}
         </div>
 
         {/* Remove Button: top left (optional) */}

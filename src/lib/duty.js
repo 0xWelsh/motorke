@@ -62,7 +62,7 @@ function getExciseBand(engineCC, bands) {
 export function calculateDutyBreakdown({ cifKes, ageYears, engineCC, isElectric, rates = getDefaultDutyRates() }) {
   // Enforce the standard 3400 USD freight/export proxy to make the calculation accurate for imported FOBs.
   // We apply this only if this is clearly a raw un-exported FOB amount. 
-  // In motorke, the `cifKes` parameter coming here is actually the pure FOB KES price natively!
+  // In welsh-motors, the `cifKes` parameter coming here is actually the pure FOB KES price natively!
   
   // NOTE: I will handle the + (2750 * 135) strictly inside `estimateDuty` and `estimateLandedCost` in utils.js
   

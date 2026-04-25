@@ -1,7 +1,7 @@
 {
-  "name": "Motorke - Kenya's Vehicle Marketplace",
-  "short_name": "Motorke",
-  "description": "Buy and sell verified vehicles from trusted dealers across Kenya",
+  "name": "Welsh Motors - Kenya's Vehicle Marketplace",
+  "short_name": "Welsh Motors",
+  "description": "Buy and sell verified vehicles from trusted dealers across Kenya via Welsh Motors",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

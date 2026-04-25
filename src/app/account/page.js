@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import AccountTabs from "@/components/AccountTabs";
 import { Heart, MessageSquare, ShieldCheck, User as UserIcon, Calendar, ArrowRight } from "lucide-react";
 
-export const metadata = { title: "My Account — Motorke Digital Garage" };
+export const metadata = { title: "My Account — Welsh Motors Digital Garage" };
 
 export default async function AccountPage({ searchParams }) {
   const sp = await searchParams;

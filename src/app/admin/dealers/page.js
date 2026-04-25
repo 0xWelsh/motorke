@@ -21,7 +21,7 @@ import {
   LogIn
 } from "lucide-react";
 
-export const metadata = { title: "Dealers — Motorke Admin" };
+export const metadata = { title: "Dealers — Welsh Motors Admin" };
 
 export default async function AdminDealersPage() {
   await requireAdmin();

@@ -55,7 +55,7 @@ export default function GlobalFooter() {
               <div className="relative h-8 w-32">
                 <Image
                   src="/logos/logo-dark.png"
-                  alt="Motorske"
+                  alt="Welsh Motors"
                   fill
                   className="object-contain"
                 />
@@ -94,14 +94,14 @@ export default function GlobalFooter() {
         {/* Bottom Bar */}
         <div className="pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-[#718096] text-xs font-medium">
-            © {currentYear} Motorske Platforms. All rights reserved.
+            © {currentYear} Welsh Motors Platforms. All rights reserved.
           </p>
           <div className="flex items-center gap-8 text-[#718096]">
             <span className="flex items-center gap-2 text-xs">
               <MapPin size={14} /> Nairobi, Kenya
             </span>
             <span className="flex items-center gap-2 text-xs">
-              <Mail size={14} /> hello@motorske.com
+              <Mail size={14} /> hello@welsh-motors.com
             </span>
           </div>
         </div>

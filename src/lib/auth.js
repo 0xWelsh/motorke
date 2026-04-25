@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import crypto from "crypto";
 
-const SESSION_COOKIE = "motorke_session";
+const SESSION_COOKIE = "welsh-motors_session";
 const SESSION_DAYS   = 30;
 
 import bcrypt from "bcrypt";

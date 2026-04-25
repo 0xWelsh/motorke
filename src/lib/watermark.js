@@ -3,21 +3,21 @@
  * Server-side watermark applied via Sharp on every car image upload.
  *
  * Design:
- *  - Bottom bar: semi-transparent dark strip with "MOTORKE • motorke.co.ke"
- *  - Corner bug: small brand text bottom-right with white/black outline (fallback visibility on any bg)
- *  - Diagonal tiled ghost text: light repeat across whole image to deter scraping
+ *  - Bottom bar: semi-transparent dark strip with "WELSH MOTORS • welshmotors.co.ke"
+ *  - Corner bug: small brand text bottom-right with white/black outline 
+ *  - Diagonal tiled ghost text: light repeat across whole image
  *
  * Controlled via env:
  *   LISTING_WATERMARK_ENABLED=false  → skip watermarking (default: enabled)
- *   LISTING_WATERMARK_TEXT           → override brand text (default: "MOTORKE")
- *   LISTING_WATERMARK_URL            → override URL text (default: "motorke.co.ke")
+ *   LISTING_WATERMARK_TEXT           → override brand text (default: "WELSH MOTORS")
+ *   LISTING_WATERMARK_URL            → override URL text (default: "welshmotors.co.ke")
  */
 
 import sharp from "sharp";
 
 const WATERMARK_ENABLED = process.env.LISTING_WATERMARK_ENABLED !== "false";
-const BRAND             = process.env.LISTING_WATERMARK_TEXT || "MOTORKE";
-const BRAND_URL         = process.env.LISTING_WATERMARK_URL  || "motorke.co.ke";
+const BRAND             = process.env.LISTING_WATERMARK_TEXT || "WELSH MOTORS";
+const BRAND_URL         = process.env.LISTING_WATERMARK_URL  || "welshmotors.co.ke";
 
 function escapeXml(str) {
   return String(str ?? "")
@@ -31,14 +31,14 @@ function escapeXml(str) {
 /**
  * Bottom bar: dark strip with brand + URL
  */
-function buildBarSvg(width, height) {
+function buildBarSvg(width, height, customText = null) {
   const barH    = Math.max(28, Math.round(height * 0.062));
   const fontSize = Math.max(11, Math.round(barH * 0.44));
   const pad     = Math.max(10, Math.round(width * 0.02));
   const y       = height - barH;
   const textY   = y + barH * 0.64;
 
-  const label   = escapeXml(BRAND);
+  const label   = escapeXml(customText || BRAND);
   const url     = escapeXml(BRAND_URL);
 
   return Buffer.from(
@@ -74,10 +74,10 @@ function buildBarSvg(width, height) {
  * Diagonal ghost tiling: deters crop-and-repost
  * Renders evenly-spaced rotated "MOTORKE" labels at low opacity.
  */
-function buildGhostSvg(width, height) {
+function buildGhostSvg(width, height, customText = null) {
   const step     = Math.round(Math.max(width, height) * 0.28);
   const fontSize = Math.max(13, Math.round(step * 0.11));
-  const text     = escapeXml(BRAND);
+  const text     = escapeXml(customText || BRAND);
   const labels   = [];
 
   for (let y = -step; y < height + step; y += step) {
@@ -89,7 +89,7 @@ function buildGhostSvg(width, height) {
           font-size="${fontSize}"
           font-weight="700"
           letter-spacing="2"
-          fill="rgba(255,255,255,0.10)"
+          fill="rgba(255,255,255,0.06)"
         >${text}</text>`
       );
     }
@@ -105,7 +105,7 @@ function buildGhostSvg(width, height) {
 /**
  * Main export — apply all watermark layers to the incoming image buffer.
  */
-export async function applyListingWatermark(buffer, mimeType) {
+export async function applyListingWatermark(buffer, mimeType, customText = null) {
   if (!WATERMARK_ENABLED) return buffer;
 
   const image = sharp(buffer, { failOn: "none" });
@@ -115,8 +115,8 @@ export async function applyListingWatermark(buffer, mimeType) {
 
   if (!width || !height) return buffer;
 
-  const bar   = buildBarSvg(width, height);
-  const ghost = buildGhostSvg(width, height);
+  const bar   = buildBarSvg(width, height, customText);
+  const ghost = buildGhostSvg(width, height, customText);
 
   const composited = image.composite([
     { input: ghost, left: 0, top: 0 },   // ghost tile first (under bar)

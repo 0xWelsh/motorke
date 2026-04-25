@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import CarForm from "@/components/CarForm";
 
-export const metadata = { title: "Add Car — Motorke Portal" };
+export const metadata = { title: "Add Car — Welsh Motors Portal" };
 
 export default async function PortalNewCarPage({ searchParams }) {
   const user = await requireDealer();

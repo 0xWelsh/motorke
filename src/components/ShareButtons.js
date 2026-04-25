@@ -20,7 +20,7 @@ export default function ShareButtons({ title, price }) {
   }
 
   const waText = encodeURIComponent(
-    `Check out this car on Motorke 🚗\n${title} — ${price}\n${url}`
+    `Check out this car on Welsh Motors 🚗\n${title} — ${price}\n${url}`
   );
   const waUrl = `https://wa.me/?text=${waText}`;
 

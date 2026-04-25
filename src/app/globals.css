@@ -320,7 +320,7 @@ h1, h2, h3, h4, h5, h6 {
 .dark .text-white\/60 { color: rgba(255, 255, 255, 0.6) !important; }
 
 /* Logo Inversion */
-.dark img[src*="headerlogo"], .dark img[alt="Motorke Digital Showroom"] {
+.dark img[src*="headerlogo"], .dark img[alt="Welsh Motors Digital Showroom"] {
   filter: invert(1) brightness(2);
 }
 

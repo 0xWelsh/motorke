@@ -6,17 +6,17 @@ import { Quote } from "lucide-react";
 const quotes = [
   {
     text: "Find the right car faster. Compare listings, prices, and dealer details in one place.",
-    author: "Motorke",
+    author: "Welsh Motors",
     role: "Car Search"
   },
   {
     text: "Dealers can list cars, get leads, and manage their inventory from one dashboard.",
-    author: "Motorke",
+    author: "Welsh Motors",
     role: "Dealer Tools"
   },
   {
     text: "Buyers and dealers connect directly with clear contact info and secure account tools.",
-    author: "Motorke",
+    author: "Welsh Motors",
     role: "Trusted Marketplace"
   }
 ];

@@ -5,7 +5,7 @@ import { X, ChevronRight } from "lucide-react";
 
 const TOOLTIPS = {
   first_time_visitor: {
-    title: "Welcome to Motorke! 👋",
+    title: "Welcome to Welsh Motors! 👋",
     steps: [
       {
         target: "search-bar",
@@ -34,7 +34,7 @@ const TOOLTIPS = {
     ],
   },
   dealer_first_time: {
-    title: "Welcome to Motorke Dealer Portal! 🚗",
+    title: "Welcome to Welsh Motors Dealer Portal! 🚗",
     steps: [
       {
         target: "add-car-btn",
@@ -160,7 +160,7 @@ export function OnboardingGuide({ type = "first_time_visitor" }) {
 
   useEffect(() => {
     // Check if user has already seen this tutorial
-    const key = `motorke_tutorial_${type}`;
+    const key = `welsh_motors_tutorial_${type}`;
     const seen = localStorage.getItem(key);
 
     if (!seen) {
@@ -185,7 +185,7 @@ export function OnboardingGuide({ type = "first_time_visitor" }) {
 
   const handleClose = () => {
     setIsVisible(false);
-    localStorage.setItem(`motorke_tutorial_${type}`, "true");
+    localStorage.setItem(`welsh_motors_tutorial_${type}`, "true");
   };
 
   if (!isVisible || hasSeenTutorial || steps.length === 0) {

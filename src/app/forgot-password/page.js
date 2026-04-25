@@ -109,7 +109,7 @@ export default function ForgotPasswordPage() {
           </form>
 
           <p className="mt-5 text-xs font-semibold text-slate-600">
-            Need help now? Contact <a href="mailto:support@motorke.com" className="text-slate-900 dark:text-white underline underline-offset-2">support@motorke.com</a>
+            Need help now? Contact <a href="mailto:support@welsh-motors.com" className="text-slate-900 dark:text-white underline underline-offset-2">support@welsh-motors.com</a>
           </p>
         </div>
       </div>

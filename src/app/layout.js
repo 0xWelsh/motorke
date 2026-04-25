@@ -12,6 +12,7 @@ import CookieConsent from "@/components/CookieConsent";
 
 import { Playfair_Display } from "next/font/google";
 import GlobalFooter from "@/components/GlobalFooter";
+import LiveActivityFeed from "@/components/LiveActivityFeed";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -20,8 +21,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata = {
-  title: "Motorke — Find Your Car in Kenya",
-  description: "Compare cars from top dealerships across Kenya.",
+  title: "Welsh Motors — Find Your Car in Kenya",
+  description: "Compare cars from top dealerships across Kenya on Welsh Motors.",
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.png",
@@ -61,6 +62,7 @@ export default async function RootLayout({ children }) {
           <GlobalFooter />
           <ScrollToTop />
           <CookieConsent />
+          <LiveActivityFeed />
         </ThemeProvider>
       </body>
     </html>

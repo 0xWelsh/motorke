@@ -14,7 +14,7 @@ import {
   BarChart3
 } from "lucide-react";
 
-export const metadata = { title: "Analytics — Motorke Dealer Portal" };export default async function AnalyticsPage() {
+export const metadata = { title: "Analytics — Welsh Motors Dealer Portal" };export default async function AnalyticsPage() {
   const user = await requireDealer();
 
   // Fetch data for the last 14 days

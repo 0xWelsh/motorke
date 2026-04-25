@@ -124,7 +124,7 @@ export default async function DealerPage(props) {
     "@context": "https://schema.org",
     "@type": "AutoDealer",
     name: dealer.name,
-    image: dealer.logoUrl || "https://motorke.co.ke/headerlogo.png",
+    image: dealer.logoUrl || "https://welsh-motors.co.ke/headerlogo.png",
     address: {
       "@type": "PostalAddress",
       addressLocality: dealer.location,

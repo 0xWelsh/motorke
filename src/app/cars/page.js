@@ -12,7 +12,7 @@ import { CompareButton } from "@/components/CompareSelector";
 import SearchMapToggle from "@/components/SearchMapToggle";
 
 
-export const metadata = { title: "Inventory — Motorke Standard" };
+export const metadata = { title: "Inventory — Welsh Motors Standard" };
 
 function distance(lat1, lng1, lat2, lng2) {
   if (!lat1 || !lat2) return 9999;

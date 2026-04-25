@@ -1,12 +1,12 @@
 /* 
-  Motorke Service Worker
+  Welsh Motors Service Worker
   Provides offline capability and caching for faster loads
   
   Strategy: Cache-first for static assets, network-first for API calls
 */
 
-const CACHE_NAME = "motorke-v1";
-const RUNTIME_CACHE = "motorke-runtime-v1";
+const CACHE_NAME = "welsh-motors-v1";
+const RUNTIME_CACHE = "welsh-motors-runtime-v1";
 
 // Files to cache on install (essential assets)
 const PRECACHE_URLS = [
@@ -122,13 +122,13 @@ self.addEventListener("sync", (event) => {
 self.addEventListener("push", (event) => {
   const data = event.data ? event.data.json() : {};
   const options = {
-    body: data.body || "You have a new notification from Motorke",
+    body: data.body || "You have a new notification from Welsh Motors",
     icon: "/headerlogo.png",
     badge: "/favicon.svg",
-    tag: "motorke-notification",
+    tag: "welsh-motors-notification",
   };
 
-  event.waitUntil(self.registration.showNotification(data.title || "Motorke", options));
+  event.waitUntil(self.registration.showNotification(data.title || "Welsh Motors", options));
 });
 
 // Notification click handler

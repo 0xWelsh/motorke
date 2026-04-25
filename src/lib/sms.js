@@ -24,7 +24,7 @@ export async function sendSMSVerification(phone, otp) {
   if (!API_KEY) {
     console.log("📱 ======================================");
     console.log(`📱 MOCK SMS TO: ${phone}`);
-    console.log(`📱 MESSAGE: Your Motorske verification code is: ${otp}. Do not share this. Code expires via 15 mins.`);
+    console.log(`📱 MESSAGE: Your Welsh Motors verification code is: ${otp}. Do not share this. Code expires via 15 mins.`);
     console.log("📱 ======================================");
     return { success: true, mocked: true };
   }

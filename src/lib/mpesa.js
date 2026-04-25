@@ -50,7 +50,7 @@ export async function initiateSTKPush(phoneNumber, amount, accountReference, tra
   const password = Buffer.from(`${SHORTCODE}${PASSKEY}${timestamp}`).toString("base64");
   
   // Safaricom requires a publicly reachable HTTPS callback URL.
-  // In production, set MPESA_CALLBACK_URL to your real domain (e.g. https://motorske.com/api/webhooks/mpesa)
+  // In production, set MPESA_CALLBACK_URL to your real domain (e.g. https://welsh-motors.com/api/webhooks/mpesa)
   // For sandbox testing, we use a placeholder since Safaricom sandbox doesn't actually deliver callbacks.
   const callbackUrl = process.env.MPESA_CALLBACK_URL || "https://mydomain.com/api/webhooks/mpesa";
 

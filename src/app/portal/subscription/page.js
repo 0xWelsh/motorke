@@ -258,7 +258,7 @@ export default function SubscriptionPage() {
                 <div className="bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-6 space-y-3 mb-4">
                   {[
                     ["Bank Name", "Equity Bank"],
-                    ["Account Name", "Motorske Ltd"],
+                    ["Account Name", "Welsh Motors Ltd"],
                     ["Account Number", "0123456789012"],
                     ["Branch", "Westlands, Nairobi"],
                     ["Swift Code", "EABOROBNXXX"],
@@ -272,7 +272,7 @@ export default function SubscriptionPage() {
                 </div>
                 <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl">
                   <p className="text-[11px] uppercase font-black tracking-[0.15em] font-semibold text-amber-900 uppercase tracking-wider mb-1">Important</p>
-                  <p className="text-[11px] uppercase font-black tracking-[0.15em] text-slate-700">After transferring, send your payment confirmation screenshot to <span className="text-slate-900 dark:text-white font-bold">billing@motorske.com</span> or WhatsApp <span className="text-slate-900 dark:text-white font-bold">+254 700 000 000</span>. Your plan will be activated within 24 hours.</p>
+                  <p className="text-[11px] uppercase font-black tracking-[0.15em] text-slate-700">After transferring, send your payment confirmation screenshot to <span className="text-slate-900 dark:text-white font-bold">billing@welsh-motors.com</span> or WhatsApp <span className="text-slate-900 dark:text-white font-bold">+254 700 000 000</span>. Your plan will be activated within 24 hours.</p>
                 </div>
                 <button onClick={() => { setSelectedPlan(null); setStatus("idle"); }} className="w-full mt-4 bg-[#fbfcfe] dark:bg-[#111111] hover:bg-slate-200 text-slate-900 dark:text-white rounded-2xl py-3 font-semibold text-[11px] uppercase font-black tracking-[0.10em] transition-all">
                   Done

@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
 import LeadManager from "@/components/LeadManager";
 
-export const metadata = { title: "Leads — Motorke Portal" };
+export const metadata = { title: "Leads — Welsh Motors Portal" };
 
 export default async function PortalLeadsPage({ searchParams }) {
   const user   = await requireDealer();

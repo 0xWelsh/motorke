@@ -14,16 +14,16 @@ const transporter = nodemailer.createTransport({
 });
 
 function buildEmailFooter() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke";
   return `
     <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid #e2e8f0;">
-      <p style="margin: 0 0 6px; font-size: 12px; color: #475569;">Motorke Marketplace</p>
+      <p style="margin: 0 0 6px; font-size: 12px; color: #475569;">Welsh Motors Marketplace</p>
       <p style="margin: 0; font-size: 12px; color: #64748b;">
         <a href="${siteUrl}/terms" style="color: #0f172a; text-decoration: underline;">Terms</a>
         &nbsp;•&nbsp;
         <a href="${siteUrl}/privacy" style="color: #0f172a; text-decoration: underline;">Privacy</a>
         &nbsp;•&nbsp;
-        <a href="mailto:support@motorke.com" style="color: #0f172a; text-decoration: underline;">support@motorke.com</a>
+        <a href="mailto:support@welsh-motors.com" style="color: #0f172a; text-decoration: underline;">support@welsh-motors.com</a>
       </p>
     </div>
   `;
@@ -66,7 +66,7 @@ export async function sendVerificationEmail(email, name, otp) {
          <span style="font-size: 42px; font-weight: 900; letter-spacing: 0.25em; color: #ff5a2f;">${otp}</span>
       </div>
       <p style="font-size: 12px; color: #999; margin-top: 40px;">
-        This code expires in 30 minutes. If you did not create a Motorske account, you can safely ignore this.
+        This code expires in 30 minutes. If you did not create a Welsh Motors account, you can safely ignore this.
       </p>
       ${buildEmailFooter()}
     </div>
@@ -74,9 +74,9 @@ export async function sendVerificationEmail(email, name, otp) {
 
   try {
     await transporter.sendMail({
-      from: '"Motorske Standard" <noreply@motorske.com>',
+      from: '"Welsh Motors Standard" <noreply@welsh-motors.com>',
       to: email,
-      subject: "Your Motorske Verification Code",
+      subject: "Your Welsh Motors Verification Code",
       html: htmlContent,
     });
     return { success: true };
@@ -136,7 +136,7 @@ export async function sendLeadAlertEmail({
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 28px; color: #111827;">
       <h1 style="margin: 0 0 8px; font-size: 24px; font-weight: 800;">New Buyer Enquiry</h1>
       <p style="margin: 0 0 20px; color: #475569; font-size: 14px;">
-        A potential buyer has reached out on Motorke.
+        A potential buyer has reached out on Welsh Motors.
       </p>
 
       <div style="border: 1px solid #e2e8f0; border-radius: 0px; padding: 18px; margin-bottom: 14px;">
@@ -158,7 +158,7 @@ export async function sendLeadAlertEmail({
         <p style="margin: 10px 0 0;"><strong>Message:</strong> ${safeBuyerMessage}</p>
       </div>
 
-      <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke"}/portal/leads" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;border-radius:0px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Open Leads Dashboard</a>
+      <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke"}/portal/leads" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;border-radius:0px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Open Leads Dashboard</a>
 
       <p style="margin-top: 20px; color: #94a3b8; font-size: 12px;">Lead Ref: ${safeLeadId}</p>
       ${buildEmailFooter()}
@@ -167,7 +167,7 @@ export async function sendLeadAlertEmail({
 
   try {
     await transporter.sendMail({
-      from: '"Motorke Alerts" <noreply@motorke.com>',
+      from: '"Welsh Motors Alerts" <noreply@welsh-motors.com>',
       to: recipients.join(","),
       subject: `New Buyer Enquiry - ${carTitle || "Vehicle"}`,
       html: htmlContent,
@@ -197,7 +197,7 @@ export async function createPasswordResetToken(email) {
 }
 
 export async function sendPasswordResetEmail({ email, name, resetToken }) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke";
   const resetUrl = `${siteUrl}/reset-password?token=${encodeURIComponent(resetToken)}&email=${encodeURIComponent(email)}`;
   const escapeHtml = (value) =>
     (value || "")
@@ -220,7 +220,7 @@ export async function sendPasswordResetEmail({ email, name, resetToken }) {
   const htmlContent = `
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 620px; margin: 0 auto; padding: 30px; color: #0f172a;">
       <h1 style="margin: 0 0 8px; font-size: 26px; font-weight: 800;">Reset your password</h1>
-      <p style="margin: 0 0 22px; font-size: 15px; color: #475569;">Hi ${safeName}, we received a request to reset your Motorke account password.</p>
+      <p style="margin: 0 0 22px; font-size: 15px; color: #475569;">Hi ${safeName}, we received a request to reset your Welsh Motors account password.</p>
 
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0px; padding: 18px; margin-bottom: 20px;">
         <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1.6;">For your security, this link expires in 30 minutes. If you did not request this reset, you can ignore this email.</p>
@@ -235,9 +235,9 @@ export async function sendPasswordResetEmail({ email, name, resetToken }) {
 
   try {
     await transporter.sendMail({
-      from: '"Motorke Security" <noreply@motorke.com>',
+      from: '"Welsh Motors Security" <noreply@welsh-motors.com>',
       to: email,
-      subject: "Reset your Motorke password",
+      subject: "Reset your Welsh Motors password",
       html: htmlContent,
     });
     return { success: true };
@@ -258,7 +258,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
     return { success: true };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke";
   const newCarUrl = `${siteUrl}/cars/${newCar.id}`;
   const savingsPercent = ((savings / previousCar.price) * 100).toFixed(1);
 
@@ -308,7 +308,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
         </a>
 
         <p style="margin: 24px 0; font-size: 13px; color: #64748b; line-height: 1.6;">
-          This deal won't last long. Better deals go fast on Motorke!
+          This deal won't last long. Better deals go fast on Welsh Motors!
         </p>
       </div>
 
@@ -318,7 +318,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
 
   try {
     await transporter.sendMail({
-      from: '"Motorke" <deals@motorke.com>',
+      from: '"Welsh Motors" <deals@welsh-motors.com>',
       to: userEmail,
       subject: `Better deal: ${newCar.year} ${newCar.make} - Save KSh ${parseInt(savings).toLocaleString("en-KE")}`,
       html: htmlContent,
@@ -357,11 +357,11 @@ export async function sendEngagementFollowUpEmail({ userEmail, userName, carTitl
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">Hi ${safeName},</p>
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">
           You reached out to <strong>${safeDealer}</strong> a few days ago regarding the <strong>${safeCar}</strong>. 
-          Vehicles move incredibly fast on Motorke, so we wanted to check in to see if you are still looking to buy or if you've already found your dream car.
+          Vehicles move incredibly fast on Welsh Motors, so we wanted to check in to see if you are still looking to buy or if you've already found your dream car.
         </p>
 
         <div style="text-align: center; margin: 32px 0;">
-          <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke"}/cars" style="display: inline-block; background: #ff5a2f; color: white; padding: 16px 32px; border-radius: 0px; font-size: 13px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;">
+          <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke"}/cars" style="display: inline-block; background: #ff5a2f; color: white; padding: 16px 32px; border-radius: 0px; font-size: 13px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;">
             Browse More Vehicles
           </a>
         </div>
@@ -377,7 +377,7 @@ export async function sendEngagementFollowUpEmail({ userEmail, userName, carTitl
 
   try {
     await transporter.sendMail({
-      from: '"Motorke Team" <hello@motorke.com>',
+      from: '"Welsh Motors Team" <hello@welsh-motors.com>',
       to: userEmail,
       subject: `Still looking for the ${safeCar}?`,
       html: htmlContent,
@@ -411,7 +411,7 @@ export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName
         <h1 style="margin: 0 0 16px; font-size: 24px; font-weight: 900;">How was the service?</h1>
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">Hi ${safeName},</p>
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">
-          You recently contacted <strong>${safeDealer}</strong> through Motorke. We carefully vet all our partners to ensure the highest quality experience, and your feedback is vital.
+          You recently contacted <strong>${safeDealer}</strong> through Welsh Motors. We carefully vet all our partners to ensure the highest quality experience, and your feedback is vital.
         </p>
         
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">
@@ -419,7 +419,7 @@ export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName
         </p>
 
         <div style="text-align: center; margin: 32px 0;">
-          <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke"}/contact" style="display: inline-block; background: #111111; color: white; padding: 16px 32px; border-radius: 0px; font-size: 13px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;">
+          <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke"}/contact" style="display: inline-block; background: #111111; color: white; padding: 16px 32px; border-radius: 0px; font-size: 13px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;">
             Leave Feedback
           </a>
         </div>
@@ -431,7 +431,7 @@ export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName
 
   try {
     await transporter.sendMail({
-      from: '"Motorke Quality" <quality@motorke.com>',
+      from: '"Welsh Motors Quality" <quality@welsh-motors.com>',
       to: userEmail,
       subject: `How was your experience with ${safeDealer}?`,
       html: htmlContent,

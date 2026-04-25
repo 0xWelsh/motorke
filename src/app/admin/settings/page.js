@@ -2,7 +2,7 @@ import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { Settings, Save, AlertCircle } from "lucide-react";
 
-export const metadata = { title: "Settings — Motorke Admin" };
+export const metadata = { title: "Settings — Welsh Motors Admin" };
 
 export default async function AdminSettingsPage({ searchParams }) {
   await requireAdmin();
@@ -69,7 +69,7 @@ export default async function AdminSettingsPage({ searchParams }) {
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Global Support Email</label>
               <input 
                 name="support_email" 
-                defaultValue={settings.support_email || "support@motorske.com"} 
+                defaultValue={settings.support_email || "support@welsh-motors.com"} 
                 className="w-full bg-[#f7f6f3] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-slate-900 font-medium" 
                 placeholder="support@domain.com"
               />

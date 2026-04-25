@@ -30,10 +30,10 @@ export async function generateMetadata({ params }) {
   });
   if (!car) return {};
 
-  const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} - Motorke Kenya`;
-  const description = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Motorke.`;
+  const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} - Welsh Motors Kenya`;
+  const description = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motors.`;
   const image = car.images[0]?.url || "/headerlogo.png";
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke";
   const url = `${baseUrl}/cars/${id}`;
 
   return {
@@ -44,7 +44,7 @@ export async function generateMetadata({ params }) {
       title,
       description,
       url,
-      siteName: "Motorke",
+      siteName: "Welsh Motors",
       images: [{ url: image }],
       type: "website",
     },
@@ -242,21 +242,33 @@ export default async function CarDetailPage({ params }) {
     specRows.push([visibleSpecs[i], visibleSpecs[i + 1] || null]);
   }
 
-  const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Motorke.`;
+  const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motors.`;
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: title,
-    description: seoDescription,
-    image: car.images[0]?.url || "https://motorke.co.ke/headerlogo.png",
-    brand: { "@type": "Brand", name: car.make },
-    offers: {
+    "name": title,
+    "description": seoDescription,
+    "image": car.images.map(i => i.url),
+    "brand": {
+      "@type": "Brand",
+      "name": car.make
+    },
+    "sku": car.id,
+    "mpn": car.id,
+    "color": car.color,
+    "offers": {
       "@type": "Offer",
-      price: car.price,
-      priceCurrency: "KES",
-      availability: car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-      seller: { "@type": "AutoDealer", name: car.dealer?.name || "Motorske Dealer" }
+      "price": car.price,
+      "priceCurrency": "KES",
+      "itemCondition": car.condition === "NEW" ? "https://schema.org/NewCondition" : "https://schema.org/UsedCondition",
+      "availability": car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "url": `${process.env.NEXT_PUBLIC_SITE_URL}/cars/${car.id}`,
+      "seller": {
+        "@type": "AutoDealer",
+        "name": car.dealer?.name || "Welsh Motors",
+        "image": car.dealer?.logoUrl
+      }
     }
   };
 

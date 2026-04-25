@@ -9,7 +9,7 @@ import LocationPicker from "@/components/LocationPicker";
 import ImageGallery from "@/components/ImageGallery";
 import { User, Mail, Shield, Calendar, Plus, Building2, MapPin, Globe, Phone } from "lucide-react";
 
-export const metadata = { title: "Profile Settings — Motorke Dealer Portal" };
+export const metadata = { title: "Profile Settings — Welsh Motors Dealer Portal" };
 
 const COUNTIES = [
   "Nairobi", "Mombasa", "Kisumu", "Nakuru", "Uasin Gishu", "Kiambu", "Machakos",

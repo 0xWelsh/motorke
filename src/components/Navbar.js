@@ -107,7 +107,7 @@ export default function Navbar({ user }) {
               <div className="relative h-8 md:h-10 w-32 md:w-40">
                 <Image
                   src={activeLogo}
-                  alt="Motorske"
+                  alt="Welsh Motors"
                   fill
                   className="object-contain"
                   priority
@@ -292,7 +292,7 @@ export default function Navbar({ user }) {
               <div className="relative h-8 w-28">
                 <Image
                   src={activeLogo}
-                  alt="Motorske"
+                  alt="Welsh Motors"
                   fill
                   className="object-contain"
                 />

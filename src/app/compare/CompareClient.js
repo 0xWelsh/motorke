@@ -512,9 +512,9 @@ export default function CompareClient({ initialCars }) {
         url,
       };
 
-      const existing = JSON.parse(localStorage.getItem("motorke_compare_snapshots") || "[]");
+      const existing = JSON.parse(localStorage.getItem("welsh-motors_compare_snapshots") || "[]");
       const next = [snapshot, ...existing].slice(0, 20);
-      localStorage.setItem("motorke_compare_snapshots", JSON.stringify(next));
+      localStorage.setItem("welsh-motors_compare_snapshots", JSON.stringify(next));
 
       setSaveState("copied");
       setTimeout(() => setSaveState("idle"), 1800);
@@ -598,7 +598,7 @@ export default function CompareClient({ initialCars }) {
         <html>
           <head>
             <meta charset="utf-8" />
-            <title>Motorke Comparison PDF</title>
+            <title>Welsh Motors Comparison PDF</title>
             <style>
               body {
                 font-family: Arial, sans-serif;
@@ -647,7 +647,7 @@ export default function CompareClient({ initialCars }) {
             </style>
           </head>
           <body>
-            <h1>Motorke Comparison Report</h1>
+            <h1>Welsh Motors Comparison Report</h1>
             <p class="meta">${escapeHtml(title)}<br/>Generated: ${escapeHtml(printedAt)} · Preset: ${escapeHtml(preset)}</p>
 
             <div class="section-title">Quick Summary</div>

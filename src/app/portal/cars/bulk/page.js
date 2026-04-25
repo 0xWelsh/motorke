@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 import { requireDealer } from "@/lib/auth";
 import BulkUpload from "@/components/BulkUpload";
 
-export const metadata = { title: "Bulk Upload Cars — Motorke Portal" };
+export const metadata = { title: "Bulk Upload Cars — Welsh Motors Portal" };
 
 export default async function PortalBulkUploadPage() {
   const user = await requireDealer();

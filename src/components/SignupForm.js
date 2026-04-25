@@ -174,8 +174,8 @@ export default function SignupForm({ error: initialError, initialRole }) {
           {/* Header */}
           <div className="mb-8 text-center">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <img src="/headerlogo.png" alt="Motorke" className="h-8 w-8 object-contain" />
-              <h1 className="text-2xl font-black uppercase tracking-widest text-slate-900 dark:text-white">Motorke</h1>
+              <img src="/headerlogo.png" alt="Welsh Motors" className="h-8 w-8 object-contain" />
+              <h1 className="text-2xl font-black uppercase tracking-widest text-slate-900 dark:text-white">Welsh Motors</h1>
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tighter mb-2">Create Account</h2>
             <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mt-2">Join as buyer or dealer to get started</p>

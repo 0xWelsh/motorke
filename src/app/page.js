@@ -14,6 +14,7 @@ import { unstable_cache } from "next/cache";
 import HeroShowcase from "@/components/HeroShowcase";
 import HeroGridShowcase from "@/components/HeroGridShowcase";
 import CarCard from "@/components/CarCard";
+import { analyzePrice } from "@/lib/market";
 
 const HERO_BACKGROUND = "/images/backgrounds/pexels-mikebirdy-10123985.jpg";
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
@@ -102,18 +103,26 @@ export default async function HomePage() {
     .slice(0, 8);
 
   // Priority: Hot This Week (with views) > Featured > New Arrivals
-  const spotlight = hotSorted.length > 0 ? hotSorted : (featured && featured.length > 0) ? featured : newArrivals;
-  const heroPrimary = spotlight?.[0] || null;
+  const baseSpotlight = hotSorted.length > 0 ? hotSorted : (featured && featured.length > 0) ? featured : newArrivals;
+
+  // Enhance cars with market intelligence
+  const [spotlightEnhanced, hotEnhanced, newEnhanced] = await Promise.all([
+    Promise.all((baseSpotlight || []).map(async c => ({ ...c, marketAnalysis: await analyzePrice(c) }))),
+    Promise.all((hotSorted || []).map(async c => ({ ...c, marketAnalysis: await analyzePrice(c) }))),
+    Promise.all((newArrivals || []).map(async c => ({ ...c, marketAnalysis: await analyzePrice(c) }))),
+  ]);
+
+  const heroPrimary = spotlightEnhanced?.[0] || null;
 
   return (
     <div className="min-h-screen pb-20 bg-white dark:bg-[#0a0a0a]">
       {/* Dynamic Hero Section */}
-      <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
+      <section className="relative pt-20 pb-12 md:pt-24 md:pb-16 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           
           {/* Page Header - Full Width */}
-          <div className="mb-16 md:mb-20 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <h1 className="text-4xl sm:text-7xl md:text-8xl font-bold text-[#111827] dark:text-white leading-[0.95] tracking-tight mb-10">
+          <div className="mb-10 md:mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-[#111827] dark:text-white leading-[0.95] tracking-tight mb-6">
               Moving the world<br />
               <span className="editorial-heading text-[#38A169]">with transparency.</span>
             </h1>
@@ -140,7 +149,7 @@ export default async function HomePage() {
 
             <div className="hidden lg:block lg:col-span-5 xl:col-span-5 lg:pl-4">
               <HeroGridShowcase 
-                cars={hotSorted.length >= 2 ? hotSorted : featured.slice(0, 2)} 
+                cars={hotEnhanced.length >= 2 ? hotEnhanced : spotlightEnhanced.slice(0, 2)} 
                 reviews={highlightReviews} 
               />
             </div>
@@ -164,7 +173,7 @@ export default async function HomePage() {
 
 
       {/* Spotlight / Trending Section */}
-      {hotSorted.length > 0 && (
+      {hotEnhanced.length > 0 && (
         <section className="py-24 sm:py-32">
           <div className="container mx-auto px-6 max-w-7xl">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
@@ -196,7 +205,7 @@ export default async function HomePage() {
                 </Link>
               </div>
 
-              {hotSorted.slice(0, 2).map((car) => (
+              {hotEnhanced.slice(0, 2).map((car) => (
                 <CarCard key={car.id} car={car} />
               ))}
             </div>
@@ -240,7 +249,7 @@ export default async function HomePage() {
                     </div>
                   </div>
                   <p className="text-sm text-[#4A5568] dark:text-slate-300 leading-relaxed mb-10 line-clamp-2">
-                    {dealer.description || "Partnering with Motorske to provide premium verified vehicles."}
+                    {dealer.description || "Partnering with Welsh Motors to provide premium verified vehicles."}
                   </p>
                   <div className="pt-6 border-t border-[#EDF2F7] dark:border-slate-800 flex items-center justify-between">
                     <span className="text-xs font-bold text-[#111827] dark:text-slate-300 uppercase tracking-widest">{dealer._count?.cars || 0} Units</span>
@@ -273,7 +282,7 @@ export default async function HomePage() {
                 <span className="editorial-heading text-[#718096]">without the hassle.</span>
               </h2>
               <p className="text-lg text-[#A0AEC0] leading-relaxed max-w-xl font-medium">
-                Tired of recycled listings and unverified sellers? Motorske provides a direct link
+                Tired of recycled listings and unverified sellers? Welsh Motors provides a direct link
                 to the actual stock sitting on dealership floors. No middlemen, no scraped data,
                 just high-fidelity inventory.
               </p>
@@ -298,7 +307,7 @@ export default async function HomePage() {
       </section>
 
       {/* Fresh Arrivals Section */}
-      {newArrivals.length > 0 && (
+      {newEnhanced.length > 0 && (
         <section className="py-24 sm:py-32">
           <div className="container mx-auto px-6 max-w-7xl">
             <div className="flex items-end justify-between mb-16">
@@ -311,7 +320,7 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {newArrivals.slice(0, 8).map((car) => (
+              {newEnhanced.slice(0, 8).map((car) => (
                 <CarCard key={car.id} car={car} />
               ))}
             </div>

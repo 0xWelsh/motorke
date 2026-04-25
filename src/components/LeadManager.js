@@ -22,8 +22,8 @@ const STATUS_META = {
   CONTACTED:   { label: "Contacted",   bg: "bg-slate-100",   text: "text-slate-700",   border: "border-[#ddd4c8] dark:border-slate-800" },
   INTERESTED:  { label: "Interested",  bg: "bg-slate-100",   text: "text-slate-700",   border: "border-[#ddd4c8] dark:border-slate-800" },
   NEGOTIATING: { label: "Negotiating", bg: "bg-slate-100",   text: "text-slate-700",   border: "border-[#ddd4c8] dark:border-slate-800" },
-  SOLD:        { label: "Closed/Sold", bg: "bg-slate-100",   text: "text-slate-700",   border: "border-[#ddd4c8] dark:border-slate-800" },
-  DEAD:        { label: "Closed/Dead", bg: "bg-slate-100",   text: "text-slate-700",   border: "border-[#ddd4c8] dark:border-slate-800" },
+  SOLD:        { label: "Deal Won",  bg: "bg-emerald-50 dark:bg-emerald-500/10",   text: "text-emerald-700 dark:text-emerald-400",   border: "border-emerald-200 dark:border-emerald-500/20" },
+  DEAD:        { label: "Deal Lost", bg: "bg-rose-50 dark:bg-rose-500/10",      text: "text-rose-700 dark:text-rose-400",      border: "border-rose-200 dark:border-rose-500/20" },
 };
 
 const STATUSES = Object.keys(STATUS_META);
