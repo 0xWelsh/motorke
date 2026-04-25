@@ -179,25 +179,25 @@ export default function SignupForm({ error: initialError, initialRole }) {
       <div className="w-full lg:w-3/5 flex items-center justify-center p-6 sm:p-12 lg:p-16 relative bg-white dark:bg-[#0a0a0a] overflow-y-auto">
         <div className="w-full max-w-lg">
           {/* Mobile Logo */}
-          <Link href="/" className="lg:hidden flex items-center justify-center gap-3 mb-10">
-             <img src="/headerlogo.png" alt="Logo" className="w-8 h-8 object-contain" />
-             <span className="text-xl font-black uppercase tracking-widest text-slate-900 dark:text-white italic">Welsh Motors</span>
+          <Link href="/" className="lg:hidden flex items-center justify-center gap-2 mb-6">
+             <img src="/headerlogo.png" alt="Logo" className="w-6 h-6 object-contain" />
+             <span className="text-lg font-black uppercase tracking-widest text-slate-900 dark:text-white italic">Welsh Motors</span>
           </Link>
 
-          <header className="mb-8 text-left">
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-3 italic">
+          <header className="mb-6 text-left">
+            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-2 italic">
               Sign Up.
             </h2>
-            <p className="text-sm font-medium text-slate-400">Enter your details below to create your account.</p>
+            <p className="text-xs font-medium text-slate-400">Enter your details below to create your account.</p>
           </header>
 
           {/* Role Toggle */}
-          <div className="flex gap-2 mb-8 bg-slate-50 dark:bg-zinc-900 p-1 border border-slate-100 dark:border-zinc-800">
+          <div className="flex gap-2 mb-6 bg-slate-50 dark:bg-zinc-900 p-1 border border-slate-100 dark:border-zinc-800">
             <button 
               type="button" 
               onClick={() => setRole("BUYER")}
               className={clsx(
-                "flex-1 py-3 px-4 font-black uppercase tracking-widest text-[10px] transition-all",
+                "flex-1 py-2 px-4 font-black uppercase tracking-widest text-[9px] transition-all",
                 role === "BUYER" 
                   ? "bg-white dark:bg-[#111] text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-zinc-700" 
                   : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
@@ -209,7 +209,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
               type="button" 
               onClick={() => setRole("DEALER")}
               className={clsx(
-                "flex-1 py-3 px-4 font-black uppercase tracking-widest text-[10px] transition-all",
+                "flex-1 py-2 px-4 font-black uppercase tracking-widest text-[9px] transition-all",
                 role === "DEALER" 
                   ? "bg-[#38A169] text-white shadow-md shadow-[#38A169]/20" 
                   : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
@@ -226,13 +226,13 @@ export default function SignupForm({ error: initialError, initialRole }) {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
             <input type="hidden" name="captchaToken" value={captchaToken} readOnly />
             <input type="text" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
             <input type="hidden" name="role" value={role} />
 
             <div className={role === "DEALER" ? "md:col-span-1" : "md:col-span-2"}>
-              <label htmlFor="email" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Email</label>
+              <label htmlFor="email" className="block text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Email</label>
               <input 
                 id="email"
                 name="email" 
@@ -241,24 +241,24 @@ export default function SignupForm({ error: initialError, initialRole }) {
                 onChange={(e) => setEmail(e.target.value)}
                 required 
                 placeholder="you@email.com" 
-                className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-3 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
+                className="w-full border-b border-slate-100 dark:border-zinc-800 bg-transparent py-2 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
               />
             </div>
 
             <div className={role === "DEALER" ? "md:col-span-1" : "md:col-span-2"}>
-              <label htmlFor="name" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Full Name</label>
+              <label htmlFor="name" className="block text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Full Name</label>
               <input 
                 id="name"
                 name="name" 
                 type="text" 
                 required 
                 placeholder="John Doe" 
-                className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-3 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
+                className="w-full border-b border-slate-100 dark:border-zinc-800 bg-transparent py-2 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
               />
             </div>
 
             <div className="md:col-span-1">
-              <label htmlFor="password" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Password</label>
+              <label htmlFor="password" className="block text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Password</label>
               <div className="relative">
                 <input 
                   id="password"
@@ -268,69 +268,69 @@ export default function SignupForm({ error: initialError, initialRole }) {
                   onChange={(e) => setPassword(e.target.value)}
                   required 
                   placeholder="••••••••" 
-                  className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-3 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all pr-10"
+                  className="w-full border-b border-slate-100 dark:border-zinc-800 bg-transparent py-2 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all pr-10"
                 />
                 <button 
                   type="button" 
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-0 bottom-3 text-slate-300 hover:text-[#38A169]"
+                  className="absolute right-0 bottom-2 text-slate-300 hover:text-[#38A169]"
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
               {password && <PasswordMeter password={password} />}
             </div>
 
             <div className="md:col-span-1">
-              <label htmlFor="confirm" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Confirm Password</label>
+              <label htmlFor="confirm" className="block text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Confirm Password</label>
               <input 
                 id="confirm"
                 name="confirm" 
                 type={showPassword ? "text" : "password"}
                 required 
                 placeholder="••••••••" 
-                className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-3 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
+                className="w-full border-b border-slate-100 dark:border-zinc-800 bg-transparent py-2 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
               />
             </div>
 
             {role === "DEALER" && (
               <>
-                <div className="md:col-span-2 pt-4">
-                   <div className="h-px bg-slate-100 dark:bg-zinc-900 w-full mb-6" />
-                   <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#38A169] mb-6">Business Information</h4>
+                <div className="md:col-span-2 pt-2">
+                   <div className="h-px bg-slate-100 dark:bg-zinc-900 w-full mb-4" />
+                   <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-[#38A169] mb-4">Business Information</h4>
                 </div>
                 
                 <div className="md:col-span-1">
-                  <label htmlFor="dealerName" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Dealership Title</label>
+                  <label htmlFor="dealerName" className="block text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Dealership Title</label>
                   <input 
                     id="dealerName"
                     name="dealerName" 
                     type="text" 
                     required
                     placeholder="Japanese Car Exports" 
-                    className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-3 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
+                    className="w-full border-b border-slate-100 dark:border-zinc-800 bg-transparent py-2 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
                   />
                 </div>
 
                 <div className="md:col-span-1">
-                  <label htmlFor="phone" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Primary Phone</label>
+                  <label htmlFor="phone" className="block text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Primary Phone</label>
                   <input 
                     id="phone"
                     name="phone" 
                     type="tel" 
                     required
                     placeholder="+254 7__ ___ ___" 
-                    className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-3 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
+                    className="w-full border-b border-slate-100 dark:border-zinc-800 bg-transparent py-2 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all"
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label htmlFor="county" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Base County</label>
+                  <label htmlFor="county" className="block text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-1">Base County</label>
                   <select 
                     id="county"
                     name="county"
                     required
-                    className="w-full border-b-2 border-slate-100 dark:border-zinc-800 bg-transparent py-3 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all appearance-none cursor-pointer"
+                    className="w-full border-b border-slate-100 dark:border-zinc-800 bg-transparent py-2 text-base font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-all appearance-none cursor-pointer"
                   >
                     <option value="" className="text-slate-900 dark:text-white dark:bg-[#0a0a0a]">Select a county</option>
                     {COUNTIES.map((c) => (
@@ -341,13 +341,13 @@ export default function SignupForm({ error: initialError, initialRole }) {
               </>
             )}
 
-            <div className="md:col-span-2 pt-4">
+            <div className="md:col-span-2 pt-2">
               <button 
                 type="submit" 
                 disabled={loading}
-                className="w-full bg-[#38A169] hover:bg-[#2F855A] disabled:bg-slate-100 dark:disabled:bg-zinc-900 disabled:text-slate-400 text-white py-5 px-6 font-black uppercase tracking-[0.2em] text-xs transition-all hover:scale-[0.98] active:scale-95 flex items-center justify-center gap-3 group mb-4"
+                className="w-full bg-[#38A169] hover:bg-[#2F855A] disabled:bg-slate-100 dark:disabled:bg-zinc-900 disabled:text-slate-400 text-white py-4 px-6 font-black uppercase tracking-[0.2em] text-xs transition-all hover:scale-[0.98] active:scale-95 flex items-center justify-center gap-3 group mb-2"
               >
-                {loading ? <Loader2 size={18} className="animate-spin" /> : "Sign Up"}
+                {loading ? <Loader2 size={16} className="animate-spin" /> : "Sign Up"}
                 {!loading && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
               </button>
               
@@ -357,14 +357,14 @@ export default function SignupForm({ error: initialError, initialRole }) {
             </div>
           </form>
 
-          <footer className="mt-10 pt-8 border-t border-slate-100 dark:border-zinc-900 text-center">
-            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+          <footer className="mt-8 pt-4 border-t border-slate-100 dark:border-zinc-900 text-center">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
               Already have an account?{" "}
               <Link href="/login" className="text-[#38A169] hover:underline underline-offset-4 decoration-2">
                 Sign In
               </Link>
             </p>
-            <p className="text-[10px] text-slate-400 mt-6 leading-relaxed">
+            <p className="text-[9px] text-slate-400 mt-4 leading-relaxed">
               By joining the network, you agree to our{" "}
               <Link href="/terms" className="underline underline-offset-2 hover:text-[#38A169]">Terms</Link>
               {" "}and{" "}
