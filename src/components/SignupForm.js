@@ -70,6 +70,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
   const [captchaToken, setCaptchaToken] = useState("");
   const [website, setWebsite] = useState("");
   
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
   const hasGoogleAuth = Boolean(googleClientId);
   const requiresHumanCheck = Boolean(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 
