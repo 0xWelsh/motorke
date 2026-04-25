@@ -156,25 +156,33 @@ export default async function CarsPage({ searchParams }) {
       <div className="w-full px-4 sm:px-8 pt-32 sm:pt-40">
         
         {/* Adjusted Top Bar with Breadcrumbs and Count */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4">
-          <div className="flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.2em] text-[#718096] dark:text-slate-400">
-            <Link href="/" className="hover:text-[#111827] dark:hover:text-white transition-colors">Home</Link>
-            <ChevronRight className="w-3 h-3" />
-            <Link href="/cars" className="hover:text-[#111827] dark:hover:text-white transition-colors">Vehicles</Link>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-[#111827] dark:text-white">Available</span>
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-8 border-b border-slate-100 dark:border-zinc-900 pb-8">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.2em] text-[#718096] dark:text-slate-400">
+              <Link href="/" className="hover:text-[#111827] dark:hover:text-white transition-colors">Home</Link>
+              <ChevronRight className="w-3 h-3" />
+              <Link href="/cars" className="hover:text-[#111827] dark:hover:text-white transition-colors">Vehicles</Link>
+              <ChevronRight className="w-3 h-3" />
+              <span className="text-[#111827] dark:text-white">Available</span>
+            </div>
+            <div className="flex items-center gap-6">
+               {sortedCars.length > 0 && <SearchMapToggle cars={sortedCars} />}
+               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[#718096] dark:text-slate-400">
+                 Showing {(page - 1) * limit + 1} - {Math.min(page * limit, total)} of {total}
+               </div>
+            </div>
           </div>
           
-          <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[#718096] dark:text-slate-400">
-            Vehicles showing ({total})
+          <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[#38A169]">
+            Network Availability: {total} Units Verified
           </div>
         </div>
 
         {/* Side-by-Side Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 items-start">
           
-          {/* Sidebar - Spans many rows to allow cars to flow next to and then below it */}
-          <div className="lg:col-span-1 lg:row-span-[50] lg:sticky lg:top-40 space-y-10">
+          {/* Sidebar - Spans rows as long as it needs */}
+          <div className="lg:col-span-1 lg:row-span-[10] lg:sticky lg:top-40 space-y-10">
             <CarsSearch
               initialSearch={search}
               initialMake={make}
@@ -202,22 +210,8 @@ export default async function CarsPage({ searchParams }) {
             </div>
           </div>
 
-          {/* Tools Area - Spans the remaining 3 columns next to sidebar */}
-          <div className="lg:col-span-3 items-center pb-8 border-b border-[#EDF2F7] mb-4 gap-6 flex flex-col sm:flex-row justify-between">
-             <div className="flex items-center gap-6">
-               {sortedCars.length > 0 && <SearchMapToggle cars={sortedCars} />}
-             </div>
-             <div className="text-xs font-bold text-[#718096] uppercase tracking-widest">
-               Showing {(page - 1) * limit + 1} - {Math.min(page * limit, total)} of {total}
-             </div>
-          </div>
-
           {/* Results Grid - Each car is 1 column. 
-              When Sidebar is present (Col 1), cars fill Col 2, 3, 4 (3 cars).
-              When Sidebar row-span ends (though here it spans 50 rows), 
-              the cars would shift. To make them 4 below the sidebar, 
-              we'd actually need two separate lists if the sidebar isn't actually that tall,
-              but for most inventory pages (~12 cars), 50 rows is plenty.
+              The flow starts immediately next to the Sidebar.
           */}
           {sortedCars.map((car) => (
             <div key={car.id} className="lg:col-span-1">
