@@ -24,8 +24,13 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
     setProvider(selectedProvider);
   }, [recaptchaSiteKey, turnstileSiteKey]);
 
-  // Store initial mobile state for Turnstile sizing
-  const isMobileRef = useRef(window.innerWidth < 640);
+  // Store initial mobile state for Turnstile sizing (SSR-safe)
+  const isMobileRef = useRef(false);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      isMobileRef.current = window.innerWidth < 640;
+    }
+  }, []);
 
   // If no provider configured, auto-approve for development
   useEffect(() => {

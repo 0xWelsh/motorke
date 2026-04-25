@@ -189,12 +189,12 @@ export default function CarsSearch({
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Filter by budget</label>
             <div className="grid grid-cols-2 gap-2">
               {[
-                { label: "$0 - $10K", min: 0, max: 1300000 },
-                { label: "$10K - $20K", min: 1300000, max: 2600000 },
-                { label: "$20K - $30K", min: 2600000, max: 3900000 },
-                { label: "$30K - $50K", min: 3900000, max: 6500000 },
-                { label: "$50K - $75K", min: 6500000, max: 9750000 },
-                { label: "$75K - $100K", min: 9750000, max: 13000000 },
+                { label: "KSh 0 - 1.3M", min: 0, max: 1300000 },
+                { label: "KSh 1.3M - 2.6M", min: 1300000, max: 2600000 },
+                { label: "KSh 2.6M - 3.9M", min: 2600000, max: 3900000 },
+                { label: "KSh 3.9M - 6.5M", min: 3900000, max: 6500000 },
+                { label: "KSh 6.5M - 9.8M", min: 6500000, max: 9750000 },
+                { label: "KSh 9.8M - 13M", min: 9750000, max: 13000000 },
               ].map((btn) => (
                 <button
                   key={btn.label}
@@ -228,7 +228,7 @@ export default function CarsSearch({
                 }`}
                 style={{ borderRadius: '2px' }}
               >
-                Above $100K
+                Above KSh 13M
               </button>
             </div>
           </div>

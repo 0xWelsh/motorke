@@ -83,9 +83,12 @@ export default function PortalLayout({ children }) {
          <div className="flex items-center gap-3">
            <button 
              onClick={() => setDrawerOpen(!drawerOpen)}
-             className="p-2 -ml-2 text-slate-700 hover:text-slate-900 dark:text-white transition-colors"
+             className="inline-flex items-center gap-2 px-3 py-2 -ml-1 border border-[#ddd4c8] dark:border-slate-800 bg-white dark:bg-[#111111] text-slate-700 hover:text-slate-900 dark:text-white transition-colors"
+             style={{ borderRadius: "10px" }}
+             aria-label="Open navigation menu"
            >
-             <Menu size={20} />
+             <Menu size={18} />
+             <span className="text-[11px] font-bold uppercase tracking-widest">Menu</span>
            </button>
            <div className="hidden lg:flex flex-col">
               <span className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900 dark:text-white">Welsh Motors</span>
@@ -95,7 +98,14 @@ export default function PortalLayout({ children }) {
            </div>
          </div>
          
-         <div className="flex items-center gap-4">
+         <div className="flex items-center gap-3 sm:gap-4">
+            <Link
+              href="/portal/profile"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 border border-[#ddd4c8] dark:border-slate-800 bg-white dark:bg-[#111111] text-slate-700 dark:text-white text-[10px] font-black uppercase tracking-[0.12em] hover:bg-[#fbfcfe] dark:hover:bg-[#151515] transition-colors"
+              style={{ borderRadius: "10px" }}
+            >
+              <Settings size={14} /> Account
+            </Link>
             <NotificationsBell variant="portal" />
             <div className="w-10 h-10 rounded-2xl bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-700 flex items-center justify-center font-bold shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
               D
@@ -206,6 +216,7 @@ export default function PortalLayout({ children }) {
           { href: "/portal",           label: "Overview",  Icon: LayoutDashboard },
           { href: "/portal/inventory", label: "Inventory", Icon: Package         },
           { href: "/portal/leads",     label: "Leads",     Icon: MessageSquare   },
+          { href: "/portal/profile",   label: "Profile",   Icon: Settings        },
           { href: "/portal/cars/new",  label: "Add Car",   Icon: Plus            },
         ].map(({ href, label, Icon }) => {
           const active = path === href;
