@@ -155,7 +155,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
       <div className="hidden lg:flex lg:w-2/5 relative bg-[#0a0a0a] overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
-            src="/images/backgrounds/pexels-matreding-11692836.jpg"
+            src="/images/backgrounds/pexels-criticalimagery-36840206.jpg"
             alt="Signup Concept"
             className="w-full h-full object-cover opacity-50 scale-105"
           />

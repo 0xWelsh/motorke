@@ -42,9 +42,6 @@ export default function AuthCarousel() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-md"
         >
-          <div className="mb-8 p-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl inline-block">
-            {SLIDES[index].icon}
-          </div>
           <h3 className="text-4xl md:text-5xl font-black italic tracking-tighter leading-[1.1] mb-6">
             {SLIDES[index].title}
           </h3>

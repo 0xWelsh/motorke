@@ -195,7 +195,7 @@ export default function LoginForm({ error }) {
              <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 text-center">
                 New to the platform?{" "}
                 <Link href="/signup" className="text-[#38A169] hover:underline underline-offset-4 decoration-2">
-                   Join Network
+                   Sign Up
                 </Link>
              </p>
           </footer>
