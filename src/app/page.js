@@ -110,30 +110,35 @@ export default async function HomePage() {
       {/* Dynamic Hero Section */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-7 xl:col-span-8 text-center lg:text-left">
-              <h1 className="text-4xl sm:text-7xl md:text-8xl font-bold text-[#111827] dark:text-white leading-[0.95] tracking-tight mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-                Moving the world<br />
-                <span className="editorial-heading text-[#38A169]">with transparency.</span>
-              </h1>
+          
+          {/* Page Header - Full Width */}
+          <div className="mb-16 md:mb-20 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            <h1 className="text-4xl sm:text-7xl md:text-8xl font-bold text-[#111827] dark:text-white leading-[0.95] tracking-tight mb-10">
+              Moving the world<br />
+              <span className="editorial-heading text-[#38A169]">with transparency.</span>
+            </h1>
 
-              <p className="text-lg md:text-xl text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-2xl font-medium mb-12 mx-auto lg:mx-0">
-                Experience a minimalist approach to car buying. We connect verified dealerships
-                directly to savvy buyers, removing the noise and clutter of traditional marketplaces.
-              </p>
+            <p className="text-lg md:text-xl text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl font-medium">
+              Experience a minimalist approach to car buying. We connect verified dealerships
+              directly to savvy buyers, removing the noise and clutter of traditional marketplaces.
+            </p>
+          </div>
 
-              <div className="w-full max-w-2xl mx-auto lg:mx-0 text-left">
+          {/* Side-by-Side Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:items-start animate-in fade-in duration-1000 delay-200">
+            <div className="lg:col-span-7 xl:col-span-7 text-left">
+              <div className="w-full text-left">
                 <BrowsePanel />
               </div>
 
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 mt-12">
+              <div className="flex flex-wrap items-center gap-6 mt-12">
                 <Link href="/cars" className="bg-[#38A169] hover:bg-[#2F855A] text-white px-8 py-4 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95" style={{ borderRadius: 'var(--radius)' }}>
                   Explore Inventory
                 </Link>
               </div>
             </div>
 
-            <div className="hidden lg:block lg:col-span-5 xl:col-span-5 lg:pl-4 animate-in fade-in slide-in-from-right-12 duration-1000 delay-300">
+            <div className="hidden lg:block lg:col-span-5 xl:col-span-5 lg:pl-4">
               <HeroGridShowcase 
                 cars={hotSorted.length >= 2 ? hotSorted : featured.slice(0, 2)} 
                 reviews={highlightReviews} 
