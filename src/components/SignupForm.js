@@ -186,9 +186,9 @@ export default function SignupForm({ error: initialError, initialRole }) {
 
           <header className="mb-8 text-left">
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-3 italic">
-              Join the Network.
+              Sign Up.
             </h2>
-            <p className="text-sm font-medium text-slate-400">Establish your presence in Kenya's premier automotive ecosystem.</p>
+            <p className="text-sm font-medium text-slate-400">Enter your details below to create your account.</p>
           </header>
 
           {/* Role Toggle */}
@@ -221,7 +221,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
 
           {errorMsg && (
             <div className="mb-8 p-5 bg-rose-50 dark:bg-rose-950/20 border-l-4 border-rose-500">
-               <p className="text-[10px] font-black uppercase tracking-widest text-rose-500 mb-1">Validation Error</p>
+               <p className="text-[10px] font-black uppercase tracking-widest text-rose-500 mb-1">Signup Error</p>
                <p className="text-sm font-bold text-slate-600 dark:text-rose-200">{errorMsg}</p>
             </div>
           )}
@@ -232,7 +232,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
             <input type="hidden" name="role" value={role} />
 
             <div className={role === "DEALER" ? "md:col-span-1" : "md:col-span-2"}>
-              <label htmlFor="email" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Identifier (Email)</label>
+              <label htmlFor="email" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Email</label>
               <input 
                 id="email"
                 name="email" 
@@ -258,7 +258,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
             </div>
 
             <div className="md:col-span-1">
-              <label htmlFor="password" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Secure Key</label>
+              <label htmlFor="password" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Password</label>
               <div className="relative">
                 <input 
                   id="password"
@@ -282,7 +282,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
             </div>
 
             <div className="md:col-span-1">
-              <label htmlFor="confirm" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Confirm Key</label>
+              <label htmlFor="confirm" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Confirm Password</label>
               <input 
                 id="confirm"
                 name="confirm" 
@@ -297,7 +297,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
               <>
                 <div className="md:col-span-2 pt-4">
                    <div className="h-px bg-slate-100 dark:bg-zinc-900 w-full mb-6" />
-                   <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#38A169] mb-6">Business Intelligence</h4>
+                   <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#38A169] mb-6">Business Information</h4>
                 </div>
                 
                 <div className="md:col-span-1">
@@ -347,7 +347,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
                 disabled={loading}
                 className="w-full bg-[#38A169] hover:bg-[#2F855A] disabled:bg-slate-100 dark:disabled:bg-zinc-900 disabled:text-slate-400 text-white py-5 px-6 font-black uppercase tracking-[0.2em] text-xs transition-all hover:scale-[0.98] active:scale-95 flex items-center justify-center gap-3 group mb-4"
               >
-                {loading ? <Loader2 size={18} className="animate-spin" /> : "Verify & Create Account"}
+                {loading ? <Loader2 size={18} className="animate-spin" /> : "Sign Up"}
                 {!loading && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
               </button>
               
@@ -368,7 +368,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
               By joining the network, you agree to our{" "}
               <Link href="/terms" className="underline underline-offset-2 hover:text-[#38A169]">Terms</Link>
               {" "}and{" "}
-              <Link href="/privacy" className="underline underline-offset-2 hover:text-[#38A169]">Privacy Protocol</Link>.
+              <Link href="/privacy" className="underline underline-offset-2 hover:text-[#38A169]">Privacy Policy</Link>.
             </p>
           </footer>
         </div>

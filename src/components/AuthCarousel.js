@@ -5,19 +5,16 @@ import { ShieldCheck, Zap, Globe, Star } from 'lucide-react';
 
 const SLIDES = [
   {
-    icon: <ShieldCheck className="w-8 h-8 text-[#38A169]" />,
-    title: "Verified Inventory",
-    desc: "Every listing on Welsh Motors undergoes a rigorous 150-point inspection before it goes live."
+    title: "Verified Cars",
+    desc: "Every car on Welsh Motors is inspected before it goes live."
   },
   {
-    icon: <Zap className="w-8 h-8 text-[#38A169]" />,
-    title: "Real-time Intelligence",
-    desc: "Access Fair Price intelligence and market trends to ensure you always get the best value."
+    title: "Fair Pricing",
+    desc: "We analyze local listings to ensure you always get the best value."
   },
   {
-    icon: <Globe className="w-8 h-8 text-[#38A169]" />,
-    title: "Direct Access",
-    desc: "Connect directly with trusted dealerships across Kenya without any middlemen or hidden fees."
+    title: "Direct Chat",
+    desc: "Speak with verified dealers in real-time to close deals faster."
   }
 ];
 

@@ -104,19 +104,19 @@ export default function LoginForm({ error }) {
 
           <header className="mb-10 text-left">
             <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-3 italic">
-              Access the Edge.
+              Sign In.
             </h2>
-            <p className="text-sm font-medium text-slate-400">Enter your credentials to manage your inventory and leads.</p>
+            <p className="text-sm font-medium text-slate-400">Enter your email and password to continue.</p>
           </header>
 
           {error && (
             <div className="mb-8 p-5 bg-rose-50 dark:bg-rose-950/20 border-l-4 border-rose-500">
-               <p className="text-[10px] font-black uppercase tracking-widest text-rose-500 mb-1">Authenticity Error</p>
+               <p className="text-[10px] font-black uppercase tracking-widest text-rose-500 mb-1">Login Error</p>
                <p className="text-sm font-bold text-slate-600 dark:text-rose-200">
                   {error === "invalid" && "The email or password entered is incorrect."}
                   {error === "inactive" && "This dealership account is currently inactive."}
-                  {error === "captcha" && "Security handshake failed. Check your connection."}
-                  {error === "too_many" && "Security protocol engaged: too many attempts."}
+                  {error === "captcha" && "Connection failed. Check your connection."}
+                  {error === "too_many" && "Too many attempts. Please try again later."}
                   {error === "unknown" && "A system error occurred. Please try again."}
                </p>
             </div>
@@ -127,7 +127,7 @@ export default function LoginForm({ error }) {
             <input type="text" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
             <div>
-              <label htmlFor="emailAddress" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Identifier</label>
+              <label htmlFor="emailAddress" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Email</label>
               <input 
                 id="emailAddress"
                 name="email" 
@@ -141,7 +141,7 @@ export default function LoginForm({ error }) {
             </div>
 
             <div className="relative">
-              <label htmlFor="securePassword" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Secure Key</label>
+              <label htmlFor="securePassword" className="block text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 mb-2">Password</label>
               <input 
                 id="securePassword"
                 name="password" 
@@ -164,10 +164,10 @@ export default function LoginForm({ error }) {
             <div className="flex items-center justify-between pt-2">
               <label className="flex items-center gap-3 cursor-pointer group">
                 <input type="checkbox" name="remember" className="w-5 h-5 border-2 border-slate-200 dark:border-zinc-800 rounded-none checked:bg-[#38A169] checked:border-[#38A169] transition-all accent-[#38A169]" />
-                <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Remember Protocol</span>
+                <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Remember me</span>
               </label>
               <Link href="/forgot-password" size="sm" className="text-[11px] font-black uppercase tracking-widest text-[#38A169] hover:underline underline-offset-4 decoration-2">
-                Recovery
+                Forgot password?
               </Link>
             </div>
 
@@ -180,7 +180,7 @@ export default function LoginForm({ error }) {
               disabled={!canSubmit}
               className="w-full bg-[#38A169] hover:bg-[#2F855A] disabled:bg-slate-100 dark:disabled:bg-zinc-900 disabled:text-slate-400 text-white py-5 px-6 font-black uppercase tracking-[0.2em] text-xs transition-all hover:scale-[0.98] active:scale-95 flex items-center justify-center gap-3 group"
             >
-              Initialize Session
+              Sign In
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
 
