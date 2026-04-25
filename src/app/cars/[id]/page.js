@@ -315,11 +315,16 @@ export default async function CarDetailPage({ params }) {
                   <span className="text-2xl font-extrabold text-[#111827] dark:text-white">
                     {car.currency || "USD"} {formatCarPrice(car).replace("KSh", "").trim()}
                   </span>
-                  <div className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-[11px] text-slate-400 font-bold italic">
+                  <div 
+                    className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-[11px] text-slate-400 font-bold italic cursor-help"
+                    title={car.dutyPaid ? "Locally available. Price inclusive of registration and all duties." : "Direct import. Price includes shipping, tax, and clearing fees to Nairobi."}
+                  >
                      i
                   </div>
                 </div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-10">Price includes shipping</p>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-10">
+                  {car.dutyPaid ? "DUTY ALREADY PAID" : "PRICE INCLUDES SHIPPING"}
+                </p>
 
                 <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
                    <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#A0AEC0] dark:text-slate-600 mb-8">Description</h2>

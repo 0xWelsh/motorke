@@ -109,7 +109,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
             </span>
             <div 
               className="w-4 h-4 rounded-full border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-[10px] text-slate-400 font-bold italic cursor-help"
-              title="Price includes estimated import duty and registration fees."
+              title={car.dutyPaid ? "Locally available. Price inclusive of registration and all duties." : "Direct import. Price includes shipping, tax, and clearing fees to Nairobi."}
             >
                i
             </div>
