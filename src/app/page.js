@@ -12,6 +12,7 @@ import {
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
 import HeroShowcase from "@/components/HeroShowcase";
+import HeroGridShowcase from "@/components/HeroGridShowcase";
 import CarCard from "@/components/CarCard";
 
 const HERO_BACKGROUND = "/images/backgrounds/pexels-mikebirdy-10123985.jpg";
@@ -132,8 +133,11 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="hidden lg:block lg:col-span-5 xl:col-span-4 lg:pl-12 animate-in fade-in slide-in-from-right-12 duration-1000 delay-300">
-              <HeroShowcase items={showcaseItems} />
+            <div className="hidden lg:block lg:col-span-5 xl:col-span-5 lg:pl-4 animate-in fade-in slide-in-from-right-12 duration-1000 delay-300">
+              <HeroGridShowcase 
+                cars={hotSorted.length >= 2 ? hotSorted : featured.slice(0, 2)} 
+                reviews={highlightReviews} 
+              />
             </div>
           </div>
         </div>
