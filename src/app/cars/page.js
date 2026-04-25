@@ -214,7 +214,7 @@ export default async function CarsPage({ searchParams }) {
               The flow starts immediately next to the Sidebar.
           */}
           {sortedCars.map((car) => (
-            <div key={car.id} className="lg:col-span-1">
+            <div key={car.id} className="lg:col-span-1 h-full">
               <CarCard 
                 car={car} 
                 distance={userLat && car.dealer?.lat ? Math.round(distance(userLat, userLng, car.dealer.lat, car.dealer.lng)) : null} 
