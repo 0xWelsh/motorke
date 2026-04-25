@@ -179,10 +179,10 @@ export default async function CarsPage({ searchParams }) {
         </div>
 
         {/* Side-by-Side Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
           
           {/* Sidebar - Spans rows as long as it needs */}
-          <div className="lg:col-span-1 lg:row-span-[10] lg:sticky lg:top-40 space-y-10">
+          <div className="lg:col-span-1 lg:row-span-[30] lg:sticky lg:top-40 self-start space-y-10">
             <CarsSearch
               initialSearch={search}
               initialMake={make}
@@ -214,7 +214,7 @@ export default async function CarsPage({ searchParams }) {
               The flow starts immediately next to the Sidebar.
           */}
           {sortedCars.map((car) => (
-            <div key={car.id} className="lg:col-span-1 h-full">
+            <div key={car.id} className="lg:col-span-1">
               <CarCard 
                 car={car} 
                 distance={userLat && car.dealer?.lat ? Math.round(distance(userLat, userLng, car.dealer.lat, car.dealer.lng)) : null} 
