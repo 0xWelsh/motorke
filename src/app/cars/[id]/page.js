@@ -291,15 +291,13 @@ export default async function CarDetailPage({ params }) {
           <span className="text-slate-900 dark:text-white truncate max-w-[200px] opacity-60 group-hover:opacity-100 transition-opacity">{car.make} {car.model}</span>
         </nav>
 
-        <div className="space-y-16">
+        <div className="space-y-10">
           {/* TOP SECTION: Full-Width Gallery */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
              <div className="lg:col-span-12 overflow-hidden" style={{ borderRadius: 'var(--radius)' }}>
                 <ImageGallery images={car.images} title={title} />
              </div>
           </div>
-
-          <div className="border-t border-slate-100 dark:border-zinc-900 w-full" />
 
           {/* BOTTOM SECTION: Details + Enquiry Form */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
