@@ -158,7 +158,7 @@ export default async function PortalPage({ searchParams }) {
                           }
                         </div>
                         <div className="min-w-0">
-                          <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{car.year} {car.make} {car.model}</p>
+                          <p className="text-sm font-bold font-playfair text-slate-900 dark:text-white truncate">{car.year} {car.make} {car.model}</p>
                           <p className="text-xs font-semibold text-slate-500 capitalize truncate">{car.variant || "Standard Trim"}</p>
                         </div>
                       </div>

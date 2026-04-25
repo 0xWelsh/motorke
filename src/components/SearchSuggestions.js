@@ -70,7 +70,7 @@ export default function SearchSuggestions({
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2 mb-0.5">
-                        <h3 className="font-bold text-slate-900 dark:text-white text-xs group-hover:text-[#ff5a2f] transition truncate">
+                        <h3 className="font-playfair font-semibold text-slate-900 dark:text-white text-xs group-hover:text-[#ff5a2f] transition truncate">
                           {car.value}
                         </h3>
                         {car.dealerVerified && (
@@ -148,7 +148,7 @@ export default function SearchSuggestions({
                   >
                     <div className="shrink-0">{typeInfo.icon}</div>
                     <div className="flex-1 text-left min-w-0">
-                      <p className="text-xs font-semibold text-slate-900 dark:text-white">
+                      <p className="text-xs font-playfair font-semibold text-slate-900 dark:text-white">
                         {matchIndex >= 0 ? (
                           <>
                             {beforeMatch}

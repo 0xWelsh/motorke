@@ -25,7 +25,7 @@ export default async function AdminEditCarPage({ params }) {
     <div className="p-8 max-w-3xl">
       <div className="mb-8">
         <a href="/admin/cars" className="text-xs text-white/40 hover:text-white transition-colors">← All cars</a>
-        <h1 className="text-3xl font-black mt-2">
+        <h1 className="text-3xl font-black font-playfair mt-2">
           Edit — {car.year} {car.make} {car.model}
         </h1>
       </div>

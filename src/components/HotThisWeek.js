@@ -38,7 +38,7 @@ export default function HotThisWeek({ trending = [] }) {
               className="flex items-center justify-between p-3 rounded-2xl bg-white/80 border border-yellow-100 hover:border-yellow-300 transition-colors"
             >
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{item.make}</p>
+                <p className="text-sm font-playfair font-semibold text-slate-900 dark:text-white truncate">{item.make}</p>
                 <p className="text-[11px] text-slate-500 font-semibold">{item.units} viewed this week</p>
               </div>
               <div className="ml-3 flex-shrink-0 flex items-center gap-1">

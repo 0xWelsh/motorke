@@ -70,7 +70,7 @@ export default function SearchMapLeaflet({ dealers }) {
         const price = formatPrice(c.computedLandedPrice ?? c.price);
         return `
           <a href="/cars/${c.id}" style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid #f1f5f9;text-decoration:none;color:inherit">
-            <span style="font-size:11px;font-weight:700;color:#0f172a">${c.year} ${c.make} ${c.model}</span>
+            <span style="font-size:11px;font-weight:700;color:#0f172a;font-family:var(--font-serif),Georgia,serif">${c.year} ${c.make} ${c.model}</span>
             ${price ? `<span style="font-size:11px;font-weight:800;color:#ff5a2f;white-space:nowrap">${price}</span>` : ""}
           </a>
         `;

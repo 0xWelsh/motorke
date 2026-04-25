@@ -33,6 +33,8 @@ module.exports = {
       fontFamily: {
         sans:    ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
         serif:   ["Lora", "ui-serif", "Georgia", "Cambria", "Times New Roman", "serif"],
+        /** Vehicle listing titles — matches `Playfair_Display` in `layout.js` (`--font-serif`) */
+        playfair: ["var(--font-serif)", "Georgia", "ui-serif", "serif"],
         display: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
         mono:    ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "monospace"],
       },

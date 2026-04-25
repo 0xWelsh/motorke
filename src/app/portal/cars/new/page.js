@@ -87,7 +87,7 @@ export default async function PortalNewCarPage({ searchParams }) {
                   )}
                 </div>
                 <div>
-                  <p className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900 dark:text-white">{car.year} {car.make} {car.model}</p>
+                  <p className="text-[11px] uppercase font-playfair font-semibold tracking-[0.10em] text-slate-900 dark:text-white">{car.year} {car.make} {car.model}</p>
                   <p className="text-[11px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700">{car.variant || "Standard"}</p>
                 </div>
               </Link>

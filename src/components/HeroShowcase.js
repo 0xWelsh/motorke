@@ -53,8 +53,8 @@ export default function HeroShowcase({ items }) {
               </div>
             </div>
             <div className="p-5">
-               <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{current.year} {current.make}</p>
-               <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-4">{current.model}</h4>
+               <p className="text-[10px] font-playfair font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{current.year} {current.make}</p>
+               <h4 className="text-xl font-playfair font-semibold text-slate-900 dark:text-white mb-4">{current.model}</h4>
                <div className="flex items-center justify-between pt-4 border-t border-slate-50 dark:border-slate-800">
                  <span className="text-lg font-bold text-[#38A169]">KSh {(current.price/1000000).toFixed(2)}M</span>
                  <Link href={`/cars/${current.id}`} className="text-slate-900 dark:text-white text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70 transition-opacity">
