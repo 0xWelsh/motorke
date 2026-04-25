@@ -283,12 +283,12 @@ export default async function CarDetailPage({ params }) {
       
       <div className="container mx-auto px-6 max-w-7xl pt-32 sm:pt-40 pb-20">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#718096] mb-12">
-          <Link href="/" className="hover:text-[#1A202C] transition-colors">Home</Link>
-          <span>/</span>
-          <Link href="/cars" className="hover:text-[#1A202C] transition-colors">Inventory</Link>
-          <span>/</span>
-          <span className="text-[#1A202C] truncate max-w-[200px]">{car.make} {car.model}</span>
+        <nav className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-12">
+          <Link href="/" className="hover:opacity-70 transition-opacity">Home</Link>
+          <span className="opacity-40">/</span>
+          <Link href="/cars" className="hover:opacity-70 transition-opacity">Inventory</Link>
+          <span className="opacity-40">/</span>
+          <span className="text-slate-900 dark:text-white truncate max-w-[200px] opacity-60 group-hover:opacity-100 transition-opacity">{car.make} {car.model}</span>
         </nav>
 
         <div className="space-y-16">
