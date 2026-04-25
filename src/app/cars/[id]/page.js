@@ -18,6 +18,7 @@ import SpecSheet from "@/components/SpecSheet";
 import CarReviewForm from "@/components/CarReviewForm";
 import Link from "next/link";
 import Image from "next/image";
+import Script from "next/script";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -274,7 +275,11 @@ export default async function CarDetailPage({ params }) {
 
   return (
     <div className="bg-white min-h-screen">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <Script
+        id="car-json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       
       <div className="container mx-auto px-6 max-w-7xl pt-32 sm:pt-40 pb-20">
         {/* Breadcrumb */}
@@ -322,12 +327,9 @@ export default async function CarDetailPage({ params }) {
                      i
                   </div>
                 </div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-10">
-                  {car.dutyPaid ? "DUTY ALREADY PAID" : "PRICE INCLUDES SHIPPING"}
-                </p>
 
-                <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
-                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#A0AEC0] dark:text-slate-600 mb-8">Description</h2>
+                <div className="pt-8 border-t border-slate-100 dark:border-zinc-900 mt-8">
+                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#A0AEC0] dark:text-slate-600 mb-6">Description</h2>
                    <div className="text-[15px] text-[#4A5568] dark:text-slate-400 leading-[1.8] font-medium">
                       {specString && <span className="text-[#111827] dark:text-white font-bold">{specString}</span>}
                       {specString && " • "}
