@@ -2,7 +2,7 @@
 // src/components/LoginForm.js
 import { useState } from "react";
 import Link from "next/link";
-import { Lock, ArrowLeft, ShieldCheck, ChevronRight, Eye, EyeOff, CheckCircle2 } from "lucide-react";
+import { Lock, ArrowLeft, ArrowRight, ShieldCheck, ChevronRight, Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import Script from "next/script";
 import HumanCheck from "./HumanCheck";
 

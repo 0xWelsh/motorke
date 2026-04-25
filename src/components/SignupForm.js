@@ -1,7 +1,7 @@
 "use client";
 // src/components/SignupForm.js
 import { useState } from "react";
-import { UserPlus, Building2, User, Loader2, ArrowLeft, ShieldCheck, Eye, EyeOff, MapPin, CheckCircle2 } from "lucide-react";
+import { UserPlus, Building2, User, Loader2, ArrowLeft, ArrowRight, ShieldCheck, Eye, EyeOff, MapPin, CheckCircle2 } from "lucide-react";
 import { clsx } from "clsx";
 import LocationPicker from "./LocationPicker";
 import Link from "next/link";
@@ -50,7 +50,6 @@ function PasswordMeter({ password }) {
 }
 
 import AuthCarousel from "./AuthCarousel";
-import { ArrowRight } from "lucide-react";
 
 export default function SignupForm({ error: initialError, initialRole }) {
   const initialErrorMessage =
