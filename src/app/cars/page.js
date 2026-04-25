@@ -82,7 +82,12 @@ export default async function CarsPage({ searchParams }) {
     sort === "price_desc" ? [{ computedLandedPrice: "desc" }] :
     sort === "mileage_asc" ? [{ mileage: "asc" }] :
     sort === "year_desc" ? [{ year: "desc" }] :
-    [{ featured: "desc" }, { createdAt: "desc" }];
+    [
+      { featuredWeight: "desc" },
+      { dealer: { featured: "desc" } },
+      { dealer: { boostScore: "desc" } },
+      { createdAt: "desc" }
+    ];
 
   const [cars, total, allMakes] = await Promise.all([
     db.car.findMany({
@@ -148,7 +153,7 @@ export default async function CarsPage({ searchParams }) {
 
   return (
     <div className="min-h-screen bg-white pb-20">
-      <div className="container mx-auto px-6 max-w-7xl pt-32 sm:pt-40">
+      <div className="w-full px-4 sm:px-8 pt-32 sm:pt-40">
         
         {/* Adjusted Top Bar with Breadcrumbs and Count */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4">
