@@ -200,50 +200,81 @@ export default function ImageGallery({ images, title }) {
       )}
 
       {lightbox && (
-        <div className="fixed inset-0 z-[100] bg-white dark:bg-[#111111] overflow-y-auto">
-          {/* Header */}
-          <div className="sticky top-0 z-10 w-full bg-white dark:bg-[#111111] border-b border-slate-100 dark:border-slate-800 flex items-center justify-between px-4 py-3">
+        <div className="fixed inset-0 z-[100] bg-black/95 flex flex-col items-center justify-center">
+          {/* Top Control Bar */}
+          <div className="absolute top-0 left-0 right-0 p-4 flex justify-end z-[110]">
             <button
               onClick={() => setLightbox(false)}
-              className="p-2 -ml-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
+              className="w-12 h-12 flex items-center justify-center text-white/50 hover:text-white transition-colors"
+              aria-label="Close gallery"
             >
-              <X className="w-6 h-6" />
-            </button>
-            <h2 className="text-[13px] font-black tracking-widest uppercase text-slate-900 dark:text-white truncate px-4 max-w-[200px] sm:max-w-[400px]">
-              {title}
-            </h2>
-            <button
-              onClick={handleShare}
-              className="p-2 -mr-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
-            >
-              <Share2 className="w-5 h-5" />
+              <X size={32} />
             </button>
           </div>
 
-          {/* Mosaic Grid scrollable area */}
-          <div className="w-full flex justify-center pb-20">
-            <div className="w-full max-w-4xl grid grid-cols-2 gap-1 p-1">
-              {images.map((img, idx) => {
-                // Let's create a predictable mosaic pattern:
-                // Full width (col-span-2) for idx: 0, 3, 6, 9...
-                // Half width (col-span-1) for everything else.
-                const isFullWidth = idx % 3 === 0;
+          {/* Main Visual Stage */}
+          <div 
+            className="relative w-full flex-1 flex items-center justify-center px-4 sm:px-12"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            {/* Desktop Navigation Arrows */}
+            <button
+              onClick={(e) => { e.stopPropagation(); prev(); }}
+              className="hidden sm:flex absolute left-4 w-12 h-12 items-center justify-center text-white/30 hover:text-white transition-all transform hover:scale-110"
+              aria-label="Previous image"
+            >
+              <span className="text-4xl">‹</span>
+            </button>
 
-                return (
-                  <div 
-                    key={idx} 
-                    className={`relative ${isFullWidth ? 'col-span-2 aspect-[4/3] sm:aspect-[16/9]' : 'col-span-1 aspect-square'} bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800`}
-                  >
-                    <Image
-                      src={img.url}
-                      alt={img.alt || `${title} photo ${idx + 1}`}
-                      fill
-                      className="object-cover"
-                      sizes={isFullWidth ? "100vw" : "50vw"}
-                    />
-                  </div>
-                );
-              })}
+            <div className="relative w-full h-[60vh] sm:h-[80vh] flex items-center justify-center">
+              <Image
+                src={images[active].url}
+                alt={images[active].alt || `${title} photo ${active + 1}`}
+                fill
+                className="object-contain"
+                priority
+                sizes="100vw"
+              />
+            </div>
+
+            <button
+              onClick={(e) => { e.stopPropagation(); next(); }}
+              className="hidden sm:flex absolute right-4 w-12 h-12 items-center justify-center text-white/30 hover:text-white transition-all transform hover:scale-110"
+              aria-label="Next image"
+            >
+              <span className="text-4xl">›</span>
+            </button>
+          </div>
+
+          {/* Bottom Thumbnails Strip */}
+          <div className="w-full bg-black/40 backdrop-blur-md py-6 px-4 border-t border-white/10">
+            <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-none justify-start sm:justify-center">
+              {images.map((img, i) => (
+                <button
+                  key={`thumb-${i}`}
+                  onClick={() => setActive(i)}
+                  className={`relative flex-shrink-0 w-16 h-12 sm:w-20 sm:h-14 overflow-hidden border-2 transition-all ${
+                    i === active 
+                      ? "border-white opacity-100 scale-105" 
+                      : "border-transparent opacity-40 hover:opacity-70"
+                  }`}
+                >
+                  <Image
+                    src={img.url}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    sizes="80px"
+                  />
+                </button>
+              ))}
+            </div>
+            {/* Counters */}
+            <div className="mt-4 text-center">
+               <span className="text-[10px] font-black tracking-[0.2em] text-white/40 uppercase">
+                 Image {active + 1} of {images.length}
+               </span>
             </div>
           </div>
         </div>
