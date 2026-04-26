@@ -228,7 +228,7 @@ export default function FAQPage() {
           <div className="mt-24 sm:mt-32 pt-16 sm:pt-20 border-t border-slate-100 dark:border-slate-800 text-center">
              <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-6">Still have questions?</h3>
              <h4 className="text-2xl sm:text-3xl font-bold text-[#111827] dark:text-white mb-10">Reach our support terminal.</h4>
-             <Link href="/contact" className="inline-block bg-[#111827] dark:bg-white text-white dark:!text-black px-12 py-5 text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98] shadow-2xl" style={{ borderRadius: 'var(--radius)' }}>
+             <Link href="/contact" className="inline-flex items-center justify-center h-12 px-8 sm:px-10 bg-[#111827] dark:bg-white text-white dark:!text-black border border-[#111827] dark:border-white text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98] shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
                 Contact Support Hub
              </Link>
           </div>

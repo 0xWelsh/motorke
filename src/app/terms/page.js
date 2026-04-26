@@ -180,15 +180,21 @@ export default function TermsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
              <div>
                 <h4 className="text-[10px] font-bold text-[#1A202C] dark:text-white uppercase tracking-[0.2em] mb-4">Support Direct</h4>
-                <p className="text-sm font-bold text-[#718096] dark:text-slate-400">support@welsh-motors.com</p>
+                <a href="mailto:support@welsh-motors.com" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
+                  support@welsh-motors.com
+                </a>
              </div>
              <div>
                 <h4 className="text-[10px] font-bold text-[#1A202C] dark:text-white uppercase tracking-[0.2em] mb-4">Compliance Hub</h4>
-                <p className="text-sm font-bold text-[#718096] dark:text-slate-400">legal@welsh-motors.com</p>
+                <a href="mailto:legal@welsh-motors.com" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
+                  legal@welsh-motors.com
+                </a>
              </div>
              <div>
                 <h4 className="text-[10px] font-bold text-[#1A202C] dark:text-white uppercase tracking-[0.2em] mb-4">Financial Terminal</h4>
-                <p className="text-sm font-bold text-[#718096] dark:text-slate-400">billing@welsh-motors.com</p>
+                <a href="mailto:billing@welsh-motors.com" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
+                  billing@welsh-motors.com
+                </a>
              </div>
           </div>
           <p className="text-xs font-medium text-[#A0AEC0] dark:text-slate-500 max-w-2xl">

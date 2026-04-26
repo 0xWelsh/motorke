@@ -269,11 +269,15 @@ export default function PrivacyPage() {
         <div className="pt-24 border-t border-[#EDF2F7] dark:border-slate-800 grid grid-cols-1 md:grid-cols-3 gap-16">
           <div>
             <h3 className="text-[10px] font-bold text-[#1A202C] dark:text-white uppercase tracking-[0.2em] mb-4">Privacy Terminal</h3>
-            <a href="mailto:privacy@welsh-motors.com" className="text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">privacy@welsh-motors.com</a>
+            <a href="mailto:privacy@welsh-motors.com" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
+              privacy@welsh-motors.com
+            </a>
           </div>
           <div>
             <h3 className="text-[10px] font-bold text-[#1A202C] dark:text-white uppercase tracking-[0.2em] mb-4">Legal Hub</h3>
-            <a href="mailto:legal@welsh-motors.com" className="text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">legal@welsh-motors.com</a>
+            <a href="mailto:legal@welsh-motors.com" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
+              legal@welsh-motors.com
+            </a>
           </div>
           <div>
             <h3 className="text-[10px] font-bold text-[#1A202C] dark:text-white uppercase tracking-[0.2em] mb-4">Station HQ</h3>
