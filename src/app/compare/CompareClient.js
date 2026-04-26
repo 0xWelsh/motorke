@@ -1,6 +1,6 @@
 "use client";
 // src/app/compare/CompareClient.js
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { useCompare } from "@/components/CompareContext";
 import {
   formatPrice, formatCarPrice,
@@ -871,6 +871,12 @@ export default function CompareClient({ initialCars }) {
   const mobileCar = comparedSlots[activeMobileSlot] || null;
   const currentTutorial = TUTORIAL_STEPS[tutorialStep] || null;
   const currentTutorialKey = showTutorial ? currentTutorial?.key : null;
+  const mobileQuickSpecs = [
+    { id: "price", label: "Price", rank: "min", pick: (c) => ({ value: formatCarPrice(c), raw: c?.computedLandedPrice ?? c?.price }) },
+    { id: "annualTco", label: "Annual TCO", rank: "min", pick: (c) => ({ value: formatPrice(getInsights(c)?.tco?.annualTotal || 0), raw: getInsights(c)?.tco?.annualTotal }) },
+    { id: "road", label: "Road", rank: "max", pick: (c) => ({ value: `${getInsights(c)?.roadSuitabilityScore ?? "N/A"}/100`, raw: getInsights(c)?.roadSuitabilityScore }) },
+    { id: "import", label: "Import", rank: "booltrue", pick: (c) => ({ value: yesNo(getInsights(c)?.importEligibility), raw: getInsights(c)?.importEligibility }) },
+  ];
 
   useEffect(() => {
     const filled = [0, 1, 2].filter((idx) => comparedSlots[idx]);
@@ -1320,10 +1326,10 @@ export default function CompareClient({ initialCars }) {
                   key={idx}
                   type="button"
                   onClick={() => setActiveMobileSlot(idx)}
-                  className={`shrink-0 px-3 py-2 text-[10px] font-bold uppercase tracking-widest border transition-colors ${
+                  className={`shrink-0 px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest border transition-colors shadow-sm ${
                     activeMobileSlot === idx
                       ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:text-black dark:border-white"
-                      : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
+                      : "bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300"
                   }`}
                   style={{ borderRadius: "var(--radius)" }}
                 >
@@ -1335,13 +1341,62 @@ export default function CompareClient({ initialCars }) {
         </div>
           {mobileCar ? (
             <>
-              <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-500">
-                Same specs, different car — switch tabs above. On wide screens, columns stay side by side.
+              <p className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">
+                Tap tabs to switch the full sheet. Quick side-by-side is below.
               </p>
+              {fullComparedCars.length >= 2 && (
+                <div className="border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-900/40 p-3" style={{ borderRadius: "var(--radius)" }}>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2.5">At a glance</p>
+                  <div className="overflow-x-auto no-scrollbar">
+                    <div className="min-w-[560px]">
+                      <div className="grid grid-cols-[132px_repeat(3,minmax(136px,1fr))] border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0f0f0f]" style={{ borderRadius: "10px" }}>
+                        <div className="p-2.5 border-r border-slate-200 dark:border-slate-700" />
+                        {SLOT_KEYS.map((_, idx) => {
+                          const c = comparedSlots[idx];
+                          return (
+                            <div key={idx} className={`p-2.5 border-r border-slate-200 dark:border-slate-700 last:border-r-0 ${idx === activeMobileSlot ? "bg-[#111827]/5 dark:bg-white/10" : ""}`}>
+                              {c ? (
+                                <p className="text-[10px] font-bold uppercase tracking-wide text-slate-700 dark:text-slate-200 truncate">
+                                  {c.make} {c.model}
+                                </p>
+                              ) : (
+                                <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-600">—</p>
+                              )}
+                            </div>
+                          );
+                        })}
+                        {mobileQuickSpecs.map((spec) => {
+                          const best = getBest(spec, fullComparedCars);
+                          return (
+                            <Fragment key={spec.id}>
+                              <div className="p-2.5 border-t border-r border-slate-200 dark:border-slate-700 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                {spec.label}
+                              </div>
+                              {SLOT_KEYS.map((_, idx) => {
+                                const c = comparedSlots[idx];
+                                if (!c) {
+                                  return <div key={`${spec.id}-${idx}`} className="p-2.5 border-t border-r border-slate-200 dark:border-slate-700 last:border-r-0 text-[11px] text-slate-400 dark:text-slate-600">—</div>;
+                                }
+                                const { value, raw } = spec.pick(c);
+                                const isBest = best != null && raw === best;
+                                return (
+                                  <div key={`${spec.id}-${idx}`} className={`p-2.5 border-t border-r border-slate-200 dark:border-slate-700 last:border-r-0 text-[11px] font-bold tabular-nums ${isBest ? "text-[#111827] dark:text-white" : "text-slate-600 dark:text-slate-300"}`}>
+                                    {value}
+                                  </div>
+                                );
+                              })}
+                            </Fragment>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="space-y-6">
                 {specGroups.map((group) => (
                   <div key={group.name} className="space-y-0">
-                    <h4 className="text-[10px] font-bold text-[#111827] dark:text-white uppercase tracking-[0.2em] border-b border-slate-200 dark:border-slate-800 pb-2 mb-1">
+                    <h4 className="text-[10px] font-bold text-[#111827] dark:text-white uppercase tracking-[0.2em] border-b border-slate-300 dark:border-slate-700 pb-2 mb-1">
                       {group.name}
                     </h4>
                     <div className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -1354,13 +1409,13 @@ export default function CompareClient({ initialCars }) {
                           <div
                             key={spec.id}
                             className={`flex items-start justify-between gap-3 py-3.5 ${
-                              diff ? "bg-[#38A169]/5 -mx-2 px-2 rounded-sm" : ""
+                              diff ? "bg-[#38A169]/8 -mx-2 px-2 rounded-sm border-l-2 border-[#38A169]" : ""
                             }`}
                           >
-                            <span className="text-[10px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-widest min-w-0 max-w-[48%] leading-snug">
+                            <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider min-w-0 max-w-[48%] leading-snug">
                               {spec.label}
                             </span>
-                            <span className="text-xs font-bold text-right text-slate-900 dark:text-slate-100 tabular-nums break-words max-w-[52%]">
+                            <span className="text-[13px] font-bold text-right text-slate-900 dark:text-slate-100 tabular-nums break-words max-w-[52%]">
                               {value}
                             </span>
                           </div>
