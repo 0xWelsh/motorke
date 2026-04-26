@@ -7,6 +7,7 @@ import { clsx } from "clsx";
 import BuyerLocationSettings from "./BuyerLocationSettings";
 import CarCard from "./CarCard";
 import { RECENT_COOKIE_KEY, RECENT_STORAGE_KEY, readJsonCookie } from "@/lib/personalization";
+import ProfileCompletenessPanel from "./ProfileCompletenessPanel";
 
 
 const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" });
@@ -77,6 +78,16 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
 
   const inputCls = "w-full bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 focus:border-[#ff5a2f] focus:ring-1 focus:ring-blue-100 rounded-2xl py-2.5 px-4 text-sm font-medium text-slate-900 dark:text-white outline-none transition-colors placeholder:text-slate-400";
   const labelCls = "text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5 block";
+  const buyerProfileItems = [
+    { label: "Profile photo", done: Boolean(user.avatarUrl) },
+    { label: "Full name", done: Boolean(name?.trim()) },
+    { label: "Email", done: Boolean(user.email?.trim()) },
+    { label: "Location", done: Number.isFinite(user.lat) && Number.isFinite(user.lng) },
+    { label: "Watchlist started", done: saved.length > 0 },
+  ];
+  const buyerMissingFieldIds = [];
+  if (!name?.trim()) buyerMissingFieldIds.push("buyer-name-input");
+  if (!(Number.isFinite(user.lat) && Number.isFinite(user.lng))) buyerMissingFieldIds.push("buyer-location-settings");
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -111,6 +122,16 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                 </h2>
                 <p className="text-sm font-medium text-slate-500 mt-1 mb-8">Ensure your contact details are accurate so sellers can reach you.</p>
               </div>
+              <ProfileCompletenessPanel
+                title="Buyer profile completeness"
+                items={buyerProfileItems}
+                missingFieldIds={buyerMissingFieldIds}
+              />
+              {!user.avatarUrl && (
+                <p className="text-[11px] font-semibold text-slate-500 -mt-2">
+                  Add your photo from the account header for a complete profile.
+                </p>
+              )}
 
               {profMsg === "success" && <Alert type="success">Profile identity synchronized.</Alert>}
               {profMsg === "error" && <Alert type="error">Could not sync profile identity.</Alert>}
@@ -118,7 +139,14 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
               <form onSubmit={saveProfile} className="space-y-6">
                 <div>
                   <label className={labelCls}>Full Legal Name</label>
-                  <input value={name} onChange={e => setName(e.target.value)} required className={inputCls} placeholder="e.g. John Doe" />
+                  <input
+                    id="buyer-name-input"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    required
+                    className={inputCls}
+                    placeholder="e.g. John Doe"
+                  />
                 </div>
                 <div>
                   <label className={labelCls}>Primary Email</label>
@@ -177,8 +205,8 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
             </div>
 
             {/* Location Settings */}
-            <div className="lg:col-span-2 border-t border-[#ddd4c8] dark:border-slate-800 pt-8">
-              <BuyerLocationSettings initialLat={null} initialLng={null} />
+            <div id="buyer-location-settings" className="lg:col-span-2 border-t border-[#ddd4c8] dark:border-slate-800 pt-8">
+              <BuyerLocationSettings initialLat={user.lat} initialLng={user.lng} />
             </div>
           </div>
         )}

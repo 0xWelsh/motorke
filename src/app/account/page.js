@@ -118,7 +118,14 @@ export default async function AccountPage({ searchParams }) {
         <div className="bg-white dark:bg-[#111111] rounded-none overflow-hidden min-h-[600px] shadow-sm">
           <AccountTabs
             tab={tab}
-            user={{ id: user.id, name: user.name, email: user.email, avatarUrl: user.avatarUrl || null }}
+            user={{
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              avatarUrl: user.avatarUrl || null,
+              lat: user.lat ?? null,
+              lng: user.lng ?? null,
+            }}
             savedCars={savedCars.map(sc => ({
               savedId:   sc.id,
               savedAt:   sc.createdAt.toISOString(),

@@ -5,6 +5,7 @@ import AvatarUpload from "@/components/AvatarUpload";
 import DealerLogoUpload from "@/components/DealerLogoUpload";
 import DealerBannerUpload from "@/components/DealerBannerUpload";
 import ImageGallery from "@/components/ImageGallery";
+import ProfileCompletenessPanel from "@/components/ProfileCompletenessPanel";
 import { User, Mail, Shield, Calendar, Plus, Building2, MapPin, Globe, Phone } from "lucide-react";
 
 export const metadata = { title: "Profile Settings — Welsh Motors Dealer Portal" };
@@ -37,6 +38,21 @@ export default async function PortalProfilePage({ searchParams }) {
   const inputCls = "w-full bg-slate-50 dark:bg-[#111111] border-b-2 border-slate-200 dark:border-slate-800 rounded-none px-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none focus:border-slate-900 dark:focus:border-white transition-all placeholder:text-slate-400";
   const labelCls = "text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 block";
   const selectCls = "w-full bg-slate-50 dark:bg-[#111111] border-b-2 border-slate-200 dark:border-slate-800 rounded-none px-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none focus:border-slate-900 dark:focus:border-white transition-all";
+  const dealerCompletionItems = user.dealer
+    ? [
+        { label: "Dealership name", done: Boolean(user.dealer.name?.trim()) },
+        { label: "Location", done: Boolean(user.dealer.location?.trim()) },
+        { label: "Business phone", done: Boolean(user.dealer.phone?.trim()) },
+        { label: "WhatsApp", done: Boolean(user.dealer.whatsapp?.trim()) },
+        { label: "About section", done: Boolean(user.dealer.description?.trim()) },
+      ]
+    : [];
+  const dealerMissingFieldIds = [];
+  if (user.dealer && !user.dealer.name?.trim()) dealerMissingFieldIds.push("dealer-name-field");
+  if (user.dealer && !user.dealer.location?.trim()) dealerMissingFieldIds.push("dealer-location-field");
+  if (user.dealer && !user.dealer.phone?.trim()) dealerMissingFieldIds.push("dealer-phone-field");
+  if (user.dealer && !user.dealer.whatsapp?.trim()) dealerMissingFieldIds.push("dealer-whatsapp-field");
+  if (user.dealer && !user.dealer.description?.trim()) dealerMissingFieldIds.push("dealer-description-field");
 
   return (
     <div className="w-full max-w-4xl pt-4 pb-12">
@@ -230,12 +246,17 @@ export default async function PortalProfilePage({ searchParams }) {
           {user.dealer && (
             <div className="bg-white dark:bg-[#111111] rounded-none p-4 sm:p-8 shadow-sm">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Dealer Profile</h3>
+              <ProfileCompletenessPanel
+                title="Dealer profile completeness"
+                items={dealerCompletionItems}
+                missingFieldIds={dealerMissingFieldIds}
+              />
 
               <form action="/api/portal/profile" method="POST" className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label className={labelCls}>Dealership Name</label>
-                    <input name="name" defaultValue={user.dealer.name} className={inputCls} required />
+                    <input id="dealer-name-field" name="name" defaultValue={user.dealer.name} className={inputCls} required />
                   </div>
                   <div>
                     <label className={labelCls}>County</label>
@@ -249,7 +270,7 @@ export default async function PortalProfilePage({ searchParams }) {
 
                 <div>
                   <label className={labelCls}>Area / Location</label>
-                  <input name="location" defaultValue={user.dealer.location || ""} className={inputCls} required />
+                  <input id="dealer-location-field" name="location" defaultValue={user.dealer.location || ""} className={inputCls} required />
                 </div>
 
                 <div>
@@ -260,11 +281,11 @@ export default async function PortalProfilePage({ searchParams }) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label className={labelCls}>Business Phone</label>
-                    <input name="phone" defaultValue={user.dealer.phone || ""} className={inputCls} required />
+                    <input id="dealer-phone-field" name="phone" defaultValue={user.dealer.phone || ""} className={inputCls} required />
                   </div>
                   <div>
                     <label className={labelCls}>WhatsApp</label>
-                    <input name="whatsapp" defaultValue={user.dealer.whatsapp || ""} className={inputCls} placeholder="2547XXXXXXXX" />
+                    <input id="dealer-whatsapp-field" name="whatsapp" defaultValue={user.dealer.whatsapp || ""} className={inputCls} placeholder="2547XXXXXXXX" />
                   </div>
                 </div>
 
@@ -282,6 +303,7 @@ export default async function PortalProfilePage({ searchParams }) {
                 <div>
                   <label className={labelCls}>Short About</label>
                   <textarea
+                    id="dealer-description-field"
                     name="description"
                     defaultValue={user.dealer.description || ""}
                     rows={4}
