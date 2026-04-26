@@ -58,6 +58,12 @@ function isMissing(raw) {
   return raw === null || raw === undefined || raw === "";
 }
 
+function carPhotoUrl(car) {
+  if (!car) return null;
+  const u = car?.images?.[0]?.url ?? car?.image;
+  return u || null;
+}
+
 function normalizeScore(cars, getter, carId, higherIsBetter = true) {
   const points = cars.map((car) => ({ id: car.id, value: getter(car) }))
     .filter((entry) => typeof entry.value === "number");
@@ -908,6 +914,42 @@ export default function CompareClient({ initialCars }) {
             </p>
           </div>
 
+          {fullComparedCars.length > 0 && (
+            <div className="mt-5 sm:mt-7 w-full" aria-label="Vehicles in this comparison">
+              <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2.5">In this comparison</p>
+              <div className="flex flex-wrap items-center gap-0 sm:gap-1 pl-0.5">
+                {fullComparedCars.map((car) => {
+                  const src = carPhotoUrl(car);
+                  return (
+                    <Link
+                      key={car.id}
+                      href={`/cars/${car.id}`}
+                      className="relative -ml-2 first:ml-0 h-14 w-[5.5rem] sm:h-16 sm:w-28 shrink-0 overflow-hidden rounded border-2 border-white dark:border-[#0a0a0a] shadow-md ring-1 ring-slate-200/80 dark:ring-slate-700/60 transition-transform hover:z-10 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#38A169] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#0a0a0a]"
+                      style={{ borderRadius: "var(--radius)" }}
+                    >
+                      {src ? (
+                        <Image
+                          src={src}
+                          alt={`${car.year} ${car.make} ${car.model}`}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 88px, 112px"
+                        />
+                      ) : (
+                        <div
+                          className="absolute inset-0 flex items-center justify-center bg-slate-200 dark:bg-slate-800 text-[9px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-500 p-1 text-center leading-tight"
+                          aria-hidden
+                        >
+                          {car.make?.slice(0, 3) || "—"}
+                        </div>
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           <div className="sticky top-0 z-40 mt-5 -mx-4 px-4 sm:-mx-6 sm:px-6 py-2.5 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md border-b border-slate-200/90 dark:border-slate-800/90 shadow-sm sm:mt-6 lg:static lg:mx-0 lg:px-0 lg:py-0 lg:bg-transparent lg:backdrop-blur-none lg:border-0 lg:shadow-none">
             <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 lg:hidden">View &amp; filter</p>
             <div className="flex flex-nowrap items-center gap-2 overflow-x-auto no-scrollbar pb-0.5 -mb-0.5">
@@ -990,14 +1032,36 @@ export default function CompareClient({ initialCars }) {
                   Relative balance of comfort, economy, and value in this set — same scoring as the table below.
                 </p>
                 <div className="space-y-3">
-                   {fullComparedCars.map((car, ci) => (
-                      <div key={car.id} className="flex items-center gap-3 group">
-                         <div className="w-8 h-0.5 transition-all" style={{ background: ci === 0 ? "#38A169" : ci === 1 ? "#FFFFFF" : "#718096" }} />
-                         <span className="text-xs font-sans font-semibold text-white/90 group-hover:text-[#38A169] transition-colors truncate">
+                   {fullComparedCars.map((car, ci) => {
+                      const p = carPhotoUrl(car);
+                      return (
+                      <Link
+                        key={car.id}
+                        href={`/cars/${car.id}`}
+                        className="flex items-center gap-2.5 sm:gap-3 group min-w-0"
+                      >
+                         <div className="relative h-9 w-12 sm:h-10 sm:w-14 shrink-0 overflow-hidden rounded border border-white/20 bg-white/5">
+                            {p ? (
+                              <Image
+                                src={p}
+                                alt={`${car.year} ${car.make} ${car.model}`}
+                                fill
+                                className="object-cover"
+                                sizes="56px"
+                              />
+                            ) : (
+                              <div className="absolute inset-0 flex items-center justify-center text-[8px] font-bold uppercase text-white/40" aria-hidden>
+                                {ci + 1}
+                              </div>
+                            )}
+                         </div>
+                         <div className="w-5 sm:w-6 h-0.5 shrink-0" style={{ background: ci === 0 ? "#38A169" : ci === 1 ? "#FFFFFF" : "#718096" }} />
+                         <span className="text-xs font-sans font-semibold text-white/90 group-hover:text-[#38A169] transition-colors truncate min-w-0">
                             {car.year} {car.make} {car.model}
                          </span>
-                      </div>
-                   ))}
+                      </Link>
+                      );
+                   })}
                 </div>
               </div>
               
@@ -1053,19 +1117,35 @@ export default function CompareClient({ initialCars }) {
 
         {/* Winner Rail */}
         <div id="compare-winners" className="order-5 lg:order-4 scroll-mt-24 mb-8 sm:mb-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {winnerRail.map((item) => (
+          {winnerRail.map((item) => {
+            const wThumb = item.car ? carPhotoUrl(item.car) : null;
+            return (
             <div key={item.title} className="p-5 sm:p-6 border border-slate-100 dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
               <p className="text-[10px] font-bold uppercase tracking-widest text-[#A0AEC0] dark:text-slate-600 mb-4">{item.title}</p>
               {item.car ? (
-                <Link href={`/cars/${item.car.id}`} className="group block">
-                  <h3 className="text-lg font-bold font-sans text-[#111827] dark:text-white mb-1 group-hover:text-[#38A169] transition-colors">{item.car.year} {item.car.make}</h3>
-                  <p className="text-[10px] font-bold text-[#718096] dark:text-slate-500 uppercase tracking-widest">{item.sub}</p>
+                <Link href={`/cars/${item.car.id}`} className="group flex gap-3.5 min-w-0">
+                  {wThumb ? (
+                    <div className="relative h-[4.5rem] w-[5.5rem] sm:h-20 sm:w-24 shrink-0 overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900" style={{ borderRadius: "var(--radius)" }}>
+                      <Image
+                        src={wThumb}
+                        alt={`${item.car.year} ${item.car.make} ${item.car.model}`}
+                        fill
+                        className="object-cover transition-transform group-hover:scale-105"
+                        sizes="96px"
+                      />
+                    </div>
+                  ) : null}
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-lg font-bold font-sans text-[#111827] dark:text-white mb-1 group-hover:text-[#38A169] transition-colors leading-snug">{item.car.year} {item.car.make}</h3>
+                    <p className="text-[10px] font-bold text-[#718096] dark:text-slate-500 uppercase tracking-widest">{item.sub}</p>
+                  </div>
                 </Link>
               ) : (
                 <p className="text-sm font-medium text-slate-300 dark:text-slate-700">Insufficient Data</p>
               )}
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {smartNarrative?.headline && (
