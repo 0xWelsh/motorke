@@ -10,12 +10,13 @@ import CarCard from "@/components/CarCard";
 import { unstable_cache } from "next/cache";
 import { CompareButton } from "@/components/CompareSelector";
 import SearchMapToggle from "@/components/SearchMapToggle";
+import { getSession } from "@/lib/auth";
 
 
 export const metadata = { title: "Inventory — Welsh Motors Standard" };
 
 function distance(lat1, lng1, lat2, lng2) {
-  if (!lat1 || !lat2) return 9999;
+  if ([lat1, lng1, lat2, lng2].some((value) => value == null || Number.isNaN(value))) return 9999;
   const R = 6371;
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLng = (lng2 - lng1) * Math.PI / 180;
@@ -58,6 +59,11 @@ export default async function CarsPage({ searchParams }) {
 
   const userLat = sp.lat ? parseFloat(sp.lat) : null;
   const userLng = sp.lng ? parseFloat(sp.lng) : null;
+  const session = await getSession();
+  const savedLat = session?.user?.lat ?? null;
+  const savedLng = session?.user?.lng ?? null;
+  const effectiveLat = userLat ?? savedLat;
+  const effectiveLng = userLng ?? savedLng;
 
   const where = {
     available: true,
@@ -135,10 +141,10 @@ export default async function CarsPage({ searchParams }) {
     getAllMakes(),
   ]);
 
-  const sortedCars = userLat && userLng && sort === "newest"
+  const sortedCars = effectiveLat != null && effectiveLng != null && sort === "newest"
     ? [...cars].sort((a, b) => {
-        const da = distance(userLat, userLng, a.dealer?.lat, a.dealer?.lng);
-        const db2 = distance(userLat, userLng, b.dealer?.lat, b.dealer?.lng);
+        const da = distance(effectiveLat, effectiveLng, a.dealer?.lat, a.dealer?.lng);
+        const db2 = distance(effectiveLat, effectiveLng, b.dealer?.lat, b.dealer?.lng);
         return da - db2;
       })
     : cars;
@@ -217,7 +223,11 @@ export default async function CarsPage({ searchParams }) {
             <div key={car.id} className="lg:col-span-1">
               <CarCard 
                 car={car} 
-                distance={userLat && car.dealer?.lat ? Math.round(distance(userLat, userLng, car.dealer.lat, car.dealer.lng)) : null} 
+                distance={
+                  effectiveLat != null && effectiveLng != null && car.dealer?.lat != null && car.dealer?.lng != null
+                    ? distance(effectiveLat, effectiveLng, car.dealer.lat, car.dealer.lng)
+                    : null
+                }
               />
             </div>
           ))}
