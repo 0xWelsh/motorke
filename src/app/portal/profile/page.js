@@ -4,7 +4,6 @@ import { db } from "@/lib/db";
 import AvatarUpload from "@/components/AvatarUpload";
 import DealerLogoUpload from "@/components/DealerLogoUpload";
 import DealerBannerUpload from "@/components/DealerBannerUpload";
-import LocationPicker from "@/components/LocationPicker";
 import ImageGallery from "@/components/ImageGallery";
 import { User, Mail, Shield, Calendar, Plus, Building2, MapPin, Globe, Phone } from "lucide-react";
 
@@ -291,8 +290,44 @@ export default async function PortalProfilePage({ searchParams }) {
                   />
                 </div>
 
-                <div className="pt-4 border-t border-[#e8e2d9] dark:border-slate-800">
-                  <LocationPicker defaultLat={user.dealer.lat} defaultLng={user.dealer.lng} />
+                <div className="pt-4 border-t border-[#e8e2d9] dark:border-slate-800 space-y-4">
+                  <div>
+                    <label className={labelCls}>Google Maps Link</label>
+                    <input
+                      name="googleMapsUrl"
+                      type="url"
+                      className={inputCls}
+                      placeholder="Paste Google Maps share link (https://maps.google.com/...)"
+                    />
+                    <p className="mt-1 text-[11px] font-semibold text-slate-500">
+                      Paste your dealership Maps link. We will auto-extract coordinates for nearby distance results.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div>
+                      <label className={labelCls}>Latitude</label>
+                      <input
+                        name="lat"
+                        type="number"
+                        step="any"
+                        defaultValue={user.dealer.lat ?? ""}
+                        className={inputCls}
+                        placeholder="-1.2921"
+                      />
+                    </div>
+                    <div>
+                      <label className={labelCls}>Longitude</label>
+                      <input
+                        name="lng"
+                        type="number"
+                        step="any"
+                        defaultValue={user.dealer.lng ?? ""}
+                        className={inputCls}
+                        placeholder="36.8219"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="pt-2">

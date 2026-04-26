@@ -16,6 +16,13 @@ import { CompareButton } from "./CompareSelector";
 export default function CarCard({ car, distance = null, onRemove = null }) {
   const primaryImg = car.images?.[0]?.url;
   const title = `${car.make} ${car.model}${car.variant ? ` ( ${car.variant} )` : ""}`;
+  const distanceKm = Number.isFinite(distance) ? distance : (Number.isFinite(car?.distance) ? car.distance : null);
+  const distanceLabel =
+    distanceKm == null
+      ? null
+      : distanceKm < 1
+        ? `${Math.round(distanceKm * 1000)} m`
+        : `${distanceKm.toFixed(1)} km`;
   
   const compareData = {
     ...car,
@@ -66,6 +73,19 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
             {car.available ? "Available" : "Reserved"}
           </span>
         </div>
+
+        {/* Distance Badge: Top Left */}
+        {distanceLabel && (
+          <div className="absolute top-4 left-4">
+            <span
+              className="inline-flex items-center gap-1.5 bg-white/95 dark:bg-[#111111]/95 text-slate-900 dark:text-white text-[9px] font-bold px-2.5 py-1 border border-slate-200/80 dark:border-zinc-700/80"
+              style={{ borderRadius: "2px" }}
+            >
+              <MapPin className="w-3 h-3 text-[#38A169]" />
+              {distanceLabel}
+            </span>
+          </div>
+        )}
       </Link>
 
       {/* Content Area */}
