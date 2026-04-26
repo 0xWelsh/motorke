@@ -16,6 +16,7 @@ import { CompareButton } from "@/components/CompareSelector";
 import PrintButton from "@/components/PrintButton";
 import SpecSheet from "@/components/SpecSheet";
 import CarReviewForm from "@/components/CarReviewForm";
+import CarCard from "@/components/CarCard";
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
@@ -376,11 +377,13 @@ export default async function CarDetailPage({ params }) {
                </div>
 
                {/* Comparison Tool Shortcut */}
-               <div className="mt-8 flex items-center justify-between px-8 py-6 bg-white dark:bg-[#0a0a0a] border border-slate-100 dark:border-zinc-900" style={{ borderRadius: '2px' }}>
-                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#38A169]">Match & Compare</span>
-                  <div className="flex items-center gap-4">
-                      <CompareButton car={compareCar} className="w-5 h-5 text-slate-400 hover:text-black dark:text-slate-600 dark:hover:text-white transition-colors" />
-                  </div>
+               <div className="mt-8 px-6 py-5 bg-white dark:bg-[#0a0a0a] border border-slate-100 dark:border-zinc-900" style={{ borderRadius: '2px' }}>
+                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-[#38A169] mb-1">Match & Compare</p>
+                  <p className="text-[12px] text-slate-600 dark:text-slate-300 mb-4">Add this car to your compare sheet and view side-by-side specs.</p>
+                  <CompareButton
+                    car={compareCar}
+                    className="w-full h-11 inline-flex items-center justify-center bg-[#111827] text-white dark:bg-white dark:!text-black text-[10px] font-bold uppercase tracking-widest border border-[#111827] dark:border-white transition-transform hover:scale-[0.99]"
+                  />
                </div>
             </div>
           </div>
@@ -390,17 +393,9 @@ export default async function CarDetailPage({ params }) {
         {similar.length > 0 && (
           <div className="mt-32 pt-32 border-t border-[#EDF2F7]">
             <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-16">Recommendation Engine</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                {similar.map((sc) => (
-                 <Link key={sc.id} href={`/cars/${sc.id}`} className="group block">
-                    <div className="relative aspect-[4/3] bg-[#EDF2F7] overflow-hidden mb-6" style={{ borderRadius: 'var(--radius)' }}>
-                       {sc.images?.[0]?.url && <Image src={sc.images[0].url} alt={sc.model} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />}
-                    </div>
-                    <div className="space-y-2">
-                       <h3 className="text-lg font-bold font-sans text-[#1A202C] group-hover:text-[#38A169] transition-colors">{sc.year} {sc.make} {sc.model}</h3>
-                       <p className="text-sm font-bold text-[#718096]">{formatCarPrice(sc)}</p>
-                    </div>
-                 </Link>
+                 <CarCard key={sc.id} car={sc} />
                ))}
             </div>
           </div>
@@ -411,14 +406,14 @@ export default async function CarDetailPage({ params }) {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
              <div>
                 <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-6">User Feedback</h2>
-                <h3 className="text-3xl sm:text-4xl font-bold text-[#1A202C]">Experience Shared.</h3>
+                <h3 className="text-3xl sm:text-4xl font-bold text-[#1A202C] dark:text-white">Experience Shared.</h3>
              </div>
              {reviewsData.avgRating && (
-                <div className="flex items-center gap-4 px-6 py-4 bg-[#F7FAFC]" style={{ borderRadius: 'var(--radius)' }}>
+                <div className="flex items-center gap-4 px-6 py-4 bg-[#F7FAFC] dark:bg-zinc-900 border border-transparent dark:border-zinc-800" style={{ borderRadius: 'var(--radius)' }}>
                    <div className="flex text-amber-400">
                       {[...Array(5)].map((_, i) => <Star key={i} className={`w-4 h-4 ${i < Math.round(parseFloat(reviewsData.avgRating)) ? 'fill-current' : 'text-[#CBD5E0]'}`} />)}
                    </div>
-                   <span className="text-lg font-bold text-[#1A202C]">{reviewsData.avgRating} / 5.0</span>
+                   <span className="text-lg font-bold text-[#1A202C] dark:text-white">{reviewsData.avgRating} / 5.0</span>
                 </div>
              )}
           </div>
@@ -430,23 +425,23 @@ export default async function CarDetailPage({ params }) {
              <div className="lg:col-span-8 space-y-8">
                 {reviewsData.reviews.length > 0 ? (
                   reviewsData.reviews.map((r) => (
-                    <div key={r.id} className="pb-8 border-b border-[#EDF2F7]">
+                    <div key={r.id} className="pb-8 border-b border-[#EDF2F7] dark:border-zinc-800">
                        <div className="flex justify-between items-center mb-4">
                           <div className="flex items-center gap-3">
-                             <div className="w-8 h-8 rounded-full bg-[#EDF2F7] flex items-center justify-center overflow-hidden">
+                             <div className="w-8 h-8 rounded-full bg-[#EDF2F7] dark:bg-zinc-800 flex items-center justify-center overflow-hidden">
                                 {r.user.avatarUrl ? <img src={r.user.avatarUrl} className="w-full h-full object-cover" /> : <span className="text-[10px] font-bold">{r.user.name[0]}</span>}
                              </div>
-                             <span className="text-sm font-bold text-[#1A202C]">{r.user.name}</span>
+                             <span className="text-sm font-bold text-[#1A202C] dark:text-white">{r.user.name}</span>
                           </div>
                           <div className="flex text-amber-400">
                              {[...Array(5)].map((_, i) => <Star key={i} className={`w-3 h-3 ${i < r.rating ? 'fill-current' : 'text-[#CBD5E0]'}`} />)}
                           </div>
                        </div>
-                       <p className="text-base text-[#718096] leading-relaxed font-medium">{r.comment}</p>
+                       <p className="text-base text-[#718096] dark:text-slate-300 leading-relaxed font-medium">{r.comment}</p>
                     </div>
                   ))
                 ) : (
-                  <p className="text-[#718096] font-medium">No reviews yet for this unit.</p>
+                  <p className="text-[#718096] dark:text-slate-300 font-medium">No reviews yet for this unit.</p>
                 )}
              </div>
           </div>
