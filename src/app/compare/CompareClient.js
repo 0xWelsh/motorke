@@ -207,6 +207,7 @@ export default function CompareClient({ initialCars }) {
   const [tutorialStep, setTutorialStep] = useState(0);
   const [activeMobileSlot, setActiveMobileSlot] = useState(0);
   const [searchSlotError, setSearchSlotError] = useState("");
+  const [freeAi, setFreeAi] = useState({ status: "idle", text: "", hint: "" });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -827,6 +828,56 @@ export default function CompareClient({ initialCars }) {
     tcoStats,
   ]);
 
+  const insightPayload = useMemo(() => {
+    if (fullComparedCars.length === 0) return null;
+    return {
+      preset,
+      cars: fullComparedCars.map((car) => {
+        const tco = insightsMap.get(car.id)?.tco?.annualTotal;
+        const road = insightsMap.get(car.id)?.roadSuitabilityScore;
+        return {
+          label: `${car.year} ${car.make} ${car.model}`.slice(0, 180),
+          priceText: formatCarPrice(car),
+          annualTcoText: typeof tco === "number" ? formatPrice(tco) : "N/A",
+          roadScore: typeof road === "number" ? String(road) : "N/A",
+        };
+      }),
+      ruleBullets: smartNarrative?.bullets ?? [],
+    };
+  }, [fullComparedCars, insightsMap, preset, smartNarrative]);
+
+  async function requestFreeAi() {
+    if (!insightPayload) return;
+    setFreeAi({ status: "loading", text: "", hint: "" });
+    try {
+      const res = await fetch("/api/compare/insight", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(insightPayload),
+      });
+      const data = await res.json();
+      if (data.ok && data.text) {
+        setFreeAi({
+          status: "done",
+          text: data.text,
+          hint: data.provider ? `Source: ${data.provider} (free tier)` : "",
+        });
+        return;
+      }
+      if (data.noKey) {
+        setFreeAi({ status: "nokey", text: "", hint: data.hint || data.message || "" });
+        return;
+      }
+      setFreeAi({
+        status: "err",
+        text: "",
+        hint: data.message || data.error || "Could not generate a paragraph.",
+      });
+    } catch {
+      setFreeAi({ status: "err", text: "", hint: "Network error — try again." });
+    }
+  }
+
   return (
     <div className="bg-white dark:bg-[#0a0a0a] min-h-screen">
       <div className="max-w-7xl mx-auto px-6 py-32 sm:py-40">
@@ -1007,6 +1058,40 @@ export default function CompareClient({ initialCars }) {
                 {smartNarrative.disclaimer}
               </p>
             )}
+
+            <div className="mt-6 border-t border-slate-200/80 dark:border-slate-700/80 pt-5">
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-500 mb-3">
+                Free AI-style paragraph (optional)
+              </p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-400 mb-3 leading-relaxed">
+                Your $0 default is the summary above. For a short natural-language blurb, add a{" "}
+                <span className="font-semibold text-slate-800 dark:text-slate-200">free API key</span> on the server
+                (Groq or Google Gemini — free hobby tiers). No key = this button explains how.
+              </p>
+              <button
+                type="button"
+                onClick={requestFreeAi}
+                disabled={!insightPayload || freeAi.status === "loading"}
+                className="inline-flex items-center justify-center px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-[#111827] dark:text-white hover:border-[#38A169] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                style={{ borderRadius: "var(--radius)" }}
+              >
+                {freeAi.status === "loading" ? "Working…" : "Try free AI paragraph"}
+              </button>
+              {freeAi.status === "done" && freeAi.text && (
+                <div className="mt-4 p-4 bg-white/80 dark:bg-black/20 border border-slate-200 dark:border-slate-700 text-sm text-slate-800 dark:text-slate-200 leading-relaxed">
+                  {freeAi.text}
+                  {freeAi.hint && (
+                    <p className="mt-2 text-[10px] font-semibold text-slate-500">{freeAi.hint}</p>
+                  )}
+                </div>
+              )}
+              {freeAi.status === "nokey" && freeAi.hint && (
+                <p className="mt-3 text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl">{freeAi.hint}</p>
+              )}
+              {freeAi.status === "err" && freeAi.hint && (
+                <p className="mt-3 text-[11px] text-amber-800 dark:text-amber-200 leading-relaxed max-w-2xl">{freeAi.hint}</p>
+              )}
+            </div>
           </div>
         )}
 
