@@ -17,6 +17,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Search, X, Check, ArrowRight, Minus, Download } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { buildCompareNarrative } from "@/lib/compare-narrative";
 
 const SLOT_KEYS = ["a", "b", "c"];
 const PRESETS = [
@@ -204,6 +205,8 @@ export default function CompareClient({ initialCars }) {
 
   const [showTutorial, setShowTutorial] = useState(false);
   const [tutorialStep, setTutorialStep] = useState(0);
+  const [activeMobileSlot, setActiveMobileSlot] = useState(0);
+  const [searchSlotError, setSearchSlotError] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -774,13 +777,55 @@ export default function CompareClient({ initialCars }) {
       return;
     }
 
-    if (isFull) return;
+    if (isFull) {
+      setSearchSlotError("All 3 compare slots are full. Remove a car from the header row, then add this one.");
+      return;
+    }
 
     addToCompare(car);
+    setSearchSlotError("");
     setSearchQuery("");
     setSearchResults([]);
     setActiveSlot(null);
   };
+
+  const mobileFilledSlots = [0, 1, 2].filter((idx) => comparedSlots[idx]);
+  const mobileCar = comparedSlots[activeMobileSlot] || null;
+
+  useEffect(() => {
+    const filled = [0, 1, 2].filter((idx) => comparedSlots[idx]);
+    if (filled.length === 0) return;
+    if (!filled.includes(activeMobileSlot)) {
+      setActiveMobileSlot(filled[0]);
+    }
+  }, [comparedSlots, activeMobileSlot]);
+
+  const smartNarrative = useMemo(() => {
+    if (fullComparedCars.length === 0) return null;
+    const spread =
+      typeof tcoStats.max === "number" && typeof tcoStats.min === "number"
+        ? Math.max(0, tcoStats.max - tcoStats.min)
+        : null;
+    return buildCompareNarrative({
+      preset,
+      cars: fullComparedCars,
+      insightsMap,
+      overallCar: overallWinner,
+      winnerByPrice,
+      winnerLowestTco,
+      winnerRoad,
+      annualTcoSpread: spread,
+    });
+  }, [
+    fullComparedCars,
+    insightsMap,
+    preset,
+    overallWinner,
+    winnerByPrice,
+    winnerLowestTco,
+    winnerRoad,
+    tcoStats,
+  ]);
 
   return (
     <div className="bg-white dark:bg-[#0a0a0a] min-h-screen">
@@ -948,8 +993,92 @@ export default function CompareClient({ initialCars }) {
           ))}
         </div>
 
-        {/* Comparison Terminal (Table) */}
-        <div className="relative border border-slate-100 dark:border-slate-800 overflow-x-auto bg-white dark:bg-[#0a0a0a] mb-32 shadow-2xl no-scrollbar" style={{ borderRadius: 'var(--radius)' }}>
+        {smartNarrative?.headline && (
+          <div className="mb-16 p-6 sm:p-8 border border-[#38A169]/25 bg-[#38A169]/[0.07] dark:bg-[#0f172a] dark:border-[#38A169]/30" style={{ borderRadius: "var(--radius)" }}>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2f855a] dark:text-[#4ade80] mb-2">Decision helper</p>
+            <h3 className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white mb-4">{smartNarrative.headline}</h3>
+            <ul className="space-y-2.5 list-disc pl-4 text-sm font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
+              {smartNarrative.bullets.map((b, i) => (
+                <li key={i}>{b}</li>
+              ))}
+            </ul>
+            {smartNarrative.disclaimer && (
+              <p className="mt-4 text-[11px] text-slate-500 dark:text-slate-500 leading-relaxed border-t border-slate-200/80 dark:border-slate-700/80 pt-3">
+                {smartNarrative.disclaimer}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Spec matrix: mobile (one car) + desktop (table) */}
+        <div className="relative border border-slate-100 dark:border-slate-800 overflow-hidden bg-white dark:bg-[#0a0a0a] mb-32 shadow-2xl" style={{ borderRadius: "var(--radius)" }}>
+        {fullComparedCars.length > 0 && (
+        <div className="lg:hidden no-print p-4 sm:p-5 space-y-4 border-b border-slate-100 dark:border-slate-800">
+          <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-0.5 px-0.5 no-scrollbar">
+            {mobileFilledSlots.map((idx) => {
+              const c = comparedSlots[idx];
+              if (!c) return null;
+              const label = `${c.make} ${c.model}`.trim();
+              return (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setActiveMobileSlot(idx)}
+                  className={`shrink-0 px-3 py-2 text-[10px] font-bold uppercase tracking-widest border transition-colors ${
+                    activeMobileSlot === idx
+                      ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:text-black dark:border-white"
+                      : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
+                  }`}
+                  style={{ borderRadius: "var(--radius)" }}
+                >
+                  {label.length > 24 ? `${label.slice(0, 22)}…` : label}
+                </button>
+              );
+            })}
+          </div>
+          {mobileCar ? (
+            <>
+              <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-500">
+                Tap another tab to see the same specs for a different car. For true side-by-side, use a larger screen.
+              </p>
+              <div className="space-y-6">
+                {specGroups.map((group) => (
+                  <div key={group.name} className="space-y-0">
+                    <h4 className="text-[10px] font-bold text-[#111827] dark:text-white uppercase tracking-[0.2em] border-b border-slate-200 dark:border-slate-800 pb-2 mb-1">
+                      {group.name}
+                    </h4>
+                    <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                      {group.specs.map((spec) => {
+                        if (!shouldShowSpec(spec)) return null;
+                        const diff = isDifferent(spec, fullComparedCars);
+                        if (showDiffOnly && !diff && fullComparedCars.length > 1) return null;
+                        const { value } = spec.pick(mobileCar);
+                        return (
+                          <div
+                            key={spec.id}
+                            className={`flex items-start justify-between gap-3 py-3.5 ${
+                              diff ? "bg-[#38A169]/5 -mx-2 px-2 rounded-sm" : ""
+                            }`}
+                          >
+                            <span className="text-[10px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-widest min-w-0 max-w-[48%] leading-snug">
+                              {spec.label}
+                            </span>
+                            <span className="text-xs font-bold text-right text-slate-900 dark:text-slate-100 tabular-nums break-words max-w-[52%]">
+                              {value}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : null}
+        </div>
+        )}
+
+        <div className="hidden lg:block overflow-x-auto no-scrollbar">
           <div className="min-w-[900px] sm:min-w-[1100px]">
              {/* Header Row */}
              <div className="sticky top-0 z-40 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-slate-100 dark:border-slate-800">
@@ -981,15 +1110,18 @@ export default function CompareClient({ initialCars }) {
                               </div>
                            ) : (
                               <div className="relative group flex flex-col items-center justify-center py-12 border-2 border-dashed border-slate-100 dark:border-slate-800 transition-colors hover:border-[#38A169]/40" style={{ borderRadius: 'var(--radius)' }}>
-                                 <button onClick={() => setActiveSlot(idx)} className="w-14 h-14 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+                                 <button onClick={() => { setSearchSlotError(""); setActiveSlot(idx); }} className="w-14 h-14 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
                                     <Search className="w-5 h-5 text-[#A0AEC0] dark:text-slate-600" />
                                  </button>
                                  <p className="mt-6 text-[10px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-widest">Awaiting Data</p>
                                  
                                  {activeSlot === idx && (
                                     <div className="absolute inset-0 bg-white dark:bg-[#111111] z-50 p-6 shadow-2xl animate-in fade-in slide-in-from-top-2" style={{ borderRadius: 'var(--radius)' }}>
-                                       <input autoFocus type="text" placeholder="Search parameters..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                                       <input autoFocus type="text" placeholder="Search parameters..." value={searchQuery} onChange={(e) => { setSearchSlotError(""); setSearchQuery(e.target.value); }}
                                           className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 px-5 py-4 text-sm font-bold text-[#111827] dark:text-white outline-none focus:border-[#38A169]" style={{ borderRadius: 'var(--radius)' }} />
+                                       {searchSlotError && (
+                                          <p className="mt-3 text-xs font-semibold text-red-600 dark:text-red-400 leading-relaxed">{searchSlotError}</p>
+                                       )}
                                        <div className="mt-6 space-y-2 max-h-[300px] overflow-y-auto no-scrollbar">
                                           {searchResults.map(res => (
                                              <button key={res.id} onClick={() => onAddCarSearch(res)} className="w-full flex items-center gap-4 p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900">
@@ -1055,6 +1187,7 @@ export default function CompareClient({ initialCars }) {
                 ))}
              </div>
           </div>
+        </div>
         </div>
 
         {/* Action Center */}

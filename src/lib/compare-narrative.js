@@ -1,0 +1,100 @@
+// Rule-based "smart summary" for compare page — no external AI; uses on-page specs + Kenya models.
+import { formatPrice, formatCarPrice } from "@/lib/utils";
+
+const PRESET_PHRASE = {
+  all: "overall balance of price, running costs, comfort, and performance",
+  city: "city driving (running costs, traffic-related fuel, ease of use)",
+  family: "family use (space, comfort, and safety-related specs)",
+  performance: "performance (power and drivetrain)",
+  longtrip: "longer trips and total running cost",
+};
+
+/**
+ * @param {object} p
+ * @param {string} p.preset
+ * @param {import("@prisma/client").Car[]} p.cars
+ * @param {Map<string, object>} p.insightsMap
+ * @param {object | null} p.overallCar — highest composite for current preset
+ * @param {object | null} p.winnerByPrice
+ * @param {object | null} p.winnerLowestTco
+ * @param {object | null} p.winnerRoad
+ * @param {number | null} p.annualTcoSpread
+ * @returns {{ headline: string, bullets: string[], disclaimer: string }}
+ */
+export function buildCompareNarrative({
+  preset = "all",
+  cars = [],
+  insightsMap = new Map(),
+  overallCar = null,
+  winnerByPrice = null,
+  winnerLowestTco = null,
+  winnerRoad = null,
+  annualTcoSpread = null,
+}) {
+  const disclaimer =
+    "This summary is generated from the numbers on this page and our Kenya cost models. It is not a chatbot and does not replace a physical inspection, service history, or a bank quote.";
+
+  if (cars.length === 0) {
+    return { headline: "", bullets: [], disclaimer: "" };
+  }
+
+  if (cars.length === 1) {
+    const c = cars[0];
+    return {
+      headline: "Add more to compare",
+      bullets: [
+        `Add up to two more cars to see tradeoffs side by side. Right now you only have ${c.year} ${c.make} ${c.model} in the matrix.`,
+      ],
+      disclaimer,
+    };
+  }
+
+  const phrase = PRESET_PHRASE[preset] || PRESET_PHRASE.all;
+  const bullets = [];
+
+  if (overallCar) {
+    bullets.push(
+      `With the current "${preset === "all" ? "Full sheet" : preset}" lens, ${overallCar.year} ${overallCar.make} ${overallCar.model} edges ahead for ${phrase}.`
+    );
+  }
+
+  if (winnerByPrice && cars.length > 1) {
+    const price = formatCarPrice(winnerByPrice);
+    bullets.push(`Lowest listed price in this set: ${winnerByPrice.make} ${winnerByPrice.model} (${price}).`);
+  }
+
+  if (winnerLowestTco) {
+    const tco = insightsMap.get(winnerLowestTco.id)?.tco?.annualTotal;
+    const extra =
+      typeof tco === "number" ? ` Around ${formatPrice(tco)} per year estimated annual TCO in our model.` : "";
+    bullets.push(`Lowest estimated annual TCO: ${winnerLowestTco.make} ${winnerLowestTco.model}.${extra}`);
+  }
+
+  if (winnerRoad) {
+    const s = insightsMap.get(winnerRoad.id)?.roadSuitabilityScore;
+    const extra = typeof s === "number" ? ` Road-readiness score ${s}/100.` : "";
+    bullets.push(`Strongest on road suitability in this set: ${winnerRoad.make} ${winnerRoad.model}.${extra}`);
+  }
+
+  if (typeof annualTcoSpread === "number" && annualTcoSpread > 1000 && cars.length > 1) {
+    bullets.push(
+      `Gap between the highest and lowest annual TCO here is about ${formatPrice(annualTcoSpread)} per year—pair that with purchase price when you decide.`
+    );
+  }
+
+  if (cars.length === 2) {
+    bullets.push(`Tip: use “Differences” to hide identical rows and focus on what actually splits these two.`);
+  }
+
+  if (cars.length === 3) {
+    bullets.push(
+      `All three slots are used—if one is clearly not in the running, remove it to keep the table readable.`
+    );
+  }
+
+  return {
+    headline: "Smart summary",
+    bullets: bullets.slice(0, 6),
+    disclaimer,
+  };
+}

@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import { useCompare } from "./CompareContext";
 import Link from "next/link";
 import Image from "next/image";
@@ -44,14 +45,24 @@ export function CompareBar() {
 
         {/* Info + Actions */}
         <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 pr-1 sm:pr-4 w-full sm:w-auto">
-          <div className="sm:hidden text-left">
+          <div className="sm:hidden text-left min-w-0">
             <p className="text-[10px] font-bold uppercase tracking-widest text-[#38A169]">Compare</p>
             <p className="text-[10px] font-bold text-white/70">{compareCars.length}/3 selected</p>
+            {compareCars.length >= 3 && (
+              <p className="text-[9px] font-semibold text-white/50 mt-0.5 leading-tight">
+                Full — tap × on a thumbnail to free a slot
+              </p>
+            )}
           </div>
 
-          <div className="hidden sm:block text-right">
+          <div className="hidden sm:block text-right min-w-0">
             <p className="text-[10px] font-bold uppercase tracking-widest text-[#38A169]">Comparison Tool</p>
             <p className="text-xs font-bold text-white/70">{compareCars.length}/3 selected</p>
+            {compareCars.length >= 3 && (
+              <p className="text-[9px] font-semibold text-white/50 mt-0.5">
+                Full — remove one to add another
+              </p>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
@@ -78,39 +89,52 @@ export function CompareBar() {
 // Button to add/remove a single car from the compare list
 export function CompareButton({ car, className = "" }) {
   const { isInCompare, addToCompare, removeFromCompare, isFull } = useCompare();
+  const [fullHint, setFullHint] = useState(false);
   const selected = isInCompare(car.id);
+  const cantAdd = !selected && isFull;
+
+  useEffect(() => {
+    if (!fullHint) return;
+    const t = setTimeout(() => setFullHint(false), 5000);
+    return () => clearTimeout(t);
+  }, [fullHint]);
 
   const handleToggle = (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (selected) {
       removeFromCompare(car.id);
-    } else {
-      addToCompare(car);
+      return;
     }
+    if (isFull) {
+      setFullHint(true);
+      return;
+    }
+    addToCompare(car);
   };
 
   return (
+    <div className={className}>
     <button
+      type="button"
       onClick={handleToggle}
-      disabled={!selected && isFull}
-      className={`relative h-11 sm:h-10 text-[10px] font-bold uppercase tracking-widest transition-all duration-500 overflow-hidden group ${
+      className={`relative h-11 sm:h-10 w-full sm:w-auto text-[10px] font-bold uppercase tracking-widest transition-all duration-500 overflow-hidden group ${
         selected
           ? "bg-[#38A169] text-white px-6"
-          : isFull 
-            ? "bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-slate-300 dark:text-slate-700 cursor-not-allowed px-4"
+          : cantAdd
+            ? "bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-500 px-4"
             : "bg-white dark:bg-[#111111] border border-slate-100 dark:border-slate-800 text-[#718096] dark:text-slate-400 hover:text-[#111827] dark:hover:text-white hover:border-[#111827] dark:hover:border-white px-6 active:scale-95"
-      } ${className}`}
+      } `}
       style={{ borderRadius: 'var(--radius)' }}
     >
-      <span className="relative z-10 flex items-center gap-2">
+      <span className="relative z-10 flex items-center justify-center gap-2">
         {selected ? (
           <>
-            <span className="text-sm">✓</span> 
+            <span className="text-sm">✓</span>
             <span>Added</span>
           </>
         ) : isFull ? (
-          <span>Slot Full</span>
+          <span>3/3 full</span>
         ) : (
           <>
             <span className="text-lg leading-none">+</span>
@@ -122,6 +146,12 @@ export function CompareButton({ car, className = "" }) {
       <div className="absolute inset-0 bg-gradient-to-r from-[var(--brand-accent)]/0 via-[var(--brand-accent)]/5 to-[var(--brand-accent)]/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
       )}
     </button>
+    {fullHint && (
+      <p className="mt-1.5 text-[10px] font-semibold text-slate-600 dark:text-slate-400 leading-snug max-w-[220px]">
+        Compare is full. Remove a car from the bar at the bottom, then add this one.
+      </p>
+    )}
+    </div>
   );
 }
 
