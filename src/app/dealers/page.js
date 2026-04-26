@@ -2,9 +2,8 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import { ArrowUpRight, Building2, CarFront, MapPin, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, Building2, MapPin } from "lucide-react";
 import NearbyDealersList from "@/components/NearbyDealersList";
-import DealersMapView from "@/components/DealersMapView";
 
 export const metadata = { title: "Dealers — Welsh Motors Kenya" };
 
@@ -84,14 +83,6 @@ export default async function DealersPage() {
                 ))}
               </div>
             )}
-
-            {/* National Grid Map */}
-            <div className="mt-20 pt-20 border-t border-slate-100 dark:border-slate-800">
-               <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-400 mb-10">National Grid Array</h2>
-               <div className="h-[550px] bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 overflow-hidden shadow-2xl" style={{ borderRadius: 'var(--radius)' }}>
-                  <DealersMapView dealers={dealers} />
-               </div>
-            </div>
           </main>
         </div>
       </div>

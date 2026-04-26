@@ -69,19 +69,25 @@ export default function NearbyDealersList() {
     }
   }
 
+  const btnBase =
+    "inline-flex items-center justify-center gap-1.5 rounded-md border text-[10px] font-bold uppercase tracking-[0.1em] transition disabled:opacity-50";
+  const btnPrimary = `${btnBase} border-[#38A169] bg-[#38A169] text-white hover:bg-[#2f855a] dark:hover:bg-[#2f855a]`;
+  const btnSecondary = `${btnBase} border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800`;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Controls */}
-      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-end">
-        <div>
-          <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
+      <div className="flex flex-col gap-3">
+        <div className="w-full">
+          <label className="block text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-1.5">
             Search radius
           </label>
           <select
             value={radius}
             onChange={(e) => setRadius(Number(e.target.value))}
             disabled={loading}
-            className="px-3 py-3 sm:py-2 border border-[#ddd4c8] dark:border-zinc-800 rounded-lg text-slate-900 dark:text-white bg-white dark:bg-zinc-900 disabled:opacity-50"
+            className="w-full px-3 py-2 text-sm font-medium border border-[#E2E8F0] dark:border-zinc-700 text-slate-900 dark:text-white bg-white dark:bg-zinc-900 disabled:opacity-50 outline-none focus:border-[#38A169]"
+            style={{ borderRadius: "var(--radius)" }}
           >
             <option value={5}>5 km</option>
             <option value={10}>10 km</option>
@@ -93,57 +99,60 @@ export default function NearbyDealersList() {
 
         {/* Show both options if saved location exists */}
         {savedLocation ? (
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col gap-2">
             <button
-              onClick={() => handleFindNearby('saved')}
+              type="button"
+              onClick={() => handleFindNearby("saved")}
               disabled={loading}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg font-bold text-[10px] uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-50 transition"
+              className={`${btnSecondary} w-full py-2 px-3`}
             >
-              {loading && locationSource === 'saved' ? (
+              {loading && locationSource === "saved" ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Finding...
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Finding…
                 </>
               ) : (
                 <>
-                  <MapPin className="w-4 h-4" />
-                  Saved Location
+                  <MapPin className="w-3.5 h-3.5" />
+                  Saved location
                 </>
               )}
             </button>
             <button
-              onClick={() => handleFindNearby('current')}
+              type="button"
+              onClick={() => handleFindNearby("current")}
               disabled={loading}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-[#ff5a2f] text-white dark:bg-white dark:!text-black rounded-lg font-bold text-[10px] uppercase tracking-widest hover:opacity-80 disabled:opacity-50 transition"
+              className={`${btnPrimary} w-full py-2 px-3`}
             >
-              {loading && locationSource === 'current' ? (
+              {loading && locationSource === "current" ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Finding...
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Finding…
                 </>
               ) : (
                 <>
-                  <MapPin className="w-4 h-4" />
-                  LOAD DEALERSHIPS NEAR YOU
+                  <MapPin className="w-3.5 h-3.5" />
+                  Near you
                 </>
               )}
             </button>
           </div>
         ) : (
           <button
-            onClick={() => handleFindNearby('current')}
+            type="button"
+            onClick={() => handleFindNearby("current")}
             disabled={loading}
-            className="inline-flex items-center gap-2 px-6 py-3 sm:py-2 bg-[#ff5a2f] text-white dark:bg-white dark:!text-black rounded-lg font-bold text-[10px] uppercase tracking-widest hover:opacity-80 disabled:opacity-50 transition"
+            className={`${btnPrimary} w-full py-2 px-3`}
           >
             {loading ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Loading...
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                Finding…
               </>
             ) : (
               <>
-                <MapPin className="w-4 h-4" />
-                LOAD DEALERSHIPS NEAR YOU
+                <MapPin className="w-3.5 h-3.5" />
+                Near you
               </>
             )}
           </button>
@@ -152,18 +161,18 @@ export default function NearbyDealersList() {
 
       {/* Error State */}
       {error && (
-        <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl">
-          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-red-700">{error}</p>
+        <div className="flex items-start gap-2.5 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-md">
+          <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+          <p className="text-xs font-medium text-red-800 dark:text-red-200 leading-relaxed">{error}</p>
         </div>
       )}
 
       {/* Results */}
       {dealers !== null && (
-        <div className="space-y-3">
-          <p className="text-sm text-slate-600">
-            {dealers.length} dealer{dealers.length !== 1 ? 's' : ''} found
-            {locationSource && ` • Using ${locationSource === 'saved' ? 'saved' : 'current'} location`}
+        <div className="space-y-2">
+          <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+            {dealers.length} dealer{dealers.length !== 1 ? "s" : ""} found
+            {locationSource && ` · ${locationSource === "saved" ? "Saved" : "Current"} location`}
           </p>
 
           {dealers.length > 0 ? (
@@ -172,25 +181,24 @@ export default function NearbyDealersList() {
                 <Link
                   key={dealer.id}
                   href={`/dealers/${dealer.slug}`}
-                  className="flex items-center justify-between p-5 border border-[#ddd4c8] dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:bg-white/5 transition shadow-sm"
+                  className="flex items-center justify-between gap-3 p-3 border border-[#E2E8F0] dark:border-slate-800 hover:border-[#38A169]/40 dark:hover:border-[#38A169]/40 hover:bg-slate-50/80 dark:hover:bg-white/[0.03] transition"
+                  style={{ borderRadius: "var(--radius)" }}
                 >
-                  <div className="flex-1">
-                    <h3 className="font-medium text-slate-900 dark:text-white">{dealer.name}</h3>
-                    <p className="text-sm text-slate-600">{dealer.location}</p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate">{dealer.name}</h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 truncate">{dealer.location}</p>
                     {dealer._count?.cars > 0 && (
-                      <p className="text-sm text-slate-500 mt-1">
-                        {dealer._count.cars} car{dealer._count.cars !== 1 ? 's' : ''}
+                      <p className="text-[10px] font-semibold text-slate-500 mt-0.5">
+                        {dealer._count.cars} car{dealer._count.cars !== 1 ? "s" : ""} listed
                       </p>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-3 ml-4">
-                    <div className="text-right">
-                      <div className="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-100 text-blue-700 rounded-2xl text-sm font-medium">
-                        <MapPin className="w-4 h-4" />
-                        {formatDistance(dealer.distance)}
-                      </div>
-                    </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#2f855a] dark:text-[#4ade80] border border-[#38A169]/30 bg-[#38A169]/5">
+                      <MapPin className="w-3 h-3" />
+                      {formatDistance(dealer.distance)}
+                    </span>
                     <ChevronRight className="w-4 h-4 text-slate-400" />
                   </div>
                 </Link>
