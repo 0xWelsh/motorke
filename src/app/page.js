@@ -16,7 +16,7 @@ import HeroGridShowcase from "@/components/HeroGridShowcase";
 import CarCard from "@/components/CarCard";
 import { analyzePrice } from "@/lib/market";
 
-const HERO_BACKGROUND = "/images/backgrounds/pexels-mikebirdy-10123985.jpg";
+const HERO_BACKGROUND = "/images/backgrounds/pexels-mikebirdy-10123994.jpg";
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
 
 
