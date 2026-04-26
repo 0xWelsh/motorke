@@ -128,8 +128,8 @@ export default async function HomePage() {
             </h1>
 
             <p className="text-lg md:text-xl text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl font-medium">
-              Experience a minimalist approach to car buying. We connect verified dealerships
-              directly to savvy buyers, removing the noise and clutter of traditional marketplaces.
+              Find verified Kenyan inventory with transparent ownership costs in minutes.
+              Compare up to three cars, inspect duty and TCO signals, then contact real dealers directly.
             </p>
           </div>
 
@@ -140,10 +140,36 @@ export default async function HomePage() {
                 <BrowsePanel />
               </div>
 
-              <div className="flex flex-wrap items-center gap-6 mt-12">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-10 sm:mt-12">
                 <Link href="/cars" className="bg-[#38A169] hover:bg-[#2F855A] text-white px-8 py-4 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95" style={{ borderRadius: 'var(--radius)' }}>
                   Explore Inventory
                 </Link>
+                <Link href="/compare" className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-6 py-4 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#111827] dark:hover:border-white" style={{ borderRadius: 'var(--radius)' }}>
+                  Compare Cars
+                </Link>
+              </div>
+
+              <div className="mt-8 sm:mt-9 p-4 sm:p-5 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">Quick compare</p>
+                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                  Side-by-side specs, annual TCO, road readiness, and import checks in one clean sheet.
+                </p>
+                <Link href="/compare" className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors">
+                  Start comparing <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-6 sm:mt-8">
+                {[
+                  { label: "Verified dealers", value: `${dealers.length}+` },
+                  { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
+                  { label: "Updated", value: "Daily" },
+                ].map((item) => (
+                  <div key={item.label} className="p-3 sm:p-4 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
+                    <p className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white">{item.value}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mt-1">{item.label}</p>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -174,7 +200,7 @@ export default async function HomePage() {
 
       {/* Spotlight / Trending Section */}
       {hotEnhanced.length > 0 && (
-        <section className="py-24 sm:py-32">
+        <section className="py-16 sm:py-24 lg:py-28">
           <div className="container mx-auto px-6 max-w-7xl">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
               <div className="max-w-xl">
@@ -186,7 +212,7 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {/* Promo Card: Top Left */}
               <div className="flex flex-col h-full bg-[#fbfcfe] dark:bg-zinc-900 border border-black dark:border-white p-12 text-center" style={{ borderRadius: 'var(--radius)' }}>
                 <div className="flex justify-center gap-1.5 mb-10 text-slate-300 dark:text-slate-700">
@@ -215,7 +241,7 @@ export default async function HomePage() {
 
       {/* Featured Dealerships */}
       {dealers.length > 0 && (
-        <section className="py-24 sm:py-32 bg-[#F7FAFC] dark:bg-[#111111]">
+        <section className="py-16 sm:py-24 lg:py-28 bg-[#F7FAFC] dark:bg-[#111111]">
           <div className="container mx-auto px-6 max-w-7xl">
             <div className="mb-20 text-center max-w-3xl mx-auto">
               <h2 className="text-3xl sm:text-5xl font-bold text-[#111827] dark:text-white mb-6">Partner Dealerships</h2>
@@ -263,7 +289,7 @@ export default async function HomePage() {
       )}
 
       {/* Editorial Information Block */}
-      <section className="relative py-24 sm:py-48 bg-[#1A202C] text-white overflow-hidden">
+      <section className="relative py-16 sm:py-28 lg:py-36 bg-[#1A202C] text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
             src={DIFFERENCE_BACKGROUND}
@@ -308,9 +334,9 @@ export default async function HomePage() {
 
       {/* Fresh Arrivals Section */}
       {newEnhanced.length > 0 && (
-        <section className="py-24 sm:py-32">
+        <section className="py-16 sm:py-24 lg:py-28">
           <div className="container mx-auto px-6 max-w-7xl">
-            <div className="flex items-end justify-between mb-16">
+            <div className="flex items-end justify-between mb-10 sm:mb-14">
               <div>
                 <h2 className="text-3xl sm:text-5xl font-bold text-[#111827] dark:text-white mb-4">Fresh Arrivals</h2>
                 <p className="text-[#718096] dark:text-slate-400 text-lg font-medium">The latest units added to our network within the last 7 days.</p>
@@ -320,9 +346,14 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {newEnhanced.slice(0, 8).map((car) => (
+              {newEnhanced.slice(0, 6).map((car) => (
                 <CarCard key={car.id} car={car} />
               ))}
+            </div>
+            <div className="mt-8 sm:hidden">
+              <Link href="/cars?sort=newest" className="block text-center text-xs font-bold uppercase tracking-widest bg-[#EDF2F7] dark:bg-[#111111] text-[#111827] dark:text-white px-6 py-4" style={{ borderRadius: 'var(--radius)' }}>
+                See All Arrivals
+              </Link>
             </div>
           </div>
         </section>
