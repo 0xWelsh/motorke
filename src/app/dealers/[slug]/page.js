@@ -191,9 +191,13 @@ export default async function DealerPage(props) {
       {/* Hero Banner */}
       <div className="w-full h-[32vh] sm:h-[42vh] lg:h-[50vh] relative bg-[#111827] overflow-hidden">
          {dealer.bannerUrl ? (
-           <img src={dealer.bannerUrl} alt={dealer.name} className="absolute inset-0 w-full h-full object-cover opacity-75 sm:opacity-65" />
+           <img
+             src={dealer.bannerUrl}
+             alt={dealer.name}
+             className="absolute inset-0 w-full h-full object-cover opacity-[0.86] sm:opacity-65"
+           />
          ) : (
-           <div className="absolute inset-0 grid grid-cols-3 gap-1 opacity-60 sm:opacity-40">
+           <div className="absolute inset-0 grid grid-cols-3 gap-1 opacity-72 sm:opacity-40">
               {dealerGallery.map((car, i) => (
                 <div key={i} className="relative h-full w-full">
                   <Image src={car.image} alt={car.title} fill className="object-cover" />
@@ -201,7 +205,9 @@ export default async function DealerPage(props) {
               ))}
            </div>
          )}
-         <div className="absolute inset-0 bg-gradient-to-t from-white/90 dark:from-[#0a0a0a]/85 via-transparent to-transparent sm:from-white dark:sm:from-[#0a0a0a]" />
+         <div
+           className="absolute inset-0 bg-gradient-to-t to-transparent from-white/50 dark:from-[#0a0a0a]/55 via-white/5 dark:via-[#0a0a0a]/10 sm:from-white/90 sm:dark:from-[#0a0a0a]/85 sm:via-transparent"
+         />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl -mt-20 sm:-mt-28 lg:-mt-32 relative z-10 pb-20">
