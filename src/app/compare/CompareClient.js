@@ -1073,7 +1073,7 @@ export default function CompareClient({ initialCars }) {
                   setSearchSlotError("");
                   setActiveSlot(mobileEmptySlots[0]);
                 }}
-                className="lg:hidden shrink-0 px-4 h-10 sm:h-11 bg-[#38A169] text-white border border-[#38A169] text-[10px] font-bold uppercase tracking-widest"
+                className="lg:hidden shrink-0 px-4 h-10 sm:h-11 bg-[#38A169] dark:!bg-[#38A169] text-white dark:!text-white border border-[#38A169] dark:!border-[#38A169] text-[10px] font-bold uppercase tracking-widest"
                 style={{ borderRadius: "var(--radius)" }}
               >
                 Add car
@@ -1342,7 +1342,7 @@ export default function CompareClient({ initialCars }) {
                   onClick={() => setActiveMobileSlot(idx)}
                   className={`shrink-0 px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest border transition-colors shadow-sm ${
                     activeMobileSlot === idx
-                      ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:text-black dark:border-white"
+                      ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:!text-black dark:border-white"
                       : "bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300"
                   }`}
                   style={{ borderRadius: "var(--radius)" }}
@@ -1467,7 +1467,7 @@ export default function CompareClient({ initialCars }) {
                 setSearchSlotError("");
                 setActiveSlot(0);
               }}
-              className="h-11 px-4 bg-[#111827] dark:bg-white text-white dark:text-black text-[10px] font-bold uppercase tracking-widest"
+              className="h-11 px-4 bg-[#111827] dark:!bg-[#38A169] text-white dark:!text-white border border-[#111827] dark:!border-[#38A169] text-[10px] font-bold uppercase tracking-widest"
               style={{ borderRadius: "var(--radius)" }}
             >
               Add first car
@@ -1680,7 +1680,7 @@ export default function CompareClient({ initialCars }) {
               <button
                 type="button"
                 onClick={nextStep}
-                className="h-10 px-3 bg-[#111827] dark:bg-white text-white dark:text-black text-[10px] font-bold uppercase tracking-widest"
+                className="h-10 px-3 bg-[#111827] dark:bg-white text-white dark:!text-black text-[10px] font-bold uppercase tracking-widest"
                 style={{ borderRadius: "var(--radius)" }}
               >
                 {tutorialStep < TUTORIAL_STEPS.length - 1 ? "Next" : "Done"}
