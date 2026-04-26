@@ -50,7 +50,7 @@ export function CompareBar() {
             <p className="text-[10px] font-bold text-white/70">{compareCars.length}/3 selected</p>
             {compareCars.length >= 3 && (
               <p className="text-[9px] font-semibold text-white/50 mt-0.5 leading-tight">
-                Full — tap × on a thumbnail to free a slot
+                Full — tap × on a thumbnail to remove a car
               </p>
             )}
           </div>

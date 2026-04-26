@@ -19,9 +19,8 @@ const bodySchema = z.object({
 });
 
 const NO_KEY_MESSAGE =
-  "No GROQ_API_KEY or GEMINI_API_KEY in server env. " +
-  "The on-page “Smart summary” is always free. For a short AI-style paragraph, add a free key: " +
-  "GROQ_API_KEY from https://console.groq.com or GEMINI_API_KEY from https://aistudio.google.com — both offer free API tiers (subject to their terms).";
+  "A short narrative is not available in this environment. Your comparison table and the bullet summary above are complete. " +
+  "Site owners can add optional AI (Groq or Google Gemini) in server settings if they want this feature for visitors.";
 
 export async function POST(request) {
   let json;
@@ -78,7 +77,7 @@ export async function POST(request) {
       error: result.error,
       details: result.details,
       message:
-        "The smart summary on the page is still available. This endpoint could not get an AI paragraph — check GROQ_API_KEY / GEMINI_API_KEY and model quotas.",
+        "The narrative could not be generated this time. Your comparison table and bullet summary on the page are unchanged. Try again in a moment.",
     },
     { status: 200 }
   );

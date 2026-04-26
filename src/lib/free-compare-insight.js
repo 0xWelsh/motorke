@@ -1,6 +1,5 @@
 /**
- * Optional free-tier LLM paragraph for /compare.
- * Set GROQ_API_KEY and/or GEMINI_API_KEY in env (hobby / free-quota; no charge from this app).
+ * Optional LLM paragraph for /compare. Server-only: GROQ_API_KEY and/or GEMINI_API_KEY.
  * Uses fetch only — no extra npm package.
  */
 

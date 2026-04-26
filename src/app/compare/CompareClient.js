@@ -860,7 +860,7 @@ export default function CompareClient({ initialCars }) {
         setFreeAi({
           status: "done",
           text: data.text,
-          hint: data.provider ? `Source: ${data.provider} (free tier)` : "",
+          hint: data.provider ? `Assisted by ${data.provider}` : "",
         });
         return;
       }
@@ -1061,12 +1061,12 @@ export default function CompareClient({ initialCars }) {
 
             <div className="mt-6 border-t border-slate-200/80 dark:border-slate-700/80 pt-5">
               <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-500 mb-3">
-                Free AI-style paragraph (optional)
+                Plain-English readout
               </p>
               <p className="text-[11px] text-slate-600 dark:text-slate-400 mb-3 leading-relaxed">
-                Your $0 default is the summary above. For a short natural-language blurb, add a{" "}
-                <span className="font-semibold text-slate-800 dark:text-slate-200">free API key</span> on the server
-                (Groq or Google Gemini — free hobby tiers). No key = this button explains how.
+                The points above are generated from the numbers in this comparison. You can also ask for a short
+                narrative paragraph that restates the same facts in everyday language. Availability depends on how the
+                site is configured—if it is not available, the comparison table and bullets are still the full result.
               </p>
               <button
                 type="button"
@@ -1075,7 +1075,7 @@ export default function CompareClient({ initialCars }) {
                 className="inline-flex items-center justify-center px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-[#111827] dark:text-white hover:border-[#38A169] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 style={{ borderRadius: "var(--radius)" }}
               >
-                {freeAi.status === "loading" ? "Working…" : "Try free AI paragraph"}
+                {freeAi.status === "loading" ? "Working…" : "Get narrative summary"}
               </button>
               {freeAi.status === "done" && freeAi.text && (
                 <div className="mt-4 p-4 bg-white/80 dark:bg-black/20 border border-slate-200 dark:border-slate-700 text-sm text-slate-800 dark:text-slate-200 leading-relaxed">
