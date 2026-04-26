@@ -6,7 +6,6 @@ import { MapPin, Phone, Mail, Globe, ShieldCheck, MessageCircle } from "lucide-r
 import { getSession } from "@/lib/auth";
 import DealerReviews from "@/components/DealerReviews";
 import DealerInventory from "@/components/DealerInventory";
-import DealerLocationMap from "@/components/DealerLocationMap";
 import { calculateDistance } from "@/lib/geolocation";
 
 // Force dynamic and no-cache
@@ -247,7 +246,7 @@ export default async function DealerPage(props) {
 
           <div className="mt-12 pt-12 border-t border-slate-100 dark:border-slate-800">
              <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-6">About the Station</h2>
-             <div className="text-lg text-[#111827] dark:text-white leading-relaxed font-medium max-w-4xl editorial-heading">
+             <div className="text-lg text-[#111827] dark:text-white leading-relaxed font-medium font-sans max-w-4xl">
                 {dealer.description || `${dealer.name} is a cornerstone of our verified network, committed to operational excellence and transparency in asset logistics.`}
              </div>
           </div>
@@ -286,17 +285,23 @@ export default async function DealerPage(props) {
 
           {/* Sidebar */}
           <aside className="lg:col-span-4 space-y-12">
-            {/* Map */}
-            <div className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-1 overflow-hidden shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
-               <div className="h-[320px] bg-slate-50 dark:bg-slate-900">
-                  <DealerLocationMap dealer={dealer} />
-               </div>
-               <div className="p-6">
+            {/* Google Maps Link */}
+            <div className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-6 overflow-hidden shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
+               <div>
                   <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-2">Station Address</h4>
                   <p className="text-sm font-bold text-[#111827] dark:text-white leading-relaxed">{dealer.address || dealer.location || "Nairobi, Kenya"}</p>
                   {dealerDistanceLabel && (
                     <p className="mt-2 text-[11px] font-bold text-[#38A169] uppercase tracking-[0.12em]">{dealerDistanceLabel}</p>
                   )}
+                  <a
+                    href={googleMapsHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                    style={{ borderRadius: "var(--radius)" }}
+                  >
+                    Open in Google Maps
+                  </a>
                </div>
             </div>
 
