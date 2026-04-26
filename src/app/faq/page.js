@@ -218,16 +218,16 @@ export default function FAQPage() {
       </section>
 
       {/* FAQ Content */}
-      <section className="py-24 px-6">
+      <section className="py-20 sm:py-24 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           {Object.entries(faqs).map(([category, items]) => (
             <FAQCategory key={category} category={category} items={items} />
           ))}
 
           {/* Need Support */}
-          <div className="mt-32 pt-20 border-t border-slate-100 dark:border-slate-800 text-center">
+          <div className="mt-24 sm:mt-32 pt-16 sm:pt-20 border-t border-slate-100 dark:border-slate-800 text-center">
              <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-6">Still have questions?</h3>
-             <h4 className="text-3xl font-bold text-[#111827] dark:text-white mb-10">Reach our support terminal.</h4>
+             <h4 className="text-2xl sm:text-3xl font-bold text-[#111827] dark:text-white mb-10">Reach our support terminal.</h4>
              <Link href="/contact" className="inline-block bg-[#111827] dark:bg-white text-white dark:!text-black px-12 py-5 text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98] shadow-2xl" style={{ borderRadius: 'var(--radius)' }}>
                 Contact Support Hub
              </Link>

@@ -24,7 +24,7 @@ export default function MissionPage() {
       </section>
 
       {/* Core Narrative */}
-      <section className="py-24 px-6">
+      <section className="py-20 sm:py-24 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto space-y-32">
           
           {/* Section 1: The Problem */}
@@ -63,7 +63,7 @@ export default function MissionPage() {
       </section>
 
       {/* Impact Metrics */}
-      <section className="py-24 px-6 bg-[#1A202C] text-white">
+      <section className="py-20 sm:py-24 px-4 sm:px-6 bg-[#1A202C] text-white">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
              <div>
@@ -86,7 +86,7 @@ export default function MissionPage() {
       </section>
 
       {/* Strategic Vision */}
-      <section className="py-32 px-6 border-t border-slate-100 dark:border-slate-800">
+      <section className="py-24 sm:py-32 px-4 sm:px-6 border-t border-slate-100 dark:border-slate-800">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-20">
            <div className="lg:col-span-4">
               <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-600 mb-8">Strategic Roadmap</h2>
@@ -111,7 +111,7 @@ export default function MissionPage() {
       </section>
 
       {/* CTA Terminal */}
-      <section className="py-24 px-6 border-t border-slate-100 dark:border-slate-800">
+      <section className="py-20 sm:py-24 px-4 sm:px-6 border-t border-slate-100 dark:border-slate-800">
         <div className="max-w-4xl mx-auto text-center space-y-12">
            <h2 className="text-4xl sm:text-5xl font-bold text-[#111827] dark:text-white">Join the Network.</h2>
            <div className="flex flex-col sm:flex-row gap-6 justify-center">
