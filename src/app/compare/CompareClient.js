@@ -15,7 +15,7 @@ import {
 import { computeComparisonInsights } from "@/lib/comparison";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, X, Check, ArrowRight, Minus, Download, ChevronDown, ChevronUp } from "lucide-react";
+import { Search, X, Check, ArrowRight, Minus, Download, ChevronDown, ChevronUp, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { buildCompareNarrative } from "@/lib/compare-narrative";
 
@@ -33,6 +33,53 @@ const SEVERITY_STYLES = {
   moderate: "text-zinc-800 border-zinc-400 bg-zinc-200",
   major: "text-black border-zinc-500 bg-zinc-300",
 };
+
+const TUTORIAL_STEPS = [
+  {
+    key: "filters",
+    title: "Choose your lens",
+    body: "Use Full Sheet or presets, then toggle Diffs to hide identical rows.",
+  },
+  {
+    key: "summary",
+    title: "Read the headline metrics",
+    body: "These cards show set-level impact: annual TCO spread, best road score, and import count.",
+  },
+  {
+    key: "specs",
+    title: "Inspect the specs matrix",
+    body: "Scroll through grouped specs and compare values side by side.",
+  },
+  {
+    key: "export",
+    title: "Save or share",
+    body: "Download a PDF snapshot or copy a shareable link.",
+  },
+];
+
+function TooltipLabel({ label, tip }) {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <span>{label}</span>
+      <span className="relative inline-flex group/tt">
+        <button
+          type="button"
+          aria-label={`${label} info`}
+          className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full border border-slate-300 dark:border-slate-600 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
+        >
+          <Info className="w-2.5 h-2.5" />
+        </button>
+        <span
+          role="tooltip"
+          className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-[calc(100%+6px)] z-30 w-48 p-2 text-[10px] font-semibold normal-case tracking-normal leading-relaxed text-slate-600 dark:text-slate-300 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-700 shadow-lg opacity-0 group-hover/tt:opacity-100 group-focus-within/tt:opacity-100 transition-opacity"
+          style={{ borderRadius: "8px" }}
+        >
+          {tip}
+        </span>
+      </span>
+    </span>
+  );
+}
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -223,6 +270,16 @@ export default function CompareClient({ initialCars }) {
   }, []);
 
   useEffect(() => {
+    if (!showTutorial) return;
+    const key = TUTORIAL_STEPS[tutorialStep]?.key;
+    if (!key || typeof window === "undefined") return;
+    const el = document.querySelector(`[data-tour='${key}']`);
+    if (el && typeof el.scrollIntoView === "function") {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [showTutorial, tutorialStep]);
+
+  useEffect(() => {
     if (typeof window !== "undefined") {
       const hasSeen = localStorage.getItem("hasSeenCompareTour");
       if (!hasSeen) {
@@ -232,16 +289,23 @@ export default function CompareClient({ initialCars }) {
   }, []);
 
   const nextStep = () => {
-    if (tutorialStep < 2) {
+    if (tutorialStep < TUTORIAL_STEPS.length - 1) {
       setTutorialStep(tutorialStep + 1);
     } else {
       closeTutorial();
     }
   };
 
+  const startTutorial = () => {
+    setTutorialStep(0);
+    setShowTutorial(true);
+  };
+
   const closeTutorial = () => {
     setShowTutorial(false);
-    localStorage.setItem("hasSeenCompareTour", "true");
+    if (typeof window !== "undefined") {
+      localStorage.setItem("hasSeenCompareTour", "true");
+    }
   };
 
   const initialCarsById = useMemo(() => {
@@ -805,6 +869,8 @@ export default function CompareClient({ initialCars }) {
 
   const mobileFilledSlots = [0, 1, 2].filter((idx) => comparedSlots[idx]);
   const mobileCar = comparedSlots[activeMobileSlot] || null;
+  const currentTutorial = TUTORIAL_STEPS[tutorialStep] || null;
+  const currentTutorialKey = showTutorial ? currentTutorial?.key : null;
 
   useEffect(() => {
     const filled = [0, 1, 2].filter((idx) => comparedSlots[idx]);
@@ -899,7 +965,11 @@ export default function CompareClient({ initialCars }) {
           <div className="min-w-0 xl:col-span-8 2xl:col-span-9">
             <div className="flex flex-col gap-5 sm:gap-6 lg:gap-8">
         {/* 1: Title + sticky controls */}
-        <div className="order-1 no-print">
+        <div
+          data-tour="filters"
+          className={`order-1 no-print ${currentTutorialKey === "filters" ? "ring-2 ring-[#38A169] ring-offset-2 ring-offset-white dark:ring-offset-[#0a0a0a]" : ""}`}
+          style={currentTutorialKey === "filters" ? { borderRadius: "var(--radius)" } : undefined}
+        >
           <div className="max-w-3xl">
             <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-4 sm:mb-5">
               <span>Compare</span>
@@ -976,6 +1046,7 @@ export default function CompareClient({ initialCars }) {
                 showDiffOnly ? "bg-[#38A169] text-white border-[#38A169]" : "bg-white dark:bg-[#111111] text-[#718096] border-slate-200 dark:border-slate-800"
               }`}
               style={{ borderRadius: "var(--radius)" }}
+              title="Hide rows where all cars have the same value"
             >
               {showDiffOnly ? <Check className="w-3.5 h-3.5" /> : <Minus className="w-3.5 h-3.5" />}
               Diffs
@@ -988,20 +1059,50 @@ export default function CompareClient({ initialCars }) {
             >
               Clear all
             </button>
+            <button
+              type="button"
+              onClick={startTutorial}
+              className="shrink-0 px-4 h-10 sm:h-11 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-slate-200 text-[10px] font-bold uppercase tracking-widest"
+              style={{ borderRadius: "var(--radius)" }}
+            >
+              Tour
+            </button>
             </div>
           </div>
         </div>
 
         {/* Global Summary Stats — order 3 on mobile, 2 on large screens */}
         {kenyaLensSummary && (
-          <div id="compare-summary" className="order-3 lg:order-2 scroll-mt-24 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+          <div
+            id="compare-summary"
+            data-tour="summary"
+            className={`order-3 lg:order-2 scroll-mt-24 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 ${currentTutorialKey === "summary" ? "ring-2 ring-[#38A169] ring-offset-2 ring-offset-white dark:ring-offset-[#0a0a0a] p-1" : ""}`}
+            style={currentTutorialKey === "summary" ? { borderRadius: "var(--radius)" } : undefined}
+          >
             {[
-              { label: 'Annual TCO Gap', value: `${formatKesCompact(kenyaLensSummary.annualTcoSpread)}/yr`, sub: 'Set Variance' },
-              { label: 'Top Road Score', value: `${kenyaLensSummary.bestRoadScore}/100`, sub: 'Highest Readiness' },
-              { label: 'Import Eligible', value: `${kenyaLensSummary.eligibleCount}/${fullComparedCars.length} Assets`, sub: 'Fiscal Approval' }
+              {
+                label: "Annual TCO Gap",
+                tip: "Difference between the highest and lowest yearly ownership cost in this set.",
+                value: `${formatKesCompact(kenyaLensSummary.annualTcoSpread)}/yr`,
+                sub: "Set Variance",
+              },
+              {
+                label: "Top Road Score",
+                tip: "Highest road-readiness score among the compared vehicles.",
+                value: `${kenyaLensSummary.bestRoadScore}/100`,
+                sub: "Highest Readiness",
+              },
+              {
+                label: "Import Eligible",
+                tip: "How many vehicles in this set pass import-eligibility checks.",
+                value: `${kenyaLensSummary.eligibleCount}/${fullComparedCars.length} Assets`,
+                sub: "Fiscal Approval",
+              }
             ].map((stat, i) => (
               <div key={i} className="bg-[#F7FAFC] dark:bg-[#111111] border border-slate-100 dark:border-slate-800 p-5 sm:p-6 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-2">{stat.label}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-2">
+                  <TooltipLabel label={stat.label} tip={stat.tip} />
+                </p>
                 <div className="flex items-baseline gap-2 flex-wrap">
                   <p className="text-xl sm:text-2xl font-bold text-[#111827] dark:text-white tabular-nums">{stat.value}</p>
                   <p className="text-[9px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-wide">{stat.sub}</p>
@@ -1200,7 +1301,12 @@ export default function CompareClient({ initialCars }) {
         )}
 
         {/* Spec matrix: mobile first in flow (order-2), desktop after insights (lg:order-6) */}
-        <div id="compare-specs" className="order-2 lg:order-6 scroll-mt-24 relative border border-slate-100 dark:border-slate-800 overflow-hidden bg-white dark:bg-[#0a0a0a] mb-8 sm:mb-10 lg:mb-12 shadow-2xl" style={{ borderRadius: "var(--radius)" }}>
+        <div
+          id="compare-specs"
+          data-tour="specs"
+          className={`order-2 lg:order-6 scroll-mt-24 relative border border-slate-100 dark:border-slate-800 overflow-hidden bg-white dark:bg-[#0a0a0a] mb-8 sm:mb-10 lg:mb-12 shadow-2xl ${currentTutorialKey === "specs" ? "ring-2 ring-[#38A169] ring-offset-2 ring-offset-white dark:ring-offset-[#0a0a0a]" : ""}`}
+          style={{ borderRadius: "var(--radius)" }}
+        >
         {fullComparedCars.length > 0 && (
         <div className="lg:hidden no-print p-4 sm:p-5 space-y-4 border-b border-slate-100 dark:border-slate-800">
           <div className="sticky top-[52px] z-30 -mx-4 px-4 py-2 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur border-b border-slate-100 dark:border-slate-800 sm:static sm:bg-transparent sm:backdrop-blur-none sm:border-0 sm:p-0 sm:mx-0">
@@ -1382,7 +1488,12 @@ export default function CompareClient({ initialCars }) {
         </div>
 
         {/* Action Center — order-7; pb-24 on page clears fixed mobile bar */}
-        <div id="compare-export" className="order-7 no-print scroll-mt-24">
+        <div
+          id="compare-export"
+          data-tour="export"
+          className={`order-7 no-print scroll-mt-24 ${currentTutorialKey === "export" ? "ring-2 ring-[#38A169] ring-offset-2 ring-offset-white dark:ring-offset-[#0a0a0a] p-1" : ""}`}
+          style={currentTutorialKey === "export" ? { borderRadius: "var(--radius)" } : undefined}
+        >
         <p className="lg:hidden text-center text-[11px] text-slate-500 dark:text-slate-500 py-1 mb-2">
           PDF and share: use the bar at the bottom of the screen.
         </p>
@@ -1410,6 +1521,13 @@ export default function CompareClient({ initialCars }) {
           <aside className="hidden xl:block min-w-0 xl:col-span-4 2xl:col-span-3 sticky top-24 self-start">
             <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-3">On this page</p>
             <nav aria-label="Compare sections" className="text-sm space-y-0.5 border border-slate-200 dark:border-slate-800 bg-[#F7FAFC] dark:bg-[#111111] p-4" style={{ borderRadius: "var(--radius)" }}>
+              <button
+                type="button"
+                onClick={startTutorial}
+                className="w-full text-left py-1.5 mb-1 text-[#111827] dark:text-slate-100 hover:text-[#38A169] font-semibold border-b border-slate-200 dark:border-slate-800"
+              >
+                Start tutorial
+              </button>
               {[
                 ["Summary", "#compare-summary"],
                 ["Performance", "#compare-radar"],
@@ -1431,6 +1549,47 @@ export default function CompareClient({ initialCars }) {
         </div>
       </div>
     </div>
+    {showTutorial && currentTutorial && (
+      <div className="fixed inset-x-0 bottom-20 lg:bottom-6 z-[60] px-4 no-print">
+        <div className="max-w-md mx-auto border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#111111] shadow-2xl p-4 sm:p-5" style={{ borderRadius: "var(--radius)" }}>
+          <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
+            Compare tutorial {tutorialStep + 1}/{TUTORIAL_STEPS.length}
+          </p>
+          <h4 className="text-base font-bold text-[#111827] dark:text-white mb-1.5">{currentTutorial.title}</h4>
+          <p className="text-[12px] text-slate-600 dark:text-slate-300 leading-relaxed mb-4">{currentTutorial.body}</p>
+          <div className="flex items-center justify-between gap-2">
+            <button
+              type="button"
+              onClick={closeTutorial}
+              className="h-10 px-3 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold uppercase tracking-widest"
+              style={{ borderRadius: "var(--radius)" }}
+            >
+              Skip
+            </button>
+            <div className="flex items-center gap-2">
+              {tutorialStep > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setTutorialStep((s) => Math.max(0, s - 1))}
+                  className="h-10 px-3 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold uppercase tracking-widest"
+                  style={{ borderRadius: "var(--radius)" }}
+                >
+                  Back
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={nextStep}
+                className="h-10 px-3 bg-[#111827] dark:bg-white text-white dark:text-black text-[10px] font-bold uppercase tracking-widest"
+                style={{ borderRadius: "var(--radius)" }}
+              >
+                {tutorialStep < TUTORIAL_STEPS.length - 1 ? "Next" : "Done"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
     <div
       className="lg:hidden no-print fixed bottom-0 inset-x-0 z-50 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex gap-2 justify-center"
       aria-label="Export comparison"
