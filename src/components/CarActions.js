@@ -3,6 +3,7 @@
 // Save button + recently viewed tracker for car detail page
 
 import { useState, useEffect } from "react";
+import { RECENT_COOKIE_KEY, RECENT_STORAGE_KEY, writeJsonCookie } from "@/lib/personalization";
 
 // ── Save Button ───────────────────────────────────────────────
 export function SaveButton({ carId, initialSaved = false, isLoggedIn }) {
@@ -47,20 +48,24 @@ export function TrackRecentView({ car }) {
     
     try {
       const MAX   = 12;
-      const KEY   = "welsh-motors_recent";
       const entry = {
         id:       car.id,
+        make: car.make,
+        model: car.model,
+        year: car.year,
         title:    `${car.year} ${car.make} ${car.model}`,
         price:    car.price,
         image:    car.image,
         viewedAt: new Date().toISOString(),
       };
 
-      const existing = JSON.parse(localStorage.getItem(KEY) || "[]");
+      const existing = JSON.parse(localStorage.getItem(RECENT_STORAGE_KEY) || "[]");
       // Remove if already there, add to front
       const filtered = existing.filter(c => c.id !== car.id);
       const updated  = [entry, ...filtered].slice(0, MAX);
-      localStorage.setItem(KEY, JSON.stringify(updated));
+      localStorage.setItem(RECENT_STORAGE_KEY, JSON.stringify(updated));
+      // Keep a short cookie trail for personalization before login/session restore.
+      writeJsonCookie(RECENT_COOKIE_KEY, updated.slice(0, 6), 60 * 60 * 24 * 30);
     } catch {}
 
     // Also track in database for logged-in users

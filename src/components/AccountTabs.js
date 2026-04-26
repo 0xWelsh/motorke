@@ -6,6 +6,7 @@ import { formatCarPrice } from "@/lib/utils";
 import { clsx } from "clsx";
 import BuyerLocationSettings from "./BuyerLocationSettings";
 import CarCard from "./CarCard";
+import { RECENT_COOKIE_KEY, RECENT_STORAGE_KEY, readJsonCookie } from "@/lib/personalization";
 
 
 const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" });
@@ -24,7 +25,17 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
   const [showNew, setShowNew] = useState(false);
 
   useEffect(() => {
-    try { setRecent(JSON.parse(localStorage.getItem("welsh-motors_recent") || "[]")); } catch {}
+    try {
+      const localRecent = JSON.parse(localStorage.getItem(RECENT_STORAGE_KEY) || "[]");
+      if (Array.isArray(localRecent) && localRecent.length > 0) {
+        setRecent(localRecent);
+        return;
+      }
+      const cookieRecent = readJsonCookie(RECENT_COOKIE_KEY, []);
+      if (Array.isArray(cookieRecent)) {
+        setRecent(cookieRecent);
+      }
+    } catch {}
   }, []);
 
   const tabs = [

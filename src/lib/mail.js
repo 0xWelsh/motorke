@@ -441,3 +441,62 @@ export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName
     return { success: false, error };
   }
 }
+
+export async function sendWatchAlertEmail({
+  userEmail,
+  userName,
+  car,
+  type,
+  previousPrice,
+}) {
+  if (!userEmail || !car?.id) return { success: true, skipped: true };
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke";
+  const carUrl = `${siteUrl}/cars/${car.id}`;
+  const title = `${car.year} ${car.make} ${car.model}`;
+  const firstName = (userName || "there").split(" ")[0];
+  const isPriceDrop = type === "PRICE_DROP";
+  const dropAmount = isPriceDrop && previousPrice ? Math.max(0, previousPrice - car.price) : 0;
+
+  if (!SMTP_USER || !SMTP_PASS) {
+    console.log("WATCH ALERT EMAIL (MOCK):", { userEmail, type, title, previousPrice, current: car.price });
+    return { success: true, mocked: true };
+  }
+
+  const heading = isPriceDrop ? "Price drop on your watchlist car" : "Back in stock";
+  const summary = isPriceDrop
+    ? `The ${title} dropped by KSh ${dropAmount.toLocaleString("en-KE")}.`
+    : `The ${title} is now available again.`;
+  const priceBlock = isPriceDrop
+    ? `<p style="margin: 0 0 8px;"><strong>Previous:</strong> KSh ${previousPrice.toLocaleString("en-KE")}</p>
+       <p style="margin: 0;"><strong>Current:</strong> KSh ${car.price.toLocaleString("en-KE")}</p>`
+    : `<p style="margin: 0;"><strong>Current price:</strong> KSh ${car.price.toLocaleString("en-KE")}</p>`;
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto; color: #0f172a;">
+      <h1 style="font-size: 24px; margin-bottom: 8px;">${heading}</h1>
+      <p style="font-size: 14px; color: #475569; margin-top: 0;">Hi ${firstName}, ${summary}</p>
+      <div style="border: 1px solid #e2e8f0; padding: 16px; margin: 18px 0;">
+        <p style="margin: 0 0 8px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #64748b; font-weight: 700;">Vehicle</p>
+        <p style="margin: 0 0 12px; font-weight: 700;">${title}</p>
+        ${priceBlock}
+      </div>
+      <a href="${carUrl}" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Open Listing</a>
+      ${buildEmailFooter()}
+    </div>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: '"Welsh Motors Alerts" <alerts@welsh-motors.com>',
+      to: userEmail,
+      subject: isPriceDrop
+        ? `Price drop: ${title}`
+        : `Back in stock: ${title}`,
+      html,
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Watch alert email failed:", error);
+    return { success: false, error };
+  }
+}

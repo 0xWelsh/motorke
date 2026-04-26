@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
+import { setCookie } from "@/lib/personalization";
 
 export default function CookieConsent() {
   const [show, setShow] = useState(false);
@@ -17,11 +18,15 @@ export default function CookieConsent() {
 
   const accept = () => {
     localStorage.setItem("welsh-motors-cookies", "accepted");
+    setCookie("wm_cookie_consent", "accepted");
+    setCookie("wm_personalization", "on");
     setShow(false);
   };
 
   const decline = () => {
     localStorage.setItem("welsh-motors-cookies", "declined");
+    setCookie("wm_cookie_consent", "declined");
+    setCookie("wm_personalization", "off");
     setShow(false);
   };
 

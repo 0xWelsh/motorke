@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Clock, ChevronRight, Sparkles, User } from "lucide-react";
 import { formatPrice, formatCarPrice } from "@/lib/utils";
 import CarCard from "@/components/CarCard";
+import { RECENT_COOKIE_KEY, RECENT_STORAGE_KEY, readJsonCookie } from "@/lib/personalization";
 
 export default function ClientRecentSection() {
   const [recent, setRecent] = useState([]);
@@ -20,12 +21,14 @@ export default function ClientRecentSection() {
         if (userData.user) setUser(userData.user);
 
         // 2. Get Recent from LocalStorage
-        const localData = JSON.parse(localStorage.getItem("welsh-motors_recent") || "[]");
-        setRecent(localData.slice(0, 4));
+        const localData = JSON.parse(localStorage.getItem(RECENT_STORAGE_KEY) || "[]");
+        const fallbackCookie = readJsonCookie(RECENT_COOKIE_KEY, []);
+        const recentSeed = localData.length > 0 ? localData : (Array.isArray(fallbackCookie) ? fallbackCookie : []);
+        setRecent(recentSeed.slice(0, 4));
 
         // 3. Get Recommendations based on most frequent make in history
-        if (localData.length > 0) {
-          const makes = localData.map(c => c.make).filter(Boolean);
+        if (recentSeed.length > 0) {
+          const makes = recentSeed.map(c => c.make).filter(Boolean);
           const topMake = makes.sort((a,b) =>
             makes.filter(v => v===a).length - makes.filter(v => v===b).length
           ).pop();
@@ -34,7 +37,7 @@ export default function ClientRecentSection() {
             const recRes = await fetch(`/api/cars?make=${topMake}&limit=4`);
             const recData = await recRes.json();
             // Filter out cars already in 'recent'
-            const filteredRecs = recData.cars.filter(c => !localData.find(r => r.id === c.id));
+            const filteredRecs = recData.cars.filter(c => !recentSeed.find(r => r.id === c.id));
             setRecommended(filteredRecs.slice(0, 4));
           }
         }

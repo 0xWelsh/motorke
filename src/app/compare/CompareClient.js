@@ -18,6 +18,7 @@ import Image from "next/image";
 import { Search, X, Check, ArrowRight, Minus, Download, ChevronDown, ChevronUp, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { buildCompareNarrative } from "@/lib/compare-narrative";
+import { COMPARE_SETS_KEY, writeJsonCookie } from "@/lib/personalization";
 
 const SLOT_KEYS = ["a", "b", "c"];
 const PRESETS = [
@@ -255,6 +256,8 @@ export default function CompareClient({ initialCars }) {
   const [didInitialSync, setDidInitialSync] = useState(false);
   const [saveState, setSaveState] = useState("idle");
   const [pdfState, setPdfState] = useState("idle");
+  const [setName, setSetName] = useState("");
+  const [savedSets, setSavedSets] = useState([]);
 
   const [showTutorial, setShowTutorial] = useState(false);
   const [tutorialStep, setTutorialStep] = useState(0);
@@ -606,6 +609,50 @@ export default function CompareClient({ initialCars }) {
     }
   }
 
+  function persistCompareSets(nextSets) {
+    if (typeof window === "undefined") return;
+    localStorage.setItem(COMPARE_SETS_KEY, JSON.stringify(nextSets));
+    writeJsonCookie(COMPARE_SETS_KEY, nextSets, 60 * 60 * 24 * 30);
+  }
+
+  function handleSaveNamedSet() {
+    if (compareCars.length === 0) {
+      setSaveState("failed");
+      setTimeout(() => setSaveState("idle"), 1400);
+      return;
+    }
+    const normalized = (setName || "").trim() || `Set ${new Date().toLocaleDateString("en-KE")}`;
+    const item = {
+      id: Date.now(),
+      name: normalized.slice(0, 36),
+      ids: compareCars.slice(0, 3).map((car) => car.id),
+      createdAt: new Date().toISOString(),
+    };
+    const next = [item, ...savedSets.filter((set) => set.name !== item.name)].slice(0, 8);
+    setSavedSets(next);
+    persistCompareSets(next);
+    setSetName("");
+    setSaveState("saved");
+    setTimeout(() => setSaveState("idle"), 1600);
+  }
+
+  function handleLoadSet(setItem) {
+    if (!setItem?.ids?.length) return;
+    clearCompare();
+    setTimeout(() => {
+      setItem.ids.forEach((id) => {
+        const found = initialCarsById.get(id);
+        if (found) addToCompare(found);
+      });
+    }, 0);
+  }
+
+  function handleDeleteSet(setId) {
+    const next = savedSets.filter((set) => set.id !== setId);
+    setSavedSets(next);
+    persistCompareSets(next);
+  }
+
   function handleDownloadPdf() {
     if (fullComparedCars.length === 0 || typeof window === "undefined") return;
 
@@ -847,6 +894,14 @@ export default function CompareClient({ initialCars }) {
     };
   }, [searchQuery, activeSlot]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const parsed = JSON.parse(localStorage.getItem(COMPARE_SETS_KEY) || "[]");
+      if (Array.isArray(parsed)) setSavedSets(parsed.slice(0, 8));
+    } catch {}
+  }, []);
+
   const onAddCarSearch = (car) => {
     if (compareCars.find((c) => c.id === car.id)) {
       setSearchQuery("");
@@ -1087,6 +1142,57 @@ export default function CompareClient({ initialCars }) {
             >
               Tour
             </button>
+            <button
+              type="button"
+              onClick={handleSaveNamedSet}
+              className="shrink-0 px-4 h-10 sm:h-11 bg-[#111827] dark:bg-white text-white dark:!text-black border border-[#111827] dark:border-white text-[10px] font-bold uppercase tracking-widest"
+              style={{ borderRadius: "var(--radius)" }}
+            >
+              {saveState === "saved" ? "Set Saved" : "Save Set"}
+            </button>
+            </div>
+            <div className="mt-2 space-y-2">
+              <div className="flex items-center gap-2">
+                <input
+                  value={setName}
+                  onChange={(e) => setSetName(e.target.value)}
+                  placeholder="Set name (optional)"
+                  className="h-9 flex-1 min-w-[180px] bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 px-3 text-[11px] font-semibold text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                  style={{ borderRadius: "var(--radius)" }}
+                />
+                {savedSets.length > 0 && (
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                    Saved sets
+                  </p>
+                )}
+              </div>
+              {savedSets.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {savedSets.map((setItem) => (
+                    <div
+                      key={setItem.id}
+                      className="inline-flex items-center gap-1 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 px-2 py-1.5"
+                      style={{ borderRadius: "var(--radius)" }}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => handleLoadSet(setItem)}
+                        className="text-[10px] font-bold uppercase tracking-widest text-slate-700 dark:text-slate-200"
+                      >
+                        {setItem.name}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteSet(setItem.id)}
+                        className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                        aria-label={`Delete ${setItem.name}`}
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
