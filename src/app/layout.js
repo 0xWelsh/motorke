@@ -48,6 +48,7 @@ export default async function RootLayout({ children }) {
     name:    session.user.name,
     email:   session.user.email,
     role:    session.user.role,
+    avatarUrl: session.user.avatarUrl || null,
   } : null;
 
   return (
