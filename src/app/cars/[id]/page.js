@@ -391,8 +391,8 @@ export default async function CarDetailPage({ params }) {
 
         {/* Similar Cars Section */}
         {similar.length > 0 && (
-          <div className="mt-32 pt-32 border-t border-[#EDF2F7]">
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-16">Recommendation Engine</h2>
+          <div className="mt-16 sm:mt-20 pt-12 sm:pt-16 border-t border-[#EDF2F7] dark:border-zinc-800">
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-12">People Are Also Interested In</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                {similar.map((sc) => (
                  <CarCard key={sc.id} car={sc} />

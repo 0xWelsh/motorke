@@ -271,7 +271,7 @@ export default function EnquiryForm({
               <a
                 href={callLink}
                 onClick={handleCall}
-                className="flex items-center justify-center gap-2 bg-[#111827] dark:bg-white hover:bg-black dark:hover:bg-slate-200 text-white dark:text-black font-bold text-[10px] py-4 uppercase tracking-widest transition-all"
+                className="flex items-center justify-center gap-2 bg-[#111827] dark:!bg-white hover:bg-black dark:hover:!bg-slate-200 text-white dark:!text-black font-bold text-[10px] py-4 uppercase tracking-widest transition-all"
                 style={{ borderRadius: '2px' }}
               >
                 Call Now
