@@ -146,7 +146,7 @@ export default function ContactPage() {
                 </div>
                 <div className="md:col-span-2">
                    <button type="submit" disabled={loading} className="group w-full bg-[#111827] dark:bg-white text-white dark:!text-black py-6 text-xs font-bold uppercase tracking-[0.25em] transition-all hover:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-3 shadow-2xl" style={{ borderRadius: 'var(--radius)' }}>
-                      {loading ? "Transmitting..." : "Send Data Packet"}
+                      {loading ? "Transmitting..." : "Send Message"}
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                    </button>
                 </div>
