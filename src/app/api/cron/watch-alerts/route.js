@@ -29,12 +29,73 @@ export async function GET(request) {
   return runWatchAlerts();
 }
 
-export async function POST() {
+export async function POST(request) {
   const session = await getSessionFromRequest();
   if (!session?.user?.id || session.user.role !== "ADMIN") {
     return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
   }
+
+  let body = {};
+  try {
+    const raw = await request.text();
+    if (raw) body = JSON.parse(raw);
+  } catch {
+    // non-JSON body: run full job
+  }
+
+  if (body.test === true) {
+    return sendTestWatchAlertEmail(session.user);
+  }
+
   return runWatchAlerts();
+}
+
+/** One-off test using the same template and From: as real alerts; always sends to the admin's email. */
+async function sendTestWatchAlertEmail(admin) {
+  const car = await db.car.findFirst({
+    orderBy: { id: "asc" },
+    select: { id: true, make: true, model: true, year: true, price: true, available: true },
+  });
+  if (!car) {
+    return Response.json(
+      { success: false, error: "Add at least one car listing before sending a test alert." },
+      { status: 400 }
+    );
+  }
+
+  const previousPrice = Number(car.price) + 500_000;
+  const result = await sendWatchAlertEmail({
+    userEmail: admin.email,
+    userName: admin.name,
+    car,
+    type: "PRICE_DROP",
+    previousPrice,
+  });
+
+  if (result?.mocked) {
+    return Response.json({
+      success: true,
+      test: true,
+      mocked: true,
+      to: admin.email,
+      message:
+        "SMTP is not configured in this environment. Watch alert would be sent from sec@welsh.co.ke when SMTP_USER/SMTP_PASS are set.",
+    });
+  }
+  if (result?.success === false) {
+    return Response.json(
+      { success: false, error: result.error?.message || "Failed to send test email" },
+      { status: 500 }
+    );
+  }
+  return Response.json({
+    success: true,
+    test: true,
+    mocked: false,
+    to: admin.email,
+    from: "sec@welsh.co.ke",
+    alertsSent: 1,
+  });
 }
 
 async function runWatchAlerts() {
