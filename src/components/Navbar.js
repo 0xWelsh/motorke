@@ -4,11 +4,11 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import Image from "next/image";
-import { 
+import {
   Search, User, Menu, X, ChevronDown, LogOut, Heart,
   LayoutDashboard, Store, PlusCircle, ShieldCheck, Compass,
   ArrowUpRight, Bell, Settings, BarChart2, Shield,
-  CarFront, GitCompare
+  CarFront, GitCompare, Mail, ChevronRight,
 } from "lucide-react";
 import { clsx } from "clsx";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
@@ -43,6 +43,15 @@ export default function Navbar({ user }) {
     return () => {
       document.body.style.overflow = "";
     };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
   useEffect(() => {
@@ -227,11 +236,14 @@ export default function Navbar({ user }) {
               <ThemeToggle simple />
 
               <button
+                type="button"
                 onClick={() => setOpen(!open)}
-                className="w-10 h-10 flex items-center justify-center transition-all text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-zinc-800"
+                className="w-10 h-10 flex items-center justify-center border border-slate-200/90 dark:border-zinc-700 text-slate-900 dark:text-white transition-all hover:bg-slate-50 dark:hover:bg-zinc-800 active:scale-95"
                 style={{ borderRadius: 'var(--radius)' }}
+                aria-expanded={open}
+                aria-label={open ? "Close menu" : "Open menu"}
               >
-                {open ? <X size={24} /> : <Menu size={24} />}
+                {open ? <X size={22} /> : <Menu size={22} strokeWidth={2.25} />}
               </button>
             </div>
           </div>
@@ -290,82 +302,176 @@ export default function Navbar({ user }) {
         </div>
       )}
 
-      {/* MOBILE MENU */}
+      {/* MOBILE MENU — bottom sheet */}
       {open && (
-        <div className="lg:hidden fixed inset-0 z-[200] bg-[#1A202C]/40 backdrop-blur-md animate-in fade-in" onClick={() => setOpen(false)}>
-          <div className="ml-auto h-full w-full max-w-xs bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl p-8 flex flex-col shadow-2xl animate-in slide-in-from-right duration-300" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-12">
-              <div className="relative h-8 w-28">
-                <Image
-                  src={activeLogo}
-                  alt="Welsh Motors"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-              <button onClick={() => setOpen(false)} className="text-[#718096] hover:text-slate-900 dark:hover:text-white transition-colors">
-                <X size={28} />
-              </button>
-            </div>
-
-            <div className="flex flex-col gap-6 mb-12">
-              <button 
-                onClick={() => { setOpen(false); setMobileSearch(true); }}
-                className="flex items-center gap-4 text-lg font-bold uppercase tracking-widest text-[#38A169]">
-                <Search size={22} />
-                Search
-              </button>
-
-              {links.map(({ href, label }) => (
-                <Link key={href} href={href} onClick={() => setOpen(false)}
-                  className="text-lg font-bold uppercase tracking-widest text-slate-900 dark:text-white hover:text-[#38A169] transition-colors">
-                  {label}
-                </Link>
-              ))}
-              <Link href="/contact" onClick={() => setOpen(false)}
-                className="text-lg font-bold uppercase tracking-widest text-slate-900 dark:text-white hover:text-[#38A169] transition-colors">
-                Contact
-              </Link>
-            </div>
-            
-            {user ? (
-              <div className="mb-12 pt-8 border-t border-gray-100 dark:border-zinc-800 space-y-6">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Notifications</span>
-                  <NotificationsBell variant="navbar" />
+        <div
+          className="lg:hidden fixed inset-0 z-[200] flex flex-col justify-end"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Main menu"
+        >
+          <div
+            className="absolute inset-0 z-0 bg-black/45 backdrop-blur-[3px] animate-in fade-in duration-200"
+            onClick={() => setOpen(false)}
+            aria-hidden
+          />
+          <div
+            className="relative z-10 flex max-h-[min(90dvh,38rem)] w-full flex-col overflow-hidden rounded-t-3xl border border-slate-200/90 bg-white/98 shadow-2xl dark:border-zinc-800 dark:bg-[#0a0a0a]/98 animate-in slide-in-from-bottom duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mx-auto mt-2 h-1 w-9 shrink-0 rounded-full bg-slate-200 dark:bg-slate-600" aria-hidden />
+            <div className="shrink-0 border-b border-slate-100 px-4 pb-3 pt-2 dark:border-zinc-800 sm:px-5">
+              <div className="flex items-center justify-between gap-3">
+                <div className="relative h-8 w-32 shrink-0">
+                  <Image
+                    src={activeLogo}
+                    alt="Welsh Motors"
+                    fill
+                    className="object-contain object-left"
+                  />
                 </div>
-                <Link
-                  href={user.role === "DEALER" ? "/portal/profile" : "/account"}
+                <button
+                  type="button"
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-4 text-lg font-bold uppercase tracking-widest text-slate-900 dark:text-white"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-zinc-800 dark:hover:text-white"
+                  aria-label="Close menu"
                 >
-                  <User size={22} className="text-[#718096]" />
-                  Account
-                </Link>
+                  <X size={22} />
+                </button>
               </div>
-            ) : (
-              <div className="mb-12 pt-8 border-t border-gray-100 dark:border-zinc-800">
-                <Link href="/login" onClick={() => setOpen(false)} className="flex items-center gap-4 text-lg font-bold uppercase tracking-widest text-slate-900 dark:text-white">
-                  <User size={22} className="text-[#718096]" />
-                  Sign In
-                </Link>
-              </div>
-            )}
-
-            <div className="mt-auto space-y-4 pt-8 border-t border-gray-100 dark:border-zinc-800">
-              {!user ? (
-                <>
-                  <Link href="/signup" onClick={() => setOpen(false)}
-                    className="block w-full py-4 text-center text-sm font-bold uppercase tracking-widest bg-[#38A169] text-white hover:opacity-90 transition-all"
-                    style={{ borderRadius: 'var(--radius)' }}>
-                    Join Now
-                  </Link>
-                </>
+              {user ? (
+                <div className="mt-3 flex items-center gap-3 rounded-xl border border-slate-200/90 bg-slate-50/90 p-3 dark:border-zinc-800 dark:bg-zinc-900/80">
+                  {user.avatarUrl ? (
+                    <img
+                      src={user.avatarUrl}
+                      alt=""
+                      className="h-11 w-11 shrink-0 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#38A169] text-sm font-bold uppercase text-white">
+                      {user.name?.[0] ?? "?"}
+                    </div>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Signed in</p>
+                    <p className="truncate text-sm font-bold text-slate-900 dark:text-white">{user.name}</p>
+                  </div>
+                </div>
               ) : (
-                <form action="/api/auth/logout" method="POST">
-                   <button type="submit" className="w-full py-4 text-center text-sm font-bold uppercase tracking-widest border border-rose-500 text-rose-500 hover:bg-rose-500 hover:text-white transition-all shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
-                    Sign Out
-                   </button>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                  Verified inventory, TCO context, and side-by-side compare in one app.
+                </p>
+              )}
+            </div>
+
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-1 sm:px-5">
+              <MobileMenuSection title="Explore">
+                <MobileMenuRow
+                  variant="primary"
+                  icon={<Search className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.25} />}
+                  label="Search vehicles"
+                  onClick={() => {
+                    setOpen(false);
+                    setMobileSearch(true);
+                  }}
+                />
+                <MobileMenuRow
+                  href="/cars"
+                  onClick={() => setOpen(false)}
+                  icon={<CarFront className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
+                  label="Cars"
+                />
+                <MobileMenuRow
+                  href="/dealers"
+                  onClick={() => setOpen(false)}
+                  icon={<Store className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
+                  label="Dealers"
+                />
+                <MobileMenuRow
+                  href="/compare"
+                  onClick={() => setOpen(false)}
+                  icon={<GitCompare className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
+                  label="Compare"
+                />
+                <MobileMenuRow
+                  href="/contact"
+                  onClick={() => setOpen(false)}
+                  icon={<Mail className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
+                  label="Contact"
+                />
+              </MobileMenuSection>
+
+              <MobileMenuSection title="Account" className="pt-1">
+                {user ? (
+                  <>
+                    {user.role === "ADMIN" && (
+                      <MobileMenuRow
+                        href="/admin"
+                        onClick={() => setOpen(false)}
+                        icon={<LayoutDashboard className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
+                        label="Dashboard"
+                      />
+                    )}
+                    {user.role === "DEALER" && (
+                      <MobileMenuRow
+                        href="/portal"
+                        onClick={() => setOpen(false)}
+                        icon={<Store className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
+                        label="Dealer portal"
+                      />
+                    )}
+                    <div className="flex min-h-[3.15rem] items-center justify-between gap-3 rounded-lg border border-slate-200/90 bg-slate-50/80 px-3 py-2.5 dark:border-zinc-800 dark:bg-zinc-900/40">
+                      <span className="text-sm font-bold text-slate-900 dark:text-white">Notifications</span>
+                      <NotificationsBell variant="navbar" />
+                    </div>
+                    <MobileMenuRow
+                      href={user.role === "DEALER" ? "/portal/profile" : "/account"}
+                      onClick={() => setOpen(false)}
+                      icon={<User className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
+                      label="Account settings"
+                    />
+                    {user.role !== "DEALER" && (
+                      <MobileMenuRow
+                        href="/account?tab=saved"
+                        onClick={() => setOpen(false)}
+                        icon={<Heart className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
+                        label="Watchlist"
+                      />
+                    )}
+                  </>
+                ) : (
+                  <MobileMenuRow
+                    href="/login"
+                    onClick={() => setOpen(false)}
+                    icon={<User className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
+                    label="Sign in"
+                  />
+                )}
+              </MobileMenuSection>
+            </div>
+
+            <div
+              className="shrink-0 space-y-3 border-t border-slate-100 bg-slate-50/90 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950/50 sm:px-5"
+              style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+            >
+              {!user ? (
+                <Link
+                  href="/signup"
+                  onClick={() => setOpen(false)}
+                  className="flex h-12 w-full items-center justify-center text-xs font-bold uppercase tracking-[0.2em] text-white transition hover:opacity-90 active:scale-[0.99] bg-[#38A169]"
+                  style={{ borderRadius: "var(--radius)" }}
+                >
+                  Create account
+                </Link>
+              ) : (
+                <form action="/api/auth/logout" method="POST" className="w-full">
+                  <button
+                    type="submit"
+                    className="h-12 w-full text-center text-xs font-bold uppercase tracking-[0.2em] text-rose-600 transition hover:bg-rose-50 dark:hover:bg-rose-500/10 border border-rose-500/50 dark:border-rose-500/40"
+                    style={{ borderRadius: "var(--radius)" }}
+                  >
+                    Sign out
+                  </button>
                 </form>
               )}
             </div>
@@ -373,6 +479,56 @@ export default function Navbar({ user }) {
         </div>
       )}
     </>
+  );
+}
+
+function MobileMenuSection({ title, children, className }) {
+  return (
+    <div className={clsx("mb-5", className)}>
+      {title ? (
+        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-500">
+          {title}
+        </p>
+      ) : null}
+      <div className="space-y-2">{children}</div>
+    </div>
+  );
+}
+
+function MobileMenuRow({ icon, label, href, onClick, variant = "default" }) {
+  const primary = variant === "primary";
+  const rowClass = clsx(
+    "flex w-full min-h-[3.15rem] items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition active:scale-[0.99]",
+    primary
+      ? "border-[#38A169]/35 bg-[#38A169]/6 dark:border-[#38A169]/25 dark:bg-[#38A169]/10"
+      : "border-slate-200/90 bg-white dark:border-zinc-800 dark:bg-zinc-900/35"
+  );
+  const iconWrap = clsx(
+    "flex h-10 w-10 shrink-0 items-center justify-center rounded-md",
+    primary
+      ? "bg-white text-[#2F855A] shadow-sm dark:bg-black/25 dark:text-[#38A169]"
+      : "bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-slate-200"
+  );
+  const body = (
+    <>
+      <span className="flex min-w-0 flex-1 items-center gap-3">
+        <span className={iconWrap}>{icon}</span>
+        <span className="truncate text-sm font-bold text-slate-900 dark:text-white">{label}</span>
+      </span>
+      <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" aria-hidden />
+    </>
+  );
+  if (href) {
+    return (
+      <Link href={href} onClick={onClick} className={rowClass}>
+        {body}
+      </Link>
+    );
+  }
+  return (
+    <button type="button" onClick={onClick} className={rowClass}>
+      {body}
+    </button>
   );
 }
 
