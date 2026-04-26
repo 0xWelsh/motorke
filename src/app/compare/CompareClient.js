@@ -1066,6 +1066,19 @@ export default function CompareClient({ initialCars }) {
             >
               Clear all
             </button>
+            {mobileEmptySlots.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchSlotError("");
+                  setActiveSlot(mobileEmptySlots[0]);
+                }}
+                className="lg:hidden shrink-0 px-4 h-10 sm:h-11 bg-[#38A169] text-white border border-[#38A169] text-[10px] font-bold uppercase tracking-widest"
+                style={{ borderRadius: "var(--radius)" }}
+              >
+                Add car
+              </button>
+            )}
             <button
               type="button"
               onClick={startTutorial}
@@ -1442,6 +1455,24 @@ export default function CompareClient({ initialCars }) {
             </>
           ) : null}
         </div>
+        )}
+        {fullComparedCars.length === 0 && (
+          <div className="lg:hidden no-print p-5 border-b border-slate-100 dark:border-slate-800">
+            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
+              Add up to 3 cars to start comparing.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setSearchSlotError("");
+                setActiveSlot(0);
+              }}
+              className="h-11 px-4 bg-[#111827] dark:bg-white text-white dark:text-black text-[10px] font-bold uppercase tracking-widest"
+              style={{ borderRadius: "var(--radius)" }}
+            >
+              Add first car
+            </button>
+          </div>
         )}
 
         <div className="hidden lg:block overflow-x-auto no-scrollbar">
