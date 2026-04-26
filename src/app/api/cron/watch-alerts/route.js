@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { sendWatchAlertEmail } from "@/lib/mail";
+import { getSessionFromRequest } from "@/lib/auth";
 
 const ALERT_COOLDOWN_HOURS = 18;
 
@@ -11,7 +12,32 @@ function parseState(value) {
   }
 }
 
-export async function GET() {
+export async function GET(request) {
+  const cronHeader = request.headers.get("x-vercel-cron");
+  const authHeader = request.headers.get("authorization");
+  const cronSecret = process.env.CRON_SECRET;
+  const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
+
+  const isAuthorizedCron = Boolean(
+    cronHeader ||
+      (cronSecret && bearerToken && bearerToken === cronSecret)
+  );
+  if (!isAuthorizedCron) {
+    return Response.json({ success: false, error: "Unauthorized cron trigger" }, { status: 401 });
+  }
+
+  return runWatchAlerts();
+}
+
+export async function POST() {
+  const session = await getSessionFromRequest();
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  }
+  return runWatchAlerts();
+}
+
+async function runWatchAlerts() {
   try {
     const watches = await db.savedCar.findMany({
       include: {

@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
 import Link from "next/link";
 import AdminTrendsChart from "@/components/admin/AdminTrendsChart";
+import RunWatchAlertsButton from "@/components/admin/RunWatchAlertsButton";
 import { 
   Car, Building2, MessageSquare, Users, ChevronRight,
   Plus, Activity, Bolt, AlertCircle, ShieldAlert, BadgeCheck
@@ -98,7 +99,9 @@ export default async function AdminDashboard({ searchParams }) {
         
         {/* Date Range Toggle */}
         <div className="flex items-center justify-between lg:justify-end w-full lg:w-auto">
-          <div className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-none shadow-inner">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <RunWatchAlertsButton />
+            <div className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-none shadow-inner">
             {[
               { v: "7", label: "7 DAYS" },
               { v: "30", label: "30 DAYS" },
@@ -113,6 +116,7 @@ export default async function AdminDashboard({ searchParams }) {
                 {opt.label}
               </Link>
             ))}
+            </div>
           </div>
         </div>
       </div>
