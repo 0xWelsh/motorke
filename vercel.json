@@ -7,6 +7,10 @@
     {
       "path": "/api/cron/engagements",
       "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/watch-alerts",
+      "schedule": "0 9 */2 * *"
     }
   ]
 }
