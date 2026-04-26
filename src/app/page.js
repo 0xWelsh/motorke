@@ -14,10 +14,43 @@ import { unstable_cache } from "next/cache";
 import HeroShowcase from "@/components/HeroShowcase";
 import HeroGridShowcase from "@/components/HeroGridShowcase";
 import CarCard from "@/components/CarCard";
+import TrackedLink from "@/components/TrackedLink";
 import { analyzePrice } from "@/lib/market";
 
 const HERO_BACKGROUND = "/images/backgrounds/pexels-mikebirdy-10123994.jpg";
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
+
+function scoreMarketValue(marketAnalysis) {
+  if (!marketAnalysis) return 6;
+  if (marketAnalysis.comparison <= -10) return 24;
+  if (marketAnalysis.comparison < 0) return 18;
+  if (marketAnalysis.comparison <= 5) return 10;
+  return 4;
+}
+
+function scoreFreshness(createdAt) {
+  if (!createdAt) return 0;
+  const ageDays = Math.max(
+    0,
+    Math.floor((Date.now() - new Date(createdAt).getTime()) / (1000 * 60 * 60 * 24))
+  );
+  return Math.max(0, 20 - Math.min(20, ageDays));
+}
+
+function rankHotDeals(carsWithAnalysis) {
+  const maxViews = carsWithAnalysis.reduce((max, car) => Math.max(max, car._count?.carViews || 0), 0) || 1;
+  return [...carsWithAnalysis]
+    .map((car) => {
+      const viewScore = ((car._count?.carViews || 0) / maxViews) * 55;
+      const freshnessScore = scoreFreshness(car.createdAt);
+      const valueScore = scoreMarketValue(car.marketAnalysis);
+      const trustScore = (car.dealer?.verified ? 8 : 0) + (car.featured ? 5 : 0);
+      const hotScore = viewScore + freshnessScore + valueScore + trustScore;
+      return { ...car, hotScore };
+    })
+    .sort((a, b) => b.hotScore - a.hotScore || (b._count?.carViews || 0) - (a._count?.carViews || 0))
+    .slice(0, 8);
+}
 
 
 const getCachedData = unstable_cache(
@@ -96,19 +129,33 @@ export default async function HomePage() {
     ...(highlightReviews || []).slice(0, 6).map(r => ({ ...r, type: 'review' }))
   ].sort(() => Math.random() - 0.5);
 
-  // Sort hot cars by view count and take top 8
-  const hotSorted = (hotThisWeek || [])
+  // Build hot deals with blended scoring: demand + freshness + market value + dealer trust.
+  const hotCandidates = (hotThisWeek || [])
     .filter(car => car && car._count?.carViews > 0)
     .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
-    .slice(0, 8);
+    .slice(0, 30);
+
+  const hotCandidatesWithAnalysis = await Promise.all(
+    hotCandidates.map(async (car) => ({
+      ...car,
+      marketAnalysis: await analyzePrice(car),
+    }))
+  );
+  const hotSorted = rankHotDeals(hotCandidatesWithAnalysis);
 
   // Priority: Hot This Week (with views) > Featured > New Arrivals
   const baseSpotlight = hotSorted.length > 0 ? hotSorted : (featured && featured.length > 0) ? featured : newArrivals;
 
   // Enhance cars with market intelligence
   const [spotlightEnhanced, hotEnhanced, newEnhanced] = await Promise.all([
-    Promise.all((baseSpotlight || []).map(async c => ({ ...c, marketAnalysis: await analyzePrice(c) }))),
-    Promise.all((hotSorted || []).map(async c => ({ ...c, marketAnalysis: await analyzePrice(c) }))),
+    Promise.all((baseSpotlight || []).map(async (car) => {
+      if (car.marketAnalysis) return car;
+      return { ...car, marketAnalysis: await analyzePrice(car) };
+    })),
+    Promise.all((hotSorted || []).map(async (car) => {
+      if (car.marketAnalysis) return car;
+      return { ...car, marketAnalysis: await analyzePrice(car) };
+    })),
     Promise.all((newArrivals || []).map(async c => ({ ...c, marketAnalysis: await analyzePrice(c) }))),
   ]);
 
@@ -141,12 +188,24 @@ export default async function HomePage() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-10 sm:mt-12 max-w-md sm:max-w-xl mx-auto lg:mx-0">
-                <Link href="/cars" className="h-12 w-full inline-flex items-center justify-center bg-[#38A169] hover:bg-[#2F855A] text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95" style={{ borderRadius: 'var(--radius)' }}>
+                <TrackedLink
+                  href="/cars"
+                  eventName="homepage_explore_inventory_click"
+                  eventPayload={{ area: "hero" }}
+                  className="h-12 w-full inline-flex items-center justify-center bg-[#38A169] hover:bg-[#2F855A] text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
+                  style={{ borderRadius: 'var(--radius)' }}
+                >
                   Explore Inventory
-                </Link>
-                <Link href="/compare" className="h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#111827] dark:hover:border-white" style={{ borderRadius: 'var(--radius)' }}>
+                </TrackedLink>
+                <TrackedLink
+                  href="/compare"
+                  eventName="homepage_compare_cars_click"
+                  eventPayload={{ area: "hero" }}
+                  className="h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#111827] dark:hover:border-white"
+                  style={{ borderRadius: 'var(--radius)' }}
+                >
                   Compare Cars
-                </Link>
+                </TrackedLink>
               </div>
 
               <div className="mt-8 sm:mt-9 p-4 sm:p-5 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
@@ -154,9 +213,14 @@ export default async function HomePage() {
                 <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4 text-center lg:text-left">
                   Side-by-side specs, annual TCO, road readiness, and import checks in one clean sheet.
                 </p>
-                <Link href="/compare" className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors justify-center lg:justify-start w-full lg:w-auto">
+                <TrackedLink
+                  href="/compare"
+                  eventName="homepage_quick_compare_click"
+                  eventPayload={{ area: "hero_card" }}
+                  className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors justify-center lg:justify-start w-full lg:w-auto"
+                >
                   Start comparing <ArrowRight className="w-4 h-4" />
-                </Link>
+                </TrackedLink>
               </div>
 
               <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-6 sm:mt-8">
@@ -206,9 +270,14 @@ export default async function HomePage() {
                 <h2 className="text-4xl sm:text-6xl font-normal editorial-heading text-[#111827] dark:text-white mb-4">Spotlight</h2>
                 <p className="text-[#718096] dark:text-slate-400 text-lg font-medium">Verified listings currently receiving the most interest from our network.</p>
               </div>
-              <Link href="/cars?sort=popular" className="text-[#111827] dark:text-white text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:opacity-70 transition-opacity">
+              <TrackedLink
+                href="/cars?sort=popular"
+                eventName="homepage_view_trending_click"
+                eventPayload={{ area: "spotlight" }}
+                className="text-[#111827] dark:text-white text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:opacity-70 transition-opacity"
+              >
                 View Trending <ArrowUpRight className="w-4 h-4" />
-              </Link>
+              </TrackedLink>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">

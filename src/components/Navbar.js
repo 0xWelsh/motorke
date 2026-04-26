@@ -15,6 +15,7 @@ import useDebouncedSearch from "@/hooks/useDebouncedSearch";
 import SearchSuggestions from "@/components/SearchSuggestions";
 import NotificationsBell from "@/components/NotificationsBell";
 import ThemeToggle from "@/components/ThemeToggle";
+import { trackUiEvent } from "@/lib/analytics";
 
 export default function Navbar({ user }) {
   const router    = useRouter();
@@ -237,7 +238,11 @@ export default function Navbar({ user }) {
 
               <button
                 type="button"
-                onClick={() => setOpen(!open)}
+                onClick={() => {
+                  const nextOpen = !open;
+                  setOpen(nextOpen);
+                  trackUiEvent(nextOpen ? "mobile_menu_open" : "mobile_menu_close", { source: "navbar" });
+                }}
                 className="w-10 h-10 flex items-center justify-center border border-slate-200/90 dark:border-zinc-700 text-slate-900 dark:text-white transition-all hover:bg-slate-50 dark:hover:bg-zinc-800 active:scale-95"
                 style={{ borderRadius: 'var(--radius)' }}
                 aria-expanded={open}
@@ -370,6 +375,7 @@ export default function Navbar({ user }) {
                   variant="primary"
                   icon={<Search className="h-[1.1rem] w-[1.1rem]" strokeWidth={2.25} />}
                   label="Search vehicles"
+                  analyticsEvent="mobile_menu_search_vehicles_click"
                   onClick={() => {
                     setOpen(false);
                     setMobileSearch(true);
@@ -380,24 +386,28 @@ export default function Navbar({ user }) {
                   onClick={() => setOpen(false)}
                   icon={<CarFront className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
                   label="Cars"
+                  analyticsEvent="mobile_menu_cars_click"
                 />
                 <MobileMenuRow
                   href="/dealers"
                   onClick={() => setOpen(false)}
                   icon={<Store className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
                   label="Dealers"
+                  analyticsEvent="mobile_menu_dealers_click"
                 />
                 <MobileMenuRow
                   href="/compare"
                   onClick={() => setOpen(false)}
                   icon={<GitCompare className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
                   label="Compare"
+                  analyticsEvent="mobile_menu_compare_click"
                 />
                 <MobileMenuRow
                   href="/contact"
                   onClick={() => setOpen(false)}
                   icon={<Mail className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
                   label="Contact"
+                  analyticsEvent="mobile_menu_contact_click"
                 />
               </MobileMenuSection>
 
@@ -495,7 +505,7 @@ function MobileMenuSection({ title, children, className }) {
   );
 }
 
-function MobileMenuRow({ icon, label, href, onClick, variant = "default" }) {
+function MobileMenuRow({ icon, label, href, onClick, variant = "default", analyticsEvent }) {
   const primary = variant === "primary";
   const rowClass = clsx(
     "flex w-full min-h-[3.15rem] items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition active:scale-[0.99]",
@@ -520,13 +530,27 @@ function MobileMenuRow({ icon, label, href, onClick, variant = "default" }) {
   );
   if (href) {
     return (
-      <Link href={href} onClick={onClick} className={rowClass}>
+      <Link
+        href={href}
+        onClick={(event) => {
+          if (analyticsEvent) trackUiEvent(analyticsEvent, { location: "mobile_menu" });
+          onClick?.(event);
+        }}
+        className={rowClass}
+      >
         {body}
       </Link>
     );
   }
   return (
-    <button type="button" onClick={onClick} className={rowClass}>
+    <button
+      type="button"
+      onClick={(event) => {
+        if (analyticsEvent) trackUiEvent(analyticsEvent, { location: "mobile_menu" });
+        onClick?.(event);
+      }}
+      className={rowClass}
+    >
       {body}
     </button>
   );
