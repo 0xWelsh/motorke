@@ -187,13 +187,12 @@ export default async function HomePage() {
           <Image
             src={HERO_BACKGROUND}
             fill
-            className="object-cover"
-            style={{ opacity: 0.12 }}
+            className="object-cover opacity-[0.2] sm:opacity-[0.16] lg:opacity-[0.12]"
             alt=""
             priority
           />
-          {/* Subtle gradient overlay to ensure text contrast on mobile if needed */}
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 dark:from-[#0a0a0a] dark:via-[#0a0a0a]/80 to-transparent lg:hidden" />
+          {/* Softer left wash on small screens so the photo shows through; text stays readable */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white/88 via-white/45 dark:from-[#0a0a0a]/88 dark:via-[#0a0a0a]/48 to-transparent lg:hidden" />
         </div>
       </section>
 
