@@ -121,13 +121,13 @@ export default async function HomePage() {
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           
           {/* Page Header - Full Width */}
-          <div className="mb-10 md:mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          <div className="mb-10 md:mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center lg:text-left">
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-[#111827] dark:text-white leading-[0.95] tracking-tight mb-6">
               Moving the world<br />
               <span className="editorial-heading text-[#38A169]">with transparency.</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl font-medium">
+            <p className="text-lg md:text-xl text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl font-medium mx-auto lg:mx-0">
               Find verified Kenyan inventory with transparent ownership costs in minutes.
               Compare up to three cars, inspect duty and TCO signals, then contact real dealers directly.
             </p>
@@ -135,26 +135,26 @@ export default async function HomePage() {
 
           {/* Side-by-Side Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:items-start animate-in fade-in duration-1000 delay-200">
-            <div className="lg:col-span-7 xl:col-span-7 text-left">
+            <div className="lg:col-span-7 xl:col-span-7 text-center lg:text-left">
               <div className="w-full text-left">
                 <BrowsePanel />
               </div>
 
-              <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-10 sm:mt-12">
-                <Link href="/cars" className="bg-[#38A169] hover:bg-[#2F855A] text-white px-8 py-4 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95" style={{ borderRadius: 'var(--radius)' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-10 sm:mt-12 max-w-md sm:max-w-xl mx-auto lg:mx-0">
+                <Link href="/cars" className="h-12 w-full inline-flex items-center justify-center bg-[#38A169] hover:bg-[#2F855A] text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95" style={{ borderRadius: 'var(--radius)' }}>
                   Explore Inventory
                 </Link>
-                <Link href="/compare" className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-6 py-4 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#111827] dark:hover:border-white" style={{ borderRadius: 'var(--radius)' }}>
+                <Link href="/compare" className="h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#111827] dark:hover:border-white" style={{ borderRadius: 'var(--radius)' }}>
                   Compare Cars
                 </Link>
               </div>
 
               <div className="mt-8 sm:mt-9 p-4 sm:p-5 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">Quick compare</p>
-                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3 text-center lg:text-left">Quick compare</p>
+                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4 text-center lg:text-left">
                   Side-by-side specs, annual TCO, road readiness, and import checks in one clean sheet.
                 </p>
-                <Link href="/compare" className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors">
+                <Link href="/compare" className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors justify-center lg:justify-start w-full lg:w-auto">
                   Start comparing <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
