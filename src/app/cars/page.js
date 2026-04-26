@@ -9,7 +9,6 @@ import CarsSearch from "@/components/CarsSearch";
 import CarCard from "@/components/CarCard";
 import { unstable_cache } from "next/cache";
 import { CompareButton } from "@/components/CompareSelector";
-import SearchMapToggle from "@/components/SearchMapToggle";
 import { getSession } from "@/lib/auth";
 
 
@@ -172,15 +171,10 @@ export default async function CarsPage({ searchParams }) {
               <span className="text-[#111827] dark:text-white">Available</span>
             </div>
             <div className="flex items-center gap-6">
-               {sortedCars.length > 0 && <SearchMapToggle cars={sortedCars} />}
                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[#718096] dark:text-slate-400">
                  Showing {(page - 1) * limit + 1} - {Math.min(page * limit, total)} of {total}
                </div>
             </div>
-          </div>
-          
-          <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[#38A169]">
-            Network Availability: {total} Units Verified
           </div>
         </div>
 
