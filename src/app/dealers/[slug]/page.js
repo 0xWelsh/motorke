@@ -7,6 +7,7 @@ import { getSession } from "@/lib/auth";
 import DealerReviews from "@/components/DealerReviews";
 import DealerInventory from "@/components/DealerInventory";
 import DealerLocationMap from "@/components/DealerLocationMap";
+import { calculateDistance } from "@/lib/geolocation";
 
 // Force dynamic and no-cache
 export const dynamic = "force-dynamic";
@@ -33,7 +34,30 @@ export default async function DealerPage(props) {
     include: {
       cars: {
         where: { available: true },
-        include: {
+        select: {
+          id: true,
+          make: true,
+          model: true,
+          variant: true,
+          year: true,
+          price: true,
+          computedLandedPrice: true,
+          dutyPaid: true,
+          engineCC: true,
+          mileage: true,
+          bodyType: true,
+          fuelType: true,
+          transmission: true,
+          featured: true,
+          badges: true,
+          description: true,
+          available: true,
+          steering: true,
+          horsepower: true,
+          torque: true,
+          cylinders: true,
+          turbo: true,
+          updatedAt: true,
           images: { take: 1, orderBy: { order: "asc" } },
         },
         orderBy: { createdAt: "desc" },
@@ -64,6 +88,33 @@ export default async function DealerPage(props) {
     [dealer.address || dealer.location, dealer.county, "Kenya"].filter(Boolean).join(", ")
   );
   const googleMapsHref = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+  const userLat = Number.isFinite(viewer?.lat) ? viewer.lat : null;
+  const userLng = Number.isFinite(viewer?.lng) ? viewer.lng : null;
+  const dealerLat = Number.isFinite(dealer?.lat) ? dealer.lat : null;
+  const dealerLng = Number.isFinite(dealer?.lng) ? dealer.lng : null;
+  const dealerDistanceKm =
+    userLat != null && userLng != null && dealerLat != null && dealerLng != null
+      ? calculateDistance(userLat, userLng, dealerLat, dealerLng)
+      : null;
+  const dealerDistanceLabel =
+    dealerDistanceKm == null
+      ? null
+      : dealerDistanceKm < 1
+        ? `${Math.round(dealerDistanceKm * 1000)} m away`
+        : `${dealerDistanceKm.toFixed(1)} km away`;
+  const inventoryWithDistance = dealer.cars.map((car) => ({
+    ...car,
+    distance: dealerDistanceKm,
+  }));
+  const latestInventoryUpdate =
+    dealer.cars.length > 0
+      ? new Date(Math.max(...dealer.cars.map((car) => new Date(car.updatedAt).getTime())))
+      : null;
+  const inventoryFreshnessDays = latestInventoryUpdate
+    ? Math.max(0, Math.floor((Date.now() - latestInventoryUpdate.getTime()) / (1000 * 60 * 60 * 24)))
+    : null;
+  const inventoryFreshnessLabel =
+    inventoryFreshnessDays == null ? null : `${inventoryFreshnessDays} day${inventoryFreshnessDays === 1 ? "" : "s"} ago`;
   const dealerRatingTags = [];
   if (totalReviews >= 8 && averageRating >= 4.5) {
     dealerRatingTags.push("Fair Pricing", "Clean Logbooks", "Good After-sales");
@@ -172,6 +223,9 @@ export default async function DealerPage(props) {
                   </div>
                   <div className="flex flex-wrap items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">
                      <span className="flex items-center gap-2"><MapPin className="w-3 h-3 text-[#38A169]" /> {dealer.location || dealer.county}</span>
+                     {dealerDistanceLabel && (
+                       <span className="flex items-center gap-2 text-[#38A169]"><MapPin className="w-3 h-3" /> {dealerDistanceLabel}</span>
+                     )}
                      <span className="flex items-center gap-2"><ShieldCheck className="w-3 h-3 text-[#38A169]" /> Member since {startedYear}</span>
                   </div>
                </div>
@@ -213,7 +267,7 @@ export default async function DealerPage(props) {
                  </div>
                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">{dealer.cars.length} Units Available</span>
               </div>
-              <DealerInventory cars={dealer.cars} dealerSlug={dealer.slug} />
+              <DealerInventory cars={inventoryWithDistance} dealerSlug={dealer.slug} />
             </section>
 
             {/* Reviews Section */}
@@ -240,6 +294,9 @@ export default async function DealerPage(props) {
                <div className="p-6">
                   <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-2">Station Address</h4>
                   <p className="text-sm font-bold text-[#111827] dark:text-white leading-relaxed">{dealer.address || dealer.location || "Nairobi, Kenya"}</p>
+                  {dealerDistanceLabel && (
+                    <p className="mt-2 text-[11px] font-bold text-[#38A169] uppercase tracking-[0.12em]">{dealerDistanceLabel}</p>
+                  )}
                </div>
             </div>
 
@@ -260,6 +317,18 @@ export default async function DealerPage(props) {
                </div>
 
                <div className="space-y-4">
+                  <div className="bg-white dark:bg-slate-900 p-4 border border-[#E2E8F0] dark:border-slate-800 space-y-2" style={{ borderRadius: 'var(--radius)' }}>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#718096] dark:text-slate-400">Response cue</p>
+                    <p className="text-sm font-bold text-[#111827] dark:text-white">
+                      {dealer.whatsapp ? "Fastest response on WhatsApp" : dealer.phone ? "Best reached via direct call" : "Use enquiry form for replies"}
+                    </p>
+                  </div>
+                  <div className="bg-white dark:bg-slate-900 p-4 border border-[#E2E8F0] dark:border-slate-800 space-y-2" style={{ borderRadius: 'var(--radius)' }}>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#718096] dark:text-slate-400">Inventory freshness</p>
+                    <p className="text-sm font-bold text-[#111827] dark:text-white">
+                      {inventoryFreshnessLabel ? `Updated ${inventoryFreshnessLabel}` : "No recent inventory updates"}
+                    </p>
+                  </div>
                   {[
                     "Verified Assets",
                     "Direct Logistics",

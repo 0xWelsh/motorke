@@ -27,6 +27,16 @@ export default function DealerInventory({ cars, dealerSlug }) {
     });
   }, [cars, query, activeFilter]);
 
+  const getFreshnessLabel = (dateValue) => {
+    if (!dateValue) return null;
+    const updatedAt = new Date(dateValue);
+    if (Number.isNaN(updatedAt.getTime())) return null;
+    const diffDays = Math.max(0, Math.floor((Date.now() - updatedAt.getTime()) / (1000 * 60 * 60 * 24)));
+    if (diffDays === 0) return "Updated today";
+    if (diffDays === 1) return "Updated yesterday";
+    return `Updated ${diffDays} days ago`;
+  };
+
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-10">
@@ -76,7 +86,12 @@ export default function DealerInventory({ cars, dealerSlug }) {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {filteredCars.map((car) => (
-            <CarCard key={car.id} car={car} />
+            <div key={car.id} className="space-y-2">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
+                {getFreshnessLabel(car.updatedAt) || "Recently listed"}
+              </p>
+              <CarCard car={car} />
+            </div>
           ))}
         </div>
       )}

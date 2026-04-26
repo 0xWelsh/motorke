@@ -13,6 +13,14 @@ function formatReviewDate(value) {
   });
 }
 
+function formatPurchaseMonth(value) {
+  const date = new Date(value);
+  return date.toLocaleDateString("en-KE", {
+    year: "numeric",
+    month: "long",
+  });
+}
+
 function Stars({ rating, size = "sm" }) {
   const className = size === "lg" ? "text-lg" : "text-sm";
   return (
@@ -106,8 +114,14 @@ export default function DealerReviews({
               <article key={review.id} className="rounded-2xl border border-[#ece6dd] px-4 py-4 sm:px-5 sm:py-5">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{review.user?.name || "Verified Buyer"}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{review.user?.name || "Buyer"}</p>
+                      <span className="inline-flex items-center border border-emerald-200 text-emerald-700 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] rounded">
+                        Verified buyer
+                      </span>
+                    </div>
                     <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500 mt-0.5">{formatReviewDate(review.createdAt)}</p>
+                    <p className="text-[10px] font-semibold text-slate-500 mt-1">Purchase month: {formatPurchaseMonth(review.createdAt)}</p>
                   </div>
                   <Stars rating={review.rating} />
                 </div>
