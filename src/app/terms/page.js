@@ -16,7 +16,7 @@ const sections = [
     title: "2. User Accounts",
     subsections: [
       { heading: "2.1 Account Creation", content: "To use certain Platform features, you must create an account and provide accurate, complete, and current information. You are responsible for updating your profile information and maintaining its accuracy." },
-      { heading: "2.2 Credentials and Security", content: "You are solely responsible for maintaining the confidentiality of your password and account credentials. You agree not to share access with unauthorized parties. You must notify support@welsh-motors.com immediately if you suspect unauthorized access." },
+      { heading: "2.2 Credentials and Security", content: "You are solely responsible for maintaining the confidentiality of your password and account credentials. You agree not to share access with unauthorized parties. You must notify sec@welsh.co.ke immediately if you suspect unauthorized access." },
       { heading: "2.3 Account Liability", content: "All activity conducted under your account is your responsibility. We are not liable for unauthorized access unless caused by our gross negligence. Repeated unauthorized access attempts may result in account suspension." },
       { heading: "2.4 Eligibility", content: "You must be at least 18 years old and have legal capacity to enter into binding agreements. Dealers must be registered business entities compliant with Kenya Revenue Authority (KRA) regulations." },
     ]
@@ -87,7 +87,7 @@ const sections = [
   {
     title: "10. Termination and Suspension",
     subsections: [
-      { heading: "10.1 User Termination", content: "You may terminate your account by contacting support@welsh-motors.com. Upon termination, your listings and account data will be accessible for 30 days before permanent deletion." },
+      { heading: "10.1 User Termination", content: "You may terminate your account by contacting sec@welsh.co.ke. Upon termination, your listings and account data will be accessible for 30 days before permanent deletion." },
       { heading: "10.2 Welsh Motors Termination", content: "We may suspend or terminate your account immediately for violations of these Terms, including prohibited conduct, violation of law, or non-payment. Repeated violations may result in permanent ban." },
       { heading: "10.3 Effect of Termination", content: "Upon termination, your right to use the Platform ceases immediately. Provisions regarding liability, indemnification, and intellectual property survive termination." },
     ]
@@ -96,7 +96,7 @@ const sections = [
     title: "11. Governing Law and Disputes",
     subsections: [
       { heading: "11.1 Jurisdiction", content: "These Terms are governed by the laws of Kenya without regard to conflicts of law principles. You consent to the exclusive jurisdiction of courts in Nairobi, Kenya." },
-      { heading: "11.2 Dispute Resolution", content: "Before pursuing litigation, you agree to attempt good-faith resolution through support@welsh-motors.com. Disputes not resolved within 30 days may proceed to court." },
+      { heading: "11.2 Dispute Resolution", content: "Before pursuing litigation, you agree to attempt good-faith resolution through sec@welsh.co.ke. Disputes not resolved within 30 days may proceed to court." },
     ]
   },
   {
@@ -111,9 +111,9 @@ const sections = [
   {
     title: "13. Contact",
     subsections: [
-      { heading: "13.1 Support", content: "For account support, technical issues, and general inquiries: support@welsh-motors.com" },
-      { heading: "13.2 Legal Inquiries", content: "For legal or compliance questions: legal@welsh-motors.com" },
-      { heading: "13.3 Billing Support", content: "For billing disputes and subscription questions: billing@welsh-motors.com" },
+      { heading: "13.1 Support", content: "For account support, technical issues, and general inquiries: sec@welsh.co.ke" },
+      { heading: "13.2 Legal Inquiries", content: "For legal or compliance questions: sec@welsh.co.ke" },
+      { heading: "13.3 Billing Support", content: "For billing disputes and subscription questions: sec@welsh.co.ke" },
     ]
   },
 ];
@@ -180,20 +180,20 @@ export default function TermsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
              <div>
                 <h4 className="text-[10px] font-bold text-[#1A202C] dark:text-white uppercase tracking-[0.2em] mb-4">Support Direct</h4>
-                <a href="mailto:support@welsh-motors.com" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
-                  support@welsh-motors.com
+                <a href="mailto:sec@welsh.co.ke" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
+                  sec@welsh.co.ke
                 </a>
              </div>
              <div>
                 <h4 className="text-[10px] font-bold text-[#1A202C] dark:text-white uppercase tracking-[0.2em] mb-4">Compliance Hub</h4>
-                <a href="mailto:legal@welsh-motors.com" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
-                  legal@welsh-motors.com
+                <a href="mailto:sec@welsh.co.ke" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
+                  sec@welsh.co.ke
                 </a>
              </div>
              <div>
                 <h4 className="text-[10px] font-bold text-[#1A202C] dark:text-white uppercase tracking-[0.2em] mb-4">Financial Terminal</h4>
-                <a href="mailto:billing@welsh-motors.com" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
-                  billing@welsh-motors.com
+                <a href="mailto:sec@welsh.co.ke" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
+                  sec@welsh.co.ke
                 </a>
              </div>
           </div>

@@ -23,7 +23,7 @@ function buildEmailFooter() {
         &nbsp;•&nbsp;
         <a href="${siteUrl}/privacy" style="color: #0f172a; text-decoration: underline;">Privacy</a>
         &nbsp;•&nbsp;
-        <a href="mailto:support@welsh-motors.com" style="color: #0f172a; text-decoration: underline;">support@welsh-motors.com</a>
+        <a href="mailto:sec@welsh.co.ke" style="color: #0f172a; text-decoration: underline;">sec@welsh.co.ke</a>
       </p>
     </div>
   `;
@@ -74,7 +74,7 @@ export async function sendVerificationEmail(email, name, otp) {
 
   try {
     await transporter.sendMail({
-      from: '"Welsh Motors Standard" <noreply@welsh-motors.com>',
+      from: '"Welsh Motors Standard" <sec@welsh.co.ke>',
       to: email,
       subject: "Your Welsh Motors Verification Code",
       html: htmlContent,
@@ -167,7 +167,7 @@ export async function sendLeadAlertEmail({
 
   try {
     await transporter.sendMail({
-      from: '"Welsh Motors Alerts" <noreply@welsh-motors.com>',
+      from: '"Welsh Motors Alerts" <sec@welsh.co.ke>',
       to: recipients.join(","),
       subject: `New Buyer Enquiry - ${carTitle || "Vehicle"}`,
       html: htmlContent,
@@ -235,7 +235,7 @@ export async function sendPasswordResetEmail({ email, name, resetToken }) {
 
   try {
     await transporter.sendMail({
-      from: '"Welsh Motors Security" <noreply@welsh-motors.com>',
+      from: '"Welsh Motors Security" <sec@welsh.co.ke>',
       to: email,
       subject: "Reset your Welsh Motors password",
       html: htmlContent,
@@ -318,7 +318,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
 
   try {
     await transporter.sendMail({
-      from: '"Welsh Motors" <deals@welsh-motors.com>',
+      from: '"Welsh Motors" <sec@welsh.co.ke>',
       to: userEmail,
       subject: `Better deal: ${newCar.year} ${newCar.make} - Save KSh ${parseInt(savings).toLocaleString("en-KE")}`,
       html: htmlContent,
@@ -377,7 +377,7 @@ export async function sendEngagementFollowUpEmail({ userEmail, userName, carTitl
 
   try {
     await transporter.sendMail({
-      from: '"Welsh Motors Team" <hello@welsh-motors.com>',
+      from: '"Welsh Motors Team" <sec@welsh.co.ke>',
       to: userEmail,
       subject: `Still looking for the ${safeCar}?`,
       html: htmlContent,
@@ -431,7 +431,7 @@ export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName
 
   try {
     await transporter.sendMail({
-      from: '"Welsh Motors Quality" <quality@welsh-motors.com>',
+      from: '"Welsh Motors Quality" <sec@welsh.co.ke>',
       to: userEmail,
       subject: `How was your experience with ${safeDealer}?`,
       html: htmlContent,
@@ -487,7 +487,7 @@ export async function sendWatchAlertEmail({
 
   try {
     await transporter.sendMail({
-      from: '"Welsh Motors Alerts" <alerts@welsh-motors.com>',
+      from: '"Welsh Motors Alerts" <sec@welsh.co.ke>',
       to: userEmail,
       subject: isPriceDrop
         ? `Price drop: ${title}`

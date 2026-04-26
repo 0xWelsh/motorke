@@ -65,7 +65,7 @@ const sections = [
     subsections: [
       { heading: "6.1 What Dealers See", content: "When you (as a buyer) send an enquiry, the dealer receives your name, phone number, email, and enquiry message. This is necessary to facilitate the transaction." },
       { heading: "6.2 Your Control", content: "You can opt out of receiving dealer contact via your account settings. Dealers will still see your enquiry but will not be able to call/message you directly." },
-      { heading: "6.3 Dealer Responsibilities", content: "Dealers are responsible for using your contact info only to respond to your enquiry. Welsh Motors is not liable for dealer misuse of your data. Report abuse to support@welsh-motors.com." },
+      { heading: "6.3 Dealer Responsibilities", content: "Dealers are responsible for using your contact info only to respond to your enquiry. Welsh Motors is not liable for dealer misuse of your data. Report abuse to sec@welsh.co.ke." },
     ],
   },
   {
@@ -73,7 +73,7 @@ const sections = [
     subsections: [
       { heading: "7.1 Session Cookies", content: "We use session cookies to keep you logged in and maintain security. These are deleted when you close your browser." },
       { heading: "7.2 Analytics Cookies", content: "Tools like Google Analytics track page views and user behavior to help us improve the platform. These data are anonymized and aggregated." },
-      { heading: "7.3 Opt-Out", content: "Most browsers allow you to disable cookies via settings. Some platform features may not work without cookies (like login). You can also opt out of analytics tracking—contact support@welsh-motors.com." },
+      { heading: "7.3 Opt-Out", content: "Most browsers allow you to disable cookies via settings. Some platform features may not work without cookies (like login). You can also opt out of analytics tracking—contact sec@welsh.co.ke." },
     ],
   },
   {
@@ -97,7 +97,7 @@ const sections = [
   {
     title: "10. Your Rights (GDPR-Inspired)",
     subsections: [
-      { heading: "10.1 Access", content: "You can request a copy of all personal data we hold about you. Contact support@welsh-motors.com with \"Data Subject Access Request.\" We will respond within 30 days." },
+      { heading: "10.1 Access", content: "You can request a copy of all personal data we hold about you. Contact sec@welsh.co.ke with \"Data Subject Access Request.\" We will respond within 30 days." },
       { heading: "10.2 Correction", content: "You can update your profile information directly in your account settings. Contact support if you need help correcting locked fields." },
       { heading: "10.3 Deletion", content: "You can request deletion of your account and associated data. Some data (transaction records) may be retained for legal/audit purposes but will be anonymized." },
       { heading: "10.4 Portability", content: "You can request your data in a portable format (CSV). We will provide it within 30 days." },
@@ -135,9 +135,9 @@ const sections = [
   {
     title: "15. Contact & Requests",
     subsections: [
-      { heading: "15.1 Privacy Officer", content: "Welsh Motors Ltd Privacy Officer: privacy@welsh-motors.com" },
-      { heading: "15.2 Support", content: "General inquiries: support@welsh-motors.com" },
-      { heading: "15.3 Legal Requests", content: "Formal data requests or legal matters: legal@welsh-motors.com" },
+      { heading: "15.1 Privacy Officer", content: "Welsh Motors Ltd Privacy Officer: sec@welsh.co.ke" },
+      { heading: "15.2 Support", content: "General inquiries: sec@welsh.co.ke" },
+      { heading: "15.3 Legal Requests", content: "Formal data requests or legal matters: sec@welsh.co.ke" },
       { heading: "15.4 Response Time", content: "We will respond to data requests within 30 days. Complex requests may require more time." },
     ],
   },
@@ -269,14 +269,14 @@ export default function PrivacyPage() {
         <div className="pt-24 border-t border-[#EDF2F7] dark:border-slate-800 grid grid-cols-1 md:grid-cols-3 gap-16">
           <div>
             <h3 className="text-[10px] font-bold text-[#1A202C] dark:text-white uppercase tracking-[0.2em] mb-4">Privacy Terminal</h3>
-            <a href="mailto:privacy@welsh-motors.com" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
-              privacy@welsh-motors.com
+            <a href="mailto:sec@welsh.co.ke" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
+              sec@welsh.co.ke
             </a>
           </div>
           <div>
             <h3 className="text-[10px] font-bold text-[#1A202C] dark:text-white uppercase tracking-[0.2em] mb-4">Legal Hub</h3>
-            <a href="mailto:legal@welsh-motors.com" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
-              legal@welsh-motors.com
+            <a href="mailto:sec@welsh.co.ke" className="inline-flex items-center justify-center h-11 px-5 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-sm font-bold text-[#718096] dark:text-slate-400 hover:text-[#38A169]">
+              sec@welsh.co.ke
             </a>
           </div>
           <div>

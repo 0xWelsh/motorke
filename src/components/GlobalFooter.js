@@ -37,9 +37,9 @@ export default function GlobalFooter() {
       title: "Company",
       links: [
         { label: "About Us", href: "/mission" },
-        { label: "Careers", href: "/careers" },
-        { label: "Press", href: "/press" },
-        { label: "Partners", href: "/partners" },
+        { label: "Partner Dealers", href: "/dealers" },
+        { label: "Trust & Safety", href: "/faq" },
+        { label: "Contact Team", href: "/contact" },
       ],
     },
   ];
@@ -101,7 +101,7 @@ export default function GlobalFooter() {
               <MapPin size={14} /> Nairobi, Kenya
             </span>
             <span className="flex items-center gap-2 text-xs">
-              <Mail size={14} /> hello@welsh-motors.com
+              <Mail size={14} /> sec@welsh.co.ke
             </span>
           </div>
         </div>
