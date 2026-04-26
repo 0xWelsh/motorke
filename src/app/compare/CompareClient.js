@@ -15,7 +15,7 @@ import {
 import { computeComparisonInsights } from "@/lib/comparison";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, X, Check, ArrowRight, Minus, Download } from "lucide-react";
+import { Search, X, Check, ArrowRight, Minus, Download, ChevronDown, ChevronUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { buildCompareNarrative } from "@/lib/compare-narrative";
 
@@ -208,6 +208,13 @@ export default function CompareClient({ initialCars }) {
   const [activeMobileSlot, setActiveMobileSlot] = useState(0);
   const [searchSlotError, setSearchSlotError] = useState("");
   const [freeAi, setFreeAi] = useState({ status: "idle", text: "", hint: "" });
+  const [radarOpen, setRadarOpen] = useState(true);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 1023px)").matches) {
+      setRadarOpen(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -879,99 +886,114 @@ export default function CompareClient({ initialCars }) {
   }
 
   return (
-    <div className="bg-white dark:bg-[#0a0a0a] min-h-screen">
-      <div className="max-w-7xl mx-auto px-6 py-32 sm:py-40">
-        
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-12">
+    <>
+    <div className="bg-white dark:bg-[#0a0a0a] min-h-screen pb-24 lg:pb-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-6 sm:pb-10 min-w-0">
+        <div className="xl:grid xl:grid-cols-12 xl:gap-8 xl:items-start">
+          <div className="min-w-0 xl:col-span-8 2xl:col-span-9">
+            <div className="flex flex-col gap-5 sm:gap-6 lg:gap-8">
+        {/* 1: Title + sticky controls */}
+        <div className="order-1 no-print">
           <div className="max-w-3xl">
-            <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-8">
-              <span>Terminal</span>
+            <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-4 sm:mb-5">
+              <span>Compare</span>
               <span>/</span>
-              <span className="text-[#111827] dark:text-white">Technical Comparison</span>
+              <span className="text-[#111827] dark:text-white">Vehicles</span>
             </div>
-            <h1 className="text-5xl sm:text-7xl font-bold text-[#111827] dark:text-white tracking-tight leading-[1.05] mb-8">
-              Spec <br />
-              <span className="editorial-heading text-[#718096] dark:text-slate-400">Synthesis.</span>
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-[#111827] dark:text-white tracking-tight leading-[1.1] mb-3 sm:mb-4">
+              <span className="text-[#38A169]">Side-by-side</span> comparison
             </h1>
-            <p className="text-xl text-[#718096] dark:text-slate-400 font-medium leading-relaxed">
-              Side-by-side mechanical analysis with architectural precision. 
-              Integrating Kenya-specific operational data: TCO models, road suitability, 
-              and central parts availability.
+            <p className="text-sm sm:text-base text-[#718096] dark:text-slate-400 font-medium leading-relaxed max-w-2xl">
+              Kenya TCO, road fitness, and specs in one place. Use the lens to focus the rows, or hide identical lines with Differences.
             </p>
           </div>
-          
-          <div className="no-print flex items-center gap-3 flex-wrap md:justify-end">
+
+          <div className="sticky top-0 z-40 mt-5 -mx-4 px-4 sm:-mx-6 sm:px-6 py-2.5 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md border-b border-slate-200/90 dark:border-slate-800/90 shadow-sm sm:mt-6 lg:static lg:mx-0 lg:px-0 lg:py-0 lg:bg-transparent lg:backdrop-blur-none lg:border-0 lg:shadow-none">
+            <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 lg:hidden">View &amp; filter</p>
+            <div className="flex flex-nowrap items-center gap-2 overflow-x-auto no-scrollbar pb-0.5 -mb-0.5">
             {PRESETS.map((option) => (
               <button
                 key={option.id}
+                type="button"
                 onClick={() => setPreset(option.id)}
-                className={`px-6 h-12 text-[10px] font-bold uppercase tracking-widest transition-all border ${
+                className={`shrink-0 px-4 h-10 sm:h-11 text-[10px] font-bold uppercase tracking-widest transition-all border ${
                   preset === option.id
-                    ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:!text-black dark:border-white shadow-xl"
-                    : "bg-white dark:bg-[#111111] text-[#718096] dark:text-slate-400 border-slate-100 dark:border-slate-800 hover:border-[#111827] dark:hover:border-white"
+                    ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:!text-black dark:border-white shadow-sm"
+                    : "bg-white dark:bg-[#111111] text-[#718096] dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-[#111827] dark:hover:border-white"
                 }`}
-                style={{ borderRadius: 'var(--radius)' }}
+                style={{ borderRadius: "var(--radius)" }}
               >
                 {option.label}
               </button>
             ))}
-
+            <div className="w-px h-8 bg-slate-200 dark:bg-slate-700 shrink-0 self-center" aria-hidden />
             <button
+              type="button"
               onClick={() => setShowDiffOnly(!showDiffOnly)}
-              className={`px-6 h-12 flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest transition-all border ${
-                showDiffOnly ? "bg-[#38A169] text-white border-[#38A169]" : "bg-white dark:bg-[#111111] text-[#718096] dark:text-slate-400 border-slate-100 dark:border-slate-800 hover:border-[#38A169]"
+              className={`shrink-0 px-4 h-10 sm:h-11 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest transition-all border ${
+                showDiffOnly ? "bg-[#38A169] text-white border-[#38A169]" : "bg-white dark:bg-[#111111] text-[#718096] border-slate-200 dark:border-slate-800"
               }`}
-              style={{ borderRadius: 'var(--radius)' }}
+              style={{ borderRadius: "var(--radius)" }}
             >
               {showDiffOnly ? <Check className="w-3.5 h-3.5" /> : <Minus className="w-3.5 h-3.5" />}
-              Differences
+              Diffs
             </button>
-            
             <button
+              type="button"
               onClick={clearCompare}
-              className="px-6 h-12 bg-white dark:bg-[#111111] border border-slate-100 dark:border-slate-800 text-[#718096] dark:text-slate-400 hover:text-[#111827] dark:hover:text-white hover:border-[#111827] dark:hover:border-white text-[10px] font-bold uppercase tracking-widest transition-all"
-              style={{ borderRadius: 'var(--radius)' }}
+              className="shrink-0 px-4 h-10 sm:h-11 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#718096] dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest"
+              style={{ borderRadius: "var(--radius)" }}
             >
-              Reset Terminal
+              Clear all
             </button>
+            </div>
           </div>
         </div>
 
-        {/* Global Summary Stats */}
+        {/* Global Summary Stats — order 3 on mobile, 2 on large screens */}
         {kenyaLensSummary && (
-          <div className="mb-24 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div id="compare-summary" className="order-3 lg:order-2 scroll-mt-24 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
             {[
               { label: 'Annual TCO Gap', value: `${formatKesCompact(kenyaLensSummary.annualTcoSpread)}/yr`, sub: 'Set Variance' },
               { label: 'Top Road Score', value: `${kenyaLensSummary.bestRoadScore}/100`, sub: 'Highest Readiness' },
               { label: 'Import Eligible', value: `${kenyaLensSummary.eligibleCount}/${fullComparedCars.length} Assets`, sub: 'Fiscal Approval' }
             ].map((stat, i) => (
-              <div key={i} className="bg-[#F7FAFC] dark:bg-[#111111] border border-slate-100 dark:border-slate-800 p-8 sm:p-10 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-4">{stat.label}</p>
-                <div className="flex items-baseline gap-3">
-                  <p className="text-2xl sm:text-3xl font-bold text-[#111827] dark:text-white tabular-nums">{stat.value}</p>
-                  <p className="text-[10px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-wide">{stat.sub}</p>
+              <div key={i} className="bg-[#F7FAFC] dark:bg-[#111111] border border-slate-100 dark:border-slate-800 p-5 sm:p-6 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-2">{stat.label}</p>
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <p className="text-xl sm:text-2xl font-bold text-[#111827] dark:text-white tabular-nums">{stat.value}</p>
+                  <p className="text-[9px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-wide">{stat.sub}</p>
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* Analytics Engine (Radar) */}
+        {/* Radar — order 4 on mobile, 3 on large; collapsible on small screens */}
         {fullComparedCars.length >= 2 && (
-          <div className="mb-32 bg-[#111827] dark:bg-[#111111] p-12 sm:p-20 overflow-hidden shadow-2xl" style={{ borderRadius: 'var(--radius)' }}>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div id="compare-radar" className="order-4 lg:order-3 scroll-mt-24 mb-0">
+            <button
+              type="button"
+              onClick={() => setRadarOpen((o) => !o)}
+              className="lg:hidden w-full flex items-center justify-between gap-3 py-3 px-4 text-left text-[10px] font-bold uppercase tracking-widest text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 mb-3"
+              style={{ borderRadius: "var(--radius)" }}
+            >
+              <span>Performance chart</span>
+              {radarOpen ? <ChevronUp className="w-4 h-4 shrink-0" /> : <ChevronDown className="w-4 h-4 shrink-0" />}
+            </button>
+            <div className={`${radarOpen ? "block" : "hidden"} lg:block`}>
+          <div className="mb-6 sm:mb-8 bg-[#111827] dark:bg-[#111111] p-6 sm:p-10 lg:p-12 overflow-hidden shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               <div>
-                <h2 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-8">Performance Dimensions</h2>
-                <p className="text-xl text-white/60 font-medium leading-relaxed mb-12">
-                   Vector analysis of four critical mechanical pillars. The synthesis highlights 
-                   how each unit balances fiscal efficiency against high-performance dynamics.
+                <h2 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-3">Performance mix</h2>
+                <p className="text-sm sm:text-base text-white/60 font-medium leading-relaxed mb-6">
+                  Relative balance of comfort, economy, and value in this set — same scoring as the table below.
                 </p>
-                <div className="space-y-6">
+                <div className="space-y-3">
                    {fullComparedCars.map((car, ci) => (
-                      <div key={car.id} className="flex items-center gap-4 group">
-                         <div className="w-12 h-[2px] transition-all" style={{ background: ci === 0 ? '#38A169' : ci === 1 ? '#FFFFFF' : '#718096' }} />
-                         <span className="text-[11px] font-sans font-semibold text-white tracking-widest group-hover:text-[#38A169] transition-colors">
+                      <div key={car.id} className="flex items-center gap-3 group">
+                         <div className="w-8 h-0.5 transition-all" style={{ background: ci === 0 ? "#38A169" : ci === 1 ? "#FFFFFF" : "#718096" }} />
+                         <span className="text-xs font-sans font-semibold text-white/90 group-hover:text-[#38A169] transition-colors truncate">
                             {car.year} {car.make} {car.model}
                          </span>
                       </div>
@@ -979,7 +1001,7 @@ export default function CompareClient({ initialCars }) {
                 </div>
               </div>
               
-              <div className="flex justify-center scale-90 sm:scale-100">
+              <div className="flex justify-center scale-[0.85] sm:scale-95 lg:scale-100 -mx-2">
                 {(() => {
                   const DIMS = ["Performance", "Comfort", "Economy", "Value"];
                   const getDimScore = (car) => [
@@ -1025,12 +1047,14 @@ export default function CompareClient({ initialCars }) {
               </div>
             </div>
           </div>
+            </div>
+          </div>
         )}
 
         {/* Winner Rail */}
-        <div className="mb-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div id="compare-winners" className="order-5 lg:order-4 scroll-mt-24 mb-8 sm:mb-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {winnerRail.map((item) => (
-            <div key={item.title} className="p-8 border border-slate-100 dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
+            <div key={item.title} className="p-5 sm:p-6 border border-slate-100 dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
               <p className="text-[10px] font-bold uppercase tracking-widest text-[#A0AEC0] dark:text-slate-600 mb-4">{item.title}</p>
               {item.car ? (
                 <Link href={`/cars/${item.car.id}`} className="group block">
@@ -1045,7 +1069,7 @@ export default function CompareClient({ initialCars }) {
         </div>
 
         {smartNarrative?.headline && (
-          <div className="mb-16 p-6 sm:p-8 border border-[#38A169]/25 bg-[#38A169]/[0.07] dark:bg-[#0f172a] dark:border-[#38A169]/30" style={{ borderRadius: "var(--radius)" }}>
+          <div id="compare-decision" className="order-6 lg:order-5 scroll-mt-24 mb-8 sm:mb-10 p-5 sm:p-7 border border-[#38A169]/25 bg-[#38A169]/[0.07] dark:bg-[#0f172a] dark:border-[#38A169]/30" style={{ borderRadius: "var(--radius)" }}>
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2f855a] dark:text-[#4ade80] mb-2">Decision helper</p>
             <h3 className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white mb-4">{smartNarrative.headline}</h3>
             <ul className="space-y-2.5 list-disc pl-4 text-sm font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
@@ -1095,10 +1119,11 @@ export default function CompareClient({ initialCars }) {
           </div>
         )}
 
-        {/* Spec matrix: mobile (one car) + desktop (table) */}
-        <div className="relative border border-slate-100 dark:border-slate-800 overflow-hidden bg-white dark:bg-[#0a0a0a] mb-32 shadow-2xl" style={{ borderRadius: "var(--radius)" }}>
+        {/* Spec matrix: mobile first in flow (order-2), desktop after insights (lg:order-6) */}
+        <div id="compare-specs" className="order-2 lg:order-6 scroll-mt-24 relative border border-slate-100 dark:border-slate-800 overflow-hidden bg-white dark:bg-[#0a0a0a] mb-8 sm:mb-10 lg:mb-12 shadow-2xl" style={{ borderRadius: "var(--radius)" }}>
         {fullComparedCars.length > 0 && (
         <div className="lg:hidden no-print p-4 sm:p-5 space-y-4 border-b border-slate-100 dark:border-slate-800">
+          <div className="sticky top-[52px] z-30 -mx-4 px-4 py-2 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur border-b border-slate-100 dark:border-slate-800 sm:static sm:bg-transparent sm:backdrop-blur-none sm:border-0 sm:p-0 sm:mx-0">
           <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-0.5 px-0.5 no-scrollbar">
             {mobileFilledSlots.map((idx) => {
               const c = comparedSlots[idx];
@@ -1121,10 +1146,11 @@ export default function CompareClient({ initialCars }) {
               );
             })}
           </div>
+        </div>
           {mobileCar ? (
             <>
               <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-500">
-                Tap another tab to see the same specs for a different car. For true side-by-side, use a larger screen.
+                Same specs, different car — switch tabs above. On wide screens, columns stay side by side.
               </p>
               <div className="space-y-6">
                 {specGroups.map((group) => (
@@ -1168,8 +1194,8 @@ export default function CompareClient({ initialCars }) {
              {/* Header Row */}
              <div className="sticky top-0 z-40 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-slate-100 dark:border-slate-800">
                 <div className="grid grid-cols-[180px_1fr_1fr_1fr] sm:grid-cols-[300px_1fr_1fr_1fr]">
-                   <div className="p-8 sm:p-12 border-r border-slate-100 dark:border-slate-800 flex items-center bg-white dark:bg-[#0a0a0a] sticky left-0 z-50">
-                      <span className="text-[10px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-[0.2em] transform -rotate-180 [writing-mode:vertical-lr]">Spec Matrix</span>
+                   <div className="p-6 sm:p-10 border-r border-slate-100 dark:border-slate-800 flex items-end justify-center bg-white dark:bg-[#0a0a0a] sticky left-0 z-50">
+                      <span className="text-[10px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-[0.2em]">Specifications</span>
                    </div>
                    {SLOT_KEYS.map((_, idx) => {
                       const car = comparedSlots[idx];
@@ -1253,14 +1279,14 @@ export default function CompareClient({ initialCars }) {
                                   </div>
                                   {SLOT_KEYS.map((_, idx) => {
                                      const car = comparedSlots[idx];
-                                     if (!car) return <div key={idx} className="p-8 border-r border-slate-100 dark:border-slate-800 last:border-r-0" />;
+                                     if (!car) return <div key={idx} className="p-6 sm:p-8 border-r border-slate-100 dark:border-slate-800 last:border-r-0" />;
                                      const { value, raw } = spec.pick(car);
                                      const best = getBest(spec, fullComparedCars);
                                      const isBest = best != null && raw === best;
                                      return (
-                                        <div key={idx} className="p-6 sm:p-8 border-r border-slate-100 dark:border-slate-800 last:border-r-0 text-center font-bold tabular-nums">
-                                           <span className={`text-xs sm:text-sm ${isBest ? 'text-[#111827] dark:text-white' : 'text-[#718096] dark:text-slate-500'}`}>{value}</span>
-                                           {isBest && <div className="mt-1 sm:mt-2 text-[8px] font-bold text-[#38A169] uppercase tracking-widest">Optimized</div>}
+                                        <div key={idx} className="p-6 sm:p-8 border-r border-slate-100 dark:border-slate-800 last:border-r-0 text-right font-bold tabular-nums min-w-0">
+                                           <span className={`text-xs sm:text-sm inline-block text-right ${isBest ? 'text-[#111827] dark:text-white' : 'text-[#718096] dark:text-slate-500'}`}>{value}</span>
+                                           {isBest && <div className="mt-1 sm:mt-2 text-[8px] font-bold text-[#38A169] uppercase tracking-widest text-right">Optimized</div>}
                                         </div>
                                      );
                                   })}
@@ -1275,14 +1301,17 @@ export default function CompareClient({ initialCars }) {
         </div>
         </div>
 
-        {/* Action Center */}
-        <div className="pt-24 border-t border-slate-100 dark:border-slate-800">
+        {/* Action Center — order-7; pb-24 on page clears fixed mobile bar */}
+        <div id="compare-export" className="order-7 no-print scroll-mt-24">
+        <p className="lg:hidden text-center text-[11px] text-slate-500 dark:text-slate-500 py-1 mb-2">
+          PDF and share: use the bar at the bottom of the screen.
+        </p>
+        <div className="max-lg:hidden pt-10 sm:pt-12 lg:pt-16 border-t border-slate-100 dark:border-slate-800">
            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
               <div>
-                 <h3 className="text-2xl font-bold text-[#111827] dark:text-white mb-4">Export Result Matrix</h3>
+                 <h3 className="text-2xl font-bold text-[#111827] dark:text-white mb-4">Export</h3>
                  <p className="text-sm font-medium text-[#718096] dark:text-slate-400 leading-relaxed">
-                    Generate a high-fidelity documentation set for your comparison. 
-                    Includes full mechanical specs and regional operational scoring.
+                    Download a PDF of this comparison or copy a link to return later.
                  </p>
               </div>
               <div className="flex flex-wrap gap-4 md:justify-end">
@@ -1295,7 +1324,54 @@ export default function CompareClient({ initialCars }) {
               </div>
            </div>
         </div>
+        </div>
+            </div>
+          </div>
+          <aside className="hidden xl:block min-w-0 xl:col-span-4 2xl:col-span-3 sticky top-24 self-start">
+            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-3">On this page</p>
+            <nav aria-label="Compare sections" className="text-sm space-y-0.5 border border-slate-200 dark:border-slate-800 bg-[#F7FAFC] dark:bg-[#111111] p-4" style={{ borderRadius: "var(--radius)" }}>
+              {[
+                ["Summary", "#compare-summary"],
+                ["Performance", "#compare-radar"],
+                ["Highlights", "#compare-winners"],
+                ["Decision", "#compare-decision"],
+                ["Specifications", "#compare-specs"],
+                ["Export", "#compare-export"],
+              ].map(([label, href]) => (
+                <a
+                  key={href}
+                  href={href}
+                  className="block py-1.5 text-slate-600 dark:text-slate-400 hover:text-[#38A169] font-medium"
+                >
+                  {label}
+                </a>
+              ))}
+            </nav>
+          </aside>
+        </div>
       </div>
     </div>
+    <div
+      className="lg:hidden no-print fixed bottom-0 inset-x-0 z-50 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex gap-2 justify-center"
+      aria-label="Export comparison"
+    >
+      <button
+        type="button"
+        onClick={handleDownloadPdf}
+        className="flex-1 h-12 max-w-[200px] bg-[#111827] dark:bg-white text-white dark:!text-black text-[10px] font-bold uppercase tracking-widest"
+        style={{ borderRadius: "var(--radius)" }}
+      >
+        PDF
+      </button>
+      <button
+        type="button"
+        onClick={handleSaveComparison}
+        className="flex-1 h-12 max-w-[200px] bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white text-[10px] font-bold uppercase tracking-widest"
+        style={{ borderRadius: "var(--radius)" }}
+      >
+        {saveState === "copied" ? "Copied" : "Share"}
+      </button>
+    </div>
+    </>
   );
 }
