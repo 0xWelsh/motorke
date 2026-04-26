@@ -189,7 +189,7 @@ export default async function DealerPage(props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       
       {/* Hero Banner */}
-      <div className="w-full h-[40vh] sm:h-[50vh] relative bg-[#111827] overflow-hidden">
+      <div className="w-full h-[32vh] sm:h-[42vh] lg:h-[50vh] relative bg-[#111827] overflow-hidden">
          {dealer.bannerUrl ? (
            <img src={dealer.bannerUrl} alt={dealer.name} className="absolute inset-0 w-full h-full object-cover opacity-60" />
          ) : (
@@ -204,23 +204,23 @@ export default async function DealerPage(props) {
          <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#0a0a0a] via-transparent to-transparent" />
       </div>
 
-      <div className="container mx-auto px-6 max-w-7xl -mt-32 relative z-10 pb-20">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl -mt-20 sm:-mt-28 lg:-mt-32 relative z-10 pb-20">
         
         {/* Dealership Info Card */}
-        <div className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-8 sm:p-12 shadow-2xl mb-16" style={{ borderRadius: 'var(--radius)' }}>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <div className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-8 lg:p-12 shadow-2xl mb-12 sm:mb-16" style={{ borderRadius: 'var(--radius)' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 sm:gap-10 lg:gap-12 items-start">
             
             {/* Logo & Identity */}
-            <div className="lg:col-span-8 flex flex-col sm:flex-row gap-8 items-start sm:items-center">
-               <div className="w-32 h-32 bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 p-4 flex items-center justify-center shrink-0 overflow-hidden shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+            <div className="lg:col-span-8 flex flex-col sm:flex-row gap-5 sm:gap-7 items-start sm:items-center">
+               <div className="w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 p-3 sm:p-4 flex items-center justify-center shrink-0 overflow-hidden shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
                   {dealer.logoUrl ? <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" /> : <span className="text-4xl font-bold text-[#CBD5E0] dark:text-slate-700">{dealer.name[0]}</span>}
                </div>
                <div>
-                  <div className="flex items-center gap-4 mb-4">
-                     <h1 className="text-4xl sm:text-5xl font-bold text-[#111827] dark:text-white leading-tight tracking-tight">{dealer.name}</h1>
+                  <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 mb-3 sm:mb-4">
+                     <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-[#111827] dark:text-white leading-tight tracking-tight">{dealer.name}</h1>
                      {dealer.verified && <span className="bg-[#38A169] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>VERIFIED STATION</span>}
                   </div>
-                  <div className="flex flex-wrap items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">
+                  <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">
                      <span className="flex items-center gap-2"><MapPin className="w-3 h-3 text-[#38A169]" /> {dealer.location || dealer.county}</span>
                      {dealerDistanceLabel && (
                        <span className="flex items-center gap-2 text-[#38A169]"><MapPin className="w-3 h-3" /> {dealerDistanceLabel}</span>
@@ -231,38 +231,38 @@ export default async function DealerPage(props) {
             </div>
 
             {/* Quick Actions */}
-            <div className="lg:col-span-4 flex flex-col gap-4">
+            <div className="lg:col-span-4 flex flex-col gap-3 sm:gap-4 w-full">
                {dealer.whatsapp && (
-                 <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="bg-[#38A169] text-white py-4 text-center text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
+                 <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full bg-[#38A169] text-white py-3.5 text-center text-[11px] sm:text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
                     Start Live Enquiry
                  </a>
                )}
-               <div className="grid grid-cols-2 gap-4">
-                  {dealer.phone && <a href={`tel:${dealer.phone}`} className="bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700" style={{ borderRadius: 'var(--radius)' }}>Call Direct</a>}
-                  {dealer.website && <a href={dealer.website.startsWith('http') ? dealer.website : `https://${dealer.website}`} target="_blank" rel="noopener noreferrer" className="bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700" style={{ borderRadius: 'var(--radius)' }}>Visit Site</a>}
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  {dealer.phone && <a href={`tel:${dealer.phone}`} className="w-full bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700" style={{ borderRadius: 'var(--radius)' }}>Call Direct</a>}
+                  {dealer.website && <a href={dealer.website.startsWith('http') ? dealer.website : `https://${dealer.website}`} target="_blank" rel="noopener noreferrer" className="w-full bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700" style={{ borderRadius: 'var(--radius)' }}>Visit Site</a>}
                </div>
             </div>
           </div>
 
-          <div className="mt-12 pt-12 border-t border-slate-100 dark:border-slate-800">
+          <div className="mt-8 sm:mt-12 pt-8 sm:pt-12 border-t border-slate-100 dark:border-slate-800">
              <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-6">About the Station</h2>
-             <div className="text-lg text-[#111827] dark:text-white leading-relaxed font-medium font-sans max-w-4xl">
+             <div className="text-base sm:text-lg text-[#111827] dark:text-white leading-relaxed font-medium font-sans max-w-4xl">
                 {dealer.description || `${dealer.name} is a cornerstone of our verified network, committed to operational excellence and transparency in asset logistics.`}
              </div>
           </div>
         </div>
 
         {/* Content Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-14 lg:gap-16">
           
           {/* Main Content */}
-          <div className="lg:col-span-8 space-y-20">
+          <div className="lg:col-span-8 space-y-14 sm:space-y-20">
             {/* Inventory */}
             <section>
-              <div className="flex items-end justify-between mb-12">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12 gap-3">
                  <div>
                     <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-4">Showroom Inventory</h2>
-                    <h3 className="text-3xl font-bold text-[#111827] dark:text-white uppercase tracking-tight">Live Listings.</h3>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-[#111827] dark:text-white uppercase tracking-tight">Live Listings.</h3>
                  </div>
                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">{dealer.cars.length} Units Available</span>
               </div>
@@ -284,7 +284,7 @@ export default async function DealerPage(props) {
           </div>
 
           {/* Sidebar */}
-          <aside className="lg:col-span-4 space-y-12">
+          <aside className="lg:col-span-4 space-y-8 sm:space-y-12">
             {/* Google Maps Link */}
             <div className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-6 overflow-hidden shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
                <div>

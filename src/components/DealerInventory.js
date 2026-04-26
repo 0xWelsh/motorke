@@ -66,7 +66,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
                onClick={() => setActiveFilter(make)}
                className={`px-4 py-2.5 shrink-0 text-[10px] font-bold uppercase tracking-widest transition-all border ${
                  activeFilter === make
-                    ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:text-black dark:border-white"
+                   ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:!text-black dark:border-white"
                     : "bg-white dark:bg-[#111111] text-[#718096] dark:text-slate-400 border-slate-100 dark:border-slate-800 hover:border-[#111827] dark:hover:border-white"
                }`}
                style={{ borderRadius: 'var(--radius)' }}
