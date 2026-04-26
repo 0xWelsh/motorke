@@ -8,6 +8,7 @@ import BuyerLocationSettings from "./BuyerLocationSettings";
 import CarCard from "./CarCard";
 import { RECENT_COOKIE_KEY, RECENT_STORAGE_KEY, readJsonCookie } from "@/lib/personalization";
 import ProfileCompletenessPanel from "./ProfileCompletenessPanel";
+import PhoneVerificationControl from "./PhoneVerificationControl";
 
 
 const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" });
@@ -17,7 +18,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
   const [saved, setSaved] = useState(savedCars);
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(user.phone || "");
   const [profMsg, setProfMsg] = useState("");
   const [pwMsg, setPwMsg] = useState("");
   const [pwErr, setPwErr] = useState("");
@@ -155,6 +156,9 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                 <div>
                   <label className={labelCls}>Contact Phone</label>
                   <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="+254 7XX XXX XXX" className={inputCls} />
+                  <div className="mt-2">
+                    <PhoneVerificationControl phone={phone} />
+                  </div>
                 </div>
                 <button type="submit" className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-2xl text-xs font-bold uppercase tracking-wider transition">
                   Save Changes

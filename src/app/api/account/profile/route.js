@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { normalizeKenyanPhone } from "@/lib/phone-verification";
 
 export async function POST(request) {
   const session = await getSessionFromRequest();
@@ -27,6 +28,33 @@ export async function POST(request) {
       where: { id: session.user.id },
       data:  { name: name.trim(), email: email.toLowerCase().trim() },
     });
+
+    const normalizedPhone = normalizeKenyanPhone(phone);
+    const phoneKey = `buyer-phone:${session.user.id}`;
+    await db.setting.upsert({
+      where: { key: phoneKey },
+      create: {
+        key: phoneKey,
+        value: JSON.stringify({ phone: normalizedPhone || null }),
+        description: "Buyer contact phone",
+      },
+      update: {
+        value: JSON.stringify({ phone: normalizedPhone || null }),
+      },
+    });
+
+    const verifiedKey = `phone-verified:${session.user.id}`;
+    const verified = await db.setting.findUnique({ where: { key: verifiedKey } });
+    if (verified?.value) {
+      let parsed = {};
+      try {
+        parsed = JSON.parse(verified.value);
+      } catch {}
+      const verifiedPhone = normalizeKenyanPhone(parsed?.phone || "");
+      if (verifiedPhone && verifiedPhone !== normalizedPhone) {
+        await db.setting.delete({ where: { key: verifiedKey } }).catch(() => {});
+      }
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {

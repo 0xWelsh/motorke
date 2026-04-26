@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { normalizeKenyanPhone } from "@/lib/phone-verification";
 
 function toNullableCoordinate(value) {
   if (value == null) return null;
@@ -114,6 +115,20 @@ export async function POST(request) {
       website:     formData.get("website")?.toString().trim() || null,
     },
   });
+
+  const verifiedKey = `phone-verified:${session.user.id}`;
+  const verified = await db.setting.findUnique({ where: { key: verifiedKey } });
+  if (verified?.value) {
+    let parsed = {};
+    try {
+      parsed = JSON.parse(verified.value);
+    } catch {}
+    const nextDealerPhone = normalizeKenyanPhone(phone);
+    const verifiedPhone = normalizeKenyanPhone(parsed?.phone || "");
+    if (verifiedPhone && verifiedPhone !== nextDealerPhone) {
+      await db.setting.delete({ where: { key: verifiedKey } }).catch(() => {});
+    }
+  }
 
   return NextResponse.redirect(new URL("/portal/profile?saved=1", request.url), 303);
 }

@@ -17,7 +17,7 @@ export default async function AccountPage({ searchParams }) {
 
   const tab = sp.tab || "profile";
 
-  const [savedCars, enquiries] = await Promise.all([
+  const [savedCars, enquiries, buyerPhoneSetting] = await Promise.all([
     db.savedCar.findMany({
       where:   { userId: user.id },
       include: {
@@ -39,7 +39,12 @@ export default async function AccountPage({ searchParams }) {
       orderBy: { createdAt: "desc" },
       take:    20,
     }),
+    db.setting.findUnique({ where: { key: `buyer-phone:${user.id}` } }),
   ]);
+  let buyerPhone = "";
+  try {
+    buyerPhone = JSON.parse(buyerPhoneSetting?.value || "{}")?.phone || "";
+  } catch {}
 
   return (
     <div className="min-h-screen bg-white bg-[#fbfcfe] dark:bg-[#0a0a0a]">
@@ -125,6 +130,7 @@ export default async function AccountPage({ searchParams }) {
               avatarUrl: user.avatarUrl || null,
               lat: user.lat ?? null,
               lng: user.lng ?? null,
+              phone: buyerPhone,
             }}
             savedCars={savedCars.map(sc => ({
               savedId:   sc.id,
