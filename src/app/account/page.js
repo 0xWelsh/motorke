@@ -4,6 +4,7 @@ import { requireAuth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import AccountTabs from "@/components/AccountTabs";
+import AvatarUpload from "@/components/AvatarUpload";
 import { Heart, MessageSquare, ShieldCheck, User as UserIcon, Calendar, ArrowRight } from "lucide-react";
 
 export const metadata = { title: "My Account — Welsh Motors Digital Garage" };
@@ -64,8 +65,15 @@ export default async function AccountPage({ searchParams }) {
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
               {/* Avatar */}
               <div className="flex items-center gap-4 w-full sm:w-auto">
-                <div className="w-14 h-14 sm:w-20 sm:h-20 bg-slate-100 dark:bg-[#222222] text-slate-900 dark:text-white rounded-none flex items-center justify-center font-bold text-xl sm:text-3xl flex-shrink-0">
-                  {user.name?.[0]?.toUpperCase()}
+                <div className="flex flex-col items-start gap-1">
+                  <AvatarUpload
+                    currentUrl={user.avatarUrl || ""}
+                    userName={user.name}
+                    size="md"
+                  />
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">
+                    Tap photo to update
+                  </span>
                 </div>
                 
                 <div className="sm:hidden flex flex-col">
@@ -110,7 +118,7 @@ export default async function AccountPage({ searchParams }) {
         <div className="bg-white dark:bg-[#111111] rounded-none overflow-hidden min-h-[600px] shadow-sm">
           <AccountTabs
             tab={tab}
-            user={{ id: user.id, name: user.name, email: user.email }}
+            user={{ id: user.id, name: user.name, email: user.email, avatarUrl: user.avatarUrl || null }}
             savedCars={savedCars.map(sc => ({
               savedId:   sc.id,
               savedAt:   sc.createdAt.toISOString(),
