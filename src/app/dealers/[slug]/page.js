@@ -218,7 +218,7 @@ export default async function DealerPage(props) {
                <div>
                   <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 mb-3 sm:mb-4">
                      <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-[#111827] dark:text-white leading-tight tracking-tight">{dealer.name}</h1>
-                     {dealer.verified && <span className="bg-[#38A169] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>VERIFIED STATION</span>}
+                     {dealer.verified && <span className="bg-[#38A169] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>VERIFIED DEALER</span>}
                   </div>
                   <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">
                      <span className="flex items-center gap-2"><MapPin className="w-3 h-3 text-[#38A169]" /> {dealer.location || dealer.county}</span>
@@ -286,23 +286,25 @@ export default async function DealerPage(props) {
           {/* Sidebar */}
           <aside className="lg:col-span-4 space-y-8 sm:space-y-12">
             {/* Google Maps Link */}
-            <div className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-6 overflow-hidden shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
-               <div>
-                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-2">Station Address</h4>
-                  <p className="text-sm font-bold text-[#111827] dark:text-white leading-relaxed">{dealer.address || dealer.location || "Nairobi, Kenya"}</p>
-                  {dealerDistanceLabel && (
-                    <p className="mt-2 text-[11px] font-bold text-[#38A169] uppercase tracking-[0.12em]">{dealerDistanceLabel}</p>
-                  )}
-                  <a
-                    href={googleMapsHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                    style={{ borderRadius: "var(--radius)" }}
-                  >
-                    Open in Google Maps
-                  </a>
-               </div>
+            <div className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 overflow-hidden shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500">Dealer Address</h4>
+                {dealerDistanceLabel && (
+                  <span className="text-[10px] font-bold text-[#38A169] uppercase tracking-[0.12em]">{dealerDistanceLabel}</span>
+                )}
+              </div>
+              <p className="text-sm font-bold text-[#111827] dark:text-white leading-relaxed">
+                {dealer.address || dealer.location || "Nairobi, Kenya"}
+              </p>
+              <a
+                href={googleMapsHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex w-full items-center justify-center bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                style={{ borderRadius: "var(--radius)" }}
+              >
+                Open in Google Maps
+              </a>
             </div>
 
             {/* Stats / Badges */}

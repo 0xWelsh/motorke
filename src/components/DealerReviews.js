@@ -134,12 +134,15 @@ export default function DealerReviews({
         )}
       </div>
 
-      <aside className="rounded-3xl border border-[#ece6dd] bg-[#fcfbf8] p-5 sm:p-6 h-fit">
-        <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-500 mb-3">Share Your Experience</p>
+      <aside className="h-fit border border-[#E2E8F0] dark:border-slate-800 bg-white dark:bg-[#111111] p-5 sm:p-6 shadow-sm" style={{ borderRadius: "var(--radius)" }}>
+        <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#718096] dark:text-slate-500 mb-2">Share your experience</p>
+        <p className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-4">
+          Help other buyers understand response speed, transparency, and after-sales quality.
+        </p>
         {!viewer && (
           <div className="space-y-3">
-            <p className="text-sm text-slate-600 font-semibold">Sign in to rate this dealership and help other buyers choose confidently.</p>
-            <Link href="/login" className="inline-flex items-center rounded-2xl bg-slate-900 px-4 py-2.5 text-xs font-extrabold uppercase tracking-[0.12em] text-white hover:bg-black transition-colors">
+            <p className="text-sm text-slate-600 dark:text-slate-300 font-semibold">Sign in to rate this dealership and help other buyers choose confidently.</p>
+            <Link href="/login" className="inline-flex items-center bg-[#111827] dark:bg-white px-4 py-2.5 text-xs font-extrabold uppercase tracking-[0.12em] text-white dark:text-black hover:bg-black dark:hover:bg-slate-200 transition-colors" style={{ borderRadius: "var(--radius)" }}>
               Log In to Review
             </Link>
           </div>
@@ -152,11 +155,12 @@ export default function DealerReviews({
         {viewer && canReview && (
           <form onSubmit={handleSubmit} className="space-y-3">
             <div>
-              <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-500">Rating</label>
+              <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Rating</label>
               <select
                 value={rating}
                 onChange={(event) => setRating(parseInt(event.target.value, 10))}
-                className="mt-1 w-full rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-white px-3 py-2 text-sm font-semibold text-slate-900 dark:text-white outline-none focus:border-[#ff5a2f]"
+                className="mt-1 w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0a0a0a] px-3 py-2 text-sm font-semibold text-slate-900 dark:text-white outline-none focus:border-[#38A169]"
+                style={{ borderRadius: "var(--radius)" }}
               >
                 <option value={5}>5 - Excellent</option>
                 <option value={4}>4 - Very good</option>
@@ -167,24 +171,26 @@ export default function DealerReviews({
             </div>
 
             <div>
-              <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-500">Comment (optional)</label>
+              <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Comment (optional)</label>
               <textarea
                 value={comment}
                 onChange={(event) => setComment(event.target.value)}
                 maxLength={500}
                 rows={4}
                 placeholder="How was your experience with this dealer?"
-                className="mt-1 w-full rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-[#ff5a2f] resize-none"
+                className="mt-1 w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0a0a0a] px-3 py-2 text-sm text-slate-700 dark:text-slate-200 outline-none focus:border-[#38A169] resize-none"
+                style={{ borderRadius: "var(--radius)" }}
               />
-              <p className="mt-1 text-[11px] font-bold text-slate-400">{comment.trim().length}/500</p>
+              <p className="mt-1 text-[11px] font-bold text-slate-400 dark:text-slate-500">{comment.trim().length}/500</p>
             </div>
 
-            {error && <p className="rounded-2xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700">{error}</p>}
+            {error && <p className="border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700" style={{ borderRadius: "var(--radius)" }}>{error}</p>}
 
             <button
               type="submit"
               disabled={submitting}
-              className="inline-flex items-center justify-center rounded-2xl bg-[#ff5a2f] px-4 py-2.5 text-xs font-extrabold uppercase tracking-[0.12em] text-slate-900 dark:text-white hover:bg-[#ff5a2f] disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
+              className="inline-flex items-center justify-center bg-[#38A169] px-4 py-2.5 text-xs font-extrabold uppercase tracking-[0.12em] text-white hover:bg-[#2f855a] disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
+              style={{ borderRadius: "var(--radius)" }}
             >
               {submitting ? "Saving..." : viewerReview ? "Update Review" : "Post Review"}
             </button>
