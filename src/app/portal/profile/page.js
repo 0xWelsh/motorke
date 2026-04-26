@@ -7,6 +7,7 @@ import DealerBannerUpload from "@/components/DealerBannerUpload";
 import ImageGallery from "@/components/ImageGallery";
 import ProfileCompletenessPanel from "@/components/ProfileCompletenessPanel";
 import PhoneVerificationControl from "@/components/PhoneVerificationControl";
+import { PHONE_VERIFICATION_ENABLED } from "@/lib/feature-flags";
 import { User, Mail, Shield, Calendar, Plus, Building2, MapPin, Globe, Phone } from "lucide-react";
 
 export const metadata = { title: "Profile Settings — Welsh Motors Dealer Portal" };
@@ -289,12 +290,14 @@ export default async function PortalProfilePage({ searchParams }) {
                     <input id="dealer-whatsapp-field" name="whatsapp" defaultValue={user.dealer.whatsapp || ""} className={inputCls} placeholder="2547XXXXXXXX" />
                   </div>
                 </div>
-                <div>
-                  <PhoneVerificationControl phone={user.dealer.phone || ""} />
-                  <p className="mt-1 text-[11px] font-semibold text-slate-500">
-                    Verification is one-time per number. If you change phone, verify the new number.
-                  </p>
-                </div>
+                {PHONE_VERIFICATION_ENABLED ? (
+                  <div>
+                    <PhoneVerificationControl phone={user.dealer.phone || ""} />
+                    <p className="mt-1 text-[11px] font-semibold text-slate-500">
+                      Verification is one-time per number. If you change phone, verify the new number.
+                    </p>
+                  </div>
+                ) : null}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
