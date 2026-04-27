@@ -48,7 +48,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
   const specString = specItems.join(" • ");  return (
     <article className="group flex flex-col bg-white dark:bg-[#0a0a0a] border-2 border-slate-100 dark:border-zinc-900 transition-all hover:shadow-2xl overflow-hidden" style={{ borderRadius: '4px' }}>
       {/* Image Container */}
-      <Link href={`/cars/${car.id}`} className="relative aspect-[4/3] bg-slate-50 dark:bg-zinc-900 overflow-hidden block">
+      <Link href={`/cars/${car.id}`} className="relative aspect-[16/11] bg-slate-50 dark:bg-zinc-900 overflow-hidden block">
         {primaryImg ? (
           <Image
             src={primaryImg}
@@ -89,22 +89,22 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
       </Link>
 
       {/* Content Area */}
-      <div className="p-6 flex flex-col flex-1">
+      <div className="p-4 sm:p-5 flex flex-col flex-1">
         {/* Title & Year */}
-        <div className="flex items-start gap-4 mb-4">
+        <div className="flex items-start gap-3 mb-3">
           <span className="mt-1 text-[11px] font-black text-slate-400 uppercase tracking-widest">
             {car.year}
           </span>
           <Link href={`/cars/${car.id}`}>
-            <h3 className="text-lg font-black font-sans text-slate-900 dark:text-white tracking-tighter leading-snug hover:text-[#38A169] transition-colors truncate" title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}>
+            <h3 className="text-base sm:text-[17px] font-black font-sans text-slate-900 dark:text-white tracking-tighter leading-snug hover:text-[#38A169] transition-colors truncate" title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}>
               {car.make} {car.model} {car.variant ? `(${car.variant})` : ""}
             </h3>
           </Link>
         </div>
 
         {/* High-Density Info Area */}
-        <div className="flex-1 space-y-5">
-          <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-3">
+        <div className="flex-1 space-y-4">
+          <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-3">
              {specString && <span className="text-slate-900 dark:text-slate-200 font-bold block mb-1">{specString}</span>}
              {car.description || "Premium verified vehicle available in our showroom."}
           </p>
@@ -124,9 +124,9 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
         </div>
 
         {/* Bottom Bar: Price & Action */}
-        <div className="mt-8 pt-5 border-t border-slate-100 dark:border-zinc-900 flex items-center justify-between">
+        <div className="mt-6 pt-4 border-t border-slate-100 dark:border-zinc-900 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-lg font-black text-slate-900 dark:text-white tracking-tighter">
+            <span className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tighter">
                {formatCarPrice(car)}
             </span>
             <div 
@@ -139,7 +139,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
 
           <Link 
             href={`/cars/${car.id}`} 
-            className="group/btn flex items-center gap-4 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-white px-6 py-2.5 text-[10px] font-black uppercase tracking-widest hover:bg-[#111827] hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
+            className="group/btn flex items-center gap-3 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-[#111827] hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
             style={{ borderRadius: '2px' }}
           >
             View Offer
