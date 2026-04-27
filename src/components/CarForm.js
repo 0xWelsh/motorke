@@ -294,6 +294,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   });
 
   const formRef = useRef(null);
+  const initializedNewFormRef = useRef(false);
   const saveTimeoutRef = useRef(null);
   const uploadedLocalMapRef = useRef(new Map());
   const pendingUploadIdsRef = useRef(new Set());
@@ -339,6 +340,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   useEffect(() => {
     if (!isNew) return;
+    if (initializedNewFormRef.current) return;
+    initializedNewFormRef.current = true;
     if (draftKey) localStorage.removeItem(draftKey);
     localStorage.removeItem(defaultsKey);
     setDraftLoaded(false);
