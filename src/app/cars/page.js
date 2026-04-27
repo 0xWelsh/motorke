@@ -178,11 +178,10 @@ export default async function CarsPage({ searchParams }) {
           </div>
         </div>
 
-        {/* Side-by-Side Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-          
-          {/* Sidebar - Spans rows as long as it needs */}
-          <div className="lg:col-span-1 lg:row-span-[30] lg:sticky lg:top-40 self-start space-y-10">
+        {/* Main layout: sidebar + independent results grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-12">
+          {/* Sidebar */}
+          <div className="lg:col-span-1 self-start space-y-10">
             <CarsSearch
               initialSearch={search}
               initialMake={make}
@@ -210,70 +209,72 @@ export default async function CarsPage({ searchParams }) {
             </div>
           </div>
 
-          {/* Results Grid - Each car is 1 column. 
-              The flow starts immediately next to the Sidebar.
-          */}
-          {sortedCars.map((car) => (
-            <div key={car.id} className="lg:col-span-1">
-              <CarCard 
-                car={car} 
-                distance={
-                  effectiveLat != null && effectiveLng != null && car.dealer?.lat != null && car.dealer?.lng != null
-                    ? distance(effectiveLat, effectiveLng, car.dealer.lat, car.dealer.lng)
-                    : null
-                }
-              />
+          {/* Results area */}
+          <div className="lg:col-span-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+              {sortedCars.map((car) => (
+                <div key={car.id}>
+                  <CarCard
+                    car={car}
+                    distance={
+                      effectiveLat != null && effectiveLng != null && car.dealer?.lat != null && car.dealer?.lng != null
+                        ? distance(effectiveLat, effectiveLng, car.dealer.lat, car.dealer.lng)
+                        : null
+                    }
+                  />
+                </div>
+              ))}
             </div>
-          ))}
 
-          {sortedCars.length === 0 && (
-            <div className="lg:col-span-3 py-32 text-center bg-[#F7FAFC] dark:bg-[#111111] border border-[#EDF2F7] dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
-              <Search className="w-12 h-12 text-[#CBD5E0] dark:text-slate-700 mx-auto mb-6" />
-              <h2 className="text-2xl font-bold text-[#111827] dark:text-white mb-2">No matches found</h2>
-              <p className="text-[#718096] dark:text-slate-400 font-medium mb-8">Try adjusting your filters or resetting your search.</p>
-              <Link href="/cars" className="inline-flex bg-[#111827] dark:bg-white dark:text-[#111827] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
-                Clear All Filters
-              </Link>
-            </div>
-          )}
-
-          {/* Pagination - Full Width below all content */}
-          {totalPages > 1 && (
-            <div className="lg:col-span-4 mt-20 flex justify-center items-center gap-2 border-t border-slate-100 pt-10">
-              {page > 1 && (
-                <Link href={getPageLink(page - 1)} className="w-12 h-12 flex items-center justify-center border border-[#EDF2F7] dark:border-slate-800 text-[#111827] dark:text-white hover:bg-[#F7FAFC] dark:hover:bg-white/5 transition-colors" style={{ borderRadius: 'var(--radius)' }}>
-                  <ChevronRight className="w-4 h-4 rotate-180" />
+            {sortedCars.length === 0 && (
+              <div className="py-32 text-center bg-[#F7FAFC] dark:bg-[#111111] border border-[#EDF2F7] dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
+                <Search className="w-12 h-12 text-[#CBD5E0] dark:text-slate-700 mx-auto mb-6" />
+                <h2 className="text-2xl font-bold text-[#111827] dark:text-white mb-2">No matches found</h2>
+                <p className="text-[#718096] dark:text-slate-400 font-medium mb-8">Try adjusting your filters or resetting your search.</p>
+                <Link href="/cars" className="inline-flex bg-[#111827] dark:bg-white dark:text-[#111827] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
+                  Clear All Filters
                 </Link>
-              )}
-              <div className="flex gap-2">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-                  if (p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)) {
-                    return (
-                      <Link key={p} href={getPageLink(p)} 
-                        className={`w-12 h-12 flex items-center justify-center text-xs font-bold transition-all ${
-                          p === page 
-                            ? "bg-[#111827] dark:bg-white text-white dark:!text-black shadow-lg" 
-                            : "border border-[#EDF2F7] dark:border-slate-800 text-[#718096] dark:text-slate-400 hover:bg-[#F7FAFC] dark:hover:bg-white/5"
-                        }`}
-                        style={{ borderRadius: 'var(--radius)' }}
-                      >
-                        {p}
-                      </Link>
-                    );
-                  }
-                  if ((p === 2 && page > 3) || (p === totalPages - 1 && page < totalPages - 2)) {
-                     return <span key={p} className="w-12 h-12 flex items-end justify-center text-[#CBD5E0] dark:text-slate-700 pb-3">...</span>;
-                  }
-                  return null;
-                })}
               </div>
-              {page < totalPages && (
-                <Link href={getPageLink(page + 1)} className="w-12 h-12 flex items-center justify-center border border-[#EDF2F7] dark:border-slate-800 text-[#111827] dark:text-white hover:bg-[#F7FAFC] dark:hover:bg-white/5 transition-colors" style={{ borderRadius: 'var(--radius)' }}>
-                  <ChevronRight className="w-4 h-4" />
-                </Link>
-              )}
-            </div>
-          )}
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-20 flex justify-center items-center gap-2 border-t border-slate-100 pt-10">
+                {page > 1 && (
+                  <Link href={getPageLink(page - 1)} className="w-12 h-12 flex items-center justify-center border border-[#EDF2F7] dark:border-slate-800 text-[#111827] dark:text-white hover:bg-[#F7FAFC] dark:hover:bg-white/5 transition-colors" style={{ borderRadius: 'var(--radius)' }}>
+                    <ChevronRight className="w-4 h-4 rotate-180" />
+                  </Link>
+                )}
+                <div className="flex gap-2">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
+                    if (p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)) {
+                      return (
+                        <Link key={p} href={getPageLink(p)}
+                          className={`w-12 h-12 flex items-center justify-center text-xs font-bold transition-all ${
+                            p === page
+                              ? "bg-[#111827] dark:bg-white text-white dark:!text-black shadow-lg"
+                              : "border border-[#EDF2F7] dark:border-slate-800 text-[#718096] dark:text-slate-400 hover:bg-[#F7FAFC] dark:hover:bg-white/5"
+                          }`}
+                          style={{ borderRadius: 'var(--radius)' }}
+                        >
+                          {p}
+                        </Link>
+                      );
+                    }
+                    if ((p === 2 && page > 3) || (p === totalPages - 1 && page < totalPages - 2)) {
+                      return <span key={p} className="w-12 h-12 flex items-end justify-center text-[#CBD5E0] dark:text-slate-700 pb-3">...</span>;
+                    }
+                    return null;
+                  })}
+                </div>
+                {page < totalPages && (
+                  <Link href={getPageLink(page + 1)} className="w-12 h-12 flex items-center justify-center border border-[#EDF2F7] dark:border-slate-800 text-[#111827] dark:text-white hover:bg-[#F7FAFC] dark:hover:bg-white/5 transition-colors" style={{ borderRadius: 'var(--radius)' }}>
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
