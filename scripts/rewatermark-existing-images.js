@@ -7,7 +7,7 @@
  *   node scripts/rewatermark-existing-images.js --dry-run
  *
  * This script fetches each current image, applies the latest watermark style
- * using the car title (year + make + model), and uploads it back to the same
+ * using the dealership name, and uploads it back to the same
  * storage path (upsert), so existing URLs remain unchanged.
  */
 
@@ -53,6 +53,7 @@ async function main() {
           year: true,
           make: true,
           model: true,
+          dealer: { select: { name: true } },
         },
       },
     },
@@ -74,7 +75,7 @@ async function main() {
       continue;
     }
 
-    const title = [row.car?.year, row.car?.make, row.car?.model].filter(Boolean).join(" ").trim() || "WELSH MOTORS";
+    const watermarkText = row.car?.dealer?.name?.trim() || "WELSH MOTORS";
 
     try {
       const res = await fetch(row.url);
@@ -87,7 +88,7 @@ async function main() {
       const arrayBuffer = await res.arrayBuffer();
       const inputBuffer = Buffer.from(arrayBuffer);
       const mimeType = inferMimeType(row.url, res.headers.get("content-type"));
-      const outputBuffer = await applyListingWatermark(inputBuffer, mimeType, title);
+      const outputBuffer = await applyListingWatermark(inputBuffer, mimeType, watermarkText);
 
       if (dryRun) {
         updated += 1;

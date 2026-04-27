@@ -179,7 +179,7 @@ export default async function CarsPage({ searchParams }) {
         </div>
 
         {/* Main layout: sidebar + independent results grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-12">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-5 gap-y-10">
           {/* Sidebar */}
           <div className="lg:col-span-1 self-start space-y-10">
             <CarsSearch
@@ -215,7 +215,7 @@ export default async function CarsPage({ searchParams }) {
                 - mobile/tablet/desktop: standard grid for clean comparison
                 - xl and above: masonry columns for denser packing
             */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:hidden gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:hidden gap-5">
               {sortedCars.map((car) => (
                 <div key={car.id}>
                   <CarCard
@@ -229,9 +229,9 @@ export default async function CarsPage({ searchParams }) {
                 </div>
               ))}
             </div>
-            <div className="hidden xl:block xl:columns-3 xl:gap-8">
+            <div className="hidden xl:block xl:columns-3 xl:gap-5">
               {sortedCars.map((car) => (
-                <div key={`masonry-${car.id}`} className="mb-8 break-inside-avoid">
+                <div key={`masonry-${car.id}`} className="mb-5 break-inside-avoid">
                   <CarCard
                     car={car}
                     distance={

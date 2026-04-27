@@ -275,6 +275,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [modelSources, setModelSources] = useState(["inventory"]);
   const [selectedModel, setSelectedModel] = useState((baseSeed.model || "").trim());
   const [selectedYear, setSelectedYear] = useState(String(baseSeed.year || currentYear));
+  const [selectedDealerId, setSelectedDealerId] = useState(baseSeed.dealerId || dealers?.[0]?.id || "");
   const [variantOptions, setVariantOptions] = useState([]);
   const [loadingVariants, setLoadingVariants] = useState(false);
   const [variantSources, setVariantSources] = useState(["inventory"]);
@@ -472,12 +473,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     const results = await Promise.allSettled(
       toUpload.map(async (file) => {
         const formData = new FormData();
-        const watermarkParts = [
-          (selectedYear || "").trim(),
-          (selectedMake || "").trim(),
-          (selectedModel || "").trim(),
-        ].filter(Boolean);
-        const watermarkText = watermarkParts.join(" ") || "WELSH MOTORS";
+        const selectedDealerName =
+          dealers.find((dealer) => dealer.id === selectedDealerId)?.name ||
+          dealers?.[0]?.name ||
+          "";
+        const watermarkText = selectedDealerName.trim() || "WELSH MOTORS";
         formData.append("file", file);
         formData.append("watermarkText", watermarkText);
         const res = await fetch("/api/upload", { method: "POST", body: formData });
@@ -830,7 +830,13 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       {dealers.length > 1 && (
         <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8">
           <label className={labelCls}>Assigned Dealer *</label>
-          <select name="dealerId" defaultValue={formSeed.dealerId || ""} required className={selectCls}>
+          <select
+            name="dealerId"
+            defaultValue={formSeed.dealerId || ""}
+            required
+            className={selectCls}
+            onChange={(e) => setSelectedDealerId(e.target.value)}
+          >
             <option value="">Select dealer</option>
             {dealers.map((dealer) => (
               <option key={dealer.id} value={dealer.id}>{dealer.name} - {dealer.location}</option>
