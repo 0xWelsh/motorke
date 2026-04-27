@@ -52,6 +52,23 @@ function rankHotDeals(carsWithAnalysis) {
     .slice(0, 8);
 }
 
+function rotateList(items, offset = 0) {
+  if (!Array.isArray(items) || items.length === 0) return [];
+  const safeOffset = ((offset % items.length) + items.length) % items.length;
+  return [...items.slice(safeOffset), ...items.slice(0, safeOffset)];
+}
+
+function getRotationOffset(size) {
+  if (!size) return 0;
+  const now = new Date();
+  // Rotate every 6 hours so the same cars don't dominate all day.
+  const slot = Math.floor(now.getUTCHours() / 6);
+  const daySeed =
+    now.getUTCFullYear() * 1000 +
+    Math.floor((Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) - Date.UTC(now.getUTCFullYear(), 0, 0)) / 86400000);
+  return (daySeed + slot) % size;
+}
+
 
 const getCachedData = unstable_cache(
   async () => {
@@ -159,7 +176,11 @@ export default async function HomePage() {
     Promise.all((newArrivals || []).map(async c => ({ ...c, marketAnalysis: await analyzePrice(c) }))),
   ]);
 
-  const heroPrimary = spotlightEnhanced?.[0] || null;
+  const spotlightPool = (hotEnhanced.length > 0 ? hotEnhanced : spotlightEnhanced).slice(0, 12);
+  const spotlightRotated = rotateList(spotlightPool, getRotationOffset(spotlightPool.length));
+  const heroCars = spotlightRotated.slice(0, 2);
+  const spotlightCards = spotlightRotated.slice(0, 2);
+  const heroPrimary = heroCars?.[0] || spotlightEnhanced?.[0] || null;
 
   return (
     <div className="min-h-screen pb-20 bg-white dark:bg-[#0a0a0a]">
@@ -239,7 +260,7 @@ export default async function HomePage() {
 
             <div className="hidden lg:block lg:col-span-5 xl:col-span-5 lg:pl-4">
               <HeroGridShowcase 
-                cars={hotEnhanced.length >= 2 ? hotEnhanced : spotlightEnhanced.slice(0, 2)} 
+                cars={heroCars.length >= 2 ? heroCars : spotlightEnhanced.slice(0, 2)} 
                 reviews={highlightReviews} 
               />
             </div>
@@ -299,7 +320,7 @@ export default async function HomePage() {
                 </Link>
               </div>
 
-              {hotEnhanced.slice(0, 2).map((car) => (
+              {spotlightCards.map((car) => (
                 <CarCard key={car.id} car={car} />
               ))}
             </div>

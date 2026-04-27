@@ -211,9 +211,27 @@ export default async function CarsPage({ searchParams }) {
 
           {/* Results area */}
           <div className="lg:col-span-3">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            {/* Safe hybrid layout:
+                - mobile/tablet/desktop: standard grid for clean comparison
+                - xl and above: masonry columns for denser packing
+            */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:hidden gap-8">
               {sortedCars.map((car) => (
                 <div key={car.id}>
+                  <CarCard
+                    car={car}
+                    distance={
+                      effectiveLat != null && effectiveLng != null && car.dealer?.lat != null && car.dealer?.lng != null
+                        ? distance(effectiveLat, effectiveLng, car.dealer.lat, car.dealer.lng)
+                        : null
+                    }
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="hidden xl:block xl:columns-3 xl:gap-8">
+              {sortedCars.map((car) => (
+                <div key={`masonry-${car.id}`} className="mb-8 break-inside-avoid">
                   <CarCard
                     car={car}
                     distance={
