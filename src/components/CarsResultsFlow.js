@@ -93,18 +93,18 @@ export default function CarsResultsFlow({ cars, sidebarId = "cars-filter-sidebar
 
   return (
     <div ref={rootRef} className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-[2200px]:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-[2200px]:grid-cols-4 gap-4 justify-items-start">
         {topCars.map((car) => (
-          <div key={`top-${car.id}`} data-flow-card="true">
+          <div key={`top-${car.id}`} data-flow-card="true" className="w-full max-w-[320px]">
             <CarCard car={car} distance={car.distanceValue ?? null} />
           </div>
         ))}
       </div>
 
       {bottomCars.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 min-[2200px]:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 min-[2200px]:grid-cols-5 gap-4 justify-items-start">
           {bottomCars.map((car) => (
-            <div key={`bottom-${car.id}`}>
+            <div key={`bottom-${car.id}`} className="w-full max-w-[320px]">
               <CarCard car={car} distance={car.distanceValue ?? null} />
             </div>
           ))}
