@@ -94,6 +94,9 @@ model Dealer {
   whatsapp     String?
   email        String?
   website      String?
+  instagramUrl String?
+  facebookUrl  String?
+  tiktokUrl    String?
   location     String
   county       String         @default("Nairobi")
   address      String?

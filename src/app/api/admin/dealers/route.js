@@ -37,6 +37,9 @@ export async function POST(request) {
     const whatsapp = formData.get("whatsapp")?.toString().trim() || null;
     const email = formData.get("email")?.toString().trim() || null;
     const website = formData.get("website")?.toString().trim() || null;
+    const instagramUrl = formData.get("instagramUrl")?.toString().trim() || null;
+    const facebookUrl = formData.get("facebookUrl")?.toString().trim() || null;
+    const tiktokUrl = formData.get("tiktokUrl")?.toString().trim() || null;
     const description = formData.get("description")?.toString().trim() || null;
     const verified = formData.get("verified") === "on";
     const featured = formData.get("featured") === "on";
@@ -58,6 +61,9 @@ export async function POST(request) {
             whatsapp,
             email,
             website,
+            instagramUrl,
+            facebookUrl,
+            tiktokUrl,
             description,
             verified,
             featured,

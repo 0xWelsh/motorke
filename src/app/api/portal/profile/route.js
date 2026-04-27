@@ -113,6 +113,9 @@ export async function POST(request) {
       lng,
       description: formData.get("description")?.toString().trim() || null,
       website:     formData.get("website")?.toString().trim() || null,
+      instagramUrl: formData.get("instagramUrl")?.toString().trim() || null,
+      facebookUrl:  formData.get("facebookUrl")?.toString().trim() || null,
+      tiktokUrl:    formData.get("tiktokUrl")?.toString().trim() || null,
     },
   });
 

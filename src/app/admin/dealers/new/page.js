@@ -80,6 +80,21 @@ export default async function AdminNewDealerPage(props) {
             </div>
           </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className={labelCls}>Instagram URL</label>
+              <input name="instagramUrl" type="url" placeholder="https://instagram.com/yourdealership" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Facebook URL</label>
+              <input name="facebookUrl" type="url" placeholder="https://facebook.com/yourdealership" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>TikTok URL</label>
+              <input name="tiktokUrl" type="url" placeholder="https://www.tiktok.com/@yourdealership" className={inputCls} />
+            </div>
+          </div>
+
           <div>
             <label className={labelCls}>Description</label>
             <textarea name="description" rows={3}

@@ -310,6 +310,39 @@ export default async function PortalProfilePage({ searchParams }) {
                   </div>
                 </div>
 
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+                  <div>
+                    <label className={labelCls}>Instagram URL</label>
+                    <input
+                      name="instagramUrl"
+                      type="url"
+                      defaultValue={user.dealer.instagramUrl || ""}
+                      className={inputCls}
+                      placeholder="https://instagram.com/yourdealership"
+                    />
+                  </div>
+                  <div>
+                    <label className={labelCls}>Facebook URL</label>
+                    <input
+                      name="facebookUrl"
+                      type="url"
+                      defaultValue={user.dealer.facebookUrl || ""}
+                      className={inputCls}
+                      placeholder="https://facebook.com/yourdealership"
+                    />
+                  </div>
+                  <div>
+                    <label className={labelCls}>TikTok URL</label>
+                    <input
+                      name="tiktokUrl"
+                      type="url"
+                      defaultValue={user.dealer.tiktokUrl || ""}
+                      className={inputCls}
+                      placeholder="https://www.tiktok.com/@yourdealership"
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <label className={labelCls}>Short About</label>
                   <textarea

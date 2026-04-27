@@ -105,6 +105,21 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
             </div>
           </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className={labelCls}>Instagram URL</label>
+              <input name="instagramUrl" type="url" defaultValue={dealer.instagramUrl || ""} className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Facebook URL</label>
+              <input name="facebookUrl" type="url" defaultValue={dealer.facebookUrl || ""} className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>TikTok URL</label>
+              <input name="tiktokUrl" type="url" defaultValue={dealer.tiktokUrl || ""} className={inputCls} />
+            </div>
+          </div>
+
           <div>
             <label className={labelCls}>Description</label>
             <textarea name="description" rows={3} defaultValue={dealer.description || ""}

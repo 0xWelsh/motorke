@@ -12,6 +12,11 @@ import { calculateDistance } from "@/lib/geolocation";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+function withProtocol(url) {
+  if (!url) return null;
+  return url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
+}
+
 export async function generateMetadata(props) {
   const params = await props.params;
   const dealer = await db.dealer.findUnique({
@@ -152,7 +157,7 @@ export default async function DealerPage(props) {
     contactLinks.push({
       icon: <Globe className="w-4 h-4" />,
       label: "Website",
-      href: dealer.website.startsWith('http') ? dealer.website : `https://${dealer.website}`,
+      href: withProtocol(dealer.website),
       external: true,
     });
   }
@@ -163,6 +168,12 @@ export default async function DealerPage(props) {
       href: `mailto:${dealer.email}`,
     });
   }
+
+  const socialLinks = [
+    { key: "instagram", label: "Instagram", href: withProtocol(dealer.instagramUrl), icon: <span className="text-[10px] font-black uppercase tracking-wide">IG</span> },
+    { key: "facebook", label: "Facebook", href: withProtocol(dealer.facebookUrl), icon: <span className="text-sm font-black leading-none">f</span> },
+    { key: "tiktok", label: "TikTok", href: withProtocol(dealer.tiktokUrl), icon: <span className="text-[10px] font-black uppercase tracking-wide">TT</span> },
+  ].filter((item) => Boolean(item.href));
 
   // Generate the gallery for the hero section
   const dealerGallery = dealer.cars
@@ -245,8 +256,25 @@ export default async function DealerPage(props) {
                )}
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {dealer.phone && <a href={`tel:${dealer.phone}`} className="w-full bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700" style={{ borderRadius: 'var(--radius)' }}>Call Direct</a>}
-                  {dealer.website && <a href={dealer.website.startsWith('http') ? dealer.website : `https://${dealer.website}`} target="_blank" rel="noopener noreferrer" className="w-full bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700" style={{ borderRadius: 'var(--radius)' }}>Visit Site</a>}
+                  {dealer.website && <a href={withProtocol(dealer.website)} target="_blank" rel="noopener noreferrer" className="w-full bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700" style={{ borderRadius: 'var(--radius)' }}>Visit Site</a>}
                </div>
+               {socialLinks.length > 0 && (
+                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                   {socialLinks.map((item) => (
+                     <a
+                       key={item.key}
+                       href={item.href}
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       className="w-full bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 inline-flex items-center justify-center gap-2"
+                       style={{ borderRadius: "var(--radius)" }}
+                     >
+                       {item.icon}
+                       {item.label}
+                     </a>
+                   ))}
+                 </div>
+               )}
             </div>
           </div>
 
