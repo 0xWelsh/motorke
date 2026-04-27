@@ -217,7 +217,7 @@ export default async function CarsPage({ searchParams }) {
             */}
             <div className="grid grid-cols-1 sm:grid-cols-2 min-[900px]:grid-cols-3 2xl:hidden gap-4">
               {sortedCars.map((car) => (
-                <div key={car.id}>
+                <div key={car.id} className="w-full max-w-[330px] mx-auto">
                   <CarCard
                     car={car}
                     distance={
@@ -231,7 +231,7 @@ export default async function CarsPage({ searchParams }) {
             </div>
             <div className="hidden 2xl:block 2xl:columns-3 2xl:gap-4">
               {sortedCars.map((car) => (
-                <div key={`masonry-${car.id}`} className="mb-4 break-inside-avoid">
+                <div key={`masonry-${car.id}`} className="mb-4 break-inside-avoid w-full max-w-[330px]">
                   <CarCard
                     car={car}
                     distance={
