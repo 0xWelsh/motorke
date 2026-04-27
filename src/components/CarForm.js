@@ -279,6 +279,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [variantSources, setVariantSources] = useState(["inventory"]);
   const [smartFillText, setSmartFillText] = useState("");
   const [parsing, setParsing] = useState(false);
+  const [smartFillMeta, setSmartFillMeta] = useState({
+    source: "rules",
+    confidence: {},
+    overall: null,
+    warnings: [],
+  });
   const [videoUrl, setVideoUrl] = useState(formSeed.videoUrl || "");
   const [checklist, setChecklist] = useState({
     basics: false,
@@ -307,6 +313,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const inputCls = "w-full bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-[#ff5a2f] transition-all";
   const selectCls = "w-full bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white outline-none focus:border-[#ff5a2f] transition-all appearance-none";
   const labelCls = "block text-[11px] font-bold uppercase tracking-wider text-slate-500 ml-1 mb-2";
+  const confidenceClass = (fieldName) => {
+    const score = Number(smartFillMeta?.confidence?.[fieldName] ?? 0);
+    if (!score) return "";
+    if (score < 0.6) return " border-amber-400 ring-2 ring-amber-100 dark:ring-amber-900/30";
+    return " border-emerald-500/60";
+  };
 
   const saveDraft = useCallback(() => {
     if (!draftKey || !isNew || !formRef.current) return;
@@ -654,177 +666,62 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     }
   }
 
-  const normalizeModelToken = (token = "") =>
-    token
-      .replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9+-]+$/g, "")
-      .trim();
-
-  const toTitleCase = (value = "") =>
-    value
-      .split(/\s+/)
-      .filter(Boolean)
-      .map((part) => {
-        if (/^[A-Z0-9-]{2,}$/.test(part)) return part;
-        return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
-      })
-      .join(" ");
-
   const handleSmartFill = async () => {
     if (!smartFillText.trim()) return;
     setParsing(true);
     setError("");
+    setSmartFillMeta({ source: "rules", confidence: {}, overall: null, warnings: [] });
 
     try {
-      // 1. Reset target fields to "empty" state first
-      const resetState = {
-        make: "",
-        model: "",
-        year: "",
-        price: "",
-        mileage: "",
-        engineCC: "",
-        variant: ""
-      };
-      
-      let detectedYear = "";
-      let detectedMake = "";
-      let detectedModel = "";
-      let detectedPrice = "";
-      let detectedMileage = "";
-      let detectedCC = "";
-
-      // Detection 1: Year (4 digits 19xx or 20xx)
-      const yearMatch = smartFillText.match(/\b(19|20)\d{2}\b/);
-      if (yearMatch) {
-        detectedYear = parseInt(yearMatch[0], 10);
+      const response = await fetch("/api/cars/parse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: smartFillText }),
+      });
+      const payload = await response.json();
+      if (!response.ok || !payload?.success) {
+        throw new Error(payload?.error || "Smart Fill service failed");
       }
 
-      // Detection 2: Make (from our MAKES list, longest first to avoid partial clashes)
-      const makesByLength = [...MAKES].sort((a, b) => b.length - a.length);
-      for (const make of makesByLength) {
-        if (new RegExp(`\\b${make.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(smartFillText)) {
-          detectedMake = make;
-          break;
-        }
-      }
+      const parsed = payload?.data || {};
+      const confidence = parsed?.confidence || {};
 
-      // Detection 3: Model (supports multi-word model tokens after make)
-      if (detectedMake) {
-        const words = smartFillText.split(/[\s,]+/).filter(Boolean);
-        const makeIdx = words.findIndex(w => w.toLowerCase() === detectedMake.toLowerCase());
-        if (makeIdx !== -1) {
-          const stopTokens = new Set([
-            "price", "ksh", "kes", "usd", "km", "mileage", "cc", "litre", "liter",
-            "automatic", "manual", "petrol", "diesel", "hybrid", "engine", "color", "colour",
-          ]);
-          const modelParts = [];
-          for (let i = makeIdx + 1; i < Math.min(words.length, makeIdx + 4); i += 1) {
-            const cleaned = normalizeModelToken(words[i]);
-            if (!cleaned) break;
-            if (stopTokens.has(cleaned.toLowerCase())) break;
-            modelParts.push(cleaned);
-          }
-          if (modelParts.length > 0) {
-            detectedModel = toTitleCase(modelParts.join(" "));
-          }
-        }
-      }
-
-      // Detection 4: Price
-      const priceRegex = /(?:ksh|kes|usd|price|cost|asking|@)\s*[:\-]?\s*([\d,.]+)\s*(m|million|k)?\b|([\d,.]+)\s*(m|million)\b/gi;
-      const matches = smartFillText.matchAll(new RegExp(priceRegex, 'gi'));
-      for (const match of matches) {
-        const raw = (match[1] || match[3] || "").replace(/,/g, "");
-        if (!raw) continue;
-        let val = raw;
-        let num = parseFloat(val);
-        if (isNaN(num)) continue;
-
-        const context = smartFillText.toLowerCase();
-        const snippet = context.substring(Math.max(0, (match.index || 0) - 18), (match.index || 0) + 28);
-        const suffix = (match[2] || match[4] || "").toLowerCase();
-        
-        if (suffix === "m" || suffix === "million" || snippet.includes(" million")) {
-          if (num < 100) num = num * 1000000;
-        } else if ((suffix === "k" || snippet.includes(" k")) && !snippet.includes('km')) {
-          if (num < 10000) num = num * 1000;
-        }
-
-        if (num > 50000 && num < 100000000) {
-          detectedPrice = num;
-          break;
-        }
-      }
-
-      // Detection 5: Mileage
-      const mileageRegex = /(?:mileage[:\s-]*)?([\d,.]+)\s*(k)?\s*(?:km|km's|miles)?\b/i;
-      const mileageMatch = smartFillText.match(mileageRegex);
-      if (mileageMatch) {
-        let val = mileageMatch[1].replace(/,/g, '');
-        let num = parseFloat(val);
-        if (mileageMatch[2] && num < 1000) num = num * 1000;
-        const context = smartFillText.toLowerCase().substring(mileageMatch.index, mileageMatch.index + 24);
-        if (context.includes(" km") && context.includes("k") && num < 1000) num = num * 1000;
-        
-        if (num > 0 && num < 1000000) {
-          detectedMileage = num;
-        }
-      }
-
-      // Detection 6: Engine CC (supports both 1490cc and 1.5L)
-      const ccMatch = smartFillText.match(/(\d{3,4})\s*(?:cc)\b/i);
-      if (ccMatch) {
-        detectedCC = parseInt(ccMatch[1], 10);
-      } else {
-        const litresMatch = smartFillText.match(/(\d(?:\.\d)?)\s*(?:l|litre|liter)\b/i);
-        if (litresMatch) {
-          detectedCC = Math.round(parseFloat(litresMatch[1]) * 1000);
-        }
-      }
-
-      // Detection 7: Features (from FEATURE_CHECKLIST)
-      const detectedFeatures = [];
-      const lowerText = smartFillText.toLowerCase();
-      FEATURE_CHECKLIST.forEach(feature => {
-        const featureLower = feature.toLowerCase();
-        // Simple word match, but also handle some common variations
-        if (lowerText.includes(featureLower)) {
-          detectedFeatures.push(feature);
-        } else if (featureLower.includes("camera") && lowerText.includes("camera")) {
-          // If "Reverse Camera" is in checklist and text has "camera", but maybe user said "rear camera"
-          if (!detectedFeatures.includes(feature)) detectedFeatures.push(feature);
-        } else if (featureLower === "leather seats" && lowerText.includes("leather")) {
-          if (!detectedFeatures.includes(feature)) detectedFeatures.push(feature);
-        } else if (featureLower === "keyless entry" && (lowerText.includes("keyless") || lowerText.includes("push start"))) {
-           if (!detectedFeatures.includes(feature)) detectedFeatures.push(feature);
-        }
+      setSmartFillMeta({
+        source: parsed?.source || (payload?.aiUsed ? "llm+rules" : "rules"),
+        confidence,
+        overall: typeof payload?.confidenceScore === "number" ? payload.confidenceScore : null,
+        warnings: Array.isArray(parsed?.warnings) ? parsed.warnings : [],
       });
 
-      // Final State Application
-      // Only set detected values, keep others empty as per request
-      setSelectedYear(detectedYear ? String(detectedYear) : "");
-      setSelectedMake(detectedMake || "");
-      setSelectedModel(detectedModel || "");
-      setPriceInput(detectedPrice ? String(detectedPrice) : "");
-      setSelectedFeatures(detectedFeatures);
+      const nextFeatures = [];
+      const lowerText = smartFillText.toLowerCase();
+      FEATURE_CHECKLIST.forEach((feature) => {
+        const featureLower = feature.toLowerCase();
+        if (lowerText.includes(featureLower)) nextFeatures.push(feature);
+      });
+      if (nextFeatures.length) setSelectedFeatures(Array.from(new Set([...selectedFeatures, ...nextFeatures])));
 
-      setFormSeed(prev => ({
-        ...prev,
-        ...resetState, // Clear target fields first
-        make: detectedMake || "",
-        model: detectedModel || "",
-        year: detectedYear || "",
-        price: detectedPrice || "",
-        mileage: detectedMileage || "",
-        engineCC: detectedCC || ""
-      }));
+      const seeded = {
+        make: parsed?.make || "",
+        model: parsed?.model || "",
+        variant: parsed?.variant || "",
+        year: parsed?.year || "",
+        price: parsed?.price || "",
+        mileage: parsed?.mileage || "",
+        engineCC: parsed?.engineCC || "",
+      };
 
-      // Visual feedback
-      setFormVersion(v => v + 1);
-      if (!detectedMake && !detectedModel && !detectedPrice && !detectedMileage && !detectedYear) {
+      setSelectedYear(seeded.year ? String(seeded.year) : "");
+      setSelectedMake(seeded.make || "");
+      setSelectedModel(seeded.model || "");
+      setPriceInput(seeded.price ? String(seeded.price) : "");
+
+      setFormSeed((prev) => ({ ...prev, ...seeded }));
+      setFormVersion((v) => v + 1);
+
+      if (!seeded.make && !seeded.model && !seeded.price && !seeded.mileage && !seeded.year) {
         setError("No key fields detected. Try adding year, make, model, price, and mileage in the text.");
       }
-      
     } catch (err) {
       console.error("Smart Fill Error:", err);
       setError("Failed to parse some details. Please review fields manually.");
@@ -955,6 +852,18 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                    </button>
                 )}
               </div>
+              {(smartFillMeta.overall !== null || smartFillMeta.warnings.length > 0) && (
+                <div className="rounded-2xl border border-indigo-200 dark:border-zinc-700 bg-white/60 dark:bg-zinc-900/40 px-4 py-3">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                    Source: {smartFillMeta.source} {smartFillMeta.overall !== null ? `• Confidence ${(smartFillMeta.overall * 100).toFixed(0)}%` : ""}
+                  </p>
+                  {smartFillMeta.warnings.length > 0 && (
+                    <p className="mt-1 text-[11px] font-semibold text-amber-700 dark:text-amber-300">
+                      Review highlighted fields: {smartFillMeta.warnings.join(", ")}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -976,7 +885,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 required
                 defaultValue={formSeed.make}
                 placeholder="e.g. Toyota"
-                className={inputCls}
+                className={`${inputCls}${confidenceClass("make")}`}
                 onChange={(e) => {
                   const nextMake = e.target.value.trim();
                   const currentMake = selectedMake.trim();
@@ -1004,7 +913,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 required
                 defaultValue={formSeed.model}
                 placeholder={selectedMake ? `Type or pick a ${selectedMake} model` : "Pick make first or type model"}
-                className={inputCls}
+                className={`${inputCls}${confidenceClass("model")}`}
                 onChange={(e) => {
                   const nextModel = e.target.value.trim();
                   const currentModel = selectedModel.trim();
@@ -1037,7 +946,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 list="variant-list"
                 defaultValue={formSeed.variant}
                 placeholder={selectedModel ? `Type or pick a ${selectedModel} variant` : "Pick model first or type variant"}
-                className={inputCls}
+                className={`${inputCls}${confidenceClass("variant")}`}
               />
               <datalist id="variant-list">
                 {variantOptions.map((variant) => <option key={variant} value={variant} />)}
@@ -1059,7 +968,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 name="year"
                 defaultValue={formSeed.year}
                 required
-                className={selectCls}
+                className={`${selectCls}${confidenceClass("year")}`}
                 onChange={(e) => setSelectedYear(e.target.value)}
               >
                 {years.map((year) => <option key={year} value={year}>{year}</option>)}
@@ -1098,7 +1007,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 value={priceInput}
                 onChange={(e) => setPriceInput(e.target.value)}
                 placeholder={currency === "KES" ? "e.g. 2500000" : "e.g. 18500"} 
-                className={inputCls} 
+                className={`${inputCls}${confidenceClass("price")}`} 
               />
               {currency === "USD" && Boolean(priceInput) && !isNaN(parseInt(priceInput, 10)) && (
                 <p className="mt-1.5 text-[11px] font-bold text-slate-500 dark:text-slate-400">
@@ -1110,7 +1019,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
             <div>
               <label className={labelCls}>Mileage (km)</label>
-              <input name="mileage" type="number" defaultValue={formSeed.mileage} placeholder="e.g. 52000" className={inputCls} />
+              <input name="mileage" type="number" defaultValue={formSeed.mileage} placeholder="e.g. 52000" className={`${inputCls}${confidenceClass("mileage")}`} />
             </div>
             <div>
               <label className={labelCls}>Fuel *</label>
@@ -1290,7 +1199,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
                     <label className={labelCls}>Engine CC</label>
-                    <input name="engineCC" type="number" defaultValue={formSeed.engineCC} placeholder="e.g. 2000" className={inputCls} />
+                    <input name="engineCC" type="number" defaultValue={formSeed.engineCC} placeholder="e.g. 2000" className={`${inputCls}${confidenceClass("engineCC")}`} />
                   </div>
                   <div>
                     <label className={labelCls}>Ground Clearance (mm)</label>
