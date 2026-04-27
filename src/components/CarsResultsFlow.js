@@ -1,19 +1,15 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import CarCard from "@/components/CarCard";
 
 export default function CarsResultsFlow({ cars, sidebarId = "cars-filter-sidebar" }) {
-  const [fitCount, setFitCount] = useState(null);
+  const [fitCount, setFitCount] = useState(cars.length);
+  const rootRef = useRef(null);
+  const rafRef = useRef(null);
+  const timeoutRef = useRef(null);
 
-  useEffect(() => {
-    const onResize = () => setFitCount(null);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  useLayoutEffect(() => {
-    if (fitCount !== null) return;
+  const measureFitCount = useCallback(() => {
     if (typeof window === "undefined") return;
 
     // On smaller screens, the sidebar stacks above results; no split is needed.
@@ -23,7 +19,7 @@ export default function CarsResultsFlow({ cars, sidebarId = "cars-filter-sidebar
     }
 
     const sidebar = document.getElementById(sidebarId);
-    const cards = Array.from(document.querySelectorAll("[data-flow-card='true']"));
+    const cards = Array.from(rootRef.current?.querySelectorAll("[data-flow-card='true']") || []);
     if (!sidebar || cards.length === 0) {
       setFitCount(cars.length);
       return;
@@ -57,7 +53,33 @@ export default function CarsResultsFlow({ cars, sidebarId = "cars-filter-sidebar
 
     const nextFitCount = Math.max(0, lastFittingIndex + 1);
     setFitCount(nextFitCount);
-  }, [cars, fitCount, sidebarId]);
+  }, [cars.length, sidebarId]);
+
+  useEffect(() => {
+    const scheduleMeasure = () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      rafRef.current = requestAnimationFrame(measureFitCount);
+      // Re-measure after deferred layout/content settles (fonts/images/sidebar state).
+      timeoutRef.current = setTimeout(measureFitCount, 180);
+    };
+
+    const onResize = () => scheduleMeasure();
+    window.addEventListener("resize", onResize);
+    scheduleMeasure();
+
+    const sidebar = document.getElementById(sidebarId);
+    const observer = typeof ResizeObserver !== "undefined" ? new ResizeObserver(scheduleMeasure) : null;
+    if (observer && sidebar) observer.observe(sidebar);
+    if (observer && rootRef.current) observer.observe(rootRef.current);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+      if (observer) observer.disconnect();
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [measureFitCount, sidebarId]);
 
   const topCars = useMemo(() => {
     if (fitCount === null) return cars;
@@ -70,7 +92,7 @@ export default function CarsResultsFlow({ cars, sidebarId = "cars-filter-sidebar
   }, [cars, fitCount]);
 
   return (
-    <div className="space-y-4">
+    <div ref={rootRef} className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-[2200px]:grid-cols-4 gap-4">
         {topCars.map((car) => (
           <div key={`top-${car.id}`} data-flow-card="true">
