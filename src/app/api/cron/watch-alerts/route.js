@@ -3,6 +3,7 @@ import { sendWatchAlertEmail } from "@/lib/mail";
 import { getSessionFromRequest } from "@/lib/auth";
 
 const ALERT_COOLDOWN_HOURS = 18;
+const SIMILAR_ALERT_COOLDOWN_HOURS = 24;
 
 function parseState(value) {
   try {
@@ -10,6 +11,13 @@ function parseState(value) {
   } catch {
     return {};
   }
+}
+
+function canSend(lastSentAt, cooldownHours, now) {
+  if (!lastSentAt) return true;
+  const parsed = new Date(lastSentAt);
+  if (Number.isNaN(parsed.getTime())) return true;
+  return now.getTime() - parsed.getTime() > cooldownHours * 60 * 60 * 1000;
 }
 
 export async function GET(request) {
@@ -103,7 +111,17 @@ async function runWatchAlerts() {
     const watches = await db.savedCar.findMany({
       include: {
         user: { select: { id: true, email: true, name: true } },
-        car: { select: { id: true, make: true, model: true, year: true, price: true, available: true } },
+        car: {
+          select: {
+            id: true,
+            dealerId: true,
+            make: true,
+            model: true,
+            year: true,
+            price: true,
+            available: true,
+          },
+        },
       },
     });
 
@@ -117,27 +135,70 @@ async function runWatchAlerts() {
       const setting = await db.setting.findUnique({ where: { key } });
       const previous = parseState(setting?.value);
       const previousPrice = Number(previous.price);
-      const previousAvailability = Boolean(previous.available);
-      const lastSentAt = previous.lastSentAt ? new Date(previous.lastSentAt) : null;
-      const canSend =
-        !lastSentAt || now.getTime() - lastSentAt.getTime() > ALERT_COOLDOWN_HOURS * 60 * 60 * 1000;
+      const canSendPriceDrop = canSend(previous.lastPriceDropSentAt, ALERT_COOLDOWN_HOURS, now);
+      const canSendBackInStock = canSend(previous.lastBackInStockSentAt, ALERT_COOLDOWN_HOURS, now);
+      const canSendSimilar = canSend(previous.lastSimilarSentAt, SIMILAR_ALERT_COOLDOWN_HOURS, now);
 
       let type = null;
+      let similarCar = null;
       if (Number.isFinite(previousPrice) && watch.car.price < previousPrice) {
         type = "PRICE_DROP";
       } else if (previous.available === false && watch.car.available === true) {
         type = "BACK_IN_STOCK";
+      } else {
+        similarCar = await db.car.findFirst({
+          where: {
+            available: true,
+            id: { not: watch.car.id },
+            make: { equals: watch.car.make, mode: "insensitive" },
+            model: { equals: watch.car.model, mode: "insensitive" },
+            dealerId: { not: watch.car.dealerId },
+            createdAt: { gt: watch.createdAt },
+          },
+          select: {
+            id: true,
+            make: true,
+            model: true,
+            year: true,
+            price: true,
+            available: true,
+          },
+          orderBy: { createdAt: "desc" },
+        });
+
+        if (
+          similarCar &&
+          similarCar.id !== previous.lastSimilarCarId
+        ) {
+          type = "SIMILAR_LISTING";
+        }
       }
 
-      if (type && canSend) {
+      const canSendForType =
+        type === "PRICE_DROP"
+          ? canSendPriceDrop
+          : type === "BACK_IN_STOCK"
+            ? canSendBackInStock
+            : type === "SIMILAR_LISTING"
+              ? canSendSimilar
+              : false;
+
+      if (type && canSendForType) {
+        const similarTitle = similarCar
+          ? `${similarCar.year} ${similarCar.make} ${similarCar.model}`
+          : `${watch.car.year} ${watch.car.make} ${watch.car.model}`;
         const title =
           type === "PRICE_DROP"
             ? `Price drop: ${watch.car.year} ${watch.car.make} ${watch.car.model}`
-            : `Back in stock: ${watch.car.year} ${watch.car.make} ${watch.car.model}`;
+            : type === "BACK_IN_STOCK"
+              ? `Back in stock: ${watch.car.year} ${watch.car.make} ${watch.car.model}`
+              : `New similar listing: ${similarTitle}`;
         const message =
           type === "PRICE_DROP"
             ? `Now KSh ${watch.car.price.toLocaleString("en-KE")} (was KSh ${previousPrice.toLocaleString("en-KE")}).`
-            : `Your watched car is now available again at KSh ${watch.car.price.toLocaleString("en-KE")}.`;
+            : type === "BACK_IN_STOCK"
+              ? `Your watched car is now available again at KSh ${watch.car.price.toLocaleString("en-KE")}.`
+              : `A similar car was just posted at KSh ${(similarCar?.price ?? 0).toLocaleString("en-KE")}.`;
 
         await db.notification.create({
           data: {
@@ -145,7 +206,7 @@ async function runWatchAlerts() {
             type,
             title,
             message,
-            link: `/cars/${watch.car.id}`,
+            link: `/cars/${type === "SIMILAR_LISTING" ? similarCar?.id : watch.car.id}`,
           },
         });
 
@@ -155,6 +216,7 @@ async function runWatchAlerts() {
           car: watch.car,
           type,
           previousPrice: Number.isFinite(previousPrice) ? previousPrice : undefined,
+          similarCar: type === "SIMILAR_LISTING" ? similarCar : undefined,
         });
         alerts += 1;
       }
@@ -163,7 +225,22 @@ async function runWatchAlerts() {
         price: watch.car.price,
         available: watch.car.available,
         lastSeenAt: now.toISOString(),
-        lastSentAt: type && canSend ? now.toISOString() : previous.lastSentAt || null,
+        lastPriceDropSentAt:
+          type === "PRICE_DROP" && canSendForType
+            ? now.toISOString()
+            : previous.lastPriceDropSentAt || null,
+        lastBackInStockSentAt:
+          type === "BACK_IN_STOCK" && canSendForType
+            ? now.toISOString()
+            : previous.lastBackInStockSentAt || null,
+        lastSimilarSentAt:
+          type === "SIMILAR_LISTING" && canSendForType
+            ? now.toISOString()
+            : previous.lastSimilarSentAt || null,
+        lastSimilarCarId:
+          type === "SIMILAR_LISTING" && canSendForType
+            ? similarCar?.id || previous.lastSimilarCarId || null
+            : previous.lastSimilarCarId || null,
       };
 
       await db.setting.upsert({

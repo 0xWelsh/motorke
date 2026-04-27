@@ -448,13 +448,16 @@ export async function sendWatchAlertEmail({
   car,
   type,
   previousPrice,
+  similarCar,
 }) {
   if (!userEmail || !car?.id) return { success: true, skipped: true };
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke";
   const carUrl = `${siteUrl}/cars/${car.id}`;
   const title = `${car.year} ${car.make} ${car.model}`;
+  const similarTitle = similarCar ? `${similarCar.year} ${similarCar.make} ${similarCar.model}` : null;
   const firstName = (userName || "there").split(" ")[0];
   const isPriceDrop = type === "PRICE_DROP";
+  const isSimilarListing = type === "SIMILAR_LISTING";
   const dropAmount = isPriceDrop && previousPrice ? Math.max(0, previousPrice - car.price) : 0;
 
   if (!SMTP_USER || !SMTP_PASS) {
@@ -462,14 +465,24 @@ export async function sendWatchAlertEmail({
     return { success: true, mocked: true };
   }
 
-  const heading = isPriceDrop ? "Price drop on your watchlist car" : "Back in stock";
+  const heading = isPriceDrop
+    ? "Price drop on your watchlist car"
+    : isSimilarListing
+      ? "A similar listing was just posted"
+      : "Back in stock";
   const summary = isPriceDrop
     ? `The ${title} dropped by KSh ${dropAmount.toLocaleString("en-KE")}.`
-    : `The ${title} is now available again.`;
+    : isSimilarListing
+      ? `We found a similar listing: ${similarTitle}.`
+      : `The ${title} is now available again.`;
   const priceBlock = isPriceDrop
     ? `<p style="margin: 0 0 8px;"><strong>Previous:</strong> KSh ${previousPrice.toLocaleString("en-KE")}</p>
        <p style="margin: 0;"><strong>Current:</strong> KSh ${car.price.toLocaleString("en-KE")}</p>`
-    : `<p style="margin: 0;"><strong>Current price:</strong> KSh ${car.price.toLocaleString("en-KE")}</p>`;
+    : isSimilarListing
+      ? `<p style="margin: 0 0 8px;"><strong>Watchlist car:</strong> ${title}</p>
+         <p style="margin: 0 0 8px;"><strong>New similar:</strong> ${similarTitle}</p>
+         <p style="margin: 0;"><strong>New listing price:</strong> KSh ${(similarCar?.price ?? 0).toLocaleString("en-KE")}</p>`
+      : `<p style="margin: 0;"><strong>Current price:</strong> KSh ${car.price.toLocaleString("en-KE")}</p>`;
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto; color: #0f172a;">
@@ -480,7 +493,7 @@ export async function sendWatchAlertEmail({
         <p style="margin: 0 0 12px; font-weight: 700;">${title}</p>
         ${priceBlock}
       </div>
-      <a href="${carUrl}" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Open Listing</a>
+      <a href="${isSimilarListing && similarCar?.id ? `${siteUrl}/cars/${similarCar.id}` : carUrl}" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Open Listing</a>
       ${buildEmailFooter()}
     </div>
   `;
@@ -491,7 +504,9 @@ export async function sendWatchAlertEmail({
       to: userEmail,
       subject: isPriceDrop
         ? `Price drop: ${title}`
-        : `Back in stock: ${title}`,
+        : isSimilarListing
+          ? `New similar listing: ${similarTitle}`
+          : `Back in stock: ${title}`,
       html,
     });
     return { success: true };
