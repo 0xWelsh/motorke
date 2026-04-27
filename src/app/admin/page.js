@@ -32,7 +32,7 @@ export default async function AdminDashboard({ searchParams }) {
   const [
     totalCars, totalDealers, totalLeads, totalUsers,
     carsInRange, leadsInRange, 
-    inventoryValueAgg, pendingDealers, carsToday,
+    inventoryValueAgg, pendingDealers, pendingDealersCount, carsToday, leadsToday,
     premiumSubs, freeSubs,
     rawCarsForChart, rawLeadsForChart
   ] = await Promise.all([
@@ -44,7 +44,9 @@ export default async function AdminDashboard({ searchParams }) {
     db.lead.count({ where: { createdAt: { gte: startDate } } }),
     db.car.aggregate({ _sum: { price: true }, where: { available: true } }),
     db.dealer.findMany({ where: { verified: false }, take: 4, select: { id: true, name: true, createdAt: true } }),
+    db.dealer.count({ where: { verified: false } }),
     db.car.count({ where: { createdAt: { gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) } } }), // cars added today
+    db.lead.count({ where: { createdAt: { gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) } } }),
     db.subscription.count({ where: { plan: "PRO", status: "ACTIVE" } }),
     db.subscription.count({ where: { plan: "FREE", status: "ACTIVE" } }),
     db.car.findMany({ where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } }, select: { createdAt: true } }),
@@ -85,16 +87,16 @@ export default async function AdminDashboard({ searchParams }) {
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-1000 max-w-[1400px]">
       
       {/* ── HEADER ── */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-6 sm:mb-8 gap-4 sm:gap-6">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-2 mb-1.5">
              <div className="w-2 h-2 rounded-none bg-[#ff5a2f] shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">System Administration</span>
           </div>
-          <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-1">
+          <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-1">
              Platform Command Center
           </h1>
-          <p className="text-slate-500 text-[11px] font-bold uppercase tracking-widest">Real-time marketplace analytics and pending operation alerts.</p>
+          <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.14em]">Real-time marketplace analytics and pending operation alerts.</p>
         </div>
         
         {/* Date Range Toggle */}
@@ -121,8 +123,41 @@ export default async function AdminDashboard({ searchParams }) {
         </div>
       </div>
 
+      {/* ── QUICK ACTIONS ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6 sm:mb-8">
+        {[
+          { href: "/admin/cars/new", label: "Add Car", Icon: Car },
+          { href: "/admin/dealers/new", label: "Add Dealer", Icon: Building2 },
+          { href: "/admin/approvals", label: "Approvals", Icon: ShieldAlert },
+          { href: "/admin/users", label: "Users", Icon: Users },
+        ].map(({ href, label, Icon }) => (
+          <Link
+            key={href}
+            href={href}
+            className="h-12 px-4 bg-white dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 text-[10px] font-black uppercase tracking-[0.14em] text-slate-700 dark:text-slate-200 flex items-center justify-between hover:border-[#ff5a2f] hover:text-[#ff5a2f] transition-colors"
+          >
+            <span>{label}</span>
+            <Icon size={15} />
+          </Link>
+        ))}
+      </div>
+
+      {/* ── TODAY SNAPSHOT ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8 sm:mb-10">
+        {[
+          { label: "Cars Added Today", value: carsToday },
+          { label: "Leads Today", value: leadsToday },
+          { label: "Pending Approvals", value: pendingDealersCount },
+        ].map((item) => (
+          <div key={item.label} className="bg-[#f8f7f4] dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 px-4 py-3">
+            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 mb-1">{item.label}</p>
+            <p className="text-2xl font-black text-slate-900 dark:text-white">{item.value}</p>
+          </div>
+        ))}
+      </div>
+
       {/* ── METRICS ROW ── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5 mb-8 sm:mb-10">
         {[
           { label: "Total Cars",   val: totalCars,    sub: `+${carsInRange} listings in ${rangeLabel}`, icon: <Car size={20} /> },
           { label: "Total Leads",  val: totalLeads,   sub: `+${leadsInRange} leads in ${rangeLabel}`, icon: <MessageSquare size={20} />, color: "emerald" },
@@ -145,7 +180,7 @@ export default async function AdminDashboard({ searchParams }) {
       </div>
 
       {/* ── CHARTS & ALERTS ROW ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5 mb-8 sm:mb-12">
       
          {/* Main Chart (Takes up 2/3 width) */}
          <div className="lg:col-span-2 flex flex-col items-stretch">
@@ -162,7 +197,7 @@ export default async function AdminDashboard({ searchParams }) {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-red-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-none h-2 w-2 bg-red-500"></span>
                   </span>
-                  <span className="text-xs font-black uppercase tracking-widest text-red-600">Needs Action</span>
+                  <span className="text-xs font-black uppercase tracking-widest text-red-600">Needs Action ({pendingDealersCount})</span>
                </div>
 
                <div className="space-y-3">
