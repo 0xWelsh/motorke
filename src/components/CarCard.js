@@ -104,19 +104,19 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
 
         {/* High-Density Info Area */}
         <div className="flex-1 space-y-4">
-          <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-3">
+          <p className="min-h-[56px] text-[11px] font-medium text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-3">
              {specString && <span className="text-slate-900 dark:text-slate-200 font-bold block mb-1">{specString}</span>}
              {car.description || "Premium verified vehicle available in our showroom."}
           </p>
 
           {/* Secondary Badges Row */}
-          <div className="flex flex-wrap gap-2">
+          <div className="min-h-[36px] flex flex-wrap gap-2 content-start">
             {[
               car.steering && (car.steering === "RHD" ? "RHD" : "LHD"),
               car.engineCC && `${car.engineCC} CC`,
               car.fuelType && (FUEL_LABELS[car.fuelType] || car.fuelType.toUpperCase()),
             ].filter(Boolean).map((badge, idx) => (
-              <span key={idx} className="bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-none border border-slate-100 dark:border-zinc-800">
+              <span key={idx} className="bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-none border border-slate-100 dark:border-zinc-800 whitespace-nowrap">
                 {badge}
               </span>
             ))}
