@@ -259,7 +259,11 @@ export default async function DealerPage(props) {
                   {dealer.website && <a href={withProtocol(dealer.website)} target="_blank" rel="noopener noreferrer" className="w-full bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700" style={{ borderRadius: 'var(--radius)' }}>Visit Site</a>}
                </div>
                {socialLinks.length > 0 && (
-                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                 <div className="space-y-2">
+                   <p className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">
+                     Socials
+                   </p>
+                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                    {socialLinks.map((item) => (
                      <a
                        key={item.key}
@@ -273,6 +277,7 @@ export default async function DealerPage(props) {
                        {item.label}
                      </a>
                    ))}
+                   </div>
                  </div>
                )}
             </div>
@@ -387,16 +392,35 @@ export default async function DealerPage(props) {
       </div>
 
       {/* Persistent Mobile Action Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-[#111111]/90 backdrop-blur-xl border-t border-slate-100 dark:border-slate-800 px-6 py-5 flex items-center gap-4 shadow-2xl">
-         {dealer.phone && (
-           <a href={`tel:${dealer.phone}`} className="flex-1 bg-[#111827] dark:bg-white text-white dark:!text-black py-4 text-center text-xs font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
-              Call
-           </a>
-         )}
-         {dealer.whatsapp && (
-           <a href={whatsappChatHref} className="flex-1 bg-[#38A169] text-white py-4 text-center text-xs font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
-              WhatsApp
-           </a>
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-[#111111]/90 backdrop-blur-xl border-t border-slate-100 dark:border-slate-800 px-4 py-4 shadow-2xl">
+         <div className="flex items-center gap-3">
+           {dealer.phone && (
+             <a href={`tel:${dealer.phone}`} className="flex-1 bg-[#111827] dark:bg-white text-white dark:!text-black py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
+                Call
+             </a>
+           )}
+           {dealer.whatsapp && (
+             <a href={whatsappChatHref} className="flex-1 bg-[#38A169] text-white py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
+                WhatsApp
+             </a>
+           )}
+         </div>
+         {socialLinks.length > 0 && (
+           <div className="mt-3 grid grid-cols-3 gap-3">
+             {socialLinks.map((item) => (
+               <a
+                 key={`mobile-${item.key}`}
+                 href={item.href}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-2.5 text-center text-[10px] font-bold uppercase tracking-widest inline-flex items-center justify-center gap-1.5"
+                 style={{ borderRadius: "var(--radius)" }}
+               >
+                 {item.icon}
+                 {item.label}
+               </a>
+             ))}
+           </div>
          )}
       </div>
 
