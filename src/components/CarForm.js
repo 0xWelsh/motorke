@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Check, Info, Sparkles, UploadCloud } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Info, Sparkles, UploadCloud } from "lucide-react";
 import MediaUploader from "./admin/MediaUploader";
 import {
   BADGE_OPTIONS,
@@ -282,10 +282,23 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [smartFillText, setSmartFillText] = useState("");
   const [parsing, setParsing] = useState(false);
   const [videoUrl, setVideoUrl] = useState(formSeed.videoUrl || "");
+  const [checklist, setChecklist] = useState({
+    basics: false,
+    media: false,
+    details: false,
+    publish: false,
+  });
 
   const formRef = useRef(null);
   const saveTimeoutRef = useRef(null);
   const score = qualityScore(formSeed, images, selectedFeatures);
+  const checklistItems = [
+    { key: "basics", label: "Basics" },
+    { key: "media", label: "Photos" },
+    { key: "details", label: "Details" },
+    { key: "publish", label: "Ready" },
+  ];
+  const checklistDone = checklistItems.filter((item) => checklist[item.key]).length;
 
   const inputCls = "w-full bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-[#ff5a2f] transition-all";
   const selectCls = "w-full bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white outline-none focus:border-[#ff5a2f] transition-all appearance-none";
@@ -458,6 +471,39 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     loadVariants();
     return () => controller.abort();
   }, [selectedMake, selectedModel, selectedYear]);
+
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form) return;
+
+    const deriveChecklist = () => {
+      const values = collectFormValues(form);
+      const basicsDone =
+        Boolean((values.make || "").trim()) &&
+        Boolean((values.model || "").trim()) &&
+        Boolean(values.year) &&
+        Boolean(values.price);
+      const mediaDone = images.length >= 3;
+      const detailsDone =
+        ((values.description || "").trim().length >= 50) || selectedFeatures.length >= 3;
+      const publishDone = basicsDone && mediaDone && detailsDone;
+
+      setChecklist({
+        basics: basicsDone,
+        media: mediaDone,
+        details: detailsDone,
+        publish: publishDone,
+      });
+    };
+
+    deriveChecklist();
+    form.addEventListener("input", deriveChecklist);
+    form.addEventListener("change", deriveChecklist);
+    return () => {
+      form.removeEventListener("input", deriveChecklist);
+      form.removeEventListener("change", deriveChecklist);
+    };
+  }, [images, selectedFeatures, formVersion]);
 
   async function handleFilesSelected(newFiles) {
     const toUpload = newFiles.filter((f) => !f.url);
@@ -779,7 +825,26 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   };
 
   return (
-    <form key={formVersion} ref={formRef} onSubmit={handleSubmit} className="space-y-10 animate-in fade-in duration-700">
+    <form key={formVersion} ref={formRef} onSubmit={handleSubmit} className="space-y-6 animate-in fade-in duration-700">
+      <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex items-center gap-2">
+            {checklistItems.map((item, idx) => {
+              const done = checklist[item.key];
+              return (
+                <div key={item.key} className="flex items-center gap-2">
+                  <div className={`w-6 h-6 rounded-full border flex items-center justify-center ${done ? "bg-emerald-500 border-emerald-500 text-white" : "border-slate-300 text-slate-400"}`}>
+                    {done ? <Check size={12} /> : <span className="text-[10px] font-bold">{idx + 1}</span>}
+                  </div>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">{item.label}</span>
+                  {idx < checklistItems.length - 1 && <ChevronRight size={13} className="text-slate-300" />}
+                </div>
+              );
+            })}
+          </div>
+          <span className="text-[11px] font-black uppercase tracking-wider text-[#ff5a2f]">{checklistDone}/4 complete</span>
+        </div>
+      </div>
       {isNew && (
         <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-6 space-y-5">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -897,14 +962,14 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
       )}
 
-      <div className="space-y-10">
+      <div className="space-y-6">
         <div>
-          <div className="flex items-center gap-3 mb-8">
+          <div className="flex items-center gap-3 mb-4">
             <div className="w-1.5 h-1.5 rounded-2xl bg-[#ff5a2f]" />
             <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Vehicle Basics</h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className={labelCls}>Make *</label>
               <input
@@ -1084,8 +1149,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
 
         <div>
-          <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8">
-            <div className="flex items-center justify-between mb-8">
+          <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
+            <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-1.5 h-1.5 rounded-2xl bg-[#ff5a2f]" />
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Photos</h3>
@@ -1107,14 +1172,14 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               Upload starts immediately so dealers can continue filling details while photos process.
             </div>
             
-            <div className="mt-10 pt-10 border-t border-slate-100 dark:border-slate-800">
+            <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800">
                <div className="flex items-center gap-3 mb-6">
                   <div className="w-1.5 h-1.5 rounded-2xl bg-indigo-500" />
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Listing Video</h3>
                </div>
                
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                  <div className="space-y-4">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
+                  <div className="space-y-3">
                       <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">
                           Increase engagement by adding a YouTube or Vimeo link. A preview will appear on the right if the link is valid.
                       </p>
@@ -1127,7 +1192,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                       />
                   </div>
                   
-                  <div className="aspect-video bg-slate-100 dark:bg-[#111111] rounded-[2rem] border border-slate-200 dark:border-slate-800 overflow-hidden flex items-center justify-center relative group">
+                  <div className="aspect-video bg-slate-100 dark:bg-[#111111] rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex items-center justify-center relative group">
                       {videoUrl ? (
                          <iframe 
                             className="w-full h-full"
@@ -1154,14 +1219,14 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
         <div>
           <div className="space-y-6">
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8">
+            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-1.5 h-1.5 rounded-2xl bg-purple-500" />
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Description</h3>
               </div>
               <textarea name="description" rows={5} defaultValue={formSeed.description} placeholder="Share condition, service history, and key selling points..." className={`${inputCls} resize-none`} />
             </div>
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8">
+            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <p className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">Feature Checklist</p>
@@ -1186,7 +1251,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   );
                 })}
               </div>
-              <div className="mt-5 flex flex-col sm:flex-row gap-2">
+              <div className="mt-4 flex flex-col sm:flex-row gap-2">
                 <input
                   value={customFeature}
                   onChange={(e) => setCustomFeature(e.target.value)}
@@ -1205,12 +1270,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               </div>
             </div>
             {!simpleMode && (
-              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8">
+              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
                 <div className="flex items-center gap-3 mb-8">
                   <Sparkles size={16} className="text-amber-500" />
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Advanced Specs</h3>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
                     <label className={labelCls}>Engine CC</label>
                     <input name="engineCC" type="number" defaultValue={formSeed.engineCC} placeholder="e.g. 2000" className={inputCls} />
@@ -1276,7 +1341,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 </div>
               </div>
             )}
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8">
+            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
               <label className={labelCls}>Tags</label>
               <div className="flex flex-wrap gap-2 mt-3">
                 {Object.keys(BADGE_OPTIONS).map((name) => {
@@ -1296,7 +1361,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 })}
               </div>
             </div>
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8">
+            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
               <div className="flex items-center justify-between gap-4 flex-wrap">
                 <div>
                   <p className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">Listing Quality</p>
@@ -1310,7 +1375,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 Add 3+ photos, a clear description, and more features for better visibility.
               </p>
             </div>
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8">
+            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
               <div className="flex items-center gap-8 flex-wrap">
                 {[
                   { name: "negotiable", label: "Accepting Offers", defaultChecked: !!formSeed.negotiable },

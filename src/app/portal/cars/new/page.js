@@ -51,14 +51,14 @@ export default async function PortalNewCarPage({ searchParams }) {
   const dealers = [user.dealer];
 
   return (
-    <div className="animate-in fade-in duration-1000 max-w-4xl">
-      <div className="mb-12">
+    <div className="animate-in fade-in duration-700 max-w-4xl">
+      <div className="mb-6">
         <a href="/portal" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-700 hover:text-[#ff5a2f] transition-colors mb-6">
           <span className="text-lg">←</span> Back to Showroom
         </a>
-        <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Add Car</h1>
-        <p className="text-slate-700 font-bold mt-2">
-          Fast upload mode is enabled by default. You can publish quickly and refine later.
+        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Add Car</h1>
+        <p className="text-slate-700 font-semibold mt-1">
+          Use the checklist below to publish faster.
         </p>
 
         <div className="mt-5 flex flex-wrap gap-2">
@@ -74,7 +74,7 @@ export default async function PortalNewCarPage({ searchParams }) {
       </div>
 
       {recentCars.length > 0 && (
-        <section className="mb-8 rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-white p-5">
+        <section className="mb-6 rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-white p-4">
           <h2 className="text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-[0.14em] text-slate-700">Duplicate From Existing Listing</h2>
           <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
             {recentCars.map((car) => (

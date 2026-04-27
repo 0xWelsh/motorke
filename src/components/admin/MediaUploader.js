@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { UploadCloud, Image as ImageIcon, CheckCircle2, Camera, Trash2, Crown, Info } from "lucide-react";
+import { UploadCloud, CheckCircle2, Trash2, Crown, Info, ArrowLeft, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function MediaUploader({ initialImages = [], onFilesSelected, maxFiles = 15 }) {
@@ -70,6 +70,16 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
     syncFiles(next);
   };
 
+  const moveFile = (id, direction) => {
+    const from = files.findIndex((f) => f.id === id);
+    const to = from + direction;
+    if (from < 0 || to < 0 || to >= files.length) return;
+    const next = [...files];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    syncFiles(next);
+  };
+
   // --- Grid Reorder Logic ---
   const handleItemDragStart = (id) => (e) => {
     setDraggedId(id);
@@ -97,9 +107,9 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full space-y-4">
       <div 
-        className={`relative w-full h-64 border-2 border-dashed rounded-[2.5rem] flex flex-col items-center justify-center p-6 transition-all duration-500 overflow-hidden group cursor-pointer ${
+        className={`relative w-full h-48 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center p-4 transition-all duration-500 overflow-hidden group cursor-pointer ${
           dragActive ? "border-[#ff5a2f] bg-[#ff5a2f]/5 scale-[1.01]" : "border-slate-200 dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#0a0a0a] hover:border-slate-300 dark:hover:border-slate-700"
         }`}
         onDragEnter={handleDrag}
@@ -116,11 +126,11 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
         <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => handleFiles(e.target.files)} />
 
         <div className="relative z-10 flex flex-col items-center">
-            <div className="w-16 h-16 rounded-3xl bg-white dark:bg-[#111111] shadow-2xl flex items-center justify-center mb-5 text-[#ff5a2f] border border-slate-100 dark:border-slate-800 group-hover:scale-110 transition-transform duration-500">
-                <UploadCloud size={32} />
+            <div className="w-12 h-12 rounded-2xl bg-white dark:bg-[#111111] shadow-lg flex items-center justify-center mb-3 text-[#ff5a2f] border border-slate-100 dark:border-slate-800 group-hover:scale-110 transition-transform duration-500">
+                <UploadCloud size={24} />
             </div>
-            <p className="text-xl font-black text-slate-900 dark:text-white tracking-tight">Drop listing photos</p>
-            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-3 block">High-Resolution Preferred</p>
+            <p className="text-base font-black text-slate-900 dark:text-white tracking-tight">Drop listing photos</p>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.16em] mt-2 block">Tap or drag to add</p>
         </div>
 
         {dragActive && (
@@ -135,8 +145,8 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
       </div>
 
       {files.length > 0 && (
-        <div className="bg-[#fbfcfe] dark:bg-[#0a0a0a] border border-slate-200 dark:border-slate-800 p-8 rounded-[2.5rem] shadow-sm">
-           <div className="flex items-center justify-between mb-8">
+        <div className="bg-[#fbfcfe] dark:bg-[#0a0a0a] border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-sm">
+           <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                  <div className="w-2 h-2 rounded-full bg-[#ff5a2f]" />
                  <h3 className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Asset Grid</h3>
@@ -146,7 +156,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
               </div>
            </div>
 
-           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
+           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
               <AnimatePresence>
                 {files.map((file) => (
                   <motion.div 
@@ -160,7 +170,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    className={`relative group aspect-square rounded-[2rem] overflow-hidden bg-slate-100 dark:bg-[#111111] border transition-all duration-300 cursor-grab active:cursor-grabbing ${
+                    className={`relative group aspect-square rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#111111] border transition-all duration-300 cursor-grab active:cursor-grabbing ${
                        draggedId === file.id ? "opacity-30 scale-95 border-emerald-500" : "opacity-100 border-slate-200 dark:border-slate-800"
                     }`}
                   >
@@ -169,22 +179,38 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
                     <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-end p-4 backdrop-blur-sm pointer-events-auto">
                         <div className="w-full space-y-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                             {file.isPrimary ? (
-                               <div className="w-full py-3 rounded-2xl bg-[#ff5a2f] text-white text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2">
+                               <div className="w-full py-2 rounded-xl bg-[#ff5a2f] text-white text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2">
                                   <Crown size={12} /> Primary Hub
                                </div>
                             ) : (
                               <button 
                                   type="button"
                                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); setPrimary(file.id); }}
-                                  className="w-full bg-white text-slate-900 text-[9px] font-black uppercase tracking-widest py-3 rounded-2xl hover:bg-emerald-50 transition-colors"
+                                  className="w-full bg-white text-slate-900 text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-emerald-50 transition-colors"
                               >
                                   Set Main
                               </button>
                             )}
+                            <div className="grid grid-cols-2 gap-2">
+                              <button
+                                type="button"
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); moveFile(file.id, -1); }}
+                                className="bg-white/90 text-slate-900 text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-white transition-colors flex items-center justify-center gap-1"
+                              >
+                                <ArrowLeft size={11} /> Left
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); moveFile(file.id, 1); }}
+                                className="bg-white/90 text-slate-900 text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-white transition-colors flex items-center justify-center gap-1"
+                              >
+                                Right <ArrowRight size={11} />
+                              </button>
+                            </div>
                             <button 
                               type="button"
                               onClick={(e) => { e.preventDefault(); e.stopPropagation(); removeFile(file.id); }}
-                              className="w-full bg-rose-500/80 text-white text-[9px] font-black uppercase tracking-widest py-3 rounded-2xl hover:bg-rose-600 transition-colors flex items-center justify-center gap-2"
+                              className="w-full bg-rose-500/80 text-white text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-rose-600 transition-colors flex items-center justify-center gap-2"
                             >
                               <Trash2 size={12} /> Purge
                             </button>
@@ -205,9 +231,9 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
               </AnimatePresence>
            </div>
 
-           <div className="mt-8 pt-8 border-t border-slate-100 dark:border-slate-800/50 flex items-center gap-3">
+           <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/50 flex items-center gap-3">
               <Info size={14} className="text-[#ff5a2f]" />
-              <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Drag thumbnails to rearrange. The first image is the cover.</p>
+              <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Drag or use Left/Right. Primary image is your cover.</p>
            </div>
         </div>
       )}
