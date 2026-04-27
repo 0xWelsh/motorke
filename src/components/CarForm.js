@@ -827,7 +827,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
       {isNew && (
         <div className="bg-gradient-to-br from-indigo-50 to-emerald-50 dark:from-zinc-900/50 dark:to-zinc-800/50 border border-indigo-100 dark:border-zinc-800 rounded-2xl p-8 mb-10 overflow-hidden relative group">
-          <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
+          <div className="pointer-events-none absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
              <Sparkles size={120} className="text-indigo-500" />
           </div>
           
