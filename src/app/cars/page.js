@@ -167,21 +167,17 @@ export default async function CarsPage({ searchParams }) {
     <div className="min-h-screen bg-white pb-20">
       <div className="w-full px-4 sm:px-8 pt-32 sm:pt-40">
         
-        {/* Adjusted Top Bar with Breadcrumbs and Count */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-8 border-b border-slate-100 dark:border-zinc-900 pb-8">
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.2em] text-[#718096] dark:text-slate-400">
-              <Link href="/" className="hover:text-[#111827] dark:hover:text-white transition-colors">Home</Link>
-              <ChevronRight className="w-3 h-3" />
-              <Link href="/cars" className="hover:text-[#111827] dark:hover:text-white transition-colors">Vehicles</Link>
-              <ChevronRight className="w-3 h-3" />
-              <span className="text-[#111827] dark:text-white">Available</span>
-            </div>
-            <div className="flex items-center gap-6">
-               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[#718096] dark:text-slate-400">
-                 Showing {(page - 1) * limit + 1} - {Math.min(page * limit, total)} of {total}
-               </div>
-            </div>
+        {/* Compact breadcrumb strip */}
+        <div className="flex items-center justify-between mb-6 gap-4 border-b border-slate-100 dark:border-zinc-900 pb-3">
+          <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400">
+            <Link href="/" className="hover:text-[#111827] dark:hover:text-white transition-colors">Home</Link>
+            <ChevronRight className="w-3 h-3" />
+            <Link href="/cars" className="hover:text-[#111827] dark:hover:text-white transition-colors">Vehicles</Link>
+            <ChevronRight className="w-3 h-3" />
+            <span className="text-[#111827] dark:text-white">Available</span>
+          </div>
+          <div className="text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400 whitespace-nowrap">
+            Vehicles Showing ({total})
           </div>
         </div>
 
