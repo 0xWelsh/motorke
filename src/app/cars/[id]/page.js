@@ -317,7 +317,7 @@ export default async function CarDetailPage({ params }) {
 
                 <div className="flex items-center gap-3 mb-8">
                   <span className="text-2xl font-extrabold text-[#111827] dark:text-white">
-                    {car.currency || "USD"} {formatCarPrice(car).replace("KSh", "").trim()}
+                    {formatCarPrice(car)}
                   </span>
                   <div 
                     className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-[11px] text-slate-400 font-bold cursor-help"

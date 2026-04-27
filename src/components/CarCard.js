@@ -127,7 +127,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
         <div className="mt-8 pt-5 border-t border-slate-100 dark:border-zinc-900 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-lg font-black text-slate-900 dark:text-white tracking-tighter">
-               USD {formatCarPrice(car).replace("KSh", "").trim()}
+               {formatCarPrice(car)}
             </span>
             <div 
               className="w-4 h-4 rounded-full border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-[10px] text-slate-400 font-bold cursor-help"
