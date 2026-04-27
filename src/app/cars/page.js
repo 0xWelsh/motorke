@@ -186,9 +186,9 @@ export default async function CarsPage({ searchParams }) {
         </div>
 
         {/* Main layout: sidebar + independent results grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)] gap-x-4 gap-y-10">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-4 gap-y-10">
           {/* Sidebar */}
-          <div id="cars-filter-sidebar" className="self-start space-y-10">
+          <div id="cars-filter-sidebar" className="self-start space-y-10 lg:col-span-1">
             <CarsSearch
               initialSearch={search}
               initialMake={make}
@@ -217,7 +217,7 @@ export default async function CarsPage({ searchParams }) {
           </div>
 
           {/* Results area */}
-          <div className="min-w-0">
+          <div className="min-w-0 lg:col-span-3">
             <CarsResultsFlow cars={carsWithDistance} sidebarId="cars-filter-sidebar" />
 
             {sortedCars.length === 0 && (
