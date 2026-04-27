@@ -98,9 +98,14 @@ export default function ImageGallery({ images, title }) {
                  {images.length} Photos
                </span>
             )}
-            <span className="absolute bottom-2.5 left-2.5 inline-flex items-center justify-center w-8 h-8 rounded-sm bg-white/90 text-slate-700 text-sm shadow">
-              ↗
-            </span>
+            <button
+              type="button"
+              onClick={handleShare}
+              className="absolute bottom-2.5 left-2.5 inline-flex items-center justify-center w-8 h-8 rounded-sm bg-white/90 text-slate-700 shadow hover:bg-white transition-colors"
+              aria-label="Share vehicle"
+            >
+              <Share2 className="w-4 h-4" />
+            </button>
           </button>
 
           {images.slice(1, 5).map((img, i) => {
