@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ChevronRight, Search, MessageCircle, ShieldCheck, MapPin, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import CarsSearch from "@/components/CarsSearch";
-import CarCard from "@/components/CarCard";
+import CarsResultsFlow from "@/components/CarsResultsFlow";
 import { unstable_cache } from "next/cache";
 import { CompareButton } from "@/components/CompareSelector";
 import { getSession } from "@/lib/auth";
@@ -147,6 +147,13 @@ export default async function CarsPage({ searchParams }) {
         return da - db2;
       })
     : cars;
+  const carsWithDistance = sortedCars.map((car) => ({
+    ...car,
+    distanceValue:
+      effectiveLat != null && effectiveLng != null && car.dealer?.lat != null && car.dealer?.lng != null
+        ? distance(effectiveLat, effectiveLng, car.dealer.lat, car.dealer.lng)
+        : null,
+  }));
 
   const totalPages = Math.ceil(total / limit);
 
@@ -181,7 +188,7 @@ export default async function CarsPage({ searchParams }) {
         {/* Main layout: sidebar + independent results grid */}
         <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)] gap-x-4 gap-y-10">
           {/* Sidebar */}
-          <div className="self-start space-y-10">
+          <div id="cars-filter-sidebar" className="self-start space-y-10">
             <CarsSearch
               initialSearch={search}
               initialMake={make}
@@ -211,38 +218,7 @@ export default async function CarsPage({ searchParams }) {
 
           {/* Results area */}
           <div className="min-w-0">
-            {/* Safe hybrid layout:
-                - mobile/tablet/desktop: standard grid for clean comparison
-                - 2xl and above: masonry columns for denser packing
-            */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 min-[900px]:grid-cols-3 2xl:hidden gap-4">
-              {sortedCars.map((car) => (
-                <div key={car.id} className="w-full max-w-[330px] mx-auto">
-                  <CarCard
-                    car={car}
-                    distance={
-                      effectiveLat != null && effectiveLng != null && car.dealer?.lat != null && car.dealer?.lng != null
-                        ? distance(effectiveLat, effectiveLng, car.dealer.lat, car.dealer.lng)
-                        : null
-                    }
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="hidden 2xl:block 2xl:columns-3 2xl:gap-4">
-              {sortedCars.map((car) => (
-                <div key={`masonry-${car.id}`} className="mb-4 break-inside-avoid w-full max-w-[330px]">
-                  <CarCard
-                    car={car}
-                    distance={
-                      effectiveLat != null && effectiveLng != null && car.dealer?.lat != null && car.dealer?.lng != null
-                        ? distance(effectiveLat, effectiveLng, car.dealer.lat, car.dealer.lng)
-                        : null
-                    }
-                  />
-                </div>
-              ))}
-            </div>
+            <CarsResultsFlow cars={carsWithDistance} sidebarId="cars-filter-sidebar" />
 
             {sortedCars.length === 0 && (
               <div className="py-32 text-center bg-[#F7FAFC] dark:bg-[#111111] border border-[#EDF2F7] dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>

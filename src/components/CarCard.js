@@ -48,7 +48,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
   const specString = specItems.join(" • ");  return (
     <article className="group flex flex-col bg-white dark:bg-[#0a0a0a] border-2 border-slate-100 dark:border-zinc-900 transition-all hover:shadow-2xl overflow-hidden" style={{ borderRadius: '4px' }}>
       {/* Image Container */}
-      <Link href={`/cars/${car.id}`} className="relative aspect-[16/10] bg-slate-50 dark:bg-zinc-900 overflow-hidden block">
+      <Link href={`/cars/${car.id}`} className="relative aspect-[16/11] bg-slate-50 dark:bg-zinc-900 overflow-hidden block">
         {primaryImg ? (
           <Image
             src={primaryImg}
