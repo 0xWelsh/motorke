@@ -215,7 +215,7 @@ export default async function CarsPage({ searchParams }) {
                 - mobile/tablet/desktop: standard grid for clean comparison
                 - xl and above: masonry columns for denser packing
             */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:hidden gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 min-[980px]:grid-cols-3 xl:hidden gap-5">
               {sortedCars.map((car) => (
                 <div key={car.id}>
                   <CarCard
