@@ -46,8 +46,6 @@ export default async function DealerPage(props) {
           variant: true,
           year: true,
           price: true,
-          computedLandedPrice: true,
-          dutyPaid: true,
           engineCC: true,
           mileage: true,
           bodyType: true,

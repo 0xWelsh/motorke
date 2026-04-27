@@ -1,6 +1,4 @@
 // src/lib/utils.js
-import { estimateDuty as estimateDutyCore, calculateDutyBreakdown, getAgeYearsFromYear, getDefaultDutyRates } from "./duty";
-
 /** Format KES price → "KSh 4,200,000" */
 export function formatPrice(amount) {
   let numAmount = Number(amount);
@@ -17,50 +15,15 @@ export function formatPrice(amount) {
   return `KSh ${numAmount.toLocaleString("en-KE")}`;
 }
 
-export function estimateLandedCost(price, year, options = {}) {
-  const ageYears = getAgeYearsFromYear(year);
-  const breakdown = calculateDutyBreakdown({
-    // By default, add standard Export ($450) and Shipping ($2300) = $2750 USD to the FOB price to estimate CIF.
-    // Assuming 135 KES/USD for foreign cars.
-    cifKes: (Number(price) || 0) + (2750 * 135),
-    ageYears,
-    engineCC: options.engineCC ?? 1500,
-    isElectric: options.isElectric ?? false,
-    rates: options.rates || getDefaultDutyRates(),
-  });
-  // Include standard localized Clearing & Agent fees
-  return Math.round(breakdown.landed + 200000);
-}
-
-export function formatCarPrice(car, dutyRates = null) {
+export function formatCarPrice(car) {
   if (!car || car.price == null) return "N/A";
-  
-  if (car.computedLandedPrice) {
-    return formatPrice(car.computedLandedPrice);
-  }
-  
-  if (car.dutyPaid === true || car.imported === true) {
-    return formatPrice(car.price);
-  }
-  
-  const landedCost = estimateLandedCost(car.price, car.year, {
-    engineCC: car.engineCC,
-    isElectric: car.fuelType === "ELECTRIC",
-    rates: dutyRates || getDefaultDutyRates(),
-  });
-
-  return formatPrice(landedCost);
+  return formatPrice(car.price);
 }
 
 /** Format mileage → "38,000 km" */
 export function formatMileage(km) {
   if (!km) return "N/A";
   return `${Number(km).toLocaleString("en-KE")} km`;
-}
-
-/** Rough import duty estimate (simplified Kenya KRA formula for illustration) */
-export function estimateDuty(price, year) {
-  return estimateDutyCore(price, year);
 }
 
 /** Body type → human label (Expanded for precision) */

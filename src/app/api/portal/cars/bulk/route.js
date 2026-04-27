@@ -82,16 +82,12 @@ export async function POST(request) {
             groundClearanceMm: row.groundclearancemm ? parseInt(row.groundclearancemm, 10) : null,
             hybridBatteryTech,
             spareAvailability: row.spareavailability ? parseInt(row.spareavailability, 10) : null,
-            importEligibility:
-              row.importeligibility === undefined || row.importeligibility === null || row.importeligibility === ""
-                ? null
-                : parseBool(row.importeligibility, true),
             color: row.color ? String(row.color).trim() : null,
             seats: row.seats ? parseInt(row.seats, 10) : null,
             description: row.description ? String(row.description).trim() : null,
             features,
             negotiable: parseBool(row.negotiable, true),
-            dutyPaid: parseBool(row.dutypaid, true),
+            dutyPaid: true,
             imported: parseBool(row.imported, true),
             importCountry: row.importcountry ? String(row.importcountry).trim() : "Japan",
             available: true,

@@ -1,4 +1,3 @@
-import { computeLandedPriceForDb } from "@/lib/duty";
 // src/app/api/cars/create/route.js
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
@@ -35,7 +34,6 @@ export async function POST(request) {
         variant:      get("variant")?.trim() || null,
         year:         getInt("year"),
         price: getInt("price"),
-      computedLandedPrice: await computeLandedPriceForDb(getInt("price"), dutyPaid, year, engineCC, fuelType),
         mileage:      getInt("mileage"),
         fuelType:     get("fuelType"),
         transmission: get("transmission"),
@@ -46,7 +44,7 @@ export async function POST(request) {
         description:  get("description")?.trim() || null,
         features,
         negotiable:   getBool("negotiable"),
-        dutyPaid:     getBool("dutyPaid"),
+        dutyPaid:     true,
         imported:     getBool("imported"),
         importCountry: "Japan",
         available:    true,

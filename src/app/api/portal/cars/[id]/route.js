@@ -1,18 +1,8 @@
-import { computeLandedPriceForDb } from "@/lib/duty";
 // src/app/api/portal/cars/[id]/route.js  — PUT (dealer updates car)
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
-
-function parseOptionalBool(value) {
-  if (value === null || value === undefined || value === "") return null;
-  if (typeof value === "string") {
-    const normalized = value.toLowerCase();
-    return !(normalized === "false" || normalized === "0" || normalized === "no");
-  }
-  return Boolean(value);
-}
 
 export async function PUT(request, { params }) {
   const { id } = await params;
@@ -32,10 +22,10 @@ export async function PUT(request, { params }) {
     const {
       make, model, variant, year, price, mileage, condition,
       fuelType, transmission, bodyType, engineCC, drivetrain, steering,
-      groundClearanceMm, hybridBatteryTech, spareAvailability, importEligibility,
+      groundClearanceMm, hybridBatteryTech, spareAvailability,
       cylinders, horsepower, torque, turbo, sunroof, airbags,
       color, seats, description, features, badges, images,
-      negotiable, dutyPaid, imported,
+      negotiable, imported,
     } = body;
     console.log("🏁 PORTAL UPDATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
@@ -47,7 +37,6 @@ export async function PUT(request, { params }) {
         variant:      variant?.trim() || null,
         year:         parseInt(year),
         price: parseInt(price),
-      computedLandedPrice: await computeLandedPriceForDb(parseInt(price), dutyPaid, year, engineCC, fuelType),
         mileage:      mileage ? parseInt(mileage) : null,
         condition:    condition || "USED",
         fuelType,
@@ -57,7 +46,6 @@ export async function PUT(request, { params }) {
         groundClearanceMm: groundClearanceMm ? parseInt(groundClearanceMm) : null,
         hybridBatteryTech: hybridBatteryTech || null,
         spareAvailability: spareAvailability ? parseInt(spareAvailability) : null,
-        importEligibility: parseOptionalBool(importEligibility),
         cylinders:    cylinders ? parseInt(cylinders) : null,
         horsepower:   horsepower ? parseInt(horsepower) : null,
         torque:       torque ? parseInt(torque) : null,
@@ -72,7 +60,7 @@ export async function PUT(request, { params }) {
         features:     Array.isArray(features) ? features : [],
         badges:       Array.isArray(badges) ? badges : [],
         negotiable:   Boolean(negotiable),
-        dutyPaid:     Boolean(dutyPaid),
+        dutyPaid:     true,
         imported:     Boolean(imported),
         // featured intentionally excluded — only admin can change
       },

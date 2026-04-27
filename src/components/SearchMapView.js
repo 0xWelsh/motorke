@@ -41,7 +41,6 @@ export default function SearchMapView({ cars }) {
       model: car.model,
       year: car.year,
       price: car.price,
-      computedLandedPrice: car.computedLandedPrice,
     });
   }
 

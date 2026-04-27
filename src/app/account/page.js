@@ -33,7 +33,7 @@ export default async function AccountPage({ searchParams }) {
     db.lead.findMany({
       where:   { email: user.email },
       include: {
-        car:    { select: { id: true, make: true, model: true, year: true, price: true, dutyPaid: true, engineCC: true, fuelType: true, available: true } },
+        car:    { select: { id: true, make: true, model: true, year: true, price: true, engineCC: true, fuelType: true, available: true } },
         dealer: { select: { name: true, slug: true, phone: true, whatsapp: true } },
       },
       orderBy: { createdAt: "desc" },

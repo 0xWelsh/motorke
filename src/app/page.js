@@ -197,7 +197,7 @@ export default async function HomePage() {
 
             <p className="text-lg md:text-xl text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl font-medium mx-auto lg:mx-0">
               Find verified Kenyan inventory with transparent ownership costs in minutes.
-              Compare up to three cars, inspect duty and TCO signals, then contact real dealers directly.
+              Compare up to three cars, inspect real running-cost and road-readiness signals, then contact real dealers directly.
             </p>
           </div>
 
@@ -232,7 +232,7 @@ export default async function HomePage() {
               <div className="mt-8 sm:mt-9 p-4 sm:p-5 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3 text-center lg:text-left">Quick compare</p>
                 <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4 text-center lg:text-left">
-                  Side-by-side specs, annual TCO, road readiness, and import checks in one clean sheet.
+                  Side-by-side specs, annual TCO, and road readiness in one clean sheet.
                 </p>
                 <TrackedLink
                   href="/compare"
@@ -406,7 +406,7 @@ export default async function HomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               {[
                 { title: "Dealer Verified", icon: <ShieldCheck />, desc: "Every unit is hand-uploaded by real businesses." },
-                { title: "Duty Analysis", icon: <BadgeCheck />, desc: "Transparent breakdown of KRA duties and fees." },
+                { title: "Pricing Clarity", icon: <BadgeCheck />, desc: "Final listed prices shown upfront with no hidden calculations." },
                 { title: "Direct Contact", icon: <Star />, desc: "Communicate directly via WhatsApp or Phone." },
                 { title: "Fresh Stock", icon: <Compass />, desc: "Listings are removed the second they sell." },
               ].map((item, i) => (

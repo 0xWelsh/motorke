@@ -340,8 +340,8 @@ export default function CompareClient({ initialCars }) {
     {
       name: "Core",
       specs: [
-        { id: "price", label: "Price", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: (c?.computedLandedPrice ?? c?.price) != null ? formatCarPrice(c) : "N/A", raw: c?.computedLandedPrice ?? c?.price }), rank: "min" },
-        { id: "monthlyLoan", label: "Est. Loan (48m@14%)", tags: ["all", "city", "family", "performance"], pick: (c) => ({ value: (c?.computedLandedPrice ?? c?.price) != null ? formatPrice(estimateMonthlyLoan(c?.computedLandedPrice ?? c?.price)) : "N/A", raw: estimateMonthlyLoan(c?.computedLandedPrice ?? c?.price) }), rank: "min" },
+        { id: "price", label: "Price", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: c?.price != null ? formatCarPrice(c) : "N/A", raw: c?.price }), rank: "min" },
+        { id: "monthlyLoan", label: "Est. Loan (48m@14%)", tags: ["all", "city", "family", "performance"], pick: (c) => ({ value: c?.price != null ? formatPrice(estimateMonthlyLoan(c?.price)) : "N/A", raw: estimateMonthlyLoan(c?.price) }), rank: "min" },
         { id: "year", label: "Year", tags: ["all", "city", "family", "longtrip", "performance"], pick: (c) => ({ value: toDisplay(c?.year), raw: c?.year }), rank: "max" },
         { id: "mileage", label: "Mileage", tags: ["all", "city", "longtrip", "family"], pick: (c) => ({ value: c?.mileage != null ? formatMileage(c.mileage) : "N/A", raw: c?.mileage }), rank: "min" },
         { id: "condition", label: "Condition", tags: ["all", "family", "longtrip"], pick: (c) => ({ value: toDisplay(c?.condition), raw: c?.condition }) },
@@ -374,9 +374,8 @@ export default function CompareClient({ initialCars }) {
       ],
     },
     {
-      name: "Ownership & Import",
+      name: "Ownership",
       specs: [
-        { id: "dutyPaid", label: "Duty paid", tags: ["all", "city", "longtrip"], pick: (c) => ({ value: yesNo(c?.dutyPaid), raw: c?.dutyPaid }) },
         { id: "imported", label: "Imported", tags: ["all", "city", "longtrip"], pick: (c) => ({ value: yesNo(c?.imported), raw: c?.imported }) },
         { id: "importCountry", label: "Import country", tags: ["all", "city", "longtrip"], pick: (c) => ({ value: toDisplay(c?.importCountry), raw: c?.importCountry }) },
         { id: "dealer", label: "Dealer", tags: ["all", "city", "family", "performance", "longtrip"], pick: (c) => ({ value: toDisplay(c?.dealer?.name), raw: c?.dealer?.name }) },
@@ -401,7 +400,6 @@ export default function CompareClient({ initialCars }) {
             };
           },
         },
-        { id: "importEligibility", label: "Import eligibility", tags: ["all", "city", "longtrip"], pick: (c) => ({ value: yesNo(getInsights(c)?.importEligibility), raw: getInsights(c)?.importEligibility }), rank: "booltrue" },
         { id: "trafficFactor", label: "Traffic fuel factor", tags: ["all", "city", "longtrip"], pick: (c) => ({ value: `${((getInsights(c)?.tco?.trafficMultiplier ?? 1) * 100 - 100).toFixed(0)}%`, raw: getInsights(c)?.tco?.trafficMultiplier }), rank: "min" },
         { id: "annualFuel", label: "Annual energy cost", tags: ["all", "city", "longtrip"], pick: (c) => ({ value: formatPrice(getInsights(c)?.tco?.annualFuelCost || 0), raw: getInsights(c)?.tco?.annualFuelCost }), rank: "min" },
         { id: "annualInsurance", label: "Annual insurance", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: formatPrice(getInsights(c)?.tco?.annualInsurance || 0), raw: getInsights(c)?.tco?.annualInsurance }), rank: "min" },
@@ -421,8 +419,6 @@ export default function CompareClient({ initialCars }) {
     const valueMap = new Map();
 
     cars.forEach((car) => {
-      const insight = insightsMap.get(car.id);
-
       const perf = (
         normalizeScore(cars, (x) => x.horsepower, car.id, true) * 0.4 +
         normalizeScore(cars, (x) => x.torque, car.id, true) * 0.3 +
@@ -440,8 +436,7 @@ export default function CompareClient({ initialCars }) {
       const economy = (
         normalizeScore(cars, (x) => insightsMap.get(x.id)?.tco?.annualTotal, car.id, false) * 0.52 +
         normalizeScore(cars, (x) => insightsMap.get(x.id)?.spareAvailabilityScore, car.id, true) * 0.14 +
-        normalizeScore(cars, (x) => insightsMap.get(x.id)?.roadSuitabilityScore, car.id, true) * 0.14 +
-        (insight?.importEligibility ? 1 : 0) * 0.2
+        normalizeScore(cars, (x) => insightsMap.get(x.id)?.roadSuitabilityScore, car.id, true) * 0.34
       );
 
       const value = (
@@ -494,9 +489,9 @@ export default function CompareClient({ initialCars }) {
   const topTwo = rankedCars.slice(0, 2).map((entry) => entry.car);
 
   const winnerByPrice = useMemo(() => {
-    const priced = fullComparedCars.filter((car) => typeof (car.computedLandedPrice ?? car.price) === "number");
+    const priced = fullComparedCars.filter((car) => typeof car.price === "number");
     if (priced.length === 0) return null;
-    return [...priced].sort((a, b) => (a.computedLandedPrice ?? a.price) - (b.computedLandedPrice ?? b.price))[0];
+    return [...priced].sort((a, b) => a.price - b.price)[0];
   }, [fullComparedCars]);
 
   function winnerFromMap(scoreMap) {
@@ -543,7 +538,6 @@ export default function CompareClient({ initialCars }) {
     const count = fullComparedCars.length;
     if (count === 0) return null;
 
-    const eligibleCount = fullComparedCars.filter((car) => getInsights(car)?.importEligibility === true).length;
     const bestRoadScore = Math.max(...fullComparedCars.map((car) => getInsights(car)?.roadSuitabilityScore || 0));
     const spread =
       typeof tcoStats.max === "number" && typeof tcoStats.min === "number"
@@ -551,7 +545,6 @@ export default function CompareClient({ initialCars }) {
         : 0;
 
     return {
-      eligibleCount,
       bestRoadScore,
       annualTcoSpread: spread,
     };
@@ -707,15 +700,12 @@ export default function CompareClient({ initialCars }) {
           const insight = getInsights(car);
           const annualTco = insight?.tco?.annualTotal || 0;
           const road = insight?.roadSuitabilityScore ?? "N/A";
-          const importStatus = insight?.importEligibility === true ? "Eligible" : insight?.importEligibility === false ? "Not Eligible" : "N/A";
-
           return `
             <tr>
               <td class="car-name">${escapeHtml(`${car.year} ${car.make} ${car.model}`)}</td>
               <td>${escapeHtml(formatCarPrice(car))}</td>
               <td>${escapeHtml(formatPrice(annualTco))}</td>
               <td>${escapeHtml(String(road))}</td>
-              <td>${escapeHtml(importStatus)}</td>
             </tr>
           `;
         })
@@ -790,7 +780,6 @@ export default function CompareClient({ initialCars }) {
                   <th>Price</th>
                   <th>Annual TCO</th>
                   <th>Road Score</th>
-                  <th>Import Eligibility</th>
                 </tr>
               </thead>
               <tbody>
@@ -928,10 +917,10 @@ export default function CompareClient({ initialCars }) {
   const currentTutorial = TUTORIAL_STEPS[tutorialStep] || null;
   const currentTutorialKey = showTutorial ? currentTutorial?.key : null;
   const mobileQuickSpecs = [
-    { id: "price", label: "Price", rank: "min", pick: (c) => ({ value: formatCarPrice(c), raw: c?.computedLandedPrice ?? c?.price }) },
+    { id: "price", label: "Price", rank: "min", pick: (c) => ({ value: formatCarPrice(c), raw: c?.price }) },
     { id: "annualTco", label: "Annual TCO", rank: "min", pick: (c) => ({ value: formatPrice(getInsights(c)?.tco?.annualTotal || 0), raw: getInsights(c)?.tco?.annualTotal }) },
     { id: "road", label: "Road", rank: "max", pick: (c) => ({ value: `${getInsights(c)?.roadSuitabilityScore ?? "N/A"}/100`, raw: getInsights(c)?.roadSuitabilityScore }) },
-    { id: "import", label: "Import", rank: "booltrue", pick: (c) => ({ value: yesNo(getInsights(c)?.importEligibility), raw: getInsights(c)?.importEligibility }) },
+    { id: "import", label: "Imported", rank: "booltrue", pick: (c) => ({ value: yesNo(c?.imported), raw: c?.imported }) },
   ];
 
   useEffect(() => {
@@ -1219,10 +1208,10 @@ export default function CompareClient({ initialCars }) {
                 sub: "Highest Readiness",
               },
               {
-                label: "Import Eligible",
-                tip: "How many vehicles in this set pass import-eligibility checks.",
-                value: `${kenyaLensSummary.eligibleCount}/${fullComparedCars.length} Assets`,
-                sub: "Fiscal Approval",
+                label: "Cars Compared",
+                tip: "Total number of vehicles currently loaded in this comparison set.",
+                value: `${fullComparedCars.length} Assets`,
+                sub: "Current Set",
               }
             ].map((stat, i) => (
               <div key={i} className="bg-[#F7FAFC] dark:bg-[#111111] border border-slate-100 dark:border-slate-800 p-5 sm:p-6 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
@@ -1607,7 +1596,9 @@ export default function CompareClient({ initialCars }) {
                                 {hydrated && (
                                    <div className="mt-4 flex flex-wrap gap-2">
                                       <span className="px-2 py-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[8px] font-bold text-[#718096] dark:text-slate-400 uppercase tracking-widest" style={{ borderRadius: '4px' }}>ROAD {getInsights(car)?.roadSuitabilityScore}</span>
-                                      <span className="px-2 py-1 bg-[#38A169]/5 border border-[#38A169]/20 text-[8px] font-bold text-[#38A169] uppercase tracking-widest" style={{ borderRadius: '4px' }}>{getInsights(car)?.importEligibility ? 'ELIGIBLE' : 'NOT ELIGIBLE'}</span>
+                                      <span className={`px-2 py-1 text-[8px] font-bold uppercase tracking-widest border ${importTone(car?.imported)}`} style={{ borderRadius: '4px' }}>
+                                        {car?.imported ? "IMPORTED" : "LOCAL"}
+                                      </span>
                                    </div>
                                 )}
                               </div>

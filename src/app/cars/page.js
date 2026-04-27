@@ -73,7 +73,7 @@ export default async function CarsPage({ searchParams }) {
     ...(bodyType     && { bodyType }),
     ...(fuelType     && { fuelType }),
     ...(transmission && { transmission }),
-    ...(minPrice || maxPrice ? { computedLandedPrice: { ...(minPrice && { gte: minPrice }), ...(maxPrice && { lte: maxPrice }) } } : {}),
+    ...(minPrice || maxPrice ? { price: { ...(minPrice && { gte: minPrice }), ...(maxPrice && { lte: maxPrice }) } } : {}),
     ...(county       && { dealer: { county: { equals: county, mode: "insensitive" } } }),
     ...(search       && { OR: [
       { make:    { contains: search, mode: "insensitive" } },
@@ -83,8 +83,8 @@ export default async function CarsPage({ searchParams }) {
   };
 
   const orderBy =
-    sort === "price_asc" ? [{ computedLandedPrice: "asc" }] :
-    sort === "price_desc" ? [{ computedLandedPrice: "desc" }] :
+    sort === "price_asc" ? [{ price: "asc" }] :
+    sort === "price_desc" ? [{ price: "desc" }] :
     sort === "mileage_asc" ? [{ mileage: "asc" }] :
     sort === "year_desc" ? [{ year: "desc" }] :
     [
@@ -104,8 +104,6 @@ export default async function CarsPage({ searchParams }) {
         variant: true,
         year: true,
         price: true,
-        computedLandedPrice: true,
-        dutyPaid: true,
         engineCC: true,
         mileage: true,
         bodyType: true,

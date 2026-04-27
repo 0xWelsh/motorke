@@ -1,7 +1,6 @@
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +11,7 @@ export async function POST(request) {
   }
 
   const formData = await request.formData();
-  const keys = ["duty_rate", "platform_fee", "support_email", "advanced_duty_json"];
+  const keys = ["platform_fee", "support_email"];
 
   try {
     for (const key of keys) {
@@ -25,9 +24,6 @@ export async function POST(request) {
         });
       }
     }
-    
-    // Invalidate the duty rates cache so the new settings take effect immediately
-    revalidateTag("duty-rates-config");
     
     return NextResponse.redirect(new URL("/admin/settings?saved=1", request.url));
   } catch (err) {

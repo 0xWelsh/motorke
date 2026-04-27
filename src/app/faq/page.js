@@ -36,7 +36,7 @@ const faqs = {
     },
     {
       q: "Do you help with financing?",
-      a: "Not directly, but many dealers offer financing options. You'll see 'Financing Available' tags on listings. We also show estimated duty costs (for imported vehicles) so you can plan your total investment.",
+      a: "Not directly, but many dealers offer financing options. You'll see 'Financing Available' tags on listings. You can compare final listed prices and ownership-related specs before deciding.",
     },
     {
       q: "How do I get better deal notifications?",
@@ -91,8 +91,8 @@ const faqs = {
   ],
   "Technical & Logistics": [
     {
-      q: "What's the duty calculator and is it accurate?",
-      a: "The duty calculator estimates import taxes for vehicles. It uses current Kenya Revenue Authority rates (engine size, vehicle age, import value). It's a guide—official duty depends on your HS code and CIF value. Consult a clearing agent for exact quotes.",
+      q: "How should I interpret listed prices on Welsh Motors?",
+      a: "Prices shown on listings are the dealer's final listed prices on Welsh Motors. Always confirm the final transaction amount, optional add-ons, and transfer fees directly with the dealer before payment.",
     },
     {
       q: "Can I save my location to find cars nearby?",

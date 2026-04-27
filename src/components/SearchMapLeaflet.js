@@ -67,7 +67,7 @@ export default function SearchMapLeaflet({ dealers }) {
       });
 
       const carListHtml = dealer.cars.slice(0, 5).map((c) => {
-        const price = formatPrice(c.computedLandedPrice ?? c.price);
+        const price = formatPrice(c.price);
         return `
           <a href="/cars/${c.id}" style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid #f1f5f9;text-decoration:none;color:inherit">
             <span style="font-size:11px;font-weight:700;color:#0f172a;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif">${c.year} ${c.make} ${c.model}</span>

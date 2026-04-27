@@ -44,17 +44,6 @@ export default async function AdminSettingsPage({ searchParams }) {
       <form action="/api/admin/settings" method="POST" className="bg-white rounded-3xl p-8 border border-[#ddd4c8] dark:border-slate-800">
          <div className="space-y-6 mb-8">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Duty Rate Multiple</label>
-              <input 
-                name="duty_rate" 
-                defaultValue={settings.duty_rate || "1.35"} 
-                className="w-full bg-[#f7f6f3] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-slate-900 font-medium" 
-                placeholder="Ex. 1.35 for 35%"
-              />
-              <p className="text-xs text-slate-400 mt-2">Multiplier applied to vehicle CRF values to guess final retail pricing in calculators.</p>
-            </div>
-            
-            <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Platform Fee (Monthly)</label>
               <input 
                 name="platform_fee" 
@@ -74,18 +63,6 @@ export default async function AdminSettingsPage({ searchParams }) {
                 placeholder="support@domain.com"
               />
               <p className="text-xs text-slate-400 mt-2">Where default notifications and automated customer inquiries are CC'ed.</p>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Advanced Duty Rates (JSON)</label>
-              <textarea 
-                name="advanced_duty_json" 
-                defaultValue={settings.advanced_duty_json || ""} 
-                rows={12}
-                className="w-full bg-[#f7f6f3] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-slate-900 font-mono text-xs" 
-                placeholder='{"idfRate":0.0225,"vatRate":0.16...}'
-              />
-              <p className="text-xs text-slate-400 mt-2">Override KRA Duty calculation baseline. Must be perfectly valid JSON with identical schema to DEFAULT_DUTY_RATES. If empty, the system defaults will be applied.</p>
             </div>
          </div>
 

@@ -84,7 +84,7 @@ export async function POST(request) {
             description:  r.description?.trim() || null,
             features,
             negotiable:   parseBool(r.negotiable, true),
-            dutyPaid:     parseBool(r.dutypaid, true),
+            dutyPaid:     true,
             imported:     parseBool(r.imported, true),
             importCountry: r.importcountry || "Japan",
             available:    true,

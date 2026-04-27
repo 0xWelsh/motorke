@@ -1,4 +1,3 @@
-import { computeLandedPriceForDb } from "@/lib/duty";
 // src/app/api/admin/cars/route.js  — POST (create)
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
@@ -28,7 +27,7 @@ export async function createCar(body) {
     fuelType, transmission, bodyType, engineCC, drivetrain, steering,
     cylinders, horsepower, torque, turbo, sunroof, airbags,
     color, seats, description, features, badges, images, videoUrl,
-    negotiable, dutyPaid, imported, featured,
+    negotiable, imported, featured,
   } = body;
   console.log("🏁 CREATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
@@ -40,7 +39,6 @@ export async function createCar(body) {
       variant:      variant?.trim() || null,
       year:         parseInt(year),
       price: parseInt(price),
-      computedLandedPrice: await computeLandedPriceForDb(parseInt(price), dutyPaid, year, engineCC, fuelType),
       mileage:      mileage ? parseInt(mileage) : null,
       fuelType:     fuelType || "PETROL",
       transmission: transmission || "AUTOMATIC",
@@ -61,7 +59,7 @@ export async function createCar(body) {
       badges:       Array.isArray(badges) ? badges : [],
       videoUrl:     videoUrl?.trim() || null,
       negotiable:   Boolean(negotiable),
-      dutyPaid:     Boolean(dutyPaid),
+      dutyPaid:     true,
       imported:     Boolean(imported),
       importCountry: imported ? "Japan" : null,
       featured:     Boolean(featured),

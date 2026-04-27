@@ -4,8 +4,7 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { unstable_cache } from "next/cache";
-import { computeComparisonInsights } from "@/lib/comparison";
-import { formatPrice, formatCarPrice, formatMileage, estimateDuty, whatsappLink } from "@/lib/utils";
+import { formatPrice, formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
 import { BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/constants";
 import { MessageCircle, ChevronRight, MapPin, Wallet, ShieldCheck, Phone, Star } from "lucide-react";
 import EnquiryForm from "@/components/EnquiryForm";
@@ -144,14 +143,6 @@ const getCarReviews = unstable_cache(
   { revalidate: 300, tags: ["car-reviews"] }
 );
 
-function batteryTechLabel(value) {
-  if (!value) return null;
-  if (value === "NIMH") return "NiMH";
-  if (value === "LI_ION") return "Li-ion";
-  if (value === "NA") return "N/A";
-  return value;
-}
-
 export default async function CarDetailPage({ params }) {
   const { id } = await params;
   const carData = await getCarData(id);
@@ -175,7 +166,6 @@ export default async function CarDetailPage({ params }) {
   const title    = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const titleWithoutYear = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const yearLabel = car.year;
-  const duty     = estimateDuty(car.price, car.year);
   const primaryImg = car.images.find((i) => i.isPrimary) || car.images[0];
   const dealerBrandImage = dealer.logoUrl || dealer.users?.[0]?.avatarUrl || null;
   const specItems = [
@@ -199,17 +189,6 @@ export default async function CarDetailPage({ params }) {
     image: primaryImg?.url,
   };
 
-  const insight = computeComparisonInsights(car);
-
-  const trustBadges = [
-    dealer.verified ? "Verified Dealer" : null,
-    car.dutyPaid ? "Import Docs Present" : null,
-    insight.importEligibility === true ? "Import Age Eligible" : null,
-    car.fuelType === "HYBRID" && car.hybridBatteryTech
-      ? `${batteryTechLabel(car.hybridBatteryTech)} Battery`
-      : null,
-  ].filter(Boolean);
-
   const specs = [
     { label: "Year",          value: car.year },
     { label: "Mileage",       value: formatMileage(car.mileage) },
@@ -229,7 +208,6 @@ export default async function CarDetailPage({ params }) {
     { label: "Color",         value: car.color || "N/A" },
     { label: "Condition",     value: car.condition },
     { label: "Import country",value: car.importCountry || "N/A" },
-    { label: "Duty paid",     value: car.dutyPaid ? "Yes" : "No" },
   ];
 
   const descriptionBullets = (car.description || "")
@@ -321,7 +299,7 @@ export default async function CarDetailPage({ params }) {
                   </span>
                   <div 
                     className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-[11px] text-slate-400 font-bold cursor-help"
-                    title={car.dutyPaid ? "Locally available. Price inclusive of registration and all duties." : "Direct import. Price includes shipping, tax, and clearing fees to Nairobi."}
+                    title="Final listed price"
                   >
                      i
                   </div>

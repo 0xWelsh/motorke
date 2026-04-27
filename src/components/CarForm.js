@@ -183,7 +183,6 @@ function buildBaseSeed(car, currentYear) {
     groundClearanceMm: car?.groundClearanceMm || "",
     hybridBatteryTech: car?.hybridBatteryTech || "NA",
     spareAvailability: car?.spareAvailability || "",
-    importEligibility: typeof car?.importEligibility === "boolean" ? String(car.importEligibility) : "",
     cylinders: car?.cylinders || "",
     horsepower: car?.horsepower || "",
     torque: car?.torque || "",
@@ -194,7 +193,6 @@ function buildBaseSeed(car, currentYear) {
     color: car?.color || "",
     description: car?.description || "",
     negotiable: car?.negotiable ?? true,
-    dutyPaid: car?.dutyPaid ?? true,
     imported: car?.imported ?? true,
     turbo: car?.turbo ?? false,
     sunroof: car?.sunroof ?? false,
@@ -620,7 +618,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     data.groundClearanceMm = data.groundClearanceMm ? parseInt(data.groundClearanceMm, 10) : null;
     data.spareAvailability = data.spareAvailability ? parseInt(data.spareAvailability, 10) : null;
     data.hybridBatteryTech = data.hybridBatteryTech ? data.hybridBatteryTech : null;
-    data.importEligibility = data.importEligibility === "" ? null : data.importEligibility === "true";
     data.cylinders = data.cylinders ? parseInt(data.cylinders, 10) : null;
     data.horsepower = data.horsepower ? parseInt(data.horsepower, 10) : null;
     data.torque = data.torque ? parseInt(data.torque, 10) : null;
@@ -628,7 +625,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     data.seats = data.seats ? parseInt(data.seats, 10) : null;
 
     data.negotiable = data.negotiable === "on";
-    data.dutyPaid = data.dutyPaid === "on";
     data.imported = data.imported === "on";
     data.featured = data.featured === "on";
     data.turbo = data.turbo === "on";
@@ -653,7 +649,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           bodyType: data.bodyType,
           condition: data.condition,
           imported: data.imported,
-          dutyPaid: data.dutyPaid,
           negotiable: data.negotiable,
         })
       );
@@ -1130,7 +1125,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               {currency === "USD" && Boolean(priceInput) && !isNaN(parseInt(priceInput, 10)) && (
                 <p className="mt-1.5 text-[11px] font-bold text-slate-500 dark:text-slate-400">
                   ≈ {new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES', maximumFractionDigits: 0 }).format(parseInt(priceInput, 10) * EXCHANGE_RATE)}
-                  <span className="font-medium text-slate-400 ml-1">(Purchase Price base. Taxes will be automatically added up later)</span>
+                  <span className="font-medium text-slate-400 ml-1">(Converted to KES for listing)</span>
                 </p>
               )}
             </div>
@@ -1314,14 +1309,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                     <input name="spareAvailability" type="number" min="1" max="10" defaultValue={formSeed.spareAvailability} placeholder="e.g. 8" className={inputCls} />
                   </div>
                   <div>
-                    <label className={labelCls}>Import Eligibility</label>
-                    <select name="importEligibility" defaultValue={formSeed.importEligibility} className={selectCls}>
-                      <option value="">Auto (derive by year)</option>
-                      <option value="true">Eligible</option>
-                      <option value="false">Not Eligible</option>
-                    </select>
-                  </div>
-                  <div>
                     <label className={labelCls}>Hybrid Battery Tech</label>
                     <select name="hybridBatteryTech" defaultValue={formSeed.hybridBatteryTech} className={selectCls}>
                       {Object.entries(HYBRID_BATTERY_LABELS).map(([value, label]) => (
@@ -1404,7 +1391,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               <div className="flex items-center gap-8 flex-wrap">
                 {[
                   { name: "negotiable", label: "Accepting Offers", defaultChecked: !!formSeed.negotiable },
-                  { name: "dutyPaid", label: "Duty Paid", defaultChecked: !!formSeed.dutyPaid },
                   { name: "imported", label: "Imported", defaultChecked: !!formSeed.imported },
                   { name: "featured", label: "Featured", defaultChecked: !!formSeed.featured && !isPortal },
                 ].map(({ name, label, defaultChecked }) => (

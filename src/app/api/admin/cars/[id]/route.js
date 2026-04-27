@@ -1,4 +1,3 @@
-import { computeLandedPriceForDb } from "@/lib/duty";
 // src/app/api/admin/cars/[id]/route.js  — PUT (update)
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
@@ -19,7 +18,7 @@ export async function PUT(request, { params }) {
       fuelType, transmission, bodyType, engineCC, drivetrain, steering,
       cylinders, horsepower, torque, turbo, sunroof, airbags,
       color, seats, description, features, badges, images,
-      negotiable, dutyPaid, imported, featured, dealerId, videoUrl,
+      negotiable, imported, featured, dealerId, videoUrl,
     } = body;
     console.log("🏁 UPDATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
@@ -33,7 +32,6 @@ export async function PUT(request, { params }) {
         variant:      variant?.trim() || null,
         year:         parseInt(year),
         price: parseInt(price),
-      computedLandedPrice: await computeLandedPriceForDb(parseInt(price), dutyPaid, year, engineCC, fuelType),
         mileage:      mileage ? parseInt(mileage) : null,
         fuelType,
         transmission,
@@ -54,7 +52,7 @@ export async function PUT(request, { params }) {
         badges:       Array.isArray(badges) ? badges : [],
         videoUrl:     videoUrl?.trim() || null,
         negotiable:   Boolean(negotiable),
-        dutyPaid:     Boolean(dutyPaid),
+        dutyPaid:     true,
         imported:     Boolean(imported),
         featured:     Boolean(featured),
       },
