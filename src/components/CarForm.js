@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronLeft, ChevronRight, Info, Sparkles, UploadCloud } from "lucide-react";
+import { Check, ChevronRight, Info, Sparkles, UploadCloud } from "lucide-react";
 import MediaUploader from "./admin/MediaUploader";
 import {
   BADGE_OPTIONS,
@@ -291,6 +291,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   const formRef = useRef(null);
   const saveTimeoutRef = useRef(null);
+  const uploadedLocalMapRef = useRef(new Map());
+  const pendingUploadIdsRef = useRef(new Set());
   const score = qualityScore(formSeed, images, selectedFeatures);
   const checklistItems = [
     { key: "basics", label: "Basics" },
@@ -505,16 +507,36 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     };
   }, [images, selectedFeatures, formVersion]);
 
-  async function handleFilesSelected(newFiles) {
-    const toUpload = newFiles.filter((f) => !f.url);
-    if (!toUpload.length) {
-      setImages(newFiles.map((f) => ({ url: f.url || f.preview, isPrimary: f.isPrimary })));
-      return;
+  function normalizeImagePayload(list) {
+    const unique = [];
+    const seen = new Set();
+    for (const item of list) {
+      if (!item?.url || seen.has(item.url)) continue;
+      seen.add(item.url);
+      unique.push({ url: item.url, isPrimary: Boolean(item.isPrimary) });
     }
+    if (unique.length > 0 && !unique.some((img) => img.isPrimary)) unique[0].isPrimary = true;
+    return unique;
+  }
+
+  async function handleFilesSelected(newFiles) {
+    const withKnownUrls = normalizeImagePayload(
+      newFiles.map((f) => ({
+        url: f.url || uploadedLocalMapRef.current.get(f.id) || null,
+        isPrimary: f.isPrimary,
+      }))
+    );
+    if (withKnownUrls.length) setImages(withKnownUrls);
+
+    const toUpload = newFiles.filter(
+      (f) => !f.url && f.id && !uploadedLocalMapRef.current.has(f.id) && !pendingUploadIdsRef.current.has(f.id)
+    );
+    if (!toUpload.length) return;
 
     setUploading(true);
     setError("");
     setUploadProgress({ done: 0, total: toUpload.length });
+    toUpload.forEach((f) => pendingUploadIdsRef.current.add(f.id));
 
     const results = await Promise.allSettled(
       toUpload.map(async (file) => {
@@ -530,18 +552,21 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         const data = await res.json();
 
         if (!res.ok) throw new Error(data.error || `Failed: ${file.name}`);
+        uploadedLocalMapRef.current.set(file.id, data.url);
         setUploadProgress((prev) => ({ ...prev, done: prev.done + 1 }));
         return data.url;
       })
     );
 
-    const urls = results.filter((r) => r.status === "fulfilled").map((r) => r.value);
+    toUpload.forEach((f) => pendingUploadIdsRef.current.delete(f.id));
     const failures = results.filter((r) => r.status === "rejected").map((r) => r.reason.message);
-
-    setImages((prev) => {
-      const incoming = urls.map((url, idx) => ({ url, isPrimary: prev.length === 0 && idx === 0 }));
-      return [...prev, ...incoming];
-    });
+    const finalPayload = normalizeImagePayload(
+      newFiles.map((f) => ({
+        url: f.url || uploadedLocalMapRef.current.get(f.id) || null,
+        isPrimary: f.isPrimary,
+      }))
+    );
+    setImages(finalPayload);
 
     if (failures.length > 0) setError(`${failures.length} upload(s) failed: ${failures.join(", ")}`);
 

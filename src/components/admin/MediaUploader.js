@@ -65,6 +65,15 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
     syncFiles([...next]);
   };
 
+  const clearAllFiles = () => {
+    const ok = window.confirm("Remove all selected listing photos?");
+    if (!ok) return;
+    files.forEach((file) => {
+      if (file?.preview && !file.url) URL.revokeObjectURL(file.preview);
+    });
+    syncFiles([]);
+  };
+
   const setPrimary = (id) => {
     const next = files.map((f) => ({ ...f, isPrimary: f.id === id }));
     syncFiles(next);
@@ -151,8 +160,17 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
                  <div className="w-2 h-2 rounded-full bg-[#ff5a2f]" />
                  <h3 className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Asset Grid</h3>
               </div>
-              <div className="px-4 py-1.5 bg-slate-100 dark:bg-[#111111] rounded-full">
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{files.length} / {maxFiles} Assets</p>
+              <div className="flex items-center gap-2">
+                <div className="px-4 py-1.5 bg-slate-100 dark:bg-[#111111] rounded-full">
+                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{files.length} / {maxFiles} Assets</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={clearAllFiles}
+                  className="px-3 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-black uppercase tracking-widest hover:bg-rose-100 transition-colors"
+                >
+                  Clear All
+                </button>
               </div>
            </div>
 
