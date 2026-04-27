@@ -250,7 +250,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const baseSeed = useMemo(() => buildBaseSeed(car, currentYear), [car, currentYear]);
 
   const [formSeed, setFormSeed] = useState(baseSeed);
-  const [formVersion, setFormVersion] = useState(0);
   const [simpleMode, setSimpleMode] = useState(initialSimpleMode);
 
   const [uploading, setUploading] = useState(false);
@@ -351,7 +350,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setSelectedFeatures([]);
     setPriceInput(baseSeed.price || "");
     setSimpleMode(initialSimpleMode);
-    setFormVersion((v) => v + 1);
   }, [baseSeed, defaultsKey, draftKey, initialSimpleMode, isNew]);
 
   useEffect(() => {
@@ -384,21 +382,21 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       formRef.current?.querySelector('input[name="make"]')?.value?.trim() ||
       (formSeed.make || "").trim();
     setSelectedMake(currentMake);
-  }, [formVersion, formSeed.make]);
+  }, [formSeed.make]);
 
   useEffect(() => {
     const currentModel =
       formRef.current?.querySelector('input[name="model"]')?.value?.trim() ||
       (formSeed.model || "").trim();
     setSelectedModel(currentModel);
-  }, [formVersion, formSeed.model]);
+  }, [formSeed.model]);
 
   useEffect(() => {
     const currentYearValue =
       formRef.current?.querySelector('select[name="year"]')?.value?.trim() ||
       String(formSeed.year || currentYear);
     setSelectedYear(currentYearValue);
-  }, [currentYear, formVersion, formSeed.year]);
+  }, [currentYear, formSeed.year]);
 
   useEffect(() => {
     const make = selectedMake.trim();
@@ -504,7 +502,25 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       form.removeEventListener("input", deriveChecklist);
       form.removeEventListener("change", deriveChecklist);
     };
-  }, [images, selectedFeatures, formVersion]);
+  }, [images, selectedFeatures]);
+
+  const applyDetectedValuesToForm = useCallback((seeded) => {
+    const form = formRef.current;
+    if (!form) return;
+    const setField = (selector, value) => {
+      const field = form.querySelector(selector);
+      if (!field) return;
+      field.value = value ?? "";
+      field.dispatchEvent(new Event("input", { bubbles: true }));
+      field.dispatchEvent(new Event("change", { bubbles: true }));
+    };
+    setField('input[name="make"]', seeded.make);
+    setField('input[name="model"]', seeded.model);
+    setField('input[name="variant"]', seeded.variant);
+    setField('select[name="year"]', seeded.year ? String(seeded.year) : "");
+    setField('input[name="mileage"]', seeded.mileage ? String(seeded.mileage) : "");
+    setField('input[name="engineCC"]', seeded.engineCC ? String(seeded.engineCC) : "");
+  }, []);
 
   function normalizeImagePayload(list) {
     const unique = [];
@@ -718,9 +734,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       setSelectedMake(seeded.make || "");
       setSelectedModel(seeded.model || "");
       setPriceInput(seeded.price ? String(seeded.price) : "");
+      applyDetectedValuesToForm(seeded);
 
       setFormSeed((prev) => ({ ...prev, ...seeded }));
-      setFormVersion((v) => v + 1);
 
       if (!seeded.make && !seeded.model && !seeded.price && !seeded.mileage && !seeded.year) {
         setError("No key fields detected. Try adding year, make, model, price, and mileage in the text.");
@@ -734,7 +750,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   };
 
   return (
-    <form key={formVersion} ref={formRef} onSubmit={handleSubmit} className="space-y-6 animate-in fade-in duration-700">
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-6 animate-in fade-in duration-700">
       <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4">
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2">
