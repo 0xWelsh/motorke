@@ -163,7 +163,7 @@ const FEATURE_CHECKLIST = [
   "Collision Warning", "Emergency Braking", "Tyre Pressure Monitor", "USB Ports",
   "Memory Seats", "Power Mirrors", "Fold Mirrors", "Dash Cam", "Immobilizer",
   "Alarm System", "Child Lock", "ISOFIX", "Tinted Windows", "Rear Spoiler",
-];
+].sort((a, b) => a.localeCompare(b));
 
 
 function buildBaseSeed(car, currentYear) {
@@ -299,6 +299,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     { key: "publish", label: "Ready" },
   ];
   const checklistDone = checklistItems.filter((item) => checklist[item.key]).length;
+  const featureOptions = useMemo(
+    () => Array.from(new Set([...FEATURE_CHECKLIST, ...selectedFeatures])).sort((a, b) => a.localeCompare(b)),
+    [selectedFeatures]
+  );
 
   const inputCls = "w-full bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-[#ff5a2f] transition-all";
   const selectCls = "w-full bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white outline-none focus:border-[#ff5a2f] transition-all appearance-none";
@@ -322,36 +326,18 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   }, [badges, draftKey, images, isNew, selectedFeatures, simpleMode]);
 
   useEffect(() => {
-    if (!isNew || !formRef.current) return;
-
-    const draftRaw = draftKey ? localStorage.getItem(draftKey) : null;
-    if (draftRaw) {
-      try {
-        const parsed = JSON.parse(draftRaw);
-        setFormSeed((prev) => ({ ...prev, ...(parsed.fields || {}) }));
-        setImages(Array.isArray(parsed.images) ? parsed.images : []);
-        setBadges(Array.isArray(parsed.badges) ? parsed.badges : []);
-        setSelectedFeatures(Array.isArray(parsed.selectedFeatures) ? parsed.selectedFeatures : []);
-        setSimpleMode(typeof parsed.simpleMode === "boolean" ? parsed.simpleMode : initialSimpleMode);
-        setDraftLoaded(true);
-        setFormVersion((v) => v + 1);
-        return;
-      } catch {
-        if (draftKey) localStorage.removeItem(draftKey);
-      }
-    }
-
-    const defaultsRaw = localStorage.getItem(defaultsKey);
-    if (defaultsRaw) {
-      try {
-        const defaults = JSON.parse(defaultsRaw);
-        setFormSeed((prev) => ({ ...prev, ...defaults }));
-        setFormVersion((v) => v + 1);
-      } catch {
-        // Ignore malformed defaults
-      }
-    }
-  }, [defaultsKey, draftKey, initialSimpleMode, isNew]);
+    if (!isNew) return;
+    if (draftKey) localStorage.removeItem(draftKey);
+    localStorage.removeItem(defaultsKey);
+    setDraftLoaded(false);
+    setFormSeed(baseSeed);
+    setImages([]);
+    setBadges([]);
+    setSelectedFeatures([]);
+    setPriceInput(baseSeed.price || "");
+    setSimpleMode(initialSimpleMode);
+    setFormVersion((v) => v + 1);
+  }, [baseSeed, defaultsKey, draftKey, initialSimpleMode, isNew]);
 
   useEffect(() => {
     if (!isNew || !draftKey || !formRef.current) return;
@@ -581,7 +567,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   function addCustomFeature() {
     const clean = customFeature.trim();
     if (!clean) return;
-    if (!selectedFeatures.includes(clean)) setSelectedFeatures((prev) => [...prev, clean]);
+    setSelectedFeatures((prev) => {
+      const exists = prev.some((f) => f.toLowerCase() === clean.toLowerCase());
+      return exists ? prev : [...prev, clean];
+    });
     setCustomFeature("");
   }
 
@@ -866,42 +855,31 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
       </div>
       {isNew && (
-        <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-6 space-y-5">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-500">Upload Flow</p>
-              <h2 className="text-xl font-black text-slate-900 dark:text-white">{simpleMode ? "Quick Upload" : "Advanced Upload"}</h2>
-              <p className="text-sm font-semibold text-slate-500 mt-1">
-                {simpleMode ? "Publish fast with essentials first. Add advanced specs any time." : "Full control with all technical fields now."}
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setSimpleMode(true)}
-                className={`px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-wider border transition-colors ${
-                  simpleMode 
-                    ? "bg-slate-900 border-slate-900 text-white dark:bg-[#3f3f46] dark:text-white dark:border-[#3f3f46]" 
-                    : "bg-white border-[#ddd4c8] dark:border-slate-800 text-slate-500 hover:text-slate-900 dark:text-white dark:bg-[#111111] dark:border-[#27272a] dark:text-slate-400 dark:hover:text-white"
-                }`}
-              >
-                Quick
-              </button>
-              <button
-                type="button"
-                onClick={() => setSimpleMode(false)}
-                className={`px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-wider border transition-colors ${
-                  !simpleMode 
-                    ? "bg-slate-900 border-slate-900 text-white dark:bg-[#3f3f46] dark:text-white dark:border-[#3f3f46]" 
-                    : "bg-white border-[#ddd4c8] dark:border-slate-800 text-slate-500 hover:text-slate-900 dark:text-white dark:bg-[#111111] dark:border-[#27272a] dark:text-slate-400 dark:hover:text-white"
-                }`}
-              >
-                Advanced
-              </button>
-            </div>
+        <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-6">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setSimpleMode(true)}
+              className={`px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-wider border transition-colors ${
+                simpleMode
+                  ? "bg-slate-900 border-slate-900 text-white dark:bg-[#3f3f46] dark:text-white dark:border-[#3f3f46]"
+                  : "bg-white border-[#ddd4c8] dark:border-slate-800 text-slate-500 hover:text-slate-900 dark:text-white dark:bg-[#111111] dark:border-[#27272a] dark:text-slate-400 dark:hover:text-white"
+              }`}
+            >
+              Quick
+            </button>
+            <button
+              type="button"
+              onClick={() => setSimpleMode(false)}
+              className={`px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-wider border transition-colors ${
+                !simpleMode
+                  ? "bg-slate-900 border-slate-900 text-white dark:bg-[#3f3f46] dark:text-white dark:border-[#3f3f46]"
+                  : "bg-white border-[#ddd4c8] dark:border-slate-800 text-slate-500 hover:text-slate-900 dark:text-white dark:bg-[#111111] dark:border-[#27272a] dark:text-slate-400 dark:hover:text-white"
+              }`}
+            >
+              Advanced
+            </button>
           </div>
-
         </div>
       )}
 
@@ -1255,7 +1233,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 <span className="text-xs font-bold text-[#ff5a2f] bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-2xl">{selectedFeatures.length} selected</span>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5">
-                {FEATURE_CHECKLIST.map((feature) => {
+                {featureOptions.map((feature) => {
                   const active = selectedFeatures.includes(feature);
                   return (
                     <button
@@ -1288,6 +1266,20 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   Add Feature
                 </button>
               </div>
+              {selectedFeatures.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {selectedFeatures.map((feature) => (
+                    <button
+                      key={`selected-${feature}`}
+                      type="button"
+                      onClick={() => toggleFeature(feature)}
+                      className="px-3 py-1.5 rounded-2xl border border-[#ff5a2f] bg-[#ff5a2f]/10 text-[11px] font-bold text-slate-700 dark:text-slate-200"
+                    >
+                      {feature} x
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             {!simpleMode && (
               <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
