@@ -472,7 +472,14 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     const results = await Promise.allSettled(
       toUpload.map(async (file) => {
         const formData = new FormData();
+        const watermarkParts = [
+          (selectedYear || "").trim(),
+          (selectedMake || "").trim(),
+          (selectedModel || "").trim(),
+        ].filter(Boolean);
+        const watermarkText = watermarkParts.join(" ") || "WELSH MOTORS";
         formData.append("file", file);
+        formData.append("watermarkText", watermarkText);
         const res = await fetch("/api/upload", { method: "POST", body: formData });
         const data = await res.json();
 

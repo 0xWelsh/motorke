@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Phone, Mail, Globe, ShieldCheck, MessageCircle } from "lucide-react";
+import { SiInstagram, SiFacebook, SiTiktok } from "react-icons/si";
 import { getSession } from "@/lib/auth";
 import DealerReviews from "@/components/DealerReviews";
 import DealerInventory from "@/components/DealerInventory";
@@ -170,9 +171,9 @@ export default async function DealerPage(props) {
   }
 
   const socialLinks = [
-    { key: "instagram", label: "Instagram", href: withProtocol(dealer.instagramUrl), icon: <span className="text-[10px] font-black uppercase tracking-wide">IG</span> },
-    { key: "facebook", label: "Facebook", href: withProtocol(dealer.facebookUrl), icon: <span className="text-sm font-black leading-none">f</span> },
-    { key: "tiktok", label: "TikTok", href: withProtocol(dealer.tiktokUrl), icon: <span className="text-[10px] font-black uppercase tracking-wide">TT</span> },
+    { key: "instagram", label: "Instagram", href: withProtocol(dealer.instagramUrl), icon: <SiInstagram className="w-3.5 h-3.5" /> },
+    { key: "facebook", label: "Facebook", href: withProtocol(dealer.facebookUrl), icon: <SiFacebook className="w-3.5 h-3.5" /> },
+    { key: "tiktok", label: "TikTok", href: withProtocol(dealer.tiktokUrl), icon: <SiTiktok className="w-3.5 h-3.5" /> },
   ].filter((item) => Boolean(item.href));
 
   // Generate the gallery for the hero section

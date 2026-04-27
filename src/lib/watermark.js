@@ -3,21 +3,18 @@
  * Server-side watermark applied via Sharp on every car image upload.
  *
  * Design:
- *  - Bottom bar: semi-transparent dark strip with "WELSH MOTORS • welshmotors.co.ke"
- *  - Corner bug: small brand text bottom-right with white/black outline 
- *  - Diagonal tiled ghost text: light repeat across whole image
+ *  - Bottom bar: semi-transparent dark strip with centered watermark text.
+ *  - Text defaults to brand name, but upload handlers can pass the car title.
  *
  * Controlled via env:
  *   LISTING_WATERMARK_ENABLED=false  → skip watermarking (default: enabled)
- *   LISTING_WATERMARK_TEXT           → override brand text (default: "WELSH MOTORS")
- *   LISTING_WATERMARK_URL            → override URL text (default: "welshmotors.co.ke")
+ *   LISTING_WATERMARK_TEXT           → override default text (default: "WELSH MOTORS")
  */
 
 import sharp from "sharp";
 
 const WATERMARK_ENABLED = process.env.LISTING_WATERMARK_ENABLED !== "false";
 const BRAND             = process.env.LISTING_WATERMARK_TEXT || "WELSH MOTORS";
-const BRAND_URL         = process.env.LISTING_WATERMARK_URL  || "welshmotors.co.ke";
 
 function escapeXml(str) {
   return String(str ?? "")
@@ -29,75 +26,27 @@ function escapeXml(str) {
 }
 
 /**
- * Bottom bar: dark strip with brand + URL
+ * Bottom bar: dark strip with centered text.
  */
 function buildBarSvg(width, height, customText = null) {
   const barH    = Math.max(28, Math.round(height * 0.062));
-  const fontSize = Math.max(11, Math.round(barH * 0.44));
-  const pad     = Math.max(10, Math.round(width * 0.02));
+  const fontSize = Math.max(11, Math.round(barH * 0.42));
   const y       = height - barH;
   const textY   = y + barH * 0.64;
 
   const label   = escapeXml(customText || BRAND);
-  const url     = escapeXml(BRAND_URL);
 
   return Buffer.from(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-      <!-- Dark bar -->
       <rect x="0" y="${y}" width="${width}" height="${barH}" fill="rgba(0,0,0,0.52)" />
-      <!-- Brand text left -->
-      <text x="${pad}" y="${textY}"
+      <text x="${width / 2}" y="${textY}"
         font-family="Arial, Helvetica, sans-serif"
         font-size="${fontSize}"
         font-weight="800"
-        letter-spacing="2"
+        letter-spacing="1.2"
+        text-anchor="middle"
         fill="rgba(255,255,255,0.92)"
       >${label}</text>
-      <!-- Separator dot -->
-      <text x="${pad + (label.length * fontSize * 0.65)}" y="${textY}"
-        font-family="Arial, Helvetica, sans-serif"
-        font-size="${fontSize}"
-        fill="rgba(255,90,47,0.9)"
-      > • </text>
-      <!-- URL text -->
-      <text x="${pad + (label.length * fontSize * 0.65) + fontSize * 1.8}" y="${textY}"
-        font-family="Arial, Helvetica, sans-serif"
-        font-size="${Math.round(fontSize * 0.85)}"
-        font-weight="600"
-        fill="rgba(255,255,255,0.7)"
-      >${url}</text>
-    </svg>`
-  );
-}
-
-/**
- * Diagonal ghost tiling: deters crop-and-repost
- * Renders evenly-spaced rotated "MOTORKE" labels at low opacity.
- */
-function buildGhostSvg(width, height, customText = null) {
-  const step     = Math.round(Math.max(width, height) * 0.28);
-  const fontSize = Math.max(13, Math.round(step * 0.11));
-  const text     = escapeXml(customText || BRAND);
-  const labels   = [];
-
-  for (let y = -step; y < height + step; y += step) {
-    for (let x = -step; x < width + step; x += step) {
-      labels.push(
-        `<text x="${x}" y="${y}"
-          transform="rotate(-32, ${x}, ${y})"
-          font-family="Arial, Helvetica, sans-serif"
-          font-size="${fontSize}"
-          font-weight="700"
-          letter-spacing="2"
-          fill="rgba(255,255,255,0.06)"
-        >${text}</text>`
-      );
-    }
-  }
-
-  return Buffer.from(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-      ${labels.join("\n")}
     </svg>`
   );
 }
@@ -115,13 +64,9 @@ export async function applyListingWatermark(buffer, mimeType, customText = null)
 
   if (!width || !height) return buffer;
 
-  const bar   = buildBarSvg(width, height, customText);
-  const ghost = buildGhostSvg(width, height, customText);
+  const bar = buildBarSvg(width, height, customText);
 
-  const composited = image.composite([
-    { input: ghost, left: 0, top: 0 },   // ghost tile first (under bar)
-    { input: bar,   left: 0, top: 0 },   // bar on top
-  ]);
+  const composited = image.composite([{ input: bar, left: 0, top: 0 }]);
 
   if (mimeType === "image/png") {
     return composited.png({ compressionLevel: 9 }).toBuffer();

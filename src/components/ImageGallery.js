@@ -169,6 +169,27 @@ export default function ImageGallery({ images, title }) {
                 {images.length}+ PHOTOS
               </button>
             )}
+            {images.length > 1 && (
+              <>
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/35 text-white flex items-center justify-center text-2xl font-bold pointer-events-none">
+                  ‹
+                </div>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/35 text-white flex items-center justify-center text-2xl font-bold pointer-events-none">
+                  ›
+                </div>
+                <div className="absolute left-1/2 -translate-x-1/2 bottom-4 flex items-center gap-1.5 pointer-events-none">
+                  {images.slice(0, 6).map((_, i) => (
+                    <span
+                      key={`mobile-dot-${i}`}
+                      className={`h-1.5 rounded-full ${i === 0 ? "w-5 bg-white" : "w-1.5 bg-white/60"}`}
+                    />
+                  ))}
+                </div>
+                <p className="absolute left-1/2 -translate-x-1/2 bottom-10 text-[10px] font-black uppercase tracking-widest text-white/85 pointer-events-none">
+                  Swipe to see more
+                </p>
+              </>
+            )}
           </div>
 
           {images.length > 1 && (

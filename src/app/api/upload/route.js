@@ -42,11 +42,11 @@ export async function POST(request) {
       );
     }
 
-    // Add brand watermark before upload.
+    // Add listing watermark (car title preferred) before upload.
     let processedBuffer = buffer;
     try {
-      const dealerName = session.user?.dealer?.name;
-      processedBuffer = await applyListingWatermark(buffer, file.type, dealerName);
+      const watermarkText = formData.get("watermarkText")?.toString().trim() || null;
+      processedBuffer = await applyListingWatermark(buffer, file.type, watermarkText);
     } catch (watermarkError) {
       console.error("Watermark processing failed:", watermarkError);
       // Keep upload flow resilient even if watermarking fails unexpectedly.
