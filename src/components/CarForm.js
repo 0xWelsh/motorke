@@ -228,6 +228,32 @@ function qualityScore(seed, images, features) {
   return Math.min(100, score);
 }
 
+function buildAutoDescription(values = {}, features = []) {
+  const bits = [];
+  const year = values.year || "";
+  const make = values.make || "";
+  const model = values.model || "";
+  const variant = values.variant || "";
+  const title = [year, make, model, variant].filter(Boolean).join(" ").trim();
+  if (title) bits.push(`${title} is available and ready for viewing.`);
+
+  const specLine = [
+    values.transmission ? `${values.transmission.toLowerCase()} transmission` : "",
+    values.fuelType ? `${values.fuelType.toLowerCase()} engine` : "",
+    values.mileage ? `${Number(values.mileage).toLocaleString("en-KE")} km mileage` : "",
+    values.color ? `${values.color} finish` : "",
+  ].filter(Boolean).join(", ");
+  if (specLine) bits.push(`Key specs include ${specLine}.`);
+
+  if (Array.isArray(features) && features.length > 0) {
+    const top = features.slice(0, 6).join(", ");
+    bits.push(`Highlighted features: ${top}${features.length > 6 ? ", and more." : "."}`);
+  }
+
+  bits.push("Contact the dealer for inspection, test drive, and final offer.");
+  return bits.join(" ");
+}
+
 export default function CarForm({ dealers = [], car = null, action, method = "POST" }) {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 40 }, (_, i) => currentYear - i);
@@ -287,6 +313,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [smartFillDiff, setSmartFillDiff] = useState([]);
   const [smartFillSuggestions, setSmartFillSuggestions] = useState([]);
   const [videoUrl, setVideoUrl] = useState(formSeed.videoUrl || "");
+  const [descriptionText, setDescriptionText] = useState(formSeed.description || "");
+  const [descriptionTouched, setDescriptionTouched] = useState(Boolean((formSeed.description || "").trim()));
   const [activeSection, setActiveSection] = useState("basics");
   const [liveDraft, setLiveDraft] = useState({});
   const [checklist, setChecklist] = useState({
@@ -371,6 +399,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setPriceInput(baseSeed.price || "");
     setSimpleMode(initialSimpleMode);
   }, [baseSeed, defaultsKey, draftKey, initialSimpleMode, isNew]);
+
+  useEffect(() => {
+    setDescriptionText(formSeed.description || "");
+    setDescriptionTouched(Boolean((formSeed.description || "").trim()));
+  }, [formSeed.description]);
 
   useEffect(() => {
     if (!isNew || !draftKey || !formRef.current) return;
@@ -571,6 +604,26 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     if (field === "year") setSelectedYear(String(value || ""));
     setSmartFillSuggestions((prev) => prev.filter((s) => s.field !== field));
   }, []);
+
+  const applyGeneratedDescription = useCallback((force = false) => {
+    if (descriptionTouched && !force) return;
+    const values = { ...liveDraft, make: selectedMake || liveDraft.make, model: selectedModel || liveDraft.model, year: selectedYear || liveDraft.year };
+    const generated = buildAutoDescription(values, selectedFeatures);
+    setDescriptionText(generated);
+    const form = formRef.current;
+    const field = form?.querySelector('textarea[name="description"]');
+    if (field) {
+      field.value = generated;
+      field.dispatchEvent(new Event("input", { bubbles: true }));
+      field.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  }, [descriptionTouched, liveDraft, selectedFeatures, selectedMake, selectedModel, selectedYear]);
+
+  useEffect(() => {
+    if (activeSection !== "details") return;
+    if ((descriptionText || "").trim()) return;
+    applyGeneratedDescription(false);
+  }, [activeSection, applyGeneratedDescription, descriptionText]);
 
   function normalizeImagePayload(list) {
     const unique = [];
@@ -1366,72 +1419,94 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         {activeSection === "details" && (
         <div>
           <div className="space-y-6">
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-1.5 h-1.5 rounded-2xl bg-purple-500" />
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Description</h3>
-              </div>
-              <textarea name="description" rows={5} defaultValue={formSeed.description} placeholder="Share condition, service history, and key selling points..." className={`${inputCls} resize-none`} />
-              <p className="mt-2 text-xs font-semibold text-slate-500">
-                Keep it honest and specific: service history, owner count, accidents, tyres, and any known issue.
-              </p>
-            </div>
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <p className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">Feature Checklist</p>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Tap to select car features</h3>
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5 xl:col-span-5">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="w-1.5 h-1.5 rounded-2xl bg-purple-500" />
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Description</h3>
                 </div>
-                <span className="text-xs font-bold text-[#ff5a2f] bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-2xl">{selectedFeatures.length} selected</span>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5">
-                {featureOptions.map((feature) => {
-                  const active = selectedFeatures.includes(feature);
-                  return (
-                    <button
-                      key={feature}
-                      type="button"
-                      onClick={() => toggleFeature(feature)}
-                      className={`text-left text-[11px] font-bold px-3 py-2.5 rounded-2xl border transition-all ${
-                        active ? "bg-[#ff5a2f] text-slate-900 dark:text-white border-[#ff5a2f]" : "bg-[#fbfcfe] dark:bg-[#111111] text-slate-700 border-[#ddd4c8] dark:border-slate-800 hover:bg-slate-100"
-                      }`}
-                    >
-                      {feature}
-                    </button>
-                  );
-                })}
-              </div>
-              <div className="mt-4 flex flex-col sm:flex-row gap-2">
-                <input
-                  value={customFeature}
-                  onChange={(e) => setCustomFeature(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      addCustomFeature();
-                    }
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  <button
+                    type="button"
+                    onClick={() => applyGeneratedDescription(true)}
+                    className="px-3 py-1.5 rounded-xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-wider"
+                  >
+                    Generate from specs
+                  </button>
+                  <span className="text-[11px] font-semibold text-slate-500">Tags remain unchanged.</span>
+                </div>
+                <textarea
+                  name="description"
+                  rows={9}
+                  value={descriptionText}
+                  onChange={(e) => {
+                    setDescriptionText(e.target.value);
+                    setDescriptionTouched(true);
                   }}
-                  placeholder="Add custom feature"
-                  className={inputCls}
+                  placeholder="Share condition, service history, and key selling points..."
+                  className={`${inputCls} resize-none`}
                 />
-                <button type="button" onClick={addCustomFeature} className="px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider">
-                  Add Feature
-                </button>
+                <p className="mt-2 text-xs font-semibold text-slate-500">
+                  Keep it honest and specific: service history, owner count, accidents, tyres, and any known issue.
+                </p>
               </div>
-              {selectedFeatures.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {selectedFeatures.map((feature) => (
-                    <button
-                      key={`selected-${feature}`}
-                      type="button"
-                      onClick={() => toggleFeature(feature)}
-                      className="px-3 py-1.5 rounded-2xl border border-[#ff5a2f] bg-[#ff5a2f]/10 text-[11px] font-bold text-slate-700 dark:text-slate-200"
-                    >
-                      {feature} x
-                    </button>
-                  ))}
+              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5 xl:col-span-7">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <p className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">Feature Checklist</p>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">Tap to select car features</h3>
+                  </div>
+                  <span className="text-xs font-bold text-[#ff5a2f] bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-2xl">{selectedFeatures.length} selected</span>
                 </div>
-              )}
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5">
+                  {featureOptions.map((feature) => {
+                    const active = selectedFeatures.includes(feature);
+                    return (
+                      <button
+                        key={feature}
+                        type="button"
+                        onClick={() => toggleFeature(feature)}
+                        className={`text-left text-[11px] font-bold px-3 py-2.5 rounded-2xl border transition-all ${
+                          active ? "bg-[#ff5a2f] text-slate-900 dark:text-white border-[#ff5a2f]" : "bg-[#fbfcfe] dark:bg-[#111111] text-slate-700 border-[#ddd4c8] dark:border-slate-800 hover:bg-slate-100"
+                        }`}
+                      >
+                        {feature}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="mt-4 flex flex-col sm:flex-row gap-2">
+                  <input
+                    value={customFeature}
+                    onChange={(e) => setCustomFeature(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        addCustomFeature();
+                      }
+                    }}
+                    placeholder="Add custom feature"
+                    className={inputCls}
+                  />
+                  <button type="button" onClick={addCustomFeature} className="px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider">
+                    Add Feature
+                  </button>
+                </div>
+                {selectedFeatures.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {selectedFeatures.map((feature) => (
+                      <button
+                        key={`selected-${feature}`}
+                        type="button"
+                        onClick={() => toggleFeature(feature)}
+                        className="px-3 py-1.5 rounded-2xl border border-[#ff5a2f] bg-[#ff5a2f]/10 text-[11px] font-bold text-slate-700 dark:text-slate-200"
+                      >
+                        {feature} x
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
             {!simpleMode && (
               <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
