@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ChevronRight, Search, MessageCircle, ShieldCheck, MapPin, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import CarsSearch from "@/components/CarsSearch";
-import CarsResultsFlow from "@/components/CarsResultsFlow";
+import CarCard from "@/components/CarCard";
 import { unstable_cache } from "next/cache";
 import { CompareButton } from "@/components/CompareSelector";
 import { getSession } from "@/lib/auth";
@@ -152,6 +152,8 @@ export default async function CarsPage({ searchParams }) {
         ? distance(effectiveLat, effectiveLng, car.dealer.lat, car.dealer.lng)
         : null,
   }));
+  const topCars = carsWithDistance.slice(0, 6);
+  const lowerCars = carsWithDistance.slice(6);
 
   const totalPages = Math.ceil(total / limit);
 
@@ -179,10 +181,10 @@ export default async function CarsPage({ searchParams }) {
           </div>
         </div>
 
-        {/* Main layout: sidebar + independent results grid */}
+        {/* Main layout: sidebar + top rows */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-4 gap-y-10">
           {/* Sidebar */}
-          <div id="cars-filter-sidebar" className="self-start space-y-10 lg:col-span-1">
+          <div id="cars-filter-sidebar" className="self-start lg:col-span-1">
             <CarsSearch
               initialSearch={search}
               initialMake={make}
@@ -197,23 +199,10 @@ export default async function CarsPage({ searchParams }) {
               bodyTypeLabels={BODY_TYPE_LABELS}
               counties={COUNTIES}
             />
-            
-            {/* Context Card */}
-            <div className="bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-8" style={{ borderRadius: 'var(--radius)' }}>
-              <h3 className="text-sm font-bold text-[#111827] dark:text-white uppercase tracking-widest mb-4">Concierge</h3>
-              <p className="text-sm text-[#718096] dark:text-slate-400 leading-relaxed mb-6 font-medium">
-                Can't find it? Our network has access to off-market inventory and premium stock from the best dealerships in the country.
-              </p>
-              <Link href="/contact" className="block text-center bg-[#111827] text-white dark:bg-white dark:!text-black py-3 text-[10px] font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
-                Request Sourcing
-              </Link>
-            </div>
           </div>
 
-          {/* Results area */}
+          {/* Top two rows: 3 columns beside sidebar */}
           <div className="min-w-0 lg:col-span-3">
-            <CarsResultsFlow cars={carsWithDistance} sidebarId="cars-filter-sidebar" />
-
             {sortedCars.length === 0 && (
               <div className="py-32 text-center bg-[#F7FAFC] dark:bg-[#111111] border border-[#EDF2F7] dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
                 <Search className="w-12 h-12 text-[#CBD5E0] dark:text-slate-700 mx-auto mb-6" />
@@ -224,46 +213,62 @@ export default async function CarsPage({ searchParams }) {
                 </Link>
               </div>
             )}
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="mt-20 flex justify-center items-center gap-2 border-t border-slate-100 pt-10">
-                {page > 1 && (
-                  <Link href={getPageLink(page - 1)} className="w-12 h-12 flex items-center justify-center border border-[#EDF2F7] dark:border-slate-800 text-[#111827] dark:text-white hover:bg-[#F7FAFC] dark:hover:bg-white/5 transition-colors" style={{ borderRadius: 'var(--radius)' }}>
-                    <ChevronRight className="w-4 h-4 rotate-180" />
-                  </Link>
-                )}
-                <div className="flex gap-2">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-                    if (p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)) {
-                      return (
-                        <Link key={p} href={getPageLink(p)}
-                          className={`w-12 h-12 flex items-center justify-center text-xs font-bold transition-all ${
-                            p === page
-                              ? "bg-[#111827] dark:bg-white text-white dark:!text-black shadow-lg"
-                              : "border border-[#EDF2F7] dark:border-slate-800 text-[#718096] dark:text-slate-400 hover:bg-[#F7FAFC] dark:hover:bg-white/5"
-                          }`}
-                          style={{ borderRadius: 'var(--radius)' }}
-                        >
-                          {p}
-                        </Link>
-                      );
-                    }
-                    if ((p === 2 && page > 3) || (p === totalPages - 1 && page < totalPages - 2)) {
-                      return <span key={p} className="w-12 h-12 flex items-end justify-center text-[#CBD5E0] dark:text-slate-700 pb-3">...</span>;
-                    }
-                    return null;
-                  })}
-                </div>
-                {page < totalPages && (
-                  <Link href={getPageLink(page + 1)} className="w-12 h-12 flex items-center justify-center border border-[#EDF2F7] dark:border-slate-800 text-[#111827] dark:text-white hover:bg-[#F7FAFC] dark:hover:bg-white/5 transition-colors" style={{ borderRadius: 'var(--radius)' }}>
-                    <ChevronRight className="w-4 h-4" />
-                  </Link>
-                )}
+            {topCars.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {topCars.map((car) => (
+                  <CarCard key={`top-${car.id}`} car={car} distance={car.distanceValue ?? null} />
+                ))}
               </div>
             )}
           </div>
         </div>
+
+        {/* Row 3 onward: full width under sidebar, 4 columns on desktop */}
+        {lowerCars.length > 0 && (
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {lowerCars.map((car) => (
+              <CarCard key={`lower-${car.id}`} car={car} distance={car.distanceValue ?? null} />
+            ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="mt-20 flex justify-center items-center gap-2 border-t border-slate-100 pt-10">
+            {page > 1 && (
+              <Link href={getPageLink(page - 1)} className="w-12 h-12 flex items-center justify-center border border-[#EDF2F7] dark:border-slate-800 text-[#111827] dark:text-white hover:bg-[#F7FAFC] dark:hover:bg-white/5 transition-colors" style={{ borderRadius: 'var(--radius)' }}>
+                <ChevronRight className="w-4 h-4 rotate-180" />
+              </Link>
+            )}
+            <div className="flex gap-2">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
+                if (p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)) {
+                  return (
+                    <Link key={p} href={getPageLink(p)}
+                      className={`w-12 h-12 flex items-center justify-center text-xs font-bold transition-all ${
+                        p === page
+                          ? "bg-[#111827] dark:bg-white text-white dark:!text-black shadow-lg"
+                          : "border border-[#EDF2F7] dark:border-slate-800 text-[#718096] dark:text-slate-400 hover:bg-[#F7FAFC] dark:hover:bg-white/5"
+                      }`}
+                      style={{ borderRadius: 'var(--radius)' }}
+                    >
+                      {p}
+                    </Link>
+                  );
+                }
+                if ((p === 2 && page > 3) || (p === totalPages - 1 && page < totalPages - 2)) {
+                  return <span key={p} className="w-12 h-12 flex items-end justify-center text-[#CBD5E0] dark:text-slate-700 pb-3">...</span>;
+                }
+                return null;
+              })}
+            </div>
+            {page < totalPages && (
+              <Link href={getPageLink(page + 1)} className="w-12 h-12 flex items-center justify-center border border-[#EDF2F7] dark:border-slate-800 text-[#111827] dark:text-white hover:bg-[#F7FAFC] dark:hover:bg-white/5 transition-colors" style={{ borderRadius: 'var(--radius)' }}>
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
