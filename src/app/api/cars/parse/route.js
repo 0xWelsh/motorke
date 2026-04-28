@@ -2,6 +2,7 @@
 export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
+import { parseVehicleFieldsWithGrok } from "@/lib/ai/grokVehicle";
 
 const MAKES = [
   "Abarth","Acura","Aion","Aiways","Alfa Romeo","Alpine","Aston Martin","Audi","BAIC","Bentley","Bestune","BMW","Borgward",
@@ -190,36 +191,6 @@ function mergeBest(base, candidate, source) {
   return out;
 }
 
-async function parseWithGroq(text) {
-  const key = process.env.GROQ_API_KEY;
-  if (!key) return null;
-  const schemaHint = `Return strict JSON only:
-{"make":string|null,"model":string|null,"variant":string|null,"year":number|null,"price":number|null,"mileage":number|null,"engineCC":number|null,"confidence":{"make":0..1,"model":0..1,"variant":0..1,"year":0..1,"price":0..1,"mileage":0..1,"engineCC":0..1}}`;
-  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
-    body: JSON.stringify({
-      model: "llama-3.1-8b-instant",
-      temperature: 0.1,
-      max_tokens: 450,
-      messages: [
-        { role: "system", content: "Extract structured car listing data from noisy text. Do not explain. " + schemaHint },
-        { role: "user", content: text },
-      ],
-    }),
-  });
-  if (!res.ok) return null;
-  const json = await res.json();
-  const content = json?.choices?.[0]?.message?.content?.trim();
-  if (!content) return null;
-  try {
-    const parsed = JSON.parse(content);
-    return parsed;
-  } catch {
-    return null;
-  }
-}
-
 export async function POST(request) {
   try {
     const { text } = await request.json();
@@ -233,7 +204,7 @@ export async function POST(request) {
 
     const needsBoost = ["make", "model", "price"].some((k) => clampConfidence(rules.confidence[k]) < 0.75);
     if (needsBoost) {
-      const llm = await parseWithGroq(text);
+      const llm = await parseVehicleFieldsWithGrok(text);
       if (llm && typeof llm === "object") {
         result = mergeBest(rules, llm, "llm+rules");
         aiUsed = true;

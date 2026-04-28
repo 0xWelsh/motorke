@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { db } from "@/lib/db";
+import { suggestModelsWithGrok } from "@/lib/ai/grokVehicle";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -63,16 +64,27 @@ export async function GET(request) {
   });
 
   const inventoryModels = uniqueSorted(rows.map((row) => row.model));
-  const vpicModels = inventoryModels.length < limit ? await fetchVpicModels(make) : [];
-  const models = uniqueSorted([...inventoryModels, ...vpicModels]).slice(0, limit);
+  const shouldFetchExternal = inventoryModels.length < limit;
+  const [grokModels, vpicModels] = shouldFetchExternal
+    ? await Promise.all([
+        suggestModelsWithGrok({ make, inventoryModels, limit }),
+        fetchVpicModels(make),
+      ])
+    : [[], []];
+  const models = uniqueSorted([...inventoryModels, ...grokModels, ...vpicModels]).slice(0, limit);
 
-  const sources = ["inventory", ...(vpicModels.length > 0 ? ["vpic"] : [])];
+  const sources = [
+    "inventory",
+    ...(grokModels.length > 0 ? ["grok"] : []),
+    ...(vpicModels.length > 0 ? ["vpic"] : []),
+  ];
 
   return NextResponse.json({
     make,
     count: models.length,
     models,
     inventoryCount: inventoryModels.length,
+    grokCount: grokModels.length,
     internetCount: vpicModels.length,
     sources,
   });

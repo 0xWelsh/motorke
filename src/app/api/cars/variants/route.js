@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { db } from "@/lib/db";
+import { suggestVariantsWithGrok } from "@/lib/ai/grokVehicle";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -180,16 +181,18 @@ export async function GET(request) {
 
   const inventoryVariants = uniqueSorted(rows.map((row) => row.variant));
   const shouldFetchExternal = inventoryVariants.length < limit;
-  const [vpicVariants, fuelEconomyVariants, carQueryVariants] = shouldFetchExternal
+  const [grokVariants, vpicVariants, fuelEconomyVariants, carQueryVariants] = shouldFetchExternal
     ? await Promise.all([
+        suggestVariantsWithGrok({ make, model, year, inventoryVariants, limit }),
         fetchVpicVariantCandidates(make, model),
         fetchFuelEconomyVariants(make, model, year),
         fetchCarQueryVariants(make, model, year),
       ])
-    : [[], [], []];
+    : [[], [], [], []];
 
   const variants = uniqueSorted([
     ...inventoryVariants,
+    ...grokVariants,
     ...vpicVariants,
     ...fuelEconomyVariants,
     ...carQueryVariants,
@@ -197,6 +200,7 @@ export async function GET(request) {
 
   const sources = [
     "inventory",
+    ...(grokVariants.length > 0 ? ["grok"] : []),
     ...(vpicVariants.length > 0 ? ["vpic"] : []),
     ...(fuelEconomyVariants.length > 0 ? ["fueleconomy"] : []),
     ...(carQueryVariants.length > 0 ? ["carquery"] : []),
@@ -209,7 +213,8 @@ export async function GET(request) {
     count: variants.length,
     variants,
     inventoryCount: inventoryVariants.length,
-    internetCount: vpicVariants.length + fuelEconomyVariants.length + carQueryVariants.length,
+    internetCount: grokVariants.length + vpicVariants.length + fuelEconomyVariants.length + carQueryVariants.length,
+    grokCount: grokVariants.length,
     vpicCount: vpicVariants.length,
     fuelEconomyCount: fuelEconomyVariants.length,
     carQueryCount: carQueryVariants.length,
