@@ -7,6 +7,11 @@
 
 const CACHE_NAME = "welsh-motors-v2";
 const RUNTIME_CACHE = "welsh-motors-runtime-v2";
+const OFFLINE_FALLBACK = new Response("Offline", {
+  status: 503,
+  statusText: "Service Unavailable",
+  headers: { "Content-Type": "text/plain; charset=utf-8" },
+});
 
 // Files to cache on install (essential assets)
 const PRECACHE_URLS = [
@@ -67,7 +72,12 @@ self.addEventListener("fetch", (event) => {
     url.pathname.includes("/api/auth") ||
     url.pathname.includes("/api/session")
   ) {
-    event.respondWith(fetch(request).catch(() => caches.match(request)));
+    event.respondWith(
+      fetch(request).catch(async () => {
+        const cached = await caches.match(request);
+        return cached || OFFLINE_FALLBACK.clone();
+      })
+    );
     return;
   }
 
@@ -88,7 +98,7 @@ self.addEventListener("fetch", (event) => {
           return response;
         } catch (error) {
           const cached = await caches.match(request);
-          return cached || Response.error();
+          return cached || OFFLINE_FALLBACK.clone();
         }
       })()
     );
@@ -113,7 +123,8 @@ self.addEventListener("fetch", (event) => {
         }
         return response;
       } catch (error) {
-        return caches.match("/") || Response.error();
+        const home = await caches.match("/");
+        return home || OFFLINE_FALLBACK.clone();
       }
     })()
   );
