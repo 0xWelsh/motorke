@@ -67,7 +67,7 @@ self.addEventListener("fetch", (event) => {
       try {
         // Let browser handle cross-origin requests (avoids CSP/SW fetch errors).
         if (url.origin !== self.location.origin) {
-          return fetch(request);
+          return await fetch(request);
         }
 
         // Navigation/doc requests should be network-first (avoid stale portal/admin shells).
@@ -136,7 +136,7 @@ self.addEventListener("fetch", (event) => {
         console.warn("[SW] Global fetch handler fallback:", error?.message || error);
         return OFFLINE_FALLBACK.clone();
       }
-    })()
+    })().catch(() => OFFLINE_FALLBACK.clone())
   );
 });
 
