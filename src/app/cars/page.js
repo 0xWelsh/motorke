@@ -225,7 +225,7 @@ export default async function CarsPage({ searchParams }) {
 
         {/* Row 3 onward: full width under sidebar, 4 columns on desktop */}
         {lowerCars.length > 0 && (
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {lowerCars.map((car) => (
               <CarCard key={`lower-${car.id}`} car={car} distance={car.distanceValue ?? null} />
             ))}
