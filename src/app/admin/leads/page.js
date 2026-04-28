@@ -63,7 +63,8 @@ export default async function AdminLeadsPage({ searchParams }) {
           </h1>
         </div>
         
-        <ExportButton 
+        <ExportButton
+          label="Export CSV"
           filename="welsh-motors-leads.csv"
           data={leads.map(l => ({
             ID: l.id,
