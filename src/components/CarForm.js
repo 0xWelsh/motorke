@@ -276,7 +276,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [variantOptions, setVariantOptions] = useState([]);
   const [loadingVariants, setLoadingVariants] = useState(false);
   const [variantSources, setVariantSources] = useState(["inventory"]);
-  const [smartFillText, setSmartFillText] = useState("");
+  const [smartFillDraft, setSmartFillDraft] = useState("");
   const [parsing, setParsing] = useState(false);
   const [smartFillMeta, setSmartFillMeta] = useState({
     source: "rules",
@@ -294,6 +294,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   const formRef = useRef(null);
   const initializedNewFormRef = useRef(false);
+  const smartFillInputRef = useRef(null);
   const saveTimeoutRef = useRef(null);
   const uploadedLocalMapRef = useRef(new Map());
   const pendingUploadIdsRef = useRef(new Set());
@@ -686,7 +687,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   }
 
   const handleSmartFill = async () => {
-    if (!smartFillText.trim()) return;
+    const rawSmartFill = smartFillInputRef.current?.value || "";
+    if (!rawSmartFill.trim()) return;
     setParsing(true);
     setError("");
     setSmartFillMeta({ source: "rules", confidence: {}, overall: null, warnings: [] });
@@ -695,7 +697,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       const response = await fetch("/api/cars/parse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: smartFillText }),
+        body: JSON.stringify({ text: rawSmartFill }),
       });
       const payload = await response.json();
       if (!response.ok || !payload?.success) {
@@ -713,7 +715,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       });
 
       const nextFeatures = [];
-      const lowerText = smartFillText.toLowerCase();
+      const lowerText = rawSmartFill.toLowerCase();
       FEATURE_CHECKLIST.forEach((feature) => {
         const featureLower = feature.toLowerCase();
         if (lowerText.includes(featureLower)) nextFeatures.push(feature);
@@ -751,6 +753,23 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="space-y-6 animate-in fade-in duration-700">
+      <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5 sm:p-6">
+        <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-500">Dealer Listing Guide</p>
+        <h2 className="mt-1 text-xl sm:text-2xl font-black text-slate-900 dark:text-white">Publish better listings, faster</h2>
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {[
+            "1) Fill make/model/year/price first so customers can discover the listing.",
+            "2) Add at least 5 clear photos (front, rear, interior, dashboard, odometer).",
+            "3) Use Smart Fill for messy text, then verify highlighted fields.",
+            "4) Add strong features + short honest description before publishing.",
+          ].map((tip, idx) => (
+            <div key={idx} className="bg-[#fbfcfe] dark:bg-[#0f0f10] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300">
+              {tip}
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4">
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2">
@@ -826,51 +845,48 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       {dealers.length === 1 && dealers[0] && <input type="hidden" name="dealerId" value={dealers[0].id} />}
 
       {isNew && (
-        <div className="bg-gradient-to-br from-indigo-50 to-emerald-50 dark:from-zinc-900/50 dark:to-zinc-800/50 border border-indigo-100 dark:border-zinc-800 rounded-2xl p-8 mb-10 overflow-hidden relative group">
-          <div className="pointer-events-none absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
-             <Sparkles size={120} className="text-indigo-500" />
+        <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-6 mb-10">
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles size={16} className="text-indigo-500" />
+            <h3 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">AI Smart Fill</h3>
           </div>
-          
-          <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-200 dark:shadow-none">
-                <Sparkles size={20} />
-              </div>
-              <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">AI Smart Fill</h3>
-            </div>
-            
-            <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-6 max-w-xl">
-              Paste a description from WhatsApp, a website, or a draft. We'll pick out the Year, Make, Model, Price, and Mileage for you instantly.
-            </p>
+          <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-4 max-w-2xl">
+            Paste listing text from WhatsApp or anywhere else. We’ll extract Year, Make, Model, Price, Mileage and Engine CC.
+          </p>
 
-            <div className="space-y-4">
-              <textarea
-                value={smartFillText}
-                onChange={(e) => setSmartFillText(e.target.value)}
-                placeholder="e.g. 2017 Toyota Rav4, White, 45,000 km, Price: 3.2M, clean car..."
-                className="w-full h-32 bg-white/60 dark:bg-zinc-900/40 backdrop-blur-sm border border-indigo-200 dark:border-zinc-700 rounded-2xl px-6 py-4 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-indigo-500 transition-all resize-none shadow-inner"
-              />
-              
-              <div className="flex items-center gap-3">
+          <div className="space-y-4">
+            <textarea
+              ref={smartFillInputRef}
+              defaultValue=""
+              onInput={(e) => setSmartFillDraft(e.currentTarget.value || "")}
+              placeholder="e.g. 2017 Toyota Rav4, White, 45,000 km, Price: 3.2M, clean car..."
+              className="w-full h-32 bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-indigo-500 transition-all resize-none"
+            />
+
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={handleSmartFill}
+                disabled={parsing || !smartFillDraft.trim()}
+                className="px-6 py-3 bg-indigo-600 hover:bg-slate-900 dark:hover:bg-white dark:hover:text-black disabled:opacity-50 text-white font-black uppercase tracking-wider rounded-2xl text-xs transition-all flex items-center gap-2"
+              >
+                {parsing ? "Analyzing..." : "Apply Smart Fill"}
+                {!parsing && <Sparkles size={16} />}
+              </button>
+              {smartFillDraft && (
                 <button
                   type="button"
-                  onClick={handleSmartFill}
-                  disabled={parsing || !smartFillText.trim()}
-                  className="px-8 py-3.5 bg-indigo-600 hover:bg-slate-900 dark:hover:bg-white dark:hover:text-black disabled:opacity-50 text-white font-black uppercase tracking-wider rounded-2xl text-xs transition-all flex items-center gap-2 shadow-xl shadow-indigo-100 dark:shadow-none"
+                  onClick={() => {
+                    if (smartFillInputRef.current) smartFillInputRef.current.value = "";
+                    setSmartFillDraft("");
+                  }}
+                  className="text-xs font-bold text-slate-500 hover:text-rose-600 uppercase tracking-widest px-2"
                 >
-                  {parsing ? "Analyzing..." : "Apply Magic"}
-                  {!parsing && <Sparkles size={16} />}
+                  Clear
                 </button>
-                {smartFillText && (
-                   <button 
-                    type="button" 
-                    onClick={() => setSmartFillText("")}
-                    className="text-xs font-bold text-slate-500 hover:text-rose-600 uppercase tracking-widest px-4"
-                   >
-                     Clear
-                   </button>
-                )}
-              </div>
+              )}
+            </div>
+
               {(smartFillMeta.overall !== null || smartFillMeta.warnings.length > 0) && (
                 <div className="rounded-2xl border border-indigo-200 dark:border-zinc-700 bg-white/60 dark:bg-zinc-900/40 px-4 py-3">
                   <p className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
@@ -883,7 +899,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   )}
                 </div>
               )}
-            </div>
           </div>
         </div>
       )}
@@ -894,6 +909,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             <div className="w-1.5 h-1.5 rounded-2xl bg-[#ff5a2f]" />
             <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Vehicle Basics</h3>
           </div>
+          <p className="text-xs font-semibold text-slate-500 mb-4">
+            Start with search-critical details. These fields drive listing visibility and buyer filters.
+          </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -1097,6 +1115,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               <UploadCloud size={14} className="text-[#ff5a2f]" />
               Upload starts immediately so dealers can continue filling details while photos process.
             </div>
+            <p className="mt-2 text-xs font-semibold text-slate-500">
+              Tip: Listings with 8+ quality photos usually get better enquiry rates.
+            </p>
             
             <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800">
                <div className="flex items-center gap-3 mb-6">
@@ -1151,6 +1172,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Description</h3>
               </div>
               <textarea name="description" rows={5} defaultValue={formSeed.description} placeholder="Share condition, service history, and key selling points..." className={`${inputCls} resize-none`} />
+              <p className="mt-2 text-xs font-semibold text-slate-500">
+                Keep it honest and specific: service history, owner count, accidents, tyres, and any known issue.
+              </p>
             </div>
             <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
               <div className="flex items-center justify-between mb-6">
@@ -1335,6 +1359,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             Cancel
           </a>
           <div className="flex items-center gap-2">
+            <p className="hidden sm:block text-xs font-semibold text-slate-500 mr-1">
+              Final check: verify price, mileage, and primary photo before publishing.
+            </p>
             <button
               type="submit"
               disabled={submitting || uploading}
