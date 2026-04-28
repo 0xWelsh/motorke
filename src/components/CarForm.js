@@ -261,7 +261,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const isEdit = method === "PUT" && !!car;
   const isPortal = action?.startsWith("/api/portal/");
   const isNew = !isEdit;
-  const initialSimpleMode = isPortal && isNew;
 
   const dealerScope = dealers?.[0]?.id || "shared";
   const draftKey = useMemo(
@@ -276,7 +275,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const baseSeed = useMemo(() => buildBaseSeed(car, currentYear), [car, currentYear]);
 
   const [formSeed, setFormSeed] = useState(baseSeed);
-  const [simpleMode, setSimpleMode] = useState(initialSimpleMode);
 
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ done: 0, total: 0 });
@@ -326,9 +324,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const formRef = useRef(null);
   const initializedNewFormRef = useRef(false);
   const smartFillInputRef = useRef(null);
-  const basicsRef = useRef(null);
-  const mediaRef = useRef(null);
-  const detailsRef = useRef(null);
   const saveTimeoutRef = useRef(null);
   const uploadedLocalMapRef = useRef(new Map());
   const pendingUploadIdsRef = useRef(new Set());
@@ -358,18 +353,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const previewVariant = liveDraft.variant || "";
   const previewDescription = String(liveDraft.description || formSeed.description || "").trim();
   const previewPrice = priceInput || liveDraft.price || "";
-  const publishBlockers = useMemo(() => {
-    const blockers = [];
-    if (!String(liveDraft.make || selectedMake || "").trim()) blockers.push({ id: "make", section: "basics", text: "Set vehicle make" });
-    if (!String(liveDraft.model || selectedModel || "").trim()) blockers.push({ id: "model", section: "basics", text: "Set vehicle model" });
-    if (!String(previewPrice).trim()) blockers.push({ id: "price", section: "basics", text: "Set listing price" });
-    if (!String(liveDraft.year || selectedYear || "").trim()) blockers.push({ id: "year", section: "basics", text: "Set model year" });
-    if (images.length < 3) blockers.push({ id: "photos", section: "media", text: `Add ${3 - images.length} more photo(s)` });
-    if (selectedFeatures.length < 3) blockers.push({ id: "features", section: "details", text: "Add at least 3 features" });
-    if (previewDescription.length < 40) blockers.push({ id: "desc", section: "details", text: "Write a clearer description" });
-    return blockers;
-  }, [images.length, liveDraft.make, liveDraft.model, liveDraft.year, previewDescription.length, previewPrice, selectedFeatures.length, selectedMake, selectedModel, selectedYear]);
-
   const saveDraft = useCallback(() => {
     if (!draftKey || !isNew || !formRef.current) return;
 
@@ -381,11 +364,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         images,
         badges,
         selectedFeatures,
-        simpleMode,
         updatedAt: Date.now(),
       })
     );
-  }, [badges, draftKey, images, isNew, selectedFeatures, simpleMode]);
+  }, [badges, draftKey, images, isNew, selectedFeatures]);
 
   useEffect(() => {
     if (!isNew) return;
@@ -399,8 +381,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setBadges([]);
     setSelectedFeatures([]);
     setPriceInput(baseSeed.price || "");
-    setSimpleMode(initialSimpleMode);
-  }, [baseSeed, defaultsKey, draftKey, initialSimpleMode, isNew]);
+  }, [baseSeed, defaultsKey, draftKey, isNew]);
 
   useEffect(() => {
     setDescriptionText(formSeed.description || "");
@@ -430,7 +411,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   useEffect(() => {
     if (isNew) saveDraft();
-  }, [images, badges, selectedFeatures, simpleMode, isNew, saveDraft]);
+  }, [images, badges, selectedFeatures, isNew, saveDraft]);
 
   useEffect(() => {
     const currentMake =
@@ -625,15 +606,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     if ((descriptionText || "").trim()) return;
     applyGeneratedDescription(false);
   }, [applyGeneratedDescription, descriptionText]);
-
-  const jumpToSection = useCallback((section) => {
-    const targetMap = {
-      basics: basicsRef.current,
-      media: mediaRef.current,
-      details: detailsRef.current,
-    };
-    targetMap[section]?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, []);
 
   function normalizeImagePayload(list) {
     const unique = [];
@@ -924,40 +896,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
       </div>
 
-      <div className="sticky top-20 z-20 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Fix Next</p>
-            <p className="text-sm font-bold text-slate-900 dark:text-white">
-              {publishBlockers.length === 0 ? "Ready to publish" : publishBlockers[0].text}
-            </p>
-          </div>
-          {publishBlockers.length > 0 && (
-            <button
-              type="button"
-              onClick={() => jumpToSection(publishBlockers[0].section)}
-              className="px-4 py-2 rounded-2xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider"
-            >
-              Jump to fix
-            </button>
-          )}
-        </div>
-        {publishBlockers.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-2">
-            {publishBlockers.slice(0, 4).map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => jumpToSection(item.section)}
-                className="px-3 py-1.5 rounded-2xl border border-amber-300 bg-amber-50 text-[11px] font-bold text-amber-800"
-              >
-                {item.text}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
       <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4">
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2">
@@ -977,41 +915,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           <span className="text-[11px] font-black uppercase tracking-wider text-[#ff5a2f]">{checklistDone}/4 complete</span>
         </div>
       </div>
-      <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4">
-        <div className="flex flex-wrap gap-2 text-[11px] font-black uppercase tracking-wider">
-          <span className="px-3 py-1.5 rounded-2xl border border-[#ddd4c8] dark:border-slate-800 text-slate-600">Basics</span>
-          <span className="px-3 py-1.5 rounded-2xl border border-[#ddd4c8] dark:border-slate-800 text-slate-600">Photos & Video</span>
-          <span className="px-3 py-1.5 rounded-2xl border border-[#ddd4c8] dark:border-slate-800 text-slate-600">Details & Publish</span>
-        </div>
-      </div>
-      {isNew && (
-        <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-6">
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setSimpleMode(true)}
-              className={`px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-wider border transition-colors ${
-                simpleMode
-                  ? "bg-slate-900 border-slate-900 text-white dark:bg-[#3f3f46] dark:text-white dark:border-[#3f3f46]"
-                  : "bg-white border-[#ddd4c8] dark:border-slate-800 text-slate-500 hover:text-slate-900 dark:text-white dark:bg-[#111111] dark:border-[#27272a] dark:text-slate-400 dark:hover:text-white"
-              }`}
-            >
-              Quick
-            </button>
-            <button
-              type="button"
-              onClick={() => setSimpleMode(false)}
-              className={`px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-wider border transition-colors ${
-                !simpleMode
-                  ? "bg-slate-900 border-slate-900 text-white dark:bg-[#3f3f46] dark:text-white dark:border-[#3f3f46]"
-                  : "bg-white border-[#ddd4c8] dark:border-slate-800 text-slate-500 hover:text-slate-900 dark:text-white dark:bg-[#111111] dark:border-[#27272a] dark:text-slate-400 dark:hover:text-white"
-              }`}
-            >
-              Advanced
-            </button>
-          </div>
-        </div>
-      )}
+      
 
       {error && (
         <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-black uppercase tracking-widest rounded-2xl px-6 py-4 flex items-center gap-3">
@@ -1147,7 +1051,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       </div>
 
       <div className="space-y-6">
-        <div ref={basicsRef}>
+        <div>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-1.5 h-1.5 rounded-2xl bg-[#ff5a2f]" />
             <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Vehicle Basics</h3>
@@ -1335,7 +1239,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           </div>
         </div>
 
-        <div ref={mediaRef}>
+        <div>
           <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
@@ -1407,7 +1311,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           </div>
         </div>
 
-        <div ref={detailsRef}>
+        <div>
           <div className="space-y-6">
             <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
                 <div className="flex items-center gap-3 mb-8">
@@ -1496,13 +1400,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   </div>
                 )}
               </div>
-            {!simpleMode && (
-              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
-                <div className="flex items-center gap-3 mb-8">
-                  <Sparkles size={16} className="text-amber-500" />
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Advanced Specs</h3>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
+              <div className="flex items-center gap-3 mb-8">
+                <Sparkles size={16} className="text-amber-500" />
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Advanced Specs</h3>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
                     <label className={labelCls}>Engine CC</label>
                     <input name="engineCC" type="number" defaultValue={formSeed.engineCC} placeholder="e.g. 2000" className={`${inputCls}${confidenceClass("engineCC")}`} />
@@ -1557,9 +1460,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                       <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">Sunroof</span>
                     </label>
                   </div>
-                </div>
               </div>
-            )}
+            </div>
             <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
               <label className={labelCls}>Tags</label>
               <div className="flex flex-wrap gap-2 mt-3">
