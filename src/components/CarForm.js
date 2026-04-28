@@ -550,6 +550,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     const form = formRef.current;
     if (!form) return;
     const setField = (selector, value) => {
+      if (value === null || value === undefined || value === "") return;
       const field = form.querySelector(selector);
       if (!field) return;
       field.value = value ?? "";
@@ -858,13 +859,14 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         gatedSeeded[item.field] = "";
       });
 
-      setSelectedYear(gatedSeeded.year ? String(gatedSeeded.year) : selectedYear);
-      setSelectedMake(gatedSeeded.make || selectedMake);
-      setSelectedModel(gatedSeeded.model || selectedModel);
+      const currentMake = formRef.current?.querySelector('input[name="make"]')?.value?.trim() || selectedMake;
+      const currentModel = formRef.current?.querySelector('input[name="model"]')?.value?.trim() || selectedModel;
+      const currentYear = formRef.current?.querySelector('select[name="year"]')?.value?.trim() || selectedYear;
+      setSelectedYear(gatedSeeded.year ? String(gatedSeeded.year) : currentYear);
+      setSelectedMake(gatedSeeded.make || currentMake);
+      setSelectedModel(gatedSeeded.model || currentModel);
       if (gatedSeeded.price) setPriceInput(String(gatedSeeded.price));
       applyDetectedValuesToForm(gatedSeeded);
-
-      setFormSeed((prev) => ({ ...prev, ...gatedSeeded }));
 
       if (!seeded.make && !seeded.model && !seeded.price && !seeded.mileage && !seeded.year) {
         setError("No key fields detected. Try adding year, make, model, price, and mileage in the text.");
