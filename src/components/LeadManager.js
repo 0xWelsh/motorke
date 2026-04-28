@@ -31,7 +31,7 @@ const STATUSES = Object.keys(STATUS_META);
 const fmt    = (n)   => "KSh " + Number(n).toLocaleString("en-KE");
 const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-KE", { day:"numeric", month:"short", year:"numeric" });
 
-export default function LeadManager({ leads: initialLeads, countMap, currentStatus, currentSearch }) {
+export default function LeadManager({ leads: initialLeads, countMap, currentStatus, currentSearch, metrics = {} }) {
   const [leads,        setLeads]        = useState(initialLeads);
   const [expanded,     setExpanded]     = useState(null);
   const [noteInputs,   setNoteInputs]   = useState({});
@@ -73,6 +73,19 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
 
   return (
     <div className="space-y-6 sm:space-y-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        {[
+          { label: "New Today", value: metrics.newToday ?? 0 },
+          { label: "Unanswered", value: metrics.unanswered ?? 0 },
+          { label: "Follow-up Due", value: metrics.followUpDue ?? 0 },
+        ].map((item) => (
+          <div key={item.label} className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 shadow-sm">
+            <p className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-500">{item.label}</p>
+            <p className="mt-1 text-2xl font-black text-slate-900 dark:text-white">{item.value}</p>
+          </div>
+        ))}
+      </div>
+
       {/* Search & Tabs Combined */}
       <div className="flex flex-col gap-4 sm:gap-6 pb-6 sm:pb-8 border-b border-[#ddd4c8] dark:border-slate-800">
         <div className="flex bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 p-1 rounded-2xl w-full overflow-x-auto shadow-sm">

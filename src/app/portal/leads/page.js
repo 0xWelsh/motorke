@@ -41,6 +41,18 @@ export default async function PortalLeadsPage({ searchParams }) {
   });
   const countMap = Object.fromEntries(counts.map(c => [c.status, c._count.id]));
   const total    = leads.length;
+  const now = Date.now();
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const newToday = leads.filter((lead) => new Date(lead.createdAt).getTime() >= startOfToday.getTime()).length;
+  const unanswered = leads.filter((lead) => lead.status === "NEW").length;
+  const followUpDue = leads.filter((lead) => {
+    if (!["CONTACTED", "INTERESTED", "NEGOTIATING"].includes(lead.status)) return false;
+    const lastTouch = lead.notes?.[0]?.createdAt
+      ? new Date(lead.notes[0].createdAt).getTime()
+      : new Date(lead.createdAt).getTime();
+    return now - lastTouch > 48 * 60 * 60 * 1000;
+  }).length;
 
   return (
     <div className="w-full">
@@ -56,7 +68,12 @@ export default async function PortalLeadsPage({ searchParams }) {
         createdAt: l.createdAt.toISOString(),
         car: { ...l.car, images: l.car.images },
         notes: l.notes,
-      }))} countMap={countMap} currentStatus={status} currentSearch={search} />
+      }))}
+        countMap={countMap}
+        currentStatus={status}
+        currentSearch={search}
+        metrics={{ newToday, unanswered, followUpDue }}
+      />
     </div>
   );
 }

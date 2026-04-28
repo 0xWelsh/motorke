@@ -139,6 +139,19 @@ export default async function InventoryPage({ searchParams }) {
                   <p className="text-[11px] uppercase font-black tracking-[0.15em] text-slate-700 capitalize mt-1 truncate">
                     {car.variant || "Standard"} · {car.fuelType}
                   </p>
+                    {(() => {
+                      const hoursSinceUpdate = (Date.now() - new Date(car.updatedAt).getTime()) / 3600000;
+                      const freshness = hoursSinceUpdate <= 72
+                        ? { label: "Fresh", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" }
+                        : hoursSinceUpdate <= 24 * 14
+                          ? { label: "Aging", cls: "bg-amber-50 text-amber-700 border-amber-200" }
+                          : { label: "Stale", cls: "bg-rose-50 text-rose-700 border-rose-200" };
+                      return (
+                        <span className={`mt-2 inline-flex items-center px-2 py-1 border rounded text-[10px] font-black uppercase tracking-[0.12em] ${freshness.cls}`}>
+                          {freshness.label}
+                        </span>
+                      );
+                    })()}
                 </div>
 
                 <div className="flex items-center justify-between mb-5">
