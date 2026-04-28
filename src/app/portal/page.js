@@ -91,21 +91,25 @@ export default async function PortalPage({ searchParams }) {
         </div>
       )}
 
-      {/* Stats Cards */}
+      {/* Stats Cards — link to Inventory / Leads (same routes as header & tabs) */}
       <div className="flex flex-col md:flex-row bg-white dark:bg-[#111111] shadow-sm mb-8 sm:mb-12">
         {[
-          { label: "Live Inventory", value: live,   icon: <CheckCircle2 size={16} className="text-[#ff5a2f]" />, sub: "Publicly visible units" },
-          { label: "Drafts / Hidden",   value: hidden, icon: <EyeOff size={16} className="text-slate-500" />, sub: "Private units" },
-          { label: "Buyer Leads", value: leads,  icon: <MessageSquare size={16} className="text-[#ff5a2f]" />, sub: "Total enquiries" },
+          { href: "/portal/inventory", label: "Live Inventory", value: live,   icon: <CheckCircle2 size={16} className="text-[#ff5a2f]" />, sub: "Publicly visible units" },
+          { href: "/portal/inventory", label: "Drafts / Hidden", value: hidden, icon: <EyeOff size={16} className="text-slate-500" />, sub: "Private units" },
+          { href: "/portal/leads", label: "Buyer Leads", value: leads,  icon: <MessageSquare size={16} className="text-[#ff5a2f]" />, sub: "Total enquiries" },
         ].map((stat, i) => (
-          <div key={i} className="flex-1 p-5 sm:p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-800/80 last:border-0 hover:bg-slate-50 dark:hover:bg-[#151515] transition-colors group">
+          <Link
+            key={i}
+            href={stat.href}
+            className="flex-1 p-5 sm:p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-800/80 last:border-0 hover:bg-slate-50 dark:hover:bg-[#151515] transition-colors group text-left outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a2f] focus-visible:ring-offset-2"
+          >
             <div className="flex items-center gap-2 mb-3">
               {stat.icon}
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">{stat.label}</p>
             </div>
             <p className="text-3xl font-black text-slate-900 dark:text-white mb-1 tracking-tighter">{stat.value.toString().padStart(2, '0')}</p>
             <p className="text-xs font-medium text-slate-400">{stat.sub}</p>
-          </div>
+          </Link>
         ))}
       </div>
 

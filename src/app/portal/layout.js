@@ -29,6 +29,13 @@ const links = [
   { href: "/portal/profile",   label: "Settings",   Icon: Settings        },
 ];
 
+function isNavActive(currentPath, href) {
+  if (href === "/portal") {
+    return currentPath === "/portal" || currentPath === "/portal/";
+  }
+  return currentPath === href || currentPath.startsWith(`${href}/`);
+}
+
 function NavLink({ href, label, Icon, active, onClick }) {
   return (
     <Link 
@@ -43,6 +50,25 @@ function NavLink({ href, label, Icon, active, onClick }) {
     >
       <Icon size={18} />
       <span className="font-semibold text-[11px] uppercase font-black tracking-[0.10em]">{label}</span>
+    </Link>
+  );
+}
+
+/** Compact link for persistent desktop header (lg+ ; mobile uses bottom tabs + drawer) */
+function HeaderNavLink({ href, label, Icon, pathname }) {
+  const active = isNavActive(pathname, href);
+  return (
+    <Link
+      href={href}
+      className={clsx(
+        "hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.12em] transition-colors whitespace-nowrap",
+        active
+          ? "bg-slate-900 text-white"
+          : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10"
+      )}
+    >
+      <Icon size={14} />
+      {label}
     </Link>
   );
 }
@@ -90,12 +116,21 @@ export default function PortalLayout({ children }) {
              <Menu size={18} />
              <span className="text-[11px] font-bold uppercase tracking-widest">Menu</span>
            </button>
-           <div className="hidden lg:flex flex-col">
+           <div className="hidden lg:flex flex-col min-w-0">
               <span className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900 dark:text-white">Welsh Motors</span>
               <p className="text-[11px] uppercase font-black tracking-[0.15em] font-semibold text-[#ff5a2f] mt-0.5 flex items-center gap-1">
                  <ShieldCheck size={11} /> Active Subscription
               </p>
            </div>
+
+           {/* Desktop: always-visible primary nav (drawer stays for full list + bulk actions) */}
+           <nav className="hidden lg:flex items-center gap-1 ml-4 pl-4 border-l border-[#ddd4c8] dark:border-slate-700 overflow-x-auto max-w-[min(52vw,640px)]" aria-label="Portal sections">
+             <HeaderNavLink href="/portal" label="Overview" Icon={LayoutDashboard} pathname={path} />
+             <HeaderNavLink href="/portal/inventory" label="Inventory" Icon={Package} pathname={path} />
+             <HeaderNavLink href="/portal/leads" label="Leads" Icon={MessageSquare} pathname={path} />
+             <HeaderNavLink href="/portal/analytics" label="Analytics" Icon={BarChart2} pathname={path} />
+             <HeaderNavLink href="/portal/profile" label="Settings" Icon={Settings} pathname={path} />
+           </nav>
          </div>
          
          <div className="flex items-center gap-3 sm:gap-4">
@@ -141,7 +176,7 @@ export default function PortalLayout({ children }) {
                   href={href} 
                   label={label} 
                   Icon={Icon} 
-                  active={path === href}
+                  active={isNavActive(path, href)}
                   onClick={handleNavClick}
                 />
               ))}
@@ -158,7 +193,7 @@ export default function PortalLayout({ children }) {
                   href={href} 
                   label={label} 
                   Icon={Icon} 
-                  active={path === href}
+                  active={isNavActive(path, href)}
                   onClick={handleNavClick}
                 />
               ))}
@@ -219,7 +254,7 @@ export default function PortalLayout({ children }) {
           { href: "/portal/profile",   label: "Profile",   Icon: Settings        },
           { href: "/portal/cars/new",  label: "Add Car",   Icon: Plus            },
         ].map(({ href, label, Icon }) => {
-          const active = path === href;
+          const active = isNavActive(path, href);
           return (
             <Link
               key={href}
