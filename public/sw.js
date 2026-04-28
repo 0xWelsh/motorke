@@ -5,8 +5,8 @@
   Strategy: Cache-first for static assets, network-first for API calls
 */
 
-const CACHE_NAME = "welsh-motors-v1";
-const RUNTIME_CACHE = "welsh-motors-runtime-v1";
+const CACHE_NAME = "welsh-motors-v2";
+const RUNTIME_CACHE = "welsh-motors-runtime-v2";
 
 // Files to cache on install (essential assets)
 const PRECACHE_URLS = [
@@ -56,52 +56,66 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Don't cache auth requests or external APIs
-  if (
-    url.pathname.includes("/api/auth") ||
-    url.pathname.includes("/api/session") ||
-    url.origin !== self.location.origin
-  ) {
-    event.respondWith(fetch(request));
+  // Let browser handle cross-origin requests (avoids CSP/SW fetch errors).
+  if (url.origin !== self.location.origin) {
     return;
   }
 
-  // API calls: network-first, fallback to cache
+  // Don't cache non-GET/auth/session requests.
+  if (
+    request.method !== "GET" ||
+    url.pathname.includes("/api/auth") ||
+    url.pathname.includes("/api/session")
+  ) {
+    event.respondWith(fetch(request).catch(() => caches.match(request)));
+    return;
+  }
+
+  // API calls: network-first, fallback to cache.
   if (url.pathname.includes("/api/")) {
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          // Cache successful responses
-          if (response.status === 200) {
-            const cache = caches.open(RUNTIME_CACHE);
-            cache.then((c) => c.put(request, response.clone()));
+      (async () => {
+        try {
+          const response = await fetch(request);
+          if (response && response.ok && response.type === "basic") {
+            const cache = await caches.open(RUNTIME_CACHE);
+            try {
+              await cache.put(request, response.clone());
+            } catch (error) {
+              console.warn("[SW] API cache put skipped:", error?.message || error);
+            }
           }
           return response;
-        })
-        .catch(() => {
-          // Return cached version if offline
-          return caches.match(request);
-        })
+        } catch (error) {
+          const cached = await caches.match(request);
+          return cached || Response.error();
+        }
+      })()
     );
     return;
   }
 
-  // Static assets: cache-first, fallback to network
+  // Static assets/pages: cache-first, fallback to network.
   event.respondWith(
-    caches.match(request).then((response) => {
-      if (response) {
-        return response;
-      }
+    (async () => {
+      const cached = await caches.match(request);
+      if (cached) return cached;
 
-      return fetch(request).then((response) => {
-        // Cache successful responses
-        if (response.status === 200 && request.method === "GET") {
-          const cache = caches.open(RUNTIME_CACHE);
-          cache.then((c) => c.put(request, response.clone()));
+      try {
+        const response = await fetch(request);
+        if (response && response.ok && response.type === "basic") {
+          const cache = await caches.open(RUNTIME_CACHE);
+          try {
+            await cache.put(request, response.clone());
+          } catch (error) {
+            console.warn("[SW] Runtime cache put skipped:", error?.message || error);
+          }
         }
         return response;
-      });
-    })
+      } catch (error) {
+        return caches.match("/") || Response.error();
+      }
+    })()
   );
 });
 
