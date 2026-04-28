@@ -5,8 +5,8 @@
   Strategy: Cache-first for static assets, network-first for API calls
 */
 
-const CACHE_NAME = "welsh-motors-v2";
-const RUNTIME_CACHE = "welsh-motors-runtime-v2";
+const CACHE_NAME = "welsh-motors-v3";
+const RUNTIME_CACHE = "welsh-motors-runtime-v3";
 const OFFLINE_FALLBACK = new Response("Offline", {
   status: 503,
   statusText: "Service Unavailable",
@@ -61,30 +61,62 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Let browser handle cross-origin requests (avoids CSP/SW fetch errors).
-  if (url.origin !== self.location.origin) {
-    return;
-  }
+  // Never let SW return a rejected/non-Response promise.
+  event.respondWith(
+    (async () => {
+      try {
+        // Let browser handle cross-origin requests (avoids CSP/SW fetch errors).
+        if (url.origin !== self.location.origin) {
+          return fetch(request);
+        }
 
-  // Don't cache non-GET/auth/session requests.
-  if (
-    request.method !== "GET" ||
-    url.pathname.includes("/api/auth") ||
-    url.pathname.includes("/api/session")
-  ) {
-    event.respondWith(
-      fetch(request).catch(async () => {
+        // Navigation/doc requests should be network-first (avoid stale portal/admin shells).
+        if (request.mode === "navigate" || request.destination === "document") {
+          try {
+            return await fetch(request);
+          } catch {
+            const home = await caches.match("/");
+            return home || OFFLINE_FALLBACK.clone();
+          }
+        }
+
+        // Don't cache non-GET/auth/session requests.
+        if (
+          request.method !== "GET" ||
+          url.pathname.includes("/api/auth") ||
+          url.pathname.includes("/api/session")
+        ) {
+          try {
+            return await fetch(request);
+          } catch {
+            const cached = await caches.match(request);
+            return cached || OFFLINE_FALLBACK.clone();
+          }
+        }
+
+        // API calls: network-first, fallback to cache.
+        if (url.pathname.includes("/api/")) {
+          try {
+            const response = await fetch(request);
+            if (response && response.ok && response.type === "basic") {
+              const cache = await caches.open(RUNTIME_CACHE);
+              try {
+                await cache.put(request, response.clone());
+              } catch (error) {
+                console.warn("[SW] API cache put skipped:", error?.message || error);
+              }
+            }
+            return response;
+          } catch {
+            const cached = await caches.match(request);
+            return cached || OFFLINE_FALLBACK.clone();
+          }
+        }
+
+        // Static assets/pages: cache-first, fallback to network.
         const cached = await caches.match(request);
-        return cached || OFFLINE_FALLBACK.clone();
-      })
-    );
-    return;
-  }
+        if (cached) return cached;
 
-  // API calls: network-first, fallback to cache.
-  if (url.pathname.includes("/api/")) {
-    event.respondWith(
-      (async () => {
         try {
           const response = await fetch(request);
           if (response && response.ok && response.type === "basic") {
@@ -92,43 +124,23 @@ self.addEventListener("fetch", (event) => {
             try {
               await cache.put(request, response.clone());
             } catch (error) {
-              console.warn("[SW] API cache put skipped:", error?.message || error);
+              console.warn("[SW] Runtime cache put skipped:", error?.message || error);
             }
           }
           return response;
-        } catch (error) {
-          const cached = await caches.match(request);
-          return cached || OFFLINE_FALLBACK.clone();
+        } catch {
+          const home = await caches.match("/");
+          return home || OFFLINE_FALLBACK.clone();
         }
-      })()
-    );
-    return;
-  }
-
-  // Static assets/pages: cache-first, fallback to network.
-  event.respondWith(
-    (async () => {
-      const cached = await caches.match(request);
-      if (cached) return cached;
-
-      try {
-        const response = await fetch(request);
-        if (response && response.ok && response.type === "basic") {
-          const cache = await caches.open(RUNTIME_CACHE);
-          try {
-            await cache.put(request, response.clone());
-          } catch (error) {
-            console.warn("[SW] Runtime cache put skipped:", error?.message || error);
-          }
-        }
-        return response;
       } catch (error) {
-        const home = await caches.match("/");
-        return home || OFFLINE_FALLBACK.clone();
+        console.warn("[SW] Global fetch handler fallback:", error?.message || error);
+        return OFFLINE_FALLBACK.clone();
       }
     })()
   );
 });
+
+self.addEventListener("fetch-legacy-disabled", () => {});
 
 // Handle background sync (for submissions while offline)
 self.addEventListener("sync", (event) => {
