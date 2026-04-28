@@ -90,7 +90,9 @@ export default async function CarsPage({ searchParams }) {
     [
       { featuredWeight: "desc" },
       { dealer: { featured: "desc" } },
+      { dealer: { verified: "desc" } },
       { dealer: { boostScore: "desc" } },
+      { views: "desc" },
       { createdAt: "desc" }
     ];
 
@@ -110,6 +112,9 @@ export default async function CarsPage({ searchParams }) {
         fuelType: true,
         transmission: true,
         featured: true,
+        featuredWeight: true,
+        views: true,
+        createdAt: true,
         badges: true,
         description: true,
         images: {
@@ -138,11 +143,28 @@ export default async function CarsPage({ searchParams }) {
     getAllMakes(),
   ]);
 
-  const sortedCars = effectiveLat != null && effectiveLng != null && sort === "newest"
+  const sortedCars = sort === "newest"
     ? [...cars].sort((a, b) => {
-        const da = distance(effectiveLat, effectiveLng, a.dealer?.lat, a.dealer?.lng);
-        const db2 = distance(effectiveLat, effectiveLng, b.dealer?.lat, b.dealer?.lng);
-        return da - db2;
+        const distanceA = effectiveLat != null && effectiveLng != null
+          ? distance(effectiveLat, effectiveLng, a.dealer?.lat, a.dealer?.lng)
+          : null;
+        const distanceB = effectiveLat != null && effectiveLng != null
+          ? distance(effectiveLat, effectiveLng, b.dealer?.lat, b.dealer?.lng)
+          : null;
+        const distanceScore = (d) => (d == null || !Number.isFinite(d) ? 0 : Math.max(0, 20 - Math.min(20, d)));
+        const freshnessScore = (createdAt) => {
+          const days = Math.max(0, (Date.now() - new Date(createdAt).getTime()) / 86400000);
+          return Math.max(0, 20 - Math.min(20, days));
+        };
+        const rankScore = (car, d) =>
+          (Number(car.featuredWeight || 0) * 6) +
+          (car.dealer?.featured ? 22 : 0) +
+          (car.dealer?.verified ? 8 : 0) +
+          Math.min(Number(car.dealer?.boostScore || 0), 30) +
+          Math.min(Number(car.views || 0) / 25, 12) +
+          freshnessScore(car.createdAt) +
+          distanceScore(d);
+        return rankScore(b, distanceB) - rankScore(a, distanceA);
       })
     : cars;
   const carsWithDistance = sortedCars.map((car) => ({

@@ -70,7 +70,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
             className="bg-[#38A169] text-white text-[9px] font-bold px-2.5 py-1 uppercase tracking-[0.12em] border border-white/20"
             style={{ borderRadius: "2px" }}
           >
-            {car.available ? "Available" : "Reserved"}
+            Available
           </span>
         </div>
 
