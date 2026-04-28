@@ -25,6 +25,67 @@ function distance(lat1, lng1, lat2, lng2) {
 
 const COUNTIES = ["Nairobi","Mombasa","Nakuru","Kisumu","Uasin Gishu","Kiambu","Machakos","Meru"];
 
+function normalizeText(value = "") {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^\w\s-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function levenshtein(a = "", b = "") {
+  const s = String(a);
+  const t = String(b);
+  if (!s.length) return t.length;
+  if (!t.length) return s.length;
+  const dp = Array.from({ length: t.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= s.length; i += 1) {
+    let prev = i - 1;
+    dp[0] = i;
+    for (let j = 1; j <= t.length; j += 1) {
+      const temp = dp[j];
+      const cost = s[i - 1] === t[j - 1] ? 0 : 1;
+      dp[j] = Math.min(
+        dp[j] + 1,
+        dp[j - 1] + 1,
+        prev + cost
+      );
+      prev = temp;
+    }
+  }
+  return dp[t.length];
+}
+
+function getSearchScore(car, searchTokens = []) {
+  if (!searchTokens.length) return 0;
+  const haystack = normalizeText(
+    `${car.make || ""} ${car.model || ""} ${car.variant || ""} ${car.dealer?.name || ""}`
+  );
+  const words = haystack.split(" ").filter(Boolean);
+  let totalScore = 0;
+
+  for (const token of searchTokens) {
+    if (!token) continue;
+    let best = 0;
+    for (const word of words) {
+      if (!word) continue;
+      if (word.includes(token) || token.includes(word)) {
+        best = Math.max(best, 1);
+        continue;
+      }
+      const lenGap = Math.abs(word.length - token.length);
+      if (lenGap > 1) continue;
+      const dist = levenshtein(word, token);
+      if (dist <= 1) best = Math.max(best, 0.82);
+      else if (dist === 2 && token.length >= 6) best = Math.max(best, 0.68);
+    }
+    totalScore += best;
+  }
+
+  return totalScore / searchTokens.length;
+}
+
 const getAllMakes = unstable_cache(
   async () => {
     return db.car.findMany({
@@ -64,6 +125,7 @@ export default async function CarsPage({ searchParams }) {
   const effectiveLat = userLat ?? savedLat;
   const effectiveLng = userLng ?? savedLng;
 
+  const searchTokens = normalizeText(search).split(" ").filter(Boolean);
   const where = {
     available: true,
     ...(make         && { make: { equals: make, mode: "insensitive" } }),
@@ -75,11 +137,6 @@ export default async function CarsPage({ searchParams }) {
     ...(transmission && { transmission }),
     ...(minPrice || maxPrice ? { price: { ...(minPrice && { gte: minPrice }), ...(maxPrice && { lte: maxPrice }) } } : {}),
     ...(county       && { dealer: { county: { equals: county, mode: "insensitive" } } }),
-    ...(search       && { OR: [
-      { make:    { contains: search, mode: "insensitive" } },
-      { model:   { contains: search, mode: "insensitive" } },
-      { variant: { contains: search, mode: "insensitive" } },
-    ]}),
   };
 
   const orderBy =
@@ -96,52 +153,67 @@ export default async function CarsPage({ searchParams }) {
       { createdAt: "desc" }
     ];
 
-  const [cars, total, allMakes] = await Promise.all([
-    db.car.findMany({
-      where,
+  const carSelect = {
+    id: true,
+    make: true,
+    model: true,
+    variant: true,
+    year: true,
+    price: true,
+    engineCC: true,
+    mileage: true,
+    bodyType: true,
+    fuelType: true,
+    transmission: true,
+    featured: true,
+    featuredWeight: true,
+    views: true,
+    createdAt: true,
+    badges: true,
+    description: true,
+    images: {
+      where: { isPrimary: true },
+      take: 1,
+    },
+    dealer: {
       select: {
         id: true,
-        make: true,
-        model: true,
-        variant: true,
-        year: true,
-        price: true,
-        engineCC: true,
-        mileage: true,
-        bodyType: true,
-        fuelType: true,
-        transmission: true,
-        featured: true,
-        featuredWeight: true,
-        views: true,
-        createdAt: true,
-        badges: true,
-        description: true,
-        images: {
-          where: { isPrimary: true },
-          take: 1,
-        },
-        dealer: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            location: true,
-            verified: true,
-            lat: true,
-            lng: true,
-            county: true,
-            whatsapp: true,
-          },
-        },
+        name: true,
+        slug: true,
+        location: true,
+        verified: true,
+        lat: true,
+        lng: true,
+        county: true,
+        whatsapp: true,
       },
+    },
+  };
+
+  const [rawCars, totalFromDb, allMakes] = await Promise.all([
+    db.car.findMany({
+      where,
+      select: carSelect,
       orderBy,
-      skip: (page - 1) * limit,
-      take: limit,
+      ...(searchTokens.length > 0
+        ? { take: 500 }
+        : { skip: (page - 1) * limit, take: limit }),
     }),
     db.car.count({ where }),
     getAllMakes(),
   ]);
+
+  const searchMatchedCars = searchTokens.length > 0
+    ? rawCars
+        .map((car) => ({ car, searchScore: getSearchScore(car, searchTokens) }))
+        .filter((item) => item.searchScore >= 0.6)
+        .sort((a, b) => b.searchScore - a.searchScore)
+        .map((item) => item.car)
+    : rawCars;
+  const total = searchTokens.length > 0 ? searchMatchedCars.length : totalFromDb;
+  const cars = searchTokens.length > 0
+    ? searchMatchedCars.slice((page - 1) * limit, page * limit)
+    : searchMatchedCars;
 
   const sortedCars = sort === "newest"
     ? [...cars].sort((a, b) => {
