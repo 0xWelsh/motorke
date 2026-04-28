@@ -51,7 +51,7 @@ export default async function PortalNewCarPage({ searchParams }) {
   const dealers = [user.dealer];
 
   return (
-    <div className="animate-in fade-in duration-700 max-w-4xl">
+    <div className="animate-in fade-in duration-700 w-full">
       <div className="mb-6">
         <a href="/portal" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-700 hover:text-[#ff5a2f] transition-colors mb-6">
           <span className="text-lg">←</span> Back to Showroom

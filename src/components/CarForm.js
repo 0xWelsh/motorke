@@ -1419,8 +1419,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         {activeSection === "details" && (
         <div>
           <div className="space-y-6">
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5 xl:col-span-5">
+            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="w-1.5 h-1.5 rounded-2xl bg-purple-500" />
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Description</h3>
@@ -1437,7 +1436,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 </div>
                 <textarea
                   name="description"
-                  rows={9}
+                  rows={5}
                   value={descriptionText}
                   onChange={(e) => {
                     setDescriptionText(e.target.value);
@@ -1450,7 +1449,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   Keep it honest and specific: service history, owner count, accidents, tyres, and any known issue.
                 </p>
               </div>
-              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5 xl:col-span-7">
+              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <p className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">Feature Checklist</p>
@@ -1507,7 +1506,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   </div>
                 )}
               </div>
-            </div>
             {!simpleMode && (
               <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
                 <div className="flex items-center gap-3 mb-8">
