@@ -315,7 +315,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [videoUrl, setVideoUrl] = useState(formSeed.videoUrl || "");
   const [descriptionText, setDescriptionText] = useState(formSeed.description || "");
   const [descriptionTouched, setDescriptionTouched] = useState(Boolean((formSeed.description || "").trim()));
-  const [activeSection, setActiveSection] = useState("basics");
   const [liveDraft, setLiveDraft] = useState({});
   const [checklist, setChecklist] = useState({
     basics: false,
@@ -327,6 +326,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const formRef = useRef(null);
   const initializedNewFormRef = useRef(false);
   const smartFillInputRef = useRef(null);
+  const basicsRef = useRef(null);
+  const mediaRef = useRef(null);
+  const detailsRef = useRef(null);
   const saveTimeoutRef = useRef(null);
   const uploadedLocalMapRef = useRef(new Map());
   const pendingUploadIdsRef = useRef(new Set());
@@ -620,10 +622,18 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   }, [descriptionTouched, liveDraft, selectedFeatures, selectedMake, selectedModel, selectedYear]);
 
   useEffect(() => {
-    if (activeSection !== "details") return;
     if ((descriptionText || "").trim()) return;
     applyGeneratedDescription(false);
-  }, [activeSection, applyGeneratedDescription, descriptionText]);
+  }, [applyGeneratedDescription, descriptionText]);
+
+  const jumpToSection = useCallback((section) => {
+    const targetMap = {
+      basics: basicsRef.current,
+      media: mediaRef.current,
+      details: detailsRef.current,
+    };
+    targetMap[section]?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
 
   function normalizeImagePayload(list) {
     const unique = [];
@@ -925,7 +935,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           {publishBlockers.length > 0 && (
             <button
               type="button"
-              onClick={() => setActiveSection(publishBlockers[0].section)}
+              onClick={() => jumpToSection(publishBlockers[0].section)}
               className="px-4 py-2 rounded-2xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider"
             >
               Jump to fix
@@ -938,7 +948,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               <button
                 key={item.id}
                 type="button"
-                onClick={() => setActiveSection(item.section)}
+                onClick={() => jumpToSection(item.section)}
                 className="px-3 py-1.5 rounded-2xl border border-amber-300 bg-amber-50 text-[11px] font-bold text-amber-800"
               >
                 {item.text}
@@ -968,25 +978,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
       </div>
       <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4">
-        <div className="flex flex-wrap gap-2">
-          {[
-            { id: "basics", label: "Basics" },
-            { id: "media", label: "Photos & Video" },
-            { id: "details", label: "Details & Publish" },
-          ].map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => setActiveSection(item.id)}
-              className={`px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-wider border ${
-                activeSection === item.id
-                  ? "bg-slate-900 text-white border-slate-900"
-                  : "bg-white dark:bg-[#111111] text-slate-600 border-[#ddd4c8] dark:border-slate-800"
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
+        <div className="flex flex-wrap gap-2 text-[11px] font-black uppercase tracking-wider">
+          <span className="px-3 py-1.5 rounded-2xl border border-[#ddd4c8] dark:border-slate-800 text-slate-600">Basics</span>
+          <span className="px-3 py-1.5 rounded-2xl border border-[#ddd4c8] dark:border-slate-800 text-slate-600">Photos & Video</span>
+          <span className="px-3 py-1.5 rounded-2xl border border-[#ddd4c8] dark:border-slate-800 text-slate-600">Details & Publish</span>
         </div>
       </div>
       {isNew && (
@@ -1152,8 +1147,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       </div>
 
       <div className="space-y-6">
-        {activeSection === "basics" && (
-        <div>
+        <div ref={basicsRef}>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-1.5 h-1.5 rounded-2xl bg-[#ff5a2f]" />
             <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Vehicle Basics</h3>
@@ -1340,10 +1334,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             </div>
           </div>
         </div>
-        )}
 
-        {activeSection === "media" && (
-        <div>
+        <div ref={mediaRef}>
           <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
@@ -1414,10 +1406,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             </div>
           </div>
         </div>
-        )}
 
-        {activeSection === "details" && (
-        <div>
+        <div ref={detailsRef}>
           <div className="space-y-6">
             <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
                 <div className="flex items-center gap-3 mb-8">
@@ -1626,7 +1616,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             </div>
           </div>
         </div>
-        )}
 
         <div className="flex flex-wrap justify-between items-center gap-3 pt-2">
           <a href={isPortal ? "/portal" : "/admin"} className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl text-xs uppercase tracking-wider transition-all">
