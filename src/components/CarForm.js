@@ -284,7 +284,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     overall: null,
     warnings: [],
   });
+  const [smartFillDiff, setSmartFillDiff] = useState([]);
+  const [smartFillSuggestions, setSmartFillSuggestions] = useState([]);
   const [videoUrl, setVideoUrl] = useState(formSeed.videoUrl || "");
+  const [activeSection, setActiveSection] = useState("basics");
+  const [liveDraft, setLiveDraft] = useState({});
   const [checklist, setChecklist] = useState({
     basics: false,
     media: false,
@@ -320,6 +324,21 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     if (score < 0.6) return " border-amber-400 ring-2 ring-amber-100 dark:ring-amber-900/30";
     return " border-emerald-500/60";
   };
+  const previewTitle = `${liveDraft.year || selectedYear || ""} ${liveDraft.make || selectedMake || ""} ${liveDraft.model || selectedModel || ""}`.trim() || "Your listing preview";
+  const previewVariant = liveDraft.variant || "";
+  const previewDescription = String(liveDraft.description || formSeed.description || "").trim();
+  const previewPrice = priceInput || liveDraft.price || "";
+  const publishBlockers = useMemo(() => {
+    const blockers = [];
+    if (!String(liveDraft.make || selectedMake || "").trim()) blockers.push({ id: "make", section: "basics", text: "Set vehicle make" });
+    if (!String(liveDraft.model || selectedModel || "").trim()) blockers.push({ id: "model", section: "basics", text: "Set vehicle model" });
+    if (!String(previewPrice).trim()) blockers.push({ id: "price", section: "basics", text: "Set listing price" });
+    if (!String(liveDraft.year || selectedYear || "").trim()) blockers.push({ id: "year", section: "basics", text: "Set model year" });
+    if (images.length < 3) blockers.push({ id: "photos", section: "media", text: `Add ${3 - images.length} more photo(s)` });
+    if (selectedFeatures.length < 3) blockers.push({ id: "features", section: "details", text: "Add at least 3 features" });
+    if (previewDescription.length < 40) blockers.push({ id: "desc", section: "details", text: "Write a clearer description" });
+    return blockers;
+  }, [images.length, liveDraft.make, liveDraft.model, liveDraft.year, previewDescription.length, previewPrice, selectedFeatures.length, selectedMake, selectedModel, selectedYear]);
 
   const saveDraft = useCallback(() => {
     if (!draftKey || !isNew || !formRef.current) return;
@@ -497,11 +516,17 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     };
 
     deriveChecklist();
+    setLiveDraft(collectFormValues(form));
     form.addEventListener("input", deriveChecklist);
     form.addEventListener("change", deriveChecklist);
+    const updateLiveDraft = () => setLiveDraft(collectFormValues(form));
+    form.addEventListener("input", updateLiveDraft);
+    form.addEventListener("change", updateLiveDraft);
     return () => {
       form.removeEventListener("input", deriveChecklist);
       form.removeEventListener("change", deriveChecklist);
+      form.removeEventListener("input", updateLiveDraft);
+      form.removeEventListener("change", updateLiveDraft);
     };
   }, [images, selectedFeatures]);
 
@@ -521,6 +546,30 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setField('select[name="year"]', seeded.year ? String(seeded.year) : "");
     setField('input[name="mileage"]', seeded.mileage ? String(seeded.mileage) : "");
     setField('input[name="engineCC"]', seeded.engineCC ? String(seeded.engineCC) : "");
+  }, []);
+
+  const applySmartFillSuggestion = useCallback((field, value) => {
+    const form = formRef.current;
+    if (!form) return;
+    const selectorMap = {
+      make: 'input[name="make"]',
+      model: 'input[name="model"]',
+      variant: 'input[name="variant"]',
+      year: 'select[name="year"]',
+      mileage: 'input[name="mileage"]',
+      engineCC: 'input[name="engineCC"]',
+      price: 'input[name="price"]',
+    };
+    const fieldEl = form.querySelector(selectorMap[field]);
+    if (!fieldEl) return;
+    fieldEl.value = value ?? "";
+    fieldEl.dispatchEvent(new Event("input", { bubbles: true }));
+    fieldEl.dispatchEvent(new Event("change", { bubbles: true }));
+    if (field === "price") setPriceInput(String(value || ""));
+    if (field === "make") setSelectedMake(String(value || ""));
+    if (field === "model") setSelectedModel(String(value || ""));
+    if (field === "year") setSelectedYear(String(value || ""));
+    setSmartFillSuggestions((prev) => prev.filter((s) => s.field !== field));
   }, []);
 
   function normalizeImagePayload(list) {
@@ -732,13 +781,55 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         engineCC: parsed?.engineCC || "",
       };
 
-      setSelectedYear(seeded.year ? String(seeded.year) : "");
-      setSelectedMake(seeded.make || "");
-      setSelectedModel(seeded.model || "");
-      setPriceInput(seeded.price ? String(seeded.price) : "");
-      applyDetectedValuesToForm(seeded);
+      const currentValues = collectFormValues(formRef.current);
+      const fieldLabels = {
+        make: "Make",
+        model: "Model",
+        variant: "Variant",
+        year: "Year",
+        price: "Price",
+        mileage: "Mileage",
+        engineCC: "Engine CC",
+      };
+      const diff = [];
+      const lowConfidence = [];
+      Object.entries(seeded).forEach(([field, nextValue]) => {
+        if (nextValue === "" || nextValue === null || nextValue === undefined) return;
+        const prevValue = currentValues[field] ?? "";
+        if (String(prevValue) !== String(nextValue)) {
+          diff.push({
+            field,
+            label: fieldLabels[field] || field,
+            from: String(prevValue || "empty"),
+            to: String(nextValue),
+            confidence: Number(confidence[field] || 0),
+          });
+        }
+        if (Number(confidence[field] || 0) < 0.72) {
+          lowConfidence.push({
+            field,
+            label: fieldLabels[field] || field,
+            value: nextValue,
+            confidence: Number(confidence[field] || 0),
+          });
+        }
+      });
 
-      setFormSeed((prev) => ({ ...prev, ...seeded }));
+      setSmartFillDiff(diff);
+      setSmartFillSuggestions(lowConfidence);
+
+      const gatedSeeded = { ...seeded };
+      lowConfidence.forEach((item) => {
+        gatedSeeded[item.field] = "";
+      });
+
+      setSelectedYear(gatedSeeded.year ? String(gatedSeeded.year) : selectedYear);
+      setSelectedMake(gatedSeeded.make || selectedMake);
+      setSelectedModel(gatedSeeded.model || selectedModel);
+      if (gatedSeeded.price) setPriceInput(String(gatedSeeded.price));
+      applyDetectedValuesToForm(gatedSeeded);
+
+      setFormSeed((prev) => ({ ...prev, ...gatedSeeded }));
 
       if (!seeded.make && !seeded.model && !seeded.price && !seeded.mileage && !seeded.year) {
         setError("No key fields detected. Try adding year, make, model, price, and mileage in the text.");
@@ -770,6 +861,40 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
       </div>
 
+      <div className="sticky top-20 z-20 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Fix Next</p>
+            <p className="text-sm font-bold text-slate-900 dark:text-white">
+              {publishBlockers.length === 0 ? "Ready to publish" : publishBlockers[0].text}
+            </p>
+          </div>
+          {publishBlockers.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setActiveSection(publishBlockers[0].section)}
+              className="px-4 py-2 rounded-2xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider"
+            >
+              Jump to fix
+            </button>
+          )}
+        </div>
+        {publishBlockers.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {publishBlockers.slice(0, 4).map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setActiveSection(item.section)}
+                className="px-3 py-1.5 rounded-2xl border border-amber-300 bg-amber-50 text-[11px] font-bold text-amber-800"
+              >
+                {item.text}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4">
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2">
@@ -787,6 +912,28 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             })}
           </div>
           <span className="text-[11px] font-black uppercase tracking-wider text-[#ff5a2f]">{checklistDone}/4 complete</span>
+        </div>
+      </div>
+      <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4">
+        <div className="flex flex-wrap gap-2">
+          {[
+            { id: "basics", label: "Basics" },
+            { id: "media", label: "Photos & Video" },
+            { id: "details", label: "Details & Publish" },
+          ].map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => setActiveSection(item.id)}
+              className={`px-4 py-2 rounded-2xl text-xs font-black uppercase tracking-wider border ${
+                activeSection === item.id
+                  ? "bg-slate-900 text-white border-slate-900"
+                  : "bg-white dark:bg-[#111111] text-slate-600 border-[#ddd4c8] dark:border-slate-800"
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
         </div>
       </div>
       {isNew && (
@@ -899,11 +1046,60 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   )}
                 </div>
               )}
+              {smartFillDiff.length > 0 && (
+                <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-[#fbfcfe] dark:bg-[#0f0f10] px-4 py-3">
+                  <p className="text-[11px] font-black uppercase tracking-widest text-slate-500 mb-2">Smart Fill changes</p>
+                  <div className="space-y-1">
+                    {smartFillDiff.slice(0, 6).map((d) => (
+                      <p key={d.field} className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                        {d.label}: <span className="line-through text-slate-400">{d.from}</span> {" -> "} <span className="text-slate-900 dark:text-white">{d.to}</span>
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {smartFillSuggestions.length > 0 && (
+                <div className="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3">
+                  <p className="text-[11px] font-black uppercase tracking-widest text-amber-800 mb-2">Review low-confidence suggestions</p>
+                  <div className="space-y-2">
+                    {smartFillSuggestions.map((s) => (
+                      <div key={s.field} className="flex items-center justify-between gap-2">
+                        <p className="text-xs font-semibold text-amber-900">
+                          {s.label}: {String(s.value)} ({Math.round((s.confidence || 0) * 100)}%)
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => applySmartFillSuggestion(s.field, s.value)}
+                          className="px-3 py-1 rounded-xl bg-amber-700 text-white text-[10px] font-black uppercase tracking-wider"
+                        >
+                          Apply
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
           </div>
         </div>
       )}
 
+      <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4">
+        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Buyer Preview</p>
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+          <div className="w-full sm:w-40 h-24 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 dark:border-slate-800 flex items-center justify-center">
+            {images[0]?.url ? <img src={images[0].url} alt="" className="w-full h-full object-cover" /> : <span className="text-xs text-slate-400">No photo yet</span>}
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-black text-slate-900 dark:text-white truncate">{previewTitle}</p>
+            {previewVariant && <p className="text-xs font-semibold text-slate-500 truncate">{previewVariant}</p>}
+            <p className="text-sm font-bold text-[#ff5a2f] mt-1">{previewPrice ? `KES ${Number(previewPrice || 0).toLocaleString("en-KE")}` : "Price missing"}</p>
+            <p className="text-xs text-slate-500 mt-1 line-clamp-2">{previewDescription || "Add a short description to improve buyer trust."}</p>
+          </div>
+        </div>
+      </div>
+
       <div className="space-y-6">
+        {activeSection === "basics" && (
         <div>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-1.5 h-1.5 rounded-2xl bg-[#ff5a2f]" />
@@ -1091,7 +1287,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             </div>
           </div>
         </div>
+        )}
 
+        {activeSection === "media" && (
         <div>
           <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
             <div className="flex items-center justify-between mb-4">
@@ -1163,7 +1361,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             </div>
           </div>
         </div>
+        )}
 
+        {activeSection === "details" && (
         <div>
           <div className="space-y-6">
             <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
@@ -1353,6 +1553,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             </div>
           </div>
         </div>
+        )}
 
         <div className="flex flex-wrap justify-between items-center gap-3 pt-2">
           <a href={isPortal ? "/portal" : "/admin"} className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl text-xs uppercase tracking-wider transition-all">
