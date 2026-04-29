@@ -1,7 +1,7 @@
 {
-  "name": "Welsh Motors - Kenya's Vehicle Marketplace",
-  "short_name": "Welsh Motors",
-  "description": "Buy and sell verified vehicles from trusted dealers across Kenya via Welsh Motors",
+  "name": "Welsh Motorhub",
+  "short_name": "Welsh Motorhub",
+  "description": "Buy and sell verified vehicles from trusted dealers across Kenya via Welsh Motorhub",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
