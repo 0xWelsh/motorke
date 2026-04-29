@@ -299,6 +299,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const EXCHANGE_RATE = 135; 
   const [priceInput, setPriceInput] = useState(formSeed.price || "");
   const [selectedFeatures, setSelectedFeatures] = useState(car?.features || []);
+  const [featuresOpen, setFeaturesOpen] = useState(false);
   const [customFeature, setCustomFeature] = useState("");
   const [draftLoaded, setDraftLoaded] = useState(false);
   const [selectedMake, setSelectedMake] = useState((baseSeed.make || "").trim());
@@ -323,7 +324,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [smartFillSuggestions, setSmartFillSuggestions] = useState([]);
   const [manualOverrides, setManualOverrides] = useState({});
   const [videoUrl, setVideoUrl] = useState(formSeed.videoUrl || "");
-  const [descriptionText, setDescriptionText] = useState(formSeed.description || "");
   const [descriptionTouched, setDescriptionTouched] = useState(Boolean((formSeed.description || "").trim()));
   const [liveDraft, setLiveDraft] = useState({});
   const [checklist, setChecklist] = useState({
@@ -394,11 +394,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setSelectedFeatures([]);
     setPriceInput(baseSeed.price || "");
   }, [baseSeed, defaultsKey, draftKey, isNew]);
-
-  useEffect(() => {
-    setDescriptionText(formSeed.description || "");
-    setDescriptionTouched(Boolean((formSeed.description || "").trim()));
-  }, [formSeed.description]);
 
   useEffect(() => {
     if (!isNew || !draftKey || !formRef.current) return;
@@ -627,7 +622,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     if (descriptionTouched && !force) return;
     const values = { ...liveDraft, make: selectedMake || liveDraft.make, model: selectedModel || liveDraft.model, year: selectedYear || liveDraft.year };
     const generated = buildAutoDescription(values, selectedFeatures);
-    setDescriptionText(generated);
     const form = formRef.current;
     const field = form?.querySelector('textarea[name="description"]');
     if (field) {
@@ -638,9 +632,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   }, [descriptionTouched, liveDraft, selectedFeatures, selectedMake, selectedModel, selectedYear]);
 
   useEffect(() => {
-    if ((descriptionText || "").trim()) return;
+    const existingDescription = formRef.current?.querySelector('textarea[name="description"]')?.value || "";
+    if (existingDescription.trim()) return;
     applyGeneratedDescription(false);
-  }, [applyGeneratedDescription, descriptionText]);
+  }, [applyGeneratedDescription]);
 
   function normalizeImagePayload(list) {
     const unique = [];
@@ -1390,9 +1385,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 <textarea
                   name="description"
                   rows={5}
-                  value={descriptionText}
+                  defaultValue={formSeed.description}
                   onChange={(e) => {
-                    setDescriptionText(e.target.value);
                     setDescriptionTouched(true);
                   }}
                   placeholder="Share condition, service history, and key selling points..."
@@ -1408,42 +1402,60 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                     <p className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">Feature Checklist</p>
                     <h3 className="text-lg font-bold text-slate-900 dark:text-white">Tap to select car features</h3>
                   </div>
-                  <span className="text-xs font-bold text-[#ff5a2f] bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-2xl">{selectedFeatures.length} selected</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-[#ff5a2f] bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-2xl">{selectedFeatures.length} selected</span>
+                    <button
+                      type="button"
+                      onClick={() => setFeaturesOpen((prev) => !prev)}
+                      className="inline-flex items-center gap-2 rounded-2xl border border-[#ddd4c8] dark:border-slate-700 px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+                    >
+                      {featuresOpen ? "Collapse" : "Expand"}
+                      <ChevronRight size={14} className={`transition-transform ${featuresOpen ? "rotate-90" : ""}`} />
+                    </button>
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5">
-                  {featureOptions.map((feature) => {
-                    const active = selectedFeatures.includes(feature);
-                    return (
-                      <button
-                        key={feature}
-                        type="button"
-                        onClick={() => toggleFeature(feature)}
-                        className={`text-left text-[11px] font-bold px-3 py-2.5 rounded-2xl border transition-all ${
-                          active ? "bg-[#ff5a2f] text-slate-900 dark:text-white border-[#ff5a2f]" : "bg-[#fbfcfe] dark:bg-[#111111] text-slate-700 border-[#ddd4c8] dark:border-slate-800 hover:bg-slate-100"
-                        }`}
-                      >
-                        {feature}
+                {featuresOpen ? (
+                  <>
+                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5">
+                      {featureOptions.map((feature) => {
+                        const active = selectedFeatures.includes(feature);
+                        return (
+                          <button
+                            key={feature}
+                            type="button"
+                            onClick={() => toggleFeature(feature)}
+                            className={`text-left text-[11px] font-bold px-3 py-2.5 rounded-2xl border transition-all ${
+                              active ? "bg-[#ff5a2f] text-slate-900 dark:text-white border-[#ff5a2f]" : "bg-[#fbfcfe] dark:bg-[#111111] text-slate-700 border-[#ddd4c8] dark:border-slate-800 hover:bg-slate-100"
+                            }`}
+                          >
+                            {feature}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-4 flex flex-col sm:flex-row gap-2">
+                      <input
+                        value={customFeature}
+                        onChange={(e) => setCustomFeature(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            addCustomFeature();
+                          }
+                        }}
+                        placeholder="Add custom feature"
+                        className={inputCls}
+                      />
+                      <button type="button" onClick={addCustomFeature} className="px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider">
+                        Add Feature
                       </button>
-                    );
-                  })}
-                </div>
-                <div className="mt-4 flex flex-col sm:flex-row gap-2">
-                  <input
-                    value={customFeature}
-                    onChange={(e) => setCustomFeature(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        addCustomFeature();
-                      }
-                    }}
-                    placeholder="Add custom feature"
-                    className={inputCls}
-                  />
-                  <button type="button" onClick={addCustomFeature} className="px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider">
-                    Add Feature
-                  </button>
-                </div>
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-xs font-semibold text-slate-500">
+                    Feature list collapsed to save space. Expand to choose standard or custom features.
+                  </p>
+                )}
                 {selectedFeatures.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-2">
                     {selectedFeatures.map((feature) => (
