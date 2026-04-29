@@ -172,6 +172,15 @@ function isDifferent(spec, cars) {
   return new Set(values).size > 1;
 }
 
+function isMostlyNA(spec, cars) {
+  if (cars.length === 0) return true;
+  const missingCount = cars.reduce((count, car) => {
+    const raw = spec.pick(car).raw;
+    return isMissing(raw) ? count + 1 : count;
+  }, 0);
+  return missingCount >= 2;
+}
+
 function getDiffSeverity(spec, cars) {
   if (cars.length < 2 || !isDifferent(spec, cars)) return "none";
 
@@ -654,6 +663,7 @@ export default function CompareClient({ initialCars }) {
         .map((group) => {
           const rows = group.specs
             .filter((spec) => shouldShowSpec(spec))
+            .filter((spec) => !isMostlyNA(spec, fullComparedCars))
             .filter((spec) => !(showDiffOnly && fullComparedCars.length > 1 && !isDifferent(spec, fullComparedCars)))
             .map((spec) => ({
               label: spec.label,
@@ -1631,6 +1641,7 @@ export default function CompareClient({ initialCars }) {
                           );
                         })}
                         {mobileQuickSpecs.map((spec) => {
+                          if (isMostlyNA(spec, fullComparedCars)) return null;
                           const best = getBest(spec, fullComparedCars);
                           return (
                             <Fragment key={spec.id}>
@@ -1667,6 +1678,7 @@ export default function CompareClient({ initialCars }) {
                     <div className="divide-y divide-slate-100 dark:divide-slate-800">
                       {group.specs.map((spec) => {
                         if (!shouldShowSpec(spec)) return null;
+                        if (isMostlyNA(spec, fullComparedCars)) return null;
                         const diff = isDifferent(spec, fullComparedCars);
                         if (showDiffOnly && !diff && fullComparedCars.length > 1) return null;
                         const { value } = spec.pick(mobileCar);
@@ -1794,6 +1806,7 @@ export default function CompareClient({ initialCars }) {
                       <div className="divide-y divide-slate-50 dark:divide-slate-900">
                          {group.specs.map(spec => {
                             if (!shouldShowSpec(spec)) return null;
+                            if (isMostlyNA(spec, fullComparedCars)) return null;
                             const diff = isDifferent(spec, fullComparedCars);
                             if (showDiffOnly && !diff && fullComparedCars.length > 1) return null;
 

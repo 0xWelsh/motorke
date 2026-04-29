@@ -12,6 +12,18 @@ export function CompareBar() {
 
   const compareUrl = `/compare?${compareCars.map((c, i) => `${"abc"[i]}=${c.id}`).join("&")}`;
 
+  const handleRemove = (event, carId) => {
+    event.preventDefault();
+    event.stopPropagation();
+    removeFromCompare(carId);
+  };
+
+  const handleClear = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    clearCompare();
+  };
+
   return (
     <div className="fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1rem)] sm:w-[95%] max-w-2xl animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
       <div className="bg-[#111827]/90 dark:bg-[#111111]/90 backdrop-blur-3xl border border-slate-700 dark:border-slate-800 p-2 shadow-2xl flex items-center justify-between gap-3 sm:gap-4" style={{ borderRadius: 'var(--radius)' }}>
@@ -27,8 +39,9 @@ export function CompareBar() {
                 )}
               </div>
               <button
-                onClick={() => removeFromCompare(car.id)}
-                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#111827] dark:bg-white border border-white/20 rounded-full flex items-center justify-center text-white dark:text-black hover:bg-red-500 dark:hover:bg-red-500 transition-all opacity-0 group-hover:opacity-100 shadow-xl"
+                type="button"
+                onClick={(event) => handleRemove(event, car.id)}
+                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#111827] dark:bg-white border border-white/20 rounded-full flex items-center justify-center text-white dark:text-black hover:bg-red-500 dark:hover:bg-red-500 transition-all opacity-100 sm:opacity-0 sm:group-hover:opacity-100 shadow-xl"
               >
                 <span className="text-[11px] leading-none">×</span>
               </button>
@@ -37,9 +50,15 @@ export function CompareBar() {
 
           {/* Empty Slots */}
           {Array.from({ length: 3 - compareCars.length }).map((_, i) => (
-            <div key={`empty-${i}`} className="w-12 h-12 border border-dashed border-white/10 flex items-center justify-center text-white/20 select-none" style={{ borderRadius: 'var(--radius)' }}>
+            <Link
+              key={`empty-${i}`}
+              href="/cars"
+              className="w-12 h-12 border border-dashed border-white/20 hover:border-[#38A169]/70 flex items-center justify-center text-white/40 hover:text-[#38A169] transition-colors"
+              style={{ borderRadius: 'var(--radius)' }}
+              title="Add another car"
+            >
               <span className="text-xl">+</span>
-            </div>
+            </Link>
           ))}
         </div>
 
@@ -53,6 +72,31 @@ export function CompareBar() {
                 Full — tap × on a thumbnail to remove a car
               </p>
             )}
+            <div className="mt-1.5 flex flex-wrap gap-1.5 sm:hidden">
+              {compareCars.map((car) => (
+                <button
+                  key={car.id}
+                  type="button"
+                  onClick={(event) => handleRemove(event, car.id)}
+                  className="inline-flex items-center gap-1 border border-white/20 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-white/80"
+                  style={{ borderRadius: 'var(--radius)' }}
+                >
+                  <span className="max-w-[72px] truncate">{car.make}</span>
+                  <span className="text-white">×</span>
+                </button>
+              ))}
+              {Array.from({ length: 3 - compareCars.length }).map((_, i) => (
+                <Link
+                  key={`mobile-empty-${i}`}
+                  href="/cars"
+                  className="inline-flex items-center justify-center w-7 h-7 border border-dashed border-white/30 text-white/60 hover:text-[#38A169] hover:border-[#38A169]/60"
+                  style={{ borderRadius: 'var(--radius)' }}
+                  title="Add another car"
+                >
+                  +
+                </Link>
+              ))}
+            </div>
           </div>
 
           <div className="hidden sm:block text-right min-w-0">
@@ -67,7 +111,8 @@ export function CompareBar() {
 
           <div className="flex items-center gap-2">
             <button
-               onClick={clearCompare}
+               type="button"
+               onClick={handleClear}
                className="text-[10px] font-bold uppercase tracking-widest text-white/40 hover:text-white transition-colors px-2 sm:px-3 h-10 flex items-center"
             >
                Clear
