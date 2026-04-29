@@ -107,7 +107,7 @@ export default function Navbar({ user }) {
 
             {/* LOGO */}
             <Link href="/" className="flex items-center gap-2 shrink-0 transition-transform active:scale-95">
-              <div className="relative h-8 md:h-10 w-32 md:w-40">
+              <div className="relative h-10 md:h-12 w-44 md:w-56">
                 <Image
                   src={activeLogo}
                   alt="Welsh Motors"
@@ -320,7 +320,7 @@ export default function Navbar({ user }) {
             <div className="mx-auto mt-2 h-1 w-9 shrink-0 rounded-full bg-slate-200 dark:bg-slate-600" aria-hidden />
             <div className="shrink-0 border-b border-slate-100 px-4 pb-3 pt-2 dark:border-zinc-800 sm:px-5">
               <div className="flex items-center justify-between gap-3">
-                <div className="relative h-8 w-32 shrink-0">
+                <div className="relative h-10 w-44 shrink-0">
                   <Image
                     src={activeLogo}
                     alt="Welsh Motors"
