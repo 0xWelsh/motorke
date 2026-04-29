@@ -13,10 +13,53 @@ export default async function DealersPage() {
       _count: { select: { cars: { where: { available: true } } } },
       users: { select: { avatarUrl: true }, take: 1 },
     },
-    orderBy: [{ featured: "desc" }, { verified: "desc" }, { name: "asc" }],
   });
 
-  const counties = [...new Set(dealers.map((d) => d.county))].sort();
+  const [leadTotals, leadResponded] = await Promise.all([
+    db.lead.groupBy({
+      by: ["dealerId"],
+      _count: { _all: true },
+    }),
+    db.lead.groupBy({
+      by: ["dealerId"],
+      where: { status: { not: "NEW" } },
+      _count: { _all: true },
+    }),
+  ]);
+
+  const leadTotalMap = new Map(leadTotals.map((row) => [row.dealerId, row._count._all]));
+  const leadRespondedMap = new Map(leadResponded.map((row) => [row.dealerId, row._count._all]));
+
+  const rankedDealers = [...dealers].sort((a, b) => {
+    const activeCarsA = a._count?.cars || 0;
+    const activeCarsB = b._count?.cars || 0;
+    const totalLeadsA = leadTotalMap.get(a.id) || 0;
+    const totalLeadsB = leadTotalMap.get(b.id) || 0;
+    const respondedA = leadRespondedMap.get(a.id) || 0;
+    const respondedB = leadRespondedMap.get(b.id) || 0;
+    const responseRateA = totalLeadsA > 0 ? respondedA / totalLeadsA : 0;
+    const responseRateB = totalLeadsB > 0 ? respondedB / totalLeadsB : 0;
+    const updatedA = new Date(a.updatedAt).getTime();
+    const updatedB = new Date(b.updatedAt).getTime();
+
+    const scoreA =
+      (a.featured ? 5000 : 0) +
+      (a.verified ? 2000 : 0) +
+      activeCarsA * 40 +
+      responseRateA * 500 +
+      Math.floor(updatedA / 86_400_000);
+    const scoreB =
+      (b.featured ? 5000 : 0) +
+      (b.verified ? 2000 : 0) +
+      activeCarsB * 40 +
+      responseRateB * 500 +
+      Math.floor(updatedB / 86_400_000);
+
+    if (scoreA !== scoreB) return scoreB - scoreA;
+    return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+  });
+
+  const counties = [...new Set(rankedDealers.map((d) => d.county))].sort();
 
   return (
     <div className="bg-white min-h-screen pb-20">
@@ -34,7 +77,7 @@ export default async function DealersPage() {
             <span className="editorial-heading text-[#38A169]">Station Network.</span>
           </h1>
           <p className="text-[#718096] dark:text-slate-400 text-base sm:text-lg font-medium max-w-2xl">
-            Connecting you with {dealers.length} verified dealerships across the region.
+            Connecting you with {rankedDealers.length} verified dealerships across the region.
           </p>
         </div>
 
@@ -101,7 +144,7 @@ export default async function DealersPage() {
 
           {/* Grid */}
           <main className="order-1 lg:order-2 lg:col-span-9">
-            {dealers.length === 0 ? (
+            {rankedDealers.length === 0 ? (
               <div className="py-32 text-center bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
                 <Building2 className="w-12 h-12 text-[#CBD5E0] dark:text-slate-700 mx-auto mb-6" />
                 <h2 className="text-2xl font-bold text-[#111827] dark:text-white mb-2">Network offline</h2>
@@ -109,7 +152,7 @@ export default async function DealersPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                {dealers.map((dealer) => (
+                {rankedDealers.map((dealer) => (
                   <DealerCard key={dealer.id} dealer={dealer} />
                 ))}
               </div>
