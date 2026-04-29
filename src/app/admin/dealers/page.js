@@ -70,7 +70,7 @@ export default async function AdminDealersPage() {
           </div>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center lg:flex-col lg:items-stretch xl:flex-row xl:items-center">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+            <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:grid sm:grid-cols-3 sm:gap-3 sm:overflow-visible sm:pb-0">
               {[
                 { label: "Total", value: dealers.length, tone: "text-slate-900 dark:text-white" },
                 { label: "Verified", value: verifiedCount, tone: "text-emerald-700 dark:text-emerald-400" },
@@ -78,10 +78,10 @@ export default async function AdminDealersPage() {
               ].map((s) => (
                 <div
                   key={s.label}
-                  className="rounded-xl border border-[#ede7dd] bg-white/80 px-3 py-2.5 text-center shadow-sm backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/60"
+                  className="min-w-[120px] sm:min-w-0 rounded-xl border border-[#ede7dd] bg-white/80 px-2.5 py-2 text-center shadow-sm backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/60"
                 >
-                  <p className={`text-xl font-black tabular-nums sm:text-2xl ${s.tone}`}>{s.value}</p>
-                  <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">{s.label}</p>
+                  <p className={`text-lg leading-none font-black tabular-nums sm:text-2xl ${s.tone}`}>{s.value}</p>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500 whitespace-nowrap">{s.label}</p>
                 </div>
               ))}
             </div>
