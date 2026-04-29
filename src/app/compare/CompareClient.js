@@ -845,6 +845,9 @@ export default function CompareClient({ initialCars }) {
   // Keep URL in sync with current compare slots to trigger full-spec server hydration.
   useEffect(() => {
     if (!isInitialized || !didInitialSync) return;
+    // Avoid route refresh churn while user is still selecting the first cars.
+    // This keeps the add-car search modal stable in selection-first mode.
+    if (compareCars.length < 2) return;
 
     const ids = compareCars.slice(0, 3).map(c => c.id);
     const params = new URLSearchParams();
