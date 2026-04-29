@@ -10,7 +10,6 @@ import {
   Search,
   ChevronRight,
   Plus,
-  Eye,
   Edit3,
   ToggleLeft,
   ToggleRight,
@@ -130,7 +129,6 @@ export default async function AdminCarsPage({ searchParams }) {
                   Year: c.year,
                   Price: c.price,
                   Dealer: c.dealer.name,
-                  Views: c.views,
                   Leads: c._count.leads,
                   Status: c.available ? "Live" : "Hidden",
                   CreatedAt: c.createdAt,
@@ -235,7 +233,7 @@ export default async function AdminCarsPage({ searchParams }) {
           <table className="min-w-[960px] w-full border-collapse text-left">
             <thead>
               <tr className="border-b border-[#ececf0] bg-[#fafafa] dark:border-zinc-800 dark:bg-zinc-900/90">
-                {["Listing", "Dealer", "Engagement", "Price", "Status", ""].map((h) => (
+                {["Listing", "Dealer", "Leads", "Price", "Status", ""].map((h) => (
                   <th key={h} className="whitespace-nowrap px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 dark:text-zinc-500">
                     {h}
                   </th>
@@ -287,16 +285,10 @@ export default async function AdminCarsPage({ searchParams }) {
                       <p className="truncate text-[13px] font-semibold text-slate-800 dark:text-zinc-200">{car.dealer.name}</p>
                     </td>
                     <td className="whitespace-nowrap px-5 py-4">
-                      <div className="flex flex-wrap items-center gap-4">
-                        <span className="inline-flex items-center gap-1.5 text-slate-600 dark:text-zinc-400">
-                          <Eye size={14} className="opacity-85" aria-hidden />
-                          <span className="text-[13px] font-bold tabular-nums text-slate-900 dark:text-white">{car.views.toLocaleString()}</span>
-                        </span>
-                        <span className="inline-flex items-center gap-1.5 text-slate-600 dark:text-zinc-400">
-                          <MessageSquare size={14} className="opacity-85" aria-hidden />
-                          <span className="text-[13px] font-bold tabular-nums text-slate-900 dark:text-white">{car._count.leads}</span>
-                        </span>
-                      </div>
+                      <span className="inline-flex items-center gap-1.5 text-slate-600 dark:text-zinc-400">
+                        <MessageSquare size={14} className="opacity-85" aria-hidden />
+                        <span className="text-[13px] font-bold tabular-nums text-slate-900 dark:text-white">{car._count.leads}</span>
+                      </span>
                     </td>
                     <td className="whitespace-nowrap px-5 py-4">
                       <span className="text-[13px] font-black tabular-nums text-slate-900 dark:text-white">{formatCarPrice(car)}</span>
