@@ -3,6 +3,8 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { unstable_cache } from "next/cache";
+import { runGoSearchShadow } from "@/lib/go-search";
+import { GO_SEARCH_ACTIVE_ENABLED } from "@/lib/feature-flags";
 
 const getSearchResults = unstable_cache(
   async (query) => {
@@ -43,6 +45,19 @@ export async function GET(request) {
 
   try {
     const results = await getSearchResults(query);
+
+    // Safe migration path:
+    // - Shadow mode compares Node vs Go without changing response payload.
+    // - Active mode can be enabled later once shadow mismatch rate is low.
+    if (!GO_SEARCH_ACTIVE_ENABLED) {
+      const requester =
+        request.headers.get("x-forwarded-for") ||
+        request.headers.get("x-real-ip") ||
+        request.headers.get("user-agent") ||
+        "unknown";
+      void runGoSearchShadow({ query, nodeResults: results, requester });
+    }
+
     return NextResponse.json(results);
   } catch (error) {
     console.error("Search error:", error);

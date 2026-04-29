@@ -5,9 +5,10 @@ import { formatPrice } from "@/lib/utils";
 import Link from "next/link";
 import AdminTrendsChart from "@/components/admin/AdminTrendsChart";
 import RunWatchAlertsButton from "@/components/admin/RunWatchAlertsButton";
+import { getGoSearchShadowMetrics } from "@/lib/go-search";
 import { 
   Car, Building2, MessageSquare, Users, ChevronRight,
-  Plus, Activity, Bolt, AlertCircle, ShieldAlert, BadgeCheck
+  Plus, Activity, Bolt, AlertCircle, ShieldAlert, BadgeCheck, ServerCog
 } from "lucide-react";
 
 export const metadata = { title: "Admin Dashboard — Welsh Motors" };
@@ -82,6 +83,18 @@ export default async function AdminDashboard({ searchParams }) {
   const setting = await db.setting.findFirst({ where: { key: "platform_fee" } });
   const platformFee = Number(setting?.value || 45000);
   const mrr = premiumSubs * platformFee;
+  const goSearchShadow = getGoSearchShadowMetrics();
+
+  const ago = (ts) => {
+    if (!ts) return "never";
+    const deltaMs = now.getTime() - ts;
+    if (deltaMs < 60_000) return "just now";
+    const mins = Math.floor(deltaMs / 60_000);
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    return `${Math.floor(hours / 24)}d ago`;
+  };
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-1000 max-w-[1400px]">
@@ -143,7 +156,7 @@ export default async function AdminDashboard({ searchParams }) {
       </div>
 
       {/* ── TODAY SNAPSHOT ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8 sm:mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-8 sm:mb-10">
         {[
           { label: "Cars Added Today", value: carsToday },
           { label: "Leads Today", value: leadsToday },
@@ -154,6 +167,26 @@ export default async function AdminDashboard({ searchParams }) {
             <p className="text-2xl font-black text-slate-900 dark:text-white">{item.value}</p>
           </div>
         ))}
+        <Link
+          href="/api/admin/go-search-shadow"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-[#f8f7f4] dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 px-4 py-3 hover:border-[#ff5a2f]/50 transition-colors"
+        >
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Go Search Shadow</p>
+            <ServerCog size={14} className={goSearchShadow.flags.shadowEnabled ? "text-[#ff5a2f]" : "text-slate-400"} />
+          </div>
+          <p className="text-2xl font-black text-slate-900 dark:text-white">
+            {goSearchShadow.rates.mismatchRate.toFixed(1)}%
+          </p>
+          <p className="text-[10px] mt-1 uppercase tracking-[0.12em] font-bold text-slate-500">
+            mismatch ({goSearchShadow.counters.mismatches}/{goSearchShadow.counters.compared || 0})
+          </p>
+          <p className="text-[10px] mt-1 uppercase tracking-[0.12em] font-bold text-slate-400">
+            p95 {goSearchShadow.latencyMs.p95 ?? "-"}ms - last {ago(goSearchShadow.last.queryAt)}
+          </p>
+        </Link>
       </div>
 
       {/* ── METRICS ROW ── */}
