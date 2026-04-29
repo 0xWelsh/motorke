@@ -1093,7 +1093,16 @@ export default function CompareClient({ initialCars }) {
           </div>
         </div>
         {activeSlot !== null && (
-          <div className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm no-print">
+          <div
+            className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm no-print"
+            onClick={(e) => {
+              if (e.target !== e.currentTarget) return;
+              setActiveSlot(null);
+              setSearchSlotError("");
+              setSearchQuery("");
+              setSearchResults([]);
+            }}
+          >
             <div className="absolute inset-x-0 bottom-0 max-h-[82vh] bg-white dark:bg-[#0f0f0f] border-t border-slate-200 dark:border-slate-700 p-4" style={{ borderTopLeftRadius: "16px", borderTopRightRadius: "16px" }}>
               <div className="flex items-center justify-between mb-3">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Add a car to compare</p>
@@ -1938,7 +1947,16 @@ export default function CompareClient({ initialCars }) {
       </div>
     )}
     {activeSlot !== null && (
-      <div className="lg:hidden fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm no-print">
+      <div
+        className="lg:hidden fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm no-print"
+        onClick={(e) => {
+          if (e.target !== e.currentTarget) return;
+          setActiveSlot(null);
+          setSearchSlotError("");
+          setSearchQuery("");
+          setSearchResults([]);
+        }}
+      >
         <div className="absolute inset-x-0 bottom-0 max-h-[82vh] bg-white dark:bg-[#0f0f0f] border-t border-slate-200 dark:border-slate-700 p-4" style={{ borderTopLeftRadius: "16px", borderTopRightRadius: "16px" }}>
           <div className="flex items-center justify-between mb-3">
             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Add a car to compare</p>
