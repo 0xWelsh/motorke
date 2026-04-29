@@ -202,6 +202,31 @@ export default function AdminLayout({ children }) {
            </div>
         </header>
 
+        {/* Mobile subpage switcher (redundant nav so routes are reachable) */}
+        <nav className="lg:hidden px-4 pt-3 pb-2 overflow-x-auto border-b border-[#ede7dd] dark:border-zinc-800">
+          <div className="flex items-center gap-2 min-w-max">
+            {links.map(({ href, label, Icon }) => {
+              const active = href === "/admin" ? path === href : path.startsWith(href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={
+                    active
+                      ? "inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-[#ff5a2f]/10 border border-[#ff5a2f]/30 text-[#e54a1f] flex-shrink-0"
+                      : "inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-white dark:bg-[#111111] border border-transparent text-slate-600 dark:text-slate-300 hover:bg-[#fbfcfe] dark:hover:bg-zinc-900 hover:border-[#ddd4c8] dark:hover:border-zinc-700 flex-shrink-0"
+                  }
+                >
+                  <Icon size={16} className={active ? "text-[#e54a1f]" : ""} />
+                  <span className="text-[10px] font-black uppercase tracking-[0.12em] whitespace-nowrap">
+                    {label}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
+
         <div className="admin-scope p-4 sm:p-5 lg:p-8 xl:p-10 w-full overflow-hidden max-w-[1600px] mx-auto lg:mx-0 relative z-10 flex-1">
           {children}
         </div>
