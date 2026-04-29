@@ -17,12 +17,13 @@ import {
   Star,
   ExternalLink,
 } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 
 export const metadata = { title: "Dealers — Welsh Motors Admin" };
 
 const avatarGradients = [
   "from-[#111111] to-[#2a2a2a]",
-  "from-[#ff5a2f] to-[#e54a1f]",
+  "from-[#2F855A] to-[#38A169]",
   "from-emerald-800 to-emerald-950",
   "from-indigo-800 to-indigo-950",
   "from-amber-800 to-orange-950",
@@ -49,14 +50,14 @@ export default async function AdminDealersPage() {
   const featuredCount = dealers.filter((d) => d.featured).length;
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-2 duration-700 max-w-[1400px] mx-auto">
+    <div className="mk-page-shell animate-in fade-in slide-in-from-bottom-2 duration-700">
       {/* Page shell — matches admin warm / slate shell */}
       <section className="relative overflow-hidden rounded-2xl border border-[#ede7dd] dark:border-zinc-800 bg-gradient-to-br from-white via-[#fdfcfa] to-[#f6f7f9] dark:from-[#101012] dark:via-[#0f0f10] dark:to-[#0b0b0c] px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10 mb-8 lg:mb-10 shadow-sm">
-        <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-[#ff5a2f]/10 blur-3xl dark:bg-[#ff5a2f]/5" aria-hidden />
+        <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-[#2F855A]/10 blur-3xl dark:bg-[#2F855A]/5" aria-hidden />
         <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-2">
-              <span className="inline-flex h-2 w-2 rounded-full bg-[#ff5a2f] shadow-[0_0_12px_rgba(255,90,47,0.65)]" aria-hidden />
+              <span className="inline-flex h-2 w-2 rounded-full bg-[#2F855A] shadow-[0_0_12px_rgba(47,133,90,0.65)]" aria-hidden />
               <span className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-400">
                 Dealer network
               </span>
@@ -87,7 +88,7 @@ export default async function AdminDealersPage() {
             </div>
             <Link
               href="/admin/dealers/new"
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#ff5a2f] px-5 py-3.5 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-md shadow-orange-950/15 transition hover:bg-[#e54a1f] hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a2f] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#101012]"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#2F855A] px-5 py-3.5 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-md shadow-emerald-950/15 transition hover:bg-[#38A169] hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F855A] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#101012]"
             >
               <UserPlus size={18} strokeWidth={2.25} /> Add dealer
             </Link>
@@ -111,9 +112,9 @@ export default async function AdminDealersPage() {
           return (
             <article
               key={dealer.id}
-              className="group relative flex flex-col overflow-hidden rounded-2xl border border-[#ede7dd] bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-[#ff5a2f]/35 hover:shadow-md dark:border-zinc-800 dark:bg-[#111111] dark:hover:border-[#ff5a2f]/30"
+              className="group relative flex flex-col overflow-hidden rounded-2xl border border-[#ede7dd] bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-[#2F855A]/35 hover:shadow-md dark:border-zinc-800 dark:bg-[#111111] dark:hover:border-[#2F855A]/30"
             >
-              <div className="h-1 w-full bg-gradient-to-r from-[#ff5a2f]/80 via-amber-500/60 to-transparent opacity-60 transition group-hover:opacity-100" aria-hidden />
+              <div className="h-1 w-full bg-gradient-to-r from-[#2F855A]/80 via-emerald-500/60 to-transparent opacity-60 transition group-hover:opacity-100" aria-hidden />
 
               <div className="flex flex-1 flex-col p-5 sm:p-6">
                 <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -124,7 +125,7 @@ export default async function AdminDealersPage() {
                       {dealer.name[0]?.toUpperCase() ?? "?"}
                     </div>
                     <div className="min-w-0">
-                      <h2 className="truncate text-lg font-bold capitalize leading-tight text-slate-900 transition group-hover:text-[#ff5a2f] dark:text-white">
+                      <h2 className="truncate text-lg font-bold capitalize leading-tight text-slate-900 transition group-hover:text-[#2F855A] dark:text-white">
                         {dealer.name}
                       </h2>
                       <div className="mt-1 flex items-center gap-1.5 text-slate-500 dark:text-zinc-400">
@@ -150,7 +151,7 @@ export default async function AdminDealersPage() {
                       href={`/dealers/${dealer.slug}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex w-full items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-[#ff5a2f] dark:text-zinc-500 dark:hover:text-[#ff5a2f] sm:w-auto"
+                      className="inline-flex w-full items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-[#2F855A] dark:text-zinc-500 dark:hover:text-[#2F855A] sm:w-auto"
                     >
                       Storefront <ExternalLink size={12} />
                     </Link>
@@ -208,20 +209,14 @@ export default async function AdminDealersPage() {
         })}
 
         {dealers.length === 0 && (
-          <div className="col-span-full flex flex-col items-center rounded-2xl border border-dashed border-[#ddd4c8] bg-white/70 py-20 text-center dark:border-zinc-800 dark:bg-zinc-900/40">
-            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#f6f7f9] dark:bg-zinc-800">
-              <Building2 size={28} className="text-slate-400 dark:text-zinc-500" />
-            </div>
-            <p className="text-lg font-bold text-slate-900 dark:text-white">No dealers yet</p>
-            <p className="mt-2 max-w-sm text-sm text-slate-600 dark:text-zinc-400">
-              Create the first dealership to appear on the marketplace.
-            </p>
-            <Link
-              href="/admin/dealers/new"
-              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#ff5a2f] px-5 py-3 text-[11px] font-black uppercase tracking-[0.12em] text-white hover:bg-[#e54a1f]"
-            >
-              <UserPlus size={18} /> Add dealer
-            </Link>
+          <div className="col-span-full">
+            <EmptyState
+              title="No dealers yet"
+              message="Create the first dealership to appear on the marketplace."
+              actionHref="/admin/dealers/new"
+              actionLabel="Add dealer"
+              icon={<Building2 size={28} className="text-slate-400 dark:text-zinc-500" />}
+            />
           </div>
         )}
       </div>

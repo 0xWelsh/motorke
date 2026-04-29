@@ -3,19 +3,53 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { trackRequest } from "@/lib/telemetry";
+import { logAuditEvent } from "@/lib/audit-trail";
 
 export async function POST(request) {
+  const started = Date.now();
   const session = await getSessionFromRequest();
   if (!session || session.user.role !== "ADMIN") {
+    trackRequest({
+      route: "/api/admin/cars",
+      method: "POST",
+      status: 401,
+      durationMs: Date.now() - started,
+      ok: false,
+      errorMessage: "Unauthorised",
+    });
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
 
   try {
     const body = await request.json();
-    const car  = await createCar(body);
+    const car = await createCar(body);
+    logAuditEvent({
+      actorId: session.user.id,
+      actorRole: session.user.role,
+      action: "car.create",
+      entity: "car",
+      entityId: car.id,
+      detail: { dealerId: car.dealerId, source: "admin" },
+    });
+    trackRequest({
+      route: "/api/admin/cars",
+      method: "POST",
+      status: 201,
+      durationMs: Date.now() - started,
+      ok: true,
+    });
     return NextResponse.json({ success: true, redirectTo: `/admin/cars` }, { status: 201 });
   } catch (err) {
     console.error(err);
+    trackRequest({
+      route: "/api/admin/cars",
+      method: "POST",
+      status: 500,
+      durationMs: Date.now() - started,
+      ok: false,
+      errorMessage: err instanceof Error ? err.message : String(err),
+    });
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

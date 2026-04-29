@@ -19,6 +19,8 @@ import {
   MessageSquare,
 } from "lucide-react";
 import ExportButton from "@/components/admin/ExportButton";
+import EmptyState from "@/components/ui/EmptyState";
+import DataTableShell from "@/components/ui/DataTableShell";
 
 export const metadata = { title: "Cars Inventory — Welsh Motors Admin" };
 
@@ -74,7 +76,7 @@ export default async function AdminCarsPage({ searchParams }) {
   const to = Math.min(page * limit, total);
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-2 duration-700 mx-auto max-w-[1400px]">
+    <div className="mk-page-shell animate-in fade-in slide-in-from-bottom-2 duration-700">
       {/* Hero */}
       <section className="relative mb-8 overflow-hidden rounded-2xl border border-[#ede7dd] bg-gradient-to-br from-white via-[#fdfcfa] to-[#f6f7f9] px-6 py-8 shadow-sm dark:border-zinc-800 dark:from-[#101012] dark:via-[#0f0f10] dark:to-[#0b0b0c] lg:mb-10 sm:px-8 sm:py-10">
         <div
@@ -184,7 +186,7 @@ export default async function AdminCarsPage({ searchParams }) {
       </form>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-2xl border border-[#ede7dd] bg-white shadow-sm dark:border-zinc-800 dark:bg-[#111111]">
+      <DataTableShell>
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#ede7dd] px-5 py-3.5 dark:border-zinc-800">
           <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-500 dark:text-zinc-500">
             {total === 0 ? (
@@ -232,7 +234,7 @@ export default async function AdminCarsPage({ searchParams }) {
         <div className="overflow-x-auto">
           <table className="min-w-[960px] w-full border-collapse text-left">
             <thead>
-              <tr className="border-b border-[#ede7dd] bg-slate-50/90 dark:border-zinc-800 dark:bg-zinc-900/70">
+              <tr className="border-b border-[#ede7dd] bg-slate-50/95 dark:border-zinc-800 dark:bg-zinc-900/90">
                 {["Listing", "Dealer", "Engagement", "Price", "Status", ""].map((h) => (
                   <th key={h} className="whitespace-nowrap px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 dark:text-zinc-500">
                     {h}
@@ -357,33 +359,17 @@ export default async function AdminCarsPage({ searchParams }) {
         </div>
 
         {cars.length === 0 && (
-          <div className="flex flex-col items-center border-t border-dashed border-[#ede7dd] px-6 py-16 text-center dark:border-zinc-800">
-            <div className="mb-5 flex size-16 items-center justify-center rounded-2xl bg-[#f6f7f9] dark:bg-zinc-800">
-              <Car size={28} className="text-slate-400 dark:text-zinc-500" />
-            </div>
-            <p className="text-lg font-bold text-slate-900 dark:text-white">No listings found</p>
-            <p className="mt-2 max-w-sm text-sm text-slate-600 dark:text-zinc-400">
-              {search ? "Try different keywords or clear the filter." : "Add a vehicle or run a bulk import to populate inventory."}
-            </p>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-              {search ? (
-                <Link
-                  href="/admin/cars"
-                  className="inline-flex items-center rounded-xl border border-[#ddd4c8] bg-white px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.1em] text-slate-800 hover:bg-[#f6f7f9] dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
-                >
-                  Clear search
-                </Link>
-              ) : null}
-              <Link
-                href="/admin/cars/new"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#2F855A] px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.1em] text-white hover:bg-[#38A169]"
-              >
-                <Plus size={18} /> Add car
-              </Link>
-            </div>
-          </div>
+          <EmptyState
+            title="No listings found"
+            message={search ? "Try different keywords or clear the filter." : "Add a vehicle to populate inventory."}
+            actionHref="/admin/cars/new"
+            actionLabel="Add car"
+            secondaryHref={search ? "/admin/cars" : null}
+            secondaryLabel={search ? "Clear search" : null}
+            icon={<Car size={28} className="text-slate-400 dark:text-zinc-500" />}
+          />
         )}
-      </div>
+      </DataTableShell>
 
       {pages > 1 && (
         <nav className="mt-8 flex flex-wrap justify-center gap-2" aria-label="Pagination">

@@ -241,6 +241,14 @@ export function getGoSearchShadowMetrics() {
   const errorRate = attempted > 0 ? (store.errors / attempted) * 100 : 0;
   const timeoutRate = attempted > 0 ? (store.timeouts / attempted) * 100 : 0;
 
+  const promoteReady =
+    !GO_SEARCH_ACTIVE_ENABLED &&
+    GO_SEARCH_SHADOW_ENABLED &&
+    compared >= 200 &&
+    mismatchRate <= 1 &&
+    errorRate <= 0.5 &&
+    timeoutRate <= 0.5;
+
   return {
     flags: {
       shadowEnabled: GO_SEARCH_SHADOW_ENABLED,
@@ -263,6 +271,13 @@ export function getGoSearchShadowMetrics() {
       mismatchRate,
       errorRate,
       timeoutRate,
+    },
+    rollout: {
+      promoteReady,
+      comparedThreshold: 200,
+      mismatchTargetPct: 1,
+      errorTargetPct: 0.5,
+      timeoutTargetPct: 0.5,
     },
     latencyMs: {
       p50: percentile(store.latencies, 50),

@@ -3,14 +3,33 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { trackRequest } from "@/lib/telemetry";
+import { logAuditEvent } from "@/lib/audit-trail";
 
 export async function POST(request) {
+  const started = Date.now();
   const session = await getSessionFromRequest();
   if (!session || session.user.role !== "DEALER") {
+    trackRequest({
+      route: "/api/portal/cars",
+      method: "POST",
+      status: 401,
+      durationMs: Date.now() - started,
+      ok: false,
+      errorMessage: "Unauthorised",
+    });
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
 
   if (!session.user.dealerId) {
+    trackRequest({
+      route: "/api/portal/cars",
+      method: "POST",
+      status: 400,
+      durationMs: Date.now() - started,
+      ok: false,
+      errorMessage: "Dealer profile not linked",
+    });
     return NextResponse.json({ error: "Dealer profile is not linked to this account" }, { status: 400 });
   }
 
@@ -28,12 +47,35 @@ export async function POST(request) {
     body.dealerId = session.user.dealerId;
 
     const car = await createCarRecord(body);
+    logAuditEvent({
+      actorId: session.user.id,
+      actorRole: session.user.role,
+      action: "car.create",
+      entity: "car",
+      entityId: car.id,
+      detail: { dealerId: car.dealerId, source: "portal" },
+    });
+    trackRequest({
+      route: "/api/portal/cars",
+      method: "POST",
+      status: 201,
+      durationMs: Date.now() - started,
+      ok: true,
+    });
     return NextResponse.json(
       { success: true, redirectTo: `/portal?created=1&car=${car.id}` },
       { status: 201 }
     );
   } catch (err) {
     console.error(err);
+    trackRequest({
+      route: "/api/portal/cars",
+      method: "POST",
+      status: 500,
+      durationMs: Date.now() - started,
+      ok: false,
+      errorMessage: err instanceof Error ? err.message : String(err),
+    });
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

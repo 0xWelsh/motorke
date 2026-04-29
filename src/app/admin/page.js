@@ -35,7 +35,8 @@ export default async function AdminDashboard({ searchParams }) {
     carsInRange, leadsInRange, 
     inventoryValueAgg, pendingDealers, pendingDealersCount, carsToday, leadsToday,
     premiumSubs, freeSubs,
-    rawCarsForChart, rawLeadsForChart
+    rawCarsForChart, rawLeadsForChart,
+    listingsThisWeek, listingsPrevWeek, leadsThisWeek, leadsPrevWeek, activeListings, staleListings, respondedThisWeek
   ] = await Promise.all([
     db.car.count({ where: { available: true } }),
     db.dealer.count(),
@@ -51,7 +52,14 @@ export default async function AdminDashboard({ searchParams }) {
     db.subscription.count({ where: { plan: "PRO", status: "ACTIVE" } }),
     db.subscription.count({ where: { plan: "FREE", status: "ACTIVE" } }),
     db.car.findMany({ where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } }, select: { createdAt: true } }),
-    db.lead.findMany({ where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } }, select: { createdAt: true } })
+    db.lead.findMany({ where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } }, select: { createdAt: true } }),
+    db.car.count({ where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) } } }),
+    db.car.count({ where: { createdAt: { gte: new Date(now - 14 * 24 * 60 * 60 * 1000), lt: new Date(now - 7 * 24 * 60 * 60 * 1000) } } }),
+    db.lead.count({ where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) } } }),
+    db.lead.count({ where: { createdAt: { gte: new Date(now - 14 * 24 * 60 * 60 * 1000), lt: new Date(now - 7 * 24 * 60 * 60 * 1000) } } }),
+    db.car.count({ where: { available: true } }),
+    db.car.count({ where: { available: true, updatedAt: { lt: new Date(now - 30 * 24 * 60 * 60 * 1000) } } }),
+    db.lead.count({ where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) }, status: { not: "NEW" } } }),
   ]);
 
   const formatCompact = (num) => {
@@ -84,6 +92,11 @@ export default async function AdminDashboard({ searchParams }) {
   const platformFee = Number(setting?.value || 45000);
   const mrr = premiumSubs * platformFee;
   const goSearchShadow = getGoSearchShadowMetrics();
+  const leadsPerActiveListing = activeListings > 0 ? (leadsThisWeek / activeListings).toFixed(3) : "0.000";
+  const responseRate = leadsThisWeek > 0 ? ((respondedThisWeek / leadsThisWeek) * 100).toFixed(1) : "0.0";
+  const staleRatio = activeListings > 0 ? ((staleListings / activeListings) * 100).toFixed(1) : "0.0";
+  const listingDelta = listingsPrevWeek > 0 ? (((listingsThisWeek - listingsPrevWeek) / listingsPrevWeek) * 100).toFixed(1) : "100.0";
+  const leadDelta = leadsPrevWeek > 0 ? (((leadsThisWeek - leadsPrevWeek) / leadsPrevWeek) * 100).toFixed(1) : "100.0";
 
   const ago = (ts) => {
     if (!ts) return "never";
@@ -186,6 +199,40 @@ export default async function AdminDashboard({ searchParams }) {
           <p className="text-[10px] mt-1 uppercase tracking-[0.12em] font-bold text-slate-400">
             p95 {goSearchShadow.latencyMs.p95 ?? "-"}ms - last {ago(goSearchShadow.last.queryAt)}
           </p>
+          {goSearchShadow.rollout?.promoteReady ? (
+            <p className="text-[10px] mt-1 uppercase tracking-[0.12em] font-black text-emerald-700 dark:text-emerald-400">
+              ready for active rollout
+            </p>
+          ) : null}
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mb-8 sm:mb-10">
+        <Link
+          href="/api/admin/weekly-metrics"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-white dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 px-4 py-3 hover:border-[#2F855A]/50 transition-colors"
+        >
+          <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Weekly KPI Pulse</p>
+          <p className="mt-2 text-sm font-bold text-slate-800 dark:text-zinc-100">Listings {listingsThisWeek} ({listingDelta}%)</p>
+          <p className="text-sm font-bold text-slate-800 dark:text-zinc-100">Leads {leadsThisWeek} ({leadDelta}%)</p>
+        </Link>
+        <div className="bg-white dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 px-4 py-3">
+          <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Funnel Health</p>
+          <p className="mt-2 text-sm font-bold text-slate-800 dark:text-zinc-100">Leads/Active Listing: {leadsPerActiveListing}</p>
+          <p className="text-sm font-bold text-slate-800 dark:text-zinc-100">Lead Response Rate: {responseRate}%</p>
+          <p className="text-sm font-bold text-slate-800 dark:text-zinc-100">Stale Listing Ratio: {staleRatio}%</p>
+        </div>
+        <Link
+          href="/api/admin/ops-health"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-white dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 px-4 py-3 hover:border-[#2F855A]/50 transition-colors"
+        >
+          <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Ops Health Feed</p>
+          <p className="mt-2 text-sm font-bold text-slate-800 dark:text-zinc-100">Request telemetry + audit events</p>
+          <p className="text-[11px] font-semibold text-slate-500">Use this for backend quality tracking and incident triage.</p>
         </Link>
       </div>
 
