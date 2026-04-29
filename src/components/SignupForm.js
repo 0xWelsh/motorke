@@ -68,11 +68,16 @@ export default function SignupForm({ error: initialError, initialRole }) {
   const [errorMsg, setErrorMsg] = useState(initialErrorMessage);
   const [loading, setLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState("");
+  const [usingSecurityFallback, setUsingSecurityFallback] = useState(false);
   const [website, setWebsite] = useState("");
   
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
   const hasGoogleAuth = Boolean(googleClientId);
   const requiresHumanCheck = Boolean(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+  const canSubmit =
+    email.trim().length > 0 &&
+    password.length > 0 &&
+    (!requiresHumanCheck || captchaToken.length > 0 || usingSecurityFallback);
 
   useEffect(() => {
     if (!hasGoogleAuth || !googleClientId) return;
@@ -367,9 +372,12 @@ export default function SignupForm({ error: initialError, initialRole }) {
             )}
 
             <div className="md:col-span-2 pt-2">
+              <div className="mb-4">
+                <HumanCheck value={captchaToken} onChange={setCaptchaToken} onFallbackChange={setUsingSecurityFallback} />
+              </div>
               <button 
                 type="submit" 
-                disabled={loading}
+                disabled={loading || !canSubmit}
                 className="w-full bg-[#38A169] hover:bg-[#2F855A] disabled:bg-slate-100 dark:disabled:bg-zinc-900 disabled:text-slate-400 text-white py-4 px-6 font-black uppercase tracking-[0.2em] text-xs transition-all hover:scale-[0.98] active:scale-95 flex items-center justify-center gap-3 group mb-2"
                 style={{ borderRadius: '2px' }}
               >
