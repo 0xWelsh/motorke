@@ -165,6 +165,17 @@ const FEATURE_CHECKLIST = [
   "Alarm System", "Child Lock", "ISOFIX", "Tinted Windows", "Rear Spoiler",
 ].sort((a, b) => a.localeCompare(b));
 
+const SMART_FILL_FIELDS = new Set([
+  "make",
+  "model",
+  "variant",
+  "year",
+  "price",
+  "mileage",
+  "engineCC",
+  "bodyType",
+]);
+
 
 function buildBaseSeed(car, currentYear) {
   return {
@@ -310,6 +321,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   });
   const [smartFillDiff, setSmartFillDiff] = useState([]);
   const [smartFillSuggestions, setSmartFillSuggestions] = useState([]);
+  const [manualOverrides, setManualOverrides] = useState({});
   const [videoUrl, setVideoUrl] = useState(formSeed.videoUrl || "");
   const [descriptionText, setDescriptionText] = useState(formSeed.description || "");
   const [descriptionTouched, setDescriptionTouched] = useState(Boolean((formSeed.description || "").trim()));
@@ -408,6 +420,26 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     };
   }, [draftKey, isNew, saveDraft]);
+
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form) return;
+
+    const markManualOverride = (event) => {
+      const target = event.target;
+      const field = target?.name;
+      if (!field || !SMART_FILL_FIELDS.has(field)) return;
+      if (!event.isTrusted) return; // Ignore programmatic updates from Smart Fill
+      setManualOverrides((prev) => (prev[field] ? prev : { ...prev, [field]: true }));
+    };
+
+    form.addEventListener("input", markManualOverride);
+    form.addEventListener("change", markManualOverride);
+    return () => {
+      form.removeEventListener("input", markManualOverride);
+      form.removeEventListener("change", markManualOverride);
+    };
+  }, []);
 
   useEffect(() => {
     if (isNew) saveDraft();
@@ -862,6 +894,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       lowConfidence.forEach((item) => {
         gatedSeeded[item.field] = "";
       });
+      Object.keys(manualOverrides).forEach((field) => {
+        if (manualOverrides[field]) gatedSeeded[field] = "";
+      });
 
       const currentMake = formRef.current?.querySelector('input[name="make"]')?.value?.trim() || selectedMake;
       const currentModel = formRef.current?.querySelector('input[name="model"]')?.value?.trim() || selectedModel;
@@ -991,6 +1026,24 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 </button>
               )}
             </div>
+
+              <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3">
+                <p className="text-[11px] font-semibold text-emerald-800">
+                  Smart Fill only pre-fills values. Dealers can edit any field anytime.
+                  {Object.keys(manualOverrides).length > 0
+                    ? ` ${Object.keys(manualOverrides).length} field(s) are protected from AI overwrite.`
+                    : ""}
+                </p>
+                {Object.keys(manualOverrides).length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setManualOverrides({})}
+                    className="mt-2 text-[10px] font-black uppercase tracking-wider text-emerald-700 hover:text-emerald-900"
+                  >
+                    Reset manual protections
+                  </button>
+                )}
+              </div>
 
               {(smartFillMeta.overall !== null || smartFillMeta.warnings.length > 0) && (
                 <div className="rounded-2xl border border-indigo-200 dark:border-zinc-700 bg-white/60 dark:bg-zinc-900/40 px-4 py-3">
