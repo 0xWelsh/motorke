@@ -16,7 +16,6 @@ import { computeComparisonInsights } from "@/lib/comparison";
 import Link from "next/link";
 import Image from "next/image";
 import { Search, X, Check, ArrowRight, Minus, Download, ChevronDown, ChevronUp, Info } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { buildCompareNarrative } from "@/lib/compare-narrative";
 import { COMPARE_SETS_KEY, writeJsonCookie } from "@/lib/personalization";
 
@@ -246,7 +245,6 @@ function importTone(eligible) {
 
 export default function CompareClient({ initialCars }) {
   const { compareCars, addToCompare, removeFromCompare, clearCompare, isFull, isInitialized } = useCompare();
-  const router = useRouter();
   const [showDiffOnly, setShowDiffOnly] = useState(false);
   const [preset, setPreset] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -841,20 +839,6 @@ export default function CompareClient({ initialCars }) {
     });
     setDidInitialSync(true);
   }, [isInitialized, initialCars, compareCars, addToCompare]);
-
-  // Keep URL in sync with current compare slots to trigger full-spec server hydration.
-  useEffect(() => {
-    if (!isInitialized || !didInitialSync) return;
-    // Avoid route refresh churn while user is still selecting the first cars.
-    // This keeps the add-car search modal stable in selection-first mode.
-    if (compareCars.length < 2) return;
-
-    const ids = compareCars.slice(0, 3).map(c => c.id);
-    const params = new URLSearchParams();
-    ids.forEach((id, i) => params.set(SLOT_KEYS[i], id));
-    const nextUrl = params.toString() ? `/compare?${params.toString()}` : "/compare";
-    router.replace(nextUrl, { scroll: false });
-  }, [isInitialized, didInitialSync, compareCars, router]);
 
   // Slot search with debounce + cancellation.
   useEffect(() => {
