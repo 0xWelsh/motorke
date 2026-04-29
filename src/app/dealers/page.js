@@ -38,11 +38,33 @@ export default async function DealersPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
           
           {/* Sidebar */}
-          <aside className="lg:col-span-3 lg:sticky lg:top-32 space-y-10 text-[#111827] dark:text-white">
-            <div className="bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-8" style={{ borderRadius: 'var(--radius)' }}>
+          <aside className="order-2 lg:order-1 lg:col-span-3 lg:sticky lg:top-32 space-y-4 lg:space-y-10 text-[#111827] dark:text-white">
+            <details className="lg:hidden bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5" style={{ borderRadius: "var(--radius)" }}>
+              <summary className="cursor-pointer list-none text-xs font-bold uppercase tracking-widest">
+                Refine Network
+              </summary>
+              <div className="mt-4 space-y-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Search</label>
+                  <input type="text" placeholder="Dealer name..." className="w-full bg-white dark:bg-[#0a0a0a] border border-[#E2E8F0] dark:border-slate-800 px-4 py-3 text-sm font-medium outline-none focus:border-[#38A169] transition-all text-[#111827] dark:text-white placeholder:text-slate-400" style={{ borderRadius: "var(--radius)" }} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#718096]">Region</label>
+                  <select className="w-full bg-white dark:bg-[#0a0a0a] border border-[#E2E8F0] dark:border-slate-800 px-4 py-3 text-sm font-medium outline-none focus:border-[#38A169] transition-all appearance-none cursor-pointer text-[#111827] dark:text-white" style={{ borderRadius: "var(--radius)" }}>
+                    <option value="" className="dark:bg-[#0a0a0a]">All Regions</option>
+                    {counties.map(c => <option key={c} value={c} className="dark:bg-[#0a0a0a]">{c}</option>)}
+                  </select>
+                </div>
+                <button className="w-full bg-[#111827] dark:bg-white text-white dark:!text-black py-4 text-[10px] font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: "var(--radius)" }}>
+                  Apply Filters
+                </button>
+              </div>
+            </details>
+
+            <div className="hidden lg:block bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-8" style={{ borderRadius: 'var(--radius)' }}>
               <h3 className="text-xs font-bold uppercase tracking-widest mb-6">Refine Network</h3>
               <div className="space-y-6">
                 <div className="space-y-2">
@@ -62,14 +84,23 @@ export default async function DealersPage() {
               </div>
             </div>
 
-            <div className="bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-8" style={{ borderRadius: 'var(--radius)' }}>
+            <details className="lg:hidden bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5" style={{ borderRadius: "var(--radius)" }}>
+              <summary className="cursor-pointer list-none text-xs font-bold uppercase tracking-widest text-[#718096]">
+                Proximity Radar
+              </summary>
+              <div className="mt-4">
+                <NearbyDealersList />
+              </div>
+            </details>
+
+            <div className="hidden lg:block bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-8" style={{ borderRadius: 'var(--radius)' }}>
                <h3 className="text-xs font-bold uppercase tracking-widest mb-6 divider-line text-[#718096]">Proximity Radar</h3>
                <NearbyDealersList />
             </div>
           </aside>
 
           {/* Grid */}
-          <main className="lg:col-span-9">
+          <main className="order-1 lg:order-2 lg:col-span-9">
             {dealers.length === 0 ? (
               <div className="py-32 text-center bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
                 <Building2 className="w-12 h-12 text-[#CBD5E0] dark:text-slate-700 mx-auto mb-6" />
