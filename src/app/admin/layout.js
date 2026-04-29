@@ -227,7 +227,7 @@ export default function AdminLayout({ children }) {
           </div>
         </nav>
 
-        <div className="admin-scope p-4 sm:p-5 lg:p-8 xl:p-10 w-full overflow-hidden max-w-[1600px] mx-auto lg:mx-0 relative z-10 flex-1">
+        <div className="admin-scope p-4 sm:p-5 lg:p-8 xl:p-10 w-full overflow-hidden max-w-[1400px] mx-auto relative z-10 flex-1">
           {children}
         </div>
       </main>

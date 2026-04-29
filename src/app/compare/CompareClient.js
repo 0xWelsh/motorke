@@ -1009,7 +1009,7 @@ export default function CompareClient({ initialCars }) {
     return (
       <>
         <div className="bg-white dark:bg-[#0a0a0a] min-h-screen pb-24">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-10">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-10">
             <div className="max-w-4xl">
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-4">
                 Compare / Selection
@@ -1164,7 +1164,7 @@ export default function CompareClient({ initialCars }) {
   return (
     <>
     <div className="bg-white dark:bg-[#0a0a0a] min-h-screen pb-24 lg:pb-0">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-6 sm:pb-10 min-w-0">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-6 sm:pb-10 min-w-0">
         <div className="xl:grid xl:grid-cols-12 xl:gap-8 xl:items-start">
           <div className="min-w-0 xl:col-span-8 2xl:col-span-9">
             <div className="flex flex-col gap-5 sm:gap-6 lg:gap-8">
