@@ -98,10 +98,10 @@ export default function AdminLayout({ children }) {
 
       {/* Sidebar */}
       <aside className={clsx(
-        // Mobile: fixed slide-in drawer.
-        // Desktop (lg+): participate in flex layout so the main content is correctly offset.
-        "w-[290px] max-w-[88vw] bg-white dark:bg-[#0f0f10] border-r border-[#ddd4c8] dark:border-zinc-800 flex flex-col shrink-0 h-screen z-50 fixed left-0 top-0 overflow-hidden rounded-r-2xl shadow-[18px_0_55px_rgba(0,0,0,0.18)] transition-transform duration-300 lg:static lg:max-w-none lg:translate-x-0",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        // Mobile drawer (slide-in)
+        // Use `max-lg:` so the sidebar is NOT fixed on desktop.
+        "w-[290px] max-w-[88vw] bg-white dark:bg-[#0f0f10] border-r border-[#ddd4c8] dark:border-zinc-800 flex flex-col shrink-0 h-screen z-50 overflow-hidden rounded-r-2xl shadow-[18px_0_55px_rgba(0,0,0,0.18)] transition-transform duration-300 max-lg:fixed max-lg:left-0 max-lg:top-0 lg:static lg:translate-x-0",
+        sidebarOpen ? "max-lg:translate-x-0" : "max-lg:-translate-x-full"
       )}>
         {/* Branding */}
         <div className="p-5 lg:p-6 flex items-center justify-between border-b border-[#ede7dd] dark:border-zinc-800">
@@ -202,7 +202,7 @@ export default function AdminLayout({ children }) {
            </div>
         </header>
 
-        <div className="admin-scope p-4 sm:p-5 lg:p-8 xl:p-10 w-full overflow-hidden max-w-[1600px] mx-auto relative z-10 flex-1">
+        <div className="admin-scope p-4 sm:p-5 lg:p-8 xl:p-10 w-full overflow-hidden max-w-[1600px] mx-auto lg:mx-0 relative z-10 flex-1">
           {children}
         </div>
       </main>
