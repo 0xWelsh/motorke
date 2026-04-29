@@ -43,6 +43,19 @@ export default async function PortalPage({ searchParams }) {
   const live   = cars.filter((c) => c.available).length;
   const hidden = cars.filter((c) => !c.available).length;
 
+  const nowMs = Date.now();
+  const freshCutoffMs = nowMs - 72 * 60 * 60 * 1000; // 72h
+  const agingCutoffMs = nowMs - 14 * 24 * 60 * 60 * 1000; // 14d
+  const freshCount = cars.filter((c) => new Date(c.updatedAt).getTime() >= freshCutoffMs).length;
+  const agingCount = cars.filter((c) => {
+    const t = new Date(c.updatedAt).getTime();
+    return t < freshCutoffMs && t >= agingCutoffMs;
+  }).length;
+  const staleCount = cars.filter((c) => new Date(c.updatedAt).getTime() < agingCutoffMs).length;
+
+  const totalUnits = live + hidden;
+  const liveRate = totalUnits > 0 ? Math.round((live / totalUnits) * 100) : 0;
+
   return (
     <div className="animate-in fade-in duration-700">
       {user.dealer && !user.dealer.verified && (
@@ -60,7 +73,7 @@ export default async function PortalPage({ searchParams }) {
       
       <div className="flex flex-col gap-6 sm:gap-8 mb-8 sm:mb-12">
         <div>
-          <span className="text-[11px] sm:text-[11px] font-bold uppercase tracking-wider text-[#ff5a2f] mb-1 sm:mb-2 block">Dealer Dashboard</span>
+          <span className="text-[11px] sm:text-[11px] font-bold uppercase tracking-wider text-[#2F855A] mb-1 sm:mb-2 block">Dealer Dashboard</span>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">Overview</h1>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
@@ -78,49 +91,115 @@ export default async function PortalPage({ searchParams }) {
       </div>
 
       {created && (
-        <div className="mb-8 rounded-none border-l-4 border-l-[#ff5a2f] bg-emerald-50 px-6 py-5">
-          <h2 className="text-[11px] uppercase font-black tracking-[0.10em] font-black uppercase tracking-[0.12em] text-[#ff5a2f]">Listing Published</h2>
+        <div className="mb-8 rounded-none border-l-4 border-l-[#2F855A] bg-emerald-50 px-6 py-5">
+          <h2 className="text-[11px] uppercase font-black tracking-[0.10em] font-black uppercase tracking-[0.12em] text-[#2F855A]">Listing Published</h2>
           <p className="mt-2 text-[11px] uppercase font-black tracking-[0.10em] font-semibold text-emerald-800">
             Great work. Complete these quick actions to boost enquiries.
           </p>
           <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
-            <Link href={createdCarId ? `/cars/${createdCarId}` : "/portal/inventory"} className="rounded-none bg-white px-3 py-2 text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-[#ff5a2f] hover:bg-emerald-100">View Live Listing</Link>
-            <Link href="/portal/inventory" className="rounded-none bg-white px-3 py-2 text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-[#ff5a2f] hover:bg-emerald-100">Share To Buyer Groups</Link>
-            <Link href="/portal/leads" className="rounded-none bg-white px-3 py-2 text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-[#ff5a2f] hover:bg-emerald-100">Watch Incoming Leads</Link>
+            <Link href={createdCarId ? `/cars/${createdCarId}` : "/portal/inventory"} className="rounded-none bg-white px-3 py-2 text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-[#2F855A] hover:bg-emerald-100">View Live Listing</Link>
+            <Link href="/portal/inventory" className="rounded-none bg-white px-3 py-2 text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-[#2F855A] hover:bg-emerald-100">Share To Buyer Groups</Link>
+            <Link href="/portal/leads" className="rounded-none bg-white px-3 py-2 text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-[#2F855A] hover:bg-emerald-100">Watch Incoming Leads</Link>
           </div>
         </div>
       )}
 
-      {/* Stats Cards — link to Inventory / Leads (same routes as header & tabs) */}
-      <div className="flex flex-col md:flex-row bg-white dark:bg-[#111111] shadow-sm mb-8 sm:mb-12">
+      {/* Stats Cards — link to Inventory / Leads */}
+      <div className="grid grid-cols-3 bg-white dark:bg-[#111111] shadow-sm mb-8 sm:mb-12 divide-x divide-slate-100 dark:divide-slate-800/80">
         {[
-          { href: "/portal/inventory", label: "Live Inventory", value: live,   icon: <CheckCircle2 size={16} className="text-[#ff5a2f]" />, sub: "Publicly visible units" },
+          { href: "/portal/inventory", label: "Live Inventory", value: live,   icon: <CheckCircle2 size={16} className="text-[#2F855A]" />, sub: "Publicly visible units" },
           { href: "/portal/inventory", label: "Drafts / Hidden", value: hidden, icon: <EyeOff size={16} className="text-slate-500" />, sub: "Private units" },
-          { href: "/portal/leads", label: "Buyer Leads", value: leads,  icon: <MessageSquare size={16} className="text-[#ff5a2f]" />, sub: "Total enquiries" },
+          { href: "/portal/leads", label: "Buyer Leads", value: leads,  icon: <MessageSquare size={16} className="text-[#2F855A]" />, sub: "Total enquiries" },
         ].map((stat, i) => (
           <Link
             key={i}
             href={stat.href}
-            className="flex-1 p-5 sm:p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-800/80 last:border-0 hover:bg-slate-50 dark:hover:bg-[#151515] transition-colors group text-left outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a2f] focus-visible:ring-offset-2"
+            className="p-4 sm:p-6 hover:bg-slate-50 dark:hover:bg-[#151515] transition-colors group text-left outline-none focus-visible:ring-2 focus-visible:ring-[#2F855A] focus-visible:ring-offset-2"
           >
             <div className="flex items-center gap-2 mb-3">
               {stat.icon}
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">{stat.label}</p>
             </div>
-            <p className="text-3xl font-black text-slate-900 dark:text-white mb-1 tracking-tighter">{stat.value.toString().padStart(2, '0')}</p>
+            <p className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-1 tracking-tighter">{stat.value.toString().padStart(2, '0')}</p>
             <p className="text-xs font-medium text-slate-400">{stat.sub}</p>
           </Link>
         ))}
+      </div>
+
+      {/* Overview Insights */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 sm:mb-12">
+        <div className="bg-white dark:bg-[#111111] border border-slate-100 dark:border-slate-800/80 rounded-none p-5 sm:p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-4 gap-3">
+            <h3 className="text-[11px] uppercase font-black tracking-widest text-slate-600 dark:text-zinc-300">
+              Inventory Freshness
+            </h3>
+            <Link href="/portal/inventory" className="text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-700 hover:text-[#2F855A] transition-colors">
+              View →
+            </Link>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <div className="inline-flex items-center gap-2 rounded-none border border-emerald-200/80 bg-emerald-50 px-3 py-2">
+              <span className="inline-flex h-2 w-2 rounded-full bg-[#2F855A]" aria-hidden />
+              <span className="text-[11px] font-black uppercase tracking-[0.12em] text-emerald-800">Fresh</span>
+              <span className="text-[11px] font-black tabular-nums text-emerald-800">({freshCount})</span>
+            </div>
+            <div className="inline-flex items-center gap-2 rounded-none border border-amber-200/80 bg-amber-50 px-3 py-2">
+              <span className="inline-flex h-2 w-2 rounded-full bg-amber-500" aria-hidden />
+              <span className="text-[11px] font-black uppercase tracking-[0.12em] text-amber-800">Aging</span>
+              <span className="text-[11px] font-black tabular-nums text-amber-800">({agingCount})</span>
+            </div>
+            <div className="inline-flex items-center gap-2 rounded-none border border-rose-200/80 bg-rose-50 px-3 py-2">
+              <span className="inline-flex h-2 w-2 rounded-full bg-rose-500" aria-hidden />
+              <span className="text-[11px] font-black uppercase tracking-[0.12em] text-rose-800">Stale</span>
+              <span className="text-[11px] font-black tabular-nums text-rose-800">({staleCount})</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-[#111111] border border-slate-100 dark:border-slate-800/80 rounded-none p-5 sm:p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-4 gap-3">
+            <h3 className="text-[11px] uppercase font-black tracking-widest text-slate-600 dark:text-zinc-300">
+              Live Inventory Snapshot
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="rounded-none border border-slate-100 dark:border-slate-800/80 bg-[#fbfcfe] dark:bg-[#0f0f10] px-3 py-2 text-center">
+              <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Live</p>
+              <p className="text-2xl font-black tabular-nums text-slate-900 dark:text-white">{live}</p>
+            </div>
+            <div className="rounded-none border border-slate-100 dark:border-slate-800/80 bg-[#fbfcfe] dark:bg-[#0f0f10] px-3 py-2 text-center">
+              <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Drafts</p>
+              <p className="text-2xl font-black tabular-nums text-slate-900 dark:text-white">{hidden}</p>
+            </div>
+            <div className="rounded-none border border-slate-100 dark:border-slate-800/80 bg-[#fbfcfe] dark:bg-[#0f0f10] px-3 py-2 text-center">
+              <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Live %</p>
+              <p className="text-2xl font-black tabular-nums text-[#2F855A] dark:text-[#38A169]">{liveRate}%</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-2">
+            <Link href="/portal/cars/new" className="inline-flex items-center justify-between gap-3 rounded-none border border-slate-100 bg-[#fbfcfe] dark:bg-[#0f0f10] px-4 py-3 hover:bg-slate-50 dark:hover:bg-[#111111] transition-colors">
+              <span className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-700 dark:text-zinc-200">Add a new listing</span>
+              <span className="text-[#2F855A] font-black">→</span>
+            </Link>
+            <Link href="/portal/leads" className="inline-flex items-center justify-between gap-3 rounded-none border border-slate-100 bg-[#fbfcfe] dark:bg-[#0f0f10] px-4 py-3 hover:bg-slate-50 dark:hover:bg-[#111111] transition-colors">
+              <span className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-700 dark:text-zinc-200">Review leads ({leads})</span>
+              <span className="text-[#2F855A] font-black">→</span>
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* Main Content Area */}
       <div className="bg-white dark:bg-[#111111] rounded-none shadow-sm overflow-hidden mb-12">
         <div className="px-6 py-5 border-b-2 border-slate-50 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-[#111111]">
           <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-none bg-[#ff5a2f]" />
+            <div className="w-1.5 h-1.5 rounded-none bg-[#2F855A]" />
             Recent Vehicles
           </h2>
-          <Link href="/portal/inventory" className="text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-700 hover:text-[#ff5a2f] transition-colors">
+          <Link href="/portal/inventory" className="text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-700 hover:text-[#2F855A] transition-colors">
             View All →
           </Link>
         </div>
@@ -135,7 +214,7 @@ export default async function PortalPage({ searchParams }) {
               Your inventory is currently empty. Start reaching thousands of buyers by adding your first vehicle.
             </p>
             <Link href="/portal/cars/new"
-              className="inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-emerald-600 text-white font-bold px-6 py-3 rounded-none transition-all">
+              className="inline-flex items-center gap-2 bg-[#2F855A] hover:bg-[#38A169] text-white font-bold px-6 py-3 rounded-none transition-all">
               Add Your First Car
             </Link>
           </div>
@@ -174,10 +253,10 @@ export default async function PortalPage({ searchParams }) {
                     <td className="px-4 sm:px-6 py-4">
                       <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-1 sm:px-2.5 sm:py-1 rounded-none uppercase tracking-widest ${
                         car.available
-                          ? "bg-emerald-50 dark:bg-[#ff5a2f]/10 text-[#ff5a2f] dark:text-emerald-400"
+                          ? "bg-emerald-50 dark:bg-[#2F855A]/10 text-[#2F855A] dark:text-emerald-400"
                           : "bg-slate-100 dark:bg-[#222222] text-slate-700 dark:text-slate-300"
                       }`}>
-                        <span className={`w-1.5 h-1.5 rounded-none ${car.available ? "bg-[#ff5a2f] animate-pulse" : "bg-slate-400"}`} />
+                        <span className={`w-1.5 h-1.5 rounded-none ${car.available ? "bg-[#2F855A] animate-pulse" : "bg-slate-400"}`} />
                         {car.available ? "Live" : "Draft"}
                       </span>
                     </td>
