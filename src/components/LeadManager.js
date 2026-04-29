@@ -73,15 +73,15 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+      <div className="flex gap-2 overflow-x-auto pb-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:pb-0">
         {[
           { label: "New Today", value: metrics.newToday ?? 0 },
           { label: "Unanswered", value: metrics.unanswered ?? 0 },
           { label: "Follow-up Due", value: metrics.followUpDue ?? 0 },
         ].map((item) => (
-          <div key={item.label} className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 shadow-sm">
+          <div key={item.label} className="min-w-[132px] sm:min-w-0 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-3 py-2.5 shadow-sm">
             <p className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-500">{item.label}</p>
-            <p className="mt-1 text-2xl font-black text-slate-900 dark:text-white">{item.value}</p>
+            <p className="mt-1 text-xl sm:text-2xl font-black text-slate-900 dark:text-white">{item.value}</p>
           </div>
         ))}
       </div>
@@ -93,8 +93,8 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
             <Link key={key} href={`/portal/leads?status=${key}&search=${currentSearch}`}
               className={`px-2 sm:px-4 py-2 rounded-2xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2 whitespace-nowrap flex-shrink-0 ${
                 currentStatus === key 
-                  ? "bg-slate-900 text-white shadow-sm" 
-                  : "text-white hover:text-white hover:bg-[#fbfcfe] dark:bg-[#111111]"
+                  ? "bg-[#2F855A] text-white shadow-sm" 
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-[#fbfcfe] dark:hover:bg-white/10"
               }`}>
               {label}
               {count > 0 && (
@@ -109,9 +109,9 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
         </div>
 
         <form method="GET" className="relative group w-full">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-slate-600 transition-colors" size={16} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#2F855A] transition-colors" size={16} />
           <input name="search" defaultValue={currentSearch} placeholder="Name, phone, email…" 
-            className="w-full bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-500 outline-none focus:border-slate-900 transition-all shadow-sm" />
+            className="w-full bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl pl-10 pr-4 py-2.5 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-500 outline-none focus:border-[#2F855A] transition-all shadow-sm" />
           <input type="hidden" name="status" value={currentStatus} />
           {currentSearch && (
             <Link href={`/portal/leads?status=${currentStatus}`} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-900 dark:text-white text-xs font-semibold">
@@ -129,7 +129,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
            </div>
            <p className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2">No enquiries match your criteria</p>
            <p className="text-sm text-slate-600 mb-6 max-w-xs mx-auto">Enquiries will appear here when customers express interest in your vehicles.</p>
-           <Link href="/portal/inventory" className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-2xl transition-colors">
+          <Link href="/portal/inventory" className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2F855A] hover:bg-[#38A169] text-white text-sm font-semibold rounded-2xl transition-colors">
               View Inventory →
            </Link>
         </div>
@@ -216,11 +216,11 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                         </div>
 
                         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                          <a href={`tel:${lead.phone}`} className="flex items-center justify-center gap-2 bg-slate-900 text-white text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl hover:bg-slate-800 transition-all shadow-sm\">
+                          <a href={`tel:${lead.phone}`} className="flex items-center justify-center gap-2 bg-[#2F855A] text-white text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl hover:bg-[#38A169] transition-all shadow-sm\">
                             <Phone size={14} /> Call
                           </a>
                           {lead.phone && (
-                            <a href={`https://wa.me/${lead.phone.replace(/\\D/g,"")}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-slate-900 text-white text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl hover:bg-slate-800 transition-all shadow-sm\">
+                            <a href={`https://wa.me/${lead.phone.replace(/\\D/g,"")}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-[#2F855A] text-white text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl hover:bg-[#38A169] transition-all shadow-sm\">
                               <MessageCircle size={14} /> WhatsApp
                             </a>
                           )}
@@ -257,7 +257,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                             onKeyDown={e => e.key === "Enter" && addNote(lead.id)}
                           />
                           <button onClick={() => addNote(lead.id)} disabled={saving[`note_${lead.id}`] || !noteInputs[lead.id]?.trim()}
-                            className="absolute right-2 px-2 sm:px-3 py-1.5 bg-slate-900 disabled:bg-slate-200 text-white disabled:text-white rounded-2xl text-xs font-semibold transition-all shadow-sm\">
+                            className="absolute right-2 px-2 sm:px-3 py-1.5 bg-[#2F855A] disabled:bg-slate-200 text-white disabled:text-white rounded-2xl text-xs font-semibold transition-all shadow-sm hover:bg-[#38A169]\">
                             {saving[`note_${lead.id}`] ? "…" : "Save"}
                           </button>
                         </div>
