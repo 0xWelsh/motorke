@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -19,8 +18,6 @@ import { trackUiEvent } from "@/lib/analytics";
 
 export default function Navbar({ user }) {
   const router    = useRouter();
-  const { theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
 
   const [open,      setOpen]      = useState(false);
   const [mobileSearch, setMobileSearch] = useState(false);
@@ -34,10 +31,6 @@ export default function Navbar({ user }) {
   const mobileSearchRef = useRef(null);
 
   const { debouncedTerm } = useDebouncedSearch(search, 300);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -103,8 +96,8 @@ export default function Navbar({ user }) {
     { href: "/compare", label: "Compare" },
   ];
 
-  // Logic to determine which logo to show
-  const activeLogo = (mounted && theme === "dark") ? "/logos/logo-dark.png" : "/logos/logo-light.png";
+  // Single logo asset: invert in light mode to render black text.
+  const activeLogo = "/newlogo.jpeg";
 
   return (
     <>
@@ -119,7 +112,7 @@ export default function Navbar({ user }) {
                   src={activeLogo}
                   alt="Welsh Motors"
                   fill
-                  className="object-contain"
+                  className="object-contain invert dark:invert-0"
                   priority
                 />
               </div>
@@ -332,7 +325,7 @@ export default function Navbar({ user }) {
                     src={activeLogo}
                     alt="Welsh Motors"
                     fill
-                    className="object-contain object-left"
+                    className="object-contain object-left invert dark:invert-0"
                   />
                 </div>
                 <button
