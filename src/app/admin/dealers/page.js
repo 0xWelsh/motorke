@@ -51,7 +51,7 @@ export default async function AdminDealersPage() {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-700 max-w-[1400px] mx-auto">
       {/* Page shell — matches admin warm / slate shell */}
-      <section className="relative overflow-hidden rounded-2xl border border-[#ede7dd] dark:border-zinc-800 bg-gradient-to-br from-white via-[#fdfcfa] to-[#f6f7f9] dark:from-[#101012] dark:via-[#0f0f10] dark:to-[#0b0b0c] px-6 py-8 sm:px-8 sm:py-10 mb-8 lg:mb-10 shadow-sm">
+      <section className="relative overflow-hidden rounded-2xl border border-[#ede7dd] dark:border-zinc-800 bg-gradient-to-br from-white via-[#fdfcfa] to-[#f6f7f9] dark:from-[#101012] dark:via-[#0f0f10] dark:to-[#0b0b0c] px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10 mb-8 lg:mb-10 shadow-sm">
         <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-[#ff5a2f]/10 blur-3xl dark:bg-[#ff5a2f]/5" aria-hidden />
         <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0">
@@ -70,7 +70,7 @@ export default async function AdminDealersPage() {
           </div>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center lg:flex-col lg:items-stretch xl:flex-row xl:items-center">
-            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
               {[
                 { label: "Total", value: dealers.length, tone: "text-slate-900 dark:text-white" },
                 { label: "Verified", value: verifiedCount, tone: "text-emerald-700 dark:text-emerald-400" },
@@ -78,7 +78,7 @@ export default async function AdminDealersPage() {
               ].map((s) => (
                 <div
                   key={s.label}
-                  className="rounded-xl border border-[#ede7dd] bg-white/80 px-3 py-2.5 text-center shadow-sm backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/60 sm:min-w-[5.5rem]"
+                  className="rounded-xl border border-[#ede7dd] bg-white/80 px-3 py-2.5 text-center shadow-sm backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/60"
                 >
                   <p className={`text-xl font-black tabular-nums sm:text-2xl ${s.tone}`}>{s.value}</p>
                   <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">{s.label}</p>
@@ -116,7 +116,7 @@ export default async function AdminDealersPage() {
               <div className="h-1 w-full bg-gradient-to-r from-[#ff5a2f]/80 via-amber-500/60 to-transparent opacity-60 transition group-hover:opacity-100" aria-hidden />
 
               <div className="flex flex-1 flex-col p-5 sm:p-6">
-                <div className="mb-6 flex items-start justify-between gap-3">
+                <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div className="flex min-w-0 flex-1 items-start gap-3.5">
                     <div
                       className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${grad} text-lg font-black text-white shadow-inner ring-1 ring-white/10 transition group-hover:scale-[1.02]`}
@@ -134,13 +134,13 @@ export default async function AdminDealersPage() {
                     </div>
                   </div>
 
-                  <div className="flex shrink-0 flex-col items-end gap-2">
+                  <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-col sm:items-end">
                     <form action="/api/auth/impersonate" method="POST">
                       <input type="hidden" name="dealerId" value={dealer.id} />
                       <button
                         type="submit"
                         title="Open portal as this dealer"
-                        className="inline-flex items-center gap-1.5 rounded-xl border border-[#ede7dd] bg-[#f6f7f9] px-2.5 py-2 text-[10px] font-black uppercase tracking-[0.1em] text-slate-700 transition hover:border-slate-300 hover:bg-white dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-600"
+                        className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-[#ede7dd] bg-[#f6f7f9] px-2.5 py-2 text-[10px] font-black uppercase tracking-[0.1em] text-slate-700 transition hover:border-slate-300 hover:bg-white dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-600 sm:w-auto"
                       >
                         <LogIn size={14} />
                         Login
@@ -150,14 +150,14 @@ export default async function AdminDealersPage() {
                       href={`/dealers/${dealer.slug}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-[#ff5a2f] dark:text-zinc-500 dark:hover:text-[#ff5a2f]"
+                      className="inline-flex w-full items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-[#ff5a2f] dark:text-zinc-500 dark:hover:text-[#ff5a2f] sm:w-auto"
                     >
                       Storefront <ExternalLink size={12} />
                     </Link>
                   </div>
                 </div>
 
-                <div className="mb-6 grid grid-cols-3 gap-2">
+                <div className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-3">
                   {[
                     { label: "Cars", value: dealer._count.cars, icon: Car },
                     { label: "Leads", value: dealer._count.leads, icon: MessageSquare },

@@ -10,7 +10,6 @@ import {
   Search,
   ChevronRight,
   Plus,
-  Upload,
   Eye,
   Edit3,
   ToggleLeft,
@@ -79,14 +78,14 @@ export default async function AdminCarsPage({ searchParams }) {
       {/* Hero */}
       <section className="relative mb-8 overflow-hidden rounded-2xl border border-[#ede7dd] bg-gradient-to-br from-white via-[#fdfcfa] to-[#f6f7f9] px-6 py-8 shadow-sm dark:border-zinc-800 dark:from-[#101012] dark:via-[#0f0f10] dark:to-[#0b0b0c] lg:mb-10 sm:px-8 sm:py-10">
         <div
-          className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[#ff5a2f]/10 blur-3xl dark:bg-[#ff5a2f]/5"
+          className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[#2F855A]/10 blur-3xl dark:bg-[#2F855A]/5"
           aria-hidden
         />
         <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0 flex-1">
             <div className="mb-2 flex items-center gap-2">
               <span
-                className="inline-flex h-2 w-2 rounded-full bg-[#ff5a2f] shadow-[0_0_12px_rgba(255,90,47,0.65)]"
+                className="inline-flex h-2 w-2 rounded-full bg-[#2F855A] shadow-[0_0_12px_rgba(47,133,90,0.65)]"
                 aria-hidden
               />
               <span className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-400">
@@ -100,8 +99,9 @@ export default async function AdminCarsPage({ searchParams }) {
             </p>
           </div>
 
-          <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center lg:flex-nowrap xl:justify-end">
-            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center lg:flex-nowrap xl:justify-end">
+            {/* One-line stats (mobile + desktop aligned) */}
+            <div className="flex items-stretch gap-2 w-full sm:max-w-[22rem]">
               {[
                 { label: "Matches", value: total, tone: "text-slate-900 dark:text-white" },
                 { label: "Live", value: totalLive, tone: "text-emerald-700 dark:text-emerald-400" },
@@ -109,7 +109,7 @@ export default async function AdminCarsPage({ searchParams }) {
               ].map((s) => (
                 <div
                   key={s.label}
-                  className="min-w-[4.75rem] rounded-xl border border-[#ede7dd] bg-white/90 px-2.5 py-2 text-center shadow-sm backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/60 sm:min-w-[5.25rem]"
+                  className="flex-1 rounded-xl border border-[#ede7dd] bg-white/90 px-2.5 py-2 text-center shadow-sm backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/60"
                 >
                   <p className={`text-lg font-black tabular-nums sm:text-xl ${s.tone}`}>{s.value}</p>
                   <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">{s.label}</p>
@@ -134,16 +134,10 @@ export default async function AdminCarsPage({ searchParams }) {
                   CreatedAt: c.createdAt,
                 }))}
               />
-              <Link
-                href="/admin/cars/bulk"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#ede7dd] bg-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.08em] text-slate-800 shadow-sm transition hover:bg-[#f6f7f9] dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800"
-              >
-                <Upload size={17} strokeWidth={2} /> Bulk
-              </Link>
               <ClearAllButton />
               <Link
                 href="/admin/cars/new"
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#ff5a2f] px-4 py-3 text-[11px] font-black uppercase tracking-[0.1em] text-white shadow-md shadow-orange-950/15 transition hover:bg-[#e54a1f] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a2f] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#101012]"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#2F855A] px-4 py-3 text-[11px] font-black uppercase tracking-[0.1em] text-white shadow-md shadow-[0_0_28px_rgba(47,133,90,0.22)] transition hover:bg-[#38A169] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F855A] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#101012]"
               >
                 <Plus size={18} strokeWidth={2.25} /> New car
               </Link>
@@ -160,7 +154,7 @@ export default async function AdminCarsPage({ searchParams }) {
       >
         <div className="relative">
           <Search
-            className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-500 transition-colors peer-focus-visible:text-[#ff5a2f]"
+            className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-500 transition-colors peer-focus-visible:text-[#2F855A]"
             aria-hidden
           />
           <input
@@ -168,7 +162,7 @@ export default async function AdminCarsPage({ searchParams }) {
             defaultValue={search}
             placeholder="Make, model, VIN or plate..."
             autoComplete="off"
-            className="peer w-full rounded-xl border border-[#ddd4c8] bg-[#f6f7f9] py-3 pl-11 pr-24 text-[13px] font-medium text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-[#ff5a2f]/45 focus:bg-white focus:ring-2 focus:ring-[#ff5a2f]/15 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white dark:placeholder:text-zinc-600"
+            className="peer w-full rounded-xl border border-[#ddd4c8] bg-[#f6f7f9] py-3 pl-11 pr-24 text-[13px] font-medium text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-[#2F855A]/45 focus:bg-white focus:ring-2 focus:ring-[#2F855A]/15 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white dark:placeholder:text-zinc-600"
           />
           <button
             type="submit"
@@ -182,7 +176,7 @@ export default async function AdminCarsPage({ searchParams }) {
             <span>
               Filtering: <strong className="text-slate-900 dark:text-white">{search}</strong>
             </span>
-            <Link href="/admin/cars" className="font-semibold text-[#ff5a2f] hover:underline">
+            <Link href="/admin/cars" className="font-semibold text-[#2F855A] hover:underline">
               Clear
             </Link>
           </div>
@@ -211,7 +205,7 @@ export default async function AdminCarsPage({ searchParams }) {
               ) : (
                 <Link
                   href={adminCarsHref(search, page - 1)}
-                  className="inline-flex items-center rounded-lg border border-[#ddd4c8] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-700 transition hover:border-[#ff5a2f] hover:text-[#ff5a2f] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+                  className="inline-flex items-center rounded-lg border border-[#ddd4c8] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-700 transition hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
                 >
                   Prev
                 </Link>
@@ -226,7 +220,7 @@ export default async function AdminCarsPage({ searchParams }) {
               ) : (
                 <Link
                   href={adminCarsHref(search, page + 1)}
-                  className="inline-flex items-center rounded-lg border border-[#ddd4c8] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-700 transition hover:border-[#ff5a2f] hover:text-[#ff5a2f] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+                  className="inline-flex items-center rounded-lg border border-[#ddd4c8] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-700 transition hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
                 >
                   Next
                 </Link>
@@ -273,7 +267,7 @@ export default async function AdminCarsPage({ searchParams }) {
                             href={`/cars/${car.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="line-clamp-1 text-[13px] font-bold leading-snug text-slate-900 transition hover:text-[#ff5a2f] dark:text-white"
+                            className="line-clamp-1 text-[13px] font-bold leading-snug text-slate-900 transition hover:text-[#2F855A] dark:text-white"
                           >
                             {car.year} {car.make} {car.model}
                           </Link>
@@ -322,14 +316,14 @@ export default async function AdminCarsPage({ searchParams }) {
                           href={`/cars/${car.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="rounded-xl border border-[#ede7dd] bg-white p-2 text-slate-600 transition hover:border-[#ff5a2f] hover:text-[#ff5a2f] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400"
+                          className="rounded-xl border border-[#ede7dd] bg-white p-2 text-slate-600 transition hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400"
                           title="View live listing"
                         >
                           <ExternalLink size={15} strokeWidth={2} />
                         </Link>
                         <Link
                           href={`/admin/cars/${car.id}/edit`}
-                          className="rounded-xl border border-[#ede7dd] bg-white p-2 text-slate-600 transition hover:border-slate-900 hover:text-[#ff5a2f] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-white dark:hover:bg-white dark:hover:text-slate-900"
+                          className="rounded-xl border border-[#ede7dd] bg-white p-2 text-slate-600 transition hover:border-slate-900 hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-white dark:hover:bg-white dark:hover:text-slate-900"
                           title="Edit"
                         >
                           <Edit3 size={15} strokeWidth={2} />
@@ -382,7 +376,7 @@ export default async function AdminCarsPage({ searchParams }) {
               ) : null}
               <Link
                 href="/admin/cars/new"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#ff5a2f] px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.1em] text-white hover:bg-[#e54a1f]"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#2F855A] px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.1em] text-white hover:bg-[#38A169]"
               >
                 <Plus size={18} /> Add car
               </Link>
@@ -396,7 +390,7 @@ export default async function AdminCarsPage({ searchParams }) {
           {page > 1 ? (
             <Link
               href={adminCarsHref(search, page - 1)}
-              className="flex min-w-[8rem] items-center justify-center gap-1 rounded-xl border border-[#ddd4c8] bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-slate-700 transition hover:border-[#ff5a2f] hover:text-[#ff5a2f] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+                  className="flex min-w-[8rem] items-center justify-center gap-1 rounded-xl border border-[#ddd4c8] bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-slate-700 transition hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
             >
               <ChevronRight className="-scale-x-100" size={14} />
               Previous
@@ -413,8 +407,8 @@ export default async function AdminCarsPage({ searchParams }) {
               href={adminCarsHref(search, p)}
               className={`flex h-10 min-w-[2.5rem] items-center justify-center rounded-xl text-[13px] font-bold transition ${
                 p === page
-                  ? "bg-[#ff5a2f] text-white shadow-md shadow-orange-950/25"
-                  : "border border-[#ddd4c8] bg-white text-slate-700 hover:border-[#ff5a2f] hover:text-[#ff5a2f] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+                  ? "bg-[#2F855A] text-white shadow-md shadow-[0_0_28px_rgba(47,133,90,0.25)]"
+                  : "border border-[#ddd4c8] bg-white text-slate-700 hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
               }`}
             >
               {p}
@@ -423,7 +417,7 @@ export default async function AdminCarsPage({ searchParams }) {
           {page < pages ? (
             <Link
               href={adminCarsHref(search, page + 1)}
-              className="flex min-w-[8rem] items-center justify-center gap-1 rounded-xl border border-[#ddd4c8] bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-slate-700 transition hover:border-[#ff5a2f] hover:text-[#ff5a2f] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+              className="flex min-w-[8rem] items-center justify-center gap-1 rounded-xl border border-[#ddd4c8] bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-slate-700 transition hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
             >
               Next
               <ChevronRight size={14} />
