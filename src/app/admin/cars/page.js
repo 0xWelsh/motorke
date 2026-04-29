@@ -78,7 +78,7 @@ export default async function AdminCarsPage({ searchParams }) {
   return (
     <div className="mk-page-shell animate-in fade-in slide-in-from-bottom-2 duration-700">
       {/* Hero */}
-      <section className="relative mb-8 overflow-hidden rounded-2xl border border-[#ede7dd] bg-gradient-to-br from-white via-[#fdfcfa] to-[#f6f7f9] px-6 py-8 shadow-sm dark:border-zinc-800 dark:from-[#101012] dark:via-[#0f0f10] dark:to-[#0b0b0c] lg:mb-10 sm:px-8 sm:py-10">
+      <section className="mb-8 rounded-2xl border border-[#e7e7e9] bg-white px-6 py-7 dark:border-zinc-800 dark:bg-[#111111] lg:mb-10 sm:px-8 sm:py-8">
         <div
           className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[#2F855A]/10 blur-3xl dark:bg-[#2F855A]/5"
           aria-hidden
@@ -95,7 +95,7 @@ export default async function AdminCarsPage({ searchParams }) {
               </span>
             </div>
             <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl">Cars</h1>
-            <p className="mt-2 max-w-xl text-sm font-medium leading-relaxed text-slate-600 dark:text-zinc-400">
+            <p className="mt-2 max-w-xl text-sm font-medium leading-relaxed text-slate-500 dark:text-zinc-400">
               Search and manage listings across all dealers. Pagination shows {limit} rows per page. Export pulls the{' '}
               <span className="font-semibold text-slate-800 dark:text-zinc-200">current results</span>.
             </p>
@@ -111,7 +111,7 @@ export default async function AdminCarsPage({ searchParams }) {
               ].map((s) => (
                 <div
                   key={s.label}
-                  className="flex-1 rounded-xl border border-[#ede7dd] bg-white/90 px-2.5 py-2 text-center shadow-sm backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/60"
+                  className="flex-1 rounded-xl border border-[#e7e7e9] bg-[#fafafa] px-2.5 py-2 text-center dark:border-zinc-800 dark:bg-zinc-900/60"
                 >
                   <p className={`text-lg font-black tabular-nums sm:text-xl ${s.tone}`}>{s.value}</p>
                   <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">{s.label}</p>
@@ -139,7 +139,7 @@ export default async function AdminCarsPage({ searchParams }) {
               <ClearAllButton />
               <Link
                 href="/admin/cars/new"
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#2F855A] px-4 py-3 text-[11px] font-black uppercase tracking-[0.1em] text-white shadow-md shadow-[0_0_28px_rgba(47,133,90,0.22)] transition hover:bg-[#38A169] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F855A] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#101012]"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#2F855A] px-4 py-3 text-[11px] font-black uppercase tracking-[0.1em] text-white transition hover:bg-[#38A169] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F855A] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#101012]"
               >
                 <Plus size={18} strokeWidth={2.25} /> New car
               </Link>
@@ -152,7 +152,7 @@ export default async function AdminCarsPage({ searchParams }) {
       <form
         action="/admin/cars"
         method="GET"
-        className="mb-6 rounded-2xl border border-[#ede7dd] bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-[#111111] sm:p-5"
+        className="mb-6 rounded-2xl border border-[#e7e7e9] bg-white p-4 dark:border-zinc-800 dark:bg-[#111111] sm:p-5"
       >
         <div className="relative">
           <Search
@@ -164,7 +164,7 @@ export default async function AdminCarsPage({ searchParams }) {
             defaultValue={search}
             placeholder="Make, model, VIN or plate..."
             autoComplete="off"
-            className="peer w-full rounded-xl border border-[#ddd4c8] bg-[#f6f7f9] py-3 pl-11 pr-24 text-[13px] font-medium text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-[#2F855A]/45 focus:bg-white focus:ring-2 focus:ring-[#2F855A]/15 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white dark:placeholder:text-zinc-600"
+            className="peer w-full rounded-xl border border-[#e2e2e6] bg-[#fafafa] py-3 pl-11 pr-24 text-[13px] font-medium text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-[#2F855A]/45 focus:bg-white focus:ring-2 focus:ring-[#2F855A]/15 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white dark:placeholder:text-zinc-600"
           />
           <button
             type="submit"
@@ -187,7 +187,7 @@ export default async function AdminCarsPage({ searchParams }) {
 
       {/* Table */}
       <DataTableShell>
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#ede7dd] px-5 py-3.5 dark:border-zinc-800">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#ececf0] px-5 py-3.5 dark:border-zinc-800">
           <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-500 dark:text-zinc-500">
             {total === 0 ? (
               "No listings"
@@ -207,7 +207,7 @@ export default async function AdminCarsPage({ searchParams }) {
               ) : (
                 <Link
                   href={adminCarsHref(search, page - 1)}
-                  className="inline-flex items-center rounded-lg border border-[#ddd4c8] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-700 transition hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+                  className="inline-flex items-center rounded-lg border border-[#e2e2e6] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-700 transition hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
                 >
                   Prev
                 </Link>
@@ -222,7 +222,7 @@ export default async function AdminCarsPage({ searchParams }) {
               ) : (
                 <Link
                   href={adminCarsHref(search, page + 1)}
-                  className="inline-flex items-center rounded-lg border border-[#ddd4c8] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-700 transition hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+                  className="inline-flex items-center rounded-lg border border-[#e2e2e6] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-700 transition hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
                 >
                   Next
                 </Link>
@@ -234,7 +234,7 @@ export default async function AdminCarsPage({ searchParams }) {
         <div className="overflow-x-auto">
           <table className="min-w-[960px] w-full border-collapse text-left">
             <thead>
-              <tr className="border-b border-[#ede7dd] bg-slate-50/95 dark:border-zinc-800 dark:bg-zinc-900/90">
+              <tr className="border-b border-[#ececf0] bg-[#fafafa] dark:border-zinc-800 dark:bg-zinc-900/90">
                 {["Listing", "Dealer", "Engagement", "Price", "Status", ""].map((h) => (
                   <th key={h} className="whitespace-nowrap px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 dark:text-zinc-500">
                     {h}
@@ -242,14 +242,14 @@ export default async function AdminCarsPage({ searchParams }) {
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#ede7dd] dark:divide-zinc-800">
+            <tbody className="divide-y divide-[#ececf0] dark:divide-zinc-800">
               {cars.map((car) => {
                 const thumb = car.images[0]?.url || null;
                 return (
-                  <tr key={car.id} className="group transition-colors hover:bg-[#fdfcfa] dark:hover:bg-[#151515]/80">
+                  <tr key={car.id} className="group transition-colors hover:bg-[#f9fafb] dark:hover:bg-[#151515]/80">
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="relative h-11 w-[4.75rem] shrink-0 overflow-hidden rounded-lg border border-[#ede7dd] bg-slate-100 dark:border-zinc-700 dark:bg-zinc-800">
+                        <div className="relative h-11 w-[4.75rem] shrink-0 overflow-hidden rounded-lg border border-[#ececf0] bg-slate-100 dark:border-zinc-700 dark:bg-zinc-800">
                           {thumb ? (
                             /* eslint-disable-next-line @next/next/no-img-element */
                             <img
@@ -318,14 +318,14 @@ export default async function AdminCarsPage({ searchParams }) {
                           href={`/cars/${car.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="rounded-xl border border-[#ede7dd] bg-white p-2 text-slate-600 transition hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400"
+                          className="rounded-xl border border-[#ececf0] bg-white p-2 text-slate-600 transition hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400"
                           title="View live listing"
                         >
                           <ExternalLink size={15} strokeWidth={2} />
                         </Link>
                         <Link
                           href={`/admin/cars/${car.id}/edit`}
-                          className="rounded-xl border border-[#ede7dd] bg-white p-2 text-slate-600 transition hover:border-slate-900 hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-white dark:hover:bg-white dark:hover:text-slate-900"
+                          className="rounded-xl border border-[#ececf0] bg-white p-2 text-slate-600 transition hover:border-slate-900 hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-white dark:hover:bg-white dark:hover:text-slate-900"
                           title="Edit"
                         >
                           <Edit3 size={15} strokeWidth={2} />
@@ -393,7 +393,7 @@ export default async function AdminCarsPage({ searchParams }) {
               href={adminCarsHref(search, p)}
               className={`flex h-10 min-w-[2.5rem] items-center justify-center rounded-xl text-[13px] font-bold transition ${
                 p === page
-                  ? "bg-[#2F855A] text-white shadow-md shadow-[0_0_28px_rgba(47,133,90,0.25)]"
+                  ? "bg-[#2F855A] text-white"
                   : "border border-[#ddd4c8] bg-white text-slate-700 hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
               }`}
             >
