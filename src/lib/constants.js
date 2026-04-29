@@ -9,6 +9,11 @@ export const BODY_TYPE_LABELS = {
   WAGON:       "Wagon / Estate",
   COUPE:       "Coupe",
   CONVERTIBLE: "Convertible",
+  CROSSOVER:   "Crossover",
+  MPV:         "MPV",
+  MINIVAN:     "Minivan",
+  ROADSTER:    "Roadster",
+  LIFTBACK:    "Liftback",
   BUS:         "Bus / Coach",
   TRUCK:       "Truck",
 };

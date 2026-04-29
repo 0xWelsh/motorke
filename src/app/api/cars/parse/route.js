@@ -26,7 +26,25 @@ const MAKE_ALIASES = {
   rangerover: "Range Rover",
 };
 
-const FIELD_KEYS = ["make", "model", "variant", "year", "price", "mileage", "engineCC"];
+const BODY_TYPE_HINTS = [
+  { value: "PICKUP", patterns: [/\b(pick[\s-]?up|double[\s-]?cab|single[\s-]?cab)\b/i] },
+  { value: "SUV", patterns: [/\b(suv|4x4|off[\s-]?road)\b/i] },
+  { value: "CROSSOVER", patterns: [/\b(crossover|cuv)\b/i] },
+  { value: "HATCHBACK", patterns: [/\b(hatchback|hatch)\b/i] },
+  { value: "SEDAN", patterns: [/\b(sedan|saloon)\b/i] },
+  { value: "WAGON", patterns: [/\b(wagon|estate)\b/i] },
+  { value: "COUPE", patterns: [/\b(coupe)\b/i] },
+  { value: "CONVERTIBLE", patterns: [/\b(convertible|cabriolet|soft[\s-]?top)\b/i] },
+  { value: "ROADSTER", patterns: [/\b(roadster)\b/i] },
+  { value: "LIFTBACK", patterns: [/\b(liftback|fastback)\b/i] },
+  { value: "MPV", patterns: [/\b(mpv|multi[\s-]?purpose)\b/i] },
+  { value: "MINIVAN", patterns: [/\b(minivan)\b/i] },
+  { value: "VAN", patterns: [/\b(van|panel[\s-]?van)\b/i] },
+  { value: "BUS", patterns: [/\b(bus|coach)\b/i] },
+  { value: "TRUCK", patterns: [/\b(truck|lorry)\b/i] },
+];
+
+const FIELD_KEYS = ["make", "model", "variant", "year", "price", "mileage", "engineCC", "bodyType"];
 
 function toTitleCase(value = "") {
   return value
@@ -54,6 +72,7 @@ function baseResult() {
     price: null,
     mileage: null,
     engineCC: null,
+    bodyType: null,
     confidence: {
       make: 0,
       model: 0,
@@ -62,6 +81,7 @@ function baseResult() {
       price: 0,
       mileage: 0,
       engineCC: 0,
+      bodyType: 0,
     },
     source: "rules",
     warnings: [],
@@ -172,6 +192,14 @@ function parseWithRules(rawText) {
   if (!out.make) out.warnings.push("Make not confidently detected");
   if (!out.model) out.warnings.push("Model not confidently detected");
   if (!out.price) out.warnings.push("Price not confidently detected");
+
+  for (const hint of BODY_TYPE_HINTS) {
+    if (hint.patterns.some((pattern) => pattern.test(text))) {
+      out.bodyType = hint.value;
+      out.confidence.bodyType = 0.88;
+      break;
+    }
+  }
 
   return out;
 }

@@ -563,6 +563,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setField('select[name="year"]', seeded.year ? String(seeded.year) : "");
     setField('input[name="mileage"]', seeded.mileage ? String(seeded.mileage) : "");
     setField('input[name="engineCC"]', seeded.engineCC ? String(seeded.engineCC) : "");
+    setField('select[name="bodyType"]', seeded.bodyType || "");
   }, []);
 
   const applySmartFillSuggestion = useCallback((field, value) => {
@@ -576,6 +577,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       mileage: 'input[name="mileage"]',
       engineCC: 'input[name="engineCC"]',
       price: 'input[name="price"]',
+      bodyType: 'select[name="bodyType"]',
     };
     const fieldEl = form.querySelector(selectorMap[field]);
     if (!fieldEl) return;
@@ -815,6 +817,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         price: parsed?.price || "",
         mileage: parsed?.mileage || "",
         engineCC: parsed?.engineCC || "",
+        bodyType: parsed?.bodyType || "",
       };
 
       const currentValues = collectFormValues(formRef.current);
@@ -826,6 +829,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         price: "Price",
         mileage: "Mileage",
         engineCC: "Engine CC",
+        bodyType: "Body Type",
       };
       const diff = [];
       const lowConfidence = [];

@@ -6,7 +6,7 @@ import { useState, useRef } from "react";
 const REQUIRED = ["make", "model", "year", "price", "fuelType", "transmission", "bodyType"];
 const FUEL_TYPES = ["PETROL", "DIESEL", "HYBRID", "ELECTRIC", "LPG"];
 const TRANSMISSIONS = ["AUTOMATIC", "MANUAL", "CVT"];
-const BODY_TYPES = ["SEDAN", "SUV", "HATCHBACK", "PICKUP", "VAN", "WAGON", "COUPE", "CONVERTIBLE", "BUS", "TRUCK"];
+const BODY_TYPES = ["SEDAN", "SUV", "HATCHBACK", "PICKUP", "VAN", "WAGON", "COUPE", "CONVERTIBLE", "CROSSOVER", "MPV", "MINIVAN", "ROADSTER", "LIFTBACK", "BUS", "TRUCK"];
 
 function parseCSV(text) {
   const lines  = text.trim().split("\n").filter(Boolean);

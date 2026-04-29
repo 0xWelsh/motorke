@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 const VALID_FUEL = ["PETROL", "DIESEL", "HYBRID", "ELECTRIC", "LPG"];
 const VALID_TRANS = ["AUTOMATIC", "MANUAL", "CVT"];
-const VALID_BODY = ["SEDAN", "SUV", "HATCHBACK", "PICKUP", "VAN", "WAGON", "COUPE", "CONVERTIBLE", "BUS", "TRUCK"];
+const VALID_BODY = ["SEDAN", "SUV", "HATCHBACK", "PICKUP", "VAN", "WAGON", "COUPE", "CONVERTIBLE", "CROSSOVER", "MPV", "MINIVAN", "ROADSTER", "LIFTBACK", "BUS", "TRUCK"];
 const VALID_DRIVETRAIN = ["FWD", "RWD", "AWD", "FOURWD"];
 const VALID_STEERING = ["RHD", "LHD"];
 const VALID_HYBRID_BATTERY = ["NIMH", "LI_ION", "OTHER", "NA"];
