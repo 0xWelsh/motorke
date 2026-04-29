@@ -91,15 +91,17 @@ export default function AdminLayout({ children }) {
       {/* Mobile Backdrop */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside className={clsx(
-        "w-[290px] max-w-[88vw] bg-white dark:bg-[#0f0f10] border-r border-[#ddd4c8] dark:border-zinc-800 flex flex-col shrink-0 h-screen z-50 fixed transition-transform duration-300 lg:border-r lg:sticky lg:top-0 lg:translate-x-0",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        // Mobile: fixed slide-in drawer.
+        // Desktop (lg+): participate in flex layout so the main content is correctly offset.
+        "w-[290px] max-w-[88vw] bg-white dark:bg-[#0f0f10] border-r border-[#ddd4c8] dark:border-zinc-800 flex flex-col shrink-0 h-screen z-50 fixed left-0 top-0 overflow-hidden rounded-r-2xl shadow-[18px_0_55px_rgba(0,0,0,0.18)] transition-transform duration-300 lg:static lg:max-w-none lg:translate-x-0",
+        sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         {/* Branding */}
         <div className="p-5 lg:p-6 flex items-center justify-between border-b border-[#ede7dd] dark:border-zinc-800">
