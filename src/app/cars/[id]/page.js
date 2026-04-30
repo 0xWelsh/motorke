@@ -19,6 +19,7 @@ import CarCard from "@/components/CarCard";
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
+import { absoluteUrl, getSiteOrigin } from "@/lib/site-url";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -31,11 +32,11 @@ export async function generateMetadata({ params }) {
   });
   if (!car) return {};
 
-  const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} - Welsh Motors Kenya`;
-  const description = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motors.`;
-  const image = car.images[0]?.url || "/headerlogo.png";
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke";
-  const url = `${baseUrl}/cars/${id}`;
+  const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} for sale in Kenya`;
+  const description = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motorhub.`;
+  const image = car.images[0]?.url || "/newlogo.jpeg";
+  const origin = getSiteOrigin();
+  const url = `${origin}/cars/${id}`;
 
   return {
     title,
@@ -45,8 +46,9 @@ export async function generateMetadata({ params }) {
       title,
       description,
       url,
-      siteName: "Welsh Motors",
-      images: [{ url: image }],
+      locale: "en_KE",
+      siteName: "Welsh Motorhub",
+      images: [{ url: image.startsWith?.("http") ? image : absoluteUrl(image.startsWith("/") ? image : `/${image}`) }],
       type: "website",
     },
     twitter: {
@@ -222,14 +224,24 @@ export default async function CarDetailPage({ params }) {
     specRows.push([visibleSpecs[i], visibleSpecs[i + 1] || null]);
   }
 
-  const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motors.`;
+  const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motorhub.`;
+
+  const listingUrl = absoluteUrl(`/cars/${car.id}`);
+  const toAbsImage = (url) => {
+    if (!url) return absoluteUrl("/newlogo.jpeg");
+    if (/^https?:\/\//i.test(url)) return url;
+    return absoluteUrl(url.startsWith("/") ? url : `/${url}`);
+  };
+  const absImages = (car.images?.length ? car.images : [{ url: "/newlogo.jpeg" }]).map((i) =>
+    toAbsImage(i.url)
+  );
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     "name": title,
     "description": seoDescription,
-    "image": car.images.map(i => i.url),
+    "image": absImages,
     "brand": {
       "@type": "Brand",
       "name": car.make
@@ -243,10 +255,10 @@ export default async function CarDetailPage({ params }) {
       "priceCurrency": "KES",
       "itemCondition": car.condition === "NEW" ? "https://schema.org/NewCondition" : "https://schema.org/UsedCondition",
       "availability": car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-      "url": `${process.env.NEXT_PUBLIC_SITE_URL}/cars/${car.id}`,
+      "url": listingUrl,
       "seller": {
         "@type": "AutoDealer",
-        "name": car.dealer?.name || "Welsh Motors",
+        "name": car.dealer?.name || "Welsh Motorhub dealer",
         "image": car.dealer?.logoUrl
       }
     }

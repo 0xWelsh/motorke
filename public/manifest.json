@@ -35,7 +35,7 @@
       "name": "Browse Cars",
       "short_name": "Browse",
       "description": "Browse available vehicles",
-      "url": "/search?utm_source=pwa_menu",
+      "url": "/cars?utm_source=pwa_menu",
       "icons": [
         {
           "src": "/favicon.svg",

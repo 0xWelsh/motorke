@@ -1,6 +1,13 @@
 import { Heart, Target, Zap, Shield, Users, Lightbulb, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
+export const metadata = {
+  title: "Our mission",
+  description:
+    "Welsh Motorhub exists to make Kenya’s car market more transparent: trustworthy dealers, clearer total costs, and smarter comparison tools.",
+  alternates: { canonical: "/mission" },
+};
+
 export default function MissionPage() {
   return (
     <div className="bg-white dark:bg-[#0a0a0a] min-h-screen transition-colors duration-300">

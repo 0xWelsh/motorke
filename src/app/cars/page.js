@@ -12,7 +12,26 @@ import { CompareButton } from "@/components/CompareSelector";
 import { getSession } from "@/lib/auth";
 
 
-export const metadata = { title: "Inventory — Welsh Motors Standard" };
+export const metadata = {
+  title: "Browse cars for sale in Kenya",
+  description:
+    "Search verified cars for sale across Kenya. Filter by make, price, body type, county, and dealership. Compare listings and contact dealers on Welsh Motorhub.",
+  alternates: { canonical: "/cars" },
+  keywords: [
+    "used cars Kenya",
+    "cars Nairobi",
+    "car inventory Kenya",
+    "vehicle search",
+    "Welsh Motorhub cars",
+  ],
+  openGraph: {
+    title: "Browse cars for sale in Kenya | Welsh Motorhub",
+    description:
+      "Verified vehicle inventory from trusted Kenyan dealers. Smart filters, transparent pricing context, and dealer contact in one place.",
+    type: "website",
+    url: "/cars",
+  },
+};
 
 function distance(lat1, lng1, lat2, lng2) {
   if ([lat1, lng1, lat2, lng2].some((value) => value == null || Number.isNaN(value))) return 9999;

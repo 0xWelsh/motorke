@@ -5,7 +5,20 @@ import Link from "next/link";
 import { ArrowUpRight, Building2, MapPin } from "lucide-react";
 import NearbyDealersList from "@/components/NearbyDealersList";
 
-export const metadata = { title: "Dealers — Welsh Motors Kenya" };
+export const metadata = {
+  title: "Trusted car dealers in Kenya",
+  description:
+    "Discover verified car dealerships across Kenya. View locations, inventory counts, and open each dealer showroom on Welsh Motorhub.",
+  alternates: { canonical: "/dealers" },
+  keywords: ["car dealers Kenya", "Welsh Motorhub dealers", "verified dealerships", "automotive showroom Kenya"],
+  openGraph: {
+    title: "Trusted car dealers in Kenya | Welsh Motorhub",
+    description:
+      "Browse Welsh Motorhub’s verified dealer network: counties, listings, and direct links to each showroom.",
+    type: "website",
+    url: "/dealers",
+  },
+};
 
 export default async function DealersPage() {
   const dealers = await db.dealer.findMany({

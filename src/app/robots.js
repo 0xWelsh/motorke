@@ -1,13 +1,28 @@
 // src/app/robots.js
+import { getSiteOrigin } from "@/lib/site-url";
+
 export default function robots() {
+  const origin = getSiteOrigin();
   return {
     rules: [
       {
         userAgent: "*",
-        allow:     ["/", "/cars", "/dealers", "/compare"],
-        disallow:  ["/admin", "/portal", "/login", "/api", "/dashboard"],
+        allow: ["/", "/cars", "/dealers", "/compare", "/contact", "/faq", "/duty", "/mission", "/terms", "/privacy"],
+        disallow: [
+          "/admin",
+          "/portal",
+          "/login",
+          "/signup",
+          "/verify",
+          "/forgot-password",
+          "/reset-password",
+          "/api",
+          "/dashboard",
+          "/account",
+        ],
       },
     ],
-    sitemap: `${process.env.NEXT_PUBLIC_APP_URL || "https://welsh-motors.co.ke"}/sitemap.xml`,
+    host: origin,
+    sitemap: `${origin}/sitemap.xml`,
   };
 }

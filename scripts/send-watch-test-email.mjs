@@ -12,7 +12,7 @@ const to = process.argv[2] || "sec@welsh.co.ke";
 
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS?.replace(/\s+/g, "");
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://welshmotorhub.co.ke";
 
 function buildEmailFooter() {
   return `

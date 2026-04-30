@@ -2,6 +2,7 @@
 import { db } from "@/lib/db";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import { getSiteOrigin } from "@/lib/site-url";
 
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS?.replace(/\s+/g, '');
@@ -14,10 +15,10 @@ const transporter = nodemailer.createTransport({
 });
 
 function buildEmailFooter() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke";
+  const siteUrl = getSiteOrigin();
   return `
     <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid #e2e8f0;">
-      <p style="margin: 0 0 6px; font-size: 12px; color: #475569;">Welsh Motors Marketplace</p>
+      <p style="margin: 0 0 6px; font-size: 12px; color: #475569;">Welsh Motorhub</p>
       <p style="margin: 0; font-size: 12px; color: #64748b;">
         <a href="${siteUrl}/terms" style="color: #0f172a; text-decoration: underline;">Terms</a>
         &nbsp;•&nbsp;
@@ -158,7 +159,7 @@ export async function sendLeadAlertEmail({
         <p style="margin: 10px 0 0;"><strong>Message:</strong> ${safeBuyerMessage}</p>
       </div>
 
-      <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke"}/portal/leads" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;border-radius:0px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Open Leads Dashboard</a>
+      <a href="${getSiteOrigin()}/portal/leads" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;border-radius:0px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Open Leads Dashboard</a>
 
       <p style="margin-top: 20px; color: #94a3b8; font-size: 12px;">Lead Ref: ${safeLeadId}</p>
       ${buildEmailFooter()}
@@ -197,7 +198,7 @@ export async function createPasswordResetToken(email) {
 }
 
 export async function sendPasswordResetEmail({ email, name, resetToken }) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke";
+  const siteUrl = getSiteOrigin();
   const resetUrl = `${siteUrl}/reset-password?token=${encodeURIComponent(resetToken)}&email=${encodeURIComponent(email)}`;
   const escapeHtml = (value) =>
     (value || "")
@@ -258,7 +259,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
     return { success: true };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke";
+  const siteUrl = getSiteOrigin();
   const newCarUrl = `${siteUrl}/cars/${newCar.id}`;
   const savingsPercent = ((savings / previousCar.price) * 100).toFixed(1);
 
@@ -361,7 +362,7 @@ export async function sendEngagementFollowUpEmail({ userEmail, userName, carTitl
         </p>
 
         <div style="text-align: center; margin: 32px 0;">
-          <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke"}/cars" style="display: inline-block; background: #ff5a2f; color: white; padding: 16px 32px; border-radius: 0px; font-size: 13px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;">
+          <a href="${getSiteOrigin()}/cars" style="display: inline-block; background: #ff5a2f; color: white; padding: 16px 32px; border-radius: 0px; font-size: 13px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;">
             Browse More Vehicles
           </a>
         </div>
@@ -419,7 +420,7 @@ export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName
         </p>
 
         <div style="text-align: center; margin: 32px 0;">
-          <a href="${process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke"}/contact" style="display: inline-block; background: #111111; color: white; padding: 16px 32px; border-radius: 0px; font-size: 13px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;">
+          <a href="${getSiteOrigin()}/contact" style="display: inline-block; background: #111111; color: white; padding: 16px 32px; border-radius: 0px; font-size: 13px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;">
             Leave Feedback
           </a>
         </div>
@@ -451,7 +452,7 @@ export async function sendWatchAlertEmail({
   similarCar,
 }) {
   if (!userEmail || !car?.id) return { success: true, skipped: true };
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://welsh-motors.co.ke";
+  const siteUrl = getSiteOrigin();
   const carUrl = `${siteUrl}/cars/${car.id}`;
   const title = `${car.year} ${car.make} ${car.model}`;
   const similarTitle = similarCar ? `${similarCar.year} ${similarCar.make} ${similarCar.model}` : null;

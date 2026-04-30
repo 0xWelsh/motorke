@@ -1,7 +1,19 @@
 import { db } from "@/lib/db";
 import CompareClient from "./CompareClient";
 
-export const metadata = { title: "Compare Cars — Welsh Motors Kenya" };
+export const metadata = {
+  title: "Compare cars side by side (Kenya)",
+  description:
+    "Compare up to three Kenyan vehicle listings side by side: price, specs, duties, efficiency, and running costs — all on Welsh Motorhub.",
+  alternates: { canonical: "/compare" },
+  openGraph: {
+    title: "Compare vehicles | Welsh Motorhub",
+    description:
+      "Stack two or three Kenyan listings beside each other before you enquire. Built for decisive buyers.",
+    type: "website",
+    url: "/compare",
+  },
+};
 
 export default async function ComparePage({ searchParams }) {
   const sp = await searchParams;

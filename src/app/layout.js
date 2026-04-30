@@ -12,6 +12,7 @@ import CookieConsent from "@/components/CookieConsent";
 
 import { Playfair_Display } from "next/font/google";
 import GlobalFooter from "@/components/GlobalFooter";
+import { getSiteOrigin } from "@/lib/site-url";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -20,9 +21,44 @@ const playfair = Playfair_Display({
 });
 
 export const metadata = {
-  title: "Welsh Motors — Find Your Car in Kenya",
-  description: "Compare cars from top dealerships across Kenya on Welsh Motors.",
+  metadataBase: new URL(getSiteOrigin()),
+  title: {
+    default: "Welsh Motorhub — Find Your Car in Kenya",
+    template: "%s | Welsh Motorhub",
+  },
+  description:
+    "Browse verified vehicles from trusted dealers across Kenya. Compare specs, duties, running costs, and contact dealers directly on Welsh Motorhub.",
+  keywords: [
+    "used cars Kenya",
+    "cars for sale Kenya",
+    "Welsh Motorhub",
+    "car dealers Nairobi",
+    "compare cars Kenya",
+    "vehicle marketplace Kenya",
+  ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+  },
   manifest: "/manifest.json",
+  openGraph: {
+    type: "website",
+    locale: "en_KE",
+    siteName: "Welsh Motorhub",
+    url: getSiteOrigin(),
+    title: "Welsh Motorhub — Find Your Car in Kenya",
+    description:
+      "Browse verified vehicles from trusted dealers across Kenya. Compare specs, costs, and contact dealers directly.",
+    images: [{ url: "/newlogo.jpeg", width: 1200, height: 630, alt: "Welsh Motorhub" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Welsh Motorhub — Find Your Car in Kenya",
+    description:
+      "Browse verified vehicles from trusted dealers across Kenya. Compare specs, costs, and contact dealers directly.",
+    images: ["/newlogo.jpeg"],
+  },
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },

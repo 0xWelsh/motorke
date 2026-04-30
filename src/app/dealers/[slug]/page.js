@@ -8,6 +8,7 @@ import { getSession } from "@/lib/auth";
 import DealerReviews from "@/components/DealerReviews";
 import DealerInventory from "@/components/DealerInventory";
 import { calculateDistance } from "@/lib/geolocation";
+import { absoluteUrl } from "@/lib/site-url";
 
 // Force dynamic and no-cache
 export const dynamic = "force-dynamic";
@@ -22,13 +23,53 @@ export async function generateMetadata(props) {
   const params = await props.params;
   const dealer = await db.dealer.findUnique({
     where: { slug: params.slug },
+    select: {
+      name: true,
+      slug: true,
+      description: true,
+      county: true,
+      location: true,
+      bannerUrl: true,
+      logoUrl: true,
+    },
   });
 
   if (!dealer) return { title: "Dealer Not Found" };
 
+  const place = dealer.location || dealer.county || "Kenya";
+  const title = `${dealer.name} — dealer showroom in ${place}`;
+  const description =
+    (dealer.description && dealer.description.trim().slice(0, 158)) ||
+    `View live inventory and reviews for ${dealer.name} in ${place}. Contact the dealer on Welsh Motorhub.`;
+
+  const ogCand = dealer.bannerUrl || dealer.logoUrl;
+  const ogImage = ogCand
+    ? /^https?:\/\//i.test(ogCand)
+      ? ogCand
+      : absoluteUrl(ogCand.startsWith("/") ? ogCand : `/${ogCand}`)
+    : absoluteUrl("/newlogo.jpeg");
+
+  const canonical = `/dealers/${dealer.slug}`;
+
   return {
-    title: `${dealer.name} | Verified Dealer`,
-    description: `View inventory and reviews for ${dealer.name} on our platform.`,
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      url: absoluteUrl(canonical),
+      siteName: "Welsh Motorhub",
+      locale: "en_KE",
+      images: [{ url: ogImage }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
   };
 }
 
@@ -180,16 +221,23 @@ export default async function DealerPage(props) {
     .slice(0, 3);
   const hasHeroBanner = Boolean(dealer.bannerUrl) || dealerGallery.length >= 3;
 
+  const absAsset = (u) => {
+    if (!u) return absoluteUrl("/headerlogo.png");
+    if (/^https?:\/\//i.test(u)) return u;
+    return absoluteUrl(u.startsWith("/") ? u : `/${u}`);
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "AutoDealer",
     name: dealer.name,
-    image: dealer.logoUrl || "https://welsh-motors.co.ke/headerlogo.png",
+    url: absoluteUrl(`/dealers/${dealer.slug}`),
+    image: absAsset(dealer.logoUrl),
     address: {
       "@type": "PostalAddress",
       addressLocality: dealer.location,
       addressRegion: dealer.county,
-      addressCountry: "KE"
+      addressCountry: "KE",
     },
     telephone: dealer.phone || dealer.whatsapp || undefined,
   };

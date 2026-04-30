@@ -16,6 +16,7 @@ import HeroGridShowcase from "@/components/HeroGridShowcase";
 import CarCard from "@/components/CarCard";
 import TrackedLink from "@/components/TrackedLink";
 import { analyzePrice } from "@/lib/market";
+import { absoluteUrl, getSiteOrigin } from "@/lib/site-url";
 
 const HERO_BACKGROUND = "/images/backgrounds/pexels-mikebirdy-10123994.jpg";
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
@@ -137,6 +138,51 @@ const getCachedData = unstable_cache(
   { revalidate: 900, tags: ["homepage"] }
 );
 
+export const metadata = {
+  title: "Cars & Dealer Network Kenya",
+  description:
+    "Find verified Kenyan vehicle inventory from trusted dealerships. Compare total cost of ownership, inspect specs side by side, and contact dealers on Welsh Motorhub.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    url: absoluteUrl("/"),
+    title: "Welsh Motorhub — Find Your Car in Kenya",
+    description:
+      "Find verified Kenyan vehicle inventory from trusted dealerships. Compare costs and specs, contact dealers directly.",
+    type: "website",
+  },
+};
+
+function homeStructuredData(origin) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        name: "Welsh Motorhub",
+        url: origin,
+        logo: absoluteUrl("/newlogo.jpeg"),
+        description:
+          "Verified vehicle marketplace connecting buyers with trusted car dealers across Kenya.",
+        address: {
+          "@type": "PostalAddress",
+          addressCountry: "KE",
+        },
+      },
+      {
+        "@type": "WebSite",
+        name: "Welsh Motorhub",
+        url: origin,
+        description:
+          "Browse used and new listings, compare vehicles, and connect with Kenyan dealerships.",
+        potentialAction: {
+          "@type": "SearchAction",
+          target: `${origin}/cars?search={search_term_string}`,
+          "query-input": "required name=search_term_string",
+        },
+      },
+    ],
+  };
+}
 
 export default async function HomePage() {
   const { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews } = await getCachedData();
@@ -182,8 +228,17 @@ export default async function HomePage() {
   const spotlightCards = spotlightRotated.slice(0, 2);
   const heroPrimary = heroCars?.[0] || spotlightEnhanced?.[0] || null;
 
+  const origin = getSiteOrigin();
+
   return (
     <div className="min-h-screen pb-20 bg-white dark:bg-[#0a0a0a]">
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(homeStructuredData(origin)),
+        }}
+      />
       {/* Dynamic Hero Section */}
       <section className="relative pt-20 pb-12 md:pt-24 md:pb-16 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
