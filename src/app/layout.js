@@ -1,17 +1,15 @@
 // src/app/layout.js
 import "./globals.css";
 import { CompareProvider } from "@/components/CompareContext";
-import Navbar from "@/components/Navbar";
-import { CompareBar } from "@/components/CompareSelector";
-import { ModalProvider } from "@/components/Modal";
+import SiteChrome from "@/components/SiteChrome";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ScrollToTop from "@/components/ScrollToTop";
 import { PWARegister } from "@/components/PWARegister";
 import { getSession } from "@/lib/auth";
 import CookieConsent from "@/components/CookieConsent";
+import { headers } from "next/headers";
 
 import { Playfair_Display } from "next/font/google";
-import GlobalFooter from "@/components/GlobalFooter";
 import { getSiteOrigin } from "@/lib/site-url";
 
 const playfair = Playfair_Display({
@@ -78,6 +76,9 @@ export const viewport = {
 };
 
 export default async function RootLayout({ children }) {
+  const headerList = await headers();
+  const shellPath = headerList.get("x-pathname") || "/";
+
   const session = await getSession();
   const user    = session?.user ? {
     id:      session.user.id,
@@ -93,13 +94,10 @@ export default async function RootLayout({ children }) {
         <PWARegister />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <CompareProvider>
-            <Navbar user={user} />
-            <ModalProvider>
-              <main className="flex-1">{children}</main>
-              <CompareBar />
-            </ModalProvider>
+            <SiteChrome user={user} shellPath={shellPath}>
+              {children}
+            </SiteChrome>
           </CompareProvider>
-          <GlobalFooter />
           <ScrollToTop />
           <CookieConsent />
         </ThemeProvider>

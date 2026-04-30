@@ -5,6 +5,9 @@ const SESSION_COOKIE = "welsh-motors_session";
 export function middleware(request) {
   const { pathname } = request.nextUrl;
 
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", pathname);
+
   // Session-based route protection ENABLED for /admin and /portal
   if (pathname.startsWith("/admin") || pathname.startsWith("/portal")) {
     const session = request.cookies.get(SESSION_COOKIE);
@@ -15,7 +18,7 @@ export function middleware(request) {
     }
   }
 
-  const response = NextResponse.next();
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
 
   // Security Headers
   response.headers.set(
