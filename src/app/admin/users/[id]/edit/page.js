@@ -59,7 +59,7 @@ export default async function AdminEditUserPage(props) {
               <span className="inline-flex px-3 py-1 rounded-2xl bg-slate-100 text-slate-600 text-[11px] font-black uppercase tracking-widest">
                 ID: {user.id.slice(-8)}
               </span>
-              <span className={`inline-flex px-3 py-1 rounded-2xl text-[11px] font-black uppercase tracking-widest ${user.active ? 'bg-[#ff5a2f]/10 text-[#ff5a2f]' : 'bg-red-50 text-red-600'}`}>
+              <span className={`inline-flex px-3 py-1 rounded-2xl text-[11px] font-black uppercase tracking-widest ${user.active ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300' : 'bg-red-50 text-red-600'}`}>
                 {user.active ? 'Active' : 'Locked'}
               </span>
               <span className="inline-flex px-3 py-1 rounded-2xl bg-slate-100 text-slate-700 text-[11px] font-black uppercase tracking-widest">
@@ -85,7 +85,7 @@ export default async function AdminEditUserPage(props) {
             </div>
 
             {saved === "profile" && (
-              <div className="bg-[#ff5a2f]/10 border border-[#ff5a2f]/20 text-[#ff5a2f] text-sm font-bold rounded-2xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
+              <div className="bg-emerald-50 border border-emerald-200/80 text-emerald-800 dark:bg-emerald-950/35 dark:border-emerald-800/50 dark:text-emerald-300 text-sm font-bold rounded-2xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
                 ✓ Profile saved successfully
               </div>
             )}
@@ -141,7 +141,7 @@ export default async function AdminEditUserPage(props) {
                 </div>
               </div>
               <div className="pt-4 border-t border-slate-100 flex justify-end">
-                <button type="submit" className="bg-slate-900 border border-slate-900 text-white px-8 h-12 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-[#ff5a2f] hover:border-[#ff5a2f] transition-all shadow-none">
+                <button type="submit" className="bg-[#2F855A] border border-[#2F855A] text-white px-8 h-12 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-[#38A169] hover:border-[#38A169] transition-all shadow-none">
                   Save Details
                 </button>
               </div>
@@ -161,7 +161,7 @@ export default async function AdminEditUserPage(props) {
             </div>
 
             {saved === "password" && (
-              <div className="bg-[#ff5a2f]/10 border border-[#ff5a2f]/20 text-[#ff5a2f] text-sm font-bold rounded-2xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
+              <div className="bg-emerald-50 border border-emerald-200/80 text-emerald-800 dark:bg-emerald-950/35 dark:border-emerald-800/50 dark:text-emerald-300 text-sm font-bold rounded-2xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
                 ✓ New password successfully set
               </div>
             )}

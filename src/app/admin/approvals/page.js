@@ -32,7 +32,7 @@ export default async function AdminApprovalsPage() {
 
   const gradients = [
     "from-slate-100 to-slate-200",
-    "from-[#ff5a2f]/10 to-[#ff5a2f]/20",
+    "from-emerald-50 to-emerald-100",
     "from-blue-50 to-blue-100",
     "from-slate-50 to-slate-100",
   ];
@@ -43,7 +43,7 @@ export default async function AdminApprovalsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-8">
         <div>
           <div className="flex items-center gap-3 mb-3">
-             <div className="w-2 h-2 rounded-2xl bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.3)] animate-pulse" />
+             <div className="w-2 h-2 rounded-2xl bg-[#2F855A] shadow-[0_0_8px_rgba(47,133,90,0.45)] animate-pulse" />
              <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-800 dark:text-slate-200">Dealer Approval</span>
           </div>
           <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">
@@ -74,26 +74,26 @@ export default async function AdminApprovalsPage() {
                         {dealer.name[0]?.toUpperCase()}
                       </div>
                       <div>
-                        <p className="text-lg font-black text-slate-900 dark:text-white tracking-tight leading-none mb-1.5 uppercase group-hover:text-[#ff5a2f] transition-colors">{dealer.name}</p>
+                        <p className="text-lg font-black text-slate-900 dark:text-white tracking-tight leading-none mb-1.5 uppercase group-hover:text-[#2F855A] dark:group-hover:text-emerald-400 transition-colors">{dealer.name}</p>
                         <div className="flex items-center gap-3">
                            <span className="text-[11px] font-bold text-slate-600 uppercase tracking-widest">{dealer.phone}</span>
                            <div className="w-1 h-1 rounded-2xl bg-slate-200" />
-                           <span className="text-[11px] font-bold text-[#ff5a2f] uppercase tracking-widest">Entry: {new Date(dealer.createdAt).toLocaleDateString()}</span>
+                           <span className="text-[11px] font-bold text-[#2F855A] dark:text-emerald-400 uppercase tracking-widest">Entry: {new Date(dealer.createdAt).toLocaleDateString()}</span>
                         </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-10 py-7">
                      <div className="flex items-center gap-2.5 text-slate-700 mb-1">
-                        <MapPin size={14} className="text-[#ff5a2f]/40" />
+                        <MapPin size={14} className="text-[#2F855A]/45 dark:text-emerald-500/50" />
                         <p className="text-xs font-bold uppercase tracking-widest">{dealer.county || "Unknown Territory"}</p>
                      </div>
                      <p className="text-[11px] font-medium text-slate-600 uppercase tracking-tighter">{dealer.location}</p>
                   </td>
                   <td className="px-10 py-7">
-                     <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-100 rounded-2xl w-fit shadow-none">
-                        <Clock size={12} className="text-amber-600" />
-                        <span className="text-[11px] font-bold text-amber-600 uppercase tracking-widest">
+                     <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-800/45 rounded-2xl w-fit shadow-none">
+                        <Clock size={12} className="text-emerald-700 dark:text-emerald-400" />
+                        <span className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-widest">
                           Awaiting Validation
                         </span>
                      </div>
@@ -106,7 +106,7 @@ export default async function AdminApprovalsPage() {
                       
                       <form action={`/api/admin/dealers/${dealer.id}/toggle-verified`} method="POST">
                         <button type="submit" 
-                          className="h-11 px-6 bg-slate-900 hover:bg-[#ff5a2f] text-white font-bold text-[11px] uppercase tracking-widest border border-transparent rounded-2xl transition-all flex items-center gap-2"
+                          className="h-11 px-6 bg-[#2F855A] hover:bg-[#38A169] text-white font-bold text-[11px] uppercase tracking-widest border border-transparent rounded-2xl transition-all flex items-center gap-2"
                         >
                           <CheckCircle2 size={14} /> Authorize
                         </button>

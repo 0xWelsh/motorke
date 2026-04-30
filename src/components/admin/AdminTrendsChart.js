@@ -22,7 +22,7 @@ export default function AdminTrendsChart({ data, rangeLabel = "Last 30 Days" }) 
         </div>
         <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-wider">
            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-emerald-500" /> Leads
+              <span className="w-3 h-3 rounded-full bg-[#2F855A]" /> Leads
            </div>
            <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-slate-900" /> Listings
@@ -35,8 +35,8 @@ export default function AdminTrendsChart({ data, rangeLabel = "Last 30 Days" }) 
           <AreaChart data={data} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#2F855A" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#2F855A" stopOpacity={0}/>
               </linearGradient>
               <linearGradient id="colorCars" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#0f172a" stopOpacity={0.1}/>
@@ -62,7 +62,7 @@ export default function AdminTrendsChart({ data, rangeLabel = "Last 30 Days" }) 
               labelStyle={{ fontWeight: 'bold', color: '#64748b', marginBottom: '4px' }}
             />
             <Area type="monotone" dataKey="cars" stroke="#0f172a" strokeWidth={3} fillOpacity={1} fill="url(#colorCars)" />
-            <Area type="monotone" dataKey="leads" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorLeads)" />
+            <Area type="monotone" dataKey="leads" stroke="#2F855A" strokeWidth={3} fillOpacity={1} fill="url(#colorLeads)" />
           </AreaChart>
         </ResponsiveContainer>
       </div>

@@ -13,7 +13,7 @@ function StarDisplay({ rating }) {
         <Star
           key={i}
           size={13}
-          className={i <= rating ? "fill-amber-400 text-amber-400" : "text-slate-200"}
+          className={i <= rating ? "fill-emerald-500 text-emerald-500" : "text-slate-200 dark:text-slate-600"}
         />
       ))}
     </div>
@@ -48,7 +48,7 @@ export default async function AdminReviewsPage() {
       {/* Header */}
       <div className="mb-12">
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-2 h-2 rounded-full bg-amber-500" />
+          <div className="w-2 h-2 rounded-full bg-[#2F855A] shadow-[0_0_8px_rgba(47,133,90,0.45)]" />
           <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Moderation</span>
         </div>
         <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">
@@ -62,7 +62,7 @@ export default async function AdminReviewsPage() {
       {/* Dealer Reviews */}
       <section className="mb-16">
         <div className="flex items-center gap-3 mb-6">
-          <Building2 size={16} className="text-[#ff5a2f]" />
+          <Building2 size={16} className="text-[#2F855A]" />
           <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-700">
             Dealer Reviews <span className="text-slate-400 font-semibold">({dealerReviews.length})</span>
           </h2>
@@ -122,7 +122,7 @@ export default async function AdminReviewsPage() {
       {/* Car Reviews */}
       <section>
         <div className="flex items-center gap-3 mb-6">
-          <Car size={16} className="text-[#ff5a2f]" />
+          <Car size={16} className="text-[#2F855A]" />
           <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-700">
             Car Reviews <span className="text-slate-400 font-semibold">({carReviews.length})</span>
           </h2>

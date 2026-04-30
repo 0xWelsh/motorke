@@ -119,7 +119,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
     <div className="w-full space-y-4">
       <div 
         className={`relative w-full h-48 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center p-4 transition-all duration-500 overflow-hidden group cursor-pointer ${
-          dragActive ? "border-[#ff5a2f] bg-[#ff5a2f]/5 scale-[1.01]" : "border-slate-200 dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#0a0a0a] hover:border-slate-300 dark:hover:border-slate-700"
+          dragActive ? "border-[#2F855A] bg-[#2F855A]/5 scale-[1.01]" : "border-slate-200 dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#0a0a0a] hover:border-slate-300 dark:hover:border-slate-700"
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -128,14 +128,14 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
         onClick={() => inputRef.current?.click()}
       >
         <div className="absolute inset-0 opacity-20 pointer-events-none overflow-hidden">
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-[#ff5a2f]/20 via-transparent to-transparent rounded-full animate-spin-slow" />
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-[#2F855A]/20 via-transparent to-transparent rounded-full animate-spin-slow" />
         </div>
 
         <input ref={inputRef} type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleFiles(e.target.files)} />
         <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => handleFiles(e.target.files)} />
 
         <div className="relative z-10 flex flex-col items-center">
-            <div className="w-12 h-12 rounded-2xl bg-white dark:bg-[#111111] shadow-lg flex items-center justify-center mb-3 text-[#ff5a2f] border border-slate-100 dark:border-slate-800 group-hover:scale-110 transition-transform duration-500">
+            <div className="w-12 h-12 rounded-2xl bg-white dark:bg-[#111111] shadow-lg flex items-center justify-center mb-3 text-[#2F855A] border border-slate-100 dark:border-slate-800 group-hover:scale-110 transition-transform duration-500">
                 <UploadCloud size={24} />
             </div>
             <p className="text-base font-black text-slate-900 dark:text-white tracking-tight">Drop listing photos</p>
@@ -143,9 +143,9 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
         </div>
 
         {dragActive && (
-          <div className="absolute inset-0 z-50 bg-[#ff5a2f]/10 backdrop-blur-md flex items-center justify-center">
-             <div className="bg-white dark:bg-[#111111] px-10 py-5 rounded-full shadow-2xl border border-[#ff5a2f]">
-                <p className="text-sm font-black text-[#ff5a2f] uppercase tracking-widest flex items-center gap-3">
+          <div className="absolute inset-0 z-50 bg-[#2F855A]/10 backdrop-blur-md flex items-center justify-center">
+             <div className="bg-white dark:bg-[#111111] px-10 py-5 rounded-full shadow-2xl border border-[#2F855A]">
+                <p className="text-sm font-black text-[#2F855A] uppercase tracking-widest flex items-center gap-3">
                    <CheckCircle2 size={24} /> Drop to Attach
                 </p>
              </div>
@@ -157,7 +157,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
         <div className="bg-[#fbfcfe] dark:bg-[#0a0a0a] border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-sm">
            <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                 <div className="w-2 h-2 rounded-full bg-[#ff5a2f]" />
+                 <div className="w-2 h-2 rounded-full bg-[#2F855A]" />
                  <h3 className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Asset Grid</h3>
               </div>
               <div className="flex items-center gap-2">
@@ -197,7 +197,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
                     <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-end p-4 backdrop-blur-sm pointer-events-auto">
                         <div className="w-full space-y-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                             {file.isPrimary ? (
-                               <div className="w-full py-2 rounded-xl bg-[#ff5a2f] text-white text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2">
+                               <div className="w-full py-2 rounded-xl bg-[#2F855A] text-white text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2">
                                   <Crown size={12} /> Primary Hub
                                </div>
                             ) : (
@@ -236,7 +236,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
                     </div>
 
                     {file.isPrimary && (
-                      <div className="absolute top-4 left-4 p-2 bg-[#ff5a2f] text-white rounded-xl shadow-xl border border-white/20">
+                      <div className="absolute top-4 left-4 p-2 bg-[#2F855A] text-white rounded-xl shadow-xl border border-white/20">
                         <Crown size={14} />
                       </div>
                     )}
@@ -250,7 +250,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
            </div>
 
            <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/50 flex items-center gap-3">
-              <Info size={14} className="text-[#ff5a2f]" />
+              <Info size={14} className="text-[#2F855A]" />
               <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Drag or use Left/Right. Primary image is your cover.</p>
            </div>
         </div>

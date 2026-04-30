@@ -36,7 +36,7 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
   return (
     <div className="p-8 lg:p-12 max-w-3xl">
       <div className="mb-8">
-        <a href="/admin/dealers" className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 hover:text-[#ff5a2f] transition-all">← Dealerships</a>
+        <a href="/admin/dealers" className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 hover:text-[#2F855A] transition-all">← Dealerships</a>
         <div className="flex items-center gap-5 mt-4">
           <AdminAvatarUpload currentUrl={dealer.logoUrl} targetId={dealer.id} targetType="dealer" name={dealer.name} size="lg" />
           <div>
@@ -133,18 +133,18 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
           <div className="flex gap-6">
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" name="verified" defaultChecked={dealer.verified}
-                className="w-4 h-4 border border-[#ddd4c8] dark:border-slate-800 rounded-2xl checked:bg-[#ff5a2f] checked:border-[#ff5a2f] cursor-pointer accent-[#ff5a2f]" />
+                className="w-4 h-4 border border-[#ddd4c8] dark:border-slate-800 rounded-2xl checked:bg-[#2F855A] checked:border-[#2F855A] cursor-pointer accent-[#2F855A]" />
               <span className="text-[11px] font-bold uppercase tracking-widest text-slate-700">Verified dealer</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" name="featured" defaultChecked={dealer.featured}
-                className="w-4 h-4 border border-[#ddd4c8] dark:border-slate-800 rounded-2xl checked:bg-[#ff5a2f] checked:border-[#ff5a2f] cursor-pointer accent-[#ff5a2f]" />
+                className="w-4 h-4 border border-[#ddd4c8] dark:border-slate-800 rounded-2xl checked:bg-[#2F855A] checked:border-[#2F855A] cursor-pointer accent-[#2F855A]" />
               <span className="text-[11px] font-bold uppercase tracking-widest text-slate-700">Featured on homepage</span>
             </label>
           </div>
 
           <button type="submit"
-            className="w-full bg-[#f97316] hover:bg-[#ea6c0b] text-white font-bold py-3 rounded-2xl transition-colors">
+            className="w-full bg-[#2F855A] hover:bg-[#38A169] text-white font-bold py-3 rounded-2xl transition-colors">
             Save changes
           </button>
         </form>
@@ -157,7 +157,7 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
              <h2 className="font-black text-white">Branch Locations</h2>
              <p className="text-xs text-white/40 mt-1">Add additional map-pinned locations for this dealership.</p>
            </div>
-           <a href={`/admin/dealers/${dealer.id}/branches/new`} className="px-4 py-2 bg-orange-600/10 hover:bg-orange-600 text-orange-500 hover:text-white border border-orange-500/20 hover:border-orange-500 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-colors">
+           <a href={`/admin/dealers/${dealer.id}/branches/new`} className="px-4 py-2 bg-[#2F855A]/15 hover:bg-[#2F855A] text-[#38A169] hover:text-white border border-[#2F855A]/30 hover:border-[#2F855A] rounded-2xl text-[11px] font-black uppercase tracking-widest transition-colors">
               + Add Branch
            </a>
         </div>
@@ -167,7 +167,7 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
              {dealer.branches.map(b => (
                <div key={b.id} className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl">
                  <div className="flex items-center gap-4">
-                   <div className="w-10 h-10 rounded-2xl bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                   <div className="w-10 h-10 rounded-2xl bg-[#2F855A]/15 text-[#38A169] flex items-center justify-center">
                      <MapPin size={16} />
                    </div>
                    <div>

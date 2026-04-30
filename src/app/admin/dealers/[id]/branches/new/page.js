@@ -21,8 +21,8 @@ export default async function AdminNewBranchPage({ params, searchParams }) {
   const sp = await searchParams;
   const error = sp.error;
 
-  const inputCls  = "w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#f97316]/50 transition-colors";
-  const selectCls = "w-full bg-surface border border-white/10 rounded-2xl px-4 py-3 text-sm text-white outline-none focus:border-[#f97316]/50 transition-colors";
+  const inputCls  = "w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-[#38A169]/55 transition-colors";
+  const selectCls = "w-full bg-surface border border-white/10 rounded-2xl px-4 py-3 text-sm text-white outline-none focus:border-[#38A169]/55 transition-colors";
   const labelCls  = "block text-xs text-white/40 uppercase tracking-wider mb-2";
 
   return (
@@ -80,7 +80,7 @@ export default async function AdminNewBranchPage({ params, searchParams }) {
           </div>
 
           <button type="submit"
-            className="w-full bg-[#f97316] hover:bg-[#ea6c0b] text-white font-bold py-3 rounded-2xl transition-colors">
+            className="w-full bg-[#2F855A] hover:bg-[#38A169] text-white font-bold py-3 rounded-2xl transition-colors">
             Create Branch
           </button>
         </form>

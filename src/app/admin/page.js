@@ -116,7 +116,7 @@ export default async function AdminDashboard({ searchParams }) {
       <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-             <div className="w-2 h-2 rounded-none bg-[#ff5a2f] shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+             <div className="w-2 h-2 rounded-none bg-[#2F855A] shadow-[0_0_8px_rgba(47,133,90,0.5)]" />
              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">System Administration</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-1">
@@ -138,7 +138,7 @@ export default async function AdminDashboard({ searchParams }) {
               <Link 
                 key={opt.v} href={`?range=${opt.v}`} 
                 className={`px-4 py-2 text-[11px] font-black uppercase tracking-widest rounded-none transition-all ${
-                  range === opt.v ? "bg-white text-[#ff5a2f]" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
+                  range === opt.v ? "bg-white text-[#2F855A]" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
                 }`}
               >
                 {opt.label}
@@ -160,7 +160,7 @@ export default async function AdminDashboard({ searchParams }) {
           <Link
             key={href}
             href={href}
-            className="h-12 px-4 bg-white dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 text-[10px] font-black uppercase tracking-[0.14em] text-slate-700 dark:text-slate-200 flex items-center justify-between hover:border-[#ff5a2f] hover:text-[#ff5a2f] transition-colors"
+            className="h-12 px-4 bg-white dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 text-[10px] font-black uppercase tracking-[0.14em] text-slate-700 dark:text-slate-200 flex items-center justify-between hover:border-[#2F855A] hover:text-[#2F855A] transition-colors"
           >
             <span>{label}</span>
             <Icon size={15} />
@@ -184,11 +184,11 @@ export default async function AdminDashboard({ searchParams }) {
           href="/api/admin/go-search-shadow"
           target="_blank"
           rel="noopener noreferrer"
-          className="bg-[#f8f7f4] dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 px-4 py-3 hover:border-[#ff5a2f]/50 transition-colors"
+          className="bg-[#f8f7f4] dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 px-4 py-3 hover:border-[#2F855A]/50 transition-colors"
         >
           <div className="flex items-center justify-between mb-1">
             <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Go Search Shadow</p>
-            <ServerCog size={14} className={goSearchShadow.flags.shadowEnabled ? "text-[#ff5a2f]" : "text-slate-400"} />
+            <ServerCog size={14} className={goSearchShadow.flags.shadowEnabled ? "text-[#2F855A]" : "text-slate-400"} />
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white">
             {goSearchShadow.rates.mismatchRate.toFixed(1)}%
@@ -246,7 +246,7 @@ export default async function AdminDashboard({ searchParams }) {
         ].map((m, i) => (
           <div key={i} className="bg-white dark:bg-[#111111] p-5 sm:p-6 rounded-none transition-all relative overflow-hidden group shadow-sm hover:shadow-md">
             <div className="flex items-center justify-between mb-4 relative z-10">
-              <div className={`w-10 h-10 flex items-center justify-center rounded-none bg-[#f7f6f3] ${m.color ? "text-[#ff5a2f] group-hover:bg-[#ff5a2f] group-hover:text-white" : "text-slate-400 group-hover:bg-slate-900 group-hover:text-white"} transition-colors`}>
+              <div className={`w-10 h-10 flex items-center justify-center rounded-none bg-[#f7f6f3] ${m.color ? "text-[#2F855A] group-hover:bg-[#2F855A] group-hover:text-white" : "text-slate-400 group-hover:bg-slate-900 group-hover:text-white"} transition-colors`}>
                 {m.icon}
               </div>
             </div>
@@ -254,7 +254,7 @@ export default async function AdminDashboard({ searchParams }) {
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400 relative z-10 mb-1">{m.label}</p>
             <p className="text-[11px] uppercase font-bold text-slate-400 tracking-wider relative z-10 bg-[#f7f6f3] dark:bg-slate-800 inline-flex px-2 py-0.5 rounded-none mt-2">{m.sub}</p>
             
-            {m.color && <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#ff5a2f]/10 rounded-none blur-2xl opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none" />}
+            {m.color && <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#2F855A]/10 rounded-none blur-2xl opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none" />}
           </div>
         ))}
       </div>
@@ -302,19 +302,19 @@ export default async function AdminDashboard({ searchParams }) {
             </div>
 
             {/* Billing Health Panel */}
-            <div className="bg-[#ff5a2f]/10 p-5 sm:p-6 rounded-none shadow-none">
-               <div className="flex items-center gap-2 mb-4 sm:mb-6 text-[#ff5a2f]">
+            <div className="bg-[#2F855A]/10 p-5 sm:p-6 rounded-none shadow-none">
+               <div className="flex items-center gap-2 mb-4 sm:mb-6 text-[#2F855A]">
                   <Activity size={16} strokeWidth={3} />
-                  <span className="text-xs font-black uppercase tracking-widest text-[#e54a1f]">Billing Health</span>
+                  <span className="text-xs font-black uppercase tracking-widest text-[#276749]">Billing Health</span>
                </div>
                <div className="bg-white rounded-none p-5 sm:p-6 flex flex-col items-center text-center justify-center shadow-sm">
                   <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Estimated MRR</p>
                   <p className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter mb-6">{formatCompact(mrr)}</p>
                   
                   <div className="w-full flex items-center gap-2 pt-5 border-t border-slate-100/60">
-                    <div className="flex-1 bg-[#ff5a2f]/10 py-3 rounded-none flex flex-col items-center justify-center">
-                       <span className="text-[11px] font-black uppercase tracking-widest text-[#ff5a2f] mb-1">Premium</span>
-                       <span className="text-xl font-black text-[#e54a1f]">{premiumSubs}</span>
+                    <div className="flex-1 bg-[#2F855A]/10 py-3 rounded-none flex flex-col items-center justify-center">
+                       <span className="text-[11px] font-black uppercase tracking-widest text-[#2F855A] mb-1">Premium</span>
+                       <span className="text-xl font-black text-[#276749]">{premiumSubs}</span>
                     </div>
                     <div className="flex-1 bg-[#f7f6f3] py-3 rounded-none flex flex-col items-center justify-center">
                        <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1">Free</span>

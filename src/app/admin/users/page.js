@@ -30,7 +30,7 @@ export default async function AdminUsersPage(props) {
 
   const roleStyles = {
     ADMIN:  "bg-slate-900 text-white border-slate-900",
-    DEALER: "bg-[#ff5a2f]/10 text-[#ff5a2f] border-[#ff5a2f]/20",
+    DEALER: "bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/50",
     BUYER:  "bg-[#f7f6f3] text-slate-600 border-[#ddd4c8] dark:border-slate-800",
   };
 
@@ -40,7 +40,7 @@ export default async function AdminUsersPage(props) {
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
         <div>
           <div className="flex items-center gap-2 mb-2">
-             <div className="w-2 h-2 rounded-2xl bg-[#ff5a2f]" />
+             <div className="w-2 h-2 rounded-2xl bg-[#2F855A]" />
              <span className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-500">Access Management</span>
           </div>
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
@@ -48,13 +48,13 @@ export default async function AdminUsersPage(props) {
           </h1>
         </div>
         
-        <Link href="/admin/users/new" className="bg-slate-900 border border-slate-900 text-white px-8 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-[#ff5a2f] hover:border-[#ff5a2f] transition-all shadow-none">
+        <Link href="/admin/users/new" className="bg-[#2F855A] border border-[#2F855A] text-white px-8 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-[#38A169] hover:border-[#38A169] transition-all shadow-none">
           <UserPlus size={14} /> Create Identity
         </Link>
       </div>
 
       {deleted && (
-        <div className="bg-[#ff5a2f]/10 border border-[#ff5a2f]/20 text-[#ff5a2f] text-sm rounded-2xl px-4 py-3 mb-8">
+        <div className="bg-emerald-50 border border-emerald-200/80 text-emerald-800 dark:bg-emerald-950/35 dark:border-emerald-800/45 dark:text-emerald-300 text-sm rounded-2xl px-4 py-3 mb-8">
           ✓ Profile deleted successfully
         </div>
       )}
@@ -98,7 +98,7 @@ export default async function AdminUsersPage(props) {
                 </td>
                 <td className="px-8 py-6">
                   <span className={`inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-widest ${
-                    user.active ? "text-[#ff5a2f]" : "text-slate-400"
+                    user.active ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400"
                   }`}>
                     {user.active ? <CheckCircle2 size={12} /> : <Ban size={12} />}
                     {user.active ? "Active" : "Locked"}
@@ -109,17 +109,17 @@ export default async function AdminUsersPage(props) {
                 </td>
                 <td className="px-8 py-6 text-right">
                   <div className="flex items-center justify-end gap-3 transition-all duration-300 sm:opacity-0 sm:group-hover:opacity-100">
-                    <Link href={`/admin/users/${user.id}/edit`} className="flex items-center gap-2 px-4 py-2 bg-white hover:border-emerald-200 hover:text-[#ff5a2f] text-slate-700 font-black text-[11px] uppercase tracking-widest rounded-2xl transition-all border border-[#ddd4c8] dark:border-slate-800 shadow-none" title="Manage Profile">
+                    <Link href={`/admin/users/${user.id}/edit`} className="flex items-center gap-2 px-4 py-2 bg-white hover:border-[#2F855A]/40 hover:text-[#2F855A] text-slate-700 dark:bg-slate-900 dark:hover:text-emerald-400 font-black text-[11px] uppercase tracking-widest rounded-2xl transition-all border border-[#ddd4c8] dark:border-slate-800 shadow-none" title="Manage Profile">
                       <Edit3 size={14} /> Manage
                     </Link>
                     
                     <form action={`/api/admin/users/${user.id}/toggle`} method="POST">
-                      <button type="submit" className={`p-2 transition-colors ${user.active ? "text-slate-400 hover:text-slate-900 dark:text-white" : "text-[#ff5a2f] hover:text-[#e54a1f]"}`} title={user.active ? "Lock Account" : "Unlock Account"}>
+                      <button type="submit" className={`p-2 transition-colors ${user.active ? "text-slate-400 hover:text-slate-900 dark:text-white" : "text-emerald-600 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300"}`} title={user.active ? "Lock Account" : "Unlock Account"}>
                         {user.active ? <Ban size={18} /> : <CheckCircle2 size={18} />}
                       </button>
                     </form>
 
-                    <Link href={`/admin/users/${user.id}/edit#security`} className="p-2 text-slate-400 hover:text-[#ff5a2f] transition-colors" title="Reset Security">
+                    <Link href={`/admin/users/${user.id}/edit#security`} className="p-2 text-slate-400 hover:text-[#2F855A] dark:hover:text-emerald-400 transition-colors" title="Reset Security">
                       <RefreshCw size={16} />
                     </Link>
                   </div>

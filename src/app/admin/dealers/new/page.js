@@ -21,7 +21,7 @@ export default async function AdminNewDealerPage(props) {
   return (
     <div className="p-8 lg:p-12 max-w-3xl">
       <div className="mb-8">
-        <a href="/admin/dealers" className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 hover:text-[#ff5a2f] transition-all">← Dealerships</a>
+        <a href="/admin/dealers" className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 hover:text-[#2F855A] transition-all">← Dealerships</a>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tighter mt-2">Add dealership</h1>
       </div>
 
@@ -108,17 +108,17 @@ export default async function AdminNewDealerPage(props) {
 
           <div className="flex gap-6">
             <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" name="verified" className="w-4 h-4 border border-[#ddd4c8] dark:border-slate-800 rounded-2xl checked:bg-[#ff5a2f] checked:border-[#ff5a2f] cursor-pointer accent-[#ff5a2f]" />
+              <input type="checkbox" name="verified" className="w-4 h-4 border border-[#ddd4c8] dark:border-slate-800 rounded-2xl checked:bg-[#2F855A] checked:border-[#2F855A] cursor-pointer accent-[#2F855A]" />
               <span className="text-[11px] font-bold uppercase tracking-widest text-slate-700">Verified dealer</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" name="featured" className="w-4 h-4 border border-[#ddd4c8] dark:border-slate-800 rounded-2xl checked:bg-[#ff5a2f] checked:border-[#ff5a2f] cursor-pointer accent-[#ff5a2f]" />
+              <input type="checkbox" name="featured" className="w-4 h-4 border border-[#ddd4c8] dark:border-slate-800 rounded-2xl checked:bg-[#2F855A] checked:border-[#2F855A] cursor-pointer accent-[#2F855A]" />
               <span className="text-[11px] font-bold uppercase tracking-widest text-slate-700">Featured on homepage</span>
             </label>
           </div>
 
           <button type="submit"
-            className="w-full bg-[#f97316] hover:bg-[#ea6c0b] text-white font-bold py-3 rounded-2xl transition-colors">
+            className="w-full bg-[#2F855A] hover:bg-[#38A169] text-white font-bold py-3 rounded-2xl transition-colors">
             Create dealership →
           </button>
         </form>

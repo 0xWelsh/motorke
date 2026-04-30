@@ -59,7 +59,7 @@ export default function RunWatchAlertsButton() {
           type="button"
           onClick={runNow}
           disabled={state === "running"}
-          className="px-4 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-widest bg-slate-900 text-white hover:bg-black disabled:opacity-60 transition-colors"
+          className="px-4 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-widest bg-[#2F855A] text-white hover:bg-[#38A169] disabled:opacity-60 transition-colors"
         >
           {state === "running" ? "Running..." : "Run Watch Alerts"}
         </button>
@@ -67,7 +67,7 @@ export default function RunWatchAlertsButton() {
           type="button"
           onClick={sendTestEmail}
           disabled={state === "running"}
-          className="px-4 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-widest border border-slate-900 text-slate-900 hover:bg-slate-100 dark:border-slate-100 dark:text-slate-100 dark:hover:bg-slate-800 disabled:opacity-60 transition-colors"
+          className="px-4 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-widest border border-[#2F855A] text-[#2F855A] hover:bg-[#2F855A]/10 dark:border-emerald-400/80 dark:text-emerald-300 dark:hover:bg-emerald-950/50 disabled:opacity-60 transition-colors"
         >
           Send Test Alert Email
         </button>

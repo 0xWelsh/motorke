@@ -26,7 +26,7 @@ const avatarGradients = [
   "from-[#2F855A] to-[#38A169]",
   "from-emerald-800 to-emerald-950",
   "from-indigo-800 to-indigo-950",
-  "from-amber-800 to-orange-950",
+  "from-teal-800 to-teal-950",
 ];
 
 export default async function AdminDealersPage() {
@@ -75,7 +75,7 @@ export default async function AdminDealersPage() {
               {[
                 { label: "Total", value: dealers.length, tone: "text-slate-900 dark:text-white" },
                 { label: "Verified", value: verifiedCount, tone: "text-emerald-700 dark:text-emerald-400" },
-                { label: "Pending", value: pendingCount, tone: pendingCount ? "text-amber-700 dark:text-amber-400" : "text-slate-400" },
+                { label: "Pending", value: pendingCount, tone: pendingCount ? "text-sky-700 dark:text-sky-400" : "text-slate-400" },
               ].map((s) => (
                 <div
                   key={s.label}
@@ -97,7 +97,7 @@ export default async function AdminDealersPage() {
 
         {featuredCount > 0 && (
           <p className="relative mt-6 flex items-center gap-2 text-[11px] font-semibold text-slate-600 dark:text-zinc-400">
-            <Star size={14} className="text-amber-500" fill="currentColor" />
+            <Star size={14} className="text-[#38A169]" fill="currentColor" />
             <span>
               <span className="font-black text-slate-900 dark:text-white">{featuredCount}</span> featured on marketplace home
             </span>
@@ -184,13 +184,13 @@ export default async function AdminDealersPage() {
                         <ShieldCheck size={14} /> Verified
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/80 bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-200/80 bg-sky-50 px-2.5 py-1 text-[11px] font-bold text-sky-800 dark:border-sky-900/50 dark:bg-sky-950/40 dark:text-sky-200">
                         <Activity size={14} /> Pending
                       </span>
                     )}
                     {dealer.featured && (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-amber-200/60 bg-amber-50/80 px-2 py-1 text-[10px] font-black uppercase tracking-wider text-amber-800 dark:border-amber-800/50 dark:bg-amber-950/30 dark:text-amber-300">
-                        <Star size={12} className="text-amber-500" fill="currentColor" /> Featured
+                      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200/70 bg-emerald-50 px-2 py-1 text-[10px] font-black uppercase tracking-wider text-emerald-800 dark:border-emerald-800/50 dark:bg-emerald-950/35 dark:text-emerald-300">
+                        <Star size={12} className="text-[#38A169]" fill="currentColor" /> Featured
                       </span>
                     )}
                   </div>
