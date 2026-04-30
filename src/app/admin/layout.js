@@ -5,7 +5,6 @@ import {
   LayoutDashboard, 
   Car, 
   Plus, 
-  Upload, 
   Building2, 
   Users, 
   MessageSquare, 
@@ -16,7 +15,6 @@ import {
   Settings,
   Search,
   UserPlus,
-  Command,
   Menu,
   X,
   Star
@@ -96,12 +94,14 @@ export default function AdminLayout({ children }) {
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar: desktop = sticky flush-left rail (does not stretch with page height); mobile = layered drawer */}
       <aside className={clsx(
-        // Mobile drawer (slide-in)
-        // Use `max-lg:` so the sidebar is NOT fixed on desktop.
-        "w-[290px] max-w-[88vw] bg-white dark:bg-[#0f0f10] border-r border-[#ddd4c8] dark:border-zinc-800 flex flex-col shrink-0 h-screen z-50 overflow-hidden rounded-r-2xl shadow-[18px_0_55px_rgba(0,0,0,0.18)] transition-transform duration-300 max-lg:fixed max-lg:left-0 max-lg:top-0 lg:static lg:translate-x-0",
-        sidebarOpen ? "max-lg:translate-x-0" : "max-lg:-translate-x-full"
+        "flex flex-col shrink-0 z-50 bg-white dark:bg-[#0f0f10] border-[#ddd4c8] dark:border-zinc-800 overflow-hidden transition-transform duration-300 ease-out",
+        // Mobile drawer
+        "max-lg:fixed max-lg:left-0 max-lg:top-0 max-lg:h-[100dvh] max-lg:w-[min(290px,88vw)] max-lg:border-r max-lg:rounded-r-2xl max-lg:shadow-[12px_0_40px_rgba(0,0,0,0.12)]",
+        sidebarOpen ? "max-lg:translate-x-0" : "max-lg:-translate-x-full",
+        // Desktop rail — pinned to viewport, constant width (avoids awkward stretch with tall main columns)
+        "lg:sticky lg:top-0 lg:self-start lg:h-[100dvh] lg:min-h-0 lg:w-[264px] lg:border-r lg:rounded-none lg:shadow-none"
       )}>
         {/* Branding */}
         <div className="p-5 lg:p-6 flex items-center justify-between border-b border-[#ede7dd] dark:border-zinc-800">
