@@ -295,8 +295,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [badges, setBadges] = useState(car?.badges || []);
-  const [currency, setCurrency] = useState("KES");
-  const EXCHANGE_RATE = 135; 
   const [priceInput, setPriceInput] = useState(formSeed.price || "");
   const [selectedFeatures, setSelectedFeatures] = useState(car?.features || []);
   const [featuresOpen, setFeaturesOpen] = useState(false);
@@ -747,12 +745,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
     data.year = parseInt(data.year, 10);
     
-    // Currency resolution: if the user inputted USD, convert to KES before saving.
-    let basePrice = parseInt(data.price, 10);
-    if (currency === "USD") {
-      basePrice = Math.round(basePrice * EXCHANGE_RATE);
-    }
-    data.price = basePrice;
+    data.price = parseInt(data.price, 10);
 
     data.mileage = data.mileage ? parseInt(data.mileage, 10) : null;
     data.engineCC = data.engineCC ? parseInt(data.engineCC, 10) : null;
@@ -1225,40 +1218,16 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               </select>
             </div>
             <div>
-              <div className="flex flex-wrap items-end justify-between mb-2">
-                <label className={labelCls} style={{ marginBottom: 0 }}>Price *</label>
-                <div className="flex items-center bg-[#f0f3f5] dark:bg-[#111111] border border-[#ddd4c8] dark:border-[#27272a] rounded-2xl overflow-hidden">
-                  <button
-                    type="button"
-                    onClick={() => setCurrency("KES")}
-                    className={`px-3 py-1 text-[11px] font-black tracking-widest uppercase transition-colors ${currency === "KES" ? "bg-slate-900 text-white dark:bg-[#3f3f46] dark:text-white" : "text-slate-500 hover:text-slate-800 dark:text-slate-200 dark:text-slate-400 dark:hover:text-white"}`}
-                  >
-                    KES
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setCurrency("USD")}
-                    className={`px-3 py-1 text-[11px] font-black tracking-widest uppercase transition-colors ${currency === "USD" ? "bg-slate-900 text-white dark:bg-[#3f3f46] dark:text-white" : "text-slate-500 hover:text-slate-800 dark:text-slate-200 dark:text-slate-400 dark:hover:text-white"}`}
-                  >
-                    USD
-                  </button>
-                </div>
-              </div>
+              <label className={labelCls}>Price (KES) *</label>
               <input 
                 name="price" 
                 type="number" 
                 required 
                 value={priceInput}
                 onChange={(e) => setPriceInput(e.target.value)}
-                placeholder={currency === "KES" ? "e.g. 2500000" : "e.g. 18500"} 
+                placeholder="e.g. 2500000" 
                 className={`${inputCls}${confidenceClass("price")}`} 
               />
-              {currency === "USD" && Boolean(priceInput) && !isNaN(parseInt(priceInput, 10)) && (
-                <p className="mt-1.5 text-[11px] font-bold text-slate-500 dark:text-slate-400">
-                  ≈ {new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES', maximumFractionDigits: 0 }).format(parseInt(priceInput, 10) * EXCHANGE_RATE)}
-                  <span className="font-medium text-slate-400 ml-1">(Converted to KES for listing)</span>
-                </p>
-              )}
             </div>
 
             <div>
