@@ -300,6 +300,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [priceInput, setPriceInput] = useState(formSeed.price || "");
   const [selectedFeatures, setSelectedFeatures] = useState(car?.features || []);
   const [featuresOpen, setFeaturesOpen] = useState(false);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
   const [customFeature, setCustomFeature] = useState("");
   const [draftLoaded, setDraftLoaded] = useState(false);
   const [selectedMake, setSelectedMake] = useState((baseSeed.make || "").trim());
@@ -544,7 +545,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         Boolean((values.make || "").trim()) &&
         Boolean((values.model || "").trim()) &&
         Boolean(values.year) &&
-        Boolean(values.price);
+        Boolean(values.price) &&
+        Boolean(values.mileage) &&
+        Boolean(values.bodyType) &&
+        Boolean(values.fuelType) &&
+        Boolean(values.transmission) &&
+        Boolean((values.color || "").trim());
       const mediaDone = images.length >= 3;
       const detailsDone =
         ((values.description || "").trim().length >= 50) || selectedFeatures.length >= 3;
@@ -920,7 +926,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         <h2 className="mt-1 text-xl sm:text-2xl font-black text-slate-900 dark:text-white">Publish better listings, faster</h2>
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
-            "1) Fill make/model/year/price first so customers can discover the listing.",
+            "1) Start with required essentials: year, make, model, price, mileage, fuel, transmission, body type, color.",
             "2) Add at least 5 clear photos (front, rear, interior, dashboard, odometer).",
             "3) Use Smart Fill for messy text, then verify highlighted fields.",
             "4) Add strong features + short honest description before publishing.",
@@ -1271,6 +1277,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 {Object.entries(TRANSMISSION_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
               </select>
             </div>
+            <div>
+              <label className={labelCls}>Color *</label>
+              <input name="color" required defaultValue={formSeed.color} placeholder="e.g. Pearl White" className={inputCls} />
+            </div>
 
             <div>
               <label className={labelCls}>Body Type *</label>
@@ -1472,11 +1482,22 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 )}
               </div>
             <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
-              <div className="flex items-center gap-3 mb-8">
-                <Sparkles size={16} className="text-amber-500" />
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Advanced Specs</h3>
+              <div className="flex items-center justify-between gap-3 mb-6">
+                <div className="flex items-center gap-3">
+                  <Sparkles size={16} className="text-amber-500" />
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Advanced Specs</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAdvancedOpen((prev) => !prev)}
+                  className="inline-flex items-center gap-2 rounded-2xl border border-[#ddd4c8] dark:border-slate-700 px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+                >
+                  {advancedOpen ? "Collapse" : "Expand"}
+                  <ChevronRight size={14} className={`transition-transform ${advancedOpen ? "rotate-90" : ""}`} />
+                </button>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {advancedOpen ? (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
                     <label className={labelCls}>Engine CC</label>
                     <input name="engineCC" type="number" defaultValue={formSeed.engineCC} placeholder="e.g. 2000" className={`${inputCls}${confidenceClass("engineCC")}`} />
@@ -1517,10 +1538,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                     <label className={labelCls}>Seats</label>
                     <input name="seats" type="number" defaultValue={formSeed.seats} placeholder="e.g. 5" className={inputCls} />
                   </div>
-                  <div>
-                    <label className={labelCls}>Color</label>
-                    <input name="color" defaultValue={formSeed.color} placeholder="e.g. Pearl White" className={inputCls} />
-                  </div>
                   <div className="pt-8 space-y-3">
                     <label className="flex items-center gap-3 cursor-pointer">
                       <input type="checkbox" name="turbo" defaultChecked={!!formSeed.turbo} className="w-4 h-4 accent-[#ff5a2f]" />
@@ -1531,7 +1548,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                       <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">Sunroof</span>
                     </label>
                   </div>
-              </div>
+                </div>
+              ) : (
+                <p className="text-xs font-semibold text-slate-500">
+                  Advanced specs are collapsed by default for faster listing. Expand when needed.
+                </p>
+              )}
             </div>
             <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
               <label className={labelCls}>Tags</label>
