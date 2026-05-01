@@ -15,7 +15,7 @@ import SearchSuggestions from "@/components/SearchSuggestions";
 import NotificationsBell from "@/components/NotificationsBell";
 import ThemeToggle from "@/components/ThemeToggle";
 import { trackUiEvent } from "@/lib/analytics";
-import { BRAND_MARK_SQUARE } from "@/lib/site-url";
+import { BRAND_HEADER_LOGO } from "@/lib/site-url";
 
 export default function Navbar({ user }) {
   const router    = useRouter();
@@ -103,21 +103,18 @@ export default function Navbar({ user }) {
         <div className="w-full px-6 md:px-12">
           <div className="flex items-center justify-between gap-8 h-full">
 
-            {/* LOGO */}
-            <Link href="/" className="flex items-center gap-2.5 shrink-0 transition-transform active:scale-95">
-              <div className="relative h-10 md:h-12 w-10 md:w-12 shrink-0 overflow-hidden rounded-xl bg-white ring-1 ring-black/10 dark:bg-white dark:ring-white/20">
+            {/* LOGO — horizontal wordmark (not the favicon mark) */}
+            <Link href="/" className="flex shrink-0 items-center transition-transform active:scale-95">
+              <div className="relative h-12 w-52 shrink-0 md:h-14 md:w-72 lg:h-16 lg:w-80">
                 <Image
-                  src={BRAND_MARK_SQUARE}
+                  src={BRAND_HEADER_LOGO}
                   alt="Welsh Motorhub"
                   fill
-                  className="object-contain p-1.5"
+                  className="object-contain object-left invert dark:invert-0"
                   priority
-                  sizes="(max-width: 768px) 40px, 48px"
+                  sizes="(max-width: 768px) 208px, 320px"
                 />
               </div>
-              <span className="font-bold text-[15px] md:text-lg tracking-tight text-slate-900 dark:text-white">
-                Welsh Motorhub
-              </span>
             </Link>
 
             {/* NAV LINKS (Desktop) */}
@@ -325,20 +322,17 @@ export default function Navbar({ user }) {
                 <Link
                   href="/"
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-2.5 shrink-0"
+                  className="flex min-w-0 shrink-0 items-center"
                 >
-                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl bg-white ring-1 ring-black/10 dark:bg-white dark:ring-white/20">
+                  <div className="relative h-10 w-44 shrink-0 sm:h-11 sm:w-52">
                     <Image
-                      src={BRAND_MARK_SQUARE}
+                      src={BRAND_HEADER_LOGO}
                       alt="Welsh Motorhub"
                       fill
-                      className="object-contain p-1.5"
-                      sizes="40px"
+                      className="object-contain object-left invert dark:invert-0"
+                      sizes="(max-width: 640px) 176px, 208px"
                     />
                   </div>
-                  <span className="font-bold text-[15px] tracking-tight text-slate-900 dark:text-white">
-                    Welsh Motorhub
-                  </span>
                 </Link>
                 <button
                   type="button"

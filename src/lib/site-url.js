@@ -3,6 +3,8 @@ const DEFAULT_ORIGIN = "https://welshmotorhub.co.ke";
 /** Public files in /public — used for OG fallbacks, JSON-LD, navbar */
 export const BRAND_OG_IMAGE = "/opengraph.png";
 export const BRAND_MARK_SQUARE = "/app-icon-source.png";
+/** Horizontal wordmark for site header only (not favicon / app icon). */
+export const BRAND_HEADER_LOGO = "/newlogo.jpeg";
 
 /** Strip slashes for consistent URL concatenation */
 function normalizeOrigin(raw) {
