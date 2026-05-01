@@ -296,8 +296,13 @@ export default async function CarsPage({ searchParams }) {
             <ChevronRight className="w-3 h-3" />
             <span className="text-[#111827] dark:text-white">Available</span>
           </div>
-          <div className="text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400 whitespace-nowrap">
-            Vehicles Showing ({total})
+          <div className="text-right">
+            <div className="text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400 whitespace-nowrap">
+              Vehicles Showing ({total})
+            </div>
+            <p className="mt-1 text-[11px] font-semibold text-slate-500 dark:text-zinc-400">
+              Allow location to see nearest cars first.
+            </p>
           </div>
         </div>
 
@@ -315,6 +320,8 @@ export default async function CarsPage({ searchParams }) {
               initialMinPrice={sp.minPrice}
               initialMaxPrice={sp.maxPrice}
               initialSort={sort}
+              initialLat={sp.lat || ""}
+              initialLng={sp.lng || ""}
               allMakes={allMakes}
               bodyTypeLabels={BODY_TYPE_LABELS}
               counties={COUNTIES}

@@ -2,7 +2,7 @@
 // src/components/CarsSearch.js
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Search, X, SlidersHorizontal } from "lucide-react";
+import { Search, X, SlidersHorizontal, MapPin, Loader2 } from "lucide-react";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
 import SearchSuggestions from "@/components/SearchSuggestions";
 import { FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/constants";
@@ -17,6 +17,8 @@ export default function CarsSearch({
   initialMinPrice = "",
   initialMaxPrice = "",
   initialSort = "newest",
+  initialLat = "",
+  initialLng = "",
   allMakes = [],
   bodyTypeLabels = {},
   counties = []
@@ -34,6 +36,9 @@ export default function CarsSearch({
   const [minPrice, setMinPrice] = useState(initialMinPrice);
   const [maxPrice, setMaxPrice] = useState(initialMaxPrice);
   const [sort, setSort] = useState(initialSort);
+  const [lat, setLat] = useState(initialLat);
+  const [lng, setLng] = useState(initialLng);
+  const [locating, setLocating] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   
   const [suggestions, setSuggestions] = useState([]);
@@ -113,6 +118,8 @@ export default function CarsSearch({
     if (finalState.minPrice) params.set("minPrice", finalState.minPrice);
     if (finalState.maxPrice) params.set("maxPrice", finalState.maxPrice);
     if (finalState.sort && finalState.sort !== "newest") params.set("sort", finalState.sort);
+    if (finalState.lat) params.set("lat", finalState.lat);
+    if (finalState.lng) params.set("lng", finalState.lng);
 
     return params;
   }
@@ -127,7 +134,46 @@ export default function CarsSearch({
 
   function handleSubmit(e) {
     if (e) e.preventDefault();
+    // Ask for location on search submit so guest users can still get distance sorting.
+    if (!lat && !lng && typeof window !== "undefined" && "geolocation" in navigator) {
+      setLocating(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const nextLat = String(latitude);
+          const nextLng = String(longitude);
+          setLat(nextLat);
+          setLng(nextLng);
+          setLocating(false);
+          pushWith({ lat: nextLat, lng: nextLng });
+        },
+        () => {
+          setLocating(false);
+          pushWith();
+        },
+        { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
+      );
+      return;
+    }
     pushWith();
+  }
+
+  function requestLocation() {
+    if (typeof window === "undefined" || !("geolocation" in navigator)) return;
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const nextLat = String(latitude);
+        const nextLng = String(longitude);
+        setLat(nextLat);
+        setLng(nextLng);
+        setLocating(false);
+        pushWith({ lat: nextLat, lng: nextLng });
+      },
+      () => setLocating(false),
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
+    );
   }
 
   function clearFilters() {
@@ -140,12 +186,14 @@ export default function CarsSearch({
     setMinPrice("");
     setMaxPrice("");
     setSort("newest");
+    setLat("");
+    setLng("");
     setShowSuggestions(false);
     router.push("/cars");
   }
 
-  const hasFilters = search || make || bodyType || fuelType || transmission || county || minPrice || maxPrice || sort !== "newest";
-  const activeCount = [search, make, bodyType, fuelType, transmission, county, minPrice, maxPrice, sort !== "newest" ? "sort" : ""].filter(Boolean).length;
+  const hasFilters = search || make || bodyType || fuelType || transmission || county || minPrice || maxPrice || sort !== "newest" || (lat && lng);
+  const activeCount = [search, make, bodyType, fuelType, transmission, county, minPrice, maxPrice, sort !== "newest" ? "sort" : "", lat && lng ? "location" : ""].filter(Boolean).length;
 
   return (
     <div ref={formRef} className="w-full">
@@ -182,6 +230,15 @@ export default function CarsSearch({
               className="w-full bg-[#FAFAFA] dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 px-6 py-4 text-xs font-bold text-[#111827] dark:text-white outline-none focus:border-[#38A169] transition-all placeholder:text-[#A0AEC0] dark:placeholder:text-slate-600"
               style={{ borderRadius: '2px' }}
             />
+            <button
+              type="button"
+              onClick={requestLocation}
+              disabled={locating}
+              className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-[#2F855A] hover:text-[#276749] disabled:opacity-60 transition-colors"
+            >
+              {locating ? <Loader2 size={12} className="animate-spin" /> : <MapPin size={12} />}
+              {locating ? "Locating..." : lat && lng ? "Location active" : "Use my location"}
+            </button>
           </div>
 
           {/* Filter by Budget Buttons */}
