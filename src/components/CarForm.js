@@ -208,7 +208,6 @@ function buildBaseSeed(car, currentYear) {
     turbo: car?.turbo ?? false,
     sunroof: car?.sunroof ?? false,
     featured: car?.featured ?? false,
-    videoUrl: car?.videoUrl || "",
   };
 }
 
@@ -322,7 +321,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [smartFillDiff, setSmartFillDiff] = useState([]);
   const [smartFillSuggestions, setSmartFillSuggestions] = useState([]);
   const [manualOverrides, setManualOverrides] = useState({});
-  const [videoUrl, setVideoUrl] = useState(formSeed.videoUrl || "");
   const [descriptionTouched, setDescriptionTouched] = useState(Boolean((formSeed.description || "").trim()));
   const [liveDraft, setLiveDraft] = useState({});
   const [checklist, setChecklist] = useState({
@@ -1298,49 +1296,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             <p className="mt-2 text-xs font-semibold text-slate-500">
               Tip: Listings with 8+ quality photos usually get better enquiry rates.
             </p>
-            
-            <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800">
-               <div className="flex items-center gap-3 mb-6">
-                  <div className="w-1.5 h-1.5 rounded-2xl bg-indigo-500" />
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Listing Video</h3>
-               </div>
-               
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
-                  <div className="space-y-3">
-                      <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">
-                          Increase engagement by adding a YouTube or Vimeo link. A preview will appear on the right if the link is valid.
-                      </p>
-                      <input 
-                        name="videoUrl" 
-                        value={videoUrl}
-                        onChange={(e) => setVideoUrl(e.target.value)}
-                        placeholder="e.g. https://www.youtube.com/watch?v=..." 
-                        className={inputCls} 
-                      />
-                  </div>
-                  
-                  <div className="aspect-video bg-slate-100 dark:bg-[#111111] rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex items-center justify-center relative group">
-                      {videoUrl ? (
-                         <iframe 
-                            className="w-full h-full"
-                            src={(() => {
-                               if (videoUrl.includes("youtube.com/watch?v=")) return videoUrl.replace("watch?v=", "embed/");
-                               if (videoUrl.includes("youtu.be/")) return `https://www.youtube.com/embed/${videoUrl.split("youtu.be/")[1]}`;
-                               if (videoUrl.includes("vimeo.com/")) return `https://player.vimeo.com/video/${videoUrl.split("vimeo.com/")[1]}`;
-                               return videoUrl;
-                            })()}
-                            title="Video preview"
-                            allowFullScreen
-                         />
-                      ) : (
-                        <div className="text-center p-6">
-                            <UploadCloud size={40} className="mx-auto mb-3 text-slate-300 dark:text-slate-700" />
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">No Video Attached</p>
-                        </div>
-                      )}
-                  </div>
-               </div>
-            </div>
           </div>
         </div>
 
