@@ -66,7 +66,10 @@ export default async function PortalPage({ searchParams }) {
             </div>
             <div>
               <h3 className="text-[11px] uppercase font-black tracking-[0.10em] text-amber-800 mb-1">Account Under Review</h3>
-              <p className="text-[11px] uppercase font-black tracking-[0.10em] text-amber-700/80 leading-tight">Dealer pending verification. Inventory visible after approval.</p>
+              <p className="text-[11px] font-semibold normal-case tracking-normal text-amber-800/90 leading-snug">
+                Your dealer profile is pending admin verification. Listings can still appear on the marketplace while we review; the{" "}
+                <span className="font-bold">verified dealer</span> badge is added after approval.
+              </p>
             </div>
         </div>
       )}

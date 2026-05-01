@@ -77,14 +77,14 @@ export default async function PortalProfilePage({ searchParams }) {
       {/* Account Overview - Top Section */}
       <div className="bg-white dark:bg-[#111111] rounded-none p-4 sm:p-8 shadow-sm mb-6 sm:mb-10">
         <h3 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4 sm:mb-6">Account Overview</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6\">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {[
             { icon: User, label: "Role", value: user.role },
             { icon: Building2, label: "Dealership", value: user.dealer?.name || "Not linked" },
             { icon: MapPin, label: "Location", value: user.dealer?.location || "Not set" },
             { icon: Phone, label: "Phone", value: user.dealer?.phone || "Not set" },
             { icon: Globe, label: "Website", value: user.dealer?.website || "Not set" },
-            { icon: Mail, label: "Scope", value: "Enterprise" },
+            { icon: Mail, label: "Plan", value: "Early access (no charge)" },
             { icon: Shield, label: "Trust", value: user.emailVerified ? "100%" : "Pending" },
             { icon: Calendar, label: "Member Since", value: new Date(user.createdAt).toLocaleDateString("en-KE", { month: "short", year: "numeric" }) },
           ].map(({ icon: Icon, label, value }) => (
