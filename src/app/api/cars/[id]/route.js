@@ -2,11 +2,16 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 
 export async function GET(request, { params }) {
   const { id } = await params;
-  const car = await db.car.findUnique({
-    where: { id: id },
+  const car = await db.car.findFirst({
+    where: {
+      id,
+      available: true,
+      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+    },
     include: {
       images: { orderBy: { order: "asc" } },
       dealer: true,
@@ -29,6 +34,7 @@ export async function GET(request, { params }) {
   const similar = await db.car.findMany({
     where: {
       available: true,
+      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
       id:        { not: car.id },
       OR: [
         { dealerId: car.dealerId },

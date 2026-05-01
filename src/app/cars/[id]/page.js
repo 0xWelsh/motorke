@@ -20,11 +20,16 @@ import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
+import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
   const car = await db.car.findFirst({
-    where: { id, available: true },
+    where: {
+      id,
+      available: true,
+      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+    },
     include: {
       images: { where: { isPrimary: true }, take: 1 },
       dealer: { select: { name: true, location: true } },
@@ -64,7 +69,11 @@ export async function generateMetadata({ params }) {
 const getCarData = unstable_cache(
   async (id) => {
     return db.car.findFirst({
-      where:   { id, available: true },
+      where: {
+        id,
+        available: true,
+        ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+      },
       include: {
         images: { orderBy: { order: "asc" } },
         dealer: {
@@ -84,6 +93,7 @@ const getSimilarCars = unstable_cache(
     const candidates = await db.car.findMany({
       where: {
         available: true,
+        ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
         id:        { not: carId },
         OR: [{ dealerId }, { make }, { bodyType }],
       },

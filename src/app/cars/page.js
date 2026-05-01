@@ -10,6 +10,7 @@ import CarCard from "@/components/CarCard";
 import { unstable_cache } from "next/cache";
 import { CompareButton } from "@/components/CompareSelector";
 import { getSession } from "@/lib/auth";
+import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 
 
 export const metadata = {
@@ -147,6 +148,7 @@ export default async function CarsPage({ searchParams }) {
   const searchTokens = normalizeText(search).split(" ").filter(Boolean);
   const where = {
     available: true,
+    ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
     ...(make         && { make: { equals: make, mode: "insensitive" } }),
     ...(model        && { model: { equals: model, mode: "insensitive" } }),
     ...(steering     && { steering }),
@@ -155,7 +157,12 @@ export default async function CarsPage({ searchParams }) {
     ...(fuelType     && { fuelType }),
     ...(transmission && { transmission }),
     ...(minPrice || maxPrice ? { price: { ...(minPrice && { gte: minPrice }), ...(maxPrice && { lte: maxPrice }) } } : {}),
-    ...(county       && { dealer: { county: { equals: county, mode: "insensitive" } } }),
+    ...(county && {
+      dealer: {
+        ...(PUBLIC_ONLY_VERIFIED_DEALERS && { verified: true }),
+        county: { equals: county, mode: "insensitive" },
+      },
+    }),
   };
 
   const orderBy =

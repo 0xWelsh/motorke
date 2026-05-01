@@ -9,6 +9,8 @@ const asNumber = (value, fallback) => {
 };
 
 export const PHONE_VERIFICATION_ENABLED = false;
+// Trust-first launch toggle: if true, only verified dealers appear in public browse/search/detail.
+export const PUBLIC_ONLY_VERIFIED_DEALERS = asBool(process.env.PUBLIC_ONLY_VERIFIED_DEALERS, false);
 
 // Go search migration flags (safe defaults: no behavior change).
 export const GO_SEARCH_SHADOW_ENABLED = asBool(process.env.GO_SEARCH_SHADOW_ENABLED, false);

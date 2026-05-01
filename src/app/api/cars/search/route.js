@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { unstable_cache } from "next/cache";
 import { runGoSearchShadow } from "@/lib/go-search";
-import { GO_SEARCH_ACTIVE_ENABLED } from "@/lib/feature-flags";
+import { GO_SEARCH_ACTIVE_ENABLED, PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { trackRequest } from "@/lib/telemetry";
 
 const getSearchResults = unstable_cache(
@@ -12,6 +12,7 @@ const getSearchResults = unstable_cache(
     const cars = await db.car.findMany({
       where: {
         available: true,
+        ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
         OR: [
           { make:  { contains: query, mode: "insensitive" } },
           { model: { contains: query, mode: "insensitive" } },

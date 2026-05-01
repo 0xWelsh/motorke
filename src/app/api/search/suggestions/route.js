@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 
 const querySchema = z.object({
   query: z.string().min(1).max(50),
@@ -25,6 +26,7 @@ export async function GET(request) {
   const cars = showCars ? await db.car.findMany({
     where: {
       available: true,
+      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
       OR: [
         { make:  { contains: query, mode: "insensitive" } },
         { model: { contains: query, mode: "insensitive" } },
@@ -44,6 +46,7 @@ export async function GET(request) {
     where: {
       make: { contains: query, mode: "insensitive" },
       available: true,
+      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
     },
     select: { make: true },
     distinct: ["make"],
@@ -54,6 +57,7 @@ export async function GET(request) {
     where: {
       model: { contains: query, mode: "insensitive" },
       available: true,
+      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
     },
     select: { model: true },
     distinct: ["model"],
@@ -64,6 +68,7 @@ export async function GET(request) {
     where: {
       variant: { contains: query, mode: "insensitive" },
       available: true,
+      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
       NOT: { variant: null },
     },
     select: { variant: true },
