@@ -40,6 +40,11 @@ export const metadata = {
     googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
   },
   manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: "Welsh Motorhub",
+    statusBarStyle: "default",
+  },
   openGraph: {
     type: "website",
     locale: "en_KE",
@@ -73,6 +78,7 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: "#ffffff",
 };
 
 export default async function RootLayout({ children }) {
