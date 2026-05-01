@@ -161,7 +161,7 @@ self.addEventListener("push", (event) => {
   const options = {
     body: data.body || "You have a new notification from Welsh Motors",
     icon: "/headerlogo.png",
-    badge: "/favicon.svg",
+    badge: "/icon-192.png",
     tag: "welsh-motors-notification",
   };
 
