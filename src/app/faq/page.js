@@ -82,7 +82,7 @@ const faqs = {
     },
     {
       q: "What's the contract between Welsh Motors and me as a dealer?",
-      a: "You keep 100% of sale price. Welsh Motors makes money from PRO subscriptions, not commissions. We're aligned: we only win when you win.",
+      a: "You keep 100% of sale price. Dealer platform access is free while we scale traffic — no commissions through us either. Paid plans may arrive later with notice; we're aligned either way.",
     },
     {
       q: "Will Welsh Motors help me handle customer service?",
@@ -112,7 +112,7 @@ const faqs = {
     },
     {
       q: "What's your refund policy if I'm unhappy?",
-      a: "PRO subscriptions: 14-day money-back guarantee. No questions asked. Cancel in 'Settings' anytime.",
+      a: "Today there are no subscriptions to cancel — access is free. If we introduce paid tiers, we'll publish a refund and cancellation policy before anyone is charged.",
     },
   ],
   "Trust & Security": [

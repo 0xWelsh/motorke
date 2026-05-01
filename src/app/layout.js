@@ -10,7 +10,7 @@ import CookieConsent from "@/components/CookieConsent";
 import { headers } from "next/headers";
 
 import { Playfair_Display } from "next/font/google";
-import { getSiteOrigin } from "@/lib/site-url";
+import { BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -53,14 +53,14 @@ export const metadata = {
     title: "Welsh Motorhub — Find Your Car in Kenya",
     description:
       "Browse verified vehicles from trusted dealers across Kenya. Compare specs, costs, and contact dealers directly.",
-    images: [{ url: "/newlogo.jpeg", width: 1200, height: 630, alt: "Welsh Motorhub" }],
+    images: [{ url: BRAND_OG_IMAGE, width: 1200, height: 630, alt: "Welsh Motorhub" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Welsh Motorhub — Find Your Car in Kenya",
     description:
       "Browse verified vehicles from trusted dealers across Kenya. Compare specs, costs, and contact dealers directly.",
-    images: ["/newlogo.jpeg"],
+    images: [BRAND_OG_IMAGE],
   },
   icons: {
     icon: [

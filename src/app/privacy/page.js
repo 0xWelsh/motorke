@@ -45,7 +45,7 @@ const sections = [
   {
     title: "4. How We Use Your Data",
     subsections: [
-      { heading: "4.1 Core Service Operations", items: ["Authenticating your account and managing login", "Connecting buyer enquiries to dealer listings", "Delivering lead notifications via email/SMS", "Processing payments for subscriptions"] },
+      { heading: "4.1 Core Service Operations", items: ["Authenticating your account and managing login", "Connecting buyer enquiries to dealer listings", "Delivering lead notifications via email/SMS", "Processing payments if and when subscription or paid features are enabled"] },
       { heading: "4.2 Platform Improvement", items: ["Analyzing usage patterns to optimize UX", "Identifying bugs and performance issues", "A/B testing new features", "Aggregating anonymized data for market research"] },
       { heading: "4.3 Security & Compliance", items: ["Detecting fraudulent activity and abuse", "Protecting against unauthorized access", "Maintaining audit logs for disputes", "Complying with KRA tax and legal obligations"] },
       { heading: "4.4 Communication", items: ["Sending transactional emails (verification, reset codes, receipts)", "Notifying about account activity and security alerts", "Promotional emails (opt-out available)", "Support responses and account recovery"] },

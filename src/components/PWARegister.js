@@ -25,14 +25,19 @@ export function PWARegister() {
       setTimeout(() => {
         const banner = document.createElement("div");
         banner.className =
-          "fixed bottom-0 left-0 right-0 bg-[#ff5a2f] text-slate-900 dark:text-white p-4 flex items-center justify-between gap-4 z-50 animate-in slide-in-from-bottom";
+          "fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between gap-4 bg-[#2F855A] p-4 text-white shadow-[0_-4px_24px_rgba(0,0,0,0.12)]";
         banner.innerHTML = `
-          <div className="flex-1">
-            <p className="font-semibold text-sm">Install Welsh Motors</p>
-            <p className="text-xs text-blue-100">Tap Share, then "Add to Home Screen"</p>
+          <div class="min-w-0 flex-1 pr-2">
+            <p class="text-sm font-semibold">Install Welsh Motorhub</p>
+            <p class="mt-0.5 text-xs text-white/90">Tap Share, then &quot;Add to Home Screen&quot;</p>
           </div>
-          <button onclick="this.parentElement.remove(); localStorage.setItem('iosPwaPromptCount', '${iosPwaPromptCount + 1}');" class="text-sm font-semibold whitespace-nowrap">Dismiss</button>
+          <button type="button" class="shrink-0 rounded-lg bg-white/15 px-3 py-2 text-sm font-semibold text-white hover:bg-white/25">Dismiss</button>
         `;
+        const dismissBtn = banner.querySelector("button");
+        dismissBtn?.addEventListener("click", () => {
+          banner.remove();
+          localStorage.setItem("iosPwaPromptCount", String(iosPwaPromptCount + 1));
+        });
         document.body.appendChild(banner);
       }, 10000);
     }

@@ -19,7 +19,7 @@ import CarCard from "@/components/CarCard";
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
-import { absoluteUrl, getSiteOrigin } from "@/lib/site-url";
+import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }) {
 
   const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} for sale in Kenya`;
   const description = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motorhub.`;
-  const image = car.images[0]?.url || "/newlogo.jpeg";
+  const image = car.images[0]?.url || BRAND_MARK_SQUARE;
   const origin = getSiteOrigin();
   const url = `${origin}/cars/${id}`;
 
@@ -228,11 +228,11 @@ export default async function CarDetailPage({ params }) {
 
   const listingUrl = absoluteUrl(`/cars/${car.id}`);
   const toAbsImage = (url) => {
-    if (!url) return absoluteUrl("/newlogo.jpeg");
+    if (!url) return absoluteUrl(BRAND_MARK_SQUARE);
     if (/^https?:\/\//i.test(url)) return url;
     return absoluteUrl(url.startsWith("/") ? url : `/${url}`);
   };
-  const absImages = (car.images?.length ? car.images : [{ url: "/newlogo.jpeg" }]).map((i) =>
+  const absImages = (car.images?.length ? car.images : [{ url: BRAND_MARK_SQUARE }]).map((i) =>
     toAbsImage(i.url)
   );
 

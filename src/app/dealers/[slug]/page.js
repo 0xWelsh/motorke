@@ -8,7 +8,7 @@ import { getSession } from "@/lib/auth";
 import DealerReviews from "@/components/DealerReviews";
 import DealerInventory from "@/components/DealerInventory";
 import { calculateDistance } from "@/lib/geolocation";
-import { absoluteUrl } from "@/lib/site-url";
+import { absoluteUrl, BRAND_OG_IMAGE } from "@/lib/site-url";
 
 // Force dynamic and no-cache
 export const dynamic = "force-dynamic";
@@ -47,7 +47,7 @@ export async function generateMetadata(props) {
     ? /^https?:\/\//i.test(ogCand)
       ? ogCand
       : absoluteUrl(ogCand.startsWith("/") ? ogCand : `/${ogCand}`)
-    : absoluteUrl("/newlogo.jpeg");
+    : absoluteUrl(BRAND_OG_IMAGE);
 
   const canonical = `/dealers/${dealer.slug}`;
 

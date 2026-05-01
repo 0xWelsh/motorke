@@ -86,7 +86,7 @@ export default function MissionPage() {
              <div>
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-50 mb-4 block">Buyer Cost</span>
                 <p className="text-6xl font-bold mb-4">KSh 0.</p>
-                <p className="text-sm font-medium opacity-70">Our platform remains free for buyers, funded by network subscriptions.</p>
+                <p className="text-sm font-medium opacity-70">Buyer use stays free; dealer tooling is complimentary while we build traffic.</p>
              </div>
           </div>
         </div>

@@ -52,7 +52,7 @@ const sections = [
   {
     title: "6. Payments and Billing",
     subsections: [
-      { heading: "6.1 Subscription Terms", content: "Subscription plans (Starter, Pro, Enterprise) are billed monthly or as agreed. Recurring charges will be processed on renewal date unless subscription is cancelled." },
+      { heading: "6.1 Subscription Terms", content: "Dealer access is offered at no charge until Welsh Motorhub notifies you otherwise (for example via email or in-product messaging). Future subscription plans — if introduced — may be billed monthly or as agreed; recurring charges would apply on renewal unless cancelled. We will give reasonable advance notice before any paid plan takes effect." },
       { heading: "6.2 Non-Refundable Fees", content: "Fees already incurred as of the cancellation date are non-refundable except where required by applicable law or Welsh Motors's explicit written policy. Cancellation is effective at end of current billing cycle." },
       { heading: "6.3 Payment Methods", content: "We accept M-Pesa (STK Push), credit cards (Pesapal), and bank transfer. Payment processing is handled by authorized third-party providers. Declined payments may result in service suspension." },
       { heading: "6.4 Price Changes", content: "We may modify subscription pricing with 30 days' notice. Existing subscribers will continue at current rate until next renewal." },

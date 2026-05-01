@@ -51,7 +51,7 @@ export default async function AdminSettingsPage({ searchParams }) {
                 className="w-full bg-[#f7f6f3] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-slate-900 font-medium" 
                 placeholder="Ex. 45000"
               />
-              <p className="text-xs text-slate-400 mt-2">The default monthly subscription KSH amount sent to Payment limits.</p>
+              <p className="text-xs text-slate-400 mt-2">Reserved reference amount for future paid tiers (billing is off while access is free).</p>
             </div>
 
             <div>

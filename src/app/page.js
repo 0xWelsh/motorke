@@ -16,7 +16,7 @@ import HeroGridShowcase from "@/components/HeroGridShowcase";
 import CarCard from "@/components/CarCard";
 import TrackedLink from "@/components/TrackedLink";
 import { analyzePrice } from "@/lib/market";
-import { absoluteUrl, getSiteOrigin } from "@/lib/site-url";
+import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 
 const HERO_BACKGROUND = "/images/backgrounds/pexels-mikebirdy-10123994.jpg";
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
@@ -160,7 +160,7 @@ function homeStructuredData(origin) {
         "@type": "Organization",
         name: "Welsh Motorhub",
         url: origin,
-        logo: absoluteUrl("/newlogo.jpeg"),
+        logo: absoluteUrl(BRAND_MARK_SQUARE),
         description:
           "Verified vehicle marketplace connecting buyers with trusted car dealers across Kenya.",
         address: {

@@ -15,6 +15,7 @@ import SearchSuggestions from "@/components/SearchSuggestions";
 import NotificationsBell from "@/components/NotificationsBell";
 import ThemeToggle from "@/components/ThemeToggle";
 import { trackUiEvent } from "@/lib/analytics";
+import { BRAND_MARK_SQUARE } from "@/lib/site-url";
 
 export default function Navbar({ user }) {
   const router    = useRouter();
@@ -96,9 +97,6 @@ export default function Navbar({ user }) {
     { href: "/compare", label: "Compare" },
   ];
 
-  // Single logo asset: invert in light mode to render black text.
-  const activeLogo = "/newlogo.jpeg";
-
   return (
     <>
       <nav className="fixed top-0 z-50 w-full flex items-center h-16 md:h-20 bg-white dark:bg-[#0a0a0a] border-b border-gray-100 dark:border-zinc-900 shadow-sm transition-colors duration-300">
@@ -106,16 +104,20 @@ export default function Navbar({ user }) {
           <div className="flex items-center justify-between gap-8 h-full">
 
             {/* LOGO */}
-            <Link href="/" className="flex items-center gap-2 shrink-0 transition-transform active:scale-95">
-              <div className="relative h-12 md:h-16 w-56 md:w-80">
+            <Link href="/" className="flex items-center gap-2.5 shrink-0 transition-transform active:scale-95">
+              <div className="relative h-10 md:h-12 w-10 md:w-12 shrink-0 overflow-hidden rounded-xl bg-white ring-1 ring-black/10 dark:bg-white dark:ring-white/20">
                 <Image
-                  src={activeLogo}
-                  alt="Welsh Motors"
+                  src={BRAND_MARK_SQUARE}
+                  alt="Welsh Motorhub"
                   fill
-                  className="object-contain object-left invert dark:invert-0"
+                  className="object-contain p-1.5"
                   priority
+                  sizes="(max-width: 768px) 40px, 48px"
                 />
               </div>
+              <span className="font-bold text-[15px] md:text-lg tracking-tight text-slate-900 dark:text-white">
+                Welsh Motorhub
+              </span>
             </Link>
 
             {/* NAV LINKS (Desktop) */}
@@ -320,14 +322,24 @@ export default function Navbar({ user }) {
             <div className="mx-auto mt-2 h-1 w-9 shrink-0 rounded-full bg-slate-200 dark:bg-slate-600" aria-hidden />
             <div className="shrink-0 border-b border-slate-100 px-4 pb-3 pt-2 dark:border-zinc-800 sm:px-5">
               <div className="flex items-center justify-between gap-3">
-                <div className="relative h-12 w-56 shrink-0">
-                  <Image
-                    src={activeLogo}
-                    alt="Welsh Motors"
-                    fill
-                    className="object-contain object-left invert dark:invert-0"
-                  />
-                </div>
+                <Link
+                  href="/"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2.5 shrink-0"
+                >
+                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl bg-white ring-1 ring-black/10 dark:bg-white dark:ring-white/20">
+                    <Image
+                      src={BRAND_MARK_SQUARE}
+                      alt="Welsh Motorhub"
+                      fill
+                      className="object-contain p-1.5"
+                      sizes="40px"
+                    />
+                  </div>
+                  <span className="font-bold text-[15px] tracking-tight text-slate-900 dark:text-white">
+                    Welsh Motorhub
+                  </span>
+                </Link>
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
