@@ -246,8 +246,8 @@ export default async function HomePage() {
           {/* Page Header - Full Width */}
           <div className="mb-10 md:mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center lg:text-left">
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-[#111827] dark:text-white leading-[0.95] tracking-tight mb-6">
-              Moving the world<br />
-              <span className="editorial-heading text-[#38A169]">with transparency.</span>
+              Buy cars with<br />
+              <span className="editorial-heading text-[#38A169]">with dealer-level clarity.</span>
             </h1>
 
             <p className="text-lg md:text-xl text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl font-medium mx-auto lg:mx-0">
