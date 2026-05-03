@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronRight, Info, Sparkles, UploadCloud } from "lucide-react";
+import { Check, ChevronRight, Info, Sparkles } from "lucide-react";
 import MediaUploader from "./admin/MediaUploader";
 import {
   BODY_TYPE_LABELS,
@@ -298,6 +298,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [priceInput, setPriceInput] = useState(() =>
     normalizePriceToIntegerString(formSeed.price ?? "")
   );
+  /** Keeps latest price for form-level listeners (same tick as input); avoids stale closure vs controlled field. */
+  const priceInputRef = useRef(priceInput);
+  useEffect(() => {
+    priceInputRef.current = priceInput;
+  }, [priceInput]);
   const [selectedFeatures, setSelectedFeatures] = useState(car?.features || []);
   const [featuresOpen, setFeaturesOpen] = useState(false);
   const [advancedOpen, setAdvancedOpen] = useState(false);
@@ -375,16 +380,22 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setFormSeed(baseSeed);
     setImages([]);
     setSelectedFeatures([]);
-    setPriceInput(normalizePriceToIntegerString(baseSeed.price ?? ""));
+    const nextPrice = normalizePriceToIntegerString(baseSeed.price ?? "");
+    priceInputRef.current = nextPrice;
+    setPriceInput(nextPrice);
   }, [baseSeed, defaultsKey, draftKey, isNew]);
 
   useEffect(() => {
     if (!isNew) {
-      setPriceInput(normalizePriceToIntegerString(car?.price ?? ""));
+      const nextPrice = normalizePriceToIntegerString(car?.price ?? "");
+      priceInputRef.current = nextPrice;
+      setPriceInput(nextPrice);
       return;
     }
     if (car?.id) {
-      setPriceInput(normalizePriceToIntegerString(car?.price ?? ""));
+      const nextPrice = normalizePriceToIntegerString(car?.price ?? "");
+      priceInputRef.current = nextPrice;
+      setPriceInput(nextPrice);
     }
   }, [isNew, car?.id, car?.price]);
 
@@ -511,7 +522,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     const form = formRef.current;
     if (!form) return;
 
-    const updateLiveDraft = () => setLiveDraft(collectFormSnapshot(form, priceInput));
+    const updateLiveDraft = () => setLiveDraft(collectFormSnapshot(form, priceInputRef.current));
     updateLiveDraft();
     form.addEventListener("input", updateLiveDraft);
     form.addEventListener("change", updateLiveDraft);
@@ -805,7 +816,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       setSelectedYear(seeded.year ? String(seeded.year) : currentYear);
       setSelectedMake(seeded.make || currentMake);
       setSelectedModel(seeded.model || currentModel);
-      if (seeded.price) setPriceInput(normalizePriceToIntegerString(String(seeded.price)));
+      if (seeded.price) {
+        const nextPrice = normalizePriceToIntegerString(String(seeded.price));
+        priceInputRef.current = nextPrice;
+        setPriceInput(nextPrice);
+      }
       applyDetectedValuesToForm(seeded);
 
       if (!seeded.make && !seeded.model && !seeded.price && !seeded.mileage && !seeded.year) {
@@ -1033,14 +1048,26 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               <input
                 name="price"
                 type="text"
-                inputMode="decimal"
+                inputMode="numeric"
                 autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck={false}
+                enterKeyHint="done"
                 required
                 value={priceInput}
-                onChange={(e) => setPriceInput(e.target.value)}
-                onBlur={() => setPriceInput((v) => normalizePriceToIntegerString(v))}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  priceInputRef.current = v;
+                  setPriceInput(v);
+                }}
+                onBlur={(e) => {
+                  const normalized = normalizePriceToIntegerString(e.target.value);
+                  priceInputRef.current = normalized;
+                  setPriceInput(normalized);
+                }}
                 placeholder="e.g. 2500000 or 3.2M"
-                className={`${inputCls}${confidenceClass("price")}`}
+                className={`${inputCls} text-base sm:text-sm min-h-[48px]${confidenceClass("price")}`}
               />
               <p className="mt-1 text-[11px] font-semibold text-slate-500">
                 Whole shillings only. You can type plain digits, use commas, or millions like 3.2M — we tidy the field
