@@ -362,15 +362,15 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setFormInstanceKey((k) => k + 1);
   }, [baseSeed, defaultsKey, draftKey, isNew]);
 
+  // Hydrate from server car only when the listing identity changes. Do not depend on
+  // `car.features` reference — parents often pass a new array each render and would
+  // wipe the controlled textarea on every keystroke/repaint.
   useEffect(() => {
-    if (!isNew && car) {
-      setFeaturesText(Array.isArray(car.features) && car.features.length ? car.features.join(", ") : "");
-      return;
-    }
-    if (car?.id) {
-      setFeaturesText(Array.isArray(car.features) && car.features.length ? car.features.join(", ") : "");
-    }
-  }, [isNew, car?.id, car?.features]);
+    if (isNew && !car?.id) return;
+    setFeaturesText(
+      Array.isArray(car?.features) && car.features.length ? car.features.join(", ") : ""
+    );
+  }, [isNew, car?.id]);
 
   useEffect(() => {
     if (!isNew || !draftKey || !formRef.current) return;
