@@ -1,15 +1,12 @@
 // src/app/portal/cars/new/page.js
 import { requireDealer } from "@/lib/auth";
-import { db } from "@/lib/db";
 import Link from "next/link";
 import CarForm from "@/components/CarForm";
 
 export const metadata = { title: "Add Car — Welsh Motors Portal" };
 
-export default async function PortalNewCarPage({ searchParams }) {
+export default async function PortalNewCarPage() {
   const user = await requireDealer();
-  const sp = await searchParams;
-  const cloneId = sp?.clone || "";
 
   if (!user.dealerId || !user.dealer) {
     return (
@@ -25,78 +22,27 @@ export default async function PortalNewCarPage({ searchParams }) {
     );
   }
 
-  const [recentCars, templateCar] = await Promise.all([
-    db.car.findMany({
-      where: { dealerId: user.dealerId },
-      select: {
-        id: true,
-        year: true,
-        make: true,
-        model: true,
-        variant: true,
-        images: { where: { isPrimary: true }, take: 1, select: { url: true } },
-      },
-      orderBy: { createdAt: "desc" },
-      take: 6,
-    }),
-    cloneId
-      ? db.car.findFirst({
-          where: { id: cloneId, dealerId: user.dealerId },
-          include: { images: { orderBy: { order: "asc" } }, dealer: true },
-        })
-      : null,
-  ]);
-
-  // Pass dealer as a single-item array so CarForm hides the dealer selector
   const dealers = [user.dealer];
 
   return (
     <div className="animate-in fade-in duration-700 w-full">
-      <div className="mb-6">
-        <a href="/portal" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-700 hover:text-[#ff5a2f] transition-colors mb-6">
+      <div className="mb-4 sm:mb-6">
+        <a href="/portal" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-700 hover:text-[#ff5a2f] transition-colors mb-4">
           <span className="text-lg">←</span> Back to Showroom
         </a>
-        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Add Car</h1>
-        <p className="text-slate-700 font-semibold mt-1">
-          Use the checklist below to publish faster.
-        </p>
-
-        <div className="mt-5 flex flex-wrap gap-2">
-          <a href="/portal/cars/bulk" className="inline-flex rounded-2xl border border-[#ddd4c8] dark:border-slate-800 px-3 py-2 text-[11px] font-black uppercase tracking-wider text-slate-700 hover:bg-[#fbfcfe] dark:bg-[#111111]">
-            Bulk Upload CSV
-          </a>
-          {templateCar && (
-            <a href="/portal/cars/new" className="inline-flex rounded-2xl border border-[#ff5a2f] bg-emerald-50 px-3 py-2 text-[11px] font-black uppercase tracking-wider text-[#ff5a2f]">
-              Using Duplicate Template
-            </a>
-          )}
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">Add car</h1>
+        <p className="text-sm text-slate-600 font-medium mt-1">Paste text into Smart Fill or enter fields below.</p>
+        <div className="mt-4">
+          <Link
+            href="/portal/cars/bulk"
+            className="inline-flex rounded-xl border border-[#ddd4c8] dark:border-slate-800 px-3 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-slate-700 hover:bg-[#fbfcfe] dark:hover:bg-[#111111]"
+          >
+            Bulk upload CSV
+          </Link>
         </div>
       </div>
 
-      {recentCars.length > 0 && (
-        <section className="mb-6 rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-white p-4">
-          <h2 className="text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-[0.14em] text-slate-700">Duplicate From Existing Listing</h2>
-          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
-            {recentCars.map((car) => (
-              <Link key={car.id} href={`/portal/cars/new?clone=${car.id}`} className="flex items-center gap-3 rounded-2xl border border-[#ddd4c8] dark:border-slate-800 p-3 hover:bg-[#fbfcfe] dark:bg-[#111111]">
-                <div className="h-14 w-20 overflow-hidden rounded-2xl bg-[#fbfcfe] dark:bg-[#111111]">
-                  {car.images[0]?.url ? (
-                    <img src={car.images[0].url} alt="" className="h-full w-full object-cover" />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-[11px] font-bold uppercase tracking-wider text-slate-700">No Image</div>
-                  )}
-                </div>
-                <div>
-                  <p className="text-[11px] font-sans font-semibold tracking-[0.10em] text-slate-900 dark:text-white">{car.year} {car.make} {car.model}</p>
-                  <p className="text-[11px] uppercase font-black tracking-[0.15em] font-semibold text-slate-700">{car.variant || "Standard"}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <CarForm key={templateCar?.id || "new"} dealers={dealers} car={templateCar} action="/api/portal/cars" method="POST" />
+      <CarForm dealers={dealers} car={null} action="/api/portal/cars" method="POST" />
     </div>
   );
 }

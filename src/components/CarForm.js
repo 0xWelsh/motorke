@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronRight, Info, Sparkles, UploadCloud } from "lucide-react";
 import MediaUploader from "./admin/MediaUploader";
 import {
-  BADGE_OPTIONS,
   BODY_TYPE_LABELS,
   DRIVETRAIN_LABELS,
   FUEL_LABELS,
@@ -165,17 +164,6 @@ const FEATURE_CHECKLIST = [
   "Alarm System", "Child Lock", "ISOFIX", "Tinted Windows", "Rear Spoiler",
 ].sort((a, b) => a.localeCompare(b));
 
-const SMART_FILL_FIELDS = new Set([
-  "make",
-  "model",
-  "variant",
-  "year",
-  // price is controlled in React — never use DOM + manualOverrides here (first keystroke blocked AI fill)
-  "mileage",
-  "engineCC",
-  "bodyType",
-]);
-
 /** Digits-only string (e.g. normalizing API numbers). */
 function normalizePriceDigits(value) {
   return String(value ?? "").replace(/[^\d]/g, "");
@@ -251,20 +239,6 @@ function collectFormValues(form) {
   return values;
 }
 
-function qualityScore(seed, images, features) {
-  let score = 0;
-  if (seed.make && seed.model && seed.price) score += 25;
-  if (seed.year) score += 10;
-  if (seed.mileage) score += 8;
-  if (seed.fuelType && seed.transmission && seed.bodyType) score += 12;
-  if (images.length >= 1) score += 10;
-  if (images.length >= 3) score += 10;
-  if (images.length >= 6) score += 5;
-  if ((seed.description || "").trim().length >= 80) score += 12;
-  if (features.length >= 5) score += 8;
-  return Math.min(100, score);
-}
-
 function buildAutoDescription(values = {}, features = []) {
   const bits = [];
   const year = values.year || "";
@@ -320,7 +294,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [badges, setBadges] = useState(car?.badges || []);
+  const badges = useMemo(() => car?.badges || [], [car]);
   const [priceInput, setPriceInput] = useState(() =>
     normalizePriceToIntegerString(formSeed.price ?? "")
   );
@@ -348,16 +322,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     warnings: [],
   });
   const [smartFillDiff, setSmartFillDiff] = useState([]);
-  const [smartFillSuggestions, setSmartFillSuggestions] = useState([]);
-  const [manualOverrides, setManualOverrides] = useState({});
   const [descriptionTouched, setDescriptionTouched] = useState(Boolean((formSeed.description || "").trim()));
   const [liveDraft, setLiveDraft] = useState({});
-  const [checklist, setChecklist] = useState({
-    basics: false,
-    media: false,
-    details: false,
-    publish: false,
-  });
 
   const formRef = useRef(null);
   const initializedNewFormRef = useRef(false);
@@ -365,18 +331,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const saveTimeoutRef = useRef(null);
   const uploadedLocalMapRef = useRef(new Map());
   const pendingUploadIdsRef = useRef(new Set());
-  const score = qualityScore(
-    { ...formSeed, price: normalizePriceToIntegerString(priceInput) || formSeed.price },
-    images,
-    selectedFeatures
-  );
-  const checklistItems = [
-    { key: "basics", label: "Basics" },
-    { key: "media", label: "Photos" },
-    { key: "details", label: "Details" },
-    { key: "publish", label: "Ready" },
-  ];
-  const checklistDone = checklistItems.filter((item) => checklist[item.key]).length;
   const featureOptions = useMemo(
     () => Array.from(new Set([...FEATURE_CHECKLIST, ...selectedFeatures])).sort((a, b) => a.localeCompare(b)),
     [selectedFeatures]
@@ -409,7 +363,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         updatedAt: Date.now(),
       })
     );
-  }, [badges, draftKey, images, isNew, priceInput, selectedFeatures]);
+  }, [draftKey, images, isNew, priceInput, selectedFeatures, badges]);
 
   useEffect(() => {
     if (!isNew) return;
@@ -420,7 +374,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setDraftLoaded(false);
     setFormSeed(baseSeed);
     setImages([]);
-    setBadges([]);
     setSelectedFeatures([]);
     setPriceInput(normalizePriceToIntegerString(baseSeed.price ?? ""));
   }, [baseSeed, defaultsKey, draftKey, isNew]);
@@ -457,28 +410,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   }, [draftKey, isNew, saveDraft]);
 
   useEffect(() => {
-    const form = formRef.current;
-    if (!form) return;
-
-    const markManualOverride = (event) => {
-      const target = event.target;
-      const field = target?.name;
-      if (!field || !SMART_FILL_FIELDS.has(field)) return;
-      if (!event.isTrusted) return; // Ignore programmatic updates from Smart Fill
-      setManualOverrides((prev) => (prev[field] ? prev : { ...prev, [field]: true }));
-    };
-
-    form.addEventListener("input", markManualOverride);
-    form.addEventListener("change", markManualOverride);
-    return () => {
-      form.removeEventListener("input", markManualOverride);
-      form.removeEventListener("change", markManualOverride);
-    };
-  }, []);
-
-  useEffect(() => {
     if (isNew) saveDraft();
-  }, [images, badges, selectedFeatures, isNew, saveDraft]);
+  }, [images, selectedFeatures, isNew, saveDraft]);
 
   useEffect(() => {
     const currentMake =
@@ -578,42 +511,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     const form = formRef.current;
     if (!form) return;
 
-    const deriveChecklist = () => {
-      const values = collectFormSnapshot(form, priceInput);
-      const priceOk = Boolean(normalizePriceToIntegerString(values.price || ""));
-      const basicsDone =
-        Boolean((values.make || "").trim()) &&
-        Boolean((values.model || "").trim()) &&
-        Boolean(values.year) &&
-        priceOk &&
-        Boolean(values.mileage) &&
-        Boolean(values.bodyType) &&
-        Boolean(values.fuelType) &&
-        Boolean(values.transmission) &&
-        Boolean((values.color || "").trim());
-      const mediaDone = images.length >= 3;
-      const detailsDone =
-        ((values.description || "").trim().length >= 50) || selectedFeatures.length >= 3;
-      const publishDone = basicsDone && mediaDone && detailsDone;
-
-      setChecklist({
-        basics: basicsDone,
-        media: mediaDone,
-        details: detailsDone,
-        publish: publishDone,
-      });
-    };
-
-    deriveChecklist();
-    setLiveDraft(collectFormSnapshot(form, priceInput));
-    form.addEventListener("input", deriveChecklist);
-    form.addEventListener("change", deriveChecklist);
     const updateLiveDraft = () => setLiveDraft(collectFormSnapshot(form, priceInput));
+    updateLiveDraft();
     form.addEventListener("input", updateLiveDraft);
     form.addEventListener("change", updateLiveDraft);
     return () => {
-      form.removeEventListener("input", deriveChecklist);
-      form.removeEventListener("change", deriveChecklist);
       form.removeEventListener("input", updateLiveDraft);
       form.removeEventListener("change", updateLiveDraft);
     };
@@ -637,34 +539,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setField('input[name="mileage"]', seeded.mileage ? String(seeded.mileage) : "");
     setField('input[name="engineCC"]', seeded.engineCC ? String(seeded.engineCC) : "");
     setField('select[name="bodyType"]', seeded.bodyType || "");
-  }, []);
-
-  const applySmartFillSuggestion = useCallback((field, value) => {
-    const form = formRef.current;
-    if (!form) return;
-    if (field === "price") {
-      setPriceInput(normalizePriceToIntegerString(String(value ?? "")));
-      setSmartFillSuggestions((prev) => prev.filter((s) => s.field !== field));
-      return;
-    }
-    const selectorMap = {
-      make: 'input[name="make"]',
-      model: 'input[name="model"]',
-      variant: 'input[name="variant"]',
-      year: 'select[name="year"]',
-      mileage: 'input[name="mileage"]',
-      engineCC: 'input[name="engineCC"]',
-      bodyType: 'select[name="bodyType"]',
-    };
-    const fieldEl = form.querySelector(selectorMap[field]);
-    if (!fieldEl) return;
-    fieldEl.value = value ?? "";
-    fieldEl.dispatchEvent(new Event("input", { bubbles: true }));
-    fieldEl.dispatchEvent(new Event("change", { bubbles: true }));
-    if (field === "make") setSelectedMake(String(value || ""));
-    if (field === "model") setSelectedModel(String(value || ""));
-    if (field === "year") setSelectedYear(String(value || ""));
-    setSmartFillSuggestions((prev) => prev.filter((s) => s.field !== field));
   }, []);
 
   const applyGeneratedDescription = useCallback((force = false) => {
@@ -809,9 +683,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     data.airbags = data.airbags ? parseInt(data.airbags, 10) : null;
     data.seats = data.seats ? parseInt(data.seats, 10) : null;
 
-    data.negotiable = data.negotiable === "on";
-    data.imported = data.imported === "on";
-    data.featured = data.featured === "on";
+    data.negotiable = isEdit ? !!car?.negotiable : false;
+    data.imported = isEdit ? !!car?.imported : true;
+    data.featured = isEdit ? !!car?.featured : false;
     data.turbo = data.turbo === "on";
     data.sunroof = data.sunroof === "on";
 
@@ -909,7 +783,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         bodyType: "Body Type",
       };
       const diff = [];
-      const lowConfidence = [];
       Object.entries(seeded).forEach(([field, nextValue]) => {
         if (nextValue === "" || nextValue === null || nextValue === undefined) return;
         const prevValue = currentValues[field] ?? "";
@@ -922,35 +795,18 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             confidence: Number(confidence[field] || 0),
           });
         }
-        if (Number(confidence[field] || 0) < 0.72) {
-          lowConfidence.push({
-            field,
-            label: fieldLabels[field] || field,
-            value: nextValue,
-            confidence: Number(confidence[field] || 0),
-          });
-        }
       });
 
       setSmartFillDiff(diff);
-      setSmartFillSuggestions(lowConfidence);
-
-      const gatedSeeded = { ...seeded };
-      lowConfidence.forEach((item) => {
-        gatedSeeded[item.field] = "";
-      });
-      Object.keys(manualOverrides).forEach((field) => {
-        if (manualOverrides[field]) gatedSeeded[field] = "";
-      });
 
       const currentMake = formRef.current?.querySelector('input[name="make"]')?.value?.trim() || selectedMake;
       const currentModel = formRef.current?.querySelector('input[name="model"]')?.value?.trim() || selectedModel;
       const currentYear = formRef.current?.querySelector('select[name="year"]')?.value?.trim() || selectedYear;
-      setSelectedYear(gatedSeeded.year ? String(gatedSeeded.year) : currentYear);
-      setSelectedMake(gatedSeeded.make || currentMake);
-      setSelectedModel(gatedSeeded.model || currentModel);
-      if (gatedSeeded.price) setPriceInput(normalizePriceToIntegerString(String(gatedSeeded.price)));
-      applyDetectedValuesToForm(gatedSeeded);
+      setSelectedYear(seeded.year ? String(seeded.year) : currentYear);
+      setSelectedMake(seeded.make || currentMake);
+      setSelectedModel(seeded.model || currentModel);
+      if (seeded.price) setPriceInput(normalizePriceToIntegerString(String(seeded.price)));
+      applyDetectedValuesToForm(seeded);
 
       if (!seeded.make && !seeded.model && !seeded.price && !seeded.mileage && !seeded.year) {
         setError("No key fields detected. Try adding year, make, model, price, and mileage in the text.");
@@ -964,54 +820,86 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   };
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="space-y-6 animate-in fade-in duration-700">
-      <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5 sm:p-6">
-        <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-500">Dealer Listing Guide</p>
-        <h2 className="mt-1 text-xl sm:text-2xl font-black text-slate-900 dark:text-white">Publish better listings, faster</h2>
-        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {[
-            "1) Start with required essentials: year, make, model, price, mileage, fuel, transmission, body type, color.",
-            "2) Add at least 5 clear photos (front, rear, interior, dashboard, odometer).",
-            "3) Use Smart Fill for messy text, then verify highlighted fields.",
-            "4) Add strong features + short honest description before publishing.",
-          ].map((tip, idx) => (
-            <div key={idx} className="bg-[#fbfcfe] dark:bg-[#0f0f10] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300">
-              {tip}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4">
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <div className="flex items-center gap-2">
-            {checklistItems.map((item, idx) => {
-              const done = checklist[item.key];
-              return (
-                <div key={item.key} className="flex items-center gap-2">
-                  <div className={`w-6 h-6 rounded-full border flex items-center justify-center ${done ? "bg-emerald-500 border-emerald-500 text-white" : "border-slate-300 text-slate-400"}`}>
-                    {done ? <Check size={12} /> : <span className="text-[10px] font-bold">{idx + 1}</span>}
-                  </div>
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">{item.label}</span>
-                  {idx < checklistItems.length - 1 && <ChevronRight size={13} className="text-slate-300" />}
-                </div>
-              );
-            })}
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 animate-in fade-in duration-700">
+      {isNew && (
+        <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-3 sm:p-4">
+          <div className="flex items-center gap-2 mb-1 sm:mb-1.5">
+            <Sparkles size={14} className="text-indigo-500 shrink-0 sm:w-4 sm:h-4" />
+            <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight">Smart Fill</h3>
           </div>
-          <span className="text-[11px] font-black uppercase tracking-wider text-[#ff5a2f]">{checklistDone}/4 complete</span>
+          <p className="text-[11px] sm:text-xs font-medium text-slate-500 dark:text-slate-400 mb-2">
+            Paste ad or WhatsApp text — we fill year, make, model, price, mileage, and more.
+          </p>
+          <div className="space-y-2 sm:space-y-2.5">
+            <textarea
+              ref={smartFillInputRef}
+              defaultValue=""
+              onInput={(e) => setSmartFillDraft(e.currentTarget.value || "")}
+              placeholder="2017 RAV4, 45k km, 3.2M…"
+              className="w-full min-h-[5.25rem] sm:min-h-[6.5rem] bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-indigo-500 transition-all resize-y"
+            />
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={handleSmartFill}
+                disabled={parsing || !smartFillDraft.trim()}
+                className="px-3 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold uppercase tracking-wider rounded-xl text-[10px] sm:text-xs transition-all inline-flex items-center gap-1.5"
+              >
+                {parsing ? "…" : "Apply"}
+                {!parsing && <Sparkles size={14} />}
+              </button>
+              {smartFillDraft && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (smartFillInputRef.current) smartFillInputRef.current.value = "";
+                    setSmartFillDraft("");
+                  }}
+                  className="text-[10px] sm:text-xs font-bold text-slate-500 hover:text-rose-600 uppercase tracking-wider px-2"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+            <p className="hidden sm:block text-[10px] text-emerald-800 font-medium rounded-lg border border-emerald-200 bg-emerald-50/80 px-2.5 py-1.5">
+              Run again anytime; every field stays editable.
+            </p>
+            {(smartFillMeta.overall !== null || smartFillMeta.warnings.length > 0) && (
+              <div className="rounded-lg border border-indigo-200 dark:border-zinc-700 bg-white/60 dark:bg-zinc-900/40 px-2.5 py-2 text-[10px] sm:text-[11px]">
+                <p className="font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                  {smartFillMeta.source}
+                  {smartFillMeta.overall !== null ? ` · ${(smartFillMeta.overall * 100).toFixed(0)}%` : ""}
+                </p>
+                {smartFillMeta.warnings.length > 0 && (
+                  <p className="mt-1 font-semibold text-amber-700 dark:text-amber-300">{smartFillMeta.warnings.join(", ")}</p>
+                )}
+              </div>
+            )}
+            {smartFillDiff.length > 0 && (
+              <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-[#fbfcfe] dark:bg-[#0f0f10] px-2.5 py-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Changes</p>
+                <div className="space-y-0.5">
+                  {smartFillDiff.slice(0, 5).map((d) => (
+                    <p key={d.field} className="text-[10px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      {d.label}: <span className="line-through text-slate-400">{d.from}</span> → <span className="text-slate-900 dark:text-white">{d.to}</span>
+                    </p>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-      
+      )}
 
       {error && (
-        <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-black uppercase tracking-widest rounded-2xl px-6 py-4 flex items-center gap-3">
+        <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-black uppercase tracking-widest rounded-xl sm:rounded-2xl px-4 py-3 sm:px-6 sm:py-4 flex items-center gap-3">
           <Info size={16} />
           {error}
         </div>
       )}
 
       {dealers.length > 1 && (
-        <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-8">
+        <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-6 sm:p-8">
           <label className={labelCls}>Assigned Dealer *</label>
           <select
             name="dealerId"
@@ -1029,140 +917,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       )}
       {dealers.length === 1 && dealers[0] && <input type="hidden" name="dealerId" value={dealers[0].id} />}
 
-      {isNew && (
-        <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-6 mb-10">
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles size={16} className="text-indigo-500" />
-            <h3 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">AI Smart Fill</h3>
-          </div>
-          <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-4 max-w-2xl">
-            Paste listing text from WhatsApp or anywhere else. We’ll extract Year, Make, Model, Price, Mileage and Engine CC.
-          </p>
-
-          <div className="space-y-4">
-            <textarea
-              ref={smartFillInputRef}
-              defaultValue=""
-              onInput={(e) => setSmartFillDraft(e.currentTarget.value || "")}
-              placeholder="e.g. 2017 Toyota Rav4, White, 45,000 km, Price: 3.2M, clean car..."
-              className="w-full h-32 bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-indigo-500 transition-all resize-none"
-            />
-
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={handleSmartFill}
-                disabled={parsing || !smartFillDraft.trim()}
-                className="px-6 py-3 bg-indigo-600 hover:bg-slate-900 dark:hover:bg-white dark:hover:text-black disabled:opacity-50 text-white font-black uppercase tracking-wider rounded-2xl text-xs transition-all flex items-center gap-2"
-              >
-                {parsing ? "Analyzing..." : "Apply Smart Fill"}
-                {!parsing && <Sparkles size={16} />}
-              </button>
-              {smartFillDraft && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (smartFillInputRef.current) smartFillInputRef.current.value = "";
-                    setSmartFillDraft("");
-                  }}
-                  className="text-xs font-bold text-slate-500 hover:text-rose-600 uppercase tracking-widest px-2"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-
-              <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3">
-                <p className="text-[11px] font-semibold text-emerald-800">
-                  Smart Fill only pre-fills values. Dealers can edit any field anytime.
-                  {Object.keys(manualOverrides).length > 0
-                    ? ` ${Object.keys(manualOverrides).length} field(s) are protected from AI overwrite.`
-                    : ""}
-                </p>
-                {Object.keys(manualOverrides).length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setManualOverrides({})}
-                    className="mt-2 text-[10px] font-black uppercase tracking-wider text-emerald-700 hover:text-emerald-900"
-                  >
-                    Reset manual protections
-                  </button>
-                )}
-              </div>
-
-              {(smartFillMeta.overall !== null || smartFillMeta.warnings.length > 0) && (
-                <div className="rounded-2xl border border-indigo-200 dark:border-zinc-700 bg-white/60 dark:bg-zinc-900/40 px-4 py-3">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
-                    Source: {smartFillMeta.source} {smartFillMeta.overall !== null ? `• Confidence ${(smartFillMeta.overall * 100).toFixed(0)}%` : ""}
-                  </p>
-                  {smartFillMeta.warnings.length > 0 && (
-                    <p className="mt-1 text-[11px] font-semibold text-amber-700 dark:text-amber-300">
-                      Review highlighted fields: {smartFillMeta.warnings.join(", ")}
-                    </p>
-                  )}
-                </div>
-              )}
-              {smartFillDiff.length > 0 && (
-                <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-[#fbfcfe] dark:bg-[#0f0f10] px-4 py-3">
-                  <p className="text-[11px] font-black uppercase tracking-widest text-slate-500 mb-2">Smart Fill changes</p>
-                  <div className="space-y-1">
-                    {smartFillDiff.slice(0, 6).map((d) => (
-                      <p key={d.field} className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                        {d.label}: <span className="line-through text-slate-400">{d.from}</span> {" -> "} <span className="text-slate-900 dark:text-white">{d.to}</span>
-                      </p>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {smartFillSuggestions.length > 0 && (
-                <div className="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3">
-                  <p className="text-[11px] font-black uppercase tracking-widest text-amber-800 mb-2">Review low-confidence suggestions</p>
-                  <div className="space-y-2">
-                    {smartFillSuggestions.map((s) => (
-                      <div key={s.field} className="flex items-center justify-between gap-2">
-                        <p className="text-xs font-semibold text-amber-900">
-                          {s.label}: {String(s.value)} ({Math.round((s.confidence || 0) * 100)}%)
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => applySmartFillSuggestion(s.field, s.value)}
-                          className="px-3 py-1 rounded-xl bg-amber-700 text-white text-[10px] font-black uppercase tracking-wider"
-                        >
-                          Apply
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-          </div>
-        </div>
-      )}
-
-      <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-4">
-        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Buyer Preview</p>
-        <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
-          <div className="w-full sm:w-40 h-24 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 dark:border-slate-800 flex items-center justify-center">
-            {images[0]?.url ? <img src={images[0].url} alt="" className="w-full h-full object-cover" /> : <span className="text-xs text-slate-400">No photo yet</span>}
-          </div>
-          <div className="min-w-0">
-            <p className="text-sm font-black text-slate-900 dark:text-white truncate">{previewTitle}</p>
-            {previewVariant && <p className="text-xs font-semibold text-slate-500 truncate">{previewVariant}</p>}
-            <p className="text-sm font-bold text-[#ff5a2f] mt-1">{previewPrice ? `KES ${Number(previewPrice || 0).toLocaleString("en-KE")}` : "Price missing"}</p>
-            <p className="text-xs text-slate-500 mt-1 line-clamp-2">{previewDescription || "Add a short description to improve buyer trust."}</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="space-y-6">
+      <div className="space-y-5 sm:space-y-6">
         <div>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-1.5 h-1.5 rounded-2xl bg-[#ff5a2f]" />
             <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Vehicle Basics</h3>
           </div>
-          <p className="text-xs font-semibold text-slate-500 mb-4">
-            Start with search-critical details. These fields drive listing visibility and buyer filters.
-          </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -1337,7 +1097,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 <div className="w-1.5 h-1.5 rounded-2xl bg-[#ff5a2f]" />
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Photos</h3>
               </div>
-              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">3+ photos recommended</p>
             </div>
             {uploading && (
               <div className="text-center mb-8 p-6 bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl">
@@ -1349,13 +1108,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             <div className={uploading ? "opacity-50 pointer-events-none" : ""}>
               <MediaUploader initialImages={images} onFilesSelected={handleFilesSelected} maxFiles={15} />
             </div>
-            <div className="mt-4 flex items-center gap-2 text-[11px] font-semibold text-slate-500">
-              <UploadCloud size={14} className="text-[#ff5a2f]" />
-              Upload starts immediately so dealers can continue filling details while photos process.
-            </div>
-            <p className="mt-2 text-xs font-semibold text-slate-500">
-              Tip: Listings with 8+ quality photos usually get better enquiry rates.
-            </p>
+            <p className="mt-3 text-[11px] font-medium text-slate-500">Uploads start in the background.</p>
           </div>
         </div>
 
@@ -1374,7 +1127,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   >
                     Generate from specs
                   </button>
-                  <span className="text-[11px] font-semibold text-slate-500">Tags remain unchanged.</span>
                 </div>
                 <textarea
                   name="description"
