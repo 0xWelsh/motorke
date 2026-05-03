@@ -8,7 +8,16 @@ import { PrismaClient } from "@prisma/client";
 import nodemailer from "nodemailer";
 
 const db = new PrismaClient();
-const to = process.argv[2] || "sec@welsh.co.ke";
+const SUPPORT =
+  process.env.MAIL_SUPPORT ||
+  process.env.NEXT_PUBLIC_MAIL_SUPPORT ||
+  "hello@welshmotorhub.co.ke";
+const FROM_ALERTS =
+  process.env.MAIL_FROM_ALERTS ||
+  process.env.MAIL_FROM_NOREPLY ||
+  process.env.MAIL_FROM_VERIFICATION ||
+  '"Welsh Motorhub" <noreply@welshmotorhub.co.ke>';
+const to = process.argv[2] || SUPPORT;
 
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS?.replace(/\s+/g, "");
@@ -17,13 +26,13 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://welshmotorhub.co.ke
 function buildEmailFooter() {
   return `
     <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid #e2e8f0;">
-      <p style="margin: 0 0 6px; font-size: 12px; color: #475569;">Welsh Motors Marketplace</p>
+      <p style="margin: 0 0 6px; font-size: 12px; color: #475569;">Welsh Motorhub</p>
       <p style="margin: 0; font-size: 12px; color: #64748b;">
         <a href="${siteUrl}/terms" style="color: #0f172a; text-decoration: underline;">Terms</a>
         &nbsp;•&nbsp;
         <a href="${siteUrl}/privacy" style="color: #0f172a; text-decoration: underline;">Privacy</a>
         &nbsp;•&nbsp;
-        <a href="mailto:sec@welsh.co.ke" style="color: #0f172a; text-decoration: underline;">sec@welsh.co.ke</a>
+        <a href="mailto:${SUPPORT}" style="color: #0f172a; text-decoration: underline;">${SUPPORT}</a>
       </p>
     </div>
   `;
@@ -63,7 +72,7 @@ async function main() {
 
   if (!SMTP_USER || !SMTP_PASS) {
     console.log("SMTP_USER / SMTP_PASS not set — real email not sent (same behavior as the app in dev).");
-    console.log("Would send watch-style alert to:", to, "| From: sec@welsh.co.ke | Subject: Price drop:", title);
+    console.log("Would send watch-style alert to:", to, "| From:", FROM_ALERTS, "| Subject: Price drop:", title);
     process.exit(0);
   }
 
@@ -75,12 +84,12 @@ async function main() {
   });
 
   await transporter.sendMail({
-    from: '"Welsh Motors Alerts" <sec@welsh.co.ke>',
+    from: FROM_ALERTS,
     to,
     subject: `Price drop: ${title}`,
     html,
   });
-  console.log("Sent test watch alert to", to, '(From: "Welsh Motors Alerts" <sec@welsh.co.ke>)');
+  console.log("Sent test watch alert to", to, "From:", FROM_ALERTS);
 }
 
 main()

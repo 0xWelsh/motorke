@@ -1,5 +1,6 @@
 "use client";
 
+import { PUBLIC_SUPPORT_EMAIL } from "@/lib/site-contact";
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Mail, Loader2, ShieldCheck } from "lucide-react";
@@ -109,7 +110,7 @@ export default function ForgotPasswordPage() {
           </form>
 
           <p className="mt-5 text-xs font-semibold text-slate-600">
-            Need help now? Contact <a href="mailto:sec@welsh.co.ke" className="text-slate-900 dark:text-white underline underline-offset-2">sec@welsh.co.ke</a>
+            Need help now? Contact <a href={`mailto:${PUBLIC_SUPPORT_EMAIL}`} className="text-slate-900 dark:text-white underline underline-offset-2">{PUBLIC_SUPPORT_EMAIL}</a>
           </p>
         </div>
       </div>

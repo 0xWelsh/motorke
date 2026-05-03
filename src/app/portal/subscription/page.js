@@ -1,18 +1,23 @@
 import { CheckCircle2, Gift, Sparkles } from "lucide-react";
+import { getSupportEmail } from "@/lib/site-contact";
 
-const INCLUDED = [
-  "List vehicles on the marketplace (generous limits)",
-  "Public dealer profile & showroom page",
-  "Leads: enquiries, WhatsApp routing, and inbox tools",
-  "Portal inventory, bulk tools, and analytics as we ship them",
-  "Email support via sec@welsh.co.ke",
-];
+function getIncludedLines() {
+  const support = getSupportEmail();
+  return [
+    "List vehicles on the marketplace (generous limits)",
+    "Public dealer profile & showroom page",
+    "Leads: enquiries, WhatsApp routing, and inbox tools",
+    "Portal inventory, bulk tools, and analytics as we ship them",
+    `Email support via ${support}`,
+  ];
+}
 
 export const metadata = {
   title: "Plans",
 };
 
 export default function SubscriptionPage() {
+  const INCLUDED = getIncludedLines();
   return (
     <div className="w-full max-w-2xl">
       <div className="mb-8">

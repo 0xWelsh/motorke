@@ -3,19 +3,33 @@ import { db } from "@/lib/db";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import { getSiteOrigin } from "@/lib/site-url";
+import {
+  getSupportEmail,
+  getMailFromVerification,
+  getMailFromNoReply,
+  getMailFromAlerts,
+  getMailFromMarketing,
+} from "@/lib/site-contact";
 
 const SMTP_USER = process.env.SMTP_USER;
-const SMTP_PASS = process.env.SMTP_PASS?.replace(/\s+/g, '');
+const SMTP_PASS = process.env.SMTP_PASS?.replace(/\s+/g, "");
+const SMTP_HOST = process.env.SMTP_HOST || "smtp.gmail.com";
+const SMTP_PORT = Number(process.env.SMTP_PORT || 465);
+const SMTP_SECURE = process.env.SMTP_SECURE
+  ? process.env.SMTP_SECURE === "true"
+  : SMTP_PORT === 465;
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: { user: SMTP_USER, pass: SMTP_PASS },
+  host: SMTP_HOST,
+  port: SMTP_PORT,
+  secure: SMTP_SECURE,
+  auth: SMTP_USER && SMTP_PASS ? { user: SMTP_USER, pass: SMTP_PASS } : undefined,
+  ...(SMTP_PORT === 587 && !SMTP_SECURE ? { requireTLS: true } : {}),
 });
 
 function buildEmailFooter() {
   const siteUrl = getSiteOrigin();
+  const support = getSupportEmail();
   return `
     <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid #e2e8f0;">
       <p style="margin: 0 0 6px; font-size: 12px; color: #475569;">Welsh Motorhub</p>
@@ -24,7 +38,7 @@ function buildEmailFooter() {
         &nbsp;•&nbsp;
         <a href="${siteUrl}/privacy" style="color: #0f172a; text-decoration: underline;">Privacy</a>
         &nbsp;•&nbsp;
-        <a href="mailto:sec@welsh.co.ke" style="color: #0f172a; text-decoration: underline;">sec@welsh.co.ke</a>
+        <a href="mailto:${support}" style="color: #0f172a; text-decoration: underline;">${support}</a>
       </p>
     </div>
   `;
@@ -53,21 +67,32 @@ export async function sendVerificationEmail(email, name, otp) {
     return { success: true, mocked: true };
   }
 
+  const escapeHtml = (value) =>
+    (value || "")
+      .toString()
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  const firstName = escapeHtml((name || "there").toString().split(" ")[0]);
+  const origin = getSiteOrigin();
+  const support = getSupportEmail();
   const htmlContent = `
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #1A1A1A;">
-      <div style="margin-bottom: 40px; text-align: center;">
-        <span style="font-weight: 900; font-size: 24px; text-transform: uppercase; letter-spacing: -0.05em;">MOTOR<span style="color: #ff5a2f;">SKE</span></span>
-        <p style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3em; color: #999; margin-top: 5px;">Standard</p>
+      <div style="margin-bottom: 32px; text-align: center;">
+        <span style="font-weight: 900; font-size: 22px; letter-spacing: -0.03em; color: #0f172a;">Welsh Motorhub</span>
+        <p style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; color: #64748b; margin-top: 8px;">Verify your email</p>
       </div>
-      <h1 style="font-size: 28px; font-weight: 800; margin-bottom: 20px;">Welcome, ${name.split(' ')[0]}.</h1>
-      <p style="font-size: 16px; color: #666; margin-bottom: 30px;">
-        Use the following 6-digit confirmation code to verify your email address.
+      <h1 style="font-size: 26px; font-weight: 800; margin-bottom: 16px; color: #0f172a;">Hi ${firstName},</h1>
+      <p style="font-size: 16px; color: #475569; margin-bottom: 28px; line-height: 1.55;">
+        Thanks for joining <strong>Welsh Motorhub</strong> (${origin.replace(/^https?:\/\//, "")}). Enter this code to confirm your email and finish setting up your account.
       </p>
-      <div style="background: #f4f4f5; padding: 30px; text-align: center; border-radius: 0px; margin-bottom: 30px;">
-         <span style="font-size: 42px; font-weight: 900; letter-spacing: 0.25em; color: #ff5a2f;">${otp}</span>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 28px; text-align: center; border-radius: 8px; margin-bottom: 28px;">
+         <span style="font-size: 40px; font-weight: 900; letter-spacing: 0.2em; color: #ea580c;">${otp}</span>
       </div>
-      <p style="font-size: 12px; color: #999; margin-top: 40px;">
-        This code expires in 30 minutes. If you did not create a Welsh Motors account, you can safely ignore this.
+      <p style="font-size: 13px; color: #64748b; line-height: 1.5;">
+        This code expires in <strong>30 minutes</strong>. If you did not sign up, you can ignore this message. Need help? Reply is not monitored — contact <a href="mailto:${support}" style="color: #0f172a;">${support}</a>.
       </p>
       ${buildEmailFooter()}
     </div>
@@ -75,9 +100,9 @@ export async function sendVerificationEmail(email, name, otp) {
 
   try {
     await transporter.sendMail({
-      from: '"Welsh Motors Standard" <sec@welsh.co.ke>',
+      from: getMailFromVerification(),
       to: email,
-      subject: "Your Welsh Motors Verification Code",
+      subject: "Your Welsh Motorhub verification code",
       html: htmlContent,
     });
     return { success: true };
@@ -137,7 +162,7 @@ export async function sendLeadAlertEmail({
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 28px; color: #111827;">
       <h1 style="margin: 0 0 8px; font-size: 24px; font-weight: 800;">New Buyer Enquiry</h1>
       <p style="margin: 0 0 20px; color: #475569; font-size: 14px;">
-        A potential buyer has reached out on Welsh Motors.
+        A potential buyer has reached out on Welsh Motorhub.
       </p>
 
       <div style="border: 1px solid #e2e8f0; border-radius: 0px; padding: 18px; margin-bottom: 14px;">
@@ -168,7 +193,7 @@ export async function sendLeadAlertEmail({
 
   try {
     await transporter.sendMail({
-      from: '"Welsh Motors Alerts" <sec@welsh.co.ke>',
+      from: getMailFromAlerts(),
       to: recipients.join(","),
       subject: `New Buyer Enquiry - ${carTitle || "Vehicle"}`,
       html: htmlContent,
@@ -221,7 +246,7 @@ export async function sendPasswordResetEmail({ email, name, resetToken }) {
   const htmlContent = `
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 620px; margin: 0 auto; padding: 30px; color: #0f172a;">
       <h1 style="margin: 0 0 8px; font-size: 26px; font-weight: 800;">Reset your password</h1>
-      <p style="margin: 0 0 22px; font-size: 15px; color: #475569;">Hi ${safeName}, we received a request to reset your Welsh Motors account password.</p>
+      <p style="margin: 0 0 22px; font-size: 15px; color: #475569;">Hi ${safeName}, we received a request to reset your Welsh Motorhub account password.</p>
 
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0px; padding: 18px; margin-bottom: 20px;">
         <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1.6;">For your security, this link expires in 30 minutes. If you did not request this reset, you can ignore this email.</p>
@@ -236,9 +261,9 @@ export async function sendPasswordResetEmail({ email, name, resetToken }) {
 
   try {
     await transporter.sendMail({
-      from: '"Welsh Motors Security" <sec@welsh.co.ke>',
+      from: getMailFromNoReply(),
       to: email,
-      subject: "Reset your Welsh Motors password",
+      subject: "Reset your Welsh Motorhub password",
       html: htmlContent,
     });
     return { success: true };
@@ -309,7 +334,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
         </a>
 
         <p style="margin: 24px 0; font-size: 13px; color: #64748b; line-height: 1.6;">
-          This deal won't last long. Better deals go fast on Welsh Motors!
+          This deal won't last long. Better deals go fast on Welsh Motorhub!
         </p>
       </div>
 
@@ -319,7 +344,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
 
   try {
     await transporter.sendMail({
-      from: '"Welsh Motors" <sec@welsh.co.ke>',
+      from: getMailFromMarketing(),
       to: userEmail,
       subject: `Better deal: ${newCar.year} ${newCar.make} - Save KSh ${parseInt(savings).toLocaleString("en-KE")}`,
       html: htmlContent,
@@ -358,7 +383,7 @@ export async function sendEngagementFollowUpEmail({ userEmail, userName, carTitl
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">Hi ${safeName},</p>
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">
           You reached out to <strong>${safeDealer}</strong> a few days ago regarding the <strong>${safeCar}</strong>. 
-          Vehicles move incredibly fast on Welsh Motors, so we wanted to check in to see if you are still looking to buy or if you've already found your dream car.
+          Vehicles move incredibly fast on Welsh Motorhub, so we wanted to check in to see if you are still looking to buy or if you've already found your dream car.
         </p>
 
         <div style="text-align: center; margin: 32px 0;">
@@ -378,7 +403,7 @@ export async function sendEngagementFollowUpEmail({ userEmail, userName, carTitl
 
   try {
     await transporter.sendMail({
-      from: '"Welsh Motors Team" <sec@welsh.co.ke>',
+      from: getMailFromMarketing(),
       to: userEmail,
       subject: `Still looking for the ${safeCar}?`,
       html: htmlContent,
@@ -412,7 +437,7 @@ export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName
         <h1 style="margin: 0 0 16px; font-size: 24px; font-weight: 900;">How was the service?</h1>
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">Hi ${safeName},</p>
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">
-          You recently contacted <strong>${safeDealer}</strong> through Welsh Motors. We carefully vet all our partners to ensure the highest quality experience, and your feedback is vital.
+          You recently contacted <strong>${safeDealer}</strong> through Welsh Motorhub. We carefully vet all our partners to ensure the highest quality experience, and your feedback is vital.
         </p>
         
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">
@@ -432,7 +457,7 @@ export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName
 
   try {
     await transporter.sendMail({
-      from: '"Welsh Motors Quality" <sec@welsh.co.ke>',
+      from: getMailFromMarketing(),
       to: userEmail,
       subject: `How was your experience with ${safeDealer}?`,
       html: htmlContent,
@@ -501,7 +526,7 @@ export async function sendWatchAlertEmail({
 
   try {
     await transporter.sendMail({
-      from: '"Welsh Motors Alerts" <sec@welsh.co.ke>',
+      from: getMailFromAlerts(),
       to: userEmail,
       subject: isPriceDrop
         ? `Price drop: ${title}`

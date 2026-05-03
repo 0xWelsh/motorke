@@ -1,8 +1,10 @@
 // src/app/not-found.js
+import { getSupportEmail } from "@/lib/site-contact";
 import Link from "next/link";
 import { Search, Home, GitCompare } from "lucide-react";
 
 export default function NotFound() {
+  const support = getSupportEmail();
   return (
     <div className="min-h-[78vh] bg-white dark:bg-[#0a0a0a] flex items-center px-4 sm:px-6 transition-colors">
       <div className="max-w-4xl w-full mx-auto">
@@ -50,8 +52,8 @@ export default function NotFound() {
 
           <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-500">
             Need help? Reach us at{" "}
-            <a href="mailto:sec@welsh.co.ke" className="text-[#38A169] hover:underline">
-              sec@welsh.co.ke
+            <a href={`mailto:${support}`} className="text-[#38A169] hover:underline">
+              {support}
             </a>
           </p>
         </div>

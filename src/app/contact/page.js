@@ -1,5 +1,6 @@
 "use client";
 
+import { PUBLIC_SUPPORT_EMAIL } from "@/lib/site-contact";
 import { useState } from "react";
 import Link from "next/link";
 import { Mail, MapPin, Clock, ArrowRight, CheckCircle } from "lucide-react";
@@ -67,7 +68,7 @@ export default function ContactPage() {
               <div>
                 <h3 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-6">Digital Correspondence</h3>
                 <div className="space-y-4">
-                   <a href="mailto:sec@welsh.co.ke" className="text-2xl font-bold text-[#111827] dark:text-white hover:text-[#38A169] transition-colors">sec@welsh.co.ke</a>
+                   <a href={`mailto:${PUBLIC_SUPPORT_EMAIL}`} className="text-2xl font-bold text-[#111827] dark:text-white hover:text-[#38A169] transition-colors">{PUBLIC_SUPPORT_EMAIL}</a>
                    <p className="text-sm font-medium text-[#718096] dark:text-slate-500">Verified Response Time: 24h</p>
                 </div>
               </div>
@@ -163,7 +164,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 sm:gap-16">
              {[
                { title: "Direct Contact", detail: "For specific vehicle queries, use the 'WhatsApp' link on the car detail page to reach the dealer directly." },
-               { title: "Escalations", detail: "For listing disputes or fraud reports, include the Reference ID and email sec@welsh.co.ke immediately." },
+               { title: "Escalations", detail: `For listing disputes or fraud reports, include the Reference ID and email ${PUBLIC_SUPPORT_EMAIL} immediately.` },
                { title: "Business Inquiries", detail: "Seeking to join the network? Include your KRA compliance and physical yard location in the proposal." }
              ].map((item, i) => (
                <div key={i} className="text-center md:text-left group">

@@ -1,5 +1,6 @@
 "use client";
 
+import { PUBLIC_SUPPORT_EMAIL } from "@/lib/site-contact";
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, HelpCircle, Shield, Zap, MapPin, CreditCard } from "lucide-react";
@@ -24,7 +25,7 @@ const faqs = {
     },
     {
       q: "What if I have a bad experience with a dealer?",
-      a: "Leave a detailed review on their dealer profile. Your honest feedback helps other buyers and holds dealers accountable. If you believe fraud has occurred, contact us at sec@welsh.co.ke immediately with evidence.",
+      a: `Leave a detailed review on their dealer profile. Your honest feedback helps other buyers and holds dealers accountable. If you believe fraud has occurred, contact us at ${PUBLIC_SUPPORT_EMAIL} immediately with evidence.`,
     },
     {
       q: "Can I compare cars side-by-side?",
@@ -100,7 +101,7 @@ const faqs = {
     },
     {
       q: "What phone numbers do I call if I have questions?",
-      a: "Support: email sec@welsh.co.ke or visit our contact page. Response time: 24-48 hours.",
+      a: `Support: email ${PUBLIC_SUPPORT_EMAIL} or visit our contact page. Response time: 24-48 hours.`,
     },
     {
       q: "Does Welsh Motors work on mobile?",
@@ -122,7 +123,7 @@ const faqs = {
     },
     {
       q: "What if a dealer lists a stolen car?",
-      a: "Report it immediately at sec@welsh.co.ke with proof. We work with law enforcement and will remove the car and ban the dealer. Welsh Motors has zero tolerance.",
+      a: `Report it immediately at ${PUBLIC_SUPPORT_EMAIL} with proof. We work with law enforcement and will remove the car and ban the dealer. Welsh Motors has zero tolerance.`,
     },
     {
       q: "Do you facilitate payment?",

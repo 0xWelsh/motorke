@@ -1,4 +1,5 @@
 "use client";
+import { PUBLIC_SUPPORT_EMAIL } from "@/lib/site-contact";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
@@ -100,9 +101,9 @@ export default function GlobalFooter() {
             <span className="flex items-center gap-2 text-xs">
               <MapPin size={14} /> Nairobi, Kenya
             </span>
-            <span className="flex items-center gap-2 text-xs">
-              <Mail size={14} /> sec@welsh.co.ke
-            </span>
+            <a href={`mailto:${PUBLIC_SUPPORT_EMAIL}`} className="flex items-center gap-2 text-xs hover:text-white/90 transition-colors">
+              <Mail size={14} /> {PUBLIC_SUPPORT_EMAIL}
+            </a>
           </div>
         </div>
       </div>

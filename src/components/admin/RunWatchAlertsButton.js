@@ -42,7 +42,7 @@ export default function RunWatchAlertsButton() {
       if (data.mocked) {
         setSummary(data.message || "SMTP not set — check server logs for mock output.");
       } else {
-        setSummary(`Test alert sent to ${data.to} (from ${data.from || "sec@welsh.co.ke"}).`);
+        setSummary(`Test alert sent to ${data.to} (from ${data.from || "configured MAIL_FROM_*"}).`);
       }
       setTimeout(() => setState("idle"), 5000);
     } catch (error) {

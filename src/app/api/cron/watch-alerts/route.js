@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { sendWatchAlertEmail } from "@/lib/mail";
+import { getMailFromAlerts } from "@/lib/site-contact";
 import { getSessionFromRequest } from "@/lib/auth";
 
 const ALERT_COOLDOWN_HOURS = 18;
@@ -87,7 +88,7 @@ async function sendTestWatchAlertEmail(admin) {
       mocked: true,
       to: admin.email,
       message:
-        "SMTP is not configured in this environment. Watch alert would be sent from sec@welsh.co.ke when SMTP_USER/SMTP_PASS are set.",
+        `SMTP is not configured in this environment. Watch alert would be sent from ${getMailFromAlerts()} when SMTP_USER/SMTP_PASS are set.`,
     });
   }
   if (result?.success === false) {
@@ -101,7 +102,7 @@ async function sendTestWatchAlertEmail(admin) {
     test: true,
     mocked: false,
     to: admin.email,
-    from: "sec@welsh.co.ke",
+    from: getMailFromAlerts(),
     alertsSent: 1,
   });
 }
