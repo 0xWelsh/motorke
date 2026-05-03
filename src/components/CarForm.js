@@ -208,7 +208,7 @@ function buildBaseSeed(car, currentYear) {
     cylinders: car?.cylinders || "",
     horsepower: car?.horsepower || "",
     torque: car?.torque || "",
-    drivetrain: car?.drivetrain || "FWD",
+    drivetrain: car?.drivetrain ?? "",
     steering: car?.steering || "RHD",
     airbags: car?.airbags || "",
     seats: car?.seats || "",
@@ -860,8 +860,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               </select>
             </InfieldGroup>
             <InfieldGroup label="Drivetrain">
-              <select name="drivetrain" defaultValue={formSeed.drivetrain} className={inFieldSelect}>
-                {Object.entries(DRIVETRAIN_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+              <select name="drivetrain" defaultValue={formSeed.drivetrain || ""} className={inFieldSelect}>
+                <option value="">Select drivetrain…</option>
+                {Object.entries(DRIVETRAIN_LABELS).map(([value, label]) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
               </select>
             </InfieldGroup>
             <InfieldGroup label="Steering">
