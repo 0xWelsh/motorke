@@ -147,25 +147,31 @@ const CONDITIONS = [
   { value: "CERTIFIED", label: "Certified" },
 ];
 
-/** Digits-only string (e.g. normalizing API numbers). */
-function normalizePriceDigits(value) {
-  return String(value ?? "").replace(/[^\d]/g, "");
-}
-
 /**
- * Normalizes dealer-entered price to whole KES string: supports commas, KSh prefix, and 3.2M-style millions.
+ * Parses price for the API: strips commas / spaces / KSh / KES; supports 3.25M-style millions
+ * using exact integer math (no float rounding).
  */
-function normalizePriceToIntegerString(raw) {
+function parsePriceInputToKesInt(raw) {
   let s = String(raw ?? "").trim();
-  if (!s) return "";
+  if (!s) return NaN;
   s = s.replace(/,/g, "").replace(/\s+/g, "");
   s = s.replace(/^ksh/i, "").replace(/^kes/i, "").trim();
-  const mSuffix = s.match(/^([\d.]+)[mM]$/);
+  const mSuffix = s.match(/^([\d.]+)\s*[mM]$/);
   if (mSuffix) {
-    const n = parseFloat(mSuffix[1]);
-    if (Number.isFinite(n) && n >= 0) return String(Math.round(n * 1_000_000));
+    const core = mSuffix[1];
+    const [wholeRaw, fracRaw = ""] = core.split(".");
+    const wholeDigits = (wholeRaw || "").replace(/[^\d]/g, "") || "0";
+    const fracDigits = (fracRaw || "").replace(/[^\d]/g, "");
+    const w = BigInt(wholeDigits);
+    if (!fracDigits) return Number(w * 1_000_000n);
+    const f = BigInt(fracDigits);
+    const len = BigInt(fracDigits.length);
+    return Number(w * 1_000_000n + (f * 1_000_000n) / 10n ** len);
   }
-  return s.replace(/[^\d]/g, "");
+  const digits = s.replace(/[^\d]/g, "");
+  if (!digits) return NaN;
+  const n = parseInt(digits, 10);
+  return Number.isFinite(n) ? n : NaN;
 }
 
 function collectFormSnapshot(form) {
@@ -615,8 +621,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       data.price != null && String(data.price).trim() !== ""
         ? String(data.price)
         : String(formRef.current?.querySelector('input[name="price"]')?.value ?? "");
-    const priceDigits = normalizePriceToIntegerString(priceRaw);
-    data.price = parseInt(priceDigits, 10);
+    data.price = parsePriceInputToKesInt(priceRaw);
     if (!Number.isFinite(data.price) || data.price < 1) {
       setError("Enter a valid price in KES (whole numbers only).");
       setSubmitting(false);
@@ -811,15 +816,18 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   spellCheck={false}
                   enterKeyHint="done"
                   required
-                  defaultValue={normalizePriceToIntegerString(String(car?.price ?? formSeed.price ?? ""))}
-                  onBlur={(e) => {
-                    e.target.value = normalizePriceToIntegerString(e.target.value);
-                  }}
-                  placeholder="2500000 or 3.2M"
+                  defaultValue={
+                    (car?.price ?? formSeed.price) != null && (car?.price ?? formSeed.price) !== ""
+                      ? String(car?.price ?? formSeed.price)
+                      : ""
+                  }
+                  placeholder="e.g. 2,500,000 or 2.5M"
                   className={`${inField} min-h-[1.75rem]`}
                 />
               </InfieldGroup>
-              <p className="mt-1.5 text-[10px] font-medium text-slate-500">Whole shillings. Commas and 3.2M OK — we tidy digits when you leave the field.</p>
+              <p className="mt-1.5 text-[10px] font-medium text-slate-500">
+                We leave your typing as-is here; commas and optional M (millions) are read when you publish.
+              </p>
             </div>
 
             <InfieldGroup label="Mileage (km)">
