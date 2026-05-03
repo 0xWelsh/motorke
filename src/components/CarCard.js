@@ -121,6 +121,28 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
               </span>
             ))}
           </div>
+
+          {/* Listing features as horizontal scroll chips (card width) */}
+          {Array.isArray(car.features) && car.features.length > 0 && (
+            <div className="pt-1 -mx-1">
+              <p className="text-[9px] font-black uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500 mb-2">Features</p>
+              <div
+                className="flex gap-2 overflow-x-auto overflow-y-hidden pb-1.5 -mx-0.5 px-0.5 touch-pan-x [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-zinc-600"
+                style={{ WebkitOverflowScrolling: "touch" }}
+              >
+                {car.features.map((f, i) => (
+                  <span
+                    key={`${i}-${f}`}
+                    className="shrink-0 max-w-[200px] truncate inline-flex items-center bg-[#f0fdf4] dark:bg-emerald-950/40 text-[#166534] dark:text-emerald-200/90 text-[10px] font-bold px-2.5 py-1.5 border border-[#bbf7d0] dark:border-emerald-900/60 whitespace-nowrap"
+                    style={{ borderRadius: "2px" }}
+                    title={f}
+                  >
+                    {f}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Bottom Bar: Price & Action */}

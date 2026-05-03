@@ -337,6 +337,24 @@ export default async function CarDetailPage({ params }) {
                    </div>
                 </div>
 
+                {Array.isArray(car.features) && car.features.length > 0 && (
+                  <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
+                    <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-4">Features</h2>
+                    <div className="flex flex-wrap gap-2">
+                      {car.features.map((f, i) => (
+                        <span
+                          key={`${i}-${f}`}
+                          className="inline-flex max-w-full sm:max-w-xs truncate text-[12px] font-bold px-3 py-2 bg-[#f0fdf4] dark:bg-emerald-950/35 text-[#166534] dark:text-emerald-200 border border-[#bbf7d0] dark:border-emerald-900/50"
+                          style={{ borderRadius: "2px" }}
+                          title={f}
+                        >
+                          {f}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
                    <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-6">Vehicle Details</h2>
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-0 text-[13px]">
