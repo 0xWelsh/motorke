@@ -268,6 +268,7 @@ export default function CompareClient({ initialCars }) {
   const [activeMobileSlot, setActiveMobileSlot] = useState(0);
   const [searchSlotError, setSearchSlotError] = useState("");
   const [freeAi, setFreeAi] = useState({ status: "idle", text: "", hint: "" });
+  const [pickReasons, setPickReasons] = useState({ status: "idle", byCarId: {}, hint: "" });
   const [radarOpen, setRadarOpen] = useState(true);
 
   useEffect(() => {
@@ -330,6 +331,12 @@ export default function CompareClient({ initialCars }) {
   const fullComparedCars = useMemo(() => {
     return comparedSlots.filter((car) => car && initialCarsById.has(car.id));
   }, [comparedSlots, initialCarsById]);
+
+  const comparedCarIdsKey = useMemo(() => fullComparedCars.map((c) => c.id).join("|"), [fullComparedCars]);
+
+  useEffect(() => {
+    setPickReasons({ status: "idle", byCarId: {}, hint: "" });
+  }, [comparedCarIdsKey]);
 
   const insightsMap = useMemo(() => {
     return new Map(fullComparedCars.map((car) => [car.id, computeComparisonInsights(car)]));
@@ -970,6 +977,32 @@ export default function CompareClient({ initialCars }) {
     };
   }, [fullComparedCars, insightsMap, preset, smartNarrative]);
 
+  const pickReasonsPayload = useMemo(() => {
+    if (fullComparedCars.length < 2) return null;
+    return {
+      preset,
+      cars: fullComparedCars.map((car) => {
+        const tco = insightsMap.get(car.id)?.tco?.annualTotal;
+        const road = insightsMap.get(car.id)?.roadSuitabilityScore;
+        return {
+          id: car.id,
+          label: `${car.year} ${car.make} ${car.model}`.slice(0, 180),
+          priceText: formatCarPrice(car),
+          annualTcoText: typeof tco === "number" ? formatPrice(tco) : "N/A",
+          roadScore: typeof road === "number" ? `${road}/100` : "N/A",
+          bodyType: car.bodyType ? BODY_TYPE_LABELS[car.bodyType] : "N/A",
+          fuelType: car.fuelType ? FUEL_LABELS[car.fuelType] : "N/A",
+          transmission: car.transmission ? TRANSMISSION_LABELS[car.transmission] : "N/A",
+          drivetrain: car.drivetrain ? DRIVETRAIN_LABELS[car.drivetrain] : "N/A",
+          importedLabel: car.imported ? "imported" : "local",
+          mileageText: car.mileage != null ? formatMileage(car.mileage) : "N/A",
+          horsepowerText: car.horsepower ? `${car.horsepower} hp` : "N/A",
+        };
+      }),
+      ruleBullets: (smartNarrative?.bullets ?? []).slice(0, 8),
+    };
+  }, [fullComparedCars, insightsMap, preset, smartNarrative]);
+
   async function requestFreeAi() {
     if (!insightPayload) return;
     setFreeAi({ status: "loading", text: "", hint: "" });
@@ -999,6 +1032,42 @@ export default function CompareClient({ initialCars }) {
       });
     } catch {
       setFreeAi({ status: "err", text: "", hint: "Network error — try again." });
+    }
+  }
+
+  async function requestPickReasons() {
+    if (!pickReasonsPayload) return;
+    setPickReasons({ status: "loading", byCarId: {}, hint: "" });
+    try {
+      const res = await fetch("/api/compare/pick-reasons", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(pickReasonsPayload),
+      });
+      const data = await res.json();
+      if (data.ok && Array.isArray(data.reasons)) {
+        const byCarId = {};
+        for (const row of data.reasons) {
+          if (row?.carId && row?.reason) byCarId[row.carId] = row.reason;
+        }
+        setPickReasons({
+          status: "done",
+          byCarId,
+          hint: data.provider ? `Lines from ${data.provider}` : "",
+        });
+        return;
+      }
+      if (data.noKey) {
+        setPickReasons({ status: "nokey", byCarId: {}, hint: data.hint || data.message || "" });
+        return;
+      }
+      setPickReasons({
+        status: "err",
+        byCarId: {},
+        hint: data.message || data.error || "Could not generate pick lines.",
+      });
+    } catch {
+      setPickReasons({ status: "err", byCarId: {}, hint: "Network error — try again." });
     }
   }
 
@@ -1560,6 +1629,62 @@ export default function CompareClient({ initialCars }) {
               )}
               {freeAi.status === "err" && freeAi.hint && (
                 <p className="mt-3 text-[11px] text-amber-800 dark:text-amber-200 leading-relaxed max-w-2xl">{freeAi.hint}</p>
+              )}
+            </div>
+
+            <div className="mt-6 border-t border-slate-200/80 dark:border-slate-700/80 pt-5">
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-500 mb-3">
+                Who should pick which car
+              </p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-400 mb-3 leading-relaxed">
+                Short Grok-generated lines: one punchy “buy this if…” suggestion per vehicle, using the same facts as
+                the table. Requires{" "}
+                <span className="font-semibold text-slate-700 dark:text-slate-300">XAI_API_KEY</span> on the server.
+              </p>
+              <button
+                type="button"
+                onClick={requestPickReasons}
+                disabled={!pickReasonsPayload || pickReasons.status === "loading"}
+                className="inline-flex items-center justify-center px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-[#111827] dark:text-white hover:border-[#38A169] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                style={{ borderRadius: "var(--radius)" }}
+              >
+                {pickReasons.status === "loading" ? "Working…" : "Get Grok pick lines"}
+              </button>
+              {pickReasons.status === "done" && (
+                <ul className="mt-4 space-y-3">
+                  {fullComparedCars.map((car) => {
+                    const line = pickReasons.byCarId[car.id];
+                    return (
+                      <li
+                        key={car.id}
+                        className="p-3 sm:p-4 border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-black/20 text-sm text-slate-800 dark:text-slate-200 leading-snug"
+                        style={{ borderRadius: "var(--radius)" }}
+                      >
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 block mb-1">
+                          {car.year} {car.make} {car.model}
+                        </span>
+                        {line || (
+                          <span className="text-[12px] text-slate-500 dark:text-slate-500">
+                            No line returned for this car — try again.
+                          </span>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+              {pickReasons.hint && pickReasons.status === "done" && (
+                <p className="mt-2 text-[10px] font-semibold text-slate-500">{pickReasons.hint}</p>
+              )}
+              {pickReasons.status === "nokey" && pickReasons.hint && (
+                <p className="mt-3 text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl">
+                  {pickReasons.hint}
+                </p>
+              )}
+              {pickReasons.status === "err" && pickReasons.hint && (
+                <p className="mt-3 text-[11px] text-amber-800 dark:text-amber-200 leading-relaxed max-w-2xl">
+                  {pickReasons.hint}
+                </p>
               )}
             </div>
           </div>
