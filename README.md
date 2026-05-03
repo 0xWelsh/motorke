@@ -80,7 +80,9 @@ Use this same flow when **onboarding more dealers** as you scale marketing and p
 
 ## Deploy (Vercel + Supabase)
 
-Set these env vars in Vercel:
+Use **`vercel.env.example`** as the import template: copy to `vercel.env` (gitignored), fill real values, then **Vercel → Settings → Environment Variables → Import** (or paste). Do not commit the filled file.
+
+Set these env vars in Vercel (see the template for the full list):
 
 ```
 DATABASE_URL               (Supabase Transaction Pooler, port 6543)
