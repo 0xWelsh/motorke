@@ -96,7 +96,7 @@ export default async function PortalNewCarPage({ searchParams }) {
         </section>
       )}
 
-      <CarForm dealers={dealers} car={templateCar} action="/api/portal/cars" method="POST" />
+      <CarForm key={templateCar?.id || "new"} dealers={dealers} car={templateCar} action="/api/portal/cars" method="POST" />
     </div>
   );
 }

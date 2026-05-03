@@ -170,15 +170,37 @@ const SMART_FILL_FIELDS = new Set([
   "model",
   "variant",
   "year",
-  "price",
+  // price is controlled in React — never use DOM + manualOverrides here (first keystroke blocked AI fill)
   "mileage",
   "engineCC",
   "bodyType",
 ]);
 
-/** Whole KES amounts only — strips commas/spaces so dealers can paste formatted numbers. */
+/** Digits-only string (e.g. normalizing API numbers). */
 function normalizePriceDigits(value) {
   return String(value ?? "").replace(/[^\d]/g, "");
+}
+
+/**
+ * Normalizes dealer-entered price to whole KES string: supports commas, KSh prefix, and 3.2M-style millions.
+ */
+function normalizePriceToIntegerString(raw) {
+  let s = String(raw ?? "").trim();
+  if (!s) return "";
+  s = s.replace(/,/g, "").replace(/\s+/g, "");
+  s = s.replace(/^ksh/i, "").replace(/^kes/i, "").trim();
+  const mSuffix = s.match(/^([\d.]+)[mM]$/);
+  if (mSuffix) {
+    const n = parseFloat(mSuffix[1]);
+    if (Number.isFinite(n) && n >= 0) return String(Math.round(n * 1_000_000));
+  }
+  return s.replace(/[^\d]/g, "");
+}
+
+/** DOM snapshot with authoritative controlled price (avoids React/DOM desync). */
+function collectFormSnapshot(form, priceInputStr) {
+  if (!form) return {};
+  return { ...collectFormValues(form), price: priceInputStr == null ? "" : String(priceInputStr) };
 }
 
 
@@ -299,7 +321,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [badges, setBadges] = useState(car?.badges || []);
-  const [priceInput, setPriceInput] = useState(normalizePriceDigits(formSeed.price ?? ""));
+  const [priceInput, setPriceInput] = useState(() =>
+    normalizePriceToIntegerString(formSeed.price ?? "")
+  );
   const [selectedFeatures, setSelectedFeatures] = useState(car?.features || []);
   const [featuresOpen, setFeaturesOpen] = useState(false);
   const [advancedOpen, setAdvancedOpen] = useState(false);
@@ -341,7 +365,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const saveTimeoutRef = useRef(null);
   const uploadedLocalMapRef = useRef(new Map());
   const pendingUploadIdsRef = useRef(new Set());
-  const score = qualityScore(formSeed, images, selectedFeatures);
+  const score = qualityScore(
+    { ...formSeed, price: normalizePriceToIntegerString(priceInput) || formSeed.price },
+    images,
+    selectedFeatures
+  );
   const checklistItems = [
     { key: "basics", label: "Basics" },
     { key: "media", label: "Photos" },
@@ -370,7 +398,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const saveDraft = useCallback(() => {
     if (!draftKey || !isNew || !formRef.current) return;
 
-    const fields = collectFormValues(formRef.current);
+    const fields = collectFormSnapshot(formRef.current, priceInput);
     localStorage.setItem(
       draftKey,
       JSON.stringify({
@@ -381,7 +409,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         updatedAt: Date.now(),
       })
     );
-  }, [badges, draftKey, images, isNew, selectedFeatures]);
+  }, [badges, draftKey, images, isNew, priceInput, selectedFeatures]);
 
   useEffect(() => {
     if (!isNew) return;
@@ -394,8 +422,18 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setImages([]);
     setBadges([]);
     setSelectedFeatures([]);
-    setPriceInput(normalizePriceDigits(baseSeed.price ?? ""));
+    setPriceInput(normalizePriceToIntegerString(baseSeed.price ?? ""));
   }, [baseSeed, defaultsKey, draftKey, isNew]);
+
+  useEffect(() => {
+    if (!isNew) {
+      setPriceInput(normalizePriceToIntegerString(car?.price ?? ""));
+      return;
+    }
+    if (car?.id) {
+      setPriceInput(normalizePriceToIntegerString(car?.price ?? ""));
+    }
+  }, [isNew, car?.id, car?.price]);
 
   useEffect(() => {
     if (!isNew || !draftKey || !formRef.current) return;
@@ -541,12 +579,13 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     if (!form) return;
 
     const deriveChecklist = () => {
-      const values = collectFormValues(form);
+      const values = collectFormSnapshot(form, priceInput);
+      const priceOk = Boolean(normalizePriceToIntegerString(values.price || ""));
       const basicsDone =
         Boolean((values.make || "").trim()) &&
         Boolean((values.model || "").trim()) &&
         Boolean(values.year) &&
-        Boolean(values.price) &&
+        priceOk &&
         Boolean(values.mileage) &&
         Boolean(values.bodyType) &&
         Boolean(values.fuelType) &&
@@ -566,10 +605,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     };
 
     deriveChecklist();
-    setLiveDraft(collectFormValues(form));
+    setLiveDraft(collectFormSnapshot(form, priceInput));
     form.addEventListener("input", deriveChecklist);
     form.addEventListener("change", deriveChecklist);
-    const updateLiveDraft = () => setLiveDraft(collectFormValues(form));
+    const updateLiveDraft = () => setLiveDraft(collectFormSnapshot(form, priceInput));
     form.addEventListener("input", updateLiveDraft);
     form.addEventListener("change", updateLiveDraft);
     return () => {
@@ -578,7 +617,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       form.removeEventListener("input", updateLiveDraft);
       form.removeEventListener("change", updateLiveDraft);
     };
-  }, [images, selectedFeatures]);
+  }, [images, priceInput, selectedFeatures]);
 
   const applyDetectedValuesToForm = useCallback((seeded) => {
     const form = formRef.current;
@@ -604,7 +643,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     const form = formRef.current;
     if (!form) return;
     if (field === "price") {
-      setPriceInput(normalizePriceDigits(value));
+      setPriceInput(normalizePriceToIntegerString(String(value ?? "")));
       setSmartFillSuggestions((prev) => prev.filter((s) => s.field !== field));
       return;
     }
@@ -751,7 +790,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
     data.year = parseInt(data.year, 10);
 
-    const priceDigits = normalizePriceDigits(priceInput);
+    const priceDigits = normalizePriceToIntegerString(priceInput);
     data.price = parseInt(priceDigits, 10);
     if (!Number.isFinite(data.price) || data.price < 1) {
       setError("Enter a valid price in KES (whole numbers only).");
@@ -858,7 +897,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         bodyType: parsed?.bodyType || "",
       };
 
-      const currentValues = collectFormValues(formRef.current);
+      const currentValues = collectFormSnapshot(formRef.current, priceInput);
       const fieldLabels = {
         make: "Make",
         model: "Model",
@@ -910,7 +949,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       setSelectedYear(gatedSeeded.year ? String(gatedSeeded.year) : currentYear);
       setSelectedMake(gatedSeeded.make || currentMake);
       setSelectedModel(gatedSeeded.model || currentModel);
-      if (gatedSeeded.price) setPriceInput(normalizePriceDigits(gatedSeeded.price));
+      if (gatedSeeded.price) setPriceInput(normalizePriceToIntegerString(String(gatedSeeded.price)));
       applyDetectedValuesToForm(gatedSeeded);
 
       if (!seeded.make && !seeded.model && !seeded.price && !seeded.mileage && !seeded.year) {
@@ -1234,16 +1273,18 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               <input
                 name="price"
                 type="text"
-                inputMode="numeric"
+                inputMode="decimal"
                 autoComplete="off"
                 required
                 value={priceInput}
-                onChange={(e) => setPriceInput(normalizePriceDigits(e.target.value))}
-                placeholder="e.g. 2500000"
+                onChange={(e) => setPriceInput(e.target.value)}
+                onBlur={() => setPriceInput((v) => normalizePriceToIntegerString(v))}
+                placeholder="e.g. 2500000 or 3.2M"
                 className={`${inputCls}${confidenceClass("price")}`}
               />
               <p className="mt-1 text-[11px] font-semibold text-slate-500">
-                Numbers only (no commas needed). You can change this anytime, including after Smart Fill.
+                Whole shillings only. You can type plain digits, use commas, or millions like 3.2M — we tidy the field
+                when you leave the box. Smart Fill can always update price; edit again anytime after.
               </p>
             </div>
 
