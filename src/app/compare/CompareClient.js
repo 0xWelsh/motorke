@@ -53,7 +53,7 @@ const TUTORIAL_STEPS = [
   {
     key: "export",
     title: "Save or share",
-    body: "Download a PDF snapshot or copy a shareable link.",
+    body: "Download a print-ready report file to your device or copy a shareable link.",
   },
 ];
 
@@ -88,6 +88,15 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function slugifyForFilename(s) {
+  const raw = String(s || "comparison")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 64);
+  return raw || "comparison";
 }
 
 function yesNo(value) {
@@ -260,6 +269,7 @@ export default function CompareClient({ initialCars }) {
   const [didInitialSync, setDidInitialSync] = useState(false);
   const [saveState, setSaveState] = useState("idle");
   const [pdfState, setPdfState] = useState("idle");
+  const [pdfHint, setPdfHint] = useState("");
   const [setName, setSetName] = useState("");
   const [savedSets, setSavedSets] = useState([]);
 
@@ -660,8 +670,10 @@ export default function CompareClient({ initialCars }) {
   function handleDownloadPdf() {
     if (fullComparedCars.length === 0 || typeof window === "undefined") return;
 
+    setPdfHint("");
+
     try {
-      setPdfState("printing");
+      setPdfState("loading");
 
       const visibleGroups = specGroups
         .map((group) => {
@@ -682,11 +694,8 @@ export default function CompareClient({ initialCars }) {
         .map((car) => `${car.year} ${car.make} ${car.model}`)
         .join(" vs ");
 
-      const popup = window.open("", "_blank", "width=1200,height=900");
-      if (!popup) {
-        throw new Error("Popup blocked");
-      }
-
+      const slug = slugifyForFilename(title);
+      const dateStamp = new Date().toISOString().slice(0, 10);
       const printedAt = new Date().toLocaleString("en-KE");
 
       const rowsHtml = visibleGroups
@@ -723,110 +732,122 @@ export default function CompareClient({ initialCars }) {
         })
         .join("");
 
-      popup.document.write(`
-        <!doctype html>
-        <html>
-          <head>
-            <meta charset="utf-8" />
-            <title>Welsh Motors Comparison PDF</title>
-            <style>
-              body {
-                font-family: Arial, sans-serif;
-                margin: 24px;
-                color: #0f172a;
-                background: #ffffff;
-              }
-              h1 { font-size: 20px; margin: 0 0 8px; }
-              p.meta { margin: 0 0 18px; color: #334155; font-size: 12px; }
-              table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 22px;
-                font-size: 12px;
-              }
-              th, td {
-                border: 1px solid #cbd5e1;
-                padding: 8px;
-                text-align: left;
-                vertical-align: top;
-              }
-              th {
-                background: #e2e8f0;
-                font-weight: 700;
-              }
-              tr.group-row td {
-                background: #f1f5f9;
-                font-weight: 700;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-                color: #334155;
-              }
-              td.label {
-                font-weight: 700;
-                background: #f8fafc;
-              }
-              .car-name {
-                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                font-weight: 700;
-              }
-              .section-title {
-                font-size: 13px;
-                margin: 20px 0 8px;
-                text-transform: uppercase;
-                letter-spacing: 0.08em;
-                color: #475569;
-                font-weight: 700;
-              }
-              @page { size: A4; margin: 12mm; }
-            </style>
-          </head>
-          <body>
-            <h1>Welsh Motors Comparison Report</h1>
-            <p class="meta">${escapeHtml(title)}<br/>Generated: ${escapeHtml(printedAt)} · Preset: ${escapeHtml(preset)}</p>
+      const html = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Welsh Motors — Comparison Report</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 24px;
+        color: #0f172a;
+        background: #ffffff;
+      }
+      h1 { font-size: 20px; margin: 0 0 8px; }
+      p.meta { margin: 0 0 18px; color: #334155; font-size: 12px; }
+      p.note { margin: 0 0 20px; color: #64748b; font-size: 11px; }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 22px;
+        font-size: 12px;
+      }
+      th, td {
+        border: 1px solid #cbd5e1;
+        padding: 8px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: #e2e8f0;
+        font-weight: 700;
+      }
+      tr.group-row td {
+        background: #f1f5f9;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #334155;
+      }
+      td.label {
+        font-weight: 700;
+        background: #f8fafc;
+      }
+      .car-name {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 700;
+      }
+      .section-title {
+        font-size: 13px;
+        margin: 20px 0 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #475569;
+        font-weight: 700;
+      }
+      @page { size: A4; margin: 12mm; }
+    </style>
+  </head>
+  <body>
+    <h1>Welsh Motors Comparison Report</h1>
+    <p class="meta">${escapeHtml(title)}<br/>Generated: ${escapeHtml(printedAt)} · Preset: ${escapeHtml(preset)}</p>
+    <p class="note">Tip: open this file in your browser and use Print → &quot;Save as PDF&quot; if you need a PDF copy.</p>
 
-            <div class="section-title">Quick Summary</div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Car</th>
-                  <th>Price</th>
-                  <th>Annual TCO</th>
-                  <th>Road Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${summaryRows}
-              </tbody>
-            </table>
+    <div class="section-title">Quick Summary</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Car</th>
+          <th>Price</th>
+          <th>Annual TCO</th>
+          <th>Road Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${summaryRows}
+      </tbody>
+    </table>
 
-            <div class="section-title">Detailed Comparison</div>
-            <table>
-              <thead>
-                <tr>
-                  <th style="width: 24%">Specification</th>
-                  ${fullComparedCars
-                    .map((car) => `<th class="car-name">${escapeHtml(`${car.year} ${car.make} ${car.model}`)}</th>`)
-                    .join("")}
-                </tr>
-              </thead>
-              <tbody>
-                ${rowsHtml}
-              </tbody>
-            </table>
-          </body>
-        </html>
-      `);
+    <div class="section-title">Detailed Comparison</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 24%">Specification</th>
+          ${fullComparedCars
+            .map((car) => `<th class="car-name">${escapeHtml(`${car.year} ${car.make} ${car.model}`)}</th>`)
+            .join("")}
+        </tr>
+      </thead>
+      <tbody>
+        ${rowsHtml}
+      </tbody>
+    </table>
+  </body>
+</html>`;
 
-      popup.document.close();
-      popup.focus();
-      popup.print();
+      const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `welsh-motors-compare-${slug}-${dateStamp}.html`;
+      a.rel = "noopener noreferrer";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
 
       setPdfState("done");
-      setTimeout(() => setPdfState("idle"), 1800);
+      setTimeout(() => setPdfState("idle"), 1600);
     } catch (error) {
-      console.error("Failed to generate PDF:", error);
+      console.error("Failed to generate comparison download:", error);
+      setPdfHint("Could not download the report. Check that your browser allows downloads, then try again.");
       setPdfState("failed");
-      setTimeout(() => setPdfState("idle"), 1800);
+      setTimeout(() => {
+        setPdfState("idle");
+        setPdfHint("");
+      }, 7000);
     }
   }
 
@@ -1969,23 +1990,40 @@ export default function CompareClient({ initialCars }) {
           style={currentTutorialKey === "export" ? { borderRadius: "var(--radius)" } : undefined}
         >
         <p className="lg:hidden text-center text-[11px] text-slate-500 dark:text-slate-500 py-1 mb-2">
-          PDF and share: use the bar at the bottom of the screen.
+          Download report or share link — use the bar at the bottom of the screen.
         </p>
         <div className="max-lg:hidden pt-10 sm:pt-12 lg:pt-16 border-t border-slate-100 dark:border-slate-800">
            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
               <div>
                  <h3 className="text-2xl font-bold text-[#111827] dark:text-white mb-4">Export</h3>
                  <p className="text-sm font-medium text-[#718096] dark:text-slate-400 leading-relaxed">
-                    Download a PDF of this comparison or copy a link to return later.
+                    Download a print-ready HTML report to your device (open it, then use Print → Save as PDF if you want a PDF file), or copy a link to return to this comparison later.
                  </p>
               </div>
-              <div className="flex flex-wrap gap-4 md:justify-end">
-                 <button onClick={handleDownloadPdf} className="h-14 px-8 bg-[#111827] dark:bg-white text-white dark:!text-black text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
-                    Download Technical PDF
-                 </button>
-                 <button onClick={handleSaveComparison} className="h-14 px-8 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white text-xs font-bold uppercase tracking-widest hover:border-[#111827] dark:hover:border-white transition-all shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
-                    {saveState === "copied" ? "URL Copied" : "Share Comparison"}
-                 </button>
+              <div className="flex flex-col items-stretch sm:items-end gap-3 md:justify-end">
+                 <div className="flex flex-wrap gap-3 sm:gap-4 justify-end w-full">
+                 <button
+                    type="button"
+                    onClick={handleDownloadPdf}
+                    disabled={pdfState === "loading"}
+                    className="inline-flex items-center justify-center gap-2 min-h-[3.25rem] min-w-[12rem] px-6 sm:px-8 bg-[#111827] dark:bg-white text-white dark:!text-black text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98] disabled:opacity-60 disabled:pointer-events-none disabled:cursor-not-allowed"
+                    style={{ borderRadius: 'var(--radius)' }}
+                  >
+                    <Download className="w-4 h-4 shrink-0" aria-hidden />
+                    {pdfState === "loading" ? "Preparing…" : pdfState === "done" ? "Downloaded" : "Download report"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSaveComparison}
+                    className="inline-flex items-center justify-center min-h-[3.25rem] min-w-[12rem] px-6 sm:px-8 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white text-xs font-bold uppercase tracking-widest hover:border-[#111827] dark:hover:border-white transition-all shadow-sm"
+                    style={{ borderRadius: 'var(--radius)' }}
+                  >
+                    {saveState === "copied" ? "URL copied" : saveState === "failed" ? "Copy failed — retry" : "Copy share link"}
+                  </button>
+                 </div>
+                 {pdfHint ? (
+                   <p className="text-[11px] text-amber-800 dark:text-amber-200 text-right max-w-md ml-auto leading-relaxed">{pdfHint}</p>
+                 ) : null}
               </div>
            </div>
         </div>
@@ -2136,25 +2174,32 @@ export default function CompareClient({ initialCars }) {
       </div>
     )}
     <div
-      className="lg:hidden no-print fixed bottom-0 inset-x-0 z-50 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex gap-2 justify-center"
+      className="lg:hidden no-print fixed bottom-0 inset-x-0 z-50 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex flex-col gap-2"
       aria-label="Export comparison"
     >
-      <button
-        type="button"
-        onClick={handleDownloadPdf}
-        className="flex-1 h-12 max-w-[200px] bg-[#111827] dark:bg-white text-white dark:!text-black text-[10px] font-bold uppercase tracking-widest"
-        style={{ borderRadius: "var(--radius)" }}
-      >
-        PDF
-      </button>
-      <button
-        type="button"
-        onClick={handleSaveComparison}
-        className="flex-1 h-12 max-w-[200px] bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white text-[10px] font-bold uppercase tracking-widest"
-        style={{ borderRadius: "var(--radius)" }}
-      >
-        {saveState === "copied" ? "Copied" : "Share"}
-      </button>
+      {pdfHint ? (
+        <p className="text-[10px] text-center text-amber-800 dark:text-amber-200 leading-snug px-1">{pdfHint}</p>
+      ) : null}
+      <div className="flex gap-2 justify-center">
+        <button
+          type="button"
+          onClick={handleDownloadPdf}
+          disabled={pdfState === "loading"}
+          className="inline-flex flex-1 max-w-[220px] items-center justify-center gap-1.5 min-h-[3rem] px-3 bg-[#111827] dark:bg-white text-white dark:!text-black text-[10px] font-bold uppercase tracking-widest disabled:opacity-60 disabled:cursor-not-allowed"
+          style={{ borderRadius: "var(--radius)" }}
+        >
+          <Download className="w-3.5 h-3.5 shrink-0" aria-hidden />
+          {pdfState === "loading" ? "…" : "Report"}
+        </button>
+        <button
+          type="button"
+          onClick={handleSaveComparison}
+          className="inline-flex flex-1 max-w-[220px] items-center justify-center min-h-[3rem] px-3 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white text-[10px] font-bold uppercase tracking-widest"
+          style={{ borderRadius: "var(--radius)" }}
+        >
+          {saveState === "copied" ? "Copied" : saveState === "failed" ? "Retry" : "Share link"}
+        </button>
+      </div>
     </div>
     </>
   );
