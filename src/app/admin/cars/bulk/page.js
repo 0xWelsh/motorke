@@ -51,6 +51,9 @@ export default async function BulkUploadPage() {
             { col: "features",       eg: "Sunroof;Leather;Camera" },
             { col: "description",    eg: "One owner, full service history" },
             { col: "imageUrl",       eg: "https://..." },
+            { col: "registered",     eg: "true / false (Kenya)" },
+            { col: "imported",       eg: "true / false" },
+            { col: "importCountry",  eg: "Japan" },
           ].map(({ col, eg }) => (
             <div key={col} style={{ background: "#F5F5F5", borderRadius: 8, padding: "8px 12px" }}>
               <p style={{ fontWeight: 700, fontSize: 12, color: "#0A2640" }}>{col}</p>

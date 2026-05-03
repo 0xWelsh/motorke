@@ -95,6 +95,7 @@ export async function POST(request) {
             features,
             negotiable: parseBool(row.negotiable, true),
             dutyPaid: true,
+            registered: parseBool(row.registered, true),
             imported: parseBool(row.imported, true),
             importCountry: row.importcountry ? String(row.importcountry).trim() : "Japan",
             available: true,

@@ -25,7 +25,7 @@ export async function PUT(request, { params }) {
       groundClearanceMm, hybridBatteryTech, spareAvailability,
       cylinders, horsepower, torque, turbo, sunroof, airbags,
       color, seats, description, features, badges, images,
-      negotiable, imported,
+      negotiable, imported, registered,
     } = body;
     console.log("🏁 PORTAL UPDATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
@@ -61,6 +61,7 @@ export async function PUT(request, { params }) {
         badges:       Array.isArray(badges) ? badges : [],
         negotiable:   Boolean(negotiable),
         dutyPaid:     true,
+        registered:   registered === false || registered === "false" ? false : true,
         imported:     Boolean(imported),
         // featured intentionally excluded — only admin can change
       },

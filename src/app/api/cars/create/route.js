@@ -45,6 +45,7 @@ export async function POST(request) {
         features,
         negotiable:   getBool("negotiable"),
         dutyPaid:     true,
+        registered:   get("registered") != null ? getBool("registered") : true,
         imported:     getBool("imported"),
         importCountry: "Japan",
         available:    true,

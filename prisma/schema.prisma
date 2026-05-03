@@ -173,6 +173,7 @@ model Car {
   imported       Boolean       @default(true)
   importCountry  String?       @default("Japan")
   dutyPaid       Boolean       @default(true)
+  registered     Boolean       @default(true)
   description    String?
   features       String[]
   videoUrl       String?

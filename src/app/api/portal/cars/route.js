@@ -88,7 +88,7 @@ async function createCarRecord(body) {
     groundClearanceMm, hybridBatteryTech, spareAvailability,
     cylinders, horsepower, torque, turbo, sunroof, airbags,
     color, seats, description, features, badges, images,
-    negotiable, imported, featured,
+    negotiable, imported, featured, registered,
   } = body;
   console.log("🏁 PORTAL CREATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
@@ -124,6 +124,7 @@ async function createCarRecord(body) {
       badges:       Array.isArray(badges) ? badges : [],
       negotiable:   Boolean(negotiable),
       dutyPaid:     true,
+      registered:   registered === false || registered === "false" ? false : true,
       imported:     Boolean(imported),
       importCountry: imported ? "Japan" : null,
       featured:     false,   // Dealers can't self-feature — admin controls this

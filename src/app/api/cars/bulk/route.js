@@ -92,6 +92,7 @@ export async function POST(request) {
             features,
             negotiable:   parseBool(r.negotiable, true),
             dutyPaid:     true,
+            registered:   parseBool(r.registered, true),
             imported:     parseBool(r.imported, true),
             importCountry: r.importcountry || "Japan",
             available:    true,

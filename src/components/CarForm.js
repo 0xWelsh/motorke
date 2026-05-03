@@ -216,6 +216,7 @@ function buildBaseSeed(car, currentYear) {
     description: car?.description || "",
     negotiable: car?.negotiable ?? true,
     imported: car?.imported ?? true,
+    registered: car?.registered ?? true,
     turbo: car?.turbo ?? false,
     sunroof: car?.sunroof ?? false,
     featured: car?.featured ?? false,
@@ -652,6 +653,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     data.featured = isEdit ? !!car?.featured : false;
     data.turbo = data.turbo === "on";
     data.sunroof = data.sunroof === "on";
+    {
+      const r = String(data.registered ?? "").toLowerCase();
+      data.registered = !(r === "false" || r === "0" || r === "off" || r === "no");
+    }
 
     try {
       const res = await fetch(action, {
@@ -809,6 +814,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             <InfieldGroup label="Condition" required>
               <select name="condition" defaultValue={formSeed.condition} required className={inFieldSelect}>
                 {CONDITIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
+              </select>
+            </InfieldGroup>
+            <InfieldGroup label="Kenya registration" required>
+              <select name="registered" defaultValue={formSeed.registered ? "true" : "false"} required className={inFieldSelect}>
+                <option value="true">Registered</option>
+                <option value="false">Not registered</option>
               </select>
             </InfieldGroup>
             <div>

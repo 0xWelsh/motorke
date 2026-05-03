@@ -61,7 +61,7 @@ export async function createCar(body) {
     fuelType, transmission, bodyType, engineCC, drivetrain, steering,
     cylinders, horsepower, torque, turbo, sunroof, airbags,
     color, seats, description, features, badges, images, videoUrl,
-    negotiable, imported, featured,
+    negotiable, imported, featured, registered,
   } = body;
   console.log("🏁 CREATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
@@ -94,6 +94,7 @@ export async function createCar(body) {
       videoUrl:     videoUrl?.trim() || null,
       negotiable:   Boolean(negotiable),
       dutyPaid:     true,
+      registered:   registered === false || registered === "false" ? false : true,
       imported:     Boolean(imported),
       importCountry: imported ? "Japan" : null,
       featured:     Boolean(featured),
