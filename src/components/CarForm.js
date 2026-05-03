@@ -147,23 +147,6 @@ const CONDITIONS = [
   { value: "CERTIFIED", label: "Certified" },
 ];
 
-const FEATURE_CHECKLIST = [
-  "Reverse Camera", "360 Camera", "Parking Sensors", "Lane Assist", "Blind Spot Monitor",
-  "Adaptive Cruise Control", "Apple CarPlay", "Android Auto", "Navigation", "Bluetooth",
-  "Push Start", "Keyless Entry", "Leather Seats", "Electric Seats", "Heated Seats",
-  "Cooled Seats", "Sunroof", "Panoramic Roof", "LED Headlights", "Fog Lights",
-  "Alloy Wheels", "Power Tailgate", "Dual Zone AC", "Rear AC", "Climate Control",
-  "ABS", "Airbags", "Traction Control", "Stability Control", "Hill Assist",
-  "4WD", "AWD", "Turbo", "Hybrid", "Diesel", "Petrol", "Roof Rails",
-  "Tow Bar", "Bull Bar", "Side Steps", "Spare Key", "Service History",
-  "One Owner", "Accident Free", "Low Mileage", "New Tyres", "Touch Screen",
-  "Premium Sound", "Steering Controls", "Heads-Up Display", "Wireless Charging",
-  "Ambient Lighting", "Digital Cluster", "Auto Headlights", "Auto Wipers",
-  "Collision Warning", "Emergency Braking", "Tyre Pressure Monitor", "USB Ports",
-  "Memory Seats", "Power Mirrors", "Fold Mirrors", "Dash Cam", "Immobilizer",
-  "Alarm System", "Child Lock", "ISOFIX", "Tinted Windows", "Rear Spoiler",
-].sort((a, b) => a.localeCompare(b));
-
 /** Digits-only string (e.g. normalizing API numbers). */
 function normalizePriceDigits(value) {
   return String(value ?? "").replace(/[^\d]/g, "");
@@ -185,10 +168,17 @@ function normalizePriceToIntegerString(raw) {
   return s.replace(/[^\d]/g, "");
 }
 
-/** DOM snapshot with authoritative controlled price (avoids React/DOM desync). */
-function collectFormSnapshot(form, priceInputStr) {
+function collectFormSnapshot(form) {
   if (!form) return {};
-  return { ...collectFormValues(form), price: priceInputStr == null ? "" : String(priceInputStr) };
+  return collectFormValues(form);
+}
+
+/** "A, B,  C" -> ["A","B","C"] */
+function parseCommaFeatures(raw) {
+  return String(raw ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
 }
 
 
@@ -301,6 +291,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const baseSeed = useMemo(() => buildBaseSeed(car, currentYear), [car, currentYear]);
 
   const [formSeed, setFormSeed] = useState(baseSeed);
+  /** Bumps when a fresh portal "new" form is initialized so uncontrolled fields (e.g. price) remount empty. */
+  const [formInstanceKey, setFormInstanceKey] = useState(0);
 
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ done: 0, total: 0 });
@@ -310,19 +302,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const badges = useMemo(() => car?.badges || [], [car]);
-  const [priceInput, setPriceInput] = useState(() =>
-    normalizePriceToIntegerString(formSeed.price ?? "")
+  const [featuresText, setFeaturesText] = useState(() =>
+    Array.isArray(car?.features) && car.features.length ? car.features.join(", ") : ""
   );
-  /** Keeps latest price for form-level listeners (same tick as input); avoids stale closure vs controlled field. */
-  const priceInputRef = useRef(priceInput);
-  useEffect(() => {
-    priceInputRef.current = priceInput;
-  }, [priceInput]);
-  const [selectedFeatures, setSelectedFeatures] = useState(car?.features || []);
-  const [featuresOpen, setFeaturesOpen] = useState(false);
+  const parsedFeatures = useMemo(() => parseCommaFeatures(featuresText), [featuresText]);
   const [advancedOpen, setAdvancedOpen] = useState(false);
-  const [customFeature, setCustomFeature] = useState("");
-  const [draftLoaded, setDraftLoaded] = useState(false);
   const [selectedMake, setSelectedMake] = useState((baseSeed.make || "").trim());
   const [modelOptions, setModelOptions] = useState([]);
   const [loadingModels, setLoadingModels] = useState(false);
@@ -341,11 +325,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const saveTimeoutRef = useRef(null);
   const uploadedLocalMapRef = useRef(new Map());
   const pendingUploadIdsRef = useRef(new Set());
-  const featureOptions = useMemo(
-    () => Array.from(new Set([...FEATURE_CHECKLIST, ...selectedFeatures])).sort((a, b) => a.localeCompare(b)),
-    [selectedFeatures]
-  );
-
   const inputCls = "w-full bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-[#ff5a2f] transition-all";
   const selectCls = "w-full bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white outline-none focus:border-[#ff5a2f] transition-all appearance-none";
   const inField =
@@ -354,22 +333,22 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const previewTitle = `${liveDraft.year || selectedYear || ""} ${liveDraft.make || selectedMake || ""} ${liveDraft.model || selectedModel || ""}`.trim() || "Your listing preview";
   const previewVariant = liveDraft.variant || "";
   const previewDescription = String(liveDraft.description || formSeed.description || "").trim();
-  const previewPrice = priceInput || liveDraft.price || "";
+  const previewPrice = liveDraft.price || "";
   const saveDraft = useCallback(() => {
     if (!draftKey || !isNew || !formRef.current) return;
 
-    const fields = collectFormSnapshot(formRef.current, priceInput);
+    const fields = collectFormSnapshot(formRef.current);
     localStorage.setItem(
       draftKey,
       JSON.stringify({
         fields,
         images,
         badges,
-        selectedFeatures,
+        featuresText,
         updatedAt: Date.now(),
       })
     );
-  }, [draftKey, images, isNew, priceInput, selectedFeatures, badges]);
+  }, [draftKey, images, isNew, featuresText, badges]);
 
   useEffect(() => {
     if (!isNew) return;
@@ -377,28 +356,21 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     initializedNewFormRef.current = true;
     if (draftKey) localStorage.removeItem(draftKey);
     localStorage.removeItem(defaultsKey);
-    setDraftLoaded(false);
     setFormSeed(baseSeed);
     setImages([]);
-    setSelectedFeatures([]);
-    const nextPrice = normalizePriceToIntegerString(baseSeed.price ?? "");
-    priceInputRef.current = nextPrice;
-    setPriceInput(nextPrice);
+    setFeaturesText("");
+    setFormInstanceKey((k) => k + 1);
   }, [baseSeed, defaultsKey, draftKey, isNew]);
 
   useEffect(() => {
-    if (!isNew) {
-      const nextPrice = normalizePriceToIntegerString(car?.price ?? "");
-      priceInputRef.current = nextPrice;
-      setPriceInput(nextPrice);
+    if (!isNew && car) {
+      setFeaturesText(Array.isArray(car.features) && car.features.length ? car.features.join(", ") : "");
       return;
     }
     if (car?.id) {
-      const nextPrice = normalizePriceToIntegerString(car?.price ?? "");
-      priceInputRef.current = nextPrice;
-      setPriceInput(nextPrice);
+      setFeaturesText(Array.isArray(car.features) && car.features.length ? car.features.join(", ") : "");
     }
-  }, [isNew, car?.id, car?.price]);
+  }, [isNew, car?.id, car?.features]);
 
   useEffect(() => {
     if (!isNew || !draftKey || !formRef.current) return;
@@ -423,7 +395,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   useEffect(() => {
     if (isNew) saveDraft();
-  }, [images, selectedFeatures, isNew, saveDraft]);
+  }, [images, featuresText, isNew, saveDraft]);
 
   useEffect(() => {
     const currentMake =
@@ -523,7 +495,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     const form = formRef.current;
     if (!form) return;
 
-    const updateLiveDraft = () => setLiveDraft(collectFormSnapshot(form, priceInputRef.current));
+    const updateLiveDraft = () => setLiveDraft(collectFormSnapshot(form));
     updateLiveDraft();
     form.addEventListener("input", updateLiveDraft);
     form.addEventListener("change", updateLiveDraft);
@@ -531,12 +503,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       form.removeEventListener("input", updateLiveDraft);
       form.removeEventListener("change", updateLiveDraft);
     };
-  }, [images, priceInput, selectedFeatures]);
+  }, [images]);
 
   const applyGeneratedDescription = useCallback((force = false) => {
     if (descriptionTouched && !force) return;
     const values = { ...liveDraft, make: selectedMake || liveDraft.make, model: selectedModel || liveDraft.model, year: selectedYear || liveDraft.year };
-    const generated = buildAutoDescription(values, selectedFeatures);
+    const generated = buildAutoDescription(values, parsedFeatures);
     const form = formRef.current;
     const field = form?.querySelector('textarea[name="description"]');
     if (field) {
@@ -544,7 +516,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       field.dispatchEvent(new Event("input", { bubbles: true }));
       field.dispatchEvent(new Event("change", { bubbles: true }));
     }
-  }, [descriptionTouched, liveDraft, selectedFeatures, selectedMake, selectedModel, selectedYear]);
+  }, [descriptionTouched, liveDraft, parsedFeatures, selectedMake, selectedModel, selectedYear]);
 
   useEffect(() => {
     const existingDescription = formRef.current?.querySelector('textarea[name="description"]')?.value || "";
@@ -619,26 +591,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setUploadProgress({ done: 0, total: 0 });
   }
 
-  function toggleFeature(feature) {
-    setSelectedFeatures((prev) =>
-      prev.includes(feature) ? prev.filter((f) => f !== feature) : [...prev, feature]
-    );
-  }
-
-  function addCustomFeature() {
-    const clean = customFeature.trim();
-    if (!clean) return;
-    setSelectedFeatures((prev) => {
-      const exists = prev.some((f) => f.toLowerCase() === clean.toLowerCase());
-      return exists ? prev : [...prev, clean];
-    });
-    setCustomFeature("");
-  }
-
   function clearDraft() {
     if (!draftKey) return;
     localStorage.removeItem(draftKey);
-    setDraftLoaded(false);
   }
 
 
@@ -651,12 +606,16 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     const data = Object.fromEntries(fd.entries());
 
     data.images = images;
-    data.features = selectedFeatures;
+    data.features = parseCommaFeatures(featuresText);
     data.badges = badges;
 
     data.year = parseInt(data.year, 10);
 
-    const priceDigits = normalizePriceToIntegerString(priceInput);
+    const priceRaw =
+      data.price != null && String(data.price).trim() !== ""
+        ? String(data.price)
+        : String(formRef.current?.querySelector('input[name="price"]')?.value ?? "");
+    const priceDigits = normalizePriceToIntegerString(priceRaw);
     data.price = parseInt(priceDigits, 10);
     if (!Number.isFinite(data.price) || data.price < 1) {
       setError("Enter a valid price in KES (whole numbers only).");
@@ -706,7 +665,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
       if (draftKey) {
         localStorage.removeItem(draftKey);
-        setDraftLoaded(false);
       }
       
       window.location.href = result.redirectTo || (isPortal ? "/portal" : "/admin/cars");
@@ -843,31 +801,25 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             <div>
               <InfieldGroup label="Price (KES)" required>
                 <input
+                  key={`price-${car?.id ?? "new"}-${formInstanceKey}`}
                   name="price"
                   type="text"
-                  inputMode="numeric"
+                  inputMode="text"
                   autoComplete="off"
                   autoCorrect="off"
                   autoCapitalize="off"
                   spellCheck={false}
                   enterKeyHint="done"
                   required
-                  value={priceInput}
-                  onChange={(e) => {
-                    const v = e.target.value;
-                    priceInputRef.current = v;
-                    setPriceInput(v);
-                  }}
+                  defaultValue={normalizePriceToIntegerString(String(car?.price ?? formSeed.price ?? ""))}
                   onBlur={(e) => {
-                    const normalized = normalizePriceToIntegerString(e.target.value);
-                    priceInputRef.current = normalized;
-                    setPriceInput(normalized);
+                    e.target.value = normalizePriceToIntegerString(e.target.value);
                   }}
                   placeholder="2500000 or 3.2M"
                   className={`${inField} min-h-[1.75rem]`}
                 />
               </InfieldGroup>
-              <p className="mt-1.5 text-[10px] font-medium text-slate-500">Whole shillings. Commas and 3.2M OK — normalized when you leave the field.</p>
+              <p className="mt-1.5 text-[10px] font-medium text-slate-500">Whole shillings. Commas and 3.2M OK — we tidy digits when you leave the field.</p>
             </div>
 
             <InfieldGroup label="Mileage (km)">
@@ -949,83 +901,19 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 <p className="mt-2 text-[11px] font-medium text-slate-500">Honest detail builds trust.</p>
               </div>
               <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <p className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">Feature Checklist</p>
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">Tap to select car features</h3>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-[#ff5a2f] bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-2xl">{selectedFeatures.length} selected</span>
-                    <button
-                      type="button"
-                      onClick={() => setFeaturesOpen((prev) => !prev)}
-                      className="inline-flex items-center gap-2 rounded-2xl border border-[#ddd4c8] dark:border-slate-700 px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
-                    >
-                      {featuresOpen ? "Collapse" : "Expand"}
-                      <ChevronRight size={14} className={`transition-transform ${featuresOpen ? "rotate-90" : ""}`} />
-                    </button>
-                  </div>
-                </div>
-                {featuresOpen ? (
-                  <>
-                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5">
-                      {featureOptions.map((feature) => {
-                        const active = selectedFeatures.includes(feature);
-                        return (
-                          <button
-                            key={feature}
-                            type="button"
-                            onClick={() => toggleFeature(feature)}
-                            className={`text-left text-[11px] font-bold px-3 py-2.5 rounded-2xl border transition-all ${
-                              active ? "bg-[#ff5a2f] text-slate-900 dark:text-white border-[#ff5a2f]" : "bg-[#fbfcfe] dark:bg-[#111111] text-slate-700 border-[#ddd4c8] dark:border-slate-800 hover:bg-slate-100"
-                            }`}
-                          >
-                            {feature}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    <div className="mt-4 flex flex-col sm:flex-row gap-2 sm:items-end">
-                      <div className="flex-1">
-                        <InfieldGroup label="Custom feature">
-                          <input
-                            value={customFeature}
-                            onChange={(e) => setCustomFeature(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                e.preventDefault();
-                                addCustomFeature();
-                              }
-                            }}
-                            placeholder="Type and add"
-                            className={inField}
-                          />
-                        </InfieldGroup>
-                      </div>
-                      <button type="button" onClick={addCustomFeature} className="px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-black uppercase tracking-wider shrink-0">
-                        Add
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <p className="text-xs font-semibold text-slate-500">
-                    Feature list collapsed to save space. Expand to choose standard or custom features.
-                  </p>
-                )}
-                {selectedFeatures.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {selectedFeatures.map((feature) => (
-                      <button
-                        key={`selected-${feature}`}
-                        type="button"
-                        onClick={() => toggleFeature(feature)}
-                        className="px-3 py-1.5 rounded-2xl border border-[#ff5a2f] bg-[#ff5a2f]/10 text-[11px] font-bold text-slate-700 dark:text-slate-200"
-                      >
-                        {feature} x
-                      </button>
-                    ))}
-                  </div>
-                )}
+                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-3">Features</p>
+                <InfieldGroup label="List features, comma-separated">
+                  <textarea
+                    value={featuresText}
+                    onChange={(e) => setFeaturesText(e.target.value)}
+                    rows={3}
+                    placeholder="Leather seats, Sunroof, Reverse camera…"
+                    className={`${inField} resize-y min-h-[4.5rem] text-sm leading-relaxed`}
+                  />
+                </InfieldGroup>
+                <p className="mt-2 text-[11px] font-medium text-slate-500">
+                  Separate with commas. We trim spaces and skip empty items when you publish ({parsedFeatures.length} listed).
+                </p>
               </div>
             <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
               <div className="flex items-center justify-between gap-3 mb-6">
