@@ -1053,7 +1053,7 @@ export default function CompareClient({ initialCars }) {
         setPickReasons({
           status: "done",
           byCarId,
-          hint: data.provider ? `Lines from ${data.provider}` : "",
+          hint: "AI-generated suggestions—not a substitute for your own judgement.",
         });
         return;
       }
@@ -1637,9 +1637,8 @@ export default function CompareClient({ initialCars }) {
                 Who should pick which car
               </p>
               <p className="text-[11px] text-slate-600 dark:text-slate-400 mb-3 leading-relaxed">
-                Short Grok-generated lines: one punchy “buy this if…” suggestion per vehicle, using the same facts as
-                the table. Requires{" "}
-                <span className="font-semibold text-slate-700 dark:text-slate-300">XAI_API_KEY</span> on the server.
+                Optional AI: one punchy “buy this if…” line per car, grounded in the same numbers as the table. If the
+                button does nothing useful, this feature is not enabled for this deployment yet.
               </p>
               <button
                 type="button"
@@ -1648,7 +1647,7 @@ export default function CompareClient({ initialCars }) {
                 className="inline-flex items-center justify-center px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-[#111827] dark:text-white hover:border-[#38A169] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 style={{ borderRadius: "var(--radius)" }}
               >
-                {pickReasons.status === "loading" ? "Working…" : "Get Grok pick lines"}
+                {pickReasons.status === "loading" ? "Working…" : "Get pick-one-liners"}
               </button>
               {pickReasons.status === "done" && (
                 <ul className="mt-4 space-y-3">

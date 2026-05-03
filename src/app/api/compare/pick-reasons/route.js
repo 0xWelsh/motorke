@@ -23,8 +23,8 @@ const bodySchema = z.object({
 });
 
 const NO_KEY_MESSAGE =
-  "Pick-one-liner suggestions use xAI Grok and need XAI_API_KEY on the server. " +
-  "The comparison table and rule-based summary above are unchanged.";
+  "Optional one-line suggestions are not turned on for this site yet. " +
+  "The comparison table and summary above are unchanged.";
 
 export async function POST(request) {
   let json;
