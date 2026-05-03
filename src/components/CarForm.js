@@ -1291,79 +1291,35 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 </p>
               )}
             </div>
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
-              <label className={labelCls}>Tags</label>
-              <div className="flex flex-wrap gap-2 mt-3">
-                {Object.keys(BADGE_OPTIONS).map((name) => {
-                  const active = badges.includes(name);
-                  return (
-                    <button
-                      key={name}
-                      type="button"
-                      onClick={() => setBadges((prev) => (active ? prev.filter((b) => b !== name) : [...prev, name]))}
-                      className={`text-[11px] font-bold uppercase tracking-wider px-4 py-2 rounded-2xl border transition-all ${
-                        active ? "bg-[#ff5a2f] border-[#ff5a2f] text-slate-900 dark:text-white" : "bg-[#fbfcfe] dark:bg-[#111111] border-[#ddd4c8] dark:border-slate-800 text-slate-600"
-                      }`}
-                    >
-                      {active && <Check size={10} className="inline-block mr-1.5" />} {name}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
-              <div className="flex items-center justify-between gap-4 flex-wrap">
-                <div>
-                  <p className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">Listing Quality</p>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Score: {score}/100</h3>
-                </div>
-                <div className="w-full sm:w-60 h-3 rounded-2xl bg-slate-100 overflow-hidden">
-                  <div className="h-full bg-[#ff5a2f] transition-all" style={{ width: `${score}%` }} />
-                </div>
-              </div>
-              <p className="text-xs text-slate-500 font-semibold mt-3">
-                Add 3+ photos, a clear description, and more features for better visibility.
-              </p>
-            </div>
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
-              <div className="flex items-center gap-8 flex-wrap">
-                {[
-                  { name: "negotiable", label: "Accepting Offers", defaultChecked: !!formSeed.negotiable },
-                  { name: "imported", label: "Imported", defaultChecked: !!formSeed.imported },
-                  { name: "featured", label: "Featured", defaultChecked: !!formSeed.featured && !isPortal },
-                ].map(({ name, label, defaultChecked }) => (
-                  <label key={name} className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      name={name}
-                      defaultChecked={name === "featured" && isPortal ? false : defaultChecked}
-                      disabled={name === "featured" && isPortal}
-                      className="w-5 h-5 accent-[#ff5a2f] rounded-2xl"
-                    />
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">{label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
 
         <div className="flex flex-wrap justify-between items-center gap-3 pt-2">
-          <a href={isPortal ? "/portal" : "/admin"} className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl text-xs uppercase tracking-wider transition-all">
+          <a href={isPortal ? "/portal" : "/admin"} className="px-5 py-2.5 sm:px-6 sm:py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all">
             Cancel
           </a>
-          <div className="flex items-center gap-2">
-            <p className="hidden sm:block text-xs font-semibold text-slate-500 mr-1">
-              Final check: verify price, mileage, and primary photo before publishing.
-            </p>
-            <button
-              type="submit"
-              disabled={submitting || uploading}
-              className="px-8 py-3 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-50 text-slate-900 dark:text-white font-bold rounded-2xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2"
-            >
-              {submitting ? "Saving..." : isEdit ? "Save Changes" : "Publish Listing"}
-              {!submitting && <Check size={16} />}
-            </button>
+          <button
+            type="submit"
+            disabled={submitting || uploading}
+            className="px-6 py-2.5 sm:px-8 sm:py-3 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-50 text-slate-900 dark:text-white font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all inline-flex items-center justify-center gap-2"
+          >
+            {submitting ? "Saving..." : isEdit ? "Save" : "Publish"}
+            {!submitting && <Check size={16} />}
+          </button>
+        </div>
+
+        <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-3 sm:p-4">
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Preview</p>
+          <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+            <div className="w-full sm:w-36 h-20 sm:h-24 rounded-lg sm:rounded-xl overflow-hidden bg-slate-100 border border-slate-200 dark:border-slate-800 flex items-center justify-center shrink-0">
+              {images[0]?.url ? <img src={images[0].url} alt="" className="w-full h-full object-cover" /> : <span className="text-[11px] text-slate-400">No photo</span>}
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-black text-slate-900 dark:text-white truncate">{previewTitle}</p>
+              {previewVariant && <p className="text-xs font-semibold text-slate-500 truncate">{previewVariant}</p>}
+              <p className="text-sm font-bold text-[#ff5a2f] mt-1">{previewPrice ? `KES ${Number(previewPrice || 0).toLocaleString("en-KE")}` : "—"}</p>
+              <p className="text-xs text-slate-500 mt-1 line-clamp-2">{previewDescription || "—"}</p>
+            </div>
           </div>
         </div>
       </div>
