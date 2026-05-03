@@ -176,6 +176,11 @@ const SMART_FILL_FIELDS = new Set([
   "bodyType",
 ]);
 
+/** Whole KES amounts only — strips commas/spaces so dealers can paste formatted numbers. */
+function normalizePriceDigits(value) {
+  return String(value ?? "").replace(/[^\d]/g, "");
+}
+
 
 function buildBaseSeed(car, currentYear) {
   return {
@@ -294,7 +299,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [badges, setBadges] = useState(car?.badges || []);
-  const [priceInput, setPriceInput] = useState(formSeed.price || "");
+  const [priceInput, setPriceInput] = useState(normalizePriceDigits(formSeed.price ?? ""));
   const [selectedFeatures, setSelectedFeatures] = useState(car?.features || []);
   const [featuresOpen, setFeaturesOpen] = useState(false);
   const [advancedOpen, setAdvancedOpen] = useState(false);
@@ -389,7 +394,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setImages([]);
     setBadges([]);
     setSelectedFeatures([]);
-    setPriceInput(baseSeed.price || "");
+    setPriceInput(normalizePriceDigits(baseSeed.price ?? ""));
   }, [baseSeed, defaultsKey, draftKey, isNew]);
 
   useEffect(() => {
@@ -598,6 +603,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const applySmartFillSuggestion = useCallback((field, value) => {
     const form = formRef.current;
     if (!form) return;
+    if (field === "price") {
+      setPriceInput(normalizePriceDigits(value));
+      setSmartFillSuggestions((prev) => prev.filter((s) => s.field !== field));
+      return;
+    }
     const selectorMap = {
       make: 'input[name="make"]',
       model: 'input[name="model"]',
@@ -605,7 +615,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       year: 'select[name="year"]',
       mileage: 'input[name="mileage"]',
       engineCC: 'input[name="engineCC"]',
-      price: 'input[name="price"]',
       bodyType: 'select[name="bodyType"]',
     };
     const fieldEl = form.querySelector(selectorMap[field]);
@@ -613,7 +622,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     fieldEl.value = value ?? "";
     fieldEl.dispatchEvent(new Event("input", { bubbles: true }));
     fieldEl.dispatchEvent(new Event("change", { bubbles: true }));
-    if (field === "price") setPriceInput(String(value || ""));
     if (field === "make") setSelectedMake(String(value || ""));
     if (field === "model") setSelectedModel(String(value || ""));
     if (field === "year") setSelectedYear(String(value || ""));
@@ -742,8 +750,14 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     data.badges = badges;
 
     data.year = parseInt(data.year, 10);
-    
-    data.price = parseInt(data.price, 10);
+
+    const priceDigits = normalizePriceDigits(priceInput);
+    data.price = parseInt(priceDigits, 10);
+    if (!Number.isFinite(data.price) || data.price < 1) {
+      setError("Enter a valid price in KES (whole numbers only).");
+      setSubmitting(false);
+      return;
+    }
 
     data.mileage = data.mileage ? parseInt(data.mileage, 10) : null;
     data.engineCC = data.engineCC ? parseInt(data.engineCC, 10) : null;
@@ -896,7 +910,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       setSelectedYear(gatedSeeded.year ? String(gatedSeeded.year) : currentYear);
       setSelectedMake(gatedSeeded.make || currentMake);
       setSelectedModel(gatedSeeded.model || currentModel);
-      if (gatedSeeded.price) setPriceInput(String(gatedSeeded.price));
+      if (gatedSeeded.price) setPriceInput(normalizePriceDigits(gatedSeeded.price));
       applyDetectedValuesToForm(gatedSeeded);
 
       if (!seeded.make && !seeded.model && !seeded.price && !seeded.mileage && !seeded.year) {
@@ -1217,15 +1231,20 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             </div>
             <div>
               <label className={labelCls}>Price (KES) *</label>
-              <input 
-                name="price" 
-                type="number" 
-                required 
+              <input
+                name="price"
+                type="text"
+                inputMode="numeric"
+                autoComplete="off"
+                required
                 value={priceInput}
-                onChange={(e) => setPriceInput(e.target.value)}
-                placeholder="e.g. 2500000" 
-                className={`${inputCls}${confidenceClass("price")}`} 
+                onChange={(e) => setPriceInput(normalizePriceDigits(e.target.value))}
+                placeholder="e.g. 2500000"
+                className={`${inputCls}${confidenceClass("price")}`}
               />
+              <p className="mt-1 text-[11px] font-semibold text-slate-500">
+                Numbers only (no commas needed). You can change this anytime, including after Smart Fill.
+              </p>
             </div>
 
             <div>
