@@ -172,13 +172,10 @@ function isDifferent(spec, cars) {
   return new Set(values).size > 1;
 }
 
-function isMostlyNA(spec, cars) {
-  if (cars.length === 0) return true;
-  const missingCount = cars.reduce((count, car) => {
-    const raw = spec.pick(car).raw;
-    return isMissing(raw) ? count + 1 : count;
-  }, 0);
-  return missingCount >= 2;
+/** True when every car in the set has no value for this spec (UI shows N/A for all). */
+function isAllNA(spec, cars) {
+  if (!cars || cars.length === 0) return true;
+  return cars.every((car) => isMissing(spec.pick(car).raw));
 }
 
 function getDiffSeverity(spec, cars) {
@@ -663,7 +660,7 @@ export default function CompareClient({ initialCars }) {
         .map((group) => {
           const rows = group.specs
             .filter((spec) => shouldShowSpec(spec))
-            .filter((spec) => !isMostlyNA(spec, fullComparedCars))
+            .filter((spec) => !isAllNA(spec, fullComparedCars))
             .filter((spec) => !(showDiffOnly && fullComparedCars.length > 1 && !isDifferent(spec, fullComparedCars)))
             .map((spec) => ({
               label: spec.label,
@@ -1620,43 +1617,43 @@ export default function CompareClient({ initialCars }) {
                 Tap tabs to switch the full sheet. Quick side-by-side is below.
               </p>
               {fullComparedCars.length >= 2 && (
-                <div className="border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-900/40 p-3" style={{ borderRadius: "var(--radius)" }}>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2.5">At a glance</p>
+                <div className="border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-900/40 p-2 sm:p-2.5" style={{ borderRadius: "var(--radius)" }}>
+                  <p className="text-[9px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">At a glance</p>
                   <div className="overflow-x-auto no-scrollbar">
-                    <div className="min-w-[560px]">
-                      <div className="grid grid-cols-[132px_repeat(3,minmax(136px,1fr))] border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0f0f0f]" style={{ borderRadius: "10px" }}>
-                        <div className="p-2.5 border-r border-slate-200 dark:border-slate-700" />
+                    <div className="min-w-[420px]">
+                      <div className="grid grid-cols-[minmax(88px,104px)_repeat(3,minmax(96px,1fr))] border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0f0f0f]" style={{ borderRadius: "10px" }}>
+                        <div className="px-1.5 py-1.5 border-r border-slate-200 dark:border-slate-700" />
                         {SLOT_KEYS.map((_, idx) => {
                           const c = comparedSlots[idx];
                           return (
-                            <div key={idx} className={`p-2.5 border-r border-slate-200 dark:border-slate-700 last:border-r-0 ${idx === activeMobileSlot ? "bg-[#111827]/5 dark:bg-white/10" : ""}`}>
+                            <div key={idx} className={`px-1.5 py-1.5 border-r border-slate-200 dark:border-slate-700 last:border-r-0 min-w-0 ${idx === activeMobileSlot ? "bg-[#111827]/5 dark:bg-white/10" : ""}`}>
                               {c ? (
-                                <p className="text-[10px] font-bold uppercase tracking-wide text-slate-700 dark:text-slate-200 truncate">
+                                <p className="text-[9px] font-bold uppercase tracking-wide text-slate-700 dark:text-slate-200 truncate">
                                   {c.make} {c.model}
                                 </p>
                               ) : (
-                                <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-600">—</p>
+                                <p className="text-[9px] font-bold uppercase tracking-wide text-slate-400 dark:text-slate-600">—</p>
                               )}
                             </div>
                           );
                         })}
                         {mobileQuickSpecs.map((spec) => {
-                          if (isMostlyNA(spec, fullComparedCars)) return null;
+                          if (isAllNA(spec, fullComparedCars)) return null;
                           const best = getBest(spec, fullComparedCars);
                           return (
                             <Fragment key={spec.id}>
-                              <div className="p-2.5 border-t border-r border-slate-200 dark:border-slate-700 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                              <div className="px-1.5 py-1.5 border-t border-r border-slate-200 dark:border-slate-700 text-[9px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 leading-snug">
                                 {spec.label}
                               </div>
                               {SLOT_KEYS.map((_, idx) => {
                                 const c = comparedSlots[idx];
                                 if (!c) {
-                                  return <div key={`${spec.id}-${idx}`} className="p-2.5 border-t border-r border-slate-200 dark:border-slate-700 last:border-r-0 text-[11px] text-slate-400 dark:text-slate-600">—</div>;
+                                  return <div key={`${spec.id}-${idx}`} className="px-1.5 py-1.5 border-t border-r border-slate-200 dark:border-slate-700 last:border-r-0 text-[10px] text-slate-400 dark:text-slate-600">—</div>;
                                 }
                                 const { value, raw } = spec.pick(c);
                                 const isBest = best != null && raw === best;
                                 return (
-                                  <div key={`${spec.id}-${idx}`} className={`p-2.5 border-t border-r border-slate-200 dark:border-slate-700 last:border-r-0 text-[11px] font-bold tabular-nums ${isBest ? "text-[#111827] dark:text-white" : "text-slate-600 dark:text-slate-300"}`}>
+                                  <div key={`${spec.id}-${idx}`} className={`px-1.5 py-1.5 border-t border-r border-slate-200 dark:border-slate-700 last:border-r-0 text-[10px] font-bold tabular-nums leading-snug min-w-0 ${isBest ? "text-[#111827] dark:text-white" : "text-slate-600 dark:text-slate-300"}`}>
                                     {value}
                                   </div>
                                 );
@@ -1669,30 +1666,30 @@ export default function CompareClient({ initialCars }) {
                   </div>
                 </div>
               )}
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {specGroups.map((group) => (
                   <div key={group.name} className="space-y-0">
-                    <h4 className="text-[10px] font-bold text-[#111827] dark:text-white uppercase tracking-[0.2em] border-b border-slate-300 dark:border-slate-700 pb-2 mb-1">
+                    <h4 className="text-[9px] font-bold text-[#111827] dark:text-white uppercase tracking-[0.18em] border-b border-slate-300 dark:border-slate-700 pb-1.5 mb-0.5">
                       {group.name}
                     </h4>
                     <div className="divide-y divide-slate-100 dark:divide-slate-800">
                       {group.specs.map((spec) => {
                         if (!shouldShowSpec(spec)) return null;
-                        if (isMostlyNA(spec, fullComparedCars)) return null;
+                        if (isAllNA(spec, fullComparedCars)) return null;
                         const diff = isDifferent(spec, fullComparedCars);
                         if (showDiffOnly && !diff && fullComparedCars.length > 1) return null;
                         const { value } = spec.pick(mobileCar);
                         return (
                           <div
                             key={spec.id}
-                            className={`flex items-start justify-between gap-3 py-3.5 ${
+                            className={`flex items-start justify-between gap-2 py-2 ${
                               diff ? "bg-[#38A169]/8 -mx-2 px-2 rounded-sm border-l-2 border-[#38A169]" : ""
                             }`}
                           >
-                            <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider min-w-0 max-w-[48%] leading-snug">
+                            <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider min-w-0 max-w-[48%] leading-snug">
                               {spec.label}
                             </span>
-                            <span className="text-[13px] font-bold text-right text-slate-900 dark:text-slate-100 tabular-nums break-words max-w-[52%]">
+                            <span className="text-[11px] font-bold text-right text-slate-900 dark:text-slate-100 tabular-nums break-words max-w-[52%]">
                               {value}
                             </span>
                           </div>
@@ -1726,48 +1723,48 @@ export default function CompareClient({ initialCars }) {
         )}
 
         <div className="hidden lg:block overflow-x-auto no-scrollbar">
-          <div className="min-w-[900px] sm:min-w-[1100px]">
+          <div className="min-w-[720px] sm:min-w-[880px]">
              {/* Header Row */}
              <div className="sticky top-0 z-40 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-slate-100 dark:border-slate-800">
-                <div className="grid grid-cols-[180px_1fr_1fr_1fr] sm:grid-cols-[300px_1fr_1fr_1fr]">
-                   <div className="p-6 sm:p-10 border-r border-slate-100 dark:border-slate-800 flex items-end justify-center bg-white dark:bg-[#0a0a0a] sticky left-0 z-50">
-                      <span className="text-[10px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-[0.2em]">Specifications</span>
+                <div className="grid grid-cols-[minmax(112px,140px)_1fr_1fr_1fr] sm:grid-cols-[minmax(160px,220px)_1fr_1fr_1fr]">
+                   <div className="px-3 py-4 sm:px-4 sm:py-5 border-r border-slate-100 dark:border-slate-800 flex items-end justify-center bg-white dark:bg-[#0a0a0a] sticky left-0 z-50">
+                      <span className="text-[9px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-[0.18em]">Specifications</span>
                    </div>
                    {SLOT_KEYS.map((_, idx) => {
                       const car = comparedSlots[idx];
                       const hydrated = !!(car && initialCarsById.has(car.id));
                       return (
-                        <div key={idx} className="p-6 sm:p-10 border-r border-slate-100 dark:border-slate-800 last:border-r-0">
+                        <div key={idx} className="px-3 py-4 sm:px-4 sm:py-5 border-r border-slate-100 dark:border-slate-800 last:border-r-0 min-w-0">
                            {car ? (
                               <div className="relative group">
-                                <button onClick={() => removeFromCompare(car.id)} className="absolute -top-4 -right-4 w-8 h-8 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-all hover:border-[#111827] dark:hover:border-white z-10">
-                                   <X className="w-3.5 h-3.5 dark:text-white" />
+                                <button onClick={() => removeFromCompare(car.id)} className="absolute -top-2 -right-2 w-7 h-7 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-all hover:border-[#111827] dark:hover:border-white z-10">
+                                   <X className="w-3 h-3 dark:text-white" />
                                 </button>
-                                <div className="aspect-[16/9] bg-slate-50 dark:bg-slate-900 overflow-hidden mb-6 border border-black dark:border-white" style={{ borderRadius: 'var(--radius)' }}>
+                                <div className="aspect-[16/9] bg-slate-50 dark:bg-slate-900 overflow-hidden mb-3 border border-black dark:border-white" style={{ borderRadius: 'var(--radius)' }}>
                                    {(car?.images?.[0]?.url || car?.image) ? <Image src={car?.images?.[0]?.url || car?.image} alt={car.model} fill className="object-cover" /> : null}
                                 </div>
-                                <p className="text-[10px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-widest mb-1">{car.year}</p>
-                                <h3 className="text-base sm:text-xl font-bold font-sans text-[#111827] dark:text-white leading-snug line-clamp-2">{car.make} {car.model}</h3>
+                                <p className="text-[9px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-widest mb-0.5">{car.year}</p>
+                                <h3 className="text-sm sm:text-base font-bold font-sans text-[#111827] dark:text-white leading-snug line-clamp-2">{car.make} {car.model}</h3>
                                 {hydrated && (
-                                   <div className="mt-4 flex flex-wrap gap-2">
-                                      <span className="px-2 py-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[8px] font-bold text-[#718096] dark:text-slate-400 uppercase tracking-widest" style={{ borderRadius: '4px' }}>ROAD {getInsights(car)?.roadSuitabilityScore}</span>
-                                      <span className={`px-2 py-1 text-[8px] font-bold uppercase tracking-widest border ${importTone(car?.imported)}`} style={{ borderRadius: '4px' }}>
+                                   <div className="mt-2 flex flex-wrap gap-1.5">
+                                      <span className="px-1.5 py-0.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[7px] font-bold text-[#718096] dark:text-slate-400 uppercase tracking-widest" style={{ borderRadius: '4px' }}>ROAD {getInsights(car)?.roadSuitabilityScore}</span>
+                                      <span className={`px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-widest border ${importTone(car?.imported)}`} style={{ borderRadius: '4px' }}>
                                         {car?.imported ? "IMPORTED" : "LOCAL"}
                                       </span>
                                    </div>
                                 )}
                               </div>
                            ) : (
-                              <div className="relative group flex flex-col items-center justify-center py-12 border-2 border-dashed border-slate-100 dark:border-slate-800 transition-colors hover:border-[#38A169]/40" style={{ borderRadius: 'var(--radius)' }}>
-                                 <button onClick={() => { setSearchSlotError(""); setActiveSlot(idx); }} className="w-14 h-14 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
-                                    <Search className="w-5 h-5 text-[#A0AEC0] dark:text-slate-600" />
+                              <div className="relative group flex flex-col items-center justify-center py-8 border-2 border-dashed border-slate-100 dark:border-slate-800 transition-colors hover:border-[#38A169]/40" style={{ borderRadius: 'var(--radius)' }}>
+                                 <button onClick={() => { setSearchSlotError(""); setActiveSlot(idx); }} className="w-12 h-12 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+                                    <Search className="w-4 h-4 text-[#A0AEC0] dark:text-slate-600" />
                                  </button>
-                                 <p className="mt-6 text-[10px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-widest">Awaiting Data</p>
+                                 <p className="mt-4 text-[9px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-widest">Awaiting Data</p>
                                  
                                  {activeSlot === idx && (
-                                    <div className="absolute inset-0 bg-white dark:bg-[#111111] z-50 p-6 shadow-2xl animate-in fade-in slide-in-from-top-2" style={{ borderRadius: 'var(--radius)' }}>
+                                    <div className="absolute inset-0 bg-white dark:bg-[#111111] z-50 p-4 shadow-2xl animate-in fade-in slide-in-from-top-2" style={{ borderRadius: 'var(--radius)' }}>
                                        <input autoFocus type="text" placeholder="Search parameters..." value={searchQuery} onChange={(e) => { setSearchSlotError(""); setSearchQuery(e.target.value); }}
-                                          className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 px-5 py-4 text-sm font-bold text-[#111827] dark:text-white outline-none focus:border-[#38A169]" style={{ borderRadius: 'var(--radius)' }} />
+                                          className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 px-3 py-3 text-xs font-bold text-[#111827] dark:text-white outline-none focus:border-[#38A169]" style={{ borderRadius: 'var(--radius)' }} />
                                        {searchSlotError && (
                                           <p className="mt-3 text-xs font-semibold text-red-600 dark:text-red-400 leading-relaxed">{searchSlotError}</p>
                                        )}
@@ -1799,33 +1796,33 @@ export default function CompareClient({ initialCars }) {
              <div className="divide-y divide-slate-50 dark:divide-slate-900 border-t border-slate-100 dark:border-slate-800">
                 {specGroups.map(group => (
                    <div key={group.name} className="border-b border-slate-100 dark:border-slate-800 last:border-b-0">
-                      <div className="grid grid-cols-[180px_1fr] sm:grid-cols-[300px_1fr] px-8 sm:px-12 py-6 sm:py-8 bg-slate-50 dark:bg-slate-900/50 items-center sticky left-0">
-                         <h4 className="text-[10px] font-bold text-[#111827] dark:text-white uppercase tracking-[0.25em]">{group.name} System</h4>
-                         <div className="h-px bg-slate-100 dark:bg-slate-800 ml-8" />
+                      <div className="grid grid-cols-[minmax(112px,140px)_1fr] sm:grid-cols-[minmax(160px,220px)_1fr] px-4 sm:px-6 py-3 sm:py-4 bg-slate-50 dark:bg-slate-900/50 items-center sticky left-0">
+                         <h4 className="text-[9px] font-bold text-[#111827] dark:text-white uppercase tracking-[0.2em]">{group.name} System</h4>
+                         <div className="h-px bg-slate-100 dark:bg-slate-800 ml-4 sm:ml-6" />
                       </div>
                       <div className="divide-y divide-slate-50 dark:divide-slate-900">
                          {group.specs.map(spec => {
                             if (!shouldShowSpec(spec)) return null;
-                            if (isMostlyNA(spec, fullComparedCars)) return null;
+                            if (isAllNA(spec, fullComparedCars)) return null;
                             const diff = isDifferent(spec, fullComparedCars);
                             if (showDiffOnly && !diff && fullComparedCars.length > 1) return null;
 
                             return (
-                               <div key={spec.label} className={`grid grid-cols-[180px_1fr_1fr_1fr] sm:grid-cols-[300px_1fr_1fr_1fr] transition-colors ${diff ? 'bg-[#38A169]/5' : 'hover:bg-slate-50 dark:hover:bg-slate-900'}`}>
-                                  <div className="p-6 sm:p-8 border-r border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-[#0a0a0a] sticky left-0 z-30">
-                                     <span className="text-[10px] sm:text-[11px] font-bold text-[#718096] dark:text-slate-500 uppercase tracking-widest">{spec.label}</span>
-                                     {diff && <span className="w-1 h-1 bg-[#38A169] rounded-full" />}
+                               <div key={spec.label} className={`grid grid-cols-[minmax(112px,140px)_1fr_1fr_1fr] sm:grid-cols-[minmax(160px,220px)_1fr_1fr_1fr] transition-colors ${diff ? 'bg-[#38A169]/5' : 'hover:bg-slate-50 dark:hover:bg-slate-900'}`}>
+                                  <div className="px-3 py-2.5 sm:px-4 sm:py-3 border-r border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-[#0a0a0a] sticky left-0 z-30 min-w-0">
+                                     <span className="text-[9px] sm:text-[10px] font-bold text-[#718096] dark:text-slate-500 uppercase tracking-wider leading-snug">{spec.label}</span>
+                                     {diff && <span className="w-1 h-1 shrink-0 bg-[#38A169] rounded-full" />}
                                   </div>
                                   {SLOT_KEYS.map((_, idx) => {
                                      const car = comparedSlots[idx];
-                                     if (!car) return <div key={idx} className="p-6 sm:p-8 border-r border-slate-100 dark:border-slate-800 last:border-r-0" />;
+                                     if (!car) return <div key={idx} className="px-3 py-2.5 sm:px-4 sm:py-3 border-r border-slate-100 dark:border-slate-800 last:border-r-0 min-w-0" />;
                                      const { value, raw } = spec.pick(car);
                                      const best = getBest(spec, fullComparedCars);
                                      const isBest = best != null && raw === best;
                                      return (
-                                        <div key={idx} className="p-6 sm:p-8 border-r border-slate-100 dark:border-slate-800 last:border-r-0 text-right font-bold tabular-nums min-w-0">
-                                           <span className={`text-xs sm:text-sm inline-block text-right ${isBest ? 'text-[#111827] dark:text-white' : 'text-[#718096] dark:text-slate-500'}`}>{value}</span>
-                                           {isBest && <div className="mt-1 sm:mt-2 text-[8px] font-bold text-[#38A169] uppercase tracking-widest text-right">Optimized</div>}
+                                        <div key={idx} className="px-3 py-2.5 sm:px-4 sm:py-3 border-r border-slate-100 dark:border-slate-800 last:border-r-0 text-right font-bold tabular-nums min-w-0">
+                                           <span className={`text-[11px] sm:text-xs inline-block text-right leading-snug ${isBest ? 'text-[#111827] dark:text-white' : 'text-[#718096] dark:text-slate-500'}`}>{value}</span>
+                                           {isBest && <div className="mt-0.5 text-[7px] font-bold text-[#38A169] uppercase tracking-widest text-right">Optimized</div>}
                                         </div>
                                      );
                                   })}
