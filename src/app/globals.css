@@ -75,6 +75,33 @@ h1, h2, h3, h4, h5, h6 {
   display: none;
 }
 
+/* Endless feature ticker when row overflows (CarCard + listing detail) */
+@keyframes featureMarquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.feature-marquee-track {
+  animation: featureMarquee linear infinite;
+  will-change: transform;
+}
+
+.feature-marquee-track:hover,
+.feature-marquee-track:focus-within {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feature-marquee-track {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
 /* Button & Component Baselines */
 .btn-primary {
   @apply bg-[#1A202C] text-white px-6 py-3 font-bold transition-all;

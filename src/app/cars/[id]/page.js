@@ -16,6 +16,7 @@ import PrintButton from "@/components/PrintButton";
 import SpecSheet from "@/components/SpecSheet";
 import CarReviewForm from "@/components/CarReviewForm";
 import CarCard from "@/components/CarCard";
+import FeatureMarquee from "@/components/FeatureMarquee";
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
@@ -340,21 +341,7 @@ export default async function CarDetailPage({ params }) {
                 {Array.isArray(car.features) && car.features.length > 0 && (
                   <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
                     <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-4">Features</h2>
-                    <div
-                      className="flex gap-2 overflow-x-auto overflow-y-hidden pb-1.5 -mx-0.5 px-0.5 touch-pan-x [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-zinc-600"
-                      style={{ WebkitOverflowScrolling: "touch" }}
-                    >
-                      {car.features.map((f, i) => (
-                        <span
-                          key={`${i}-${f}`}
-                          className="shrink-0 max-w-[min(280px,70vw)] truncate inline-flex items-center bg-[#f0fdf4] dark:bg-emerald-950/40 text-[#166534] dark:text-emerald-200/90 text-[11px] font-bold px-3 py-2 border border-[#bbf7d0] dark:border-emerald-900/60 whitespace-nowrap"
-                          style={{ borderRadius: "2px" }}
-                          title={f}
-                        >
-                          {f}
-                        </span>
-                      ))}
-                    </div>
+                    <FeatureMarquee features={car.features} variant="detail" />
                   </div>
                 )}
 
