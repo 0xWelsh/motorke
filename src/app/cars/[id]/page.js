@@ -219,7 +219,7 @@ export default async function CarDetailPage({ params }) {
     { label: "Sunroof",       value: car.sunroof ? "Yes" : "No" },
     { label: "Color",         value: car.color || "N/A" },
     { label: "Condition",     value: car.condition },
-    { label: "Registration",  value: car.registered ? "Registered (Kenya)" : "Not registered" },
+    { label: "Registration",  value: car.registered === false ? "Not registered" : "Registered (Kenya)" },
     { label: "Import country",value: car.importCountry || "N/A" },
   ];
 

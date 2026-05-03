@@ -14,7 +14,7 @@ export default function SpecSheet({ car, dealer }) {
     { label: "Body Type",     value: BODY_TYPE_LABELS[car.bodyType] },
     { label: "Engine",        value: car.engineCC ? `${car.engineCC}cc` : "N/A" },
     { label: "Condition",     value: car.condition },
-    { label: "Registration",  value: car.registered ? "Registered (Kenya)" : "Not registered" },
+    { label: "Registration",  value: car.registered === false ? "Not registered" : "Registered (Kenya)" },
     { label: "Imported From", value: car.importCountry || "N/A" },
     { label: "Color",         value: car.color || "N/A" },
     { label: "Seats",         value: car.seats || "N/A" },
