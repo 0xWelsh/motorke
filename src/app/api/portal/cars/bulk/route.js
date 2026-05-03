@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { MIN_BULK_UPLOAD_CARS } from "@/lib/bulk-upload-policy";
 
 const VALID_FUEL = ["PETROL", "DIESEL", "HYBRID", "ELECTRIC", "LPG"];
 const VALID_TRANS = ["AUTOMATIC", "MANUAL", "CVT"];
@@ -31,6 +32,12 @@ export async function POST(request) {
 
     if (!Array.isArray(rows) || rows.length === 0) {
       return NextResponse.json({ error: "Missing rows" }, { status: 400 });
+    }
+    if (rows.length < MIN_BULK_UPLOAD_CARS) {
+      return NextResponse.json(
+        { error: `Bulk import must include at least ${MIN_BULK_UPLOAD_CARS} cars.` },
+        { status: 400 }
+      );
     }
 
     let count = 0;

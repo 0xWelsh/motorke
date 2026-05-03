@@ -27,7 +27,8 @@ export default async function PortalBulkUploadPage() {
         <a href="/portal/cars/new" className="text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-slate-700 hover:text-[#ff5a2f]">← Back to New Car</a>
         <h1 className="mt-3 text-4xl font-black text-slate-900 dark:text-white tracking-tight">Bulk Upload Cars</h1>
         <p className="mt-2 text-[11px] uppercase font-black tracking-[0.10em] font-semibold text-slate-700">
-          Upload many cars at once using CSV. Use the template to avoid format errors.
+          Upload many cars at once using CSV (minimum 3 cars per file). Use the template to avoid format errors—add
+          cars one-by-one if you only have one or two.
         </p>
       </div>
 

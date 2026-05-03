@@ -58,7 +58,10 @@ export default async function BulkUploadPage() {
             </div>
           ))}
         </div>
-        <p style={{ fontSize: 12, color: "#999", marginTop: 14 }}>* Required fields. Separate multiple features with a semicolon (;)</p>
+        <p style={{ fontSize: 12, color: "#999", marginTop: 14 }}>
+          * Required fields. Separate multiple features with a semicolon (;). Each bulk CSV must include at least 3
+          cars—use the single-car form for one or two listings.
+        </p>
       </div>
 
       {/* Upload component */}

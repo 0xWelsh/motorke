@@ -2,6 +2,7 @@
 // src/components/BulkUpload.js
 
 import { useState, useRef } from "react";
+import { MIN_BULK_UPLOAD_CARS } from "@/lib/bulk-upload-policy";
 
 const REQUIRED = ["make", "model", "year", "price", "fuelType", "transmission", "bodyType"];
 const FUEL_TYPES = ["PETROL", "DIESEL", "HYBRID", "ELECTRIC", "LPG"];
@@ -61,7 +62,12 @@ export default function BulkUpload({ dealers, mode = "ADMIN" }) {
     reader.onload = (e) => {
       const text   = e.target.result;
       const parsed = parseCSV(text);
-      const errs   = parsed.flatMap((row, i) => validateRow(row, i));
+      const errs = parsed.flatMap((row, i) => validateRow(row, i));
+      if (parsed.length > 0 && parsed.length < MIN_BULK_UPLOAD_CARS) {
+        errs.push(
+          `Bulk import must include at least ${MIN_BULK_UPLOAD_CARS} cars (this file has ${parsed.length}). Add more rows, or list one or two cars manually.`
+        );
+      }
       setRows(parsed);
       setErrors(errs);
       setResult(null);
@@ -143,6 +149,9 @@ export default function BulkUpload({ dealers, mode = "ADMIN" }) {
           {rows.length > 0 ? `${rows.length} rows loaded` : "Drop your CSV file here"}
         </p>
         <p style={{ fontSize: 13, color: "#999" }}>or click to browse · CSV files only</p>
+        <p style={{ fontSize: 12, color: "#777", marginTop: 10, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}>
+          Each bulk file must include at least {MIN_BULK_UPLOAD_CARS} cars. For fewer, use the single-car form.
+        </p>
       </div>
 
       {/* Validation errors */}
