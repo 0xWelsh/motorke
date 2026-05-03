@@ -36,6 +36,7 @@ export default async function PortalEditCarPage({ params }) {
       </div>
 
       <CarForm
+        key={car.id}
         dealers={dealers}
         car={car}
         action={`/api/portal/cars/${car.id}`}

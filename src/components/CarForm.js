@@ -308,10 +308,18 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const badges = useMemo(() => car?.badges || [], [car]);
-  const [featuresText, setFeaturesText] = useState(() =>
-    Array.isArray(car?.features) && car.features.length ? car.features.join(", ") : ""
+  /** Uncontrolled features field (like price) — avoids state being overwritten on re-render. */
+  const featuresTextareaRef = useRef(null);
+  const [featuresRev, setFeaturesRev] = useState(0);
+  const bumpFeaturesInput = useCallback(() => setFeaturesRev((n) => n + 1), []);
+  const initialFeaturesDisplay = useMemo(() => {
+    if (!Array.isArray(car?.features) || !car.features.length) return "";
+    return car.features.join(", ");
+  }, [car?.id, formInstanceKey]);
+  const parsedFeatures = useMemo(
+    () => parseCommaFeatures(featuresTextareaRef.current?.value ?? ""),
+    [featuresRev]
   );
-  const parsedFeatures = useMemo(() => parseCommaFeatures(featuresText), [featuresText]);
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [selectedMake, setSelectedMake] = useState((baseSeed.make || "").trim());
   const [modelOptions, setModelOptions] = useState([]);
@@ -344,17 +352,19 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     if (!draftKey || !isNew || !formRef.current) return;
 
     const fields = collectFormSnapshot(formRef.current);
+    const featuresFromDom =
+      formRef.current?.querySelector('textarea[data-field="features"]')?.value ?? "";
     localStorage.setItem(
       draftKey,
       JSON.stringify({
         fields,
         images,
         badges,
-        featuresText,
+        featuresText: featuresFromDom,
         updatedAt: Date.now(),
       })
     );
-  }, [draftKey, images, isNew, featuresText, badges]);
+  }, [draftKey, images, isNew, badges]);
 
   useEffect(() => {
     if (!isNew) return;
@@ -364,19 +374,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     localStorage.removeItem(defaultsKey);
     setFormSeed(baseSeed);
     setImages([]);
-    setFeaturesText("");
     setFormInstanceKey((k) => k + 1);
   }, [baseSeed, defaultsKey, draftKey, isNew]);
-
-  // Hydrate from server car only when the listing identity changes. Do not depend on
-  // `car.features` reference — parents often pass a new array each render and would
-  // wipe the controlled textarea on every keystroke/repaint.
-  useEffect(() => {
-    if (isNew && !car?.id) return;
-    setFeaturesText(
-      Array.isArray(car?.features) && car.features.length ? car.features.join(", ") : ""
-    );
-  }, [isNew, car?.id]);
 
   useEffect(() => {
     if (!isNew || !draftKey || !formRef.current) return;
@@ -401,7 +400,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   useEffect(() => {
     if (isNew) saveDraft();
-  }, [images, featuresText, isNew, saveDraft]);
+  }, [images, isNew, saveDraft]);
+
+  /** After mount / remount, refresh features-derived preview from DOM. */
+  useEffect(() => {
+    setFeaturesRev((n) => n + 1);
+  }, [formInstanceKey, car?.id]);
 
   useEffect(() => {
     const currentMake =
@@ -612,7 +616,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     const data = Object.fromEntries(fd.entries());
 
     data.images = images;
-    data.features = parseCommaFeatures(featuresText);
+    const featuresRaw =
+      featuresTextareaRef.current?.value ??
+      formRef.current?.querySelector('textarea[data-field="features"]')?.value ??
+      "";
+    data.features = parseCommaFeatures(featuresRaw);
     data.badges = badges;
 
     data.year = parseInt(data.year, 10);
@@ -912,8 +920,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-3">Features</p>
                 <InfieldGroup label="List features, comma-separated">
                   <textarea
-                    value={featuresText}
-                    onChange={(e) => setFeaturesText(e.target.value)}
+                    ref={featuresTextareaRef}
+                    data-field="features"
+                    key={`features-${car?.id ?? "new"}-${formInstanceKey}`}
+                    defaultValue={initialFeaturesDisplay}
+                    onInput={bumpFeaturesInput}
                     rows={3}
                     placeholder="Leather seats, Sunroof, Reverse camera…"
                     className={`${inField} resize-y min-h-[4.5rem] text-sm leading-relaxed`}

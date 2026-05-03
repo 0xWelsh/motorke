@@ -31,6 +31,7 @@ export default async function AdminEditCarPage({ params }) {
       </div>
 
       <CarForm
+        key={car.id}
         dealers={dealers}
         car={car}
         action={`/api/admin/cars/${car.id}`}
