@@ -31,7 +31,7 @@ export default async function PortalNewCarPage() {
           <span className="text-lg">←</span> Back to Showroom
         </a>
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">Add car</h1>
-        <p className="text-sm text-slate-600 font-medium mt-1">Paste text into Smart Fill or enter fields below.</p>
+        <p className="text-sm text-slate-600 font-medium mt-1">Fill in the listing below — every field is yours to edit.</p>
         <div className="mt-4">
           <Link
             href="/portal/cars/bulk"
