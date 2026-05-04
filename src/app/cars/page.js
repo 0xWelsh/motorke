@@ -122,9 +122,9 @@ const getAllMakes = unstable_cache(
 export default async function CarsPage({ searchParams }) {
   const sp = await searchParams;
   const page = parseInt(sp.page || "1", 10);
-  /** Layout is 6 cards (3 cols) beside the sidebar, then the remainder in `lg:grid-cols-4`.
-   * Multiples of 4 after those 6 avoids a short last row on desktop (was 12 → 6 below with 2 empty slots). */
-  const limit = 18;
+  /** 6 cards live in the 3-column strip beside the sidebar; the rest use `lg:grid-cols-4`.
+   * 14 total → 8 below = two full rows (12 had only 6 below → 2 empty cells in the last row). */
+  const limit = 14;
   const search = sp.search || "";
   const make = sp.make || "";
   const model = sp.model || "";
@@ -354,7 +354,7 @@ export default async function CarsPage({ searchParams }) {
 
         {/* Row 3 onward: full width under sidebar, 4 columns on desktop */}
         {lowerCars.length > 0 && (
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-6 gap-4">
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {lowerCars.map((car) => (
               <CarCard key={`lower-${car.id}`} car={car} distance={car.distanceValue ?? null} />
             ))}
