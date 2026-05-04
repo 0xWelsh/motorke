@@ -295,15 +295,35 @@ export default async function CarDetailPage({ params }) {
                   {car.make} {car.model} {car.variant ? `( ${car.variant} )` : ""}
                 </h1>
 
-                <div className="flex items-center gap-3 mb-8">
-                  <span className="text-2xl font-extrabold text-[#111827] dark:text-white">
+                <div className="flex flex-wrap items-baseline gap-2 mb-8">
+                  <span className="text-lg sm:text-xl font-semibold tabular-nums text-[#111827] dark:text-white">
                     {formatCarPrice(car)}
                   </span>
-                  <div 
-                    className="w-5 h-5 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-[11px] text-slate-400 font-bold cursor-help"
-                    title="Final listed price"
-                  >
-                     i
+                  <div className="relative inline-flex shrink-0 translate-y-[1px] group/tooltip">
+                    <button
+                      type="button"
+                      aria-label="Pricing information"
+                      aria-describedby="car-price-explainer"
+                      className="relative z-10 flex size-7 items-center justify-center rounded-full border border-[#38A169]/45 bg-[#38A169]/12 text-[11px] font-black text-[#38A169] shadow-sm outline-none ring-offset-2 ring-offset-white transition-colors hover:bg-[#38A169]/20 focus-visible:ring-2 focus-visible:ring-[#38A169] dark:ring-offset-[#0a0a0a] dark:bg-emerald-500/15 dark:text-[#6ee7b7] dark:border-[#38A169]/50"
+                    >
+                      i
+                    </button>
+                    <span
+                      id="car-price-explainer"
+                      role="tooltip"
+                      className="pointer-events-none absolute bottom-[calc(100%+10px)] left-1/2 z-20 mb-0 w-max max-w-[min(280px,calc(100vw-3rem))] -translate-x-1/2 rounded-[3px] border border-[#38A169]/25 bg-gradient-to-br from-emerald-50 to-white px-3.5 py-2 pb-3 text-left text-[11px] font-semibold leading-snug text-[#14532d] shadow-[0_10px_35px_-8px_rgba(22,101,52,0.35)] opacity-0 transition-opacity duration-200 group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100 dark:from-emerald-950/95 dark:to-[#0f172a] dark:border-[#38A169]/35 dark:text-emerald-100 dark:shadow-[0_12px_40px_-10px_rgba(0,0,0,0.55)]"
+                    >
+                      <span className="block text-[9px] font-black uppercase tracking-[0.18em] text-[#38A169] dark:text-[#6ee7b7]">
+                        Listing price
+                      </span>
+                      <span className="mt-1 block font-medium text-[#166534] dark:text-emerald-50">
+                        Price inclusive of all costs
+                      </span>
+                      <span
+                        aria-hidden
+                        className="absolute left-1/2 top-full h-0 w-0 -translate-x-1/2 border-x-[7px] border-x-transparent border-t-[7px] border-t-emerald-100 dark:border-t-emerald-900/90"
+                      />
+                    </span>
                   </div>
                 </div>
 
