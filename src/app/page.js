@@ -18,7 +18,7 @@ import TrackedLink from "@/components/TrackedLink";
 import { analyzePrice } from "@/lib/market";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 
-const HERO_BACKGROUND = "/images/backgrounds/pexels-mikebirdy-10123994.jpg";
+const HERO_BACKGROUND = "/images/backgrounds/hero-section-background.jpeg";
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
 
 function scoreMarketValue(marketAnalysis) {
