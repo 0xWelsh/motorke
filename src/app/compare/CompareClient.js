@@ -110,6 +110,12 @@ function toDisplay(value) {
   return value;
 }
 
+function positiveMetric(raw, suffix = "") {
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n <= 0) return { value: "—", raw: null };
+  return { value: suffix ? `${n}${suffix}` : String(n), raw: n };
+}
+
 function isMissing(raw) {
   return raw === null || raw === undefined || raw === "";
 }
@@ -376,10 +382,10 @@ export default function CompareClient({ initialCars }) {
         { id: "transmission", label: "Transmission", tags: ["all", "city", "longtrip", "performance"], pick: (c) => ({ value: c?.transmission ? TRANSMISSION_LABELS[c.transmission] : "N/A", raw: c?.transmission }) },
         { id: "drivetrain", label: "Drivetrain", tags: ["all", "performance", "longtrip"], pick: (c) => ({ value: c?.drivetrain ? DRIVETRAIN_LABELS[c.drivetrain] : "N/A", raw: c?.drivetrain }) },
         { id: "steering", label: "Steering", tags: ["all", "city", "performance"], pick: (c) => ({ value: c?.steering ? STEERING_LABELS[c.steering] : "N/A", raw: c?.steering }) },
-        { id: "engineCC", label: "Engine size", tags: ["all", "performance", "longtrip"], pick: (c) => ({ value: c?.engineCC ? `${c.engineCC}cc` : "N/A", raw: c?.engineCC }), rank: "max" },
-        { id: "cylinders", label: "Cylinders", tags: ["all", "performance"], pick: (c) => ({ value: toDisplay(c?.cylinders), raw: c?.cylinders }), rank: "max" },
-        { id: "horsepower", label: "Horsepower", tags: ["all", "performance"], pick: (c) => ({ value: c?.horsepower ? `${c.horsepower} hp` : "N/A", raw: c?.horsepower }), rank: "max" },
-        { id: "torque", label: "Torque", tags: ["all", "performance", "longtrip"], pick: (c) => ({ value: c?.torque ? `${c.torque} Nm` : "N/A", raw: c?.torque }), rank: "max" },
+        { id: "engineCC", label: "Engine size", tags: ["all", "performance", "longtrip"], pick: (c) => positiveMetric(c?.engineCC, "cc"), rank: "max" },
+        { id: "cylinders", label: "Cylinders", tags: ["all", "performance"], pick: (c) => positiveMetric(c?.cylinders), rank: "max" },
+        { id: "horsepower", label: "Horsepower", tags: ["all", "performance"], pick: (c) => positiveMetric(c?.horsepower, " hp"), rank: "max" },
+        { id: "torque", label: "Torque", tags: ["all", "performance", "longtrip"], pick: (c) => positiveMetric(c?.torque, " Nm"), rank: "max" },
         { id: "turbo", label: "Turbocharged", tags: ["all", "performance"], pick: (c) => ({ value: yesNo(c?.turbo), raw: c?.turbo }), rank: "booltrue" },
       ],
     },
@@ -397,9 +403,9 @@ export default function CompareClient({ initialCars }) {
           },
           rank: "max",
         },
-        { id: "seats", label: "Seats", tags: ["all", "family", "longtrip"], pick: (c) => ({ value: toDisplay(c?.seats), raw: c?.seats }), rank: "max" },
+        { id: "seats", label: "Seats", tags: ["all", "family", "longtrip"], pick: (c) => positiveMetric(c?.seats), rank: "max" },
         { id: "sunroof", label: "Sunroof", tags: ["all", "family"], pick: (c) => ({ value: yesNo(c?.sunroof), raw: c?.sunroof }), rank: "booltrue" },
-        { id: "doors", label: "Doors", tags: ["all", "city", "family"], pick: (c) => ({ value: toDisplay(c?.doors), raw: c?.doors }), rank: "max" },
+        { id: "doors", label: "Doors", tags: ["all", "city", "family"], pick: (c) => positiveMetric(c?.doors), rank: "max" },
         { id: "color", label: "Color", tags: ["all"], pick: (c) => ({ value: toDisplay(c?.color), raw: c?.color }) },
         { id: "featuresCount", label: "Features count", tags: ["all", "family"], pick: (c) => ({ value: c?.features?.length != null ? c.features.length : "N/A", raw: c?.features?.length }), rank: "max" },
       ],
@@ -416,7 +422,7 @@ export default function CompareClient({ initialCars }) {
     {
       name: "Kenya Ops Intelligence",
       specs: [
-        { id: "groundClearance", label: "Ground clearance", tags: ["all", "city", "longtrip", "family"], pick: (c) => ({ value: c?.groundClearanceMm ? `${c.groundClearanceMm} mm` : "N/A", raw: c?.groundClearanceMm }), rank: "max" },
+        { id: "groundClearance", label: "Ground clearance", tags: ["all", "city", "longtrip", "family"], pick: (c) => positiveMetric(c?.groundClearanceMm, " mm"), rank: "max" },
         { id: "roadSuitability", label: "Road suitability", tags: ["all", "city", "longtrip", "family"], pick: (c) => ({ value: `${getInsights(c)?.roadSuitabilityScore ?? "N/A"}/100`, raw: getInsights(c)?.roadSuitabilityScore }), rank: "max" },
         { id: "spares", label: "Spare availability", tags: ["all", "city", "longtrip", "family"], pick: (c) => ({ value: `${getInsights(c)?.spareAvailabilityScore ?? "N/A"}/10`, raw: getInsights(c)?.spareAvailabilityScore }), rank: "max" },
         {
@@ -620,9 +626,11 @@ export default function CompareClient({ initialCars }) {
         url,
       };
 
-      const existing = JSON.parse(localStorage.getItem("welsh-motors_compare_snapshots") || "[]");
+      const existing =
+        JSON.parse(localStorage.getItem("welsh-motorhub_compare_snapshots") || "null") ||
+        JSON.parse(localStorage.getItem("welsh-motors_compare_snapshots") || "[]");
       const next = [snapshot, ...existing].slice(0, 20);
-      localStorage.setItem("welsh-motors_compare_snapshots", JSON.stringify(next));
+      localStorage.setItem("welsh-motorhub_compare_snapshots", JSON.stringify(next));
 
       setSaveState("copied");
       setTimeout(() => setSaveState("idle"), 1800);
@@ -747,7 +755,7 @@ export default function CompareClient({ initialCars }) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Welsh Motors — Comparison Report</title>
+    <title>Welsh Motorhub — Comparison Report</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -801,7 +809,7 @@ export default function CompareClient({ initialCars }) {
     </style>
   </head>
   <body>
-    <h1>Welsh Motors Comparison Report</h1>
+    <h1>Welsh Motorhub Comparison Report</h1>
     <p class="meta">${escapeHtml(title)}<br/>Generated: ${escapeHtml(printedAt)} · Preset: ${escapeHtml(preset)}</p>
     <p class="note">Tip: open this file in your browser and use Print → &quot;Save as PDF&quot; if you need a PDF copy.</p>
 
@@ -841,7 +849,7 @@ export default function CompareClient({ initialCars }) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `welsh-motors-compare-${slug}-${dateStamp}.html`;
+      a.download = `welsh-motorhub-compare-${slug}-${dateStamp}.html`;
       a.rel = "noopener noreferrer";
       document.body.appendChild(a);
       a.click();

@@ -5,7 +5,7 @@ import { X, ChevronRight } from "lucide-react";
 
 const TOOLTIPS = {
   first_time_visitor: {
-    title: "Welcome to Welsh Motors! 👋",
+    title: "Welcome to Welsh Motorhub! 👋",
     steps: [
       {
         target: "search-bar",
@@ -34,7 +34,7 @@ const TOOLTIPS = {
     ],
   },
   dealer_first_time: {
-    title: "Welcome to Welsh Motors Dealer Portal! 🚗",
+    title: "Welcome to Welsh Motorhub Dealer Portal! 🚗",
     steps: [
       {
         target: "add-car-btn",

@@ -39,7 +39,7 @@ export async function POST(request) {
       phone,
       amount,
       user.dealerId, // AccountReference
-      `Welsh Motors ${plan} Subscription` // TransactionDesc
+      `Welsh Motorhub ${plan} Subscription` // TransactionDesc
     );
 
     // Ensure the Dealer has a Subscription track

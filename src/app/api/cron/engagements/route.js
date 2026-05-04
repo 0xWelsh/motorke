@@ -74,7 +74,7 @@ export async function GET(req) {
             userEmail: lead.email,
             userName: lead.name || "Customer",
             carTitle: carTitle,
-            dealerName: lead.dealer?.name || "Welsh Motors Dealer"
+            dealerName: lead.dealer?.name || "Welsh Motorhub Dealer"
           });
           
           followUpCount++;
@@ -91,7 +91,7 @@ export async function GET(req) {
           await sendServiceFeedbackEmail({
             userEmail: lead.email,
             userName: lead.name || "Customer",
-            dealerName: lead.dealer?.name || "Welsh Motors Dealer"
+            dealerName: lead.dealer?.name || "Welsh Motorhub Dealer"
           });
           
           feedbackCount++;

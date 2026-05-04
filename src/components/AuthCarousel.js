@@ -6,7 +6,7 @@ import { ShieldCheck, Zap, Globe, Star } from 'lucide-react';
 const SLIDES = [
   {
     title: "Verified Cars",
-    desc: "Every car on Welsh Motors is inspected before it goes live."
+    desc: "Every car on Welsh Motorhub is inspected before it goes live."
   },
   {
     title: "Fair Pricing",

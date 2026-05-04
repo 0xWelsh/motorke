@@ -23,7 +23,7 @@ export async function GET() {
   return new NextResponse(rows.join("\n"), {
     headers: {
       "Content-Type": "text/csv",
-      "Content-Disposition": 'attachment; filename="welsh-motors-dealer-bulk-template.csv"',
+      "Content-Disposition": 'attachment; filename="welsh-motorhub-dealer-bulk-template.csv"',
     },
   });
 }

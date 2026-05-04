@@ -112,9 +112,5 @@ export function buildCarDetailSpecRows(car) {
     value: car.registered === false ? "Not registered" : "Registered (Kenya)",
   });
 
-  if (car.importCountry?.trim()) {
-    rows.push({ label: "Import country", value: car.importCountry.trim() });
-  }
-
   return rows;
 }

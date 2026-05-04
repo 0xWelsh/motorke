@@ -6,7 +6,7 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import CarForm from "@/components/CarForm";
 
-export const metadata = { title: "Edit Car — Welsh Motors Portal" };
+export const metadata = { title: "Edit Car — Welsh Motorhub Portal" };
 
 export default async function PortalEditCarPage({ params }) {
   const { id } = await params;

@@ -1,12 +1,12 @@
 /* 
-  Welsh Motors Service Worker
+  Welsh Motorhub Service Worker
   Provides offline capability and caching for faster loads
   
   Strategy: Cache-first for static assets, network-first for API calls
 */
 
-const CACHE_NAME = "welsh-motors-v3";
-const RUNTIME_CACHE = "welsh-motors-runtime-v3";
+const CACHE_NAME = "welsh-motorhub-v4";
+const RUNTIME_CACHE = "welsh-motorhub-runtime-v4";
 const OFFLINE_FALLBACK = new Response("Offline", {
   status: 503,
   statusText: "Service Unavailable",
@@ -159,13 +159,13 @@ self.addEventListener("sync", (event) => {
 self.addEventListener("push", (event) => {
   const data = event.data ? event.data.json() : {};
   const options = {
-    body: data.body || "You have a new notification from Welsh Motors",
+    body: data.body || "You have a new notification from Welsh Motorhub",
     icon: "/headerlogo.png",
     badge: "/favicon.png",
-    tag: "welsh-motors-notification",
+    tag: "welsh-motorhub-notification",
   };
 
-  event.waitUntil(self.registration.showNotification(data.title || "Welsh Motors", options));
+  event.waitUntil(self.registration.showNotification(data.title || "Welsh Motorhub", options));
 });
 
 // Notification click handler

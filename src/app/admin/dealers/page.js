@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import EmptyState from "@/components/ui/EmptyState";
 
-export const metadata = { title: "Dealers — Welsh Motors Admin" };
+export const metadata = { title: "Dealers — Welsh Motorhub Admin" };
 
 const avatarGradients = [
   "from-[#111111] to-[#2a2a2a]",

@@ -287,10 +287,18 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   const dealerScope = dealers?.[0]?.id || "shared";
   const draftKey = useMemo(
-    () => (isNew ? `welsh-motors:car-draft:${isPortal ? "portal" : "admin"}:${dealerScope}` : null),
+    () => (isNew ? `welsh-motorhub:car-draft:${isPortal ? "portal" : "admin"}:${dealerScope}` : null),
     [isNew, isPortal, dealerScope]
   );
   const defaultsKey = useMemo(
+    () => `welsh-motorhub:car-defaults:${isPortal ? "portal" : "admin"}:${dealerScope}`,
+    [isPortal, dealerScope]
+  );
+  const legacyDraftKey = useMemo(
+    () => (isNew ? `welsh-motors:car-draft:${isPortal ? "portal" : "admin"}:${dealerScope}` : null),
+    [isNew, isPortal, dealerScope]
+  );
+  const legacyDefaultsKey = useMemo(
     () => `welsh-motors:car-defaults:${isPortal ? "portal" : "admin"}:${dealerScope}`,
     [isPortal, dealerScope]
   );
@@ -372,11 +380,13 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     if (initializedNewFormRef.current) return;
     initializedNewFormRef.current = true;
     if (draftKey) localStorage.removeItem(draftKey);
+    if (legacyDraftKey) localStorage.removeItem(legacyDraftKey);
     localStorage.removeItem(defaultsKey);
+    localStorage.removeItem(legacyDefaultsKey);
     setFormSeed(baseSeed);
     setImages([]);
     setFormInstanceKey((k) => k + 1);
-  }, [baseSeed, defaultsKey, draftKey, isNew]);
+  }, [baseSeed, defaultsKey, draftKey, legacyDefaultsKey, legacyDraftKey, isNew]);
 
   useEffect(() => {
     if (!isNew || !draftKey || !formRef.current) return;
@@ -605,6 +615,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   function clearDraft() {
     if (!draftKey) return;
     localStorage.removeItem(draftKey);
+    if (legacyDraftKey) localStorage.removeItem(legacyDraftKey);
   }
 
 
@@ -683,6 +694,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
       if (draftKey) {
         localStorage.removeItem(draftKey);
+      }
+      if (legacyDraftKey) {
+        localStorage.removeItem(legacyDraftKey);
       }
       
       window.location.href = result.redirectTo || (isPortal ? "/portal" : "/admin/cars");

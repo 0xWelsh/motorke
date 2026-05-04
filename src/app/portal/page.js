@@ -19,7 +19,7 @@ import {
   ShieldCheck
 } from "lucide-react";
 
-export const metadata = { title: "Dashboard — Welsh Motors Dealer Portal" };
+export const metadata = { title: "Dashboard — Welsh Motorhub Dealer Portal" };
 
 export default async function PortalPage({ searchParams }) {
   const user = await requireDealer();

@@ -291,7 +291,7 @@ export default async function CarDetailPage({ params }) {
                    </span>
                 </div>
                 
-                <h1 className="text-4xl sm:text-5xl font-extrabold font-sans text-[#111827] dark:text-white tracking-tight leading-[1.1] mb-6">
+                <h1 className="text-3xl sm:text-4xl font-extrabold font-sans text-[#111827] dark:text-white tracking-tight leading-[1.1] mb-6">
                   {car.make} {car.model} {car.variant ? `( ${car.variant} )` : ""}
                 </h1>
 

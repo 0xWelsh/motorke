@@ -19,7 +19,7 @@ import {
   XCircle
 } from "lucide-react";
 
-export const metadata = { title: "Approvals — Welsh Motors Admin" };
+export const metadata = { title: "Approvals — Welsh Motorhub Admin" };
 
 export default async function AdminApprovalsPage() {
   await requireAdmin();

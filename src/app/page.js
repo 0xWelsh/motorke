@@ -419,7 +419,7 @@ export default async function HomePage() {
                     </div>
                   </div>
                   <p className="text-sm text-[#4A5568] dark:text-slate-300 leading-relaxed mb-10 line-clamp-2">
-                    {dealer.description || "Partnering with Welsh Motors to provide premium verified vehicles."}
+                    {dealer.description || "Partnering with Welsh Motorhub to provide premium verified vehicles."}
                   </p>
                   <div className="pt-6 border-t border-[#EDF2F7] dark:border-slate-800 flex items-center justify-between">
                     <span className="text-xs font-bold text-[#111827] dark:text-slate-300 uppercase tracking-widest">{dealer._count?.cars || 0} Units</span>
@@ -452,7 +452,7 @@ export default async function HomePage() {
                 <span className="editorial-heading text-[#718096]">without the hassle.</span>
               </h2>
               <p className="text-lg text-[#A0AEC0] leading-relaxed max-w-xl font-medium">
-                Tired of recycled listings and unverified sellers? Welsh Motors provides a direct link
+                Tired of recycled listings and unverified sellers? Welsh Motorhub provides a direct link
                 to the actual stock sitting on dealership floors. No middlemen, no scraped data,
                 just high-fidelity inventory.
               </p>

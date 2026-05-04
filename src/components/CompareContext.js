@@ -4,13 +4,17 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 const CompareContext = createContext();
 
+const COMPARE_STORAGE_KEY = "welsh-motorhub_compare";
+const LEGACY_COMPARE_STORAGE_KEY = "welsh-motors_compare";
+
 export function CompareProvider({ children }) {
   const [compareCars, setCompareCars] = useState([]);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Load from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem("welsh-motors_compare");
+    const saved =
+      localStorage.getItem(COMPARE_STORAGE_KEY) || localStorage.getItem(LEGACY_COMPARE_STORAGE_KEY);
     if (saved) {
       try {
         setCompareCars(JSON.parse(saved));
@@ -24,7 +28,7 @@ export function CompareProvider({ children }) {
   // Save to localStorage when compareCars changes
   useEffect(() => {
     if (isInitialized) {
-      localStorage.setItem("welsh-motors_compare", JSON.stringify(compareCars));
+      localStorage.setItem(COMPARE_STORAGE_KEY, JSON.stringify(compareCars));
     }
   }, [compareCars, isInitialized]);
 

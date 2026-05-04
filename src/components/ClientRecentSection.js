@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Clock, ChevronRight, Sparkles, User } from "lucide-react";
 import { formatPrice, formatCarPrice } from "@/lib/utils";
 import CarCard from "@/components/CarCard";
-import { RECENT_COOKIE_KEY, RECENT_STORAGE_KEY, readJsonCookie } from "@/lib/personalization";
+import { RECENT_COOKIE_KEY, readRecentCarsFromStorage, readJsonCookie } from "@/lib/personalization";
 
 export default function ClientRecentSection() {
   const [recent, setRecent] = useState([]);
@@ -21,7 +21,7 @@ export default function ClientRecentSection() {
         if (userData.user) setUser(userData.user);
 
         // 2. Get Recent from LocalStorage
-        const localData = JSON.parse(localStorage.getItem(RECENT_STORAGE_KEY) || "[]");
+        const localData = readRecentCarsFromStorage();
         const fallbackCookie = readJsonCookie(RECENT_COOKIE_KEY, []);
         const recentSeed = localData.length > 0 ? localData : (Array.isArray(fallbackCookie) ? fallbackCookie : []);
         setRecent(recentSeed.slice(0, 4));

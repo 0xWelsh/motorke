@@ -117,7 +117,7 @@ export default function PortalLayout({ children }) {
              <span className="text-[11px] font-bold uppercase tracking-widest">Menu</span>
            </button>
            <div className="hidden lg:flex flex-col min-w-0">
-              <span className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900 dark:text-white">Welsh Motors</span>
+              <span className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900 dark:text-white">Welsh Motorhub</span>
               <p className="text-[11px] uppercase font-black tracking-[0.15em] font-semibold text-[#ff5a2f] mt-0.5 flex items-center gap-1">
                  <ShieldCheck size={11} /> Active Subscription
               </p>

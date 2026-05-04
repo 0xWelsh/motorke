@@ -3,7 +3,7 @@ import { requireDealer } from "@/lib/auth";
 import Link from "next/link";
 import CarForm from "@/components/CarForm";
 
-export const metadata = { title: "Add Car — Welsh Motors Portal" };
+export const metadata = { title: "Add Car — Welsh Motorhub Portal" };
 
 export default async function PortalNewCarPage() {
   const user = await requireDealer();

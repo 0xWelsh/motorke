@@ -4,7 +4,7 @@ import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import LoginForm from "@/components/LoginForm";
 
-export const metadata = { title: "Sign In — Welsh Motors Standard" };
+export const metadata = { title: "Sign In — Welsh Motorhub Standard" };
 
 export default async function LoginPage(props) {
   try {

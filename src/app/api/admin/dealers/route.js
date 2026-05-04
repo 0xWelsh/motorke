@@ -90,7 +90,7 @@ export async function POST(request) {
       const existingUser = await db.user.findUnique({ where: { email } });
       if (!existingUser) {
         const { hash } = require("bcryptjs");
-        const defaultPasswordHash = await hash("Welsh Motors123!", 10);
+        const defaultPasswordHash = await hash("Welsh Motorhub123!", 10);
         await db.user.create({
           data: {
             email,
@@ -115,7 +115,7 @@ export async function POST(request) {
       const existingUser = await db.user.findUnique({ where: { email } });
       if (!existingUser) {
         const { hash } = require("bcryptjs");
-        const defaultPasswordHash = await hash("Welsh Motors123!", 10);
+        const defaultPasswordHash = await hash("Welsh Motorhub123!", 10);
         await db.user.create({
           data: {
             email,

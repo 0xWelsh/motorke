@@ -11,7 +11,7 @@ import {
   Plus, Activity, Bolt, AlertCircle, ShieldAlert, BadgeCheck, ServerCog
 } from "lucide-react";
 
-export const metadata = { title: "Admin Dashboard — Welsh Motors" };
+export const metadata = { title: "Admin Dashboard — Welsh Motorhub" };
 
 export default async function AdminDashboard({ searchParams }) {
   await requireAdmin();

@@ -79,15 +79,14 @@ export default function ImageGallery({ images, title }) {
           <button
             type="button"
             onClick={() => {
-              setActive(0);
               setLightbox(true);
             }}
             className="relative lg:row-span-2 aspect-[4/3] lg:aspect-auto lg:h-full rounded-sm overflow-hidden bg-[#fbfcfe] dark:bg-[#111111] group border border-[#ddd4c8] dark:border-slate-800"
             aria-label="Open hero image"
           >
             <Image
-              src={images[0].url}
-              alt={images[0].alt || title}
+              src={current.url}
+              alt={current.alt || title}
               fill
               priority
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
@@ -117,15 +116,15 @@ export default function ImageGallery({ images, title }) {
                 type="button"
                 key={`${img.url}-${idx}`}
                 onClick={() => {
+                  setActive(idx);
                   setLightbox(true);
-                  // scroll to image later if necessary
                 }}
                 className="hidden lg:block relative aspect-[4/3] rounded-sm overflow-hidden bg-[#fbfcfe] dark:bg-[#111111] group"
                 aria-label={`Open image ${idx + 1}`}
               >
-                <Image
-                  src={img.url}
-                  alt={img.alt || `${title} image ${idx + 1}`}
+              <Image
+                src={img.url}
+                alt={img.alt || `${title} image ${idx + 1}`}
                   fill
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                   sizes="(max-width: 1024px) 50vw, 18vw"
@@ -144,13 +143,15 @@ export default function ImageGallery({ images, title }) {
           <div
             className="relative aspect-[4/3] sm:aspect-[16/9] w-full bg-[#fbfcfe] dark:bg-[#111111] overflow-hidden cursor-pointer"
             onClick={() => setLightbox(true)}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
             role="button"
             tabIndex={0}
             aria-label="Open image gallery"
           >
             <Image
-              src={images[0].url}
-              alt={images[0].alt || title}
+              src={current.url}
+              alt={current.alt || title}
               fill
               priority
               className="w-full h-full object-cover"
@@ -186,7 +187,7 @@ export default function ImageGallery({ images, title }) {
                   {images.slice(0, 6).map((_, i) => (
                     <span
                       key={`mobile-dot-${i}`}
-                      className={`h-1.5 rounded-full ${i === 0 ? "w-5 bg-white" : "w-1.5 bg-white/60"}`}
+                      className={`h-1.5 rounded-full ${i === active ? "w-5 bg-white" : "w-1.5 bg-white/60"}`}
                     />
                   ))}
                 </div>
@@ -196,6 +197,35 @@ export default function ImageGallery({ images, title }) {
               </>
             )}
           </div>
+
+          {images.length > 1 && (
+            <div className="mt-3 flex lg:hidden gap-2 overflow-x-auto pb-1 scrollbar-none">
+              {images.map((img, i) => (
+                <button
+                  type="button"
+                  aria-label={`View image ${i + 1}`}
+                  key={`mobile-thumb-${img.url}-${i}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActive(i);
+                  }}
+                  className={`flex-shrink-0 w-20 h-14 rounded-sm overflow-hidden border-[1.5px] transition-all ${
+                    i === active
+                      ? "border-[#ff5a2f] opacity-100"
+                      : "border-transparent opacity-60"
+                  } relative`}
+                >
+                  <Image
+                    src={img.url}
+                    alt={img.alt || `Photo ${i + 1}`}
+                    fill
+                    className="w-full h-full object-cover"
+                    sizes="80px"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
 
           {images.length > 1 && (
             <div className="hidden lg:flex gap-2 overflow-x-auto pb-1 mt-3 scrollbar-none">

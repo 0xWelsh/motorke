@@ -26,7 +26,7 @@ export async function sendOtpSms({ phone, code }) {
     throw new Error("AfricasTalking credentials are missing");
   }
 
-  const message = `Your Welsh Motors verification code is ${code}. It expires in 10 minutes.`;
+  const message = `Your Welsh Motorhub verification code is ${code}. It expires in 10 minutes.`;
   const form = new URLSearchParams();
   form.set("username", username);
   form.set("to", `+${phone}`);

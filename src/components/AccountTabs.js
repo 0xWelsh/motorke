@@ -6,7 +6,7 @@ import { formatCarPrice } from "@/lib/utils";
 import { clsx } from "clsx";
 import BuyerLocationSettings from "./BuyerLocationSettings";
 import CarCard from "./CarCard";
-import { RECENT_COOKIE_KEY, RECENT_STORAGE_KEY, readJsonCookie } from "@/lib/personalization";
+import { RECENT_COOKIE_KEY, readRecentCarsFromStorage, readJsonCookie } from "@/lib/personalization";
 import ProfileCompletenessPanel from "./ProfileCompletenessPanel";
 import PhoneVerificationControl from "./PhoneVerificationControl";
 import { PHONE_VERIFICATION_ENABLED } from "@/lib/feature-flags";
@@ -29,7 +29,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
 
   useEffect(() => {
     try {
-      const localRecent = JSON.parse(localStorage.getItem(RECENT_STORAGE_KEY) || "[]");
+      const localRecent = readRecentCarsFromStorage();
       if (Array.isArray(localRecent) && localRecent.length > 0) {
         setRecent(localRecent);
         return;

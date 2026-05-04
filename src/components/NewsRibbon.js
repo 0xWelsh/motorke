@@ -4,10 +4,10 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 const FALLBACK_NEWS = [
-  { id: "f-1", title: "Fresh inventory added daily from verified dealers", url: "/cars", sourceName: "Welsh Motors" },
-  { id: "f-2", title: "Compare vehicle options before contacting a seller", url: "/compare", sourceName: "Welsh Motors" },
-  { id: "f-3", title: "Browse trusted dealership profiles across Kenya", url: "/dealers", sourceName: "Welsh Motors" },
-  { id: "f-4", title: "Get market updates and pricing signals in one place", url: "/portal/intelligence", sourceName: "Welsh Motors" },
+  { id: "f-1", title: "Fresh inventory added daily from verified dealers", url: "/cars", sourceName: "Welsh Motorhub" },
+  { id: "f-2", title: "Compare vehicle options before contacting a seller", url: "/compare", sourceName: "Welsh Motorhub" },
+  { id: "f-3", title: "Browse trusted dealership profiles across Kenya", url: "/dealers", sourceName: "Welsh Motorhub" },
+  { id: "f-4", title: "Get market updates and pricing signals in one place", url: "/portal/intelligence", sourceName: "Welsh Motorhub" },
 ];
 
 function normalizeNews(items = []) {

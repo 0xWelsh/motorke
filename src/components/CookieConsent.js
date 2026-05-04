@@ -4,12 +4,15 @@ import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { setCookie } from "@/lib/personalization";
 
+const COOKIE_CONSENT_KEY = "welsh-motorhub-cookies";
+const LEGACY_COOKIE_CONSENT_KEY = "welsh-motors-cookies";
+
 export default function CookieConsent() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     // Only show if not previously accepted or declined
-    if (!localStorage.getItem("welsh-motors-cookies")) {
+    if (!localStorage.getItem(COOKIE_CONSENT_KEY) && !localStorage.getItem(LEGACY_COOKIE_CONSENT_KEY)) {
       setShow(true);
     }
   }, []);
@@ -17,14 +20,14 @@ export default function CookieConsent() {
   if (!show) return null;
 
   const accept = () => {
-    localStorage.setItem("welsh-motors-cookies", "accepted");
+    localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
     setCookie("wm_cookie_consent", "accepted");
     setCookie("wm_personalization", "on");
     setShow(false);
   };
 
   const decline = () => {
-    localStorage.setItem("welsh-motors-cookies", "declined");
+    localStorage.setItem(COOKIE_CONSENT_KEY, "declined");
     setCookie("wm_cookie_consent", "declined");
     setCookie("wm_personalization", "off");
     setShow(false);

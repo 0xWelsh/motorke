@@ -56,7 +56,7 @@ export default function GlobalFooter() {
               <div className="relative h-8 w-32">
                 <Image
                   src="/logos/logo-dark.png"
-                  alt="Welsh Motors"
+                  alt="Welsh Motorhub"
                   fill
                   className="object-contain"
                 />
@@ -95,7 +95,7 @@ export default function GlobalFooter() {
         {/* Bottom Bar */}
         <div className="pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-[#718096] text-xs font-medium">
-            © {currentYear} Welsh Motors Platforms. All rights reserved.
+            © {currentYear} Welsh Motorhub Platforms. All rights reserved.
           </p>
           <div className="flex items-center gap-8 text-[#718096]">
             <span className="flex items-center gap-2 text-xs">

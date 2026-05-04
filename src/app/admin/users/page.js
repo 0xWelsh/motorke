@@ -16,7 +16,7 @@ import {
   ChevronRight
 } from "lucide-react";
 
-export const metadata = { title: "User Directory — Welsh Motors Standard Admin" };
+export const metadata = { title: "User Directory — Welsh Motorhub Standard Admin" };
 
 export default async function AdminUsersPage(props) {
   const searchParams = await props.searchParams;

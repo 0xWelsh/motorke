@@ -3,7 +3,12 @@
 // Save button + recently viewed tracker for car detail page
 
 import { useState, useEffect } from "react";
-import { RECENT_COOKIE_KEY, RECENT_STORAGE_KEY, writeJsonCookie } from "@/lib/personalization";
+import {
+  RECENT_COOKIE_KEY,
+  RECENT_STORAGE_KEY,
+  readRecentCarsFromStorage,
+  writeJsonCookie,
+} from "@/lib/personalization";
 
 // ── Save Button ───────────────────────────────────────────────
 export function SaveButton({ carId, initialSaved = false, isLoggedIn }) {
@@ -59,7 +64,7 @@ export function TrackRecentView({ car }) {
         viewedAt: new Date().toISOString(),
       };
 
-      const existing = JSON.parse(localStorage.getItem(RECENT_STORAGE_KEY) || "[]");
+      const existing = readRecentCarsFromStorage();
       // Remove if already there, add to front
       const filtered = existing.filter(c => c.id !== car.id);
       const updated  = [entry, ...filtered].slice(0, MAX);

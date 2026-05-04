@@ -1,6 +1,31 @@
 "use client";
 
-export const RECENT_STORAGE_KEY = "welsh-motors_recent";
+export const RECENT_STORAGE_KEY = "welsh-motorhub_recent";
+export const LEGACY_RECENT_STORAGE_KEY = "welsh-motors_recent";
+
+/** Migrate from legacy storage key once; keeps existing browsing history intact. */
+export function readRecentCarsFromStorage() {
+  if (typeof window === "undefined") return [];
+  try {
+    const curRaw = localStorage.getItem(RECENT_STORAGE_KEY);
+    if (curRaw) {
+      const cur = JSON.parse(curRaw);
+      if (Array.isArray(cur)) return cur;
+    }
+  } catch {
+    // Fall through to legacy read.
+  }
+  try {
+    const legRaw = localStorage.getItem(LEGACY_RECENT_STORAGE_KEY);
+    const legacy = legRaw ? JSON.parse(legRaw) : [];
+    if (Array.isArray(legacy) && legacy.length) {
+      localStorage.setItem(RECENT_STORAGE_KEY, JSON.stringify(legacy));
+    }
+    return Array.isArray(legacy) ? legacy : [];
+  } catch {
+    return [];
+  }
+}
 export const RECENT_COOKIE_KEY = "wm_recent";
 export const COMPARE_SETS_KEY = "wm_compare_sets";
 

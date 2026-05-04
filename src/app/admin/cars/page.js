@@ -21,7 +21,7 @@ import ExportButton from "@/components/admin/ExportButton";
 import EmptyState from "@/components/ui/EmptyState";
 import DataTableShell from "@/components/ui/DataTableShell";
 
-export const metadata = { title: "Cars Inventory — Welsh Motors Admin" };
+export const metadata = { title: "Cars Inventory — Welsh Motorhub Admin" };
 
 /** Build `/admin/cars` href with consistent query-string handling */
 function adminCarsHref(search, pageNum = 1) {
@@ -121,7 +121,7 @@ export default async function AdminCarsPage({ searchParams }) {
             <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
               <ExportButton
                 label="CSV"
-                filename="welsh-motors-inventory.csv"
+                filename="welsh-motorhub-inventory.csv"
                 data={cars.map((c) => ({
                   ID: c.id,
                   Make: c.make,

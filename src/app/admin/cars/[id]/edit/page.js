@@ -10,10 +10,13 @@ export const metadata = { title: "Edit Car — Admin" };
 
 export default async function AdminEditCarPage({ params }) {
   await requireAdmin();
+  const resolvedParams = await params;
+  const id = resolvedParams?.id;
+  if (!id || typeof id !== "string") notFound();
 
   const [car, dealers] = await Promise.all([
     db.car.findUnique({
-      where:   { id: params.id },
+      where:   { id },
       include: { images: { orderBy: { order: "asc" } } },
     }),
     db.dealer.findMany({ orderBy: { name: "asc" } }),

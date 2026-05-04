@@ -11,6 +11,7 @@
     "build:local": "bash ./scripts/build-local.sh",
     "start": "next start",
     "lint": "eslint \"src/app/api/auth/**/*.js\" \"src/lib/google-auth.js\" \"src/lib/validate-env.js\" \"jest.setup.js\"",
+    "lint:full": "eslint \"src/**/*.{js,jsx,ts,tsx}\" \"__tests__/**/*.js\"",
     "test": "jest",
     "db:migrate": "prisma migrate dev",
     "db:push:local": "bash ./scripts/build-local.sh --sync-only",
