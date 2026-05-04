@@ -22,6 +22,13 @@ import Image from "next/image";
 import Script from "next/script";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
+import {
+  buildCarDetailSpecRows,
+  buildCarSpecSummaryItems,
+  meaningfulFeatureList,
+  positiveNum,
+} from "@/lib/car-display";
+import { FaWhatsapp } from "react-icons/fa";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -39,10 +46,25 @@ export async function generateMetadata({ params }) {
   if (!car) return {};
 
   const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} for sale in Kenya`;
-  const description = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motorhub.`;
+  const priceStr = formatCarPrice(car);
+  const loc = car.location || car.dealer?.location || "Kenya";
+  const mileStr = car.mileage ? formatMileage(car.mileage) : null;
+  const dealerName = car.dealer?.name || "Verified dealer";
+  const description = [
+    `${priceStr}`,
+    mileStr,
+    loc,
+    dealerName,
+  ]
+    .filter(Boolean)
+    .join(" · ")
+    .concat(` · ${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} on Welsh Motorhub — browse more verified cars.`);
   const image = car.images[0]?.url || BRAND_MARK_SQUARE;
   const origin = getSiteOrigin();
   const url = `${origin}/cars/${id}`;
+  const ogImageUrl = image.startsWith?.("http")
+    ? image
+    : absoluteUrl(image.startsWith("/") ? image : `/${image}`);
 
   return {
     title,
@@ -54,14 +76,14 @@ export async function generateMetadata({ params }) {
       url,
       locale: "en_KE",
       siteName: "Welsh Motorhub",
-      images: [{ url: image.startsWith?.("http") ? image : absoluteUrl(image.startsWith("/") ? image : `/${image}`) }],
+      images: [{ url: ogImageUrl, alt: title }],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [image],
+      images: [ogImageUrl],
     },
   };
 }
@@ -380,7 +402,15 @@ export default async function CarDetailPage({ params }) {
                         <span className="text-[10px] font-extrabold text-[#111827] dark:text-white">{car.id.slice(-8).toUpperCase()}</span>
                     </div>
                     <div className="py-2 flex items-center justify-center">
-                        <ShareButtons title={title} price={formatCarPrice(car)} />
+                        <ShareButtons
+                          listingUrl={absoluteUrl(`/cars/${car.id}`)}
+                          browseUrl={absoluteUrl("/cars")}
+                          title={title}
+                          price={formatCarPrice(car)}
+                          dealerName={dealer.name}
+                          location={car.location || dealer.location || "Kenya"}
+                          mileageLabel={positiveNum(car.mileage) ? formatMileage(car.mileage) : null}
+                        />
                     </div>
                   </div>
                </div>
