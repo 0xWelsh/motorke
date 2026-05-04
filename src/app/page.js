@@ -1,22 +1,19 @@
 // src/app/page.js
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
-import { formatPrice, formatCarPrice } from "@/lib/utils";
 import Link from "next/link";
-import NewsRibbon from "@/components/NewsRibbon";
-import HeroReviews from "@/components/HeroReviews";
 import BrowsePanel from "@/components/BrowsePanel";
 import {
-  ArrowUpRight, ArrowRight, Sparkles, ChevronRight, Bookmark, MapPin, ShieldCheck, Star, BadgeCheck, Compass
+  ArrowUpRight, ArrowRight, MapPin, ShieldCheck, Star, BadgeCheck, Compass
 } from "lucide-react";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
-import HeroShowcase from "@/components/HeroShowcase";
 import HeroGridShowcase from "@/components/HeroGridShowcase";
 import CarCard from "@/components/CarCard";
 import TrackedLink from "@/components/TrackedLink";
 import { analyzePrice } from "@/lib/market";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
+import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 
 const HERO_BACKGROUND = "/images/backgrounds/pexels-mikebirdy-10123994.jpg";
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
@@ -74,9 +71,24 @@ function getRotationOffset(size) {
 const getCachedData = unstable_cache(
   async () => {
     const week = new Date(); week.setDate(week.getDate() - 7);
-    const [featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews] = await Promise.all([
+    const publicCarWhere = {
+      available: true,
+      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+    };
+    const partnerDealerWhere = { OR: [{ featured: true }, { verified: true }] };
+
+    const [
+      featured,
+      hotThisWeek,
+      newArrivals,
+      dealers,
+      highlightReviews,
+      liveListingCount,
+      partnerDealerCount,
+      newThisWeekCount,
+    ] = await Promise.all([
       db.car.findMany({
-        where: { available: true, featured: true },
+        where: { ...publicCarWhere, featured: true },
         include: {
           images: { where: { isPrimary: true }, take: 1 },
           dealer: { select: { id: true, name: true, location: true, verified: true, slug: true } },
@@ -85,7 +97,7 @@ const getCachedData = unstable_cache(
         orderBy: { createdAt: "desc" },
       }),
       db.car.findMany({
-        where: { available: true },
+        where: publicCarWhere,
         include: {
           images: { where: { isPrimary: true }, take: 1 },
           dealer: { select: { id: true, name: true, location: true, verified: true, slug: true } },
@@ -94,7 +106,7 @@ const getCachedData = unstable_cache(
         take: 100, // Get more to sort by views in memory
       }),
       db.car.findMany({
-        where: { available: true, createdAt: { gte: week } },
+        where: { ...publicCarWhere, createdAt: { gte: week } },
         include: {
           images: { where: { isPrimary: true }, take: 1 },
           dealer: { select: { id: true, name: true, location: true, slug: true } },
@@ -103,24 +115,13 @@ const getCachedData = unstable_cache(
         orderBy: { createdAt: "desc" },
       }),
       db.dealer.findMany({
-        where: { OR: [{ featured: true }, { verified: true }] },
+        where: partnerDealerWhere,
         include: {
           _count: { select: { cars: { where: { available: true } } } },
           users: { select: { avatarUrl: true }, take: 1 },
         },
         take: 8,
         orderBy: [{ featured: "desc" }, { verified: "desc" }, { createdAt: "desc" }],
-      }),
-      db.article.findMany({
-        orderBy: { publishedAt: "desc" },
-        take: 8,
-        select: {
-          id: true,
-          title: true,
-          url: true,
-          sourceName: true,
-          publishedAt: true,
-        },
       }),
       db.dealerReview.findMany({
         where: { comment: { not: null }, rating: { gte: 4 } },
@@ -131,10 +132,22 @@ const getCachedData = unstable_cache(
         take: 10,
         orderBy: { createdAt: "desc" },
       }),
+      db.car.count({ where: publicCarWhere }),
+      db.dealer.count({ where: partnerDealerWhere }),
+      db.car.count({ where: { ...publicCarWhere, createdAt: { gte: week } } }),
     ]);
-    return { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews };
+    return {
+      featured,
+      hotThisWeek,
+      newArrivals,
+      dealers,
+      highlightReviews,
+      liveListingCount,
+      partnerDealerCount,
+      newThisWeekCount,
+    };
   },
-  ["homepage-minimal-v5"],
+  ["homepage-minimal-v6"],
   { revalidate: 900, tags: ["homepage"] }
 );
 
@@ -185,12 +198,16 @@ function homeStructuredData(origin) {
 }
 
 export default async function HomePage() {
-  const { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews } = await getCachedData();
-
-  const showcaseItems = [
-    ...(featured || hotThisWeek || newArrivals || []).slice(0, 6).map(c => ({ ...c, type: 'car' })),
-    ...(highlightReviews || []).slice(0, 6).map(r => ({ ...r, type: 'review' }))
-  ].sort(() => Math.random() - 0.5);
+  const {
+    featured,
+    hotThisWeek,
+    newArrivals,
+    dealers,
+    highlightReviews,
+    liveListingCount,
+    partnerDealerCount,
+    newThisWeekCount,
+  } = await getCachedData();
 
   // Build hot deals with blended scoring: demand + freshness + market value + dealer trust.
   const hotCandidates = (hotThisWeek || [])
@@ -225,8 +242,7 @@ export default async function HomePage() {
   const spotlightPool = (hotEnhanced.length > 0 ? hotEnhanced : spotlightEnhanced).slice(0, 12);
   const spotlightRotated = rotateList(spotlightPool, getRotationOffset(spotlightPool.length));
   const heroCars = spotlightRotated.slice(0, 2);
-  const spotlightCards = spotlightRotated.slice(0, 2);
-  const heroPrimary = heroCars?.[0] || spotlightEnhanced?.[0] || null;
+  const spotlightShowcaseCars = spotlightRotated.slice(0, 3);
 
   const origin = getSiteOrigin();
 
@@ -240,35 +256,62 @@ export default async function HomePage() {
         }}
       />
       {/* Dynamic Hero Section */}
-      <section className="relative pt-20 pb-12 md:pt-24 md:pb-16 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
-        <div className="container mx-auto px-6 max-w-7xl relative z-10">
-          
-          {/* Page Header - Full Width */}
-          <div className="mb-10 md:mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center lg:text-left">
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-[#111827] dark:text-white leading-[0.95] tracking-tight mb-6">
+      <section className="relative border-b border-gray-100 pt-16 pb-10 dark:border-zinc-900 md:pt-20 md:pb-12 overflow-hidden">
+        <div className="container relative z-10 mx-auto max-w-7xl px-6">
+          <div className="mb-6 animate-in fade-in slide-in-from-bottom-8 text-center duration-700 md:mb-8 lg:text-left">
+            <h1 className="mb-3 text-3xl font-bold leading-[1.05] tracking-tight text-[#111827] sm:text-5xl md:text-6xl dark:text-white">
               Buy cars with<br />
               <span className="editorial-heading text-[#38A169]">dealer-level clarity.</span>
             </h1>
-
-            <p className="text-lg md:text-xl text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl font-medium mx-auto lg:mx-0">
-              Find verified Kenyan inventory with transparent ownership costs in minutes.
-              Compare up to three cars, inspect real running-cost and road-readiness signals, then contact real dealers directly.
+            <p className="mx-auto max-w-2xl text-[15px] font-medium leading-relaxed text-[#2D3748] sm:text-base md:text-lg dark:text-[#b9c5e0] lg:mx-0">
+              Verified inventory from Kenyan dealers. Compare up to three cars with specs and cost signals, then contact the dealer directly.
             </p>
           </div>
 
-          {/* Side-by-Side Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:items-start animate-in fade-in duration-1000 delay-200">
-            <div className="lg:col-span-7 xl:col-span-7 text-center lg:text-left">
+          <div className="mb-5 grid grid-cols-3 gap-2 sm:gap-2.5 lg:mb-6">
+            {[
+              {
+                label: "Partner dealers",
+                value: partnerDealerCount,
+                hint: "Featured or verified on the network",
+              },
+              {
+                label: "Live listings",
+                value: liveListingCount,
+                hint: PUBLIC_ONLY_VERIFIED_DEALERS ? "Available cars from verified dealers" : "Available cars on the marketplace",
+              },
+              {
+                label: "New this week",
+                value: newThisWeekCount,
+                hint: "Listed in the last 7 days",
+              },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="border border-slate-200 bg-white/90 px-2.5 py-2.5 dark:border-slate-800 dark:bg-[#111111]/80 sm:px-3 sm:py-3"
+                style={{ borderRadius: "var(--radius)" }}
+                title={item.hint}
+              >
+                <p className="text-base font-bold tabular-nums text-[#111827] sm:text-lg dark:text-white">{item.value}</p>
+                <p className="mt-0.5 text-[9px] font-bold uppercase leading-tight tracking-widest text-slate-500 dark:text-slate-500">
+                  {item.label}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid animate-in fade-in grid-cols-1 gap-8 delay-150 duration-700 lg:grid-cols-12 lg:items-start lg:gap-8">
+            <div className="text-center lg:col-span-7 lg:text-left xl:col-span-7">
               <div className="w-full text-left">
                 <BrowsePanel />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-10 sm:mt-12 max-w-md sm:max-w-xl mx-auto lg:mx-0">
+              <div className="mx-auto mt-6 grid max-w-md grid-cols-1 gap-2.5 sm:mt-7 sm:max-w-xl sm:grid-cols-2 sm:gap-3 lg:mx-0">
                 <TrackedLink
                   href="/cars"
                   eventName="homepage_explore_inventory_click"
                   eventPayload={{ area: "hero" }}
-                  className="h-12 w-full inline-flex items-center justify-center bg-[#38A169] hover:bg-[#2F855A] text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
+                  className="inline-flex h-11 w-full items-center justify-center bg-[#38A169] px-5 text-xs font-bold uppercase tracking-widest text-white transition-all hover:bg-[#2F855A] active:scale-95 sm:h-12"
                   style={{ borderRadius: 'var(--radius)' }}
                 >
                   Explore Inventory
@@ -277,43 +320,35 @@ export default async function HomePage() {
                   href="/compare"
                   eventName="homepage_compare_cars_click"
                   eventPayload={{ area: "hero" }}
-                  className="h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#111827] dark:hover:border-white"
+                  className="inline-flex h-11 w-full items-center justify-center border border-slate-200 bg-white px-5 text-xs font-bold uppercase tracking-widest text-[#111827] transition-all hover:border-[#111827] dark:border-slate-800 dark:bg-[#111111] dark:text-white dark:hover:border-white sm:h-12"
                   style={{ borderRadius: 'var(--radius)' }}
                 >
                   Compare Cars
                 </TrackedLink>
               </div>
 
-              <div className="mt-8 sm:mt-9 p-4 sm:p-5 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3 text-center lg:text-left">Quick compare</p>
-                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4 text-center lg:text-left">
-                  Side-by-side specs, annual TCO, and road readiness in one clean sheet.
+              <div
+                className="mt-4 border border-slate-200 bg-white/90 p-3 dark:border-slate-800 dark:bg-[#111111]/75 sm:p-4"
+                style={{ borderRadius: "var(--radius)" }}
+              >
+                <p className="mb-1.5 text-center text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 lg:text-left">
+                  Quick compare
+                </p>
+                <p className="mb-3 text-center text-sm leading-snug text-slate-700 dark:text-slate-300 lg:text-left">
+                  Specs, annual TCO, and road-readiness side by side.
                 </p>
                 <TrackedLink
                   href="/compare"
                   eventName="homepage_quick_compare_click"
                   eventPayload={{ area: "hero_card" }}
-                  className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors justify-center lg:justify-start w-full lg:w-auto"
+                  className="inline-flex w-full items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] transition-colors hover:text-[#38A169] dark:text-white lg:inline-flex lg:w-auto lg:justify-start"
                 >
-                  Start comparing <ArrowRight className="w-4 h-4" />
+                  Start comparing <ArrowRight className="h-4 w-4" />
                 </TrackedLink>
-              </div>
-
-              <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-6 sm:mt-8">
-                {[
-                  { label: "Verified dealers", value: `${dealers.length}+` },
-                  { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
-                  { label: "Updated", value: "Daily" },
-                ].map((item) => (
-                  <div key={item.label} className="p-3 sm:p-4 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
-                    <p className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white">{item.value}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mt-1">{item.label}</p>
-                  </div>
-                ))}
               </div>
             </div>
 
-            <div className="hidden lg:block lg:col-span-5 xl:col-span-5 lg:pl-4">
+            <div className="hidden lg:block lg:col-span-5 xl:col-span-5 lg:pl-2">
               <HeroGridShowcase 
                 cars={heroCars.length >= 2 ? heroCars : spotlightEnhanced.slice(0, 2)} 
                 reviews={highlightReviews} 
@@ -341,10 +376,12 @@ export default async function HomePage() {
       {hotEnhanced.length > 0 && (
         <section className="py-16 sm:py-24 lg:py-28">
           <div className="container mx-auto px-6 max-w-7xl">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div className="mb-12 flex flex-col justify-between gap-5 md:mb-14 md:flex-row md:items-end">
               <div className="max-w-xl">
-                <h2 className="text-4xl sm:text-6xl font-normal editorial-heading text-[#111827] dark:text-white mb-4">Spotlight</h2>
-                <p className="text-[#718096] dark:text-slate-400 text-lg font-medium">Verified listings currently receiving the most interest from our network.</p>
+                <h2 className="mb-3 text-4xl font-normal editorial-heading text-[#111827] dark:text-white sm:text-5xl md:text-6xl">Spotlight</h2>
+                <p className="text-base font-medium text-[#718096] dark:text-slate-400">
+                  Listings with real buyer interest—ranked from recent views, freshness, and how the ask sits versus similar stock.
+                </p>
               </div>
               <TrackedLink
                 href="/cars?sort=popular"
@@ -356,27 +393,35 @@ export default async function HomePage() {
               </TrackedLink>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {/* Promo Card: Top Left */}
-              <div className="flex flex-col h-full bg-[#fbfcfe] dark:bg-zinc-900 border border-black dark:border-white p-12 text-center" style={{ borderRadius: 'var(--radius)' }}>
-                <div className="flex justify-center gap-1.5 mb-10 text-slate-300 dark:text-slate-700">
-                  {[...Array(5)].map((_, i) => <Star key={i} size={18} />)}
+            <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-6 lg:items-stretch">
+              <div
+                className="flex h-full flex-col border border-black bg-[#fbfcfe] p-7 text-center dark:border-white dark:bg-zinc-900 lg:col-span-3 lg:p-8 lg:text-left"
+                style={{ borderRadius: 'var(--radius)' }}
+              >
+                <div className="mb-5 flex justify-center gap-1.5 text-slate-300 dark:text-slate-700 lg:justify-start">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={16} />
+                  ))}
                 </div>
-                <h3 className="text-2xl font-serif font-medium text-[#111827] dark:text-white mb-6">Explore our premium collection</h3>
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400 leading-relaxed max-w-[280px] mx-auto mb-16">
-                  Discover quality-verified vehicles from the most reputable dealerships across Kenya. Your direct bridge to premium local inventory with uncompromising transparency.
+                <h3 className="mb-3 font-serif text-xl font-medium text-[#111827] dark:text-white sm:text-2xl">
+                  Browse the full showroom
+                </h3>
+                <p className="mx-auto mb-6 max-w-[320px] text-sm font-medium leading-relaxed text-slate-500 dark:text-slate-400 lg:mx-0">
+                  Every listing is uploaded by a real dealership. Filter by price, body type, location, and more—then open any car for full specs and dealer contact.
                 </p>
                 <Link
                   href="/cars"
-                  className="mt-auto w-full bg-[#111827] dark:!bg-white text-white dark:!text-[#111827] py-4 text-[11px] font-black uppercase tracking-widest hover:scale-[0.98] transition-transform"
+                  className="mt-auto w-full bg-[#111827] py-3.5 text-[11px] font-black uppercase tracking-widest text-white transition-transform hover:scale-[0.99] dark:!bg-white dark:!text-[#111827]"
                   style={{ borderRadius: '4px' }}
                 >
-                  View All Vehicles
+                  View all vehicles
                 </Link>
               </div>
 
-              {spotlightCards.map((car) => (
-                <CarCard key={car.id} car={car} />
+              {spotlightShowcaseCars.map((car) => (
+                <div key={car.id} className="min-w-0 lg:col-span-1">
+                  <CarCard car={car} />
+                </div>
               ))}
             </div>
           </div>
