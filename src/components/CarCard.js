@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Info, MapPin, ImageOff, Sparkles, ArrowUpRight } from "lucide-react";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
 import { FUEL_LABELS } from "@/lib/constants";
+import { buildCarSpecSummaryItems, meaningfulFeatureList, positiveNum } from "@/lib/car-display";
 import { CompareButton } from "./CompareSelector";
 import FeatureMarquee from "./FeatureMarquee";
 
@@ -31,22 +32,11 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
     model: `${car.make} ${car.model}`,
   };
 
-  // Build the high-density spec string
-  const specItems = [
-    car.horsepower ? `${car.horsepower} HP` : null,
-    car.torque ? `${car.torque} Nm` : null,
-    car.engineCC ? `${(car.engineCC / 1000).toFixed(1)}L` : null,
-    car.cylinders ? `V${car.cylinders}` : null,
-    car.turbo ? "Twin Turbo" : null,
-    car.transmission ? (car.transmission === "AUTOMATIC" ? "AT" : "MT") : null,
-    car.drivetrain || null,
-    car.fuelType ? (car.fuelType.charAt(0) + car.fuelType.slice(1).toLowerCase()) : null,
-    // Add some common "flavor" specs if available
-    car.sunroof ? "Panoramic glass roof" : null,
-    car.description?.toLowerCase().includes("leather") ? "Leather interior" : null,
-  ].filter(Boolean);
+  const specItems = buildCarSpecSummaryItems(car);
+  const specString = specItems.join(" • ");
+  const featureChips = meaningfulFeatureList(car.features);
 
-  const specString = specItems.join(" • ");  return (
+  return (
     <article className="group flex flex-col bg-white dark:bg-[#0a0a0a] border-2 border-slate-100 dark:border-zinc-900 transition-all hover:shadow-2xl overflow-hidden" style={{ borderRadius: '4px' }}>
       {/* Image Container */}
       <Link href={`/cars/${car.id}`} className="relative aspect-[16/11] bg-slate-50 dark:bg-zinc-900 overflow-hidden block">
@@ -113,8 +103,8 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
           {/* Secondary Badges Row */}
           <div className="min-h-[36px] flex flex-wrap gap-2 content-start">
             {[
-              car.steering && (car.steering === "RHD" ? "RHD" : "LHD"),
-              car.engineCC && `${car.engineCC} CC`,
+              car.steering && (car.steering === "RHD" ? "RHD" : car.steering === "LHD" ? "LHD" : null),
+              positiveNum(car.engineCC) ? `${Number(car.engineCC)} CC` : null,
               car.fuelType && (FUEL_LABELS[car.fuelType] || car.fuelType.toUpperCase()),
             ].filter(Boolean).map((badge, idx) => (
               <span key={idx} className="bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-none border border-slate-100 dark:border-zinc-800 whitespace-nowrap">
@@ -124,10 +114,10 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
           </div>
 
           {/* Listing features as horizontal scroll chips (card width) */}
-          {Array.isArray(car.features) && car.features.length > 0 && (
+          {featureChips.length > 0 && (
             <div className="pt-1 -mx-1">
               <p className="text-[9px] font-black uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500 mb-2">Features</p>
-              <FeatureMarquee features={car.features} variant="card" />
+              <FeatureMarquee features={featureChips} variant="card" />
             </div>
           )}
         </div>

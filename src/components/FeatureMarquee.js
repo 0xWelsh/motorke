@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { meaningfulFeatureList } from "@/lib/car-display";
 
 const CHIP_CARD =
   "shrink-0 max-w-[200px] truncate inline-flex items-center bg-[#f0fdf4] dark:bg-emerald-950/40 text-[#166534] dark:text-emerald-200/90 text-[10px] font-bold px-2.5 py-1.5 border border-[#bbf7d0] dark:border-emerald-900/60 whitespace-nowrap";
@@ -33,9 +34,7 @@ export default function FeatureMarquee({ features, variant = "card" }) {
   const [duration, setDuration] = useState(24);
 
   const chipClass = variant === "detail" ? CHIP_DETAIL : CHIP_CARD;
-  const list = (Array.isArray(features) ? features : [])
-    .map((s) => String(s ?? "").trim())
-    .filter(Boolean);
+  const list = meaningfulFeatureList(features);
   const listKey = list.join("\u0001");
 
   const remeasure = useCallback(() => {
