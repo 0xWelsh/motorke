@@ -16,7 +16,7 @@ export default function CarsLoading() {
 
       {/* Card grid skeleton */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        {Array.from({ length: 12 }).map((_, i) => (
+        {Array.from({ length: 18 }).map((_, i) => (
           <div key={i} className="bg-[#1a1a1a] border border-white/10 rounded-2xl overflow-hidden">
             <div className="aspect-[16/10] bg-white/5 animate-pulse" />
             <div className="p-4 space-y-2">
