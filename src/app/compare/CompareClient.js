@@ -386,7 +386,17 @@ export default function CompareClient({ initialCars }) {
     {
       name: "Safety & Comfort",
       specs: [
-        { id: "airbags", label: "Airbags", tags: ["all", "family", "longtrip"], pick: (c) => ({ value: c?.airbags != null ? c.airbags : "0", raw: c?.airbags ?? 0 }), rank: "max" },
+        {
+          id: "airbags",
+          label: "Airbags",
+          tags: ["all", "family", "longtrip"],
+          pick: (c) => {
+            const n = Number(c?.airbags);
+            const ok = c?.airbags != null && c?.airbags !== "" && Number.isFinite(n) && n > 0;
+            return { value: ok ? String(n) : "—", raw: ok ? n : null };
+          },
+          rank: "max",
+        },
         { id: "seats", label: "Seats", tags: ["all", "family", "longtrip"], pick: (c) => ({ value: toDisplay(c?.seats), raw: c?.seats }), rank: "max" },
         { id: "sunroof", label: "Sunroof", tags: ["all", "family"], pick: (c) => ({ value: yesNo(c?.sunroof), raw: c?.sunroof }), rank: "booltrue" },
         { id: "doors", label: "Doors", tags: ["all", "city", "family"], pick: (c) => ({ value: toDisplay(c?.doors), raw: c?.doors }), rank: "max" },

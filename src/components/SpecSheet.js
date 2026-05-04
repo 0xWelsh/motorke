@@ -1,24 +1,11 @@
-import { formatPrice, formatCarPrice, formatMileage, BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/utils";
+import { formatCarPrice } from "@/lib/utils";
+import { buildCarDetailSpecRows, meaningfulFeatureList } from "@/lib/car-display";
 
 export default function SpecSheet({ car, dealer }) {
   const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const primaryImg = car.images.find((i) => i.isPrimary) || car.images[0];
-
-  const specs = [
-    { label: "Year",          value: car.year },
-    { label: "Mileage",       value: formatMileage(car.mileage) },
-    { label: "Fuel",          value: FUEL_LABELS[car.fuelType] },
-    { label: "Transmission",  value: TRANSMISSION_LABELS[car.transmission] },
-    { label: "Drivetrain",    value: DRIVETRAIN_LABELS[car.drivetrain] || "N/A" },
-    { label: "Steering",      value: STEERING_LABELS[car.steering] || "N/A" },
-    { label: "Body Type",     value: BODY_TYPE_LABELS[car.bodyType] },
-    { label: "Engine",        value: car.engineCC ? `${car.engineCC}cc` : "N/A" },
-    { label: "Condition",     value: car.condition },
-    { label: "Registration",  value: car.registered === false ? "Not registered" : "Registered (Kenya)" },
-    { label: "Imported From", value: car.importCountry || "N/A" },
-    { label: "Color",         value: car.color || "N/A" },
-    { label: "Seats",         value: car.seats || "N/A" },
-  ];
+  const specs = buildCarDetailSpecRows(car);
+  const printFeatures = meaningfulFeatureList(car.features).slice(0, 16);
 
   return (
     <div id="spec-sheet" className="hidden print:block bg-white text-black p-8 font-sans min-h-[297mm] w-[210mm] mx-auto border border-gray-100">
@@ -83,11 +70,11 @@ export default function SpecSheet({ car, dealer }) {
       </div>
 
       {/* Features */}
-      {car.features?.length > 0 && (
+      {printFeatures.length > 0 && (
         <div className="mb-10">
           <h3 className="text-xs font-bold uppercase tracking-widest text-orange-600 mb-4">Included Features</h3>
           <div className="grid grid-cols-4 gap-2">
-            {car.features.slice(0, 16).map((f) => (
+            {printFeatures.map((f) => (
               <div key={f} className="text-[11px] font-bold bg-gray-50 border border-gray-100 px-3 py-2 text-gray-700">
                 • {f}
               </div>

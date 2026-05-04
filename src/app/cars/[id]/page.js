@@ -4,8 +4,7 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { unstable_cache } from "next/cache";
-import { formatPrice, formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
-import { BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, DRIVETRAIN_LABELS } from "@/lib/constants";
+import { formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
 import { MessageCircle, ChevronRight, MapPin, Wallet, ShieldCheck, Phone, Star } from "lucide-react";
 import EnquiryForm from "@/components/EnquiryForm";
 import ImageGallery from "@/components/ImageGallery";
@@ -200,20 +199,11 @@ export default async function CarDetailPage({ params }) {
 
   const title    = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const titleWithoutYear = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
-  const yearLabel = car.year;
   const primaryImg = car.images.find((i) => i.isPrimary) || car.images[0];
-  const dealerBrandImage = dealer.logoUrl || dealer.users?.[0]?.avatarUrl || null;
-  const specItems = [
-    car.horsepower ? `${car.horsepower} HP` : null,
-    car.torque ? `${car.torque} Nm` : null,
-    car.engineCC ? `${(car.engineCC / 1000).toFixed(1)}L V${car.cylinders || 8} Twin Turbo` : null,
-    car.transmission ? (car.transmission === "AUTOMATIC" ? "AT" : "MT") : null,
-    car.drivetrain || null,
-    car.fuelType ? (FUEL_LABELS[car.fuelType] || car.fuelType) : null,
-    car.sunroof ? "Panoramic glass roof" : null,
-    car.description?.toLowerCase().includes("leather") ? "Leather interior" : null,
-  ].filter(Boolean);
+  const specItems = buildCarSpecSummaryItems(car);
   const specString = specItems.join(" • ");
+  const detailSpecs = buildCarDetailSpecRows(car);
+  const featureList = meaningfulFeatureList(car.features);
 
   const compareCar = {
     id: car.id,
@@ -223,40 +213,6 @@ export default async function CarDetailPage({ params }) {
     price: car.price,
     image: primaryImg?.url,
   };
-
-  const specs = [
-    { label: "Year",          value: car.year },
-    { label: "Mileage",       value: formatMileage(car.mileage) },
-    { label: "Fuel",          value: FUEL_LABELS[car.fuelType] || "N/A" },
-    { label: "Transmission",  value: TRANSMISSION_LABELS[car.transmission] || "N/A" },
-    { label: "Drivetrain",    value: DRIVETRAIN_LABELS[car.drivetrain] || "N/A" },
-    { label: "Steering",      value: STEERING_LABELS[car.steering] || "N/A" },
-    { label: "Body type",     value: BODY_TYPE_LABELS[car.bodyType] || "N/A" },
-    { label: "Engine size",   value: car.engineCC ? `${car.engineCC}cc` : "N/A" },
-    { label: "Cylinders",     value: car.cylinders || "N/A" },
-    { label: "Horsepower",    value: car.horsepower ? `${car.horsepower} hp` : "N/A" },
-    { label: "Torque",        value: car.torque ? `${car.torque} Nm` : "N/A" },
-    { label: "Turbocharged",  value: car.turbo ? "Yes" : "No" },
-    { label: "Seats",         value: car.seats || "N/A" },
-    { label: "Airbags",       value: car.airbags || "0" },
-    { label: "Sunroof",       value: car.sunroof ? "Yes" : "No" },
-    { label: "Color",         value: car.color || "N/A" },
-    { label: "Condition",     value: car.condition },
-    { label: "Registration",  value: car.registered === false ? "Not registered" : "Registered (Kenya)" },
-    { label: "Import country",value: car.importCountry || "N/A" },
-  ];
-
-  const descriptionBullets = (car.description || "")
-    .split(/\r?\n|[.!?]+/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 8)
-    .slice(0, 4);
-
-  const visibleSpecs = specs.filter((entry) => entry.value && entry.value !== "N/A").slice(0, 14);
-  const specRows = [];
-  for (let i = 0; i < visibleSpecs.length; i += 2) {
-    specRows.push([visibleSpecs[i], visibleSpecs[i + 1] || null]);
-  }
 
   const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motorhub.`;
 
@@ -299,7 +255,7 @@ export default async function CarDetailPage({ params }) {
   };
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
       <Script
         id="car-json-ld"
         type="application/ld+json"
@@ -354,26 +310,31 @@ export default async function CarDetailPage({ params }) {
                 <div className="pt-8 border-t border-slate-100 dark:border-zinc-900 mt-8">
                    <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-6">Description</h2>
                    <div className="text-[15px] text-[#4A5568] dark:text-slate-400 leading-[1.8] font-medium">
-                      {specString && <span className="text-[#111827] dark:text-white font-bold">{specString}</span>}
-                      {specString && " • "}
-                      {car.description || "Representing excellence in engineering, this unit undergoes a rigorous 150-point inspection before listing. Our network ensures every vehicle meets stringent quality and performance benchmarks."}
+                      {specString ? (
+                        <>
+                          <span className="text-[#111827] dark:text-white font-bold">{specString}</span>
+                          {(car.description || "").trim() ? " • " : null}
+                        </>
+                      ) : null}
+                      {car.description?.trim() ||
+                        "Representing excellence in engineering, this unit undergoes a rigorous 150-point inspection before listing. Our network ensures every vehicle meets stringent quality and performance benchmarks."}
                    </div>
                 </div>
 
-                {Array.isArray(car.features) && car.features.length > 0 && (
+                {featureList.length > 0 && (
                   <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
                     <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-4">Features</h2>
-                    <FeatureMarquee features={car.features} variant="detail" />
+                    <FeatureMarquee features={featureList} variant="detail" />
                   </div>
                 )}
 
                 <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
                    <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-6">Vehicle Details</h2>
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-0 text-[13px]">
-                      {specs.map((item, idx) => (
-                        <div key={item.label} className={`flex justify-between items-center py-4 border-b border-slate-50 dark:border-zinc-900/50 ${idx < 2 ? 'border-t' : ''}`}>
-                           <span className="font-bold text-slate-400 dark:text-slate-600">{item.label}</span>
-                           <span className="font-extrabold text-[#111827] dark:text-white">{item.value || "N/A"}</span>
+                      {detailSpecs.map((item, idx) => (
+                        <div key={item.label} className={`flex justify-between items-center gap-4 py-4 border-b border-slate-50 dark:border-zinc-900/50 ${idx < 2 ? "border-t" : ""}`}>
+                           <span className="font-bold text-slate-400 dark:text-slate-600 shrink-0">{item.label}</span>
+                           <span className="font-extrabold text-[#111827] dark:text-white text-right tabular-nums">{item.value}</span>
                         </div>
                       ))}
                    </div>
@@ -487,17 +448,32 @@ export default async function CarDetailPage({ params }) {
         </div>
       </div>
 
-      {/* Persistent Mobile Bottom Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-[#EDF2F7] px-6 py-5 flex items-center gap-4">
-         <div className="flex-1">
-            <p className="text-[10px] font-bold text-[#38A169] uppercase tracking-widest mb-1">List Price</p>
-            <p className="text-lg font-bold text-[#1A202C]">{formatCarPrice(car)}</p>
-         </div>
-         {dealer.whatsapp && (
-           <a href={whatsappLink(dealer.whatsapp, title, dealer.name)} className="bg-[#38A169] text-white px-6 py-4 text-xs font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
-              WhatsApp
-           </a>
-         )}
+      <div className="lg:hidden fixed inset-x-0 bottom-0 z-50 pointer-events-none px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2">
+        <div className="pointer-events-auto mx-auto flex max-w-lg items-stretch gap-3 rounded-2xl border border-slate-200/90 bg-white/95 p-3 shadow-[0_8px_40px_rgba(15,23,42,0.14)] backdrop-blur-xl ring-1 ring-black/5 dark:border-zinc-700 dark:bg-zinc-950/95 dark:ring-white/10">
+          <div className="flex min-w-0 flex-1 flex-col justify-center pl-1">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700/90 dark:text-emerald-400">List price</p>
+            <p className="truncate text-lg font-black tracking-tight text-slate-900 dark:text-white">{formatCarPrice(car)}</p>
+          </div>
+          {dealer.whatsapp ? (
+            <a
+              href={whatsappLink(dealer.whatsapp, title, dealer.name)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-5 py-3.5 text-[13px] font-bold text-white shadow-sm transition hover:bg-[#20bd5a] active:scale-[0.98]"
+            >
+              <FaWhatsapp className="h-6 w-6 shrink-0" aria-hidden />
+              <span className="pr-0.5">WhatsApp</span>
+            </a>
+          ) : (
+            <Link
+              href={`tel:${String(dealer.phone || "").replace(/\s/g, "")}`}
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3.5 text-[13px] font-bold text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.98]"
+            >
+              <Phone className="h-5 w-5 shrink-0" aria-hidden />
+              Call
+            </Link>
+          )}
+        </div>
       </div>
 
       <SpecSheet car={car} dealer={dealer} />
