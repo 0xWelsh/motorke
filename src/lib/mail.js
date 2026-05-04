@@ -9,6 +9,7 @@ import {
   getMailFromNoReply,
   getMailFromAlerts,
   getMailFromMarketing,
+  getMailFromHello,
 } from "@/lib/site-contact";
 
 const SMTP_USER = process.env.SMTP_USER;
@@ -56,6 +57,141 @@ export async function createEmailOTP(email) {
   });
 
   return otp;
+}
+
+/**
+ * Sent once after email is verified (password signup) or after a brand-new Google account.
+ * From hello@ by default — must be an allowed sender for your SMTP mailbox (Zoho).
+ */
+export async function sendWelcomeEmail({ email, name, role }) {
+  const escapeHtml = (value) =>
+    (value || "")
+      .toString()
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+
+  const rawFirst = (name || "there").toString().split(" ")[0];
+  const firstName = escapeHtml(rawFirst);
+  const siteUrl = getSiteOrigin();
+  const support = getSupportEmail();
+  const isDealer = role === "DEALER";
+
+  const plainText = [
+    `Hi ${rawFirst},`,
+    "",
+    "Welcome to Welsh Motorhub — Kenya's marketplace for verified dealer inventory.",
+    "",
+    isDealer
+      ? "Your dealer portal is ready. Add listings, respond to leads, and keep stock up to date."
+      : "Browse live listings, compare up to three cars side by side, save favourites, and contact dealers directly.",
+    "",
+    `Start here: ${siteUrl}/cars`,
+    isDealer ? `Dealer portal: ${siteUrl}/portal` : `Compare: ${siteUrl}/compare`,
+    "",
+    `Questions? ${support}`,
+    "",
+    `Welsh Motorhub · ${siteUrl.replace(/^https?:\/\//, "")}`,
+  ].join("\n");
+
+  const ctaBrowse = `${siteUrl}/cars`;
+  const ctaCompare = `${siteUrl}/compare`;
+  const ctaPortal = `${siteUrl}/portal`;
+  const ctaSaved = `${siteUrl}/saved`;
+
+  const htmlContent = `
+  <div style="margin:0;padding:0;background-color:#f1f5f9;">
+    <span style="display:none!important;visibility:hidden;opacity:0;color:transparent;height:0;width:0;">Verified cars, transparent specs, dealer contact in one place.</span>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color:#f1f5f9;padding:24px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;">
+            <tr>
+              <td style="background:#111827;padding:28px 28px 22px;text-align:left;">
+                <p style="margin:0;font-size:11px;font-weight:800;letter-spacing:0.22em;text-transform:uppercase;color:#6ee7b7;">Welsh Motorhub</p>
+                <p style="margin:10px 0 0;font-size:22px;font-weight:800;letter-spacing:-0.03em;line-height:1.1;color:#ffffff;">Welcome aboard</p>
+                <div style="margin-top:14px;height:3px;width:48px;background:#38A169;border-radius:2px;"></div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:28px 28px 8px;">
+                <p style="margin:0 0 14px;font-size:17px;font-weight:700;color:#0f172a;">Hi ${firstName},</p>
+                <p style="margin:0 0 16px;font-size:15px;line-height:1.65;color:#475569;">
+                  Thanks for joining <strong style="color:#0f172a;">Welsh Motorhub</strong>. We connect you with <strong>real dealership inventory</strong> in Kenya — clear listings, side-by-side comparison, and direct contact with the seller.
+                </p>
+                <p style="margin:0 0 22px;font-size:15px;line-height:1.65;color:#475569;">
+                  ${
+                    isDealer
+                      ? "Your <strong>dealer portal</strong> is where you publish cars, manage photos, and respond to buyer enquiries. Verified status may apply before you appear in public search — we will guide you if anything is pending."
+                      : "Start with <strong>Browse inventory</strong> to filter by budget and location, use <strong>Compare</strong> when you are shortlisting, and <strong>Save</strong> cars you want to revisit."
+                  }
+                </p>
+                <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:22px;">
+                  <tr>
+                    <td style="padding:0 0 10px;">
+                      <a href="${ctaBrowse}" style="display:block;text-align:center;background:#38A169;color:#ffffff;text-decoration:none;padding:14px 18px;border-radius:6px;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;">Browse inventory</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:0;">
+                      <a href="${isDealer ? ctaPortal : ctaCompare}" style="display:block;text-align:center;background:#ffffff;color:#111827;text-decoration:none;padding:14px 18px;border-radius:6px;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;border:2px solid #111827;">${isDealer ? "Open dealer portal" : "Compare cars"}</a>
+                    </td>
+                  </tr>
+                </table>
+                ${
+                  isDealer
+                    ? ""
+                    : `<p style="margin:0 0 20px;font-size:13px;line-height:1.55;color:#64748b;">
+                  <a href="${ctaSaved}" style="color:#0f172a;font-weight:700;text-decoration:underline;">Saved cars</a> sync when you are signed in — useful when you are narrowing down options.
+                </p>`
+                }
+                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:16px 18px;margin-bottom:8px;">
+                  <p style="margin:0 0 6px;font-size:11px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:#64748b;">Need help?</p>
+                  <p style="margin:0;font-size:14px;line-height:1.55;color:#334155;">
+                    Reply to this email or write to <a href="mailto:${support}" style="color:#166534;font-weight:700;">${support}</a> — we read every message.
+                  </p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 28px 28px;">
+                ${buildEmailFooter()}
+              </td>
+            </tr>
+          </table>
+          <p style="margin:16px 0 0;font-size:11px;color:#94a3b8;text-align:center;max-width:520px;line-height:1.5;">
+            You received this because you created a Welsh Motorhub account. If that was not you, contact ${support}.
+          </p>
+        </td>
+      </tr>
+    </table>
+  </div>
+  `;
+
+  if (!SMTP_USER || !SMTP_PASS) {
+    console.log("✉️ ======================================");
+    console.log(`✉️ MOCK WELCOME EMAIL TO: ${email}`);
+    console.log(plainText);
+    console.log("✉️ ======================================");
+    return { success: true, mocked: true };
+  }
+
+  try {
+    await transporter.sendMail({
+      from: getMailFromHello(),
+      replyTo: support,
+      to: email,
+      subject: "Welcome to Welsh Motorhub",
+      text: plainText,
+      html: htmlContent,
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Welcome email failed:", error);
+    return { success: false, error };
+  }
 }
 
 export async function sendVerificationEmail(email, name, otp) {

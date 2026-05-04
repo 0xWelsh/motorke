@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { createSession } from "@/lib/auth";
 import { verifyGoogleToken } from "@/lib/google-auth";
+import { sendWelcomeEmail } from "@/lib/mail";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
@@ -23,6 +24,7 @@ export async function POST(request) {
     let user = await db.user.findUnique({
       where: { email },
     });
+    let isNewGoogleUser = false;
 
     if (user) {
       // Link Google ID if not already linked
@@ -34,6 +36,7 @@ export async function POST(request) {
       }
     } else {
       // Create new user (Role defaults to BUYER)
+      isNewGoogleUser = true;
       user = await db.user.create({
         data: {
           email,
@@ -53,6 +56,14 @@ export async function POST(request) {
 
     // Create session
     await createSession(user.id);
+
+    if (isNewGoogleUser) {
+      void sendWelcomeEmail({
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      }).catch((e) => console.error("Welcome email:", e));
+    }
 
     // Determine redirect destination
     let destination = "/";

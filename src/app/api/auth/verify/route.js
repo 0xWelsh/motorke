@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { createSession } from "@/lib/auth";
+import { sendWelcomeEmail } from "@/lib/mail";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
@@ -35,6 +36,12 @@ export async function POST(request) {
     });
 
     await createSession(user.id);
+
+    void sendWelcomeEmail({
+      email: user.email,
+      name: user.name,
+      role: user.role,
+    }).catch((e) => console.error("Welcome email:", e));
 
     const redirectUrl = user.role === "DEALER" ? "/portal" : "/";
     return NextResponse.json({ success: true, redirect: redirectUrl });

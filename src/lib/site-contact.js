@@ -41,3 +41,8 @@ export function getMailFromAlerts() {
 export function getMailFromMarketing() {
   return process.env.MAIL_FROM_MARKETING || getMailFromNoReply();
 }
+
+/** Welcome / onboarding — defaults to hello@ for a human, trustworthy first touch. */
+export function getMailFromHello() {
+  return process.env.MAIL_FROM_HELLO || '"Welsh Motorhub" <hello@welshmotorhub.co.ke>';
+}
