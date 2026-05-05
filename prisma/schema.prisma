@@ -29,6 +29,7 @@ model User {
   dealerReviews DealerReview[]
   carReviews    CarReview[]
   carViews      CarView[]
+  marketingEvents MarketingEvent[]
   dealer        Dealer?    @relation(fields: [dealerId], references: [id], onDelete: Cascade)
 
   @@map("users")
@@ -305,6 +306,22 @@ model CarView {
 
   @@index([userId, carId, viewedAt])
   @@map("car_views")
+}
+
+model MarketingEvent {
+  id        String   @id @default(cuid())
+  name      String
+  path      String?
+  source    String?
+  payload   Json?
+  userId    String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([name, createdAt])
+  @@index([userId, createdAt])
+  @@map("marketing_events")
 }
 
 model Subscription {

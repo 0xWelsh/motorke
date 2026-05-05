@@ -22,4 +22,22 @@ export function trackUiEvent(name, payload = {}) {
       console.error("[analytics] trackUiEvent failed", error);
     }
   }
+
+  try {
+    const body = JSON.stringify({
+      name,
+      payload,
+      source: "ui",
+      path: win.location?.pathname || "/",
+    });
+    fetch("/api/track", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body,
+      keepalive: true,
+      credentials: "same-origin",
+    }).catch(() => {});
+  } catch {
+    // Intentionally silent: tracking must never break UX.
+  }
 }

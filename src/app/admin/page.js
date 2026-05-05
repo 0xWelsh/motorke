@@ -36,7 +36,8 @@ export default async function AdminDashboard({ searchParams }) {
     inventoryValueAgg, pendingDealers, pendingDealersCount, carsToday, leadsToday,
     premiumSubs, freeSubs,
     rawCarsForChart, rawLeadsForChart,
-    listingsThisWeek, listingsPrevWeek, leadsThisWeek, leadsPrevWeek, activeListings, staleListings, respondedThisWeek
+    listingsThisWeek, listingsPrevWeek, leadsThisWeek, leadsPrevWeek, activeListings, staleListings, respondedThisWeek,
+    trackingEvents7d, trackingEvents30d, trackingTopEvents
   ] = await Promise.all([
     db.car.count({ where: { available: true } }),
     db.dealer.count(),
@@ -60,6 +61,15 @@ export default async function AdminDashboard({ searchParams }) {
     db.car.count({ where: { available: true } }),
     db.car.count({ where: { available: true, updatedAt: { lt: new Date(now - 30 * 24 * 60 * 60 * 1000) } } }),
     db.lead.count({ where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) }, status: { not: "NEW" } } }),
+    db.marketingEvent.count({ where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) } } }),
+    db.marketingEvent.count({ where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } } }),
+    db.marketingEvent.groupBy({
+      by: ["name"],
+      where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) } },
+      _count: { _all: true },
+      orderBy: { _count: { _all: "desc" } },
+      take: 3,
+    }),
   ]);
 
   const formatCompact = (num) => {
@@ -234,6 +244,38 @@ export default async function AdminDashboard({ searchParams }) {
           <p className="mt-2 text-sm font-bold text-slate-800 dark:text-zinc-100">Request telemetry + audit events</p>
           <p className="text-[11px] font-semibold text-slate-500">Use this for backend quality tracking and incident triage.</p>
         </Link>
+      </div>
+
+      <div className="bg-white dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 px-4 py-4 mb-8 sm:mb-10">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Private Marketing Tracking (Admin Only)</p>
+          <Link
+            href="/api/admin/tracking/summary"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] font-black uppercase tracking-[0.14em] text-[#2F855A] hover:opacity-80"
+          >
+            Open JSON summary
+          </Link>
+        </div>
+        <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="bg-[#f8f7f4] dark:bg-[#0d0d0d] border border-[#ede7dd] dark:border-zinc-800 px-3 py-3">
+            <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Events (7d)</p>
+            <p className="text-2xl font-black text-slate-900 dark:text-white">{trackingEvents7d}</p>
+          </div>
+          <div className="bg-[#f8f7f4] dark:bg-[#0d0d0d] border border-[#ede7dd] dark:border-zinc-800 px-3 py-3">
+            <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Events (30d)</p>
+            <p className="text-2xl font-black text-slate-900 dark:text-white">{trackingEvents30d}</p>
+          </div>
+          <div className="bg-[#f8f7f4] dark:bg-[#0d0d0d] border border-[#ede7dd] dark:border-zinc-800 px-3 py-3">
+            <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Top Events (7d)</p>
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
+              {trackingTopEvents.length
+                ? trackingTopEvents.map((row) => `${row.name} (${row._count._all})`).join(" · ")
+                : "No tracked events yet"}
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* ── METRICS ROW ── */}

@@ -1,18 +1,15 @@
-const lintTargets = [
-  "src/app/api/auth/**/*.js",
-  "src/lib/google-auth.js",
-  "src/lib/validate-env.js",
-  "jest.setup.js",
-];
+import nextVitals from "eslint-config-next/core-web-vitals";
 
 export default [
+  ...nextVitals,
   {
-    files: lintTargets,
     ignores: ["node_modules/**", ".next/**", ".vercel/**", "coverage/**"],
-    languageOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
+    rules: {
+      "@next/next/no-html-link-for-pages": "off",
+      "react/no-unescaped-entities": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/purity": "off",
+      "react-hooks/immutability": "off",
     },
-    rules: {},
   },
 ];

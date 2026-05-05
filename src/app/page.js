@@ -225,7 +225,7 @@ export default async function HomePage() {
   const spotlightPool = (hotEnhanced.length > 0 ? hotEnhanced : spotlightEnhanced).slice(0, 12);
   const spotlightRotated = rotateList(spotlightPool, getRotationOffset(spotlightPool.length));
   const heroCars = spotlightRotated.slice(0, 2);
-  const spotlightCards = spotlightRotated.slice(0, 2);
+  const spotlightCards = spotlightRotated.slice(0, 3);
   const heroPrimary = heroCars?.[0] || spotlightEnhanced?.[0] || null;
 
   const origin = getSiteOrigin();
@@ -356,25 +356,7 @@ export default async function HomePage() {
               </TrackedLink>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {/* Promo Card: Top Left */}
-              <div className="flex flex-col h-full bg-[#fbfcfe] dark:bg-zinc-900 border border-black dark:border-white p-12 text-center" style={{ borderRadius: 'var(--radius)' }}>
-                <div className="flex justify-center gap-1.5 mb-10 text-slate-300 dark:text-slate-700">
-                  {[...Array(5)].map((_, i) => <Star key={i} size={18} />)}
-                </div>
-                <h3 className="text-2xl font-serif font-medium text-[#111827] dark:text-white mb-6">Explore our premium collection</h3>
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400 leading-relaxed max-w-[280px] mx-auto mb-16">
-                  Discover quality-verified vehicles from the most reputable dealerships across Kenya. Your direct bridge to premium local inventory with uncompromising transparency.
-                </p>
-                <Link
-                  href="/cars"
-                  className="mt-auto w-full bg-[#111827] dark:!bg-white text-white dark:!text-[#111827] py-4 text-[11px] font-black uppercase tracking-widest hover:scale-[0.98] transition-transform"
-                  style={{ borderRadius: '4px' }}
-                >
-                  View All Vehicles
-                </Link>
-              </div>
-
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {spotlightCards.map((car) => (
                 <CarCard key={car.id} car={car} />
               ))}
