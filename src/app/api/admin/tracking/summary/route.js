@@ -22,7 +22,7 @@ export async function GET() {
       by: ["name"],
       where: { createdAt: { gte: start7d } },
       _count: { _all: true },
-      orderBy: { _count: { _all: "desc" } },
+      orderBy: { _count: { id: "desc" } },
       take: 5,
     }),
   ]);

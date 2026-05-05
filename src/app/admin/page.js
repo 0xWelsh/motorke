@@ -67,7 +67,7 @@ export default async function AdminDashboard({ searchParams }) {
       by: ["name"],
       where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) } },
       _count: { _all: true },
-      orderBy: { _count: { _all: "desc" } },
+      orderBy: { _count: { id: "desc" } },
       take: 3,
     }),
   ]);
