@@ -120,7 +120,7 @@ export default async function AdminDashboard({ searchParams }) {
   };
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-2 duration-1000 max-w-[1400px]">
+    <div className="animate-in fade-in slide-in-from-bottom-2 duration-1000 max-w-[1400px] px-1 sm:px-0">
       
       {/* ── HEADER ── */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
@@ -136,10 +136,10 @@ export default async function AdminDashboard({ searchParams }) {
         </div>
         
         {/* Date Range Toggle */}
-        <div className="flex items-center justify-between lg:justify-end w-full lg:w-auto">
-          <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center justify-start lg:justify-end w-full lg:w-auto">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full lg:w-auto">
             <RunWatchAlertsButton />
-            <div className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-none shadow-inner">
+            <div className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-none shadow-inner w-full sm:w-auto overflow-x-auto">
             {[
               { v: "7", label: "7 DAYS" },
               { v: "30", label: "30 DAYS" },
@@ -147,7 +147,7 @@ export default async function AdminDashboard({ searchParams }) {
             ].map(opt => (
               <Link 
                 key={opt.v} href={`?range=${opt.v}`} 
-                className={`px-4 py-2 text-[11px] font-black uppercase tracking-widest rounded-none transition-all ${
+                className={`px-3 sm:px-4 py-2 text-[10px] sm:text-[11px] whitespace-nowrap font-black uppercase tracking-widest rounded-none transition-all ${
                   range === opt.v ? "bg-white text-[#2F855A]" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
                 }`}
               >
@@ -170,9 +170,9 @@ export default async function AdminDashboard({ searchParams }) {
           <Link
             key={href}
             href={href}
-            className="h-12 px-4 bg-white dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 text-[10px] font-black uppercase tracking-[0.14em] text-slate-700 dark:text-slate-200 flex items-center justify-between hover:border-[#2F855A] hover:text-[#2F855A] transition-colors"
+            className="h-12 px-3 sm:px-4 bg-white dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 text-[10px] font-black uppercase tracking-[0.14em] text-slate-700 dark:text-slate-200 flex items-center justify-between gap-2 hover:border-[#2F855A] hover:text-[#2F855A] transition-colors"
           >
-            <span>{label}</span>
+            <span className="truncate">{label}</span>
             <Icon size={15} />
           </Link>
         ))}
@@ -269,7 +269,7 @@ export default async function AdminDashboard({ searchParams }) {
           </div>
           <div className="bg-[#f8f7f4] dark:bg-[#0d0d0d] border border-[#ede7dd] dark:border-zinc-800 px-3 py-3">
             <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Top Events (7d)</p>
-            <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-200 break-words leading-relaxed">
               {trackingTopEvents.length
                 ? trackingTopEvents.map((row) => `${row.name} (${row._count._all})`).join(" · ")
                 : "No tracked events yet"}
@@ -329,9 +329,9 @@ export default async function AdminDashboard({ searchParams }) {
                    </div>
                  ) : (
                    pendingDealers.map(d => (
-                     <Link key={d.id} href={`/admin/dealers/${d.id}`} className="bg-white hover:bg-white/80 p-4 rounded-none flex items-center justify-between group transition-colors shadow-sm">
+                     <Link key={d.id} href={`/admin/dealers/${d.id}`} className="bg-white hover:bg-white/80 p-4 rounded-none flex items-center justify-between gap-3 group transition-colors shadow-sm">
                         <div className="flex flex-col gap-1.5">
-                          <p className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-red-700 transition-colors uppercase tracking-tight">{d.name}</p>
+                          <p className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-red-700 transition-colors uppercase tracking-tight break-words">{d.name}</p>
                           <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-red-100/50 border border-red-100/80 self-start text-red-600 font-bold uppercase tracking-wider text-[8px]">
                              <AlertCircle size={10} /> Pending Approval
                           </div>

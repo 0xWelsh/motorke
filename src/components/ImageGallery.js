@@ -8,7 +8,8 @@ import { Share2, X } from "lucide-react";
 
 export default function ImageGallery({ images, title }) {
   const primaryIdx = images?.findIndex((img) => img.isPrimary) ?? -1;
-  const [active, setActive] = useState(primaryIdx >= 0 ? primaryIdx : 0);
+  const initialActive = primaryIdx >= 0 ? primaryIdx : 0;
+  const [active, setActive] = useState(initialActive);
   const [lightbox, setLightbox] = useState(false);
   const touchStartX = useRef(null);
 
@@ -50,6 +51,18 @@ export default function ImageGallery({ images, title }) {
     };
   }, [lightbox]);
 
+  useEffect(() => {
+    if (!images?.length || typeof window === "undefined") return;
+    // Preload adjacent images only to keep swipe transitions smooth without over-fetching.
+    const nextIdx = active === images.length - 1 ? 0 : active + 1;
+    const prevIdx = active === 0 ? images.length - 1 : active - 1;
+    [images[nextIdx]?.url, images[prevIdx]?.url].filter(Boolean).forEach((url) => {
+      const preloader = new window.Image();
+      preloader.decoding = "async";
+      preloader.src = url;
+    });
+  }, [active, images]);
+
   const handleShare = async (e) => {
     e.stopPropagation();
     if (navigator.share) {
@@ -81,6 +94,8 @@ export default function ImageGallery({ images, title }) {
             onClick={() => {
               setLightbox(true);
             }}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
             className="relative lg:row-span-2 aspect-[4/3] lg:aspect-auto lg:h-full rounded-sm overflow-hidden bg-[#fbfcfe] dark:bg-[#111111] group border border-[#ddd4c8] dark:border-slate-800"
             aria-label="Open hero image"
           >
@@ -88,14 +103,48 @@ export default function ImageGallery({ images, title }) {
               src={current.url}
               alt={current.alt || title}
               fill
-              priority
+              priority={active === initialActive}
+              fetchPriority={active === initialActive ? "high" : "auto"}
+              quality={72}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-              sizes="(max-width: 1024px) 100vw, 66vw"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 92vw, 1200px"
             />
             {images.length > 1 && (
-               <span className="absolute bottom-2.5 right-2.5 lg:hidden bg-white/95 text-slate-800 dark:text-slate-200 text-[11px] font-extrabold uppercase tracking-[0.12em] px-2.5 py-1 rounded-sm shadow">
-                 {images.length} Photos
-               </span>
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prev();
+                  }}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 lg:hidden w-8 h-8 bg-black/45 text-white flex items-center justify-center text-2xl font-bold"
+                  aria-label="Previous image"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    next();
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 lg:hidden w-8 h-8 bg-black/45 text-white flex items-center justify-center text-2xl font-bold"
+                  aria-label="Next image"
+                >
+                  ›
+                </button>
+                <span className="absolute bottom-2.5 right-2.5 lg:hidden bg-white/95 text-slate-800 dark:text-slate-200 text-[11px] font-extrabold uppercase tracking-[0.12em] px-2.5 py-1 rounded-sm shadow">
+                  {active + 1}/{images.length}
+                </span>
+                <div className="absolute left-1/2 -translate-x-1/2 bottom-2.5 lg:hidden flex items-center gap-1.5 pointer-events-none">
+                  {images.slice(0, 6).map((_, i) => (
+                    <span
+                      key={`mosaic-mobile-dot-${i}`}
+                      className={`h-1.5 rounded-full ${i === active ? "w-5 bg-white" : "w-1.5 bg-white/60"}`}
+                    />
+                  ))}
+                </div>
+              </>
             )}
             <button
               type="button"
@@ -125,10 +174,13 @@ export default function ImageGallery({ images, title }) {
               <Image
                 src={img.url}
                 alt={img.alt || `${title} image ${idx + 1}`}
-                  fill
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                  sizes="(max-width: 1024px) 50vw, 18vw"
-                />
+                fill
+                loading="lazy"
+                decoding="async"
+                quality={60}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                sizes="(max-width: 1024px) 50vw, 18vw"
+              />
                 {isLastVisible && remainingCount > 0 && (
                   <span className="absolute bottom-2 right-2 bg-white/95 text-slate-800 dark:text-slate-200 text-[11px] font-extrabold uppercase tracking-[0.12em] px-2.5 py-1 rounded-sm">
                     {remainingCount}+ Photos
@@ -141,7 +193,7 @@ export default function ImageGallery({ images, title }) {
       ) : (
         <>
           <div
-            className="relative aspect-[4/3] sm:aspect-[16/9] w-full bg-[#fbfcfe] dark:bg-[#111111] overflow-hidden cursor-pointer"
+            className="relative aspect-[16/10] sm:aspect-[16/9] w-full bg-[#fbfcfe] dark:bg-[#111111] overflow-hidden cursor-pointer"
             onClick={() => setLightbox(true)}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
@@ -153,9 +205,11 @@ export default function ImageGallery({ images, title }) {
               src={current.url}
               alt={current.alt || title}
               fill
-              priority
+              priority={active === initialActive}
+              fetchPriority={active === initialActive ? "high" : "auto"}
+              quality={72}
               className="w-full h-full object-cover"
-              sizes="(max-width: 1024px) 100vw, 66vw"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 92vw, 1200px"
             />
             {/* Mobile overlays matching the screenshot */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
@@ -177,12 +231,28 @@ export default function ImageGallery({ images, title }) {
             )}
             {images.length > 1 && (
               <>
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/35 text-white flex items-center justify-center text-2xl font-bold pointer-events-none">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prev();
+                  }}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/45 text-white flex items-center justify-center text-2xl font-bold pointer-events-auto"
+                  aria-label="Previous image"
+                >
                   ‹
-                </div>
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/35 text-white flex items-center justify-center text-2xl font-bold pointer-events-none">
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    next();
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/45 text-white flex items-center justify-center text-2xl font-bold pointer-events-auto"
+                  aria-label="Next image"
+                >
                   ›
-                </div>
+                </button>
                 <div className="absolute left-1/2 -translate-x-1/2 bottom-4 flex items-center gap-1.5 pointer-events-none">
                   {images.slice(0, 6).map((_, i) => (
                     <span
@@ -219,6 +289,9 @@ export default function ImageGallery({ images, title }) {
                     src={img.url}
                     alt={img.alt || `Photo ${i + 1}`}
                     fill
+                    loading="lazy"
+                    decoding="async"
+                    quality={55}
                     className="w-full h-full object-cover"
                     sizes="80px"
                   />
@@ -245,6 +318,9 @@ export default function ImageGallery({ images, title }) {
                     src={img.url}
                     alt={img.alt || `Photo ${i + 1}`}
                     fill
+                    loading="lazy"
+                    decoding="async"
+                    quality={55}
                     className="w-full h-full object-cover"
                     sizes="80px"
                   />
@@ -288,8 +364,9 @@ export default function ImageGallery({ images, title }) {
                 src={images[active].url}
                 alt={images[active].alt || `${title} photo ${active + 1}`}
                 fill
+                quality={80}
                 className="object-contain"
-                priority
+                priority={lightbox}
                 sizes="100vw"
               />
             </div>
@@ -320,6 +397,9 @@ export default function ImageGallery({ images, title }) {
                     src={img.url}
                     alt=""
                     fill
+                    loading="lazy"
+                    decoding="async"
+                    quality={50}
                     className="object-cover"
                     sizes="80px"
                   />
