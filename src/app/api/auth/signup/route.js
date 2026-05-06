@@ -85,6 +85,25 @@ export async function POST(request) {
 
     const existing = await db.user.findUnique({ where: { email } });
     if (existing) {
+      // Recovery path: if account exists but is not verified, issue a fresh OTP and continue verification flow.
+      if (!existing.emailVerified) {
+        const emailOtp = await createEmailOTP(email);
+        const verificationSend = await sendVerificationEmail(email, existing.name || name, emailOtp);
+        if (!verificationSend?.success) {
+          console.error("Verification resend failed:", verificationSend?.error);
+          if (wantsJson) {
+            return NextResponse.json(
+              { error: "We could not send the verification code right now. Please contact support at hello@welshmotorhub.co.ke." },
+              { status: 502 }
+            );
+          }
+          return NextResponse.redirect(new URL("/signup?error=mail", request.url));
+        }
+        const redirectUrl = `/verify?email=${encodeURIComponent(email)}`;
+        if (wantsJson) return NextResponse.json({ success: true, redirect: redirectUrl, resent: true });
+        return NextResponse.redirect(new URL(redirectUrl, request.url));
+      }
+
       if (wantsJson) return NextResponse.json({ error: "An account with that email already exists." }, { status: 400 });
       return NextResponse.redirect(new URL("/signup?error=exists", request.url));
     }
@@ -128,7 +147,27 @@ export async function POST(request) {
 
     // ── OTP Verification Dispatch (Email Only) ─────────────────
     const emailOtp = await createEmailOTP(email);
-    await sendVerificationEmail(email, name, emailOtp);
+    const verificationSend = await sendVerificationEmail(email, name, emailOtp);
+    if (!verificationSend?.success) {
+      console.error("Verification dispatch failed:", verificationSend?.error);
+
+      // Roll back partial signup so the user can retry cleanly.
+      await db.$transaction(async (tx) => {
+        await tx.verificationToken.deleteMany({ where: { identifier: email } });
+        await tx.user.delete({ where: { id: user.id } });
+        if (parsedDealerId) {
+          await tx.dealer.delete({ where: { id: parsedDealerId } });
+        }
+      });
+
+      if (wantsJson) {
+        return NextResponse.json(
+          { error: "Signup could not be completed because verification email failed to send. Please try again or contact hello@welshmotorhub.co.ke." },
+          { status: 502 }
+        );
+      }
+      return NextResponse.redirect(new URL("/signup?error=mail", request.url));
+    }
     
     // Redirect all users to the interactive Verification Portal first
     const redirectUrl = `/verify?email=${encodeURIComponent(email)}`;

@@ -32,12 +32,24 @@ function VerifyForm() {
     setSuccessMsg("");
     
     try {
-      // For now, guide users to request a new signup email
-      setSuccessMsg("To request a new code, please sign up again with your email address.");
+      const res = await fetch("/api/auth/resend-verification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setErrorMsg(data.error || "Could not resend code right now.");
+        setResendLoading(false);
+        return;
+      }
+
+      setSuccessMsg(data.message || "A new verification code has been sent.");
       setResendCooldown(60);
       setResendLoading(false);
     } catch (err) {
-      setErrorMsg("Please go back to signup to request a new code.");
+      setErrorMsg("Network error while resending code. Please try again.");
       setResendLoading(false);
     }
   };
@@ -219,7 +231,7 @@ function VerifyForm() {
         <div className="space-y-2 text-xs font-medium text-slate-500 dark:text-slate-400">
           <p>• Check your spam/junk folder for the verification email</p>
           <p>• Enter only the 6-digit code (no spaces or dashes)</p>
-          <p>• Code expires in 10 minutes</p>
+          <p>• Code expires in 30 minutes</p>
         </div>
         <Link 
           href="/contact" 

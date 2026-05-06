@@ -237,6 +237,7 @@ export async function sendVerificationEmail(email, name, otp) {
   try {
     await transporter.sendMail({
       from: getMailFromVerification(),
+      replyTo: getSupportEmail(),
       to: email,
       subject: "Your Welsh Motorhub verification code",
       html: htmlContent,
@@ -244,7 +245,7 @@ export async function sendVerificationEmail(email, name, otp) {
     return { success: true };
   } catch (error) {
     console.error("Nodemailer failed:", error);
-    return { error };
+    return { success: false, error };
   }
 }
 

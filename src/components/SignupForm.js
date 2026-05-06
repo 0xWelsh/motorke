@@ -57,6 +57,8 @@ export default function SignupForm({ error: initialError, initialRole }) {
       ? "Please fill all required fields correctly."
       : initialError === "exists"
         ? "An account with that email already exists."
+        : initialError === "mail"
+          ? "We could not send the verification email. Please try again shortly."
         : initialError === "captcha"
           ? "Please complete the security check and try again."
           : initialError || "";
