@@ -304,7 +304,7 @@ export default async function CarDetailPage({ params }) {
                       type="button"
                       aria-label="Pricing information"
                       aria-describedby="car-price-explainer"
-                      className="relative z-10 flex size-7 items-center justify-center rounded-full border border-[#38A169]/45 bg-[#38A169]/12 text-[11px] font-black text-[#38A169] shadow-sm outline-none ring-offset-2 ring-offset-white transition-colors hover:bg-[#38A169]/20 focus-visible:ring-2 focus-visible:ring-[#38A169] dark:ring-offset-[#0a0a0a] dark:bg-emerald-500/15 dark:text-[#6ee7b7] dark:border-[#38A169]/50"
+                      className="relative z-10 flex size-5 items-center justify-center rounded-full border border-[#38A169]/45 bg-[#38A169]/12 text-[9px] font-black text-[#38A169] shadow-sm outline-none ring-offset-2 ring-offset-white transition-colors hover:bg-[#38A169]/20 focus-visible:ring-2 focus-visible:ring-[#38A169] dark:ring-offset-[#0a0a0a] dark:bg-emerald-500/15 dark:text-[#6ee7b7] dark:border-[#38A169]/50"
                     >
                       i
                     </button>
