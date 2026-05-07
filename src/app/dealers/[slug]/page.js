@@ -329,7 +329,7 @@ export default async function DealerPage(props) {
                         </li>
                         <li className="sm:hidden h-px w-full max-w-[180px] bg-gradient-to-r from-white/35 via-white/15 to-transparent" aria-hidden="true" />
                         <li className="flex items-baseline gap-2 sm:gap-1.5">
-                          <span className="text-lg sm:text-xl font-black tabular-nums text-white">{yearsActive}+</span>
+                          <span className="text-lg sm:text-xl font-black tabular-nums text-[#ef3340]">{yearsActive}+</span>
                           <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/75">Years in business</span>
                         </li>
                         <li className="hidden sm:flex items-center px-3 sm:px-4 select-none" aria-hidden="true">
@@ -337,7 +337,7 @@ export default async function DealerPage(props) {
                         </li>
                         <li className="sm:hidden h-px w-full max-w-[180px] bg-gradient-to-r from-white/35 via-white/15 to-transparent" aria-hidden="true" />
                         <li className="flex items-baseline gap-2 sm:gap-1.5">
-                          <span className="text-lg sm:text-xl font-black tabular-nums text-white">{dealer.verified ? "100%" : "—"}</span>
+                          <span className="text-lg sm:text-xl font-black tabular-nums text-[#ef3340]">{dealer.verified ? "100%" : "—"}</span>
                           <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/75">Verified dealer</span>
                         </li>
                       </ul>
