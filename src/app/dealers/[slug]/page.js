@@ -327,7 +327,7 @@ export default async function DealerPage(props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       
       {/* Hero Banner */}
-      <div className="w-full h-[26vh] sm:h-[34vh] lg:h-[40vh] relative bg-[#111827] overflow-hidden">
+      <div className="w-full h-[210px] sm:h-[260px] lg:h-[300px] relative bg-[#111827] overflow-hidden">
          {dealer.bannerUrl ? (
            <img
              src={dealer.bannerUrl}
@@ -346,21 +346,21 @@ export default async function DealerPage(props) {
          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/10" />
       </div>
 
-      <div className="w-full mx-auto px-4 sm:px-6 2xl:px-10 max-w-[1700px] -mt-16 sm:-mt-20 lg:-mt-24 relative z-10 pb-20">
+      <div className="w-full mx-auto px-4 sm:px-6 xl:px-8 max-w-[1380px] -mt-12 sm:-mt-16 lg:-mt-20 relative z-10 pb-16">
         
         {/* Dealership Info Card */}
-        <div className="bg-white/95 dark:bg-[#111111]/95 backdrop-blur-md border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-8 lg:p-10 shadow-2xl mb-8 sm:mb-10" style={{ borderRadius: 'var(--radius)' }}>
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-7 sm:gap-8 lg:gap-10 items-start">
+        <div className="bg-white/95 dark:bg-[#111111]/95 backdrop-blur-md border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 lg:p-7 shadow-2xl mb-5 sm:mb-6" style={{ borderRadius: 'var(--radius)' }}>
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-7 items-start">
             
             {/* Logo & Identity */}
-            <div className="xl:col-span-8 flex flex-col gap-5 sm:gap-6 items-start">
-              <div className="flex flex-col sm:flex-row gap-5 sm:gap-7 items-start sm:items-center">
-               <div className="w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 p-3 sm:p-4 flex items-center justify-center shrink-0 overflow-hidden shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+            <div className="xl:col-span-8 flex flex-col gap-4 sm:gap-5 items-start">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-start sm:items-center">
+               <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 p-3 sm:p-4 flex items-center justify-center shrink-0 overflow-hidden shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
                   {dealer.logoUrl ? <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" /> : <span className="text-4xl font-bold text-[#CBD5E0] dark:text-slate-700">{dealer.name[0]}</span>}
                </div>
                <div>
                   <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 mb-3 sm:mb-4">
-                     <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-[#111827] dark:text-white leading-tight tracking-tight">{dealer.name}</h1>
+                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#111827] dark:text-white leading-tight tracking-tight">{dealer.name}</h1>
                      {dealer.verified && <span className="bg-[#38A169] text-white text-[10px] font-black px-3 py-1.5 uppercase tracking-[0.15em] shadow-lg shadow-emerald-900/25 border border-white/20" style={{ borderRadius: '2px' }}>VERIFIED DEALER</span>}
                   </div>
                   <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">
@@ -388,7 +388,7 @@ export default async function DealerPage(props) {
             </div>
 
             <div className="xl:col-span-4">
-              <div className="bg-[#0f172a]/95 border border-white/10 p-4 sm:p-5 text-white shadow-2xl" style={{ borderRadius: "var(--radius)" }}>
+              <div className="bg-[#0f172a]/95 border border-white/10 p-4 sm:p-5 text-white shadow-2xl" style={{ borderRadius: "12px" }}>
                 <div className="flex items-end justify-between gap-3 mb-5">
                   <div>
                     <p className="text-[10px] font-black uppercase tracking-[0.14em] text-emerald-300">Get in touch</p>
@@ -417,7 +417,7 @@ export default async function DealerPage(props) {
             </div>
           </div>
 
-          <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-slate-100 dark:border-slate-800">
+          <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-slate-100 dark:border-slate-800">
              <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-4">About this dealer</h2>
              <div className="text-sm sm:text-base text-[#111827] dark:text-white leading-relaxed font-medium font-sans max-w-4xl">
                 {dealer.description || `${dealer.name} is a cornerstone of our verified network, committed to operational excellence and transparency in asset logistics.`}
@@ -425,7 +425,7 @@ export default async function DealerPage(props) {
           </div>
         </div>
 
-        <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-4 sm:p-5 shadow-xl mb-8 sm:mb-10" style={{ borderRadius: "var(--radius)" }}>
+        <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-3 sm:p-4 shadow-xl mb-6" style={{ borderRadius: "var(--radius)" }}>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {heroQuickStats.map((stat) => (
               <div key={stat.label} className="bg-[#f8fafc] dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4" style={{ borderRadius: "var(--radius)" }}>
@@ -437,20 +437,35 @@ export default async function DealerPage(props) {
         </section>
 
         {/* Content Layout */}
-        <div className="space-y-10 sm:space-y-12">
-          <section id="inventory" className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-6 sm:p-8 lg:p-10 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12 gap-3">
-               <div>
-                  <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-4">Showroom Inventory</h2>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-[#111827] dark:text-white uppercase tracking-tight">Live Cars.</h3>
-               </div>
-               <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">{dealer.cars.length} Units Available</span>
-            </div>
-            <DealerInventory cars={inventoryWithDistance} dealerSlug={dealer.slug} />
-          </section>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-8 space-y-6">
+            <section id="inventory" className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 sm:mb-6 gap-3">
+                 <div>
+                    <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-2">Featured Vehicles</h2>
+                    <h3 className="text-2xl sm:text-[30px] font-bold text-[#111827] dark:text-white tracking-tight">Live Cars</h3>
+                 </div>
+                 <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">{dealer.cars.length} Units Available</span>
+              </div>
+              <DealerInventory cars={inventoryWithDistance} dealerSlug={dealer.slug} />
+            </section>
 
-          <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-7 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
+            <section id="reviews" className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
+              <DealerReviews
+                dealerSlug={dealer.slug}
+                dealerName={dealer.name}
+                averageRating={averageRating}
+                totalReviews={totalReviews}
+                reviews={dealer.reviews}
+                viewer={viewer}
+                viewerReview={viewerReview}
+              />
+            </section>
+          </div>
+
+          <aside className="lg:col-span-4 space-y-6">
+            <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
               {heroTrustStats.map((stat) => (
                 <div
                   key={stat.label}
@@ -465,12 +480,11 @@ export default async function DealerPage(props) {
                   <p className="mt-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400">{stat.sub}</p>
                 </div>
               ))}
-            </div>
-          </section>
+              </div>
+            </section>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10">
             {/* Google Maps Link */}
-            <div className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 overflow-hidden shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
+            <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 overflow-hidden shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
               <div className="flex items-center justify-between gap-3 mb-3">
                 <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500">Dealer Address</h4>
                 {dealerDistanceLabel && (
@@ -489,10 +503,10 @@ export default async function DealerPage(props) {
               >
                 Open in Google Maps
               </a>
-            </div>
+            </section>
 
             {/* Stats / Badges */}
-            <div className="bg-[#F7FAFC] dark:bg-[#111111] border border-slate-100 dark:border-slate-800 p-8 space-y-8" style={{ borderRadius: 'var(--radius)' }}>
+            <section className="bg-[#F7FAFC] dark:bg-[#111111] border border-slate-100 dark:border-slate-800 p-5 sm:p-6 space-y-6 shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
                <div>
                   <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-4">Service Metrics</h4>
                   <div className="grid grid-cols-2 gap-4">
@@ -564,20 +578,8 @@ export default async function DealerPage(props) {
                     </div>
                   )}
                </div>
-            </div>
-          </div>
-
-          <section id="reviews" className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-6 sm:p-8 lg:p-10 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
-            <DealerReviews
-              dealerSlug={dealer.slug}
-              dealerName={dealer.name}
-              averageRating={averageRating}
-              totalReviews={totalReviews}
-              reviews={dealer.reviews}
-              viewer={viewer}
-              viewerReview={viewerReview}
-            />
-          </section>
+            </section>
+          </aside>
         </div>
       </div>
 
