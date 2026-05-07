@@ -6,9 +6,8 @@ import { ArrowUpRight, Building2, MapPin, ShieldCheck } from "lucide-react";
 import NearbyDealersList from "@/components/NearbyDealersList";
 import DealersLocationButton from "@/components/DealersLocationButton";
 
-/** Full-bleed hero — showroom image clears left, copy sits on dark fade (right). */
-const DEALERS_HERO_IMAGE =
-  "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=85&w=2400";
+/** Self-hosted hero — always loads (same-origin), wide automotive photography. */
+const DEALERS_HERO_IMAGE = "/images/backgrounds/pexels-mikebirdy-10123985.jpg";
 
 export const metadata = {
   title: "Trusted car dealers in Kenya",
@@ -130,19 +129,19 @@ export default async function DealersPage({ searchParams }) {
             className="absolute inset-0 h-full w-full object-cover object-center animate-dealers-hero-image"
           />
           <div
-            className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/45 to-black/[0.88] dark:to-black/[0.92]"
+            className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/58 to-black/30 dark:from-black/88 dark:via-black/62 dark:to-black/35"
             aria-hidden
           />
-          <div className="relative h-full max-w-[1880px] mx-auto px-4 sm:px-8 xl:px-10 flex items-center justify-end">
-            <div className="w-full max-w-lg md:max-w-xl text-left sm:text-right sm:ml-auto animate-dealers-hero-content pr-0 sm:pl-8">
+          <div className="relative h-full max-w-[1880px] mx-auto px-4 sm:px-8 xl:px-10 flex items-center justify-start">
+            <div className="w-full max-w-lg md:max-w-xl text-left animate-dealers-hero-content">
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70 mb-2">Welsh Motorhub</p>
               <h1 className="text-2xl sm:text-4xl lg:text-[2.75rem] font-black text-white tracking-tight leading-[1.08] mb-3">
                 Trusted <span className="text-[#22c55e]">dealer network</span>
               </h1>
-              <p className="text-[13px] sm:text-sm text-white/85 font-medium leading-relaxed mb-4 max-w-md sm:max-w-none sm:ml-auto">
+              <p className="text-[13px] sm:text-sm text-white/85 font-medium leading-relaxed mb-4 max-w-md">
                 Verified showrooms across Kenya—compare who is stocking what, then step into a profile that feels alive.
               </p>
-              <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-white/12 backdrop-blur-md px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white">
                   <Building2 className="w-3.5 h-3.5 text-[#22c55e]" />
                   {rankedDealers.length} dealers
