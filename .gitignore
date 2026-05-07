@@ -48,4 +48,3 @@ yarn-error.log*
 /update_auth_forms*.py
 /adjust-*.js
 /cjs_duty.js
-.env*.local

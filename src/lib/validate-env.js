@@ -3,20 +3,6 @@
  * Prevents silent failures in production (e.g., emails never sent, M-Pesa never processes).
  */
 
-/** SMTP_HOST must be a bare hostname — not tutorial text like "(e.g., smtp.gmail.com)". */
-export function validateSmtpHostLooksReal(host) {
-  if (!host || typeof host !== "string") return "SMTP_HOST is missing";
-  const h = host.trim();
-  if (/[\s()[\]\"]/.test(h)) {
-    return "SMTP_HOST must be only the server name (no spaces/parentheses), e.g. smtp.zoho.com";
-  }
-  if (/\be\.g\.\b/i.test(h)) return "SMTP_HOST looks like pasted example text; set a real SMTP hostname";
-  if (!/^[a-zA-Z0-9]([a-zA-Z0-9.-]{0,253}[a-zA-Z0-9])?$/.test(h)) {
-    return "SMTP_HOST is not a valid hostname";
-  }
-  return null;
-}
-
 const REQUIRED_ENV = [
   // Database
   "DATABASE_URL",
@@ -97,17 +83,6 @@ export function validateEnv(options = {}) {
       throw new Error(`❌ ${message}`);
     }
     warnings.push(message);
-  }
-
-  if (missing.length === 0) {
-    const smtpIssue = validateSmtpHostLooksReal(process.env.SMTP_HOST);
-    if (smtpIssue) {
-      const msg = `${smtpIssue}\nCurrent value: ${JSON.stringify(process.env.SMTP_HOST)}`;
-      if (strict) {
-        throw new Error(`❌ ${msg}`);
-      }
-      warnings.push(msg);
-    }
   }
 
   if (warnings.length > 0) {
