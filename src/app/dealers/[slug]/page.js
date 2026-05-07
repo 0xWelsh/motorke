@@ -326,7 +326,7 @@ export default async function DealerPage(props) {
                   <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#22c55e] mb-1">Get in touch</p>
                   <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-white mb-3">Start your enquiry</h3>
                   {dealer.whatsapp && (
-                    <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-[#22c55e] text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
+                    <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-[#ef3340] text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
                       Start Live Enquiry
                     </a>
                   )}
@@ -344,7 +344,7 @@ export default async function DealerPage(props) {
 
         <section className="bg-white dark:bg-[#111111] shadow-xl p-3 sm:p-4 mb-6" style={{ borderRadius: "14px" }}>
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-            <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{dealer.cars.length}+</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Vehicles in stock</p></div>
+            <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black text-[#ef3340]">{dealer.cars.length}+</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Vehicles in stock</p></div>
             <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{yearsActive}+</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Years in business</p></div>
             <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{dealer.verified ? "100%" : "—"}</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Verified dealer</p></div>
           </div>
@@ -356,7 +356,7 @@ export default async function DealerPage(props) {
               <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 gap-3">
                 <div>
                   <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-2">Featured Vehicles</h2>
-                  <h3 className="text-2xl sm:text-[30px] font-black text-slate-900 dark:text-white tracking-tight">Live Cars</h3>
+                  <h3 className="text-2xl sm:text-[30px] font-black text-slate-900 dark:text-white tracking-tight inline-flex items-center gap-2">Live Cars <span className="inline-block w-2 h-2 bg-[#ef3340]" style={{ borderRadius: "999px" }} /></h3>
                 </div>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{dealer.cars.length} Units Available</span>
               </div>
