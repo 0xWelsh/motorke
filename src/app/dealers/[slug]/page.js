@@ -2,12 +2,9 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Phone, Mail, Globe, ShieldCheck, MessageCircle, Star, Clock3, CarFront, Activity, CalendarDays } from "lucide-react";
+import { MapPin, Phone, Mail, Globe, ShieldCheck, MessageCircle, Star, CalendarDays, Activity } from "lucide-react";
 import { SiInstagram, SiFacebook, SiTiktok } from "react-icons/si";
 import { getSession } from "@/lib/auth";
-import DealerReviews from "@/components/DealerReviews";
-import DealerInventory from "@/components/DealerInventory";
-import { calculateDistance } from "@/lib/geolocation";
 import { absoluteUrl, BRAND_OG_IMAGE } from "@/lib/site-url";
 
 // Force dynamic and no-cache
@@ -123,9 +120,6 @@ export default async function DealerPage(props) {
   const session = await getSession();
   const viewer = session?.user;
 
-  // Check if viewing user has already reviewed
-  const viewerReview = viewer ? dealer.reviews.find(r => r.userId === viewer.id) : null;
-
   const totalReviews = dealer.reviews.length;
   const averageRating = totalReviews > 0
     ? dealer.reviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews
@@ -135,24 +129,7 @@ export default async function DealerPage(props) {
     [dealer.address || dealer.location, dealer.county, "Kenya"].filter(Boolean).join(", ")
   );
   const googleMapsHref = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
-  const userLat = Number.isFinite(viewer?.lat) ? viewer.lat : null;
-  const userLng = Number.isFinite(viewer?.lng) ? viewer.lng : null;
-  const dealerLat = Number.isFinite(dealer?.lat) ? dealer.lat : null;
-  const dealerLng = Number.isFinite(dealer?.lng) ? dealer.lng : null;
-  const dealerDistanceKm =
-    userLat != null && userLng != null && dealerLat != null && dealerLng != null
-      ? calculateDistance(userLat, userLng, dealerLat, dealerLng)
-      : null;
-  const dealerDistanceLabel =
-    dealerDistanceKm == null
-      ? null
-      : dealerDistanceKm < 1
-        ? `${Math.round(dealerDistanceKm * 1000)} m away`
-        : `${dealerDistanceKm.toFixed(1)} km away`;
-  const inventoryWithDistance = dealer.cars.map((car) => ({
-    ...car,
-    distance: dealerDistanceKm,
-  }));
+  
   const latestInventoryUpdate =
     dealer.cars.length > 0
       ? new Date(Math.max(...dealer.cars.map((car) => new Date(car.updatedAt).getTime())))
@@ -169,67 +146,6 @@ export default async function DealerPage(props) {
     : inventoryFreshnessDays == null
       ? "Activity unavailable"
       : `Active ${inventoryFreshnessLabel}`;
-  const responseLabel = dealer.whatsapp
-    ? "Replies fastest on WhatsApp"
-    : dealer.phone
-      ? "Replies by direct call"
-      : "Replies via enquiry form";
-  const heroTrustStats = [
-    {
-      label: "Buyer rating",
-      value: totalReviews > 0 ? `${averageRating.toFixed(1)} / 5` : "Not rated",
-      sub: `${totalReviews} review${totalReviews === 1 ? "" : "s"}`,
-      icon: <Star className="w-4 h-4 text-amber-500" />,
-    },
-    {
-      label: "Cars sold",
-      value: soldCarsCount > 0 ? soldCarsCount.toLocaleString("en-KE") : "—",
-      sub: "Closed through enquiries",
-      icon: <CarFront className="w-4 h-4 text-[#38A169]" />,
-    },
-    {
-      label: "Response",
-      value: responseLabel,
-      sub: "Contact channel",
-      icon: <Clock3 className="w-4 h-4 text-sky-500" />,
-    },
-    {
-      label: "Years active",
-      value: `${yearsActive} year${yearsActive === 1 ? "" : "s"}`,
-      sub: `Member since ${startedYear}`,
-      icon: <CalendarDays className="w-4 h-4 text-violet-500" />,
-    },
-    {
-      label: "Location",
-      value: dealer.location || dealer.county || "Kenya",
-      sub: "Dealership base",
-      icon: <MapPin className="w-4 h-4 text-rose-500" />,
-    },
-    {
-      label: "Status",
-      value: lastActiveLabel,
-      sub: "Inventory signal",
-      icon: <Activity className={`w-4 h-4 ${isActiveToday ? "text-[#38A169]" : "text-slate-400"}`} />,
-    },
-  ];
-  const heroQuickStats = [
-    {
-      label: "Vehicles in stock",
-      value: `${dealer.cars.length}+`,
-    },
-    {
-      label: "Years active",
-      value: `${yearsActive}+ years`,
-    },
-    {
-      label: "Happy buyers",
-      value: totalReviews > 0 ? `${totalReviews.toLocaleString("en-KE")} reviews` : "Building reviews",
-    },
-    {
-      label: "Verified status",
-      value: dealer.verified ? "100% verified dealer" : "Verification in progress",
-    },
-  ];
   const dealerSummary =
     dealer.description?.trim()?.split(".")?.[0]?.trim()
       ? `${dealer.description.trim().split(".")[0].trim()}.`
@@ -238,60 +154,14 @@ export default async function DealerPage(props) {
     "Mon - Sat: 8:00 AM - 6:00 PM",
     "Sun: 10:00 AM - 4:00 PM",
   ];
-  const socialProof = [
-    { key: "instagram", label: "Instagram", metric: "12.4k followers", href: withProtocol(dealer.instagramUrl), icon: <SiInstagram className="w-4 h-4" style={{ color: "#E4405F" }} /> },
-    { key: "facebook", label: "Facebook", metric: "8.1k followers", href: withProtocol(dealer.facebookUrl), icon: <SiFacebook className="w-4 h-4" style={{ color: "#1877F2" }} /> },
-    { key: "tiktok", label: "TikTok", metric: "85k likes", href: withProtocol(dealer.tiktokUrl), icon: <SiTiktok className="w-4 h-4 text-slate-900 dark:text-white" /> },
-  ].filter((item) => Boolean(item.href));
-  const dealerRatingTags = [];
-  if (totalReviews >= 8 && averageRating >= 4.5) {
-    dealerRatingTags.push("Fair Pricing", "Clean Logbooks", "Good After-sales");
-  } else if (totalReviews >= 3 && averageRating >= 4) {
-    dealerRatingTags.push("Fair Pricing", "Smooth Process");
-  } else if (totalReviews > 0) {
-    dealerRatingTags.push("Rated by Buyers");
-  }
 
   const whatsappNumber = dealer.whatsapp?.replace(/\D/g, "") || "";
   const whatsappPrefill = encodeURIComponent(
-    `Hi, I'm viewing your showroom on MotorKE and I'd like to ask about your available cars.`
+    `Hi, I'm viewing your showroom on Welsh Motorhub and I'd like to ask about your available cars.`
   );
   const whatsappChatHref = whatsappNumber
     ? `https://wa.me/${whatsappNumber}?text=${whatsappPrefill}`
     : null;
-
-  // Contact links array
-  const contactLinks = [];
-  if (dealer.phone) {
-    contactLinks.push({
-      icon: <Phone className="w-4 h-4" />,
-      label: "Call Us",
-      href: `tel:${dealer.phone}`,
-    });
-  }
-  if (dealer.whatsapp) {
-    contactLinks.push({
-      icon: <MessageCircle className="w-4 h-4" />,
-      label: "WhatsApp",
-      href: whatsappChatHref,
-      external: true,
-    });
-  }
-  if (dealer.website) {
-    contactLinks.push({
-      icon: <Globe className="w-4 h-4" />,
-      label: "Website",
-      href: withProtocol(dealer.website),
-      external: true,
-    });
-  }
-  if (dealer.email) {
-    contactLinks.push({
-      icon: <Mail className="w-4 h-4" />,
-      label: "Email",
-      href: `mailto:${dealer.email}`,
-    });
-  }
 
   const socialLinks = [
     { key: "instagram", label: "Instagram", href: withProtocol(dealer.instagramUrl), icon: <SiInstagram className="w-3.5 h-3.5" style={{ color: "#E4405F" }} /> },
@@ -312,7 +182,6 @@ export default async function DealerPage(props) {
       image: car.images[0].url,
       price: car.price,
     }));
-  const hasHeroBanner = Boolean(dealer.bannerUrl) || dealerGallery.length >= 3;
 
   const absAsset = (u) => {
     if (!u) return absoluteUrl("/headerlogo.png");
@@ -336,341 +205,441 @@ export default async function DealerPage(props) {
   };
 
   return (
-    <div className="bg-gradient-to-b from-[#f8fafc] via-white to-white dark:from-[#080808] dark:via-[#0a0a0a] dark:to-[#0a0a0a] min-h-screen">
+    <div className="bg-white dark:bg-slate-950 min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       
-      {/* Hero Banner */}
-      <div className="w-full h-[210px] sm:h-[260px] lg:h-[300px] relative bg-[#111827] overflow-hidden">
+      {/* Hero Banner Section */}
+      <div className="w-full h-[280px] sm:h-[340px] lg:h-[380px] relative bg-gradient-to-r from-slate-800 to-slate-900 overflow-hidden">
          {dealer.bannerUrl ? (
            <img
              src={dealer.bannerUrl}
              alt={dealer.name}
-             className="absolute inset-0 w-full h-full object-cover opacity-[0.86] sm:opacity-65"
+             className="absolute inset-0 w-full h-full object-cover opacity-70 sm:opacity-60"
            />
          ) : (
-           <div className="absolute inset-0 grid grid-cols-3 gap-1 opacity-72 sm:opacity-40">
-              {dealerGallery.map((car, i) => (
-                <div key={i} className="relative h-full w-full">
+           <div className="absolute inset-0 grid grid-cols-3 gap-2 p-4 opacity-50 sm:opacity-30">
+              {dealerGallery.slice(0, 3).map((car, i) => (
+                <div key={i} className="relative h-full w-full rounded-lg overflow-hidden">
                   <Image src={car.image} alt={car.title} fill className="object-cover" />
                 </div>
               ))}
            </div>
          )}
-         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/10" />
+         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
       </div>
 
-      <div className="w-full mx-auto px-4 sm:px-6 xl:px-8 max-w-[1380px] -mt-12 sm:-mt-16 lg:-mt-20 relative z-10 pb-16">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-[1400px] pb-20">
         
-        {/* Dealership Info Card */}
-        <div className="bg-white/95 dark:bg-[#111111]/95 backdrop-blur-md border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 lg:p-7 shadow-2xl mb-5 sm:mb-6" style={{ borderRadius: "var(--radius)" }}>
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-7 items-start">
-            <div className="xl:col-span-8 flex flex-col gap-4 sm:gap-5 items-start">
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-start sm:items-center">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 p-3 sm:p-4 flex items-center justify-center shrink-0 overflow-hidden shadow-sm" style={{ borderRadius: "var(--radius)" }}>
-                  {dealer.logoUrl ? <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" /> : <span className="text-4xl font-bold text-[#CBD5E0] dark:text-slate-700">{dealer.name[0]}</span>}
-                </div>
-                <div>
-                  <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 mb-2 sm:mb-3">
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#111827] dark:text-white leading-tight tracking-tight">{dealer.name}</h1>
-                    {dealer.verified && <span className="bg-[#22c55e] text-white text-[10px] font-black px-3 py-1.5 uppercase tracking-[0.15em] shadow-lg shadow-emerald-900/25 border border-white/20" style={{ borderRadius: "2px" }}>VERIFIED DEALER</span>}
+        {/* Dealer Header Card - Positioned over hero */}
+        <div className="-mt-20 sm:-mt-24 lg:-mt-28 relative z-20 mb-8">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden">
+            <div className="p-6 sm:p-8 lg:p-10">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+                
+                {/* Logo & Name Section */}
+                <div className="lg:col-span-8 flex flex-col">
+                  <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 items-start">
+                    {/* Logo Box */}
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-2xl border-4 border-white dark:border-slate-700 shadow-lg p-2 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                      {dealer.logoUrl ? (
+                        <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-contain" />
+                      ) : (
+                        <span className="text-4xl sm:text-5xl font-black text-slate-300 dark:text-slate-600">{dealer.name[0]}</span>
+                      )}
+                    </div>
+                    
+                    {/* Name & Details */}
+                    <div className="flex-1">
+                      <div className="flex flex-wrap items-center gap-3 mb-3">
+                        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white leading-tight">{dealer.name}</h1>
+                        {dealer.verified && (
+                          <span className="inline-flex items-center gap-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border border-emerald-200 dark:border-emerald-800">
+                            <ShieldCheck className="w-3.5 h-3.5" /> Verified Dealer
+                          </span>
+                        )}
+                      </div>
+                      
+                      <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-400 mb-5">
+                        <span className="inline-flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-500" /> {dealer.location || dealer.county}</span>
+                        <span className="inline-flex items-center gap-1.5"><CalendarDays className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-500" /> Member since {startedYear}</span>
+                        <span className={`inline-flex items-center gap-1.5 ${isActiveToday ? "text-emerald-600 dark:text-emerald-500" : ""}`}>
+                          <Activity className={`w-3.5 h-3.5 ${isActiveToday ? "text-emerald-600 dark:text-emerald-500" : "text-slate-400"}`} /> {lastActiveLabel}
+                        </span>
+                      </div>
+                      
+                      <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed font-medium mb-6 max-w-2xl">{dealerSummary}</p>
+                      
+                      {/* Quick Stats Grid */}
+                      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                          <p className="text-lg font-black text-slate-900 dark:text-white">{dealer.cars.length}+</p>
+                          <p className="text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-400 mt-1">Vehicles in stock</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                          <p className="text-lg font-black text-slate-900 dark:text-white">{yearsActive}+</p>
+                          <p className="text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-400 mt-1">Years active</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                          <p className="text-lg font-black text-slate-900 dark:text-white">{averageRating > 0 ? averageRating.toFixed(1) : "—"}</p>
+                          <p className="text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-400 mt-1">{totalReviews} reviews</p>
+                        </div>
+                        <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                          <p className="text-lg font-black text-slate-900 dark:text-white">{dealer.verified ? "100%" : "—"}</p>
+                          <p className="text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-400 mt-1">Verified</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748b] dark:text-slate-400">
-                    <span className="inline-flex items-center gap-1.5"><MapPin className="w-3 h-3 text-[#22c55e]" />{dealer.location || dealer.county}</span>
-                    <span className="inline-flex items-center gap-1.5"><CalendarDays className="w-3 h-3 text-[#22c55e]" />Member since {startedYear}</span>
-                    <span className="inline-flex items-center gap-1.5"><Activity className={`w-3 h-3 ${isActiveToday ? "text-[#22c55e]" : "text-slate-400"}`} />{lastActiveLabel}</span>
+                </div>
+                
+                {/* Right CTA Box */}
+                <div className="lg:col-span-4">
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-slate-800 dark:to-slate-900 rounded-xl p-6 border border-amber-200 dark:border-slate-700">
+                    <p className="text-xs font-black uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-2">Get in touch</p>
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white mb-2">Find your perfect car</h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mb-5 leading-relaxed">We're here to help you find your dream car. Contact us today.</p>
+                    
+                    <div className="space-y-2.5">
+                      {dealer.whatsapp && (
+                        <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg text-sm transition-colors">
+                          <MessageCircle className="w-4 h-4" /> Start Live Enquiry
+                        </a>
+                      )}
+                      {dealer.phone && (
+                        <a href={`tel:${dealer.phone}`} className="flex items-center justify-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 font-bold py-3 rounded-lg text-sm transition-colors">
+                          <Phone className="w-4 h-4" /> Call Dealer
+                        </a>
+                      )}
+                      {dealer.whatsapp && (
+                        <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-600 font-bold py-2.5 rounded-lg text-sm border border-slate-200 dark:border-slate-600 transition-colors">
+                          WhatsApp
+                        </a>
+                      )}
+                      {dealer.website && (
+                        <a href={withProtocol(dealer.website)} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-white dark:bg-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-600 font-bold py-2.5 rounded-lg text-sm border border-slate-200 dark:border-slate-600 transition-colors">
+                          <Globe className="w-4 h-4" /> Visit Website
+                        </a>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </div>
-              <p className="text-sm sm:text-[15px] text-slate-700 dark:text-slate-300 leading-relaxed font-medium max-w-3xl">{dealerSummary}</p>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 w-full">
-                <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2.5" style={{ borderRadius: "10px" }}>
-                  <p className="text-sm font-black text-slate-900 dark:text-white">{averageRating > 0 ? averageRating.toFixed(1) : "—"}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">{totalReviews} reviews</p>
-                </div>
-                <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2.5" style={{ borderRadius: "10px" }}>
-                  <p className="text-sm font-black text-slate-900 dark:text-white">{soldCarsCount > 0 ? soldCarsCount.toLocaleString("en-KE") : "—"}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Cars sold</p>
-                </div>
-                <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2.5" style={{ borderRadius: "10px" }}>
-                  <p className="text-sm font-black text-slate-900 dark:text-white">{responseLabel.replace("Replies ", "").replace("Fastest response ", "")}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Response</p>
-                </div>
-                <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2.5" style={{ borderRadius: "10px" }}>
-                  <p className="text-sm font-black text-slate-900 dark:text-white">{dealer.cars.length}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Active cars</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="xl:col-span-4 xl:sticky xl:top-6">
-              <div className="bg-[#0f172a]/95 border border-white/10 p-4 sm:p-5 text-white shadow-2xl" style={{ borderRadius: "12px" }}>
-                <p className="text-[10px] font-black uppercase tracking-[0.14em] text-emerald-300 mb-1">Get in touch</p>
-                <h3 className="text-lg sm:text-xl font-black tracking-tight mb-4">Talk to {dealer.name}</h3>
-                <p className="text-xs text-slate-300 mb-4">We are here to help you find your next car quickly and transparently.</p>
-                <div className="space-y-2">
-                  {dealer.whatsapp && (
-                    <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full inline-flex items-center justify-center bg-[#22c55e] text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
-                      Start Live Enquiry
-                    </a>
-                  )}
-                  {dealer.whatsapp && (
-                    <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full inline-flex items-center justify-center bg-white/5 border border-white/15 text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
-                      WhatsApp Dealer
-                    </a>
-                  )}
-                  {dealer.phone && (
-                    <a href={`tel:${dealer.phone}`} className="w-full inline-flex items-center justify-center bg-white/5 border border-white/15 text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
-                      Call Dealer
-                    </a>
-                  )}
-                  {dealer.website && (
-                    <a href={withProtocol(dealer.website)} target="_blank" rel="noopener noreferrer" className="w-full inline-flex items-center justify-center bg-white/5 border border-white/15 text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
-                      Visit Website
-                    </a>
-                  )}
-                  <a href="#inventory" className="w-full inline-flex items-center justify-center bg-white/5 border border-white/15 text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
-                    Save Dealer
-                  </a>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-3 sm:p-4 shadow-xl mb-6" style={{ borderRadius: "var(--radius)" }}>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            {heroQuickStats.map((stat) => (
-              <div key={stat.label} className="bg-[#f8fafc] dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4" style={{ borderRadius: "var(--radius)" }}>
-                <p className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">{stat.value}</p>
-                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400 mt-1">{stat.label}</p>
-              </div>
+        {/* Featured Vehicles Section */}
+        <section id="inventory" className="mb-8">
+          <div className="mb-6">
+            <p className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Available now</p>
+            <h2 className="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white">Featured Vehicles</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {dealer.cars.slice(0, 4).map((car) => (
+              <Link key={car.id} href={`/cars/${car.id}`} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:shadow-xl transition-shadow">
+                {/* Car Image */}
+                <div className="relative aspect-[4/3] bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                  {car.images?.[0]?.url ? (
+                    <Image src={car.images[0].url} alt={`${car.make} ${car.model}`} fill className="object-cover hover:scale-105 transition-transform duration-300" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-slate-400">No image</div>
+                  )}
+                  {car.featured && (
+                    <div className="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">Featured</div>
+                  )}
+                </div>
+                
+                {/* Car Details */}
+                <div className="p-4 sm:p-5">
+                  <h3 className="font-bold text-slate-900 dark:text-white mb-1 text-sm sm:text-base line-clamp-1">
+                    {car.year} {car.make} {car.model}
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                    {car.mileage ? `${(car.mileage/1000).toFixed(0)}k km` : "—"} • {car.transmissionassembly || "—"}
+                  </p>
+                  <p className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-3">
+                    KSh {car.price?.toLocaleString("en-KE") || "TBD"}
+                  </p>
+                  
+                  {/* Specs */}
+                  <div className="flex flex-wrap gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    {car.transmission && <span className="bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded">{car.transmission}</span>}
+                    {car.fuelType && <span className="bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded">{car.fuelType}</span>}
+                    {car.engineCC && <span className="bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded">{car.engineCC}cc</span>}
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
+          
+          {dealer.cars.length > 4 && (
+            <div className="mt-6 text-center">
+              <Link href={`/dealers/${dealer.slug}#full-inventory`} className="inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-500 font-bold text-sm hover:underline">
+                View all {dealer.cars.length} vehicles <span>→</span>
+              </Link>
+            </div>
+          )}
         </section>
 
-        {/* Content Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-8 space-y-6">
-            <section id="inventory" className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 sm:mb-6 gap-3">
-                 <div>
-                    <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-2">Featured Vehicles</h2>
-                    <h3 className="text-2xl sm:text-[30px] font-bold text-[#111827] dark:text-white tracking-tight">Live Cars</h3>
-                 </div>
-                 <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">{dealer.cars.length} Units Available</span>
+            {/* About Section */}
+            <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-md">
+              <div className="p-6 sm:p-8">
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">About</p>
+                <h2 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white mb-6">Why Buy From {dealer.name}</h2>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {/* Text Content */}
+                  <div>
+                    <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed mb-6">
+                      {dealer.description || dealerSummary}
+                    </p>
+                    
+                    {/* Features List */}
+                    <div className="space-y-3">
+                      {[
+                        "Thoroughly inspected vehicles",
+                        "Best prices in the market",
+                        "Flexible financing options",
+                        "After-sales support",
+                        "Trade-in accepted",
+                        "Import specialists",
+                      ].map((feature, idx) => (
+                        <div key={idx} className="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300">
+                          <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-500 mt-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M20 6L9 17l-5-5" />
+                          </svg>
+                          <span className="font-medium">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Image */}
+                  <div className="relative aspect-[3/2] rounded-lg overflow-hidden bg-slate-200 dark:bg-slate-800">
+                    {recentShowcaseCars[0] ? (
+                      <Image src={recentShowcaseCars[0].image} alt="Dealership" fill className="object-cover" />
+                    ) : dealerGallery[0] ? (
+                      <Image src={dealerGallery[0].image} alt="Dealership" fill className="object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-slate-300 to-slate-400"></div>
+                    )}
+                  </div>
+                </div>
               </div>
-              <DealerInventory cars={inventoryWithDistance} dealerSlug={dealer.slug} />
             </section>
-
-            <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
-              <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-4">About {dealer.name}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="space-y-4">
-                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{dealer.description || dealerSummary}</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {[
-                      "Verified inventory",
-                      "Inspected vehicles",
-                      "Trade-in accepted",
-                      "Financing support",
-                      "After-sales assistance",
-                      "Import options available",
-                    ].map((item) => (
-                      <div key={item} className="inline-flex items-center gap-2 text-[11px] font-semibold text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2" style={{ borderRadius: "10px" }}>
-                        <ShieldCheck className="w-3.5 h-3.5 text-[#22c55e]" />
-                        {item}
-                      </div>
+            
+            {/* Reviews/Testimonials Section */}
+            <section id="reviews" className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-md">
+              <div className="p-6 sm:p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Customer reviews</p>
+                    <h2 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white">What Our Customers Say</h2>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className={`w-4 h-4 ${i < Math.round(averageRating) ? "text-amber-400 fill-amber-400" : "text-slate-300 dark:text-slate-700"}`} />
                     ))}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {(recentShowcaseCars.length > 0 ? recentShowcaseCars : dealerGallery.map((g, i) => ({ id: `g-${i}`, image: g.image, title: g.title }))).slice(0, 4).map((item) => (
-                    <div key={item.id} className="relative aspect-[4/3] overflow-hidden border border-slate-200 dark:border-slate-700" style={{ borderRadius: "10px" }}>
-                      <Image src={item.image} alt={item.title} fill className="object-cover" />
+                
+                <div className="mb-6 pb-6 border-b border-slate-200 dark:border-slate-700">
+                  <p className="text-2xl font-black text-slate-900 dark:text-white mb-1">
+                    {averageRating.toFixed(1)} / 5
+                  </p>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm">Based on {totalReviews} verified buyer reviews</p>
+                </div>
+                
+                <div className="space-y-4 max-h-96 overflow-y-auto">
+                  {dealer.reviews.slice(0, 3).map((review) => (
+                    <div key={review.id} className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                      <div className="flex items-start gap-3 mb-3">
+                        {review.user?.avatarUrl ? (
+                          <img src={review.user.avatarUrl} alt={review.user?.name} className="w-9 h-9 rounded-full object-cover" />
+                        ) : (
+                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white text-xs font-bold">
+                            {review.user?.name?.[0] || "U"}
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <p className="font-bold text-slate-900 dark:text-white text-sm">{review.user?.name || "Anonymous"}</p>
+                          <div className="flex items-center gap-2">
+                            <div className="flex gap-0.5">
+                              {[...Array(5)].map((_, i) => (
+                                <Star key={i} className={`w-3 h-3 ${i < review.rating ? "text-amber-400 fill-amber-400" : "text-slate-300 dark:text-slate-600"}`} />
+                              ))}
+                            </div>
+                            <p className="text-xs text-slate-600 dark:text-slate-400">{new Date(review.createdAt).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{review.comment}</p>
                     </div>
                   ))}
                 </div>
-              </div>
-            </section>
-
-            <section id="reviews" className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
-              <DealerReviews
-                dealerSlug={dealer.slug}
-                dealerName={dealer.name}
-                averageRating={averageRating}
-                totalReviews={totalReviews}
-                reviews={dealer.reviews}
-                viewer={viewer}
-                viewerReview={viewerReview}
-              />
-            </section>
-          </div>
-
-          <aside className="lg:col-span-4 space-y-6">
-            <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
-              {heroTrustStats.map((stat) => (
-                <div
-                  key={stat.label}
-                  className="bg-[#f8fafc] dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5"
-                  style={{ borderRadius: "var(--radius)" }}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    {stat.icon}
-                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">{stat.label}</p>
-                  </div>
-                  <p className="text-base sm:text-lg font-black text-[#111827] dark:text-white leading-tight">{stat.value}</p>
-                  <p className="mt-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400">{stat.sub}</p>
-                </div>
-              ))}
-              </div>
-            </section>
-
-            {/* Google Maps Link */}
-            <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 overflow-hidden shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-600 dark:text-slate-400 mb-3">Dealer info</h4>
-              <div className="space-y-2.5 mb-4 text-[12px] font-semibold text-slate-700 dark:text-slate-300">
-                <div className="flex justify-between gap-3"><span className="text-slate-500">Business type</span><span>Dealership</span></div>
-                <div className="flex justify-between gap-3"><span className="text-slate-500">Phone</span><span>{dealer.phone || "Not shared"}</span></div>
-                <div className="flex justify-between gap-3"><span className="text-slate-500">Email</span><span className="truncate">{dealer.email || "Not shared"}</span></div>
-                <div className="flex justify-between gap-3"><span className="text-slate-500">Website</span><span className="truncate">{dealer.website || "Not shared"}</span></div>
-                <div className="flex justify-between gap-3"><span className="text-slate-500">Verified</span><span>{dealer.verified ? "Yes" : "Pending"}</span></div>
-              </div>
-              <div className="border-t border-slate-200 dark:border-slate-700 pt-3 mb-4">
-                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 mb-2">Opening hours</p>
-                {openingHours.map((line) => (
-                  <p key={line} className="text-[12px] font-semibold text-slate-700 dark:text-slate-300">{line}</p>
-                ))}
-              </div>
-              <div className="flex items-center justify-between gap-3 mb-3">
-                <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500">Dealer Address</h4>
-                {dealerDistanceLabel && (
-                  <span className="text-[10px] font-bold text-[#38A169] uppercase tracking-[0.12em]">{dealerDistanceLabel}</span>
+                
+                {totalReviews > 3 && (
+                  <button className="mt-6 w-full py-2 text-emerald-600 dark:text-emerald-500 font-bold text-sm hover:underline">
+                    View all {totalReviews} reviews
+                  </button>
                 )}
               </div>
-              <p className="text-sm font-bold text-[#111827] dark:text-white leading-relaxed">
-                {dealer.address || dealer.location || "Nairobi, Kenya"}
-              </p>
-              <a
-                href={googleMapsHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 inline-flex w-full items-center justify-center bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                style={{ borderRadius: "var(--radius)" }}
-              >
-                Open in Google Maps
-              </a>
             </section>
-
-            {/* Stats / Badges */}
-            <section className="bg-[#F7FAFC] dark:bg-[#111111] border border-slate-100 dark:border-slate-800 p-5 sm:p-6 space-y-6 shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
-               <div>
-                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-4">Service Metrics</h4>
-                  <div className="grid grid-cols-2 gap-4">
-                     <div className="bg-white dark:bg-slate-900 p-4 border border-[#E2E8F0] dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
-                        <p className="text-2xl font-bold text-[#111827] dark:text-white">{dealer.cars.length}</p>
-                        <p className="text-[9px] font-bold text-[#718096] dark:text-slate-400 uppercase tracking-widest mt-1">Stock</p>
-                     </div>
-                     <div className="bg-white dark:bg-slate-900 p-4 border border-[#E2E8F0] dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
-                        <p className="text-2xl font-bold text-[#111827] dark:text-white">{averageRating > 0 ? averageRating.toFixed(1) : "—"}</p>
-                        <p className="text-[9px] font-bold text-[#718096] dark:text-slate-400 uppercase tracking-widest mt-1">Rating</p>
-                     </div>
+          </div>
+          
+          {/* Right Sidebar */}
+          <aside className="lg:col-span-4 space-y-6">
+            
+            {/* Dealer Info Card */}
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-md">
+              <div className="p-6 sm:p-7">
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4">Dealer info</p>
+                
+                <div className="space-y-3 text-sm mb-6 pb-6 border-b border-slate-200 dark:border-slate-700">
+                  <div className="flex justify-between">
+                    <span className="text-slate-600 dark:text-slate-400">Type</span>
+                    <span className="font-bold text-slate-900 dark:text-white">Dealership</span>
                   </div>
-               </div>
-
-               <div className="space-y-4">
-                  <div className="bg-white dark:bg-slate-900 p-4 border border-[#E2E8F0] dark:border-slate-800 space-y-2" style={{ borderRadius: 'var(--radius)' }}>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#718096] dark:text-slate-400">Response cue</p>
-                    <p className="text-sm font-bold text-[#111827] dark:text-white">
-                      {dealer.whatsapp ? "Fastest response on WhatsApp" : dealer.phone ? "Best reached via direct call" : "Use enquiry form for replies"}
-                    </p>
+                  <div className="flex justify-between">
+                    <span className="text-slate-600 dark:text-slate-400">Location</span>
+                    <span className="font-bold text-slate-900 dark:text-white text-right">{dealer.location || dealer.county || "Kenya"}</span>
                   </div>
-                  <div className="bg-white dark:bg-slate-900 p-4 border border-[#E2E8F0] dark:border-slate-800 space-y-2" style={{ borderRadius: 'var(--radius)' }}>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#718096] dark:text-slate-400">Inventory freshness</p>
-                    <p className="text-sm font-bold text-[#111827] dark:text-white">
-                      {inventoryFreshnessLabel ? `Updated ${inventoryFreshnessLabel}` : "No recent inventory updates"}
-                    </p>
+                  <div className="flex justify-between">
+                    <span className="text-slate-600 dark:text-slate-400">Member since</span>
+                    <span className="font-bold text-slate-900 dark:text-white">{startedYear}</span>
                   </div>
-                  {[
-                    "Verified Assets",
-                    "Direct Logistics",
-                    "Bank Finance Ready"
-                  ].map((tag) => (
-                    <div key={tag} className="flex items-center gap-3 text-xs font-bold text-[#111827] dark:text-white uppercase tracking-widest">
-                       <ShieldCheck className="w-4 h-4 text-[#38A169]" /> {tag}
-                    </div>
-                  ))}
-                  {socialProof.length > 0 && (
-                    <div className="bg-white dark:bg-slate-900 p-4 border border-[#E2E8F0] dark:border-slate-800 space-y-3" style={{ borderRadius: 'var(--radius)' }}>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#718096] dark:text-slate-400">Follow us</p>
-                      <div className="space-y-2">
-                        {socialProof.map((item) => (
-                          <a
-                            key={`sidebar-${item.key}`}
-                            href={item.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center justify-between w-full text-[11px] font-bold text-slate-700 dark:text-slate-200 hover:text-[#38A169] dark:hover:text-[#38A169]"
-                          >
-                            <span className="inline-flex items-center gap-2">{item.icon}{item.label}</span>
-                            <span className="text-[10px] uppercase tracking-[0.12em] text-slate-400">{item.metric}</span>
-                          </a>
-                        ))}
-                      </div>
+                </div>
+                
+                <div className="space-y-3 text-sm mb-6 pb-6 border-b border-slate-200 dark:border-slate-700">
+                  {dealer.phone && (
+                    <div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wide mb-1">Phone</p>
+                      <a href={`tel:${dealer.phone}`} className="text-blue-600 dark:text-blue-400 hover:underline break-all">{dealer.phone}</a>
                     </div>
                   )}
-                  {recentShowcaseCars.length > 0 && (
-                    <div className="bg-white dark:bg-slate-900 p-4 border border-[#E2E8F0] dark:border-slate-800 space-y-3" style={{ borderRadius: 'var(--radius)' }}>
-                      <div className="flex items-center justify-between">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#718096] dark:text-slate-400">Photos</p>
-                        <a href="#inventory" className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#38A169]">View all</a>
-                      </div>
-                      <div className="grid grid-cols-4 gap-2">
-                        {recentShowcaseCars.slice(0, 4).map((car) => (
-                          <Link key={`thumb-${car.id}`} href={`/cars/${car.id}`} className="relative aspect-square overflow-hidden" style={{ borderRadius: "6px" }}>
-                            <Image src={car.image} alt={car.title} fill className="object-cover" />
-                          </Link>
-                        ))}
-                      </div>
+                  {dealer.email && (
+                    <div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wide mb-1">Email</p>
+                      <a href={`mailto:${dealer.email}`} className="text-blue-600 dark:text-blue-400 hover:underline break-all text-xs">{dealer.email}</a>
                     </div>
                   )}
-               </div>
-            </section>
+                  {dealer.website && (
+                    <div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wide mb-1">Website</p>
+                      <a href={withProtocol(dealer.website)} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline break-all text-xs">{dealer.website}</a>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="mb-6">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wide mb-2">Opening hours</p>
+                  <div className="space-y-1 text-xs text-slate-700 dark:text-slate-300">
+                    {openingHours.map((hours, idx) => (
+                      <p key={idx}>{hours}</p>
+                    ))}
+                  </div>
+                </div>
+                
+                <a href={googleMapsHref} target="_blank" rel="noopener noreferrer" className="w-full inline-flex items-center justify-center gap-2 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold py-2.5 rounded-lg text-xs border border-slate-200 dark:border-slate-700 transition-colors">
+                  <MapPin className="w-4 h-4" /> Get Directions
+                </a>
+              </div>
+            </div>
+            
+            {/* Service Metrics Card */}
+            <div className="bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-950 dark:to-slate-900 rounded-xl border border-emerald-200 dark:border-slate-700 overflow-hidden shadow-md">
+              <div className="p-6 sm:p-7">
+                <p className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 mb-4">Service metrics</p>
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-bold text-slate-900 dark:text-white">Stock</span>
+                    <span className="text-lg font-black text-emerald-700 dark:text-emerald-400">{dealer.cars.length}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-bold text-slate-900 dark:text-white">Rating</span>
+                    <span className="text-lg font-black text-emerald-700 dark:text-emerald-400">{averageRating.toFixed(1)}/5</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-bold text-slate-900 dark:text-white">Response</span>
+                    <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 text-right">{dealer.whatsapp ? "WhatsApp" : "Call/Email"}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-bold text-slate-900 dark:text-white">Updated</span>
+                    <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400">{inventoryFreshnessLabel || "Recently"}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Social Media Section */}
+            {socialLinks.length > 0 && (
+              <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-md">
+                <div className="p-6 sm:p-7">
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-4">Follow Us</p>
+                  <div className="space-y-2.5">
+                    {socialLinks.map((link) => (
+                      <a
+                        key={link.key}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors"
+                      >
+                        <span className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-white">
+                          {link.icon} {link.label}
+                        </span>
+                        <span className="text-xs text-slate-500 dark:text-slate-400">→</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Photo Gallery Section */}
+            {recentShowcaseCars.length > 0 && (
+              <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-md">
+                <div className="p-6 sm:p-7">
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Photos from {dealer.name.split(" ")[0]}</p>
+                    <a href="#inventory" className="text-xs font-bold text-emerald-600 dark:text-emerald-500 hover:underline">View all</a>
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-2">
+                    {recentShowcaseCars.slice(0, 6).map((car) => (
+                      <Link key={car.id} href={`/cars/${car.id}`} className="relative aspect-square rounded-lg overflow-hidden bg-slate-200 dark:bg-slate-800 hover:opacity-80 transition-opacity">
+                        <Image src={car.image} alt={car.title} fill className="object-cover" />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </aside>
         </div>
       </div>
 
       {/* Persistent Mobile Action Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-[#111111]/90 backdrop-blur-xl border-t border-slate-100 dark:border-slate-800 px-4 py-4 shadow-2xl">
-         <div className="flex items-center gap-3">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 px-4 py-3 shadow-2xl">
+         <div className="flex items-center gap-2">
            {dealer.phone && (
-             <a href={`tel:${dealer.phone}`} className="flex-1 bg-[#111827] dark:bg-white text-white dark:!text-black py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
-                Call
+             <a href={`tel:${dealer.phone}`} className="flex-1 bg-slate-900 dark:bg-white text-white dark:!text-slate-900 py-3 text-center text-xs font-bold uppercase tracking-widest rounded-lg hover:opacity-90 transition-opacity">
+                📞 Call
              </a>
            )}
            {dealer.whatsapp && (
-             <a href={whatsappChatHref} className="flex-1 bg-[#38A169] text-white py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
-                WhatsApp
+             <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="flex-1 bg-emerald-600 text-white py-3 text-center text-xs font-bold uppercase tracking-widest rounded-lg hover:opacity-90 transition-opacity">
+                💬 WhatsApp
+             </a>
+           )}
+           {(!dealer.phone && !dealer.whatsapp) && (
+             <a href="#reviews" className="flex-1 bg-slate-900 dark:bg-white text-white dark:!text-slate-900 py-3 text-center text-xs font-bold uppercase tracking-widest rounded-lg hover:opacity-90 transition-opacity">
+                Let's Connect
              </a>
            )}
          </div>
-         {socialLinks.length > 0 && (
-           <div className="mt-3 grid grid-cols-3 gap-3">
-             {socialLinks.map((item) => (
-               <a
-                 key={`mobile-${item.key}`}
-                 href={item.href}
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-2.5 text-center text-[10px] font-bold uppercase tracking-widest inline-flex items-center justify-center gap-1.5"
-                 style={{ borderRadius: "var(--radius)" }}
-               >
-                 {item.icon}
-                 {item.label}
-               </a>
-             ))}
-           </div>
-         )}
       </div>
 
     </div>
