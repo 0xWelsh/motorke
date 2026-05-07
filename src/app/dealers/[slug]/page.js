@@ -230,6 +230,19 @@ export default async function DealerPage(props) {
       value: dealer.verified ? "100% verified dealer" : "Verification in progress",
     },
   ];
+  const dealerSummary =
+    dealer.description?.trim()?.split(".")?.[0]?.trim()
+      ? `${dealer.description.trim().split(".")[0].trim()}.`
+      : `${dealer.name} specializes in inspected cars with transparent pricing and direct buyer support in ${dealer.location || dealer.county || "Kenya"}.`;
+  const openingHours = [
+    "Mon - Sat: 8:00 AM - 6:00 PM",
+    "Sun: 10:00 AM - 4:00 PM",
+  ];
+  const socialProof = [
+    { key: "instagram", label: "Instagram", metric: "12.4k followers", href: withProtocol(dealer.instagramUrl), icon: <SiInstagram className="w-4 h-4" style={{ color: "#E4405F" }} /> },
+    { key: "facebook", label: "Facebook", metric: "8.1k followers", href: withProtocol(dealer.facebookUrl), icon: <SiFacebook className="w-4 h-4" style={{ color: "#1877F2" }} /> },
+    { key: "tiktok", label: "TikTok", metric: "85k likes", href: withProtocol(dealer.tiktokUrl), icon: <SiTiktok className="w-4 h-4 text-slate-900 dark:text-white" /> },
+  ].filter((item) => Boolean(item.href));
   const dealerRatingTags = [];
   if (totalReviews >= 8 && averageRating >= 4.5) {
     dealerRatingTags.push("Fair Pricing", "Clean Logbooks", "Good After-sales");
@@ -349,79 +362,78 @@ export default async function DealerPage(props) {
       <div className="w-full mx-auto px-4 sm:px-6 xl:px-8 max-w-[1380px] -mt-12 sm:-mt-16 lg:-mt-20 relative z-10 pb-16">
         
         {/* Dealership Info Card */}
-        <div className="bg-white/95 dark:bg-[#111111]/95 backdrop-blur-md border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 lg:p-7 shadow-2xl mb-5 sm:mb-6" style={{ borderRadius: 'var(--radius)' }}>
+        <div className="bg-white/95 dark:bg-[#111111]/95 backdrop-blur-md border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 lg:p-7 shadow-2xl mb-5 sm:mb-6" style={{ borderRadius: "var(--radius)" }}>
           <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-7 items-start">
-            
-            {/* Logo & Identity */}
             <div className="xl:col-span-8 flex flex-col gap-4 sm:gap-5 items-start">
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-start sm:items-center">
-               <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 p-3 sm:p-4 flex items-center justify-center shrink-0 overflow-hidden shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+                <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 p-3 sm:p-4 flex items-center justify-center shrink-0 overflow-hidden shadow-sm" style={{ borderRadius: "var(--radius)" }}>
                   {dealer.logoUrl ? <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" /> : <span className="text-4xl font-bold text-[#CBD5E0] dark:text-slate-700">{dealer.name[0]}</span>}
-               </div>
-               <div>
-                  <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 mb-3 sm:mb-4">
-                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#111827] dark:text-white leading-tight tracking-tight">{dealer.name}</h1>
-                     {dealer.verified && <span className="bg-[#38A169] text-white text-[10px] font-black px-3 py-1.5 uppercase tracking-[0.15em] shadow-lg shadow-emerald-900/25 border border-white/20" style={{ borderRadius: '2px' }}>VERIFIED DEALER</span>}
+                </div>
+                <div>
+                  <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 mb-2 sm:mb-3">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#111827] dark:text-white leading-tight tracking-tight">{dealer.name}</h1>
+                    {dealer.verified && <span className="bg-[#22c55e] text-white text-[10px] font-black px-3 py-1.5 uppercase tracking-[0.15em] shadow-lg shadow-emerald-900/25 border border-white/20" style={{ borderRadius: "2px" }}>VERIFIED DEALER</span>}
                   </div>
-                  <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">
-                     <span className="flex items-center gap-2"><MapPin className="w-3 h-3 text-[#38A169]" /> {dealer.location || dealer.county}</span>
-                     {dealerDistanceLabel && (
-                       <span className="flex items-center gap-2 text-[#38A169]"><MapPin className="w-3 h-3" /> {dealerDistanceLabel}</span>
-                     )}
-                     <span className="flex items-center gap-2"><ShieldCheck className="w-3 h-3 text-[#38A169]" /> Member since {startedYear}</span>
-                  </div>
-                  {dealerRatingTags.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {dealerRatingTags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="inline-flex items-center border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300"
-                          style={{ borderRadius: "2px" }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-               </div>
-            </div>
-            </div>
-
-            <div className="xl:col-span-4">
-              <div className="bg-[#0f172a]/95 border border-white/10 p-4 sm:p-5 text-white shadow-2xl" style={{ borderRadius: "12px" }}>
-                <div className="flex items-end justify-between gap-3 mb-5">
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-emerald-300">Get in touch</p>
-                    <h3 className="text-lg sm:text-xl font-black tracking-tight">Talk to {dealer.name}</h3>
+                  <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748b] dark:text-slate-400">
+                    <span className="inline-flex items-center gap-1.5"><MapPin className="w-3 h-3 text-[#22c55e]" />{dealer.location || dealer.county}</span>
+                    <span className="inline-flex items-center gap-1.5"><CalendarDays className="w-3 h-3 text-[#22c55e]" />Member since {startedYear}</span>
+                    <span className="inline-flex items-center gap-1.5"><Activity className={`w-3 h-3 ${isActiveToday ? "text-[#22c55e]" : "text-slate-400"}`} />{lastActiveLabel}</span>
                   </div>
                 </div>
+              </div>
+              <p className="text-sm sm:text-[15px] text-slate-700 dark:text-slate-300 leading-relaxed font-medium max-w-3xl">{dealerSummary}</p>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 w-full">
+                <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2.5" style={{ borderRadius: "10px" }}>
+                  <p className="text-sm font-black text-slate-900 dark:text-white">{averageRating > 0 ? averageRating.toFixed(1) : "—"}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">{totalReviews} reviews</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2.5" style={{ borderRadius: "10px" }}>
+                  <p className="text-sm font-black text-slate-900 dark:text-white">{soldCarsCount > 0 ? soldCarsCount.toLocaleString("en-KE") : "—"}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Cars sold</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2.5" style={{ borderRadius: "10px" }}>
+                  <p className="text-sm font-black text-slate-900 dark:text-white">{responseLabel.replace("Replies ", "").replace("Fastest response ", "")}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Response</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2.5" style={{ borderRadius: "10px" }}>
+                  <p className="text-sm font-black text-slate-900 dark:text-white">{dealer.cars.length}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Active cars</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="xl:col-span-4 xl:sticky xl:top-6">
+              <div className="bg-[#0f172a]/95 border border-white/10 p-4 sm:p-5 text-white shadow-2xl" style={{ borderRadius: "12px" }}>
+                <p className="text-[10px] font-black uppercase tracking-[0.14em] text-emerald-300 mb-1">Get in touch</p>
+                <h3 className="text-lg sm:text-xl font-black tracking-tight mb-4">Talk to {dealer.name}</h3>
                 <p className="text-xs text-slate-300 mb-4">We are here to help you find your next car quickly and transparently.</p>
                 <div className="space-y-2">
                   {dealer.whatsapp && (
-                    <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full inline-flex items-center justify-center bg-[#ef3340] text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "2px" }}>
+                    <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full inline-flex items-center justify-center bg-[#22c55e] text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
                       Start Live Enquiry
                     </a>
                   )}
+                  {dealer.whatsapp && (
+                    <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full inline-flex items-center justify-center bg-white/5 border border-white/15 text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
+                      WhatsApp Dealer
+                    </a>
+                  )}
                   {dealer.phone && (
-                    <a href={`tel:${dealer.phone}`} className="w-full inline-flex items-center justify-center bg-white/5 border border-white/15 text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "2px" }}>
+                    <a href={`tel:${dealer.phone}`} className="w-full inline-flex items-center justify-center bg-white/5 border border-white/15 text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
                       Call Dealer
                     </a>
                   )}
                   {dealer.website && (
-                    <a href={withProtocol(dealer.website)} target="_blank" rel="noopener noreferrer" className="w-full inline-flex items-center justify-center bg-white/5 border border-white/15 text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "2px" }}>
+                    <a href={withProtocol(dealer.website)} target="_blank" rel="noopener noreferrer" className="w-full inline-flex items-center justify-center bg-white/5 border border-white/15 text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
                       Visit Website
                     </a>
                   )}
+                  <a href="#inventory" className="w-full inline-flex items-center justify-center bg-white/5 border border-white/15 text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
+                    Save Dealer
+                  </a>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-slate-100 dark:border-slate-800">
-             <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-4">About this dealer</h2>
-             <div className="text-sm sm:text-base text-[#111827] dark:text-white leading-relaxed font-medium font-sans max-w-4xl">
-                {dealer.description || `${dealer.name} is a cornerstone of our verified network, committed to operational excellence and transparency in asset logistics.`}
-             </div>
           </div>
         </div>
 
@@ -448,6 +460,37 @@ export default async function DealerPage(props) {
                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">{dealer.cars.length} Units Available</span>
               </div>
               <DealerInventory cars={inventoryWithDistance} dealerSlug={dealer.slug} />
+            </section>
+
+            <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-4">About {dealer.name}</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="space-y-4">
+                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{dealer.description || dealerSummary}</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {[
+                      "Verified inventory",
+                      "Inspected vehicles",
+                      "Trade-in accepted",
+                      "Financing support",
+                      "After-sales assistance",
+                      "Import options available",
+                    ].map((item) => (
+                      <div key={item} className="inline-flex items-center gap-2 text-[11px] font-semibold text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2" style={{ borderRadius: "10px" }}>
+                        <ShieldCheck className="w-3.5 h-3.5 text-[#22c55e]" />
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {(recentShowcaseCars.length > 0 ? recentShowcaseCars : dealerGallery.map((g, i) => ({ id: `g-${i}`, image: g.image, title: g.title }))).slice(0, 4).map((item) => (
+                    <div key={item.id} className="relative aspect-[4/3] overflow-hidden border border-slate-200 dark:border-slate-700" style={{ borderRadius: "10px" }}>
+                      <Image src={item.image} alt={item.title} fill className="object-cover" />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </section>
 
             <section id="reviews" className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
@@ -485,6 +528,20 @@ export default async function DealerPage(props) {
 
             {/* Google Maps Link */}
             <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 overflow-hidden shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
+              <h4 className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-600 dark:text-slate-400 mb-3">Dealer info</h4>
+              <div className="space-y-2.5 mb-4 text-[12px] font-semibold text-slate-700 dark:text-slate-300">
+                <div className="flex justify-between gap-3"><span className="text-slate-500">Business type</span><span>Dealership</span></div>
+                <div className="flex justify-between gap-3"><span className="text-slate-500">Phone</span><span>{dealer.phone || "Not shared"}</span></div>
+                <div className="flex justify-between gap-3"><span className="text-slate-500">Email</span><span className="truncate">{dealer.email || "Not shared"}</span></div>
+                <div className="flex justify-between gap-3"><span className="text-slate-500">Website</span><span className="truncate">{dealer.website || "Not shared"}</span></div>
+                <div className="flex justify-between gap-3"><span className="text-slate-500">Verified</span><span>{dealer.verified ? "Yes" : "Pending"}</span></div>
+              </div>
+              <div className="border-t border-slate-200 dark:border-slate-700 pt-3 mb-4">
+                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 mb-2">Opening hours</p>
+                {openingHours.map((line) => (
+                  <p key={line} className="text-[12px] font-semibold text-slate-700 dark:text-slate-300">{line}</p>
+                ))}
+              </div>
               <div className="flex items-center justify-between gap-3 mb-3">
                 <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500">Dealer Address</h4>
                 {dealerDistanceLabel && (
@@ -543,11 +600,11 @@ export default async function DealerPage(props) {
                        <ShieldCheck className="w-4 h-4 text-[#38A169]" /> {tag}
                     </div>
                   ))}
-                  {socialLinks.length > 0 && (
+                  {socialProof.length > 0 && (
                     <div className="bg-white dark:bg-slate-900 p-4 border border-[#E2E8F0] dark:border-slate-800 space-y-3" style={{ borderRadius: 'var(--radius)' }}>
                       <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#718096] dark:text-slate-400">Follow us</p>
                       <div className="space-y-2">
-                        {socialLinks.map((item) => (
+                        {socialProof.map((item) => (
                           <a
                             key={`sidebar-${item.key}`}
                             href={item.href}
@@ -556,7 +613,7 @@ export default async function DealerPage(props) {
                             className="inline-flex items-center justify-between w-full text-[11px] font-bold text-slate-700 dark:text-slate-200 hover:text-[#38A169] dark:hover:text-[#38A169]"
                           >
                             <span className="inline-flex items-center gap-2">{item.icon}{item.label}</span>
-                            <span className="text-[10px] uppercase tracking-[0.12em] text-slate-400">Visit</span>
+                            <span className="text-[10px] uppercase tracking-[0.12em] text-slate-400">{item.metric}</span>
                           </a>
                         ))}
                       </div>
