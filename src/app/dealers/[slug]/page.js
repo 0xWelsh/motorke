@@ -382,6 +382,11 @@ export default async function DealerPage(props) {
           )}
         </section>
 
+        {/* Two Column Layout: Main Content + Sidebar */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+          {/* Main Content */}
+          <div className="lg:col-span-8 space-y-8">
+            
             {/* About Section */}
             <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-md">
               <div className="p-6 sm:p-8">
