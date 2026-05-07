@@ -339,7 +339,7 @@ export default async function DealerPage(props) {
         </div>
       </div>
 
-      <div className="w-full mx-auto px-4 sm:px-6 xl:px-8 max-w-[1380px] mt-5 relative z-10 pb-20">
+      <div className="w-full mx-auto px-4 sm:px-6 xl:px-10 2xl:px-12 max-w-[1880px] mt-5 relative z-10 pb-20">
 
         <section className="bg-white dark:bg-[#111111] shadow-xl p-3 sm:p-4 mb-6" style={{ borderRadius: "14px" }}>
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
@@ -352,7 +352,7 @@ export default async function DealerPage(props) {
         </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-8 space-y-6">
+          <div className="lg:col-span-9 space-y-6">
             <section id="inventory" className="bg-white dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
               <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 gap-3">
                 <div>
@@ -393,7 +393,7 @@ export default async function DealerPage(props) {
             </section>
           </div>
 
-          <aside className="lg:col-span-4 space-y-6">
+          <aside className="lg:col-span-3 space-y-6">
             <section className="bg-white dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
               <h4 className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-600 dark:text-slate-400 mb-3">Dealer info</h4>
               <div className="space-y-2.5 mb-4 text-[12px] font-semibold text-slate-700 dark:text-slate-300">
