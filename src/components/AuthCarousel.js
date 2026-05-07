@@ -10,7 +10,7 @@ const SLIDES = [
   },
   {
     title: "Fair Pricing",
-    desc: "We analyze local listings to ensure you always get the best value."
+    desc: "We analyze local cars to ensure you always get the best value."
   },
   {
     title: "Direct Chat",

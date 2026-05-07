@@ -28,6 +28,37 @@ const transporter = nodemailer.createTransport({
   ...(SMTP_PORT === 587 && !SMTP_SECURE ? { requireTLS: true } : {}),
 });
 
+/** SMTP login check (does not send mail). Admin diagnostics only. */
+export async function verifySmtpTransport() {
+  if (!SMTP_USER || !SMTP_PASS) {
+    return {
+      ok: false,
+      configured: false,
+      message: "SMTP_USER / SMTP_PASS not set — verification emails cannot send.",
+    };
+  }
+  try {
+    await transporter.verify();
+    return {
+      ok: true,
+      configured: true,
+      host: SMTP_HOST,
+      port: SMTP_PORT,
+      user: SMTP_USER,
+      mailFromVerification: getMailFromVerification(),
+    };
+  } catch (e) {
+    return {
+      ok: false,
+      configured: true,
+      message: e?.message || String(e),
+      code: e?.code,
+      responseCode: e?.responseCode,
+      command: e?.command,
+    };
+  }
+}
+
 function buildEmailFooter() {
   const siteUrl = getSiteOrigin();
   const support = getSupportEmail();
@@ -85,8 +116,8 @@ export async function sendWelcomeEmail({ email, name, role }) {
     "Welcome to Welsh Motorhub — Kenya's marketplace for verified dealer inventory.",
     "",
     isDealer
-      ? "Your dealer portal is ready. Add listings, respond to leads, and keep stock up to date."
-      : "Browse live listings, compare up to three cars side by side, save favourites, and contact dealers directly.",
+      ? "Your dealer portal is ready. Add cars, respond to leads, and keep stock up to date."
+      : "Browse live cars, compare up to three cars side by side, save favourites, and contact dealers directly.",
     "",
     `Start here: ${siteUrl}/cars`,
     isDealer ? `Dealer portal: ${siteUrl}/portal` : `Compare: ${siteUrl}/compare`,
@@ -119,7 +150,7 @@ export async function sendWelcomeEmail({ email, name, role }) {
               <td style="padding:28px 28px 8px;">
                 <p style="margin:0 0 14px;font-size:17px;font-weight:700;color:#0f172a;">Hi ${firstName},</p>
                 <p style="margin:0 0 16px;font-size:15px;line-height:1.65;color:#475569;">
-                  Thanks for joining <strong style="color:#0f172a;">Welsh Motorhub</strong>. We connect you with <strong>real dealership inventory</strong> in Kenya — clear listings, side-by-side comparison, and direct contact with the seller.
+                  Thanks for joining <strong style="color:#0f172a;">Welsh Motorhub</strong>. We connect you with <strong>real dealership inventory</strong> in Kenya — clear cars, side-by-side comparison, and direct contact with the seller.
                 </p>
                 <p style="margin:0 0 22px;font-size:15px;line-height:1.65;color:#475569;">
                   ${
@@ -234,17 +265,27 @@ export async function sendVerificationEmail(email, name, otp) {
     </div>
   `;
 
+  const plainText = [
+    `Hi ${(name || "there").toString().split(" ")[0]},`,
+    "",
+    `Your Welsh Motorhub verification code is: ${otp}`,
+    "",
+    "This code expires in 30 minutes.",
+    `If you did not sign up, ignore this email. Support: ${support}`,
+  ].join("\n");
+
   try {
     await transporter.sendMail({
       from: getMailFromVerification(),
       replyTo: getSupportEmail(),
       to: email,
       subject: "Your Welsh Motorhub verification code",
+      text: plainText,
       html: htmlContent,
     });
     return { success: true };
   } catch (error) {
-    console.error("Nodemailer failed:", error);
+    console.error("Nodemailer failed:", error?.message, error?.responseCode, error?.response);
     return { success: false, error };
   }
 }
@@ -270,7 +311,7 @@ export async function sendLeadAlertEmail({
       .replace(/'/g, "&#39;");
 
   const safeDealerName = escapeHtml(dealerName || "Dealer Team");
-  const safeCarTitle = escapeHtml(carTitle || "Listing");
+  const safeCarTitle = escapeHtml(carTitle || "Car");
   const safeBuyerName = escapeHtml(buyerName || "Unknown");
   const safeBuyerPhone = escapeHtml(buyerPhone || "Not provided");
   const safeBuyerEmail = escapeHtml(buyerEmail || "Not provided");
@@ -631,12 +672,12 @@ export async function sendWatchAlertEmail({
   const heading = isPriceDrop
     ? "Price drop on your watchlist car"
     : isSimilarListing
-      ? "A similar listing was just posted"
+      ? "A similar car was just posted"
       : "Back in stock";
   const summary = isPriceDrop
     ? `The ${title} dropped by KSh ${dropAmount.toLocaleString("en-KE")}.`
     : isSimilarListing
-      ? `We found a similar listing: ${similarTitle}.`
+      ? `We found a similar car: ${similarTitle}.`
       : `The ${title} is now available again.`;
   const priceBlock = isPriceDrop
     ? `<p style="margin: 0 0 8px;"><strong>Previous:</strong> KSh ${previousPrice.toLocaleString("en-KE")}</p>
@@ -644,7 +685,7 @@ export async function sendWatchAlertEmail({
     : isSimilarListing
       ? `<p style="margin: 0 0 8px;"><strong>Watchlist car:</strong> ${title}</p>
          <p style="margin: 0 0 8px;"><strong>New similar:</strong> ${similarTitle}</p>
-         <p style="margin: 0;"><strong>New listing price:</strong> KSh ${(similarCar?.price ?? 0).toLocaleString("en-KE")}</p>`
+         <p style="margin: 0;"><strong>New car price:</strong> KSh ${(similarCar?.price ?? 0).toLocaleString("en-KE")}</p>`
       : `<p style="margin: 0;"><strong>Current price:</strong> KSh ${car.price.toLocaleString("en-KE")}</p>`;
 
   const html = `
@@ -656,7 +697,7 @@ export async function sendWatchAlertEmail({
         <p style="margin: 0 0 12px; font-weight: 700;">${title}</p>
         ${priceBlock}
       </div>
-      <a href="${isSimilarListing && similarCar?.id ? `${siteUrl}/cars/${similarCar.id}` : carUrl}" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Open Listing</a>
+      <a href="${isSimilarListing && similarCar?.id ? `${siteUrl}/cars/${similarCar.id}` : carUrl}" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Open Car</a>
       ${buildEmailFooter()}
     </div>
   `;
@@ -668,7 +709,7 @@ export async function sendWatchAlertEmail({
       subject: isPriceDrop
         ? `Price drop: ${title}`
         : isSimilarListing
-          ? `New similar listing: ${similarTitle}`
+          ? `New similar car: ${similarTitle}`
           : `Back in stock: ${title}`,
       html,
     });

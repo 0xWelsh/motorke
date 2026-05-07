@@ -95,7 +95,7 @@ export default async function AdminCarsPage({ searchParams }) {
             </div>
             <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl">Cars</h1>
             <p className="mt-2 max-w-xl text-sm font-medium leading-relaxed text-slate-500 dark:text-zinc-400">
-              Search and manage listings across all dealers. Pagination shows {limit} rows per page. Export pulls the{' '}
+              Search and manage cars across all dealers. Pagination shows {limit} rows per page. Export pulls the{' '}
               <span className="font-semibold text-slate-800 dark:text-zinc-200">current results</span>.
             </p>
           </div>
@@ -188,7 +188,7 @@ export default async function AdminCarsPage({ searchParams }) {
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#ececf0] px-5 py-3.5 dark:border-zinc-800">
           <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-500 dark:text-zinc-500">
             {total === 0 ? (
-              "No listings"
+              "No cars"
             ) : (
               <>
                 Showing <span className="text-slate-900 dark:text-white">{from}–{to}</span> of{" "}
@@ -233,7 +233,7 @@ export default async function AdminCarsPage({ searchParams }) {
           <table className="min-w-[960px] w-full border-collapse text-left">
             <thead>
               <tr className="border-b border-[#ececf0] bg-[#fafafa] dark:border-zinc-800 dark:bg-zinc-900/90">
-                {["Listing", "Dealer", "Leads", "Price", "Status", ""].map((h) => (
+                {["Car", "Dealer", "Leads", "Price", "Status", ""].map((h) => (
                   <th key={h} className="whitespace-nowrap px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 dark:text-zinc-500">
                     {h}
                   </th>
@@ -311,7 +311,7 @@ export default async function AdminCarsPage({ searchParams }) {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="rounded-xl border border-[#ececf0] bg-white p-2 text-slate-600 transition hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400"
-                          title="View live listing"
+                          title="View live car"
                         >
                           <ExternalLink size={15} strokeWidth={2} />
                         </Link>
@@ -330,8 +330,8 @@ export default async function AdminCarsPage({ searchParams }) {
                                 ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 dark:border-emerald-800/70 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-950/70"
                                 : "border-slate-200 bg-[#f6f7f9] text-slate-700 hover:bg-white hover:border-[#ddd4c8] dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
                             }`}
-                            title={car.available ? "Hide listing" : "Publish listing"}
-                            aria-label={car.available ? "Hide listing" : "Publish listing"}
+                            title={car.available ? "Hide car" : "Publish car"}
+                            aria-label={car.available ? "Hide car" : "Publish car"}
                           >
                             {car.available ? (
                               <ToggleRight size={16} strokeWidth={2.25} />
@@ -352,7 +352,7 @@ export default async function AdminCarsPage({ searchParams }) {
 
         {cars.length === 0 && (
           <EmptyState
-            title="No listings found"
+            title="No cars found"
             message={search ? "Try different keywords or clear the filter." : "Add a vehicle to populate inventory."}
             actionHref="/admin/cars/new"
             actionLabel="Add car"

@@ -48,7 +48,7 @@ export default function HeroShowcase({ items }) {
               />
               <div className="absolute top-3 left-3">
                 <span className="bg-[#38A169] text-white text-[8px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '1px' }}>
-                  Featured Listing
+                  Featured Car
                 </span>
               </div>
             </div>

@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   return NextResponse.json(
-    { ok: false, message: "Price rates endpoint retired. Listings now use final prices." },
+    { ok: false, message: "Price rates endpoint retired. Cars now use final prices." },
     { status: 410 }
   );
 }

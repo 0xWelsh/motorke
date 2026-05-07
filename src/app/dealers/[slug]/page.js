@@ -357,7 +357,7 @@ export default async function DealerPage(props) {
             <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12 gap-3">
                <div>
                   <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-4">Showroom Inventory</h2>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-[#111827] dark:text-white uppercase tracking-tight">Live Listings.</h3>
+                  <h3 className="text-2xl sm:text-3xl font-bold text-[#111827] dark:text-white uppercase tracking-tight">Live Cars.</h3>
                </div>
                <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">{dealer.cars.length} Units Available</span>
             </div>

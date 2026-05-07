@@ -25,7 +25,7 @@ export default function AdminTrendsChart({ data, rangeLabel = "Last 30 Days" }) 
               <span className="w-3 h-3 rounded-full bg-[#2F855A]" /> Leads
            </div>
            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-slate-900" /> Listings
+              <span className="w-3 h-3 rounded-full bg-slate-900" /> Cars
            </div>
         </div>
       </div>

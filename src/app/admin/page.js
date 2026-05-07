@@ -225,14 +225,14 @@ export default async function AdminDashboard({ searchParams }) {
           className="bg-white dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 px-4 py-3 hover:border-[#2F855A]/50 transition-colors"
         >
           <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Weekly KPI Pulse</p>
-          <p className="mt-2 text-sm font-bold text-slate-800 dark:text-zinc-100">Listings {listingsThisWeek} ({listingDelta}%)</p>
+          <p className="mt-2 text-sm font-bold text-slate-800 dark:text-zinc-100">Cars {listingsThisWeek} ({listingDelta}%)</p>
           <p className="text-sm font-bold text-slate-800 dark:text-zinc-100">Leads {leadsThisWeek} ({leadDelta}%)</p>
         </Link>
         <div className="bg-white dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 px-4 py-3">
           <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Funnel Health</p>
-          <p className="mt-2 text-sm font-bold text-slate-800 dark:text-zinc-100">Leads/Active Listing: {leadsPerActiveListing}</p>
+          <p className="mt-2 text-sm font-bold text-slate-800 dark:text-zinc-100">Leads/Active Car: {leadsPerActiveListing}</p>
           <p className="text-sm font-bold text-slate-800 dark:text-zinc-100">Lead Response Rate: {responseRate}%</p>
-          <p className="text-sm font-bold text-slate-800 dark:text-zinc-100">Stale Listing Ratio: {staleRatio}%</p>
+          <p className="text-sm font-bold text-slate-800 dark:text-zinc-100">Stale Car Ratio: {staleRatio}%</p>
         </div>
         <Link
           href="/api/admin/ops-health"
@@ -281,7 +281,7 @@ export default async function AdminDashboard({ searchParams }) {
       {/* ── METRICS ROW ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5 mb-8 sm:mb-10">
         {[
-          { label: "Total Cars",   val: totalCars,    sub: `+${carsInRange} listings in ${rangeLabel}`, icon: <Car size={20} /> },
+          { label: "Total Cars",   val: totalCars,    sub: `+${carsInRange} cars in ${rangeLabel}`, icon: <Car size={20} /> },
           { label: "Total Leads",  val: totalLeads,   sub: `+${leadsInRange} leads in ${rangeLabel}`, icon: <MessageSquare size={20} />, color: "emerald" },
           { label: "Total Value",  val: formatCompact(totalValue), sub: "Listed Active Inventory Value", icon: <Bolt size={20} /> },
           { label: "Active Users", val: totalUsers,   sub: `Current Marketplace Shoppers`, icon: <Users size={20} /> }

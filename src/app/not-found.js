@@ -19,7 +19,7 @@ export default function NotFound() {
             We can&apos;t find that page.
           </h1>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl mb-8">
-            It may have moved, the listing may have been removed, or the link is outdated.
+            It may have moved, the car may have been removed, or the link is outdated.
             Use one of the quick paths below to continue.
           </p>
 

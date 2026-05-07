@@ -67,7 +67,7 @@ async function sendTestWatchAlertEmail(admin) {
   });
   if (!car) {
     return Response.json(
-      { success: false, error: "Add at least one car listing before sending a test alert." },
+      { success: false, error: "Add at least one car before sending a test alert." },
       { status: 400 }
     );
   }
@@ -193,7 +193,7 @@ async function runWatchAlerts() {
             ? `Price drop: ${watch.car.year} ${watch.car.make} ${watch.car.model}`
             : type === "BACK_IN_STOCK"
               ? `Back in stock: ${watch.car.year} ${watch.car.make} ${watch.car.model}`
-              : `New similar listing: ${similarTitle}`;
+              : `New similar car: ${similarTitle}`;
         const message =
           type === "PRICE_DROP"
             ? `Now KSh ${watch.car.price.toLocaleString("en-KE")} (was KSh ${previousPrice.toLocaleString("en-KE")}).`

@@ -133,7 +133,7 @@ export default function ContactPage() {
                         <option value="">Select a reason...</option>
                         <option value="bug">Terminal Bug</option>
                         <option value="partnership">Partnership</option>
-                        <option value="dealer">Dealer Listing</option>
+                        <option value="dealer">Dealer Car</option>
                         <option value="general">General Support</option>
                      </select>
                      <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
@@ -164,7 +164,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 sm:gap-16">
              {[
                { title: "Direct Contact", detail: "For specific vehicle queries, use the 'WhatsApp' link on the car detail page to reach the dealer directly." },
-               { title: "Escalations", detail: `For listing disputes or fraud reports, include the Reference ID and email ${PUBLIC_SUPPORT_EMAIL} immediately.` },
+               { title: "Escalations", detail: `For car disputes or fraud reports, include the Reference ID and email ${PUBLIC_SUPPORT_EMAIL} immediately.` },
                { title: "Business Inquiries", detail: "Seeking to join the network? Include your KRA compliance and physical yard location in the proposal." }
              ].map((item, i) => (
                <div key={i} className="text-center md:text-left group">

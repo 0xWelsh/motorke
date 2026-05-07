@@ -15,7 +15,7 @@ export const metadata = {
   openGraph: {
     title: "Trusted car dealers in Kenya | Welsh Motorhub",
     description:
-      "Browse Welsh Motorhub’s verified dealer network: counties, listings, and direct links to each showroom.",
+      "Browse Welsh Motorhub’s verified dealer network: counties, cars, and direct links to each showroom.",
     type: "website",
     url: "/dealers",
   },

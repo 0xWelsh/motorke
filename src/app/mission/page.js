@@ -43,7 +43,7 @@ export default function MissionPage() {
              <div className="lg:col-span-7">
                 <div className="bg-slate-50 dark:bg-[#111111] p-10 sm:p-12 border border-slate-100 dark:border-slate-800 shadow-2xl" style={{ borderRadius: 'var(--radius)' }}>
                    <p className="text-lg text-[#111827] dark:text-white leading-relaxed font-medium">
-                      The traditional car buying process was marked by opacity. Outdated listings, verification hurdles, and a lack of direct dealer performance metrics created friction. 
+                      The traditional car buying process was marked by opacity. Outdated car posts, verification hurdles, and a lack of direct dealer performance metrics created friction. 
                       <span className="block mt-6 text-[#38A169]">Welsh Motorhub was built to decentralize access to verified vehicle data.</span>
                    </p>
                 </div>
@@ -53,7 +53,7 @@ export default function MissionPage() {
           {/* Section 2: Core Pillars */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
              {[
-               { icon: <Shield className="w-5 h-5" />, title: "Verified Assets", detail: "Every listing is cross-referenced with regional registration databases to ensure legal compliance." },
+               { icon: <Shield className="w-5 h-5" />, title: "Verified Assets", detail: "Every car is cross-referenced with regional registration databases to ensure legal compliance." },
                { icon: <Zap className="w-5 h-5" />, title: "Operational Data", detail: "We enforce strict mileage verification protocols to eliminate odometer discrepancies." },
                { icon: <Target className="w-5 h-5" />, title: "Direct Logistics", detail: "Connect directly with verified yards. No middleman, no hidden commission structures." }
              ].map((pillar, i) => (

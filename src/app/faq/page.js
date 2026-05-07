@@ -17,11 +17,11 @@ const faqs = {
     },
     {
       q: "How do I know the car I'm buying is actually available?",
-      a: "Every listing is live and tied to the dealer's inventory system. If a car is sold, the dealer must update their inventory immediately. Our 'Mark as Sold' feature ensures no ghost listings. If you find a car marked available but it's sold, contact us immediately—we'll investigate.",
+      a: "Every car is live and tied to the dealer's inventory system. If a car is sold, the dealer must update their inventory immediately. Our 'Mark as Sold' feature ensures no ghost cars. If you find a car marked available but it's sold, contact us immediately—we'll investigate.",
     },
     {
       q: "Can I negotiate the price on Welsh Motorhub?",
-      a: "Yes! Use the enquiry form or call the dealer directly (phone numbers are on every listing). Welsh Motorhub connects you; the final negotiation happens between you and the dealer. Some dealers are more flexible on price, especially for cash buyers or bulk purchases.",
+      a: "Yes! Use the enquiry form or call the dealer directly (phone numbers are on every car). Welsh Motorhub connects you; the final negotiation happens between you and the dealer. Some dealers are more flexible on price, especially for cash buyers or bulk purchases.",
     },
     {
       q: "What if I have a bad experience with a dealer?",
@@ -33,11 +33,11 @@ const faqs = {
     },
     {
       q: "What does 'verified' mean on a dealer's profile?",
-      a: "A verified dealer has passed our background check, provided business registration proof, and maintains consistent, honest listings. They're held to higher standards. Trust the badge.",
+      a: "A verified dealer has passed our background check, provided business registration proof, and maintains consistent, honest cars. They're held to higher standards. Trust the badge.",
     },
     {
       q: "Do you help with financing?",
-      a: "Not directly, but many dealers offer financing options. You'll see 'Financing Available' tags on listings. You can compare final listed prices and ownership-related specs before deciding.",
+      a: "Not directly, but many dealers offer financing options. You'll see 'Financing Available' tags on cars. You can compare final listed prices and ownership-related specs before deciding.",
     },
     {
       q: "How do I get better deal notifications?",
@@ -51,7 +51,7 @@ const faqs = {
   "For Dealers": [
     {
       q: "How much does it cost to list on Welsh Motorhub?",
-      a: "Welsh Motorhub offers a FREE tier (list up to 20 vehicles) and a PRO tier (unlimited listings + analytics + lead prioritization). PRO is KSh 3,999/month or KSh 39,990/year. Cancel anytime.",
+      a: "Welsh Motorhub offers a FREE tier (list up to 20 vehicles) and a PRO tier (unlimited cars + analytics + lead prioritization). PRO is KSh 3,999/month or KSh 39,990/year. Cancel anytime.",
     },
     {
       q: "Why list on Welsh Motorhub instead of managing my own website?",
@@ -93,7 +93,7 @@ const faqs = {
   "Technical & Logistics": [
     {
       q: "How should I interpret listed prices on Welsh Motorhub?",
-      a: "Prices shown on listings are the dealer's final listed prices on Welsh Motorhub. Always confirm the final transaction amount, optional add-ons, and transfer fees directly with the dealer before payment.",
+      a: "Prices shown on cars are the dealer's final listed prices on Welsh Motorhub. Always confirm the final transaction amount, optional add-ons, and transfer fees directly with the dealer before payment.",
     },
     {
       q: "Can I save my location to find cars nearby?",
