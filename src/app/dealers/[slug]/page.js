@@ -268,7 +268,7 @@ export default async function DealerPage(props) {
          />
       </div>
 
-      <div className="w-full mx-auto px-4 sm:px-6 2xl:px-10 max-w-[1700px] -mt-20 sm:-mt-28 lg:-mt-32 relative z-10 pb-20">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl -mt-20 sm:-mt-28 lg:-mt-32 relative z-10 pb-20">
         
         {/* Dealership Info Card */}
         <div className="bg-white/95 dark:bg-[#111111]/95 backdrop-blur-md border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-8 lg:p-12 shadow-2xl mb-12 sm:mb-16" style={{ borderRadius: 'var(--radius)' }}>
@@ -352,19 +352,38 @@ export default async function DealerPage(props) {
         </div>
 
         {/* Content Layout */}
-        <div className="space-y-10 sm:space-y-12">
-          <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-6 sm:p-8 lg:p-10 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12 gap-3">
-               <div>
-                  <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-4">Showroom Inventory</h2>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-[#111827] dark:text-white uppercase tracking-tight">Live Listings.</h3>
-               </div>
-               <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">{dealer.cars.length} Units Available</span>
-            </div>
-            <DealerInventory cars={inventoryWithDistance} dealerSlug={dealer.slug} />
-          </section>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-14 lg:gap-16">
+          
+          {/* Main Content */}
+          <div className="lg:col-span-8 space-y-14 sm:space-y-20">
+            {/* Inventory */}
+            <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-6 sm:p-8 lg:p-10 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12 gap-3">
+                 <div>
+                    <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-4">Showroom Inventory</h2>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-[#111827] dark:text-white uppercase tracking-tight">Live Listings.</h3>
+                 </div>
+                 <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">{dealer.cars.length} Units Available</span>
+              </div>
+              <DealerInventory cars={inventoryWithDistance} dealerSlug={dealer.slug} />
+            </section>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10">
+            {/* Reviews Section */}
+            <section id="reviews" className="pt-10 sm:pt-12 border-t border-[#EDF2F7] dark:border-slate-800 bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-6 sm:p-8 lg:p-10 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
+              <DealerReviews
+                dealerSlug={dealer.slug}
+                dealerName={dealer.name}
+                averageRating={averageRating}
+                totalReviews={totalReviews}
+                reviews={dealer.reviews}
+                viewer={viewer}
+                viewerReview={viewerReview}
+              />
+            </section>
+          </div>
+
+          {/* Sidebar */}
+          <aside className="lg:col-span-4 space-y-8 sm:space-y-12">
             {/* Google Maps Link */}
             <div className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 overflow-hidden shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
               <div className="flex items-center justify-between gap-3 mb-3">
@@ -427,19 +446,8 @@ export default async function DealerPage(props) {
                   ))}
                </div>
             </div>
-          </div>
+          </aside>
 
-          <section id="reviews" className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-6 sm:p-8 lg:p-10 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
-            <DealerReviews
-              dealerSlug={dealer.slug}
-              dealerName={dealer.name}
-              averageRating={averageRating}
-              totalReviews={totalReviews}
-              reviews={dealer.reviews}
-              viewer={viewer}
-              viewerReview={viewerReview}
-            />
-          </section>
         </div>
       </div>
 
