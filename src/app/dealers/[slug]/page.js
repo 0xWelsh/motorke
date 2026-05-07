@@ -279,7 +279,7 @@ export default async function DealerPage(props) {
     <div className="bg-gradient-to-b from-[#f8fafc] via-white to-white dark:from-[#0a0a0a] dark:via-[#0b0b0b] dark:to-[#0a0a0a] min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <div className="w-full h-[300px] sm:h-[380px] lg:h-[460px] relative bg-[#111827] overflow-hidden">
+      <div className="w-full h-[260px] sm:h-[320px] lg:h-[380px] relative bg-[#111827] overflow-hidden">
         {dealer.bannerUrl ? (
           <img src={dealer.bannerUrl} alt={dealer.name} className="absolute inset-0 w-full h-full object-cover" />
         ) : (
@@ -291,93 +291,69 @@ export default async function DealerPage(props) {
             ))}
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/35" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/35" />
+        <div className="absolute inset-x-0 bottom-0">
+          <div className="w-full mx-auto px-4 sm:px-6 xl:px-8 max-w-[1380px] pb-4 sm:pb-5 lg:pb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
+              <section className="lg:col-span-8 bg-black/35 dark:bg-black/45 backdrop-blur-md p-4 sm:p-5 shadow-2xl" style={{ borderRadius: "14px" }}>
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/95 p-2.5 flex items-center justify-center shrink-0 overflow-hidden" style={{ borderRadius: "10px" }}>
+                    {dealer.logoUrl ? <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" /> : <span className="text-2xl font-black text-slate-400">{dealer.name[0]}</span>}
+                  </div>
+                  <div className="w-full">
+                    <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                      <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight">{dealer.name}</h1>
+                      {dealer.verified && <span className="bg-[#22c55e] text-white text-[10px] font-black px-2.5 py-1 uppercase tracking-[0.14em]" style={{ borderRadius: "999px" }}>Verified Dealer</span>}
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/80">
+                      <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3 text-[#22c55e]" /> {dealer.location || dealer.county}</span>
+                      <span className="inline-flex items-center gap-1"><CalendarDays className="w-3 h-3 text-[#22c55e]" /> Since {startedYear}</span>
+                      <span className="inline-flex items-center gap-1"><Activity className={`w-3 h-3 ${isActiveToday ? "text-[#22c55e]" : "text-white/50"}`} /> {lastActiveLabel}</span>
+                    </div>
+                    <p className="mt-2 text-[13px] sm:text-sm text-white/90 leading-relaxed line-clamp-2">{dealerSummary}</p>
+                    <div className="mt-2.5 grid grid-cols-2 lg:grid-cols-4 gap-2">
+                      <div className="bg-white/12 px-2.5 py-2" style={{ borderRadius: "9px" }}><p className="text-sm font-black text-white">{averageRating > 0 ? averageRating.toFixed(1) : "—"}</p><p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">{totalReviews} reviews</p></div>
+                      <div className="bg-white/12 px-2.5 py-2" style={{ borderRadius: "9px" }}><p className="text-sm font-black text-white">{soldCarsCount > 0 ? soldCarsCount.toLocaleString("en-KE") : "—"}</p><p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">cars sold</p></div>
+                      <div className="bg-white/12 px-2.5 py-2" style={{ borderRadius: "9px" }}><p className="text-sm font-black text-white">{responseTimeLabel}</p><p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">response</p></div>
+                      <div className="bg-white/12 px-2.5 py-2" style={{ borderRadius: "9px" }}><p className="text-sm font-black text-white">{dealer.cars.length}</p><p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">active cars</p></div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <aside className="lg:col-span-4 hidden lg:block">
+                <div className="bg-white/90 dark:bg-[#141414]/90 backdrop-blur-md p-4 shadow-2xl" style={{ borderRadius: "14px" }}>
+                  <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#22c55e] mb-1">Get in touch</p>
+                  <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-white mb-3">Start your enquiry</h3>
+                  {dealer.whatsapp && (
+                    <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-[#22c55e] text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
+                      Start Live Enquiry
+                    </a>
+                  )}
+                  {dealer.whatsapp && <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>WhatsApp Dealer</a>}
+                  {dealer.phone && <a href={`tel:${dealer.phone}`} className="w-full mb-2 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>Call Dealer</a>}
+                  {dealer.website && <a href={withProtocol(dealer.website)} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>Visit Website</a>}
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="w-full mx-auto px-4 sm:px-6 xl:px-8 max-w-[1380px] -mt-28 sm:-mt-32 lg:-mt-36 relative z-10 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
-          <section className="lg:col-span-8 bg-white/95 dark:bg-[#121212]/95 border border-slate-200 dark:border-slate-800 shadow-2xl p-5 sm:p-7" style={{ borderRadius: "16px" }}>
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-start">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 flex items-center justify-center shrink-0 overflow-hidden" style={{ borderRadius: "12px" }}>
-                {dealer.logoUrl ? <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" /> : <span className="text-3xl font-black text-slate-300">{dealer.name[0]}</span>}
-              </div>
-              <div className="w-full">
-                <div className="flex flex-wrap items-center gap-3 mb-2">
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#111827] dark:text-white tracking-tight">{dealer.name}</h1>
-                  {dealer.verified && <span className="bg-[#22c55e] text-white text-[10px] font-black px-3 py-1.5 uppercase tracking-[0.15em]" style={{ borderRadius: "999px" }}>Verified Dealer</span>}
-                </div>
-                <div className="flex flex-wrap items-center gap-3 text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
-                  <span className="inline-flex items-center gap-1.5"><MapPin className="w-3 h-3 text-[#22c55e]" /> {dealer.location || dealer.county}</span>
-                  <span className="inline-flex items-center gap-1.5"><CalendarDays className="w-3 h-3 text-[#22c55e]" /> Member since {startedYear}</span>
-                  <span className="inline-flex items-center gap-1.5"><Activity className={`w-3 h-3 ${isActiveToday ? "text-[#22c55e]" : "text-slate-400"}`} /> {lastActiveLabel}</span>
-                </div>
-                <p className="mt-3 text-sm sm:text-[15px] font-medium text-slate-700 dark:text-slate-300 leading-relaxed">{dealerSummary}</p>
-                <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-2.5">
-                  <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2.5" style={{ borderRadius: "10px" }}>
-                    <p className="text-sm font-black text-slate-900 dark:text-white">{averageRating > 0 ? averageRating.toFixed(1) : "—"}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">{totalReviews} reviews</p>
-                  </div>
-                  <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2.5" style={{ borderRadius: "10px" }}>
-                    <p className="text-sm font-black text-slate-900 dark:text-white">{soldCarsCount > 0 ? soldCarsCount.toLocaleString("en-KE") : "—"}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">cars sold</p>
-                  </div>
-                  <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2.5" style={{ borderRadius: "10px" }}>
-                    <p className="text-sm font-black text-slate-900 dark:text-white">{responseTimeLabel}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">response</p>
-                  </div>
-                  <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2.5" style={{ borderRadius: "10px" }}>
-                    <p className="text-sm font-black text-slate-900 dark:text-white">{dealer.cars.length}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">active inventory</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+      <div className="w-full mx-auto px-4 sm:px-6 xl:px-8 max-w-[1380px] mt-5 relative z-10 pb-20">
 
-          <aside className="lg:col-span-4 lg:sticky lg:top-6 self-start">
-            <div className="bg-[#0f172a]/95 border border-white/10 p-4 sm:p-5 text-white shadow-2xl" style={{ borderRadius: "14px" }}>
-              <p className="text-[10px] font-black uppercase tracking-[0.14em] text-emerald-300 mb-1">Get in touch</p>
-              <h3 className="text-lg sm:text-xl font-black tracking-tight mb-4">Start your enquiry</h3>
-              {dealer.whatsapp && (
-                <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-[#22c55e] text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
-                  Start Live Enquiry
-                </a>
-              )}
-              {dealer.whatsapp && (
-                <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-white/5 border border-white/15 text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
-                  WhatsApp Dealer
-                </a>
-              )}
-              {dealer.phone && (
-                <a href={`tel:${dealer.phone}`} className="w-full mb-2 inline-flex items-center justify-center bg-white/5 border border-white/15 text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
-                  Call Dealer
-                </a>
-              )}
-              {dealer.website && (
-                <a href={withProtocol(dealer.website)} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-white/5 border border-white/15 text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
-                  Visit Website
-                </a>
-              )}
-              <a href="#inventory" className="w-full inline-flex items-center justify-center bg-white/5 border border-white/15 text-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
-                Save Dealer
-              </a>
-            </div>
-          </aside>
-        </div>
-
-        <section className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 shadow-xl p-3 sm:p-4 mb-6" style={{ borderRadius: "14px" }}>
+        <section className="bg-white dark:bg-[#111111] shadow-xl p-3 sm:p-4 mb-6" style={{ borderRadius: "14px" }}>
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{dealer.cars.length}+</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Vehicles in stock</p></div>
-            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{yearsActive}+</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Years in business</p></div>
-            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{soldCarsCount > 0 ? soldCarsCount.toLocaleString("en-KE") : "—"}</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Cars sold</p></div>
-            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{totalReviews || "—"}</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Happy customers</p></div>
-            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{dealer.verified ? "100%" : "—"}</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Verified dealer</p></div>
+            <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{dealer.cars.length}+</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Vehicles in stock</p></div>
+            <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{yearsActive}+</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Years in business</p></div>
+            <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{soldCarsCount > 0 ? soldCarsCount.toLocaleString("en-KE") : "—"}</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Cars sold</p></div>
+            <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{totalReviews || "—"}</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Happy customers</p></div>
+            <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{dealer.verified ? "100%" : "—"}</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Verified dealer</p></div>
           </div>
         </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-8 space-y-6">
-            <section id="inventory" className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
+            <section id="inventory" className="bg-white dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
               <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 gap-3">
                 <div>
                   <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-2">Featured Vehicles</h2>
@@ -388,14 +364,14 @@ export default async function DealerPage(props) {
               <DealerInventory cars={inventoryWithDistance} dealerSlug={dealer.slug} />
             </section>
 
-            <section className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
+            <section className="bg-white dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
               <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-4">About {dealer.name}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-4">
                   <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{dealer.description || dealerSummary}</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {["Verified inventory", "Inspected vehicles", "Trade-in accepted", "Financing support", "After-sales assistance", "Import options available"].map((item) => (
-                      <div key={item} className="inline-flex items-center gap-2 text-[11px] font-semibold text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2" style={{ borderRadius: "10px" }}>
+                      <div key={item} className="inline-flex items-center gap-2 text-[11px] font-semibold text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 px-3 py-2" style={{ borderRadius: "10px" }}>
                         <ShieldCheck className="w-3.5 h-3.5 text-[#22c55e]" />
                         {item}
                       </div>
@@ -404,7 +380,7 @@ export default async function DealerPage(props) {
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   {(recentShowcaseCars.length > 0 ? recentShowcaseCars : dealerGallery.map((g, i) => ({ id: `g-${i}`, image: g.image, title: g.title }))).slice(0, 4).map((item) => (
-                    <div key={item.id} className="relative aspect-[4/3] overflow-hidden border border-slate-200 dark:border-slate-700" style={{ borderRadius: "10px" }}>
+                    <div key={item.id} className="relative aspect-[4/3] overflow-hidden" style={{ borderRadius: "10px" }}>
                       <Image src={item.image} alt={item.title} fill className="object-cover" />
                     </div>
                   ))}
@@ -412,13 +388,13 @@ export default async function DealerPage(props) {
               </div>
             </section>
 
-            <section id="reviews" className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
+            <section id="reviews" className="bg-white dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
               <DealerReviews dealerSlug={dealer.slug} dealerName={dealer.name} averageRating={averageRating} totalReviews={totalReviews} reviews={dealer.reviews} viewer={viewer} viewerReview={viewerReview} />
             </section>
           </div>
 
           <aside className="lg:col-span-4 space-y-6">
-            <section className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
+            <section className="bg-white dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
               <h4 className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-600 dark:text-slate-400 mb-3">Dealer info</h4>
               <div className="space-y-2.5 mb-4 text-[12px] font-semibold text-slate-700 dark:text-slate-300">
                 <div className="flex justify-between gap-3"><span className="text-slate-500">Business type</span><span>Dealership</span></div>
@@ -442,12 +418,12 @@ export default async function DealerPage(props) {
               </a>
             </section>
 
-            <section className="bg-[#F8FAFC] dark:bg-[#111111] border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
+            <section className="bg-[#F8FAFC] dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
               <h4 className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 mb-3">Social & Media</h4>
               {socialProof.length > 0 ? (
                 <div className="space-y-2">
                   {socialProof.map((item) => (
-                    <a key={item.key} href={item.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-between w-full text-[12px] font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2.5" style={{ borderRadius: "10px" }}>
+                    <a key={item.key} href={item.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-between w-full text-[12px] font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 px-3 py-2.5" style={{ borderRadius: "10px" }}>
                       <span className="inline-flex items-center gap-2">{item.icon}{item.label}</span>
                       <span className="text-[10px] uppercase tracking-[0.12em] text-slate-500">{item.metric}</span>
                     </a>
@@ -464,7 +440,7 @@ export default async function DealerPage(props) {
                   </div>
                   <div className="grid grid-cols-4 gap-2">
                     {recentShowcaseCars.map((car) => (
-                      <Link key={`media-${car.id}`} href={`/cars/${car.id}`} className="relative aspect-square overflow-hidden border border-slate-200 dark:border-slate-700" style={{ borderRadius: "8px" }}>
+                      <Link key={`media-${car.id}`} href={`/cars/${car.id}`} className="relative aspect-square overflow-hidden" style={{ borderRadius: "8px" }}>
                         <Image src={car.image} alt={car.title} fill className="object-cover" />
                       </Link>
                     ))}

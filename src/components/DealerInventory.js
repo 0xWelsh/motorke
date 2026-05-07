@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import CarCard from "@/components/CarCard";
 
 export default function DealerInventory({ cars, dealerSlug }) {
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("ALL");
+  const [page, setPage] = useState(1);
 
   const makes = useMemo(() => {
     return ["ALL", ...new Set(cars.map((c) => c.make))];
@@ -32,8 +33,16 @@ export default function DealerInventory({ cars, dealerSlug }) {
     if (diffDays === 1) return "Updated yesterday";
     return `Updated ${diffDays} days ago`;
   };
-  const topCars = filteredCars.slice(0, 6);
-  const lowerCars = filteredCars.slice(6);
+  const PAGE_SIZE = 14;
+  const totalPages = Math.max(1, Math.ceil(filteredCars.length / PAGE_SIZE));
+  const pageStart = (page - 1) * PAGE_SIZE;
+  const pageCars = filteredCars.slice(pageStart, pageStart + PAGE_SIZE);
+  const topCars = pageCars.slice(0, 6);
+  const lowerCars = pageCars.slice(6);
+
+  useEffect(() => {
+    setPage(1);
+  }, [query, activeFilter]);
 
   return (
     <div>
@@ -105,6 +114,52 @@ export default function DealerInventory({ cars, dealerSlug }) {
                   <CarCard car={car} />
                 </div>
               ))}
+            </div>
+          )}
+
+          {totalPages > 1 && (
+            <div className="pt-2 flex items-center justify-center gap-2 sm:gap-3">
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="px-4 py-2 text-[11px] font-black uppercase tracking-[0.12em] bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 disabled:opacity-40"
+                style={{ borderRadius: "10px" }}
+              >
+                Prev
+              </button>
+              <div className="flex items-center gap-1.5">
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter((p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
+                  .map((p, idx, arr) => (
+                    <div key={p} className="flex items-center">
+                      {idx > 0 && arr[idx - 1] !== p - 1 && (
+                        <span className="px-1 text-slate-400">…</span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setPage(p)}
+                        className={`w-9 h-9 text-[11px] font-black ${
+                          p === page
+                            ? "bg-[#22c55e] text-white"
+                            : "bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300"
+                        }`}
+                        style={{ borderRadius: "10px" }}
+                      >
+                        {p}
+                      </button>
+                    </div>
+                  ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="px-4 py-2 text-[11px] font-black uppercase tracking-[0.12em] bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 disabled:opacity-40"
+                style={{ borderRadius: "10px" }}
+              >
+                Next
+              </button>
             </div>
           )}
         </div>
