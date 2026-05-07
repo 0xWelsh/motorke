@@ -26,9 +26,9 @@ export function middleware(request) {
     "default-src 'self'; " +
     "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com cdn.jsdelivr.net; " +
     "style-src 'self' 'unsafe-inline' *.googleapis.com *.fontshare.com fonts.googleapis.com; " +
-    "img-src 'self' data: blob: https: *.supabase.co *.unsplash.com; " +
+    "img-src 'self' data: blob: https: *.supabase.co *.unsplash.com *.openstreetmap.org tile.openstreetmap.org a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org; " +
     "font-src 'self' *.fontshare.com fonts.gstatic.com; " +
-    "connect-src 'self' *.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com *.supabase.co *.safaricom.co.ke vercel.com; " +
+    "connect-src 'self' *.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com *.supabase.co *.safaricom.co.ke vercel.com *.openstreetmap.org tile.openstreetmap.org a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org; " +
     "frame-src 'self' *.google.com *.recaptcha.net *.cloudflare.com; " +
     "object-src 'none'; " +
     "base-uri 'self'; " +
