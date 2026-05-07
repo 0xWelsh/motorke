@@ -173,7 +173,7 @@ function homeStructuredData(origin) {
         name: "Welsh Motorhub",
         url: origin,
         description:
-          "Browse used and new cars, compare vehicles, and connect with Kenyan dealerships.",
+          "Browse used and new listings, compare vehicles, and connect with Kenyan dealerships.",
         potentialAction: {
           "@type": "SearchAction",
           target: `${origin}/cars?search={search_term_string}`,
@@ -302,7 +302,7 @@ export default async function HomePage() {
               <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-6 sm:mt-8">
                 {[
                   { label: "Verified dealers", value: `${dealers.length}+` },
-                  { label: "Live cars", value: `${(hotThisWeek || []).length}+` },
+                  { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
                   { label: "Updated", value: "Daily" },
                 ].map((item) => (
                   <div key={item.label} className="p-3 sm:p-4 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
@@ -344,7 +344,7 @@ export default async function HomePage() {
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
               <div className="max-w-xl">
                 <h2 className="text-4xl sm:text-6xl font-normal editorial-heading text-[#111827] dark:text-white mb-4">Spotlight</h2>
-                <p className="text-[#718096] dark:text-slate-400 text-lg font-medium">Verified cars currently receiving the most interest from our network.</p>
+                <p className="text-[#718096] dark:text-slate-400 text-lg font-medium">Verified listings currently receiving the most interest from our network.</p>
               </div>
               <TrackedLink
                 href="/cars?sort=popular"
@@ -434,7 +434,7 @@ export default async function HomePage() {
                 <span className="editorial-heading text-[#718096]">without the hassle.</span>
               </h2>
               <p className="text-lg text-[#A0AEC0] leading-relaxed max-w-xl font-medium">
-                Tired of recycled cars and unverified sellers? Welsh Motorhub provides a direct link
+                Tired of recycled listings and unverified sellers? Welsh Motorhub provides a direct link
                 to the actual stock sitting on dealership floors. No middlemen, no scraped data,
                 just high-fidelity inventory.
               </p>
@@ -445,7 +445,7 @@ export default async function HomePage() {
                 { title: "Dealer Verified", icon: <ShieldCheck />, desc: "Every unit is hand-uploaded by real businesses." },
                 { title: "Pricing Clarity", icon: <BadgeCheck />, desc: "Final listed prices shown upfront with no hidden calculations." },
                 { title: "Direct Contact", icon: <Star />, desc: "Communicate directly via WhatsApp or Phone." },
-                { title: "Fresh Stock", icon: <Compass />, desc: "Cars are removed the second they sell." },
+                { title: "Fresh Stock", icon: <Compass />, desc: "Listings are removed the second they sell." },
               ].map((item, i) => (
                 <div key={i} className="flex flex-col gap-4">
                   <div className="text-[#38A169]">{item.icon}</div>

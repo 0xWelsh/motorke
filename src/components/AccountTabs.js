@@ -221,7 +221,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
         {/* ── SAVED CARS ── */}
         {tab === "saved" && (
           saved.length === 0
-            ? <Empty icon={<Bookmark size={32} className="text-amber-500" />} title="No Watchlist Assets" desc="You haven't bookmarked any cars yet. When you find an interesting unit, save it to track price changes." href="/cars" cta="Explore Inventory Drop" />
+            ? <Empty icon={<Bookmark size={32} className="text-amber-500" />} title="No Watchlist Assets" desc="You haven't bookmarked any listings yet. When you find an interesting unit, save it to track price changes." href="/cars" cta="Explore Inventory Drop" />
             : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {saved.map(car => (

@@ -67,7 +67,7 @@ export default async function PortalPage({ searchParams }) {
             <div>
               <h3 className="text-[11px] uppercase font-black tracking-[0.10em] text-amber-800 mb-1">Account Under Review</h3>
               <p className="text-[11px] font-semibold normal-case tracking-normal text-amber-800/90 leading-snug">
-                Your dealer profile is pending admin verification. Cars can still appear on the marketplace while we review; the{" "}
+                Your dealer profile is pending admin verification. Listings can still appear on the marketplace while we review; the{" "}
                 <span className="font-bold">verified dealer</span> badge is added after approval.
               </p>
             </div>
@@ -88,19 +88,19 @@ export default async function PortalPage({ searchParams }) {
           <Link href="/portal/cars/new"
             className="flex items-center justify-center sm:justify-start gap-2 bg-[#111111] hover:bg-slate-800 text-white text-xs font-bold uppercase tracking-wider px-4 sm:px-6 py-2.5 sm:py-3 rounded-none shadow-sm transition-all">
             <Plus size={16} className="sm:block hidden" />
-            <Plus size={14} className="sm:hidden" /> New Car
+            <Plus size={14} className="sm:hidden" /> New Listing
           </Link>
         </div>
       </div>
 
       {created && (
         <div className="mb-8 rounded-none border-l-4 border-l-[#2F855A] bg-emerald-50 px-6 py-5">
-          <h2 className="text-[11px] uppercase font-black tracking-[0.10em] font-black uppercase tracking-[0.12em] text-[#2F855A]">Car Published</h2>
+          <h2 className="text-[11px] uppercase font-black tracking-[0.10em] font-black uppercase tracking-[0.12em] text-[#2F855A]">Listing Published</h2>
           <p className="mt-2 text-[11px] uppercase font-black tracking-[0.10em] font-semibold text-emerald-800">
             Great work. Complete these quick actions to boost enquiries.
           </p>
           <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
-            <Link href={createdCarId ? `/cars/${createdCarId}` : "/portal/inventory"} className="rounded-none bg-white px-3 py-2 text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-[#2F855A] hover:bg-emerald-100">View Live Car</Link>
+            <Link href={createdCarId ? `/cars/${createdCarId}` : "/portal/inventory"} className="rounded-none bg-white px-3 py-2 text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-[#2F855A] hover:bg-emerald-100">View Live Listing</Link>
             <Link href="/portal/inventory" className="rounded-none bg-white px-3 py-2 text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-[#2F855A] hover:bg-emerald-100">Share To Buyer Groups</Link>
             <Link href="/portal/leads" className="rounded-none bg-white px-3 py-2 text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-[#2F855A] hover:bg-emerald-100">Watch Incoming Leads</Link>
           </div>
@@ -184,7 +184,7 @@ export default async function PortalPage({ searchParams }) {
 
           <div className="grid grid-cols-1 gap-2">
             <Link href="/portal/cars/new" className="inline-flex items-center justify-between gap-3 rounded-none border border-slate-100 bg-[#fbfcfe] dark:bg-[#0f0f10] px-4 py-3 hover:bg-slate-50 dark:hover:bg-[#111111] transition-colors">
-              <span className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-700 dark:text-zinc-200">Add a new car</span>
+              <span className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-700 dark:text-zinc-200">Add a new listing</span>
               <span className="text-[#2F855A] font-black">→</span>
             </Link>
             <Link href="/portal/leads" className="inline-flex items-center justify-between gap-3 rounded-none border border-slate-100 bg-[#fbfcfe] dark:bg-[#0f0f10] px-4 py-3 hover:bg-slate-50 dark:hover:bg-[#111111] transition-colors">

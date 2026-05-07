@@ -32,7 +32,7 @@ function getPrivacySections(support) {
     subsections: [
       { heading: "2.1 Account Information", items: ["Name", "Email address", "Phone number", "Password (hashed, never stored plaintext)", "Date of birth (for age verification)"] },
       { heading: "2.2 Dealer Profile Data", items: ["Business name and registration number", "KRA PIN", "Physical address and county", "Logo or avatars", "Business description", "Verification documents"] },
-      { heading: "2.3 Inventory & Car Data", items: ["Vehicle specifications (make, model, year)", "Pricing, mileage, condition", "Photos and videos you upload", "Contact information in cars"] },
+      { heading: "2.3 Inventory & Listing Data", items: ["Vehicle specifications (make, model, year)", "Pricing, mileage, condition", "Photos and videos you upload", "Contact information in listings"] },
       { heading: "2.4 Interaction & Activity Data", items: ["Enquiries sent by buyers", "Lead interactions and responses", "Search queries", "Pages visited and time spent", "Device information (browser, OS, IP address)", "Cookies and tracking pixels"] },
       { heading: "2.5 Payment Data", items: ["M-Pesa phone number", "Transaction IDs and amounts", "Payment status and timestamps", "Invoice records"] },
     ],
@@ -40,7 +40,7 @@ function getPrivacySections(support) {
   {
     title: "3. How We Collect Data",
     subsections: [
-      { heading: "3.1 Direct Collection", content: "Data you provide when creating accounts, updating profiles, uploading cars, sending enquiries, or subscribing to plans." },
+      { heading: "3.1 Direct Collection", content: "Data you provide when creating accounts, updating profiles, uploading listings, sending enquiries, or subscribing to plans." },
       { heading: "3.2 Automatic Collection", content: "IP addresses, browser cookies, device identifiers, and page click tracking via server logs and analytics tools." },
       { heading: "3.3 Third-Party Sources", content: "M-Pesa verification for phone numbers, KRA records for dealer validation, and analytics partners for aggregated usage data." },
     ],
@@ -48,7 +48,7 @@ function getPrivacySections(support) {
   {
     title: "4. How We Use Your Data",
     subsections: [
-      { heading: "4.1 Core Service Operations", items: ["Authenticating your account and managing login", "Connecting buyer enquiries to dealer cars", "Delivering lead notifications via email/SMS", "Processing payments if and when subscription or paid features are enabled"] },
+      { heading: "4.1 Core Service Operations", items: ["Authenticating your account and managing login", "Connecting buyer enquiries to dealer listings", "Delivering lead notifications via email/SMS", "Processing payments if and when subscription or paid features are enabled"] },
       { heading: "4.2 Platform Improvement", items: ["Analyzing usage patterns to optimize UX", "Identifying bugs and performance issues", "A/B testing new features", "Aggregating anonymized data for market research"] },
       { heading: "4.3 Security & Compliance", items: ["Detecting fraudulent activity and abuse", "Protecting against unauthorized access", "Maintaining audit logs for disputes", "Complying with KRA tax and legal obligations"] },
       { heading: "4.4 Communication", items: ["Sending transactional emails (verification, reset codes, receipts)", "Notifying about account activity and security alerts", "Promotional emails (opt-out available)", "Support responses and account recovery"] },

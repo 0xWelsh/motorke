@@ -190,7 +190,7 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
       <div className="mt-6 bg-red-500/5 border border-red-500/20 rounded-2xl p-6">
         <h3 className="font-bold text-red-400 mb-1">Danger zone</h3>
         <p className="text-xs text-white/30 mb-4">
-          Deleting a dealership removes all their cars and portal accounts permanently.
+          Deleting a dealership removes all their listings and portal accounts permanently.
         </p>
         <DeleteButton action={`/api/admin/dealers/${dealer.id}/delete`} message="Delete this dealership and ALL their cars? Cannot be undone." label="Delete" />
       </div>

@@ -9,10 +9,10 @@ export default function ClearAllButton({ dealerId = null }) {
   async function handleClick() {
     const msg = dealerId
       ? "Delete ALL cars for this dealer? This cannot be undone."
-      : "Delete ALL cars from the entire platform? Every car, photo and enquiry will be permanently removed.";
+      : "Delete ALL car listings from the entire platform? Every listing, photo and enquiry will be permanently removed.";
 
     const confirmed = await danger(msg, {
-      title: "Clear all cars",
+      title: "Clear all listings",
       confirmLabel: "Yes, delete everything",
     });
     if (!confirmed) return;
@@ -45,7 +45,7 @@ export default function ClearAllButton({ dealerId = null }) {
       fontFamily: "inherit", fontWeight: 700,
       opacity: loading ? 0.6 : 1,
     }}>
-      {loading ? "Deleting…" : "🗑 Clear all cars"}
+      {loading ? "Deleting…" : "🗑 Clear all listings"}
     </button>
   );
 }

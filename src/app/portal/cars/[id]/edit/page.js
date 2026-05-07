@@ -28,7 +28,7 @@ export default async function PortalEditCarPage({ params }) {
           <span className="text-lg">←</span> Back to Showroom
         </a>
         <h1 className="text-3xl font-black text-slate-950 tracking-tight">
-          Edit Car
+          Edit Listing
         </h1>
         <p className="text-slate-700 font-medium mt-1 font-sans">
           {car.year} {car.make} {car.model} — System Ref: {car.id.slice(-8)}
@@ -45,7 +45,7 @@ export default async function PortalEditCarPage({ params }) {
 
       {/* Danger zone */}
       <div className="mt-10 bg-rose-50/30 border border-rose-100 rounded-2xl p-6">
-        <h3 className="text-lg font-black text-rose-600 tracking-tight mb-2 uppercase">Delete Car</h3>
+        <h3 className="text-lg font-black text-rose-600 tracking-tight mb-2 uppercase">Delete Listing</h3>
         <p className="text-[11px] font-bold text-rose-400 mb-8 uppercase tracking-widest">
           Permanently remove this vehicle and related lead data.
         </p>

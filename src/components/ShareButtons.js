@@ -73,7 +73,7 @@ export default function ShareButtons({
         disabled={!listUrl}
         className="flex items-center gap-1.5 text-xs bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-700 hover:text-slate-900 dark:text-white hover:bg-slate-100 rounded-2xl px-3 py-2 font-semibold transition-colors disabled:opacity-50"
       >
-        {copied ? "✓ Copied!" : "🔗 Copy car link"}
+        {copied ? "✓ Copied!" : "🔗 Copy listing link"}
       </button>
     </div>
   );

@@ -314,7 +314,7 @@ export default async function CarDetailPage({ params }) {
                       className="pointer-events-none absolute bottom-[calc(100%+10px)] left-1/2 z-20 mb-0 w-max max-w-[min(280px,calc(100vw-3rem))] -translate-x-1/2 rounded-[3px] border border-[#38A169]/25 bg-gradient-to-br from-emerald-50 to-white px-3.5 py-2 pb-3 text-left text-[11px] font-semibold leading-snug text-[#14532d] shadow-[0_10px_35px_-8px_rgba(22,101,52,0.35)] opacity-0 transition-opacity duration-200 group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100 dark:from-emerald-950/95 dark:to-[#0f172a] dark:border-[#38A169]/35 dark:text-emerald-100 dark:shadow-[0_12px_40px_-10px_rgba(0,0,0,0.55)]"
                     >
                       <span className="block text-[9px] font-black uppercase tracking-[0.18em] text-[#38A169] dark:text-[#6ee7b7]">
-                        Car price
+                        Listing price
                       </span>
                       <span className="mt-1 block font-medium text-[#166534] dark:text-emerald-50">
                         Price inclusive of all costs
@@ -337,7 +337,7 @@ export default async function CarDetailPage({ params }) {
                         </>
                       ) : null}
                       {car.description?.trim() ||
-                        "Representing excellence in engineering, this unit undergoes a rigorous 150-point inspection before publication. Our network ensures every vehicle meets stringent quality and performance benchmarks."}
+                        "Representing excellence in engineering, this unit undergoes a rigorous 150-point inspection before listing. Our network ensures every vehicle meets stringent quality and performance benchmarks."}
                    </div>
                 </div>
 

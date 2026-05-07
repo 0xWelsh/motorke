@@ -69,6 +69,6 @@ export async function POST(request) {
     );
   } catch (err) {
     console.error("Create car error:", err);
-    return NextResponse.json({ error: "Failed to create car" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to create listing" }, { status: 500 });
   }
 }

@@ -4,12 +4,12 @@ import CompareClient from "./CompareClient";
 export const metadata = {
   title: "Compare cars side by side (Kenya)",
   description:
-    "Compare up to three Kenyan vehicles side by side: price, specs, duties, efficiency, and running costs — all on Welsh Motorhub.",
+    "Compare up to three Kenyan vehicle listings side by side: price, specs, duties, efficiency, and running costs — all on Welsh Motorhub.",
   alternates: { canonical: "/compare" },
   openGraph: {
     title: "Compare vehicles | Welsh Motorhub",
     description:
-      "Stack two or three Kenyan cars beside each other before you enquire. Built for decisive buyers.",
+      "Stack two or three Kenyan listings beside each other before you enquire. Built for decisive buyers.",
     type: "website",
     url: "/compare",
   },

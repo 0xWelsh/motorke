@@ -87,7 +87,7 @@ export default function EnquiryForm({
 
     try {
       const leadMessage = notifySimilar
-        ? `${message?.trim() || ""}\n\n[Notify me when similar cars appear]`
+        ? `${message?.trim() || ""}\n\n[Notify me when similar listings appear]`
         : message;
 
       const res = await fetch("/api/leads", {
@@ -229,7 +229,7 @@ export default function EnquiryForm({
               onChange={(e) => setNotifySimilar(e.target.checked)}
               className="mt-1 accent-black"
             />
-            Notify me when similar cars appear
+            Notify me when similar listings appear
           </label>
           
           <label className="flex items-start gap-3 text-[11px] text-slate-500 cursor-pointer select-none">

@@ -353,7 +353,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const inField =
     "block w-full min-h-[1.5rem] border-0 bg-transparent p-0 text-base font-semibold text-slate-900 dark:text-white outline-none ring-0 focus:ring-0 placeholder:text-slate-400";
   const inFieldSelect = `${inField} appearance-none cursor-pointer pr-1`;
-  const previewTitle = `${liveDraft.year || selectedYear || ""} ${liveDraft.make || selectedMake || ""} ${liveDraft.model || selectedModel || ""}`.trim() || "Your car preview";
+  const previewTitle = `${liveDraft.year || selectedYear || ""} ${liveDraft.make || selectedMake || ""} ${liveDraft.model || selectedModel || ""}`.trim() || "Your listing preview";
   const previewVariant = liveDraft.variant || "";
   const previewDescription = String(liveDraft.description || formSeed.description || "").trim();
   const previewPrice = liveDraft.price || "";
@@ -735,7 +735,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
       <div className="space-y-5 sm:space-y-6">
         <div>
-          <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-3">Car</p>
+          <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-3">Listing</p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
             <div>
@@ -1023,7 +1023,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 </div>
               ) : (
                 <p className="text-xs font-semibold text-slate-500">
-                  Advanced specs are collapsed by default for faster publishing. Expand when needed.
+                  Advanced specs are collapsed by default for faster listing. Expand when needed.
                 </p>
               )}
             </div>

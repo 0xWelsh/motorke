@@ -15,7 +15,7 @@ export default async function BulkUploadPage() {
       <div style={{ marginBottom: 28 }}>
         <a href="/admin" style={{ fontSize: 12, color: "#999", textDecoration: "none" }}>← Dashboard</a>
         <h1 style={{ fontWeight: 800, fontSize: "1.6rem", color: "#0A2640", marginTop: 8 }}>Bulk upload cars</h1>
-        <p style={{ color: "#666", fontSize: 14, marginTop: 4 }}>Upload multiple cars at once using a CSV or Excel file</p>
+        <p style={{ color: "#666", fontSize: 14, marginTop: 4 }}>Upload multiple car listings at once using a CSV or Excel file</p>
       </div>
 
       {/* Template download */}
@@ -63,7 +63,7 @@ export default async function BulkUploadPage() {
         </div>
         <p style={{ fontSize: 12, color: "#999", marginTop: 14 }}>
           * Required fields. Separate multiple features with a semicolon (;). Each bulk CSV must include at least 3
-          cars—use the single-car form for one or two cars.
+          cars—use the single-car form for one or two listings.
         </p>
       </div>
 

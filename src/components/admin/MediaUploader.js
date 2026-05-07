@@ -66,7 +66,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
   };
 
   const clearAllFiles = () => {
-    const ok = window.confirm("Remove all selected car photos?");
+    const ok = window.confirm("Remove all selected listing photos?");
     if (!ok) return;
     files.forEach((file) => {
       if (file?.preview && !file.url) URL.revokeObjectURL(file.preview);
@@ -138,7 +138,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
             <div className="w-12 h-12 rounded-2xl bg-white dark:bg-[#111111] shadow-lg flex items-center justify-center mb-3 text-[#2F855A] border border-slate-100 dark:border-slate-800 group-hover:scale-110 transition-transform duration-500">
                 <UploadCloud size={24} />
             </div>
-            <p className="text-base font-black text-slate-900 dark:text-white tracking-tight">Drop car photos</p>
+            <p className="text-base font-black text-slate-900 dark:text-white tracking-tight">Drop listing photos</p>
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.16em] mt-2 block">Tap or drag to add</p>
         </div>
 
@@ -192,7 +192,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
                        draggedId === file.id ? "opacity-30 scale-95 border-emerald-500" : "opacity-100 border-slate-200 dark:border-slate-800"
                     }`}
                   >
-                    <img src={file.preview} alt="Car Photo" className="w-full h-full object-cover pointer-events-none" />
+                    <img src={file.preview} alt="Listing Photo" className="w-full h-full object-cover pointer-events-none" />
                     
                     <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-end p-4 backdrop-blur-sm pointer-events-auto">
                         <div className="w-full space-y-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">

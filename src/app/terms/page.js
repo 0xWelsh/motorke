@@ -27,11 +27,11 @@ function getTermsSections(support) {
   {
     title: "3. Dealer Obligations",
     subsections: [
-      { heading: "3.1 Accurate Cars", content: "Dealers must publish truthful, accurate, and complete inventory information including vehicle specifications, mileage, condition, pricing, photographs, and availability status. Misleading car details violate these Terms and may result in car removal or account suspension." },
+      { heading: "3.1 Accurate Listings", content: "Dealers must publish truthful, accurate, and complete inventory information including vehicle specifications, mileage, condition, pricing, photographs, and availability status. Misleading listings violate these Terms and may result in listing removal or account suspension." },
       { heading: "3.2 Contact Information", content: "Dealers must maintain current, accurate contact information (phone, email, WhatsApp, physical address). Lead notifications will be sent to these channels; inaccurate information may result in missed business opportunities." },
       { heading: "3.3 Response Obligations", content: "Dealers agree to respond to buyer enquiries within 24 hours during business hours. Persistent non-responsiveness (3+ ignored enquiries per week) may trigger account review and potential suspension." },
       { heading: "3.4 Inventory Accuracy", content: "Dealers must mark vehicles as \"Sold\" or \"Unavailable\" within 48 hours of transaction. Expired or false availability status may be corrected by Welsh Motorhub without notice and could trigger dealer account warnings." },
-      { heading: "3.5 No Bait-and-Switch", content: "Vehicle pricing, condition, mileage, and availability in cars must match actual inventory. Last-minute price changes or unavailability claims not reflected in a car violate these Terms." },
+      { heading: "3.5 No Bait-and-Switch", content: "Vehicle pricing, condition, mileage, and availability in listings must match actual inventory. Last-minute price changes or unavailability claims not reflected in listing violate these Terms." },
     ]
   },
   {
@@ -67,7 +67,7 @@ function getTermsSections(support) {
     subsections: [
       { heading: "7.1 Platform IP", content: "All content, design, functionality, and technology comprising the Platform are the exclusive property of Welsh Motors Ltd and protected by Kenyan and international copyright law." },
       { heading: "7.2 User License", content: "We grant you a limited, non-exclusive, revocable license to use the Platform for its intended purpose. This license does not permit resale, redistribution, or derivative works." },
-      { heading: "7.3 User Content", content: "By posting cars, photos, or descriptions, dealers retain ownership but grant Welsh Motors Ltd a worldwide, perpetual, royalty-free license to use, reproduce, and display this content on the Platform and in promotional materials." },
+      { heading: "7.3 User Content", content: "By posting listings, photos, or descriptions, dealers retain ownership but grant Welsh Motors Ltd a worldwide, perpetual, royalty-free license to use, reproduce, and display this content on the Platform and in promotional materials." },
     ]
   },
   {
@@ -90,7 +90,7 @@ function getTermsSections(support) {
   {
     title: "10. Termination and Suspension",
     subsections: [
-      { heading: "10.1 User Termination", content: `You may terminate your account by contacting ${support}. Upon termination, your cars and account data will be accessible for 30 days before permanent deletion.` },
+      { heading: "10.1 User Termination", content: `You may terminate your account by contacting ${support}. Upon termination, your listings and account data will be accessible for 30 days before permanent deletion.` },
       { heading: "10.2 Welsh Motorhub Termination", content: "We may suspend or terminate your account immediately for violations of these Terms, including prohibited conduct, violation of law, or non-payment. Repeated violations may result in permanent ban." },
       { heading: "10.3 Effect of Termination", content: "Upon termination, your right to use the Platform ceases immediately. Provisions regarding liability, indemnification, and intellectual property survive termination." },
     ]

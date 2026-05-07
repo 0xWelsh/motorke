@@ -16,7 +16,7 @@ import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 export const metadata = {
   title: "Browse cars for sale in Kenya",
   description:
-    "Search verified cars for sale across Kenya. Filter by make, price, body type, county, and dealership. Compare cars and contact dealers on Welsh Motorhub.",
+    "Search verified cars for sale across Kenya. Filter by make, price, body type, county, and dealership. Compare listings and contact dealers on Welsh Motorhub.",
   alternates: { canonical: "/cars" },
   keywords: [
     "used cars Kenya",

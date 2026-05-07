@@ -189,7 +189,7 @@ export default async function InventoryPage({ searchParams }) {
                 
                 <Link href={`/cars/${car.id}`} target="_blank"
                   className="mt-3 flex items-center justify-center gap-1.5 text-[11px] uppercase font-black tracking-[0.15em] font-medium text-slate-700 hover:text-slate-900 dark:text-white transition-colors py-2">
-                  View Car <ExternalLink size={12} />
+                  View Listing <ExternalLink size={12} />
                 </Link>
               </div>
             </div>
