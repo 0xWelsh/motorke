@@ -117,10 +117,6 @@ export default async function DealerPage(props) {
   if (!dealer) {
     notFound();
   }
-  const soldCarsCount = await db.lead.count({
-    where: { dealerId: dealer.id, status: "SOLD" },
-  });
-
   const session = await getSession();
   const viewer = session?.user;
 
@@ -312,9 +308,8 @@ export default async function DealerPage(props) {
                       <span className="inline-flex items-center gap-1"><Activity className={`w-3 h-3 ${isActiveToday ? "text-[#22c55e]" : "text-white/50"}`} /> {lastActiveLabel}</span>
                     </div>
                     <p className="mt-2 text-[13px] sm:text-sm text-white/90 leading-relaxed line-clamp-2">{dealerSummary}</p>
-                    <div className="mt-2.5 grid grid-cols-2 lg:grid-cols-4 gap-2">
+                    <div className="mt-2.5 grid grid-cols-2 lg:grid-cols-3 gap-2">
                       <div className="bg-white/12 px-2.5 py-2" style={{ borderRadius: "9px" }}><p className="text-sm font-black text-white">{averageRating > 0 ? averageRating.toFixed(1) : "—"}</p><p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">{totalReviews} reviews</p></div>
-                      <div className="bg-white/12 px-2.5 py-2" style={{ borderRadius: "9px" }}><p className="text-sm font-black text-white">{soldCarsCount > 0 ? soldCarsCount.toLocaleString("en-KE") : "—"}</p><p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">cars sold</p></div>
                       <div className="bg-white/12 px-2.5 py-2" style={{ borderRadius: "9px" }}><p className="text-sm font-black text-white">{responseTimeLabel}</p><p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">response</p></div>
                       <div className="bg-white/12 px-2.5 py-2" style={{ borderRadius: "9px" }}><p className="text-sm font-black text-white">{dealer.cars.length}</p><p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">active cars</p></div>
                     </div>
