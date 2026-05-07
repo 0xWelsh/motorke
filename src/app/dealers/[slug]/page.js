@@ -318,6 +318,30 @@ export default async function DealerPage(props) {
                       <div className="bg-white/12 px-2.5 py-2" style={{ borderRadius: "9px" }}><p className="text-sm font-black text-white">{responseTimeLabel}</p><p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">response</p></div>
                       <div className="bg-white/12 px-2.5 py-2" style={{ borderRadius: "9px" }}><p className="text-sm font-black text-white">{dealer.cars.length}</p><p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">active cars</p></div>
                     </div>
+                    <div className="mt-3 pt-3 border-t border-white/20">
+                      <ul className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-0 list-none p-0 m-0">
+                        <li className="flex items-baseline gap-2 sm:gap-1.5">
+                          <span className="text-lg sm:text-xl font-black tabular-nums text-[#ef3340]">{dealer.cars.length}+</span>
+                          <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/75">Vehicles in stock</span>
+                        </li>
+                        <li className="hidden sm:flex items-center px-3 sm:px-4 select-none" aria-hidden="true">
+                          <span className="inline-flex w-[6px] h-[6px] rotate-45 bg-white/35 shrink-0" style={{ borderRadius: "1px" }} />
+                        </li>
+                        <li className="sm:hidden h-px w-full max-w-[180px] bg-gradient-to-r from-white/35 via-white/15 to-transparent" aria-hidden="true" />
+                        <li className="flex items-baseline gap-2 sm:gap-1.5">
+                          <span className="text-lg sm:text-xl font-black tabular-nums text-white">{yearsActive}+</span>
+                          <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/75">Years in business</span>
+                        </li>
+                        <li className="hidden sm:flex items-center px-3 sm:px-4 select-none" aria-hidden="true">
+                          <span className="inline-flex w-[6px] h-[6px] rotate-45 bg-white/35 shrink-0" style={{ borderRadius: "1px" }} />
+                        </li>
+                        <li className="sm:hidden h-px w-full max-w-[180px] bg-gradient-to-r from-white/35 via-white/15 to-transparent" aria-hidden="true" />
+                        <li className="flex items-baseline gap-2 sm:gap-1.5">
+                          <span className="text-lg sm:text-xl font-black tabular-nums text-white">{dealer.verified ? "100%" : "—"}</span>
+                          <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/75">Verified dealer</span>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </section>
@@ -341,14 +365,6 @@ export default async function DealerPage(props) {
       </div>
 
       <div className="w-full mx-auto px-4 sm:px-6 xl:px-10 2xl:px-12 max-w-[1880px] mt-5 relative z-10 pb-20">
-
-        <section className="bg-white dark:bg-[#111111] shadow-xl p-3 sm:p-4 mb-6" style={{ borderRadius: "14px" }}>
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-            <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black text-[#ef3340]">{dealer.cars.length}+</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Vehicles in stock</p></div>
-            <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{yearsActive}+</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Years in business</p></div>
-            <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{dealer.verified ? "100%" : "—"}</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Verified dealer</p></div>
-          </div>
-        </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-9 space-y-6">
