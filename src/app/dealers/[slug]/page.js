@@ -7,6 +7,7 @@ import { SiInstagram, SiFacebook, SiTiktok } from "react-icons/si";
 import { getSession } from "@/lib/auth";
 import DealerReviews from "@/components/DealerReviews";
 import DealerInventory from "@/components/DealerInventory";
+import DealerLocationMap from "@/components/DealerLocationMap";
 import { calculateDistance } from "@/lib/geolocation";
 import { absoluteUrl, BRAND_OG_IMAGE } from "@/lib/site-url";
 
@@ -410,10 +411,8 @@ export default async function DealerPage(props) {
                 <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Find us</h4>
                 {dealerDistanceLabel && <span className="text-[10px] font-bold text-[#22c55e] uppercase tracking-[0.12em]">{dealerDistanceLabel}</span>}
               </div>
-              <p className="text-sm font-bold text-slate-900 dark:text-white leading-relaxed">{dealer.address || dealer.location || "Nairobi, Kenya"}</p>
-              <a href={googleMapsHref} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex w-full items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" style={{ borderRadius: "10px" }}>
-                Open in Google Maps
-              </a>
+              <p className="text-sm font-bold text-slate-900 dark:text-white leading-relaxed mb-3">{dealer.address || dealer.location || "Nairobi, Kenya"}</p>
+              <DealerLocationMap dealer={dealer} />
             </section>
 
             <section className="bg-[#F8FAFC] dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>

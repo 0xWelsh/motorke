@@ -18,7 +18,9 @@ const LeafletSinglePin = dynamic(() => import("./DealerLocationMapLeaflet"), {
 });
 
 export default function DealerLocationMap({ dealer }) {
-  const hasCoords = dealer?.lat && dealer?.lng;
+  const lat = Number.parseFloat(dealer?.lat);
+  const lng = Number.parseFloat(dealer?.lng);
+  const hasCoords = Number.isFinite(lat) && Number.isFinite(lng);
   const mapsQuery = encodeURIComponent(
     [dealer?.address || dealer?.location, dealer?.county, "Kenya"].filter(Boolean).join(", ")
   );
@@ -43,8 +45,8 @@ export default function DealerLocationMap({ dealer }) {
 
       {hasCoords ? (
         <LeafletSinglePin
-          lat={parseFloat(dealer.lat)}
-          lng={parseFloat(dealer.lng)}
+          lat={lat}
+          lng={lng}
           name={dealer.name}
           address={dealer.address || dealer.location}
           county={dealer.county}
@@ -52,19 +54,14 @@ export default function DealerLocationMap({ dealer }) {
           verified={dealer.verified}
         />
       ) : (
-        <div className="mx-5 mb-5 h-[200px] bg-slate-50 border border-dashed border-slate-200 flex flex-col items-center justify-center gap-2">
-          <MapPin className="w-6 h-6 text-slate-300" />
-          <p className="text-xs text-slate-400 font-semibold text-center max-w-[180px]">
-            Exact location not pinned yet.
-          </p>
-          <a
-            href={googleHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[11px] font-black uppercase tracking-widest text-[#ff5a2f] hover:underline"
-          >
-            Search on Google Maps →
-          </a>
+        <div className="mx-5 mb-5 overflow-hidden border border-slate-200" style={{ borderRadius: "8px" }}>
+          <iframe
+            title={`Map of ${dealer?.name || "dealer location"}`}
+            src={`https://www.google.com/maps?q=${mapsQuery}&output=embed`}
+            className="w-full h-[200px] border-0"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
       )}
 
