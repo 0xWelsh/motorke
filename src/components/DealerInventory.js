@@ -1,11 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { formatPrice, formatCarPrice, formatMileage, FUEL_LABELS, BADGE_OPTIONS } from "@/lib/utils";
-import { Search, SlidersHorizontal, ChevronRight, X, Grid, List } from "lucide-react";
-import { CompareButton } from "@/components/CompareSelector";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import CarCard from "@/components/CarCard";
 
 export default function DealerInventory({ cars, dealerSlug }) {
@@ -36,6 +32,8 @@ export default function DealerInventory({ cars, dealerSlug }) {
     if (diffDays === 1) return "Updated yesterday";
     return `Updated ${diffDays} days ago`;
   };
+  const topCars = filteredCars.slice(0, 6);
+  const lowerCars = filteredCars.slice(6);
 
   return (
     <div>
@@ -84,15 +82,31 @@ export default function DealerInventory({ cars, dealerSlug }) {
            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Try adjusting your filters or search query.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {filteredCars.map((car) => (
-            <div key={car.id} className="space-y-2">
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
-                {getFreshnessLabel(car.updatedAt) || "Recently listed"}
-              </p>
-              <CarCard car={car} />
+        <div className="space-y-6">
+          {topCars.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {topCars.map((car) => (
+                <div key={`top-${car.id}`} className="space-y-2">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
+                    {getFreshnessLabel(car.updatedAt) || "Recently listed"}
+                  </p>
+                  <CarCard car={car} />
+                </div>
+              ))}
             </div>
-          ))}
+          )}
+          {lowerCars.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {lowerCars.map((car) => (
+                <div key={`lower-${car.id}`} className="space-y-2">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
+                    {getFreshnessLabel(car.updatedAt) || "Recently listed"}
+                  </p>
+                  <CarCard car={car} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
