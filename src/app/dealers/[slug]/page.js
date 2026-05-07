@@ -342,11 +342,9 @@ export default async function DealerPage(props) {
       <div className="w-full mx-auto px-4 sm:px-6 xl:px-10 2xl:px-12 max-w-[1880px] mt-5 relative z-10 pb-20">
 
         <section className="bg-white dark:bg-[#111111] shadow-xl p-3 sm:p-4 mb-6" style={{ borderRadius: "14px" }}>
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
             <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{dealer.cars.length}+</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Vehicles in stock</p></div>
             <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{yearsActive}+</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Years in business</p></div>
-            <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{soldCarsCount > 0 ? soldCarsCount.toLocaleString("en-KE") : "—"}</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Cars sold</p></div>
-            <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{totalReviews || "—"}</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Happy customers</p></div>
             <div className="bg-slate-50 dark:bg-slate-900 p-3" style={{ borderRadius: "10px" }}><p className="text-xl font-black">{dealer.verified ? "100%" : "—"}</p><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Verified dealer</p></div>
           </div>
         </section>
