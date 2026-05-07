@@ -272,6 +272,15 @@ export default async function DealerPage(props) {
   const dealerGallery = dealer.cars
     .flatMap(c => c.images.map(i => ({ image: i.url, title: `${c.make} ${c.model}` })))
     .slice(0, 3);
+  const recentShowcaseCars = dealer.cars
+    .filter((car) => Boolean(car.images?.[0]?.url))
+    .slice(0, 4)
+    .map((car) => ({
+      id: car.id,
+      title: `${car.year} ${car.make} ${car.model}`.trim(),
+      image: car.images[0].url,
+      price: car.price,
+    }));
   const hasHeroBanner = Boolean(dealer.bannerUrl) || dealerGallery.length >= 3;
 
   const absAsset = (u) => {
@@ -320,13 +329,36 @@ export default async function DealerPage(props) {
       </div>
 
       <div className="w-full mx-auto px-4 sm:px-6 2xl:px-10 max-w-[1700px] -mt-16 sm:-mt-20 lg:-mt-24 relative z-10 pb-20">
+        <div className="sticky top-3 z-30 mb-4 sm:mb-6">
+          <div className="bg-white/95 dark:bg-[#111111]/95 backdrop-blur-xl border border-slate-200 dark:border-slate-800 shadow-xl px-3 sm:px-5 py-3" style={{ borderRadius: "var(--radius)" }}>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              {dealer.whatsapp && (
+                <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="bg-[#38A169] text-white px-4 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "2px" }}>
+                  WhatsApp Dealer
+                </a>
+              )}
+              {dealer.phone && (
+                <a href={`tel:${dealer.phone}`} className="bg-slate-900 dark:bg-white dark:text-slate-900 text-white px-4 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "2px" }}>
+                  Call Dealer
+                </a>
+              )}
+              <a href="#inventory" className="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-[0.14em] border border-slate-200 dark:border-slate-700" style={{ borderRadius: "2px" }}>
+                Browse Cars
+              </a>
+              <a href="#reviews" className="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-[0.14em] border border-slate-200 dark:border-slate-700" style={{ borderRadius: "2px" }}>
+                Read Reviews
+              </a>
+            </div>
+          </div>
+        </div>
         
         {/* Dealership Info Card */}
-        <div className="bg-white/95 dark:bg-[#111111]/95 backdrop-blur-md border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-8 lg:p-12 shadow-2xl mb-8 sm:mb-10" style={{ borderRadius: 'var(--radius)' }}>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 sm:gap-10 lg:gap-12 items-start">
+        <div className="bg-white/95 dark:bg-[#111111]/95 backdrop-blur-md border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-8 lg:p-10 shadow-2xl mb-8 sm:mb-10" style={{ borderRadius: 'var(--radius)' }}>
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-7 sm:gap-8 lg:gap-10 items-start">
             
             {/* Logo & Identity */}
-            <div className="lg:col-span-8 flex flex-col sm:flex-row gap-5 sm:gap-7 items-start sm:items-center">
+            <div className="xl:col-span-7 flex flex-col gap-5 sm:gap-6 items-start">
+              <div className="flex flex-col sm:flex-row gap-5 sm:gap-7 items-start sm:items-center">
                <div className="w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 p-3 sm:p-4 flex items-center justify-center shrink-0 overflow-hidden shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
                   {dealer.logoUrl ? <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" /> : <span className="text-4xl font-bold text-[#CBD5E0] dark:text-slate-700">{dealer.name[0]}</span>}
                </div>
@@ -357,46 +389,61 @@ export default async function DealerPage(props) {
                   )}
                </div>
             </div>
+            <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {socialLinks.length > 0 ? socialLinks.map((item) => (
+                <a
+                  key={item.key}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 inline-flex items-center justify-between gap-2 hover:border-slate-400 dark:hover:border-slate-500 transition-colors"
+                  style={{ borderRadius: "var(--radius)" }}
+                >
+                  <span className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.12em] text-slate-800 dark:text-slate-200">
+                    {item.icon}
+                    {item.label}
+                  </span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Open</span>
+                </a>
+              )) : (
+                <div className="sm:col-span-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 text-[11px] font-semibold text-slate-500 dark:text-slate-400" style={{ borderRadius: "var(--radius)" }}>
+                  No social channels shared yet.
+                </div>
+              )}
+            </div>
+            </div>
 
-            {/* Quick Actions */}
-            <div className="lg:col-span-4 flex flex-col gap-3 sm:gap-4 w-full">
-               {dealer.whatsapp && (
-                 <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full bg-[#38A169] text-white py-3.5 text-center text-[11px] sm:text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
-                    Start Live Enquiry
-                 </a>
-               )}
-               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  {dealer.phone && <a href={`tel:${dealer.phone}`} className="w-full bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700" style={{ borderRadius: 'var(--radius)' }}>Call Direct</a>}
-                  {dealer.website && <a href={withProtocol(dealer.website)} target="_blank" rel="noopener noreferrer" className="w-full bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700" style={{ borderRadius: 'var(--radius)' }}>Visit Site</a>}
-               </div>
-               {socialLinks.length > 0 && (
-                 <div className="space-y-2">
-                   <p className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">
-                     Social channels
-                   </p>
-                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                   {socialLinks.map((item) => (
-                     <a
-                       key={item.key}
-                       href={item.href}
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       className="w-full bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 inline-flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700"
-                       style={{ borderRadius: "var(--radius)" }}
-                     >
-                       {item.icon}
-                       {item.label}
-                     </a>
-                   ))}
-                   </div>
-                 </div>
-               )}
+            <div className="xl:col-span-5">
+              <div className="bg-slate-50/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-4 sm:p-5" style={{ borderRadius: "var(--radius)" }}>
+                <div className="flex items-end justify-between gap-3 mb-4">
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Live from showroom</p>
+                    <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">Recent Cars</h3>
+                  </div>
+                  <a href="#inventory" className="text-[10px] font-black uppercase tracking-[0.14em] text-[#38A169]">View all</a>
+                </div>
+                {recentShowcaseCars.length > 0 ? (
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                    {recentShowcaseCars.map((car) => (
+                      <Link key={car.id} href={`/cars/${car.id}`} className="group block">
+                        <div className="relative aspect-[4/3] overflow-hidden border border-slate-200 dark:border-slate-700" style={{ borderRadius: "var(--radius)" }}>
+                          <Image src={car.image} alt={car.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                        </div>
+                        <p className="mt-2 text-[11px] font-black text-slate-900 dark:text-white line-clamp-1">{car.title}</p>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">KSh {Number(car.price || 0).toLocaleString("en-KE")}</p>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Recent car media will appear once photos are added.</p>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="mt-8 sm:mt-12 pt-8 sm:pt-12 border-t border-slate-100 dark:border-slate-800">
-             <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-6">About the Station</h2>
-             <div className="text-base sm:text-lg text-[#111827] dark:text-white leading-relaxed font-medium font-sans max-w-4xl">
+          <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-slate-100 dark:border-slate-800">
+             <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-4">About this dealer</h2>
+             <div className="text-sm sm:text-base text-[#111827] dark:text-white leading-relaxed font-medium font-sans max-w-4xl">
                 {dealer.description || `${dealer.name} is a cornerstone of our verified network, committed to operational excellence and transparency in asset logistics.`}
              </div>
           </div>
