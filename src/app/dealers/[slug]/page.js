@@ -243,7 +243,7 @@ export default async function DealerPage(props) {
   };
 
   return (
-    <div className="bg-gradient-to-b from-[#f8fafc] via-white to-white dark:from-[#080808] dark:via-[#0a0a0a] dark:to-[#0a0a0a] min-h-screen">
+    <div className="bg-white dark:bg-[#0a0a0a] min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       
       {/* Hero Banner */}
@@ -271,7 +271,7 @@ export default async function DealerPage(props) {
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl -mt-20 sm:-mt-28 lg:-mt-32 relative z-10 pb-20">
         
         {/* Dealership Info Card */}
-        <div className="bg-white/95 dark:bg-[#111111]/95 backdrop-blur-md border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-8 lg:p-12 shadow-2xl mb-12 sm:mb-16" style={{ borderRadius: 'var(--radius)' }}>
+        <div className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-8 lg:p-12 shadow-2xl mb-12 sm:mb-16" style={{ borderRadius: 'var(--radius)' }}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 sm:gap-10 lg:gap-12 items-start">
             
             {/* Logo & Identity */}
@@ -291,19 +291,6 @@ export default async function DealerPage(props) {
                      )}
                      <span className="flex items-center gap-2"><ShieldCheck className="w-3 h-3 text-[#38A169]" /> Member since {startedYear}</span>
                   </div>
-                  {dealerRatingTags.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {dealerRatingTags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="inline-flex items-center border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300"
-                          style={{ borderRadius: "2px" }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
                </div>
             </div>
 
@@ -357,7 +344,7 @@ export default async function DealerPage(props) {
           {/* Main Content */}
           <div className="lg:col-span-8 space-y-14 sm:space-y-20">
             {/* Inventory */}
-            <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-6 sm:p-8 lg:p-10 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
+            <section>
               <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12 gap-3">
                  <div>
                     <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-4">Showroom Inventory</h2>
@@ -369,7 +356,7 @@ export default async function DealerPage(props) {
             </section>
 
             {/* Reviews Section */}
-            <section id="reviews" className="pt-10 sm:pt-12 border-t border-[#EDF2F7] dark:border-slate-800 bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-6 sm:p-8 lg:p-10 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
+            <section id="reviews" className="pt-20 border-t border-[#EDF2F7]">
               <DealerReviews
                 dealerSlug={dealer.slug}
                 dealerName={dealer.name}
