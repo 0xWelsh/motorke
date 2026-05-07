@@ -2,9 +2,13 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import { ArrowUpRight, Building2, MapPin } from "lucide-react";
+import { ArrowUpRight, Building2, MapPin, ShieldCheck } from "lucide-react";
 import NearbyDealersList from "@/components/NearbyDealersList";
 import DealersLocationButton from "@/components/DealersLocationButton";
+
+/** Full-bleed hero — showroom image clears left, copy sits on dark fade (right). */
+const DEALERS_HERO_IMAGE =
+  "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=85&w=2400";
 
 export const metadata = {
   title: "Trusted car dealers in Kenya",
@@ -15,7 +19,7 @@ export const metadata = {
   openGraph: {
     title: "Trusted car dealers in Kenya | Welsh Motorhub",
     description:
-      "Browse Welsh Motorhub’s verified dealer network: counties, listings, and direct links to each showroom.",
+      "Browse Welsh Motorhub’s verified dealer network: counties, cars in stock, and direct links to each showroom.",
     type: "website",
     url: "/dealers",
   },
@@ -113,41 +117,72 @@ export default async function DealersPage({ searchParams }) {
   });
 
   const counties = [...new Set(enriched.map((d) => d.county).filter(Boolean))].sort();
+  const shownVerified = rankedDealers.filter((d) => d.verified).length;
+  const shownCars = rankedDealers.reduce((s, d) => s + d.activeCars, 0);
 
   return (
-    <div className="bg-white min-h-screen pb-20">
-      <div className="w-full px-4 sm:px-8 pt-32 sm:pt-40">
-        <div className="flex items-center justify-between mb-6 gap-4 border-b border-slate-100 dark:border-zinc-900 pb-3">
-          <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400">
-            <Link href="/" className="hover:text-[#111827] dark:hover:text-white transition-colors">Home</Link>
+    <div className="bg-gradient-to-b from-[#f8fafc] via-white to-white dark:from-[#0a0a0a] dark:via-[#0b0b0b] dark:to-[#0a0a0a] min-h-screen pb-20">
+      <div className="pt-16 md:pt-20">
+        <div className="relative w-full h-[220px] sm:h-[280px] lg:h-[320px] overflow-hidden bg-[#111827]">
+          <img
+            src={DEALERS_HERO_IMAGE}
+            alt="Car dealership showroom"
+            className="absolute inset-0 h-full w-full object-cover object-center animate-dealers-hero-image"
+          />
+          <div
+            className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/45 to-black/[0.88] dark:to-black/[0.92]"
+            aria-hidden
+          />
+          <div className="relative h-full max-w-[1880px] mx-auto px-4 sm:px-8 xl:px-10 flex items-center justify-end">
+            <div className="w-full max-w-lg md:max-w-xl text-left sm:text-right sm:ml-auto animate-dealers-hero-content pr-0 sm:pl-8">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70 mb-2">Welsh Motorhub</p>
+              <h1 className="text-2xl sm:text-4xl lg:text-[2.75rem] font-black text-white tracking-tight leading-[1.08] mb-3">
+                Trusted <span className="text-[#22c55e]">dealer network</span>
+              </h1>
+              <p className="text-[13px] sm:text-sm text-white/85 font-medium leading-relaxed mb-4 max-w-md sm:max-w-none sm:ml-auto">
+                Verified showrooms across Kenya—compare who is stocking what, then step into a profile that feels alive.
+              </p>
+              <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/12 backdrop-blur-md px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white">
+                  <Building2 className="w-3.5 h-3.5 text-[#22c55e]" />
+                  {rankedDealers.length} dealers
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/12 backdrop-blur-md px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#22c55e]" />
+                  {shownVerified} verified
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/12 backdrop-blur-md px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white">
+                  <span className="font-black text-[#ef3340] tabular-nums">{shownCars}</span>
+                  <span className="text-white/80">cars</span>
+                </span>
+              </div>
+              {hasLocation ? (
+                <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#86efac]">
+                  Sorted by distance from you
+                </p>
+              ) : (
+                <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.14em] text-white/50">
+                  Enable location to see nearest dealers first
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full mx-auto px-4 sm:px-8 xl:px-10 max-w-[1880px] pt-6 sm:pt-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6 sm:mb-8 pb-3 border-b border-slate-200/80 dark:border-slate-800">
+          <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+            <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
             <span>/</span>
-            <span className="text-[#111827] dark:text-white">Dealers</span>
+            <span className="text-slate-900 dark:text-white">Dealers</span>
           </div>
-          <div className="text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400 whitespace-nowrap">
-            Dealers Showing ({rankedDealers.length})
+          <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+            Showing {rankedDealers.length} dealer{rankedDealers.length === 1 ? "" : "s"}
           </div>
         </div>
 
-        {/* Header Section */}
-        <div className="mb-10 sm:mb-12">
-          <h1 className="text-3xl sm:text-5xl font-bold text-[#111827] dark:text-white tracking-tight leading-[1.1] mb-4">
-            Trusted <span className="text-[#38A169]">Dealer Network</span>
-          </h1>
-          <p className="text-[#718096] dark:text-slate-400 text-sm sm:text-base font-medium max-w-2xl">
-            Browse verified dealerships, compare active inventory footprint, and pick your next trusted seller faster.
-          </p>
-          {hasLocation ? (
-            <p className="mt-2 text-[11px] font-semibold text-[#2F855A] dark:text-emerald-400">
-              Sorted by distance from your current location.
-            </p>
-          ) : (
-            <p className="mt-2 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-              Enable location to rank nearest dealers first.
-            </p>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-4 gap-y-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-4 gap-y-8 lg:gap-y-10 items-start">
           
           {/* Sidebar */}
           <aside className="order-2 lg:order-1 lg:col-span-3 lg:sticky lg:top-32 space-y-4 lg:space-y-6 text-[#111827] dark:text-white">
@@ -239,13 +274,13 @@ export default async function DealersPage({ searchParams }) {
           {/* Grid */}
           <main className="order-1 lg:order-2 lg:col-span-9">
             {rankedDealers.length === 0 ? (
-              <div className="py-32 text-center bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
-                <Building2 className="w-12 h-12 text-[#CBD5E0] dark:text-slate-700 mx-auto mb-6" />
-                <h2 className="text-2xl font-bold text-[#111827] dark:text-white mb-2">Network offline</h2>
-                <p className="text-[#718096] dark:text-slate-400 font-medium">We couldn't find any active dealers matching your criteria.</p>
+              <div className="py-24 text-center bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
+                <Building2 className="w-10 h-10 text-[#CBD5E0] dark:text-slate-700 mx-auto mb-4" />
+                <h2 className="text-xl font-bold text-[#111827] dark:text-white mb-2">Network offline</h2>
+                <p className="text-[#718096] dark:text-slate-400 font-medium text-sm">We couldn&apos;t find any active dealers matching your criteria.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                 {rankedDealers.map((dealer) => (
                   <DealerCard key={dealer.id} dealer={dealer} />
                 ))}
@@ -260,51 +295,54 @@ export default async function DealersPage({ searchParams }) {
 
 function DealerCard({ dealer }) {
   const brandImage = dealer.logoUrl || dealer.users?.[0]?.avatarUrl;
-  const bannerImage = dealer.bannerUrl || "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=1200";
+  const bannerImage = dealer.bannerUrl || "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=900";
   const response = responseTier(dealer.responseRate, dealer.totalLeads);
   const distance = formatDistance(dealer.distanceValue);
 
   return (
-    <Link href={`/dealers/${dealer.slug}`} className="group flex flex-col h-full bg-white dark:bg-[#111111] border border-slate-100 dark:border-slate-800 transition-all hover:border-[#38A169] dark:hover:border-[#38A169]" style={{ borderRadius: 'var(--radius)' }}>
-      <div className="relative aspect-[16/10] bg-slate-100 dark:bg-slate-900 overflow-hidden" style={{ borderTopLeftRadius: 'var(--radius)', borderTopRightRadius: 'var(--radius)' }}>
-        <img src={bannerImage} alt={dealer.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-        <div className="absolute top-4 left-4 flex flex-col gap-2">
-           {dealer.verified && <span className="bg-[#38A169] text-white text-[8px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>VERIFIED</span>}
-           {dealer.featured && <span className="bg-[#111827] text-white text-[8px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>PREMIUM</span>}
+    <Link href={`/dealers/${dealer.slug}`} className="group flex flex-col h-full bg-white dark:bg-[#111111] shadow-sm hover:shadow-lg border border-slate-100/90 dark:border-slate-800 transition-all hover:border-[#22c55e]/50 dark:hover:border-[#22c55e]/40" style={{ borderRadius: "12px" }}>
+      <div className="relative aspect-[2.2/1] min-h-[88px] bg-slate-100 dark:bg-slate-900 overflow-hidden" style={{ borderTopLeftRadius: "12px", borderTopRightRadius: "12px" }}>
+        <img src={bannerImage} alt={dealer.name} className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-[1.1s] ease-out" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+        <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+           {dealer.verified && <span className="bg-[#22c55e] text-white text-[7px] font-black px-1.5 py-0.5 uppercase tracking-widest" style={{ borderRadius: "4px" }}>Verified</span>}
+           {dealer.featured && <span className="bg-[#111827] text-white text-[7px] font-black px-1.5 py-0.5 uppercase tracking-widest" style={{ borderRadius: "4px" }}>Premium</span>}
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col p-5">
-        <div className="flex items-start justify-between gap-4 mb-4">
+      <div className="flex-1 flex flex-col p-3 sm:p-3.5">
+        <div className="flex items-start justify-between gap-2 mb-2">
            <div className="min-w-0">
-              <h3 className="text-lg font-bold text-[#111827] dark:text-white group-hover:text-[#38A169] transition-colors truncate">{dealer.name}</h3>
-              <p className="text-[10px] font-bold text-[#718096] dark:text-slate-400 uppercase tracking-widest mt-1 flex items-center gap-1">
-                 <MapPin className="w-3 h-3 text-[#38A169]" /> {dealer.location || dealer.county}
+              <h3 className="text-[15px] font-bold text-[#111827] dark:text-white group-hover:text-[#22c55e] transition-colors truncate leading-tight">{dealer.name}</h3>
+              <p className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-1 flex items-center gap-1">
+                 <MapPin className="w-3 h-3 text-[#22c55e] shrink-0" /> <span className="truncate">{dealer.location || dealer.county}</span>
               </p>
-              <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <div className="mt-1.5 flex flex-wrap items-center gap-1">
                 {distance ? (
-                  <span className="inline-flex items-center gap-1 text-[9px] font-black px-2 py-1 uppercase tracking-widest text-[#2F855A] bg-[#38A169]/10" style={{ borderRadius: "2px" }}>
-                    <MapPin className="w-3 h-3" /> {distance}
+                  <span className="inline-flex items-center gap-0.5 text-[8px] font-black px-1.5 py-0.5 uppercase tracking-widest text-[#15803d] dark:text-emerald-400 bg-emerald-500/10" style={{ borderRadius: "4px" }}>
+                    <MapPin className="w-2.5 h-2.5" /> {distance}
                   </span>
                 ) : null}
-                <span className={`inline-flex items-center text-[9px] font-black px-2 py-1 uppercase tracking-widest ${response.tone}`} style={{ borderRadius: "2px" }}>
+                <span className={`inline-flex items-center text-[8px] font-black px-1.5 py-0.5 uppercase tracking-widest ${response.tone}`} style={{ borderRadius: "4px" }}>
                   {response.label}
                 </span>
               </div>
            </div>
-           <div className="w-12 h-12 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center shrink-0 overflow-hidden shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
-              {brandImage ? <img src={brandImage} className="w-full h-full object-cover" /> : <span className="text-sm font-bold text-slate-300 dark:text-slate-500">{dealer.name[0]}</span>}
+           <div className="w-9 h-9 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center shrink-0 overflow-hidden" style={{ borderRadius: "8px" }}>
+              {brandImage ? <img src={brandImage} alt="" className="w-full h-full object-cover" /> : <span className="text-xs font-bold text-slate-300 dark:text-slate-500">{dealer.name[0]}</span>}
            </div>
         </div>
 
-        <p className="text-xs text-[#718096] dark:text-slate-400 font-medium line-clamp-2 leading-relaxed mb-5">
-           {dealer.description || "A cornerstone of our verified network, offering premium logistics and asset transparency."}
+        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium line-clamp-2 leading-snug mb-3 flex-1">
+           {dealer.description || "Verified partner on Welsh Motorhub—transparent inventory and direct contact."}
         </p>
 
-        <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
-           <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{dealer.activeCars || 0} Listed Units</span>
-           <span className="text-[10px] font-bold text-[#38A169] uppercase tracking-widest hover:opacity-70 flex items-center gap-1 group-hover:translate-x-1 transition-all">
-              Visit Station <ArrowUpRight className="w-3 h-3" />
+        <div className="mt-auto pt-2.5 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+           <span className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest tabular-nums">
+             {dealer.activeCars || 0} <span className="text-slate-500 dark:text-slate-400 font-bold">cars</span>
+           </span>
+           <span className="text-[9px] font-black text-[#22c55e] uppercase tracking-widest flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+              Showroom <ArrowUpRight className="w-3 h-3" />
            </span>
         </div>
       </div>

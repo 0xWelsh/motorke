@@ -49,12 +49,22 @@ module.exports = {
       },
       animation: {
         'glow-pulse': 'glow 3s ease-in-out infinite alternate',
+        'dealers-hero-image': 'dealersHeroImage 1.35s ease-out forwards',
+        'dealers-hero-content': 'dealersHeroContent 0.85s ease-out 0.12s both',
       },
       keyframes: {
         glow: {
           '0%':   { boxShadow: '0 0 20px rgba(16,185,129,0)' },
           '100%': { boxShadow: '0 0 40px rgba(16,185,129,0.3)' },
-        }
+        },
+        dealersHeroImage: {
+          '0%': { opacity: '0.4', transform: 'scale(1.05)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        dealersHeroContent: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
       }
     },
   },
