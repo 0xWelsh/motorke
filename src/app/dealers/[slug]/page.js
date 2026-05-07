@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Phone, Mail, Globe, ShieldCheck, MessageCircle } from "lucide-react";
+import { MapPin, Phone, Mail, Globe, ShieldCheck, MessageCircle, Star, Clock3, CarFront, Activity, CalendarDays } from "lucide-react";
 import { SiInstagram, SiFacebook, SiTiktok } from "react-icons/si";
 import { getSession } from "@/lib/auth";
 import DealerReviews from "@/components/DealerReviews";
@@ -116,6 +116,9 @@ export default async function DealerPage(props) {
   if (!dealer) {
     notFound();
   }
+  const soldCarsCount = await db.lead.count({
+    where: { dealerId: dealer.id, status: "SOLD" },
+  });
 
   const session = await getSession();
   const viewer = session?.user;
@@ -159,6 +162,56 @@ export default async function DealerPage(props) {
     : null;
   const inventoryFreshnessLabel =
     inventoryFreshnessDays == null ? null : `${inventoryFreshnessDays} day${inventoryFreshnessDays === 1 ? "" : "s"} ago`;
+  const yearsActive = Math.max(1, new Date().getFullYear() - startedYear + 1);
+  const isActiveToday = inventoryFreshnessDays != null && inventoryFreshnessDays <= 0;
+  const lastActiveLabel = isActiveToday
+    ? "Active today"
+    : inventoryFreshnessDays == null
+      ? "Activity unavailable"
+      : `Active ${inventoryFreshnessLabel}`;
+  const responseLabel = dealer.whatsapp
+    ? "Replies fastest on WhatsApp"
+    : dealer.phone
+      ? "Replies by direct call"
+      : "Replies via enquiry form";
+  const heroTrustStats = [
+    {
+      label: "Buyer rating",
+      value: totalReviews > 0 ? `${averageRating.toFixed(1)} / 5` : "Not rated",
+      sub: `${totalReviews} review${totalReviews === 1 ? "" : "s"}`,
+      icon: <Star className="w-4 h-4 text-amber-500" />,
+    },
+    {
+      label: "Cars sold",
+      value: soldCarsCount > 0 ? soldCarsCount.toLocaleString("en-KE") : "—",
+      sub: "Closed through enquiries",
+      icon: <CarFront className="w-4 h-4 text-[#38A169]" />,
+    },
+    {
+      label: "Response",
+      value: responseLabel,
+      sub: "Contact channel",
+      icon: <Clock3 className="w-4 h-4 text-sky-500" />,
+    },
+    {
+      label: "Years active",
+      value: `${yearsActive} year${yearsActive === 1 ? "" : "s"}`,
+      sub: `Member since ${startedYear}`,
+      icon: <CalendarDays className="w-4 h-4 text-violet-500" />,
+    },
+    {
+      label: "Location",
+      value: dealer.location || dealer.county || "Kenya",
+      sub: "Dealership base",
+      icon: <MapPin className="w-4 h-4 text-rose-500" />,
+    },
+    {
+      label: "Status",
+      value: lastActiveLabel,
+      sub: "Inventory signal",
+      icon: <Activity className={`w-4 h-4 ${isActiveToday ? "text-[#38A169]" : "text-slate-400"}`} />,
+    },
+  ];
   const dealerRatingTags = [];
   if (totalReviews >= 8 && averageRating >= 4.5) {
     dealerRatingTags.push("Fair Pricing", "Clean Logbooks", "Good After-sales");
@@ -247,7 +300,7 @@ export default async function DealerPage(props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       
       {/* Hero Banner */}
-      <div className="w-full h-[32vh] sm:h-[42vh] lg:h-[50vh] relative bg-[#111827] overflow-hidden">
+      <div className="w-full h-[26vh] sm:h-[34vh] lg:h-[40vh] relative bg-[#111827] overflow-hidden">
          {dealer.bannerUrl ? (
            <img
              src={dealer.bannerUrl}
@@ -263,15 +316,13 @@ export default async function DealerPage(props) {
               ))}
            </div>
          )}
-         <div
-           className="absolute inset-0 bg-gradient-to-t to-transparent from-white/50 dark:from-[#0a0a0a]/55 via-white/5 dark:via-[#0a0a0a]/10 sm:from-white/90 sm:dark:from-[#0a0a0a]/85 sm:via-transparent"
-         />
+         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-black/10" />
       </div>
 
-      <div className="w-full mx-auto px-4 sm:px-6 2xl:px-10 max-w-[1700px] -mt-20 sm:-mt-28 lg:-mt-32 relative z-10 pb-20">
+      <div className="w-full mx-auto px-4 sm:px-6 2xl:px-10 max-w-[1700px] -mt-16 sm:-mt-20 lg:-mt-24 relative z-10 pb-20">
         
         {/* Dealership Info Card */}
-        <div className="bg-white/95 dark:bg-[#111111]/95 backdrop-blur-md border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-8 lg:p-12 shadow-2xl mb-12 sm:mb-16" style={{ borderRadius: 'var(--radius)' }}>
+        <div className="bg-white/95 dark:bg-[#111111]/95 backdrop-blur-md border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-8 lg:p-12 shadow-2xl mb-8 sm:mb-10" style={{ borderRadius: 'var(--radius)' }}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 sm:gap-10 lg:gap-12 items-start">
             
             {/* Logo & Identity */}
@@ -282,7 +333,7 @@ export default async function DealerPage(props) {
                <div>
                   <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 mb-3 sm:mb-4">
                      <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-[#111827] dark:text-white leading-tight tracking-tight">{dealer.name}</h1>
-                     {dealer.verified && <span className="bg-[#38A169] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>VERIFIED DEALER</span>}
+                     {dealer.verified && <span className="bg-[#38A169] text-white text-[10px] font-black px-3 py-1.5 uppercase tracking-[0.15em] shadow-lg shadow-emerald-900/25 border border-white/20" style={{ borderRadius: '2px' }}>VERIFIED DEALER</span>}
                   </div>
                   <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">
                      <span className="flex items-center gap-2"><MapPin className="w-3 h-3 text-[#38A169]" /> {dealer.location || dealer.county}</span>
@@ -321,7 +372,7 @@ export default async function DealerPage(props) {
                {socialLinks.length > 0 && (
                  <div className="space-y-2">
                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">
-                     Socials
+                     Social channels
                    </p>
                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                    {socialLinks.map((item) => (
@@ -330,7 +381,7 @@ export default async function DealerPage(props) {
                        href={item.href}
                        target="_blank"
                        rel="noopener noreferrer"
-                       className="w-full bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 inline-flex items-center justify-center gap-2"
+                       className="w-full bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3 text-center text-[10px] font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 inline-flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700"
                        style={{ borderRadius: "var(--radius)" }}
                      >
                        {item.icon}
@@ -362,6 +413,25 @@ export default async function DealerPage(props) {
                <span className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-400">{dealer.cars.length} Units Available</span>
             </div>
             <DealerInventory cars={inventoryWithDistance} dealerSlug={dealer.slug} />
+          </section>
+
+          <section className="bg-white dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-7 shadow-xl" style={{ borderRadius: "var(--radius)" }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
+              {heroTrustStats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="bg-[#f8fafc] dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5"
+                  style={{ borderRadius: "var(--radius)" }}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    {stat.icon}
+                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">{stat.label}</p>
+                  </div>
+                  <p className="text-base sm:text-lg font-black text-[#111827] dark:text-white leading-tight">{stat.value}</p>
+                  <p className="mt-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400">{stat.sub}</p>
+                </div>
+              ))}
+            </div>
           </section>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10">
