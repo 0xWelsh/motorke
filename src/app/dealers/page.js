@@ -146,7 +146,7 @@ export default async function DealersPage({ searchParams }) {
             aria-hidden
           />
           <div className="relative z-10 h-full max-w-[1880px] mx-auto px-4 sm:px-8 xl:px-10 flex items-center justify-start">
-            <div className="w-full max-w-lg md:max-w-xl text-left rounded-2xl border border-white/15 bg-black/45 px-5 py-4 sm:px-6 sm:py-5 shadow-2xl backdrop-blur-md animate-dealers-hero-content supports-[backdrop-filter]:bg-black/35">
+            <div className="w-full max-w-lg md:max-w-xl text-left rounded-2xl bg-black/40 px-5 py-4 sm:px-6 sm:py-5 backdrop-blur-xl shadow-[0_28px_90px_-20px_rgba(0,0,0,0.75),0_12px_40px_-24px_rgba(0,0,0,0.5)] animate-dealers-hero-content supports-[backdrop-filter]:bg-black/28">
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white mb-2">Welsh Motorhub</p>
               <h1 className="text-2xl sm:text-4xl lg:text-[2.75rem] font-black text-white tracking-tight leading-[1.08] mb-3 drop-shadow-sm">
                 Trusted <span className="text-[#4ade80]">dealer network</span>
@@ -155,15 +155,15 @@ export default async function DealersPage({ searchParams }) {
                 Verified showrooms across Kenya—compare who is stocking what, then step into a profile that feels alive.
               </p>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/35 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-sm">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-sm shadow-[0_10px_30px_-12px_rgba(0,0,0,0.55)]">
                   <Building2 className="w-3.5 h-3.5 text-[#4ade80]" />
                   {rankedDealers.length} dealers
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/35 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-sm">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-sm shadow-[0_10px_30px_-12px_rgba(0,0,0,0.55)]">
                   <ShieldCheck className="w-3.5 h-3.5 text-[#4ade80]" />
                   {shownVerified} verified
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/35 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-sm">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-sm shadow-[0_10px_30px_-12px_rgba(0,0,0,0.55)]">
                   <span className="font-black text-[#f87171] tabular-nums">{shownCars}</span>
                   <span className="text-white">cars</span>
                 </span>
