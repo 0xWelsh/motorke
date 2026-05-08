@@ -240,30 +240,30 @@ export default async function HomePage() {
         }}
       />
       {/* Dynamic Hero Section */}
-      <section className="relative pt-20 pb-12 md:pt-24 md:pb-16 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
+      <section className="relative pt-18 pb-8 md:pt-20 md:pb-10 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           
           {/* Page Header - Full Width */}
-          <div className="mb-10 md:mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center lg:text-left">
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-[#111827] dark:text-white leading-[0.95] tracking-tight mb-6">
+          <div className="mb-6 md:mb-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center lg:text-left">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#111827] dark:text-white leading-[0.95] tracking-tight mb-4">
               Buy cars with<br />
               <span className="editorial-heading text-[#38A169]">dealer-level clarity.</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl font-medium mx-auto lg:mx-0">
+            <p className="text-base md:text-lg text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl font-medium mx-auto lg:mx-0">
               Find verified Kenyan inventory with transparent ownership costs in minutes.
               Compare up to three cars, inspect real running-cost and road-readiness signals, then contact real dealers directly.
             </p>
           </div>
 
           {/* Side-by-Side Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:items-start animate-in fade-in duration-1000 delay-200">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:items-start animate-in fade-in duration-1000 delay-200">
             <div className="lg:col-span-7 xl:col-span-7 text-center lg:text-left">
               <div className="w-full text-left">
                 <BrowsePanel />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-10 sm:mt-12 max-w-md sm:max-w-xl mx-auto lg:mx-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-8 max-w-md sm:max-w-xl mx-auto lg:mx-0">
                 <TrackedLink
                   href="/cars"
                   eventName="homepage_explore_inventory_click"
@@ -284,7 +284,7 @@ export default async function HomePage() {
                 </TrackedLink>
               </div>
 
-              <div className="mt-8 sm:mt-9 p-4 sm:p-5 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
+              <div className="mt-6 sm:mt-7 p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3 text-center lg:text-left">Quick compare</p>
                 <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4 text-center lg:text-left">
                   Side-by-side specs, annual TCO, and road readiness in one clean sheet.
@@ -299,13 +299,13 @@ export default async function HomePage() {
                 </TrackedLink>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-6 sm:mt-8">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-5">
                 {[
                   { label: "Verified dealers", value: `${dealers.length}+` },
                   { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
                   { label: "Updated", value: "Daily" },
                 ].map((item) => (
-                  <div key={item.label} className="p-3 sm:p-4 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
+                  <div key={item.label} className="p-3 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
                     <p className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white">{item.value}</p>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mt-1">{item.label}</p>
                   </div>
@@ -339,9 +339,9 @@ export default async function HomePage() {
 
       {/* Spotlight / Trending Section */}
       {hotEnhanced.length > 0 && (
-        <section className="py-16 sm:py-24 lg:py-28">
+        <section className="py-10 sm:py-14 lg:py-16">
           <div className="container mx-auto px-6 max-w-7xl">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
               <div className="max-w-xl">
                 <h2 className="text-4xl sm:text-6xl font-normal editorial-heading text-[#111827] dark:text-white mb-4">Spotlight</h2>
                 <p className="text-[#718096] dark:text-slate-400 text-lg font-medium">Verified listings currently receiving the most interest from our network.</p>
@@ -367,25 +367,25 @@ export default async function HomePage() {
 
       {/* Featured Dealerships */}
       {dealers.length > 0 && (
-        <section className="py-16 sm:py-24 lg:py-28 bg-[#F7FAFC] dark:bg-[#111111]">
+        <section className="py-10 sm:py-14 lg:py-16 bg-[#F7FAFC] dark:bg-[#111111]">
           <div className="container mx-auto px-6 max-w-7xl">
-            <div className="mb-20 text-center max-w-3xl mx-auto">
-              <h2 className="text-3xl sm:text-5xl font-bold text-[#111827] dark:text-white mb-6">Partner Dealerships</h2>
+            <div className="mb-10 text-center max-w-3xl mx-auto">
+              <h2 className="text-3xl sm:text-4xl font-bold text-[#111827] dark:text-white mb-4">Partner Dealerships</h2>
               <p className="text-[#718096] dark:text-slate-400 text-lg font-medium leading-relaxed">
                 We work exclusively with certified dealerships that meet our strict standards for
                 pricing transparency and vehicle verification.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {dealers.slice(0, 6).map((dealer) => (
                 <Link
                   key={dealer.id}
                   href={`/dealers/${dealer.slug}`}
-                  className="group block bg-white dark:bg-zinc-900 border border-[#E2E8F0] dark:border-slate-800 p-6 sm:p-8 transition-all hover:shadow-xl"
+                  className="group block bg-white dark:bg-zinc-900 border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 transition-all hover:shadow-xl"
                   style={{ borderRadius: 'var(--radius)' }}
                 >
-                  <div className="flex items-center gap-5 mb-8">
+                  <div className="flex items-center gap-4 mb-5">
                     <div className="w-16 h-16 shrink-0 border border-[#EDF2F7] dark:border-slate-800 overflow-hidden flex items-center justify-center p-2" style={{ borderRadius: 'var(--radius)' }}>
                       {dealer.logoUrl ? (
                         <img src={dealer.logoUrl} className="w-full h-full object-contain" alt="" />
@@ -400,10 +400,10 @@ export default async function HomePage() {
                       </p>
                     </div>
                   </div>
-                  <p className="text-sm text-[#4A5568] dark:text-slate-300 leading-relaxed mb-10 line-clamp-2">
+                  <p className="text-sm text-[#4A5568] dark:text-slate-300 leading-relaxed mb-6 line-clamp-2">
                     {dealer.description || "Partnering with Welsh Motorhub to provide premium verified vehicles."}
                   </p>
-                  <div className="pt-6 border-t border-[#EDF2F7] dark:border-slate-800 flex items-center justify-between">
+                  <div className="pt-4 border-t border-[#EDF2F7] dark:border-slate-800 flex items-center justify-between">
                     <span className="text-xs font-bold text-[#111827] dark:text-slate-300 uppercase tracking-widest">{dealer._count?.cars || 0} Units</span>
                     <span className="text-xs font-bold text-[#38A169] uppercase tracking-widest">Visit Showroom ›</span>
                   </div>
@@ -415,7 +415,7 @@ export default async function HomePage() {
       )}
 
       {/* Editorial Information Block */}
-      <section className="relative py-16 sm:py-28 lg:py-36 bg-[#1A202C] text-white overflow-hidden">
+      <section className="relative py-12 sm:py-16 lg:py-20 bg-[#1A202C] text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
             src={DIFFERENCE_BACKGROUND}
@@ -426,21 +426,21 @@ export default async function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-[#1A202C] via-[#1A202C]/80 to-transparent" />
         </div>
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <p className="text-[#38A169] text-xs font-bold uppercase tracking-[0.4em] mb-8">The Difference</p>
-              <h2 className="text-4xl sm:text-6xl font-bold leading-[1.1] mb-10">
+              <p className="text-[#38A169] text-xs font-bold uppercase tracking-[0.32em] mb-5">The Difference</p>
+              <h2 className="text-3xl sm:text-5xl font-bold leading-[1.1] mb-6">
                 Marketplace purity<br />
                 <span className="editorial-heading text-[#718096]">without the hassle.</span>
               </h2>
-              <p className="text-lg text-[#A0AEC0] leading-relaxed max-w-xl font-medium">
+              <p className="text-base sm:text-lg text-[#A0AEC0] leading-relaxed max-w-xl font-medium">
                 Tired of recycled listings and unverified sellers? Welsh Motorhub provides a direct link
                 to the actual stock sitting on dealership floors. No middlemen, no scraped data,
                 just high-fidelity inventory.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {[
                 { title: "Dealer Verified", icon: <ShieldCheck />, desc: "Every unit is hand-uploaded by real businesses." },
                 { title: "Pricing Clarity", icon: <BadgeCheck />, desc: "Final listed prices shown upfront with no hidden calculations." },
@@ -460,9 +460,9 @@ export default async function HomePage() {
 
       {/* Fresh Arrivals Section */}
       {newEnhanced.length > 0 && (
-        <section className="py-16 sm:py-24 lg:py-28">
+        <section className="py-10 sm:py-14 lg:py-16">
           <div className="container mx-auto px-6 max-w-7xl">
-            <div className="flex items-end justify-between mb-10 sm:mb-14">
+            <div className="flex items-end justify-between mb-7 sm:mb-9">
               <div>
                 <h2 className="text-3xl sm:text-5xl font-bold text-[#111827] dark:text-white mb-4">Fresh Arrivals</h2>
                 <p className="text-[#718096] dark:text-slate-400 text-lg font-medium">The latest units added to our network within the last 7 days.</p>
@@ -471,7 +471,7 @@ export default async function HomePage() {
                 See All Arrivals
               </Link>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {newEnhanced.slice(0, 6).map((car) => (
                 <CarCard key={car.id} car={car} />
               ))}
