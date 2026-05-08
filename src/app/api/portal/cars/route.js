@@ -63,7 +63,7 @@ export async function POST(request) {
       ok: true,
     });
     return NextResponse.json(
-      { success: true, redirectTo: `/portal?created=1&car=${car.id}` },
+      { success: true, redirectTo: `/portal/inventory?created=1&car=${car.id}` },
       { status: 201 }
     );
   } catch (err) {

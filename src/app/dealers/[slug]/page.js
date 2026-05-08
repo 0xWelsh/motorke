@@ -8,6 +8,7 @@ import { getSession } from "@/lib/auth";
 import DealerReviews from "@/components/DealerReviews";
 import DealerInventory from "@/components/DealerInventory";
 import DealerLocationMap from "@/components/DealerLocationMap";
+import TrackEventOnMount from "@/components/TrackEventOnMount";
 import { calculateDistance } from "@/lib/geolocation";
 import { absoluteUrl, BRAND_OG_IMAGE } from "@/lib/site-url";
 
@@ -274,6 +275,15 @@ export default async function DealerPage(props) {
 
   return (
     <div className="bg-gradient-to-b from-[#f8fafc] via-white to-white dark:from-[#0a0a0a] dark:via-[#0b0b0b] dark:to-[#0a0a0a] min-h-screen">
+      <TrackEventOnMount
+        name="dealer_page_view"
+        payload={{
+          dealer_id: dealer.id,
+          dealer_slug: dealer.slug,
+          active_cars: dealer.cars.length,
+          verified: Boolean(dealer.verified),
+        }}
+      />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div className="w-full h-[260px] sm:h-[320px] lg:h-[380px] relative bg-[#111827] overflow-hidden">

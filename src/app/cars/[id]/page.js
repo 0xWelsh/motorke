@@ -16,6 +16,7 @@ import SpecSheet from "@/components/SpecSheet";
 import CarReviewForm from "@/components/CarReviewForm";
 import CarCard from "@/components/CarCard";
 import FeatureMarquee from "@/components/FeatureMarquee";
+import TrackEventOnMount from "@/components/TrackEventOnMount";
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
@@ -256,6 +257,16 @@ export default async function CarDetailPage({ params }) {
 
   return (
     <div className="bg-white min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
+      <TrackEventOnMount
+        name="view_car"
+        payload={{
+          car_id: car.id,
+          dealer_id: dealer.id,
+          make: car.make,
+          model: car.model,
+          price: Number(car.price || 0),
+        }}
+      />
       <Script
         id="car-json-ld"
         type="application/ld+json"

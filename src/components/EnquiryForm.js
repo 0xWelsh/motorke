@@ -6,6 +6,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { whatsappLink } from "@/lib/utils";
+import { trackUiEvent } from "@/lib/analytics";
 
 function normalizeKenyanPhone(value) {
   const digits = (value || "").replace(/\D/g, "");
@@ -107,6 +108,11 @@ export default function EnquiryForm({
       if (!res.ok) throw new Error("Failed");
       setState("sent");
       setLastSubmitAt(now);
+      trackUiEvent("submit_lead", {
+        car_id: carId,
+        dealer_id: dealerId,
+        channel: "web",
+      });
     } catch {
       setState("error");
       setErrorText("Something went wrong. Please try WhatsApp instead.");
@@ -135,6 +141,12 @@ export default function EnquiryForm({
     });
 
     // Track WhatsApp action for analytics
+    trackUiEvent("open_whatsapp", {
+      car_id: carId,
+      dealer_id: dealerId,
+      channel: "whatsapp",
+      context: "enquiry_form",
+    });
     fetch(`/api/cars/${carId}/track-action`, {
       method: "POST",
       body: JSON.stringify({ action: "whatsapp" }),
@@ -145,6 +157,12 @@ export default function EnquiryForm({
   }
 
   function handleCall() {
+    trackUiEvent("open_call", {
+      car_id: carId,
+      dealer_id: dealerId,
+      channel: "call",
+      context: "enquiry_form",
+    });
     fetch(`/api/cars/${carId}/track-action`, {
       method: "POST",
       body: JSON.stringify({ action: "call" }),

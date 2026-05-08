@@ -8,6 +8,7 @@ import Image from "next/image";
 import CarsSearch from "@/components/CarsSearch";
 import CarCard from "@/components/CarCard";
 import CarsQuickActions from "@/components/CarsQuickActions";
+import TrackEventOnMount from "@/components/TrackEventOnMount";
 import { unstable_cache } from "next/cache";
 import { getSession } from "@/lib/auth";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
@@ -518,6 +519,20 @@ export default async function CarsPage({ searchParams }) {
 
   return (
     <div className="min-h-screen bg-white pb-20">
+      <TrackEventOnMount
+        name="cars_listing_view"
+        payload={{
+          search: search || "",
+          make: make || "",
+          body_type: bodyType || "",
+          fuel_type: fuelType || "",
+          transmission: transmission || "",
+          county: county || "",
+          sort: sort || "newest",
+          page,
+          result_count: total,
+        }}
+      />
       <div className="w-full px-4 sm:px-8 pt-32 sm:pt-40">
         
         {/* Compact breadcrumb strip */}

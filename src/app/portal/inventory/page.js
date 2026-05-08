@@ -3,8 +3,10 @@ import { requireDealer } from "@/lib/auth";
 import Link from "next/link";
 import Image from "next/image";
 import { formatCarPrice } from "@/lib/utils";
+import { absoluteUrl } from "@/lib/site-url";
 import { BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/constants";
 import InventoryToggle from "@/components/InventoryToggle";
+import InventorySharePrompt from "@/components/InventorySharePrompt";
 import { 
   Plus, 
   Car as CarIcon, 
@@ -12,6 +14,7 @@ import {
   Edit3, 
   EyeOff,
   MessageSquare,
+  MessageCircle,
 } from "lucide-react";
 
 export default async function InventoryPage({ searchParams }) {
@@ -28,6 +31,8 @@ export default async function InventoryPage({ searchParams }) {
   const minYear = sp.minYear ? Number.parseInt(sp.minYear, 10) : null;
   const maxYear = sp.maxYear ? Number.parseInt(sp.maxYear, 10) : null;
   const sort = (sp.sort || "newest").toString();
+  const created = (sp.created || "").toString();
+  const createdCarId = (sp.car || "").toString();
   const searchYear = Number.parseInt(search, 10);
 
   const where = {
@@ -81,6 +86,36 @@ export default async function InventoryPage({ searchParams }) {
       orderBy: { make: "asc" },
     }),
   ]);
+  const createdCar =
+    created === "1" && createdCarId
+      ? await db.car.findFirst({
+          where: { id: createdCarId, dealerId: user.dealerId },
+          select: {
+            id: true,
+            make: true,
+            model: true,
+            year: true,
+            price: true,
+            description: true,
+            images: { where: { isPrimary: true }, take: 1, select: { url: true } },
+          },
+        })
+      : null;
+
+  const buildInventoryWhatsAppHref = (car) => {
+    const listingUrl = absoluteUrl(`/cars/${car.id}`);
+    const title = `${car.year} ${car.make} ${car.model}`.replace(/\s+/g, " ").trim();
+    const body = [
+      `${title} is now available in our showroom.`,
+      car.price ? `Price: ${formatCarPrice(car)}` : "",
+      car.description ? car.description.slice(0, 160) : "Contact us for full details, inspection, and booking.",
+      "",
+      `View photos and details: ${listingUrl}`,
+    ]
+      .filter(Boolean)
+      .join("\n");
+    return `https://wa.me/?text=${encodeURIComponent(body)}`;
+  };
 
   const draftCount = soldCount;
   const makeOptions = [...new Set(filterData.map((item) => item.make).filter(Boolean))];
@@ -128,6 +163,19 @@ export default async function InventoryPage({ searchParams }) {
 
   return (
     <div className="w-full">
+      {createdCar ? (
+        <InventorySharePrompt
+          car={{
+            title: `${createdCar.year} ${createdCar.make} ${createdCar.model}`,
+            imageUrl: createdCar.images?.[0]?.url || "",
+            description:
+              createdCar.description?.slice(0, 140) ||
+              "Ready for viewing. Tap share to send this car to WhatsApp contacts.",
+            priceLabel: formatCarPrice(createdCar),
+          }}
+          whatsappHref={buildInventoryWhatsAppHref(createdCar)}
+        />
+      ) : null}
       {/* Header */}
       <div className="flex flex-col gap-4 sm:gap-8 mb-5 sm:mb-10">
         <div>
@@ -345,6 +393,15 @@ export default async function InventoryPage({ searchParams }) {
                   </Link>
                   <InventoryToggle carId={car.id} available={car.available} />
                 </div>
+                <a
+                  href={buildInventoryWhatsAppHref(car)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2.5 sm:mt-3 flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#20bd5a] text-white text-[10px] sm:text-[11px] uppercase font-black tracking-[0.1em] sm:tracking-[0.15em] py-2 rounded-2xl transition-colors"
+                >
+                  <MessageCircle size={13} />
+                  Share to WhatsApp
+                </a>
                 
                 <Link href={`/cars/${car.id}`} target="_blank"
                   className="mt-2.5 sm:mt-3 flex items-center justify-center gap-1.5 text-[10px] sm:text-[11px] uppercase font-black tracking-[0.1em] sm:tracking-[0.15em] font-medium text-slate-700 hover:text-slate-900 dark:text-white transition-colors py-1.5 sm:py-2">

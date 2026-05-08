@@ -8,6 +8,7 @@ import { FUEL_LABELS } from "@/lib/constants";
 import { buildCarSpecSummaryItems, meaningfulFeatureList, positiveNum } from "@/lib/car-display";
 import { CompareButton } from "./CompareSelector";
 import FeatureMarquee from "./FeatureMarquee";
+import { trackUiEvent } from "@/lib/analytics";
 
 /**
  * Universal premium CarCard matching the G99 reference design.
@@ -35,11 +36,25 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
   const specItems = buildCarSpecSummaryItems(car);
   const specString = specItems.join(" • ");
   const featureChips = meaningfulFeatureList(car.features);
+  const eventPayload = {
+    car_id: car.id,
+    dealer_id: car?.dealer?.id || "",
+    make: car.make || "",
+    model: car.model || "",
+    price: Number(car.price || 0),
+  };
+
+  function onCarClick(placement) {
+    trackUiEvent("view_car_click", {
+      ...eventPayload,
+      placement,
+    });
+  }
 
   return (
     <article className="group flex flex-col bg-white dark:bg-[#0a0a0a] border-2 border-slate-100 dark:border-zinc-900 transition-all hover:shadow-2xl overflow-hidden" style={{ borderRadius: '4px' }}>
       {/* Image Container */}
-      <Link href={`/cars/${car.id}`} className="relative aspect-[16/11] bg-slate-50 dark:bg-zinc-900 overflow-hidden block">
+      <Link href={`/cars/${car.id}`} onClick={() => onCarClick("image")} className="relative aspect-[16/11] bg-slate-50 dark:bg-zinc-900 overflow-hidden block">
         {primaryImg ? (
           <Image
             src={primaryImg}
@@ -85,7 +100,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
           <span className="mt-1 text-[11px] font-black text-slate-400 uppercase tracking-widest">
             {car.year}
           </span>
-          <Link href={`/cars/${car.id}`}>
+          <Link href={`/cars/${car.id}`} onClick={() => onCarClick("title")}>
             <h3 className="text-base sm:text-[17px] font-black font-sans text-slate-900 dark:text-white tracking-tighter leading-snug hover:text-[#38A169] transition-colors truncate" title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}>
               {car.make} {car.model} {car.variant ? `(${car.variant})` : ""}
             </h3>
@@ -137,6 +152,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
 
           <Link 
             href={`/cars/${car.id}`} 
+            onClick={() => onCarClick("cta")}
             className="group/btn flex items-center gap-3 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-[#111827] hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
             style={{ borderRadius: '2px' }}
           >

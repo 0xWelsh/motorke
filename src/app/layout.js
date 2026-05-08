@@ -5,6 +5,7 @@ import SiteChrome from "@/components/SiteChrome";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ScrollToTop from "@/components/ScrollToTop";
 import { PWARegister } from "@/components/PWARegister";
+import AnalyticsBootstrap from "@/components/AnalyticsBootstrap";
 import { getSession } from "@/lib/auth";
 import CookieConsent from "@/components/CookieConsent";
 import { headers } from "next/headers";
@@ -99,6 +100,7 @@ export default async function RootLayout({ children }) {
       <body className={`${playfair.variable} bg-background text-slate-900 dark:text-white min-h-screen antialiased flex flex-col font-sans transition-colors duration-300`}>
         <PWARegister />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <AnalyticsBootstrap />
           <CompareProvider>
             <SiteChrome user={user} shellPath={shellPath}>
               {children}
