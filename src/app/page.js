@@ -240,7 +240,7 @@ export default async function HomePage() {
         }}
       />
       {/* Dynamic Hero Section */}
-      <section className="relative pt-18 pb-8 md:pt-20 md:pb-10 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
+      <section className="relative pt-24 pb-8 md:pt-20 md:pb-10 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           
           {/* Page Header - Full Width */}
