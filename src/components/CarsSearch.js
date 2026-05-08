@@ -23,6 +23,7 @@ export default function CarsSearch({
   bodyTypeLabels = {},
   counties = []
 }) {
+  const RECENT_CAR_SEARCHES_KEY = "motorke:recent-car-searches";
   const [search, setSearch] = useState(initialSearch);
   const [make, setMake] = useState(initialMake);
   const [model, setModel] = useState("");
@@ -127,6 +128,51 @@ export default function CarsSearch({
   function pushWith(next = {}) {
     const params = buildParams(next);
     const query = params.toString();
+    const nextState = {
+      search: search?.trim() || "",
+      make,
+      bodyType,
+      fuelType,
+      transmission,
+      county,
+      minPrice,
+      maxPrice,
+      sort,
+      ...next,
+    };
+    const hasMeaningfulFilter = Boolean(
+      nextState.search ||
+      nextState.make ||
+      nextState.bodyType ||
+      nextState.fuelType ||
+      nextState.transmission ||
+      nextState.county ||
+      nextState.minPrice ||
+      nextState.maxPrice ||
+      (nextState.sort && nextState.sort !== "newest")
+    );
+    if (hasMeaningfulFilter && typeof window !== "undefined") {
+      try {
+        const prev = JSON.parse(window.localStorage.getItem(RECENT_CAR_SEARCHES_KEY) || "[]");
+        const labelParts = [
+          nextState.search || null,
+          nextState.make || null,
+          nextState.bodyType || null,
+          nextState.fuelType || null,
+          nextState.maxPrice ? `<= ${Number(nextState.maxPrice).toLocaleString()}` : null,
+        ].filter(Boolean);
+        const label = labelParts.join(" • ") || "Custom cars search";
+        const entry = {
+          label,
+          query,
+          createdAt: Date.now(),
+        };
+        const deduped = [entry, ...prev.filter((item) => item.query !== query)].slice(0, 6);
+        window.localStorage.setItem(RECENT_CAR_SEARCHES_KEY, JSON.stringify(deduped));
+      } catch {
+        // Ignore storage failures in private mode.
+      }
+    }
     setShowSuggestions(false);
     setMobileOpen(false); // Close mobile filters on push
     router.push(query ? `/cars?${query}` : "/cars");

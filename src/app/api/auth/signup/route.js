@@ -4,22 +4,29 @@ import { hashPassword } from "@/lib/auth";
 import { createEmailOTP, sendVerificationEmail } from "@/lib/mail";
 import { isCaptchaConfigured, verifyTurnstileToken } from "@/lib/captcha";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/request-security";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const slugify = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
 const signupSchema = z.object({
-  name: z.string().min(2).trim(),
+  name: z.string().min(2).max(80).trim(),
   email: z.string().email().toLowerCase().trim(),
-  password: z.string().min(8),
+  password: z
+    .string()
+    .min(8)
+    .max(128)
+    .regex(/[A-Z]/, "Password must include at least one uppercase letter.")
+    .regex(/[a-z]/, "Password must include at least one lowercase letter.")
+    .regex(/[0-9]/, "Password must include at least one number."),
   confirm: z.string(),
   role: z.enum(["BUYER", "DEALER"]).default("BUYER"),
-  dealerName: z.string().optional(),
-  county: z.string().optional(),
-  phone: z.string().optional(),
-  captchaToken: z.string().optional(),
-  website: z.string().optional(),
+  dealerName: z.string().trim().max(120).optional(),
+  county: z.string().trim().max(60).optional(),
+  phone: z.string().trim().max(32).optional(),
+  captchaToken: z.string().max(2048).optional(),
+  website: z.string().max(0).optional(),
 }).refine(data => data.password === data.confirm, {
   message: "Passwords don't match",
   path: ["confirm"]
@@ -45,8 +52,7 @@ export async function POST(request) {
       return NextResponse.redirect(new URL("/signup?error=invalid", request.url));
     }
 
-    const forwardedFor = request.headers.get("x-forwarded-for") || "";
-    const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+    const ip = getClientIp(request);
 
     const ipLimit = checkRateLimit({
       name: "signup-ip",

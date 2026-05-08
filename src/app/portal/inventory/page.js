@@ -1,16 +1,15 @@
 import { db } from "@/lib/db";
 import { requireDealer } from "@/lib/auth";
 import Link from "next/link";
-import { formatPrice, formatCarPrice } from "@/lib/utils";
+import Image from "next/image";
+import { formatCarPrice } from "@/lib/utils";
+import { BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/constants";
 import InventoryToggle from "@/components/InventoryToggle";
 import { 
   Plus, 
-  Search, 
-  Filter, 
   Car as CarIcon, 
   ExternalLink, 
   Edit3, 
-  Eye,
   EyeOff,
   MessageSquare,
 } from "lucide-react";
@@ -19,11 +18,40 @@ export default async function InventoryPage({ searchParams }) {
   const user   = await requireDealer();
   const sp     = await searchParams;
   const filter = sp.filter || "all";
+  const search = (sp.search || "").toString().trim();
+  const make = (sp.make || "").toString().trim();
+  const bodyType = (sp.bodyType || "").toString().trim();
+  const fuelType = (sp.fuelType || "").toString().trim();
+  const transmission = (sp.transmission || "").toString().trim();
+  const minPrice = sp.minPrice ? Number.parseInt(sp.minPrice, 10) : null;
+  const maxPrice = sp.maxPrice ? Number.parseInt(sp.maxPrice, 10) : null;
+  const minYear = sp.minYear ? Number.parseInt(sp.minYear, 10) : null;
+  const maxYear = sp.maxYear ? Number.parseInt(sp.maxYear, 10) : null;
+  const sort = (sp.sort || "newest").toString();
+  const searchYear = Number.parseInt(search, 10);
 
   const where = {
     dealerId: user.dealerId,
     ...(filter === "live"   && { available: true  }),
     ...(filter === "sold"   && { available: false }),
+    ...(make && { make: { equals: make, mode: "insensitive" } }),
+    ...(bodyType && { bodyType }),
+    ...(fuelType && { fuelType }),
+    ...(transmission && { transmission }),
+    ...((minPrice || maxPrice)
+      ? { price: { ...(minPrice ? { gte: minPrice } : {}), ...(maxPrice ? { lte: maxPrice } : {}) } }
+      : {}),
+    ...((minYear || maxYear)
+      ? { year: { ...(minYear ? { gte: minYear } : {}), ...(maxYear ? { lte: maxYear } : {}) } }
+      : {}),
+    ...(search && {
+      OR: [
+        { make: { contains: search, mode: "insensitive" } },
+        { model: { contains: search, mode: "insensitive" } },
+        { variant: { contains: search, mode: "insensitive" } },
+        ...(Number.isFinite(searchYear) ? [{ year: searchYear }] : []),
+      ],
+    }),
   };
 
   const cars = await db.car.findMany({
@@ -32,16 +60,71 @@ export default async function InventoryPage({ searchParams }) {
       images: { where: { isPrimary: true }, take: 1 },
       _count: { select: { leads: true } },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy:
+      sort === "price_asc"
+        ? { price: "asc" }
+        : sort === "price_desc"
+          ? { price: "desc" }
+          : sort === "views_desc"
+            ? { views: "desc" }
+            : { createdAt: "desc" },
   });
 
-  const [liveCount, soldCount, totalCount] = await Promise.all([
+  const [liveCount, soldCount, totalCount, filterData] = await Promise.all([
     db.car.count({ where: { dealerId: user.dealerId, available: true  } }),
     db.car.count({ where: { dealerId: user.dealerId, available: false } }),
     db.car.count({ where: { dealerId: user.dealerId } }),
+    db.car.findMany({
+      where: { dealerId: user.dealerId },
+      select: { make: true, bodyType: true, fuelType: true, transmission: true, year: true },
+      distinct: ["make", "bodyType", "fuelType", "transmission", "year"],
+      orderBy: { make: "asc" },
+    }),
   ]);
 
   const draftCount = soldCount;
+  const makeOptions = [...new Set(filterData.map((item) => item.make).filter(Boolean))];
+  const bodyOptions = [...new Set(filterData.map((item) => item.bodyType).filter(Boolean))];
+  const fuelOptions = [...new Set(filterData.map((item) => item.fuelType).filter(Boolean))];
+  const transmissionOptions = [...new Set(filterData.map((item) => item.transmission).filter(Boolean))];
+  const yearOptions = [...new Set(filterData.map((item) => item.year).filter(Boolean))].sort((a, b) => b - a);
+  const filterState = { filter, search, make, bodyType, fuelType, transmission, minPrice, maxPrice, minYear, maxYear, sort };
+  const hasAdvancedFilters = Boolean(
+    filterState.search ||
+    filterState.make ||
+    filterState.bodyType ||
+    filterState.fuelType ||
+    filterState.transmission ||
+    filterState.minPrice ||
+    filterState.maxPrice ||
+    filterState.minYear ||
+    filterState.maxYear ||
+    filterState.sort !== "newest"
+  );
+  const preserveFilterHref = (nextFilter) => {
+    const params = new URLSearchParams();
+    params.set("filter", nextFilter);
+    if (search) params.set("search", search);
+    if (make) params.set("make", make);
+    if (bodyType) params.set("bodyType", bodyType);
+    if (fuelType) params.set("fuelType", fuelType);
+    if (transmission) params.set("transmission", transmission);
+    if (minPrice) params.set("minPrice", String(minPrice));
+    if (maxPrice) params.set("maxPrice", String(maxPrice));
+    if (minYear) params.set("minYear", String(minYear));
+    if (maxYear) params.set("maxYear", String(maxYear));
+    if (sort && sort !== "newest") params.set("sort", sort);
+    return `/portal/inventory?${params.toString()}`;
+  };
+  const presetHref = (preset) => {
+    const params = new URLSearchParams();
+    params.set("filter", preset.filter || "all");
+    if (preset.bodyType) params.set("bodyType", preset.bodyType);
+    if (preset.minPrice) params.set("minPrice", String(preset.minPrice));
+    if (preset.maxPrice) params.set("maxPrice", String(preset.maxPrice));
+    if (preset.sort) params.set("sort", preset.sort);
+    return `/portal/inventory?${params.toString()}`;
+  };
 
   return (
     <div className="w-full">
@@ -49,6 +132,16 @@ export default async function InventoryPage({ searchParams }) {
       <div className="flex flex-col gap-6 sm:gap-8 mb-8 sm:mb-10">
         <div>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-1 sm:mb-2\">Inventory</h1>
+          {hasAdvancedFilters ? (
+            <div className="mt-2 flex items-center gap-2">
+              <span className="inline-flex items-center gap-2 rounded-2xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-blue-700">
+                Filters active
+              </span>
+              <Link href="/portal/inventory?filter=all" className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-600 hover:text-slate-900">
+                Clear
+              </Link>
+            </div>
+          ) : null}
           {/* One-line stats (mobile stays horizontally aligned) */}
           <div className="mt-2 flex items-center gap-2 flex-nowrap overflow-x-auto pb-1">
             <span className="inline-flex items-center gap-2 rounded-2xl border border-[#ddd4c8] bg-white/70 dark:bg-[#111111] px-3 py-2">
@@ -76,6 +169,72 @@ export default async function InventoryPage({ searchParams }) {
         </div>
       </div>
 
+      <form method="GET" className="mb-6 rounded-2xl border border-[#ddd4c8] bg-white p-3 sm:p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.04)]">
+        <input type="hidden" name="filter" value={filter} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-6 gap-2">
+          <input
+            name="search"
+            defaultValue={search}
+            placeholder="Search make, model, year..."
+            className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]"
+          />
+          <select name="make" defaultValue={make} className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]">
+            <option value="">All makes</option>
+            {makeOptions.map((value) => <option key={value} value={value}>{value}</option>)}
+          </select>
+          <select name="bodyType" defaultValue={bodyType} className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]">
+            <option value="">All body shapes</option>
+            {bodyOptions.map((value) => <option key={value} value={value}>{BODY_TYPE_LABELS[value] || value}</option>)}
+          </select>
+          <select name="fuelType" defaultValue={fuelType} className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]">
+            <option value="">All fuel types</option>
+            {fuelOptions.map((value) => <option key={value} value={value}>{FUEL_LABELS[value] || value}</option>)}
+          </select>
+          <select name="transmission" defaultValue={transmission} className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]">
+            <option value="">All transmissions</option>
+            {transmissionOptions.map((value) => <option key={value} value={value}>{TRANSMISSION_LABELS[value] || value}</option>)}
+          </select>
+          <select name="sort" defaultValue={sort} className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]">
+            <option value="newest">Newest first</option>
+            <option value="price_asc">Price low to high</option>
+            <option value="price_desc">Price high to low</option>
+            <option value="views_desc">Most viewed</option>
+          </select>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-6 gap-2 mt-2">
+          <input name="minPrice" type="number" defaultValue={minPrice ?? ""} placeholder="Min price" className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]" />
+          <input name="maxPrice" type="number" defaultValue={maxPrice ?? ""} placeholder="Max price" className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]" />
+          <select name="minYear" defaultValue={minYear ?? ""} className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]">
+            <option value="">Min year</option>
+            {yearOptions.map((value) => <option key={`min-${value}`} value={value}>{value}</option>)}
+          </select>
+          <select name="maxYear" defaultValue={maxYear ?? ""} className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]">
+            <option value="">Max year</option>
+            {yearOptions.map((value) => <option key={`max-${value}`} value={value}>{value}</option>)}
+          </select>
+          <button type="submit" className="h-10 px-3 bg-[#111111] text-white text-[10px] font-black uppercase tracking-[0.12em]">Apply filters</button>
+          <Link href={`/portal/inventory?filter=${filter}`} className="h-10 px-3 border border-[#ddd4c8] text-[10px] font-black uppercase tracking-[0.12em] inline-flex items-center justify-center">Reset row</Link>
+        </div>
+      </form>
+
+      <div className="mb-6 flex flex-wrap gap-2">
+        {[
+          { label: "Daily Driver", bodyType: "SEDAN", maxPrice: 3500000, sort: "price_asc" },
+          { label: "SUV Stock", bodyType: "SUV", sort: "views_desc" },
+          { label: "Pickup Focus", bodyType: "PICKUP", sort: "newest" },
+          { label: "Price Drop Window", maxPrice: 2500000, sort: "price_asc" },
+          { label: "Premium Shelf", minPrice: 5000000, sort: "price_desc" },
+        ].map((preset) => (
+          <Link
+            key={preset.label}
+            href={presetHref(preset)}
+            className="inline-flex items-center h-8 px-3 rounded-full border border-[#ddd4c8] bg-white text-[10px] font-black uppercase tracking-[0.12em] text-slate-700 hover:bg-[#fbfcfe]"
+          >
+            {preset.label}
+          </Link>
+        ))}
+      </div>
+
       {/* Filter Tabs */}
       <div className="flex bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 p-1 rounded-2xl w-full overflow-x-auto mb-8 sm:mb-10 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
         {[
@@ -83,7 +242,7 @@ export default async function InventoryPage({ searchParams }) {
           { key: "live", label: "Available",     count: liveCount },
           { key: "sold", label: "Sold/Drafts",    count: soldCount },
         ].map(({ key, label, count }) => (
-          <Link key={key} href={`/portal/inventory?filter=${key}`}
+          <Link key={key} href={preserveFilterHref(key)}
             className={`px-2 sm:px-4 py-2 rounded-2xl text-[11px] uppercase font-black tracking-[0.10em] transition-all flex items-center gap-1 sm:gap-2 flex-shrink-0 ${
               filter === key 
                 ? "bg-[#2F855A] text-white" 
@@ -118,7 +277,7 @@ export default async function InventoryPage({ searchParams }) {
               {/* Image & Status Badge */}
               <div className="relative aspect-[16/11] bg-[#fbfcfe] dark:bg-[#111111] overflow-hidden shrink-0">
                 {car.images[0]
-                  ? <img src={car.images[0].url} alt="" className="w-full h-full object-cover" />
+                  ? <Image src={car.images[0].url} alt={`${car.make} ${car.model}`} width={640} height={440} className="w-full h-full object-cover" />
                   : <div className="flex items-center justify-center h-full bg-[#fbfcfe] dark:bg-[#111111]">
                       <CarIcon size={28} className="text-slate-300" />
                     </div>

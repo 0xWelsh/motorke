@@ -4,6 +4,7 @@ const SESSION_COOKIE = "welsh-motors_session";
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;
+  const isProd = process.env.NODE_ENV === "production";
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", pathname);
@@ -24,7 +25,7 @@ export function middleware(request) {
   response.headers.set(
     "Content-Security-Policy",
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com cdn.jsdelivr.net; " +
+    `script-src 'self' 'unsafe-inline' ${isProd ? "" : "'unsafe-eval' "}*.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com cdn.jsdelivr.net; ` +
     "style-src 'self' 'unsafe-inline' *.googleapis.com *.fontshare.com fonts.googleapis.com; " +
     "img-src 'self' data: blob: https: *.supabase.co *.unsplash.com *.openstreetmap.org tile.openstreetmap.org a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org; " +
     "font-src 'self' *.fontshare.com fonts.gstatic.com; " +
@@ -46,6 +47,9 @@ export function middleware(request) {
 
   // Referrer Policy
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
+  response.headers.set("Cross-Origin-Resource-Policy", "same-site");
+  response.headers.set("Origin-Agent-Cluster", "?1");
 
   // Permissions Policy (formerly Feature Policy)
   response.headers.set(
@@ -54,7 +58,7 @@ export function middleware(request) {
   );
 
   // HSTS (only in production)
-  if (process.env.NODE_ENV === "production") {
+  if (isProd) {
     response.headers.set(
       "Strict-Transport-Security",
       "max-age=31536000; includeSubDomains; preload"

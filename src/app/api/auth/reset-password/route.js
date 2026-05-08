@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { hashPassword } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { verifyTurnstileToken } from "@/lib/captcha";
+import { getClientIp, json429, normalizeToken } from "@/lib/request-security";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -12,11 +13,17 @@ const RESET_WINDOW_MS = 10 * 60 * 1000;
 const resetSchema = z
   .object({
     email: z.string().email().toLowerCase().trim(),
-    token: z.string().min(10),
-    password: z.string().min(8),
+    token: z.string().min(10).max(256),
+    password: z
+      .string()
+      .min(8)
+      .max(128)
+      .regex(/[A-Z]/, "Password must include at least one uppercase letter.")
+      .regex(/[a-z]/, "Password must include at least one lowercase letter.")
+      .regex(/[0-9]/, "Password must include at least one number."),
     confirm: z.string().min(8),
-    captchaToken: z.string().min(2),
-    website: z.string().optional(),
+    captchaToken: z.string().min(2).max(2048),
+    website: z.string().max(0).optional(),
   })
   .refine((data) => data.password === data.confirm, {
     message: "Passwords do not match.",
@@ -33,8 +40,8 @@ export async function POST(request) {
     }
 
     const { email, token, password, captchaToken, website } = parsed.data;
-    const forwardedFor = request.headers.get("x-forwarded-for") || "";
-    const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+    const safeToken = normalizeToken(token);
+    const ip = getClientIp(request);
 
     if (website) {
       return NextResponse.json({ error: "Invalid reset request." }, { status: 400 });
@@ -47,16 +54,16 @@ export async function POST(request) {
       maxRequests: 12,
     });
     if (ipLimit.limited) {
-      return NextResponse.json({ error: "Too many reset attempts. Please try again shortly." }, { status: 429, headers: { "Retry-After": String(ipLimit.retryAfter) } });
+      return json429("Too many reset attempts. Please try again shortly.", ipLimit.retryAfter);
     }
     const tokenLimit = checkRateLimit({
       name: "reset-password-token",
-      key: `${email}:${token}`,
+      key: `${email}:${safeToken}`,
       windowMs: RESET_WINDOW_MS,
       maxRequests: 5,
     });
     if (tokenLimit.limited) {
-      return NextResponse.json({ error: "Too many reset attempts. Please request a new reset link." }, { status: 429, headers: { "Retry-After": String(tokenLimit.retryAfter) } });
+      return json429("Too many reset attempts. Please request a new reset link.", tokenLimit.retryAfter);
     }
     const captchaCheck = await verifyTurnstileToken({ token: captchaToken, ip });
     if (!captchaCheck.success) {
@@ -69,7 +76,7 @@ export async function POST(request) {
       where: {
         identifier_token: {
           identifier,
-          token,
+          token: safeToken,
         },
       },
     });

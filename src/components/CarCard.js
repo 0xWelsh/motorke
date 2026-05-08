@@ -47,7 +47,6 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-700"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-slate-300">

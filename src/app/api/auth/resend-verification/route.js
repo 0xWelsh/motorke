@@ -4,18 +4,24 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { createEmailOTP, sendVerificationEmail } from "@/lib/mail";
+import { getClientIp, json429, normalizeEmail } from "@/lib/request-security";
+import { z } from "zod";
+
+const resendSchema = z.object({
+  email: z.string().email(),
+});
 
 export async function POST(request) {
   try {
-    const { email } = await request.json();
-    const safeEmail = (email || "").toString().toLowerCase().trim();
+    const body = await request.json();
+    const parsed = resendSchema.safeParse(body);
+    const safeEmail = parsed.success ? normalizeEmail(parsed.data.email) : null;
 
     if (!safeEmail) {
       return NextResponse.json({ error: "Email is required." }, { status: 400 });
     }
 
-    const forwardedFor = request.headers.get("x-forwarded-for") || "";
-    const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+    const ip = getClientIp(request);
 
     const ipLimit = checkRateLimit({
       name: "resend-otp-ip",
@@ -24,10 +30,7 @@ export async function POST(request) {
       maxRequests: 20,
     });
     if (ipLimit.limited) {
-      return NextResponse.json(
-        { error: `Too many requests. Try again in ${ipLimit.retryAfter}s.` },
-        { status: 429 }
-      );
+      return json429("Too many requests. Please try again shortly.", ipLimit.retryAfter);
     }
 
     const emailLimit = checkRateLimit({
@@ -37,10 +40,7 @@ export async function POST(request) {
       maxRequests: 5,
     });
     if (emailLimit.limited) {
-      return NextResponse.json(
-        { error: `Too many attempts for this email. Try again in ${emailLimit.retryAfter}s.` },
-        { status: 429 }
-      );
+      return json429("Too many attempts for this email. Please try again shortly.", emailLimit.retryAfter);
     }
 
     const user = await db.user.findUnique({

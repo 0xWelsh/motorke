@@ -1,5 +1,6 @@
 const rateLimitStores = globalThis.__welsh_motorsRateLimitStores || new Map();
 globalThis.__welsh_motorsRateLimitStores = rateLimitStores;
+let lastGlobalPruneAt = 0;
 
 function getStore(name) {
   if (!rateLimitStores.has(name)) {
@@ -16,7 +17,9 @@ export function checkRateLimit({ name, key, windowMs, maxRequests }) {
   const now = Date.now();
   const store = getStore(name);
   const hits = store.get(key) || [];
-  const freshHits = hits.filter((timestamp) => now - timestamp < windowMs);
+  const freshHits = hits
+    .filter((timestamp) => now - timestamp < windowMs)
+    .slice(-Math.max(maxRequests * 3, maxRequests + 5));
 
   if (freshHits.length >= maxRequests) {
     const oldest = freshHits[0] || now;
@@ -31,6 +34,22 @@ export function checkRateLimit({ name, key, windowMs, maxRequests }) {
 
   freshHits.push(now);
   store.set(key, freshHits);
+
+  // Opportunistic global prune to keep memory stable during abuse spikes.
+  if (now - lastGlobalPruneAt > 60_000) {
+    for (const scopedStore of rateLimitStores.values()) {
+      for (const [scopedKey, scopedHits] of scopedStore.entries()) {
+        if (!Array.isArray(scopedHits) || scopedHits.length === 0) {
+          scopedStore.delete(scopedKey);
+          continue;
+        }
+        const recentHits = scopedHits.filter((timestamp) => now - timestamp < windowMs);
+        if (recentHits.length === 0) scopedStore.delete(scopedKey);
+        else scopedStore.set(scopedKey, recentHits.slice(-200));
+      }
+    }
+    lastGlobalPruneAt = now;
+  }
 
   return {
     limited: false,

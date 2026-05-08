@@ -2,12 +2,11 @@
 export const dynamic = "force-dynamic";
 import { requireDealer } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { formatPrice, formatCarPrice } from "@/lib/utils";
+import { formatCarPrice } from "@/lib/utils";
 import { 
   TrendingUp, 
   Users, 
   MousePointer2, 
-  Printer, 
   Award,
   ArrowUpRight,
   ArrowDownRight,
@@ -69,7 +68,6 @@ export default async function AnalyticsPage() {
   // Summary Metrics
   const totalViews  = cars.reduce((acc, c) => acc + c.views, 0);
   const totalClicks = cars.reduce((acc, c) => acc + c.whatsappClicks, 0);
-  const totalPrints = cars.reduce((acc, c) => acc + c.printCount, 0);
   const totalLeads  = leads.length;
   const convRate    = totalViews > 0 ? ((totalLeads / totalViews) * 100).toFixed(1) : 0;
 
@@ -91,9 +89,9 @@ export default async function AnalyticsPage() {
 
   return (
     <div className="w-full">
-      <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">Analytics</h1>
-        <p className="text-[11px] uppercase font-black tracking-[0.15em] sm:text-[11px] uppercase font-black tracking-[0.10em] text-slate-700 font-medium mt-1 sm:mt-2">Performance over 14 days</p>
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Analytics</h1>
+        <p className="text-[10px] uppercase font-black tracking-[0.12em] text-slate-700 font-medium mt-1">Performance over 14 days</p>
       </div>
 
       {/* KPI Grid */}

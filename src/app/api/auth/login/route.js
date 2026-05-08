@@ -3,14 +3,15 @@ import { db } from "@/lib/db";
 import { verifyPassword, createSession } from "@/lib/auth";
 import { isCaptchaConfigured, verifyTurnstileToken } from "@/lib/captcha";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/request-security";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const loginSchema = z.object({
   email: z.string().email().toLowerCase().trim(),
-  password: z.string().min(1),
-  captchaToken: z.string().optional(),
-  website: z.string().optional(),
+  password: z.string().min(1).max(128),
+  captchaToken: z.string().max(2048).optional(),
+  website: z.string().max(0).optional(),
 });
 
 export async function POST(request) {
@@ -28,8 +29,7 @@ export async function POST(request) {
       return NextResponse.redirect(new URL("/login?error=invalid", request.url));
     }
 
-    const forwardedFor = request.headers.get("x-forwarded-for") || "";
-    const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+    const ip = getClientIp(request);
 
     const ipLimit = checkRateLimit({
       name: "login-ip",

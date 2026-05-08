@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { createPasswordResetToken, sendPasswordResetEmail } from "@/lib/mail";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { verifyTurnstileToken } from "@/lib/captcha";
+import { getClientIp, json429 } from "@/lib/request-security";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -25,8 +26,7 @@ export async function POST(request) {
     }
 
     const { email, captchaToken, website } = parsed.data;
-    const forwardedFor = request.headers.get("x-forwarded-for") || "";
-    const ip = forwardedFor.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+    const ip = getClientIp(request);
 
     if (website) {
       return NextResponse.json({
@@ -42,10 +42,7 @@ export async function POST(request) {
       maxRequests: 10,
     });
     if (ipLimit.limited) {
-      return NextResponse.json(
-        { error: "Too many reset attempts. Please try again shortly." },
-        { status: 429, headers: { "Retry-After": String(ipLimit.retryAfter) } }
-      );
+      return json429("Too many reset attempts. Please try again shortly.", ipLimit.retryAfter);
     }
 
     const emailLimit = checkRateLimit({
@@ -55,7 +52,7 @@ export async function POST(request) {
       maxRequests: 5,
     });
     if (emailLimit.limited) {
-      return NextResponse.json({ error: "Too many reset attempts. Please try again shortly." }, { status: 429, headers: { "Retry-After": String(emailLimit.retryAfter) } });
+      return json429("Too many reset attempts. Please try again shortly.", emailLimit.retryAfter);
     }
     const captchaCheck = await verifyTurnstileToken({ token: captchaToken, ip });
     if (!captchaCheck.success) {
