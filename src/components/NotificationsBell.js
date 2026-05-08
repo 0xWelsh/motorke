@@ -32,9 +32,9 @@ export default function NotificationsBell({ variant = "portal" }) {
   const dropdownClassName = useMemo(
     () =>
       clsx(
-        "absolute right-0 top-full mt-3 w-[400px] max-w-[90vw] border shadow-[0_20px_50px_rgba(0,0,0,0.2)] z-50 overflow-hidden",
-        "bg-white dark:bg-[#0a0a0a] border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white",
-        "rounded-[6px]"
+        "absolute right-0 top-full mt-3 w-[380px] max-w-[calc(100vw-1rem)] max-sm:fixed max-sm:left-2 max-sm:right-2 max-sm:top-[4.25rem] max-sm:w-auto border shadow-[0_20px_50px_rgba(0,0,0,0.2)] z-50 overflow-hidden",
+        "bg-white dark:bg-[#0a0a0a] border-[#ddd4c8] dark:border-slate-800 text-slate-900 dark:text-white",
+        "rounded-2xl"
       ),
     []
   );
@@ -134,10 +134,10 @@ export default function NotificationsBell({ variant = "portal" }) {
         className={clsx(
           "transition-all relative",
           isAdmin
-            ? "text-slate-600 hover:text-[#ff5a2f]"
+            ? "text-slate-600 hover:text-[#2F855A]"
             : isNavbar
-              ? "w-10 h-10 rounded-full bg-white dark:bg-zinc-900 border border-[#ddd4c8] dark:border-zinc-800 text-slate-600 hover:text-[#ff5a2f] hover:border-slate-300 flex items-center justify-center"
-            : "w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-800 border border-[#ddd4c8] dark:border-zinc-800 text-slate-600 dark:text-slate-300 hover:text-[#ff5a2f] flex items-center justify-center"
+              ? "w-10 h-10 rounded-full bg-white dark:bg-zinc-900 border border-[#ddd4c8] dark:border-zinc-800 text-slate-600 hover:text-[#2F855A] hover:border-slate-300 flex items-center justify-center"
+            : "w-10 h-10 rounded-full bg-slate-100 dark:bg-zinc-800 border border-[#ddd4c8] dark:border-zinc-800 text-slate-600 dark:text-slate-300 hover:text-[#2F855A] flex items-center justify-center"
         )}
         title="Notifications"
         aria-label="Notifications"
@@ -147,8 +147,8 @@ export default function NotificationsBell({ variant = "portal" }) {
           <span className={clsx(
             "absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full text-[11px] font-bold flex items-center justify-center",
             isAdmin || isNavbar
-              ? "bg-[#ff5a2f] text-slate-900 dark:text-white border-2 border-white"
-              : "bg-[#ff5a2f] text-slate-900 dark:text-white border-2 border-slate-50 dark:border-slate-900"
+              ? "bg-[#2F855A] text-white border-2 border-white"
+              : "bg-[#2F855A] text-white border-2 border-slate-50 dark:border-slate-900"
           )}>
             {Math.min(unreadCount, 99)}
           </span>
@@ -157,7 +157,7 @@ export default function NotificationsBell({ variant = "portal" }) {
 
       {open && (
         <div className={dropdownClassName}>
-          <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-white/5">
+          <div className="px-5 py-4 border-b border-[#ddd4c8] dark:border-slate-800 flex items-center justify-between bg-[#fbfcfe] dark:bg-[#0f1115]">
             <div>
               <p className="text-sm font-bold uppercase tracking-widest text-[#111827] dark:text-white">Notifications</p>
               <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
@@ -168,7 +168,7 @@ export default function NotificationsBell({ variant = "portal" }) {
               <button
                 type="button"
                 onClick={markAllRead}
-                className="text-[10px] font-bold text-[#ff5a2f] uppercase tracking-widest hover:opacity-70 transition-opacity flex items-center gap-1.5"
+                className="text-[10px] font-bold text-[#2F855A] uppercase tracking-widest hover:opacity-70 transition-opacity flex items-center gap-1.5"
                 disabled={busy}
               >
                 <CheckCheck size={12} /> Mark all
@@ -176,7 +176,7 @@ export default function NotificationsBell({ variant = "portal" }) {
             )}
           </div>
 
-          <div className="max-h-[450px] overflow-auto divide-y divide-slate-50 dark:divide-slate-800/50">
+          <div className="max-h-[450px] overflow-auto divide-y divide-slate-100 dark:divide-slate-800/70">
             {loading ? (
               <p className="px-6 py-10 text-xs font-medium text-slate-400 text-center uppercase tracking-widest">
                 Loading notifications...
@@ -189,14 +189,14 @@ export default function NotificationsBell({ variant = "portal" }) {
               notifications.map((item) => {
                 const itemClass = clsx(
                   "block px-6 py-5 transition-all duration-300",
-                  item.read ? "opacity-60 grayscale-[0.5]" : "bg-white dark:bg-transparent hover:bg-slate-50 dark:hover:bg-white/5"
+                  item.read ? "opacity-60 grayscale-[0.5]" : "bg-white dark:bg-transparent hover:bg-[#fbfcfe] dark:hover:bg-[#0f1115]"
                 );
 
                 const content = (
                   <>
                     <div className="flex items-start justify-between gap-4">
                       <p className="text-[13px] font-bold leading-snug text-[#111827] dark:text-white">{item.title}</p>
-                      {!item.read && <span className="mt-1 w-2 h-2 rounded-full bg-[#ff5a2f] shrink-0 shadow-[0_0_8px_rgba(255,90,47,0.5)]" />}
+                      {!item.read && <span className="mt-1 w-2 h-2 rounded-full bg-[#2F855A] shrink-0 shadow-[0_0_8px_rgba(47,133,90,0.45)]" />}
                     </div>
                     <p className="text-[12px] text-slate-600 dark:text-slate-400 leading-relaxed mt-1.5 line-clamp-2">
                        {item.message}
@@ -237,7 +237,7 @@ export default function NotificationsBell({ variant = "portal" }) {
               })
             )}
           </div>
-          <div className="p-4 bg-slate-50 dark:bg-white/5 border-t border-slate-100 dark:border-slate-800">
+          <div className="p-4 bg-[#fbfcfe] dark:bg-[#0f1115] border-t border-[#ddd4c8] dark:border-slate-800">
             <Link href="/notifications" className="block text-center text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest hover:text-[#111827] dark:hover:text-white transition-colors">
               View All Notifications
             </Link>

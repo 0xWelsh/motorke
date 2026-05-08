@@ -441,7 +441,7 @@ export default function PortalLayout({ children }) {
       </main>
 
       {/* Mobile Bottom Tab Bar — visible below lg */}
-      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-white border-t border-[#ddd4c8] flex items-stretch" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-white/98 dark:bg-[#0a0a0a]/98 backdrop-blur-md border-t border-[#ddd4c8] dark:border-slate-800 flex items-stretch" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         {[
           { href: "/portal",           label: "Overview",  Icon: LayoutDashboard },
           { href: "/portal/inventory", label: "Inventory", Icon: Package         },
@@ -456,7 +456,7 @@ export default function PortalLayout({ children }) {
               href={href}
               className={clsx(
                 "flex-1 flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-black uppercase tracking-[0.12em] transition-colors",
-                active ? "text-[#ff5a2f]" : "text-slate-500 hover:text-slate-800"
+                active ? "text-[#2F855A]" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
               )}
             >
               <Icon size={20} strokeWidth={active ? 2.5 : 1.75} />

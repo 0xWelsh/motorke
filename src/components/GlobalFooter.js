@@ -46,9 +46,9 @@ export default function GlobalFooter() {
   ];
 
   return (
-    <footer className="bg-[#1A202C] text-white pt-20 pb-10 mt-auto">
+    <footer className="bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white pt-16 pb-8 mt-auto border-t border-slate-200 dark:border-zinc-900">
       <div className="container mx-auto px-6 max-w-7xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-14">
           
           {/* Brand Info */}
           <div className="lg:col-span-2">
@@ -62,13 +62,13 @@ export default function GlobalFooter() {
                 />
               </div>
             </Link>
-            <p className="text-[#A0AEC0] text-sm leading-relaxed max-w-sm mb-8">
+            <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-sm mb-6">
               Experience the future of automotive digital showrooms. Premium vehicles, 
               verified dealers, and a seamless buying journey across East Africa.
             </p>
             <div className="flex gap-4">
               {[MessageCircle, Send, Camera, Share2].map((Icon, i) => (
-                <a key={i} href="#" className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-[#38A169] text-white transition-all" style={{ borderRadius: 'var(--radius)' }}>
+                <a key={i} href="#" className="w-10 h-10 flex items-center justify-center bg-slate-100 dark:bg-zinc-900 hover:bg-[#2F855A] hover:text-white text-slate-700 dark:text-slate-300 transition-all border border-slate-200 dark:border-zinc-800" style={{ borderRadius: 'var(--radius)' }}>
                   <Icon size={18} />
                 </a>
               ))}
@@ -78,11 +78,11 @@ export default function GlobalFooter() {
           {/* Links Columns */}
           {columns.map((col, i) => (
             <div key={i}>
-              <h4 className="text-[12px] font-bold uppercase tracking-widest text-[#718096] mb-6">{col.title}</h4>
+              <h4 className="text-[12px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-5">{col.title}</h4>
               <ul className="space-y-4">
                 {col.links.map((link, j) => (
                   <li key={j}>
-                    <Link href={link.href} className="text-[#A0AEC0] hover:text-white text-sm transition-colors font-medium">
+                    <Link href={link.href} className="text-slate-600 dark:text-slate-300 hover:text-[#2F855A] dark:hover:text-[#4ade80] text-sm transition-colors font-medium">
                       {link.label}
                     </Link>
                   </li>
@@ -93,15 +93,15 @@ export default function GlobalFooter() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-[#718096] text-xs font-medium">
+        <div className="pt-8 border-t border-slate-200 dark:border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-slate-500 dark:text-slate-400 text-xs font-medium">
             © {currentYear} Welsh Motorhub Platforms. All rights reserved.
           </p>
-          <div className="flex items-center gap-8 text-[#718096]">
+          <div className="flex items-center gap-8 text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-2 text-xs">
               <MapPin size={14} /> Nairobi, Kenya
             </span>
-            <a href={`mailto:${PUBLIC_SUPPORT_EMAIL}`} className="flex items-center gap-2 text-xs hover:text-white/90 transition-colors">
+            <a href={`mailto:${PUBLIC_SUPPORT_EMAIL}`} className="flex items-center gap-2 text-xs hover:text-[#2F855A] dark:hover:text-[#4ade80] transition-colors">
               <Mail size={14} /> {PUBLIC_SUPPORT_EMAIL}
             </a>
           </div>
