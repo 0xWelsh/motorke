@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ArrowUpRight, Building2, MapPin, ShieldCheck } from "lucide-react";
 import NearbyDealersList from "@/components/NearbyDealersList";
 import DealersLocationButton from "@/components/DealersLocationButton";
+import DealersSortSelect from "@/components/DealersSortSelect";
 
 /** Self-hosted hero (user asset in public/) — anchored right; gradient mutes toward text on the left. */
 const DEALERS_HERO_IMAGE = "/images/backgrounds/car-dealership.jpg";
@@ -202,52 +203,17 @@ export default async function DealersPage({ searchParams }) {
       <div className="relative z-10 w-full mx-auto px-4 sm:px-8 xl:px-10 max-w-[1880px] -mt-7 sm:-mt-9 lg:-mt-11 pt-1 sm:pt-2">
         <div className="h-px w-full max-w-md bg-gradient-to-r from-slate-400/70 via-slate-300/45 to-transparent dark:from-slate-700 dark:via-slate-800/60 mb-5 sm:mb-6" aria-hidden />
 
-        {/* Sort controls */}
-        <div className="mb-5 sm:mb-6">
-          <form method="GET" className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 whitespace-nowrap">
-                Sort by
-              </p>
-              <div className="flex items-center gap-2">
-                <input type="hidden" name="search" value={search} />
-                {countyFilter ? <input type="hidden" name="county" value={countyFilter} /> : null}
-                {verifiedOnly ? <input type="hidden" name="verified" value="1" /> : null}
-                <input type="hidden" name="inventory" value={inventoryMode} />
-                {sp.lat ? <input type="hidden" name="lat" value={sp.lat} /> : null}
-                {sp.lng ? <input type="hidden" name="lng" value={sp.lng} /> : null}
-                {/* Visible select updates via button click by submitting a new GET */}
-                <select
-                  name="sort"
-                  defaultValue={sortMode}
-                  className="bg-white dark:bg-[#0a0a0a] border border-[#E2E8F0] dark:border-slate-800 px-4 py-3 text-sm font-medium outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/25 transition-all appearance-none cursor-pointer text-[#111827] dark:text-white"
-                  style={{ borderRadius: "var(--radius)" }}
-                >
-                  <option value="recommended">Recommended</option>
-                  <option value="nearest" disabled={!hasLocation}>Nearest</option>
-                  <option value="active">Most active inventory</option>
-                  <option value="response">Best response rate</option>
-                </select>
-              </div>
-            </div>
-            <button
-              type="submit"
-              className="bg-[#ef3340] text-white py-3.5 px-5 text-[10px] font-black uppercase tracking-widest transition-transform hover:scale-[0.99] active:scale-[0.98]"
-              style={{ borderRadius: "var(--radius)" }}
-            >
-              Sort
-            </button>
-          </form>
-        </div>
-
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5 sm:mb-6 pb-3 border-b border-slate-200/80 dark:border-slate-800">
           <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
             <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
             <span>/</span>
             <span className="text-slate-900 dark:text-white">Dealers</span>
           </div>
-          <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-            Showing <span className="text-[#ef3340] tabular-nums">{rankedDealers.length}</span> dealer{rankedDealers.length === 1 ? "" : "s"}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
+            <DealersSortSelect hasLocation={hasLocation} defaultValue={sortMode} />
+            <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+              Showing <span className="text-[#ef3340] tabular-nums">{rankedDealers.length}</span> dealer{rankedDealers.length === 1 ? "" : "s"}
+            </div>
           </div>
         </div>
 
