@@ -58,7 +58,7 @@ export default async function PortalLeadsPage({ searchParams }) {
       <div className="mb-4 sm:mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Leads</h1>
         <p className="text-[10px] uppercase font-black tracking-[0.12em] text-slate-700 font-medium mt-1">
-          {total} active lead{total !== 1 ? "s" : ""}
+          {total} active lead{total !== 1 ? "s" : ""} • {newToday} new today • {unanswered} unanswered • {followUpDue} follow-up due
         </p>
       </div>
 

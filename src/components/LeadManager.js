@@ -30,6 +30,23 @@ const STATUSES = Object.keys(STATUS_META);
 
 const fmt    = (n)   => "KSh " + Number(n).toLocaleString("en-KE");
 const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-KE", { day:"numeric", month:"short", year:"numeric" });
+const cleanPhone = (value) => String(value || "").replace(/\D/g, "");
+
+function buildLeadMessage(lead) {
+  const customerName = lead?.name || "there";
+  const dealerName = "Welsh Motorhub";
+  const carLabel = lead?.car ? `${lead.car.year} ${lead.car.make} ${lead.car.model}` : "the car";
+  const priceLabel = lead?.car?.price ? fmt(lead.car.price) : "the listed price";
+
+  return [
+    `Hi ${customerName},`,
+    "",
+    `Thanks for your interest in the ${carLabel}.`,
+    `I am reaching out from ${dealerName} to help you with availability, pricing (${priceLabel}), and next steps.`,
+    "",
+    "Would you like to book a viewing or receive a quick walkaround video first?",
+  ].join("\n");
+}
 
 export default function LeadManager({ leads: initialLeads, countMap, currentStatus, currentSearch, metrics = {} }) {
   const [leads,        setLeads]        = useState(initialLeads);
@@ -139,6 +156,10 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
             const sm = STATUS_META[lead.status] || STATUS_META.NEW;
             const isOpen = expanded === lead.id;
             const img = lead.car?.images?.[0]?.url;
+            const leadMessage = buildLeadMessage(lead);
+            const whatsappHref = `https://wa.me/${cleanPhone(lead.phone)}?text=${encodeURIComponent(leadMessage)}`;
+            const emailSubject = encodeURIComponent(`Regarding your enquiry: ${lead.car?.year} ${lead.car?.make} ${lead.car?.model}`);
+            const emailBody = encodeURIComponent(leadMessage);
             return (
               <div key={lead.id} className={`group bg-white dark:bg-[#111111] border transition-all overflow-hidden rounded-2xl shadow-sm hover:shadow-md ${
                 isOpen ? "border-slate-300 shadow-md" : "border-[#ddd4c8] dark:border-slate-800 hover:border-slate-300"
@@ -220,8 +241,16 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                             <Phone size={14} /> Call
                           </a>
                           {lead.phone && (
-                            <a href={`https://wa.me/${lead.phone.replace(/\\D/g,"")}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-[#2F855A] text-white text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl hover:bg-[#38A169] transition-all shadow-sm\">
+                            <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-[#2F855A] text-white text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl hover:bg-[#38A169] transition-all shadow-sm\">
                               <MessageCircle size={14} /> WhatsApp
+                            </a>
+                          )}
+                          {lead.email && (
+                            <a
+                              href={`mailto:${lead.email}?subject=${emailSubject}&body=${emailBody}`}
+                              className="flex items-center justify-center gap-2 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl hover:bg-[#fbfcfe] dark:hover:bg-slate-900 transition-all shadow-sm"
+                            >
+                              <Mail size={14} /> Email
                             </a>
                           )}
                         </div>

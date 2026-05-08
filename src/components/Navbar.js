@@ -99,7 +99,7 @@ export default function Navbar({ user }) {
 
   return (
     <>
-      <nav className="fixed top-0 z-50 w-full flex items-center h-16 md:h-20 bg-white dark:bg-[#0a0a0a] border-b border-gray-100 dark:border-zinc-900 shadow-sm transition-colors duration-300">
+      <nav className="sticky top-0 z-[70] w-full flex items-center h-16 md:h-20 bg-white dark:bg-[#0a0a0a] border-b border-gray-100 dark:border-zinc-900 shadow-sm transition-colors duration-300">
         <div className="w-full px-6 md:px-12">
           <div className="flex items-center justify-between gap-8 h-full">
 
