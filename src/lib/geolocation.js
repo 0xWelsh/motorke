@@ -23,7 +23,8 @@ export async function getUserLocation() {
         console.warn("Geolocation error:", error.message);
         resolve(null);
       },
-      { timeout: 10000, enableHighAccuracy: false }
+      // Force a live reading so distance calculations don't use stale cached coordinates.
+      { timeout: 12000, enableHighAccuracy: true, maximumAge: 0 }
     );
   });
 }

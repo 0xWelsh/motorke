@@ -35,7 +35,8 @@ export default function DealersLocationButton() {
         applyLocation(position.coords.latitude, position.coords.longitude);
       },
       () => setLocating(false),
-      { timeout: 6000, enableHighAccuracy: false, maximumAge: 300000 }
+      // Force fresh device coordinates instead of cached location.
+      { timeout: 10000, enableHighAccuracy: true, maximumAge: 0 }
     );
   }
 
