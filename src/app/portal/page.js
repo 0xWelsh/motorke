@@ -172,14 +172,14 @@ export default async function PortalPage({ searchParams }) {
         </div>
       )}
       
-      <div className="flex flex-col gap-4 sm:gap-6 mb-6 sm:mb-8">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 sm:gap-6 mb-5 sm:mb-8">
+        <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <span className="text-[10px] font-black uppercase tracking-[0.16em] text-[#2F855A] mb-1 block">Dealer cockpit</span>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">Welcome back, {user.dealer.name}</h1>
-            <p className="text-[12px] text-slate-500 mt-1">Here is what is happening in your dealership today.</p>
+            <h1 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">Welcome back, {user.dealer.name}</h1>
+            <p className="text-[11px] sm:text-[12px] text-slate-500 mt-1">Here is what is happening in your dealership today.</p>
           </div>
-          <div className="inline-flex items-center gap-2 px-3 py-2 border border-slate-200 bg-white text-[11px] font-bold text-slate-700">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 border border-slate-200 bg-white text-[10px] sm:text-[11px] font-bold text-slate-700">
             <CalendarDays className="w-4 h-4 text-slate-500" />
             {todayLabel}
           </div>
@@ -212,19 +212,19 @@ export default async function PortalPage({ searchParams }) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5 mb-6 sm:mb-8">
         <section className="lg:col-span-9">
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-3 mb-5">
+          <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-5 gap-2 sm:gap-3 mb-4 sm:mb-5">
             {statCards.map((stat) => {
               const StatIcon = stat.icon;
               const hasTrend = typeof stat.trend === "number";
               const trendUp = (stat.trend || 0) >= 0;
               return (
-                <div key={stat.label} className="bg-white border border-slate-200 p-4">
+                <div key={stat.label} className="bg-white border border-slate-200 p-2.5 sm:p-4">
                   <div className="flex items-start justify-between gap-2">
-                    <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-50 ${stat.iconClass}`}>
-                      <StatIcon className="w-4 h-4" />
+                    <span className={`inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-50 ${stat.iconClass}`}>
+                      <StatIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </span>
                     {hasTrend && (
                       <span className={`inline-flex items-center gap-1 text-[10px] font-black uppercase ${trendUp ? "text-[#2F855A]" : "text-rose-600"}`}>
@@ -233,21 +233,21 @@ export default async function PortalPage({ searchParams }) {
                       </span>
                     )}
                   </div>
-                  <p className="mt-3 text-[10px] font-black uppercase tracking-[0.13em] text-slate-500">{stat.label}</p>
-                  <p className="mt-1 text-3xl font-black tracking-tight text-slate-900">{stat.value}</p>
-                  <p className="mt-1 text-[11px] font-semibold text-slate-500">{stat.sub}</p>
+                  <p className="mt-2 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.11em] sm:tracking-[0.13em] text-slate-500">{stat.label}</p>
+                  <p className="mt-0.5 text-xl sm:text-3xl font-black tracking-tight text-slate-900">{stat.value}</p>
+                  <p className="mt-0.5 text-[10px] sm:text-[11px] font-semibold text-slate-500">{stat.sub}</p>
                 </div>
               );
             })}
-            <div className="bg-white border border-slate-200 p-4 sm:col-span-2 xl:col-span-1">
+            <div className="bg-white border border-slate-200 p-2.5 sm:p-4 col-span-2 sm:col-span-2 xl:col-span-1">
               <div className="flex items-center justify-between">
                 <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-50 text-slate-700">
                   <ShieldCheck className="w-4 h-4" />
                 </span>
                 <span className="text-[10px] font-black uppercase text-[#2F855A]">Excellent</span>
               </div>
-              <p className="mt-3 text-[10px] font-black uppercase tracking-[0.13em] text-slate-500">Profile strength</p>
-              <p className="mt-1 text-3xl font-black tracking-tight text-slate-900">{profileStrength}%</p>
+              <p className="mt-2 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.11em] sm:tracking-[0.13em] text-slate-500">Profile strength</p>
+              <p className="mt-0.5 text-xl sm:text-3xl font-black tracking-tight text-slate-900">{profileStrength}%</p>
               <div className="mt-2 h-2 bg-slate-100">
                 <div className="h-2 bg-[#2F855A]" style={{ width: `${profileStrength}%` }} />
               </div>
@@ -258,8 +258,8 @@ export default async function PortalPage({ searchParams }) {
           </div>
 
           {/* Main Content Area */}
-          <div className="bg-white dark:bg-[#111111] rounded-none shadow-sm overflow-hidden mb-6">
-            <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-[#111111]">
+          <div className="bg-white dark:bg-[#111111] rounded-none shadow-sm overflow-hidden mb-4 sm:mb-6">
+            <div className="px-3 py-3 sm:px-5 sm:py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-[#111111]">
               <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-none bg-[#2F855A]" />
                 Recent Inventory
@@ -283,7 +283,8 @@ export default async function PortalPage({ searchParams }) {
                 </Link>
               </div>
             ) : (
-              <div className="overflow-x-auto">
+              <>
+              <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
                     <tr className="bg-slate-50 dark:bg-[#151515]">
@@ -353,27 +354,54 @@ export default async function PortalPage({ searchParams }) {
                   </tbody>
                 </table>
               </div>
+              <div className="md:hidden divide-y divide-slate-100">
+                {recentCars.map((car) => {
+                  const carLeads = recentLeads.filter((lead) => lead.carId === car.id).length;
+                  return (
+                    <div key={`mobile-${car.id}`} className="px-3 py-2.5">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-12 h-9 rounded-none bg-slate-100 overflow-hidden shrink-0">
+                          {car.images[0]
+                            ? <Image src={car.images[0].url} alt={`${car.make} ${car.model}`} width={96} height={72} className="w-full h-full object-cover" />
+                            : <div className="flex items-center justify-center h-full text-slate-400 text-[9px] font-bold uppercase">No Pic</div>
+                          }
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[12px] font-bold text-slate-900 truncate">{car.year} {car.make} {car.model}</p>
+                          <p className="text-[10px] font-semibold text-slate-500 truncate">{formatCarPrice(car)} · {car.views.toLocaleString()} views · {carLeads} leads</p>
+                        </div>
+                        <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-1 uppercase tracking-[0.1em] ${
+                          car.available ? "bg-emerald-50 text-[#2F855A]" : "bg-slate-100 text-slate-600"
+                        }`}>
+                          {car.available ? "Live" : "Draft"}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              </>
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className="inline-flex items-center gap-2 border border-emerald-200/80 bg-emerald-50 px-3 py-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3">
+            <div className="inline-flex items-center gap-2 border border-emerald-200/80 bg-emerald-50 px-2.5 py-1.5 sm:px-3 sm:py-2">
               <CircleDot className="w-3.5 h-3.5 text-[#2F855A]" />
               <span className="text-[10px] font-black uppercase tracking-[0.12em] text-emerald-800">Fresh ({freshCount})</span>
             </div>
-            <div className="inline-flex items-center gap-2 border border-amber-200/80 bg-amber-50 px-3 py-2">
+            <div className="inline-flex items-center gap-2 border border-amber-200/80 bg-amber-50 px-2.5 py-1.5 sm:px-3 sm:py-2">
               <CircleDot className="w-3.5 h-3.5 text-amber-600" />
               <span className="text-[10px] font-black uppercase tracking-[0.12em] text-amber-800">Aging ({agingCount})</span>
             </div>
-            <div className="inline-flex items-center gap-2 border border-rose-200/80 bg-rose-50 px-3 py-2">
+            <div className="inline-flex items-center gap-2 border border-rose-200/80 bg-rose-50 px-2.5 py-1.5 sm:px-3 sm:py-2">
               <CircleDot className="w-3.5 h-3.5 text-rose-600" />
               <span className="text-[10px] font-black uppercase tracking-[0.12em] text-rose-800">Stale ({staleCount})</span>
             </div>
           </div>
         </section>
 
-        <aside className="lg:col-span-3 space-y-4">
-          <div className="bg-white border border-slate-200 p-4">
+        <aside className="lg:col-span-3 space-y-3 sm:space-y-4">
+          <div className="bg-white border border-slate-200 p-3 sm:p-4">
             <div className="flex items-center justify-between">
               <h3 className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-700">Leads overview</h3>
               <Link href="/portal/leads" className="text-[10px] font-black uppercase tracking-[0.12em] text-sky-600 hover:text-sky-700">View all leads →</Link>
@@ -409,7 +437,7 @@ export default async function PortalPage({ searchParams }) {
             </Link>
           </div>
 
-          <div className="bg-white border border-slate-200 p-4">
+          <div className="bg-white border border-slate-200 p-3 sm:p-4">
             <h3 className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-700">Your plan</h3>
             <div className="mt-3 flex items-center gap-2">
               <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 text-emerald-700">
@@ -431,7 +459,7 @@ export default async function PortalPage({ searchParams }) {
             </Link>
           </div>
 
-          <div className="bg-slate-50 border border-slate-200 p-4">
+          <div className="bg-slate-50 border border-slate-200 p-3 sm:p-4">
             <div className="flex items-center gap-2">
               <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-violet-100 text-violet-700">
                 <Rocket className="w-4 h-4" />
@@ -447,18 +475,18 @@ export default async function PortalPage({ searchParams }) {
       </div>
 
       {/* compact secondary quick stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="bg-white border border-slate-200 px-4 py-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+        <div className="bg-white border border-slate-200 px-3 py-2 sm:px-4 sm:py-3">
           <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Live inventory rate</p>
-          <p className="text-2xl font-black text-slate-900">{liveRate}%</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-900">{liveRate}%</p>
         </div>
-        <div className="bg-white border border-slate-200 px-4 py-3">
+        <div className="bg-white border border-slate-200 px-3 py-2 sm:px-4 sm:py-3">
           <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Leads this month</p>
-          <p className="text-2xl font-black text-slate-900">{leadsThisMonth}</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-900">{leadsThisMonth}</p>
         </div>
-        <div className="bg-white border border-slate-200 px-4 py-3">
+        <div className="bg-white border border-slate-200 px-3 py-2 sm:px-4 sm:py-3">
           <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Cars sold this month</p>
-          <p className="text-2xl font-black text-slate-900">{soldThisMonth}</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-900">{soldThisMonth}</p>
         </div>
       </div>
     </div>
