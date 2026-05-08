@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { unstable_cache } from "next/cache";
 
 /**
  * Basic Price Analysis for a vehicle
@@ -9,25 +10,10 @@ export async function analyzePrice(car) {
   if (!car?.make || !car?.model || !car?.price) return null;
 
   try {
-    // Find sample of similar cars (same make, model)
-    const similar = await db.car.findMany({
-      where: {
-        make: car.make,
-        model: car.model,
-        year: { gte: car.year - 1, lte: car.year + 1 },
-        available: true,
-      },
-      select: { price: true },
-      take: 20
-    });
+    const similar = await getSimilarPriceSample(car.make, car.model, car.year);
 
     if (similar.length < 3) {
-      // Not enough data for specific year, broaden to all years for that model
-      const broader = await db.car.findMany({
-        where: { make: car.make, model: car.model, available: true },
-        select: { price: true },
-        take: 50
-      });
+      const broader = await getBroaderPriceSample(car.make, car.model);
       if (broader.length < 3) return null;
       return calculateMetric(car.price, broader.map(s => s.price));
     }
@@ -38,6 +24,36 @@ export async function analyzePrice(car) {
     return null;
   }
 }
+
+// Cache model/year sample lookups to prevent repeated DB fanout under load.
+const getSimilarPriceSample = unstable_cache(
+  async (make, model, year) => {
+    return db.car.findMany({
+      where: {
+        make,
+        model,
+        year: { gte: year - 1, lte: year + 1 },
+        available: true,
+      },
+      select: { price: true },
+      take: 20,
+    });
+  },
+  ["market-similar-sample-v1"],
+  { revalidate: 300, tags: ["market-analysis"] }
+);
+
+const getBroaderPriceSample = unstable_cache(
+  async (make, model) => {
+    return db.car.findMany({
+      where: { make, model, available: true },
+      select: { price: true },
+      take: 50,
+    });
+  },
+  ["market-broader-sample-v1"],
+  { revalidate: 300, tags: ["market-analysis"] }
+);
 
 function calculateMetric(price, prices) {
   const avg = prices.reduce((a, b) => a + b, 0) / prices.length;

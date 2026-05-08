@@ -119,6 +119,76 @@ const getAllMakes = unstable_cache(
   { revalidate: 3600, tags: ["makes"] }
 );
 
+const defaultCarsSelect = {
+  id: true,
+  make: true,
+  model: true,
+  variant: true,
+  year: true,
+  price: true,
+  engineCC: true,
+  mileage: true,
+  bodyType: true,
+  fuelType: true,
+  transmission: true,
+  featured: true,
+  featuredWeight: true,
+  views: true,
+  createdAt: true,
+  badges: true,
+  description: true,
+  images: {
+    where: { isPrimary: true },
+    take: 1,
+  },
+  dealer: {
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      location: true,
+      verified: true,
+      lat: true,
+      lng: true,
+      county: true,
+      whatsapp: true,
+      featured: true,
+      boostScore: true,
+    },
+  },
+};
+
+const getDefaultCarsPage = unstable_cache(
+  async () => {
+    const where = {
+      available: true,
+      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+    };
+    const orderBy = [
+      { featuredWeight: "desc" },
+      { dealer: { featured: "desc" } },
+      { dealer: { verified: "desc" } },
+      { dealer: { boostScore: "desc" } },
+      { views: "desc" },
+      { createdAt: "desc" },
+    ];
+
+    const [cars, total] = await Promise.all([
+      db.car.findMany({
+        where,
+        select: defaultCarsSelect,
+        orderBy,
+        take: 14,
+      }),
+      db.car.count({ where }),
+    ]);
+
+    return { cars, total };
+  },
+  ["cars-default-page-v1"],
+  { revalidate: 60, tags: ["cars-listing"] }
+);
+
 export default async function CarsPage({ searchParams }) {
   const sp = await searchParams;
   const page = parseInt(sp.page || "1", 10);
@@ -148,6 +218,21 @@ export default async function CarsPage({ searchParams }) {
   const effectiveLng = userLng ?? savedLng;
 
   const searchTokens = normalizeText(search).split(" ").filter(Boolean);
+  const isDefaultFastPath =
+    !search &&
+    !make &&
+    !model &&
+    !steering &&
+    !minYOM &&
+    !maxYOM &&
+    !bodyType &&
+    !fuelType &&
+    !transmission &&
+    !county &&
+    !minPrice &&
+    !maxPrice &&
+    sort === "newest" &&
+    page === 1;
   const where = {
     available: true,
     ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
@@ -218,18 +303,24 @@ export default async function CarsPage({ searchParams }) {
     },
   };
 
-  const [rawCars, totalFromDb, allMakes] = await Promise.all([
-    db.car.findMany({
-      where,
-      select: carSelect,
-      orderBy,
-      ...(searchTokens.length > 0
-        ? { take: 500 }
-        : { skip: (page - 1) * limit, take: limit }),
-    }),
-    db.car.count({ where }),
+  const [carsData, allMakes] = await Promise.all([
+    isDefaultFastPath
+      ? getDefaultCarsPage()
+      : Promise.all([
+          db.car.findMany({
+            where,
+            select: carSelect,
+            orderBy,
+            ...(searchTokens.length > 0
+              ? { take: 500 }
+              : { skip: (page - 1) * limit, take: limit }),
+          }),
+          db.car.count({ where }),
+        ]).then(([cars, total]) => ({ cars, total })),
     getAllMakes(),
   ]);
+  const rawCars = carsData.cars;
+  const totalFromDb = carsData.total;
 
   const searchMatchedCars = searchTokens.length > 0
     ? rawCars

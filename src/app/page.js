@@ -146,7 +146,7 @@ const getCachedHomeEnriched = unstable_cache(
     const hotCandidates = (hotThisWeek || [])
       .filter((car) => car && car._count?.carViews > 0)
       .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
-      .slice(0, 30);
+      .slice(0, 12);
 
     const hotCandidatesWithAnalysis = await Promise.all(
       hotCandidates.map(async (car) => ({
@@ -174,7 +174,7 @@ const getCachedHomeEnriched = unstable_cache(
           return { ...car, marketAnalysis: await analyzePrice(car) };
         })
       ),
-      Promise.all((newArrivals || []).map(async (c) => ({ ...c, marketAnalysis: await analyzePrice(c) }))),
+      Promise.all((newArrivals || []).slice(0, 6).map(async (c) => ({ ...c, marketAnalysis: await analyzePrice(c) }))),
     ]);
 
     return {
