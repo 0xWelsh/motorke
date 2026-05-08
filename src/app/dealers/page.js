@@ -206,7 +206,7 @@ export default async function DealersPage({ searchParams }) {
             <details className="lg:hidden overflow-hidden bg-[#F7FAFC] dark:bg-[#111111] border border-slate-200/90 dark:border-slate-800 border-l-[3px] border-l-[#ef3340] shadow-md shadow-slate-900/[0.06] dark:shadow-none pt-px pl-5 pr-5 pb-5" style={{ borderRadius: "var(--radius)" }}>
               <summary className="cursor-pointer list-none text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-slate-100 py-5 flex items-center gap-2.5 [&::-webkit-details-marker]:hidden">
                 <span className="h-6 w-[3px] shrink-0 rounded-full bg-[#ef3340]/90" aria-hidden />
-                Filters
+                Refine network
               </summary>
               <form method="GET" className="mt-4 space-y-4">
                 <div className="space-y-2">
@@ -243,7 +243,7 @@ export default async function DealersPage({ searchParams }) {
             <div className="hidden lg:block overflow-hidden bg-[#F7FAFC] dark:bg-[#111111] border border-slate-200/90 dark:border-slate-800 border-l-[3px] border-l-[#ef3340] shadow-md shadow-slate-900/[0.07] dark:shadow-none p-6" style={{ borderRadius: 'var(--radius)' }}>
               <h3 className="text-xs font-black uppercase tracking-widest mb-6 text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
                 <span className="h-6 w-[3px] shrink-0 rounded-full bg-[#ef3340]" aria-hidden />
-                Filters
+                Refine network
               </h3>
               <form method="GET" className="space-y-6">
                 <div className="space-y-2">
@@ -280,7 +280,7 @@ export default async function DealersPage({ searchParams }) {
             <details className="lg:hidden overflow-hidden bg-[#F7FAFC] dark:bg-[#111111] border border-slate-200/90 dark:border-slate-800 border-l-[3px] border-l-[#ef3340]/80 shadow-md shadow-slate-900/[0.06] dark:shadow-none pt-px pl-5 pr-5 pb-5" style={{ borderRadius: "var(--radius)" }}>
               <summary className="cursor-pointer list-none text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-slate-100 py-5 flex items-center gap-2.5 [&::-webkit-details-marker]:hidden">
                 <span className="h-6 w-[3px] shrink-0 rounded-full bg-[#ef3340]/80" aria-hidden />
-                Nearby
+                Proximity radar
               </summary>
               <div className="mt-4">
                 <NearbyDealersList />
@@ -290,7 +290,7 @@ export default async function DealersPage({ searchParams }) {
             <div className="hidden lg:block overflow-hidden bg-[#F7FAFC] dark:bg-[#111111] border border-slate-200/90 dark:border-slate-800 border-l-[3px] border-l-[#ef3340]/80 shadow-md shadow-slate-900/[0.06] dark:shadow-none p-6" style={{ borderRadius: 'var(--radius)' }}>
                <h3 className="text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2.5 text-slate-900 dark:text-slate-100">
                  <span className="h-6 w-[3px] shrink-0 rounded-full bg-[#ef3340]/80" aria-hidden />
-                 Nearby
+                 Proximity radar
                </h3>
                <NearbyDealersList />
             </div>
