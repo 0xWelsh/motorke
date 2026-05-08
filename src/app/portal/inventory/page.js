@@ -102,6 +102,7 @@ export default async function InventoryPage({ searchParams }) {
             model: true,
             year: true,
             price: true,
+            color: true,
             description: true,
             images: { where: { isPrimary: true }, take: 1, select: { url: true } },
           },
@@ -111,18 +112,15 @@ export default async function InventoryPage({ searchParams }) {
   const buildInventoryWhatsAppHref = (car, template = "clean") => {
     const listingUrl = absoluteUrl(`/cars/${car.id}`);
     const title = `${car.year} ${car.make} ${car.model}`.replace(/\s+/g, " ").trim();
-    const shortDesc = car.description
-      ? car.description.slice(0, 160)
-      : "Contact us for full details, inspection, and booking.";
+    const colorLine = car.color ? `Color: ${car.color}` : "";
     const body =
       template === "urgent"
         ? [
             `Hot pick: ${title}`,
             car.price ? `Price now: ${formatCarPrice(car)}` : "",
-            "Priority viewing available this week.",
-            shortDesc,
+            colorLine,
             "",
-            `Photos + details: ${listingUrl}`,
+            listingUrl,
           ]
             .filter(Boolean)
             .join("\n")
@@ -130,19 +128,18 @@ export default async function InventoryPage({ searchParams }) {
           ? [
               `Value pick: ${title}`,
               car.price ? `Offer: ${formatCarPrice(car)}` : "",
-              "Clean paperwork and test drive available.",
-              shortDesc,
+            colorLine,
               "",
-              `Open listing: ${listingUrl}`,
+            listingUrl,
             ]
               .filter(Boolean)
               .join("\n")
           : [
               `${title} is available now.`,
               car.price ? `Price: ${formatCarPrice(car)}` : "",
-              shortDesc,
+              colorLine,
               "",
-              `View photos and details: ${listingUrl}`,
+              listingUrl,
             ]
               .filter(Boolean)
               .join("\n");
