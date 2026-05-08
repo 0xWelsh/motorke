@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Info, MapPin, ImageOff, Sparkles, ArrowUpRight } from "lucide-react";
+import { Info, MapPin, ImageOff, Sparkles, ArrowUpRight, Share2 } from "lucide-react";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
 import { FUEL_LABELS } from "@/lib/constants";
 import { buildCarSpecSummaryItems, meaningfulFeatureList, positiveNum } from "@/lib/car-display";
@@ -49,6 +49,31 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
       ...eventPayload,
       placement,
     });
+  }
+
+  function handleShare() {
+    const titleText = `${car.year} ${car.make} ${car.model}`.replace(/\s+/g, " ").trim();
+    const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/cars/${car.id}` : `/cars/${car.id}`;
+    const shareText = `${titleText} - ${formatCarPrice(car)}. View photos and details: ${shareUrl}`;
+
+    trackUiEvent("share_car_click", {
+      ...eventPayload,
+      placement: "card",
+    });
+
+    if (typeof navigator !== "undefined" && navigator.share) {
+      navigator.share({
+        title: titleText,
+        text: `${titleText} - ${formatCarPrice(car)}`,
+        url: shareUrl,
+      }).catch(() => {});
+      return;
+    }
+
+    if (typeof window !== "undefined") {
+      const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+      window.open(waUrl, "_blank", "noopener,noreferrer");
+    }
   }
 
   return (
@@ -137,7 +162,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
         </div>
 
         {/* Bottom Bar: Price & Action */}
-        <div className="mt-6 pt-4 border-t border-slate-100 dark:border-zinc-900 flex items-center justify-between">
+        <div className="mt-6 pt-4 border-t border-slate-100 dark:border-zinc-900 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tighter">
                {formatCarPrice(car)}
@@ -162,6 +187,15 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
             </div>
           </Link>
         </div>
+        <button
+          type="button"
+          onClick={handleShare}
+          className="mt-2 inline-flex items-center justify-center gap-2 w-full bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-zinc-800 text-slate-700 dark:text-slate-200 px-3 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-zinc-900 transition-colors"
+          style={{ borderRadius: "2px" }}
+        >
+          <Share2 className="w-3.5 h-3.5" />
+          Share
+        </button>
       </div>
     </article>
   );

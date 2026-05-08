@@ -117,9 +117,9 @@ export default async function InventoryPage({ searchParams }) {
     const body =
       template === "urgent"
         ? [
-            `HOT UNIT: ${title}`,
-            car.price ? `Current price: ${formatCarPrice(car)}` : "",
-            "First serious buyers get priority viewing slots this week.",
+            `Hot pick: ${title}`,
+            car.price ? `Price now: ${formatCarPrice(car)}` : "",
+            "Priority viewing available this week.",
             shortDesc,
             "",
             `Photos + details: ${listingUrl}`,
@@ -128,9 +128,9 @@ export default async function InventoryPage({ searchParams }) {
             .join("\n")
         : template === "deal"
           ? [
-              `Great value alert: ${title}`,
-              car.price ? `Offer price: ${formatCarPrice(car)}` : "",
-              "Clean deal, quick paperwork, and test drive available.",
+              `Value pick: ${title}`,
+              car.price ? `Offer: ${formatCarPrice(car)}` : "",
+              "Clean paperwork and test drive available.",
               shortDesc,
               "",
               `Open listing: ${listingUrl}`,
@@ -138,7 +138,7 @@ export default async function InventoryPage({ searchParams }) {
               .filter(Boolean)
               .join("\n")
           : [
-              `${title} is now available in our showroom.`,
+              `${title} is available now.`,
               car.price ? `Price: ${formatCarPrice(car)}` : "",
               shortDesc,
               "",

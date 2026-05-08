@@ -273,7 +273,7 @@ export default async function CarDetailPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <div className="container mx-auto px-6 max-w-7xl pt-32 sm:pt-40 pb-20">
+      <div className="container mx-auto px-6 max-w-7xl pt-18 sm:pt-24 pb-20">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-12">
           <Link href="/" className="hover:opacity-70 transition-opacity">Home</Link>
