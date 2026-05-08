@@ -225,8 +225,10 @@ export default function Navbar({ user }) {
             </div>
 
             {/* MOBILE ACTIONS */}
-            <div className="flex lg:hidden items-center gap-1">
-              <ThemeToggle simple />
+            <div className="flex lg:hidden items-center gap-2 shrink-0">
+              <div className="inline-flex items-center justify-center w-10 h-10 border border-slate-200/90 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+                <ThemeToggle simple />
+              </div>
 
               <button
                 type="button"
@@ -235,7 +237,7 @@ export default function Navbar({ user }) {
                   setOpen(nextOpen);
                   trackUiEvent(nextOpen ? "mobile_menu_open" : "mobile_menu_close", { source: "navbar" });
                 }}
-                className="w-10 h-10 flex items-center justify-center border border-slate-200/90 dark:border-zinc-700 text-slate-900 dark:text-white transition-all hover:bg-slate-50 dark:hover:bg-zinc-800 active:scale-95"
+                className="w-10 h-10 flex items-center justify-center border border-slate-200/90 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-slate-900 dark:text-white transition-all hover:bg-slate-50 dark:hover:bg-zinc-800 active:scale-95"
                 style={{ borderRadius: 'var(--radius)' }}
                 aria-expanded={open}
                 aria-label={open ? "Close menu" : "Open menu"}
