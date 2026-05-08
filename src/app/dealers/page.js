@@ -153,7 +153,7 @@ export default async function DealersPage({ searchParams }) {
 
   return (
     <div className="bg-gradient-to-b from-[#f8fafc] via-white to-white dark:from-[#0a0a0a] dark:via-[#0b0b0b] dark:to-[#0a0a0a] min-h-screen pb-20">
-      <div className="pt-16 md:pt-20">
+      <div className="pt-2 md:pt-3">
         <div className="relative w-full h-[240px] sm:h-[300px] lg:h-[340px] overflow-hidden bg-slate-950">
           <Image
             src={DEALERS_HERO_IMAGE}

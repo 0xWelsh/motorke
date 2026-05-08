@@ -533,7 +533,7 @@ export default async function CarsPage({ searchParams }) {
           result_count: total,
         }}
       />
-      <div className="w-full px-4 sm:px-8 pt-18 sm:pt-24">
+      <div className="w-full px-4 sm:px-8 pt-3 sm:pt-4">
         
         {/* Compact breadcrumb strip */}
         <div className="flex items-center justify-between mb-6 gap-4 border-b border-slate-100 dark:border-zinc-900 pb-3">
