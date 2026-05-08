@@ -7,6 +7,7 @@ import { ArrowUpRight, Building2, MapPin, ShieldCheck } from "lucide-react";
 import NearbyDealersList from "@/components/NearbyDealersList";
 import DealersLocationButton from "@/components/DealersLocationButton";
 import DealersSortSelect from "@/components/DealersSortSelect";
+import { unstable_cache } from "next/cache";
 
 /** Self-hosted hero (user asset in public/) — anchored right; gradient mutes toward text on the left. */
 const DEALERS_HERO_IMAGE = "/images/backgrounds/car-dealership.jpg";
@@ -48,6 +49,50 @@ function responseTier(responseRate, totalLeads) {
   return { label: "Slow replies", tone: "text-amber-700 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-300" };
 }
 
+const getDealersBaseData = unstable_cache(
+  async () => {
+    const dealers = await db.dealer.findMany({
+      include: {
+        _count: { select: { cars: { where: { available: true } } } },
+        users: { select: { avatarUrl: true }, take: 1 },
+      },
+    });
+
+    const [leadTotals, leadResponded] = await Promise.all([
+      db.lead.groupBy({
+        by: ["dealerId"],
+        _count: { _all: true },
+      }),
+      db.lead.groupBy({
+        by: ["dealerId"],
+        where: { status: { not: "NEW" } },
+        _count: { _all: true },
+      }),
+    ]);
+
+    const leadTotalMap = new Map(leadTotals.map((row) => [row.dealerId, row._count._all]));
+    const leadRespondedMap = new Map(leadResponded.map((row) => [row.dealerId, row._count._all]));
+
+    return dealers.map((dealer) => {
+      const activeCars = dealer._count?.cars || 0;
+      const totalLeads = leadTotalMap.get(dealer.id) || 0;
+      const respondedLeads = leadRespondedMap.get(dealer.id) || 0;
+      const responseRate = totalLeads > 0 ? respondedLeads / totalLeads : 0;
+      const updatedMs = new Date(dealer.updatedAt).getTime();
+      const score =
+        (dealer.featured ? 5000 : 0) +
+        (dealer.verified ? 2000 : 0) +
+        activeCars * 40 +
+        responseRate * 500 +
+        Math.floor(updatedMs / 86_400_000);
+
+      return { ...dealer, activeCars, totalLeads, respondedLeads, responseRate, score };
+    });
+  },
+  ["dealers-index-base-v1"],
+  { revalidate: 60, tags: ["dealers-index"] }
+);
+
 export default async function DealersPage({ searchParams }) {
   const sp = await searchParams;
   const search = (sp.search || "").toString().trim();
@@ -60,43 +105,11 @@ export default async function DealersPage({ searchParams }) {
   const userLng = sp.lng ? parseFloat(sp.lng) : null;
   const hasLocation = Number.isFinite(userLat) && Number.isFinite(userLng);
 
-  const dealers = await db.dealer.findMany({
-    include: {
-      _count: { select: { cars: { where: { available: true } } } },
-      users: { select: { avatarUrl: true }, take: 1 },
-    },
-  });
-
-  const [leadTotals, leadResponded] = await Promise.all([
-    db.lead.groupBy({
-      by: ["dealerId"],
-      _count: { _all: true },
-    }),
-    db.lead.groupBy({
-      by: ["dealerId"],
-      where: { status: { not: "NEW" } },
-      _count: { _all: true },
-    }),
-  ]);
-
-  const leadTotalMap = new Map(leadTotals.map((row) => [row.dealerId, row._count._all]));
-  const leadRespondedMap = new Map(leadResponded.map((row) => [row.dealerId, row._count._all]));
-
-  const enriched = dealers.map((dealer) => {
-    const activeCars = dealer._count?.cars || 0;
-    const totalLeads = leadTotalMap.get(dealer.id) || 0;
-    const respondedLeads = leadRespondedMap.get(dealer.id) || 0;
-    const responseRate = totalLeads > 0 ? respondedLeads / totalLeads : 0;
-    const updatedMs = new Date(dealer.updatedAt).getTime();
-    const score =
-      (dealer.featured ? 5000 : 0) +
-      (dealer.verified ? 2000 : 0) +
-      activeCars * 40 +
-      responseRate * 500 +
-      Math.floor(updatedMs / 86_400_000);
-    const distanceValue = hasLocation ? distanceKm(userLat, userLng, dealer.lat, dealer.lng) : null;
-    return { ...dealer, activeCars, totalLeads, respondedLeads, responseRate, score, distanceValue };
-  });
+  const baseDealers = await getDealersBaseData();
+  const enriched = baseDealers.map((dealer) => ({
+    ...dealer,
+    distanceValue: hasLocation ? distanceKm(userLat, userLng, dealer.lat, dealer.lng) : null,
+  }));
 
   const needle = search.toLowerCase();
   const filtered = enriched.filter((dealer) => {
