@@ -138,6 +138,61 @@ const getCachedData = unstable_cache(
   { revalidate: 900, tags: ["homepage"] }
 );
 
+const getCachedHomeEnriched = unstable_cache(
+  async () => {
+    const { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews } = await getCachedData();
+
+    // Build hot deals with blended scoring: demand + freshness + market value + dealer trust.
+    const hotCandidates = (hotThisWeek || [])
+      .filter((car) => car && car._count?.carViews > 0)
+      .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
+      .slice(0, 30);
+
+    const hotCandidatesWithAnalysis = await Promise.all(
+      hotCandidates.map(async (car) => ({
+        ...car,
+        marketAnalysis: await analyzePrice(car),
+      }))
+    );
+    const hotSorted = rankHotDeals(hotCandidatesWithAnalysis);
+
+    // Priority: Hot This Week (with views) > Featured > New Arrivals
+    const baseSpotlight =
+      hotSorted.length > 0 ? hotSorted : featured && featured.length > 0 ? featured : newArrivals;
+
+    // Enhance cars with market intelligence
+    const [spotlightEnhanced, hotEnhanced, newEnhanced] = await Promise.all([
+      Promise.all(
+        (baseSpotlight || []).map(async (car) => {
+          if (car.marketAnalysis) return car;
+          return { ...car, marketAnalysis: await analyzePrice(car) };
+        })
+      ),
+      Promise.all(
+        (hotSorted || []).map(async (car) => {
+          if (car.marketAnalysis) return car;
+          return { ...car, marketAnalysis: await analyzePrice(car) };
+        })
+      ),
+      Promise.all((newArrivals || []).map(async (c) => ({ ...c, marketAnalysis: await analyzePrice(c) }))),
+    ]);
+
+    return {
+      featured,
+      hotThisWeek,
+      newArrivals,
+      dealers,
+      newsItems,
+      highlightReviews,
+      spotlightEnhanced,
+      hotEnhanced,
+      newEnhanced,
+    };
+  },
+  ["homepage-enriched-v1"],
+  { revalidate: 300, tags: ["homepage"] }
+);
+
 export const metadata = {
   title: "Cars & Dealer Network Kenya",
   description:
@@ -185,42 +240,22 @@ function homeStructuredData(origin) {
 }
 
 export default async function HomePage() {
-  const { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews } = await getCachedData();
+  const {
+    featured,
+    hotThisWeek,
+    newArrivals,
+    dealers,
+    newsItems,
+    highlightReviews,
+    spotlightEnhanced,
+    hotEnhanced,
+    newEnhanced,
+  } = await getCachedHomeEnriched();
 
   const showcaseItems = [
     ...(featured || hotThisWeek || newArrivals || []).slice(0, 6).map(c => ({ ...c, type: 'car' })),
     ...(highlightReviews || []).slice(0, 6).map(r => ({ ...r, type: 'review' }))
   ].sort(() => Math.random() - 0.5);
-
-  // Build hot deals with blended scoring: demand + freshness + market value + dealer trust.
-  const hotCandidates = (hotThisWeek || [])
-    .filter(car => car && car._count?.carViews > 0)
-    .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
-    .slice(0, 30);
-
-  const hotCandidatesWithAnalysis = await Promise.all(
-    hotCandidates.map(async (car) => ({
-      ...car,
-      marketAnalysis: await analyzePrice(car),
-    }))
-  );
-  const hotSorted = rankHotDeals(hotCandidatesWithAnalysis);
-
-  // Priority: Hot This Week (with views) > Featured > New Arrivals
-  const baseSpotlight = hotSorted.length > 0 ? hotSorted : (featured && featured.length > 0) ? featured : newArrivals;
-
-  // Enhance cars with market intelligence
-  const [spotlightEnhanced, hotEnhanced, newEnhanced] = await Promise.all([
-    Promise.all((baseSpotlight || []).map(async (car) => {
-      if (car.marketAnalysis) return car;
-      return { ...car, marketAnalysis: await analyzePrice(car) };
-    })),
-    Promise.all((hotSorted || []).map(async (car) => {
-      if (car.marketAnalysis) return car;
-      return { ...car, marketAnalysis: await analyzePrice(car) };
-    })),
-    Promise.all((newArrivals || []).map(async c => ({ ...c, marketAnalysis: await analyzePrice(c) }))),
-  ]);
 
   const spotlightPool = (hotEnhanced.length > 0 ? hotEnhanced : spotlightEnhanced).slice(0, 12);
   const spotlightRotated = rotateList(spotlightPool, getRotationOffset(spotlightPool.length));
