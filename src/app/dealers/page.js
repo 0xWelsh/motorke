@@ -152,7 +152,7 @@ export default async function DealersPage({ searchParams }) {
                 <span className="text-[#4ade80]">dealer network</span>
               </h1>
               <p className="text-[13px] sm:text-sm text-white font-medium leading-relaxed mb-4 max-w-md">
-                Verified showrooms across Kenya—compare who is stocking what, then step into a profile that feels alive.
+                Verified dealer network across Kenya—compare who is stocking what, then step into a profile that feels alive.
               </p>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-sm">
