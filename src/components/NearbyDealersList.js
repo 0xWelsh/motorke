@@ -79,7 +79,7 @@ export default function NearbyDealersList() {
       {/* Controls */}
       <div className="flex flex-col gap-3">
         <div className="w-full">
-          <label className="block text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-1.5">
+          <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-1.5">
             Search radius
           </label>
           <select
@@ -189,7 +189,7 @@ export default function NearbyDealersList() {
                     <p className="text-xs text-slate-600 dark:text-slate-400 truncate">{dealer.location}</p>
                     {dealer._count?.cars > 0 && (
                       <p className="text-[10px] font-semibold text-slate-500 mt-0.5">
-                        {dealer._count.cars} car{dealer._count.cars !== 1 ? "s" : ""} listed
+                        {dealer._count.cars} car{dealer._count.cars !== 1 ? "s" : ""}
                       </p>
                     )}
                   </div>
