@@ -21,6 +21,7 @@ import {
 import { clsx } from "clsx";
 import { useState, useEffect, useRef } from "react";
 import NotificationsBell from "@/components/NotificationsBell";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const links = [
   { href: "/portal", label: "Overview", Icon: LayoutDashboard },
@@ -278,6 +279,7 @@ export default function PortalLayout({ children }) {
          </div>
 
          <div className="flex items-center gap-3 sm:gap-4">
+            <ThemeToggle simple />
             <Link
               href="/portal/profile"
               className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 border border-[#ddd4c8] dark:border-slate-800 bg-white dark:bg-[#111111] text-slate-700 dark:text-white text-[10px] font-black uppercase tracking-[0.12em] hover:bg-[#fbfcfe] dark:hover:bg-[#151515] transition-colors"

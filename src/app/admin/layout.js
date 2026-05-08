@@ -22,6 +22,7 @@ import {
 import { clsx } from "clsx";
 import { useState, useEffect } from "react";
 import NotificationsBell from "@/components/NotificationsBell";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const links = [
   { href: "/admin",           label: "Overview",    Icon: LayoutDashboard },
@@ -188,6 +189,7 @@ export default function AdminLayout({ children }) {
               </div>
 
               <div className="flex items-center gap-2 sm:gap-3 border-l border-slate-200 dark:border-zinc-800 pl-3 sm:pl-5 shrink-0">
+                 <ThemeToggle simple />
                   <NotificationsBell variant="admin" />
                  <Link href="/admin/settings" className="hidden sm:flex text-slate-500 hover:text-[#2F855A] dark:text-slate-400 dark:hover:text-[#38A169] transition-colors p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-zinc-800" title="Configurations">
                     <Settings size={20} />
