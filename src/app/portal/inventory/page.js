@@ -17,6 +17,12 @@ import {
   MessageCircle,
 } from "lucide-react";
 
+const SHARE_TEMPLATE_OPTIONS = [
+  { key: "clean", label: "Clean" },
+  { key: "urgent", label: "Urgent" },
+  { key: "deal", label: "Deal" },
+];
+
 export default async function InventoryPage({ searchParams }) {
   const user   = await requireDealer();
   const sp     = await searchParams;
@@ -102,18 +108,44 @@ export default async function InventoryPage({ searchParams }) {
         })
       : null;
 
-  const buildInventoryWhatsAppHref = (car) => {
+  const buildInventoryWhatsAppHref = (car, template = "clean") => {
     const listingUrl = absoluteUrl(`/cars/${car.id}`);
     const title = `${car.year} ${car.make} ${car.model}`.replace(/\s+/g, " ").trim();
-    const body = [
-      `${title} is now available in our showroom.`,
-      car.price ? `Price: ${formatCarPrice(car)}` : "",
-      car.description ? car.description.slice(0, 160) : "Contact us for full details, inspection, and booking.",
-      "",
-      `View photos and details: ${listingUrl}`,
-    ]
-      .filter(Boolean)
-      .join("\n");
+    const shortDesc = car.description
+      ? car.description.slice(0, 160)
+      : "Contact us for full details, inspection, and booking.";
+    const body =
+      template === "urgent"
+        ? [
+            `HOT UNIT: ${title}`,
+            car.price ? `Current price: ${formatCarPrice(car)}` : "",
+            "First serious buyers get priority viewing slots this week.",
+            shortDesc,
+            "",
+            `Photos + details: ${listingUrl}`,
+          ]
+            .filter(Boolean)
+            .join("\n")
+        : template === "deal"
+          ? [
+              `Great value alert: ${title}`,
+              car.price ? `Offer price: ${formatCarPrice(car)}` : "",
+              "Clean deal, quick paperwork, and test drive available.",
+              shortDesc,
+              "",
+              `Open listing: ${listingUrl}`,
+            ]
+              .filter(Boolean)
+              .join("\n")
+          : [
+              `${title} is now available in our showroom.`,
+              car.price ? `Price: ${formatCarPrice(car)}` : "",
+              shortDesc,
+              "",
+              `View photos and details: ${listingUrl}`,
+            ]
+              .filter(Boolean)
+              .join("\n");
     return `https://wa.me/?text=${encodeURIComponent(body)}`;
   };
 
@@ -173,7 +205,11 @@ export default async function InventoryPage({ searchParams }) {
               "Ready for viewing. Tap share to send this car to WhatsApp contacts.",
             priceLabel: formatCarPrice(createdCar),
           }}
-          whatsappHref={buildInventoryWhatsAppHref(createdCar)}
+          whatsappHrefByTemplate={{
+            clean: buildInventoryWhatsAppHref(createdCar, "clean"),
+            urgent: buildInventoryWhatsAppHref(createdCar, "urgent"),
+            deal: buildInventoryWhatsAppHref(createdCar, "deal"),
+          }}
         />
       ) : null}
       {/* Header */}
@@ -393,15 +429,30 @@ export default async function InventoryPage({ searchParams }) {
                   </Link>
                   <InventoryToggle carId={car.id} available={car.available} />
                 </div>
-                <a
-                  href={buildInventoryWhatsAppHref(car)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2.5 sm:mt-3 flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#20bd5a] text-white text-[10px] sm:text-[11px] uppercase font-black tracking-[0.1em] sm:tracking-[0.15em] py-2 rounded-2xl transition-colors"
-                >
-                  <MessageCircle size={13} />
-                  Share to WhatsApp
-                </a>
+                <div className="mt-2.5 sm:mt-3 space-y-2">
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {SHARE_TEMPLATE_OPTIONS.map((item) => (
+                      <a
+                        key={`${car.id}-share-${item.key}`}
+                        href={buildInventoryWhatsAppHref(car, item.key)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center rounded-lg border border-[#ddd4c8] bg-white px-1.5 py-1 text-[9px] font-black uppercase tracking-[0.11em] text-slate-600 hover:text-slate-900 hover:bg-[#fbfcfe]"
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </div>
+                  <a
+                    href={buildInventoryWhatsAppHref(car, "clean")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#20bd5a] text-white text-[10px] sm:text-[11px] uppercase font-black tracking-[0.1em] sm:tracking-[0.15em] py-2 rounded-2xl transition-colors"
+                  >
+                    <MessageCircle size={13} />
+                    Share to WhatsApp
+                  </a>
+                </div>
                 
                 <Link href={`/cars/${car.id}`} target="_blank"
                   className="mt-2.5 sm:mt-3 flex items-center justify-center gap-1.5 text-[10px] sm:text-[11px] uppercase font-black tracking-[0.1em] sm:tracking-[0.15em] font-medium text-slate-700 hover:text-slate-900 dark:text-white transition-colors py-1.5 sm:py-2">

@@ -6,11 +6,19 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { MessageCircle, X } from "lucide-react";
 
-export default function InventorySharePrompt({ car, whatsappHref }) {
+const SHARE_TEMPLATES = [
+  { key: "clean", label: "Clean" },
+  { key: "urgent", label: "Urgent" },
+  { key: "deal", label: "Deal" },
+];
+
+export default function InventorySharePrompt({ car, whatsappHrefByTemplate }) {
   const [open, setOpen] = useState(true);
+  const [template, setTemplate] = useState("clean");
   const pathname = usePathname();
 
   const dismissHref = useMemo(() => pathname || "/portal/inventory", [pathname]);
+  const whatsappHref = whatsappHrefByTemplate?.[template] || whatsappHrefByTemplate?.clean || "";
 
   if (!open || !car || !whatsappHref) return null;
 
@@ -48,6 +56,23 @@ export default function InventorySharePrompt({ car, whatsappHref }) {
           <p className="truncate text-[11px] font-semibold text-slate-500">{car.priceLabel}</p>
           <p className="line-clamp-1 text-[11px] text-slate-600">{car.description}</p>
         </div>
+      </div>
+
+      <div className="mt-3 flex flex-wrap items-center gap-1.5">
+        {SHARE_TEMPLATES.map((item) => (
+          <button
+            key={item.key}
+            type="button"
+            onClick={() => setTemplate(item.key)}
+            className={`inline-flex items-center rounded-lg border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] transition-colors ${
+              template === item.key
+                ? "border-[#2F855A] bg-[#2F855A] text-white"
+                : "border-[#ddd4c8] bg-white text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            {item.label}
+          </button>
+        ))}
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
