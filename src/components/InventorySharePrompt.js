@@ -1,9 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { MessageCircle, X } from "lucide-react";
 
 const SHARE_TEMPLATES = [
@@ -16,9 +15,20 @@ export default function InventorySharePrompt({ car, whatsappHrefByTemplate }) {
   const [open, setOpen] = useState(true);
   const [template, setTemplate] = useState("clean");
   const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const dismissHref = useMemo(() => pathname || "/portal/inventory", [pathname]);
   const whatsappHref = whatsappHrefByTemplate?.[template] || whatsappHrefByTemplate?.clean || "";
+  
+  const dismissPrompt = () => {
+    setOpen(false);
+    const params = new URLSearchParams(searchParams?.toString() || "");
+    params.delete("created");
+    params.delete("car");
+    const next = params.toString() ? `${dismissHref}?${params.toString()}` : dismissHref;
+    router.replace(next, { scroll: false });
+  };
 
   if (!open || !car || !whatsappHref) return null;
 
@@ -35,7 +45,7 @@ export default function InventorySharePrompt({ car, whatsappHrefByTemplate }) {
         </div>
         <button
           type="button"
-          onClick={() => setOpen(false)}
+          onClick={dismissPrompt}
           className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-emerald-200 bg-white text-slate-500 hover:text-slate-800"
           aria-label="Close share prompt"
         >
@@ -85,12 +95,13 @@ export default function InventorySharePrompt({ car, whatsappHrefByTemplate }) {
           <MessageCircle size={14} />
           Share on WhatsApp
         </a>
-        <Link
-          href={dismissHref}
+        <button
+          type="button"
+          onClick={dismissPrompt}
           className="inline-flex items-center rounded-xl border border-[#ddd4c8] bg-white px-3.5 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-slate-600 hover:text-slate-900"
         >
           Dismiss
-        </Link>
+        </button>
       </div>
     </div>
   );
