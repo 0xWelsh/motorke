@@ -54,6 +54,7 @@ export default async function DealersPage({ searchParams }) {
   const verifiedOnly = sp.verified === "1";
   const inventoryMode = (sp.inventory || "active").toString();
   const withActiveInventoryOnly = inventoryMode !== "all";
+  const sortMode = (sp.sort || "recommended").toString();
   const userLat = sp.lat ? parseFloat(sp.lat) : null;
   const userLng = sp.lng ? parseFloat(sp.lng) : null;
   const hasLocation = Number.isFinite(userLat) && Number.isFinite(userLng);
@@ -108,10 +109,26 @@ export default async function DealersPage({ searchParams }) {
     return true;
   });
 
+  const getDistance = (d) => (d.distanceValue == null ? Number.POSITIVE_INFINITY : d.distanceValue);
   const rankedDealers = [...filtered].sort((a, b) => {
-    if (hasLocation && a.distanceValue != null && b.distanceValue != null && a.distanceValue !== b.distanceValue) {
-      return a.distanceValue - b.distanceValue;
+    if (sortMode === "nearest") {
+      const da = getDistance(a);
+      const db = getDistance(b);
+      if (da !== db) return da - db;
+      if (a.score !== b.score) return b.score - a.score;
+      return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
     }
+    if (sortMode === "active") {
+      if ((b.activeCars ?? 0) !== (a.activeCars ?? 0)) return (b.activeCars ?? 0) - (a.activeCars ?? 0);
+      if (a.score !== b.score) return b.score - a.score;
+      return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+    }
+    if (sortMode === "response") {
+      if ((b.responseRate ?? 0) !== (a.responseRate ?? 0)) return (b.responseRate ?? 0) - (a.responseRate ?? 0);
+      if (a.score !== b.score) return b.score - a.score;
+      return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+    }
+    // default: "recommended" (score-based)
     if (a.score !== b.score) return b.score - a.score;
     return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
   });
@@ -184,6 +201,45 @@ export default async function DealersPage({ searchParams }) {
 
       <div className="relative z-10 w-full mx-auto px-4 sm:px-8 xl:px-10 max-w-[1880px] -mt-7 sm:-mt-9 lg:-mt-11 pt-1 sm:pt-2">
         <div className="h-px w-full max-w-md bg-gradient-to-r from-slate-400/70 via-slate-300/45 to-transparent dark:from-slate-700 dark:via-slate-800/60 mb-5 sm:mb-6" aria-hidden />
+
+        {/* Sort controls */}
+        <div className="mb-5 sm:mb-6">
+          <form method="GET" className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                Sort by
+              </p>
+              <div className="flex items-center gap-2">
+                <input type="hidden" name="search" value={search} />
+                {countyFilter ? <input type="hidden" name="county" value={countyFilter} /> : null}
+                {verifiedOnly ? <input type="hidden" name="verified" value="1" /> : null}
+                <input type="hidden" name="inventory" value={inventoryMode} />
+                {sp.lat ? <input type="hidden" name="lat" value={sp.lat} /> : null}
+                {sp.lng ? <input type="hidden" name="lng" value={sp.lng} /> : null}
+                {/* Visible select updates via button click by submitting a new GET */}
+                <select
+                  name="sort"
+                  defaultValue={sortMode}
+                  className="bg-white dark:bg-[#0a0a0a] border border-[#E2E8F0] dark:border-slate-800 px-4 py-3 text-sm font-medium outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/25 transition-all appearance-none cursor-pointer text-[#111827] dark:text-white"
+                  style={{ borderRadius: "var(--radius)" }}
+                >
+                  <option value="recommended">Recommended</option>
+                  <option value="nearest" disabled={!hasLocation}>Nearest</option>
+                  <option value="active">Most active inventory</option>
+                  <option value="response">Best response rate</option>
+                </select>
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="bg-[#ef3340] text-white py-3.5 px-5 text-[10px] font-black uppercase tracking-widest transition-transform hover:scale-[0.99] active:scale-[0.98]"
+              style={{ borderRadius: "var(--radius)" }}
+            >
+              Sort
+            </button>
+          </form>
+        </div>
+
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5 sm:mb-6 pb-3 border-b border-slate-200/80 dark:border-slate-800">
           <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
             <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
@@ -205,6 +261,7 @@ export default async function DealersPage({ searchParams }) {
                 Refine network
               </summary>
               <form method="GET" className="mt-4 space-y-4">
+                <input type="hidden" name="sort" value={sortMode} />
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">Search</label>
                   <input name="search" defaultValue={search} type="text" placeholder="Dealer name..." className="w-full bg-white dark:bg-[#0a0a0a] border border-[#E2E8F0] dark:border-slate-800 px-4 py-3 text-sm font-medium outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/25 transition-all text-[#111827] dark:text-white placeholder:text-slate-400" style={{ borderRadius: "var(--radius)" }} />
@@ -242,6 +299,7 @@ export default async function DealersPage({ searchParams }) {
                 Refine network
               </h3>
               <form method="GET" className="space-y-6">
+                <input type="hidden" name="sort" value={sortMode} />
                 <div className="space-y-2">
                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">Search</label>
                    <input name="search" defaultValue={search} type="text" placeholder="Dealer name..." className="w-full bg-white dark:bg-[#0a0a0a] border border-[#E2E8F0] dark:border-slate-800 px-4 py-3 text-sm font-medium outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/25 transition-all text-[#111827] dark:text-white placeholder:text-slate-400" style={{ borderRadius: 'var(--radius)' }} />
