@@ -267,8 +267,8 @@ export default function PortalLayout({ children }) {
               <div className="absolute right-0 mt-2 w-72 p-3 border border-[#ddd4c8] bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,0.04)] z-50">
                 <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-700">Search syntax</p>
                 <ul className="mt-2 space-y-1 text-[11px] font-medium text-slate-600">
-                  <li><code>lead:john</code> -> lead inbox search</li>
-                  <li><code>status:sold</code> -> sold leads</li>
+                  <li><code>lead:john</code> {"->"} lead inbox search</li>
+                  <li><code>status:sold</code> {"->"} sold leads</li>
                   <li><code>make:Toyota body:SUV</code></li>
                   <li><code>fuel:PETROL trans:AUTOMATIC</code></li>
                   <li><code>min:1500000 max:4500000 year:2021</code></li>
