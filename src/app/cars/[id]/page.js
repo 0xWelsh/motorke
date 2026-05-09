@@ -28,7 +28,7 @@ import {
   meaningfulFeatureList,
   positiveNum,
 } from "@/lib/car-display";
-import { specIconSrcForDetailLabel } from "@/lib/spec-icons";
+import { specIconSrcForDetailLabel, specIconImageClassName } from "@/lib/spec-icons";
 import { FaWhatsapp } from "react-icons/fa";
 
 export async function generateMetadata({ params }) {
@@ -367,17 +367,18 @@ export default async function CarDetailPage({ params }) {
                 )}
 
                 <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
-                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-6">Vehicle Details</h2>
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-20 gap-y-0 text-[13px]">
+                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-5">Vehicle Details</h2>
+                   <div className="max-w-lg">
+                     <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-6 lg:gap-x-8 gap-y-0 text-[12px] md:text-[13px]">
                       {detailSpecs.map((item, idx) => {
                         const iconSrc = specIconSrcForDetailLabel(item.label);
                         return (
                           <div
                             key={item.label}
-                            className={`flex items-center gap-3 md:gap-4 py-4 border-b border-slate-50 dark:border-zinc-900/50 ${idx < 2 ? "border-t border-slate-50 dark:border-zinc-900/50" : ""}`}
+                            className={`flex items-center gap-2 md:gap-2.5 py-2.5 md:py-3 border-b border-slate-50 dark:border-zinc-900/50 ${idx < 2 ? "border-t border-slate-50 dark:border-zinc-900/50" : ""}`}
                           >
                             <div
-                              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${
+                              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${
                                 iconSrc
                                   ? "bg-[#f7faf8] dark:bg-white/[0.06] ring-1 ring-slate-200/80 dark:ring-white/10"
                                   : ""
@@ -387,17 +388,18 @@ export default async function CarDetailPage({ params }) {
                                 <Image
                                   src={iconSrc}
                                   alt=""
-                                  width={28}
-                                  height={28}
-                                  className="object-contain opacity-[0.92] dark:opacity-95 dark:[filter:invert(1)_brightness(1.08)]"
+                                  width={22}
+                                  height={22}
+                                  className={specIconImageClassName(item.label)}
                                 />
                               ) : null}
                             </div>
-                            <span className="min-w-0 font-bold text-slate-400 dark:text-slate-600 shrink-0">{item.label}</span>
-                            <span className="min-w-0 font-extrabold text-[#111827] dark:text-white text-right tabular-nums ml-auto pl-2">{item.value}</span>
+                            <span className="min-w-0 font-bold text-slate-400 dark:text-slate-600 shrink-0 text-[11px] md:text-[13px]">{item.label}</span>
+                            <span className="min-w-0 font-extrabold text-[#111827] dark:text-white text-right tabular-nums ml-auto pl-1.5">{item.value}</span>
                           </div>
                         );
                       })}
+                     </div>
                    </div>
                 </div>
               </div>
