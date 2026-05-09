@@ -52,7 +52,7 @@ function UnitCount({ count }) {
 export default function PartnerDealershipsSection({ dealers }) {
   if (!dealers?.length) return null;
 
-  const radius = "var(--radius)";
+  const borderRadius = "var(--radius)";
 
   return (
     <section className="relative overflow-hidden py-12 sm:py-16 lg:py-20 bg-[#F7FAFC] dark:bg-[#111111]">
