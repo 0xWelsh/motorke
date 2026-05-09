@@ -94,41 +94,48 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
           </div>
         )}
 
-        {/* Top Right Actions */}
-        <div className="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              handleShare();
-            }}
-            className="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 bg-white/95 dark:bg-[#111111]/95 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-zinc-700/80 hover:bg-white dark:hover:bg-[#151515] transition-colors"
-            style={{ borderRadius: "2px" }}
-            aria-label="Share car"
+        {/* Top overlays: single row avoids overlap on narrow (mobile) cards */}
+        <div className="pointer-events-none absolute inset-x-2 top-2 z-10 flex items-start justify-between gap-2 sm:inset-x-4 sm:top-4 sm:gap-2">
+          <div
+            className={
+              distanceLabel
+                ? "min-w-0 max-w-[calc(100%-5.5rem)] sm:max-w-[calc(100%-7rem)]"
+                : "min-w-0 flex-1"
+            }
           >
-            <Share2 className="w-3.5 h-3.5" />
-          </button>
-          <span
-            className="bg-[#38A169] text-white text-[8px] sm:text-[9px] font-bold px-2 py-1 uppercase tracking-[0.12em] border border-white/20"
-            style={{ borderRadius: "2px" }}
-          >
-            Available
-          </span>
-        </div>
-
-        {/* Distance Badge: Top Left */}
-        {distanceLabel && (
-          <div className="absolute top-2.5 left-2.5 sm:top-4 sm:left-4">
+            {distanceLabel ? (
+              <span
+                className="pointer-events-auto inline-flex max-w-full items-center gap-1 bg-white/95 px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wide text-slate-900 dark:bg-[#111111]/95 dark:text-white sm:gap-1.5 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.12em] border border-slate-200/80 dark:border-zinc-700/80"
+                style={{ borderRadius: "2px" }}
+                title={`${distanceLabel} away`}
+              >
+                <MapPin className="h-2.5 w-2.5 shrink-0 text-[#38A169] sm:h-3 sm:w-3" aria-hidden />
+                <span className="min-w-0 truncate tabular-nums">{distanceLabel}</span>
+              </span>
+            ) : null}
+          </div>
+          <div className="pointer-events-auto flex shrink-0 items-center gap-1 sm:gap-1.5">
+            <button
+              type="button"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                handleShare();
+              }}
+              className="inline-flex h-6 w-6 items-center justify-center bg-white/95 text-slate-700 transition-colors hover:bg-white dark:bg-[#111111]/95 dark:text-slate-200 dark:hover:bg-[#151515] sm:h-8 sm:w-8 border border-slate-200/80 dark:border-zinc-700/80"
+              style={{ borderRadius: "2px" }}
+              aria-label="Share car"
+            >
+              <Share2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+            </button>
             <span
-              className="inline-flex items-center gap-1.5 bg-white/95 dark:bg-[#111111]/95 text-slate-900 dark:text-white text-[8px] sm:text-[9px] font-bold px-2 py-1 sm:px-2.5 border border-slate-200/80 dark:border-zinc-700/80"
+              className="bg-[#38A169] px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wide text-white border border-white/20 sm:px-2 sm:py-1 sm:text-[9px] sm:tracking-[0.12em]"
               style={{ borderRadius: "2px" }}
             >
-              <MapPin className="w-3 h-3 text-[#38A169]" />
-              {distanceLabel}
+              Available
             </span>
           </div>
-        )}
+        </div>
       </Link>
 
       {/* Content Area */}
