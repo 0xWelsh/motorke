@@ -4,8 +4,11 @@
  * Usage:
  *   node scripts/rewatermark-existing-images.js
  *   node scripts/rewatermark-existing-images.js --limit=200
+ *   node scripts/rewatermark-existing-images.js --car-id=cmabc123...
+ *   node scripts/rewatermark-existing-images.js --from-date=2026-05-01
  *   node scripts/rewatermark-existing-images.js --recent-cars=5
  *   node scripts/rewatermark-existing-images.js --dry-run
+ *   node scripts/rewatermark-existing-images.js --retries=3
  *
  * This script fetches each current image, applies the latest watermark style
  * using the dealership name, and uploads it back to the same
@@ -19,6 +22,51 @@ const { uploadImage } = require("../src/lib/storage");
 const prisma = new PrismaClient();
 
 const PUBLIC_MARKER = "/storage/v1/object/public/car-images/";
+const DEFAULT_RETRIES = 2;
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function parseIsoDateMaybe(raw) {
+  if (!raw) return null;
+  const dt = new Date(raw);
+  if (Number.isNaN(dt.getTime())) return null;
+  return dt;
+}
+
+function isRetriableError(err) {
+  const msg = String(err?.message || "").toLowerCase();
+  return (
+    msg.includes("timeout") ||
+    msg.includes("timed out") ||
+    msg.includes("econnreset") ||
+    msg.includes("enotfound") ||
+    msg.includes("fetch failed") ||
+    msg.includes("network") ||
+    msg.includes("429") ||
+    msg.includes("502") ||
+    msg.includes("503") ||
+    msg.includes("504")
+  );
+}
+
+async function withRetry(task, retries, label) {
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    try {
+      return await task();
+    } catch (err) {
+      const finalAttempt = attempt >= retries;
+      if (finalAttempt || !isRetriableError(err)) throw err;
+      const backoff = 400 * 2 ** attempt;
+      console.warn(
+        `[rewatermark] retrying ${label} attempt=${attempt + 1}/${retries + 1} in ${backoff}ms: ${err?.message || err}`
+      );
+      await sleep(backoff);
+    }
+  }
+  throw new Error(`Unexpected retry termination for ${label}`);
+}
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -27,11 +75,25 @@ function parseArgs() {
   const limit = limitArg ? Number(limitArg.split("=")[1]) : null;
   const recentArg = args.find((arg) => arg.startsWith("--recent-cars="));
   const recentCars = recentArg ? Number(recentArg.split("=")[1]) : null;
+  const retriesArg = args.find((arg) => arg.startsWith("--retries="));
+  const retriesRaw = retriesArg ? Number(retriesArg.split("=")[1]) : DEFAULT_RETRIES;
+  const retries = Number.isFinite(retriesRaw) && retriesRaw >= 0 ? Math.floor(retriesRaw) : DEFAULT_RETRIES;
+  const carIdArg = args.find((arg) => arg.startsWith("--car-id="));
+  const carId = carIdArg ? carIdArg.split("=")[1]?.trim() || null : null;
+  const fromDateArg = args.find((arg) => arg.startsWith("--from-date="));
+  const fromDateRaw = fromDateArg ? fromDateArg.split("=")[1]?.trim() : null;
+  const fromDate = parseIsoDateMaybe(fromDateRaw);
+  if (fromDateRaw && !fromDate) {
+    throw new Error(`Invalid --from-date value "${fromDateRaw}". Use ISO format, e.g. 2026-05-01 or 2026-05-01T00:00:00Z`);
+  }
   return {
     dryRun,
     limit: Number.isFinite(limit) ? limit : null,
     recentCars:
       Number.isFinite(recentCars) && recentCars > 0 ? Math.floor(recentCars) : null,
+    retries,
+    carId,
+    fromDate,
   };
 }
 
@@ -51,16 +113,36 @@ function inferMimeType(url, contentTypeHeader) {
 }
 
 async function main() {
-  const { dryRun, limit, recentCars } = parseArgs();
-  console.log(`[rewatermark] starting ${dryRun ? "(dry-run)" : ""}`);
+  const { dryRun, limit, recentCars, retries, carId, fromDate } = parseArgs();
+  console.log(
+    `[rewatermark] starting ${dryRun ? "(dry-run)" : ""} retries=${retries} ${carId ? `car-id=${carId}` : ""} ${fromDate ? `from-date=${fromDate.toISOString()}` : ""}`
+  );
 
   let rows;
 
-  if (recentCars != null) {
+  if (carId) {
+    rows = await prisma.carImage.findMany({
+      where: { carId },
+      include: {
+        car: {
+          select: {
+            year: true,
+            make: true,
+            model: true,
+            dealer: { select: { name: true } },
+          },
+        },
+      },
+      orderBy: [{ order: "asc" }, { id: "asc" }],
+      ...(limit ? { take: limit } : {}),
+    });
+    console.log(`[rewatermark] scope car-id=${carId} images=${rows.length}`);
+  } else if (recentCars != null) {
     const recent = await prisma.car.findMany({
       select: { id: true, createdAt: true },
       orderBy: { createdAt: "desc" },
       take: recentCars,
+      ...(fromDate ? { where: { createdAt: { gte: fromDate } } } : {}),
     });
     const carIds = recent.map((c) => c.id);
     console.log(
@@ -79,9 +161,13 @@ async function main() {
         },
       },
       orderBy: [{ carId: "asc" }, { order: "asc" }],
+      ...(limit ? { take: limit } : {}),
     });
   } else {
     rows = await prisma.carImage.findMany({
+      where: {
+        ...(fromDate ? { car: { createdAt: { gte: fromDate } } } : {}),
+      },
       include: {
         car: {
           select: {
@@ -116,7 +202,11 @@ async function main() {
     const watermarkText = row.car?.dealer?.name?.trim() || "WELSH MOTORS";
 
     try {
-      const res = await fetch(row.url);
+      const res = await withRetry(
+        () => fetch(row.url),
+        retries,
+        `fetch image=${row.id}`
+      );
       if (!res.ok) {
         failed += 1;
         console.error(`[rewatermark] fetch failed (${res.status}) for image ${row.id}`);
@@ -133,7 +223,11 @@ async function main() {
         continue;
       }
 
-      await uploadImage(outputBuffer, storagePath, mimeType);
+      await withRetry(
+        () => uploadImage(outputBuffer, storagePath, mimeType),
+        retries,
+        `upload image=${row.id}`
+      );
       updated += 1;
     } catch (err) {
       failed += 1;
