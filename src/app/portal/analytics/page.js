@@ -10,7 +10,8 @@ import {
   Award,
   ArrowUpRight,
   ArrowDownRight,
-  BarChart3
+  BarChart3,
+  FileDown,
 } from "lucide-react";
 
 export const metadata = { title: "Analytics — Welsh Motorhub Dealer Portal" };
@@ -89,9 +90,34 @@ export default async function AnalyticsPage() {
 
   return (
     <div className="w-full">
-      <div className="mb-4 sm:mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Analytics</h1>
-        <p className="text-[10px] uppercase font-black tracking-[0.12em] text-slate-700 font-medium mt-1">Performance over 14 days</p>
+      <div className="mb-4 sm:mb-6 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Analytics</h1>
+          <p className="text-[10px] uppercase font-black tracking-[0.12em] text-slate-700 font-medium mt-1">Performance over 14 days</p>
+        </div>
+        <div className="rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-gradient-to-br from-[#fff8f5] via-white to-[#fbfcfe] dark:from-[#151515] dark:via-[#111111] dark:to-[#0a0a0a] p-4 sm:p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.04)] max-w-lg lg:max-w-md lg:shrink-0">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#ff5a2f]/15 text-[#ff5a2f] flex items-center justify-center shrink-0 border border-[#ff5a2f]/25">
+              <FileDown size={18} strokeWidth={2.25} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#ff5a2f]">Weekly proof pack</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white mt-1 leading-snug">
+                Dealer-ready PDF: 7-day views & leads, day-by-day pulse, momentum vs last week, hot listings.
+              </p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                Share with owners when they ask “is anyone actually seeing our cars?” — rolling window, print-quality.
+              </p>
+              <a
+                href="/api/portal/reports/weekly-pdf"
+                download
+                className="mt-3 inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-black uppercase tracking-[0.14em] hover:opacity-90 transition-opacity"
+              >
+                <FileDown size={14} /> Download weekly PDF
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* KPI Grid */}
