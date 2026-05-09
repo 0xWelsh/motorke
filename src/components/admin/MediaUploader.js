@@ -115,10 +115,106 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
     syncFiles(files); // Final sync on drop
   };
 
+  const primaryFile = files.find((f) => f.isPrimary) || files[0];
+  const otherFiles = primaryFile ? files.filter((f) => f.id !== primaryFile.id) : [];
+
+  const renderPhotoTile = (file, layout) => {
+    const isHero = layout === "hero";
+    return (
+      <motion.div
+        layout
+        key={file.id}
+        draggable
+        onDragStart={handleItemDragStart(file.id)}
+        onDragOver={handleItemDragOver(file.id)}
+        onDragEnd={handleItemDragEnd}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.8 }}
+        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        className={`relative group rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#111111] border transition-all duration-300 cursor-grab active:cursor-grabbing ${
+          isHero ? "aspect-[2/1] max-h-52 md:max-h-60 w-full" : "aspect-square"
+        } ${
+          draggedId === file.id ? "opacity-30 scale-95 border-emerald-500" : "opacity-100 border-slate-200 dark:border-slate-800"
+        }`}
+      >
+        <img src={file.preview} alt="Listing" className="w-full h-full object-cover pointer-events-none" />
+
+        <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 max-md:opacity-100 max-md:bg-gradient-to-t max-md:from-black/85 max-md:via-black/25 max-md:to-transparent md:transition-all md:duration-500 flex flex-col items-center justify-end p-3 sm:p-4 backdrop-blur-[2px] pointer-events-auto">
+          <div className="w-full space-y-2 translate-y-4 group-hover:translate-y-0 max-md:translate-y-0 transition-transform duration-500">
+            {file.isPrimary ? (
+              <div className="w-full py-2 rounded-xl bg-[#2F855A] text-white text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2">
+                <Crown size={12} /> Primary / cover
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setPrimary(file.id);
+                }}
+                className="w-full bg-white text-slate-900 text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-emerald-50 transition-colors"
+              >
+                Set as cover
+              </button>
+            )}
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  moveFile(file.id, -1);
+                }}
+                className="bg-white/90 text-slate-900 text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-white transition-colors flex items-center justify-center gap-1"
+              >
+                <ArrowLeft size={11} /> Left
+              </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  moveFile(file.id, 1);
+                }}
+                className="bg-white/90 text-slate-900 text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-white transition-colors flex items-center justify-center gap-1"
+              >
+                Right <ArrowRight size={11} />
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                removeFile(file.id);
+              }}
+              className="w-full bg-rose-500/80 text-white text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-rose-600 transition-colors flex items-center justify-center gap-2"
+            >
+              <Trash2 size={12} /> Remove
+            </button>
+          </div>
+        </div>
+
+        {file.isPrimary && (
+          <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-[#2F855A] text-white rounded-xl shadow-xl border border-white/20">
+            <Crown size={14} />
+            <span className="text-[9px] font-black uppercase tracking-widest">Cover</span>
+          </div>
+        )}
+
+        <div className="absolute bottom-3 right-3 text-[8px] font-black text-white/80 uppercase tracking-widest drop-shadow-sm">
+          #{files.indexOf(file) + 1}
+        </div>
+      </motion.div>
+    );
+  };
+
   return (
     <div className="w-full space-y-4">
       <div 
-        className={`relative w-full h-48 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center p-4 transition-all duration-500 overflow-hidden group cursor-pointer ${
+        className={`relative w-full h-36 sm:h-48 border-2 border-dashed rounded-xl sm:rounded-2xl flex flex-col items-center justify-center p-3 sm:p-4 transition-all duration-500 overflow-hidden group cursor-pointer ${
           dragActive ? "border-[#2F855A] bg-[#2F855A]/5 scale-[1.01]" : "border-slate-200 dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#0a0a0a] hover:border-slate-300 dark:hover:border-slate-700"
         }`}
         onDragEnter={handleDrag}
@@ -174,84 +270,29 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
               </div>
            </div>
 
-           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
-              <AnimatePresence>
-                {files.map((file) => (
-                  <motion.div 
-                    layout
-                    key={file.id} 
-                    draggable
-                    onDragStart={handleItemDragStart(file.id)}
-                    onDragOver={handleItemDragOver(file.id)}
-                    onDragEnd={handleItemDragEnd}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    className={`relative group aspect-square rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#111111] border transition-all duration-300 cursor-grab active:cursor-grabbing ${
-                       draggedId === file.id ? "opacity-30 scale-95 border-emerald-500" : "opacity-100 border-slate-200 dark:border-slate-800"
-                    }`}
-                  >
-                    <img src={file.preview} alt="Listing Photo" className="w-full h-full object-cover pointer-events-none" />
-                    
-                    <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-end p-4 backdrop-blur-sm pointer-events-auto">
-                        <div className="w-full space-y-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            {file.isPrimary ? (
-                               <div className="w-full py-2 rounded-xl bg-[#2F855A] text-white text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2">
-                                  <Crown size={12} /> Primary Hub
-                               </div>
-                            ) : (
-                              <button 
-                                  type="button"
-                                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); setPrimary(file.id); }}
-                                  className="w-full bg-white text-slate-900 text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-emerald-50 transition-colors"
-                              >
-                                  Set Main
-                              </button>
-                            )}
-                            <div className="grid grid-cols-2 gap-2">
-                              <button
-                                type="button"
-                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); moveFile(file.id, -1); }}
-                                className="bg-white/90 text-slate-900 text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-white transition-colors flex items-center justify-center gap-1"
-                              >
-                                <ArrowLeft size={11} /> Left
-                              </button>
-                              <button
-                                type="button"
-                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); moveFile(file.id, 1); }}
-                                className="bg-white/90 text-slate-900 text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-white transition-colors flex items-center justify-center gap-1"
-                              >
-                                Right <ArrowRight size={11} />
-                              </button>
-                            </div>
-                            <button 
-                              type="button"
-                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); removeFile(file.id); }}
-                              className="w-full bg-rose-500/80 text-white text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-rose-600 transition-colors flex items-center justify-center gap-2"
-                            >
-                              <Trash2 size={12} /> Purge
-                            </button>
-                        </div>
-                    </div>
+           {primaryFile && (
+             <div className="mb-4 space-y-2">
+               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Cover photo (shown first)</p>
+               <AnimatePresence mode="popLayout">{renderPhotoTile(primaryFile, "hero")}</AnimatePresence>
+             </div>
+           )}
 
-                    {file.isPrimary && (
-                      <div className="absolute top-4 left-4 p-2 bg-[#2F855A] text-white rounded-xl shadow-xl border border-white/20">
-                        <Crown size={14} />
-                      </div>
-                    )}
+           {otherFiles.length > 0 && (
+             <>
+               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">More photos — order &amp; gallery</p>
+               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                 <AnimatePresence>{otherFiles.map((file) => renderPhotoTile(file, "grid"))}</AnimatePresence>
+               </div>
+             </>
+           )}
 
-                    <div className="absolute bottom-4 right-4 text-[8px] font-black text-white/50 uppercase tracking-widest">
-                      #{files.indexOf(file) + 1}
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-           </div>
+           {files.length === 1 && (
+             <p className="text-[11px] font-semibold text-slate-500 mt-3">Add more shots so buyers see the full vehicle.</p>
+           )}
 
            <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/50 flex items-center gap-3">
               <Info size={14} className="text-[#2F855A]" />
-              <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Drag or use Left/Right. Primary image is your cover.</p>
+              <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Drag tiles to reorder. The cover image is your listing hero.</p>
            </div>
         </div>
       )}

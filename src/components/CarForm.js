@@ -314,6 +314,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [images, setImages] = useState(
     car?.images?.map((img) => ({ url: img.url, isPrimary: img.isPrimary })) || []
   );
+  /** Blob or URL for listing preview before / without server URLs; cleared when images carry a primary URL. */
+  const [coverDisplaySrc, setCoverDisplaySrc] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const badges = useMemo(() => car?.badges || [], [car]);
@@ -357,6 +359,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const previewVariant = liveDraft.variant || "";
   const previewDescription = String(liveDraft.description || formSeed.description || "").trim();
   const previewPrice = liveDraft.price || "";
+  const previewCoverSrc = useMemo(() => {
+    if (coverDisplaySrc) return coverDisplaySrc;
+    const p = images.find((i) => i.isPrimary) || images[0];
+    return p?.url || null;
+  }, [coverDisplaySrc, images]);
   const saveDraft = useCallback(() => {
     if (!draftKey || !isNew || !formRef.current) return;
 
@@ -424,6 +431,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       (formSeed.make || "").trim();
     setSelectedMake(currentMake);
   }, [formSeed.make]);
+
+  useEffect(() => {
+    setCoverDisplaySrc(null);
+  }, [car?.id, formInstanceKey]);
 
   useEffect(() => {
     const currentModel =
@@ -558,6 +569,19 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   }
 
   async function handleFilesSelected(newFiles) {
+    const primaryThumb = (list) => {
+      const p = list.find((f) => f.isPrimary) || list[0];
+      return p ? p.url || p.preview || null : null;
+    };
+
+    if (!newFiles.length) {
+      setImages([]);
+      setCoverDisplaySrc(null);
+      return;
+    }
+
+    setCoverDisplaySrc(primaryThumb(newFiles));
+
     const withKnownUrls = normalizeImagePayload(
       newFiles.map((f) => ({
         url: f.url || uploadedLocalMapRef.current.get(f.id) || null,
@@ -569,7 +593,18 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     const toUpload = newFiles.filter(
       (f) => !f.url && f.id && !uploadedLocalMapRef.current.has(f.id) && !pendingUploadIdsRef.current.has(f.id)
     );
-    if (!toUpload.length) return;
+    if (!toUpload.length) {
+      const finalPayload = normalizeImagePayload(
+        newFiles.map((f) => ({
+          url: f.url || uploadedLocalMapRef.current.get(f.id) || null,
+          isPrimary: f.isPrimary,
+        }))
+      );
+      setImages(finalPayload);
+      const primaryUrl = (finalPayload.find((i) => i.isPrimary) || finalPayload[0])?.url;
+      setCoverDisplaySrc(primaryUrl || primaryThumb(newFiles));
+      return;
+    }
 
     setUploading(true);
     setError("");
@@ -605,6 +640,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       }))
     );
     setImages(finalPayload);
+
+    const primaryAfter = (finalPayload.find((i) => i.isPrimary) || finalPayload[0])?.url;
+    setCoverDisplaySrc(primaryAfter || primaryThumb(newFiles));
 
     if (failures.length > 0) setError(`${failures.length} upload(s) failed: ${failures.join(", ")}`);
 
@@ -706,8 +744,16 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     }
   }
 
+  const scrollToSection = useCallback((id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 animate-in fade-in duration-700">
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      className={`space-y-4 sm:space-y-6 animate-in fade-in duration-700 ${isPortal ? "max-lg:pb-36" : ""}`}
+    >
       {error && (
         <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-black uppercase tracking-widest rounded-xl sm:rounded-2xl px-4 py-3 sm:px-6 sm:py-4 flex items-center gap-3">
           <Info size={16} />
@@ -733,11 +779,37 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       )}
       {dealers.length === 1 && dealers[0] && <input type="hidden" name="dealerId" value={dealers[0].id} />}
 
-      <div className="space-y-5 sm:space-y-6">
-        <div>
+      {isPortal ? (
+        <div
+          className="lg:hidden sticky top-0 z-[15] -mx-1 px-1 py-2 mb-1 bg-white/92 dark:bg-[#0a0a0a]/92 backdrop-blur-md border border-[#ddd4c8]/80 dark:border-slate-800 rounded-xl shadow-sm flex gap-1.5 overflow-x-auto overscroll-x-contain [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+          aria-label="Jump to section"
+        >
+          {[
+            { id: "portal-car-listing", label: "Listing" },
+            { id: "portal-car-photos", label: "Photos" },
+            { id: "portal-car-details", label: "Details" },
+            { id: "portal-car-preview", label: "Preview" },
+          ].map(({ id, label }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => scrollToSection(id)}
+              className="shrink-0 px-2.5 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-[0.14em] bg-slate-100 dark:bg-[#151515] text-slate-800 dark:text-slate-100 border border-[#ddd4c8] dark:border-slate-700 active:scale-[0.98]"
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      ) : null}
+
+      <div className={`space-y-5 sm:space-y-6 ${isPortal ? "max-md:space-y-4" : ""}`}>
+        <div id="portal-car-listing" className="scroll-mt-28 md:scroll-mt-8">
           <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-3">Listing</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
+          <div className="space-y-8">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">Vehicle identity</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
             <div>
               <InfieldGroup label="Make" required>
                 <input
@@ -825,6 +897,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 {years.map((year) => <option key={year} value={year}>{year}</option>)}
               </select>
             </InfieldGroup>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">Price &amp; registration</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
             <InfieldGroup label="Condition" required>
               <select name="condition" defaultValue={formSeed.condition} required className={inFieldSelect}>
                 {CONDITIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
@@ -866,6 +944,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             <InfieldGroup label="Mileage (km)">
               <input name="mileage" type="number" inputMode="numeric" defaultValue={formSeed.mileage} placeholder="52000" className={inField} />
             </InfieldGroup>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">Specs</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
             <InfieldGroup label="Fuel" required>
               <select name="fuelType" defaultValue={formSeed.fuelType} required className={inFieldSelect}>
                 {Object.entries(FUEL_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
@@ -897,12 +981,14 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 {Object.entries(STEERING_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
               </select>
             </InfieldGroup>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div>
-          <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
-            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-4">Photos</p>
+        <div id="portal-car-photos" className="scroll-mt-28 md:scroll-mt-8">
+          <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5">
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-3 sm:mb-4">Photos</p>
             {uploading && (
               <div className="text-center mb-8 p-6 bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl">
                 <div className="w-10 h-10 border-4 border-[#ff5a2f] border-t-transparent rounded-2xl animate-spin mx-auto mb-4" />
@@ -917,9 +1003,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           </div>
         </div>
 
-        <div>
-          <div className="space-y-6">
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
+        <div id="portal-car-details" className="scroll-mt-28 md:scroll-mt-8">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5">
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                   <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">Description</p>
                   <button
@@ -944,7 +1030,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 </InfieldGroup>
                 <p className="mt-2 text-[11px] font-medium text-slate-500">Honest detail builds trust.</p>
               </div>
-              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
+              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5">
                 <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-3">Features</p>
                 <InfieldGroup label="List features, comma-separated">
                   <textarea
@@ -962,11 +1048,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   Separate with commas. We trim spaces and skip empty items when you publish ({parsedFeatures.length} listed).
                 </p>
               </div>
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-5">
-              <div className="flex items-center justify-between gap-3 mb-6">
+            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5">
+              <div className="flex items-center justify-between gap-3 mb-4 sm:mb-6">
                 <div className="flex items-center gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Advanced specs</h3>
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">Advanced specs</h3>
                 </div>
                 <button
                   type="button"
@@ -1030,7 +1116,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-between items-center gap-3 pt-2">
+        <div className="hidden lg:flex flex-wrap justify-between items-center gap-3 pt-2">
           <a href={isPortal ? "/portal" : "/admin"} className="px-5 py-2.5 sm:px-6 sm:py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all">
             Cancel
           </a>
@@ -1044,11 +1130,18 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           </button>
         </div>
 
-        <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-3 sm:p-4">
+        <div
+          id="portal-car-preview"
+          className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-3 sm:p-4 scroll-mt-28 md:scroll-mt-8"
+        >
           <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Preview</p>
           <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
             <div className="w-full sm:w-36 h-20 sm:h-24 rounded-lg sm:rounded-xl overflow-hidden bg-slate-100 border border-slate-200 dark:border-slate-800 flex items-center justify-center shrink-0">
-              {images[0]?.url ? <img src={images[0].url} alt="" className="w-full h-full object-cover" /> : <span className="text-[11px] text-slate-400">No photo</span>}
+              {previewCoverSrc ? (
+                <img src={previewCoverSrc} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-[11px] text-slate-400">No photo</span>
+              )}
             </div>
             <div className="min-w-0">
               <p className="text-sm font-black text-slate-900 dark:text-white truncate">{previewTitle}</p>
@@ -1058,6 +1151,31 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             </div>
           </div>
         </div>
+
+        {isPortal ? (
+          <div
+            className="lg:hidden fixed inset-x-0 z-[45] border-t border-[#ddd4c8] dark:border-slate-800 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md px-3 pt-2.5 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.06)]"
+            style={{ bottom: "calc(4rem + env(safe-area-inset-bottom, 0px))" }}
+          >
+            <div className="flex items-stretch gap-2 max-w-7xl mx-auto">
+              <a
+                href="/portal"
+                className="flex-1 min-w-0 inline-flex items-center justify-center px-3 py-3 bg-slate-100 dark:bg-[#151515] hover:bg-slate-200 dark:hover:bg-[#1f1f1f] text-slate-800 dark:text-slate-100 font-bold rounded-xl text-[10px] uppercase tracking-wider text-center"
+              >
+                Cancel
+              </a>
+              <button
+                type="button"
+                disabled={submitting || uploading}
+                onClick={() => formRef.current?.requestSubmit()}
+                className="flex-[1.35] min-w-0 inline-flex items-center justify-center gap-1.5 px-3 py-3 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-50 text-white font-bold rounded-xl text-[10px] uppercase tracking-wider"
+              >
+                {submitting ? "Saving…" : isEdit ? "Save" : "Publish"}
+                {!submitting && <Check size={15} />}
+              </button>
+            </div>
+          </div>
+        ) : null}
       </div>
     </form>
     );

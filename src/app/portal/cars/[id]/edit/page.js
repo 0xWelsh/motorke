@@ -22,16 +22,18 @@ export default async function PortalEditCarPage({ params }) {
   const dealers = [user.dealer];
 
   return (
-    <div className="animate-in fade-in duration-700 w-full">
-      <div className="mb-6">
-        <a href="/portal" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-700 hover:text-[#ff5a2f] transition-colors mb-6">
-          <span className="text-lg">←</span> Back to Showroom
+    <div className="animate-in fade-in duration-700 w-full max-md:-mx-1">
+      <div className="mb-4 sm:mb-6">
+        <a
+          href="/portal"
+          className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-slate-700 hover:text-[#ff5a2f] transition-colors mb-2 sm:mb-6"
+        >
+          <span className="text-base sm:text-lg">←</span>
+          <span className="truncate sm:whitespace-normal">Back</span>
         </a>
-        <h1 className="text-3xl font-black text-slate-950 tracking-tight">
-          Edit Listing
-        </h1>
-        <p className="text-slate-700 font-medium mt-1 font-sans">
-          {car.year} {car.make} {car.model} — System Ref: {car.id.slice(-8)}
+        <h1 className="text-xl sm:text-3xl font-black text-slate-950 dark:text-white tracking-tight leading-tight">Edit listing</h1>
+        <p className="text-slate-700 dark:text-slate-300 font-medium mt-1 text-sm font-sans line-clamp-2 sm:line-clamp-none">
+          {car.year} {car.make} {car.model} — Ref {car.id.slice(-8)}
         </p>
       </div>
 
