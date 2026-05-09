@@ -591,7 +591,7 @@ export default async function CarsPage({ searchParams }) {
               </div>
             )}
             {topCars.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
                 {topCars.map((car) => (
                   <CarCard key={`top-${car.id}`} car={car} distance={car.distanceValue ?? null} />
                 ))}
@@ -602,7 +602,7 @@ export default async function CarsPage({ searchParams }) {
 
         {/* Row 3 onward: full width under sidebar, 4 columns on desktop */}
         {lowerCars.length > 0 && (
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
             {lowerCars.map((car) => (
               <CarCard key={`lower-${car.id}`} car={car} distance={car.distanceValue ?? null} />
             ))}
@@ -623,7 +623,7 @@ export default async function CarsPage({ searchParams }) {
                 Explore more →
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
               {personalizedCarsWithDistance.map((car) => (
                 <div key={`personal-${car.id}`} className="space-y-1.5">
                   <p className="text-[10px] font-black uppercase tracking-[0.11em] text-[#2F855A]">

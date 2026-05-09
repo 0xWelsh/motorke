@@ -94,10 +94,23 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
           </div>
         )}
 
-        {/* Status Badge: Top Right */}
-        <div className="absolute top-4 right-4">
+        {/* Top Right Actions */}
+        <div className="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              handleShare();
+            }}
+            className="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 bg-white/95 dark:bg-[#111111]/95 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-zinc-700/80 hover:bg-white dark:hover:bg-[#151515] transition-colors"
+            style={{ borderRadius: "2px" }}
+            aria-label="Share car"
+          >
+            <Share2 className="w-3.5 h-3.5" />
+          </button>
           <span
-            className="bg-[#38A169] text-white text-[9px] font-bold px-2.5 py-1 uppercase tracking-[0.12em] border border-white/20"
+            className="bg-[#38A169] text-white text-[8px] sm:text-[9px] font-bold px-2 py-1 uppercase tracking-[0.12em] border border-white/20"
             style={{ borderRadius: "2px" }}
           >
             Available
@@ -106,9 +119,9 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
 
         {/* Distance Badge: Top Left */}
         {distanceLabel && (
-          <div className="absolute top-4 left-4">
+          <div className="absolute top-2.5 left-2.5 sm:top-4 sm:left-4">
             <span
-              className="inline-flex items-center gap-1.5 bg-white/95 dark:bg-[#111111]/95 text-slate-900 dark:text-white text-[9px] font-bold px-2.5 py-1 border border-slate-200/80 dark:border-zinc-700/80"
+              className="inline-flex items-center gap-1.5 bg-white/95 dark:bg-[#111111]/95 text-slate-900 dark:text-white text-[8px] sm:text-[9px] font-bold px-2 py-1 sm:px-2.5 border border-slate-200/80 dark:border-zinc-700/80"
               style={{ borderRadius: "2px" }}
             >
               <MapPin className="w-3 h-3 text-[#38A169]" />
@@ -119,34 +132,34 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
       </Link>
 
       {/* Content Area */}
-      <div className="p-4 sm:p-5 flex flex-col flex-1">
+      <div className="p-2.5 sm:p-5 flex flex-col flex-1">
         {/* Title & Year */}
-        <div className="flex items-start gap-3 mb-3">
-          <span className="mt-1 text-[11px] font-black text-slate-400 uppercase tracking-widest">
+        <div className="flex items-start gap-2 sm:gap-3 mb-2.5 sm:mb-3">
+          <span className="mt-0.5 sm:mt-1 text-[9px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest">
             {car.year}
           </span>
           <Link href={`/cars/${car.id}`} onClick={() => onCarClick("title")}>
-            <h3 className="text-base sm:text-[17px] font-black font-sans text-slate-900 dark:text-white tracking-tighter leading-snug hover:text-[#38A169] transition-colors truncate" title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}>
+            <h3 className="text-[12px] sm:text-[17px] font-black font-sans text-slate-900 dark:text-white tracking-tight sm:tracking-tighter leading-snug hover:text-[#38A169] transition-colors line-clamp-2" title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}>
               {car.make} {car.model} {car.variant ? `(${car.variant})` : ""}
             </h3>
           </Link>
         </div>
 
         {/* High-Density Info Area */}
-        <div className="flex-1 space-y-4">
-          <p className="min-h-[56px] text-[11px] font-medium text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-3">
-             {specString && <span className="text-slate-900 dark:text-slate-200 font-bold block mb-1">{specString}</span>}
+        <div className="flex-1 space-y-2.5 sm:space-y-4">
+          <p className="min-h-[46px] sm:min-h-[56px] text-[10px] sm:text-[11px] font-medium text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 sm:line-clamp-3">
+             {specString && <span className="text-slate-900 dark:text-slate-200 font-bold block mb-0.5 sm:mb-1">{specString}</span>}
              {car.description || "Premium verified vehicle available in our showroom."}
           </p>
 
           {/* Secondary Badges Row */}
-          <div className="min-h-[36px] flex flex-wrap gap-2 content-start">
+          <div className="min-h-[30px] sm:min-h-[36px] flex flex-wrap gap-1.5 sm:gap-2 content-start">
             {[
               car.steering && (car.steering === "RHD" ? "RHD" : car.steering === "LHD" ? "LHD" : null),
               positiveNum(car.engineCC) ? `${Number(car.engineCC)} CC` : null,
               car.fuelType && (FUEL_LABELS[car.fuelType] || car.fuelType.toUpperCase()),
             ].filter(Boolean).map((badge, idx) => (
-              <span key={idx} className="bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-none border border-slate-100 dark:border-zinc-800 whitespace-nowrap">
+              <span key={idx} className="bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-slate-400 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest px-2 py-1 sm:px-3 sm:py-1.5 rounded-none border border-slate-100 dark:border-zinc-800 whitespace-nowrap">
                 {badge}
               </span>
             ))}
@@ -162,13 +175,13 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
         </div>
 
         {/* Bottom Bar: Price & Action */}
-        <div className="mt-6 pt-4 border-t border-slate-100 dark:border-zinc-900 flex items-center justify-between gap-2">
+        <div className="mt-3.5 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-100 dark:border-zinc-900 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tighter">
+            <span className="text-[13px] sm:text-lg font-black text-slate-900 dark:text-white tracking-tight sm:tracking-tighter">
                {formatCarPrice(car)}
             </span>
             <div 
-              className="w-4 h-4 rounded-full border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-[10px] text-slate-400 font-bold cursor-help"
+              className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-[9px] sm:text-[10px] text-slate-400 font-bold cursor-help"
               title="Final listed price"
             >
                i
@@ -178,24 +191,15 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
           <Link 
             href={`/cars/${car.id}`} 
             onClick={() => onCarClick("cta")}
-            className="group/btn flex items-center gap-3 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-[#111827] hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
+            className="group/btn inline-flex items-center gap-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-white px-2.5 sm:px-4 py-1.5 sm:py-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-[#111827] hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
             style={{ borderRadius: '2px' }}
           >
-            View Offer
-            <div className="w-5 h-5 flex items-center justify-center bg-slate-200 dark:bg-zinc-800 group-hover/btn:bg-[#38A169] group-hover/btn:text-white transition-colors" style={{ borderRadius: '1px' }}>
+            View
+            <div className="w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center bg-slate-200 dark:bg-zinc-800 group-hover/btn:bg-[#38A169] group-hover/btn:text-white transition-colors" style={{ borderRadius: '1px' }}>
               <ArrowUpRight className="w-3 h-3 translate-y-[0.5px]" />
             </div>
           </Link>
         </div>
-        <button
-          type="button"
-          onClick={handleShare}
-          className="mt-2 inline-flex items-center justify-center gap-2 w-full bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-zinc-800 text-slate-700 dark:text-slate-200 px-3 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-zinc-900 transition-colors"
-          style={{ borderRadius: "2px" }}
-        >
-          <Share2 className="w-3.5 h-3.5" />
-          Share
-        </button>
       </div>
     </article>
   );
