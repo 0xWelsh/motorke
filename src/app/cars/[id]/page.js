@@ -379,7 +379,7 @@ export default async function CarDetailPage({ params }) {
                             <div
                               className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${
                                 iconSrc
-                                  ? "bg-[#f7faf8] dark:bg-zinc-900/90 ring-1 ring-slate-200/80 dark:ring-zinc-800"
+                                  ? "bg-[#f7faf8] dark:bg-white/[0.06] ring-1 ring-slate-200/80 dark:ring-white/10"
                                   : ""
                               }`}
                             >
@@ -389,7 +389,7 @@ export default async function CarDetailPage({ params }) {
                                   alt=""
                                   width={28}
                                   height={28}
-                                  className="object-contain opacity-[0.92] dark:opacity-95"
+                                  className="object-contain opacity-[0.92] dark:opacity-95 dark:[filter:invert(1)_brightness(1.08)]"
                                 />
                               ) : null}
                             </div>
