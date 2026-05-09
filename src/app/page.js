@@ -7,13 +7,14 @@ import NewsRibbon from "@/components/NewsRibbon";
 import HeroReviews from "@/components/HeroReviews";
 import BrowsePanel from "@/components/BrowsePanel";
 import {
-  ArrowUpRight, ArrowRight, Sparkles, ChevronRight, Bookmark, MapPin, ShieldCheck, Star, BadgeCheck, Compass
+  ArrowUpRight, ArrowRight, Sparkles, ChevronRight, Bookmark, ShieldCheck, Star, BadgeCheck, Compass
 } from "lucide-react";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
 import HeroShowcase from "@/components/HeroShowcase";
 import HeroGridShowcase from "@/components/HeroGridShowcase";
 import CarCard from "@/components/CarCard";
+import PartnerDealershipsSection from "@/components/PartnerDealershipsSection";
 import TrackedLink from "@/components/TrackedLink";
 import { analyzePrice } from "@/lib/market";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
@@ -70,6 +71,37 @@ function getRotationOffset(size) {
   return (daySeed + slot) % size;
 }
 
+/** Homepage partner strip: featured and verified first, then inventory signal and boost. */
+function rankHomepageDealers(dealers) {
+  if (!dealers?.length) return [];
+  return [...dealers].sort((a, b) => {
+    if (a.featured !== b.featured) return a.featured ? -1 : 1;
+    if (a.verified !== b.verified) return a.verified ? -1 : 1;
+    const ca = a._count?.cars ?? 0;
+    const cb = b._count?.cars ?? 0;
+    if (cb !== ca) return cb - ca;
+    const boostDiff = (b.boostScore ?? 0) - (a.boostScore ?? 0);
+    if (boostDiff !== 0) return boostDiff;
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+}
+
+/** On desktop 3-column row, move the featured dealer to the center tile when possible. */
+function balanceFeaturedInFirstRow(dealers, rowSize = 3) {
+  if (!dealers?.length || dealers.length < rowSize) return [...dealers];
+  const first = dealers.slice(0, rowSize);
+  const rest = dealers.slice(rowSize);
+  const featuredIdx = first.findIndex((d) => d.featured);
+  if (featuredIdx === -1) return [...dealers];
+  if (featuredIdx === 1) return [...first, ...rest];
+  if (featuredIdx === 0) {
+    const [feat, second, third] = first;
+    return [second, feat, third, ...rest].filter(Boolean);
+  }
+  const [left, mid, feat] = first;
+  return [left, feat, mid, ...rest];
+}
+
 
 const getCachedData = unstable_cache(
   async () => {
@@ -109,7 +141,12 @@ const getCachedData = unstable_cache(
           users: { select: { avatarUrl: true }, take: 1 },
         },
         take: 8,
-        orderBy: [{ featured: "desc" }, { verified: "desc" }, { createdAt: "desc" }],
+        orderBy: [
+          { featured: "desc" },
+          { verified: "desc" },
+          { boostScore: "desc" },
+          { createdAt: "desc" },
+        ],
       }),
       db.article.findMany({
         orderBy: { publishedAt: "desc" },
@@ -297,6 +334,8 @@ export default async function HomePage() {
 
   const origin = getSiteOrigin();
 
+  const partnerDealers = balanceFeaturedInFirstRow(rankHomepageDealers(dealers || [])).slice(0, 6);
+
   return (
     <div className="min-h-screen pb-20 bg-white dark:bg-[#0a0a0a]">
       <script
@@ -437,54 +476,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Featured Dealerships */}
-      {dealers.length > 0 && (
-        <section className="py-10 sm:py-14 lg:py-18 xl:py-20 bg-[#F7FAFC] dark:bg-[#111111]">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[min(90vw,1600px)]">
-            <div className="mb-10 text-center max-w-3xl mx-auto">
-              <h2 className="text-3xl sm:text-4xl font-bold text-[#111827] dark:text-white mb-4">Partner Dealerships</h2>
-              <p className="text-[#718096] dark:text-slate-400 text-lg font-medium leading-relaxed">
-                We work exclusively with certified dealerships that meet our strict standards for
-                pricing transparency and vehicle verification.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-              {dealers.slice(0, 6).map((dealer) => (
-                <Link
-                  key={dealer.id}
-                  href={`/dealers/${dealer.slug}`}
-                  className="group block h-full bg-white dark:bg-zinc-900 border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 transition-all hover:shadow-xl"
-                  style={{ borderRadius: 'var(--radius)' }}
-                >
-                  <div className="flex items-center gap-4 mb-5">
-                    <div className="relative w-16 h-16 shrink-0 border border-[#EDF2F7] dark:border-slate-800 overflow-hidden flex items-center justify-center p-2" style={{ borderRadius: 'var(--radius)' }}>
-                      {dealer.logoUrl ? (
-                        <Image src={dealer.logoUrl} fill className="object-contain" alt="" sizes="64px" />
-                      ) : (
-                        <span className="text-xl font-bold text-[#111827] dark:text-white">{dealer.name[0]}</span>
-                      )}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-[#111827] dark:text-white text-lg mb-1 group-hover:text-[#38A169] transition-colors">{dealer.name}</h3>
-                      <p className="text-xs font-bold text-[#718096] dark:text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
-                        <MapPin className="w-3 h-3" /> {dealer.location}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-sm text-[#4A5568] dark:text-slate-300 leading-relaxed mb-6 line-clamp-2">
-                    {dealer.description || "Partnering with Welsh Motorhub to provide premium verified vehicles."}
-                  </p>
-                  <div className="pt-4 border-t border-[#EDF2F7] dark:border-slate-800 flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#111827] dark:text-slate-300 uppercase tracking-widest">{dealer._count?.cars || 0} Units</span>
-                    <span className="text-xs font-bold text-[#38A169] uppercase tracking-widest">Visit Showroom ›</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {partnerDealers.length > 0 && <PartnerDealershipsSection dealers={partnerDealers} />}
 
       {/* Editorial Information Block */}
       <section className="relative py-12 sm:py-16 lg:py-20 xl:py-24 bg-[#1A202C] text-white overflow-hidden">
