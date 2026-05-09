@@ -4,6 +4,7 @@
  * Usage:
  *   node scripts/rewatermark-existing-images.js
  *   node scripts/rewatermark-existing-images.js --limit=200
+ *   node scripts/rewatermark-existing-images.js --recent-cars=5
  *   node scripts/rewatermark-existing-images.js --dry-run
  *
  * This script fetches each current image, applies the latest watermark style
@@ -24,7 +25,14 @@ function parseArgs() {
   const dryRun = args.includes("--dry-run");
   const limitArg = args.find((arg) => arg.startsWith("--limit="));
   const limit = limitArg ? Number(limitArg.split("=")[1]) : null;
-  return { dryRun, limit: Number.isFinite(limit) ? limit : null };
+  const recentArg = args.find((arg) => arg.startsWith("--recent-cars="));
+  const recentCars = recentArg ? Number(recentArg.split("=")[1]) : null;
+  return {
+    dryRun,
+    limit: Number.isFinite(limit) ? limit : null,
+    recentCars:
+      Number.isFinite(recentCars) && recentCars > 0 ? Math.floor(recentCars) : null,
+  };
 }
 
 function storagePathFromUrl(url) {
@@ -43,23 +51,51 @@ function inferMimeType(url, contentTypeHeader) {
 }
 
 async function main() {
-  const { dryRun, limit } = parseArgs();
+  const { dryRun, limit, recentCars } = parseArgs();
   console.log(`[rewatermark] starting ${dryRun ? "(dry-run)" : ""}`);
 
-  const rows = await prisma.carImage.findMany({
-    include: {
-      car: {
-        select: {
-          year: true,
-          make: true,
-          model: true,
-          dealer: { select: { name: true } },
+  let rows;
+
+  if (recentCars != null) {
+    const recent = await prisma.car.findMany({
+      select: { id: true, createdAt: true },
+      orderBy: { createdAt: "desc" },
+      take: recentCars,
+    });
+    const carIds = recent.map((c) => c.id);
+    console.log(
+      `[rewatermark] scope recent-cars=${recentCars} matched=${carIds.length} listings`
+    );
+    rows = await prisma.carImage.findMany({
+      where: { carId: { in: carIds } },
+      include: {
+        car: {
+          select: {
+            year: true,
+            make: true,
+            model: true,
+            dealer: { select: { name: true } },
+          },
         },
       },
-    },
-    orderBy: { id: "asc" },
-    ...(limit ? { take: limit } : {}),
-  });
+      orderBy: [{ carId: "asc" }, { order: "asc" }],
+    });
+  } else {
+    rows = await prisma.carImage.findMany({
+      include: {
+        car: {
+          select: {
+            year: true,
+            make: true,
+            model: true,
+            dealer: { select: { name: true } },
+          },
+        },
+      },
+      orderBy: { id: "asc" },
+      ...(limit ? { take: limit } : {}),
+    });
+  }
 
   let scanned = 0;
   let updated = 0;
