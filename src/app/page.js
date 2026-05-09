@@ -308,7 +308,7 @@ export default async function HomePage() {
       />
       {/* Dynamic Hero Section */}
       <section className="relative pt-4 pb-8 md:pt-6 md:pb-10 lg:pt-8 lg:pb-12 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[min(90vw,1600px)] relative z-10">
           
           {/* Page Header - Full Width */}
           <div className="mb-6 md:mb-8 lg:mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center lg:text-left">
@@ -407,7 +407,7 @@ export default async function HomePage() {
       {/* Hot Deals / Trending Section */}
       {hotEnhanced.length > 0 && (
         <section className="py-16 sm:py-20 lg:py-26 xl:py-32 bg-gradient-to-b from-white via-red-50/45 to-slate-50/85 dark:from-[#0a0a0a] dark:via-[#160a0b] dark:to-[#0d0f10] border-y border-red-100/60 dark:border-red-950/40">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[min(90vw,1600px)]">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
               <div className="max-w-2xl">
                 <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#dc2626] dark:text-red-400 mb-2">Hot deals</p>
@@ -440,7 +440,7 @@ export default async function HomePage() {
       {/* Featured Dealerships */}
       {dealers.length > 0 && (
         <section className="py-10 sm:py-14 lg:py-18 xl:py-20 bg-[#F7FAFC] dark:bg-[#111111]">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[min(90vw,1600px)]">
             <div className="mb-10 text-center max-w-3xl mx-auto">
               <h2 className="text-3xl sm:text-4xl font-bold text-[#111827] dark:text-white mb-4">Partner Dealerships</h2>
               <p className="text-[#718096] dark:text-slate-400 text-lg font-medium leading-relaxed">
@@ -497,7 +497,7 @@ export default async function HomePage() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1A202C] via-[#1A202C]/80 to-transparent" />
         </div>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[min(90vw,1600px)] relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <p className="text-[#38A169] text-xs font-bold uppercase tracking-[0.32em] mb-5">The Difference</p>
@@ -533,7 +533,7 @@ export default async function HomePage() {
       {/* Fresh Arrivals Section */}
       {newEnhanced.length > 0 && (
         <section className="py-10 sm:py-14 lg:py-18 xl:py-20">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[min(90vw,1600px)]">
             <div className="flex items-end justify-between mb-7 sm:mb-9">
               <div>
                 <h2 className="text-3xl sm:text-5xl font-bold text-[#111827] dark:text-white mb-4">Fresh Arrivals</h2>
