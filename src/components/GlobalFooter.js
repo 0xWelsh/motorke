@@ -3,7 +3,7 @@ import { PUBLIC_SUPPORT_EMAIL } from "@/lib/site-contact";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { MessageCircle, Send, Camera, Share2, Mail, MapPin } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 
 export default function GlobalFooter() {
   const pathname = usePathname() || "";
@@ -46,8 +46,9 @@ export default function GlobalFooter() {
   ];
 
   return (
-    <footer className="bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white pt-16 pb-8 mt-auto border-t border-slate-200 dark:border-zinc-900">
-      <div className="container mx-auto px-6 max-w-7xl">
+    <footer className="relative mt-auto overflow-hidden border-t border-emerald-200/70 dark:border-emerald-900/50 bg-gradient-to-b from-emerald-50/90 via-white to-slate-50/80 dark:from-[#0c1a14] dark:via-[#0a0f0d] dark:to-[#060807] text-slate-900 dark:text-white pt-14 sm:pt-16 pb-8">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/35 to-transparent dark:via-emerald-500/25" aria-hidden />
+      <div className="container mx-auto px-6 max-w-7xl relative">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-14">
           
           {/* Brand Info */}
@@ -62,23 +63,29 @@ export default function GlobalFooter() {
                 />
               </div>
             </Link>
-            <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-sm mb-6">
-              Experience the future of automotive digital showrooms. Premium vehicles, 
-              verified dealers, and a seamless buying journey across East Africa.
+            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-sm mb-5">
+              Verified Kenyan inventory from real dealers — compare, contact, and buy with clarity.
             </p>
-            <div className="flex gap-4">
-              {[MessageCircle, Send, Camera, Share2].map((Icon, i) => (
-                <a key={i} href="#" className="w-10 h-10 flex items-center justify-center bg-slate-100 dark:bg-zinc-900 hover:bg-[#2F855A] hover:text-white text-slate-700 dark:text-slate-300 transition-all border border-slate-200 dark:border-zinc-800" style={{ borderRadius: 'var(--radius)' }}>
-                  <Icon size={18} />
-                </a>
-              ))}
+            <div className="flex flex-wrap items-center gap-3">
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 rounded-lg border border-emerald-600/40 bg-emerald-600/10 px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-emerald-800 transition-colors hover:bg-emerald-600 hover:text-white dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-200 dark:hover:bg-emerald-600 dark:hover:text-white"
+              >
+                Contact us
+              </Link>
+              <Link
+                href="/cars"
+                className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 underline-offset-4 transition-colors hover:text-[#2F855A] dark:text-slate-400 dark:hover:text-[#4ade80]"
+              >
+                Browse cars
+              </Link>
             </div>
           </div>
 
           {/* Links Columns */}
           {columns.map((col, i) => (
             <div key={i}>
-              <h4 className="text-[12px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-5">{col.title}</h4>
+              <h4 className="text-[12px] font-bold uppercase tracking-widest text-emerald-800/90 dark:text-emerald-400/90 mb-5">{col.title}</h4>
               <ul className="space-y-4">
                 {col.links.map((link, j) => (
                   <li key={j}>
@@ -93,8 +100,8 @@ export default function GlobalFooter() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-slate-200 dark:border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-slate-500 dark:text-slate-400 text-xs font-medium">
+        <div className="pt-8 border-t border-emerald-200/60 dark:border-emerald-900/40 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-slate-600 dark:text-slate-400 text-xs font-medium">
             © {currentYear} Welsh Motorhub Platforms. All rights reserved.
           </p>
           <div className="flex items-center gap-8 text-slate-500 dark:text-slate-400">

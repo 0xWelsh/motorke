@@ -93,7 +93,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
       ) : (
         <div className="space-y-6">
           {topCars.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
               {topCars.map((car) => (
                 <div key={`top-${car.id}`} className="space-y-2">
                   <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
@@ -105,7 +105,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
             </div>
           )}
           {lowerCars.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
               {lowerCars.map((car) => (
                 <div key={`lower-${car.id}`} className="space-y-2">
                   <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
