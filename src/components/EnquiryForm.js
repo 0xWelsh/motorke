@@ -172,7 +172,8 @@ export default function EnquiryForm({
     });
   }
 
-  const inputCls = "w-full bg-[#fbfcfe] dark:bg-zinc-900 border border-[#e2e8f0] dark:border-zinc-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-400 outline-none focus:border-black dark:focus:border-white transition-all";
+  const inputCls =
+    "w-full bg-[#fbfcfe] dark:bg-zinc-900 border border-[#e2e8f0] dark:border-zinc-800 px-3.5 py-2.5 sm:px-4 sm:py-3 text-[13px] sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 outline-none focus:border-black dark:focus:border-white transition-all";
 
   if (state === "sent") {
     return (
@@ -266,8 +267,7 @@ export default function EnquiryForm({
           <button
             type="submit"
             disabled={state === "sending"}
-            className="w-full bg-[#64748b] hover:bg-slate-600 disabled:opacity-50 text-white font-bold py-4 text-[11px] uppercase tracking-[0.15em] transition-all shadow-sm"
-            style={{ borderRadius: '2px' }}
+            className="w-full min-h-12 bg-[#64748b] hover:bg-slate-600 disabled:opacity-50 text-white font-bold py-3.5 sm:py-4 text-[11px] uppercase tracking-[0.15em] transition-all shadow-sm rounded-xl sm:rounded-sm"
           >
             {state === "sending" ? "Processing..." : "Submit Enquiry"}
           </button>
@@ -279,8 +279,7 @@ export default function EnquiryForm({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleWhatsApp}
-                className="flex items-center justify-center gap-2 bg-[#1cb558] hover:bg-emerald-600 text-white font-bold text-[10px] py-4 uppercase tracking-widest transition-all"
-                style={{ borderRadius: '2px' }}
+                className="flex min-h-12 items-center justify-center gap-2 bg-[#1cb558] hover:bg-emerald-600 text-white font-bold text-[10px] py-3.5 uppercase tracking-widest transition-all rounded-xl sm:rounded-sm"
               >
                 WhatsApp
               </a>
@@ -289,8 +288,7 @@ export default function EnquiryForm({
               <a
                 href={callLink}
                 onClick={handleCall}
-                className="flex items-center justify-center gap-2 bg-[#111827] dark:!bg-white hover:bg-black dark:hover:!bg-slate-200 text-white dark:!text-black font-bold text-[10px] py-4 uppercase tracking-widest transition-all"
-                style={{ borderRadius: '2px' }}
+                className="flex min-h-12 items-center justify-center gap-2 bg-[#111827] dark:!bg-white hover:bg-black dark:hover:!bg-slate-200 text-white dark:!text-black font-bold text-[10px] py-3.5 uppercase tracking-widest transition-all rounded-xl sm:rounded-sm"
               >
                 Call Now
               </a>

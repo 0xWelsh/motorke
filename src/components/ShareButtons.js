@@ -58,12 +58,12 @@ export default function ShareButtons({
   const waUrl = `https://wa.me/?text=${waText}`;
 
   return (
-    <div className="flex flex-wrap gap-2 justify-center">
+    <div className="flex w-full max-w-md flex-col gap-2.5 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-center">
       <a
         href={waUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center gap-1.5 text-xs bg-[#25D366]/12 border border-[#25D366]/25 text-[#128C3C] dark:text-[#25D366] hover:bg-[#25D366]/18 rounded-2xl px-3 py-2 font-semibold transition-colors"
+        className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 whitespace-nowrap text-xs bg-[#25D366]/12 border border-[#25D366]/25 text-[#128C3C] dark:text-[#25D366] hover:bg-[#25D366]/18 rounded-xl px-4 py-2.5 font-semibold transition-colors sm:flex-initial sm:rounded-2xl sm:py-2"
       >
         💬 Share on WhatsApp
       </a>
@@ -71,7 +71,7 @@ export default function ShareButtons({
         type="button"
         onClick={copyLink}
         disabled={!listUrl}
-        className="flex items-center gap-1.5 text-xs bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-700 hover:text-slate-900 dark:text-white hover:bg-slate-100 rounded-2xl px-3 py-2 font-semibold transition-colors disabled:opacity-50"
+        className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 whitespace-nowrap text-xs bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-700 hover:text-slate-900 dark:text-white hover:bg-slate-100 rounded-xl px-4 py-2.5 font-semibold transition-colors disabled:opacity-50 sm:flex-initial sm:rounded-2xl sm:py-2"
       >
         {copied ? "✓ Copied!" : "🔗 Copy listing link"}
       </button>

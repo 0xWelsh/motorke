@@ -274,9 +274,9 @@ export default async function CarDetailPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <div className="container mx-auto px-6 max-w-7xl pt-3 sm:pt-4 pb-20">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-3 sm:pt-4 pb-20">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-12">
+        <nav className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-8 sm:mb-12">
           <Link href="/" className="hover:opacity-70 transition-opacity">Home</Link>
           <span className="opacity-40">/</span>
           <Link href="/cars" className="hover:opacity-70 transition-opacity">Inventory</Link>
@@ -293,9 +293,9 @@ export default async function CarDetailPage({ params }) {
           </div>
 
           {/* BOTTOM SECTION: Details + Enquiry Form */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
             {/* Bottom Left: Title, Description, Core Details */}
-            <div className="lg:col-span-8 space-y-16">
+            <div className="lg:col-span-8 space-y-12 sm:space-y-16">
               <div>
                 <div className="flex items-center gap-4 mb-4">
                    <span className="bg-[#38A169]/10 text-[#38A169] text-[10px] font-black px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '2px' }}>
@@ -405,11 +405,19 @@ export default async function CarDetailPage({ params }) {
               </div>
             </div>
 
-            {/* Bottom Right: Enquiry Form */}
-            <div className="lg:col-span-4">
-               <div className="bg-white dark:bg-[#0a0a0a] border border-slate-100 dark:border-zinc-900 p-10 shadow-sm" style={{ borderRadius: '2px' }}>
-                  <div className="space-y-10">
-                    <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-[#38A169]">Send an Enquiry</h3>
+            {/* Bottom Right: enquiry + compare — stacked cards, mobile-first spacing */}
+            <div className="lg:col-span-4 flex flex-col gap-4 sm:gap-5">
+               <section className="bg-white dark:bg-[#0a0a0a] border border-slate-200/90 dark:border-zinc-800 rounded-2xl p-5 sm:p-8 lg:p-10 lg:rounded-sm shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.04]">
+                  <header className="mb-5 sm:mb-6 lg:mb-8">
+                    <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-[#38A169]">
+                      Send an Enquiry
+                    </h3>
+                    <p className="mt-2 text-[12px] sm:text-[13px] leading-snug text-slate-500 dark:text-slate-400">
+                      Reach <span className="font-semibold text-slate-700 dark:text-slate-300">{dealer.name}</span>
+                      {" "}about this car. Typical response within a few hours.
+                    </p>
+                  </header>
+                  <div>
                     <EnquiryForm
                         carId={car.id}
                         dealerId={dealer.id}
@@ -420,12 +428,12 @@ export default async function CarDetailPage({ params }) {
                       />
                   </div>
 
-                  <div className="mt-12 pt-10 border-t border-slate-50 dark:border-zinc-900/50 flex flex-col gap-6">
-                    <div className="px-5 py-3 bg-[#fbfcfe] dark:bg-zinc-900 border border-[#e2e8f0] dark:border-zinc-800 flex items-center justify-between" style={{ borderRadius: '2px' }}>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-[#38A169]">Reference ID</span>
-                        <span className="text-[10px] font-extrabold text-[#111827] dark:text-white">{car.id.slice(-8).toUpperCase()}</span>
+                  <div className="mt-8 pt-6 sm:mt-10 sm:pt-8 border-t border-slate-100 dark:border-zinc-800/80 flex flex-col gap-4 sm:gap-5">
+                    <div className="px-4 py-3 sm:px-5 sm:py-3.5 bg-[#f8fafc] dark:bg-zinc-900/80 border border-slate-200/80 dark:border-zinc-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-xl sm:rounded-sm">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-[#38A169] shrink-0">Reference ID</span>
+                        <span className="text-[11px] sm:text-[10px] font-mono font-extrabold text-[#111827] dark:text-white tracking-wide tabular-nums break-all text-left sm:text-right">{car.id.slice(-8).toUpperCase()}</span>
                     </div>
-                    <div className="py-2 flex items-center justify-center">
+                    <div className="flex items-center justify-center pt-1">
                         <ShareButtons
                           listingUrl={absoluteUrl(`/cars/${car.id}`)}
                           browseUrl={absoluteUrl("/cars")}
@@ -437,29 +445,57 @@ export default async function CarDetailPage({ params }) {
                         />
                     </div>
                   </div>
-               </div>
+               </section>
 
-               {/* Comparison Tool Shortcut */}
-               <div className="mt-8 px-6 py-5 bg-white dark:bg-[#0a0a0a] border border-slate-100 dark:border-zinc-900" style={{ borderRadius: '2px' }}>
-                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-[#38A169] mb-1">Match & Compare</p>
-                  <p className="text-[12px] text-slate-600 dark:text-slate-300 mb-4">Add this car to your compare sheet and view side-by-side specs.</p>
+               <section className="rounded-2xl lg:rounded-sm border border-slate-200/90 dark:border-zinc-800 bg-gradient-to-b from-emerald-50/50 via-white to-white dark:from-emerald-950/20 dark:via-[#0a0a0a] dark:to-[#0a0a0a] p-5 sm:p-6 ring-1 ring-black/[0.03] dark:ring-white/[0.04]">
+                  <div className="flex gap-3 mb-4">
+                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-600/15 text-[10px] font-black text-emerald-800 dark:text-emerald-300 border border-emerald-600/20" aria-hidden>
+                      VS
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#38A169] mb-1">Match &amp; Compare</p>
+                      <p className="text-[12px] sm:text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Add up to three cars and open a side-by-side spec sheet on any device.
+                      </p>
+                    </div>
+                  </div>
                   <CompareButton
                     car={compareCar}
-                    className="w-full h-11 inline-flex items-center justify-center bg-[#111827] text-white dark:bg-white dark:!text-black text-[10px] font-bold uppercase tracking-widest border border-[#111827] dark:border-white transition-transform hover:scale-[0.99]"
+                    className="w-full min-h-12 rounded-xl sm:rounded-sm inline-flex items-center justify-center bg-[#111827] text-white dark:bg-white dark:!text-black text-[10px] font-bold uppercase tracking-widest border border-[#111827] dark:border-white transition-transform active:scale-[0.99] hover:opacity-95"
                   />
-               </div>
+               </section>
             </div>
           </div>
         </div>
 
         {/* Similar Cars Section */}
         {similar.length > 0 && (
-          <div className="mt-16 sm:mt-20 pt-12 sm:pt-16 border-t border-[#EDF2F7] dark:border-zinc-800">
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-12">People Are Also Interested In</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="mt-12 sm:mt-20 pt-10 sm:pt-16 border-t border-[#EDF2F7] dark:border-zinc-800">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-4 mb-6 sm:mb-10">
+              <div>
+                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169]">People Are Also Interested In</h2>
+                <p className="mt-2 text-[13px] sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl leading-snug">
+                  Similar listings from our network — swipe sideways on your phone.
+                </p>
+              </div>
+              <Link
+                href="/cars"
+                className="shrink-0 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-[#38A169] transition-colors py-1"
+              >
+                Browse all →
+              </Link>
+            </div>
+            <div className="relative -mx-4 sm:mx-0">
+              <div className="flex md:grid md:grid-cols-3 gap-3 sm:gap-5 md:gap-8 overflow-x-auto md:overflow-visible px-4 sm:px-0 pb-2 md:pb-0 snap-x snap-mandatory md:snap-none scroll-px-4 no-scrollbar">
                {similar.map((sc) => (
-                 <CarCard key={sc.id} car={sc} />
+                 <div
+                   key={sc.id}
+                   className="snap-center shrink-0 w-[min(88vw,19.5rem)] sm:w-[min(88vw,20rem)] md:w-auto md:shrink md:min-w-0"
+                 >
+                   <CarCard car={sc} />
+                 </div>
                ))}
+              </div>
             </div>
           </div>
         )}
