@@ -4,8 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { formatCarPrice } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site-url";
-import { BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/constants";
 import InventoryToggle from "@/components/InventoryToggle";
+import PortalInventoryFilters from "@/components/PortalInventoryFilters";
 import InventorySharePrompt from "@/components/InventorySharePrompt";
 import { 
   Plus, 
@@ -212,7 +212,7 @@ export default async function InventoryPage({ searchParams }) {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:gap-8 mb-5 sm:mb-10">
         <div>
-          <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-1 sm:mb-2\">Inventory</h1>
+          <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-1 sm:mb-2">Inventory</h1>
           {hasAdvancedFilters ? (
             <div className="mt-2 flex items-center gap-2">
               <span className="inline-flex items-center gap-2 rounded-2xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-blue-700">
@@ -250,53 +250,25 @@ export default async function InventoryPage({ searchParams }) {
         </div>
       </div>
 
-      <form method="GET" className="mb-4 sm:mb-6 rounded-2xl border border-[#ddd4c8] bg-white p-2.5 sm:p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.04)]">
-        <input type="hidden" name="filter" value={filter} />
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-6 gap-2">
-          <input
-            name="search"
-            defaultValue={search}
-            placeholder="Search make, model, year..."
-            className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]"
-          />
-          <select name="make" defaultValue={make} className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]">
-            <option value="">All makes</option>
-            {makeOptions.map((value) => <option key={value} value={value}>{value}</option>)}
-          </select>
-          <select name="bodyType" defaultValue={bodyType} className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]">
-            <option value="">All body shapes</option>
-            {bodyOptions.map((value) => <option key={value} value={value}>{BODY_TYPE_LABELS[value] || value}</option>)}
-          </select>
-          <select name="fuelType" defaultValue={fuelType} className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]">
-            <option value="">All fuel types</option>
-            {fuelOptions.map((value) => <option key={value} value={value}>{FUEL_LABELS[value] || value}</option>)}
-          </select>
-          <select name="transmission" defaultValue={transmission} className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]">
-            <option value="">All transmissions</option>
-            {transmissionOptions.map((value) => <option key={value} value={value}>{TRANSMISSION_LABELS[value] || value}</option>)}
-          </select>
-          <select name="sort" defaultValue={sort} className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]">
-            <option value="newest">Newest first</option>
-            <option value="price_asc">Price low to high</option>
-            <option value="price_desc">Price high to low</option>
-            <option value="views_desc">Most viewed</option>
-          </select>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-6 gap-2 mt-2">
-          <input name="minPrice" type="number" defaultValue={minPrice ?? ""} placeholder="Min price" className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]" />
-          <input name="maxPrice" type="number" defaultValue={maxPrice ?? ""} placeholder="Max price" className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]" />
-          <select name="minYear" defaultValue={minYear ?? ""} className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]">
-            <option value="">Min year</option>
-            {yearOptions.map((value) => <option key={`min-${value}`} value={value}>{value}</option>)}
-          </select>
-          <select name="maxYear" defaultValue={maxYear ?? ""} className="h-10 px-3 border border-[#ddd4c8] text-[12px] font-medium outline-none focus:border-[#2F855A]">
-            <option value="">Max year</option>
-            {yearOptions.map((value) => <option key={`max-${value}`} value={value}>{value}</option>)}
-          </select>
-          <button type="submit" className="h-10 px-3 bg-[#111111] text-white text-[10px] font-black uppercase tracking-[0.12em]">Apply filters</button>
-          <Link href={`/portal/inventory?filter=${filter}`} className="h-10 px-3 border border-[#ddd4c8] text-[10px] font-black uppercase tracking-[0.12em] inline-flex items-center justify-center">Reset row</Link>
-        </div>
-      </form>
+      <PortalInventoryFilters
+        filter={filter}
+        search={search}
+        make={make}
+        bodyType={bodyType}
+        fuelType={fuelType}
+        transmission={transmission}
+        sort={sort}
+        minPrice={minPrice}
+        maxPrice={maxPrice}
+        minYear={minYear}
+        maxYear={maxYear}
+        makeOptions={makeOptions}
+        bodyOptions={bodyOptions}
+        fuelOptions={fuelOptions}
+        transmissionOptions={transmissionOptions}
+        yearOptions={yearOptions}
+        startExpanded={hasAdvancedFilters}
+      />
 
       <div className="mb-4 sm:mb-6 flex flex-wrap gap-1.5 sm:gap-2">
         {[
