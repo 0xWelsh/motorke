@@ -158,26 +158,29 @@ const getSimilarCars = unstable_cache(
   { revalidate: 3600, tags: ["cars"] }
 );
 
-const getCarReviews = unstable_cache(
-  async (carId) => {
-    const reviews = await db.carReview.findMany({
-      where: { carId },
-      include: {
-        user: { select: { name: true, avatarUrl: true } },
-      },
-      orderBy: { createdAt: "desc" },
-      take: 10,
-    });
+async function getCarReviews(carId) {
+  const cached = unstable_cache(
+    async () => {
+      const reviews = await db.carReview.findMany({
+        where: { carId },
+        include: {
+          user: { select: { name: true, avatarUrl: true } },
+        },
+        orderBy: { createdAt: "desc" },
+        take: 10,
+      });
 
-    const avgRating = reviews.length > 0
-      ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
-      : null;
+      const avgRating = reviews.length > 0
+        ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+        : null;
 
-    return { reviews, avgRating, count: reviews.length };
-  },
-  ["car-reviews"],
-  { revalidate: 300, tags: ["car-reviews"] }
-);
+      return { reviews, avgRating, count: reviews.length };
+    },
+    ["car-reviews", carId],
+    { revalidate: 300, tags: [`car-reviews:${carId}`] }
+  );
+  return cached();
+}
 
 export default async function CarDetailPage({ params }) {
   const { id } = await params;

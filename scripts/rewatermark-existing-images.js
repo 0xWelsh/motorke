@@ -9,6 +9,7 @@
  *   node scripts/rewatermark-existing-images.js --recent-cars=5
  *   node scripts/rewatermark-existing-images.js --dry-run
  *   node scripts/rewatermark-existing-images.js --retries=3
+ *   node scripts/rewatermark-existing-images.js --concurrency=4 --max-failures=15
  *
  * This script fetches each current image, applies the latest watermark style
  * using the dealership name, and uploads it back to the same
@@ -23,6 +24,8 @@ const prisma = new PrismaClient();
 
 const PUBLIC_MARKER = "/storage/v1/object/public/car-images/";
 const DEFAULT_RETRIES = 2;
+const DEFAULT_CONCURRENCY = 2;
+const DEFAULT_MAX_FAILURES = Infinity;
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -83,6 +86,18 @@ function parseArgs() {
   const fromDateArg = args.find((arg) => arg.startsWith("--from-date="));
   const fromDateRaw = fromDateArg ? fromDateArg.split("=")[1]?.trim() : null;
   const fromDate = parseIsoDateMaybe(fromDateRaw);
+  const concurrencyArg = args.find((arg) => arg.startsWith("--concurrency="));
+  const concurrencyRaw = concurrencyArg ? Number(concurrencyArg.split("=")[1]) : DEFAULT_CONCURRENCY;
+  const concurrency =
+    Number.isFinite(concurrencyRaw) && concurrencyRaw > 0
+      ? Math.floor(concurrencyRaw)
+      : DEFAULT_CONCURRENCY;
+  const maxFailuresArg = args.find((arg) => arg.startsWith("--max-failures="));
+  const maxFailuresRaw = maxFailuresArg ? Number(maxFailuresArg.split("=")[1]) : DEFAULT_MAX_FAILURES;
+  const maxFailures =
+    Number.isFinite(maxFailuresRaw) && maxFailuresRaw >= 0
+      ? Math.floor(maxFailuresRaw)
+      : DEFAULT_MAX_FAILURES;
   if (fromDateRaw && !fromDate) {
     throw new Error(`Invalid --from-date value "${fromDateRaw}". Use ISO format, e.g. 2026-05-01 or 2026-05-01T00:00:00Z`);
   }
@@ -94,6 +109,8 @@ function parseArgs() {
     retries,
     carId,
     fromDate,
+    concurrency,
+    maxFailures,
   };
 }
 
@@ -113,9 +130,9 @@ function inferMimeType(url, contentTypeHeader) {
 }
 
 async function main() {
-  const { dryRun, limit, recentCars, retries, carId, fromDate } = parseArgs();
+  const { dryRun, limit, recentCars, retries, carId, fromDate, concurrency, maxFailures } = parseArgs();
   console.log(
-    `[rewatermark] starting ${dryRun ? "(dry-run)" : ""} retries=${retries} ${carId ? `car-id=${carId}` : ""} ${fromDate ? `from-date=${fromDate.toISOString()}` : ""}`
+    `[rewatermark] starting ${dryRun ? "(dry-run)" : ""} retries=${retries} concurrency=${concurrency} max-failures=${Number.isFinite(maxFailures) ? maxFailures : "∞"} ${carId ? `car-id=${carId}` : ""} ${fromDate ? `from-date=${fromDate.toISOString()}` : ""}`
   );
 
   let rows;
@@ -189,61 +206,81 @@ async function main() {
   let failed = 0;
 
   const progressEvery = 40;
+  let stopRequested = false;
+  let nextIdx = 0;
 
-  for (const row of rows) {
-    scanned += 1;
-
+  async function processRow(row) {
     const storagePath = storagePathFromUrl(row.url);
     if (!storagePath) {
-      skipped += 1;
-      continue;
+      return { status: "skipped" };
     }
 
-    const watermarkText = row.car?.dealer?.name?.trim() || "WELSH MOTORS";
+    const watermarkText = row.car?.dealer?.name?.trim() || "WELSH MOTORHUB";
 
-    try {
-      const res = await withRetry(
-        () => fetch(row.url),
-        retries,
-        `fetch image=${row.id}`
-      );
-      if (!res.ok) {
-        failed += 1;
-        console.error(`[rewatermark] fetch failed (${res.status}) for image ${row.id}`);
-        continue;
-      }
+    const res = await withRetry(
+      () => fetch(row.url),
+      retries,
+      `fetch image=${row.id}`
+    );
+    if (!res.ok) {
+      throw new Error(`fetch failed (${res.status}) for image ${row.id}`);
+    }
 
-      const arrayBuffer = await res.arrayBuffer();
-      const inputBuffer = Buffer.from(arrayBuffer);
-      const mimeType = inferMimeType(row.url, res.headers.get("content-type"));
-      const outputBuffer = await applyListingWatermark(inputBuffer, mimeType, watermarkText);
+    const arrayBuffer = await res.arrayBuffer();
+    const inputBuffer = Buffer.from(arrayBuffer);
+    const mimeType = inferMimeType(row.url, res.headers.get("content-type"));
+    const outputBuffer = await applyListingWatermark(inputBuffer, mimeType, watermarkText);
 
-      if (dryRun) {
-        updated += 1;
-        continue;
-      }
-
+    if (!dryRun) {
       await withRetry(
         () => uploadImage(outputBuffer, storagePath, mimeType),
         retries,
         `upload image=${row.id}`
       );
-      updated += 1;
-    } catch (err) {
-      failed += 1;
-      console.error(`[rewatermark] failed image ${row.id}:`, err?.message || err);
     }
+    return { status: "updated" };
+  }
 
-    if (scanned % progressEvery === 0) {
-      console.log(
-        `[rewatermark] progress scanned=${scanned}/${rows.length} updated=${updated} skipped=${skipped} failed=${failed}`
-      );
+  async function worker() {
+    while (!stopRequested) {
+      const idx = nextIdx;
+      nextIdx += 1;
+      if (idx >= rows.length) return;
+
+      const row = rows[idx];
+      scanned += 1;
+
+      try {
+        const result = await processRow(row);
+        if (result.status === "updated") updated += 1;
+        if (result.status === "skipped") skipped += 1;
+      } catch (err) {
+        failed += 1;
+        console.error(`[rewatermark] failed image ${row.id}:`, err?.message || err);
+        if (failed >= maxFailures) {
+          stopRequested = true;
+          console.error(`[rewatermark] aborting: reached max-failures=${maxFailures}`);
+        }
+      }
+
+      if (scanned % progressEvery === 0 || stopRequested) {
+        console.log(
+          `[rewatermark] progress scanned=${scanned}/${rows.length} updated=${updated} skipped=${skipped} failed=${failed}`
+        );
+      }
     }
   }
+
+  const workerCount = Math.min(concurrency, Math.max(rows.length, 1));
+  await Promise.all(Array.from({ length: workerCount }, () => worker()));
 
   console.log(
     `[rewatermark] done scanned=${scanned} updated=${updated} skipped=${skipped} failed=${failed}${dryRun ? " (dry-run)" : ""}`
   );
+
+  if (failed >= maxFailures) {
+    process.exitCode = 1;
+  }
 }
 
 main()

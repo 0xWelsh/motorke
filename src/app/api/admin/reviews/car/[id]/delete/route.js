@@ -6,7 +6,13 @@ import { revalidateTag } from "next/cache";
 export async function POST(request, { params }) {
   await requireAdmin();
   const { id } = await params;
+  const existing = await db.carReview.findUnique({
+    where: { id },
+    select: { carId: true },
+  });
   await db.carReview.delete({ where: { id } });
-  revalidateTag("car-reviews");
+  if (existing?.carId) {
+    revalidateTag(`car-reviews:${existing.carId}`);
+  }
   return NextResponse.redirect(new URL("/admin/reviews", request.url));
 }

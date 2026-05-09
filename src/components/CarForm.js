@@ -583,7 +583,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           dealers.find((dealer) => dealer.id === selectedDealerId)?.name ||
           dealers?.[0]?.name ||
           "";
-        const watermarkText = selectedDealerName.trim() || "WELSH MOTORS";
+        const watermarkText = selectedDealerName.trim() || "WELSH MOTORHUB";
         formData.append("file", file);
         formData.append("watermarkText", watermarkText);
         const res = await fetch("/api/upload", { method: "POST", body: formData });

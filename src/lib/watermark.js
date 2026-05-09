@@ -12,7 +12,7 @@
  *
  * Controlled via env:
  *   LISTING_WATERMARK_ENABLED=false  → skip watermarking (default: enabled)
- *   LISTING_WATERMARK_TEXT           → override default text (default: "WELSH MOTORS")
+ *   LISTING_WATERMARK_TEXT           → override default text (default: "WELSH MOTORHUB")
  */
 
 import { readFileSync } from "node:fs";
@@ -20,7 +20,7 @@ import { join } from "node:path";
 import sharp from "sharp";
 
 const WATERMARK_ENABLED = process.env.LISTING_WATERMARK_ENABLED !== "false";
-const BRAND             = process.env.LISTING_WATERMARK_TEXT || "WELSH MOTORS";
+const BRAND             = process.env.LISTING_WATERMARK_TEXT || "WELSH MOTORHUB";
 
 /** Cached @font-face rules for SVG (empty string if files unavailable). */
 let embeddedInterCss = null;

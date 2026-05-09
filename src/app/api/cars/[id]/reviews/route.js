@@ -82,9 +82,9 @@ export async function POST(request, props) {
       },
     });
 
-    // Car detail uses unstable_cache with tag "car-reviews".
+    // Car detail uses unstable_cache with tag `car-reviews:${carId}`.
     // Invalidate right after write so router.refresh() can show the new review immediately.
-    revalidateTag("car-reviews");
+    revalidateTag(`car-reviews:${carId}`);
 
     console.log("Review created successfully:", review.id);
     return NextResponse.json(review, { status: 201 });
