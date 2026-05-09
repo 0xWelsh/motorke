@@ -1,6 +1,7 @@
 "use client";
 // src/components/BrowsePanel.js
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight, MapPin, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -43,21 +44,23 @@ function BrandLogo({ name, img }) {
   return (
     <Link
       href={`/cars?make=${encodeURIComponent(name)}`}
-      className="group flex flex-col items-center justify-center gap-2 p-3 w-[92px] sm:w-[100px] rounded-xl border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300"
+      className="group flex flex-col items-center justify-center gap-2.5 p-3 sm:p-3.5 w-[94px] sm:w-[104px] lg:w-[114px] rounded-xl border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300 shadow-[0_1px_0_rgba(0,0,0,0.02)]"
     >
-      <div className="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center">
+      <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 flex items-center justify-center">
         {failed ?
           <span className="text-lg font-black text-slate-700 dark:text-slate-300">{name[0]}</span>
         : (
-          <img
+          <Image
             src={src}
             alt={name}
+            width={56}
+            height={56}
             className="w-full h-full object-contain drop-shadow-sm group-hover:scale-105 transition-transform"
             onError={() => setFailed(true)}
           />
         )}
       </div>
-      <span className="text-[10px] sm:text-[11px] font-sans font-semibold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight">
+      <span className="text-[10px] sm:text-[11px] lg:text-xs font-sans font-semibold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight">
         {name}
       </span>
     </Link>
@@ -111,7 +114,7 @@ function ScrollableRow({ children }) {
           maskImage: `linear-gradient(to right, ${canScrollLeft ? 'transparent' : 'black'} 0%, black 48px, black calc(100% - 48px), ${canScrollRight ? 'transparent' : 'black'} 100%)`,
           WebkitMaskImage: `linear-gradient(to right, ${canScrollLeft ? 'transparent' : 'black'} 0%, black 48px, black calc(100% - 48px), ${canScrollRight ? 'transparent' : 'black'} 100%)`
         }}
-        className="flex overflow-x-auto snap-x snap-mandatory gap-2.5 sm:gap-3 pb-4 -mx-2 sm:-mx-4 px-2 sm:px-4 scroll-smooth [&::-webkit-scrollbar]:hidden"
+        className="flex overflow-x-auto snap-x snap-mandatory gap-2.5 sm:gap-3 lg:gap-3.5 pb-4 -mx-2 sm:-mx-4 px-2 sm:px-4 scroll-smooth [&::-webkit-scrollbar]:hidden"
       >
         {children}
       </div>
@@ -137,13 +140,15 @@ function BodyTypeCard({ label, value, img }) {
   return (
     <Link
       href={`/cars?bodyType=${value}`}
-      className="group flex flex-col items-center justify-center gap-2 p-2.5 w-[106px] sm:w-[114px] rounded-xl border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300"
+      className="group flex flex-col items-center justify-center gap-2 p-2.5 sm:p-3 w-[108px] sm:w-[116px] lg:w-[124px] rounded-xl border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300 shadow-[0_1px_0_rgba(0,0,0,0.02)]"
     >
-      <div className="w-[76px] h-9 sm:w-20 sm:h-10 flex items-center justify-center">
+      <div className="w-[76px] h-9 sm:w-20 sm:h-10 lg:w-24 lg:h-11 flex items-center justify-center">
         {!failed ? (
-          <img
+          <Image
             src={img}
             alt={label}
+            width={96}
+            height={44}
             className="max-h-full max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-md dark:invert"
             onError={() => setFailed(true)}
           />
@@ -151,7 +156,7 @@ function BodyTypeCard({ label, value, img }) {
           <span className="text-2xl">🚗</span>
         )}
       </div>
-      <span className="text-[10px] sm:text-[11px] font-black text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight">
+      <span className="text-[10px] sm:text-[11px] lg:text-xs font-black text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight">
         {label}
       </span>
     </Link>
@@ -223,9 +228,9 @@ export default function BrowsePanel() {
 
 
       {/* Popular Brands & Body Types - tighter grouping */}
-      <div className="flex flex-col gap-3 sm:gap-4">
-        <div className="rounded-xl border border-[#ebe5dc] dark:border-zinc-800 bg-white/70 dark:bg-[#0f0f0f]/70 p-2 sm:p-3">
-          <div className="flex items-center justify-between px-1 sm:px-2 mb-1.5">
+      <div className="flex flex-col gap-3.5 sm:gap-4">
+        <div className="rounded-xl border border-[#ebe5dc] dark:border-zinc-800 bg-gradient-to-b from-white/90 to-[#faf9f7] dark:from-[#131313]/95 dark:to-[#0f0f0f]/90 p-2.5 sm:p-3.5">
+          <div className="flex items-center justify-between px-1 sm:px-2 mb-2">
             <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
               Shop by brand
             </p>
@@ -244,8 +249,8 @@ export default function BrowsePanel() {
             ))}
           </ScrollableRow>
         </div>
-        <div className="rounded-xl border border-[#ebe5dc] dark:border-zinc-800 bg-white/70 dark:bg-[#0f0f0f]/70 p-2 sm:p-3">
-          <div className="flex items-center justify-between px-1 sm:px-2 mb-1.5">
+        <div className="rounded-xl border border-[#ebe5dc] dark:border-zinc-800 bg-gradient-to-b from-white/90 to-[#faf9f7] dark:from-[#131313]/95 dark:to-[#0f0f0f]/90 p-2.5 sm:p-3.5">
+          <div className="flex items-center justify-between px-1 sm:px-2 mb-2">
             <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
               Shop by shape
             </p>

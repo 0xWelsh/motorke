@@ -260,7 +260,7 @@ export default async function HomePage() {
   const spotlightPool = (hotEnhanced.length > 0 ? hotEnhanced : spotlightEnhanced).slice(0, 12);
   const spotlightRotated = rotateList(spotlightPool, getRotationOffset(spotlightPool.length));
   const heroCars = spotlightRotated.slice(0, 2);
-  const spotlightCards = spotlightRotated.slice(0, 3);
+  const spotlightCards = spotlightRotated.slice(0, 6);
   const heroPrimary = heroCars?.[0] || spotlightEnhanced?.[0] || null;
 
   const origin = getSiteOrigin();
@@ -372,26 +372,29 @@ export default async function HomePage() {
       </section>
 
 
-      {/* Spotlight / Trending Section */}
+      {/* Hot Deals / Trending Section */}
       {hotEnhanced.length > 0 && (
-        <section className="py-10 sm:py-14 lg:py-18 xl:py-20">
+        <section className="py-12 sm:py-16 lg:py-20 xl:py-24 bg-gradient-to-b from-white to-slate-50/70 dark:from-[#0a0a0a] dark:to-[#0d0f10]">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-              <div className="max-w-xl">
-                <h2 className="text-4xl sm:text-6xl font-normal editorial-heading text-[#111827] dark:text-white mb-4">Spotlight</h2>
-                <p className="text-[#718096] dark:text-slate-400 text-lg font-medium">Verified listings currently receiving the most interest from our network.</p>
+              <div className="max-w-2xl">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#38A169] mb-2">Hot deals</p>
+                <h2 className="text-4xl sm:text-6xl lg:text-7xl font-normal editorial-heading text-[#111827] dark:text-white mb-3">Spotlight</h2>
+                <p className="text-[#718096] dark:text-slate-400 text-base sm:text-lg font-medium">
+                  Verified listings currently receiving the most buyer interest and strongest value signals.
+                </p>
               </div>
               <TrackedLink
                 href="/cars?sort=popular"
                 eventName="homepage_view_trending_click"
                 eventPayload={{ area: "spotlight" }}
-                className="text-[#111827] dark:text-white text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:opacity-70 transition-opacity"
+                className="inline-flex h-11 items-center text-[#111827] dark:text-white text-xs font-bold uppercase tracking-widest gap-2 hover:opacity-70 transition-opacity"
               >
                 View Trending <ArrowUpRight className="w-4 h-4" />
               </TrackedLink>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5 items-stretch">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 items-stretch">
               {spotlightCards.map((car) => (
                 <div key={car.id} className="h-full">
                   <CarCard car={car} />
