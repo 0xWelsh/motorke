@@ -307,18 +307,24 @@ export default async function CarDetailPage({ params }) {
                   {car.make} {car.model} {car.variant ? `( ${car.variant} )` : ""}
                 </h1>
 
-                <div className="flex flex-wrap items-baseline gap-2 mb-8">
-                  <span className="text-lg sm:text-xl font-semibold tabular-nums text-[#111827] dark:text-white">
+                <div className="flex flex-wrap items-baseline gap-1.5 mb-8 text-lg sm:text-xl leading-none">
+                  <span className="font-semibold tabular-nums text-[#111827] dark:text-white leading-normal">
                     {formatCarPrice(car)}
                   </span>
-                  <div className="relative inline-flex shrink-0 translate-y-[1px] group/tooltip">
+                  <div className="relative inline-flex shrink-0 translate-y-[0.1em] group/tooltip">
                     <button
                       type="button"
                       aria-label="Pricing information"
                       aria-describedby="car-price-explainer"
-                      className="relative z-10 flex size-5 items-center justify-center rounded-full border border-[#38A169]/45 bg-[#38A169]/12 text-[9px] font-black text-[#38A169] shadow-sm outline-none ring-offset-2 ring-offset-white transition-colors hover:bg-[#38A169]/20 focus-visible:ring-2 focus-visible:ring-[#38A169] dark:ring-offset-[#0a0a0a] dark:bg-emerald-500/15 dark:text-[#6ee7b7] dark:border-[#38A169]/50"
+                      className="relative z-10 inline-flex h-[0.76em] w-[0.76em] min-h-[12px] min-w-[12px] items-center justify-center rounded-full border border-emerald-700/22 bg-emerald-600/[0.05] outline-none ring-offset-2 ring-offset-white transition-[background-color,border-color] hover:border-emerald-700/34 hover:bg-emerald-600/10 focus-visible:ring-2 focus-visible:ring-emerald-600/40 focus-visible:ring-offset-2 dark:border-emerald-500/26 dark:bg-emerald-500/[0.06] dark:ring-offset-[#0a0a0a] dark:hover:border-emerald-400/38 dark:hover:bg-emerald-500/12"
+                      style={{ fontSize: "inherit" }}
                     >
-                      i
+                      <span
+                        className="font-serif italic font-semibold leading-none text-[0.52em] text-emerald-800 dark:text-emerald-200 select-none translate-y-px"
+                        aria-hidden
+                      >
+                        i
+                      </span>
                     </button>
                     <span
                       id="car-price-explainer"
