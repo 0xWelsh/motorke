@@ -7,7 +7,16 @@ import { Star, Quote, ArrowRight, Flame } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function HeroGridShowcase({ cars = [], reviews = [] }) {
+  const [carIndex, setCarIndex] = useState(0);
   const [reviewIndex, setReviewIndex] = useState(0);
+
+  useEffect(() => {
+    if (!cars || cars.length < 2) return;
+    const timer = setInterval(() => {
+      setCarIndex((prev) => (prev + 1) % cars.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [cars]);
 
   useEffect(() => {
     if (!reviews || reviews.length === 0) return;
@@ -19,12 +28,12 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
 
   if (!cars || cars.length < 2) return null;
 
-  const mainCar = cars[0];
-  const secondaryCar = cars[1];
+  const mainCar = cars[carIndex % cars.length];
+  const secondaryCar = cars[(carIndex + 1) % cars.length];
   const currentReview = reviews[reviewIndex];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full h-full min-h-[320px] max-h-[440px] animate-in fade-in slide-in-from-right-8 duration-1000">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full h-full min-h-[380px] max-h-[520px] animate-in fade-in slide-in-from-right-8 duration-1000">
       
       {/* Primary Hot Deal - Large Vertical Card with Full Frame Image */}
       <Link 
@@ -54,7 +63,7 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
              <p className="text-[10px] font-sans font-semibold text-white/60 tracking-[0.35em] mb-2">
                {mainCar.year} {mainCar.make}
              </p>
-             <h4 className="text-2xl md:text-3xl font-sans font-bold text-white mb-4 tracking-tight leading-[0.8] group-hover:text-[#38A169] transition-colors line-clamp-1">
+             <h4 className="text-2xl md:text-[2rem] font-sans font-bold text-white mb-4 tracking-tight leading-[0.82] group-hover:text-[#38A169] transition-colors line-clamp-1">
                {mainCar.model}
              </h4>
              
@@ -92,7 +101,7 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
           </div>
           
           <div className="relative z-10 p-4 flex flex-col h-full">
-            <span className="bg-[#38A169]/20 text-[#38A169] text-[8px] font-black px-3 py-1 uppercase tracking-widest self-start border border-[#38A169]/30 mb-2">
+            <span className="bg-[#ff5a2f]/20 text-[#ff5a2f] text-[8px] font-black px-3 py-1 uppercase tracking-widest self-start border border-[#ff5a2f]/30 mb-2">
               Hot Deal
             </span>
             <h4 className="text-lg font-sans font-bold text-white tracking-tight mb-0.5 line-clamp-1">{secondaryCar.year} {secondaryCar.model}</h4>
@@ -143,6 +152,11 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
                className="h-full bg-[#38A169] w-full shadow-[0_0_15px_#38A169]"
              />
           </div>
+          {cars.length > 2 && (
+            <div className="absolute top-4 right-4 z-20 bg-black/35 text-white text-[9px] font-black tracking-[0.14em] px-2 py-1 uppercase border border-white/10">
+              {carIndex + 1}/{cars.length}
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -291,8 +291,8 @@ export default async function HomePage() {
 
   const spotlightPool = (hotEnhanced.length > 0 ? hotEnhanced : spotlightEnhanced).slice(0, 12);
   const spotlightRotated = rotateList(spotlightPool, getRotationOffset(spotlightPool.length));
-  const heroCars = spotlightRotated.slice(0, 2);
-  const spotlightCards = spotlightRotated.slice(0, 6);
+  const heroCars = spotlightRotated.slice(0, 8);
+  const spotlightCards = spotlightRotated.slice(0, 8);
   const heroPrimary = heroCars?.[0] || spotlightEnhanced?.[0] || null;
 
   const origin = getSiteOrigin();
@@ -325,7 +325,7 @@ export default async function HomePage() {
 
           {/* Side-by-Side Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 lg:items-start animate-in fade-in duration-1000 delay-200">
-            <div className="lg:col-span-7 xl:col-span-7 text-center lg:text-left">
+            <div className="lg:col-span-6 xl:col-span-6 text-center lg:text-left">
               <div className="w-full text-left">
                 <BrowsePanel />
               </div>
@@ -380,9 +380,9 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="hidden lg:block lg:col-span-5 xl:col-span-5 lg:pl-2 xl:pl-4">
+            <div className="hidden lg:block lg:col-span-6 xl:col-span-6 lg:pl-3 xl:pl-5">
               <HeroGridShowcase 
-                cars={heroCars.length >= 2 ? heroCars : spotlightEnhanced.slice(0, 2)} 
+                cars={heroCars.length >= 2 ? heroCars : spotlightEnhanced.slice(0, 6)} 
                 reviews={highlightReviews} 
               />
             </div>
@@ -406,7 +406,7 @@ export default async function HomePage() {
 
       {/* Hot Deals / Trending Section */}
       {hotEnhanced.length > 0 && (
-        <section className="py-14 sm:py-18 lg:py-24 xl:py-28 bg-gradient-to-b from-white via-red-50/40 to-slate-50/80 dark:from-[#0a0a0a] dark:via-[#160a0b] dark:to-[#0d0f10] border-y border-red-100/60 dark:border-red-950/40">
+        <section className="py-16 sm:py-20 lg:py-26 xl:py-32 bg-gradient-to-b from-white via-red-50/45 to-slate-50/85 dark:from-[#0a0a0a] dark:via-[#160a0b] dark:to-[#0d0f10] border-y border-red-100/60 dark:border-red-950/40">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
               <div className="max-w-2xl">
@@ -426,7 +426,7 @@ export default async function HomePage() {
               </TrackedLink>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 items-stretch">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 items-stretch">
               {spotlightCards.map((car) => (
                 <div key={car.id} className="h-full">
                   <CarCard car={car} />
