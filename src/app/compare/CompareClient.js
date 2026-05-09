@@ -1130,7 +1130,7 @@ export default function CompareClient({ initialCars }) {
     return (
       <>
         <div className="bg-white dark:bg-[#0a0a0a] min-h-screen pb-24">
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-10">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pt-4 sm:pt-5 pb-10">
             <div className="max-w-4xl">
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-4">
                 Compare / Selection
@@ -1293,10 +1293,10 @@ export default function CompareClient({ initialCars }) {
   return (
     <>
     <div className="bg-white dark:bg-[#0a0a0a] min-h-screen pb-24 lg:pb-0">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-6 sm:pb-10 min-w-0">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 pt-4 sm:pt-5 pb-6 sm:pb-10 min-w-0">
         <div className="xl:grid xl:grid-cols-12 xl:gap-8 xl:items-start">
           <div className="min-w-0 xl:col-span-8 2xl:col-span-9">
-            <div className="flex flex-col gap-5 sm:gap-6 lg:gap-8">
+            <div className="flex flex-col gap-4 sm:gap-5 lg:gap-6">
         {/* 1: Title + sticky controls */}
         <div
           data-tour="filters"
@@ -1304,7 +1304,7 @@ export default function CompareClient({ initialCars }) {
           style={currentTutorialKey === "filters" ? { borderRadius: "var(--radius)" } : undefined}
         >
           <div className="max-w-3xl">
-            <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-4 sm:mb-5">
+            <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-3 sm:mb-4">
               <span>Compare</span>
               <span>/</span>
               <span className="text-[#111827] dark:text-white">Vehicles</span>
@@ -1318,7 +1318,7 @@ export default function CompareClient({ initialCars }) {
           </div>
 
           {fullComparedCars.length > 0 && (
-            <div className="mt-5 sm:mt-7 w-full" aria-label="Vehicles in this comparison">
+            <div className="mt-4 sm:mt-5 w-full" aria-label="Vehicles in this comparison">
               <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2.5">In this comparison</p>
               <div className="flex flex-wrap items-center gap-0 sm:gap-1 pl-0.5">
                 {fullComparedCars.map((car) => {
@@ -1353,7 +1353,7 @@ export default function CompareClient({ initialCars }) {
             </div>
           )}
 
-          <div className="sticky top-0 z-40 mt-5 -mx-4 px-4 sm:-mx-6 sm:px-6 py-2.5 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md border-b border-slate-200/90 dark:border-slate-800/90 shadow-sm sm:mt-6 lg:static lg:mx-0 lg:px-0 lg:py-0 lg:bg-transparent lg:backdrop-blur-none lg:border-0 lg:shadow-none">
+          <div className="sticky top-0 z-40 mt-4 -mx-4 px-4 sm:-mx-6 sm:px-6 py-2 sm:py-2.5 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md border-b border-slate-200/90 dark:border-slate-800/90 shadow-sm sm:mt-5 lg:static lg:mx-0 lg:px-0 lg:py-0 lg:bg-transparent lg:backdrop-blur-none lg:border-0 lg:shadow-none">
             <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 lg:hidden">View &amp; filter</p>
             <div className="flex flex-nowrap items-center gap-2 overflow-x-auto no-scrollbar pb-0.5 -mb-0.5">
             <button
