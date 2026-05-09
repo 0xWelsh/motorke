@@ -40,7 +40,7 @@ export default function CarReviewForm({ carId, onReviewSubmitted }) {
       setRating(0);
       setComment("");
       router.refresh();
-      if (onReviewSubmitted) onReviewSubmitted();
+      if (onReviewSubmitted) onReviewSubmitted(data);
       setTimeout(() => setSuccess(false), 5000);
     } catch (err) {
       console.error("Review submission error:", err);

@@ -2,6 +2,7 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { getSessionFromRequest } from "@/lib/auth";
+import { revalidateTag } from "next/cache";
 
 export async function GET(request, props) {
   try {
@@ -80,6 +81,10 @@ export async function POST(request, props) {
         user: { select: { id: true, name: true, avatarUrl: true } },
       },
     });
+
+    // Car detail uses unstable_cache with tag "car-reviews".
+    // Invalidate right after write so router.refresh() can show the new review immediately.
+    revalidateTag("car-reviews");
 
     console.log("Review created successfully:", review.id);
     return NextResponse.json(review, { status: 201 });
