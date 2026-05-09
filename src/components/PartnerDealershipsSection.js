@@ -5,30 +5,10 @@ import {
   Car,
   Handshake,
   MapPin,
-  ShieldCheck,
-  Tag,
 } from "lucide-react";
 import TrackedLink from "@/components/TrackedLink";
 
 const PARTNER_BG = "/images/backgrounds/car-dealership.jpg";
-
-const PILLARS = [
-  {
-    title: "Verified dealers",
-    description: "Every showroom is reviewed before they can list live inventory on the hub.",
-    Icon: ShieldCheck,
-  },
-  {
-    title: "Transparent pricing",
-    description: "We prioritise listings where pricing and fees are stated clearly for buyers.",
-    Icon: Tag,
-  },
-  {
-    title: "Quality assured",
-    description: "Cars are uploaded by the dealer — not scraped — so what you see reflects real stock.",
-    Icon: BadgeCheck,
-  },
-];
 
 function UnitCount({ count }) {
   const n = count ?? 0;
@@ -68,7 +48,7 @@ export default function PartnerDealershipsSection({ dealers }) {
       </div>
 
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 max-w-[min(90vw,1600px)]">
-        <div className="mx-auto mb-10 max-w-3xl text-center lg:mb-12">
+        <div className="mx-auto mb-8 max-w-3xl text-center lg:mb-10">
           <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#C6F6D5] bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[#276749] shadow-sm dark:border-emerald-900/50 dark:bg-zinc-900 dark:text-emerald-400">
             <Handshake className="h-3.5 w-3.5" aria-hidden />
             Trusted partners
@@ -81,22 +61,6 @@ export default function PartnerDealershipsSection({ dealers }) {
             We work exclusively with certified dealerships that meet our standards for verification,
             pricing transparency, and how inventory is presented to buyers.
           </p>
-        </div>
-
-        <div className="mx-auto mb-12 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-3 lg:mb-14">
-          {PILLARS.map(({ title, description, Icon }) => (
-            <div
-              key={title}
-              className="rounded-2xl border border-[#E2E8F0] bg-white/80 p-5 text-center shadow-sm backdrop-blur-sm dark:border-slate-800 dark:bg-zinc-900/80 sm:text-left"
-              style={{ borderRadius }}
-            >
-              <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-[#E6FFFA] text-[#276749] dark:bg-emerald-950/50 dark:text-emerald-400 sm:mx-0">
-                <Icon className="h-5 w-5" aria-hidden />
-              </div>
-              <h3 className="mb-1.5 text-sm font-bold text-[#2F855A] dark:text-emerald-400">{title}</h3>
-              <p className="text-sm leading-relaxed text-[#718096] dark:text-slate-400">{description}</p>
-            </div>
-          ))}
         </div>
 
         <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
