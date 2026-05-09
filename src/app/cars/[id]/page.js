@@ -486,13 +486,15 @@ export default async function CarDetailPage({ params }) {
               </Link>
             </div>
             <div className="relative -mx-4 sm:mx-0">
-              <div className="flex md:grid md:grid-cols-3 gap-3 sm:gap-5 md:gap-8 overflow-x-auto md:overflow-visible px-4 sm:px-0 pb-2 md:pb-0 snap-x snap-mandatory md:snap-none scroll-px-4 no-scrollbar">
+              <div className="flex md:grid md:grid-cols-3 gap-3 sm:gap-5 md:gap-8 overflow-x-auto md:overflow-visible px-4 sm:px-0 pb-2 md:pb-0 snap-x snap-mandatory md:snap-none scroll-px-4 no-scrollbar items-stretch">
                {similar.map((sc) => (
                  <div
                    key={sc.id}
-                   className="snap-center shrink-0 w-[min(88vw,19.5rem)] sm:w-[min(88vw,20rem)] md:w-auto md:shrink md:min-w-0"
+                   className="snap-center shrink-0 w-[min(88vw,19.5rem)] sm:w-[min(88vw,20rem)] md:w-auto md:shrink md:min-w-0 self-stretch"
                  >
-                   <CarCard car={sc} />
+                   <div className="h-full min-h-[23.5rem] sm:min-h-[24.5rem] md:min-h-[25rem]">
+                     <CarCard car={sc} />
+                   </div>
                  </div>
                ))}
               </div>
