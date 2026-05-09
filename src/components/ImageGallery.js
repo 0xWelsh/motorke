@@ -4,19 +4,35 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
-import { Share2, X } from "lucide-react";
+import { Share2, X, ChevronLeft, ChevronRight } from "lucide-react";
+
+const LIGHTBOX_AUTO_MS = 4200;
 
 export default function ImageGallery({ images, title }) {
   const primaryIdx = images?.findIndex((img) => img.isPrimary) ?? -1;
   const initialActive = primaryIdx >= 0 ? primaryIdx : 0;
   const [active, setActive] = useState(initialActive);
   const [lightbox, setLightbox] = useState(false);
+  /** User took manual control (arrows / swipe / thumbs / keys); stop autoplay until lightbox reopens. */
+  const [slideshowPaused, setSlideshowPaused] = useState(false);
   const touchStartX = useRef(null);
 
   const prev = useCallback(() =>
     setActive((i) => (i === 0 ? images.length - 1 : i - 1)), [images.length]);
   const next = useCallback(() =>
     setActive((i) => (i === images.length - 1 ? 0 : i + 1)), [images.length]);
+
+  useEffect(() => {
+    if (lightbox) setSlideshowPaused(false);
+  }, [lightbox]);
+
+  useEffect(() => {
+    if (!lightbox || images.length < 2 || slideshowPaused) return undefined;
+    const id = window.setInterval(() => {
+      setActive((i) => (i === images.length - 1 ? 0 : i + 1));
+    }, LIGHTBOX_AUTO_MS);
+    return () => window.clearInterval(id);
+  }, [lightbox, images.length, slideshowPaused, active]);
 
   const handleTouchStart = (e) => {
     touchStartX.current = e.changedTouches?.[0]?.clientX ?? null;
@@ -29,6 +45,7 @@ export default function ImageGallery({ images, title }) {
     touchStartX.current = null;
 
     if (Math.abs(delta) < 48) return;
+    if (lightbox) setSlideshowPaused(true);
     if (delta > 0) next();
     else prev();
   };
@@ -36,8 +53,14 @@ export default function ImageGallery({ images, title }) {
   useEffect(() => {
     if (!lightbox) return;
     const handler = (e) => {
-      if (e.key === "ArrowLeft") prev();
-      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") {
+        setSlideshowPaused(true);
+        prev();
+      }
+      if (e.key === "ArrowRight") {
+        setSlideshowPaused(true);
+        next();
+      }
       if (e.key === "Escape") setLightbox(false);
     };
     window.addEventListener("keydown", handler);
@@ -346,17 +369,21 @@ export default function ImageGallery({ images, title }) {
 
           {/* Main Visual Stage */}
           <div 
-            className="relative w-full flex-1 flex items-center justify-center px-4 sm:px-12"
+            className="relative w-full flex-1 flex items-center justify-center px-14 sm:px-16"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            {/* Desktop Navigation Arrows */}
             <button
-              onClick={(e) => { e.stopPropagation(); prev(); }}
-              className="hidden sm:flex absolute left-4 w-12 h-12 items-center justify-center text-white/30 hover:text-white transition-all transform hover:scale-110"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSlideshowPaused(true);
+                prev();
+              }}
+              className="flex absolute left-1 sm:left-4 z-[115] min-h-11 min-w-11 sm:min-h-12 sm:min-w-12 items-center justify-center rounded-full bg-black/55 text-white shadow-lg backdrop-blur-[2px] transition-colors hover:bg-black/75 active:scale-95"
               aria-label="Previous image"
             >
-              <span className="text-4xl">‹</span>
+              <ChevronLeft className="h-7 w-7 sm:h-8 sm:w-8 opacity-95" strokeWidth={2} aria-hidden />
             </button>
 
             <div className="relative w-full h-[60vh] sm:h-[80vh] flex items-center justify-center">
@@ -372,11 +399,16 @@ export default function ImageGallery({ images, title }) {
             </div>
 
             <button
-              onClick={(e) => { e.stopPropagation(); next(); }}
-              className="hidden sm:flex absolute right-4 w-12 h-12 items-center justify-center text-white/30 hover:text-white transition-all transform hover:scale-110"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSlideshowPaused(true);
+                next();
+              }}
+              className="flex absolute right-1 sm:right-4 z-[115] min-h-11 min-w-11 sm:min-h-12 sm:min-w-12 items-center justify-center rounded-full bg-black/55 text-white shadow-lg backdrop-blur-[2px] transition-colors hover:bg-black/75 active:scale-95"
               aria-label="Next image"
             >
-              <span className="text-4xl">›</span>
+              <ChevronRight className="h-7 w-7 sm:h-8 sm:w-8 opacity-95" strokeWidth={2} aria-hidden />
             </button>
           </div>
 
@@ -386,7 +418,11 @@ export default function ImageGallery({ images, title }) {
               {images.map((img, i) => (
                 <button
                   key={`thumb-${i}`}
-                  onClick={() => setActive(i)}
+                  type="button"
+                  onClick={() => {
+                    setSlideshowPaused(true);
+                    setActive(i);
+                  }}
                   className={`relative flex-shrink-0 w-16 h-12 sm:w-20 sm:h-14 overflow-hidden border-2 transition-all ${
                     i === active 
                       ? "border-white opacity-100 scale-105" 
@@ -407,10 +443,15 @@ export default function ImageGallery({ images, title }) {
               ))}
             </div>
             {/* Counters */}
-            <div className="mt-4 text-center">
+            <div className="mt-4 space-y-1 text-center">
                <span className="text-[10px] font-black tracking-[0.2em] text-white/40 uppercase">
                  Image {active + 1} of {images.length}
                </span>
+               {images.length > 1 && !slideshowPaused && (
+                 <p className="text-[9px] font-semibold tracking-wide text-white/35 px-4">
+                   Auto slideshow · swipe or tap arrows to pause
+                 </p>
+               )}
             </div>
           </div>
         </div>
