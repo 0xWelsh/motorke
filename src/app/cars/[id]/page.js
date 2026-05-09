@@ -28,6 +28,7 @@ import {
   meaningfulFeatureList,
   positiveNum,
 } from "@/lib/car-display";
+import { specIconSrcForDetailLabel } from "@/lib/spec-icons";
 import { FaWhatsapp } from "react-icons/fa";
 
 export async function generateMetadata({ params }) {
@@ -361,13 +362,36 @@ export default async function CarDetailPage({ params }) {
 
                 <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
                    <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-6">Vehicle Details</h2>
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-0 text-[13px]">
-                      {detailSpecs.map((item, idx) => (
-                        <div key={item.label} className={`flex justify-between items-center gap-4 py-4 border-b border-slate-50 dark:border-zinc-900/50 ${idx < 2 ? "border-t" : ""}`}>
-                           <span className="font-bold text-slate-400 dark:text-slate-600 shrink-0">{item.label}</span>
-                           <span className="font-extrabold text-[#111827] dark:text-white text-right tabular-nums">{item.value}</span>
-                        </div>
-                      ))}
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-20 gap-y-0 text-[13px]">
+                      {detailSpecs.map((item, idx) => {
+                        const iconSrc = specIconSrcForDetailLabel(item.label);
+                        return (
+                          <div
+                            key={item.label}
+                            className={`flex items-center gap-3 md:gap-4 py-4 border-b border-slate-50 dark:border-zinc-900/50 ${idx < 2 ? "border-t border-slate-50 dark:border-zinc-900/50" : ""}`}
+                          >
+                            <div
+                              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${
+                                iconSrc
+                                  ? "bg-[#f7faf8] dark:bg-zinc-900/90 ring-1 ring-slate-200/80 dark:ring-zinc-800"
+                                  : ""
+                              }`}
+                            >
+                              {iconSrc ? (
+                                <Image
+                                  src={iconSrc}
+                                  alt=""
+                                  width={28}
+                                  height={28}
+                                  className="object-contain opacity-[0.92] dark:opacity-95"
+                                />
+                              ) : null}
+                            </div>
+                            <span className="min-w-0 font-bold text-slate-400 dark:text-slate-600 shrink-0">{item.label}</span>
+                            <span className="min-w-0 font-extrabold text-[#111827] dark:text-white text-right tabular-nums ml-auto pl-2">{item.value}</span>
+                          </div>
+                        );
+                      })}
                    </div>
                 </div>
               </div>
