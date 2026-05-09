@@ -49,7 +49,7 @@ export default function GlobalFooter() {
     <footer className="relative mt-auto overflow-hidden border-t border-emerald-200/70 dark:border-emerald-900/50 bg-gradient-to-b from-emerald-50/90 via-white to-slate-50/80 dark:from-[#0c1a14] dark:via-[#0a0f0d] dark:to-[#060807] text-slate-900 dark:text-white pt-14 sm:pt-16 pb-8">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/35 to-transparent dark:via-emerald-500/25" aria-hidden />
       <div className="container mx-auto px-6 max-w-7xl relative">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-6 gap-y-8 lg:gap-10 mb-14">
           
           {/* Brand Info */}
           <div className="lg:col-span-2">
@@ -82,21 +82,28 @@ export default function GlobalFooter() {
             </div>
           </div>
 
-          {/* Links Columns */}
-          {columns.map((col, i) => (
-            <div key={i}>
-              <h4 className="text-[12px] font-bold uppercase tracking-widest text-emerald-800/90 dark:text-emerald-400/90 mb-5">{col.title}</h4>
-              <ul className="space-y-4">
-                {col.links.map((link, j) => (
-                  <li key={j}>
-                    <Link href={link.href} className="text-slate-600 dark:text-slate-300 hover:text-[#2F855A] dark:hover:text-[#4ade80] text-sm transition-colors font-medium">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Link columns: 3-up on small screens, row slots on lg via contents */}
+          <div className="grid grid-cols-3 gap-x-3 sm:gap-x-6 md:gap-x-8 lg:contents">
+            {columns.map((col, i) => (
+              <div key={i} className="min-w-0">
+                <h4 className="text-[11px] sm:text-[12px] font-bold uppercase tracking-wide sm:tracking-widest text-emerald-800/90 dark:text-emerald-400/90 mb-3 sm:mb-5">
+                  {col.title}
+                </h4>
+                <ul className="space-y-2.5 sm:space-y-4">
+                  {col.links.map((link, j) => (
+                    <li key={j}>
+                      <Link
+                        href={link.href}
+                        className="text-slate-600 dark:text-slate-300 hover:text-[#2F855A] dark:hover:text-[#4ade80] text-xs sm:text-sm transition-colors font-medium leading-snug"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Bottom Bar */}
