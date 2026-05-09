@@ -2,7 +2,6 @@
 import { PUBLIC_SUPPORT_EMAIL } from "@/lib/site-contact";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
 import { Mail, MapPin } from "lucide-react";
 
 export default function GlobalFooter() {
@@ -53,15 +52,13 @@ export default function GlobalFooter() {
           
           {/* Brand Info */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-block mb-6 transition-transform active:scale-95">
-              <div className="relative h-8 w-32">
-                <Image
-                  src="/logos/logo-dark.png"
-                  alt="Welsh Motorhub"
-                  fill
-                  className="object-contain"
-                />
-              </div>
+            <Link href="/" className="inline-flex flex-col gap-1.5 mb-6 transition-transform active:scale-95">
+              <span className="text-[11px] font-black uppercase tracking-[0.24em] text-slate-900 dark:text-white">
+                Welsh Motors
+              </span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700/90 dark:text-emerald-400/90">
+                Motorhub
+              </span>
             </Link>
             <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-sm mb-5">
               Verified Kenyan inventory from real dealers — compare, contact, and buy with clarity.
