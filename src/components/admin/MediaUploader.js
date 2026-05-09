@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { UploadCloud, CheckCircle2, Crown, Info, X } from "lucide-react";
+import { UploadCloud, CheckCircle2, Crown, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const LONG_PRESS_MS = 450;
@@ -31,6 +31,8 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
     )
   );
   const [liftedId, setLiftedId] = useState(null);
+  /** Checked = marked to remove once user taps “Remove marked”. */
+  const [markedForRemoval, setMarkedForRemoval] = useState(() => new Set());
 
   const filesRef = useRef(files);
   const tileRefs = useRef(new Map());
@@ -38,6 +40,13 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
 
   useEffect(() => {
     filesRef.current = files;
+  }, [files]);
+
+  useEffect(() => {
+    setMarkedForRemoval((prev) => {
+      const next = new Set([...prev].filter((id) => files.some((f) => f.id === id)));
+      return next.size === prev.size && [...prev].every((id) => next.has(id)) ? prev : next;
+    });
   }, [files]);
 
   useEffect(() => {
@@ -78,6 +87,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
           }))
         )
       );
+      setMarkedForRemoval(new Set());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally compares against latest `files` without listing it
   }, [initialImages]);
@@ -121,11 +131,33 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
     [handleFiles]
   );
 
-  const removeFile = (id) => {
-    const file = files.find((f) => f.id === id);
-    if (file?.preview && !file.url) URL.revokeObjectURL(file.preview);
-    syncFiles(files.filter((f) => f.id !== id));
-  };
+  const toggleMarkedForRemoval = useCallback((id, checked) => {
+    setMarkedForRemoval((prev) => {
+      const next = new Set(prev);
+      if (checked) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  }, []);
+
+  const markedRef = useRef(markedForRemoval);
+  useEffect(() => {
+    markedRef.current = markedForRemoval;
+  }, [markedForRemoval]);
+
+  const removeMarkedFiles = useCallback(() => {
+    const toRemove = markedRef.current;
+    if (toRemove.size === 0) return;
+    const cur = filesRef.current;
+    toRemove.forEach((id) => {
+      const file = cur.find((f) => f.id === id);
+      if (file?.preview && !file.url) URL.revokeObjectURL(file.preview);
+    });
+    syncFiles(normalizeCoverOrder(cur.filter((f) => !toRemove.has(f.id))));
+    setMarkedForRemoval(new Set());
+  }, [syncFiles]);
+
+  const clearMarkedSelection = useCallback(() => setMarkedForRemoval(new Set()), []);
 
   const clearAllFiles = () => {
     const ok = window.confirm("Remove all selected listing photos?");
@@ -134,6 +166,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
       if (file?.preview && !file.url) URL.revokeObjectURL(file.preview);
     });
     syncFiles([]);
+    setMarkedForRemoval(new Set());
   };
 
   const setTileEl = useCallback((id, el) => {
@@ -225,6 +258,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
   const renderPhotoTile = (file, layout) => {
     const isHero = layout === "hero";
     const isLifted = liftedId === file.id;
+    const isMarked = markedForRemoval.has(file.id);
     return (
       <motion.div
         layout
@@ -243,27 +277,39 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
         } ${
           isLifted
             ? "z-50 border-emerald-500 shadow-2xl ring-2 ring-emerald-500/40"
-            : "border-slate-200 dark:border-slate-800 active:scale-[0.99]"
+            : isMarked
+              ? "border-rose-400 ring-2 ring-rose-400/55"
+              : "border-slate-200 dark:border-slate-800 active:scale-[0.99]"
         }`}
         style={{ cursor: isLifted ? "grabbing" : "grab" }}
       >
         <img src={file.preview} alt="" draggable={false} className="w-full h-full object-cover pointer-events-none" />
 
-        <button
-          type="button"
-          title="Remove photo"
-          aria-label="Remove photo"
-          className="absolute top-2 right-2 z-20 flex h-8 w-8 items-center justify-center rounded-[4px] border-2 border-white bg-black/55 text-white shadow-md backdrop-blur-[2px] hover:bg-rose-600 hover:border-white active:scale-95"
-          onPointerDown={(ev) => {
-            ev.stopPropagation();
-          }}
-          onClick={(ev) => {
-            ev.stopPropagation();
-            removeFile(file.id);
-          }}
+        {isMarked && (
+          <div className="absolute inset-0 z-10 bg-rose-950/30 pointer-events-none flex items-center justify-center p-2">
+            <span className="text-[9px] font-black uppercase tracking-widest text-white drop-shadow-md text-center leading-tight">
+              Tick off to undo, or Remove marked
+            </span>
+          </div>
+        )}
+
+        <label
+          className="absolute top-2 right-2 z-20 flex h-9 w-9 cursor-pointer items-center justify-center rounded-md border-2 border-white bg-white shadow-md backdrop-blur-sm dark:bg-[#151515]"
+          title="Tick to queue this photo for removal (untick to cancel)"
+          onPointerDown={(ev) => ev.stopPropagation()}
+          onClick={(ev) => ev.stopPropagation()}
         >
-          <X size={15} strokeWidth={2.5} aria-hidden />
-        </button>
+          <input
+            type="checkbox"
+            checked={isMarked}
+            onChange={(ev) => {
+              ev.stopPropagation();
+              toggleMarkedForRemoval(file.id, ev.target.checked);
+            }}
+            className="h-5 w-5 rounded-[3px] border-2 border-slate-400 text-rose-600 accent-rose-600 focus:ring-2 focus:ring-rose-500/40 focus:ring-offset-1 focus:ring-offset-white dark:border-slate-500 dark:focus:ring-offset-[#151515]"
+            aria-label="Mark photo for removal"
+          />
+        </label>
 
         {file.isPrimary && (
           <div className="absolute top-2 left-2 inline-flex items-center gap-1.5 px-2 py-1 bg-[#2F855A] text-white rounded-lg shadow-lg border border-white/20 pointer-events-none">
@@ -323,7 +369,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
               <div className="w-2 h-2 rounded-full bg-[#2F855A]" />
               <h3 className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Photos</h3>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center justify-end gap-2">
               <div className="px-4 py-1.5 bg-slate-100 dark:bg-[#111111] rounded-full">
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                   {files.length} / {maxFiles}
@@ -331,10 +377,26 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
               </div>
               <button
                 type="button"
-                onClick={clearAllFiles}
-                className="px-3 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-black uppercase tracking-widest hover:bg-rose-100 transition-colors"
+                disabled={markedForRemoval.size === 0}
+                onClick={removeMarkedFiles}
+                className="px-3 py-1.5 rounded-full bg-rose-600 disabled:opacity-40 disabled:pointer-events-none text-white border border-rose-700 text-[10px] font-black uppercase tracking-widest hover:bg-rose-700 transition-colors"
               >
-                Clear All
+                Remove marked{markedForRemoval.size > 0 ? ` (${markedForRemoval.size})` : ""}
+              </button>
+              <button
+                type="button"
+                disabled={markedForRemoval.size === 0}
+                onClick={clearMarkedSelection}
+                className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-[#151515] text-slate-700 dark:text-slate-300 border border-[#ddd4c8] dark:border-slate-600 text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-[#222] disabled:opacity-40 disabled:pointer-events-none transition-colors"
+              >
+                Clear ticks
+              </button>
+              <button
+                type="button"
+                onClick={clearAllFiles}
+                className="px-3 py-1.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-black uppercase tracking-widest hover:bg-rose-100 transition-colors"
+              >
+                Clear all
               </button>
             </div>
           </div>
@@ -362,7 +424,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
           <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/50 flex items-center gap-3">
             <Info size={14} className="text-[#2F855A] shrink-0" />
             <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider leading-snug">
-              Long-press a photo, then drag to reorder. The first photo is your cover. Use ✕ (top right) to remove.
+              Long-press, then drag to reorder — first photo is cover. Tick the checkbox to queue a photo for removal, untick anytime, then tap <span className="text-slate-700 dark:text-slate-400">Remove marked</span>.
             </p>
           </div>
         </div>
