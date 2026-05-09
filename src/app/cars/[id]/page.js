@@ -492,7 +492,7 @@ export default async function CarDetailPage({ params }) {
                    key={sc.id}
                    className="snap-center shrink-0 w-[min(88vw,19.5rem)] sm:w-[min(88vw,20rem)] md:w-auto md:shrink md:min-w-0 self-stretch"
                  >
-                   <div className="h-full min-h-[23.5rem] sm:min-h-[24.5rem] md:min-h-[25rem]">
+                   <div className="h-full min-h-[clamp(22.5rem,72vw,25rem)] md:min-h-[25rem]">
                      <CarCard car={sc} />
                    </div>
                  </div>
