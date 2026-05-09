@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Info, MapPin, ImageOff, Sparkles, ArrowUpRight, Share2 } from "lucide-react";
+import { MapPin, ImageOff, ArrowUpRight, Share2 } from "lucide-react";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
 import { FUEL_LABELS } from "@/lib/constants";
 import { buildCarSpecSummaryItems, meaningfulFeatureList, positiveNum } from "@/lib/car-display";
@@ -176,16 +176,10 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
 
         {/* Bottom Bar: Price & Action */}
         <div className="mt-3.5 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-100 dark:border-zinc-900 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="text-[13px] sm:text-lg font-black text-slate-900 dark:text-white tracking-tight sm:tracking-tighter">
+          <div className="flex items-center min-w-0">
+            <span className="text-[13px] sm:text-lg font-black text-slate-900 dark:text-white tracking-tight sm:tracking-tighter truncate">
                {formatCarPrice(car)}
             </span>
-            <div 
-              className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-[9px] sm:text-[10px] text-slate-400 font-bold cursor-help"
-              title="Final listed price"
-            >
-               i
-            </div>
           </div>
 
           <Link 

@@ -307,11 +307,11 @@ export default async function CarDetailPage({ params }) {
                   {car.make} {car.model} {car.variant ? `( ${car.variant} )` : ""}
                 </h1>
 
-                <div className="flex flex-wrap items-baseline gap-1.5 mb-8 text-lg sm:text-xl leading-none">
-                  <span className="font-semibold tabular-nums text-[#111827] dark:text-white leading-normal">
+                <div className="flex flex-wrap items-center gap-1.5 mb-8 text-lg sm:text-xl">
+                  <span className="font-semibold tabular-nums text-[#111827] dark:text-white leading-none">
                     {formatCarPrice(car)}
                   </span>
-                  <div className="relative inline-flex shrink-0 translate-y-[0.1em] group/tooltip">
+                  <div className="relative inline-flex shrink-0 group/tooltip">
                     <button
                       type="button"
                       aria-label="Pricing information"
@@ -320,7 +320,7 @@ export default async function CarDetailPage({ params }) {
                       style={{ fontSize: "inherit" }}
                     >
                       <span
-                        className="font-serif italic font-semibold leading-none text-[0.52em] text-emerald-800 dark:text-emerald-200 select-none translate-y-px"
+                        className="font-serif italic font-semibold leading-none text-[0.52em] text-emerald-800 dark:text-emerald-200 select-none"
                         aria-hidden
                       >
                         i
