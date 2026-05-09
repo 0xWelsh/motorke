@@ -1,11 +1,10 @@
 "use client";
 // src/components/SignupForm.js
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { UserPlus, Building2, User, Loader2, ArrowLeft, ArrowRight, ShieldCheck, Eye, EyeOff, MapPin, CheckCircle2 } from "lucide-react";
 import { clsx } from "clsx";
 import LocationPicker from "./LocationPicker";
 import Link from "next/link";
-import Script from "next/script";
 import HumanCheck from "./HumanCheck";
 
 const COUNTIES = [
@@ -72,64 +71,12 @@ export default function SignupForm({ error: initialError, initialRole }) {
   const [captchaToken, setCaptchaToken] = useState("");
   const [usingSecurityFallback, setUsingSecurityFallback] = useState(false);
   const [website, setWebsite] = useState("");
-  
-  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-  const hasGoogleAuth = Boolean(googleClientId);
+
   const requiresHumanCheck = Boolean(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
   const canSubmit =
     email.trim().length > 0 &&
     password.length > 0 &&
     (!requiresHumanCheck || captchaToken.length > 0 || usingSecurityFallback);
-
-  useEffect(() => {
-    if (!hasGoogleAuth || !googleClientId) return;
-
-    const initGoogle = () => {
-      if (!window.google) return;
-      
-      window.google.accounts.id.initialize({
-        client_id: googleClientId,
-        use_fedcm_for_prompt: false,
-        callback: async (response) => {
-          try {
-            const res = await fetch("/api/auth/google", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ token: response.credential, action: "signup" }),
-            });
-            const data = await res.json();
-            if (data.success) {
-              window.location.href = data.destination || "/";
-            } else {
-              setErrorMsg("Google signup failed.");
-            }
-          } catch (err) {
-            setErrorMsg("Network error during Google signup.");
-          }
-        },
-      });
-
-      const container = document.getElementById("google-signup-button");
-      if (container) {
-        window.google.accounts.id.renderButton(container, {
-          theme: "filled_black",
-          size: "large",
-          width: "360", // Explicit width often works better than "full" in some iFrames
-          text: "signup_with",
-          shape: "rectangular",
-          logo_alignment: "center",
-        });
-      }
-    };
-
-    if (window.google) {
-      initGoogle();
-    } else {
-      window.addEventListener("google-script-loaded", initGoogle);
-    }
-    
-    return () => window.removeEventListener("google-script-loaded", initGoogle);
-  }, [hasGoogleAuth, googleClientId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -165,17 +112,6 @@ export default function SignupForm({ error: initialError, initialRole }) {
 
   return (
     <div className="min-h-screen flex overflow-hidden bg-white dark:bg-[#0a0a0a]">
-      {hasGoogleAuth && (
-        <Script
-          src="https://accounts.google.com/gsi/client"
-          strategy="afterInteractive"
-          onLoad={() => {
-            window.google_script_loaded = true;
-            window.dispatchEvent(new Event("google-script-loaded"));
-          }}
-        />
-      )}
-
       {/* Left: Cinematic Benefit Side (Hidden on Mobile) */}
       <div className="hidden lg:flex lg:w-2/5 relative bg-[#0a0a0a] overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -386,21 +322,6 @@ export default function SignupForm({ error: initialError, initialRole }) {
                 {loading ? <Loader2 size={16} className="animate-spin" /> : "Sign Up"}
                 {!loading && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
               </button>
-              
-              {hasGoogleAuth && (
-                 <div className="pt-6 relative">
-                   <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                     <div className="w-full border-t border-slate-100 dark:border-zinc-900"></div>
-                   </div>
-                   <div className="relative flex justify-center text-[8px] font-black uppercase tracking-[0.2em]">
-                     <span className="bg-transparent px-4 text-slate-400 font-bold">or join with</span>
-                   </div>
-                   
-                   <div className="mt-6 flex justify-center min-h-[44px]">
-                     <div id="google-signup-button" className="w-full flex justify-center bg-transparent" />
-                   </div>
-                 </div>
-              )}
             </div>
           </form>
 

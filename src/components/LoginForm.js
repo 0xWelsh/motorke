@@ -1,9 +1,8 @@
 "use client";
 // src/components/LoginForm.js
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { Lock, ArrowLeft, ArrowRight, ShieldCheck, ChevronRight, Eye, EyeOff, CheckCircle2 } from "lucide-react";
-import Script from "next/script";
+import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import HumanCheck from "./HumanCheck";
 
 import AuthCarousel from "./AuthCarousel";
@@ -15,75 +14,12 @@ export default function LoginForm({ error }) {
   const [captchaToken, setCaptchaToken] = useState("");
   const [usingSecurityFallback, setUsingSecurityFallback] = useState(false);
   const [website, setWebsite] = useState("");
-  
-  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-  const hasGoogleAuth = Boolean(googleClientId);
+
   const requiresHumanCheck = Boolean(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
   const canSubmit = email.trim().length > 0 && password.length > 0 && (!requiresHumanCheck || captchaToken.length > 0 || usingSecurityFallback);
-  
-  useEffect(() => {
-    if (!hasGoogleAuth || !googleClientId) return;
-
-    const initGoogle = () => {
-      if (!window.google) return;
-      
-      window.google.accounts.id.initialize({
-        client_id: googleClientId,
-        use_fedcm_for_prompt: false,
-        callback: async (response) => {
-          try {
-            const res = await fetch("/api/auth/google", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ token: response.credential }),
-            });
-            const data = await res.json();
-            if (data.success) {
-              window.location.href = data.destination || "/";
-            } else {
-              window.location.href = "/login?error=unknown";
-            }
-          } catch (err) {
-            window.location.href = "/login?error=unknown";
-          }
-        },
-      });
-
-      const container = document.getElementById("google-button-container");
-      if (container) {
-        window.google.accounts.id.renderButton(container, {
-          theme: "filled_black",
-          size: "large",
-          width: "360",
-          text: "signin_with",
-          shape: "rectangular",
-          logo_alignment: "center",
-        });
-      }
-    };
-
-    if (window.google) {
-      initGoogle();
-    } else {
-      window.addEventListener("google-script-loaded", initGoogle);
-    }
-    
-    return () => window.removeEventListener("google-script-loaded", initGoogle);
-  }, [hasGoogleAuth, googleClientId]);
 
   return (
     <div className="min-h-screen flex overflow-hidden bg-white dark:bg-[#0a0a0a]">
-      {hasGoogleAuth && (
-        <Script 
-          src="https://accounts.google.com/gsi/client" 
-          strategy="afterInteractive"
-          onLoad={() => {
-            window.google_script_loaded = true;
-            window.dispatchEvent(new Event("google-script-loaded"));
-          }}
-        />
-      )}
-
       {/* Left: Cinematic Benefit Side (Hidden on Mobile) */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-[#0a0a0a] overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -202,21 +138,6 @@ export default function LoginForm({ error }) {
               Sign In
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
-
-            {hasGoogleAuth && (
-              <div className="pt-6 relative">
-                <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                  <div className="w-full border-t border-slate-100 dark:border-zinc-900"></div>
-                </div>
-                <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.2em]">
-                  <span className="bg-transparent px-4 text-slate-400">or connect with</span>
-                </div>
-                
-                <div className="mt-8 flex justify-center">
-                  <div id="google-button-container" className="w-full flex justify-center min-h-[44px] bg-transparent" />
-                </div>
-              </div>
-            )}
           </form>
 
           <footer className="mt-12 pt-8 border-t border-slate-100 dark:border-zinc-900">
