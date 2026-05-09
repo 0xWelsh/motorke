@@ -15,7 +15,7 @@ import {
 import { computeComparisonInsights } from "@/lib/comparison";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, X, Check, ArrowRight, Minus, Download, ChevronDown, ChevronUp, Info } from "lucide-react";
+import { Search, X, Check, ArrowRight, Minus, Download, ChevronDown, ChevronUp, Info, CircleHelp } from "lucide-react";
 import { buildCompareNarrative } from "@/lib/compare-narrative";
 import { COMPARE_SETS_KEY, writeJsonCookie } from "@/lib/personalization";
 
@@ -531,6 +531,12 @@ export default function CompareClient({ initialCars }) {
     return [...priced].sort((a, b) => a.price - b.price)[0];
   }, [fullComparedCars]);
 
+  const winnerLowestMileage = useMemo(() => {
+    const withM = fullComparedCars.filter((car) => typeof car.mileage === "number" && car.mileage >= 0);
+    if (withM.length < 2) return null;
+    return [...withM].sort((a, b) => a.mileage - b.mileage)[0];
+  }, [fullComparedCars]);
+
   function winnerFromMap(scoreMap) {
     const entries = [...scoreMap.entries()];
     if (entries.length === 0) return null;
@@ -592,6 +598,14 @@ export default function CompareClient({ initialCars }) {
       title: "Best Price",
       car: winnerByPrice,
       sub: winnerByPrice?.price != null ? formatCarPrice(winnerByPrice) : "N/A",
+    },
+    {
+      title: "Lowest Mileage",
+      car: winnerLowestMileage,
+      sub:
+        winnerLowestMileage?.mileage != null
+          ? formatMileage(winnerLowestMileage.mileage)
+          : "N/A",
     },
     {
       title: "Best Performance",
@@ -985,6 +999,7 @@ export default function CompareClient({ initialCars }) {
       winnerByPrice,
       winnerLowestTco,
       winnerRoad,
+      winnerLowestMileage,
       annualTcoSpread: spread,
     });
   }, [
@@ -995,6 +1010,7 @@ export default function CompareClient({ initialCars }) {
     winnerByPrice,
     winnerLowestTco,
     winnerRoad,
+    winnerLowestMileage,
     tcoStats,
   ]);
 
@@ -1125,6 +1141,14 @@ export default function CompareClient({ initialCars }) {
               <p className="text-sm sm:text-base text-[#718096] dark:text-slate-400 font-medium leading-relaxed max-w-2xl">
                 Start by choosing vehicles first. The comparison engine appears only after selection and shows key parameters side by side.
               </p>
+              <p className="mt-3 text-[11px] sm:text-xs text-slate-500 dark:text-slate-500 font-medium leading-relaxed max-w-2xl">
+                Shareable URL pattern (query params <span className="font-mono text-[10px]">a</span>,{" "}
+                <span className="font-mono text-[10px]">b</span>, <span className="font-mono text-[10px]">c</span>):{" "}
+                <code className="text-[10px] sm:text-[11px] font-mono text-[#111827] dark:text-slate-300 bg-slate-100 dark:bg-slate-800/80 px-1.5 py-0.5 rounded break-all">
+                  {"/compare?a=<id>&b=<id>&c=<id>"}
+                </code>
+                . Omit any slot you do not use.
+              </p>
             </div>
 
             <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
@@ -1138,7 +1162,7 @@ export default function CompareClient({ initialCars }) {
                   >
                     {car ? (
                       <div className="space-y-3">
-                        <div className="relative h-36 w-full overflow-hidden bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700" style={{ borderRadius: "var(--radius)" }}>
+                        <div className="relative h-28 w-full overflow-hidden bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700" style={{ borderRadius: "var(--radius)" }}>
                           {carPhotoUrl(car) ? (
                             <Image src={carPhotoUrl(car)} alt={`${car.year} ${car.make} ${car.model}`} fill className="object-cover" />
                           ) : null}
@@ -1332,12 +1356,21 @@ export default function CompareClient({ initialCars }) {
           <div className="sticky top-0 z-40 mt-5 -mx-4 px-4 sm:-mx-6 sm:px-6 py-2.5 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md border-b border-slate-200/90 dark:border-slate-800/90 shadow-sm sm:mt-6 lg:static lg:mx-0 lg:px-0 lg:py-0 lg:bg-transparent lg:backdrop-blur-none lg:border-0 lg:shadow-none">
             <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 lg:hidden">View &amp; filter</p>
             <div className="flex flex-nowrap items-center gap-2 overflow-x-auto no-scrollbar pb-0.5 -mb-0.5">
+            <button
+              type="button"
+              onClick={startTutorial}
+              className="shrink-0 inline-flex items-center justify-center gap-1.5 px-3 h-9 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest bg-[#38A169]/10 border border-emerald-500/50 dark:border-emerald-400/45 text-emerald-900 dark:text-emerald-200 hover:bg-[#38A169]/15 transition-colors"
+              style={{ borderRadius: "var(--radius)" }}
+            >
+              <CircleHelp className="w-3.5 h-3.5 shrink-0" aria-hidden />
+              How it works
+            </button>
             {PRESETS.map((option) => (
               <button
                 key={option.id}
                 type="button"
                 onClick={() => setPreset(option.id)}
-                className={`shrink-0 px-4 h-10 sm:h-11 text-[10px] font-bold uppercase tracking-widest transition-all border ${
+                className={`shrink-0 px-3 h-9 text-[10px] font-bold uppercase tracking-widest transition-all border ${
                   preset === option.id
                     ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:!text-black dark:border-white shadow-sm"
                     : "bg-white dark:bg-[#111111] text-[#718096] dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-[#111827] dark:hover:border-white"
@@ -1347,11 +1380,11 @@ export default function CompareClient({ initialCars }) {
                 {option.label}
               </button>
             ))}
-            <div className="w-px h-8 bg-slate-200 dark:bg-slate-700 shrink-0 self-center" aria-hidden />
+            <div className="w-px h-7 bg-slate-200 dark:bg-slate-700 shrink-0 self-center" aria-hidden />
             <button
               type="button"
               onClick={() => setShowDiffOnly(!showDiffOnly)}
-              className={`shrink-0 px-4 h-10 sm:h-11 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest transition-all border ${
+              className={`shrink-0 px-3 h-9 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest transition-all border ${
                 showDiffOnly ? "bg-[#38A169] text-white border-[#38A169]" : "bg-white dark:bg-[#111111] text-[#718096] border-slate-200 dark:border-slate-800"
               }`}
               style={{ borderRadius: "var(--radius)" }}
@@ -1363,7 +1396,7 @@ export default function CompareClient({ initialCars }) {
             <button
               type="button"
               onClick={clearCompare}
-              className="shrink-0 px-4 h-10 sm:h-11 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#718096] dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest"
+              className="shrink-0 px-3 h-9 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#718096] dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest"
               style={{ borderRadius: "var(--radius)" }}
             >
               Clear all
@@ -1375,7 +1408,7 @@ export default function CompareClient({ initialCars }) {
                   setSearchSlotError("");
                   setActiveSlot(mobileEmptySlots[0]);
                 }}
-                className="lg:hidden shrink-0 px-4 h-10 sm:h-11 bg-[#38A169] dark:!bg-[#38A169] text-white dark:!text-white border border-[#38A169] dark:!border-[#38A169] text-[10px] font-bold uppercase tracking-widest"
+                className="lg:hidden shrink-0 px-3 h-9 bg-[#38A169] dark:!bg-[#38A169] text-white dark:!text-white border border-[#38A169] dark:!border-[#38A169] text-[10px] font-bold uppercase tracking-widest"
                 style={{ borderRadius: "var(--radius)" }}
               >
                 Add car
@@ -1383,16 +1416,8 @@ export default function CompareClient({ initialCars }) {
             )}
             <button
               type="button"
-              onClick={startTutorial}
-              className="shrink-0 px-4 h-10 sm:h-11 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-slate-200 text-[10px] font-bold uppercase tracking-widest"
-              style={{ borderRadius: "var(--radius)" }}
-            >
-              Tour
-            </button>
-            <button
-              type="button"
               onClick={handleSaveNamedSet}
-              className="shrink-0 px-4 h-10 sm:h-11 bg-[#111827] dark:bg-white text-white dark:!text-black border border-[#111827] dark:border-white text-[10px] font-bold uppercase tracking-widest"
+              className="shrink-0 px-3 h-9 bg-[#111827] dark:bg-white text-white dark:!text-black border border-[#111827] dark:border-white text-[10px] font-bold uppercase tracking-widest"
               style={{ borderRadius: "var(--radius)" }}
             >
               {saveState === "saved" ? "Set Saved" : "Save Set"}
@@ -1449,7 +1474,7 @@ export default function CompareClient({ initialCars }) {
           <div
             id="compare-summary"
             data-tour="summary"
-            className={`order-3 lg:order-2 scroll-mt-24 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 ${currentTutorialKey === "summary" ? "ring-2 ring-[#38A169] ring-offset-2 ring-offset-white dark:ring-offset-[#0a0a0a] p-1" : ""}`}
+            className={`order-3 lg:order-2 scroll-mt-24 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-3.5 ${currentTutorialKey === "summary" ? "ring-2 ring-[#38A169] ring-offset-2 ring-offset-white dark:ring-offset-[#0a0a0a] p-1" : ""}`}
             style={currentTutorialKey === "summary" ? { borderRadius: "var(--radius)" } : undefined}
           >
             {[
@@ -1472,13 +1497,13 @@ export default function CompareClient({ initialCars }) {
                 sub: "Current Set",
               }
             ].map((stat, i) => (
-              <div key={i} className="bg-[#F7FAFC] dark:bg-[#111111] border border-slate-100 dark:border-slate-800 p-5 sm:p-6 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-2">
+              <div key={i} className="bg-[#F7FAFC] dark:bg-[#111111] border border-slate-100 dark:border-slate-800 p-3.5 sm:p-4 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+                <p className="text-[9px] font-bold uppercase tracking-widest text-[#718096] dark:text-slate-500 mb-1.5">
                   <TooltipLabel label={stat.label} tip={stat.tip} />
                 </p>
                 <div className="flex items-baseline gap-2 flex-wrap">
-                  <p className="text-xl sm:text-2xl font-bold text-[#111827] dark:text-white tabular-nums">{stat.value}</p>
-                  <p className="text-[9px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-wide">{stat.sub}</p>
+                  <p className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white tabular-nums">{stat.value}</p>
+                  <p className="text-[8px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-wide">{stat.sub}</p>
                 </div>
               </div>
             ))}
@@ -1498,11 +1523,11 @@ export default function CompareClient({ initialCars }) {
               {radarOpen ? <ChevronUp className="w-4 h-4 shrink-0" /> : <ChevronDown className="w-4 h-4 shrink-0" />}
             </button>
             <div className={`${radarOpen ? "block" : "hidden"} lg:block`}>
-          <div className="mb-6 sm:mb-8 bg-[#111827] dark:bg-[#111111] p-6 sm:p-10 lg:p-12 overflow-hidden shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="mb-4 sm:mb-6 bg-[#111827] dark:bg-[#111111] p-4 sm:p-6 lg:p-8 overflow-hidden shadow-xl" style={{ borderRadius: 'var(--radius)' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-8 items-center">
               <div>
-                <h2 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-3">Performance mix</h2>
-                <p className="text-sm sm:text-base text-white/60 font-medium leading-relaxed mb-6">
+                <h2 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-2">Performance mix</h2>
+                <p className="text-xs sm:text-sm text-white/60 font-medium leading-relaxed mb-4">
                   Relative balance of comfort, economy, and value in this set — same scoring as the table below.
                 </p>
                 <div className="space-y-3">
@@ -1590,32 +1615,32 @@ export default function CompareClient({ initialCars }) {
         )}
 
         {/* Winner Rail */}
-        <div id="compare-winners" className="order-5 lg:order-4 scroll-mt-24 mb-8 sm:mb-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <div id="compare-winners" className="order-5 lg:order-4 scroll-mt-24 mb-6 sm:mb-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3">
           {winnerRail.map((item) => {
             const wThumb = item.car ? carPhotoUrl(item.car) : null;
             return (
-            <div key={item.title} className="p-5 sm:p-6 border border-slate-100 dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#A0AEC0] dark:text-slate-600 mb-4">{item.title}</p>
+            <div key={item.title} className="p-3 sm:p-3.5 border border-slate-100 dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
+              <p className="text-[9px] font-bold uppercase tracking-widest text-[#A0AEC0] dark:text-slate-600 mb-2">{item.title}</p>
               {item.car ? (
-                <Link href={`/cars/${item.car.id}`} className="group flex gap-3.5 min-w-0">
+                <Link href={`/cars/${item.car.id}`} className="group flex gap-2 sm:gap-2.5 min-w-0">
                   {wThumb ? (
-                    <div className="relative h-[4.5rem] w-[5.5rem] sm:h-20 sm:w-24 shrink-0 overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900" style={{ borderRadius: "var(--radius)" }}>
+                    <div className="relative h-12 w-14 sm:h-14 sm:w-[4.5rem] shrink-0 overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900" style={{ borderRadius: "var(--radius)" }}>
                       <Image
                         src={wThumb}
                         alt={`${item.car.year} ${item.car.make} ${item.car.model}`}
                         fill
                         className="object-cover transition-transform group-hover:scale-105"
-                        sizes="96px"
+                        sizes="72px"
                       />
                     </div>
                   ) : null}
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-lg font-bold font-sans text-[#111827] dark:text-white mb-1 group-hover:text-[#38A169] transition-colors leading-snug">{item.car.year} {item.car.make}</h3>
-                    <p className="text-[10px] font-bold text-[#718096] dark:text-slate-500 uppercase tracking-widest">{item.sub}</p>
+                    <h3 className="text-sm font-bold font-sans text-[#111827] dark:text-white mb-0.5 group-hover:text-[#38A169] transition-colors leading-snug line-clamp-2">{item.car.year} {item.car.make}</h3>
+                    <p className="text-[9px] font-bold text-[#38A169] dark:text-emerald-400/90 uppercase tracking-widest">{item.sub}</p>
                   </div>
                 </Link>
               ) : (
-                <p className="text-sm font-medium text-slate-300 dark:text-slate-700">Insufficient Data</p>
+                <p className="text-xs font-medium text-slate-300 dark:text-slate-700">—</p>
               )}
             </div>
             );
@@ -1623,9 +1648,9 @@ export default function CompareClient({ initialCars }) {
         </div>
 
         {smartNarrative?.headline && (
-          <div id="compare-decision" className="order-6 lg:order-5 scroll-mt-24 mb-8 sm:mb-10 p-5 sm:p-7 border border-[#38A169]/25 bg-[#38A169]/[0.07] dark:bg-[#0f172a] dark:border-[#38A169]/30" style={{ borderRadius: "var(--radius)" }}>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2f855a] dark:text-[#4ade80] mb-2">Decision helper</p>
-            <h3 className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white mb-4">{smartNarrative.headline}</h3>
+          <div id="compare-decision" className="order-6 lg:order-5 scroll-mt-24 mb-6 sm:mb-8 p-4 sm:p-5 border border-[#38A169]/25 bg-[#38A169]/[0.07] dark:bg-[#0f172a] dark:border-[#38A169]/30" style={{ borderRadius: "var(--radius)" }}>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2f855a] dark:text-[#4ade80] mb-1.5">Decision helper</p>
+            <h3 className="text-base sm:text-lg font-bold text-[#111827] dark:text-white mb-3">{smartNarrative.headline}</h3>
             <ul className="space-y-2.5 list-disc pl-4 text-sm font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
               {smartNarrative.bullets.map((b, i) => (
                 <li key={i}>{b}</li>
@@ -2080,12 +2105,26 @@ export default function CompareClient({ initialCars }) {
       </div>
     </div>
     {showTutorial && currentTutorial && (
-      <div className="fixed inset-x-0 bottom-20 lg:bottom-6 z-[60] px-4 no-print">
-        <div className="max-w-md mx-auto border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#111111] shadow-2xl p-4 sm:p-5" style={{ borderRadius: "var(--radius)" }}>
+      <div
+        className="fixed inset-0 z-[85] flex items-end sm:items-center justify-center p-4 pb-[max(1rem,env(safe-area-inset-bottom))] bg-black/50 no-print"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="compare-tutorial-title"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) closeTutorial();
+        }}
+      >
+        <div
+          className="max-w-md w-full max-h-[min(420px,70vh)] overflow-y-auto border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#111111] shadow-2xl p-4 sm:p-5"
+          style={{ borderRadius: "var(--radius)" }}
+          onClick={(e) => e.stopPropagation()}
+        >
           <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
             Compare tutorial {tutorialStep + 1}/{TUTORIAL_STEPS.length}
           </p>
-          <h4 className="text-base font-bold text-[#111827] dark:text-white mb-1.5">{currentTutorial.title}</h4>
+          <h4 id="compare-tutorial-title" className="text-base font-bold text-[#111827] dark:text-white mb-1.5">
+            {currentTutorial.title}
+          </h4>
           <p className="text-[12px] text-slate-600 dark:text-slate-300 leading-relaxed mb-4">{currentTutorial.body}</p>
           <div className="flex items-center justify-between gap-2">
             <button
