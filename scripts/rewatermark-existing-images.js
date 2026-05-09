@@ -66,6 +66,8 @@ async function main() {
   let skipped = 0;
   let failed = 0;
 
+  const progressEvery = 40;
+
   for (const row of rows) {
     scanned += 1;
 
@@ -100,6 +102,12 @@ async function main() {
     } catch (err) {
       failed += 1;
       console.error(`[rewatermark] failed image ${row.id}:`, err?.message || err);
+    }
+
+    if (scanned % progressEvery === 0) {
+      console.log(
+        `[rewatermark] progress scanned=${scanned}/${rows.length} updated=${updated} skipped=${skipped} failed=${failed}`
+      );
     }
   }
 
