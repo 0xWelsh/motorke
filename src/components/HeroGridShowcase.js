@@ -31,6 +31,8 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
   const mainCar = cars[carIndex % cars.length];
   const secondaryCar = cars[(carIndex + 1) % cars.length];
   const currentReview = reviews[reviewIndex];
+  const mainVariant = [mainCar.model, mainCar.variant].filter(Boolean).join(" · ");
+  const secondaryVariant = [secondaryCar.model, secondaryCar.variant].filter(Boolean).join(" · ");
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full h-full min-h-[380px] max-h-[520px] animate-in fade-in slide-in-from-right-8 duration-1000">
@@ -60,14 +62,19 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
           </div>
           
           <div className="mt-auto">
-             <p className="text-[10px] font-sans font-semibold text-white/60 tracking-[0.35em] mb-2">
-               {mainCar.year} {mainCar.make}
+             <p className="text-[10px] font-sans font-semibold text-white/60 tracking-[0.3em] mb-1.5">
+               {mainCar.year}
              </p>
-             <h4 className="text-2xl md:text-[2rem] font-sans font-bold text-white mb-4 tracking-tight leading-[0.82] group-hover:text-[#38A169] transition-colors line-clamp-1">
-               {mainCar.model}
+             <h4 className="text-[2.05rem] md:text-[2.35rem] font-sans font-black text-white tracking-tight leading-[0.82] uppercase group-hover:text-[#38A169] transition-colors line-clamp-1">
+               {mainCar.make}
              </h4>
-             
+             <p className="mt-1 mb-4 text-[11px] md:text-[12px] font-semibold tracking-[0.08em] uppercase text-white/75 line-clamp-1">
+               {mainVariant}
+             </p>
              <div className="h-px bg-white/10 w-full mb-4" />
+             <h4 className="sr-only">
+               {mainCar.year} {mainCar.make} {mainCar.model} {mainCar.variant || ""}
+             </h4>
              
              <div className="flex items-center justify-between">
                <div className="flex flex-col">
@@ -104,7 +111,9 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
             <span className="bg-[#ff5a2f]/20 text-[#ff5a2f] text-[8px] font-black px-3 py-1 uppercase tracking-widest self-start border border-[#ff5a2f]/30 mb-2">
               Hot Deal
             </span>
-            <h4 className="text-lg font-sans font-bold text-white tracking-tight mb-0.5 line-clamp-1">{secondaryCar.year} {secondaryCar.model}</h4>
+            <p className="text-[9px] font-semibold tracking-[0.2em] uppercase text-white/60 mb-1">{secondaryCar.year}</p>
+            <h4 className="text-[1.15rem] font-sans font-black text-white tracking-tight leading-[1] mb-1 uppercase line-clamp-1">{secondaryCar.make}</h4>
+            <p className="text-[10px] font-semibold text-white/75 tracking-[0.08em] uppercase mb-1.5 line-clamp-1">{secondaryVariant}</p>
             <p className="text-base font-black text-[#38A169]">KSh {(secondaryCar.price/1000000).toFixed(2)}M</p>
             
             <div className="mt-auto pt-1 flex items-center gap-2 text-slate-400 group-hover:text-white transition-colors duration-300">
