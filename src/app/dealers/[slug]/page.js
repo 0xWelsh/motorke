@@ -286,23 +286,26 @@ export default async function DealerPage(props) {
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <div className="w-full h-[260px] sm:h-[320px] lg:h-[380px] relative bg-[#111827] overflow-hidden">
-        {dealer.bannerUrl ? (
-          <img src={dealer.bannerUrl} alt={dealer.name} className="absolute inset-0 w-full h-full object-cover" />
-        ) : (
-          <div className="absolute inset-0 grid grid-cols-3 gap-1 opacity-70">
-            {dealerGallery.slice(0, 3).map((car, i) => (
-              <div key={i} className="relative h-full w-full">
-                <Image src={car.image} alt={car.title} fill className="object-cover" />
-              </div>
-            ))}
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/35" />
-        <div className="absolute inset-x-0 bottom-0">
-          <div className="w-full mx-auto px-4 sm:px-6 xl:px-8 max-w-[1380px] pb-4 sm:pb-5 lg:pb-6">
+      <div className="relative w-full overflow-x-hidden">
+        <div className="relative h-[176px] sm:h-[240px] lg:h-[380px] w-full overflow-hidden bg-[#111827]">
+          {dealer.bannerUrl ? (
+            <img src={dealer.bannerUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          ) : (
+            <div className="absolute inset-0 grid grid-cols-3 gap-1 opacity-70">
+              {dealerGallery.slice(0, 3).map((car, i) => (
+                <div key={i} className="relative h-full w-full">
+                  <Image src={car.image} alt={car.title} fill className="object-cover" />
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/35" />
+        </div>
+
+        <div className="relative z-[2] mx-auto w-full max-w-[1380px] px-4 pb-4 sm:px-6 sm:pb-5 xl:px-8 lg:absolute lg:inset-x-0 lg:bottom-0 lg:pb-6">
+          <div className="-mt-7 sm:-mt-9 lg:mt-0">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
-              <section className="lg:col-span-8 bg-black/35 dark:bg-black/45 backdrop-blur-md p-4 sm:p-5 shadow-2xl" style={{ borderRadius: "14px" }}>
+              <section className="lg:col-span-8 bg-black/35 dark:bg-black/45 backdrop-blur-md p-4 sm:p-5 shadow-2xl min-w-0" style={{ borderRadius: "14px" }}>
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start">
                   <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/95 p-2.5 flex items-center justify-center shrink-0 overflow-hidden" style={{ borderRadius: "10px" }}>
                     {dealer.logoUrl ? <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" /> : <span className="text-2xl font-black text-slate-400">{dealer.name[0]}</span>}
@@ -369,7 +372,7 @@ export default async function DealerPage(props) {
         </div>
       </div>
 
-      <div className="w-full mx-auto px-4 sm:px-6 xl:px-10 2xl:px-12 max-w-[1880px] mt-5 relative z-10 pb-20">
+      <div className="w-full mx-auto px-4 sm:px-6 xl:px-10 2xl:px-12 max-w-[1880px] mt-5 sm:mt-6 lg:mt-5 relative z-10 pb-20">
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-9 space-y-6">
