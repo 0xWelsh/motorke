@@ -74,7 +74,7 @@ function getRotationOffset(size) {
 const getCachedData = unstable_cache(
   async () => {
     const week = new Date(); week.setDate(week.getDate() - 7);
-    const [featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews] = await Promise.all([
+    const [featured, hotThisWeek, newArrivals, dealers, newsItems, dealerReviews, carReviews] = await Promise.all([
       db.car.findMany({
         where: { available: true, featured: true },
         include: {
@@ -131,8 +131,40 @@ const getCachedData = unstable_cache(
         take: 10,
         orderBy: { createdAt: "desc" },
       }),
+      db.carReview.findMany({
+        where: { comment: { not: null }, rating: { gte: 4 } },
+        include: {
+          user: { select: { name: true, avatarUrl: true } },
+          car: {
+            select: {
+              make: true,
+              model: true,
+              dealer: { select: { name: true, county: true } },
+            },
+          },
+        },
+        take: 10,
+        orderBy: { createdAt: "desc" },
+      }),
     ]);
-    return { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews };
+    const combinedReviews = [
+      ...(dealerReviews || []).map((r) => ({
+        ...r,
+        source: "dealer",
+      })),
+      ...(carReviews || []).map((r) => ({
+        ...r,
+        source: "car",
+        dealer: r.car?.dealer || null,
+        comment:
+          r.comment ||
+          `Great ${r.car?.make || ""} ${r.car?.model || ""} experience.`,
+      })),
+    ]
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 12);
+
+    return { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews: combinedReviews };
   },
   ["homepage-minimal-v5"],
   { revalidate: 900, tags: ["homepage"] }
@@ -374,11 +406,11 @@ export default async function HomePage() {
 
       {/* Hot Deals / Trending Section */}
       {hotEnhanced.length > 0 && (
-        <section className="py-12 sm:py-16 lg:py-20 xl:py-24 bg-gradient-to-b from-white to-slate-50/70 dark:from-[#0a0a0a] dark:to-[#0d0f10]">
+        <section className="py-14 sm:py-18 lg:py-24 xl:py-28 bg-gradient-to-b from-white via-red-50/40 to-slate-50/80 dark:from-[#0a0a0a] dark:via-[#160a0b] dark:to-[#0d0f10] border-y border-red-100/60 dark:border-red-950/40">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
               <div className="max-w-2xl">
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#38A169] mb-2">Hot deals</p>
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#dc2626] dark:text-red-400 mb-2">Hot deals</p>
                 <h2 className="text-4xl sm:text-6xl lg:text-7xl font-normal editorial-heading text-[#111827] dark:text-white mb-3">Spotlight</h2>
                 <p className="text-[#718096] dark:text-slate-400 text-base sm:text-lg font-medium">
                   Verified listings currently receiving the most buyer interest and strongest value signals.
@@ -388,7 +420,7 @@ export default async function HomePage() {
                 href="/cars?sort=popular"
                 eventName="homepage_view_trending_click"
                 eventPayload={{ area: "spotlight" }}
-                className="inline-flex h-11 items-center text-[#111827] dark:text-white text-xs font-bold uppercase tracking-widest gap-2 hover:opacity-70 transition-opacity"
+                className="inline-flex h-11 items-center text-[#b91c1c] dark:text-red-300 text-xs font-bold uppercase tracking-widest gap-2 hover:opacity-70 transition-opacity"
               >
                 View Trending <ArrowUpRight className="w-4 h-4" />
               </TrackedLink>

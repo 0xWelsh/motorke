@@ -44,9 +44,9 @@ function BrandLogo({ name, img }) {
   return (
     <Link
       href={`/cars?make=${encodeURIComponent(name)}`}
-      className="group flex flex-col items-center justify-center gap-2.5 p-3 sm:p-3.5 w-[94px] sm:w-[104px] lg:w-[114px] rounded-xl border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300 shadow-[0_1px_0_rgba(0,0,0,0.02)]"
+      className="group flex flex-col items-center justify-center gap-1.5 p-2 sm:p-2.5 w-[72px] sm:w-[78px] lg:w-[86px] rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300"
     >
-      <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 flex items-center justify-center">
+      <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center">
         {failed ?
           <span className="text-lg font-black text-slate-700 dark:text-slate-300">{name[0]}</span>
         : (
@@ -140,9 +140,9 @@ function BodyTypeCard({ label, value, img }) {
   return (
     <Link
       href={`/cars?bodyType=${value}`}
-      className="group flex flex-col items-center justify-center gap-2 p-2.5 sm:p-3 w-[108px] sm:w-[116px] lg:w-[124px] rounded-xl border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300 shadow-[0_1px_0_rgba(0,0,0,0.02)]"
+      className="group flex flex-col items-center justify-center gap-1.5 p-2 sm:p-2.5 w-[80px] sm:w-[88px] lg:w-[96px] rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300"
     >
-      <div className="w-[76px] h-9 sm:w-20 sm:h-10 lg:w-24 lg:h-11 flex items-center justify-center">
+      <div className="w-[56px] h-7 sm:w-[60px] sm:h-7.5 lg:w-[66px] lg:h-8 flex items-center justify-center">
         {!failed ? (
           <Image
             src={img}
@@ -156,7 +156,7 @@ function BodyTypeCard({ label, value, img }) {
           <span className="text-2xl">🚗</span>
         )}
       </div>
-      <span className="text-[10px] sm:text-[11px] lg:text-xs font-black text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight">
+      <span className="text-[9px] sm:text-[10px] lg:text-[10px] font-black text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight">
         {label}
       </span>
     </Link>
@@ -207,7 +207,7 @@ export default function BrowsePanel() {
   };
 
   return (
-    <div className="w-full space-y-4 sm:space-y-6 pt-2">
+    <div className="w-full space-y-3 sm:space-y-4 pt-2">
       {/* Search Bar with Geolocation */}
       <form onSubmit={handleSearch} className="relative mb-6 sm:mb-8 w-full group">
         <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#38A169] transition-colors" />
@@ -228,8 +228,8 @@ export default function BrowsePanel() {
 
 
       {/* Popular Brands & Body Types - tighter grouping */}
-      <div className="flex flex-col gap-3.5 sm:gap-4">
-        <div className="rounded-xl border border-[#ebe5dc] dark:border-zinc-800 bg-gradient-to-b from-white/90 to-[#faf9f7] dark:from-[#131313]/95 dark:to-[#0f0f0f]/90 p-2.5 sm:p-3.5">
+      <div className="flex flex-col gap-2.5 sm:gap-3">
+        <div className="rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-gradient-to-b from-white/90 to-[#faf9f7] dark:from-[#131313]/95 dark:to-[#0f0f0f]/90 p-2 sm:p-2.5">
           <div className="flex items-center justify-between px-1 sm:px-2 mb-2">
             <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
               Shop by brand
@@ -249,7 +249,7 @@ export default function BrowsePanel() {
             ))}
           </ScrollableRow>
         </div>
-        <div className="rounded-xl border border-[#ebe5dc] dark:border-zinc-800 bg-gradient-to-b from-white/90 to-[#faf9f7] dark:from-[#131313]/95 dark:to-[#0f0f0f]/90 p-2.5 sm:p-3.5">
+        <div className="rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-gradient-to-b from-white/90 to-[#faf9f7] dark:from-[#131313]/95 dark:to-[#0f0f0f]/90 p-2 sm:p-2.5">
           <div className="flex items-center justify-between px-1 sm:px-2 mb-2">
             <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
               Shop by shape
