@@ -1,26 +1,85 @@
 "use client";
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { UploadCloud, CheckCircle2, Trash2, Crown, Info, ArrowLeft, ArrowRight } from "lucide-react";
+import { UploadCloud, CheckCircle2, Crown, Info, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+
+const LONG_PRESS_MS = 450;
+const MOVE_CANCEL_SQ = 12 * 12;
+
+function normalizeCoverOrder(list) {
+  return list.map((f, i) => ({ ...f, isPrimary: i === 0 }));
+}
+
+function reorderToIndex(files, draggedId, toIndex) {
+  const from = files.findIndex((f) => f.id === draggedId);
+  if (from < 0 || toIndex < 0 || toIndex >= files.length || from === toIndex) return files;
+  const next = [...files];
+  const [moved] = next.splice(from, 1);
+  next.splice(toIndex, 0, moved);
+  return normalizeCoverOrder(next);
+}
 
 export default function MediaUploader({ initialImages = [], onFilesSelected, maxFiles = 15 }) {
   const [dragActive, setDragActive] = useState(false);
-  const [files, setFiles] = useState(initialImages.map(img => ({ ...img, id: img.id || Math.random().toString(36).substr(2, 9), preview: img.url || img.preview })));
-  const [draggedId, setDraggedId] = useState(null);
-  
-  const inputRef = useRef(null);
-  const cameraRef = useRef(null);
+  const [files, setFiles] = useState(() =>
+    normalizeCoverOrder(
+      initialImages.map((img) => ({
+        ...img,
+        id: img.id || Math.random().toString(36).substr(2, 9),
+        preview: img.url || img.preview,
+      }))
+    )
+  );
+  const [liftedId, setLiftedId] = useState(null);
 
-  const syncFiles = useCallback((nextFiles) => {
-    setFiles(nextFiles);
-    if (onFilesSelected) onFilesSelected(nextFiles);
-  }, [onFilesSelected]);
+  const filesRef = useRef(files);
+  const tileRefs = useRef(new Map());
+  const inputRef = useRef(null);
 
   useEffect(() => {
-    const hasExternalChanges = initialImages.length !== files.filter(f => f.url).length;
+    filesRef.current = files;
+  }, [files]);
+
+  useEffect(() => {
+    if (!liftedId) return undefined;
+    const prev = document.body.style.touchAction;
+    document.body.style.touchAction = "none";
+    return () => {
+      document.body.style.touchAction = prev;
+    };
+  }, [liftedId]);
+
+  const finalizeOrder = useCallback(
+    (nextList) => {
+      const normalized = normalizeCoverOrder(nextList);
+      setFiles(normalized);
+      if (onFilesSelected) onFilesSelected(normalized);
+    },
+    [onFilesSelected]
+  );
+
+  const syncFiles = useCallback(
+    (nextFiles) => {
+      finalizeOrder(nextFiles);
+    },
+    [finalizeOrder]
+  );
+
+  /* Match parent-provided URLs to local previews; omit `files` from deps (avoid reset loops; same as prior implementation). */
+  useEffect(() => {
+    const hasExternalChanges = initialImages.length !== files.filter((f) => f.url).length;
     if (hasExternalChanges) {
-       setFiles(initialImages.map(img => ({ ...img, id: img.id || Math.random().toString(36).substr(2, 9), preview: img.url || img.preview })));
+      setFiles(
+        normalizeCoverOrder(
+          initialImages.map((img) => ({
+            ...img,
+            id: img.id || Math.random().toString(36).substr(2, 9),
+            preview: img.url || img.preview,
+          }))
+        )
+      );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally compares against latest `files` without listing it
   }, [initialImages]);
 
   const handleDrag = useCallback((e) => {
@@ -33,36 +92,39 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
     }
   }, []);
 
-  const handleDrop = useCallback((e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFiles(e.dataTransfer.files);
-    }
-  }, []);
+  const handleFiles = useCallback(
+    (newFiles) => {
+      const fileArray = Array.from(newFiles).filter((f) => f.type.startsWith("image/"));
+      const incoming = fileArray.map((f) =>
+        Object.assign(f, {
+          id: Math.random().toString(36).substr(2, 9),
+          preview: URL.createObjectURL(f),
+          isPrimary: false,
+        })
+      );
 
-  const handleFiles = (newFiles) => {
-    const fileArray = Array.from(newFiles).filter(f => f.type.startsWith('image/'));
-    const incoming = fileArray.map(f => Object.assign(f, { 
-      id: Math.random().toString(36).substr(2, 9),
-      preview: URL.createObjectURL(f), 
-      isPrimary: false 
-    }));
+      const combined = normalizeCoverOrder([...filesRef.current, ...incoming].slice(0, maxFiles));
+      syncFiles(combined);
+    },
+    [maxFiles, syncFiles]
+  );
 
-    const combined = [...files, ...incoming].slice(0, maxFiles);
-    if (combined.length > 0 && !combined.find(c => c.isPrimary)) {
-      combined[0].isPrimary = true;
-    }
-    syncFiles([...combined]);
-  };
+  const handleDrop = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setDragActive(false);
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleFiles(e.dataTransfer.files);
+      }
+    },
+    [handleFiles]
+  );
 
   const removeFile = (id) => {
-    const file = files.find(f => f.id === id);
+    const file = files.find((f) => f.id === id);
     if (file?.preview && !file.url) URL.revokeObjectURL(file.preview);
-    const next = files.filter(f => f.id !== id);
-    if (file?.isPrimary && next.length > 0) next[0].isPrimary = true;
-    syncFiles([...next]);
+    syncFiles(files.filter((f) => f.id !== id));
   };
 
   const clearAllFiles = () => {
@@ -74,137 +136,143 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
     syncFiles([]);
   };
 
-  const setPrimary = (id) => {
-    const next = files.map((f) => ({ ...f, isPrimary: f.id === id }));
-    syncFiles(next);
-  };
+  const setTileEl = useCallback((id, el) => {
+    if (el) tileRefs.current.set(id, el);
+    else tileRefs.current.delete(id);
+  }, []);
 
-  const moveFile = (id, direction) => {
-    const from = files.findIndex((f) => f.id === id);
-    const to = from + direction;
-    if (from < 0 || to < 0 || to >= files.length) return;
-    const next = [...files];
-    const [moved] = next.splice(from, 1);
-    next.splice(to, 0, moved);
-    syncFiles(next);
-  };
+  function getDropIndex(clientX, clientY, order) {
+    for (let i = 0; i < order.length; i++) {
+      const el = tileRefs.current.get(order[i].id);
+      if (!el) continue;
+      const r = el.getBoundingClientRect();
+      if (clientX >= r.left && clientY >= r.top && clientX <= r.right && clientY <= r.bottom) return i;
+    }
+    return -1;
+  }
 
-  // --- Grid Reorder Logic ---
-  const handleItemDragStart = (id) => (e) => {
-    setDraggedId(id);
-    e.dataTransfer.effectAllowed = "move";
-  };
+  const attachPointerDragHandlers = useCallback(
+    (e, draggedId) => {
+      const startX = e.clientX;
+      const startY = e.clientY;
+      let longPressTimer = null;
+      let active = false;
+      let dragOrder = [...filesRef.current];
 
-  const handleItemDragOver = (targetId) => (e) => {
-    e.preventDefault();
-    if (draggedId === targetId) return;
+      const detach = () => {
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
+      };
 
-    const draggedIdx = files.findIndex(f => f.id === draggedId);
-    const targetIdx = files.findIndex(f => f.id === targetId);
-    
-    if (draggedIdx === -1 || targetIdx === -1) return;
+      const onMove = (ev) => {
+        if (!active) {
+          const dx = ev.clientX - startX;
+          const dy = ev.clientY - startY;
+          if (longPressTimer && dx * dx + dy * dy > MOVE_CANCEL_SQ) {
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
+          }
+          return;
+        }
+        ev.preventDefault();
+        const t = getDropIndex(ev.clientX, ev.clientY, dragOrder);
+        if (t < 0) return;
+        const cur = dragOrder.findIndex((f) => f.id === draggedId);
+        if (cur === t) return;
+        dragOrder = reorderToIndex(dragOrder, draggedId, t);
+        setFiles(dragOrder);
+      };
 
-    const next = [...files];
-    const [moved] = next.splice(draggedIdx, 1);
-    next.splice(targetIdx, 0, moved);
-    setFiles(next); // Immediate local update for "layout" animation
-  };
+      const onUp = () => {
+        if (longPressTimer) {
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+        detach();
+        if (active) finalizeOrder(dragOrder);
+        setLiftedId(null);
+        active = false;
+      };
 
-  const handleItemDragEnd = () => {
-    setDraggedId(null);
-    syncFiles(files); // Final sync on drop
-  };
+      window.addEventListener("pointermove", onMove, { passive: false });
+      window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
 
-  const primaryFile = files.find((f) => f.isPrimary) || files[0];
-  const otherFiles = primaryFile ? files.filter((f) => f.id !== primaryFile.id) : [];
+      longPressTimer = window.setTimeout(() => {
+        longPressTimer = null;
+        active = true;
+        dragOrder = [...filesRef.current];
+        setLiftedId(draggedId);
+        try {
+          navigator.vibrate?.(12);
+        } catch {
+          /* ignore */
+        }
+        try {
+          e.currentTarget?.setPointerCapture?.(e.pointerId);
+        } catch {
+          /* ignore */
+        }
+      }, LONG_PRESS_MS);
+    },
+    [finalizeOrder]
+  );
+
+  const coverFile = files[0];
+  const otherFiles = files.length > 1 ? files.slice(1) : [];
 
   const renderPhotoTile = (file, layout) => {
     const isHero = layout === "hero";
+    const isLifted = liftedId === file.id;
     return (
       <motion.div
         layout
         key={file.id}
-        draggable
-        onDragStart={handleItemDragStart(file.id)}
-        onDragOver={handleItemDragOver(file.id)}
-        onDragEnd={handleItemDragEnd}
+        ref={(el) => setTileEl(file.id, el)}
+        onPointerDown={(e) => {
+          if (e.button !== 0 && e.pointerType === "mouse") return;
+          attachPointerDragHandlers(e, file.id);
+        }}
         initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
+        animate={{ opacity: 1, scale: isLifted ? 1.04 : 1 }}
         exit={{ opacity: 0, scale: 0.8 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className={`relative group rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#111111] border transition-all duration-300 cursor-grab active:cursor-grabbing ${
+        className={`relative select-none rounded-2xl overflow-hidden bg-slate-100 dark:bg-[#111111] border transition-all duration-200 touch-manipulation ${
           isHero ? "aspect-[2/1] max-h-52 md:max-h-60 w-full" : "aspect-square"
         } ${
-          draggedId === file.id ? "opacity-30 scale-95 border-emerald-500" : "opacity-100 border-slate-200 dark:border-slate-800"
+          isLifted
+            ? "z-50 border-emerald-500 shadow-2xl ring-2 ring-emerald-500/40"
+            : "border-slate-200 dark:border-slate-800 active:scale-[0.99]"
         }`}
+        style={{ cursor: isLifted ? "grabbing" : "grab" }}
       >
-        <img src={file.preview} alt="Listing" className="w-full h-full object-cover pointer-events-none" />
+        <img src={file.preview} alt="" draggable={false} className="w-full h-full object-cover pointer-events-none" />
 
-        <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 max-md:opacity-100 max-md:bg-gradient-to-t max-md:from-black/85 max-md:via-black/25 max-md:to-transparent md:transition-all md:duration-500 flex flex-col items-center justify-end p-3 sm:p-4 backdrop-blur-[2px] pointer-events-auto">
-          <div className="w-full space-y-2 translate-y-4 group-hover:translate-y-0 max-md:translate-y-0 transition-transform duration-500">
-            {file.isPrimary ? (
-              <div className="w-full py-2 rounded-xl bg-[#2F855A] text-white text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2">
-                <Crown size={12} /> Primary / cover
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setPrimary(file.id);
-                }}
-                className="w-full bg-white text-slate-900 text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-emerald-50 transition-colors"
-              >
-                Set as cover
-              </button>
-            )}
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  moveFile(file.id, -1);
-                }}
-                className="bg-white/90 text-slate-900 text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-white transition-colors flex items-center justify-center gap-1"
-              >
-                <ArrowLeft size={11} /> Left
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  moveFile(file.id, 1);
-                }}
-                className="bg-white/90 text-slate-900 text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-white transition-colors flex items-center justify-center gap-1"
-              >
-                Right <ArrowRight size={11} />
-              </button>
-            </div>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                removeFile(file.id);
-              }}
-              className="w-full bg-rose-500/80 text-white text-[9px] font-black uppercase tracking-widest py-2 rounded-xl hover:bg-rose-600 transition-colors flex items-center justify-center gap-2"
-            >
-              <Trash2 size={12} /> Remove
-            </button>
-          </div>
-        </div>
+        <button
+          type="button"
+          title="Remove photo"
+          aria-label="Remove photo"
+          className="absolute top-2 right-2 z-20 flex h-8 w-8 items-center justify-center rounded-[4px] border-2 border-white bg-black/55 text-white shadow-md backdrop-blur-[2px] hover:bg-rose-600 hover:border-white active:scale-95"
+          onPointerDown={(ev) => {
+            ev.stopPropagation();
+          }}
+          onClick={(ev) => {
+            ev.stopPropagation();
+            removeFile(file.id);
+          }}
+        >
+          <X size={15} strokeWidth={2.5} aria-hidden />
+        </button>
 
         {file.isPrimary && (
-          <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-[#2F855A] text-white rounded-xl shadow-xl border border-white/20">
-            <Crown size={14} />
-            <span className="text-[9px] font-black uppercase tracking-widest">Cover</span>
+          <div className="absolute top-2 left-2 inline-flex items-center gap-1.5 px-2 py-1 bg-[#2F855A] text-white rounded-lg shadow-lg border border-white/20 pointer-events-none">
+            <Crown size={12} />
+            <span className="text-[8px] font-black uppercase tracking-widest">Cover</span>
           </div>
         )}
 
-        <div className="absolute bottom-3 right-3 text-[8px] font-black text-white/80 uppercase tracking-widest drop-shadow-sm">
+        <div className="absolute bottom-2 right-2 text-[8px] font-black text-white/90 uppercase tracking-widest drop-shadow-md pointer-events-none">
           #{files.indexOf(file) + 1}
         </div>
       </motion.div>
@@ -213,7 +281,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
 
   return (
     <div className="w-full space-y-4">
-      <div 
+      <div
         className={`relative w-full h-36 sm:h-48 border-2 border-dashed rounded-xl sm:rounded-2xl flex flex-col items-center justify-center p-3 sm:p-4 transition-all duration-500 overflow-hidden group cursor-pointer ${
           dragActive ? "border-[#2F855A] bg-[#2F855A]/5 scale-[1.01]" : "border-slate-200 dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#0a0a0a] hover:border-slate-300 dark:hover:border-slate-700"
         }`}
@@ -224,76 +292,79 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
         onClick={() => inputRef.current?.click()}
       >
         <div className="absolute inset-0 opacity-20 pointer-events-none overflow-hidden">
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-[#2F855A]/20 via-transparent to-transparent rounded-full animate-spin-slow" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-[#2F855A]/20 via-transparent to-transparent rounded-full animate-spin-slow" />
         </div>
 
         <input ref={inputRef} type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleFiles(e.target.files)} />
-        <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => handleFiles(e.target.files)} />
 
-        <div className="relative z-10 flex flex-col items-center">
-            <div className="w-12 h-12 rounded-2xl bg-white dark:bg-[#111111] shadow-lg flex items-center justify-center mb-3 text-[#2F855A] border border-slate-100 dark:border-slate-800 group-hover:scale-110 transition-transform duration-500">
-                <UploadCloud size={24} />
-            </div>
-            <p className="text-base font-black text-slate-900 dark:text-white tracking-tight">Drop listing photos</p>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.16em] mt-2 block">Tap or drag to add</p>
+        <div className="relative z-10 flex flex-col items-center pointer-events-none">
+          <div className="w-12 h-12 rounded-2xl bg-white dark:bg-[#111111] shadow-lg flex items-center justify-center mb-3 text-[#2F855A] border border-slate-100 dark:border-slate-800 group-hover:scale-110 transition-transform duration-500">
+            <UploadCloud size={24} />
+          </div>
+          <p className="text-base font-black text-slate-900 dark:text-white tracking-tight">Drop listing photos</p>
+          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.16em] mt-2 block">Tap or drag to add</p>
         </div>
 
         {dragActive && (
           <div className="absolute inset-0 z-50 bg-[#2F855A]/10 backdrop-blur-md flex items-center justify-center">
-             <div className="bg-white dark:bg-[#111111] px-10 py-5 rounded-full shadow-2xl border border-[#2F855A]">
-                <p className="text-sm font-black text-[#2F855A] uppercase tracking-widest flex items-center gap-3">
-                   <CheckCircle2 size={24} /> Drop to Attach
-                </p>
-             </div>
+            <div className="bg-white dark:bg-[#111111] px-10 py-5 rounded-full shadow-2xl border border-[#2F855A]">
+              <p className="text-sm font-black text-[#2F855A] uppercase tracking-widest flex items-center gap-3">
+                <CheckCircle2 size={24} /> Drop to Attach
+              </p>
+            </div>
           </div>
         )}
       </div>
 
       {files.length > 0 && (
         <div className="bg-[#fbfcfe] dark:bg-[#0a0a0a] border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-sm">
-           <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                 <div className="w-2 h-2 rounded-full bg-[#2F855A]" />
-                 <h3 className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Asset Grid</h3>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-[#2F855A]" />
+              <h3 className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Photos</h3>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="px-4 py-1.5 bg-slate-100 dark:bg-[#111111] rounded-full">
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                  {files.length} / {maxFiles}
+                </p>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="px-4 py-1.5 bg-slate-100 dark:bg-[#111111] rounded-full">
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{files.length} / {maxFiles} Assets</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={clearAllFiles}
-                  className="px-3 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-black uppercase tracking-widest hover:bg-rose-100 transition-colors"
-                >
-                  Clear All
-                </button>
+              <button
+                type="button"
+                onClick={clearAllFiles}
+                className="px-3 py-1.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-black uppercase tracking-widest hover:bg-rose-100 transition-colors"
+              >
+                Clear All
+              </button>
+            </div>
+          </div>
+
+          {coverFile && (
+            <div className="mb-4 space-y-2">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Cover (first photo — long-press &amp; drag to reorder)</p>
+              <AnimatePresence mode="popLayout">{renderPhotoTile(coverFile, "hero")}</AnimatePresence>
+            </div>
+          )}
+
+          {otherFiles.length > 0 && (
+            <>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">More photos</p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                <AnimatePresence>{otherFiles.map((file) => renderPhotoTile(file, "grid"))}</AnimatePresence>
               </div>
-           </div>
+            </>
+          )}
 
-           {primaryFile && (
-             <div className="mb-4 space-y-2">
-               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Cover photo (shown first)</p>
-               <AnimatePresence mode="popLayout">{renderPhotoTile(primaryFile, "hero")}</AnimatePresence>
-             </div>
-           )}
+          {files.length === 1 && (
+            <p className="text-[11px] font-semibold text-slate-500 mt-3">Add more shots so buyers see the full vehicle.</p>
+          )}
 
-           {otherFiles.length > 0 && (
-             <>
-               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">More photos — order &amp; gallery</p>
-               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                 <AnimatePresence>{otherFiles.map((file) => renderPhotoTile(file, "grid"))}</AnimatePresence>
-               </div>
-             </>
-           )}
-
-           {files.length === 1 && (
-             <p className="text-[11px] font-semibold text-slate-500 mt-3">Add more shots so buyers see the full vehicle.</p>
-           )}
-
-           <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/50 flex items-center gap-3">
-              <Info size={14} className="text-[#2F855A]" />
-              <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Drag tiles to reorder. The cover image is your listing hero.</p>
-           </div>
+          <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/50 flex items-center gap-3">
+            <Info size={14} className="text-[#2F855A] shrink-0" />
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider leading-snug">
+              Long-press a photo, then drag to reorder. The first photo is your cover. Use ✕ (top right) to remove.
+            </p>
+          </div>
         </div>
       )}
     </div>

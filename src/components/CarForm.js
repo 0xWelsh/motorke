@@ -955,6 +955,16 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 {Object.entries(FUEL_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
               </select>
             </InfieldGroup>
+            <InfieldGroup label="Engine (CC)">
+              <input
+                name="engineCC"
+                type="number"
+                inputMode="numeric"
+                defaultValue={formSeed.engineCC != null && formSeed.engineCC !== "" ? String(formSeed.engineCC) : ""}
+                placeholder="e.g. 2000"
+                className={inField}
+              />
+            </InfieldGroup>
             <InfieldGroup label="Transmission" required>
               <select name="transmission" defaultValue={formSeed.transmission} required className={inFieldSelect}>
                 {Object.entries(TRANSMISSION_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
@@ -1065,9 +1075,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               </div>
               {advancedOpen ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                  <InfieldGroup label="Engine CC">
-                    <input name="engineCC" type="number" inputMode="numeric" defaultValue={formSeed.engineCC} placeholder="2000" className={inField} />
-                  </InfieldGroup>
                   <InfieldGroup label="Ground clearance (mm)">
                     <input name="groundClearanceMm" type="number" inputMode="numeric" defaultValue={formSeed.groundClearanceMm} placeholder="185" className={inField} />
                   </InfieldGroup>
