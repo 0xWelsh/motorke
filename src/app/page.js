@@ -275,24 +275,24 @@ export default async function HomePage() {
         }}
       />
       {/* Dynamic Hero Section */}
-      <section className="relative pt-4 pb-8 md:pt-6 md:pb-10 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
-        <div className="container mx-auto px-6 max-w-7xl relative z-10">
+      <section className="relative pt-4 pb-8 md:pt-6 md:pb-10 lg:pt-8 lg:pb-12 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
           
           {/* Page Header - Full Width */}
-          <div className="mb-6 md:mb-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center lg:text-left">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#111827] dark:text-white leading-[0.95] tracking-tight mb-4">
+          <div className="mb-6 md:mb-8 lg:mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center lg:text-left">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-[#111827] dark:text-white leading-[0.92] tracking-tight mb-4 lg:max-w-4xl">
               Buy cars with<br />
               <span className="editorial-heading text-[#38A169]">dealer-level clarity.</span>
             </h1>
 
-            <p className="text-base md:text-lg text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl font-medium mx-auto lg:mx-0">
+            <p className="text-base md:text-lg lg:text-[1.15rem] text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto lg:mx-0">
               Find verified Kenyan inventory with transparent ownership costs in minutes.
               Compare up to three cars, inspect real running-cost and road-readiness signals, then contact real dealers directly.
             </p>
           </div>
 
           {/* Side-by-Side Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:items-start animate-in fade-in duration-1000 delay-200">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 lg:items-start animate-in fade-in duration-1000 delay-200">
             <div className="lg:col-span-7 xl:col-span-7 text-center lg:text-left">
               <div className="w-full text-left">
                 <BrowsePanel />
@@ -348,7 +348,7 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="hidden lg:block lg:col-span-5 xl:col-span-5 lg:pl-4">
+            <div className="hidden lg:block lg:col-span-5 xl:col-span-5 lg:pl-2 xl:pl-4">
               <HeroGridShowcase 
                 cars={heroCars.length >= 2 ? heroCars : spotlightEnhanced.slice(0, 2)} 
                 reviews={highlightReviews} 
@@ -374,8 +374,8 @@ export default async function HomePage() {
 
       {/* Spotlight / Trending Section */}
       {hotEnhanced.length > 0 && (
-        <section className="py-10 sm:py-14 lg:py-16">
-          <div className="container mx-auto px-6 max-w-7xl">
+        <section className="py-10 sm:py-14 lg:py-18 xl:py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
               <div className="max-w-xl">
                 <h2 className="text-4xl sm:text-6xl font-normal editorial-heading text-[#111827] dark:text-white mb-4">Spotlight</h2>
@@ -391,9 +391,11 @@ export default async function HomePage() {
               </TrackedLink>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5 items-stretch">
               {spotlightCards.map((car) => (
-                <CarCard key={car.id} car={car} />
+                <div key={car.id} className="h-full">
+                  <CarCard car={car} />
+                </div>
               ))}
             </div>
           </div>
@@ -402,8 +404,8 @@ export default async function HomePage() {
 
       {/* Featured Dealerships */}
       {dealers.length > 0 && (
-        <section className="py-10 sm:py-14 lg:py-16 bg-[#F7FAFC] dark:bg-[#111111]">
-          <div className="container mx-auto px-6 max-w-7xl">
+        <section className="py-10 sm:py-14 lg:py-18 xl:py-20 bg-[#F7FAFC] dark:bg-[#111111]">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div className="mb-10 text-center max-w-3xl mx-auto">
               <h2 className="text-3xl sm:text-4xl font-bold text-[#111827] dark:text-white mb-4">Partner Dealerships</h2>
               <p className="text-[#718096] dark:text-slate-400 text-lg font-medium leading-relaxed">
@@ -412,18 +414,18 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
               {dealers.slice(0, 6).map((dealer) => (
                 <Link
                   key={dealer.id}
                   href={`/dealers/${dealer.slug}`}
-                  className="group block bg-white dark:bg-zinc-900 border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 transition-all hover:shadow-xl"
+                  className="group block h-full bg-white dark:bg-zinc-900 border border-[#E2E8F0] dark:border-slate-800 p-5 sm:p-6 transition-all hover:shadow-xl"
                   style={{ borderRadius: 'var(--radius)' }}
                 >
                   <div className="flex items-center gap-4 mb-5">
-                    <div className="w-16 h-16 shrink-0 border border-[#EDF2F7] dark:border-slate-800 overflow-hidden flex items-center justify-center p-2" style={{ borderRadius: 'var(--radius)' }}>
+                    <div className="relative w-16 h-16 shrink-0 border border-[#EDF2F7] dark:border-slate-800 overflow-hidden flex items-center justify-center p-2" style={{ borderRadius: 'var(--radius)' }}>
                       {dealer.logoUrl ? (
-                        <img src={dealer.logoUrl} className="w-full h-full object-contain" alt="" />
+                        <Image src={dealer.logoUrl} fill className="object-contain" alt="" sizes="64px" />
                       ) : (
                         <span className="text-xl font-bold text-[#111827] dark:text-white">{dealer.name[0]}</span>
                       )}
@@ -450,7 +452,7 @@ export default async function HomePage() {
       )}
 
       {/* Editorial Information Block */}
-      <section className="relative py-12 sm:py-16 lg:py-20 bg-[#1A202C] text-white overflow-hidden">
+      <section className="relative py-12 sm:py-16 lg:py-20 xl:py-24 bg-[#1A202C] text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
             src={DIFFERENCE_BACKGROUND}
@@ -460,7 +462,7 @@ export default async function HomePage() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1A202C] via-[#1A202C]/80 to-transparent" />
         </div>
-        <div className="container mx-auto px-6 max-w-7xl relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <p className="text-[#38A169] text-xs font-bold uppercase tracking-[0.32em] mb-5">The Difference</p>
@@ -475,14 +477,14 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-stretch">
               {[
                 { title: "Dealer Verified", icon: <ShieldCheck />, desc: "Every unit is hand-uploaded by real businesses." },
                 { title: "Pricing Clarity", icon: <BadgeCheck />, desc: "Final listed prices shown upfront with no hidden calculations." },
                 { title: "Direct Contact", icon: <Star />, desc: "Communicate directly via WhatsApp or Phone." },
                 { title: "Fresh Stock", icon: <Compass />, desc: "Listings are removed the second they sell." },
               ].map((item, i) => (
-                <div key={i} className="flex flex-col gap-4">
+                <div key={i} className="flex h-full flex-col gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
                   <div className="text-[#38A169]">{item.icon}</div>
                   <h3 className="font-bold text-lg">{item.title}</h3>
                   <p className="text-sm text-[#A0AEC0] leading-relaxed font-medium">{item.desc}</p>
@@ -495,8 +497,8 @@ export default async function HomePage() {
 
       {/* Fresh Arrivals Section */}
       {newEnhanced.length > 0 && (
-        <section className="py-10 sm:py-14 lg:py-16">
-          <div className="container mx-auto px-6 max-w-7xl">
+        <section className="py-10 sm:py-14 lg:py-18 xl:py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div className="flex items-end justify-between mb-7 sm:mb-9">
               <div>
                 <h2 className="text-3xl sm:text-5xl font-bold text-[#111827] dark:text-white mb-4">Fresh Arrivals</h2>
@@ -506,9 +508,11 @@ export default async function HomePage() {
                 See All Arrivals
               </Link>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 items-stretch">
               {newEnhanced.slice(0, 6).map((car) => (
-                <CarCard key={car.id} car={car} />
+                <div key={car.id} className="h-full">
+                  <CarCard car={car} />
+                </div>
               ))}
             </div>
             <div className="mt-8 sm:hidden">
