@@ -288,7 +288,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
         {isMarked && (
           <div className="absolute inset-0 z-10 bg-rose-950/30 pointer-events-none flex items-center justify-center p-2">
             <span className="text-[9px] font-black uppercase tracking-widest text-white drop-shadow-md text-center leading-tight">
-              Tick off to undo, or Remove marked
+              Queued — untick to cancel
             </span>
           </div>
         )}
