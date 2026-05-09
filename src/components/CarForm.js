@@ -350,6 +350,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const saveTimeoutRef = useRef(null);
   const uploadedLocalMapRef = useRef(new Map());
   const pendingUploadIdsRef = useRef(new Set());
+  /** Latest uploader file list (for post-upload payload if user toggles include while uploading). */
+  const latestUploaderSelectionRef = useRef([]);
   const inputCls = "w-full bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-[#ff5a2f] transition-all";
   const selectCls = "w-full bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white outline-none focus:border-[#ff5a2f] transition-all appearance-none";
   const inField =
@@ -569,10 +571,14 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   }
 
   async function handleFilesSelected(newFiles) {
+    latestUploaderSelectionRef.current = newFiles;
+
     const primaryThumb = (list) => {
       const p = list.find((f) => f.isPrimary) || list[0];
       return p ? p.url || p.preview || null : null;
     };
+
+    const active = newFiles.filter((f) => f.included !== false);
 
     if (!newFiles.length) {
       setImages([]);
@@ -580,29 +586,37 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       return;
     }
 
-    setCoverDisplaySrc(primaryThumb(newFiles));
+    setCoverDisplaySrc(primaryThumb(active));
+
+    if (!active.length) {
+      setImages([]);
+      setCoverDisplaySrc(null);
+      return;
+    }
 
     const withKnownUrls = normalizeImagePayload(
-      newFiles.map((f) => ({
+      active.map((f) => ({
         url: f.url || uploadedLocalMapRef.current.get(f.id) || null,
         isPrimary: f.isPrimary,
       }))
     );
     if (withKnownUrls.length) setImages(withKnownUrls);
 
-    const toUpload = newFiles.filter(
+    const toUpload = active.filter(
       (f) => !f.url && f.id && !uploadedLocalMapRef.current.has(f.id) && !pendingUploadIdsRef.current.has(f.id)
     );
     if (!toUpload.length) {
+      const snapshot = latestUploaderSelectionRef.current || newFiles;
+      const act = snapshot.filter((f) => f.included !== false);
       const finalPayload = normalizeImagePayload(
-        newFiles.map((f) => ({
+        act.map((f) => ({
           url: f.url || uploadedLocalMapRef.current.get(f.id) || null,
           isPrimary: f.isPrimary,
         }))
       );
       setImages(finalPayload);
       const primaryUrl = (finalPayload.find((i) => i.isPrimary) || finalPayload[0])?.url;
-      setCoverDisplaySrc(primaryUrl || primaryThumb(newFiles));
+      setCoverDisplaySrc(primaryUrl || primaryThumb(act));
       return;
     }
 
@@ -633,8 +647,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
     toUpload.forEach((f) => pendingUploadIdsRef.current.delete(f.id));
     const failures = results.filter((r) => r.status === "rejected").map((r) => r.reason.message);
+    const snapshot = latestUploaderSelectionRef.current || newFiles;
+    const act = snapshot.filter((f) => f.included !== false);
     const finalPayload = normalizeImagePayload(
-      newFiles.map((f) => ({
+      act.map((f) => ({
         url: f.url || uploadedLocalMapRef.current.get(f.id) || null,
         isPrimary: f.isPrimary,
       }))
@@ -642,7 +658,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     setImages(finalPayload);
 
     const primaryAfter = (finalPayload.find((i) => i.isPrimary) || finalPayload[0])?.url;
-    setCoverDisplaySrc(primaryAfter || primaryThumb(newFiles));
+    setCoverDisplaySrc(primaryAfter || primaryThumb(act));
 
     if (failures.length > 0) setError(`${failures.length} upload(s) failed: ${failures.join(", ")}`);
 
