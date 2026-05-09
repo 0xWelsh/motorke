@@ -11,6 +11,23 @@ function calcAvg(reviews = []) {
   return (sum / reviews.length).toFixed(1);
 }
 
+function formatReviewAge(dateValue) {
+  if (!dateValue) return "Recently";
+  const date = new Date(dateValue);
+  if (Number.isNaN(date.getTime())) return "Recently";
+
+  const diffMs = date.getTime() - Date.now();
+  const absSec = Math.abs(diffMs) / 1000;
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+  if (absSec < 45) return "Just now";
+  if (absSec < 3600) return rtf.format(Math.round(diffMs / 60000), "minute");
+  if (absSec < 86400) return rtf.format(Math.round(diffMs / 3600000), "hour");
+  if (absSec < 2592000) return rtf.format(Math.round(diffMs / 86400000), "day");
+  if (absSec < 31536000) return rtf.format(Math.round(diffMs / 2592000000), "month");
+  return rtf.format(Math.round(diffMs / 31536000000), "year");
+}
+
 export default function CarReviewsSection({ carId, initialReviews = [], initialAvgRating = null }) {
   const [reviews, setReviews] = useState(initialReviews);
 
@@ -57,7 +74,7 @@ export default function CarReviewsSection({ carId, initialReviews = [], initialA
             reviews.map((r) => (
               <div key={r.id} className="rounded-xl sm:rounded-2xl border border-[#EDF2F7] dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] p-4 sm:p-5">
                 <div className="flex items-center justify-between gap-4 mb-3">
-                  <div className="flex items-center gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
                     <div className="relative w-8 h-8 rounded-full bg-[#EDF2F7] dark:bg-zinc-800 flex items-center justify-center overflow-hidden ring-1 ring-slate-200/70 dark:ring-zinc-700">
                       {r.user?.avatarUrl ? (
                         <Image src={r.user.avatarUrl} alt={`${r.user.name} avatar`} fill className="object-cover" />
@@ -65,7 +82,15 @@ export default function CarReviewsSection({ carId, initialReviews = [], initialA
                         <span className="text-[10px] font-bold">{r.user?.name?.[0] || "U"}</span>
                       )}
                     </div>
-                    <span className="text-[13px] sm:text-sm font-bold text-[#1A202C] dark:text-white">{r.user?.name || "User"}</span>
+                    <div className="min-w-0">
+                      <span className="block truncate text-[13px] sm:text-sm font-bold text-[#1A202C] dark:text-white">{r.user?.name || "User"}</span>
+                      <span
+                        className="block text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500 mt-0.5"
+                        title={r.createdAt ? new Date(r.createdAt).toLocaleString("en-KE") : ""}
+                      >
+                        {formatReviewAge(r.createdAt)}
+                      </span>
+                    </div>
                   </div>
                   <div className="flex text-amber-400">
                     {[...Array(5)].map((_, i) => (
