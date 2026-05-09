@@ -13,10 +13,12 @@ function isIncluded(f) {
 /** First included item in list order is cover / primary. */
 function normalizeListingFlags(list) {
   const firstIncludedId = list.find((f) => isIncluded(f))?.id;
-  return list.map((f) => ({
-    ...f,
-    isPrimary: isIncluded(f) && f.id === firstIncludedId,
-  }));
+  // Never `{ ...f }` — spread strips File/Blob body so uploads become "No file provided".
+  return list.map((f) =>
+    Object.assign(f, {
+      isPrimary: isIncluded(f) && f.id === firstIncludedId,
+    })
+  );
 }
 
 function reorderToIndex(files, draggedId, toIndex) {
@@ -136,7 +138,10 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
   const setFileIncluded = useCallback(
     (id, checked) => {
       const next = normalizeListingFlags(
-        filesRef.current.map((f) => (f.id === id ? { ...f, included: checked } : f))
+        filesRef.current.map((f) => {
+          if (f.id !== id) return f;
+          return Object.assign(f, { included: checked });
+        })
       );
       finalizeOrder(next);
     },
