@@ -506,9 +506,9 @@ export default async function HomePage() {
                 <span className="editorial-heading text-[#718096]">More real cars.</span>
               </h2>
               <p className="text-base sm:text-lg text-[#A0AEC0] leading-relaxed max-w-xl font-medium">
-                Welsh Motorhub is built around dealer inventory you can tie to a real showroom—so you compare
-                in one place, then move the conversation straight to WhatsApp or a phone call when you are ready.
-                Fewer phantom posts, fewer dead ends.
+                Welsh Motorhub is built around dealer inventory that you can tie to a real showroom; so you compare in one place,
+                then move the conversation straight to WhatsApp or a phone call when you are ready. Fewer phantom posts, fewer
+                dead ends.
               </p>
             </div>
 
