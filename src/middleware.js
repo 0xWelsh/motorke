@@ -70,7 +70,7 @@ export function middleware(request) {
 
 export const config = {
   matcher: [
-    // Protect all routes except static assets and api routes with own security
-    "/((?!_next/static|_next/image|favicon.ico|public).*)",
+    // Pages only — skip /api so binary routes (e.g. PDF) are not wrapped by page CSP / header pass-through quirks
+    "/((?!api|_next/static|_next/image|favicon.ico|public).*)",
   ],
 };

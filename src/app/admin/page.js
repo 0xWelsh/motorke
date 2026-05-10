@@ -11,6 +11,7 @@ import {
   Plus, Activity, Bolt, AlertCircle, ShieldAlert, BadgeCheck, ServerCog,
   FileDown,
 } from "lucide-react";
+import PdfBlobDownloadButton from "@/components/PdfBlobDownloadButton";
 
 export const metadata = { title: "Admin Dashboard — Welsh Motorhub" };
 
@@ -219,16 +220,12 @@ export default async function AdminDashboard({ searchParams }) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-8 sm:mb-10">
-        <Link
-          href="/api/admin/reports/network-weekly-pdf"
-          download
-          className="bg-gradient-to-br from-[#ecfdf5] via-white to-[#f8f7f4] dark:from-[#0f172a] dark:via-[#111111] dark:to-[#0a0a0a] border border-[#2F855A]/35 dark:border-[#38A169]/40 px-4 py-3 hover:border-[#2F855A]/70 transition-colors shadow-sm"
-        >
+        <div className="bg-gradient-to-br from-[#ecfdf5] via-white to-[#f8f7f4] dark:from-[#0f172a] dark:via-[#111111] dark:to-[#0a0a0a] border border-[#2F855A]/35 dark:border-[#38A169]/40 px-4 py-3 hover:border-[#2F855A]/70 transition-colors shadow-sm">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#2F855A]/15 text-[#2F855A] flex items-center justify-center shrink-0 border border-[#2F855A]/25">
               <FileDown size={18} strokeWidth={2.25} />
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#2F855A]">Network weekly PDF</p>
               <p className="mt-1 text-sm font-bold text-slate-800 dark:text-zinc-100 leading-snug">
                 Full marketplace digest — dealers, traffic, hot listings.
@@ -236,12 +233,17 @@ export default async function AdminDashboard({ searchParams }) {
               <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-1">
                 Same rolling 7-day window as dealer proof packs · admin only.
               </p>
-              <span className="mt-2 inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-[#2F855A]">
-                Download PDF <ChevronRight size={12} />
-              </span>
+              <div className="mt-3">
+                <PdfBlobDownloadButton
+                  fetchUrl="/api/admin/reports/network-weekly-pdf"
+                  fileStem="welsh-motorhub-network-weekly"
+                  idleLabel="Download network PDF"
+                  buttonClassName="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#2F855A] text-white text-[10px] font-black uppercase tracking-[0.12em] hover:bg-[#276749] transition-colors disabled:opacity-60 w-full sm:w-auto"
+                />
+              </div>
             </div>
           </div>
-        </Link>
+        </div>
         <Link
           href="/api/admin/weekly-metrics"
           target="_blank"

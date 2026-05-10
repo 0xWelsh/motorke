@@ -13,6 +13,7 @@ import {
   BarChart3,
   FileDown,
 } from "lucide-react";
+import PdfBlobDownloadButton from "@/components/PdfBlobDownloadButton";
 
 export const metadata = { title: "Analytics — Welsh Motorhub Dealer Portal" };
 
@@ -108,13 +109,12 @@ export default async function AnalyticsPage() {
               <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
                 Share with owners when they ask “is anyone actually seeing our cars?” — rolling window, print-quality.
               </p>
-              <a
-                href="/api/portal/reports/weekly-pdf"
-                download
-                className="mt-3 inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-black uppercase tracking-[0.14em] hover:opacity-90 transition-opacity"
-              >
-                <FileDown size={14} /> Download weekly PDF
-              </a>
+              <PdfBlobDownloadButton
+                fetchUrl="/api/portal/reports/weekly-pdf"
+                fileStem="welsh-motorhub-weekly"
+                idleLabel="Download weekly PDF"
+                buttonClassName="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-black uppercase tracking-[0.14em] hover:opacity-90 transition-opacity disabled:opacity-60"
+              />
             </div>
           </div>
         </div>
