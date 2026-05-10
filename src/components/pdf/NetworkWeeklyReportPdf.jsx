@@ -180,7 +180,7 @@ export default function NetworkWeeklyReportPdf({ report }) {
             <Text style={[styles.thc, { width: "14%", textAlign: "right" }]}>Leads</Text>
           </View>
           {dealerLeaderboard.map((row, i) => (
-            <View key={row.name + i} style={[styles.tr, i % 2 === 1 ? styles.trAlt : {}]} wrap={false}>
+            <View key={`dealer-${i}`} style={[styles.tr, i % 2 === 1 ? styles.trAlt : {}]} wrap={false}>
               <Text style={[styles.tc, { width: "34%", fontWeight: 700 }]}>{row.name}</Text>
               <Text style={[styles.tc, { width: "26%", fontSize: 7, color: MUTED }]}>{row.location}</Text>
               <Text style={[styles.tc, { width: "12%", textAlign: "right" }]}>{row.activeListings}</Text>
