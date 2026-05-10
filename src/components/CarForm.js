@@ -768,7 +768,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     <form
       ref={formRef}
       onSubmit={handleSubmit}
-      className={`space-y-4 sm:space-y-6 animate-in fade-in duration-700 ${isPortal ? "max-lg:pb-36" : ""}`}
+      className={`space-y-4 sm:space-y-6 animate-in fade-in duration-700 ${isPortal ? "max-lg:pb-[calc(7rem+env(safe-area-inset-bottom))]" : ""}`}
     >
       {error && (
         <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-black uppercase tracking-widest rounded-xl sm:rounded-2xl px-4 py-3 sm:px-6 sm:py-4 flex items-center gap-3">
@@ -1139,20 +1139,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           </div>
         </div>
 
-        <div className="hidden lg:flex flex-wrap justify-between items-center gap-3 pt-2">
-          <a href={isPortal ? "/portal" : "/admin"} className="px-5 py-2.5 sm:px-6 sm:py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all">
-            Cancel
-          </a>
-          <button
-            type="submit"
-            disabled={submitting || uploading}
-            className="px-6 py-2.5 sm:px-8 sm:py-3 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-50 text-slate-900 dark:text-white font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all inline-flex items-center justify-center gap-2"
-          >
-            {submitting ? "Saving..." : isEdit ? "Save" : "Publish"}
-            {!submitting && <Check size={16} />}
-          </button>
-        </div>
-
         <div
           id="portal-car-preview"
           className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-3 sm:p-4 scroll-mt-28 md:scroll-mt-8"
@@ -1175,9 +1161,23 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           </div>
         </div>
 
+        <div className="hidden lg:flex flex-wrap justify-between items-center gap-3 pt-2 pb-4 border-t border-[#ddd4c8]/80 dark:border-slate-800 mt-2">
+          <a href={isPortal ? "/portal" : "/admin"} className="px-5 py-2.5 sm:px-6 sm:py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all">
+            Cancel
+          </a>
+          <button
+            type="submit"
+            disabled={submitting || uploading}
+            className="px-6 py-2.5 sm:px-8 sm:py-3 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-50 text-slate-900 dark:text-white font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all inline-flex items-center justify-center gap-2"
+          >
+            {submitting ? "Saving..." : isEdit ? "Save" : "Publish"}
+            {!submitting && <Check size={16} />}
+          </button>
+        </div>
+
         {isPortal ? (
           <div
-            className="lg:hidden fixed inset-x-0 z-[45] border-t border-[#ddd4c8] dark:border-slate-800 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md px-3 pt-2.5 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.06)]"
+            className="lg:hidden fixed inset-x-0 z-[55] border-t border-[#ddd4c8] dark:border-slate-800 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md px-3 pt-2.5 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.06)]"
             style={{ bottom: "calc(4rem + env(safe-area-inset-bottom, 0px))" }}
           >
             <div className="flex items-stretch gap-2 max-w-7xl mx-auto">
