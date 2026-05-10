@@ -136,6 +136,13 @@ export default async function AdminDealersPage() {
                   </div>
 
                   <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-col sm:items-end">
+                    <Link
+                      href={`/admin/cars/new?dealerId=${dealer.id}`}
+                      className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#2F855A] px-2.5 py-2 text-[10px] font-black uppercase tracking-[0.1em] text-white shadow-sm transition hover:bg-[#38A169] sm:w-auto"
+                      title="Add a listing to this dealer inventory"
+                    >
+                      <Car size={14} /> Add car
+                    </Link>
                     <form action="/api/auth/impersonate" method="POST">
                       <input type="hidden" name="dealerId" value={dealer.id} />
                       <button

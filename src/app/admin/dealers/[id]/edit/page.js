@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { requireAdmin } from "@/lib/auth";
 import DeleteButton from "@/components/DeleteButton";
 import { db } from "@/lib/db";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import LocationPicker from "@/components/LocationPicker";
 import AdminAvatarUpload from "@/components/AdminAvatarUpload";
@@ -42,6 +43,12 @@ export default async function AdminEditDealerPage({ params, searchParams }) {
           <div>
             <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">{dealer.name}</h1>
             <p className="text-xs text-white/40 mt-1">Click the logo to upload or change it</p>
+            <Link
+              href={`/admin/cars/new?dealerId=${dealer.id}`}
+              className="mt-3 inline-flex items-center justify-center rounded-xl bg-[#2F855A] px-4 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-white shadow-sm transition hover:bg-[#38A169]"
+            >
+              Add car to inventory
+            </Link>
           </div>
         </div>
       </div>

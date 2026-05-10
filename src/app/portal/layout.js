@@ -84,6 +84,13 @@ function HeaderNavLink({ href, label, Icon, pathname }) {
   );
 }
 
+/** Long car form: hide bottom tabs so fixed Publish/Cancel is not covered */
+function hidePortalMobileTabBar(pathname) {
+  if (!pathname) return false;
+  if (pathname === "/portal/cars/new" || pathname.startsWith("/portal/cars/new/")) return true;
+  return /^\/portal\/cars\/[^/]+\/edit$/.test(pathname);
+}
+
 export default function PortalLayout({ children }) {
   const path = usePathname();
   const router = useRouter();
@@ -434,37 +441,44 @@ export default function PortalLayout({ children }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto custom-scrollbar bg-white pb-20 lg:pb-0">
+      <main
+        className={clsx(
+          "flex-1 overflow-y-auto custom-scrollbar bg-white lg:pb-0",
+          hidePortalMobileTabBar(path) ? "pb-8 max-lg:pb-[calc(6rem+env(safe-area-inset-bottom))]" : "pb-20 max-lg:pb-[calc(5rem+env(safe-area-inset-bottom))]"
+        )}
+      >
         <div className="p-4 sm:p-5 lg:p-8 w-full max-w-7xl mx-auto">
           {children}
         </div>
       </main>
 
-      {/* Mobile Bottom Tab Bar — visible below lg */}
-      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-white/98 dark:bg-[#0a0a0a]/98 backdrop-blur-md border-t border-[#ddd4c8] dark:border-slate-800 flex items-stretch" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-        {[
-          { href: "/portal",           label: "Overview",  Icon: LayoutDashboard },
-          { href: "/portal/inventory", label: "Inventory", Icon: Package         },
-          { href: "/portal/leads",     label: "Leads",     Icon: MessageSquare   },
-          { href: "/portal/profile",   label: "Profile",   Icon: Settings        },
-          { href: "/portal/cars/new",  label: "Add Car",   Icon: Plus            },
-        ].map(({ href, label, Icon }) => {
-          const active = isNavActive(path, href);
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={clsx(
-                "flex-1 flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-black uppercase tracking-[0.12em] transition-colors",
-                active ? "text-[#2F855A]" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
-              )}
-            >
-              <Icon size={20} strokeWidth={active ? 2.5 : 1.75} />
-              <span>{label}</span>
-            </Link>
-          );
-        })}
-      </nav>
+      {/* Mobile Bottom Tab Bar — hidden on add/edit car so listing actions stay visible */}
+      {!hidePortalMobileTabBar(path) ? (
+        <nav className="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-white/98 dark:bg-[#0a0a0a]/98 backdrop-blur-md border-t border-[#ddd4c8] dark:border-slate-800 flex items-stretch" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
+          {[
+            { href: "/portal", label: "Overview", Icon: LayoutDashboard },
+            { href: "/portal/inventory", label: "Inventory", Icon: Package },
+            { href: "/portal/leads", label: "Leads", Icon: MessageSquare },
+            { href: "/portal/profile", label: "Profile", Icon: Settings },
+            { href: "/portal/cars/new", label: "Add Car", Icon: Plus },
+          ].map(({ href, label, Icon }) => {
+            const active = isNavActive(path, href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={clsx(
+                  "flex-1 flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-black uppercase tracking-[0.12em] transition-colors",
+                  active ? "text-[#2F855A]" : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
+                )}
+              >
+                <Icon size={20} strokeWidth={active ? 2.5 : 1.75} />
+                <span>{label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      ) : null}
     </div>
   );
 }

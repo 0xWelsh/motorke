@@ -1,7 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronRight, Info } from "lucide-react";
 import MediaUploader from "./admin/MediaUploader";
 import {
@@ -189,9 +188,13 @@ function parseCommaFeatures(raw) {
 }
 
 
-function buildBaseSeed(car, currentYear) {
+function buildBaseSeed(car, currentYear, initialDealerId, dealers) {
+  let dealerId = car?.dealerId || "";
+  if (!dealerId && initialDealerId && dealers?.some((d) => d.id === initialDealerId)) {
+    dealerId = initialDealerId;
+  }
   return {
-    dealerId: car?.dealerId || "",
+    dealerId,
     make: car?.make || "",
     model: car?.model || "",
     variant: car?.variant || "",
@@ -278,12 +281,14 @@ function InfieldGroup({ label, required, className = "", children }) {
   );
 }
 
-export default function CarForm({ dealers = [], car = null, action, method = "POST" }) {
+export default function CarForm({ dealers = [], car = null, action, method = "POST", initialDealerId = null }) {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 40 }, (_, i) => currentYear - i);
 
   const isEdit = method === "PUT" && !!car;
   const isPortal = action?.startsWith("/api/portal/");
+  /** Dealer portal + admin car create/edit all need the same mobile/desktop publish chrome */
+  const useMobileDock = Boolean(isPortal || action?.startsWith("/api/admin/cars"));
   const isNew = !isEdit;
 
   const dealerScope = dealers?.[0]?.id || "shared";
@@ -304,7 +309,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     [isPortal, dealerScope]
   );
 
-  const baseSeed = useMemo(() => buildBaseSeed(car, currentYear), [car, currentYear]);
+  const baseSeed = useMemo(
+    () => buildBaseSeed(car, currentYear, initialDealerId, dealers),
+    [car, currentYear, initialDealerId, dealers]
+  );
 
   const [formSeed, setFormSeed] = useState(baseSeed);
   /** Bumps when a fresh portal "new" form is initialized so uncontrolled fields (e.g. price) remount empty. */
@@ -348,7 +356,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   const formRef = useRef(null);
   const [publishReady, setPublishReady] = useState(false);
-  const [portalDockReady, setPortalDockReady] = useState(false);
   const initializedNewFormRef = useRef(false);
   const saveTimeoutRef = useRef(null);
   const uploadedLocalMapRef = useRef(new Map());
@@ -568,10 +575,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     }
     setPublishReady(true);
   }, [dealers.length, selectedDealerId, uploading, submitting]);
-
-  useLayoutEffect(() => {
-    setPortalDockReady(true);
-  }, []);
 
   useEffect(() => {
     recalcPublishReady();
@@ -817,50 +820,54 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   const publishBlocked = submitting || uploading || !publishReady;
 
-  const portalMobileDock =
-    isPortal ? (
-      <div
-        className="lg:hidden fixed inset-x-0 z-[100] border-t border-[#ddd4c8] dark:border-slate-800 bg-white/98 dark:bg-[#0a0a0a]/98 backdrop-blur-md px-3 pt-2.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(0,0,0,0.08)] pointer-events-auto"
-        style={{ bottom: "calc(4.75rem + env(safe-area-inset-bottom, 0px))" }}
-        role="region"
-        aria-label="Listing actions"
-      >
-        <div className="flex items-stretch gap-2 max-w-7xl mx-auto">
-          <a
-            href="/portal"
-            className="flex-1 min-w-0 inline-flex items-center justify-center px-3 py-3 bg-slate-100 dark:bg-[#151515] hover:bg-slate-200 dark:hover:bg-[#1f1f1f] text-slate-800 dark:text-slate-100 font-bold rounded-xl text-[10px] uppercase tracking-wider text-center"
-          >
-            Cancel
-          </a>
-          <button
-            type="button"
-            disabled={publishBlocked}
-            aria-disabled={publishBlocked}
-            title={publishBlocked && !submitting && !uploading ? "Complete required fields and a valid KES price" : undefined}
-            onClick={() => {
-              if (publishBlocked) return;
-              formRef.current?.requestSubmit();
-            }}
-            className="flex-[1.35] min-w-0 inline-flex items-center justify-center gap-1.5 px-3 py-3 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-45 disabled:pointer-events-none disabled:cursor-not-allowed text-white font-bold rounded-xl text-[10px] uppercase tracking-wider"
-          >
-            {submitting ? "Saving…" : isEdit ? "Save" : "Publish"}
-            {!submitting && <Check size={15} aria-hidden />}
-          </button>
-        </div>
-        {!publishReady && !submitting && !uploading ? (
-          <p className="mt-2 text-center text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400 px-1 leading-snug">
-            Fill all required fields and a valid price (KES) to publish
-          </p>
-        ) : null}
+  const mobileCancelHref = isPortal ? "/portal" : "/admin/cars";
+
+  const mobileDock = useMobileDock ? (
+    <div
+      className="lg:hidden fixed left-0 right-0 max-w-[100vw] z-[9999] border-t border-[#ddd4c8] dark:border-slate-800 bg-white dark:bg-[#0a0a0a] px-3 pt-2.5 pb-[max(0.65rem,env(safe-area-inset-bottom))] shadow-[0_-12px_32px_rgba(0,0,0,0.12)]"
+      style={{ bottom: 0 }}
+      role="region"
+      aria-label="Listing actions"
+    >
+      <div className="flex items-stretch gap-2 max-w-7xl mx-auto">
+        <a
+          href={mobileCancelHref}
+          className="flex-1 min-w-0 inline-flex items-center justify-center px-3 py-3.5 bg-slate-100 dark:bg-[#151515] hover:bg-slate-200 dark:hover:bg-[#1f1f1f] text-slate-800 dark:text-slate-100 font-bold rounded-xl text-[10px] uppercase tracking-wider text-center border border-slate-200/80 dark:border-slate-700"
+        >
+          Cancel
+        </a>
+        <button
+          type="button"
+          disabled={publishBlocked}
+          aria-disabled={publishBlocked}
+          title={publishBlocked && !submitting && !uploading ? "Complete required fields and a valid KES price" : undefined}
+          onClick={() => {
+            if (publishBlocked) return;
+            formRef.current?.requestSubmit();
+          }}
+          className="flex-[1.35] min-w-0 inline-flex items-center justify-center gap-1.5 px-3 py-3.5 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-45 disabled:pointer-events-none disabled:cursor-not-allowed text-white font-black rounded-xl text-[11px] uppercase tracking-wider"
+        >
+          {submitting ? "Saving…" : isEdit ? "Save" : "Publish"}
+          {!submitting && <Check size={15} aria-hidden />}
+        </button>
       </div>
-    ) : null;
+      {!publishReady && !submitting && !uploading ? (
+        <p className="mt-2 text-center text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400 px-1 leading-snug">
+          Fill all required fields and a valid price (KES) to publish
+        </p>
+      ) : null}
+    </div>
+  ) : null;
+
+  const formBottomPadding = useMobileDock
+    ? "max-lg:pb-[calc(6.25rem+env(safe-area-inset-bottom))]"
+    : "";
 
   return (
-    <>
     <form
       ref={formRef}
       onSubmit={handleSubmit}
-      className={`space-y-4 sm:space-y-6 animate-in fade-in duration-700 ${isPortal ? "max-lg:pb-[calc(7rem+env(safe-area-inset-bottom))]" : ""}`}
+      className={`relative space-y-4 sm:space-y-6 animate-in fade-in duration-700 ${formBottomPadding}`}
     >
       {error && (
         <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-black uppercase tracking-widest rounded-xl sm:rounded-2xl px-4 py-3 sm:px-6 sm:py-4 flex items-center gap-3">
@@ -887,7 +894,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       )}
       {dealers.length === 1 && dealers[0] && <input type="hidden" name="dealerId" value={dealers[0].id} />}
 
-      {isPortal ? (
+      {useMobileDock ? (
         <div
           className="lg:hidden sticky top-0 z-[15] -mx-1 px-1 py-2 mb-1 bg-white/92 dark:bg-[#0a0a0a]/92 backdrop-blur-md border border-[#ddd4c8]/80 dark:border-slate-800 rounded-xl shadow-sm flex gap-1.5 overflow-x-auto overscroll-x-contain [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           aria-label="Jump to section"
@@ -910,7 +917,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
       ) : null}
 
-      <div className={`space-y-5 sm:space-y-6 ${isPortal ? "max-md:space-y-4" : ""}`}>
+      <div className={`space-y-5 sm:space-y-6 ${useMobileDock ? "max-md:space-y-4" : ""}`}>
         <div id="portal-car-listing" className="scroll-mt-28 md:scroll-mt-8">
           <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-3">Listing</p>
 
@@ -1255,7 +1262,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
         <div className="hidden lg:flex flex-col gap-2 pt-2 pb-4 border-t border-[#ddd4c8]/80 dark:border-slate-800 mt-2">
           <div className="flex flex-wrap justify-between items-center gap-3">
-            <a href={isPortal ? "/portal" : "/admin"} className="px-5 py-2.5 sm:px-6 sm:py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all">
+            <a href={mobileCancelHref} className="px-5 py-2.5 sm:px-6 sm:py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all">
               Cancel
             </a>
             <button
@@ -1268,17 +1275,15 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               {!submitting && <Check size={16} />}
             </button>
           </div>
-          {isPortal && !publishReady && !submitting && !uploading ? (
+          {useMobileDock && !publishReady && !submitting && !uploading ? (
             <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 text-right">
               Fill required fields and a valid price (KES) to enable Publish
             </p>
           ) : null}
         </div>
       </div>
+
+      {mobileDock}
     </form>
-    {portalDockReady && portalMobileDock && typeof document !== "undefined"
-      ? createPortal(portalMobileDock, document.body)
-      : null}
-    </>
     );
   }
