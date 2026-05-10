@@ -25,7 +25,7 @@ function getPrivacySections(support) {
   return [
   {
     title: "1. Who We Are",
-    content: "Welsh Motorhub (\"we\", \"us\", \"our\") is operated by Welsh Motors Ltd, a Kenyan automotive marketplace. This Privacy Policy describes how we collect, use, protect, and share your personal data when you use our platform at welshmotorhub.co.ke (\"Platform\").",
+    content: "Welsh Motorhub (\"we\", \"us\", \"our\") is a trading name of Welsh Motors Ltd, a Kenyan company. This Privacy Policy describes how we collect, use, protect, and share your personal data when you use our platform at welshmotorhub.co.ke (\"Platform\").",
   },
   {
     title: "2. What Data We Collect",
@@ -166,7 +166,8 @@ export default function PrivacyPage() {
             <span className="editorial-heading text-[#718096] dark:text-slate-400">Governance.</span>
           </h1>
           <p className="text-lg text-[#718096] dark:text-slate-400 font-medium max-w-2xl">
-            Effective as of April 7, 2026. This protocol outlines how Welsh Motors Ltd manages, encrypts, and secures your digital assets and identity.
+            Effective as of April 7, 2026. Welsh Motorhub is a trading name of Welsh Motors Ltd. This policy explains how we handle
+            personal data for the platform.
           </p>
         </div>
 

@@ -52,11 +52,16 @@ export default function GlobalFooter() {
           
           {/* Brand Info */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-flex mb-6 transition-transform active:scale-95">
-              <span className="text-[11px] font-black uppercase tracking-[0.24em] text-slate-900 dark:text-white">
-                Welsh Motorhub
-              </span>
-            </Link>
+            <div className="mb-6">
+              <Link href="/" className="inline-flex transition-transform active:scale-95">
+                <span className="text-[11px] font-black uppercase tracking-[0.24em] text-slate-900 dark:text-white">
+                  Welsh Motorhub
+                </span>
+              </Link>
+              <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-500">
+                A trading name of Welsh Motors Ltd
+              </p>
+            </div>
             <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-sm mb-5">
               Welsh Motorhub brings dealer listings from across Kenya together in one place for browsing and comparing. Reach the showroom
               on WhatsApp or by phone when you are ready so you speak with the team behind the inventory, not a random middleman.
@@ -104,7 +109,7 @@ export default function GlobalFooter() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-emerald-200/60 dark:border-emerald-900/40 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-slate-600 dark:text-slate-400 text-xs font-medium">
-            © {currentYear} Welsh Motorhub Platforms. All rights reserved.
+            © {currentYear} Welsh Motors Ltd. All rights reserved.
           </p>
           <div className="flex items-center gap-8 text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-2 text-xs">

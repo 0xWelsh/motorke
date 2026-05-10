@@ -141,8 +141,8 @@ export default function TermsPage() {
             <span className="editorial-heading text-[#718096] dark:text-slate-400">Framework.</span>
           </h1>
           <p className="text-lg text-[#718096] dark:text-slate-400 font-medium max-w-2xl leading-relaxed">
-            Motors Kenya Ltd Operational Standards. Last updated April 7, 2026. 
-            By utilizing the Welsh Motorhub terminal, you agree to these commercial and legal protocols.
+            Welsh Motorhub is a trading name of Welsh Motors Ltd. Last updated April 7, 2026. By using the platform, you agree to
+            these Terms of Service and the policies they refer to.
           </p>
         </div>
 
