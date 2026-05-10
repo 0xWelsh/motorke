@@ -9,6 +9,7 @@ import DealerReviews from "@/components/DealerReviews";
 import DealerInventory from "@/components/DealerInventory";
 import DealerLocationMap from "@/components/DealerLocationMap";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
+import DealerShowroomShare from "@/components/DealerShowroomShare";
 import { calculateDistance } from "@/lib/geolocation";
 import { absoluteUrl, BRAND_OG_IMAGE } from "@/lib/site-url";
 
@@ -63,7 +64,7 @@ export async function generateMetadata(props) {
       url: absoluteUrl(canonical),
       siteName: "Welsh Motorhub",
       locale: "en_KE",
-      images: [{ url: ogImage }],
+      images: [{ url: ogImage, alt: `${dealer.name} on Welsh Motorhub` }],
       type: "website",
     },
     twitter: {
@@ -258,11 +259,13 @@ export default async function DealerPage(props) {
     return absoluteUrl(u.startsWith("/") ? u : `/${u}`);
   };
 
+  const showroomPublicUrl = absoluteUrl(`/dealers/${dealer.slug}`);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "AutoDealer",
     name: dealer.name,
-    url: absoluteUrl(`/dealers/${dealer.slug}`),
+    url: showroomPublicUrl,
     image: absAsset(dealer.logoUrl),
     address: {
       "@type": "PostalAddress",
@@ -365,6 +368,14 @@ export default async function DealerPage(props) {
                   {dealer.whatsapp && <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>WhatsApp Dealer</a>}
                   {dealer.phone && <a href={`tel:${dealer.phone}`} className="w-full mb-2 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>Call Dealer</a>}
                   {dealer.website && <a href={withProtocol(dealer.website)} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>Visit Website</a>}
+                  <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                    <DealerShowroomShare
+                      showroomUrl={showroomPublicUrl}
+                      dealerName={dealer.name}
+                      stockCount={dealer.cars.length}
+                      location={dealer.location || dealer.county || undefined}
+                    />
+                  </div>
                 </div>
               </aside>
             </div>
@@ -475,6 +486,15 @@ export default async function DealerPage(props) {
 
       {/* Persistent Mobile Action Bar */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-[#111111]/90 backdrop-blur-xl border-t border-slate-100 dark:border-slate-800 px-4 py-4 shadow-2xl">
+         <div className="mb-3">
+           <DealerShowroomShare
+             layout="mobileBar"
+             showroomUrl={showroomPublicUrl}
+             dealerName={dealer.name}
+             stockCount={dealer.cars.length}
+             location={dealer.location || dealer.county || undefined}
+           />
+         </div>
          <div className="flex items-center gap-3">
            {dealer.phone && (
              <a href={`tel:${dealer.phone}`} className="flex-1 bg-[#111827] dark:bg-white text-white dark:!text-black py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
