@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Check, ChevronRight, Info } from "lucide-react";
 import MediaUploader from "./admin/MediaUploader";
 import {
@@ -346,6 +347,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [liveDraft, setLiveDraft] = useState({});
 
   const formRef = useRef(null);
+  const [publishReady, setPublishReady] = useState(false);
+  const [portalDockReady, setPortalDockReady] = useState(false);
   const initializedNewFormRef = useRef(false);
   const saveTimeoutRef = useRef(null);
   const uploadedLocalMapRef = useRef(new Map());
@@ -538,6 +541,54 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       form.removeEventListener("change", updateLiveDraft);
     };
   }, [images]);
+
+  const recalcPublishReady = useCallback(() => {
+    const form = formRef.current;
+    if (!form) {
+      setPublishReady(false);
+      return;
+    }
+    if (uploading || submitting) {
+      setPublishReady(false);
+      return;
+    }
+    if (dealers.length > 1 && !String(selectedDealerId || "").trim()) {
+      setPublishReady(false);
+      return;
+    }
+    if (!form.checkValidity()) {
+      setPublishReady(false);
+      return;
+    }
+    const priceRaw = form.querySelector('input[name="price"]')?.value ?? "";
+    const p = parsePriceInputToKesInt(priceRaw);
+    if (!Number.isFinite(p) || p < 1) {
+      setPublishReady(false);
+      return;
+    }
+    setPublishReady(true);
+  }, [dealers.length, selectedDealerId, uploading, submitting]);
+
+  useLayoutEffect(() => {
+    setPortalDockReady(true);
+  }, []);
+
+  useEffect(() => {
+    recalcPublishReady();
+  }, [recalcPublishReady, images, uploading, submitting, formInstanceKey, selectedDealerId]);
+
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form) return undefined;
+    const sync = () => recalcPublishReady();
+    sync();
+    form.addEventListener("input", sync);
+    form.addEventListener("change", sync);
+    return () => {
+      form.removeEventListener("input", sync);
+      form.removeEventListener("change", sync);
+    };
+  }, [recalcPublishReady]);
 
   const applyGeneratedDescription = useCallback((force = false) => {
     if (descriptionTouched && !force) return;
@@ -764,7 +815,48 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
+  const publishBlocked = submitting || uploading || !publishReady;
+
+  const portalMobileDock =
+    isPortal ? (
+      <div
+        className="lg:hidden fixed inset-x-0 z-[100] border-t border-[#ddd4c8] dark:border-slate-800 bg-white/98 dark:bg-[#0a0a0a]/98 backdrop-blur-md px-3 pt-2.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(0,0,0,0.08)] pointer-events-auto"
+        style={{ bottom: "calc(4.75rem + env(safe-area-inset-bottom, 0px))" }}
+        role="region"
+        aria-label="Listing actions"
+      >
+        <div className="flex items-stretch gap-2 max-w-7xl mx-auto">
+          <a
+            href="/portal"
+            className="flex-1 min-w-0 inline-flex items-center justify-center px-3 py-3 bg-slate-100 dark:bg-[#151515] hover:bg-slate-200 dark:hover:bg-[#1f1f1f] text-slate-800 dark:text-slate-100 font-bold rounded-xl text-[10px] uppercase tracking-wider text-center"
+          >
+            Cancel
+          </a>
+          <button
+            type="button"
+            disabled={publishBlocked}
+            aria-disabled={publishBlocked}
+            title={publishBlocked && !submitting && !uploading ? "Complete required fields and a valid KES price" : undefined}
+            onClick={() => {
+              if (publishBlocked) return;
+              formRef.current?.requestSubmit();
+            }}
+            className="flex-[1.35] min-w-0 inline-flex items-center justify-center gap-1.5 px-3 py-3 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-45 disabled:pointer-events-none disabled:cursor-not-allowed text-white font-bold rounded-xl text-[10px] uppercase tracking-wider"
+          >
+            {submitting ? "Saving…" : isEdit ? "Save" : "Publish"}
+            {!submitting && <Check size={15} aria-hidden />}
+          </button>
+        </div>
+        {!publishReady && !submitting && !uploading ? (
+          <p className="mt-2 text-center text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400 px-1 leading-snug">
+            Fill all required fields and a valid price (KES) to publish
+          </p>
+        ) : null}
+      </div>
+    ) : null;
+
   return (
+    <>
     <form
       ref={formRef}
       onSubmit={handleSubmit}
@@ -1161,45 +1253,32 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           </div>
         </div>
 
-        <div className="hidden lg:flex flex-wrap justify-between items-center gap-3 pt-2 pb-4 border-t border-[#ddd4c8]/80 dark:border-slate-800 mt-2">
-          <a href={isPortal ? "/portal" : "/admin"} className="px-5 py-2.5 sm:px-6 sm:py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all">
-            Cancel
-          </a>
-          <button
-            type="submit"
-            disabled={submitting || uploading}
-            className="px-6 py-2.5 sm:px-8 sm:py-3 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-50 text-slate-900 dark:text-white font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all inline-flex items-center justify-center gap-2"
-          >
-            {submitting ? "Saving..." : isEdit ? "Save" : "Publish"}
-            {!submitting && <Check size={16} />}
-          </button>
-        </div>
-
-        {isPortal ? (
-          <div
-            className="lg:hidden fixed inset-x-0 z-[55] border-t border-[#ddd4c8] dark:border-slate-800 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md px-3 pt-2.5 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.06)]"
-            style={{ bottom: "calc(4rem + env(safe-area-inset-bottom, 0px))" }}
-          >
-            <div className="flex items-stretch gap-2 max-w-7xl mx-auto">
-              <a
-                href="/portal"
-                className="flex-1 min-w-0 inline-flex items-center justify-center px-3 py-3 bg-slate-100 dark:bg-[#151515] hover:bg-slate-200 dark:hover:bg-[#1f1f1f] text-slate-800 dark:text-slate-100 font-bold rounded-xl text-[10px] uppercase tracking-wider text-center"
-              >
-                Cancel
-              </a>
-              <button
-                type="button"
-                disabled={submitting || uploading}
-                onClick={() => formRef.current?.requestSubmit()}
-                className="flex-[1.35] min-w-0 inline-flex items-center justify-center gap-1.5 px-3 py-3 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-50 text-white font-bold rounded-xl text-[10px] uppercase tracking-wider"
-              >
-                {submitting ? "Saving…" : isEdit ? "Save" : "Publish"}
-                {!submitting && <Check size={15} />}
-              </button>
-            </div>
+        <div className="hidden lg:flex flex-col gap-2 pt-2 pb-4 border-t border-[#ddd4c8]/80 dark:border-slate-800 mt-2">
+          <div className="flex flex-wrap justify-between items-center gap-3">
+            <a href={isPortal ? "/portal" : "/admin"} className="px-5 py-2.5 sm:px-6 sm:py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all">
+              Cancel
+            </a>
+            <button
+              type="submit"
+              disabled={publishBlocked}
+              title={publishBlocked && !submitting && !uploading ? "Complete required fields and a valid KES price" : undefined}
+              className="px-6 py-2.5 sm:px-8 sm:py-3 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-45 disabled:cursor-not-allowed text-slate-900 dark:text-white font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all inline-flex items-center justify-center gap-2"
+            >
+              {submitting ? "Saving..." : isEdit ? "Save" : "Publish"}
+              {!submitting && <Check size={16} />}
+            </button>
           </div>
-        ) : null}
+          {isPortal && !publishReady && !submitting && !uploading ? (
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 text-right">
+              Fill required fields and a valid price (KES) to enable Publish
+            </p>
+          ) : null}
+        </div>
       </div>
     </form>
+    {portalDockReady && portalMobileDock && typeof document !== "undefined"
+      ? createPortal(portalMobileDock, document.body)
+      : null}
+    </>
     );
   }
