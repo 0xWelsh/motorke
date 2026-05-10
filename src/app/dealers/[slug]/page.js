@@ -181,7 +181,7 @@ export default async function DealerPage(props) {
 
   const whatsappNumber = dealer.whatsapp?.replace(/\D/g, "") || "";
   const whatsappPrefill = encodeURIComponent(
-    `Hi, I'm viewing your showroom on MotorKE and I'd like to ask about your available cars.`
+    `Hi, I'm viewing your showroom on Welsh Motorhub and I'd like to ask about your available cars.`
   );
   const whatsappChatHref = whatsappNumber
     ? `https://wa.me/${whatsappNumber}?text=${whatsappPrefill}`
