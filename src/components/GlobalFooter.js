@@ -58,7 +58,8 @@ export default function GlobalFooter() {
               </span>
             </Link>
             <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-sm mb-5">
-              Verified Kenyan inventory from real dealers — compare, contact, and buy with clarity.
+              Welsh Motorhub brings dealer listings from across Kenya together in one place for browsing and comparing. Reach the showroom
+              on WhatsApp or by phone when you are ready so you speak with the team behind the inventory, not a random middleman.
             </p>
             <div className="flex flex-wrap items-center gap-3">
               <Link
