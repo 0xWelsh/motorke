@@ -8,6 +8,11 @@ import ImageGallery from "@/components/ImageGallery";
 import ProfileCompletenessPanel from "@/components/ProfileCompletenessPanel";
 import PhoneVerificationControl from "@/components/PhoneVerificationControl";
 import { PHONE_VERIFICATION_ENABLED } from "@/lib/feature-flags";
+import {
+  PHONE_COUNTRY_CODE_HELPER,
+  PHONE_PLACEHOLDER_INTERNATIONAL,
+  WHATSAPP_STORE_HELPER,
+} from "@/lib/phone-hints";
 import { User, Mail, Shield, Calendar, Plus, Building2, MapPin, Globe, Phone } from "lucide-react";
 
 export const metadata = { title: "Profile Settings — Welsh Motorhub Dealer Portal" };
@@ -282,12 +287,32 @@ export default async function PortalProfilePage({ searchParams }) {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
-                    <label className={labelCls}>Business Phone</label>
-                    <input id="dealer-phone-field" name="phone" defaultValue={user.dealer.phone || ""} className={inputCls} required />
+                    <label className={labelCls}>Business phone</label>
+                    <input
+                      id="dealer-phone-field"
+                      name="phone"
+                      type="tel"
+                      inputMode="tel"
+                      autoComplete="tel"
+                      defaultValue={user.dealer.phone || ""}
+                      className={inputCls}
+                      placeholder={PHONE_PLACEHOLDER_INTERNATIONAL}
+                      required
+                    />
+                    <p className="mt-1.5 text-[11px] font-medium text-slate-500">{PHONE_COUNTRY_CODE_HELPER}</p>
                   </div>
                   <div>
                     <label className={labelCls}>WhatsApp</label>
-                    <input id="dealer-whatsapp-field" name="whatsapp" defaultValue={user.dealer.whatsapp || ""} className={inputCls} placeholder="2547XXXXXXXX" />
+                    <input
+                      id="dealer-whatsapp-field"
+                      name="whatsapp"
+                      type="tel"
+                      inputMode="numeric"
+                      defaultValue={user.dealer.whatsapp || ""}
+                      className={inputCls}
+                      placeholder="254712345678"
+                    />
+                    <p className="mt-1.5 text-[11px] font-medium text-slate-500">{WHATSAPP_STORE_HELPER}</p>
                   </div>
                 </div>
                 {PHONE_VERIFICATION_ENABLED ? (

@@ -6,6 +6,7 @@ import { clsx } from "clsx";
 import LocationPicker from "./LocationPicker";
 import Link from "next/link";
 import HumanCheck from "./HumanCheck";
+import { PHONE_COUNTRY_CODE_HELPER, PHONE_PLACEHOLDER_INTERNATIONAL } from "@/lib/phone-hints";
 
 const COUNTIES = [
   "Nairobi","Mombasa","Kisumu","Nakuru","Uasin Gishu","Kiambu","Machakos",
@@ -279,16 +280,19 @@ export default function SignupForm({ error: initialError, initialRole }) {
                 </div>
 
                 <div className="md:col-span-1">
-                  <label htmlFor="phone" className="block text-[10px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-2">Primary Phone</label>
+                  <label htmlFor="phone" className="block text-[10px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-2">Primary phone</label>
                   <input 
                     id="phone"
                     name="phone" 
                     type="tel" 
+                    inputMode="tel"
+                    autoComplete="tel"
                     required
-                    placeholder="+254 7__ ___ ___" 
+                    placeholder={PHONE_PLACEHOLDER_INTERNATIONAL}
                     className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
                     style={{ borderRadius: '2px' }}
                   />
+                  <p className="mt-2 text-[10px] font-medium text-slate-500 leading-snug">{PHONE_COUNTRY_CODE_HELPER}</p>
                 </div>
 
                 <div className="md:col-span-2">

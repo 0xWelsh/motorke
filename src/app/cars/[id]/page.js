@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { unstable_cache } from "next/cache";
 import { formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
+import { telHrefFromMsisdn } from "@/lib/phone-hints";
 import { MessageCircle, ChevronRight, MapPin, Wallet, ShieldCheck, Phone } from "lucide-react";
 import EnquiryForm from "@/components/EnquiryForm";
 import ImageGallery from "@/components/ImageGallery";
@@ -528,15 +529,15 @@ export default async function CarDetailPage({ params }) {
               <FaWhatsapp className="h-6 w-6 shrink-0" aria-hidden />
               <span className="pr-0.5">WhatsApp</span>
             </a>
-          ) : (
+          ) : dealer.phone && telHrefFromMsisdn(dealer.phone) ? (
             <Link
-              href={`tel:${String(dealer.phone || "").replace(/\s/g, "")}`}
+              href={telHrefFromMsisdn(dealer.phone)}
               className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3.5 text-[13px] font-bold text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.98]"
             >
               <Phone className="h-5 w-5 shrink-0" aria-hidden />
               Call
             </Link>
-          )}
+          ) : null}
         </div>
       </div>
 

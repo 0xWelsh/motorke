@@ -1,5 +1,10 @@
 // src/app/admin/dealers/new/page.js
 import { requireAdmin } from "@/lib/auth";
+import {
+  PHONE_COUNTRY_CODE_HELPER,
+  PHONE_PLACEHOLDER_INTERNATIONAL,
+  WHATSAPP_STORE_HELPER,
+} from "@/lib/phone-hints";
 import LocationPicker from "@/components/LocationPicker";
 
 export const metadata = { title: "Add Dealership — Admin" };
@@ -60,12 +65,21 @@ export default async function AdminNewDealerPage(props) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>Phone *</label>
-              <input name="phone" required placeholder="+254 720 100 200" className={inputCls} />
+              <input
+                name="phone"
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                required
+                placeholder={PHONE_PLACEHOLDER_INTERNATIONAL}
+                className={inputCls}
+              />
+              <p className="text-[11px] font-medium text-slate-500 mt-2">{PHONE_COUNTRY_CODE_HELPER}</p>
             </div>
             <div>
-              <label className={labelCls}>WhatsApp number</label>
-              <input name="whatsapp" placeholder="254720100200" className={inputCls} />
-              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-2 block">Country code, no +</p>
+              <label className={labelCls}>WhatsApp</label>
+              <input name="whatsapp" type="tel" inputMode="numeric" placeholder="254720100200" className={inputCls} />
+              <p className="text-[11px] font-medium text-slate-500 mt-2">{WHATSAPP_STORE_HELPER}</p>
             </div>
           </div>
 

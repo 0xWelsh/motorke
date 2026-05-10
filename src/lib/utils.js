@@ -42,10 +42,12 @@ export function clamp(val, min, max) {
   return Math.min(Math.max(val, min), max);
 }
 
-/** Build WhatsApp link for a car enquiry */
+/** Build WhatsApp link for a car enquiry (wa.me expects digits, country code, no +) */
 export function whatsappLink(whatsapp, carTitle, dealerName) {
+  const digits = String(whatsapp ?? "").replace(/\D/g, "");
+  if (!digits) return "#";
   const msg = encodeURIComponent(
     `Hi ${dealerName}, I am interested in the ${carTitle}. Is it still available? Please share final price and viewing details.`
   );
-  return `https://wa.me/${whatsapp}?text=${msg}`;
+  return `https://wa.me/${digits}?text=${msg}`;
 }

@@ -12,6 +12,7 @@ import TrackEventOnMount from "@/components/TrackEventOnMount";
 import DealerShowroomShare from "@/components/DealerShowroomShare";
 import { calculateDistance } from "@/lib/geolocation";
 import { absoluteUrl, BRAND_OG_IMAGE } from "@/lib/site-url";
+import { telHrefFromMsisdn } from "@/lib/phone-hints";
 
 // Force dynamic and no-cache
 export const dynamic = "force-dynamic";
@@ -186,14 +187,15 @@ export default async function DealerPage(props) {
   const whatsappChatHref = whatsappNumber
     ? `https://wa.me/${whatsappNumber}?text=${whatsappPrefill}`
     : null;
+  const dealerTelHref = dealer.phone ? telHrefFromMsisdn(dealer.phone) : "";
 
   // Contact links array
   const contactLinks = [];
-  if (dealer.phone) {
+  if (dealerTelHref) {
     contactLinks.push({
       icon: <Phone className="w-4 h-4" />,
       label: "Call Us",
-      href: `tel:${dealer.phone}`,
+      href: dealerTelHref,
     });
   }
   if (dealer.whatsapp) {
@@ -366,7 +368,15 @@ export default async function DealerPage(props) {
                     </a>
                   )}
                   {dealer.whatsapp && <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>WhatsApp Dealer</a>}
-                  {dealer.phone && <a href={`tel:${dealer.phone}`} className="w-full mb-2 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>Call Dealer</a>}
+                  {dealerTelHref ? (
+                    <a
+                      href={dealerTelHref}
+                      className="w-full mb-2 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]"
+                      style={{ borderRadius: "10px" }}
+                    >
+                      Call Dealer
+                    </a>
+                  ) : null}
                   {dealer.website && <a href={withProtocol(dealer.website)} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>Visit Website</a>}
                   <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
                     <DealerShowroomShare
@@ -432,7 +442,7 @@ export default async function DealerPage(props) {
               <h4 className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-600 dark:text-slate-400 mb-3">Dealer info</h4>
               <div className="space-y-2.5 mb-4 text-[12px] font-semibold text-slate-700 dark:text-slate-300">
                 <div className="flex justify-between gap-3"><span className="text-slate-500">Business type</span><span>Dealership</span></div>
-                <div className="flex justify-between gap-3"><span className="text-slate-500">Phone</span><span>{dealer.phone || "Not shared"}</span></div>
+                <div className="flex justify-between gap-3"><span className="text-slate-500">Phone</span><span dir="ltr" className="text-right">{dealer.phone || "Not shared"}</span></div>
                 <div className="flex justify-between gap-3"><span className="text-slate-500">Email</span><span className="truncate">{dealer.email || "Not shared"}</span></div>
                 <div className="flex justify-between gap-3"><span className="text-slate-500">Website</span><span className="truncate">{dealer.website || "Not shared"}</span></div>
                 <div className="flex justify-between gap-3"><span className="text-slate-500">Verified</span><span>{dealer.verified ? "Yes" : "Pending"}</span></div>
@@ -496,11 +506,11 @@ export default async function DealerPage(props) {
            />
          </div>
          <div className="flex items-center gap-3">
-           {dealer.phone && (
-             <a href={`tel:${dealer.phone}`} className="flex-1 bg-[#111827] dark:bg-white text-white dark:!text-black py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
+           {dealerTelHref ? (
+             <a href={dealerTelHref} className="flex-1 bg-[#111827] dark:bg-white text-white dark:!text-black py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
                 Call
              </a>
-           )}
+           ) : null}
            {dealer.whatsapp && (
              <a href={whatsappChatHref} className="flex-1 bg-[#38A169] text-white py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
                 WhatsApp

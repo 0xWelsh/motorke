@@ -2,7 +2,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Settings, Bookmark, MessageSquare, History, Phone, ShieldCheck, Clock, MapPin, Eye, EyeOff } from "lucide-react";
-import { formatCarPrice } from "@/lib/utils";
+import { formatCarPrice, whatsappLink } from "@/lib/utils";
+import { PHONE_COUNTRY_CODE_HELPER, PHONE_PLACEHOLDER_INTERNATIONAL, telHrefFromMsisdn } from "@/lib/phone-hints";
 import { clsx } from "clsx";
 import BuyerLocationSettings from "./BuyerLocationSettings";
 import CarCard from "./CarCard";
@@ -155,8 +156,17 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                   <input value={email} onChange={e => setEmail(e.target.value)} type="email" required className={clsx(inputCls, "bg-[#fbfcfe] dark:bg-[#111111]/50 text-slate-400 cursor-not-allowed")} disabled />
                 </div>
                 <div>
-                  <label className={labelCls}>Contact Phone</label>
-                  <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="+254 7XX XXX XXX" className={inputCls} />
+                  <label className={labelCls}>Contact phone</label>
+                  <input
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder={PHONE_PLACEHOLDER_INTERNATIONAL}
+                    className={inputCls}
+                  />
+                  <p className="mt-1.5 text-[10px] font-medium text-slate-500">{PHONE_COUNTRY_CODE_HELPER}</p>
                   {PHONE_VERIFICATION_ENABLED ? (
                     <div className="mt-2">
                       <PhoneVerificationControl phone={phone} />
@@ -280,16 +290,21 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                       )}
                       
                       <div className="flex flex-wrap gap-2">
-                        {e.dealer.phone && (
-                          <a href={`tel:${e.dealer.phone}`} className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-2xl text-xs font-semibold transition">
+                        {e.dealer.phone && telHrefFromMsisdn(e.dealer.phone) ? (
+                          <a href={telHrefFromMsisdn(e.dealer.phone)} className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-2xl text-xs font-semibold transition">
                             <Phone size={14} /> Call
                           </a>
-                        )}
-                        {e.dealer.whatsapp && (
-                          <a href={`https://wa.me/${e.dealer.whatsapp}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-emerald-700 text-slate-900 dark:text-white px-4 py-2 rounded-2xl text-xs font-semibold transition">
+                        ) : null}
+                        {e.dealer.whatsapp ? (
+                          <a
+                            href={whatsappLink(e.dealer.whatsapp, `${e.car.year} ${e.car.make} ${e.car.model}`, e.dealer.name)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-emerald-700 text-slate-900 dark:text-white px-4 py-2 rounded-2xl text-xs font-semibold transition"
+                          >
                             <MessageSquare size={14} className="fill-white" /> WhatsApp
                           </a>
-                        )}
+                        ) : null}
                         {!e.car.available && (
                           <span className="flex items-center gap-2 bg-rose-50 text-rose-500 border border-rose-100 px-4 py-2.5 rounded-2xl text-xs font-black">
                             Unit Sold

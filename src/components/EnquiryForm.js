@@ -6,6 +6,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { whatsappLink } from "@/lib/utils";
+import {
+  PHONE_COUNTRY_CODE_HELPER,
+  PHONE_PLACEHOLDER_INTERNATIONAL,
+  telHrefFromMsisdn,
+} from "@/lib/phone-hints";
 import { trackUiEvent } from "@/lib/analytics";
 
 function normalizeKenyanPhone(value) {
@@ -46,7 +51,8 @@ export default function EnquiryForm({
   const waLink = dealer.whatsapp
     ? whatsappLink(dealer.whatsapp, carTitle, dealer.name)
     : null;
-  const callLink = dealer.phone ? `tel:${dealer.phone}` : null;
+  const callHref = dealer.phone ? telHrefFromMsisdn(dealer.phone) : "";
+  const callLink = callHref || null;
 
   const quickMessages = [
     "Is this car still available?",
@@ -80,7 +86,9 @@ export default function EnquiryForm({
     const normalizedPhone = normalizeKenyanPhone(phone);
     if (!isValidKenyanPhone(normalizedPhone)) {
       setState("error");
-      setErrorText("Use a valid Kenyan number (e.g. 07XXXXXXXX or +2547XXXXXXXX).");
+      setErrorText(
+        "Enter a valid Kenya mobile with country code (+254… or 254…), or local 07… / 7… ."
+      );
       return;
     }
 
@@ -217,18 +225,19 @@ export default function EnquiryForm({
             className={inputCls}
             style={{ borderRadius: '2px' }}
           />
-          <div className="relative">
-             <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
-                <span className="text-xs">🇰🇪</span>
-                <span className="text-[11px] font-bold text-slate-400">+254</span>
-             </div>
-             <input
-               type="tel"
-               value={phone} onChange={(e) => setPhone(e.target.value)}
-               placeholder="Phone (optional)"
-               className={`${inputCls} !pl-20`}
-               style={{ borderRadius: '2px' }}
-             />
+          <div>
+            <input
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+              placeholder={PHONE_PLACEHOLDER_INTERNATIONAL}
+              className={inputCls}
+              style={{ borderRadius: "2px" }}
+            />
+            <p className="mt-1.5 text-[10px] font-medium text-slate-500 leading-snug">{PHONE_COUNTRY_CODE_HELPER}</p>
           </div>
           
           <textarea
