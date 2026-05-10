@@ -7,7 +7,15 @@ import NewsRibbon from "@/components/NewsRibbon";
 import HeroReviews from "@/components/HeroReviews";
 import BrowsePanel from "@/components/BrowsePanel";
 import {
-  ArrowUpRight, ArrowRight, Sparkles, ChevronRight, Bookmark, ShieldCheck, Star, BadgeCheck, Compass
+  ArrowUpRight,
+  ArrowRight,
+  Sparkles,
+  ChevronRight,
+  Bookmark,
+  Building2,
+  MessageCircle,
+  GitCompare,
+  RefreshCw,
 } from "lucide-react";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
@@ -494,25 +502,43 @@ export default async function HomePage() {
             <div>
               <p className="text-[#38A169] text-xs font-bold uppercase tracking-[0.32em] mb-5">The Difference</p>
               <h2 className="text-3xl sm:text-5xl font-bold leading-[1.1] mb-6">
-                Marketplace purity<br />
-                <span className="editorial-heading text-[#718096]">without the hassle.</span>
+                Less scrolling.<br />
+                <span className="editorial-heading text-[#718096]">More real cars.</span>
               </h2>
               <p className="text-base sm:text-lg text-[#A0AEC0] leading-relaxed max-w-xl font-medium">
-                Tired of recycled listings and unverified sellers? Welsh Motorhub provides a direct link
-                to the actual stock sitting on dealership floors. No middlemen, no scraped data,
-                just high-fidelity inventory.
+                Welsh Motorhub is built around dealer inventory you can tie to a real showroom—so you compare
+                in one place, then move the conversation straight to WhatsApp or a phone call when you are ready.
+                Fewer phantom posts, fewer dead ends.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-stretch">
               {[
-                { title: "Dealer Verified", icon: <ShieldCheck />, desc: "Every unit is hand-uploaded by real businesses." },
-                { title: "Pricing Clarity", icon: <BadgeCheck />, desc: "Final listed prices shown upfront with no hidden calculations." },
-                { title: "Direct Contact", icon: <Star />, desc: "Communicate directly via WhatsApp or Phone." },
-                { title: "Fresh Stock", icon: <Compass />, desc: "Listings are removed the second they sell." },
+                {
+                  title: "Yard-first listings",
+                  icon: <Building2 className="h-6 w-6" aria-hidden />,
+                  desc: "Cars come from partner dealers with a physical presence—not scraped dumps or anonymous “DM for price” threads.",
+                },
+                {
+                  title: "Straight to the seller",
+                  icon: <MessageCircle className="h-6 w-6" aria-hidden />,
+                  desc: "You reach the dealership’s line. Ask about finance, trade-in, or viewing—without a mystery broker in the middle.",
+                },
+                {
+                  title: "Compare before you commit",
+                  icon: <GitCompare className="h-6 w-6" aria-hidden />,
+                  desc: "Use specs, photos, and our tools to shortlist seriously, so your next step is a viewing—not another wild goose chase.",
+                },
+                {
+                  title: "Stock that keeps pace",
+                  icon: <RefreshCw className="h-6 w-6" aria-hidden />,
+                  desc: "We expect listings to reflect what’s still on the floor. When something moves, it should come down—quickly.",
+                },
               ].map((item, i) => (
                 <div key={i} className="flex h-full flex-col gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
-                  <div className="text-[#38A169]">{item.icon}</div>
+                  <div className="text-[#38A169]" aria-hidden>
+                    {item.icon}
+                  </div>
                   <h3 className="font-bold text-lg">{item.title}</h3>
                   <p className="text-sm text-[#A0AEC0] leading-relaxed font-medium">{item.desc}</p>
                 </div>
