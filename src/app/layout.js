@@ -26,15 +26,24 @@ export const metadata = {
     template: "%s | Welsh Motorhub",
   },
   description:
-    "Browse verified vehicles from trusted dealers across Kenya. Compare specs, duties, running costs, and contact dealers directly on Welsh Motorhub.",
+    "Welsh Motorhub is Kenya's verified car marketplace — browse dealer inventory across Nairobi, Mombasa, Kisumu and beyond. Compare specs, duties, and running costs, then contact dealers directly.",
+  applicationName: "Welsh Motorhub",
+  category: "automotive",
   keywords: [
+    "Welsh Motorhub",
+    "Welsh Motorhub Kenya",
+    "Welsh Motors Kenya",
     "used cars Kenya",
     "cars for sale Kenya",
-    "Welsh Motorhub",
     "car dealers Nairobi",
+    "car dealers Mombasa",
+    "verified car dealers Kenya",
     "compare cars Kenya",
     "vehicle marketplace Kenya",
   ],
+  alternates: {
+    canonical: "/",
+  },
   robots: {
     index: true,
     follow: true,
@@ -95,8 +104,62 @@ export default async function RootLayout({ children }) {
     avatarUrl: session.user.avatarUrl || null,
   } : null;
 
+  const origin = getSiteOrigin();
+  const sameAs = [
+    process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM,
+    process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK,
+    process.env.NEXT_PUBLIC_SOCIAL_TIKTOK,
+    process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN,
+    process.env.NEXT_PUBLIC_SOCIAL_X,
+  ].filter(Boolean);
+
+  const organizationLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Welsh Motorhub",
+    legalName: "Welsh Motors Ltd",
+    alternateName: ["Welsh Motors", "Welsh Motorhub Kenya"],
+    url: origin,
+    logo: `${origin}/headerlogo.png`,
+    image: `${origin}${BRAND_OG_IMAGE}`,
+    description:
+      "Welsh Motorhub is Kenya's verified car marketplace connecting buyers with trusted dealers across the country.",
+    areaServed: { "@type": "Country", name: "Kenya" },
+    address: { "@type": "PostalAddress", addressCountry: "KE", addressLocality: "Nairobi" },
+    ...(sameAs.length ? { sameAs } : {}),
+  };
+
+  const websiteLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Welsh Motorhub",
+    alternateName: "Welsh Motors",
+    url: origin,
+    inLanguage: "en-KE",
+    publisher: { "@type": "Organization", name: "Welsh Motorhub" },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: { "@type": "EntryPoint", urlTemplate: `${origin}/cars?search={search_term_string}` },
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Country / region signals for "Welsh Motorhub" vs Wales disambiguation in search */}
+        <meta name="geo.region" content="KE" />
+        <meta name="geo.placename" content="Nairobi, Kenya" />
+        <meta name="ICBM" content="-1.2921, 36.8219" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }}
+        />
+      </head>
       <body className={`${playfair.variable} bg-background text-slate-900 dark:text-white min-h-screen antialiased flex flex-col font-sans transition-colors duration-300`}>
         <PWARegister />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
