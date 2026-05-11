@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Share2 } from "lucide-react";
+import { Share2, Facebook } from "lucide-react";
 import { trackUiEvent } from "@/lib/analytics";
+import { shareToFacebookWithCaption } from "@/lib/share-helpers";
 
 /**
  * @param {{ showroomUrl: string; dealerName: string; stockCount?: number; location?: string; layout?: "stacked" | "mobileBar" }} props
@@ -15,6 +16,7 @@ export default function DealerShowroomShare({
   layout = "stacked",
 }) {
   const [copied, setCopied] = useState(false);
+  const [fbHint, setFbHint] = useState(null); // "copied" | "manual" | null
 
   const url = (showroomUrl || "").trim();
   const meta = [stockCount ? `${stockCount} cars in stock` : null, location].filter(Boolean).join(" · ");
@@ -32,6 +34,17 @@ export default function DealerShowroomShare({
     "Browse inventory & contact:",
     url,
   ];
+
+  // Facebook caption — Facebook will render the OG preview from the URL itself,
+  // so we keep this caption clean and post-style without re-pasting the link.
+  const fbCaption = [
+    `${dealerName} — verified showroom on Welsh Motorhub.`,
+    meta || null,
+    "",
+    "Tap to browse the live inventory and contact the dealer directly.",
+  ]
+    .filter((line) => line !== null)
+    .join("\n");
 
   function emitShare(kind) {
     trackUiEvent("share_dealer_showroom", {
@@ -69,6 +82,14 @@ export default function DealerShowroomShare({
       return;
     }
     await copyLink();
+  }
+
+  async function shareFacebook() {
+    if (!url) return;
+    const copiedOk = await shareToFacebookWithCaption(url, fbCaption);
+    setFbHint(copiedOk ? "copied" : "manual");
+    setTimeout(() => setFbHint(null), 4000);
+    emitShare("facebook");
   }
 
   const waText = encodeURIComponent(shareLines.join("\n"));
@@ -122,6 +143,21 @@ export default function DealerShowroomShare({
         >
           WhatsApp
         </a>
+        <button
+          type="button"
+          onClick={() => shareFacebook()}
+          disabled={!url}
+          className="w-full inline-flex items-center justify-center gap-2 bg-[#1877F2]/12 border border-[#1877F2]/30 text-[#1877F2] px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] hover:bg-[#1877F2]/18 transition-colors disabled:opacity-50"
+          style={{ borderRadius: "10px" }}
+          title="Caption is copied to your clipboard so you can paste it in Facebook"
+        >
+          <Facebook className="w-3.5 h-3.5 shrink-0" aria-hidden />
+          {fbHint === "copied"
+            ? "Caption copied — paste in FB"
+            : fbHint === "manual"
+              ? "Paste caption in FB"
+              : "Facebook"}
+        </button>
       </div>
     </div>
   );
