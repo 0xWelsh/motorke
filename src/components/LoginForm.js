@@ -2,8 +2,10 @@
 // src/components/LoginForm.js
 import { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import HumanCheck from "./HumanCheck";
+import GoogleAuthButton, { GoogleAuthDivider } from "./GoogleAuthButton";
 
 import AuthCarousel from "./AuthCarousel";
 
@@ -14,6 +16,9 @@ export default function LoginForm({ error }) {
   const [captchaToken, setCaptchaToken] = useState("");
   const [usingSecurityFallback, setUsingSecurityFallback] = useState(false);
   const [website, setWebsite] = useState("");
+
+  const searchParams = useSearchParams();
+  const next = searchParams?.get("from") || searchParams?.get("next") || "/";
 
   const requiresHumanCheck = Boolean(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
   const canSubmit = email.trim().length > 0 && password.length > 0 && (!requiresHumanCheck || captchaToken.length > 0 || usingSecurityFallback);
@@ -65,13 +70,25 @@ export default function LoginForm({ error }) {
                <p className="text-[10px] font-black uppercase tracking-widest text-rose-500 mb-1">Login Error</p>
                <p className="text-sm font-bold text-slate-600 dark:text-rose-200">
                   {error === "invalid" && "The email or password entered is incorrect."}
-                  {error === "inactive" && "This dealership account is currently inactive."}
+                  {error === "inactive" && "This account is currently inactive. Please contact support."}
                   {error === "captcha" && "Connection failed. Check your connection."}
                   {error === "too_many" && "Too many attempts. Please try again later."}
                   {error === "unknown" && "A system error occurred. Please try again."}
+                  {error === "oauth_unavailable" && "Google sign-in is not configured. Please use email."}
+                  {error === "oauth_invalid" && "Google sign-in request was invalid. Please try again."}
+                  {error === "oauth_state" && "Your Google sign-in session expired. Please try again."}
+                  {error === "oauth_exchange" && "We could not verify your Google session. Please try again."}
+                  {error === "oauth_verify" && "Google did not return a valid profile. Please try again."}
+                  {error === "oauth_user" && "We could not set up your account. Please try email signup."}
+                  {error === "oauth_cancelled" && "Google sign-in was cancelled."}
                </p>
             </div>
           )}
+
+          <div className="mb-2">
+            <GoogleAuthButton mode="signin" next={next} />
+          </div>
+          <GoogleAuthDivider />
 
           <form action="/api/auth/login" method="POST" className="space-y-6">
             <input type="hidden" name="captchaToken" value={captchaToken} readOnly />

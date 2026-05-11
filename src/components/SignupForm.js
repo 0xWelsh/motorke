@@ -6,6 +6,7 @@ import { clsx } from "clsx";
 import LocationPicker from "./LocationPicker";
 import Link from "next/link";
 import HumanCheck from "./HumanCheck";
+import GoogleAuthButton, { GoogleAuthDivider } from "./GoogleAuthButton";
 import { PHONE_COUNTRY_CODE_HELPER, PHONE_PLACEHOLDER_INTERNATIONAL } from "@/lib/phone-hints";
 
 const COUNTIES = [
@@ -186,6 +187,20 @@ export default function SignupForm({ error: initialError, initialRole }) {
                <p className="text-[10px] font-black uppercase tracking-widest text-rose-500 mb-1">Signup Error</p>
                <p className="text-sm font-bold text-slate-600 dark:text-rose-200">{errorMsg}</p>
             </div>
+          )}
+
+          {role === "BUYER" ? (
+            <>
+              <div className="mb-2">
+                <GoogleAuthButton mode="signup" next="/" />
+              </div>
+              <GoogleAuthDivider />
+            </>
+          ) : (
+            <p className="mb-4 text-[10px] font-bold text-slate-500 dark:text-slate-400 leading-relaxed">
+              Dealerships sign up with email so we can verify your business
+              details. Switch to <button type="button" onClick={() => setRole("BUYER")} className="underline underline-offset-2 text-[#38A169]">Personal</button> to use Google one-tap.
+            </p>
           )}
 
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
