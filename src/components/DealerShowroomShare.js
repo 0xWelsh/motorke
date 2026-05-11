@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Share2, Facebook } from "lucide-react";
+import { Share2 } from "lucide-react";
+import { FaFacebookF } from "react-icons/fa";
 import { trackUiEvent } from "@/lib/analytics";
 import { shareToFacebookWithCaption } from "@/lib/share-helpers";
 
@@ -151,7 +152,7 @@ export default function DealerShowroomShare({
           style={{ borderRadius: "10px" }}
           title="Caption is copied to your clipboard so you can paste it in Facebook"
         >
-          <Facebook className="w-3.5 h-3.5 shrink-0" aria-hidden />
+          <FaFacebookF className="w-3.5 h-3.5 shrink-0" aria-hidden />
           {fbHint === "copied"
             ? "Caption copied — paste in FB"
             : fbHint === "manual"
