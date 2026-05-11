@@ -263,19 +263,90 @@ export default async function DealerPage(props) {
 
   const showroomPublicUrl = absoluteUrl(`/dealers/${dealer.slug}`);
 
+  // ── Schema.org enrichments ──────────────────────────────────────────────
+  const prices = dealer.cars.map((c) => Number(c.price)).filter((p) => Number.isFinite(p) && p > 0);
+  const minPrice = prices.length ? Math.min(...prices) : null;
+  const maxPrice = prices.length ? Math.max(...prices) : null;
+  const priceRange = minPrice && maxPrice
+    ? `KES ${minPrice.toLocaleString("en-KE")} - KES ${maxPrice.toLocaleString("en-KE")}`
+    : undefined;
+
+  const dealerSameAs = [
+    dealer.instagramUrl,
+    dealer.facebookUrl,
+    dealer.tiktokUrl,
+    dealer.website,
+  ]
+    .filter(Boolean)
+    .map(withProtocol)
+    .filter(Boolean);
+
+  const openingHoursSpecification = [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      opens: "08:00",
+      closes: "18:00",
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: "Sunday",
+      opens: "10:00",
+      closes: "16:00",
+    },
+  ];
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "AutoDealer",
+    "@id": showroomPublicUrl,
     name: dealer.name,
     url: showroomPublicUrl,
-    image: absAsset(dealer.logoUrl),
+    image: absAsset(dealer.bannerUrl || dealer.logoUrl),
+    logo: absAsset(dealer.logoUrl),
+    description: dealer.description || dealerSummary,
     address: {
       "@type": "PostalAddress",
-      addressLocality: dealer.location,
-      addressRegion: dealer.county,
+      ...(dealer.address ? { streetAddress: dealer.address } : {}),
+      addressLocality: dealer.location || dealer.county || "Nairobi",
+      addressRegion: dealer.county || "Nairobi",
       addressCountry: "KE",
     },
     telephone: dealer.phone || dealer.whatsapp || undefined,
+    ...(dealer.email ? { email: dealer.email } : {}),
+    ...(dealerLat != null && dealerLng != null
+      ? { geo: { "@type": "GeoCoordinates", latitude: dealerLat, longitude: dealerLng } }
+      : {}),
+    ...(priceRange ? { priceRange } : {}),
+    areaServed: { "@type": "Country", name: "Kenya" },
+    openingHoursSpecification,
+    ...(dealerSameAs.length ? { sameAs: dealerSameAs } : {}),
+    ...(totalReviews > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: Number(averageRating.toFixed(2)),
+            reviewCount: totalReviews,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }
+      : {}),
+    parentOrganization: {
+      "@type": "Organization",
+      name: "Welsh Motorhub",
+      url: absoluteUrl("/"),
+    },
+  };
+
+  const dealerBreadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+      { "@type": "ListItem", position: 2, name: "Dealers", item: absoluteUrl("/dealers") },
+      { "@type": "ListItem", position: 3, name: dealer.name, item: showroomPublicUrl },
+    ],
   };
 
   return (
@@ -290,6 +361,7 @@ export default async function DealerPage(props) {
         }}
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(dealerBreadcrumbLd) }} />
 
       <div className="relative w-full overflow-x-hidden">
         <div className="relative h-[176px] sm:h-[240px] lg:h-[380px] w-full overflow-hidden bg-[#111827]">

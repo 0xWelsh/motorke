@@ -1,21 +1,43 @@
 // src/app/sitemap.js
-// Next.js generates /sitemap.xml automatically from this file
+// Next.js generates /sitemap.xml automatically from this file.
 
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
-import { getSiteOrigin } from "@/lib/site-url";
+import { absoluteUrl, getSiteOrigin } from "@/lib/site-url";
+import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 
 const BASE = getSiteOrigin();
 
+function toAbsImage(url) {
+  if (!url) return null;
+  if (/^https?:\/\//i.test(url)) return url;
+  return absoluteUrl(url.startsWith("/") ? url : `/${url}`);
+}
+
 export default async function sitemap() {
+  const carWhere = {
+    available: true,
+    ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+  };
+  const dealerWhere = PUBLIC_ONLY_VERIFIED_DEALERS ? { verified: true } : {};
+
   const [cars, dealers] = await Promise.all([
     db.car.findMany({
-      where:   { available: true },
-      select:  { id: true, updatedAt: true },
+      where: carWhere,
+      select: {
+        id: true,
+        updatedAt: true,
+        images: {
+          orderBy: { order: "asc" },
+          take: 4,
+          select: { url: true },
+        },
+      },
       orderBy: { updatedAt: "desc" },
     }),
     db.dealer.findMany({
-      select:  { slug: true, updatedAt: true },
+      where: dealerWhere,
+      select: { slug: true, updatedAt: true, logoUrl: true, bannerUrl: true },
     }),
   ]);
 
@@ -33,19 +55,29 @@ export default async function sitemap() {
     { url: `${BASE}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.25 },
   ];
 
-  const carPages = cars.map((car) => ({
-    url: `${BASE}/cars/${car.id}`,
-    lastModified: car.updatedAt,
-    changeFrequency: "weekly",
-    priority: 0.85,
-  }));
+  const carPages = cars.map((car) => {
+    const images = (car.images || [])
+      .map((img) => toAbsImage(img.url))
+      .filter(Boolean);
+    return {
+      url: `${BASE}/cars/${car.id}`,
+      lastModified: car.updatedAt,
+      changeFrequency: "weekly",
+      priority: 0.85,
+      ...(images.length ? { images } : {}),
+    };
+  });
 
-  const dealerPages = dealers.map((dealer) => ({
-    url: `${BASE}/dealers/${dealer.slug}`,
-    lastModified: dealer.updatedAt,
-    changeFrequency: "weekly",
-    priority: 0.75,
-  }));
+  const dealerPages = dealers.map((dealer) => {
+    const images = [toAbsImage(dealer.bannerUrl), toAbsImage(dealer.logoUrl)].filter(Boolean);
+    return {
+      url: `${BASE}/dealers/${dealer.slug}`,
+      lastModified: dealer.updatedAt,
+      changeFrequency: "weekly",
+      priority: 0.75,
+      ...(images.length ? { images } : {}),
+    };
+  });
 
   return [...staticPages, ...carPages, ...dealerPages];
 }

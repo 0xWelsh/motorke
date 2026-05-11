@@ -232,32 +232,147 @@ export default async function CarDetailPage({ params }) {
     toAbsImage(i.url)
   );
 
+  // ── Schema.org maps for enum values ─────────────────────────────────────
+  const FUEL_TYPE_LD = {
+    PETROL: "Gasoline",
+    DIESEL: "Diesel",
+    HYBRID: "Hybrid",
+    ELECTRIC: "Electric",
+    LPG: "LPG",
+  };
+  const TRANSMISSION_LD = {
+    AUTOMATIC: "Automatic",
+    MANUAL: "Manual",
+    CVT: "Continuously Variable Transmission",
+  };
+  const DRIVETRAIN_LD = {
+    FWD: "https://schema.org/FrontWheelDriveConfiguration",
+    RWD: "https://schema.org/RearWheelDriveConfiguration",
+    AWD: "https://schema.org/AllWheelDriveConfiguration",
+    FOURWD: "https://schema.org/FourWheelDriveConfiguration",
+  };
+  const conditionLd =
+    car.condition === "NEW"
+      ? "https://schema.org/NewCondition"
+      : car.condition === "CERTIFIED"
+        ? "https://schema.org/RefurbishedCondition"
+        : "https://schema.org/UsedCondition";
+
+  const priceValidUntil = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
+
+  const ratingAvg = reviewsData?.avgRating ? Number(reviewsData.avgRating) : null;
+  const ratingCount = reviewsData?.count || 0;
+
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Product",
-    "name": title,
-    "description": seoDescription,
-    "image": absImages,
-    "brand": {
-      "@type": "Brand",
-      "name": car.make
-    },
-    "sku": car.id,
-    "mpn": car.id,
-    "color": car.color,
-    "offers": {
+    "@type": "Vehicle",
+    name: title,
+    description: seoDescription,
+    image: absImages,
+    url: listingUrl,
+    sku: car.id,
+    mpn: car.id,
+    brand: { "@type": "Brand", name: car.make },
+    manufacturer: { "@type": "Organization", name: car.make },
+    model: car.model,
+    vehicleConfiguration: car.variant || undefined,
+    vehicleModelDate: String(car.year),
+    productionDate: String(car.year),
+    bodyType: car.bodyType,
+    color: car.color || undefined,
+    numberOfDoors: car.doors || undefined,
+    vehicleSeatingCapacity: car.seats || undefined,
+    fuelType: FUEL_TYPE_LD[car.fuelType] || car.fuelType,
+    vehicleTransmission: TRANSMISSION_LD[car.transmission] || car.transmission,
+    driveWheelConfiguration: DRIVETRAIN_LD[car.drivetrain] || undefined,
+    steeringPosition:
+      car.steering === "LHD"
+        ? "https://schema.org/LeftHandDriving"
+        : "https://schema.org/RightHandDriving",
+    itemCondition: conditionLd,
+    countryOfOrigin: car.importCountry || undefined,
+    ...(positiveNum(car.mileage)
+      ? {
+          mileageFromOdometer: {
+            "@type": "QuantitativeValue",
+            value: car.mileage,
+            unitCode: "KMT",
+          },
+        }
+      : {}),
+    ...(positiveNum(car.engineCC)
+      ? {
+          vehicleEngine: {
+            "@type": "EngineSpecification",
+            engineDisplacement: {
+              "@type": "QuantitativeValue",
+              value: car.engineCC,
+              unitCode: "CMQ",
+            },
+            ...(positiveNum(car.horsepower)
+              ? {
+                  enginePower: {
+                    "@type": "QuantitativeValue",
+                    value: car.horsepower,
+                    unitCode: "BHP",
+                  },
+                }
+              : {}),
+            fuelType: FUEL_TYPE_LD[car.fuelType] || car.fuelType,
+          },
+        }
+      : {}),
+    offers: {
       "@type": "Offer",
-      "price": car.price,
-      "priceCurrency": "KES",
-      "itemCondition": car.condition === "NEW" ? "https://schema.org/NewCondition" : "https://schema.org/UsedCondition",
-      "availability": car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-      "url": listingUrl,
-      "seller": {
+      price: car.price,
+      priceCurrency: "KES",
+      priceValidUntil,
+      itemCondition: conditionLd,
+      availability: car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      url: listingUrl,
+      seller: {
         "@type": "AutoDealer",
-        "name": car.dealer?.name || "Welsh Motorhub dealer",
-        "image": car.dealer?.logoUrl
-      }
-    }
+        name: car.dealer?.name || "Welsh Motorhub dealer",
+        ...(car.dealer?.logoUrl ? { image: toAbsImage(car.dealer.logoUrl) } : {}),
+        ...(car.dealer?.location
+          ? {
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: car.dealer.location,
+                addressCountry: "KE",
+              },
+            }
+          : {}),
+      },
+    },
+    ...(ratingAvg && ratingCount > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: ratingAvg,
+            reviewCount: ratingCount,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }
+      : {}),
+  };
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+      { "@type": "ListItem", position: 2, name: "Inventory", item: absoluteUrl("/cars") },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: `${car.make} ${car.model}`,
+        item: listingUrl,
+      },
+    ],
   };
 
   return (
@@ -276,6 +391,11 @@ export default async function CarDetailPage({ params }) {
         id="car-json-ld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <Script
+        id="car-breadcrumb-json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-3 sm:pt-4 pb-20">
