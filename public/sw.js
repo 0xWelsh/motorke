@@ -5,8 +5,8 @@
   Strategy: Cache-first for static assets, network-first for API calls
 */
 
-const CACHE_NAME = "welsh-motorhub-v4";
-const RUNTIME_CACHE = "welsh-motorhub-runtime-v4";
+const CACHE_NAME = "welsh-motorhub-v5";
+const RUNTIME_CACHE = "welsh-motorhub-runtime-v5";
 const OFFLINE_FALLBACK = new Response("Offline", {
   status: 503,
   statusText: "Service Unavailable",

@@ -13,17 +13,16 @@ try {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // Allow any HTTPS image host. User uploads go through /api/upload to
-    // Supabase Storage, but legacy listings and admin/dealer-pasted URLs
-    // can originate from arbitrary CDNs (dealer websites, social hosts,
-    // etc). Restricting to a fixed allowlist silently breaks those.
+    // We serve all car images from Supabase Storage, which already provides
+    // a CDN with caching. Routing them through Vercel's /_next/image
+    // optimizer hits the Hobby-plan image-optimization quota (402 Payment
+    // Required) once a site has many listings. Disable optimization so
+    // <Image> falls back to a plain <img> tag pointing straight at the
+    // source URL — no quota, no extra hop, same render result.
+    unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "**" },
     ],
-    // Keep modern formats and a reasonable cache window so optimized
-    // images don't get re-rendered on every request.
-    formats: ["image/avif", "image/webp"],
-    minimumCacheTTL: 60 * 60 * 24,
     dangerouslyAllowSVG: false,
   },
   // Prevent Prisma from being bundled into the server graph.
