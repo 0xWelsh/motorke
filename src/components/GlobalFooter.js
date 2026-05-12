@@ -45,20 +45,20 @@ export default function GlobalFooter() {
   ];
 
   return (
-    <footer className="relative mt-auto overflow-hidden border-t border-emerald-200/70 dark:border-emerald-900/50 bg-gradient-to-b from-emerald-50/90 via-white to-slate-50/80 dark:from-[#0c1a14] dark:via-[#0a0f0d] dark:to-[#060807] text-slate-900 dark:text-white pt-14 sm:pt-16 pb-8">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/35 to-transparent dark:via-emerald-500/25" aria-hidden />
-      <div className="container mx-auto px-6 max-w-7xl relative">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-6 gap-y-8 lg:gap-10 mb-14">
-          
+    <footer className="relative mt-auto border-t border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white pt-12 sm:pt-16 pb-8">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-6 gap-y-10 lg:gap-10 mb-12">
+
           {/* Brand Info */}
           <div className="lg:col-span-2">
-            <div className="mb-6">
-              <Link href="/" className="inline-flex transition-transform active:scale-95">
+            <div className="mb-5">
+              <Link href="/" className="group inline-flex items-center gap-2 transition-opacity active:opacity-80">
+                <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-[#2F855A] group-hover:bg-[#38A169] transition-colors" />
                 <span className="text-[11px] font-black uppercase tracking-[0.24em] text-slate-900 dark:text-white">
                   Welsh Motorhub
                 </span>
               </Link>
-              <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-500">
+              <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
                 A trading name of Welsh Motors Ltd
               </p>
             </div>
@@ -66,18 +66,18 @@ export default function GlobalFooter() {
               Welsh Motorhub brings dealer listings from across Kenya together in one place for browsing and comparing. Reach the showroom
               on WhatsApp or by phone when you are ready so you speak with the team behind the inventory, not a random middleman.
             </p>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 rounded-lg border border-emerald-600/40 bg-emerald-600/10 px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-emerald-800 transition-colors hover:bg-emerald-600 hover:text-white dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-200 dark:hover:bg-emerald-600 dark:hover:text-white"
+                className="inline-flex items-center gap-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white transition-colors hover:border-slate-900 dark:hover:border-white hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-slate-900"
               >
                 Contact us
               </Link>
               <Link
                 href="/cars"
-                className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 underline-offset-4 transition-colors hover:text-[#2F855A] dark:text-slate-400 dark:hover:text-[#4ade80]"
+                className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400 transition-colors hover:text-[#2F855A] dark:hover:text-[#4ade80]"
               >
-                Browse cars
+                Browse cars →
               </Link>
             </div>
           </div>
@@ -86,10 +86,10 @@ export default function GlobalFooter() {
           <div className="grid grid-cols-3 gap-x-3 sm:gap-x-6 md:gap-x-8 lg:contents">
             {columns.map((col, i) => (
               <div key={i} className="min-w-0">
-                <h4 className="text-[11px] sm:text-[12px] font-bold uppercase tracking-wide sm:tracking-widest text-emerald-800/90 dark:text-emerald-400/90 mb-3 sm:mb-5">
+                <h4 className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 mb-3 sm:mb-5">
                   {col.title}
                 </h4>
-                <ul className="space-y-2.5 sm:space-y-4">
+                <ul className="space-y-2.5 sm:space-y-3">
                   {col.links.map((link, j) => (
                     <li key={j}>
                       <Link
@@ -107,16 +107,19 @@ export default function GlobalFooter() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-emerald-200/60 dark:border-emerald-900/40 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-slate-600 dark:text-slate-400 text-xs font-medium">
+        <div className="pt-6 border-t border-slate-200 dark:border-slate-800/70 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6">
+          <p className="text-slate-500 dark:text-slate-500 text-xs font-medium">
             © {currentYear} Welsh Motors Ltd. All rights reserved.
           </p>
-          <div className="flex items-center gap-8 text-slate-500 dark:text-slate-400">
-            <span className="flex items-center gap-2 text-xs">
-              <MapPin size={14} /> Nairobi, Kenya
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 text-slate-500 dark:text-slate-500">
+            <span className="inline-flex items-center gap-2 text-xs">
+              <MapPin size={13} className="shrink-0" /> Nairobi, Kenya
             </span>
-            <a href={`mailto:${PUBLIC_SUPPORT_EMAIL}`} className="flex items-center gap-2 text-xs hover:text-[#2F855A] dark:hover:text-[#4ade80] transition-colors">
-              <Mail size={14} /> {PUBLIC_SUPPORT_EMAIL}
+            <a
+              href={`mailto:${PUBLIC_SUPPORT_EMAIL}`}
+              className="inline-flex items-center gap-2 text-xs hover:text-[#2F855A] dark:hover:text-[#4ade80] transition-colors break-all"
+            >
+              <Mail size={13} className="shrink-0" /> {PUBLIC_SUPPORT_EMAIL}
             </a>
           </div>
         </div>
