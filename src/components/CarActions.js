@@ -46,18 +46,29 @@ export function SaveButton({ carId, initialSaved = false, isLoggedIn }) {
 }
 
 // ── Recently Viewed Tracker ───────────────────────────────────
-// Call this on every car detail page to track views in localStorage + database
+// Call this on every car detail page to:
+//   1. Write the car into the "recently viewed" localStorage/cookie trail
+//      (used for the homepage rail + on-site personalization).
+//   2. Ping the server-side view counter, but only after the user has
+//      stayed on the page for 2s, so accidental scrolls-and-aways don't
+//      inflate dealer stats. We also send the document.referrer so the
+//      server can attribute the view to Facebook / WhatsApp / Google /
+//      etc.
+const VIEW_DWELL_MS = 2000;
+
 export function TrackRecentView({ car }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
-    
+
+    // 1) Local "recently viewed" trail – do this immediately, it's a UX
+    //    thing and dwell time doesn't matter.
     try {
       const MAX   = 12;
       const entry = {
         id:       car.id,
-        make: car.make,
-        model: car.model,
-        year: car.year,
+        make:     car.make,
+        model:    car.model,
+        year:     car.year,
         title:    `${car.year} ${car.make} ${car.model}`,
         price:    car.price,
         image:    car.image,
@@ -65,23 +76,32 @@ export function TrackRecentView({ car }) {
       };
 
       const existing = readRecentCarsFromStorage();
-      // Remove if already there, add to front
-      const filtered = existing.filter(c => c.id !== car.id);
+      const filtered = existing.filter((c) => c.id !== car.id);
       const updated  = [entry, ...filtered].slice(0, MAX);
       localStorage.setItem(RECENT_STORAGE_KEY, JSON.stringify(updated));
-      // Keep a short cookie trail for personalization before login/session restore.
       writeJsonCookie(RECENT_COOKIE_KEY, updated.slice(0, 6), 60 * 60 * 24 * 30);
     } catch {}
 
-    // Also track in database for logged-in users
-    try {
-      fetch("/api/cars/views", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ carId: car.id }),
-      }).catch(() => {}); // Silent fail if offline
-    } catch {}
+    // 2) Server-side counter – only after the dwell threshold. Cancel
+    //    if the user navigates away first.
+    const timer = window.setTimeout(() => {
+      try {
+        const referrer = typeof document !== "undefined" ? document.referrer : "";
+        fetch("/api/cars/views", {
+          method:      "POST",
+          headers:     { "Content-Type": "application/json" },
+          credentials: "include",
+          keepalive:   true,
+          body: JSON.stringify({
+            carId:    car.id,
+            referrer: referrer || null,
+          }),
+        }).catch(() => {});
+      } catch {}
+    }, VIEW_DWELL_MS);
+
+    return () => window.clearTimeout(timer);
   }, [car.id]);
 
-  return null; // renders nothing
+  return null;
 }

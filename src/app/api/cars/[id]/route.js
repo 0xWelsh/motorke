@@ -22,13 +22,12 @@ export async function GET(request, { params }) {
     return NextResponse.json({ error: "Car not found" }, { status: 404 });
   }
 
-  // Increment view count (fire and forget)
-  db.car.update({
-    where: { id: id },
-    data:  { views: { increment: 1 } },
-  }).catch((error) => {
-    console.error("Failed to increment car view count:", error);
-  });
+  // NOTE: We used to bump `car.views` here, but the public car page
+  // never calls this endpoint – it reads Prisma directly. The single
+  // source of truth for view tracking is now `POST /api/cars/views`,
+  // fired from <TrackRecentView> on the client. Incrementing here as
+  // well caused double counts whenever the compare drawer or the
+  // dealer portal touched a car (and zero counts everywhere else).
 
   // Fetch similar cars from same dealer or same make
   const similar = await db.car.findMany({

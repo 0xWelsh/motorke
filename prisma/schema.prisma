@@ -9,43 +9,43 @@ datasource db {
 }
 
 model User {
-  id            String     @id @default(cuid())
-  email         String     @unique
-  passwordHash  String?
-  role          UserRole   @default(BUYER)
-  name          String
-  avatarUrl     String?
-  dealerId      String?
-  active        Boolean    @default(true)
-  emailVerified DateTime?
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  googleId      String?    @unique
-  lat           Float?
-  lng           Float?
-  savedCars     SavedCar[]
-  sessions      Session[]
-  notifications Notification[]
-  dealerReviews DealerReview[]
-  carReviews    CarReview[]
-  carViews      CarView[]
+  id              String           @id @default(cuid())
+  email           String           @unique
+  passwordHash    String?
+  role            UserRole         @default(BUYER)
+  name            String
+  avatarUrl       String?
+  dealerId        String?
+  active          Boolean          @default(true)
+  emailVerified   DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  googleId        String?          @unique
+  lat             Float?
+  lng             Float?
+  savedCars       SavedCar[]
+  sessions        Session[]
+  notifications   Notification[]
+  dealerReviews   DealerReview[]
+  carReviews      CarReview[]
+  carViews        CarView[]
   marketingEvents MarketingEvent[]
-  dealer        Dealer?    @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+  dealer          Dealer?          @relation(fields: [dealerId], references: [id], onDelete: Cascade)
 
   @@map("users")
 }
 
 model Notification {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   userId    String
-  type      String   @default("GENERAL")
+  type      String    @default("GENERAL")
   title     String
   message   String
   link      String?
-  read      Boolean  @default(false)
+  read      Boolean   @default(false)
   readAt    DateTime?
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, read, createdAt])
   @@map("notifications")
@@ -85,9 +85,9 @@ model SavedCar {
 }
 
 model Dealer {
-  id           String         @id @default(cuid())
+  id           String               @id @default(cuid())
   name         String
-  slug         String         @unique
+  slug         String               @unique
   description  String?
   logoUrl      String?
   bannerUrl    String?
@@ -99,15 +99,15 @@ model Dealer {
   facebookUrl  String?
   tiktokUrl    String?
   location     String
-  county       String         @default("Nairobi")
+  county       String               @default("Nairobi")
   address      String?
   lat          Float?
   lng          Float?
-  verified     Boolean        @default(false)
-  featured     Boolean        @default(false)
-  boostScore   Int            @default(0)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  verified     Boolean              @default(false)
+  featured     Boolean              @default(false)
+  boostScore   Int                  @default(0)
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
   cars         Car[]
   branches     DealerBranch[]
   leads        Lead[]
@@ -124,7 +124,7 @@ model DealerGalleryMedia {
   id        String   @id @default(cuid())
   dealerId  String
   url       String
-  type      String   // 'image' or 'video'
+  type      String // 'image' or 'video'
   caption   String?
   createdAt DateTime @default(now())
   dealer    Dealer   @relation(fields: [dealerId], references: [id], onDelete: Cascade)
@@ -153,60 +153,60 @@ model DealerBranch {
 }
 
 model Car {
-  id             String        @id @default(cuid())
-  dealerId       String
-  make           String
-  model          String
-  variant        String?
-  year           Int
-  condition      Condition     @default(USED)
-  price          Int
+  id                  String             @id @default(cuid())
+  dealerId            String
+  make                String
+  model               String
+  variant             String?
+  year                Int
+  condition           Condition          @default(USED)
+  price               Int
   computedLandedPrice Int?
-  negotiable     Boolean       @default(true)
-  mileage        Int?
-  fuelType       FuelType      @default(PETROL)
-  transmission   Transmission  @default(AUTOMATIC)
-  engineCC       Int?
-  bodyType       BodyType      @default(SEDAN)
-  color          String?
-  doors          Int?          @default(4)
-  seats          Int?          @default(5)
-  imported       Boolean       @default(true)
-  importCountry  String?       @default("Japan")
-  dutyPaid       Boolean       @default(true)
-  registered     Boolean       @default(true)
-  description    String?
-  features       String[]
-  videoUrl       String?
-  available      Boolean       @default(true)
-  featured       Boolean       @default(false)
-  featuredWeight Int           @default(0)
-  views          Int           @default(0)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  branchId       String?
-  drivetrain     Drivetrain    @default(FWD)
-  badges         String[]
-  airbags        Int?          @default(0)
-  cylinders      Int?
-  horsepower     Int?
-  steering       Steering      @default(RHD)
-  groundClearanceMm Int?
-  hybridBatteryTech HybridBatteryTech?
-  spareAvailability Int?
-  importEligibility Boolean?
-  sunroof        Boolean       @default(false)
-  torque         Int?
-  turbo          Boolean       @default(false)
-  printCount     Int           @default(0)
-  whatsappClicks Int           @default(0)
-  images         CarImage[]
-  carViews       CarView[]
-  reviews        CarReview[]
-  branch         DealerBranch? @relation(fields: [branchId], references: [id])
-  dealer         Dealer        @relation(fields: [dealerId], references: [id], onDelete: Cascade)
-  leads          Lead[]
-  savedBy        SavedCar[]
+  negotiable          Boolean            @default(true)
+  mileage             Int?
+  fuelType            FuelType           @default(PETROL)
+  transmission        Transmission       @default(AUTOMATIC)
+  engineCC            Int?
+  bodyType            BodyType           @default(SEDAN)
+  color               String?
+  doors               Int?               @default(4)
+  seats               Int?               @default(5)
+  imported            Boolean            @default(true)
+  importCountry       String?            @default("Japan")
+  dutyPaid            Boolean            @default(true)
+  registered          Boolean            @default(true)
+  description         String?
+  features            String[]
+  videoUrl            String?
+  available           Boolean            @default(true)
+  featured            Boolean            @default(false)
+  featuredWeight      Int                @default(0)
+  views               Int                @default(0)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  branchId            String?
+  drivetrain          Drivetrain         @default(FWD)
+  badges              String[]
+  airbags             Int?               @default(0)
+  cylinders           Int?
+  horsepower          Int?
+  steering            Steering           @default(RHD)
+  groundClearanceMm   Int?
+  hybridBatteryTech   HybridBatteryTech?
+  spareAvailability   Int?
+  importEligibility   Boolean?
+  sunroof             Boolean            @default(false)
+  torque              Int?
+  turbo               Boolean            @default(false)
+  printCount          Int                @default(0)
+  whatsappClicks      Int                @default(0)
+  images              CarImage[]
+  carViews            CarView[]
+  reviews             CarReview[]
+  branch              DealerBranch?      @relation(fields: [branchId], references: [id])
+  dealer              Dealer             @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+  leads               Lead[]
+  savedBy             SavedCar[]
 
   @@index([make, model])
   @@index([dealerId])
@@ -296,15 +296,22 @@ model LeadNote {
 }
 
 model CarView {
-  id       String   @id @default(cuid())
-  carId    String
-  userId   String?
-  viewedAt DateTime @default(now())
-  source   String?
-  car      Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
-  user     User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         String   @id @default(cuid())
+  carId      String
+  userId     String?
+  // Stable per-device key (the `wmh-rot` cookie) used to dedupe
+  // anonymous refresh-spam inside a 30-minute window.
+  sessionKey String?
+  viewedAt   DateTime @default(now())
+  // Classified referrer at the moment of view: "facebook" | "whatsapp"
+  // | "google" | "tiktok" | "internal" | "direct" | "external" etc.
+  source     String?
+  car        Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, carId, viewedAt])
+  @@index([sessionKey, carId, viewedAt])
+  @@index([carId, viewedAt])
   @@map("car_views")
 }
 
@@ -471,6 +478,6 @@ model Setting {
   value       String
   description String?
   updatedAt   DateTime @updatedAt
-  
+
   @@map("settings")
 }
