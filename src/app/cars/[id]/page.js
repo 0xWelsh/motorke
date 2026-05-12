@@ -376,6 +376,16 @@ export default async function CarDetailPage({ params }) {
 
   return (
     <div className="bg-white min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
+      {/* Pre-warm the share-card cache: any visitor on the detail page
+          quietly fetches /cars/{id}/opengraph-image in the background,
+          so by the time someone shares the link to WhatsApp/Facebook
+          the scraper hits a fully-cached edge response instead of
+          waiting on a cold generation. */}
+      <link
+        rel="prefetch"
+        as="image"
+        href={`/cars/${car.id}/opengraph-image`}
+      />
       <TrackEventOnMount
         name="view_car"
         payload={{

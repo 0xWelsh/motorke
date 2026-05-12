@@ -14,7 +14,11 @@ import { formatCarPrice, formatMileage } from "@/lib/utils";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 
 export const runtime = "nodejs"; // Prisma + Node fs both need Node runtime.
-export const revalidate = 3600;
+// Long ISR window: once a car's poster is generated, serve it for a
+// week at the edge before regenerating. Combined with the explicit
+// Cache-Control headers below, this means scrapers (WhatsApp / Facebook
+// / X) get an instant response on every share after the first.
+export const revalidate = 604800;
 export const alt = "Welsh Motorhub car listing";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -40,6 +44,46 @@ function truncate(str, max) {
   if (!str) return "";
   return str.length > max ? `${str.slice(0, max - 1).trimEnd()}…` : str;
 }
+
+/**
+ * Supabase Storage supports on-the-fly image transformations via the
+ * `/render/image/` endpoint. Rewriting the URL to fetch a 1200×470
+ * cover crop at quality 80 collapses a 3–5 MB source download to
+ * ~120 KB, which is the single biggest win for satori render time on
+ * the first (uncached) share. Falls back to the raw URL on any error
+ * (e.g. non-Supabase host, or if the project doesn't have transforms
+ * enabled — the raw object still resolves).
+ */
+function toResizedSupabaseUrl(url) {
+  if (typeof url !== "string" || !url) return url;
+  try {
+    const parsed = new URL(url);
+    if (!parsed.hostname.endsWith(".supabase.co")) return url;
+    if (!parsed.pathname.includes("/storage/v1/object/")) return url;
+    parsed.pathname = parsed.pathname.replace(
+      "/storage/v1/object/",
+      "/storage/v1/render/image/"
+    );
+    parsed.searchParams.set("width", "1200");
+    parsed.searchParams.set("height", "470");
+    parsed.searchParams.set("resize", "cover");
+    parsed.searchParams.set("quality", "80");
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
+// Cache-Control applied to every generated response. We keep
+// `s-maxage` long (Vercel/CDN holds the bytes for a week) and lean on
+// `stale-while-revalidate` so a scraper never waits on a regen — if
+// the cache is stale, the old bytes ship instantly while a refresh
+// happens in the background. `max-age` for the actual scraper / user
+// is shorter so price/title edits propagate within an hour.
+const RESPONSE_HEADERS = {
+  "cache-control":
+    "public, max-age=3600, s-maxage=604800, stale-while-revalidate=2592000",
+};
 
 function BrandFallback() {
   return (
@@ -112,10 +156,14 @@ export default async function Image({ params }) {
   }
 
   if (!car) {
-    return new ImageResponse(<BrandFallback />, { ...size, fonts });
+    return new ImageResponse(<BrandFallback />, {
+      ...size,
+      fonts,
+      headers: RESPONSE_HEADERS,
+    });
   }
 
-  const hero = car.images?.[0]?.url || null;
+  const hero = toResizedSupabaseUrl(car.images?.[0]?.url || null);
 
   const titleRaw = `${car.year} ${car.make} ${car.model}${
     car.variant ? ` ${car.variant}` : ""
@@ -309,6 +357,6 @@ export default async function Image({ params }) {
         </div>
       </div>
     ),
-    { ...size, fonts }
+    { ...size, fonts, headers: RESPONSE_HEADERS }
   );
 }
