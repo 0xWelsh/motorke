@@ -56,6 +56,93 @@ const RESPONSE_HEADERS = {
     "public, max-age=3600, s-maxage=604800, stale-while-revalidate=2592000",
 };
 
+/**
+ * Fetch the hero photo ourselves with a hard timeout, then hand
+ * satori a `data:` URL. This is the key reliability move: scrapers
+ * give us ~5 s to produce the OG image; if we let satori fetch the
+ * photo and Supabase is having a slow night, we blow past that
+ * budget and the scraper ships the link without a preview. By doing
+ * the fetch with our own AbortController we guarantee we either
+ * embed the photo (when it loads in time) or fall back to a branded
+ * card (when it doesn't), but we always return a valid PNG fast.
+ */
+async function fetchHeroAsDataUrl(url, timeoutMs = 2500) {
+  if (!url) return null;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      // Re-use any HTTP cache the platform has for this URL.
+      cache: "force-cache",
+    });
+    if (!res.ok) return null;
+    const contentType = (res.headers.get("content-type") || "image/jpeg").split(";")[0].trim();
+    if (!contentType.startsWith("image/")) return null;
+    const buf = Buffer.from(await res.arrayBuffer());
+    // Hard size cap — anything over 4 MB will take too long for
+    // satori to encode anyway and won't materially improve the
+    // 1200x470 render. Better to fall back to the branded card.
+    if (buf.byteLength > 4 * 1024 * 1024) return null;
+    return `data:${contentType};base64,${buf.toString("base64")}`;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function HeroPlaceholder() {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        background:
+          "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 45%, #0d1f15 100%)",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div
+          style={{
+            width: 40,
+            height: 40,
+            background: BRAND_EMERALD,
+            borderRadius: 9,
+            display: "flex",
+          }}
+        />
+        <span
+          style={{
+            fontSize: 44,
+            color: "white",
+            letterSpacing: "-0.02em",
+            display: "flex",
+          }}
+        >
+          Welsh Motorhub
+        </span>
+      </div>
+      <span
+        style={{
+          marginTop: 14,
+          color: "rgba(255,255,255,0.55)",
+          fontSize: 18,
+          letterSpacing: 2,
+          textTransform: "uppercase",
+          display: "flex",
+        }}
+      >
+        Tap to open the listing
+      </span>
+    </div>
+  );
+}
+
 function BrandFallback() {
   return (
     <div
@@ -134,7 +221,8 @@ export default async function Image({ params }) {
     });
   }
 
-  const hero = car.images?.[0]?.url || null;
+  const heroUrl = car.images?.[0]?.url || null;
+  const hero = await fetchHeroAsDataUrl(heroUrl, 2500);
 
   const titleRaw = `${car.year} ${car.make} ${car.model}${
     car.variant ? ` ${car.variant}` : ""
@@ -229,7 +317,9 @@ export default async function Image({ params }) {
           )}
         </div>
 
-        {/* Hero photo — full width */}
+        {/* Hero photo — full width. When the fetch with timeout
+            couldn't pull the photo we render a branded card in its
+            place so the share preview still ships in time. */}
         <div
           style={{
             flex: 1,
@@ -247,7 +337,9 @@ export default async function Image({ params }) {
               alt=""
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
-          ) : null}
+          ) : (
+            <HeroPlaceholder />
+          )}
           {/* Soft vignette so the bottom gutter reads even when the hero is bright */}
           <div
             style={{
