@@ -63,6 +63,70 @@ export async function createEmailOTP(email) {
  * Sent once after email is verified (password signup) or after a brand-new Google account.
  * From hello@ by default — must be an allowed sender for your SMTP mailbox (Zoho).
  */
+/**
+ * Internal system alert (e.g. image health check, cron failures).
+ * Goes to the support inbox; not for marketing or transactional traffic.
+ */
+export async function sendSystemAlertEmail({ subject, summary, details = {} }) {
+  const support = getSupportEmail();
+  if (!support) return { success: false, skipped: "no_support_email" };
+
+  if (!SMTP_USER || !SMTP_PASS) {
+    console.log("SYSTEM ALERT (MOCK):", { subject, summary, details });
+    return { success: true, mocked: true };
+  }
+
+  const escapeHtml = (value) =>
+    (value || "")
+      .toString()
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+
+  const detailRows = Object.entries(details || {})
+    .map(
+      ([key, value]) =>
+        `<tr>
+          <td style="padding:6px 12px;border-bottom:1px solid #e2e8f0;font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:.06em;font-weight:700;">${escapeHtml(key)}</td>
+          <td style="padding:6px 12px;border-bottom:1px solid #e2e8f0;font-size:13px;color:#0f172a;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all;">${escapeHtml(
+            typeof value === "object" ? JSON.stringify(value) : value
+          )}</td>
+        </tr>`
+    )
+    .join("");
+
+  const html = `
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 24px; color: #0f172a;">
+      <p style="margin:0 0 8px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.16em;color:#b91c1c;">System Alert</p>
+      <h1 style="margin:0 0 12px;font-size:22px;font-weight:800;">${escapeHtml(subject)}</h1>
+      <p style="margin:0 0 16px;color:#475569;font-size:14px;line-height:1.5;">${escapeHtml(summary)}</p>
+      ${
+        detailRows
+          ? `<table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;margin-bottom:14px;">${detailRows}</table>`
+          : ""
+      }
+      <p style="margin:18px 0 0;font-size:12px;color:#94a3b8;">Automated message from Welsh Motorhub monitoring.</p>
+      ${buildEmailFooter()}
+    </div>
+  `;
+
+  try {
+    const info = await transporter.sendMail({
+      from: getMailFromAlerts(),
+      to: support,
+      subject: `[Welsh Motorhub] ${subject}`,
+      html,
+      replyTo: support,
+    });
+    return { success: true, messageId: info.messageId };
+  } catch (err) {
+    console.error("sendSystemAlertEmail error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
 export async function sendWelcomeEmail({ email, name, role }) {
   const escapeHtml = (value) =>
     (value || "")

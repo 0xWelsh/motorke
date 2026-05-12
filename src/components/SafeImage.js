@@ -6,9 +6,10 @@
 // CDN, etc.) shows the browser's broken-image icon — which is what users
 // were seeing on certain car listings.
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ImageOff } from "lucide-react";
+import { trackUiEvent } from "@/lib/analytics";
 
 function isUsableSrc(src) {
   if (!src || typeof src !== "string") return false;
@@ -20,6 +21,37 @@ function isUsableSrc(src) {
   return false;
 }
 
+// Browser-local rate limit so a single broken URL appearing on a 50-card
+// listing doesn't spam analytics with 50 identical events. We keep one
+// short-lived entry per src+host.
+const recentErrors = new Map();
+const ERROR_WINDOW_MS = 60_000;
+
+function rememberError(src) {
+  if (typeof window === "undefined" || !src) return false;
+  const now = Date.now();
+  const last = recentErrors.get(src);
+  if (last && now - last < ERROR_WINDOW_MS) return false;
+  recentErrors.set(src, now);
+  // GC old entries.
+  if (recentErrors.size > 200) {
+    for (const [k, v] of recentErrors) {
+      if (now - v > ERROR_WINDOW_MS * 5) recentErrors.delete(k);
+    }
+  }
+  return true;
+}
+
+function hostOf(src) {
+  try {
+    if (!src || typeof src !== "string") return "";
+    if (src.startsWith("/")) return "self";
+    return new URL(src).host;
+  } catch {
+    return "unknown";
+  }
+}
+
 export default function SafeImage({
   src,
   alt = "",
@@ -28,9 +60,11 @@ export default function SafeImage({
   ...rest
 }) {
   const [errored, setErrored] = useState(false);
+  const reportedRef = useRef(false);
 
   useEffect(() => {
     setErrored(false);
+    reportedRef.current = false;
   }, [src]);
 
   if (!isUsableSrc(src) || errored) {
@@ -47,7 +81,29 @@ export default function SafeImage({
     <Image
       src={src}
       alt={alt}
-      onError={() => setErrored(true)}
+      onError={(event) => {
+        setErrored(true);
+        if (reportedRef.current) return;
+        reportedRef.current = true;
+        if (!rememberError(src)) return;
+        // Fire-and-forget telemetry. If something in this chain throws
+        // (e.g. analytics blocked), we silently swallow it.
+        try {
+          trackUiEvent("image_load_failed", {
+            host: hostOf(src),
+            src_path: (() => {
+              try {
+                return new URL(src).pathname;
+              } catch {
+                return "";
+              }
+            })(),
+            natural_width: event?.target?.naturalWidth ?? 0,
+          });
+        } catch {
+          // ignore
+        }
+      }}
       onLoadingComplete={onLoadingComplete}
       {...rest}
     />

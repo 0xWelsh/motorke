@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/watch-alerts",
       "schedule": "0 9 */2 * *"
+    },
+    {
+      "path": "/api/cron/image-health",
+      "schedule": "30 6 * * *"
     }
   ]
 }
