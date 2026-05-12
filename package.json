@@ -21,7 +21,8 @@
     "postinstall": "prisma generate",
     "rewatermark": "node --env-file=.env.local scripts/rewatermark-existing-images.js",
     "rewatermark:dry-run": "node --env-file=.env.local scripts/rewatermark-existing-images.js --dry-run",
-    "rewatermark:recent-5": "node --env-file=.env.local scripts/rewatermark-existing-images.js --recent-cars=5"
+    "rewatermark:recent-5": "node --env-file=.env.local scripts/rewatermark-existing-images.js --recent-cars=5",
+    "watermark:build": "node scripts/generate-watermark.mjs"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

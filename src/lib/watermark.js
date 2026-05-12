@@ -2,123 +2,135 @@
  * lib/watermark.js
  * Server-side watermark applied via Sharp on every car image upload.
  *
- * Design:
- *  - Bottom bar: semi-transparent dark strip with centered watermark text.
- *  - Text defaults to brand name, but upload handlers can pass the car title.
+ * Architecture:
+ *   We composite a pre-rendered PNG (public/watermark/brand-watermark.png)
+ *   onto each photo. The PNG is generated locally by
+ *   `scripts/generate-watermark.mjs` and committed to the repo. Runtime
+ *   never renders text, so we cannot get tofu (□) boxes from missing
+ *   fonts on Vercel cold starts — the only failure mode left is "PNG
+ *   asset missing," which trips during build, not in production.
  *
- * Fonts: SVG embeds Inter (latin + latin-ext WOFF from /fonts/watermark) so librsvg
- *  renders glyphs on Linux/serverless where Arial is missing (otherwise → □).
- *  Bundled files ship with the repo so Next/Vercel tracing never omits them.
+ *   Why we don't render the dealer name on photos: per the standard
+ *   classifieds pattern (Jiji, Cheki, OLX), only the marketplace brand
+ *   is watermarked. The dealer name appears in the listing UI, not on
+ *   the image. This keeps the watermark consistent, professional, and
+ *   immune to variable-text font issues.
  *
  * Controlled via env:
  *   LISTING_WATERMARK_ENABLED=false  → skip watermarking (default: enabled)
- *   LISTING_WATERMARK_TEXT           → override default text (default: "WELSH MOTORHUB")
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import sharp from "sharp";
 
 const WATERMARK_ENABLED = process.env.LISTING_WATERMARK_ENABLED !== "false";
-const BRAND             = process.env.LISTING_WATERMARK_TEXT || "WELSH MOTORHUB";
 
-/** Cached @font-face rules for SVG (empty string if files unavailable). */
-let embeddedInterCss = null;
+// Watermark width as a fraction of the source image width.
+const WATERMARK_WIDTH_RATIO = 0.22;
+// Lower-bound and upper-bound watermark width (px) so tiny thumbnails
+// don't get an invisible mark and large hero shots don't get an
+// overpowering one.
+const MIN_WATERMARK_WIDTH = 140;
+const MAX_WATERMARK_WIDTH = 520;
+// Padding from the bottom-right edge (px) relative to source size.
+const EDGE_PADDING_RATIO = 0.022;
+const MIN_EDGE_PADDING = 14;
+const MAX_EDGE_PADDING = 36;
 
-function getEmbeddedInterCss() {
-  if (embeddedInterCss !== null) return embeddedInterCss;
-  try {
-    const dir = join(process.cwd(), "fonts", "watermark");
-    const latin = readFileSync(join(dir, "inter-latin-700-normal.woff"));
-    const latinExt = readFileSync(join(dir, "inter-latin-ext-700-normal.woff"));
-    const a = latin.toString("base64");
-    const b = latinExt.toString("base64");
-    embeddedInterCss = `
-@font-face{font-family:'MotorkeWatermark';font-style:normal;font-weight:700;
-src:url(data:font/woff;charset=utf-8;base64,${a}) format('woff');}
-@font-face{font-family:'MotorkeWatermark';font-style:normal;font-weight:700;
-src:url(data:font/woff;charset=utf-8;base64,${b}) format('woff');}`;
-  } catch (err) {
-    console.warn("[watermark] Could not load embedded Inter fonts:", err?.message || err);
-    embeddedInterCss = "";
+/** Cache the watermark PNG buffer once per server lifecycle. */
+let cachedBrandWatermark = undefined;
+
+function loadBrandWatermark() {
+  if (cachedBrandWatermark !== undefined) return cachedBrandWatermark;
+  const path = join(process.cwd(), "public", "watermark", "brand-watermark.png");
+  if (!existsSync(path)) {
+    console.warn(`[watermark] Asset missing at ${path}. Run 'node scripts/generate-watermark.mjs' to (re)generate it. Skipping watermark.`);
+    cachedBrandWatermark = null;
+    return null;
   }
-  return embeddedInterCss;
+  try {
+    cachedBrandWatermark = readFileSync(path);
+  } catch (err) {
+    console.warn("[watermark] Could not read brand watermark PNG:", err?.message || err);
+    cachedBrandWatermark = null;
+  }
+  return cachedBrandWatermark;
 }
 
-function escapeXml(str) {
-  return String(str ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&apos;");
-}
-
-/** Normalize label for SVG text (length cap, strip broken surrogates). */
-function normalizeWatermarkLabel(raw) {
-  let s = String(raw ?? "")
-    .normalize("NFKC")
-    .replace(/\s+/g, " ")
-    .trim();
-  if (!s) return BRAND;
-  s = s.replace(/\uFFFD/g, "");
-  return s.slice(0, 96);
+function clamp(value, min, max) {
+  if (Number.isNaN(value)) return min;
+  return Math.max(min, Math.min(max, value));
 }
 
 /**
- * Bottom bar: dark strip with centered text.
+ * Main export — apply the brand watermark to the incoming image buffer.
+ *
+ * @param {Buffer} buffer    Raw image bytes.
+ * @param {string} mimeType  e.g. "image/jpeg" | "image/png" | "image/webp".
+ * @returns {Promise<Buffer>}  Watermarked image buffer in the same format.
  */
-function buildBarSvg(width, height, customText = null) {
-  const barH     = Math.max(28, Math.round(height * 0.062));
-  const fontSize = Math.max(11, Math.round(barH * 0.42));
-  const y        = height - barH;
-  const textY    = y + barH * 0.64;
-
-  const label = escapeXml(normalizeWatermarkLabel(customText || BRAND));
-
-  const fontCss = getEmbeddedInterCss();
-  const defs = fontCss
-    ? `<defs><style type="text/css"><![CDATA[${fontCss}]]></style></defs>`
-    : "";
-
-  return Buffer.from(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-      ${defs}
-      <rect x="0" y="${y}" width="${width}" height="${barH}" fill="rgba(0,0,0,0.52)" />
-      <text x="${width / 2}" y="${textY}"
-        font-family="MotorkeWatermark, DejaVu Sans, Liberation Sans, Helvetica Neue, Helvetica, Arial, sans-serif"
-        font-size="${fontSize}"
-        font-weight="700"
-        letter-spacing="0.04em"
-        text-anchor="middle"
-        fill="rgba(255,255,255,0.92)"
-      >${label}</text>
-    </svg>`
-  );
-}
-
-/**
- * Main export — apply all watermark layers to the incoming image buffer.
- */
-export async function applyListingWatermark(buffer, mimeType, customText = null) {
+export async function applyListingWatermark(buffer, mimeType /* customText ignored */) {
   if (!WATERMARK_ENABLED) return buffer;
 
-  const image = sharp(buffer, { failOn: "none" });
-  const meta  = await image.metadata();
-  const width  = meta.width  || 0;
-  const height = meta.height || 0;
+  const brand = loadBrandWatermark();
+  if (!brand) return buffer;
 
+  const image = sharp(buffer, { failOn: "none" });
+  const meta = await image.metadata();
+  const width = meta.width || 0;
+  const height = meta.height || 0;
   if (!width || !height) return buffer;
 
-  const bar = buildBarSvg(width, height, customText);
+  // Compute watermark dimensions relative to the source photo.
+  const targetWidth = Math.round(
+    clamp(width * WATERMARK_WIDTH_RATIO, MIN_WATERMARK_WIDTH, MAX_WATERMARK_WIDTH)
+  );
+  const padding = Math.round(
+    clamp(width * EDGE_PADDING_RATIO, MIN_EDGE_PADDING, MAX_EDGE_PADDING)
+  );
 
-  const composited = image.composite([{ input: bar, left: 0, top: 0 }]);
+  // Resize the watermark PNG (opacity is already baked into the asset).
+  let overlay;
+  let overlayWidth = 0;
+  let overlayHeight = 0;
+  try {
+    overlay = await sharp(brand)
+      .resize({ width: targetWidth, withoutEnlargement: true })
+      .png()
+      .toBuffer();
+    const overlayMeta = await sharp(overlay).metadata();
+    overlayWidth = overlayMeta.width || targetWidth;
+    overlayHeight = overlayMeta.height || 0;
+  } catch (err) {
+    console.warn("[watermark] Could not prepare overlay, returning original:", err?.message || err);
+    return buffer;
+  }
 
-  if (mimeType === "image/png") {
-    return composited.png({ compressionLevel: 9 }).toBuffer();
+  let composited;
+  try {
+    composited = image.composite([
+      {
+        input: overlay,
+        left: Math.max(0, width - overlayWidth - padding),
+        top: Math.max(0, height - overlayHeight - padding),
+      },
+    ]);
+  } catch (err) {
+    console.warn("[watermark] Composite failed, returning original:", err?.message || err);
+    return buffer;
   }
-  if (mimeType === "image/webp") {
-    return composited.webp({ quality: 90 }).toBuffer();
+
+  try {
+    if (mimeType === "image/png") {
+      return await composited.png({ compressionLevel: 9 }).toBuffer();
+    }
+    if (mimeType === "image/webp") {
+      return await composited.webp({ quality: 90 }).toBuffer();
+    }
+    return await composited.jpeg({ quality: 88, mozjpeg: true }).toBuffer();
+  } catch (err) {
+    console.warn("[watermark] Encode failed, returning original:", err?.message || err);
+    return buffer;
   }
-  return composited.jpeg({ quality: 88, mozjpeg: true }).toBuffer();
 }
