@@ -1,6 +1,6 @@
-// src/app/api/__bypass-maintenance/route.js
+// src/app/api/bypass-maintenance/route.js
 // One-shot endpoint to obtain a cookie that bypasses maintenance mode.
-// Usage:  /api/__bypass-maintenance?token=<MAINTENANCE_BYPASS_TOKEN>&next=/
+// Usage:  /api/bypass-maintenance?token=<MAINTENANCE_BYPASS_TOKEN>&next=/
 // Sets `welsh-maint-bypass=1` for 8 hours, then 302s to ?next or "/".
 
 import { NextResponse } from "next/server";
