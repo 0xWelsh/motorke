@@ -210,13 +210,17 @@ const getDefaultCarsPage = unstable_cache(
   { revalidate: 60, tags: ["cars-listing"] }
 );
 
+// Allowed per-page sizes. 14 is the design default (6 top tier + 8 below);
+// 28/56/84 are 2x/4x/6x multiples so the grid still fills cleanly.
+const PER_PAGE_OPTIONS = [14, 28, 56, 84];
+const DEFAULT_PER_PAGE = 14;
+
 export default async function CarsPage({ searchParams }) {
   const sp = await searchParams;
   const rawPage = Number.parseInt(sp.page || "1", 10);
   const page = Number.isFinite(rawPage) && rawPage > 0 ? rawPage : 1;
-  /** 6 cards live in the 3-column strip beside the sidebar; the rest use `lg:grid-cols-4`.
-   * 14 total → 8 below = two full rows (12 had only 6 below → 2 empty cells in the last row). */
-  const limit = 14;
+  const rawPerPage = Number.parseInt(sp.perPage || "", 10);
+  const limit = PER_PAGE_OPTIONS.includes(rawPerPage) ? rawPerPage : DEFAULT_PER_PAGE;
   const search = sp.search || "";
   const make = sp.make || "";
   const model = sp.model || "";
@@ -557,11 +561,28 @@ export default async function CarsPage({ searchParams }) {
     ? Math.min(total, searchMatchedCars.length)
     : total;
   const totalPages = Math.max(1, Math.ceil(navigableTotal / limit));
+  const shownOnPageCount = sortedCars.length;
+  const rangeStart = shownOnPageCount === 0 ? 0 : (page - 1) * limit + 1;
+  const rangeEnd = (page - 1) * limit + shownOnPageCount;
 
   const getPageLink = (p) => {
     const params = new URLSearchParams(sp);
     params.set("page", p);
     return `/cars?${params.toString()}`;
+  };
+
+  // Per-page selector links — preserve every other filter / sort and
+  // reset to page 1 because the row numbering changes with the new size.
+  const getPerPageLink = (size) => {
+    const params = new URLSearchParams(sp);
+    if (size === DEFAULT_PER_PAGE) {
+      params.delete("perPage");
+    } else {
+      params.set("perPage", String(size));
+    }
+    params.delete("page");
+    const qs = params.toString();
+    return qs ? `/cars?${qs}` : "/cars";
   };
 
   return (
@@ -593,11 +614,42 @@ export default async function CarsPage({ searchParams }) {
           </div>
           <div className="text-right">
             <div className="text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400 whitespace-nowrap">
-              Vehicles Showing ({total})
+              {shownOnPageCount > 0
+                ? <>Showing <span className="text-[#111827] dark:text-white">{rangeStart}–{rangeEnd}</span> of {total}</>
+                : <>0 of {total}</>}
             </div>
             <p className="mt-1 text-[11px] font-semibold text-slate-500 dark:text-zinc-400">
               Allow location to see nearest cars first.
             </p>
+          </div>
+        </div>
+
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400">
+            Per page
+          </p>
+          <div className="flex flex-wrap items-center gap-1.5">
+            {PER_PAGE_OPTIONS.map((size) => {
+              const isActive = limit === size;
+              return (
+                <Link
+                  key={size}
+                  href={getPerPageLink(size)}
+                  scroll={false}
+                  prefetch={false}
+                  aria-current={isActive ? "page" : undefined}
+                  className={[
+                    "px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.14em] border transition-colors",
+                    isActive
+                      ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:text-[#111827] dark:border-white"
+                      : "bg-white text-[#111827] border-[#EDF2F7] hover:border-[#111827] dark:bg-[#111111] dark:text-white dark:border-slate-800 dark:hover:border-white",
+                  ].join(" ")}
+                  style={{ borderRadius: "var(--radius)" }}
+                >
+                  {size}
+                </Link>
+              );
+            })}
           </div>
         </div>
 
