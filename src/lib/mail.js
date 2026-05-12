@@ -678,3 +678,130 @@ export async function sendWatchAlertEmail({
     return { success: false, error };
   }
 }
+
+/**
+ * Sends contact-form submissions to the public support inbox
+ * (hello@welshmotorhub.co.ke by default; overridable via MAIL_SUPPORT).
+ * The visitor's email is set as Reply-To so support can hit reply directly.
+ */
+export async function sendContactFormEmail({
+  name,
+  email,
+  subject,
+  message,
+  meta = {},
+}) {
+  const escapeHtml = (value) =>
+    (value || "")
+      .toString()
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+
+  const safeName = escapeHtml(name || "Anonymous");
+  const safeEmail = escapeHtml(email || "");
+  const safeSubject = escapeHtml(subject || "general");
+  const safeMessage = escapeHtml(message || "").replace(/\n/g, "<br />");
+  const safeIp = escapeHtml(meta.ip || "");
+  const safeUa = escapeHtml(meta.userAgent || "");
+  const safeReferer = escapeHtml(meta.referer || "");
+  const submittedAt = new Date().toLocaleString("en-KE", {
+    timeZone: "Africa/Nairobi",
+  });
+
+  const subjectLabel = ({
+    bug: "Terminal Bug",
+    partnership: "Partnership",
+    dealer: "Dealer Listing",
+    general: "General Support",
+  })[subject] || "General Support";
+
+  const supportInbox = getSupportEmail();
+  const siteUrl = getSiteOrigin();
+
+  const plainText = [
+    `New contact form submission`,
+    ``,
+    `Subject: ${subjectLabel}`,
+    `From:    ${name || "Anonymous"} <${email || "unknown"}>`,
+    `When:    ${submittedAt} (Africa/Nairobi)`,
+    meta.referer ? `Referer: ${meta.referer}` : null,
+    ``,
+    `Message:`,
+    message || "",
+    ``,
+    `--`,
+    `Reply directly to this email — Reply-To is set to the visitor.`,
+  ]
+    .filter((l) => l !== null)
+    .join("\n");
+
+  if (!SMTP_USER || !SMTP_PASS) {
+    console.log("CONTACT FORM EMAIL (MOCK):", {
+      to: supportInbox,
+      subject: subjectLabel,
+      from: { name, email },
+      message,
+    });
+    return { success: true, mocked: true };
+  }
+
+  const html = `
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 28px; color: #111827;">
+      <p style="margin: 0 0 6px; font-size: 11px; color: #38A169; text-transform: uppercase; letter-spacing: .12em; font-weight: 800;">Welsh Motorhub · Contact Form</p>
+      <h1 style="margin: 0 0 18px; font-size: 22px; font-weight: 800;">${subjectLabel}</h1>
+
+      <div style="border: 1px solid #e2e8f0; padding: 16px; margin-bottom: 12px;">
+        <p style="margin: 0 0 6px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: .08em; font-weight: 700;">From</p>
+        <p style="margin: 0;"><strong>${safeName}</strong> &lt;<a href="mailto:${safeEmail}" style="color: #0f172a;">${safeEmail}</a>&gt;</p>
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; padding: 16px; margin-bottom: 12px;">
+        <p style="margin: 0 0 6px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: .08em; font-weight: 700;">When</p>
+        <p style="margin: 0;">${submittedAt} <span style="color:#94a3b8;">(Africa/Nairobi)</span></p>
+      </div>
+
+      <div style="border: 1px solid #e2e8f0; padding: 16px; margin-bottom: 16px; background: #f8fafc;">
+        <p style="margin: 0 0 8px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: .08em; font-weight: 700;">Message</p>
+        <p style="margin: 0; line-height: 1.6; white-space: pre-wrap;">${safeMessage}</p>
+      </div>
+
+      ${(safeIp || safeUa || safeReferer)
+        ? `<details style="margin-bottom: 16px; border: 1px solid #e2e8f0; padding: 12px;">
+             <summary style="font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; cursor: pointer;">Request metadata</summary>
+             ${safeIp ? `<p style="margin: 8px 0 0; font-size: 12px; color: #475569;"><strong>IP:</strong> ${safeIp}</p>` : ""}
+             ${safeReferer ? `<p style="margin: 4px 0 0; font-size: 12px; color: #475569;"><strong>Referer:</strong> ${safeReferer}</p>` : ""}
+             ${safeUa ? `<p style="margin: 4px 0 0; font-size: 12px; color: #475569;"><strong>User-Agent:</strong> ${safeUa}</p>` : ""}
+           </details>`
+        : ""}
+
+      <p style="margin: 0; font-size: 12px; color: #64748b;">
+        Hit reply to respond directly to ${safeName}. Reply-To is set to their address.
+      </p>
+
+      <p style="margin: 18px 0 0; font-size: 11px; color: #94a3b8;">
+        Form: <a href="${siteUrl}/contact" style="color: #475569;">${siteUrl.replace(/^https?:\/\//, "")}/contact</a>
+      </p>
+      ${buildEmailFooter()}
+    </div>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: getMailFromHello(), // hello@welshmotorhub.co.ke
+      to: supportInbox,         // delivers to the support inbox
+      replyTo: email
+        ? `${name ? `"${name.replace(/"/g, "")}" ` : ""}<${email}>`
+        : undefined,
+      subject: `[Contact] ${subjectLabel} — ${name || "Anonymous"}`,
+      text: plainText,
+      html,
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Contact form email failed:", error);
+    return { success: false, error };
+  }
+}

@@ -10,29 +10,39 @@ export default function ContactPage() {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [website, setWebsite] = useState(""); // honeypot
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMsg("");
 
     try {
-      // In production, send to your email service
-      // For now, just simulate submission
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, subject, message, website }),
+      });
+      const data = await res.json().catch(() => ({}));
 
-      // Clear form and show success
+      if (!res.ok || !data?.success) {
+        setErrorMsg(data?.error || "We could not send your message. Please try again.");
+        setLoading(false);
+        return;
+      }
+
       setName("");
       setEmail("");
       setSubject("");
       setMessage("");
       setSubmitted(true);
-
-      // Hide success message after 5 seconds
-      setTimeout(() => setSubmitted(false), 5000);
+      setTimeout(() => setSubmitted(false), 6000);
     } catch (error) {
       console.error("Error submitting form:", error);
+      setErrorMsg("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
@@ -123,6 +133,23 @@ export default function ContactPage() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-6 sm:gap-x-8 gap-y-4 sm:gap-y-6 md:gap-y-10">
+                {/* Honeypot — hidden from humans, bots fill it and we silently drop the submission */}
+                <input
+                  type="text"
+                  name="website"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="hidden"
+                />
+                {errorMsg && (
+                  <div className="md:col-span-2 p-4 bg-rose-50 dark:bg-rose-950/20 border-l-4 border-rose-500" style={{ borderRadius: 'var(--radius)' }}>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-rose-500 mb-1">Submission failed</p>
+                    <p className="text-sm font-bold text-slate-700 dark:text-rose-200">{errorMsg}</p>
+                  </div>
+                )}
                 <div className="space-y-2 sm:space-y-3 min-w-0">
                    <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#718096] dark:text-slate-500">Identity Name</label>
                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Full Name" className="w-full bg-[#F7FAFC] dark:bg-[#111111] border border-slate-100 dark:border-slate-800 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-[#111827] dark:text-white outline-none focus:bg-white dark:focus:bg-black focus:border-[#38A169]/50 transition-all" style={{ borderRadius: 'var(--radius)' }} />
