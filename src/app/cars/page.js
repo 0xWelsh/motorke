@@ -10,8 +10,10 @@ import CarCard from "@/components/CarCard";
 import CarsQuickActions from "@/components/CarsQuickActions";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
 import { unstable_cache } from "next/cache";
+import { cookies, headers } from "next/headers";
 import { getSession } from "@/lib/auth";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
+import { isSearchBot, rotationSeed, sortByTierAndSeed } from "@/lib/shuffle";
 
 
 export const metadata = {
@@ -228,12 +230,36 @@ export default async function CarsPage({ searchParams }) {
   const minPrice = sp.minPrice ? parseInt(sp.minPrice, 10) : undefined;
   const maxPrice = sp.maxPrice ? parseInt(sp.maxPrice, 10) : undefined;
   const sort = sp.sort || "newest";
-  const shouldUseDistanceRanking = sort === "newest";
 
   const userLat = sp.lat ? parseFloat(sp.lat) : null;
   const userLng = sp.lng ? parseFloat(sp.lng) : null;
   const session = await getSession();
   const userId = session?.user?.id;
+
+  const searchTokens = normalizeText(search).split(" ").filter(Boolean).slice(0, 6);
+
+  // Visitor-stable, day-rotating seed. Within each quality tier the
+  // listing order is reshuffled per visitor so older cars get fair
+  // exposure instead of living on page 7 forever. Search engine bots
+  // skip the shuffle to keep the SEO surface consistent across crawls.
+  const headerStore = await headers();
+  const cookieStore = await cookies();
+  const userAgent = headerStore.get("user-agent") || "";
+  const ipHeader = headerStore.get("x-forwarded-for") || headerStore.get("x-real-ip") || "";
+  const ip = ipHeader.split(",")[0]?.trim() || "0.0.0.0";
+  const cookieRotationId = cookieStore.get("wmh-rot")?.value || null;
+  const isBot = isSearchBot(userAgent);
+  const seed = rotationSeed({ userId, cookieRotationId, ip, userAgent });
+
+  // Rotation only applies to the unfiltered/text-free browse experience
+  // on the default sort. Explicit sorts (price, year, mileage) and
+  // typed searches stay deterministic so users see what they asked for.
+  const wantsRotation = sort === "newest" && !searchTokens.length && !isBot;
+  // Distance ranking re-orders results by proximity + freshness; that
+  // would undo the seeded shuffle so we only run it when we are not
+  // rotating (i.e. on searches that include "newest" sort).
+  const shouldUseDistanceRanking = sort === "newest" && !wantsRotation;
+
   let effectiveLat = userLat;
   let effectiveLng = userLng;
   if (shouldUseDistanceRanking && (effectiveLat == null || effectiveLng == null)) {
@@ -241,7 +267,6 @@ export default async function CarsPage({ searchParams }) {
     effectiveLng = effectiveLng ?? session?.user?.lng ?? null;
   }
 
-  const searchTokens = normalizeText(search).split(" ").filter(Boolean).slice(0, 6);
   const isDefaultFastPath =
     !search &&
     !make &&
@@ -256,7 +281,8 @@ export default async function CarsPage({ searchParams }) {
     !minPrice &&
     !maxPrice &&
     sort === "newest" &&
-    page === 1;
+    page === 1 &&
+    isBot; // crawlers keep the cached, deterministic 14-card first page
   const where = {
     available: true,
     ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
@@ -319,6 +345,8 @@ export default async function CarsPage({ searchParams }) {
         slug: true,
         location: true,
         verified: true,
+        featured: true,
+        boostScore: true,
         lat: true,
         lng: true,
         county: true,
@@ -327,6 +355,7 @@ export default async function CarsPage({ searchParams }) {
     },
   };
 
+  const ROTATION_POOL_SIZE = 600;
   const [carsData, allMakes, personalizedCarsRaw] = await Promise.all([
     isDefaultFastPath
       ? getDefaultCarsPage()
@@ -337,6 +366,8 @@ export default async function CarsPage({ searchParams }) {
             orderBy,
             ...(searchTokens.length > 0
               ? { take: 300 }
+              : wantsRotation
+              ? { take: ROTATION_POOL_SIZE }
               : { skip: (page - 1) * limit, take: limit }),
           }),
           db.car.count({ where }),
@@ -460,8 +491,15 @@ export default async function CarsPage({ searchParams }) {
         .map((item) => item.car)
     : rawCars;
   const total = searchTokens.length > 0 ? searchMatchedCars.length : totalFromDb;
+  // When rotation is active, sortByTierAndSeed re-orders the pool so
+  // featured/verified cars still anchor the top but the rest cycle per
+  // visitor/day. The DB returned up to ROTATION_POOL_SIZE rows in
+  // quality order; we sort by (tier, seededRank) and then slice the
+  // requested page locally.
   const cars = searchTokens.length > 0
     ? searchMatchedCars.slice((page - 1) * limit, page * limit)
+    : wantsRotation
+    ? sortByTierAndSeed(searchMatchedCars, seed).slice((page - 1) * limit, page * limit)
     : searchMatchedCars;
 
   const sortedCars = shouldUseDistanceRanking
@@ -509,7 +547,16 @@ export default async function CarsPage({ searchParams }) {
   const topCars = carsWithDistance.slice(0, 6);
   const lowerCars = carsWithDistance.slice(6);
 
-  const totalPages = Math.ceil(total / limit);
+  // The rotation pool is capped (ROTATION_POOL_SIZE rows) so pagination
+  // must stop at the last page that actually contains cars; otherwise
+  // buyers can click into empty pages once the catalog grows past the
+  // pool. Once the catalog regularly exceeds the pool we should switch
+  // to a SQL-side seeded order, but for now this guard keeps the UX
+  // honest.
+  const navigableTotal = wantsRotation
+    ? Math.min(total, searchMatchedCars.length)
+    : total;
+  const totalPages = Math.max(1, Math.ceil(navigableTotal / limit));
 
   const getPageLink = (p) => {
     const params = new URLSearchParams(sp);

@@ -2,6 +2,18 @@ import { NextResponse } from "next/server";
 
 const SESSION_COOKIE = "welsh-motors_session";
 const MAINT_BYPASS_COOKIE = "welsh-maint-bypass";
+const ROTATION_COOKIE = "wmh-rot";
+const ROTATION_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
+
+function generateRotationId() {
+  const bytes = new Uint8Array(8);
+  if (typeof globalThis.crypto?.getRandomValues === "function") {
+    globalThis.crypto.getRandomValues(bytes);
+  } else {
+    for (let i = 0; i < bytes.length; i += 1) bytes[i] = Math.floor(Math.random() * 256);
+  }
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
 
 function isMaintenanceOn() {
   const flag = (process.env.MAINTENANCE_MODE || "").toLowerCase().trim();
@@ -62,6 +74,21 @@ export function middleware(request) {
   }
 
   const response = NextResponse.next({ request: { headers: requestHeaders } });
+
+  // Issue a stable per-device rotation id used by the public /cars
+  // listing to give every visitor their own deterministic shuffle.
+  // No PII, just a random hex; rotates daily via the seed combiner.
+  if (!request.cookies.get(ROTATION_COOKIE)?.value) {
+    response.cookies.set({
+      name: ROTATION_COOKIE,
+      value: generateRotationId(),
+      maxAge: ROTATION_COOKIE_MAX_AGE,
+      sameSite: "lax",
+      path: "/",
+      secure: isProd,
+      httpOnly: false,
+    });
+  }
 
   // Security Headers
   response.headers.set(
