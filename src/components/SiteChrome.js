@@ -15,7 +15,10 @@ import GlobalFooter from "@/components/GlobalFooter";
 export default function SiteChrome({ user, children, shellPath = "/" }) {
   const clientPath = usePathname();
   const pathname = clientPath || shellPath || "/";
-  const appShell = pathname.startsWith("/admin") || pathname.startsWith("/portal");
+  const appShell =
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/portal") ||
+    pathname === "/maintenance";
 
   if (appShell) {
     return (
