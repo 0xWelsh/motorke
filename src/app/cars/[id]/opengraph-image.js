@@ -45,35 +45,6 @@ function truncate(str, max) {
   return str.length > max ? `${str.slice(0, max - 1).trimEnd()}…` : str;
 }
 
-/**
- * Supabase Storage supports on-the-fly image transformations via the
- * `/render/image/` endpoint. Rewriting the URL to fetch a 1200×470
- * cover crop at quality 80 collapses a 3–5 MB source download to
- * ~120 KB, which is the single biggest win for satori render time on
- * the first (uncached) share. Falls back to the raw URL on any error
- * (e.g. non-Supabase host, or if the project doesn't have transforms
- * enabled — the raw object still resolves).
- */
-function toResizedSupabaseUrl(url) {
-  if (typeof url !== "string" || !url) return url;
-  try {
-    const parsed = new URL(url);
-    if (!parsed.hostname.endsWith(".supabase.co")) return url;
-    if (!parsed.pathname.includes("/storage/v1/object/")) return url;
-    parsed.pathname = parsed.pathname.replace(
-      "/storage/v1/object/",
-      "/storage/v1/render/image/"
-    );
-    parsed.searchParams.set("width", "1200");
-    parsed.searchParams.set("height", "470");
-    parsed.searchParams.set("resize", "cover");
-    parsed.searchParams.set("quality", "80");
-    return parsed.toString();
-  } catch {
-    return url;
-  }
-}
-
 // Cache-Control applied to every generated response. We keep
 // `s-maxage` long (Vercel/CDN holds the bytes for a week) and lean on
 // `stale-while-revalidate` so a scraper never waits on a regen — if
@@ -163,7 +134,7 @@ export default async function Image({ params }) {
     });
   }
 
-  const hero = toResizedSupabaseUrl(car.images?.[0]?.url || null);
+  const hero = car.images?.[0]?.url || null;
 
   const titleRaw = `${car.year} ${car.make} ${car.model}${
     car.variant ? ` ${car.variant}` : ""
