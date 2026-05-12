@@ -21,7 +21,18 @@ export default function LoginForm({ error }) {
   const next = searchParams?.get("from") || searchParams?.get("next") || "/";
 
   const requiresHumanCheck = Boolean(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
-  const canSubmit = email.trim().length > 0 && password.length > 0 && (!requiresHumanCheck || captchaToken.length > 0 || usingSecurityFallback);
+  // A real captcha token from Turnstile/reCAPTCHA is at least 30 chars and
+  // doesn't look like our internal fallback markers. We deliberately do not
+  // accept `usingSecurityFallback` as a substitute when a provider is
+  // configured — server would reject those tokens anyway and we shouldn't
+  // pretend on the client that the form is submittable.
+  const hasUsableToken =
+    captchaToken.length >= 20 &&
+    captchaToken !== "dev-no-captcha";
+  const canSubmit =
+    email.trim().length > 0 &&
+    password.length > 0 &&
+    (!requiresHumanCheck || hasUsableToken || (!requiresHumanCheck && usingSecurityFallback));
 
   return (
     <div className="min-h-screen flex overflow-hidden bg-white dark:bg-[#0a0a0a]">

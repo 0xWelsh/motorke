@@ -39,11 +39,15 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
     }
   }, []);
 
-  // If no provider configured, auto-approve for development
+  // If no provider is configured (dev / local), tell the parent to allow
+  // submission. Server-side captcha.js mirrors this: when neither
+  // RECAPTCHA_SECRET nor TURNSTILE_SECRET is set, the check is skipped.
+  // We send a marker that's harmless on the server (it isn't on the
+  // allow-list anymore; verification still bails to "not-configured").
   useEffect(() => {
     if (!provider) {
-      onChange("human-checked");
-      onFallbackChange?.(false);
+      onChange("dev-no-captcha");
+      onFallbackChange?.(true);
     }
   }, [onChange, onFallbackChange, provider]);
 
@@ -153,9 +157,8 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
     );
   }
 
-  function useFallback() {
-    onChange("widget-unavailable");
-    onFallbackChange?.(true);
+  function reloadPage() {
+    if (typeof window !== "undefined") window.location.reload();
   }
 
   return (
@@ -187,14 +190,14 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
       {(scriptTimeout || scriptError) && !scriptReady && (
         <div className="space-y-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3">
           <p className="text-xs font-semibold text-amber-900">
-            Security check unavailable. You can continue without it.
+            We couldn&rsquo;t load the security check. Check your connection and reload the page to try again.
           </p>
           <button
             type="button"
-            onClick={useFallback}
+            onClick={reloadPage}
             className="text-xs font-bold text-slate-900 dark:text-white hover:text-black underline underline-offset-2 transition-colors"
           >
-            Continue anyway
+            Reload page
           </button>
         </div>
       )}

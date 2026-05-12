@@ -75,10 +75,17 @@ export default function SignupForm({ error: initialError, initialRole }) {
   const [website, setWebsite] = useState("");
 
   const requiresHumanCheck = Boolean(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+  // Real captcha tokens are long opaque strings. Don't let the form
+  // submit on the "dev-no-captcha" marker when a provider IS configured
+  // (otherwise the server will reject and the user sees a confusing
+  // "captcha" error after a long round-trip).
+  const hasUsableToken =
+    captchaToken.length >= 20 &&
+    captchaToken !== "dev-no-captcha";
   const canSubmit =
     email.trim().length > 0 &&
     password.length > 0 &&
-    (!requiresHumanCheck || captchaToken.length > 0 || usingSecurityFallback);
+    (!requiresHumanCheck || hasUsableToken || (!requiresHumanCheck && usingSecurityFallback));
 
   const handleSubmit = async (e) => {
     e.preventDefault();

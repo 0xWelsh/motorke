@@ -60,18 +60,28 @@ async function verifyCloudflareTurnstileToken({ token, ip }) {
 }
 
 export async function verifyTurnstileToken({ token, ip }) {
-  if (!token) {
+  // When no provider is configured at all (dev/local), there's nothing to
+  // verify against. Treat as "skipped" so local development still works.
+  // In production the env validator forces a provider to be set.
+  if (!RECAPTCHA_SECRET && !TURNSTILE_SECRET) {
+    return { success: true, skipped: true, provider: "not-configured" };
+  }
+
+  if (!token || typeof token !== "string") {
     return { success: false, reason: "missing-token" };
   }
 
-  // HumanCheck exposes an explicit fallback path ("Continue anyway")
-  // when third-party captcha scripts fail to load.
-  if (token === "human-checked" || token === "widget-unavailable") {
-    return { success: true, skipped: true, provider: "fallback" };
+  // SECURITY: previously we accepted the magic strings "human-checked" and
+  // "widget-unavailable" as proof of humanity. That meant any attacker could
+  // POST `captchaToken=widget-unavailable` and bypass the captcha entirely.
+  // No magic strings. Token must be verified by the upstream provider.
+  if (token.length < 20) {
+    return { success: false, reason: "invalid-token-format" };
   }
 
-  // If both providers are configured, accept whichever one validates the token.
-  // This avoids false failures when client picks Turnstile and server checks reCAPTCHA first (or vice versa).
+  // If both providers are configured, accept whichever validates the token.
+  // This avoids false failures when the client renders Turnstile but the
+  // server check order put reCAPTCHA first (and vice versa).
   const checks = [];
 
   if (RECAPTCHA_SECRET) {
@@ -87,15 +97,11 @@ export async function verifyTurnstileToken({ token, ip }) {
     return successResult;
   }
 
-  if (checks.length > 0) {
-    return {
-      success: false,
-      reason: checks.map((result) => `${result.provider}:${result.reason || "failed"}`).join(";"),
-      provider: "multi",
-    };
-  }
-
-  return { success: token === "human-checked", skipped: true, provider: "fallback" };
+  return {
+    success: false,
+    reason: checks.map((result) => `${result.provider}:${result.reason || "failed"}`).join(";") || "verification-failed",
+    provider: "multi",
+  };
 }
 
 export async function verifyCaptchaToken(args) {

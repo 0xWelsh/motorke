@@ -7,10 +7,8 @@ import {
   Building2,
   MapPin,
   UserPlus,
-  ShieldCheck,
   MessageSquare,
   Car,
-  Activity,
   ArrowUpRight,
   Users,
   LogIn,
@@ -18,6 +16,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import EmptyState from "@/components/ui/EmptyState";
+import DealerFlagToggles from "@/components/admin/DealerFlagToggles";
 
 export const metadata = { title: "Dealers — Welsh Motorhub Admin" };
 
@@ -185,27 +184,16 @@ export default async function AdminDealersPage() {
                 </div>
 
                 <div className="mt-auto flex items-center justify-between gap-3 border-t border-slate-100 pt-5 dark:border-zinc-800">
-                  <div className="flex flex-wrap items-center gap-2">
-                    {dealer.verified ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200/80 bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/50 dark:text-emerald-300">
-                        <ShieldCheck size={14} /> Verified
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-200/80 bg-sky-50 px-2.5 py-1 text-[11px] font-bold text-sky-800 dark:border-sky-900/50 dark:bg-sky-950/40 dark:text-sky-200">
-                        <Activity size={14} /> Pending
-                      </span>
-                    )}
-                    {dealer.featured && (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200/70 bg-emerald-50 px-2 py-1 text-[10px] font-black uppercase tracking-wider text-emerald-800 dark:border-emerald-800/50 dark:bg-emerald-950/35 dark:text-emerald-300">
-                        <Star size={12} className="text-[#38A169]" fill="currentColor" /> Featured
-                      </span>
-                    )}
-                  </div>
+                  <DealerFlagToggles
+                    dealerId={dealer.id}
+                    verified={dealer.verified}
+                    featured={dealer.featured}
+                  />
 
                   <Link
                     href={`/admin/dealers/${dealer.id}/edit`}
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:border-slate-900 hover:bg-slate-900 hover:text-white dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-white dark:hover:bg-white dark:hover:text-slate-900"
-                    title="Edit dealer"
+                    title="Edit dealer details"
                   >
                     <ArrowUpRight size={18} strokeWidth={2.25} />
                   </Link>
