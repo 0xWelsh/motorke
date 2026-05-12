@@ -9,7 +9,14 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
   const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   const widgetRef = useRef(null);
   const widgetIdRef = useRef(null);
-  const [scriptReady, setScriptReady] = useState(false);
+  // If the captcha script is already loaded from a previous page (Next.js
+  // <Script> dedupes by src), `onLoad` never fires again on remount. We
+  // detect that here so the widget can render straight away instead of
+  // sitting in a perpetual "loading…" state until the timeout trips.
+  const [scriptReady, setScriptReady] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return Boolean(window.turnstile || window.grecaptcha);
+  });
   const [scriptTimeout, setScriptTimeout] = useState(false);
   const [scriptError, setScriptError] = useState(false);
   const [provider, setProvider] = useState(null);
@@ -40,16 +47,31 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
     }
   }, [onChange, onFallbackChange, provider]);
 
-  // Timeout if script doesn't load within 5 seconds
+  // Timeout if script doesn't load within 12s. Kenyan mobile connections
+  // routinely take 5-8 seconds for third-party scripts; a 5s budget pushed
+  // legitimate users into the fallback path.
   useEffect(() => {
-    if (!provider) return;
+    if (!provider || scriptReady) return undefined;
     const timeout = setTimeout(() => {
       if (!scriptReady) {
         setScriptTimeout(true);
       }
-    }, 5000);
+    }, 12000);
 
     return () => clearTimeout(timeout);
+  }, [provider, scriptReady]);
+
+  // Belt-and-suspenders: even after `provider` resolves on remount, the
+  // script object may already be on `window` from a prior page. Re-check
+  // before deciding to show the loading state.
+  useEffect(() => {
+    if (!provider || scriptReady) return;
+    if (typeof window === "undefined") return;
+    if (provider === "turnstile" && window.turnstile) {
+      setScriptReady(true);
+    } else if (provider === "recaptcha" && window.grecaptcha) {
+      setScriptReady(true);
+    }
   }, [provider, scriptReady]);
 
   // Clear timeout when script loads
@@ -139,8 +161,14 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
   return (
     <div className="space-y-3">
       <Script
+        id={provider === "recaptcha" ? "wmh-recaptcha" : "wmh-turnstile"}
         src={provider === "recaptcha" ? "https://www.google.com/recaptcha/api.js?render=explicit" : "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"}
         strategy="afterInteractive"
+        // onReady fires on first load AND on every remount once the script
+        // is already in the DOM (e.g. navigating from /signup to /login).
+        // Using onLoad alone leaves the widget stuck on the second page
+        // because Next.js dedupes the script tag and onLoad never refires.
+        onReady={() => setScriptReady(true)}
         onLoad={() => setScriptReady(true)}
         onError={() => {
           console.error("Failed to load security script");
