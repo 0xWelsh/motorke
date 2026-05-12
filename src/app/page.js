@@ -30,6 +30,17 @@ import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 const HERO_BACKGROUND = "/images/backgrounds/hero-section-background.jpeg";
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
 
+/** Pick the first usable car photo from a list to use as a section
+ *  backdrop. Falls back to null when the section has no cars yet so
+ *  the section renders a clean gradient instead of a broken <img>. */
+function pickSectionBackdrop(cars) {
+  for (const car of cars || []) {
+    const url = car?.images?.[0]?.url;
+    if (typeof url === "string" && url) return url;
+  }
+  return null;
+}
+
 function scoreMarketValue(marketAnalysis) {
   if (!marketAnalysis) return 6;
   if (marketAnalysis.comparison <= -10) return 24;
@@ -344,6 +355,12 @@ export default async function HomePage() {
 
   const partnerDealers = balanceFeaturedInFirstRow(rankHomepageDealers(dealers || [])).slice(0, 6);
 
+  // Pull section backdrops from the cars that section is actually
+  // showing. Falls back to null when the section has no cars yet, in
+  // which case the section renders a clean gradient instead.
+  const spotlightBackdrop = pickSectionBackdrop(spotlightCards);
+  const newArrivalsBackdrop = pickSectionBackdrop(newEnhanced);
+
   return (
     <div className="min-h-screen pb-20 bg-white dark:bg-[#0a0a0a]">
       <script
@@ -453,13 +470,35 @@ export default async function HomePage() {
 
       {/* Hot Deals / Trending Section */}
       {hotEnhanced.length > 0 && (
-        <section className="py-16 sm:py-20 lg:py-26 xl:py-32 bg-gradient-to-b from-white via-red-50/45 to-slate-50/85 dark:from-[#0a0a0a] dark:via-[#160a0b] dark:to-[#0d0f10] border-y border-red-100/60 dark:border-red-950/40">
+        <section className="relative py-16 sm:py-20 lg:py-26 xl:py-32 border-y border-slate-100 dark:border-zinc-900 overflow-hidden">
+          {/* Real spotlight car as the section backdrop. The overlay
+              washes it toward neutral so the cards below still read
+              cleanly without the section feeling like a stock photo. */}
+          {spotlightBackdrop && (
+            <div className="absolute inset-0 -z-10 pointer-events-none">
+              <Image
+                src={spotlightBackdrop}
+                fill
+                sizes="100vw"
+                alt=""
+                className="object-cover opacity-[0.18] dark:opacity-[0.12]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/92 to-white dark:from-[#0a0a0a]/95 dark:via-[#0a0a0a]/92 dark:to-[#0a0a0a]" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.06),transparent_60%)] dark:bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.10),transparent_60%)]" />
+            </div>
+          )}
+          {!spotlightBackdrop && (
+            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-white to-slate-50 dark:from-[#0a0a0a] dark:to-[#0d0f10]" />
+          )}
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[min(90vw,1600px)]">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
               <div className="max-w-2xl">
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#dc2626] dark:text-red-400 mb-2">Hot deals</p>
+                <p className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-[#dc2626] dark:text-red-400 mb-2">
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#dc2626] dark:bg-red-400" aria-hidden />
+                  Hot deals
+                </p>
                 <h2 className="text-4xl sm:text-6xl lg:text-7xl font-normal editorial-heading text-[#111827] dark:text-white mb-3">Spotlight</h2>
-                <p className="text-[#718096] dark:text-slate-400 text-base sm:text-lg font-medium">
+                <p className="text-[#475569] dark:text-slate-400 text-base sm:text-lg font-medium">
                   Verified listings currently receiving the most buyer interest and strongest value signals.
                 </p>
               </div>
@@ -550,14 +589,33 @@ export default async function HomePage() {
 
       {/* Fresh Arrivals Section */}
       {newEnhanced.length > 0 && (
-        <section className="py-10 sm:py-14 lg:py-18 xl:py-20">
+        <section className="relative py-10 sm:py-14 lg:py-18 xl:py-20 border-y border-slate-100 dark:border-zinc-900 overflow-hidden">
+          {/* Use the most recent arrival as the backdrop so the section
+              feels alive — newest cars literally set the tone. */}
+          {newArrivalsBackdrop && (
+            <div className="absolute inset-0 -z-10 pointer-events-none">
+              <Image
+                src={newArrivalsBackdrop}
+                fill
+                sizes="100vw"
+                alt=""
+                className="object-cover opacity-[0.14] dark:opacity-[0.10]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-white/96 via-white/94 to-white dark:from-[#0a0a0a]/96 dark:via-[#0a0a0a]/94 dark:to-[#0a0a0a]" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(56,161,105,0.07),transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top_left,rgba(56,161,105,0.10),transparent_55%)]" />
+            </div>
+          )}
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[min(90vw,1600px)]">
-            <div className="flex items-end justify-between mb-7 sm:mb-9">
+            <div className="flex items-end justify-between mb-7 sm:mb-9 gap-4">
               <div>
-                <h2 className="text-3xl sm:text-5xl font-bold text-[#111827] dark:text-white mb-4">Fresh Arrivals</h2>
-                <p className="text-[#718096] dark:text-slate-400 text-lg font-medium">The latest units added to our network within the last 7 days.</p>
+                <p className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-[#2F855A] dark:text-emerald-400 mb-2">
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#38A169]" aria-hidden />
+                  This week
+                </p>
+                <h2 className="text-3xl sm:text-5xl font-bold text-[#111827] dark:text-white mb-3 sm:mb-4">Fresh Arrivals</h2>
+                <p className="text-[#475569] dark:text-slate-400 text-base sm:text-lg font-medium">The latest units added to our network within the last 7 days.</p>
               </div>
-              <Link href="/cars?sort=newest" className="hidden sm:block text-xs font-bold uppercase tracking-widest bg-[#EDF2F7] dark:bg-[#111111] text-[#111827] dark:text-white px-8 py-4 transition-all hover:bg-[#E2E8F0]" style={{ borderRadius: 'var(--radius)' }}>
+              <Link href="/cars?sort=newest" className="hidden sm:block text-xs font-bold uppercase tracking-widest bg-[#EDF2F7] dark:bg-[#111111] text-[#111827] dark:text-white px-8 py-4 transition-all hover:bg-[#E2E8F0] dark:hover:bg-zinc-900" style={{ borderRadius: 'var(--radius)' }}>
                 See All Arrivals
               </Link>
             </div>
