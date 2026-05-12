@@ -1,10 +1,10 @@
 // src/app/cars/[id]/opengraph-image.js
-// Dynamic OG image for car detail pages. Renders a 1200x630 collage:
-// hero shot on the left, 4 thumbnails in a 2x2 grid on the right, and
-// two gutter bands carrying the brand on top + title/price/specs on
-// the bottom. Picked up automatically by Next.js for og:image and
-// (via fallback) twitter:image, so every WhatsApp / Facebook / X /
-// iMessage unfurl becomes a branded poster.
+// Dynamic OG image for car detail pages. Renders a 1200x630 poster:
+// the primary photo full-width with a brand gutter on top and a
+// details gutter on the bottom (title, price, specs, dealer).
+// Picked up automatically by Next.js for og:image and (via fallback)
+// twitter:image, so every WhatsApp / Facebook / X / iMessage unfurl
+// becomes a branded preview.
 
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
@@ -85,32 +85,6 @@ function BrandFallback() {
   );
 }
 
-function ThumbCell({ src, gutterLeft = 0, gutterTop = 0 }) {
-  return (
-    <div
-      style={{
-        flex: 1,
-        height: "100%",
-        display: "flex",
-        overflow: "hidden",
-        background: NEUTRAL_TILE,
-        borderLeft: `${gutterLeft}px solid ${BG}`,
-        borderTop: `${gutterTop}px solid ${BG}`,
-      }}
-    >
-      {src ? (
-        <img
-          src={src}
-          width={240}
-          height={235}
-          alt=""
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-        />
-      ) : null}
-    </div>
-  );
-}
-
 export default async function Image({ params }) {
   const { id } = await params;
   const fontData = await loadInterBold();
@@ -127,7 +101,7 @@ export default async function Image({ params }) {
         ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
       },
       include: {
-        images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }], take: 5 },
+        images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }], take: 1 },
         dealer: {
           select: { name: true, verified: true, location: true },
         },
@@ -141,14 +115,7 @@ export default async function Image({ params }) {
     return new ImageResponse(<BrandFallback />, { ...size, fonts });
   }
 
-  const allUrls = (car.images || [])
-    .map((img) => img?.url)
-    .filter((url) => typeof url === "string" && url.length > 0);
-  const hero = allUrls[0] || null;
-  const thumbs = allUrls.slice(1, 5);
-  // If we don't have 4 distinct thumbnails, pad with the hero so the
-  // collage stays full instead of showing empty grey tiles.
-  while (thumbs.length < 4 && hero) thumbs.push(hero);
+  const hero = car.images?.[0]?.url || null;
 
   const titleRaw = `${car.year} ${car.make} ${car.model}${
     car.variant ? ` ${car.variant}` : ""
@@ -243,53 +210,35 @@ export default async function Image({ params }) {
           )}
         </div>
 
-        {/* Collage row: hero left, 2x2 thumbnails right */}
-        <div style={{ display: "flex", flex: 1 }}>
-          <div
-            style={{
-              width: 720,
-              display: "flex",
-              overflow: "hidden",
-              background: NEUTRAL_TILE,
-              position: "relative",
-            }}
-          >
-            {hero ? (
-              <img
-                src={hero}
-                width={720}
-                height={470}
-                alt=""
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-            ) : null}
-            {/* Soft vignette so the title band reads even if the hero is bright */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.45) 100%)",
-                display: "flex",
-              }}
+        {/* Hero photo — full width */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            overflow: "hidden",
+            background: NEUTRAL_TILE,
+            position: "relative",
+          }}
+        >
+          {hero ? (
+            <img
+              src={hero}
+              width={1200}
+              height={470}
+              alt=""
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
-          </div>
+          ) : null}
+          {/* Soft vignette so the bottom gutter reads even when the hero is bright */}
           <div
             style={{
-              width: 480,
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(to bottom, rgba(0,0,0,0) 55%, rgba(0,0,0,0.45) 100%)",
               display: "flex",
-              flexDirection: "column",
             }}
-          >
-            <div style={{ display: "flex", flex: 1 }}>
-              <ThumbCell src={thumbs[0]} gutterLeft={2} />
-              <ThumbCell src={thumbs[1]} gutterLeft={2} />
-            </div>
-            <div style={{ display: "flex", flex: 1 }}>
-              <ThumbCell src={thumbs[2]} gutterLeft={2} gutterTop={2} />
-              <ThumbCell src={thumbs[3]} gutterLeft={2} gutterTop={2} />
-            </div>
-          </div>
+          />
         </div>
 
         {/* Bottom info gutter */}
