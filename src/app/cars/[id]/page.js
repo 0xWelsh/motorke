@@ -61,12 +61,13 @@ export async function generateMetadata({ params }) {
     .filter(Boolean)
     .join(" · ")
     .concat(` · ${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} on Welsh Motorhub — browse more verified cars.`);
-  const image = car.images[0]?.url || BRAND_MARK_SQUARE;
   const origin = getSiteOrigin();
   const url = `${origin}/cars/${id}`;
-  const ogImageUrl = image.startsWith?.("http")
-    ? image
-    : absoluteUrl(image.startsWith("/") ? image : `/${image}`);
+  // OG / Twitter images are now generated dynamically by the
+  // `opengraph-image.js` file in this route folder (a collage of the
+  // first 5 photos with branded title/price/dealer gutters). Next.js
+  // injects the meta tags automatically — we just supply the textual
+  // metadata here.
 
   return {
     title,
@@ -78,14 +79,12 @@ export async function generateMetadata({ params }) {
       url,
       locale: "en_KE",
       siteName: "Welsh Motorhub",
-      images: [{ url: ogImageUrl, alt: title }],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [ogImageUrl],
     },
   };
 }
