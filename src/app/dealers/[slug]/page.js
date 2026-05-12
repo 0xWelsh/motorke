@@ -364,7 +364,13 @@ export default async function DealerPage(props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(dealerBreadcrumbLd) }} />
 
       <div className="relative w-full overflow-x-hidden">
-        <div className="relative h-[176px] sm:h-[240px] lg:h-[300px] w-full overflow-hidden bg-[#111827]">
+        {/* Banner — taller on lg+ so the entire dealer card (about
+            + contact) can live inside it without bleeding into the
+            navbar above or the inventory section below. Mobile/tablet
+            keep the original "card overlaps bottom of banner" pattern
+            because forcing everything inside on small screens would
+            cramp the layout. */}
+        <div className="relative h-[200px] sm:h-[280px] lg:h-[460px] xl:h-[500px] w-full overflow-hidden bg-[#0b0f17]">
           {dealer.bannerUrl ? (
             <img src={dealer.bannerUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
           ) : (
@@ -376,88 +382,187 @@ export default async function DealerPage(props) {
               ))}
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/35" />
+          {/* Layered overlays: strong wash on the left for legibility,
+              a soft top fade so the navbar shadow lands cleanly, and a
+              subtle emerald radial accent that nods to the brand. */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/15 lg:from-black/90 lg:via-black/55 lg:to-black/10" />
+          <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/40 to-transparent pointer-events-none" />
+          <div className="hidden lg:block absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(34,197,94,0.18),transparent_60%)] pointer-events-none" />
+          {/* Tiny scanline / grid texture for editorial feel — barely visible but adds depth on dark photos */}
+          <div
+            className="hidden lg:block absolute inset-0 opacity-[0.05] pointer-events-none"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+              backgroundSize: "44px 44px",
+            }}
+            aria-hidden
+          />
         </div>
 
-        {/* The About card overlaps the bottom of the banner across all
-            breakpoints. Previously the lg+ layout absolute-positioned
-            the card at the banner's bottom, which on a 380px banner
-            pulled the card's top up under the sticky navbar whenever
-            the card was taller than the banner. Letting the card flow
-            below with a consistent negative-top overlap keeps every
-            stat, button, and the dealer description visible. */}
-        <div className="relative z-[2] mx-auto w-full max-w-[1380px] px-4 pb-4 sm:px-6 sm:pb-5 xl:px-8 lg:pb-6">
-          <div className="-mt-7 sm:-mt-9 lg:-mt-16">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
-              <section className="lg:col-span-8 bg-black/35 dark:bg-black/45 backdrop-blur-md p-4 sm:p-5 shadow-2xl min-w-0" style={{ borderRadius: "14px" }}>
+        {/* Hero card — relative + negative-top-margin on mobile/tablet
+            (overlap the banner edge), absolute at the bottom of the
+            banner on lg+ (squeezed inside the banner for a single
+            cinematic block above the inventory). */}
+        <div className="relative z-[2] mx-auto w-full max-w-[1380px] px-4 pb-4 sm:px-6 sm:pb-5 xl:px-8 lg:absolute lg:inset-x-0 lg:bottom-0 lg:pb-6">
+          <div className="-mt-7 sm:-mt-9 lg:mt-0">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-end">
+              <section
+                className="lg:col-span-8 bg-black/40 dark:bg-black/55 backdrop-blur-md p-4 sm:p-5 shadow-2xl min-w-0 border border-white/10 ring-1 ring-white/5"
+                style={{ borderRadius: "14px" }}
+              >
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/95 p-2.5 flex items-center justify-center shrink-0 overflow-hidden" style={{ borderRadius: "10px" }}>
-                    {dealer.logoUrl ? <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" /> : <span className="text-2xl font-black text-slate-400">{dealer.name[0]}</span>}
+                  {/* Logo with an emerald gradient ring when verified */}
+                  <div
+                    className={`relative w-16 h-16 sm:w-[72px] sm:h-[72px] shrink-0 ${
+                      dealer.verified
+                        ? "p-[2px] bg-gradient-to-br from-[#22c55e] via-[#16a34a] to-emerald-700 shadow-[0_0_24px_-6px_rgba(34,197,94,0.55)]"
+                        : "p-[2px] bg-white/10"
+                    }`}
+                    style={{ borderRadius: "12px" }}
+                  >
+                    <div
+                      className="w-full h-full bg-white p-2 flex items-center justify-center overflow-hidden"
+                      style={{ borderRadius: "10px" }}
+                    >
+                      {dealer.logoUrl ? (
+                        <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-2xl font-black text-slate-400">{dealer.name[0]}</span>
+                      )}
+                    </div>
                   </div>
-                  <div className="w-full">
+
+                  <div className="min-w-0 w-full">
+                    {/* Name + verified pill */}
                     <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                      <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight">{dealer.name}</h1>
-                      {dealer.verified && <span className="bg-[#22c55e] text-white text-[10px] font-black px-2.5 py-1 uppercase tracking-[0.14em]" style={{ borderRadius: "999px" }}>Verified Dealer</span>}
+                      <h1 className="text-xl sm:text-2xl lg:text-[1.75rem] font-black text-white tracking-tight leading-tight">
+                        {dealer.name}
+                      </h1>
+                      {dealer.verified && (
+                        <span
+                          className="inline-flex items-center gap-1 bg-[#22c55e]/15 text-[#22c55e] text-[10px] font-black px-2 py-0.5 uppercase tracking-[0.14em] border border-[#22c55e]/40"
+                          style={{ borderRadius: "999px" }}
+                        >
+                          <ShieldCheck className="w-3 h-3" /> Verified
+                        </span>
+                      )}
                     </div>
-                    <div className="flex flex-wrap items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/80">
-                      <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3 text-[#22c55e]" /> {dealer.location || dealer.county}</span>
-                      <span className="inline-flex items-center gap-1"><CalendarDays className="w-3 h-3 text-[#22c55e]" /> Since {startedYear}</span>
-                      <span className="inline-flex items-center gap-1"><Activity className={`w-3 h-3 ${isActiveToday ? "text-[#22c55e]" : "text-white/50"}`} /> {lastActiveLabel}</span>
+
+                    {/* Slim emerald accent line under the name — magazine touch */}
+                    <div className="hidden lg:block h-[2px] w-10 bg-gradient-to-r from-[#22c55e] to-transparent mb-2.5" aria-hidden />
+
+                    {/* Meta row — location · since · live status */}
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white/80">
+                      <span className="inline-flex items-center gap-1">
+                        <MapPin className="w-3 h-3 text-[#22c55e]" /> {dealer.location || dealer.county}
+                      </span>
+                      <span className="text-white/30" aria-hidden>·</span>
+                      <span className="inline-flex items-center gap-1">
+                        <CalendarDays className="w-3 h-3 text-[#22c55e]" /> Since {startedYear}
+                      </span>
+                      <span className="text-white/30" aria-hidden>·</span>
+                      <span className="inline-flex items-center gap-1.5">
+                        {isActiveToday ? (
+                          <span className="relative flex h-1.5 w-1.5">
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#22c55e] opacity-75" />
+                            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#22c55e]" />
+                          </span>
+                        ) : (
+                          <Activity className="w-3 h-3 text-white/50" />
+                        )}
+                        {lastActiveLabel}
+                      </span>
                     </div>
-                    <p className="mt-2 text-[13px] sm:text-sm text-white/90 leading-relaxed line-clamp-2">{dealerSummary}</p>
-                    <div className="mt-2.5 grid grid-cols-2 lg:grid-cols-3 gap-2">
-                      <div className="bg-white/12 px-2.5 py-2" style={{ borderRadius: "9px" }}><p className="text-sm font-black text-white">{averageRating > 0 ? averageRating.toFixed(1) : "—"}</p><p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">{totalReviews} reviews</p></div>
-                      <div className="bg-white/12 px-2.5 py-2" style={{ borderRadius: "9px" }}><p className="text-sm font-black text-white">{responseTimeLabel}</p><p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">response</p></div>
-                      <div className="bg-white/12 px-2.5 py-2" style={{ borderRadius: "9px" }}><p className="text-sm font-black text-white">{dealer.cars.length}</p><p className="text-[9px] font-bold uppercase tracking-[0.12em] text-white/70">active cars</p></div>
-                    </div>
-                    <div className="mt-3 pt-3 border-t border-white/20">
-                      <ul className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-0 list-none p-0 m-0">
-                        <li className="flex items-baseline gap-2 sm:gap-1.5">
-                          <span className="text-lg sm:text-xl font-black tabular-nums text-[#ef3340]">{dealer.cars.length}+</span>
-                          <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/75">Vehicles in stock</span>
-                        </li>
-                        <li className="hidden sm:flex items-center px-3 sm:px-4 select-none" aria-hidden="true">
-                          <span className="inline-flex w-[6px] h-[6px] rotate-45 bg-white/35 shrink-0" style={{ borderRadius: "1px" }} />
-                        </li>
-                        <li className="sm:hidden h-px w-full max-w-[180px] bg-gradient-to-r from-white/35 via-white/15 to-transparent" aria-hidden="true" />
-                        <li className="flex items-baseline gap-2 sm:gap-1.5">
-                          <span className="text-lg sm:text-xl font-black tabular-nums text-[#ef3340]">{yearsActive}+</span>
-                          <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/75">Years in business</span>
-                        </li>
-                        <li className="hidden sm:flex items-center px-3 sm:px-4 select-none" aria-hidden="true">
-                          <span className="inline-flex w-[6px] h-[6px] rotate-45 bg-white/35 shrink-0" style={{ borderRadius: "1px" }} />
-                        </li>
-                        <li className="sm:hidden h-px w-full max-w-[180px] bg-gradient-to-r from-white/35 via-white/15 to-transparent" aria-hidden="true" />
-                        <li className="flex items-baseline gap-2 sm:gap-1.5">
-                          <span className="text-lg sm:text-xl font-black tabular-nums text-[#ef3340]">{dealer.verified ? "100%" : "—"}</span>
-                          <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/75">Verified dealer</span>
-                        </li>
-                      </ul>
+
+                    {/* Description, clamped */}
+                    <p className="mt-2 text-[13px] sm:text-sm text-white/85 leading-relaxed line-clamp-2">
+                      {dealerSummary}
+                    </p>
+
+                    {/* Inline glass pills — replaces both the 3-box grid
+                        and the bottom "vehicles in stock" row for a
+                        single compact stat strip. */}
+                    <div className="mt-3 flex flex-wrap items-center gap-1.5 sm:gap-2">
+                      <span
+                        className="inline-flex items-center gap-1.5 bg-white/10 border border-white/15 px-2.5 py-1 text-[10px] font-black text-white"
+                        style={{ borderRadius: "999px" }}
+                      >
+                        <Star className="w-3 h-3 text-amber-400" fill="currentColor" />
+                        <span className="tabular-nums">{averageRating > 0 ? averageRating.toFixed(1) : "—"}</span>
+                        <span className="opacity-60 font-bold uppercase tracking-[0.1em]">({totalReviews})</span>
+                      </span>
+                      <span
+                        className="inline-flex items-center gap-1.5 bg-white/10 border border-white/15 px-2.5 py-1 text-[10px] font-black text-white uppercase tracking-[0.1em]"
+                        style={{ borderRadius: "999px" }}
+                      >
+                        <Clock3 className="w-3 h-3 text-[#22c55e]" />
+                        {responseTimeLabel}
+                      </span>
+                      <span
+                        className="inline-flex items-center gap-1.5 bg-white/10 border border-white/15 px-2.5 py-1 text-[10px] font-black text-white uppercase tracking-[0.1em]"
+                        style={{ borderRadius: "999px" }}
+                      >
+                        <CarFront className="w-3 h-3 text-[#22c55e]" />
+                        <span className="tabular-nums normal-case">{dealer.cars.length}</span> in stock
+                      </span>
+                      <span
+                        className="inline-flex items-center gap-1.5 bg-white/10 border border-white/15 px-2.5 py-1 text-[10px] font-black text-white uppercase tracking-[0.1em]"
+                        style={{ borderRadius: "999px" }}
+                      >
+                        <span className="tabular-nums normal-case">{yearsActive}+</span> yrs
+                      </span>
                     </div>
                   </div>
                 </div>
               </section>
+
               <aside className="lg:col-span-4 hidden lg:block">
-                <div className="bg-white/90 dark:bg-[#141414]/90 backdrop-blur-md p-4 shadow-2xl" style={{ borderRadius: "14px" }}>
-                  <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#22c55e] mb-1">Get in touch</p>
-                  <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-white mb-3">Start your enquiry</h3>
+                <div
+                  className="bg-white/95 dark:bg-[#141414]/95 backdrop-blur-md p-4 shadow-2xl border border-white/40 dark:border-white/10 ring-1 ring-black/5"
+                  style={{ borderRadius: "14px" }}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#22c55e]">Get in touch</p>
+                    <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
+                      Direct line
+                    </span>
+                  </div>
                   {dealer.whatsapp && (
-                    <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-[#ef3340] text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>
+                    <a
+                      href={whatsappChatHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full mb-2 inline-flex items-center justify-center gap-1.5 bg-[#ef3340] hover:bg-[#d12a36] text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors"
+                      style={{ borderRadius: "10px" }}
+                    >
+                      <MessageCircle className="w-3.5 h-3.5" />
                       Start Live Enquiry
                     </a>
                   )}
-                  {dealer.whatsapp && <a href={whatsappChatHref} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>WhatsApp Dealer</a>}
-                  {dealerTelHref ? (
-                    <a
-                      href={dealerTelHref}
-                      className="w-full mb-2 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]"
-                      style={{ borderRadius: "10px" }}
-                    >
-                      Call Dealer
-                    </a>
-                  ) : null}
-                  {dealer.website && <a href={withProtocol(dealer.website)} target="_blank" rel="noopener noreferrer" className="w-full mb-2 inline-flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em]" style={{ borderRadius: "10px" }}>Visit Website</a>}
-                  <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                  <div className="grid grid-cols-2 gap-2">
+                    {dealerTelHref ? (
+                      <a
+                        href={dealerTelHref}
+                        className="inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors"
+                        style={{ borderRadius: "10px" }}
+                      >
+                        <Phone className="w-3.5 h-3.5" /> Call
+                      </a>
+                    ) : null}
+                    {dealer.website && (
+                      <a
+                        href={withProtocol(dealer.website)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors"
+                        style={{ borderRadius: "10px" }}
+                      >
+                        <Globe className="w-3.5 h-3.5" /> Web
+                      </a>
+                    )}
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
                     <DealerShowroomShare
                       showroomUrl={showroomPublicUrl}
                       dealerName={dealer.name}
