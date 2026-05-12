@@ -364,7 +364,7 @@ export default async function DealerPage(props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(dealerBreadcrumbLd) }} />
 
       <div className="relative w-full overflow-x-hidden">
-        <div className="relative h-[176px] sm:h-[240px] lg:h-[380px] w-full overflow-hidden bg-[#111827]">
+        <div className="relative h-[176px] sm:h-[240px] lg:h-[300px] w-full overflow-hidden bg-[#111827]">
           {dealer.bannerUrl ? (
             <img src={dealer.bannerUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
           ) : (
@@ -379,8 +379,15 @@ export default async function DealerPage(props) {
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/35" />
         </div>
 
-        <div className="relative z-[2] mx-auto w-full max-w-[1380px] px-4 pb-4 sm:px-6 sm:pb-5 xl:px-8 lg:absolute lg:inset-x-0 lg:bottom-0 lg:pb-6">
-          <div className="-mt-7 sm:-mt-9 lg:mt-0">
+        {/* The About card overlaps the bottom of the banner across all
+            breakpoints. Previously the lg+ layout absolute-positioned
+            the card at the banner's bottom, which on a 380px banner
+            pulled the card's top up under the sticky navbar whenever
+            the card was taller than the banner. Letting the card flow
+            below with a consistent negative-top overlap keeps every
+            stat, button, and the dealer description visible. */}
+        <div className="relative z-[2] mx-auto w-full max-w-[1380px] px-4 pb-4 sm:px-6 sm:pb-5 xl:px-8 lg:pb-6">
+          <div className="-mt-7 sm:-mt-9 lg:-mt-16">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
               <section className="lg:col-span-8 bg-black/35 dark:bg-black/45 backdrop-blur-md p-4 sm:p-5 shadow-2xl min-w-0" style={{ borderRadius: "14px" }}>
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start">
