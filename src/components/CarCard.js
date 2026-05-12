@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { MapPin, ImageOff, ArrowUpRight, Share2 } from "lucide-react";
+import SafeImage from "@/components/SafeImage";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
 import { FUEL_LABELS } from "@/lib/constants";
 import { buildCarSpecSummaryItems, meaningfulFeatureList, positiveNum } from "@/lib/car-display";
@@ -81,12 +81,17 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
       {/* Image Container */}
       <Link href={`/cars/${car.id}`} onClick={() => onCarClick("image")} className="relative aspect-[16/11] bg-slate-50 dark:bg-zinc-900 overflow-hidden block">
         {primaryImg ? (
-          <Image
+          <SafeImage
             src={primaryImg}
             alt={title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-700"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            fallback={
+              <div className="w-full h-full flex items-center justify-center text-slate-300">
+                <ImageOff className="w-8 h-8" aria-hidden />
+              </div>
+            }
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-slate-300">

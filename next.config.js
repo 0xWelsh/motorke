@@ -13,13 +13,18 @@ try {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    // Allow any HTTPS image host. User uploads go through /api/upload to
+    // Supabase Storage, but legacy listings and admin/dealer-pasted URLs
+    // can originate from arbitrary CDNs (dealer websites, social hosts,
+    // etc). Restricting to a fixed allowlist silently breaks those.
     remotePatterns: [
-      // Seed data placeholder images
-      { protocol: "https", hostname: "images.unsplash.com" },
-      { protocol: "https", hostname: "cdn.motor1.com" },
-      // Supabase Storage (replace project ref wildcard with yours for tighter security)
-      { protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" },
+      { protocol: "https", hostname: "**" },
     ],
+    // Keep modern formats and a reasonable cache window so optimized
+    // images don't get re-rendered on every request.
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60 * 60 * 24,
+    dangerouslyAllowSVG: false,
   },
   // Prevent Prisma from being bundled into the server graph.
   serverExternalPackages: ["@prisma/client", "prisma"],

@@ -3,7 +3,7 @@
 // Mosaic-capable image gallery with lightbox for car detail page
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import Image from "next/image";
+import Image from "@/components/SafeImage";
 import { Share2, X, ChevronLeft, ChevronRight } from "lucide-react";
 
 const LIGHTBOX_AUTO_MS = 4200;
