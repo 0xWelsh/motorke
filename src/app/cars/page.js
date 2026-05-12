@@ -601,30 +601,30 @@ export default async function CarsPage({ searchParams }) {
           result_count: total,
         }}
       />
-      <div className="w-full px-4 sm:px-8 pt-3 sm:pt-4">
+      <div className="w-full px-2.5 sm:px-8 pt-3 sm:pt-4 overflow-x-hidden">
         
-        {/* Compact breadcrumb strip */}
-        <div className="flex items-center justify-between mb-6 gap-4 border-b border-slate-100 dark:border-zinc-900 pb-3">
-          <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400">
-            <Link href="/" className="hover:text-[#111827] dark:hover:text-white transition-colors">Home</Link>
-            <ChevronRight className="w-3 h-3" />
-            <Link href="/cars" className="hover:text-[#111827] dark:hover:text-white transition-colors">Vehicles</Link>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-[#111827] dark:text-white">Available</span>
+        {/* Breadcrumb strip — compact on mobile, full on desktop */}
+        <div className="mb-4 sm:mb-6 flex items-center justify-between gap-3 sm:gap-4 border-b border-slate-100 dark:border-zinc-900 pb-2.5 sm:pb-3 min-w-0">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3 text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400 truncate">
+            <Link href="/" className="hidden sm:inline hover:text-[#111827] dark:hover:text-white transition-colors">Home</Link>
+            <ChevronRight className="hidden sm:block w-3 h-3 shrink-0" />
+            <Link href="/cars" className="hover:text-[#111827] dark:hover:text-white transition-colors truncate">Vehicles</Link>
+            <ChevronRight className="w-3 h-3 shrink-0" />
+            <span className="text-[#111827] dark:text-white truncate">Available</span>
           </div>
-          <div className="text-right">
-            <div className="text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400 whitespace-nowrap">
+          <div className="shrink-0 text-right">
+            <div className="text-[10px] font-black uppercase tracking-[0.14em] sm:tracking-[0.18em] text-[#718096] dark:text-slate-400 whitespace-nowrap">
               {shownOnPageCount > 0
                 ? <>Showing <span className="text-[#111827] dark:text-white">{rangeStart}–{rangeEnd}</span> of {total}</>
                 : <>0 of {total}</>}
             </div>
-            <p className="mt-1 text-[11px] font-semibold text-slate-500 dark:text-zinc-400">
+            <p className="hidden sm:block mt-1 text-[11px] font-semibold text-slate-500 dark:text-zinc-400">
               Allow location to see nearest cars first.
             </p>
           </div>
         </div>
 
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+        <div className="mb-4 sm:mb-5 flex flex-wrap items-center justify-between gap-2 sm:gap-4">
           <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400">
             Per page
           </p>
@@ -641,8 +641,8 @@ export default async function CarsPage({ searchParams }) {
                   className={[
                     "px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.14em] border transition-colors",
                     isActive
-                      ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:text-[#111827] dark:border-white"
-                      : "bg-white text-[#111827] border-[#EDF2F7] hover:border-[#111827] dark:bg-[#111111] dark:text-white dark:border-slate-800 dark:hover:border-white",
+                      ? "bg-[#111827] text-white border-[#111827] dark:bg-[#2F855A] dark:text-white dark:border-[#2F855A]"
+                      : "bg-white text-[#111827] border-[#EDF2F7] hover:border-[#111827] dark:bg-[#111111] dark:text-white dark:border-slate-800 dark:hover:border-[#2F855A]",
                   ].join(" ")}
                   style={{ borderRadius: "var(--radius)" }}
                 >
