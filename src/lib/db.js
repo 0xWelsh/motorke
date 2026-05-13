@@ -1,5 +1,6 @@
 // src/lib/db.js
-// Singleton Prisma client — prevents too-many-connections in dev
+// Singleton Prisma client — always reuse `globalThis.prisma` so Vercel
+// serverless does not instantiate dozens of clients per cold start (P2024).
 
 import { PrismaClient } from "@prisma/client";
 
@@ -11,4 +12,4 @@ export const db =
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;
+globalForPrisma.prisma = db;

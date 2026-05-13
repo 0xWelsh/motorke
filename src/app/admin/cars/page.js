@@ -44,8 +44,8 @@ export default async function AdminCarsPage({ searchParams }) {
         OR: [
           { make: { contains: search, mode: "insensitive" } },
           { model: { contains: search, mode: "insensitive" } },
-          { plate: { contains: search, mode: "insensitive" } },
-          { vin: { contains: search, mode: "insensitive" } },
+          { variant: { contains: search, mode: "insensitive" } },
+          { description: { contains: search, mode: "insensitive" } },
         ],
       }
     : {};
@@ -160,7 +160,7 @@ export default async function AdminCarsPage({ searchParams }) {
           <input
             name="search"
             defaultValue={search}
-            placeholder="Make, model, VIN or plate..."
+            placeholder="Make, model, variant, or description…"
             autoComplete="off"
             className="peer w-full rounded-xl border border-[#e2e2e6] bg-[#fafafa] py-3 pl-11 pr-24 text-[13px] font-medium text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-[#2F855A]/45 focus:bg-white focus:ring-2 focus:ring-[#2F855A]/15 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white dark:placeholder:text-zinc-600"
           />
@@ -276,7 +276,7 @@ export default async function AdminCarsPage({ searchParams }) {
                             <span aria-hidden className="opacity-40">
                               ·
                             </span>
-                            <span>{car.plate?.trim() || "—"}</span>
+                            <span className="line-clamp-1 normal-case">{car.variant?.trim() || "—"}</span>
                           </div>
                         </div>
                       </div>
