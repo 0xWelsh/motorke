@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ChevronRight, Search, Sparkles } from "lucide-react";
 import Image from "next/image";
 import CarsSearch from "@/components/CarsSearch";
+import CarsInventorySearch from "@/components/CarsInventorySearch";
 import CarCard from "@/components/CarCard";
 import CarsQuickActions from "@/components/CarsQuickActions";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
@@ -653,24 +654,50 @@ export default async function CarsPage({ searchParams }) {
           </div>
         </div>
 
+        <CarsInventorySearch
+          initialSearch={search}
+          mergeFromUrl={{
+            make,
+            model,
+            steering,
+            minYOM: sp.minYOM || "",
+            maxYOM: sp.maxYOM || "",
+            bodyType,
+            fuelType,
+            transmission,
+            county,
+            minPrice: minPrice != null ? String(minPrice) : "",
+            maxPrice: maxPrice != null ? String(maxPrice) : "",
+            sort,
+            lat: sp.lat || "",
+            lng: sp.lng || "",
+            perPage: String(limit),
+          }}
+        />
+
         <CarsQuickActions />
 
         {/* Main layout: sidebar + top rows */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-4 gap-y-10">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 gap-y-6 lg:gap-y-8">
           {/* Sidebar */}
           <div id="cars-filter-sidebar" className="self-start lg:col-span-1">
             <CarsSearch
-              initialSearch={search}
+              currentSearch={search}
+              currentModel={model}
               initialMake={make}
+              initialSteering={steering}
+              initialMinYOM={sp.minYOM || ""}
+              initialMaxYOM={sp.maxYOM || ""}
               initialBodyType={bodyType}
               initialFuelType={fuelType}
               initialTransmission={transmission}
               initialCounty={county}
-              initialMinPrice={sp.minPrice}
-              initialMaxPrice={sp.maxPrice}
+              initialMinPrice={minPrice != null ? String(minPrice) : ""}
+              initialMaxPrice={maxPrice != null ? String(maxPrice) : ""}
               initialSort={sort}
               initialLat={sp.lat || ""}
               initialLng={sp.lng || ""}
+              listPerPage={String(limit)}
               allMakes={allMakes}
               bodyTypeLabels={BODY_TYPE_LABELS}
               counties={COUNTIES}

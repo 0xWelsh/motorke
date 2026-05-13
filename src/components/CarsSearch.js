@@ -1,15 +1,19 @@
 "use client";
 // src/components/CarsSearch.js
-import { useState, useEffect, useRef } from "react";
+// Filter sidebar only — keyword search lives in CarsInventorySearch.
+
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Search, X, SlidersHorizontal, MapPin, Loader2 } from "lucide-react";
-import useDebouncedSearch from "@/hooks/useDebouncedSearch";
-import SearchSuggestions from "@/components/SearchSuggestions";
+import { X, SlidersHorizontal } from "lucide-react";
 import { FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/constants";
 
-export default function CarsSearch({ 
-  initialSearch = "",
+export default function CarsSearch({
+  currentSearch = "",
+  currentModel = "",
   initialMake = "",
+  initialSteering = "",
+  initialMinYOM = "",
+  initialMaxYOM = "",
   initialBodyType = "",
   initialFuelType = "",
   initialTransmission = "",
@@ -19,17 +23,17 @@ export default function CarsSearch({
   initialSort = "newest",
   initialLat = "",
   initialLng = "",
+  /** Keep non-default per-page when filters change (matches server default 14). */
+  listPerPage = "",
   allMakes = [],
   bodyTypeLabels = {},
-  counties = []
+  counties = [],
 }) {
   const RECENT_CAR_SEARCHES_KEY = "motorke:recent-car-searches";
-  const [search, setSearch] = useState(initialSearch);
   const [make, setMake] = useState(initialMake);
-  const [model, setModel] = useState("");
-  const [steering, setSteering] = useState("");
-  const [minYOM, setMinYOM] = useState("");
-  const [maxYOM, setMaxYOM] = useState("");
+  const [steering, setSteering] = useState(initialSteering || "");
+  const [minYOM, setMinYOM] = useState(initialMinYOM != null ? String(initialMinYOM) : "");
+  const [maxYOM, setMaxYOM] = useState(initialMaxYOM != null ? String(initialMaxYOM) : "");
   const [bodyType, setBodyType] = useState(initialBodyType);
   const [fuelType, setFuelType] = useState(initialFuelType);
   const [transmission, setTransmission] = useState(initialTransmission);
@@ -37,64 +41,40 @@ export default function CarsSearch({
   const [minPrice, setMinPrice] = useState(initialMinPrice);
   const [maxPrice, setMaxPrice] = useState(initialMaxPrice);
   const [sort, setSort] = useState(initialSort);
-  const [lat, setLat] = useState(initialLat);
-  const [lng, setLng] = useState(initialLng);
-  const [locating, setLocating] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  
-  const [suggestions, setSuggestions] = useState([]);
-  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const router = useRouter();
-  const formRef = useRef(null);
 
-  const { debouncedTerm } = useDebouncedSearch(search, 300);
-
-  // Fetch suggestions when debounced term changes
   useEffect(() => {
-    if (!debouncedTerm || debouncedTerm.length < 2) {
-      setSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
-
-    const fetchSuggestions = async () => {
-      try {
-        setLoadingSuggestions(true);
-        const response = await fetch(`/api/search/suggestions?query=${encodeURIComponent(debouncedTerm)}`);
-        const data = await response.json();
-        setSuggestions(data.suggestions || []);
-        setShowSuggestions(data.suggestions && data.suggestions.length > 0);
-      } catch (error) {
-        console.error("Error fetching suggestions:", error);
-        setSuggestions([]);
-        setShowSuggestions(false);
-      } finally {
-        setLoadingSuggestions(false);
-      }
-    };
-
-    fetchSuggestions();
-  }, [debouncedTerm]);
-
-  // Handle click outside to close suggestions
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (formRef.current && !formRef.current.contains(event.target)) {
-        setShowSuggestions(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+    setMake(initialMake);
+    setSteering(initialSteering || "");
+    setMinYOM(initialMinYOM != null ? String(initialMinYOM) : "");
+    setMaxYOM(initialMaxYOM != null ? String(initialMaxYOM) : "");
+    setBodyType(initialBodyType);
+    setFuelType(initialFuelType);
+    setTransmission(initialTransmission);
+    setCounty(initialCounty);
+    setMinPrice(initialMinPrice);
+    setMaxPrice(initialMaxPrice);
+    setSort(initialSort);
+  }, [
+    initialMake,
+    initialSteering,
+    initialMinYOM,
+    initialMaxYOM,
+    initialBodyType,
+    initialFuelType,
+    initialTransmission,
+    initialCounty,
+    initialMinPrice,
+    initialMaxPrice,
+    initialSort,
+  ]);
 
   function buildParams(next = {}) {
     const finalState = {
-      search,
+      search: currentSearch?.trim() || "",
       make,
+      model: currentModel,
       bodyType,
       fuelType,
       transmission,
@@ -102,13 +82,15 @@ export default function CarsSearch({
       minPrice,
       maxPrice,
       sort,
+      lat: initialLat,
+      lng: initialLng,
       ...next,
     };
 
     const params = new URLSearchParams();
     if (finalState.search?.trim()) params.set("search", finalState.search.trim());
     if (finalState.make) params.set("make", finalState.make);
-    if (finalState.model) params.set("model", finalState.model);
+    if (finalState.model?.trim()) params.set("model", finalState.model.trim());
     if (finalState.steering) params.set("steering", finalState.steering);
     if (finalState.minYOM) params.set("minYOM", finalState.minYOM);
     if (finalState.maxYOM) params.set("maxYOM", finalState.maxYOM);
@@ -121,7 +103,9 @@ export default function CarsSearch({
     if (finalState.sort && finalState.sort !== "newest") params.set("sort", finalState.sort);
     if (finalState.lat) params.set("lat", finalState.lat);
     if (finalState.lng) params.set("lng", finalState.lng);
-
+    const pp = finalState.listPerPage != null ? String(finalState.listPerPage) : String(listPerPage || "");
+    if (pp && pp !== "14") params.set("perPage", pp);
+    params.delete("page");
     return params;
   }
 
@@ -129,8 +113,9 @@ export default function CarsSearch({
     const params = buildParams(next);
     const query = params.toString();
     const nextState = {
-      search: search?.trim() || "",
+      search: currentSearch?.trim() || "",
       make,
+      model: currentModel,
       bodyType,
       fuelType,
       transmission,
@@ -142,14 +127,15 @@ export default function CarsSearch({
     };
     const hasMeaningfulFilter = Boolean(
       nextState.search ||
-      nextState.make ||
-      nextState.bodyType ||
-      nextState.fuelType ||
-      nextState.transmission ||
-      nextState.county ||
-      nextState.minPrice ||
-      nextState.maxPrice ||
-      (nextState.sort && nextState.sort !== "newest")
+        nextState.make ||
+        (typeof nextState.model === "string" && nextState.model.trim()) ||
+        nextState.bodyType ||
+        nextState.fuelType ||
+        nextState.transmission ||
+        nextState.county ||
+        nextState.minPrice ||
+        nextState.maxPrice ||
+        (nextState.sort && nextState.sort !== "newest")
     );
     if (hasMeaningfulFilter && typeof window !== "undefined") {
       try {
@@ -162,69 +148,27 @@ export default function CarsSearch({
           nextState.maxPrice ? `<= ${Number(nextState.maxPrice).toLocaleString()}` : null,
         ].filter(Boolean);
         const label = labelParts.join(" • ") || "Custom cars search";
-        const entry = {
-          label,
-          query,
-          createdAt: Date.now(),
-        };
+        const entry = { label, query, createdAt: Date.now() };
         const deduped = [entry, ...prev.filter((item) => item.query !== query)].slice(0, 6);
         window.localStorage.setItem(RECENT_CAR_SEARCHES_KEY, JSON.stringify(deduped));
       } catch {
-        // Ignore storage failures in private mode.
+        // ignore
       }
     }
-    setShowSuggestions(false);
-    setMobileOpen(false); // Close mobile filters on push
+    setMobileOpen(false);
     router.push(query ? `/cars?${query}` : "/cars");
   }
 
   function handleSubmit(e) {
-    if (e) e.preventDefault();
-    // Ask for location on search submit so guest users can still get distance sorting.
-    if (!lat && !lng && typeof window !== "undefined" && "geolocation" in navigator) {
-      setLocating(true);
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          const nextLat = String(latitude);
-          const nextLng = String(longitude);
-          setLat(nextLat);
-          setLng(nextLng);
-          setLocating(false);
-          pushWith({ lat: nextLat, lng: nextLng });
-        },
-        () => {
-          setLocating(false);
-          pushWith();
-        },
-        { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
-      );
-      return;
-    }
+    e.preventDefault();
     pushWith();
   }
 
-  function requestLocation() {
-    if (typeof window === "undefined" || !("geolocation" in navigator)) return;
-    setLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        const nextLat = String(latitude);
-        const nextLng = String(longitude);
-        setLat(nextLat);
-        setLng(nextLng);
-        setLocating(false);
-        pushWith({ lat: nextLat, lng: nextLng });
-      },
-      () => setLocating(false),
-      { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
-    );
-  }
-
   function clearFilters() {
-    setSearch("");
     setMake("");
+    setSteering("");
+    setMinYOM("");
+    setMaxYOM("");
     setBodyType("");
     setFuelType("");
     setTransmission("");
@@ -232,87 +176,99 @@ export default function CarsSearch({
     setMinPrice("");
     setMaxPrice("");
     setSort("newest");
-    setLat("");
-    setLng("");
-    setShowSuggestions(false);
-    router.push("/cars");
+    const params = new URLSearchParams();
+    if (currentSearch?.trim()) params.set("search", currentSearch.trim());
+    if (initialLat) params.set("lat", initialLat);
+    if (initialLng) params.set("lng", initialLng);
+    if (listPerPage && String(listPerPage) !== "14") params.set("perPage", String(listPerPage));
+    const q = params.toString();
+    router.push(q ? `/cars?${q}` : "/cars");
   }
 
-  const hasFilters = search || make || bodyType || fuelType || transmission || county || minPrice || maxPrice || sort !== "newest" || (lat && lng);
-  const activeCount = [search, make, bodyType, fuelType, transmission, county, minPrice, maxPrice, sort !== "newest" ? "sort" : "", lat && lng ? "location" : ""].filter(Boolean).length;
+  const filterOnlyCount = [
+    make,
+    bodyType,
+    fuelType,
+    transmission,
+    county,
+    minPrice,
+    maxPrice,
+    sort !== "newest" ? "sort" : "",
+    initialLat && initialLng ? "loc" : "",
+    steering,
+    minYOM,
+    maxYOM,
+    currentModel,
+  ].filter(Boolean).length;
+
+  const hasFilters =
+    make ||
+    bodyType ||
+    fuelType ||
+    transmission ||
+    county ||
+    minPrice ||
+    maxPrice ||
+    sort !== "newest" ||
+    steering ||
+    minYOM ||
+    maxYOM ||
+    currentModel;
+
+  const bodyEntries = Object.entries(bodyTypeLabels || {});
 
   return (
-    <div ref={formRef} className="w-full">
-      <div className="lg:hidden sticky top-16 sm:top-20 z-40 -mx-6 px-6 py-4 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-[#EDF2F7] dark:border-slate-800 transition-all duration-300">
+    <div className="w-full">
+      <div className="sticky top-16 z-40 -mx-2.5 px-2.5 py-2 sm:-mx-0 sm:px-0 lg:hidden">
         <button
           type="button"
           onClick={() => setMobileOpen((prev) => !prev)}
-          className="w-full border border-[#E2E8F0] dark:border-slate-800 bg-white dark:bg-[#111111] px-6 py-4 inline-flex items-center justify-between text-xs font-bold uppercase tracking-widest text-[#111827] dark:text-white shadow-sm"
-          style={{ borderRadius: 'var(--radius)' }}
+          className="w-full border border-slate-200 bg-white px-3 py-2.5 text-[10px] font-black uppercase tracking-widest text-[#111827] shadow-sm dark:border-slate-800 dark:bg-[#111111] dark:text-white"
+          style={{ borderRadius: "var(--radius)" }}
         >
-          <span className="inline-flex items-center gap-3">
-            <SlidersHorizontal className="w-4 h-4 text-[#38A169]" />
-            Filter Inventory {activeCount > 0 ? `(${activeCount})` : ""}
+          <span className="inline-flex w-full items-center justify-between gap-2">
+            <span className="inline-flex items-center gap-2">
+              <SlidersHorizontal className="h-4 w-4 text-[#38A169]" />
+              Filters {filterOnlyCount > 0 ? `(${filterOnlyCount})` : ""}
+            </span>
+            <span className="text-[10px] font-bold text-slate-400">{mobileOpen ? "Hide" : "Show"}</span>
           </span>
-          <span className="text-[10px] text-[#718096]">{mobileOpen ? "Collapse" : "Expand"}</span>
         </button>
       </div>
 
-      <aside className={`${mobileOpen ? "block" : "hidden"} lg:block bg-white dark:bg-transparent space-y-8 mt-8 lg:mt-0`}>
-        <div className="mb-10 hidden lg:block border-b border-slate-100 dark:border-zinc-900 pb-6">
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#38A169] mb-2">Inventory</p>
-          <h2 className="text-xl font-black tracking-tighter text-[#111827] dark:text-white uppercase">Refine Results</h2>
+      <aside className={`${mobileOpen ? "block" : "hidden"} lg:block lg:mt-0`}>
+        <div className="mb-3 hidden border-b border-slate-100 pb-3 dark:border-zinc-900 lg:block">
+          <p className="mb-0.5 text-[10px] font-black uppercase tracking-[0.28em] text-[#38A169]">Refine</p>
+          <h2 className="text-base font-black uppercase tracking-tight text-[#111827] dark:text-white">Filters</h2>
         </div>
 
-        <form method="GET" onSubmit={handleSubmit} className="space-y-8">
-          {/* Keyword Search */}
-          <div className="space-y-3 relative">
-            <input
-              name="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
-              placeholder="Search by vehicle name"
-              className="w-full bg-[#FAFAFA] dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 px-6 py-4 text-xs font-bold text-[#111827] dark:text-white outline-none focus:border-[#38A169] transition-all placeholder:text-[#A0AEC0] dark:placeholder:text-slate-600"
-              style={{ borderRadius: '2px' }}
-            />
-            <button
-              type="button"
-              onClick={requestLocation}
-              disabled={locating}
-              className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-[#2F855A] hover:text-[#276749] disabled:opacity-60 transition-colors"
-            >
-              {locating ? <Loader2 size={12} className="animate-spin" /> : <MapPin size={12} />}
-              {locating ? "Locating..." : lat && lng ? "Location active" : "Use my location"}
-            </button>
-          </div>
-
-          {/* Filter by Budget Buttons */}
-          <div className="space-y-3">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Filter by budget</label>
-            <div className="grid grid-cols-2 gap-2">
+        <form method="GET" onSubmit={handleSubmit} className="space-y-3">
+          {/* Budget */}
+          <div className="space-y-1.5">
+            <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Budget</label>
+            <div className="grid grid-cols-2 gap-1.5">
               {[
-                { label: "KSh 0 - 1.3M", min: 0, max: 1300000 },
-                { label: "KSh 1.3M - 2.6M", min: 1300000, max: 2600000 },
-                { label: "KSh 2.6M - 3.9M", min: 2600000, max: 3900000 },
-                { label: "KSh 3.9M - 6.5M", min: 3900000, max: 6500000 },
-                { label: "KSh 6.5M - 9.8M", min: 6500000, max: 9750000 },
-                { label: "KSh 9.8M - 13M", min: 9750000, max: 13000000 },
+                { label: "≤1.3M", min: 0, max: 1300000 },
+                { label: "1.3–2.6M", min: 1300000, max: 2600000 },
+                { label: "2.6–3.9M", min: 2600000, max: 3900000 },
+                { label: "3.9–6.5M", min: 3900000, max: 6500000 },
+                { label: "6.5–9.8M", min: 6500000, max: 9750000 },
+                { label: "9.8–13M", min: 9750000, max: 13000000 },
               ].map((btn) => (
                 <button
                   key={btn.label}
                   type="button"
                   onClick={() => {
-                    setMinPrice(btn.min);
-                    setMaxPrice(btn.max);
-                    pushWith({ minPrice: btn.min, maxPrice: btn.max });
+                    setMinPrice(String(btn.min));
+                    setMaxPrice(String(btn.max));
+                    pushWith({ minPrice: String(btn.min), maxPrice: String(btn.max) });
                   }}
-                  className={`py-3.5 border text-[9px] font-black uppercase tracking-widest transition-all active:scale-95 ${
-                    minPrice === btn.min && maxPrice === btn.max
-                      ? "bg-[#38A169] border-[#38A169] text-white"
-                      : "border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-slate-300 hover:border-[#38A169]"
+                  className={`border py-2 text-[9px] font-black uppercase tracking-wide transition-all active:scale-[0.98] ${
+                    String(minPrice) === String(btn.min) && String(maxPrice) === String(btn.max)
+                      ? "border-[#38A169] bg-[#38A169] text-white"
+                      : "border-slate-200 bg-white text-slate-800 hover:border-[#38A169] dark:border-zinc-800 dark:bg-zinc-950 dark:text-slate-200"
                   }`}
-                  style={{ borderRadius: '2px' }}
+                  style={{ borderRadius: "2px" }}
                 >
                   {btn.label}
                 </button>
@@ -320,131 +276,214 @@ export default function CarsSearch({
               <button
                 type="button"
                 onClick={() => {
-                  setMinPrice(13000000);
+                  setMinPrice("13000000");
                   setMaxPrice("");
-                  pushWith({ minPrice: 13000000, maxPrice: "" });
+                  pushWith({ minPrice: "13000000", maxPrice: "" });
                 }}
-                className={`col-span-1 py-3.5 border text-[9px] font-black uppercase tracking-widest transition-all active:scale-95 ${
-                  minPrice === 13000000 && !maxPrice
-                    ? "bg-[#38A169] border-[#38A169] text-white"
-                    : "border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-slate-300 hover:border-[#38A169]"
+                className={`border py-2 text-[9px] font-black uppercase tracking-wide ${
+                  minPrice === "13000000" && !maxPrice
+                    ? "border-[#38A169] bg-[#38A169] text-white"
+                    : "border-slate-200 bg-white text-slate-800 hover:border-[#38A169] dark:border-zinc-800 dark:bg-zinc-950 dark:text-slate-200"
                 }`}
-                style={{ borderRadius: '2px' }}
+                style={{ borderRadius: "2px" }}
               >
-                Above KSh 13M
+                13M+
               </button>
             </div>
           </div>
 
-          {/* Brand & Model Selects - Consolidated Style */}
-          <div className="space-y-4">
-            <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Brand & Model</label>
-              <select
-                value={make}
-                onChange={(e) => setMake(e.target.value)}
-                className="w-full bg-[#FAFAFA] dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 px-4 py-3.5 text-xs font-bold text-[#111827] dark:text-white outline-none focus:border-[#38A169] transition-all appearance-none cursor-pointer"
-                style={{ borderRadius: '2px' }}
-              >
-                <option value="" className="dark:bg-[#0a0a0a]">Vehicle Brand</option>
-                {allMakes.map((m) => <option key={m.make} value={m.make} className="dark:bg-[#0a0a0a]">{m.make}</option>)}
-              </select>
-            </div>
-
+          {/* Sort */}
+          <div className="space-y-1">
+            <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Sort</label>
             <select
-              disabled={!make}
-              value={model}
+              value={sort}
               onChange={(e) => {
-                setModel(e.target.value);
-                pushWith({ model: e.target.value });
+                setSort(e.target.value);
+                pushWith({ sort: e.target.value });
               }}
-              className="w-full bg-[#FAFAFA] dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 px-4 py-3.5 text-xs font-bold text-[#111827] dark:text-white outline-none focus:border-[#38A169] transition-all appearance-none cursor-pointer disabled:opacity-50"
-              style={{ borderRadius: '2px' }}
+              className="w-full border border-slate-200 bg-white px-2 py-2 text-[11px] font-bold text-[#111827] outline-none focus:border-[#38A169] dark:border-zinc-800 dark:bg-zinc-950 dark:text-white"
+              style={{ borderRadius: "2px" }}
             >
-              <option value="">Brand Model</option>
-              {/* This would ideally fetch models for the make, but for now we'll allow it as a generic select or just a placeholder */}
+              <option value="newest">Newest</option>
+              <option value="price_asc">Price ↑</option>
+              <option value="price_desc">Price ↓</option>
+              <option value="mileage_asc">Low mileage</option>
+              <option value="year_desc">Newest year</option>
+              <option value="views_desc">Most viewed</option>
             </select>
           </div>
 
-          {/* Drive Type Toggles */}
-          <div className="space-y-3">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Drive Type</label>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setSteering("LHD");
-                  pushWith({ steering: "LHD" });
+          {/* Body & fuel */}
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div className="space-y-1">
+              <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Body</label>
+              <select
+                value={bodyType}
+                onChange={(e) => {
+                  setBodyType(e.target.value);
+                  pushWith({ bodyType: e.target.value });
                 }}
-                className={`py-3.5 border text-[9px] font-black uppercase tracking-widest transition-all active:scale-95 ${
-                  steering === "LHD"
-                    ? "bg-[#38A169] border-[#38A169] text-white"
-                    : "border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-slate-300 hover:border-[#38A169]"
-                }`}
-                style={{ borderRadius: '2px' }}
+                className="w-full border border-slate-200 bg-white px-2 py-2 text-[11px] font-bold outline-none focus:border-[#38A169] dark:border-zinc-800 dark:bg-zinc-950 dark:text-white"
+                style={{ borderRadius: "2px" }}
               >
-                Left Hand Drive
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setSteering("RHD");
-                  pushWith({ steering: "RHD" });
+                <option value="">Any</option>
+                {bodyEntries.map(([k, label]) => (
+                  <option key={k} value={k}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-1">
+              <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Fuel</label>
+              <select
+                value={fuelType}
+                onChange={(e) => {
+                  setFuelType(e.target.value);
+                  pushWith({ fuelType: e.target.value });
                 }}
-                className={`py-3.5 border text-[9px] font-black uppercase tracking-widest transition-all active:scale-95 ${
-                  steering === "RHD"
-                    ? "bg-[#38A169] border-[#38A169] text-white"
-                    : "border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-slate-300 hover:border-[#38A169]"
-                }`}
-                style={{ borderRadius: '2px' }}
+                className="w-full border border-slate-200 bg-white px-2 py-2 text-[11px] font-bold outline-none focus:border-[#38A169] dark:border-zinc-800 dark:bg-zinc-950 dark:text-white"
+                style={{ borderRadius: "2px" }}
               >
-                Right Hand Drive
-              </button>
+                <option value="">Any</option>
+                {Object.entries(FUEL_LABELS).map(([k, label]) => (
+                  <option key={k} value={k}>
+                    {label}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
-          {/* Year of Manufacture */}
-          <div className="space-y-3">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Year of Manufacture</label>
-            <div className="grid grid-cols-2 gap-2">
+          {/* Transmission & county */}
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div className="space-y-1">
+              <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Gearbox</label>
+              <select
+                value={transmission}
+                onChange={(e) => {
+                  setTransmission(e.target.value);
+                  pushWith({ transmission: e.target.value });
+                }}
+                className="w-full border border-slate-200 bg-white px-2 py-2 text-[11px] font-bold outline-none focus:border-[#38A169] dark:border-zinc-800 dark:bg-zinc-950 dark:text-white"
+                style={{ borderRadius: "2px" }}
+              >
+                <option value="">Any</option>
+                {Object.entries(TRANSMISSION_LABELS).map(([k, label]) => (
+                  <option key={k} value={k}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-1">
+              <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">County</label>
+              <select
+                value={county}
+                onChange={(e) => {
+                  setCounty(e.target.value);
+                  pushWith({ county: e.target.value });
+                }}
+                className="w-full border border-slate-200 bg-white px-2 py-2 text-[11px] font-bold outline-none focus:border-[#38A169] dark:border-zinc-800 dark:bg-zinc-950 dark:text-white"
+                style={{ borderRadius: "2px" }}
+              >
+                <option value="">Any</option>
+                {counties.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Brand */}
+          <div className="space-y-1">
+            <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Brand</label>
+            <select
+              value={make}
+              onChange={(e) => {
+                setMake(e.target.value);
+                pushWith({ make: e.target.value });
+              }}
+              className="w-full border border-slate-200 bg-white px-2 py-2 text-[11px] font-bold outline-none focus:border-[#38A169] dark:border-zinc-800 dark:bg-zinc-950 dark:text-white"
+              style={{ borderRadius: "2px" }}
+            >
+              <option value="">Any brand</option>
+              {allMakes.map((m) => (
+                <option key={m.make} value={m.make}>
+                  {m.make}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Drive & year */}
+          <div className="space-y-1.5">
+            <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Steering</label>
+            <div className="grid grid-cols-2 gap-1.5">
+              {["LHD", "RHD"].map((side) => (
+                <button
+                  key={side}
+                  type="button"
+                  onClick={() => {
+                    setSteering(side);
+                    pushWith({ steering: side });
+                  }}
+                  className={`border py-2 text-[9px] font-black uppercase tracking-wide ${
+                    steering === side
+                      ? "border-[#38A169] bg-[#38A169] text-white"
+                      : "border-slate-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 dark:text-slate-200"
+                  }`}
+                  style={{ borderRadius: "2px" }}
+                >
+                  {side === "LHD" ? "Left" : "Right"} hand
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Year</label>
+            <div className="grid grid-cols-2 gap-1.5">
               <input
                 type="number"
-                placeholder="Min YOM"
+                placeholder="Min"
                 value={minYOM}
                 onChange={(e) => setMinYOM(e.target.value)}
                 onBlur={() => pushWith({ minYOM })}
-                className="w-full bg-[#FAFAFA] dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 px-4 py-3.5 text-xs font-bold text-[#111827] dark:text-white outline-none focus:border-[#38A169] transition-all placeholder:text-[#CBD5E0] dark:placeholder:text-slate-600"
-                style={{ borderRadius: '2px' }}
+                className="w-full border border-slate-200 bg-white px-2 py-2 text-[11px] font-bold outline-none focus:border-[#38A169] dark:border-zinc-800 dark:bg-zinc-950 dark:text-white"
+                style={{ borderRadius: "2px" }}
               />
               <input
                 type="number"
-                placeholder="Max YOM"
+                placeholder="Max"
                 value={maxYOM}
                 onChange={(e) => setMaxYOM(e.target.value)}
                 onBlur={() => pushWith({ maxYOM })}
-                className="w-full bg-[#FAFAFA] dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 px-4 py-3.5 text-xs font-bold text-[#111827] dark:text-white outline-none focus:border-[#38A169] transition-all placeholder:text-[#CBD5E0] dark:placeholder:text-slate-600"
-                style={{ borderRadius: '2px' }}
+                className="w-full border border-slate-200 bg-white px-2 py-2 text-[11px] font-bold outline-none focus:border-[#38A169] dark:border-zinc-800 dark:bg-zinc-950 dark:text-white"
+                style={{ borderRadius: "2px" }}
               />
             </div>
           </div>
 
-
-          {/* Actions */}
-          <div className="pt-8 border-t border-[#EDF2F7] dark:border-slate-800 flex flex-col gap-4">
+          <div className="flex flex-col gap-2 border-t border-slate-100 pt-3 dark:border-zinc-800">
             <button
               type="submit"
-              className="bg-[#111827] text-white dark:bg-white dark:!text-black text-[10px] font-bold uppercase tracking-widest py-4 transition-transform hover:scale-[0.98] active:scale-95"
-              style={{ borderRadius: 'var(--radius)' }}
+              className="bg-[#111827] py-2.5 text-[10px] font-black uppercase tracking-widest text-white transition-transform hover:scale-[0.99] dark:bg-white dark:!text-black"
+              style={{ borderRadius: "var(--radius)" }}
             >
-              Apply Selection
+              Apply filters
             </button>
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="inline-flex items-center justify-center gap-2 text-[#718096] dark:text-slate-400 hover:text-[#111827] dark:hover:text-white text-[10px] font-bold uppercase tracking-widest py-2 transition-colors"
-            >
-              <X className="w-3.5 h-3.5" /> Clear Filters
-            </button>
+            {hasFilters ? (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="inline-flex items-center justify-center gap-1.5 py-1 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-[#111827] dark:hover:text-white"
+              >
+                <X className="h-3.5 w-3.5" /> Clear filters
+              </button>
+            ) : null}
           </div>
         </form>
       </aside>
