@@ -44,3 +44,21 @@ export function absoluteUrl(pathname = "/") {
   const p = pathname.startsWith("/") ? pathname : `/${pathname}`;
   return `${base}${p}`;
 }
+
+/**
+ * Normalise a stored media URL for crawlers (og:image, JSON-LD).
+ * Handles full https URLs (e.g. Supabase), protocol-relative URLs, and
+ * paths on this site. When `url` is empty, returns an absolute URL for
+ * `fallbackPath` if provided (e.g. "/opengraph.png").
+ */
+export function absoluteMediaUrl(url, fallbackPath = null) {
+  if (!url || typeof url !== "string" || !url.trim()) {
+    if (!fallbackPath) return null;
+    const f = fallbackPath.startsWith("/") ? fallbackPath : `/${fallbackPath}`;
+    return absoluteUrl(f);
+  }
+  const u = url.trim();
+  if (u.startsWith("//")) return `https:${u}`;
+  if (/^https?:\/\//i.test(u)) return u;
+  return absoluteUrl(u.startsWith("/") ? u : `/${u}`);
+}

@@ -21,7 +21,7 @@ import TrackEventOnMount from "@/components/TrackEventOnMount";
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
-import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
+import { absoluteUrl, absoluteMediaUrl, BRAND_MARK_SQUARE, BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import {
   buildCarDetailSpecRows,
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }) {
       ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
     },
     include: {
-      images: { where: { isPrimary: true }, take: 1 },
+      images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }], take: 1 },
       dealer: { select: { name: true, location: true } },
     },
   });
@@ -63,11 +63,13 @@ export async function generateMetadata({ params }) {
     .concat(` · ${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} on Welsh Motorhub — browse more verified cars.`);
   const origin = getSiteOrigin();
   const url = `${origin}/cars/${id}`;
-  // OG / Twitter images are now generated dynamically by the
-  // `opengraph-image.js` file in this route folder (a collage of the
-  // first 5 photos with branded title/price/dealer gutters). Next.js
-  // injects the meta tags automatically — we just supply the textual
-  // metadata here.
+  // WhatsApp / Facebook bots do not wait long for responses. A dynamic
+  // `opengraph-image` route (PNG generation + remote image fetch) often
+  // times out, so the preview shows only the domain. Use the real listing
+  // photo as `og:image` — it is already a plain https asset (Supabase) and
+  // loads reliably for scrapers.
+  const heroUrl = car.images?.[0]?.url;
+  const ogImageUrl = absoluteMediaUrl(heroUrl, BRAND_OG_IMAGE);
 
   return {
     title,
@@ -80,11 +82,20 @@ export async function generateMetadata({ params }) {
       locale: "en_KE",
       siteName: "Welsh Motorhub",
       type: "website",
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [ogImageUrl],
     },
   };
 }
@@ -222,13 +233,8 @@ export default async function CarDetailPage({ params }) {
   const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motorhub.`;
 
   const listingUrl = absoluteUrl(`/cars/${car.id}`);
-  const toAbsImage = (url) => {
-    if (!url) return absoluteUrl(BRAND_MARK_SQUARE);
-    if (/^https?:\/\//i.test(url)) return url;
-    return absoluteUrl(url.startsWith("/") ? url : `/${url}`);
-  };
   const absImages = (car.images?.length ? car.images : [{ url: BRAND_MARK_SQUARE }]).map((i) =>
-    toAbsImage(i.url)
+    absoluteMediaUrl(i.url, BRAND_MARK_SQUARE)
   );
 
   // ── Schema.org maps for enum values ─────────────────────────────────────
@@ -334,7 +340,7 @@ export default async function CarDetailPage({ params }) {
       seller: {
         "@type": "AutoDealer",
         name: car.dealer?.name || "Welsh Motorhub dealer",
-        ...(car.dealer?.logoUrl ? { image: toAbsImage(car.dealer.logoUrl) } : {}),
+        ...(car.dealer?.logoUrl ? { image: absoluteMediaUrl(car.dealer.logoUrl, BRAND_MARK_SQUARE) } : {}),
         ...(car.dealer?.location
           ? {
               address: {
@@ -376,16 +382,6 @@ export default async function CarDetailPage({ params }) {
 
   return (
     <div className="bg-white min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
-      {/* Pre-warm the share-card cache: any visitor on the detail page
-          quietly fetches /cars/{id}/opengraph-image in the background,
-          so by the time someone shares the link to WhatsApp/Facebook
-          the scraper hits a fully-cached edge response instead of
-          waiting on a cold generation. */}
-      <link
-        rel="prefetch"
-        as="image"
-        href={`/cars/${car.id}/opengraph-image`}
-      />
       <TrackEventOnMount
         name="view_car"
         payload={{
