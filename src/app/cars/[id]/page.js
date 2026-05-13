@@ -21,7 +21,7 @@ import TrackEventOnMount from "@/components/TrackEventOnMount";
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
-import { absoluteUrl, absoluteMediaUrl, BRAND_MARK_SQUARE, BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
+import { absoluteUrl, absoluteMediaUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import {
   buildCarDetailSpecRows,
@@ -63,13 +63,11 @@ export async function generateMetadata({ params }) {
     .concat(` · ${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} on Welsh Motorhub — browse more verified cars.`);
   const origin = getSiteOrigin();
   const url = `${origin}/cars/${id}`;
-  // WhatsApp / Facebook bots do not wait long for responses. A dynamic
-  // `opengraph-image` route (PNG generation + remote image fetch) often
-  // times out, so the preview shows only the domain. Use the real listing
-  // photo as `og:image` — it is already a plain https asset (Supabase) and
-  // loads reliably for scrapers.
-  const heroUrl = car.images?.[0]?.url;
-  const ogImageUrl = absoluteMediaUrl(heroUrl, BRAND_OG_IMAGE);
+  // Serve the hero through our own origin so WhatsApp / Facebook hit
+  // welshmotorhub.co.ke first (see /api/cars/[id]/og-image). Raw Supabase
+  // URLs in <meta> still fail for some listings (legacy paths, signed
+  // URLs, or crawler quirks).
+  const ogImageUrl = `${origin}/api/cars/${id}/og-image`;
 
   return {
     title,

@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ImageOff } from "lucide-react";
 import { trackUiEvent } from "@/lib/analytics";
+import { normalizeListingHeroImageUrl } from "@/lib/listing-image-url";
 
 function isUsableSrc(src) {
   if (!src || typeof src !== "string") return false;
@@ -62,12 +63,17 @@ export default function SafeImage({
   const [errored, setErrored] = useState(false);
   const reportedRef = useRef(false);
 
+  const resolvedSrc =
+    typeof src === "string" && /^https?:\/\//i.test(src.trim())
+      ? normalizeListingHeroImageUrl(src) || src.trim()
+      : src;
+
   useEffect(() => {
     setErrored(false);
     reportedRef.current = false;
   }, [src]);
 
-  if (!isUsableSrc(src) || errored) {
+  if (!isUsableSrc(resolvedSrc) || errored) {
     if (fallback) return fallback;
     return (
       <div className="absolute inset-0 flex items-center justify-center bg-slate-100 dark:bg-zinc-900 text-slate-300 dark:text-slate-600">
@@ -79,21 +85,19 @@ export default function SafeImage({
 
   return (
     <Image
-      src={src}
+      src={resolvedSrc}
       alt={alt}
       onError={(event) => {
         setErrored(true);
         if (reportedRef.current) return;
         reportedRef.current = true;
-        if (!rememberError(src)) return;
-        // Fire-and-forget telemetry. If something in this chain throws
-        // (e.g. analytics blocked), we silently swallow it.
+        if (!rememberError(resolvedSrc)) return;
         try {
           trackUiEvent("image_load_failed", {
-            host: hostOf(src),
+            host: hostOf(resolvedSrc),
             src_path: (() => {
               try {
-                return new URL(src).pathname;
+                return new URL(resolvedSrc).pathname;
               } catch {
                 return "";
               }
