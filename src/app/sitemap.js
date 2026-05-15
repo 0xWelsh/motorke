@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { absoluteUrl, getSiteOrigin } from "@/lib/site-url";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
+import { slugifyCarSegment, SEO_COUNTIES } from "@/lib/seo-car-slug";
 
 const BASE = getSiteOrigin();
 
@@ -21,7 +22,9 @@ export default async function sitemap() {
   };
   const dealerWhere = PUBLIC_ONLY_VERIFIED_DEALERS ? { verified: true } : {};
 
-  const [cars, dealers] = await Promise.all([
+  const allowedCountySlugs = new Set(SEO_COUNTIES.map((c) => slugifyCarSegment(c)));
+
+  const [cars, dealers, makeRows, comboRows, countiesWithStock] = await Promise.all([
     db.car.findMany({
       where: carWhere,
       select: {
@@ -38,6 +41,25 @@ export default async function sitemap() {
     db.dealer.findMany({
       where: dealerWhere,
       select: { slug: true, updatedAt: true, logoUrl: true, bannerUrl: true },
+    }),
+    db.car.findMany({
+      where: carWhere,
+      distinct: ["make"],
+      select: { make: true },
+      orderBy: { make: "asc" },
+    }),
+    db.car.findMany({
+      where: carWhere,
+      distinct: ["make", "model"],
+      select: { make: true, model: true },
+    }),
+    db.dealer.findMany({
+      where: {
+        ...dealerWhere,
+        cars: { some: { available: true } },
+      },
+      distinct: ["county"],
+      select: { county: true },
     }),
   ]);
 
@@ -79,5 +101,35 @@ export default async function sitemap() {
     };
   });
 
-  return [...staticPages, ...carPages, ...dealerPages];
+  const makeHubPages = makeRows.map((row) => ({
+    url: `${BASE}/cars/${slugifyCarSegment(row.make)}`,
+    lastModified: now,
+    changeFrequency: "daily",
+    priority: 0.88,
+  }));
+
+  const modelHubPages = comboRows.map((row) => ({
+    url: `${BASE}/cars/${slugifyCarSegment(row.make)}/${slugifyCarSegment(row.model)}`,
+    lastModified: now,
+    changeFrequency: "daily",
+    priority: 0.82,
+  }));
+
+  const countyHubPages = countiesWithStock
+    .filter((row) => row.county && allowedCountySlugs.has(slugifyCarSegment(row.county)))
+    .map((row) => ({
+      url: `${BASE}/cars/${slugifyCarSegment(row.county)}`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.84,
+    }));
+
+  return [
+    ...staticPages,
+    ...carPages,
+    ...dealerPages,
+    ...makeHubPages,
+    ...countyHubPages,
+    ...modelHubPages,
+  ];
 }

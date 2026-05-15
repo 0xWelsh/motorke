@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight, MapPin, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { slugifyCarSegment } from "@/lib/seo-car-slug";
 
 const BRANDS = [
   { name: "Toyota",     img: "logo_toyota.png" },
@@ -44,7 +45,7 @@ function BrandLogo({ name, make, img }) {
 
   return (
     <Link
-      href={`/cars?make=${encodeURIComponent(makeQuery)}`}
+      href={`/cars/${slugifyCarSegment(makeQuery)}`}
       className="group flex flex-col items-center justify-center gap-1.5 p-2 sm:p-2.5 w-[72px] sm:w-[78px] lg:w-[86px] rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300"
     >
       <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center">
@@ -167,7 +168,7 @@ function BodyTypeCard({ label, value, img }) {
 function LocationCard({ name }) {
   return (
     <Link
-      href={`/cars?county=${encodeURIComponent(name)}`}
+      href={`/cars/${slugifyCarSegment(name)}`}
       className="group flex items-center justify-center gap-2 px-4 py-3 min-w-[120px] rounded-2xl border border-[#e8e2d9] dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-[#ddd4c8] dark:hover:border-zinc-700 hover:shadow-md transition-all duration-300 whitespace-nowrap drop-shadow-sm"
     >
       <MapPin className="w-4 h-4 text-slate-400 group-hover:text-[#38A169] transition-colors" />

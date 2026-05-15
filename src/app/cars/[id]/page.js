@@ -31,7 +31,7 @@ import {
   positiveNum,
 } from "@/lib/car-display";
 import { specIconSrcForDetailLabel, specIconImageClassName } from "@/lib/spec-icons";
-import { FaWhatsapp } from "react-icons/fa";
+import { slugifyCarSegment } from "@/lib/seo-car-slug";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -596,6 +596,35 @@ export default async function CarDetailPage({ params }) {
           </div>
         </div>
 
+        <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border border-[#EDF2F7] dark:border-zinc-800 bg-[#F7FAFC] dark:bg-zinc-900/40 px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-slate-600 dark:text-zinc-400">
+          <span className="sr-only md:not-sr-only md:inline text-[#718096] font-black tracking-widest">Explore:</span>
+          <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-[#38A169] hover:underline">
+            All {car.make} for sale
+          </Link>
+          <span className="hidden sm:inline text-slate-300">·</span>
+          <Link
+            href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`}
+            className="text-[#38A169] hover:underline"
+          >
+            {car.make} {car.model}
+          </Link>
+          {dealer.county ? (
+            <>
+              <span className="hidden sm:inline text-slate-300">·</span>
+              <Link href={`/cars/${slugifyCarSegment(dealer.county)}`} className="text-[#38A169] hover:underline">
+                Cars in {dealer.county}
+              </Link>
+              <span className="hidden sm:inline text-slate-300">·</span>
+              <Link
+                href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(dealer.county)}`}
+                className="text-[#38A169] hover:underline"
+              >
+                {car.make} in {dealer.county}
+              </Link>
+            </>
+          ) : null}
+        </div>
+
         {/* Similar Cars Section */}
         {similar.length > 0 && (
           <div className="mt-12 sm:mt-20 pt-10 sm:pt-16 border-t border-[#EDF2F7] dark:border-zinc-800">
@@ -607,10 +636,10 @@ export default async function CarDetailPage({ params }) {
                 </p>
               </div>
               <Link
-                href="/cars"
+                href={`/cars/${slugifyCarSegment(car.make)}`}
                 className="shrink-0 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-[#38A169] transition-colors py-1"
               >
-                Browse all →
+                All {car.make} →
               </Link>
             </div>
             <div className="relative -mx-4 sm:mx-0">

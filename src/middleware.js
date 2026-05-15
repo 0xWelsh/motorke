@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { looksLikeCarListingId } from "@/lib/seo-car-slug";
 
 const SESSION_COOKIE = "welsh-motors_session";
 const MAINT_BYPASS_COOKIE = "welsh-maint-bypass";
@@ -42,6 +43,42 @@ function isMaintenanceAllowed(pathname) {
 export function middleware(request) {
   const { pathname } = request.nextUrl;
   const isProd = process.env.NODE_ENV === "production";
+
+  // Canonical public URLs like /cars/toyota internally render /cars/hub/toyota
+  // (without changing the browser URL). Listing detail IDs stay on /cars/[id].
+  if (request.method === "GET") {
+    if (pathname.startsWith("/cars/hub")) {
+      if (pathname === "/cars/hub" || pathname === "/cars/hub/") {
+        const url = request.nextUrl.clone();
+        url.pathname = "/cars";
+        return NextResponse.redirect(url, 308);
+      }
+      const rest = pathname.slice("/cars/hub".length);
+      const url = request.nextUrl.clone();
+      url.pathname = `/cars${rest}`;
+      return NextResponse.redirect(url, 308);
+    }
+
+    const twoSeg = pathname.match(/^\/cars\/([^/]+)\/([^/]+)\/?$/);
+    if (twoSeg) {
+      const a = twoSeg[1];
+      if (!looksLikeCarListingId(a)) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/cars/hub/${twoSeg[1]}/${twoSeg[2]}`;
+        return NextResponse.rewrite(url);
+      }
+    } else {
+      const oneSeg = pathname.match(/^\/cars\/([^/]+)\/?$/);
+      if (oneSeg) {
+        const a = oneSeg[1];
+        if (a && !looksLikeCarListingId(a)) {
+          const url = request.nextUrl.clone();
+          url.pathname = `/cars/hub/${a}`;
+          return NextResponse.rewrite(url);
+        }
+      }
+    }
+  }
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", pathname);
