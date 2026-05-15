@@ -8,26 +8,21 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
-ENV_FILE=""
+# Vercel/CI inject DATABASE_URL and DIRECT_URL — no .env file on the build machine.
 if [[ -f .env ]]; then
-  ENV_FILE=".env"
+  set -a
+  # shellcheck disable=SC1091
+  source .env
+  set +a
 elif [[ -f .env.local ]]; then
-  ENV_FILE=".env.local"
+  set -a
+  # shellcheck disable=SC1091
+  source .env.local
+  set +a
 fi
-
-if [[ -z "$ENV_FILE" ]]; then
-  echo "ERROR: No .env or .env.local found."
-  exit 1
-fi
-
-# Load vars without letting a stale shell DIRECT_URL override the file.
-set -a
-# shellcheck disable=SC1090
-source "$ENV_FILE"
-set +a
 
 if [[ -z "${DATABASE_URL:-}" ]]; then
-  echo "ERROR: DATABASE_URL is missing in $ENV_FILE"
+  echo "ERROR: DATABASE_URL is not set (add to .env locally or Vercel env vars)."
   exit 1
 fi
 
@@ -56,17 +51,19 @@ if (!db) {
 }
 
 const direct = parse(configuredDirect);
+// Honour an explicit Session-pooler DIRECT_URL (Vercel / .env), not the :6543 transaction URL.
 const useConfigured =
   direct &&
-  direct.hostname &&
-  !direct.hostname.includes("pooler.supabase.com") &&
-  direct.hostname.startsWith("db.") &&
-  direct.port !== "6543";
+  direct.port === "5432" &&
+  !direct.searchParams.has("pgbouncer");
 
 if (useConfigured) {
   if (!direct.searchParams.has("sslmode")) {
     direct.searchParams.set("sslmode", "require");
   }
+  process.stderr.write(
+    `Using configured DIRECT_URL (${direct.hostname}:5432).\n`
+  );
   process.stdout.write(direct.toString().replace(/^postgres:/, "postgresql:"));
   process.exit(0);
 }
@@ -107,10 +104,13 @@ echo "================================================================="
 echo "  migrate deploy failed (often P1001 on IPv6-only db.*.supabase.co)"
 echo "================================================================="
 echo ""
-echo "Apply the pending SQL manually in Supabase → SQL Editor:"
-echo "  $ROOT_DIR/prisma/manual/lead_user_id.sql"
+echo "1) Supabase → SQL Editor — run:"
+echo "     $ROOT_DIR/prisma/manual/lead_user_id.sql"
 echo ""
-echo "Then fix DIRECT_URL in $ENV_FILE — use Session pooler (port 5432) from"
+echo "2) Mark migration applied (after SQL succeeds):"
+echo "     npx prisma migrate resolve --applied 20260515_lead_user_id"
+echo ""
+echo "3) Fix DIRECT_URL (Vercel env or .env) — use Session pooler (port 5432) from"
 echo "Supabase Dashboard, NOT the transaction pooler on :6543."
 echo ""
 echo "Example shape (replace password):"
