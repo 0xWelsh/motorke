@@ -15,6 +15,7 @@ import { cookies, headers } from "next/headers";
 import { getSession } from "@/lib/auth";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { isSearchBot, rotationSeed, sortByTierAndSeed } from "@/lib/shuffle";
+import { buildMakeWhere } from "@/lib/make-filter";
 
 
 export const metadata = {
@@ -291,7 +292,7 @@ export default async function CarsPage({ searchParams }) {
   const where = {
     available: true,
     ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
-    ...(make         && { make: { equals: make, mode: "insensitive" } }),
+    ...buildMakeWhere(make),
     ...(model        && { model: { equals: model, mode: "insensitive" } }),
     ...(steering     && { steering }),
     ...(minYOM || maxYOM ? { year: { ...(minYOM && { gte: minYOM }), ...(maxYOM && { lte: maxYOM }) } } : {}),

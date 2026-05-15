@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
 import { parseVehicleFieldsWithGrok } from "@/lib/ai/grokVehicle";
+import { MAKE_ALIASES } from "@/lib/make-filter";
 
 const MAKES = [
   "Abarth","Acura","Aion","Aiways","Alfa Romeo","Alpine","Aston Martin","Audi","BAIC","Bentley","Bestune","BMW","Borgward",
@@ -16,15 +17,6 @@ const MAKES = [
   "SEAT","Skoda","Smart","SsangYong","Subaru","Suzuki","Tata","Tesla","Toyota","Triumph","Vauxhall","VinFast","Volkswagen","Volvo",
   "Wuling","XPeng","Zeekr","Zotye",
 ].sort((a, b) => b.length - a.length);
-
-const MAKE_ALIASES = {
-  benz: "Mercedes-Benz",
-  mercedes: "Mercedes-Benz",
-  merc: "Mercedes-Benz",
-  vw: "Volkswagen",
-  landcruiser: "Toyota",
-  rangerover: "Range Rover",
-};
 
 const BODY_TYPE_HINTS = [
   { value: "PICKUP", patterns: [/\b(pick[\s-]?up|double[\s-]?cab|single[\s-]?cab)\b/i] },

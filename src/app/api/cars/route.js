@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
+import { buildMakeWhere } from "@/lib/make-filter";
 
 const querySchema = z.object({
   make: z.string().optional(),
@@ -38,7 +39,7 @@ export async function GET(request) {
   const where = {
     available: true,
     ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
-    ...(make         && { make:         { equals: make, mode: "insensitive" } }),
+    ...buildMakeWhere(make),
     ...(bodyType     && { bodyType }),
     ...(fuelType     && { fuelType }),
     ...(transmission && { transmission }),

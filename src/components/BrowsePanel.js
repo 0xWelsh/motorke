@@ -18,7 +18,7 @@ const BRANDS = [
   { name: "Daihatsu",   img: "logo_daihatsu.png" },
   { name: "BMW",        img: "logo_bmw.png" },
   { name: "Volkswagen", img: "logo_volkswagen.png" },
-  { name: "Mercedes",   img: "logo_mercedes.png" },
+  { name: "Mercedes", make: "Mercedes-Benz", img: "logo_mercedes.png" },
 ];
 
 const COUNTIES = ["Nairobi", "Mombasa", "Nakuru", "Kisumu", "Uasin Gishu", "Kiambu", "Machakos", "Meru"];
@@ -37,13 +37,14 @@ const BODY_TYPES = [
   { label: "Truck",      value: "TRUCK",      img: "/images/bodies/icon_type-truck.svg"      },
 ];
 
-function BrandLogo({ name, img }) {
+function BrandLogo({ name, make, img }) {
   const [failed, setFailed] = useState(false);
   const src = `/images/logos/${img}`;
+  const makeQuery = make || name;
 
   return (
     <Link
-      href={`/cars?make=${encodeURIComponent(name)}`}
+      href={`/cars?make=${encodeURIComponent(makeQuery)}`}
       className="group flex flex-col items-center justify-center gap-1.5 p-2 sm:p-2.5 w-[72px] sm:w-[78px] lg:w-[86px] rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300"
     >
       <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center">
@@ -244,7 +245,7 @@ export default function BrowsePanel() {
           <ScrollableRow>
             {BRANDS.map((b) => (
               <div key={b.name} className="snap-start shrink-0">
-                <BrandLogo name={b.name} img={b.img} />
+                <BrandLogo name={b.name} make={b.make} img={b.img} />
               </div>
             ))}
           </ScrollableRow>
