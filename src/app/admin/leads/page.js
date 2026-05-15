@@ -27,17 +27,34 @@ export default async function AdminLeadsPage({ searchParams }) {
   await requireAdmin();
   const sp       = await searchParams;
   const dealerId = sp.dealerId || "";
+  const search   = (sp.search || "").trim();
   const page     = parseInt(sp.page || "1");
   const limit    = 25;
 
-  const where = dealerId ? { dealerId } : {};
+  const where = {
+    ...(dealerId ? { dealerId } : {}),
+    ...(search
+      ? {
+          OR: [
+            { name: { contains: search, mode: "insensitive" } },
+            { phone: { contains: search, mode: "insensitive" } },
+            { email: { contains: search, mode: "insensitive" } },
+            { message: { contains: search, mode: "insensitive" } },
+            { car: { make: { contains: search, mode: "insensitive" } } },
+            { car: { model: { contains: search, mode: "insensitive" } } },
+            { dealer: { name: { contains: search, mode: "insensitive" } } },
+          ],
+        }
+      : {}),
+  };
 
-  const [leads, total, dealers] = await Promise.all([
+  const [leads, total, dealers, guestCount] = await Promise.all([
     db.lead.findMany({
       where,
       include: {
         car:    { select: { id: true, make: true, model: true, year: true } },
         dealer: { select: { name: true } },
+        user:   { select: { id: true, name: true, email: true } },
       },
       orderBy: { createdAt: "desc" },
       skip:  (page - 1) * limit,
@@ -45,6 +62,7 @@ export default async function AdminLeadsPage({ searchParams }) {
     }),
     db.lead.count({ where }),
     db.dealer.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
+    db.lead.count({ where: { ...where, userId: null } }),
   ]);
 
   const pages = Math.ceil(total / limit);
@@ -61,6 +79,9 @@ export default async function AdminLeadsPage({ searchParams }) {
           <h1 className="text-4xl font-black text-slate-900 dark:text-white dark:text-white tracking-tight">
             Customer Leads <span className="text-slate-500 font-medium ml-3">/ {total} Total</span>
           </h1>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            All enquiries — guests and signed-in buyers. {guestCount} guest / WhatsApp-only in this filter.
+          </p>
         </div>
         
         <ExportButton
@@ -84,8 +105,10 @@ export default async function AdminLeadsPage({ searchParams }) {
       <form method="GET" className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-8 bg-white dark:bg-slate-900 border border-[#ddd4c8] dark:border-slate-800 p-4 rounded-2xl shadow-none">
         <div className="lg:col-span-7 relative group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-[#2F855A] transition-colors" />
-          <input 
-            placeholder="Search by buyer name, contact, or vehicle..." 
+          <input
+            name="search"
+            defaultValue={search}
+            placeholder="Search by buyer name, contact, or vehicle..."
             className="w-full bg-[#f7f6f3] dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl pl-10 pr-4 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-900 dark:text-white dark:text-white outline-none focus:border-[#2F855A]/50 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
         </div>
@@ -121,6 +144,18 @@ export default async function AdminLeadsPage({ searchParams }) {
                   <td className="px-6 py-4">
                     <div className="flex flex-col gap-1">
                        <p className="text-sm font-bold text-slate-900 dark:text-white dark:text-white capitalize group-hover:text-[#2F855A] transition-colors">{lead.name}</p>
+                       <div className="mt-1 flex flex-wrap items-center gap-2">
+                         <span className={`inline-flex rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                           lead.userId
+                             ? "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300"
+                             : "bg-slate-100 text-slate-600 dark:bg-zinc-800 dark:text-slate-300"
+                         }`}>
+                           {lead.userId ? "Member" : "Guest"}
+                         </span>
+                         {lead.phone === "not-provided" ? (
+                           <span className="text-[10px] font-medium text-amber-600">No phone captured</span>
+                         ) : null}
+                       </div>
                        <div className="flex items-center gap-3">
                           <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
                              <Phone size={12} /> {lead.phone}
@@ -196,7 +231,7 @@ export default async function AdminLeadsPage({ searchParams }) {
         <div className="flex justify-center items-center gap-2 mt-8">
           {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
             <Link key={p}
-              href={`/admin/leads?page=${p}&dealerId=${dealerId}`}
+              href={`/admin/leads?page=${p}&dealerId=${dealerId}&search=${encodeURIComponent(search)}`}
               className={`w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-bold transition-all ${
                 p === page 
                   ? "bg-[#2F855A] text-white shadow-[#2F855A]/20" 

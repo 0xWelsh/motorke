@@ -17,7 +17,16 @@ export default async function AccountPage({ searchParams }) {
 
   const tab = sp.tab || "profile";
 
-  const [savedCars, enquiries, buyerPhoneSetting] = await Promise.all([
+  const buyerPhoneSetting = await db.setting.findUnique({
+    where: { key: `buyer-phone:${user.id}` },
+  });
+  let buyerPhone = "";
+  try {
+    buyerPhone = JSON.parse(buyerPhoneSetting?.value || "{}")?.phone || "";
+  } catch {}
+  const phoneTail = buyerPhone.replace(/\D/g, "").slice(-9);
+
+  const [savedCars, enquiries] = await Promise.all([
     db.savedCar.findMany({
       where:   { userId: user.id },
       include: {
@@ -31,20 +40,21 @@ export default async function AccountPage({ searchParams }) {
       orderBy: { createdAt: "desc" },
     }),
     db.lead.findMany({
-      where:   { email: user.email },
+      where: {
+        OR: [
+          { userId: user.id },
+          { email: { equals: user.email, mode: "insensitive" } },
+          ...(phoneTail.length >= 9 ? [{ phone: { contains: phoneTail } }] : []),
+        ],
+      },
       include: {
         car:    { select: { id: true, make: true, model: true, year: true, price: true, engineCC: true, fuelType: true, available: true } },
         dealer: { select: { name: true, slug: true, phone: true, whatsapp: true } },
       },
       orderBy: { createdAt: "desc" },
-      take:    20,
+      take:    50,
     }),
-    db.setting.findUnique({ where: { key: `buyer-phone:${user.id}` } }),
   ]);
-  let buyerPhone = "";
-  try {
-    buyerPhone = JSON.parse(buyerPhoneSetting?.value || "{}")?.phone || "";
-  } catch {}
 
   return (
     <div className="min-h-screen bg-white bg-[#fbfcfe] dark:bg-[#0a0a0a]">

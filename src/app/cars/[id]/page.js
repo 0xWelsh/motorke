@@ -8,6 +8,7 @@ import { formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
 import { telHrefFromMsisdn } from "@/lib/phone-hints";
 import { MessageCircle, ChevronRight, MapPin, Wallet, ShieldCheck, Phone } from "lucide-react";
 import EnquiryForm from "@/components/EnquiryForm";
+import MobileListingContactBar from "@/components/MobileListingContactBar";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
 import { SaveButton, TrackRecentView } from "@/components/CarActions";
@@ -637,31 +638,15 @@ export default async function CarDetailPage({ params }) {
       </div>
 
       <div className="lg:hidden fixed inset-x-0 bottom-0 z-50 pointer-events-none px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2">
-        <div className="pointer-events-auto mx-auto flex max-w-lg items-stretch gap-3 rounded-2xl border border-slate-200/90 bg-white/95 p-3 shadow-[0_8px_40px_rgba(15,23,42,0.14)] backdrop-blur-xl ring-1 ring-black/5 dark:border-zinc-700 dark:bg-zinc-950/95 dark:ring-white/10">
-          <div className="flex min-w-0 flex-1 flex-col justify-center pl-1">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700/90 dark:text-emerald-400">List price</p>
-            <p className="truncate text-lg font-black tracking-tight text-slate-900 dark:text-white">{formatCarPrice(car)}</p>
-          </div>
-          {dealer.whatsapp ? (
-            <a
-              href={whatsappLink(dealer.whatsapp, title, dealer.name)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-5 py-3.5 text-[13px] font-bold text-white shadow-sm transition hover:bg-[#20bd5a] active:scale-[0.98]"
-            >
-              <FaWhatsapp className="h-6 w-6 shrink-0" aria-hidden />
-              <span className="pr-0.5">WhatsApp</span>
-            </a>
-          ) : dealer.phone && telHrefFromMsisdn(dealer.phone) ? (
-            <Link
-              href={telHrefFromMsisdn(dealer.phone)}
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3.5 text-[13px] font-bold text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.98]"
-            >
-              <Phone className="h-5 w-5 shrink-0" aria-hidden />
-              Call
-            </Link>
-          ) : null}
-        </div>
+        <MobileListingContactBar
+          carId={car.id}
+          dealerId={dealer.id}
+          carTitle={title}
+          dealerName={dealer.name}
+          priceLabel={formatCarPrice(car)}
+          whatsappHref={dealer.whatsapp ? whatsappLink(dealer.whatsapp, title, dealer.name) : null}
+          callHref={!dealer.whatsapp && dealer.phone ? telHrefFromMsisdn(dealer.phone) : null}
+        />
       </div>
 
       <SpecSheet car={car} dealer={dealer} />

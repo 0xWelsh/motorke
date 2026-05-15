@@ -7,7 +7,8 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma migrate deploy && prisma generate && next build",
+    "build": "bash scripts/migrate-deploy.sh && prisma generate && next build",
+    "db:deploy": "bash scripts/migrate-deploy.sh",
     "build:local": "bash ./scripts/build-local.sh",
     "start": "next start",
     "lint": "eslint \"src/app/api/auth/**/*.js\" \"src/lib/google-auth.js\" \"src/lib/validate-env.js\" \"jest.setup.js\"",

@@ -18,6 +18,7 @@ import {
   Menu,
   X,
   Star,
+  BarChart2,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { useState, useEffect } from "react";
@@ -31,6 +32,7 @@ const links = [
   { href: "/admin/approvals", label: "Approvals", Icon: ShieldAlert },
   { href: "/admin/users", label: "Users", Icon: Users },
   { href: "/admin/leads", label: "Leads", Icon: MessageSquare },
+  { href: "/admin/traffic", label: "Traffic", Icon: BarChart2 },
   { href: "/admin/reviews", label: "Reviews", Icon: Star },
 ];
 

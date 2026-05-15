@@ -30,6 +30,7 @@ model User {
   carReviews      CarReview[]
   carViews        CarView[]
   marketingEvents MarketingEvent[]
+  leads           Lead[]
   dealer          Dealer?          @relation(fields: [dealerId], references: [id], onDelete: Cascade)
 
   @@map("users")
@@ -236,6 +237,7 @@ model Lead {
   id        String     @id @default(cuid())
   carId     String
   dealerId  String
+  userId    String?
   name      String
   phone     String
   email     String?
@@ -246,7 +248,10 @@ model Lead {
   notes     LeadNote[]
   car       Car        @relation(fields: [carId], references: [id], onDelete: Cascade)
   dealer    Dealer     @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+  user      User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
 
+  @@index([userId, createdAt])
+  @@index([dealerId, createdAt])
   @@map("leads")
 }
 

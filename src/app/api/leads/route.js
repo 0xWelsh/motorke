@@ -113,8 +113,8 @@ async function dispatchLeadNotifications({ lead, car, dealerId, buyerUserId }) {
 export async function POST(request) {
   try {
     const session = await getSessionFromRequest();
-    const buyerUserId =
-      session?.user?.id && session?.user?.role === "BUYER" ? session.user.id : null;
+    const isBuyer = session?.user?.role === "BUYER";
+    const buyerUserId = isBuyer ? session.user.id : null;
 
     const contentType = request.headers.get("content-type") || "";
     let body;
@@ -128,6 +128,8 @@ export async function POST(request) {
 
     const { carId, dealerId, name, phone, email, message, channel } = body;
     const normalizedChannel = (channel || "web").toString().toLowerCase();
+    const allowsAnonymousContact =
+      normalizedChannel === "whatsapp" || normalizedChannel === "call";
     const forwardedFor = request.headers.get("x-forwarded-for") || "";
     const ip = forwardedFor.split(",")[0]?.trim() || "unknown";
     const rateKey = `${ip}:${carId || "unknown"}`;
@@ -159,7 +161,7 @@ export async function POST(request) {
     }
 
     const normalizedPhone = normalizeKenyanPhone(phone);
-    const requiresBuyerContact = normalizedChannel !== "whatsapp";
+    const requiresBuyerContact = !allowsAnonymousContact;
     const normalizedName = name?.toString().trim();
 
     if (requiresBuyerContact && !normalizedName) {
@@ -210,9 +212,10 @@ export async function POST(request) {
       data: {
         carId,
         dealerId,
-        name:    normalizedName || (normalizedChannel === "whatsapp" ? "WhatsApp tap" : "Anonymous"),
+        userId:  buyerUserId,
+        name:    normalizedName || (allowsAnonymousContact ? `${normalizedChannel} tap` : "Anonymous"),
         phone:   normalizedPhone || "not-provided",
-        email:   email?.toString().trim() || null,
+        email:   email?.toString().trim() || (isBuyer ? session?.user?.email : null) || null,
         message: message?.toString().trim() || null,
         channel: normalizedChannel,
       },
