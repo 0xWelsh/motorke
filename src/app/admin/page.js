@@ -122,35 +122,32 @@ export default async function AdminDashboard({ searchParams }) {
   };
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-2 duration-1000 max-w-[1400px] px-1 sm:px-0">
+    <div className="animate-in fade-in slide-in-from-bottom-2 duration-700">
       
       {/* ── HEADER ── */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
-             <div className="w-2 h-2 rounded-none bg-[#2F855A] shadow-[0_0_8px_rgba(47,133,90,0.5)]" />
-             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">System Administration</span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-1">
-             Platform Command Center
-          </h1>
-          <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.14em]">Real-time marketplace analytics and pending operation alerts.</p>
+          <p className="mb-1 text-xs font-medium text-slate-500 dark:text-slate-400">System administration</p>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-white">
+             Platform overview
+          </h2>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Marketplace analytics and items that need your attention.</p>
         </div>
         
         {/* Date Range Toggle */}
         <div className="flex items-center justify-start lg:justify-end w-full lg:w-auto">
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full lg:w-auto">
             <RunWatchAlertsButton />
-            <div className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-none shadow-inner w-full sm:w-auto overflow-x-auto">
+            <div className="flex w-full items-center gap-1 overflow-x-auto rounded-lg border border-slate-200 bg-slate-100 p-1 sm:w-auto dark:border-zinc-800 dark:bg-zinc-900">
             {[
-              { v: "7", label: "7 DAYS" },
-              { v: "30", label: "30 DAYS" },
-              { v: "all", label: "ALL TIME" }
+              { v: "7", label: "7 days" },
+              { v: "30", label: "30 days" },
+              { v: "all", label: "All time" }
             ].map(opt => (
               <Link 
                 key={opt.v} href={`?range=${opt.v}`} 
-                className={`px-3 sm:px-4 py-2 text-[10px] sm:text-[11px] whitespace-nowrap font-black uppercase tracking-widest rounded-none transition-all ${
-                  range === opt.v ? "bg-white text-[#2F855A]" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
+                className={`rounded-md px-3 py-2 text-xs font-semibold whitespace-nowrap transition-colors ${
+                  range === opt.v ? "bg-white text-emerald-700 shadow-sm dark:bg-zinc-800 dark:text-emerald-400" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
                 }`}
               >
                 {opt.label}
@@ -172,7 +169,7 @@ export default async function AdminDashboard({ searchParams }) {
           <Link
             key={href}
             href={href}
-            className="h-12 px-3 sm:px-4 bg-white dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 text-[10px] font-black uppercase tracking-[0.14em] text-slate-700 dark:text-slate-200 flex items-center justify-between gap-2 hover:border-[#2F855A] hover:text-[#2F855A] transition-colors"
+            className="flex h-11 items-center justify-between gap-2 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 transition-colors hover:border-emerald-500/40 hover:text-emerald-700 sm:px-4 dark:border-zinc-800 dark:bg-zinc-950 dark:text-slate-200 dark:hover:text-emerald-400"
           >
             <span className="truncate">{label}</span>
             <Icon size={15} />
@@ -187,8 +184,8 @@ export default async function AdminDashboard({ searchParams }) {
           { label: "Leads Today", value: leadsToday },
           { label: "Pending Approvals", value: pendingDealersCount },
         ].map((item) => (
-          <div key={item.label} className="bg-[#f8f7f4] dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 px-4 py-3">
-            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 mb-1">{item.label}</p>
+          <div key={item.label} className="rounded-lg border border-slate-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950">
+            <p className="mb-1 text-xs font-medium text-slate-500">{item.label}</p>
             <p className="text-2xl font-black text-slate-900 dark:text-white">{item.value}</p>
           </div>
         ))}
@@ -312,7 +309,7 @@ export default async function AdminDashboard({ searchParams }) {
           { label: "Total Value",  val: formatCompact(totalValue), sub: "Listed Active Inventory Value", icon: <Bolt size={20} /> },
           { label: "Active Users", val: totalUsers,   sub: `Current Marketplace Shoppers`, icon: <Users size={20} /> }
         ].map((m, i) => (
-          <div key={i} className="bg-white dark:bg-[#111111] p-5 sm:p-6 rounded-none transition-all relative overflow-hidden group shadow-sm hover:shadow-md">
+          <div key={i} className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-5 transition-colors hover:border-slate-300 sm:p-6 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700">
             <div className="flex items-center justify-between mb-4 relative z-10">
               <div className={`w-10 h-10 flex items-center justify-center rounded-none bg-[#f7f6f3] ${m.color ? "text-[#2F855A] group-hover:bg-[#2F855A] group-hover:text-white" : "text-slate-400 group-hover:bg-slate-900 group-hover:text-white"} transition-colors`}>
                 {m.icon}

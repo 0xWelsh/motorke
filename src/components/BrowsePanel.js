@@ -114,7 +114,7 @@ function ScrollableRow({ children }) {
           maskImage: `linear-gradient(to right, ${canScrollLeft ? 'transparent' : 'black'} 0%, black 48px, black calc(100% - 48px), ${canScrollRight ? 'transparent' : 'black'} 100%)`,
           WebkitMaskImage: `linear-gradient(to right, ${canScrollLeft ? 'transparent' : 'black'} 0%, black 48px, black calc(100% - 48px), ${canScrollRight ? 'transparent' : 'black'} 100%)`
         }}
-        className="flex overflow-x-auto snap-x snap-mandatory gap-2.5 sm:gap-3 lg:gap-3.5 pb-4 -mx-2 sm:-mx-4 px-2 sm:px-4 scroll-smooth [&::-webkit-scrollbar]:hidden"
+        className="flex overflow-x-auto snap-x snap-mandatory gap-2.5 sm:gap-3 lg:gap-3.5 pb-4 -mx-1 sm:-mx-2 px-1 sm:px-2 scroll-smooth [&::-webkit-scrollbar]:hidden"
       >
         {children}
       </div>

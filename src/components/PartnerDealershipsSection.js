@@ -35,7 +35,7 @@ export default function PartnerDealershipsSection({ dealers }) {
   const borderRadius = "var(--radius)";
 
   return (
-    <section className="relative overflow-hidden py-12 sm:py-16 lg:py-20 bg-[#F7FAFC] dark:bg-[#111111]">
+    <section className="relative overflow-hidden py-10 sm:py-16 lg:py-20 bg-[#F7FAFC] dark:bg-[#111111]">
       <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[min(480px,44vw)] lg:block">
         <Image
           src={PARTNER_BG}
@@ -47,7 +47,7 @@ export default function PartnerDealershipsSection({ dealers }) {
         <div className="absolute inset-0 bg-gradient-to-l from-[#F7FAFC] via-[#F7FAFC]/90 to-transparent dark:from-[#111111] dark:via-[#111111]/92" />
       </div>
 
-      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 max-w-[min(90vw,1600px)]">
+      <div className="home-shell relative z-10">
         <div className="mx-auto mb-8 max-w-3xl text-center lg:mb-10">
           <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#C6F6D5] bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[#276749] shadow-sm dark:border-emerald-900/50 dark:bg-zinc-900 dark:text-emerald-400">
             <Handshake className="h-3.5 w-3.5" aria-hidden />

@@ -371,11 +371,11 @@ export default async function HomePage() {
         }}
       />
       {/* Dynamic Hero Section */}
-      <section className="relative pt-4 pb-8 md:pt-6 md:pb-10 lg:pt-8 lg:pb-12 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[min(90vw,1600px)] relative z-10">
+      <section className="relative pt-3 pb-6 sm:pt-4 sm:pb-8 md:pt-6 md:pb-10 lg:pt-8 lg:pb-12 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
+        <div className="home-shell relative z-10">
           
           {/* Page Header - Full Width */}
-          <div className="mb-6 md:mb-8 lg:mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center lg:text-left">
+          <div className="mb-5 sm:mb-6 md:mb-8 lg:mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center lg:text-left">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-[#111827] dark:text-white leading-[0.92] tracking-tight mb-4 lg:max-w-4xl">
               Buy cars with<br />
               <span className="editorial-heading text-[#38A169]">dealer-level clarity.</span>
@@ -394,7 +394,7 @@ export default async function HomePage() {
                 <BrowsePanel />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-8 max-w-md sm:max-w-xl mx-auto lg:mx-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 mt-5 sm:mt-8 w-full sm:max-w-xl lg:mx-0">
                 <TrackedLink
                   href="/cars"
                   eventName="homepage_explore_inventory_click"
@@ -470,7 +470,7 @@ export default async function HomePage() {
 
       {/* Hot Deals / Trending Section */}
       {hotEnhanced.length > 0 && (
-        <section className="relative py-16 sm:py-20 lg:py-26 xl:py-32 border-y border-slate-100 dark:border-zinc-900 overflow-hidden">
+        <section className="relative py-10 sm:py-16 lg:py-26 xl:py-32 border-y border-slate-100 dark:border-zinc-900 overflow-hidden">
           {/* Real spotlight car as the section backdrop. The overlay
               washes it toward neutral so the cards below still read
               cleanly without the section feeling like a stock photo. */}
@@ -490,8 +490,8 @@ export default async function HomePage() {
           {!spotlightBackdrop && (
             <div className="absolute inset-0 -z-10 bg-gradient-to-b from-white to-slate-50 dark:from-[#0a0a0a] dark:to-[#0d0f10]" />
           )}
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[min(90vw,1600px)]">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <div className="home-shell">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 gap-4">
               <div className="max-w-2xl">
                 <p className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-[#dc2626] dark:text-red-400 mb-2">
                   <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#dc2626] dark:bg-red-400" aria-hidden />
@@ -512,7 +512,7 @@ export default async function HomePage() {
               </TrackedLink>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 items-stretch">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 items-stretch">
               {spotlightCards.map((car) => (
                 <div key={car.id} className="h-full">
                   <CarCard car={car} />
@@ -536,7 +536,7 @@ export default async function HomePage() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1A202C] via-[#1A202C]/80 to-transparent" />
         </div>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[min(90vw,1600px)] relative z-10">
+        <div className="home-shell relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <p className="text-[#38A169] text-xs font-bold uppercase tracking-[0.32em] mb-5">The Difference</p>
@@ -605,8 +605,8 @@ export default async function HomePage() {
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(56,161,105,0.07),transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top_left,rgba(56,161,105,0.10),transparent_55%)]" />
             </div>
           )}
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[min(90vw,1600px)]">
-            <div className="flex items-end justify-between mb-7 sm:mb-9 gap-4">
+          <div className="home-shell">
+            <div className="flex items-end justify-between mb-6 sm:mb-9 gap-4">
               <div>
                 <p className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-[#2F855A] dark:text-emerald-400 mb-2">
                   <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#38A169]" aria-hidden />
@@ -619,7 +619,7 @@ export default async function HomePage() {
                 See All Arrivals
               </Link>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 items-stretch">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 lg:gap-6 items-stretch">
               {newEnhanced.slice(0, 6).map((car) => (
                 <div key={car.id} className="h-full">
                   <CarCard car={car} />

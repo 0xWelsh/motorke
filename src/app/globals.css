@@ -132,6 +132,11 @@ h1, h2, h3, h4, h5, h6 {
   @apply mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-8;
 }
 
+/* Homepage: edge-to-edge on mobile, comfortable gutters from sm+ */
+.home-shell {
+  @apply mx-auto w-full max-w-[1600px] px-3 sm:px-5 md:px-6 lg:px-8;
+}
+
 .mk-section-gap {
   @apply space-y-6 sm:space-y-8;
 }
@@ -448,9 +453,27 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Admin UI consistency pass */
+.admin-scope {
+  --admin-border: #e2e8f0;
+  --admin-surface: #ffffff;
+  --admin-muted: #f8fafc;
+}
+
+.admin-scope .mk-page-shell {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.dark .admin-scope {
+  --admin-border: #27272a;
+  --admin-surface: #101012;
+  --admin-muted: #161618;
+}
+
 .admin-scope [class*="rounded-[2.5rem]"],
 .admin-scope [class*="rounded-[3rem]"] {
-  border-radius: 1rem !important;
+  border-radius: 0.75rem !important;
 }
 
 .admin-scope .overflow-x-auto {
