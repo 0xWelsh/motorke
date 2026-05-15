@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
 import Link from "next/link";
 import AdminTrendsChart from "@/components/admin/AdminTrendsChart";
+import AdminOverviewPieChart from "@/components/admin/AdminOverviewPieChart";
 import RunWatchAlertsButton from "@/components/admin/RunWatchAlertsButton";
 import { getGoSearchShadowMetrics } from "@/lib/go-search";
 import { 
@@ -121,6 +122,18 @@ export default async function AdminDashboard({ searchParams }) {
     return `${Math.floor(hours / 24)}d ago`;
   };
 
+  const pieData = [
+    { name: "Active listings", value: activeListings, color: "#2F855A" },
+    { name: "Stale listings", value: staleListings, color: "#dc2626" },
+    { name: "Pending approvals", value: pendingDealersCount, color: "#ef4444" },
+    { name: "Leads (7d)", value: leadsThisWeek, color: "#2563eb" },
+  ];
+
+  const subscriptionPie = [
+    { name: "Premium", value: premiumSubs, color: "#2F855A" },
+    { name: "Free", value: freeSubs, color: "#94a3b8" },
+  ];
+
   return (
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-700">
       
@@ -147,7 +160,9 @@ export default async function AdminDashboard({ searchParams }) {
               <Link 
                 key={opt.v} href={`?range=${opt.v}`} 
                 className={`rounded-md px-3 py-2 text-xs font-semibold whitespace-nowrap transition-colors ${
-                  range === opt.v ? "bg-white text-emerald-700 shadow-sm dark:bg-zinc-800 dark:text-emerald-400" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                  range === opt.v
+                    ? "bg-white text-emerald-700 shadow-sm dark:bg-emerald-600/25 dark:text-emerald-200 dark:ring-1 dark:ring-emerald-500/40"
+                    : "text-slate-500 hover:text-slate-700 dark:text-zinc-400 dark:hover:text-zinc-200"
                 }`}
               >
                 {opt.label}
@@ -180,13 +195,18 @@ export default async function AdminDashboard({ searchParams }) {
       {/* ── TODAY SNAPSHOT ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-8 sm:mb-10">
         {[
-          { label: "Cars Added Today", value: carsToday },
-          { label: "Leads Today", value: leadsToday },
-          { label: "Pending Approvals", value: pendingDealersCount },
+          { label: "Cars added today", value: carsToday, valueClass: "text-emerald-600 dark:text-emerald-400", border: "border-emerald-200/80 dark:border-emerald-900/50" },
+          { label: "Leads today", value: leadsToday, valueClass: "text-blue-600 dark:text-blue-400", border: "border-blue-200/80 dark:border-blue-900/50" },
+          {
+            label: "Pending approvals",
+            value: pendingDealersCount,
+            valueClass: pendingDealersCount > 0 ? "text-red-600 dark:text-red-400" : "text-slate-500",
+            border: pendingDealersCount > 0 ? "border-red-300 dark:border-red-900/60 bg-red-50/50 dark:bg-red-950/20" : "border-slate-200 dark:border-zinc-800",
+          },
         ].map((item) => (
-          <div key={item.label} className="rounded-lg border border-slate-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950">
-            <p className="mb-1 text-xs font-medium text-slate-500">{item.label}</p>
-            <p className="text-2xl font-black text-slate-900 dark:text-white">{item.value}</p>
+          <div key={item.label} className={`rounded-xl border bg-white px-4 py-3 dark:bg-zinc-950 ${item.border}`}>
+            <p className="mb-1 text-xs font-medium text-slate-500 dark:text-zinc-400">{item.label}</p>
+            <p className={`text-3xl font-black tabular-nums ${item.valueClass}`}>{item.value}</p>
           </div>
         ))}
         <Link
@@ -199,7 +219,7 @@ export default async function AdminDashboard({ searchParams }) {
             <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Go Search Shadow</p>
             <ServerCog size={14} className={goSearchShadow.flags.shadowEnabled ? "text-[#2F855A]" : "text-slate-400"} />
           </div>
-          <p className="text-2xl font-black text-slate-900 dark:text-white">
+          <p className={`text-2xl font-black tabular-nums ${goSearchShadow.rates.mismatchRate > 5 ? "text-red-600 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"}`}>
             {goSearchShadow.rates.mismatchRate.toFixed(1)}%
           </p>
           <p className="text-[10px] mt-1 uppercase tracking-[0.12em] font-bold text-slate-500">
@@ -255,7 +275,7 @@ export default async function AdminDashboard({ searchParams }) {
           <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Funnel Health</p>
           <p className="mt-2 text-sm font-bold text-slate-800 dark:text-zinc-100">Leads/Active Listing: {leadsPerActiveListing}</p>
           <p className="text-sm font-bold text-slate-800 dark:text-zinc-100">Lead Response Rate: {responseRate}%</p>
-          <p className="text-sm font-bold text-slate-800 dark:text-zinc-100">Stale Listing Ratio: {staleRatio}%</p>
+          <p className="text-sm font-bold text-red-600 dark:text-red-400">Stale listing ratio: {staleRatio}%</p>
         </div>
         <Link
           href="/api/admin/ops-health"
@@ -284,11 +304,11 @@ export default async function AdminDashboard({ searchParams }) {
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <div className="bg-[#f8f7f4] dark:bg-[#0d0d0d] border border-[#ede7dd] dark:border-zinc-800 px-3 py-3">
             <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Events (7d)</p>
-            <p className="text-2xl font-black text-slate-900 dark:text-white">{trackingEvents7d}</p>
+            <p className="text-2xl font-black text-red-600 dark:text-red-400">{trackingEvents7d}</p>
           </div>
           <div className="bg-[#f8f7f4] dark:bg-[#0d0d0d] border border-[#ede7dd] dark:border-zinc-800 px-3 py-3">
             <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Events (30d)</p>
-            <p className="text-2xl font-black text-slate-900 dark:text-white">{trackingEvents30d}</p>
+            <p className="text-2xl font-black text-blue-600 dark:text-blue-400">{trackingEvents30d}</p>
           </div>
           <div className="bg-[#f8f7f4] dark:bg-[#0d0d0d] border border-[#ede7dd] dark:border-zinc-800 px-3 py-3">
             <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Top Events (7d)</p>
@@ -304,22 +324,20 @@ export default async function AdminDashboard({ searchParams }) {
       {/* ── METRICS ROW ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5 mb-8 sm:mb-10">
         {[
-          { label: "Total Cars",   val: totalCars,    sub: `+${carsInRange} listings in ${rangeLabel}`, icon: <Car size={20} /> },
-          { label: "Total Leads",  val: totalLeads,   sub: `+${leadsInRange} leads in ${rangeLabel}`, icon: <MessageSquare size={20} />, color: "emerald" },
-          { label: "Total Value",  val: formatCompact(totalValue), sub: "Listed Active Inventory Value", icon: <Bolt size={20} /> },
-          { label: "Active Users", val: totalUsers,   sub: `Current Marketplace Shoppers`, icon: <Users size={20} /> }
+          { label: "Total Cars", val: totalCars, sub: `+${carsInRange} listings in ${rangeLabel}`, icon: <Car size={20} />, valClass: "text-slate-900 dark:text-white", accent: "emerald" },
+          { label: "Total Leads", val: totalLeads, sub: `+${leadsInRange} leads in ${rangeLabel}`, icon: <MessageSquare size={20} />, valClass: "text-red-600 dark:text-red-400", accent: "red" },
+          { label: "Total Value", val: formatCompact(totalValue), sub: "Listed active inventory value", icon: <Bolt size={20} />, valClass: "text-amber-600 dark:text-amber-400", accent: "amber" },
+          { label: "Active Users", val: totalUsers, sub: "Marketplace shoppers", icon: <Users size={20} />, valClass: "text-blue-600 dark:text-blue-400", accent: "blue" },
         ].map((m, i) => (
           <div key={i} className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-5 transition-colors hover:border-slate-300 sm:p-6 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700">
-            <div className="flex items-center justify-between mb-4 relative z-10">
-              <div className={`w-10 h-10 flex items-center justify-center rounded-none bg-[#f7f6f3] ${m.color ? "text-[#2F855A] group-hover:bg-[#2F855A] group-hover:text-white" : "text-slate-400 group-hover:bg-slate-900 group-hover:text-white"} transition-colors`}>
-                {m.icon}
-              </div>
+            <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 dark:bg-zinc-900">
+              <span className={
+                m.accent === "red" ? "text-red-600" : m.accent === "amber" ? "text-amber-600" : m.accent === "blue" ? "text-blue-600" : "text-emerald-600"
+              }>{m.icon}</span>
             </div>
-            <h3 className="text-3xl font-black text-slate-900 dark:text-white mb-1 relative z-10">{m.val}</h3>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400 relative z-10 mb-1">{m.label}</p>
-            <p className="text-[11px] uppercase font-bold text-slate-400 tracking-wider relative z-10 bg-[#f7f6f3] dark:bg-slate-800 inline-flex px-2 py-0.5 rounded-none mt-2">{m.sub}</p>
-            
-            {m.color && <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#2F855A]/10 rounded-none blur-2xl opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none" />}
+            <h3 className={`relative z-10 mb-1 text-3xl font-black tabular-nums ${m.valClass}`}>{m.val}</h3>
+            <p className="relative z-10 mb-1 text-xs font-bold uppercase tracking-wider text-slate-400">{m.label}</p>
+            <p className="relative z-10 mt-2 inline-flex bg-slate-100 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:bg-zinc-900 dark:text-zinc-400">{m.sub}</p>
           </div>
         ))}
       </div>
@@ -332,9 +350,19 @@ export default async function AdminDashboard({ searchParams }) {
             <AdminTrendsChart data={chartData} rangeLabel={rangeLabel} />
          </div>
 
-         {/* Needs Action Inbox and Health (Takes 1/3) */}
+         {/* Pie + inbox + billing */}
          <div className="flex flex-col gap-4 sm:gap-6">
-            
+            <AdminOverviewPieChart
+              data={pieData}
+              title="Attention mix"
+              subtitle="What needs eyes on the marketplace right now"
+            />
+            <AdminOverviewPieChart
+              data={subscriptionPie}
+              title="Subscriptions"
+              subtitle="Active plans on the platform"
+            />
+
             {/* Inbox Panel */}
             <div className="bg-red-50 p-5 sm:p-6 rounded-none shadow-none">
                <div className="flex items-center gap-2 mb-4 sm:mb-6">

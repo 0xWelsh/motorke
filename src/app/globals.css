@@ -519,6 +519,16 @@ h1, h2, h3, h4, h5, h6 {
   color: #b7bcc7 !important;
 }
 
+/* Admin sidebar lives outside .admin-scope — keep nav readable in dark mode */
+.dark [data-admin-sidebar] a,
+.dark [data-admin-sidebar] button {
+  color: inherit;
+}
+
+.dark [data-admin-sidebar] .text-slate-600 {
+  color: #a1a1aa !important;
+}
+
 @media (max-width: 1024px) {
   .admin-scope h1 {
     font-size: 1.8rem !important;

@@ -49,8 +49,8 @@ function NavLink({ href, label, Icon, active }) {
       className={clsx(
         "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
         active
-          ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
-          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-zinc-900 dark:hover:text-white"
+          ? "bg-slate-900 text-white shadow-sm dark:bg-emerald-600/20 dark:text-emerald-100 dark:ring-1 dark:ring-emerald-500/35"
+          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-zinc-300 dark:hover:bg-zinc-800/90 dark:hover:text-white"
       )}
     >
       <Icon
@@ -58,10 +58,10 @@ function NavLink({ href, label, Icon, active }) {
         strokeWidth={active ? 2.25 : 1.75}
         className={clsx(
           "shrink-0",
-          active ? "text-emerald-400 dark:text-emerald-600" : "text-slate-400"
+          active ? "text-emerald-300 dark:text-emerald-400" : "text-slate-400 dark:text-zinc-500"
         )}
       />
-      <span>{label}</span>
+      <span className={active ? "text-white dark:text-emerald-50" : undefined}>{label}</span>
     </Link>
   );
 }
@@ -107,6 +107,7 @@ export default function AdminLayout({ children }) {
       ) : null}
 
       <aside
+        data-admin-sidebar
         className={clsx(
           "flex w-[260px] shrink-0 flex-col border-r border-slate-200 bg-white dark:border-zinc-800 dark:bg-zinc-950",
           "max-lg:fixed max-lg:left-0 max-lg:top-0 max-lg:z-50 max-lg:h-[100dvh] max-lg:shadow-xl max-lg:transition-transform max-lg:duration-300",
@@ -171,7 +172,7 @@ export default function AdminLayout({ children }) {
         <div className="space-y-1 border-t border-slate-200 p-3 dark:border-zinc-800">
           <Link
             href="/"
-            className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-zinc-900 dark:hover:text-white"
+            className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white"
           >
             <ExternalLink size={16} />
             View site
