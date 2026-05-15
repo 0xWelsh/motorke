@@ -3,33 +3,37 @@ export const dynamic = "force-dynamic";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import { 
-  MessageSquare, 
-  Car, 
-  Building2, 
-  Smartphone, 
-  Globe, 
-  ChevronRight,
+import {
+  MessageSquare,
+  Smartphone,
+  Globe,
   Filter,
-  ExternalLink,
   Phone,
   Mail,
   Search,
-  Zap,
-  Clock,
-  ArrowUpRight
 } from "lucide-react";
 import ExportButton from "@/components/admin/ExportButton";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import DataTableShell from "@/components/ui/DataTableShell";
 
-export const metadata = { title: "Leads Dashboard — Welsh Motorhub Admin" };
+export const metadata = { title: "Leads — Welsh Motorhub Admin" };
+
+function adminLeadsHref({ page: pageNum = 1, dealerId = "", search = "" } = {}) {
+  const p = new URLSearchParams();
+  if (pageNum > 1) p.set("page", String(pageNum));
+  if (dealerId) p.set("dealerId", dealerId);
+  if (search) p.set("search", search);
+  const qs = p.toString();
+  return qs ? `/admin/leads?${qs}` : "/admin/leads";
+}
 
 export default async function AdminLeadsPage({ searchParams }) {
   await requireAdmin();
-  const sp       = await searchParams;
+  const sp = await searchParams;
   const dealerId = sp.dealerId || "";
-  const search   = (sp.search || "").trim();
-  const page     = parseInt(sp.page || "1");
-  const limit    = 25;
+  const search = (sp.search || "").trim();
+  const page = parseInt(sp.page || "1", 10);
+  const limit = 25;
 
   const where = {
     ...(dealerId ? { dealerId } : {}),
@@ -52,13 +56,13 @@ export default async function AdminLeadsPage({ searchParams }) {
     db.lead.findMany({
       where,
       include: {
-        car:    { select: { id: true, make: true, model: true, year: true } },
+        car: { select: { id: true, make: true, model: true, year: true } },
         dealer: { select: { name: true } },
-        user:   { select: { id: true, name: true, email: true } },
+        user: { select: { id: true, name: true, email: true } },
       },
       orderBy: { createdAt: "desc" },
-      skip:  (page - 1) * limit,
-      take:  limit,
+      skip: (page - 1) * limit,
+      take: limit,
     }),
     db.lead.count({ where }),
     db.dealer.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
@@ -66,183 +70,232 @@ export default async function AdminLeadsPage({ searchParams }) {
   ]);
 
   const pages = Math.ceil(total / limit);
+  const from = total === 0 ? 0 : (page - 1) * limit + 1;
+  const to = Math.min(page * limit, total);
+  const memberCount = total - guestCount;
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-700">
-      {/* ── HEADER ── */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-12 gap-8">
-        <div>
-           <div className="flex items-center gap-2 mb-2">
-             <div className="w-2 h-2 rounded-2xl bg-[#2F855A] shadow-[0_0_8px_rgba(47,133,90,0.5)]" />
-             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Leads CRM</span>
-          </div>
-          <h1 className="text-4xl font-black text-slate-900 dark:text-white dark:text-white tracking-tight">
-            Customer Leads <span className="text-slate-500 font-medium ml-3">/ {total} Total</span>
-          </h1>
-          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-            All enquiries — guests and signed-in buyers. {guestCount} guest / WhatsApp-only in this filter.
-          </p>
-        </div>
-        
-        <ExportButton
-          label="Export CSV"
-          filename="welsh-motorhub-leads.csv"
-          data={leads.map(l => ({
-            ID: l.id,
-            Buyer: l.name,
-            Phone: l.phone,
-            Email: l.email || "N/A",
-            Car: `${l.car.year} ${l.car.make} ${l.car.model}`,
-            Dealer: l.dealer.name,
-            Channel: l.channel,
-            Message: l.message || "N/A",
-            CreatedAt: l.createdAt
-          }))}
-        />
-      </div>
-
-      {/* ── ADVANCED FILTERS ── */}
-      <form method="GET" className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-8 bg-white dark:bg-slate-900 border border-[#ddd4c8] dark:border-slate-800 p-4 rounded-2xl shadow-none">
-        <div className="lg:col-span-7 relative group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-[#2F855A] transition-colors" />
-          <input
-            name="search"
-            defaultValue={search}
-            placeholder="Search by buyer name, contact, or vehicle..."
-            className="w-full bg-[#f7f6f3] dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl pl-10 pr-4 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-900 dark:text-white dark:text-white outline-none focus:border-[#2F855A]/50 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500"
+      <AdminPageHeader
+        eyebrow="Leads"
+        title="Customer enquiries"
+        description="All leads from forms, WhatsApp, and call intents — guests and signed-in buyers."
+        stats={[
+          { label: "Total", value: total },
+          { label: "Guests", value: guestCount, tone: "text-slate-600 dark:text-zinc-400" },
+          { label: "Members", value: memberCount, tone: "text-emerald-700 dark:text-emerald-400" },
+        ]}
+        actions={
+          <ExportButton
+            label="Export CSV"
+            filename="welsh-motorhub-leads.csv"
+            data={leads.map((l) => ({
+              ID: l.id,
+              Buyer: l.name,
+              Phone: l.phone,
+              Email: l.email || "N/A",
+              Car: `${l.car.year} ${l.car.make} ${l.car.model}`,
+              Dealer: l.dealer.name,
+              Channel: l.channel,
+              Message: l.message || "N/A",
+              CreatedAt: l.createdAt,
+            }))}
           />
-        </div>
+        }
+      />
 
-        <div className="lg:col-span-3">
-          <select name="dealerId" defaultValue={dealerId} className="w-full bg-[#f7f6f3] dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300 outline-none focus:border-[#2F855A]/50 transition-all cursor-pointer">
-            <option value="">All Dealerships</option>
-            {dealers.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-          </select>
+      <form
+        method="GET"
+        className="mb-6 rounded-2xl border border-slate-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950 sm:p-5"
+      >
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-12">
+          <div className="relative lg:col-span-7">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <input
+              name="search"
+              defaultValue={search}
+              placeholder="Buyer, phone, email, vehicle, or dealer…"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-emerald-500/45 focus:bg-white focus:ring-2 focus:ring-emerald-500/15 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white"
+            />
+          </div>
+          <div className="lg:col-span-3">
+            <select
+              name="dealerId"
+              defaultValue={dealerId}
+              className="w-full cursor-pointer rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 outline-none transition focus:border-emerald-500/45 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
+            >
+              <option value="">All dealerships</option>
+              {dealers.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="lg:col-span-2">
+            <button
+              type="submit"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-white"
+            >
+              <Filter size={16} /> Apply
+            </button>
+          </div>
         </div>
-
-        <div className="lg:col-span-2">
-           <button type="submit" className="w-full bg-slate-900 dark:bg-slate-700 hover:bg-[#2F855A] dark:hover:bg-[#2F855A] text-white py-3 rounded-2xl transition-all flex items-center justify-center gap-2 text-sm font-bold group">
-            <Filter size={16} className="group-hover:scale-110 transition-transform" /> Filter
-          </button>
-        </div>
+        {(search || dealerId) && (
+          <p className="mt-3 text-xs text-slate-500">
+            Filtered results.{" "}
+            <Link href="/admin/leads" className="font-semibold text-emerald-700 hover:underline dark:text-emerald-400">
+              Clear filters
+            </Link>
+          </p>
+        )}
       </form>
 
-      {/* ── DATA REGISTRY ── */}
-      <div className="bg-white dark:bg-slate-900 border border-[#ddd4c8] dark:border-slate-800 rounded-2xl overflow-hidden shadow-none">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[1000px]">
-            <thead>
-              <tr className="border-b border-[#ddd4c8] dark:border-slate-800 bg-[#f7f6f3] dark:bg-slate-900/50">
-                {["Buyer", "Vehicle", "Dealership", "Source", "Date", ""].map((h) => (
-                  <th key={h} className="px-6 py-4 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-              {leads.map((lead) => (
-                <tr key={lead.id} className="group hover:bg-[#f7f6f3] dark:hover:bg-slate-800/50 transition-colors relative">
-                  <td className="px-6 py-4">
-                    <div className="flex flex-col gap-1">
-                       <p className="text-sm font-bold text-slate-900 dark:text-white dark:text-white capitalize group-hover:text-[#2F855A] transition-colors">{lead.name}</p>
-                       <div className="mt-1 flex flex-wrap items-center gap-2">
-                         <span className={`inline-flex rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
-                           lead.userId
-                             ? "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300"
-                             : "bg-slate-100 text-slate-600 dark:bg-zinc-800 dark:text-slate-300"
-                         }`}>
-                           {lead.userId ? "Member" : "Guest"}
-                         </span>
-                         {lead.phone === "not-provided" ? (
-                           <span className="text-[10px] font-medium text-amber-600">No phone captured</span>
-                         ) : null}
-                       </div>
-                       <div className="flex items-center gap-3">
-                          <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-                             <Phone size={12} /> {lead.phone}
-                          </div>
-                          {lead.email && (
-                            <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-                               <Mail size={12} /> {lead.email}
-                            </div>
-                          )}
-                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                     <Link href={`/cars/${lead.car.id}`} target="_blank" className="group/link block">
-                        <p className="text-sm font-semibold font-sans text-slate-900 dark:text-white dark:text-white group-hover/link:text-[#2F855A] transition-colors mb-0.5">
-                           {lead.car.year} {lead.car.make}
-                        </p>
-                        <p className="text-xs font-sans text-slate-500 dark:text-slate-400">{lead.car.model}</p>
-                     </Link>
-                  </td>
-                  <td className="px-6 py-4">
-                     <p className="text-sm font-semibold text-slate-900 dark:text-white dark:text-white">{lead.dealer.name}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                     <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-2xl text-xs font-semibold ${
-                        lead.channel === 'whatsapp' ? 'bg-[#2F855A]/10 dark:bg-[#2F855A]/10 text-[#2F855A] dark:text-emerald-400' : 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400'
-                     }`}>
-                        {lead.channel === 'whatsapp' ? <Smartphone size={14} /> : <Globe size={14} />}
-                        <span className="capitalize">{lead.channel}</span>
-                     </div>
-                  </td>
-                  <td className="px-6 py-4">
-                     <div className="flex flex-col">
-                        <p className="text-sm text-slate-900 dark:text-white dark:text-slate-300">
-                          {new Date(lead.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short" })}
-                        </p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
-                           {new Date(lead.createdAt).toLocaleTimeString("en-KE", { hour: "2-digit", minute: "2-digit" })}
-                        </p>
-                     </div>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    {lead.phone && (
-                      <a 
-                        href={`https://wa.me/${lead.phone.replace(/\D/g, '').replace(/^0/, '254')}?text=${encodeURIComponent(`Hello ${lead.name.split(' ')[0]}, I'm reaching out from ${lead.dealer.name} regarding your inquiry on the ${lead.car.year} ${lead.car.make} ${lead.car.model}.`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-800 text-[#2F855A] dark:text-emerald-400 hover:bg-[#2F855A] hover:text-white dark:hover:bg-[#2F855A] dark:hover:text-white rounded-2xl text-xs font-bold transition-all border border-[#ddd4c8] dark:border-slate-700 sm:opacity-0 sm:group-hover:opacity-100"
-                      >
-                        <Smartphone size={14} /> Message
-                      </a>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        
-        {leads.length === 0 && (
-          <div className="py-24 text-center">
-            <div className="w-16 h-16 bg-[#f7f6f3] dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
-               <MessageSquare size={24} className="text-slate-400 dark:text-slate-500" />
+      <DataTableShell>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-3.5 dark:border-zinc-800">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            {total === 0 ? (
+              "No leads"
+            ) : (
+              <>
+                Showing <span className="text-slate-900 dark:text-white">{from}–{to}</span> of{" "}
+                <span className="text-slate-900 dark:text-white">{total}</span>
+              </>
+            )}
+          </p>
+          {pages > 1 && (
+            <div className="flex items-center gap-1">
+              {page <= 1 ? (
+                <span className="rounded-lg px-3 py-1.5 text-[11px] font-semibold uppercase text-slate-400 opacity-40">
+                  Prev
+                </span>
+              ) : (
+                <Link
+                  href={adminLeadsHref({ page: page - 1, dealerId, search })}
+                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold uppercase text-slate-700 transition hover:border-emerald-500/40 hover:text-emerald-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+                >
+                  Prev
+                </Link>
+              )}
+              <span className="px-2 text-[11px] font-medium tabular-nums text-slate-500">
+                Page {page} / {pages}
+              </span>
+              {page >= pages ? (
+                <span className="rounded-lg px-3 py-1.5 text-[11px] font-semibold uppercase text-slate-400 opacity-40">
+                  Next
+                </span>
+              ) : (
+                <Link
+                  href={adminLeadsHref({ page: page + 1, dealerId, search })}
+                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold uppercase text-slate-700 transition hover:border-emerald-500/40 hover:text-emerald-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+                >
+                  Next
+                </Link>
+              )}
             </div>
-            <p className="text-lg font-bold text-slate-900 dark:text-white dark:text-white">No Leads Found</p>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">There are currently no inquiries in the system.</p>
+          )}
+        </div>
+
+        <table className="w-full min-w-[900px] text-left text-sm">
+          <thead>
+            <tr className="border-b border-slate-100 bg-slate-50/80 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:border-zinc-800 dark:bg-zinc-900/50">
+              {["Buyer", "Vehicle", "Dealership", "Channel", "Date", ""].map((h) => (
+                <th key={h || "actions"} className="px-5 py-3">
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
+            {leads.map((lead) => (
+              <tr key={lead.id} className="group transition-colors hover:bg-slate-50/80 dark:hover:bg-zinc-900/40">
+                <td className="px-5 py-4">
+                  <p className="font-semibold capitalize text-slate-900 dark:text-white">{lead.name}</p>
+                  <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                    <span
+                      className={`inline-flex rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                        lead.userId
+                          ? "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300"
+                          : "bg-slate-100 text-slate-600 dark:bg-zinc-800 dark:text-zinc-300"
+                      }`}
+                    >
+                      {lead.userId ? "Member" : "Guest"}
+                    </span>
+                    {lead.phone === "not-provided" ? (
+                      <span className="text-[10px] font-medium text-amber-600">No phone</span>
+                    ) : null}
+                  </div>
+                  <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500">
+                    {lead.phone !== "not-provided" ? (
+                      <span className="inline-flex items-center gap-1">
+                        <Phone size={12} /> {lead.phone}
+                      </span>
+                    ) : null}
+                    {lead.email ? (
+                      <span className="inline-flex items-center gap-1">
+                        <Mail size={12} /> {lead.email}
+                      </span>
+                    ) : null}
+                  </div>
+                </td>
+                <td className="px-5 py-4">
+                  <Link
+                    href={`/cars/${lead.car.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-slate-900 hover:text-emerald-700 dark:text-white"
+                  >
+                    {lead.car.year} {lead.car.make} {lead.car.model}
+                  </Link>
+                </td>
+                <td className="px-5 py-4 font-medium text-slate-700 dark:text-zinc-300">{lead.dealer.name}</td>
+                <td className="px-5 py-4">
+                  <span
+                    className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold capitalize ${
+                      lead.channel === "whatsapp"
+                        ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
+                        : "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300"
+                    }`}
+                  >
+                    {lead.channel === "whatsapp" ? <Smartphone size={14} /> : <Globe size={14} />}
+                    {lead.channel}
+                  </span>
+                </td>
+                <td className="px-5 py-4 text-slate-600 dark:text-zinc-400">
+                  <p>{new Date(lead.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short" })}</p>
+                  <p className="text-xs">
+                    {new Date(lead.createdAt).toLocaleTimeString("en-KE", { hour: "2-digit", minute: "2-digit" })}
+                  </p>
+                </td>
+                <td className="px-5 py-4 text-right">
+                  {lead.phone && lead.phone !== "not-provided" ? (
+                    <a
+                      href={`https://wa.me/${lead.phone.replace(/\D/g, "").replace(/^0/, "254")}?text=${encodeURIComponent(
+                        `Hello ${lead.name.split(" ")[0]}, I'm reaching out from ${lead.dealer.name} regarding your inquiry on the ${lead.car.year} ${lead.car.make} ${lead.car.model}.`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-emerald-700 opacity-100 transition hover:bg-emerald-600 hover:text-white sm:opacity-0 sm:group-hover:opacity-100 dark:border-zinc-700 dark:bg-zinc-900 dark:text-emerald-400 dark:hover:bg-emerald-600 dark:hover:text-white"
+                    >
+                      <Smartphone size={14} /> WhatsApp
+                    </a>
+                  ) : null}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {leads.length === 0 && (
+          <div className="py-16 text-center">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-slate-100 dark:bg-zinc-900">
+              <MessageSquare size={22} className="text-slate-400" />
+            </div>
+            <p className="font-semibold text-slate-900 dark:text-white">No leads found</p>
+            <p className="mt-1 text-sm text-slate-500">Try clearing filters or check back later.</p>
           </div>
         )}
-      </div>
-
-      {/* ── PAGINATION ── */}
-      {pages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-8">
-          {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
-            <Link key={p}
-              href={`/admin/leads?page=${p}&dealerId=${dealerId}&search=${encodeURIComponent(search)}`}
-              className={`w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-bold transition-all ${
-                p === page 
-                  ? "bg-[#2F855A] text-white shadow-[#2F855A]/20" 
-                  : "bg-white dark:bg-slate-800 border border-[#ddd4c8] dark:border-slate-700 text-white dark:text-white hover:border-[#2F855A] hover:text-[#2F855A]"
-              }`}
-            >
-              {p}
-            </Link>
-          ))}
-        </div>
-      )}
+      </DataTableShell>
     </div>
   );
 }

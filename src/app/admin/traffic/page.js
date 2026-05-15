@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { Eye, MousePointerClick, BarChart3, ExternalLink } from "lucide-react";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
 export const metadata = { title: "Traffic — Welsh Motorhub Admin" };
 
@@ -100,25 +101,21 @@ export default async function AdminTrafficPage() {
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-700 space-y-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="mb-1 text-xs font-medium text-slate-500">Analytics</p>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-white">
-            Website traffic
-          </h2>
-          <p className="mt-1 max-w-2xl text-sm text-slate-500 dark:text-slate-400">
-            Page views, listing engagement, and car detail views. Includes guests and signed-in users.
-          </p>
-        </div>
-        <Link
-          href="/api/admin/tracking/summary"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 hover:border-emerald-500/40 dark:border-zinc-800 dark:bg-zinc-950 dark:text-slate-200"
-        >
-          <ExternalLink size={14} /> JSON funnel export
-        </Link>
-      </div>
+      <AdminPageHeader
+        eyebrow="Analytics"
+        title="Website traffic"
+        description="Page views, listing engagement, and car detail views. Includes guests and signed-in users."
+        actions={
+          <Link
+            href="/api/admin/tracking/summary"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 transition hover:border-emerald-500/40 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
+          >
+            <ExternalLink size={14} /> JSON export
+          </Link>
+        }
+      />
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {[
@@ -244,3 +241,4 @@ export default async function AdminTrafficPage() {
     </div>
   );
 }
+

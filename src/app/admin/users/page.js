@@ -3,20 +3,21 @@ export const dynamic = "force-dynamic";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import { 
-  Users, 
-  UserPlus, 
-  ShieldCheck, 
-  Store, 
-  User as UserIcon, 
-  Edit3, 
-  RefreshCw, 
-  Ban, 
+import {
+  Users,
+  UserPlus,
+  ShieldCheck,
+  Store,
+  User as UserIcon,
+  Edit3,
+  RefreshCw,
+  Ban,
   CheckCircle2,
-  ChevronRight
 } from "lucide-react";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import DataTableShell from "@/components/ui/DataTableShell";
 
-export const metadata = { title: "User Directory — Welsh Motorhub Standard Admin" };
+export const metadata = { title: "Users — Welsh Motorhub Admin" };
 
 export default async function AdminUsersPage(props) {
   const searchParams = await props.searchParams;
@@ -29,97 +30,123 @@ export default async function AdminUsersPage(props) {
   });
 
   const roleStyles = {
-    ADMIN:  "bg-slate-900 text-white border-slate-900",
-    DEALER: "bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/50",
-    BUYER:  "bg-[#f7f6f3] text-slate-600 border-[#ddd4c8] dark:border-slate-800",
+    ADMIN: "bg-slate-900 text-white border-slate-900",
+    DEALER:
+      "bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/50",
+    BUYER: "bg-slate-100 text-slate-600 border-slate-200 dark:border-zinc-800 dark:bg-zinc-900",
   };
+
+  const dealerCount = users.filter((u) => u.role === "DEALER").length;
+  const buyerCount = users.filter((u) => u.role === "BUYER").length;
 
   return (
     <div className="animate-in fade-in duration-700">
-      {/* ── HEADER ── */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-             <div className="w-2 h-2 rounded-2xl bg-[#2F855A]" />
-             <span className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-500">Access Management</span>
-          </div>
-          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-            System Identities <span className="text-slate-500 font-medium ml-2">({users.length})</span>
-          </h1>
-        </div>
-        
-        <Link href="/admin/users/new" className="bg-[#2F855A] border border-[#2F855A] text-white px-8 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-[#38A169] hover:border-[#38A169] transition-all shadow-none">
-          <UserPlus size={14} /> Create Identity
-        </Link>
-      </div>
+      <AdminPageHeader
+        eyebrow="Access"
+        title="Users"
+        description="Buyer accounts, dealer logins, and admin identities."
+        stats={[
+          { label: "Total", value: users.length },
+          { label: "Dealers", value: dealerCount, tone: "text-emerald-700 dark:text-emerald-400" },
+          { label: "Buyers", value: buyerCount },
+        ]}
+        actions={
+          <Link
+            href="/admin/users/new"
+            className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-emerald-600"
+          >
+            <UserPlus size={16} /> Add user
+          </Link>
+        }
+      />
 
       {deleted && (
-        <div className="bg-emerald-50 border border-emerald-200/80 text-emerald-800 dark:bg-emerald-950/35 dark:border-emerald-800/45 dark:text-emerald-300 text-sm rounded-2xl px-4 py-3 mb-8">
-          ✓ Profile deleted successfully
+        <div className="mb-6 rounded-xl border border-emerald-200/80 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-800/45 dark:bg-emerald-950/35 dark:text-emerald-300">
+          Profile deleted successfully.
         </div>
       )}
 
-      {/* ── DATA TABLE ── */}
-      <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-[3rem] overflow-hidden shadow-none">
-        <table className="w-full text-left border-collapse">
+      <DataTableShell>
+        <table className="w-full min-w-[880px] text-left text-sm">
           <thead>
-            <tr className="border-b border-slate-100 bg-slate-50/50">
-              {["User Profile", "Access Role", "Hub Association", "Status", "Joined On", ""].map((h) => (
-                <th key={h} className="px-8 py-5 text-[11px] font-black uppercase tracking-[0.2em] text-slate-700">{h}</th>
+            <tr className="border-b border-slate-100 bg-slate-50/80 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:border-zinc-800 dark:bg-zinc-900/50">
+              {["User", "Role", "Dealer", "Status", "Joined", ""].map((h) => (
+                <th key={h || "actions"} className="px-5 py-3">
+                  {h}
+                </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
             {users.map((user) => (
-              <tr key={user.id} className="group hover:bg-slate-50/50 transition-colors">
-                <td className="px-8 py-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-[1.25rem] bg-slate-100 border border-[#ddd4c8] dark:border-slate-800 text-white group-hover:bg-slate-900 group-hover:text-white flex items-center justify-center font-black text-lg transition-all duration-500 shadow-none">
+              <tr key={user.id} className="group transition-colors hover:bg-slate-50/80 dark:hover:bg-zinc-900/40">
+                <td className="px-5 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-slate-100 text-sm font-bold text-slate-700 transition group-hover:bg-slate-900 group-hover:text-white dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200">
                       {user.name[0]}
                     </div>
                     <div>
-                      <p className="text-sm font-black text-slate-900 dark:text-white tracking-tight">{user.name}</p>
-                      <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest mt-0.5">{user.email}</p>
+                      <p className="font-semibold text-slate-900 dark:text-white">{user.name}</p>
+                      <p className="text-xs text-slate-500">{user.email}</p>
                     </div>
                   </div>
                 </td>
-                <td className="px-8 py-6">
-                   <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-2xl text-[9px] font-black uppercase tracking-widest border ${roleStyles[user.role]}`}>
-                      {user.role === 'ADMIN' && <ShieldCheck size={10} />}
-                      {user.role === 'DEALER' && <Store size={10} />}
-                      {user.role === 'BUYER' && <UserIcon size={10} />}
-                      {user.role}
-                   </span>
+                <td className="px-5 py-4">
+                  <span
+                    className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide ${roleStyles[user.role]}`}
+                  >
+                    {user.role === "ADMIN" && <ShieldCheck size={10} />}
+                    {user.role === "DEALER" && <Store size={10} />}
+                    {user.role === "BUYER" && <UserIcon size={10} />}
+                    {user.role}
+                  </span>
                 </td>
-                <td className="px-8 py-6">
-                   <p className="text-xs font-black text-slate-600 uppercase tracking-tighter truncate max-w-[150px]">
-                      {user.dealer?.name || <span className="text-slate-300">—</span>}
-                   </p>
+                <td className="max-w-[160px] truncate px-5 py-4 text-slate-600 dark:text-zinc-400">
+                  {user.dealer?.name || "—"}
                 </td>
-                <td className="px-8 py-6">
-                  <span className={`inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-widest ${
-                    user.active ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400"
-                  }`}>
+                <td className="px-5 py-4">
+                  <span
+                    className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
+                      user.active ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400"
+                    }`}
+                  >
                     {user.active ? <CheckCircle2 size={12} /> : <Ban size={12} />}
                     {user.active ? "Active" : "Locked"}
                   </span>
                 </td>
-                <td className="px-8 py-6 text-[11px] font-black text-slate-600 uppercase tracking-tighter">
-                   {new Date(user.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" })}
+                <td className="px-5 py-4 text-slate-600 dark:text-zinc-400">
+                  {new Date(user.createdAt).toLocaleDateString("en-KE", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
                 </td>
-                <td className="px-8 py-6 text-right">
-                  <div className="flex items-center justify-end gap-3 transition-all duration-300 sm:opacity-0 sm:group-hover:opacity-100">
-                    <Link href={`/admin/users/${user.id}/edit`} className="flex items-center gap-2 px-4 py-2 bg-white hover:border-[#2F855A]/40 hover:text-[#2F855A] text-slate-700 dark:bg-slate-900 dark:hover:text-emerald-400 font-black text-[11px] uppercase tracking-widest rounded-2xl transition-all border border-[#ddd4c8] dark:border-slate-800 shadow-none" title="Manage Profile">
-                      <Edit3 size={14} /> Manage
+                <td className="px-5 py-4 text-right">
+                  <div className="flex items-center justify-end gap-2 sm:opacity-0 sm:group-hover:opacity-100">
+                    <Link
+                      href={`/admin/users/${user.id}/edit`}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-emerald-500/40 hover:text-emerald-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200"
+                    >
+                      <Edit3 size={14} /> Edit
                     </Link>
-                    
                     <form action={`/api/admin/users/${user.id}/toggle`} method="POST">
-                      <button type="submit" className={`p-2 transition-colors ${user.active ? "text-slate-400 hover:text-slate-900 dark:text-white" : "text-emerald-600 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300"}`} title={user.active ? "Lock Account" : "Unlock Account"}>
+                      <button
+                        type="submit"
+                        className={`rounded-lg p-2 transition ${
+                          user.active
+                            ? "text-slate-400 hover:text-slate-900"
+                            : "text-emerald-600 hover:text-emerald-800"
+                        }`}
+                        title={user.active ? "Lock account" : "Unlock account"}
+                      >
                         {user.active ? <Ban size={18} /> : <CheckCircle2 size={18} />}
                       </button>
                     </form>
-
-                    <Link href={`/admin/users/${user.id}/edit#security`} className="p-2 text-slate-400 hover:text-[#2F855A] dark:hover:text-emerald-400 transition-colors" title="Reset Security">
+                    <Link
+                      href={`/admin/users/${user.id}/edit#security`}
+                      className="rounded-lg p-2 text-slate-400 transition hover:text-emerald-600"
+                      title="Reset security"
+                    >
                       <RefreshCw size={16} />
                     </Link>
                   </div>
@@ -128,14 +155,14 @@ export default async function AdminUsersPage(props) {
             ))}
           </tbody>
         </table>
-        
+
         {users.length === 0 && (
-          <div className="py-20 text-center">
-            <Users size={40} className="mx-auto text-slate-200 mb-4" />
-            <p className="text-sm font-black text-slate-600 uppercase tracking-widest">No profiles found</p>
+          <div className="py-16 text-center">
+            <Users size={32} className="mx-auto mb-3 text-slate-300" />
+            <p className="text-sm font-medium text-slate-600">No users found</p>
           </div>
         )}
-      </div>
+      </DataTableShell>
     </div>
   );
 }
