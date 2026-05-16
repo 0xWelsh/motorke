@@ -493,13 +493,16 @@ export default async function HomePage() {
           <div className="home-shell">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 gap-4">
               <div className="max-w-2xl">
-                <p className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-[#dc2626] dark:text-red-400 mb-2">
-                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#dc2626] dark:bg-red-400" aria-hidden />
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-red-600 dark:text-red-500 mb-2 sm:inline-flex sm:items-center sm:gap-2">
+                  <span
+                    className="hidden sm:inline-block h-1.5 w-1.5 rounded-full bg-red-600 dark:bg-red-500"
+                    aria-hidden
+                  />
                   Hot deals
                 </p>
                 <h2 className="text-4xl sm:text-6xl lg:text-7xl font-normal editorial-heading text-[#111827] dark:text-white mb-3">Spotlight</h2>
                 <p className="text-[#475569] dark:text-slate-400 text-base sm:text-lg font-medium">
-                  Verified listings currently receiving the most buyer interest and strongest value signals.
+                  Cars receiving the most buyer interest right now
                 </p>
               </div>
               <TrackedLink
@@ -512,7 +515,7 @@ export default async function HomePage() {
               </TrackedLink>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 items-stretch">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6 items-stretch">
               {spotlightCards.map((car) => (
                 <div key={car.id} className="h-full">
                   <CarCard car={car} />

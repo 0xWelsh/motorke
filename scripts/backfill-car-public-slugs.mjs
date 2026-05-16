@@ -36,20 +36,68 @@ function applyEnvFile(filename, overridesExisting) {
 applyEnvFile(".env", false);
 applyEnvFile(".env.local", true);
 
+function parsePostgresUrl(raw) {
+  try {
+    return new URL(String(raw).replace(/^postgresql:/, "postgres:"));
+  } catch {
+    return null;
+  }
+}
+
+/** Session pooler :5432 from DATABASE_URL (same idea as scripts/migrate-deploy.sh). */
+function sessionPoolerFromDatabaseUrl(databaseUrl) {
+  const session = parsePostgresUrl(databaseUrl);
+  if (!session) return null;
+  session.port = "5432";
+  session.searchParams.delete("pgbouncer");
+  session.searchParams.delete("connection_limit");
+  session.searchParams.delete("pool_timeout");
+  if (!session.searchParams.has("sslmode")) {
+    session.searchParams.set("sslmode", "require");
+  }
+  return session.toString().replace(/^postgres:/, "postgresql:");
+}
+
 function prismaUrlForBackfill() {
   const direct = (process.env.DIRECT_URL || "").trim();
-  if (direct) return direct;
+  const directParsed = direct ? parsePostgresUrl(direct) : null;
+  const isIpv6DirectHost = Boolean(
+    directParsed?.hostname?.match(/^db\.[a-z0-9]+\.supabase\.co$/i),
+  );
+
+  // Good DIRECT_URL: session pooler on :5432 without pgbouncer (matches Vercel migrate).
+  const useConfiguredDirect =
+    directParsed &&
+    directParsed.port === "5432" &&
+    !directParsed.searchParams.has("pgbouncer") &&
+    !isIpv6DirectHost;
+
+  if (useConfiguredDirect) {
+    console.error(`backfill: using DIRECT_URL (${directParsed.hostname}:5432)`);
+    return direct;
+  }
+
+  if (isIpv6DirectHost) {
+    console.error(
+      "backfill: DIRECT_URL is db.<ref>.supabase.co — often unreachable from laptops (IPv6).\n" +
+        "         falling back to Session pooler :5432 from DATABASE_URL.\n" +
+        "         In Supabase → Connect, copy Session pooler URI into DIRECT_URL.\n",
+    );
+  }
 
   const dbUrl = (process.env.DATABASE_URL || "").trim();
-  if (dbUrl) {
-    if (/:6543\b/.test(dbUrl)) {
-      console.error(
-        "backfill-car-public-slugs: DATABASE_URL points at port 6543 (transaction pooler).\n" +
-          "Use DIRECT_URL instead (Supabase Session pooler, port 5432) — see .env.example.\n",
-      );
-    }
-    return dbUrl;
+  const session = sessionPoolerFromDatabaseUrl(dbUrl);
+  if (session) {
+    const host = parsePostgresUrl(session)?.hostname || "pooler";
+    console.error(`backfill: using Session pooler ${host}:5432`);
+    return session;
   }
+
+  if (direct) {
+    console.error(`backfill: using DIRECT_URL as last resort (${directParsed?.hostname})`);
+    return direct;
+  }
+
   console.error(
     "backfill-car-public-slugs: Missing DIRECT_URL or DATABASE_URL.\n" +
       "Put them in .env or .env.local (this script loads both).\n",
