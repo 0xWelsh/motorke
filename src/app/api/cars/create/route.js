@@ -2,6 +2,8 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { finalizeNewCarPublicSlug } from "@/lib/car-public-slug";
+import { carListingPath } from "@/lib/car-listing-url";
 
 export async function POST(request) {
   try {
@@ -63,10 +65,9 @@ export async function POST(request) {
       },
     });
 
-    // Redirect to the new car page
-    return NextResponse.redirect(
-      new URL(`/cars/${car.id}`, request.url)
-    );
+    const finalized = await finalizeNewCarPublicSlug(car);
+
+    return NextResponse.redirect(new URL(carListingPath(finalized), request.url));
   } catch (err) {
     console.error("Create car error:", err);
     return NextResponse.json({ error: "Failed to create listing" }, { status: 500 });

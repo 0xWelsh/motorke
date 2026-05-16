@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { MIN_BULK_UPLOAD_CARS } from "@/lib/bulk-upload-policy";
+import { finalizeNewCarPublicSlug } from "@/lib/car-public-slug";
 
 const VALID_FUEL = ["PETROL", "DIESEL", "HYBRID", "ELECTRIC", "LPG"];
 const VALID_TRANS = ["AUTOMATIC", "MANUAL", "CVT"];
@@ -70,7 +71,7 @@ export async function POST(request) {
           ? String(row.features).split(";").map((f) => f.trim()).filter(Boolean)
           : [];
 
-        await db.car.create({
+        let car = await db.car.create({
           data: {
             dealerId: session.user.dealerId,
             make: String(row.make).trim(),
@@ -105,6 +106,7 @@ export async function POST(request) {
               : undefined,
           },
         });
+        car = await finalizeNewCarPublicSlug(car);
 
         count++;
       } catch (err) {

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Star, Quote, ArrowRight } from 'lucide-react';
+import { carListingPath } from "@/lib/car-listing-url";
 
 export default function HeroShowcase({ items }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -57,7 +58,7 @@ export default function HeroShowcase({ items }) {
                <h4 className="text-xl font-sans font-semibold text-slate-900 dark:text-white mb-4">{current.model}</h4>
                <div className="flex items-center justify-between pt-4 border-t border-slate-50 dark:border-slate-800">
                  <span className="text-lg font-bold text-[#38A169]">KSh {(current.price/1000000).toFixed(2)}M</span>
-                 <Link href={`/cars/${current.id}`} className="text-slate-900 dark:text-white text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70 transition-opacity">
+                 <Link href={carListingPath(current)} className="text-slate-900 dark:text-white text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 hover:opacity-70 transition-opacity">
                    View Details <ArrowRight className="w-3. h-3" />
                  </Link>
                </div>

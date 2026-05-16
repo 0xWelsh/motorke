@@ -15,6 +15,7 @@ import {
 import ExportButton from "@/components/admin/ExportButton";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import DataTableShell from "@/components/ui/DataTableShell";
+import { carListingPath } from "@/lib/car-listing-url";
 
 export const metadata = { title: "Leads — Welsh Motorhub Admin" };
 
@@ -56,7 +57,7 @@ export default async function AdminLeadsPage({ searchParams }) {
     db.lead.findMany({
       where,
       include: {
-        car: { select: { id: true, make: true, model: true, year: true } },
+        car: { select: { id: true, publicSlug: true, make: true, model: true, year: true } },
         dealer: { select: { name: true } },
         user: { select: { id: true, name: true, email: true } },
       },
@@ -240,7 +241,7 @@ export default async function AdminLeadsPage({ searchParams }) {
                 </td>
                 <td className="px-5 py-4">
                   <Link
-                    href={`/cars/${lead.car.id}`}
+                    href={carListingPath(lead.car)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-medium text-slate-900 hover:text-emerald-700 dark:text-white"

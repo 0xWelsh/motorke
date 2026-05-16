@@ -11,6 +11,7 @@ import {
   getMailFromMarketing,
   getMailFromHello,
 } from "@/lib/site-contact";
+import { carListingPath } from "@/lib/car-listing-url";
 
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS?.replace(/\s+/g, "");
@@ -486,7 +487,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
   }
 
   const siteUrl = getSiteOrigin();
-  const newCarUrl = `${siteUrl}/cars/${newCar.id}`;
+  const newCarUrl = `${siteUrl.replace(/\/$/, "")}${carListingPath(newCar)}`;
   const savingsPercent = ((savings / previousCar.price) * 100).toFixed(1);
 
   const htmlContent = `
@@ -679,7 +680,10 @@ export async function sendWatchAlertEmail({
 }) {
   if (!userEmail || !car?.id) return { success: true, skipped: true };
   const siteUrl = getSiteOrigin();
-  const carUrl = `${siteUrl}/cars/${car.id}`;
+  const origin = siteUrl.replace(/\/$/, "");
+  const carUrl = `${origin}${carListingPath(car)}`;
+  const similarListingUrl =
+    similarCar?.id != null ? `${origin}${carListingPath(similarCar)}` : carUrl;
   const title = `${car.year} ${car.make} ${car.model}`;
   const similarTitle = similarCar ? `${similarCar.year} ${similarCar.make} ${similarCar.model}` : null;
   const firstName = (userName || "there").split(" ")[0];
@@ -720,7 +724,7 @@ export async function sendWatchAlertEmail({
         <p style="margin: 0 0 12px; font-weight: 700;">${title}</p>
         ${priceBlock}
       </div>
-      <a href="${isSimilarListing && similarCar?.id ? `${siteUrl}/cars/${similarCar.id}` : carUrl}" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Open Listing</a>
+      <a href="${isSimilarListing && similarCar?.id ? similarListingUrl : carUrl}" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Open Listing</a>
       ${buildEmailFooter()}
     </div>
   `;

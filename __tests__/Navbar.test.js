@@ -46,7 +46,7 @@ describe('Navbar Component', () => {
     render(<Navbar user={adminUser} />);
     
     // Open user menu
-    const menuButton = screen.getByRole('button', { name: /menu/i });
+    const menuButton = screen.getByRole('button', { name: / Menu$/ });
     fireEvent.click(menuButton);
     
     expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe('Navbar Component', () => {
     render(<Navbar user={dealerUser} />);
     
     // Open user menu
-    const menuButton = screen.getByRole('button', { name: /menu/i });
+    const menuButton = screen.getByRole('button', { name: / Menu$/ });
     fireEvent.click(menuButton);
     
     expect(screen.getByRole('link', { name: /^portal$/i })).toBeInTheDocument();

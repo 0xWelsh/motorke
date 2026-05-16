@@ -15,6 +15,7 @@
     "lint:full": "eslint \"src/**/*.{js,jsx,ts,tsx}\" \"__tests__/**/*.js\"",
     "test": "jest",
     "db:migrate": "prisma migrate dev",
+    "db:backfill-slugs": "node scripts/backfill-car-public-slugs.mjs",
     "db:push:local": "bash ./scripts/build-local.sh --sync-only",
     "db:seed": "node prisma/seed.js",
     "db:studio": "prisma studio",

@@ -5,6 +5,7 @@
  * Groups cars by dealer, shows each dealer as a pin, popup lists available cars.
  */
 import dynamic from "next/dynamic";
+import { carListingPath } from "@/lib/car-listing-url";
 import { Loader2 } from "lucide-react";
 
 const SearchMapLeaflet = dynamic(() => import("./SearchMapLeaflet"), {
@@ -37,6 +38,7 @@ export default function SearchMapView({ cars }) {
     }
     dealerMap[key].cars.push({
       id: car.id,
+      publicSlug: car.publicSlug,
       make: car.make,
       model: car.model,
       year: car.year,

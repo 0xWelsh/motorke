@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { formatCarPrice } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site-url";
+import { carListingPath } from "@/lib/car-listing-url";
 import InventoryToggle from "@/components/InventoryToggle";
 import PortalInventoryFilters from "@/components/PortalInventoryFilters";
 import InventorySharePrompt from "@/components/InventorySharePrompt";
@@ -98,6 +99,7 @@ export default async function InventoryPage({ searchParams }) {
           where: { id: createdCarId, dealerId: user.dealerId },
           select: {
             id: true,
+            publicSlug: true,
             make: true,
             model: true,
             year: true,
@@ -110,7 +112,7 @@ export default async function InventoryPage({ searchParams }) {
       : null;
 
   const buildInventoryWhatsAppHref = (car, template = "clean") => {
-    const listingUrl = absoluteUrl(`/cars/${car.id}`);
+    const listingUrl = absoluteUrl(carListingPath(car));
     const title = `${car.year} ${car.make} ${car.model}`.replace(/\s+/g, " ").trim();
     const colorLine = car.color ? `Color: ${car.color}` : "";
     const body =
@@ -423,7 +425,7 @@ export default async function InventoryPage({ searchParams }) {
                   </a>
                 </div>
                 
-                <Link href={`/cars/${car.id}`} target="_blank"
+                <Link href={carListingPath(car)} target="_blank"
                   className="mt-2.5 sm:mt-3 flex items-center justify-center gap-1.5 text-[10px] sm:text-[11px] uppercase font-black tracking-[0.1em] sm:tracking-[0.15em] font-medium text-slate-700 hover:text-slate-900 dark:text-white transition-colors py-1.5 sm:py-2">
                   View Listing <ExternalLink size={12} />
                 </Link>

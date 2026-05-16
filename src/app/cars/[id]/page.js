@@ -1,7 +1,7 @@
 // src/app/cars/[id]/page.js
 export const dynamic = 'force-dynamic';
 import { db } from "@/lib/db";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { unstable_cache } from "next/cache";
 import { formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
@@ -32,20 +32,13 @@ import {
 } from "@/lib/car-display";
 import { specIconSrcForDetailLabel, specIconImageClassName } from "@/lib/spec-icons";
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
+import { facetPathSegment } from "@/lib/seo-car-facets";
+import { carListingPath } from "@/lib/car-listing-url";
+import { BODY_TYPE_LABELS, FUEL_LABELS } from "@/lib/constants";
 
 export async function generateMetadata({ params }) {
-  const { id } = await params;
-  const car = await db.car.findFirst({
-    where: {
-      id,
-      available: true,
-      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
-    },
-    include: {
-      images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }], take: 1 },
-      dealer: { select: { name: true, location: true } },
-    },
-  });
+  const { id: ref } = await params;
+  const car = await getCarData(ref);
   if (!car) return {};
 
   const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} for sale in Kenya`;
@@ -63,17 +56,14 @@ export async function generateMetadata({ params }) {
     .join(" · ")
     .concat(` · ${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} on Welsh Motorhub — browse more verified cars.`);
   const origin = getSiteOrigin();
-  const url = `${origin}/cars/${id}`;
-  // Serve the hero through our own origin so WhatsApp / Facebook hit
-  // welshmotorhub.co.ke first (see /api/cars/[id]/og-image). Raw Supabase
-  // URLs in <meta> still fail for some listings (legacy paths, signed
-  // URLs, or crawler quirks).
-  const ogImageUrl = `${origin}/api/cars/${id}/og-image`;
+  const canonicalPath = carListingPath(car);
+  const url = `${origin}${canonicalPath}`;
+  const ogImageUrl = `${origin}/api/cars/${car.id}/og-image`;
 
   return {
     title,
     description,
-    alternates: { canonical: `/cars/${id}` },
+    alternates: { canonical: canonicalPath },
     openGraph: {
       title,
       description,
@@ -101,12 +91,12 @@ export async function generateMetadata({ params }) {
 
 
 const getCarData = unstable_cache(
-  async (id) => {
+  async (ref) => {
     return db.car.findFirst({
       where: {
-        id,
         available: true,
         ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+        OR: [{ id: ref }, { publicSlug: ref }],
       },
       include: {
         images: { orderBy: { order: "asc" } },
@@ -118,7 +108,7 @@ const getCarData = unstable_cache(
       },
     });
   },
-  ["car-detail"],
+  ["car-detail-v2"],
   { revalidate: 600, tags: ["cars"] }
 );
 
@@ -193,16 +183,20 @@ async function getCarReviews(carId) {
 }
 
 export default async function CarDetailPage({ params }) {
-  const { id } = await params;
-  const carData = await getCarData(id);
+  const { id: ref } = await params;
+  const carData = await getCarData(ref);
 
   if (!carData || !carData.dealer) notFound();
-  
+
+  if (carData.publicSlug && ref === carData.id) {
+    permanentRedirect(carListingPath(carData));
+  }
+
   const session    = await getSession();
   const userId     = session?.userId || null;
   const isLoggedIn = !!userId;
   const savedCar   = userId ? await db.savedCar.findUnique({
-    where: { userId_carId: { userId, carId: id } },
+    where: { userId_carId: { userId, carId: carData.id } },
   }).catch(() => null) : null;
   const isSaved = !!savedCar;
 
@@ -231,7 +225,7 @@ export default async function CarDetailPage({ params }) {
 
   const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motorhub.`;
 
-  const listingUrl = absoluteUrl(`/cars/${car.id}`);
+  const listingUrl = absoluteUrl(carListingPath(car));
   const absImages = (car.images?.length ? car.images : [{ url: BRAND_MARK_SQUARE }]).map((i) =>
     absoluteMediaUrl(i.url, BRAND_MARK_SQUARE)
   );
@@ -563,7 +557,7 @@ export default async function CarDetailPage({ params }) {
                     </div>
                     <div className="flex items-center justify-center pt-1">
                         <ShareButtons
-                          listingUrl={absoluteUrl(`/cars/${car.id}`)}
+                          listingUrl={listingUrl}
                           browseUrl={absoluteUrl("/cars")}
                           title={title}
                           price={formatCarPrice(car)}
@@ -607,6 +601,20 @@ export default async function CarDetailPage({ params }) {
             className="text-[#38A169] hover:underline"
           >
             {car.make} {car.model}
+          </Link>
+          <span className="hidden sm:inline text-slate-300">·</span>
+          <Link
+            href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`}
+            className="text-[#38A169] hover:underline"
+          >
+            {car.make} {FUEL_LABELS[car.fuelType] || car.fuelType}
+          </Link>
+          <span className="hidden sm:inline text-slate-300">·</span>
+          <Link
+            href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("body", car.bodyType)}`}
+            className="text-[#38A169] hover:underline"
+          >
+            {car.make} {BODY_TYPE_LABELS[car.bodyType] || car.bodyType}
           </Link>
           {dealer.county ? (
             <>

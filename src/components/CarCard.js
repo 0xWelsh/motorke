@@ -9,6 +9,7 @@ import { buildCarSpecSummaryItems, meaningfulFeatureList, positiveNum } from "@/
 import { CompareButton } from "./CompareSelector";
 import FeatureMarquee from "./FeatureMarquee";
 import { trackUiEvent } from "@/lib/analytics";
+import { carListingPath } from "@/lib/car-listing-url";
 
 /**
  * Universal premium CarCard matching the G99 reference design.
@@ -53,7 +54,9 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
 
   function handleShare() {
     const titleText = `${car.year} ${car.make} ${car.model}`.replace(/\s+/g, " ").trim();
-    const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/cars/${car.id}` : `/cars/${car.id}`;
+    const path = carListingPath(car);
+    const shareUrl =
+      typeof window !== "undefined" ? `${window.location.origin}${path}` : path;
     const shareText = `${titleText} - ${formatCarPrice(car)}. View photos and details: ${shareUrl}`;
 
     trackUiEvent("share_car_click", {
@@ -79,7 +82,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
   return (
     <article className="group flex flex-col bg-white dark:bg-[#0a0a0a] border-2 border-slate-100 dark:border-zinc-900 transition-all hover:shadow-2xl overflow-hidden" style={{ borderRadius: '4px' }}>
       {/* Image Container */}
-      <Link href={`/cars/${car.id}`} onClick={() => onCarClick("image")} className="relative aspect-[16/11] bg-slate-50 dark:bg-zinc-900 overflow-hidden block">
+      <Link href={carListingPath(car)} onClick={() => onCarClick("image")} className="relative aspect-[16/11] bg-slate-50 dark:bg-zinc-900 overflow-hidden block">
         {primaryImg ? (
           <SafeImage
             src={primaryImg}
@@ -150,7 +153,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
           <span className="mt-0.5 sm:mt-1 text-[9px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest">
             {car.year}
           </span>
-          <Link href={`/cars/${car.id}`} onClick={() => onCarClick("title")}>
+          <Link href={carListingPath(car)} onClick={() => onCarClick("title")}>
             <h3 className="text-[12px] sm:text-[17px] font-black font-sans text-slate-900 dark:text-white tracking-tight sm:tracking-tighter leading-snug hover:text-[#38A169] transition-colors line-clamp-2" title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}>
               {car.make} {car.model} {car.variant ? `(${car.variant})` : ""}
             </h3>
@@ -195,7 +198,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
           </div>
 
           <Link 
-            href={`/cars/${car.id}`} 
+            href={carListingPath(car)} 
             onClick={() => onCarClick("cta")}
             className="group/btn inline-flex items-center gap-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-white px-2.5 sm:px-4 py-1.5 sm:py-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-[#111827] hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
             style={{ borderRadius: '2px' }}

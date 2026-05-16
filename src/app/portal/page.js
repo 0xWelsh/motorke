@@ -6,6 +6,7 @@ import { formatCarPrice, formatMileage } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import { carListingPath } from "@/lib/car-listing-url";
 import { 
   Plus, 
   Car, 
@@ -154,6 +155,15 @@ export default async function PortalPage({ searchParams }) {
   ];
   const recentCars = cars.slice(0, 6);
 
+  let publishedListingHref = "/portal/inventory";
+  if (created && createdCarId) {
+    const row = await db.car.findFirst({
+      where: { id: createdCarId, dealerId: user.dealerId },
+      select: { id: true, publicSlug: true },
+    });
+    if (row) publishedListingHref = carListingPath(row);
+  }
+
   return (
     <div className="animate-in fade-in duration-700">
       {user.dealer && !user.dealer.verified && (
@@ -205,7 +215,7 @@ export default async function PortalPage({ searchParams }) {
             Great work. Complete these quick actions to boost enquiries.
           </p>
           <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
-            <Link href={createdCarId ? `/cars/${createdCarId}` : "/portal/inventory"} className="rounded-none bg-white px-3 py-2 text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-[#2F855A] hover:bg-emerald-100">View Live Listing</Link>
+            <Link href={publishedListingHref} className="rounded-none bg-white px-3 py-2 text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-[#2F855A] hover:bg-emerald-100">View Live Listing</Link>
             <Link href="/portal/inventory" className="rounded-none bg-white px-3 py-2 text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-[#2F855A] hover:bg-emerald-100">Share To Buyer Groups</Link>
             <Link href="/portal/leads" className="rounded-none bg-white px-3 py-2 text-[11px] uppercase font-black tracking-[0.15em] font-black uppercase tracking-wider text-[#2F855A] hover:bg-emerald-100">Watch Incoming Leads</Link>
           </div>
@@ -336,7 +346,7 @@ export default async function PortalPage({ searchParams }) {
                                 className="p-1.5 bg-slate-100 dark:bg-[#222222] text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-white rounded-none hover:bg-slate-800 dark:hover:bg-slate-600 transition-all">
                                 <Edit3 size={13} />
                               </Link>
-                              <Link href={`/cars/${car.id}`} target="_blank"
+                              <Link href={carListingPath(car)} target="_blank"
                                 className="p-1.5 bg-slate-100 dark:bg-[#222222] text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-white rounded-none hover:bg-slate-800 dark:hover:bg-slate-600 transition-all">
                                 <ExternalLink size={13} />
                               </Link>

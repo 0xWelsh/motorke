@@ -5,6 +5,7 @@ import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { trackRequest } from "@/lib/telemetry";
 import { logAuditEvent } from "@/lib/audit-trail";
+import { ensureCarPublicSlugInTx } from "@/lib/car-public-slug";
 
 export async function POST(request) {
   const started = Date.now();
@@ -63,7 +64,7 @@ export async function POST(request) {
       ok: true,
     });
     return NextResponse.json(
-      { success: true, redirectTo: `/portal/inventory?created=1&car=${car.id}` },
+      { success: true, redirectTo: `/portal/inventory?created=1&car=${car.id}`, car },
       { status: 201 }
     );
   } catch (err) {
@@ -92,8 +93,9 @@ async function createCarRecord(body) {
   } = body;
   console.log("🏁 PORTAL CREATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
-  return db.car.create({
-    data: {
+  return db.$transaction(async (tx) => {
+    const car = await tx.car.create({
+      data: {
       dealerId,
       make:         make.trim(),
       model:        model.trim(),
@@ -143,5 +145,8 @@ async function createCarRecord(body) {
           }
         : undefined,
     },
+    });
+    await ensureCarPublicSlugInTx(tx, car);
+    return tx.car.findUniqueOrThrow({ where: { id: car.id } });
   });
 }

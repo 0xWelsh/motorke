@@ -15,6 +15,7 @@ import {
 import { computeComparisonInsights } from "@/lib/comparison";
 import Link from "next/link";
 import Image from "next/image";
+import { carListingPath } from "@/lib/car-listing-url";
 import { Search, X, Check, ArrowRight, Minus, Download, ChevronDown, ChevronUp, Info, CircleHelp } from "lucide-react";
 import { buildCompareNarrative } from "@/lib/compare-narrative";
 import { COMPARE_SETS_KEY, writeJsonCookie } from "@/lib/personalization";
@@ -1326,7 +1327,7 @@ export default function CompareClient({ initialCars }) {
                   return (
                     <Link
                       key={car.id}
-                      href={`/cars/${car.id}`}
+                      href={carListingPath(car)}
                       className="relative -ml-2 first:ml-0 h-14 w-[5.5rem] sm:h-16 sm:w-28 shrink-0 overflow-hidden rounded border-2 border-white dark:border-[#0a0a0a] shadow-md ring-1 ring-slate-200/80 dark:ring-slate-700/60 transition-transform hover:z-10 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#38A169] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#0a0a0a]"
                       style={{ borderRadius: "var(--radius)" }}
                     >
@@ -1536,7 +1537,7 @@ export default function CompareClient({ initialCars }) {
                       return (
                       <Link
                         key={car.id}
-                        href={`/cars/${car.id}`}
+                        href={carListingPath(car)}
                         className="flex items-center gap-2.5 sm:gap-3 group min-w-0"
                       >
                          <div className="relative h-9 w-12 sm:h-10 sm:w-14 shrink-0 overflow-hidden rounded border border-white/20 bg-white/5">
@@ -1622,7 +1623,7 @@ export default function CompareClient({ initialCars }) {
             <div key={item.title} className="p-3 sm:p-3.5 border border-slate-100 dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
               <p className="text-[9px] font-bold uppercase tracking-widest text-[#A0AEC0] dark:text-slate-600 mb-2">{item.title}</p>
               {item.car ? (
-                <Link href={`/cars/${item.car.id}`} className="group flex gap-2 sm:gap-2.5 min-w-0">
+                <Link href={carListingPath(item.car)} className="group flex gap-2 sm:gap-2.5 min-w-0">
                   {wThumb ? (
                     <div className="relative h-12 w-14 sm:h-14 sm:w-[4.5rem] shrink-0 overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900" style={{ borderRadius: "var(--radius)" }}>
                       <Image

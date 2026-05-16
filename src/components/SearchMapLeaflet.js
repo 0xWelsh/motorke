@@ -6,6 +6,7 @@
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { carListingPath } from "@/lib/car-listing-url";
 
 function formatPrice(p) {
   if (!p) return null;
@@ -68,8 +69,9 @@ export default function SearchMapLeaflet({ dealers }) {
 
       const carListHtml = dealer.cars.slice(0, 5).map((c) => {
         const price = formatPrice(c.price);
+        const href = carListingPath(c);
         return `
-          <a href="/cars/${c.id}" style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid #f1f5f9;text-decoration:none;color:inherit">
+          <a href="${href}" style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid #f1f5f9;text-decoration:none;color:inherit">
             <span style="font-size:11px;font-weight:700;color:#0f172a;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif">${c.year} ${c.make} ${c.model}</span>
             ${price ? `<span style="font-size:11px;font-weight:800;color:#ff5a2f;white-space:nowrap">${price}</span>` : ""}
           </a>

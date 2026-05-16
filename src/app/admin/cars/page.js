@@ -20,6 +20,7 @@ import {
 import ExportButton from "@/components/admin/ExportButton";
 import EmptyState from "@/components/ui/EmptyState";
 import DataTableShell from "@/components/ui/DataTableShell";
+import { carListingPath } from "@/lib/car-listing-url";
 
 export const metadata = { title: "Cars Inventory — Welsh Motorhub Admin" };
 
@@ -264,7 +265,7 @@ export default async function AdminCarsPage({ searchParams }) {
                         </div>
                         <div className="min-w-0">
                           <Link
-                            href={`/cars/${car.id}`}
+                            href={carListingPath(car)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="line-clamp-1 text-[13px] font-bold leading-snug text-slate-900 transition hover:text-[#2F855A] dark:text-white"
@@ -307,7 +308,7 @@ export default async function AdminCarsPage({ searchParams }) {
                     <td className="px-5 py-4 text-right">
                       <div className="flex items-center justify-end gap-2 sm:opacity-100 md:opacity-70 md:group-hover:opacity-100">
                         <Link
-                          href={`/cars/${car.id}`}
+                          href={carListingPath(car)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="rounded-xl border border-[#ececf0] bg-white p-2 text-slate-600 transition hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400"

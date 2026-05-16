@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Script from "next/script";
 import { ChevronRight, Search } from "lucide-react";
 import CarCard from "@/components/CarCard";
@@ -16,6 +16,9 @@ import {
 } from "@/lib/seo-car-hubs";
 import { db } from "@/lib/db";
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
+import { fuelFacetLabel, priceBandSearchParams } from "@/lib/seo-car-facets";
+import { BODY_TYPE_LABELS } from "@/lib/constants";
+import { carListingPath } from "@/lib/car-listing-url";
 
 const HUB_PER_PAGE = 24;
 
@@ -37,6 +40,7 @@ const hubCarSelect = {
   createdAt: true,
   badges: true,
   description: true,
+  publicSlug: true,
   images: { where: { isPrimary: true }, take: 1 },
   dealer: {
     select: {
@@ -53,10 +57,21 @@ const hubCarSelect = {
   },
 };
 
-export async function generateMetadata({ params }) {
+function redirectIfAliasHub(parts, resolvedPath, page) {
+  const requested = `/cars/${(parts || []).join("/")}`;
+  if (requested === resolvedPath) return;
+  const suffix = page > 1 ? `?page=${page}` : "";
+  permanentRedirect(`${resolvedPath}${suffix}`);
+}
+
+export async function generateMetadata({ params, searchParams }) {
   const { parts } = await params;
+  const sp = await searchParams;
+  const page = Math.max(1, parseInt(sp?.page || "1", 10) || 1);
   const resolved = await resolveCarHub(parts || []);
   if (!resolved) return {};
+
+  redirectIfAliasHub(parts || [], resolved.path, page);
 
   const where = await hubWhereClause(resolved);
   const total = await db.car.count({ where });
@@ -107,6 +122,19 @@ function faqSchema(resolved, total) {
         answer: `Browse ${n}+ listings from dealers serving ${resolved.county}. Compare prices and contact dealerships through Welsh Motorhub.`,
       },
     ];
+  } else if (resolved.kind === "make_fuel" || resolved.kind === "make_body" || resolved.kind === "make_price_band") {
+    q = [
+      {
+        question: "Can I browse more inventory from other brands?",
+        answer:
+          `Yes — open Advanced filters from this page or browse all verified cars across Kenya.`,
+      },
+      {
+        question: "Are listings from verified dealerships?",
+        answer:
+          "Welsh Motorhub lists dealer-published vehicles — contact dealers directly via WhatsApp or phone from each listing.",
+      },
+    ];
   } else {
     q = [
       {
@@ -148,6 +176,8 @@ export default async function CarHubPage({ params, searchParams }) {
   const resolved = await resolveCarHub(parts || []);
   if (!resolved) notFound();
 
+  redirectIfAliasHub(parts || [], resolved.path, page);
+
   const where = await hubWhereClause(resolved);
 
   const [total, cars, siblingMakes, countyLinks, popularMakes] = await Promise.all([
@@ -165,10 +195,20 @@ export default async function CarHubPage({ params, searchParams }) {
       skip: (page - 1) * HUB_PER_PAGE,
       take: HUB_PER_PAGE,
     }),
-    resolved.kind === "make" || resolved.kind === "make_model" || resolved.kind === "make_county"
+    resolved.kind === "make" ||
+    resolved.kind === "make_model" ||
+    resolved.kind === "make_county" ||
+    resolved.kind === "make_fuel" ||
+    resolved.kind === "make_body" ||
+    resolved.kind === "make_price_band"
       ? getSiblingHubLinks(resolved.make)
       : Promise.resolve([]),
-    resolved.kind === "make" ? getCountyHubLinks() : Promise.resolve([]),
+    resolved.kind === "make" ||
+    resolved.kind === "make_fuel" ||
+    resolved.kind === "make_body" ||
+    resolved.kind === "make_price_band"
+      ? getCountyHubLinks()
+      : Promise.resolve([]),
     resolved.kind === "county" ? getPopularMakeLinks(16) : Promise.resolve([]),
   ]);
 
@@ -198,6 +238,30 @@ export default async function CarHubPage({ params, searchParams }) {
         });
         out.push({ name: resolved.county, href: path });
         break;
+      case "make_fuel":
+        out.push({
+          name: resolved.make,
+          href: `/cars/${slugifyCarSegment(resolved.make)}`,
+        });
+        out.push({ name: fuelFacetLabel(resolved.fuelType), href: path });
+        break;
+      case "make_body":
+        out.push({
+          name: resolved.make,
+          href: `/cars/${slugifyCarSegment(resolved.make)}`,
+        });
+        out.push({
+          name: BODY_TYPE_LABELS[resolved.bodyType] || resolved.bodyType,
+          href: path,
+        });
+        break;
+      case "make_price_band":
+        out.push({
+          name: resolved.make,
+          href: `/cars/${slugifyCarSegment(resolved.make)}`,
+        });
+        out.push({ name: resolved.band.label, href: path });
+        break;
       default:
         break;
     }
@@ -213,7 +277,15 @@ export default async function CarHubPage({ params, searchParams }) {
         ? `${resolved.make} for sale`
         : resolved.kind === "make_model"
           ? `${resolved.make} ${resolved.model} for sale`
-          : `${resolved.make} for sale in ${resolved.county}`;
+          : resolved.kind === "make_county"
+            ? `${resolved.make} for sale in ${resolved.county}`
+            : resolved.kind === "make_fuel"
+              ? `${resolved.make} ${fuelFacetLabel(resolved.fuelType)} for sale`
+              : resolved.kind === "make_body"
+                ? `${resolved.make} ${BODY_TYPE_LABELS[resolved.bodyType] || resolved.bodyType} for sale`
+                : resolved.kind === "make_price_band"
+                  ? `${resolved.make} (${resolved.band.label}) for sale`
+                  : "Cars for sale";
 
   const qsAllFilters = () => {
     if (resolved.kind === "make") return `/cars?make=${encodeURIComponent(resolved.make)}`;
@@ -221,7 +293,24 @@ export default async function CarHubPage({ params, searchParams }) {
       return `/cars?make=${encodeURIComponent(resolved.make)}&model=${encodeURIComponent(resolved.model)}`;
     }
     if (resolved.kind === "county") return `/cars?county=${encodeURIComponent(resolved.county)}`;
-    return `/cars?make=${encodeURIComponent(resolved.make)}&county=${encodeURIComponent(resolved.county)}`;
+    if (resolved.kind === "make_county") {
+      return `/cars?make=${encodeURIComponent(resolved.make)}&county=${encodeURIComponent(resolved.county)}`;
+    }
+    if (resolved.kind === "make_fuel") {
+      return `/cars?make=${encodeURIComponent(resolved.make)}&fuelType=${encodeURIComponent(resolved.fuelType)}`;
+    }
+    if (resolved.kind === "make_body") {
+      return `/cars?make=${encodeURIComponent(resolved.make)}&bodyType=${encodeURIComponent(resolved.bodyType)}`;
+    }
+    if (resolved.kind === "make_price_band") {
+      const pq = priceBandSearchParams(resolved.band);
+      const u = new URLSearchParams();
+      u.set("make", resolved.make);
+      if (pq.minPrice != null) u.set("minPrice", String(pq.minPrice));
+      if (pq.maxPrice != null) u.set("maxPrice", String(pq.maxPrice));
+      return `/cars?${u.toString()}`;
+    }
+    return "/cars";
   };
 
   const totalPages = Math.max(1, Math.ceil(total / HUB_PER_PAGE));
@@ -235,7 +324,7 @@ export default async function CarHubPage({ params, searchParams }) {
         itemListElement: cars.map((car, idx) => ({
           "@type": "ListItem",
           position: (page - 1) * HUB_PER_PAGE + idx + 1,
-          url: absoluteUrl(`/cars/${car.id}`),
+          url: absoluteUrl(carListingPath(car)),
           name: `${car.year} ${car.make} ${car.model}`,
         })),
       }

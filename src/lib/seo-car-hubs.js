@@ -1,8 +1,14 @@
 import { unstable_cache } from "next/cache";
 import { db } from "@/lib/db";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
-import { buildMakeWhere } from "@/lib/make-filter";
+import { BODY_TYPE_LABELS } from "@/lib/constants";
+import { buildMakeWhere, possibleMakesFromFilterSlug } from "@/lib/make-filter";
 import { countyFromSlug, slugifyCarSegment, SEO_COUNTIES } from "@/lib/seo-car-slug";
+import {
+  facetPathSegment,
+  fuelFacetLabel,
+  resolveFacetSlugSegment,
+} from "@/lib/seo-car-facets";
 
 export function hubCarWhere() {
   return {
@@ -29,8 +35,13 @@ export async function resolveMakeFromSlug(slug) {
   const s = slugifyCarSegment(slug);
   if (!s) return null;
   const makes = await getMakesForHubs();
-  const hit = makes.find((m) => slugifyCarSegment(m) === s);
-  return hit || null;
+  let hit = makes.find((m) => slugifyCarSegment(m) === s);
+  if (hit) return hit;
+  const alts = possibleMakesFromFilterSlug(s);
+  if (!alts.length) return null;
+  hit =
+    makes.find((m) => alts.some((n) => m.toLowerCase() === String(n).toLowerCase())) || null;
+  return hit;
 }
 
 async function distinctModelsForMake(make) {
@@ -65,6 +76,9 @@ export async function resolveModelFromSlug(make, slug) {
  *   | { kind: 'make'; make: string; path: string }
  *   | { kind: 'make_model'; make: string; model: string; path: string }
  *   | { kind: 'make_county'; make: string; county: string; path: string }
+ *   | { kind: 'make_fuel'; make: string; fuelType: string; path: string }
+ *   | { kind: 'make_body'; make: string; bodyType: string; path: string }
+ *   | { kind: 'make_price_band'; make: string; band: import("@/lib/seo-car-facets").SEO_PRICE_BANDS[number]; path: string }
  *   | null
  * >}
  */
@@ -97,6 +111,32 @@ export async function resolveCarHub(partsRaw) {
         make,
         county,
         path: `/cars/${slugifyCarSegment(make)}/${slugifyCarSegment(county)}`,
+      };
+    }
+
+    const facet = resolveFacetSlugSegment(b);
+    if (facet?.kind === "fuel") {
+      return {
+        kind: "make_fuel",
+        make,
+        fuelType: facet.fuelType,
+        path: `/cars/${slugifyCarSegment(make)}/${facetPathSegment("fuel", facet.fuelType)}`,
+      };
+    }
+    if (facet?.kind === "body") {
+      return {
+        kind: "make_body",
+        make,
+        bodyType: facet.bodyType,
+        path: `/cars/${slugifyCarSegment(make)}/${facetPathSegment("body", facet.bodyType)}`,
+      };
+    }
+    if (facet?.kind === "price") {
+      return {
+        kind: "make_price_band",
+        make,
+        band: facet.band,
+        path: `/cars/${slugifyCarSegment(make)}/${facetPathSegment("price", facet.band)}`,
       };
     }
 
@@ -138,6 +178,25 @@ export function hubTitleAndDescription(resolved, total) {
         title: `${resolved.make} for sale in ${resolved.county} | Welsh Motorhub`,
         description: `Browse ${n} ${resolved.make} vehicles listed by dealers in ${resolved.county}. Transparent pricing and direct contact on Welsh Motorhub.`,
       };
+    case "make_fuel": {
+      const fl = fuelFacetLabel(resolved.fuelType);
+      return {
+        title: `${resolved.make} ${fl} cars for sale in Kenya | Welsh Motorhub`,
+        description: `${n} ${resolved.make} ${fl.toLowerCase()} listings from verified Kenyan dealers — compare prices and specs on Welsh Motorhub.`,
+      };
+    }
+    case "make_body": {
+      const bl = BODY_TYPE_LABELS[resolved.bodyType] || resolved.bodyType;
+      return {
+        title: `${resolved.make} ${bl} for sale in Kenya | Welsh Motorhub`,
+        description: `Shop ${n} ${resolved.make} ${String(bl).toLowerCase()} vehicles from dealers across Kenya on Welsh Motorhub.`,
+      };
+    }
+    case "make_price_band":
+      return {
+        title: `${resolved.make} (${resolved.band.label}) — cars for sale | Welsh Motorhub`,
+        description: `Browse ${n} ${resolved.make} listings in this price range from verified Kenyan dealers on Welsh Motorhub.`,
+      };
     default:
       return {
         title: "Browse cars | Welsh Motorhub",
@@ -173,6 +232,24 @@ export async function hubWhereClause(resolved) {
           ...(PUBLIC_ONLY_VERIFIED_DEALERS && { verified: true }),
           county: { equals: resolved.county, mode: "insensitive" },
         },
+      };
+    case "make_fuel":
+      return {
+        ...base,
+        ...buildMakeWhere(resolved.make),
+        fuelType: resolved.fuelType,
+      };
+    case "make_body":
+      return {
+        ...base,
+        ...buildMakeWhere(resolved.make),
+        bodyType: resolved.bodyType,
+      };
+    case "make_price_band":
+      return {
+        ...base,
+        ...buildMakeWhere(resolved.make),
+        ...resolved.band.where,
       };
     default:
       return base;

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Star, Quote, ArrowRight, Flame } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { carListingPath } from "@/lib/car-listing-url";
 
 export default function HeroGridShowcase({ cars = [], reviews = [] }) {
   const [carIndex, setCarIndex] = useState(0);
@@ -39,7 +40,7 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
       
       {/* Primary Hot Deal - Large Vertical Card with Full Frame Image */}
       <Link 
-        href={`/cars/${mainCar.id}`}
+        href={carListingPath(mainCar)}
         className="relative group overflow-hidden bg-black shadow-xl rounded-none flex flex-col transition-all hover:ring-1 hover:ring-[#38A169]/50"
       >
         <div className="absolute inset-0 z-0 transition-transform duration-1000 group-hover:scale-110">
@@ -94,7 +95,7 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
         
         {/* Secondary Hot Deal */}
         <Link 
-          href={`/cars/${secondaryCar.id}`}
+          href={carListingPath(secondaryCar)}
           className="relative group overflow-hidden bg-[#111111] border border-zinc-900 shadow-lg rounded-none transition-all hover:bg-zinc-800"
         >
           <div className="absolute inset-0 z-0">

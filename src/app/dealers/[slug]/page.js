@@ -13,6 +13,7 @@ import DealerShowroomShare from "@/components/DealerShowroomShare";
 import { calculateDistance } from "@/lib/geolocation";
 import { absoluteUrl, BRAND_OG_IMAGE } from "@/lib/site-url";
 import { telHrefFromMsisdn } from "@/lib/phone-hints";
+import { carListingPath } from "@/lib/car-listing-url";
 
 // Force dynamic and no-cache
 export const dynamic = "force-dynamic";
@@ -86,6 +87,7 @@ export default async function DealerPage(props) {
         where: { available: true },
         select: {
           id: true,
+          publicSlug: true,
           make: true,
           model: true,
           variant: true,
@@ -246,6 +248,7 @@ export default async function DealerPage(props) {
     .slice(0, 4)
     .map((car) => ({
       id: car.id,
+      publicSlug: car.publicSlug,
       image: car.images[0].url,
       title: `${car.year} ${car.make} ${car.model}`.trim(),
       price: car.price,
@@ -666,7 +669,7 @@ export default async function DealerPage(props) {
                   </div>
                   <div className="grid grid-cols-4 gap-2">
                     {recentShowcaseCars.map((car) => (
-                      <Link key={`media-${car.id}`} href={`/cars/${car.id}`} className="relative aspect-square overflow-hidden" style={{ borderRadius: "8px" }}>
+                      <Link key={`media-${car.id}`} href={carListingPath(car)} className="relative aspect-square overflow-hidden" style={{ borderRadius: "8px" }}>
                         <Image src={car.image} alt={car.title} fill className="object-cover" />
                       </Link>
                     ))}

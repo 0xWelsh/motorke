@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { looksLikeCarListingId } from "@/lib/seo-car-slug";
+import { looksLikeCarListingId, looksLikeCarPublicSlug } from "@/lib/seo-car-slug";
 
 const SESSION_COOKIE = "welsh-motors_session";
 const MAINT_BYPASS_COOKIE = "welsh-maint-bypass";
@@ -71,7 +71,7 @@ export function middleware(request) {
       const oneSeg = pathname.match(/^\/cars\/([^/]+)\/?$/);
       if (oneSeg) {
         const a = oneSeg[1];
-        if (a && !looksLikeCarListingId(a)) {
+        if (a && !looksLikeCarListingId(a) && !looksLikeCarPublicSlug(a)) {
           const url = request.nextUrl.clone();
           url.pathname = `/cars/hub/${a}`;
           return NextResponse.rewrite(url);

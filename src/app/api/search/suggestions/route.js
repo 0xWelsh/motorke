@@ -114,6 +114,7 @@ export async function GET(request) {
   const carSuggestions = cars.map((car) => ({
     type: "car",
     id: car.id,
+    publicSlug: car.publicSlug,
     value: [car.year, car.make, car.model, car.variant].filter(Boolean).join(" "),
     year: car.year,
     make: car.make,
@@ -132,9 +133,9 @@ export async function GET(request) {
     ...variants.map((car) => ({ type: "variant", value: car.variant })),
   ];
 
-  const uniqueAttributes = Array.from(new Map(attributeSuggestions.map((s) => [s.value.toLowerCase(), s])).map(
-    ([, s]) => s
-  ));
+  const uniqueAttributes = [
+    ...new Map(attributeSuggestions.map((s) => [s.value.toLowerCase(), s])).values(),
+  ];
 
   const allSuggestions = [...carSuggestions, ...uniqueAttributes].slice(0, limit);
 

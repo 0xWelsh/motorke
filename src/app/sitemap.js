@@ -2,10 +2,13 @@
 // Next.js generates /sitemap.xml automatically from this file.
 
 export const dynamic = "force-dynamic";
+import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { absoluteUrl, getSiteOrigin } from "@/lib/site-url";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { slugifyCarSegment, SEO_COUNTIES } from "@/lib/seo-car-slug";
+import { SEO_PRICE_BANDS, facetPathSegment } from "@/lib/seo-car-facets";
+import { carListingPath } from "@/lib/car-listing-url";
 
 const BASE = getSiteOrigin();
 
@@ -13,6 +16,14 @@ function toAbsImage(url) {
   if (!url) return null;
   if (/^https?:\/\//i.test(url)) return url;
   return absoluteUrl(url.startsWith("/") ? url : `/${url}`);
+}
+
+function dedupeByUrl(entries) {
+  const map = new Map();
+  for (const e of entries) {
+    if (e?.url && !map.has(e.url)) map.set(e.url, e);
+  }
+  return [...map.values()];
 }
 
 export default async function sitemap() {
@@ -24,11 +35,24 @@ export default async function sitemap() {
 
   const allowedCountySlugs = new Set(SEO_COUNTIES.map((c) => slugifyCarSegment(c)));
 
-  const [cars, dealers, makeRows, comboRows, countiesWithStock] = await Promise.all([
+  const verifiedJoin = PUBLIC_ONLY_VERIFIED_DEALERS ? Prisma.sql`AND d.verified = true` : Prisma.empty;
+  const countiesSql = Prisma.join(SEO_COUNTIES.map((c) => Prisma.sql`${c}`));
+
+  const [
+    cars,
+    dealers,
+    makeRows,
+    comboRows,
+    countiesWithStock,
+    makeCountyRows,
+    fuelFacetRows,
+    bodyFacetRows,
+  ] = await Promise.all([
     db.car.findMany({
       where: carWhere,
       select: {
         id: true,
+        publicSlug: true,
         updatedAt: true,
         images: {
           orderBy: { order: "asc" },
@@ -61,9 +85,44 @@ export default async function sitemap() {
       distinct: ["county"],
       select: { county: true },
     }),
+    db.$queryRaw(Prisma.sql`
+      SELECT DISTINCT c.make AS make, d.county AS county
+      FROM cars c
+      INNER JOIN dealers d ON c."dealerId" = d.id
+      WHERE c.available = true
+      ${verifiedJoin}
+      AND d.county IN (${countiesSql})
+    `),
+    db.car.findMany({
+      where: carWhere,
+      distinct: ["make", "fuelType"],
+      select: { make: true, fuelType: true },
+    }),
+    db.car.findMany({
+      where: carWhere,
+      distinct: ["make", "bodyType"],
+      select: { make: true, bodyType: true },
+    }),
   ]);
 
   const now = new Date();
+
+  const priceFacetPagesNested = await Promise.all(
+    SEO_PRICE_BANDS.map(async (band) => {
+      const makes = await db.car.groupBy({
+        by: ["make"],
+        where: { ...carWhere, ...band.where },
+      });
+      return makes.map(({ make }) => ({
+        url: `${BASE}/cars/${slugifyCarSegment(make)}/${facetPathSegment("price", band)}`,
+        lastModified: now,
+        changeFrequency: "daily",
+        priority: 0.79,
+      }));
+    })
+  );
+  const priceFacetPages = priceFacetPagesNested.flat();
+
   const staticPages = [
     { url: BASE, lastModified: now, changeFrequency: "daily", priority: 1.0 },
     { url: `${BASE}/cars`, lastModified: now, changeFrequency: "daily", priority: 0.95 },
@@ -78,11 +137,10 @@ export default async function sitemap() {
   ];
 
   const carPages = cars.map((car) => {
-    const images = (car.images || [])
-      .map((img) => toAbsImage(img.url))
-      .filter(Boolean);
+    const images = (car.images || []).map((img) => toAbsImage(img.url)).filter(Boolean);
+    const path = carListingPath(car);
     return {
-      url: `${BASE}/cars/${car.id}`,
+      url: `${BASE}${path}`,
       lastModified: car.updatedAt,
       changeFrequency: "weekly",
       priority: 0.85,
@@ -124,12 +182,51 @@ export default async function sitemap() {
       priority: 0.84,
     }));
 
-  return [
+  const countyHubSlugSet = new Set(countyHubPages.map((p) => p.url));
+
+  /** @type {{ make?: string; county?: string }[]} */
+  const rawMc = Array.isArray(makeCountyRows) ? makeCountyRows : [];
+  const makeCountyHubPages = rawMc
+    .filter((row) => row?.make && row?.county)
+    .map((row) => {
+      const slug = slugifyCarSegment(row.county);
+      const hubUrl = `${BASE}/cars/${slug}`;
+      return {
+        url: `${BASE}/cars/${slugifyCarSegment(row.make)}/${slug}`,
+        lastModified: now,
+        changeFrequency: "weekly",
+        priority: countyHubSlugSet.has(hubUrl) ? 0.81 : 0.8,
+      };
+    });
+
+  const fuelFacetHubPages = fuelFacetRows
+    .filter((row) => row?.make && row?.fuelType)
+    .map((row) => ({
+      url: `${BASE}/cars/${slugifyCarSegment(row.make)}/${facetPathSegment("fuel", row.fuelType)}`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.8,
+    }));
+
+  const bodyFacetHubPages = bodyFacetRows
+    .filter((row) => row?.make && row?.bodyType)
+    .map((row) => ({
+      url: `${BASE}/cars/${slugifyCarSegment(row.make)}/${facetPathSegment("body", row.bodyType)}`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.8,
+    }));
+
+  return dedupeByUrl([
     ...staticPages,
     ...carPages,
     ...dealerPages,
     ...makeHubPages,
     ...countyHubPages,
     ...modelHubPages,
-  ];
+    ...makeCountyHubPages,
+    ...fuelFacetHubPages,
+    ...bodyFacetHubPages,
+    ...priceFacetPages,
+  ]);
 }

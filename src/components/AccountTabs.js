@@ -7,6 +7,7 @@ import { PHONE_COUNTRY_CODE_HELPER, PHONE_PLACEHOLDER_INTERNATIONAL, telHrefFrom
 import { clsx } from "clsx";
 import BuyerLocationSettings from "./BuyerLocationSettings";
 import CarCard from "./CarCard";
+import { carListingPath } from "@/lib/car-listing-url";
 import { RECENT_COOKIE_KEY, readRecentCarsFromStorage, readJsonCookie } from "@/lib/personalization";
 import ProfileCompletenessPanel from "./ProfileCompletenessPanel";
 import PhoneVerificationControl from "./PhoneVerificationControl";
@@ -264,7 +265,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                         <div>
                           <h3 className="font-black text-slate-900 dark:text-white text-lg tracking-tight leading-tight">{e.dealer.name}</h3>
-                          <Link href={`/cars/${e.car.id}`} className="text-xs font-bold text-[#ff5a2f] hover:text-blue-800 transition-colors line-clamp-1 block mt-1">
+                          <Link href={carListingPath(e.car)} className="text-xs font-bold text-[#ff5a2f] hover:text-blue-800 transition-colors line-clamp-1 block mt-1">
                             Regarding:{" "}
                             <span className="font-sans font-semibold text-[#ff5a2f]">
                               {e.car.year} {e.car.make} {e.car.model}

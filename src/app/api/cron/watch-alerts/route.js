@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { sendWatchAlertEmail } from "@/lib/mail";
 import { getMailFromAlerts } from "@/lib/site-contact";
 import { getSessionFromRequest } from "@/lib/auth";
+import { carListingPath } from "@/lib/car-listing-url";
 
 const ALERT_COOLDOWN_HOURS = 18;
 const SIMILAR_ALERT_COOLDOWN_HOURS = 24;
@@ -63,7 +64,7 @@ export async function POST(request) {
 async function sendTestWatchAlertEmail(admin) {
   const car = await db.car.findFirst({
     orderBy: { id: "asc" },
-    select: { id: true, make: true, model: true, year: true, price: true, available: true },
+    select: { id: true, make: true, model: true, year: true, price: true, available: true, publicSlug: true },
   });
   if (!car) {
     return Response.json(
@@ -121,6 +122,7 @@ async function runWatchAlerts() {
             year: true,
             price: true,
             available: true,
+            publicSlug: true,
           },
         },
       },
@@ -163,6 +165,7 @@ async function runWatchAlerts() {
             year: true,
             price: true,
             available: true,
+            publicSlug: true,
           },
           orderBy: { createdAt: "desc" },
         });
@@ -201,13 +204,15 @@ async function runWatchAlerts() {
               ? `Your watched car is now available again at KSh ${watch.car.price.toLocaleString("en-KE")}.`
               : `A similar car was just posted at KSh ${(similarCar?.price ?? 0).toLocaleString("en-KE")}.`;
 
+        const listingForLink =
+          type === "SIMILAR_LISTING" ? similarCar : watch.car;
         await db.notification.create({
           data: {
             userId: watch.user.id,
             type,
             title,
             message,
-            link: `/cars/${type === "SIMILAR_LISTING" ? similarCar?.id : watch.car.id}`,
+            link: carListingPath(listingForLink),
           },
         });
 

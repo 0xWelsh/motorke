@@ -18,6 +18,26 @@ const MAKE_FILTER_GROUPS = {
   vw: ["Volkswagen", "VW"],
 };
 
+/**
+ * DB `make` labels that match a URL/filter slug variant (e.g. `mercedes` → Mercedes-Benz inventory).
+ * @param {string} slugKey — normalized segment, e.g. from {@link slugifyCarSegment}
+ * @returns {string[]}
+ */
+export function possibleMakesFromFilterSlug(slugKey) {
+  const key = String(slugKey || "").trim().toLowerCase();
+  if (!key) return [];
+  let values = MAKE_FILTER_GROUPS[key];
+  if (!values) {
+    const canonical = MAKE_ALIASES[key];
+    if (canonical) {
+      const k2 = canonical.toLowerCase().replace(/\s+/g, "-");
+      values = MAKE_FILTER_GROUPS[k2] || MAKE_FILTER_GROUPS[canonical.toLowerCase()];
+      if (!values) values = [canonical];
+    }
+  }
+  return values ? [...new Set(values)] : [];
+}
+
 /** Prisma `where` fragment for inventory make filter. */
 export function buildMakeWhere(make) {
   const trimmed = (make || "").trim();

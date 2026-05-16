@@ -1,93 +1,94 @@
-/** @jest-environment node */
+jest.mock("@/lib/db", () => ({
+  db: {
+    car: {
+      findMany: jest.fn(),
+    },
+  },
+}));
 
-import { test, expect, beforeAll, afterAll } from '@jest/globals';
-import { spawn } from 'child_process';
+jest.mock("next/server", () => ({
+  NextResponse: {
+    json: (body, init = {}) => ({
+      status: init.status ?? 200,
+      json: async () => body,
+    }),
+  },
+}));
 
-const BASE_URL = 'http://localhost:3000';
-const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+import { GET } from "@/app/api/search/suggestions/route";
+import { db } from "@/lib/db";
 
-async function waitForServer(url, timeoutMs = 45000) {
-  const startedAt = Date.now();
+describe("Search Suggestions API (GET)", () => {
+  const findMany = /** @type {jest.Mock} */ (db.car.findMany);
 
-  while (Date.now() - startedAt < timeoutMs) {
-    try {
-      const res = await fetch(`${url}/api/search/suggestions?query=toy`);
-      if (res.ok) return;
-    } catch {
-      // Server not ready yet.
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  }
-
-  throw new Error(`Server did not become ready within ${timeoutMs}ms`);
-}
-
-describe('Search Suggestions API', () => {
-  let serverProcess = null;
-
-  beforeAll(async () => {
-    serverProcess = spawn(npmCommand, ['run', 'dev'], {
-      cwd: process.cwd(),
-      stdio: 'ignore',
-    });
-
-    await waitForServer(BASE_URL);
-  }, 60000);
-
-  afterAll(() => {
-    if (serverProcess && !serverProcess.killed) {
-      serverProcess.kill('SIGTERM');
-    }
+  beforeEach(() => {
+    findMany.mockReset();
   });
 
-  test('should return suggestions for "toy"', async () => {
-    const response = await fetch(`${BASE_URL}/api/search/suggestions?query=toy`);
-    const data = await response.json();
-    
-    expect(response.status).toBe(200);
-    expect(data.query).toBe('toy');
+  test('returns suggestions for "toy" including Toyota make', async () => {
+    findMany
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([{ make: "Toyota" }])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([]);
+
+    const res = await GET(new Request("http://localhost/api/search/suggestions?query=toy"));
+    expect(res.status).toBe(200);
+    const data = await res.json();
+
+    expect(data.query).toBe("toy");
     expect(Array.isArray(data.suggestions)).toBe(true);
     expect(data.suggestions.length).toBeGreaterThan(0);
-    
-    // Should contain Toyota make
-    const toyotaSuggestion = data.suggestions.find(s => s.value === 'Toyota');
+
+    const toyotaSuggestion = data.suggestions.find((s) => s.value === "Toyota");
     expect(toyotaSuggestion).toBeDefined();
-    expect(toyotaSuggestion.type).toBe('make');
-  }, 20000);
+    expect(toyotaSuggestion.type).toBe("make");
+  });
 
-  test('should return suggestions for "land"', async () => {
-    const response = await fetch(`${BASE_URL}/api/search/suggestions?query=land`);
-    const data = await response.json();
-    
-    expect(response.status).toBe(200);
-    expect(data.query).toBe('land');
-    expect(Array.isArray(data.suggestions)).toBe(true);
-    expect(data.suggestions.length).toBeGreaterThan(0);
-    
-    // Should contain Land Cruiser model
-    const landCruiserSuggestion = data.suggestions.find(s => s.value === 'Land Cruiser');
+  test('returns suggestions for "land" including Land Cruiser model', async () => {
+    findMany
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([{ model: "Land Cruiser" }])
+      .mockResolvedValueOnce([]);
+
+    const res = await GET(new Request("http://localhost/api/search/suggestions?query=land"));
+    expect(res.status).toBe(200);
+    const data = await res.json();
+
+    expect(data.query).toBe("land");
+    const landCruiserSuggestion = data.suggestions.find((s) => s.value === "Land Cruiser");
     expect(landCruiserSuggestion).toBeDefined();
-    expect(landCruiserSuggestion.type).toBe('model');
-  }, 20000);
+    expect(landCruiserSuggestion.type).toBe("model");
+  });
 
-  test('should return suggestions payload for one-character query', async () => {
-    const response = await fetch(`${BASE_URL}/api/search/suggestions?query=a`);
-    const data = await response.json();
-    
-    expect(response.status).toBe(200);
-    expect(data.query).toBe('a');
+  test("returns payload for one-character query with bounded list", async () => {
+    const makes = Array.from({ length: 8 }, (_, i) => ({ make: `Make-${i}-a` }));
+    findMany
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce(makes)
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([]);
+
+    const res = await GET(new Request("http://localhost/api/search/suggestions?query=a&limit=12"));
+    expect(res.status).toBe(200);
+    const data = await res.json();
+
+    expect(data.query).toBe("a");
     expect(Array.isArray(data.suggestions)).toBe(true);
     expect(data.suggestions.length).toBeLessThanOrEqual(8);
-  }, 20000);
+  });
 
-  test('should return empty suggestions for no matches', async () => {
-    const response = await fetch(`${BASE_URL}/api/search/suggestions?query=xyzabc123`);
-    const data = await response.json();
-    
-    expect(response.status).toBe(200);
-    expect(data.query).toBe('xyzabc123');
-    expect(Array.isArray(data.suggestions)).toBe(true);
-    expect(data.suggestions.length).toBe(0);
-  }, 20000);
+  test("returns empty suggestions when nothing matches", async () => {
+    findMany.mockResolvedValue([]);
+
+    const res = await GET(
+      new Request("http://localhost/api/search/suggestions?query=xyzabc123"),
+    );
+    expect(res.status).toBe(200);
+    const data = await res.json();
+
+    expect(data.query).toBe("xyzabc123");
+    expect(data.suggestions).toEqual([]);
+  });
 });

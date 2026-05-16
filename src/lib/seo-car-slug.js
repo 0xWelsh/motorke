@@ -16,6 +16,13 @@ export function looksLikeCarListingId(segment) {
   return /^[a-z0-9]+$/i.test(segment);
 }
 
+/** Year-first hyphenated listing slug assigned in `Car.publicSlug`. */
+export function looksLikeCarPublicSlug(segment) {
+  if (!segment || typeof segment !== "string") return false;
+  const s = segment.trim().toLowerCase();
+  return /^\d{4}(?:-[a-z0-9]+){3,}$/.test(s);
+}
+
 export const SEO_COUNTIES = [
   "Nairobi",
   "Mombasa",

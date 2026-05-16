@@ -48,7 +48,7 @@ export default async function AccountPage({ searchParams }) {
         ],
       },
       include: {
-        car:    { select: { id: true, make: true, model: true, year: true, price: true, engineCC: true, fuelType: true, available: true } },
+        car:    { select: { id: true, publicSlug: true, make: true, model: true, year: true, price: true, engineCC: true, fuelType: true, available: true } },
         dealer: { select: { name: true, slug: true, phone: true, whatsapp: true } },
       },
       orderBy: { createdAt: "desc" },
@@ -146,6 +146,7 @@ export default async function AccountPage({ searchParams }) {
               savedId:   sc.id,
               savedAt:   sc.createdAt.toISOString(),
               id:        sc.car.id,
+              publicSlug: sc.car.publicSlug,
               make:      sc.car.make,
               model:     sc.car.model,
               year:      sc.car.year,

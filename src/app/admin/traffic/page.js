@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import { Eye, MousePointerClick, BarChart3, ExternalLink } from "lucide-react";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import { carListingPath } from "@/lib/car-listing-url";
 
 export const metadata = { title: "Traffic — Welsh Motorhub Admin" };
 
@@ -82,6 +83,7 @@ export default async function AdminTrafficPage() {
         where: { id: { in: carIds } },
         select: {
           id: true,
+          publicSlug: true,
           year: true,
           make: true,
           model: true,
@@ -215,7 +217,7 @@ export default async function AdminTrafficPage() {
                     <td className="px-5 py-3">
                       {row.car ? (
                         <Link
-                          href={`/cars/${row.carId}`}
+                          href={carListingPath(row.car || { id: row.carId })}
                           className="font-medium text-slate-900 hover:text-emerald-700 dark:text-white"
                           target="_blank"
                         >

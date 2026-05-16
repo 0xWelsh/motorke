@@ -144,6 +144,7 @@ const getAllMakes = unstable_cache(
 
 const defaultCarsSelect = {
   id: true,
+  publicSlug: true,
   make: true,
   model: true,
   variant: true,
@@ -324,6 +325,7 @@ export default async function CarsPage({ searchParams }) {
 
   const carSelect = {
     id: true,
+    publicSlug: true,
     make: true,
     model: true,
     variant: true,
