@@ -7,7 +7,7 @@ import {
   Search, User, Menu, X, ChevronDown, LogOut, Heart,
   LayoutDashboard, Store, PlusCircle, ShieldCheck, Compass,
   ArrowUpRight, Bell, Settings, BarChart2, Shield,
-  CarFront, GitCompare, Mail, ChevronRight,
+  CarFront, GitCompare, Calculator, Mail, ChevronRight,
 } from "lucide-react";
 import { clsx } from "clsx";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
@@ -95,6 +95,7 @@ export default function Navbar({ user }) {
     { href: "/cars",    label: "Cars" },
     { href: "/dealers", label: "Dealers" },
     { href: "/compare", label: "Compare" },
+    { href: "/duty",    label: "Duty" },
   ];
 
   return (
@@ -402,6 +403,13 @@ export default function Navbar({ user }) {
                   icon={<GitCompare className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
                   label="Compare"
                   analyticsEvent="mobile_menu_compare_click"
+                />
+                <MobileMenuRow
+                  href="/duty"
+                  onClick={() => setOpen(false)}
+                  icon={<Calculator className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
+                  label="Duty"
+                  analyticsEvent="mobile_menu_duty_click"
                 />
                 <MobileMenuRow
                   href="/contact"

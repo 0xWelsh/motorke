@@ -26,7 +26,7 @@ export default function DutyPageClient({ initialVehicle = null, pageSlug = null 
           }}
         />
       </div>
-      <div className="lg:col-span-4 mt-10 lg:mt-0 lg:sticky lg:top-28">
+      <div className="lg:col-span-4 mt-10 lg:mt-0 lg:sticky lg:top-24">
         <DutySimilarStock make={stockFilter.make} model={stockFilter.model} />
       </div>
     </div>

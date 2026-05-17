@@ -2,6 +2,7 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { dutyVehicleLabel } from "@/lib/duty-vehicle-slug";
 import DutyPageClient from "@/components/DutyPageClient";
+import DutyPageHero from "@/components/DutyPageHero";
 
 export const dynamic = "force-dynamic";
 
@@ -19,23 +20,14 @@ export default async function DutyCalculatorPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a]">
-      <div className="home-shell pt-28 sm:pt-36 pb-20">
+      <div className="home-shell pt-[4.75rem] md:pt-24 pb-16 sm:pb-20">
         <div className="max-w-6xl mx-auto">
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600 dark:text-red-500 mb-3">
-            Import duty estimator
-          </p>
-          <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-4 editorial-heading">
-            Kenya vehicle duty calculator
-          </h1>
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-10 max-w-2xl">
-            Search a common import, see an indicative KRA-style tax breakdown, then browse matching verified stock on
-            Welsh Motorhub.
-          </p>
+          <DutyPageHero />
 
           <DutyPageClient />
 
           {popular.length > 0 && (
-            <div className="mt-14 pt-10 border-t border-slate-200 dark:border-zinc-800">
+            <div className="mt-12 pt-8 border-t border-slate-200 dark:border-zinc-800">
               <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-4">Popular estimates</h2>
               <ul className="flex flex-wrap gap-2">
                 {popular.map((v) => (
