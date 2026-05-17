@@ -87,7 +87,7 @@ export default function PdfBlobDownloadButton({
         onClick={handleDownload}
         className={
           buttonClassName ||
-          "inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-black uppercase tracking-[0.14em] hover:opacity-90 transition-opacity disabled:opacity-60"
+          "inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white dark:bg-[#2F855A] dark:text-white text-[10px] font-black uppercase tracking-[0.14em] hover:opacity-90 dark:hover:bg-[#276749] transition-colors disabled:opacity-60"
         }
       >
         {busy ? <Loader2 size={14} className="animate-spin" aria-hidden /> : <FileDown size={14} aria-hidden />}
