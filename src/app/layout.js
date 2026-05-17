@@ -12,7 +12,6 @@ import { headers } from "next/headers";
 
 import { Playfair_Display } from "next/font/google";
 import { BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
-import { resolveBrandIcons } from "@/lib/brand-icon";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -20,11 +19,8 @@ const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
-export async function generateMetadata() {
-  const icons = await resolveBrandIcons();
-
-  return {
-    metadataBase: new URL(getSiteOrigin()),
+export const metadata = {
+  metadataBase: new URL(getSiteOrigin()),
     title: {
       default: "Welsh Motorhub — Find Your Car in Kenya",
       template: "%s | Welsh Motorhub",
@@ -87,10 +83,16 @@ export async function generateMetadata() {
       description:
         "Browse verified vehicles from trusted dealers across Kenya. Compare specs, costs, and contact dealers directly.",
       images: [BRAND_OG_IMAGE],
-    },
-    icons,
-  };
-}
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.png", type: "image/png", sizes: "96x96" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+};
 
 // Layout utilizes standard Helvetica stack for sans-serif
 
