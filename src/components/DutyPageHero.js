@@ -10,7 +10,7 @@ export default function DutyPageHero({ compact = false }) {
 
   return (
     <section className="relative mb-10 lg:mb-12 overflow-hidden">
-      {/* Ambient blurred wash — reads well at any viewport */}
+      {/* Ambient blurred wash */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden>
         <Image
           src={MERCEDES_HERO}
@@ -18,7 +18,7 @@ export default function DutyPageHero({ compact = false }) {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[62%_center] scale-110 blur-2xl opacity-35 dark:opacity-25"
+          className="object-cover object-[62%_center] scale-110 blur-2xl opacity-35 dark:opacity-20"
         />
       </div>
 
@@ -29,19 +29,33 @@ export default function DutyPageHero({ compact = false }) {
           alt=""
           fill
           sizes="520px"
-          className="object-cover object-center"
+          className="object-cover object-center opacity-90 dark:opacity-75"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/55 to-transparent dark:from-[#0a0a0a] dark:via-[#0a0a0a]/70 dark:to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-white/30 via-transparent to-white/20 dark:from-[#0a0a0a]/40 dark:to-[#0a0a0a]/25" />
+        {/* Light: fade photo into copy */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/55 to-transparent dark:hidden" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/30 via-transparent to-white/20 dark:hidden" />
+        {/* Dark: seam only — no white wash */}
+        <div className="absolute inset-0 hidden dark:block bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/85 to-transparent" />
+        <div className="absolute inset-0 hidden dark:block bg-gradient-to-t from-[#0a0a0a]/50 via-transparent to-[#0a0a0a]/30" />
       </div>
 
-      {/* Readability overlays */}
+      {/* Light readability */}
       <div
-        className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/95 via-white/88 to-white/72 dark:from-[#0a0a0a]/96 dark:via-[#0a0a0a]/90 dark:to-[#0a0a0a]/78 lg:bg-gradient-to-r lg:from-white/96 lg:via-white/88 lg:to-white/50 dark:lg:from-[#0a0a0a]/97 dark:lg:via-[#0a0a0a]/92 dark:lg:to-[#0a0a0a]/55"
+        className="absolute inset-0 pointer-events-none dark:hidden bg-gradient-to-br from-white/95 via-white/88 to-white/72 lg:bg-gradient-to-r lg:from-white/96 lg:via-white/88 lg:to-white/50"
         aria-hidden
       />
       <div
-        className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_15%_40%,rgba(220,38,38,0.07),transparent_50%)] dark:bg-[radial-gradient(ellipse_at_15%_40%,rgba(220,38,38,0.12),transparent_55%)]"
+        className="absolute inset-0 pointer-events-none dark:hidden bg-[radial-gradient(ellipse_at_15%_40%,rgba(220,38,38,0.07),transparent_50%)]"
+        aria-hidden
+      />
+
+      {/* Dark readability — opaque left, fade only toward the photo */}
+      <div
+        className="absolute inset-0 pointer-events-none hidden dark:block bg-gradient-to-br from-[#0a0a0a] via-[#0a0a0a]/97 to-[#0a0a0a]/88 lg:bg-gradient-to-r lg:from-[#0a0a0a] lg:via-[#0a0a0a]/96 lg:to-transparent"
+        aria-hidden
+      />
+      <div
+        className="absolute inset-0 pointer-events-none hidden dark:block bg-[radial-gradient(ellipse_at_15%_40%,rgba(220,38,38,0.12),transparent_55%)]"
         aria-hidden
       />
 
