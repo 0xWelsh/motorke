@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import DutyPageClient from "@/components/DutyPageClient";
 import { getDutyVehicleBySlug } from "@/lib/duty-calculator-service";
-import { dutyVehicleLabel } from "@/lib/duty-vehicle-slug";
+import { dutyVehicleLabel, dutyVehiclePathSlug } from "@/lib/duty-vehicle-slug";
 import { getSiteOrigin } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
@@ -16,11 +16,11 @@ export async function generateMetadata({ params }) {
   return {
     title: `${label} import duty estimate Kenya`,
     description: `Indicative KRA import duty, excise, VAT, and levies for a ${label}. Search verified ${vehicle.make} ${vehicle.model} cars on Welsh Motorhub.`,
-    alternates: { canonical: `/duty/${vehicle.slug}` },
+    alternates: { canonical: `/duty/${dutyVehiclePathSlug(vehicle)}` },
     openGraph: {
       title: `${label} import duty estimate`,
       description: `Estimated import taxes for ${label} in Kenya.`,
-      url: `${getSiteOrigin()}/duty/${vehicle.slug}`,
+      url: `${getSiteOrigin()}/duty/${dutyVehiclePathSlug(vehicle)}`,
     },
   };
 }
@@ -39,13 +39,13 @@ export default async function DutyVehiclePage({ params }) {
     engineCC: vehicle.engineCC,
     fuelType: vehicle.fuelType,
     crspKes: vehicle.crspKes,
-    slug: vehicle.slug,
+    slug: dutyVehiclePathSlug(vehicle),
     label: dutyVehicleLabel(vehicle),
   };
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a]">
-      <div className="home-shell pt-[4.75rem] md:pt-24 pb-16 sm:pb-20">
+      <div className="home-shell pt-[4.75rem] md:pt-24 pb-24 sm:pb-28">
         <div className="max-w-6xl mx-auto">
           <nav className="text-xs text-slate-500 mb-6">
             <Link href="/duty" className="hover:text-slate-900 dark:hover:text-white">
@@ -63,7 +63,7 @@ export default async function DutyVehiclePage({ params }) {
             {vehicle.engineCC}cc · {vehicle.year} model year.
           </p>
 
-          <DutyPageClient initialVehicle={initialVehicle} pageSlug={vehicle.slug} />
+          <DutyPageClient initialVehicle={initialVehicle} pageSlug={dutyVehiclePathSlug(vehicle)} />
         </div>
       </div>
     </div>

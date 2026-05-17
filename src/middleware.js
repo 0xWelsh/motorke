@@ -31,6 +31,7 @@ function isMaintenanceAllowed(pathname) {
   if (pathname.startsWith("/admin")) return true;
   if (pathname.startsWith("/portal")) return true;
   if (pathname === "/login" || pathname === "/signup") return true;
+  if (pathname === "/duty" || pathname.startsWith("/duty/")) return true;
   if (pathname === "/robots.txt" || pathname === "/sitemap.xml") return true;
   if (pathname === "/manifest.json" || pathname === "/manifest.webmanifest") return true;
   if (/^\/(favicon|icon|apple-icon|android-chrome|logo|brand)/i.test(pathname)) return true;

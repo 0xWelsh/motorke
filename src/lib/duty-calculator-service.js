@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { calculateDutyBreakdown, getAgeYearsFromYear } from "@/lib/duty";
 import { getDutyRates } from "@/lib/duty-rates";
-import { buildDutyVehicleSlug, dutyVehicleLabel } from "@/lib/duty-vehicle-slug";
+import { buildDutyVehicleSlug, dutyVehicleLabel, normalizeDutySlug } from "@/lib/duty-vehicle-slug";
 
 const FREIGHT_PROXY_KES = 2750 * 135;
 
@@ -35,10 +35,21 @@ export async function searchDutyVehicles(query, limit = 12) {
 }
 
 export async function getDutyVehicleBySlug(slug) {
-  if (!slug) return null;
-  return db.dutyVehicle.findFirst({
-    where: { slug: String(slug).trim().toLowerCase(), active: true },
+  const normalized = normalizeDutySlug(slug);
+  if (!normalized) return null;
+
+  const direct = await db.dutyVehicle.findFirst({
+    where: { slug: normalized, active: true },
   });
+  if (direct) return direct;
+
+  // Fallback when stored slug drifted from make/model/trim/year (re-seed without slug update).
+  const vehicles = await db.dutyVehicle.findMany({ where: { active: true } });
+  return (
+    vehicles.find(
+      (row) => normalizeDutySlug(row.slug) === normalized || buildDutyVehicleSlug(row) === normalized,
+    ) ?? null
+  );
 }
 
 export async function getDutyVehicleById(id) {

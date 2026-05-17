@@ -97,6 +97,7 @@ async function main() {
         notes: "Illustrative CRSP for calculator MVP — verify against KRA schedule before compliance use.",
       },
       update: {
+        slug,
         make: row.make,
         model: row.model,
         trim: row.trim ?? null,
