@@ -481,13 +481,6 @@ export default async function CarDetailPage({ params }) {
                    </div>
                 </div>
 
-                {featureList.length > 0 && (
-                  <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
-                    <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-4">Features</h2>
-                    <FeatureList features={featureList} />
-                  </div>
-                )}
-
                 <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
                    <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-5">Vehicle Details</h2>
                    <div className="max-w-lg">
@@ -524,6 +517,13 @@ export default async function CarDetailPage({ params }) {
                      </div>
                    </div>
                 </div>
+
+                {featureList.length > 0 && (
+                  <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
+                    <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-4">Features</h2>
+                    <FeatureList features={featureList} />
+                  </div>
+                )}
               </div>
             </div>
 
