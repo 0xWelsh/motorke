@@ -12,6 +12,7 @@ import { headers } from "next/headers";
 
 import { Playfair_Display } from "next/font/google";
 import { BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
+import { resolveBrandIcons } from "@/lib/brand-icon";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -19,80 +20,77 @@ const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
-export const metadata = {
-  metadataBase: new URL(getSiteOrigin()),
-  title: {
-    default: "Welsh Motorhub — Find Your Car in Kenya",
-    template: "%s | Welsh Motorhub",
-  },
-  description:
-    "Welsh Motorhub is Kenya's verified car marketplace — browse dealer inventory across Nairobi, Mombasa, Kisumu and beyond. Compare specs, duties, and running costs, then contact dealers directly.",
-  applicationName: "Welsh Motorhub",
-  category: "automotive",
-  keywords: [
-    "Welsh Motorhub",
-    "Welsh Motorhub Kenya",
-    "Welsh Motors Kenya",
-    "used cars Kenya",
-    "cars for sale Kenya",
-    "car dealers Nairobi",
-    "car dealers Mombasa",
-    "verified car dealers Kenya",
-    "compare cars Kenya",
-    "vehicle marketplace Kenya",
-  ],
-  alternates: {
-    canonical: "/",
-  },
-  verification: {
-    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
-      ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
-      : {}),
-    ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
-      ? {
-          other: {
-            "msvalidate.01": [process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION],
-          },
-        }
-      : {}),
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
-  },
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    title: "Welsh Motorhub",
-    statusBarStyle: "default",
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_KE",
-    siteName: "Welsh Motorhub",
-    url: getSiteOrigin(),
-    title: "Welsh Motorhub — Find Your Car in Kenya",
+export async function generateMetadata() {
+  const icons = await resolveBrandIcons();
+
+  return {
+    metadataBase: new URL(getSiteOrigin()),
+    title: {
+      default: "Welsh Motorhub — Find Your Car in Kenya",
+      template: "%s | Welsh Motorhub",
+    },
     description:
-      "Browse verified vehicles from trusted dealers across Kenya. Compare specs, costs, and contact dealers directly.",
-    images: [{ url: BRAND_OG_IMAGE, width: 1200, height: 630, alt: "Welsh Motorhub" }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Welsh Motorhub — Find Your Car in Kenya",
-    description:
-      "Browse verified vehicles from trusted dealers across Kenya. Compare specs, costs, and contact dealers directly.",
-    images: [BRAND_OG_IMAGE],
-  },
-  icons: {
-    icon: [
-      { url: "/favicon.png", type: "image/png", sizes: "96x96" },
-      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+      "Welsh Motorhub is Kenya's verified car marketplace — browse dealer inventory across Nairobi, Mombasa, Kisumu and beyond. Compare specs, duties, and running costs, then contact dealers directly.",
+    applicationName: "Welsh Motorhub",
+    category: "automotive",
+    keywords: [
+      "Welsh Motorhub",
+      "Welsh Motorhub Kenya",
+      "Welsh Motors Kenya",
+      "used cars Kenya",
+      "cars for sale Kenya",
+      "car dealers Nairobi",
+      "car dealers Mombasa",
+      "verified car dealers Kenya",
+      "compare cars Kenya",
+      "vehicle marketplace Kenya",
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
-  },
-};
+    alternates: {
+      canonical: "/",
+    },
+    verification: {
+      ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+        ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+        : {}),
+      ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+        ? {
+            other: {
+              "msvalidate.01": [process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION],
+            },
+          }
+        : {}),
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+    },
+    manifest: "/manifest.json",
+    appleWebApp: {
+      capable: true,
+      title: "Welsh Motorhub",
+      statusBarStyle: "default",
+    },
+    openGraph: {
+      type: "website",
+      locale: "en_KE",
+      siteName: "Welsh Motorhub",
+      url: getSiteOrigin(),
+      title: "Welsh Motorhub — Find Your Car in Kenya",
+      description:
+        "Browse verified vehicles from trusted dealers across Kenya. Compare specs, costs, and contact dealers directly.",
+      images: [{ url: BRAND_OG_IMAGE, width: 1200, height: 630, alt: "Welsh Motorhub" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Welsh Motorhub — Find Your Car in Kenya",
+      description:
+        "Browse verified vehicles from trusted dealers across Kenya. Compare specs, costs, and contact dealers directly.",
+      images: [BRAND_OG_IMAGE],
+    },
+    icons,
+  };
+}
 
 // Layout utilizes standard Helvetica stack for sans-serif
 

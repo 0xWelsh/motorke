@@ -22,7 +22,7 @@ export default function MaintenancePage() {
         <div className="mx-auto mb-8 flex h-16 w-16 items-center justify-center rounded-full bg-white ring-1 ring-slate-200 shadow-sm dark:bg-[#111] dark:ring-slate-800">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/favicon.png"
+            src="/api/brand-icon"
             alt="Welsh Motorhub"
             width={40}
             height={40}

@@ -13,7 +13,7 @@ export default function RootLoading() {
       <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white ring-1 ring-slate-200 shadow-sm dark:bg-[#111] dark:ring-slate-800">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/favicon.png"
+          src="/api/brand-icon"
           alt="Welsh Motorhub"
           width={48}
           height={48}

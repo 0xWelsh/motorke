@@ -8,21 +8,25 @@ import { getSiteOrigin } from "@/lib/site-url";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
-  const { slug } = await params;
-  const vehicle = await getDutyVehicleBySlug(slug);
-  if (!vehicle) return { title: "Import duty estimate" };
+  try {
+    const { slug } = await params;
+    const vehicle = await getDutyVehicleBySlug(slug);
+    if (!vehicle) return { title: "Import duty estimate" };
 
-  const label = dutyVehicleLabel(vehicle);
-  return {
-    title: `${label} import duty estimate Kenya`,
-    description: `Indicative KRA import duty, excise, VAT, and levies for a ${label}. Search verified ${vehicle.make} ${vehicle.model} cars on Welsh Motorhub.`,
-    alternates: { canonical: `/duty/${dutyVehiclePathSlug(vehicle)}` },
-    openGraph: {
-      title: `${label} import duty estimate`,
-      description: `Estimated import taxes for ${label} in Kenya.`,
-      url: `${getSiteOrigin()}/duty/${dutyVehiclePathSlug(vehicle)}`,
-    },
-  };
+    const label = dutyVehicleLabel(vehicle);
+    return {
+      title: `${label} import duty estimate Kenya`,
+      description: `Indicative KRA import duty, excise, VAT, and levies for a ${label}. Search verified ${vehicle.make} ${vehicle.model} cars on Welsh Motorhub.`,
+      alternates: { canonical: `/duty/${dutyVehiclePathSlug(vehicle)}` },
+      openGraph: {
+        title: `${label} import duty estimate`,
+        description: `Estimated import taxes for ${label} in Kenya.`,
+        url: `${getSiteOrigin()}/duty/${dutyVehiclePathSlug(vehicle)}`,
+      },
+    };
+  } catch {
+    return { title: "Import duty estimate" };
+  }
 }
 
 export default async function DutyVehiclePage({ params }) {

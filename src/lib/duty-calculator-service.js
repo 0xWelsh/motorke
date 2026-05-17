@@ -5,6 +5,12 @@ import { buildDutyVehicleSlug, dutyVehicleLabel, normalizeDutySlug } from "@/lib
 
 const FREIGHT_PROXY_KES = 2750 * 135;
 
+function isDutyDbUnavailable(err) {
+  const code = err?.code;
+  const msg = String(err?.message || "").toLowerCase();
+  return code === "P2021" || msg.includes("duty_vehicles") || msg.includes("does not exist");
+}
+
 export async function searchDutyVehicles(query, limit = 12) {
   const q = String(query || "").trim();
   if (q.length < 1) return [];
@@ -27,29 +33,46 @@ export async function searchDutyVehicles(query, limit = 12) {
     ...(yearToken ? { year: parseInt(yearToken, 10) } : {}),
   };
 
-  return db.dutyVehicle.findMany({
-    where,
-    orderBy: [{ year: "desc" }, { make: "asc" }, { model: "asc" }],
-    take: limit,
-  });
+  try {
+    return await db.dutyVehicle.findMany({
+      where,
+      orderBy: [{ year: "desc" }, { make: "asc" }, { model: "asc" }],
+      take: limit,
+    });
+  } catch (err) {
+    if (!isDutyDbUnavailable(err)) {
+      console.error("[duty] searchDutyVehicles:", err?.message || err);
+    }
+    return [];
+  }
 }
 
 export async function getDutyVehicleBySlug(slug) {
   const normalized = normalizeDutySlug(slug);
   if (!normalized) return null;
 
-  const direct = await db.dutyVehicle.findFirst({
-    where: { slug: normalized, active: true },
-  });
-  if (direct) return direct;
+  try {
+    const direct = await db.dutyVehicle.findFirst({
+      where: { slug: normalized, active: true },
+    });
+    if (direct) return direct;
 
-  // Fallback when stored slug drifted from make/model/trim/year (re-seed without slug update).
-  const vehicles = await db.dutyVehicle.findMany({ where: { active: true } });
-  return (
-    vehicles.find(
-      (row) => normalizeDutySlug(row.slug) === normalized || buildDutyVehicleSlug(row) === normalized,
-    ) ?? null
-  );
+    // Fallback when stored slug drifted from make/model/trim/year (re-seed without slug update).
+    const vehicles = await db.dutyVehicle.findMany({
+      where: { active: true },
+      take: 250,
+    });
+    return (
+      vehicles.find(
+        (row) => normalizeDutySlug(row.slug) === normalized || buildDutyVehicleSlug(row) === normalized,
+      ) ?? null
+    );
+  } catch (err) {
+    if (!isDutyDbUnavailable(err)) {
+      console.error("[duty] getDutyVehicleBySlug:", err?.message || err);
+    }
+    return null;
+  }
 }
 
 export async function getDutyVehicleById(id) {
