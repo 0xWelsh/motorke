@@ -1,13 +1,16 @@
 import Image from "next/image";
 import { CheckCircle2 } from "lucide-react";
 
+const HERO_WIDTH = 1536;
+const HERO_HEIGHT = 1024;
+
 export default function DutyPageHero({ compact = false }) {
   if (compact) {
     return null;
   }
 
   return (
-    <section className="grid lg:grid-cols-[1fr_minmax(280px,420px)] gap-6 lg:gap-10 items-center mb-8 lg:mb-10">
+    <section className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-10 xl:gap-12 items-center mb-8 lg:mb-10">
       <div className="min-w-0">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600 dark:text-red-500 mb-2">
           Import duty estimator
@@ -36,17 +39,15 @@ export default function DutyPageHero({ compact = false }) {
         </ul>
       </div>
 
-      <div
-        className="relative w-full max-w-md mx-auto lg:max-w-none aspect-[5/4] sm:aspect-[4/3] rounded-lg overflow-hidden bg-black ring-1 ring-slate-200/10 dark:ring-zinc-800"
-        aria-hidden
-      >
+      <div className="relative w-full flex justify-center lg:justify-end">
         <Image
           src="/duty-calculator-hero.webp"
           alt="Illustration of a Mazda CX-5 with engine size, vehicle age, and fuel type used for import duty estimates"
-          fill
+          width={HERO_WIDTH}
+          height={HERO_HEIGHT}
           priority
-          sizes="(max-width: 1024px) 90vw, 420px"
-          className="object-contain object-center"
+          sizes="(max-width: 1024px) 96vw, 58vw"
+          className="w-full max-w-xl sm:max-w-2xl lg:max-w-none h-auto"
         />
       </div>
     </section>
