@@ -27,7 +27,7 @@ function useDebounced(value, ms = 280) {
   return debounced;
 }
 
-export default function DutyCalculator({ initialVehicle = null, pageSlug = null }) {
+export default function DutyCalculator({ initialVehicle = null, pageSlug = null, onVehicleChange = null }) {
   const searchId = useId();
   const [query, setQuery] = useState(
     initialVehicle ? `${initialVehicle.year} ${initialVehicle.make} ${initialVehicle.model}` : "",
@@ -71,6 +71,11 @@ export default function DutyCalculator({ initialVehicle = null, pageSlug = null 
       runCalculate(initialVehicle);
     }
   }, [initialVehicle, runCalculate]);
+
+  useEffect(() => {
+    const vehicle = selected || initialVehicle;
+    onVehicleChange?.(vehicle || null);
+  }, [selected, initialVehicle, onVehicleChange]);
 
   useEffect(() => {
     if (!debouncedQuery || debouncedQuery.length < 1 || selected) {
@@ -136,15 +141,10 @@ export default function DutyCalculator({ initialVehicle = null, pageSlug = null 
     ? carsHubPathForDutyVehicle({ make: selected.make, model: selected.model })
     : "/cars";
 
-  const breakdownRows = estimate
+  const breakdownCards = estimate
     ? [
-        { label: "CRSP reference (KES)", value: formatPrice(estimate.crspKes) },
-        { label: "Vehicle age", value: `${estimate.ageYears} yr` },
         { label: "Depreciated customs value", value: formatPrice(estimate.breakdown.customsValue) },
-        {
-          label: "Import declaration fee (IDF)",
-          value: formatPrice(estimate.breakdown.idf),
-        },
+        { label: "Import declaration fee (IDF)", value: formatPrice(estimate.breakdown.idf) },
         { label: `Excise (${estimate.breakdown.exciseLabel})`, value: formatPrice(estimate.breakdown.excise) },
         { label: "VAT (16%)", value: formatPrice(estimate.breakdown.vat) },
         { label: "Railway development levy", value: formatPrice(estimate.breakdown.rdl) },
@@ -227,68 +227,69 @@ export default function DutyCalculator({ initialVehicle = null, pageSlug = null 
           className="border border-slate-200 dark:border-zinc-800 bg-slate-50/80 dark:bg-zinc-900/50 p-5 sm:p-6 space-y-5"
           style={{ borderRadius: "var(--radius)" }}
         >
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1">Estimate</p>
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">{estimate.label}</h2>
-            <p className="text-sm text-slate-500 mt-1">
-              {estimate.engineCC}cc · {FUEL_LABELS[estimate.fuelType]} · {estimate.ageYears} years old
-            </p>
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1">Estimate result</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">{estimate.label}</h2>
+              <p className="text-sm text-slate-500 mt-2 flex flex-wrap gap-2">
+                <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-slate-200 dark:border-zinc-700">
+                  {estimate.engineCC}cc
+                </span>
+                <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-slate-200 dark:border-zinc-700">
+                  {FUEL_LABELS[estimate.fuelType]}
+                </span>
+                <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-slate-200 dark:border-zinc-700">
+                  {estimate.ageYears} yrs
+                </span>
+              </p>
+            </div>
+            <div className="shrink-0">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1">CRSP reference</p>
+              <p className="text-lg font-bold text-slate-900 dark:text-white tabular-nums">{formatPrice(estimate.crspKes)}</p>
+            </div>
           </div>
 
-          <dl className="space-y-2 text-sm">
-            {breakdownRows.map((row) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+            {breakdownCards.map((card) => (
               <div
-                key={row.label}
-                className="flex justify-between gap-4 border-b border-slate-200/80 dark:border-zinc-800 pb-2"
+                key={card.label}
+                className="p-3 border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950/60"
+                style={{ borderRadius: "var(--radius)" }}
               >
-                <dt className="text-slate-600 dark:text-slate-400">{row.label}</dt>
-                <dd className="font-semibold text-slate-900 dark:text-white tabular-nums">{row.value}</dd>
+                <p className="text-[10px] text-slate-500 leading-snug mb-2 min-h-[2.5rem]">{card.label}</p>
+                <p className="text-sm font-bold text-slate-900 dark:text-white tabular-nums">{card.value}</p>
               </div>
             ))}
-          </dl>
+          </div>
 
-          <div className="pt-2 border-t border-slate-300 dark:border-zinc-700">
-            <div className="flex justify-between items-baseline gap-4">
-              <span className="text-sm font-bold uppercase tracking-widest text-slate-700 dark:text-slate-300">
-                Total taxes (est.)
-              </span>
-              <span className="text-2xl sm:text-3xl font-bold text-[#b91c1c] dark:text-red-400 tabular-nums">
-                {formatPrice(estimate.breakdown.totalTaxes)}
-              </span>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div
+              className="flex-1 p-5 bg-[#b91c1c] dark:bg-red-700 text-white"
+              style={{ borderRadius: "var(--radius)" }}
+            >
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-100 mb-1">Total taxes (est.)</p>
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums">{formatPrice(estimate.breakdown.totalTaxes)}</p>
+              <p className="text-xs text-red-100/90 mt-2">
+                Landed reference: {formatPrice(estimate.breakdown.estimatedLanded)}
+              </p>
             </div>
-            <p className="text-xs text-slate-500 mt-2">
-              Indicative landed reference (CRSP + freight proxy + taxes):{" "}
-              <strong className="text-slate-800 dark:text-slate-200">
-                {formatPrice(estimate.breakdown.estimatedLanded)}
-              </strong>
-            </p>
+            <div className="flex flex-col gap-2 sm:w-40 justify-center">
+              <button
+                type="button"
+                onClick={handleShare}
+                className="inline-flex h-11 items-center justify-center gap-2 px-4 border border-slate-900 dark:border-white text-slate-900 dark:text-white text-[10px] font-bold uppercase tracking-widest"
+                style={{ borderRadius: "var(--radius)" }}
+              >
+                <Share2 className="w-4 h-4" aria-hidden />
+                {copied ? "Copied" : "Share"}
+              </button>
+            </div>
           </div>
 
           <p className="text-[11px] leading-relaxed text-slate-500 dark:text-slate-400">
             Estimates use KRA-style depreciation, excise bands, VAT, IDF, and RDL. CRSP values are illustrative until
             updated from official schedules. Not a binding KRA assessment.
           </p>
-
-          <div className="flex flex-col sm:flex-row gap-3 pt-1">
-            <button
-              type="button"
-              onClick={handleShare}
-              className="inline-flex h-11 items-center justify-center gap-2 px-5 border border-slate-900 dark:border-white text-slate-900 dark:text-white text-xs font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:!text-black transition-colors"
-              style={{ borderRadius: "var(--radius)" }}
-            >
-              <Share2 className="w-4 h-4" aria-hidden />
-              {copied ? "Link copied" : "Share result"}
-            </button>
-            <TrackedLink
-              href={marketplaceHref}
-              eventName="duty_calculator_marketplace_cta"
-              eventPayload={{ make: estimate.make, model: estimate.model }}
-              className="inline-flex h-11 items-center justify-center gap-2 px-5 bg-[#111827] dark:bg-white text-white dark:!text-black text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
-              style={{ borderRadius: "var(--radius)" }}
-            >
-              See similar cars <ArrowUpRight className="w-4 h-4" />
-            </TrackedLink>
-          </div>
         </div>
       )}
 
