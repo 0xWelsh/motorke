@@ -48,3 +48,4 @@ yarn-error.log*
 /update_auth_forms*.py
 /adjust-*.js
 /cjs_duty.js
+public/duty-calculator-hero.png
