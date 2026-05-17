@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import { trackRequest } from "@/lib/telemetry";
 import { logAuditEvent } from "@/lib/audit-trail";
 import { ensureCarPublicSlugInTx } from "@/lib/car-public-slug";
+import { notifyListingPublished } from "@/lib/seo-indexing";
 
 export async function POST(request) {
   const started = Date.now();
@@ -48,6 +49,7 @@ export async function POST(request) {
     body.dealerId = session.user.dealerId;
 
     const car = await createCarRecord(body);
+    notifyListingPublished(car);
     logAuditEvent({
       actorId: session.user.id,
       actorRole: session.user.role,

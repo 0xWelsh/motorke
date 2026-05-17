@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
+import { notifyListingPublished } from "@/lib/seo-indexing";
 
 /**
  * Base slug before uniqueness suffix (year-make-model-last8id).
@@ -46,9 +47,14 @@ export async function ensureCarPublicSlugInTx(tx, car) {
  * After `car.create` (same as DB row shape with id, year, make, model).
  */
 export async function finalizeNewCarPublicSlug(car) {
-  if (car.publicSlug) return car;
-  return db.$transaction(async (tx) => {
+  if (car.publicSlug) {
+    notifyListingPublished(car);
+    return car;
+  }
+  const finalized = await db.$transaction(async (tx) => {
     await ensureCarPublicSlugInTx(tx, car);
     return tx.car.findUniqueOrThrow({ where: { id: car.id } });
   });
+  notifyListingPublished(finalized);
+  return finalized;
 }
