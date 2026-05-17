@@ -17,7 +17,7 @@ import PrintButton from "@/components/PrintButton";
 import SpecSheet from "@/components/SpecSheet";
 import CarReviewsSection from "@/components/CarReviewsSection";
 import CarCard from "@/components/CarCard";
-import FeatureMarquee from "@/components/FeatureMarquee";
+import FeatureList from "@/components/FeatureList";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
 import Link from "next/link";
 import Image from "next/image";
@@ -484,7 +484,7 @@ export default async function CarDetailPage({ params }) {
                 {featureList.length > 0 && (
                   <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
                     <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-4">Features</h2>
-                    <FeatureMarquee features={featureList} variant="detail" />
+                    <FeatureList features={featureList} />
                   </div>
                 )}
 
