@@ -479,6 +479,55 @@ enum PaymentStatus {
   REFUNDED
 }
 
+/// KRA-style CRSP reference row for the public import duty calculator (not live inventory).
+model DutyVehicle {
+  id        String   @id @default(cuid())
+  make      String
+  model     String
+  trim      String?
+  year      Int
+  engineCC  Int
+  fuelType  FuelType @default(PETROL)
+  bodyType  BodyType?
+  crspKes   Int
+  slug      String   @unique
+  active    Boolean  @default(true)
+  source    String?  @default("seed")
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  calculations DutyCalculation[]
+
+  @@index([make, model])
+  @@index([year])
+  @@index([active])
+  @@map("duty_vehicles")
+}
+
+/// Anonymous calculator usage for demand intelligence.
+model DutyCalculation {
+  id            String       @id @default(cuid())
+  dutyVehicleId String?
+  searchQuery   String?
+  make          String?
+  model         String?
+  year          Int?
+  engineCC      Int?
+  fuelType      FuelType?
+  crspKes       Int?
+  totalKes      Int
+  breakdown     Json
+  sessionKey    String?
+  createdAt     DateTime     @default(now())
+  dutyVehicle   DutyVehicle? @relation(fields: [dutyVehicleId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([dutyVehicleId])
+  @@index([make, model])
+  @@map("duty_calculations")
+}
+
 model Setting {
   key         String   @id
   value       String

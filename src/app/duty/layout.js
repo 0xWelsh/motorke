@@ -1,7 +1,7 @@
 export const metadata = {
-  title: "Pricing & duty transparency",
+  title: "Kenya import duty calculator",
   description:
-    "How Welsh Motorhub presents final listed vehicle prices in Kenya and what to expect when comparing inventory across dealers.",
+    "Estimate KRA import duty, excise, VAT, IDF, and railway levy for popular used imports. Then browse matching verified cars on Welsh Motorhub.",
   alternates: { canonical: "/duty" },
 };
 

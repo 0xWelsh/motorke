@@ -47,6 +47,7 @@ export default async function sitemap() {
     makeCountyRows,
     fuelFacetRows,
     bodyFacetRows,
+    dutyVehicles,
   ] = await Promise.all([
     db.car.findMany({
       where: carWhere,
@@ -103,6 +104,9 @@ export default async function sitemap() {
       distinct: ["make", "bodyType"],
       select: { make: true, bodyType: true },
     }),
+    db.dutyVehicle
+      .findMany({ where: { active: true }, select: { slug: true, updatedAt: true } })
+      .catch(() => []),
   ]);
 
   const now = new Date();
@@ -130,7 +134,7 @@ export default async function sitemap() {
     { url: `${BASE}/compare`, lastModified: now, changeFrequency: "weekly", priority: 0.65 },
     { url: `${BASE}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE}/faq`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${BASE}/duty`, lastModified: now, changeFrequency: "monthly", priority: 0.45 },
+    { url: `${BASE}/duty`, lastModified: now, changeFrequency: "weekly", priority: 0.72 },
     { url: `${BASE}/mission`, lastModified: now, changeFrequency: "yearly", priority: 0.35 },
     { url: `${BASE}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.25 },
     { url: `${BASE}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.25 },
@@ -217,6 +221,13 @@ export default async function sitemap() {
       priority: 0.8,
     }));
 
+  const dutyPages = (dutyVehicles || []).map((row) => ({
+    url: `${BASE}/duty/${row.slug}`,
+    lastModified: row.updatedAt || now,
+    changeFrequency: "weekly",
+    priority: 0.68,
+  }));
+
   return dedupeByUrl([
     ...staticPages,
     ...carPages,
@@ -228,5 +239,6 @@ export default async function sitemap() {
     ...fuelFacetHubPages,
     ...bodyFacetHubPages,
     ...priceFacetPages,
+    ...dutyPages,
   ]);
 }
