@@ -59,7 +59,7 @@ export default function DutyPageHero({ compact = false }) {
         aria-hidden
       />
 
-      <div className="relative home-shell py-10 sm:py-12 lg:py-14">
+      <div className="relative home-shell pt-4 pb-10 sm:pt-5 sm:pb-12 lg:pt-6 lg:pb-14">
         <div className="max-w-6xl mx-auto">
           <div className="max-w-2xl lg:max-w-[52%]">
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600 dark:text-red-500 mb-2">
@@ -70,7 +70,7 @@ export default function DutyPageHero({ compact = false }) {
               <span className="text-red-600 dark:text-red-500">duty calculator</span>
             </h1>
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-              Search by make and model for a KRA-style breakdown of IDF, excise, VAT, and levies — then jump to matching
+              Search by make and model for a KRA-style breakdown of IDF, excise, VAT, and levies then jump to matching
               verified stock on Welsh Motorhub.
             </p>
             <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400">

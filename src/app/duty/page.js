@@ -20,7 +20,7 @@ export default async function DutyCalculatorPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a]">
-      <div className="pt-[4.75rem] md:pt-24">
+      <div className="pt-16 md:pt-20">
         <DutyPageHero />
       </div>
 
