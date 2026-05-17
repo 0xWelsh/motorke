@@ -20,10 +20,12 @@ export default async function DutyCalculatorPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a]">
-      <div className="home-shell pt-[4.75rem] md:pt-24 pb-16 sm:pb-20">
-        <div className="max-w-6xl mx-auto">
-          <DutyPageHero />
+      <div className="pt-[4.75rem] md:pt-24">
+        <DutyPageHero />
+      </div>
 
+      <div className="home-shell pb-16 sm:pb-20">
+        <div className="max-w-6xl mx-auto">
           <DutyPageClient />
 
           {popular.length > 0 && (
