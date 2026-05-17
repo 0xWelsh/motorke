@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { runSeoAudit } from "@/lib/seo-audit";
+import { persistSeoAuditRun } from "@/lib/seo-monitor";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -16,10 +17,11 @@ export async function GET(request) {
 
   try {
     const report = await runSeoAudit();
+    const saved = await persistSeoAuditRun(report);
     if (!report.ok) {
       console.warn("[cron/seo-audit] issues:", report.summary, report.issues?.slice(0, 5));
     }
-    return NextResponse.json(report);
+    return NextResponse.json({ ...report, persistedId: saved?.id || null });
   } catch (err) {
     console.error("[cron/seo-audit]", err);
     return NextResponse.json({ error: err?.message || "Audit failed" }, { status: 500 });

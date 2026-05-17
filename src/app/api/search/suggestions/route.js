@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
+import { logSearchQuery } from "@/lib/seo-trending";
 
 const querySchema = z.object({
   query: z.string().min(1).max(50),
@@ -138,6 +139,8 @@ export async function GET(request) {
   ];
 
   const allSuggestions = [...carSuggestions, ...uniqueAttributes].slice(0, limit);
+
+  logSearchQuery({ query, resultCount: allSuggestions.length }).catch(() => {});
 
   return NextResponse.json({
     query,

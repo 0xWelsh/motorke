@@ -9,6 +9,7 @@ import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { slugifyCarSegment, SEO_COUNTIES } from "@/lib/seo-car-slug";
 import { SEO_PRICE_BANDS, facetPathSegment } from "@/lib/seo-car-facets";
 import { carListingPath } from "@/lib/car-listing-url";
+import { listSeoPagesForSitemap, contentPublicPath } from "@/lib/seo-content";
 
 const BASE = getSiteOrigin();
 
@@ -132,6 +133,8 @@ export default async function sitemap() {
     { url: `${BASE}/cars`, lastModified: now, changeFrequency: "daily", priority: 0.95 },
     { url: `${BASE}/dealers`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE}/compare`, lastModified: now, changeFrequency: "weekly", priority: 0.65 },
+    { url: `${BASE}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.62 },
+    { url: `${BASE}/guides`, lastModified: now, changeFrequency: "daily", priority: 0.7 },
     { url: `${BASE}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE}/faq`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE}/duty`, lastModified: now, changeFrequency: "weekly", priority: 0.72 },
@@ -228,6 +231,20 @@ export default async function sitemap() {
     priority: 0.68,
   }));
 
+  const seoContentPages = await listSeoPagesForSitemap();
+  const contentPages = seoContentPages
+    .map((row) => {
+      const path = contentPublicPath(row);
+      if (!path) return null;
+      return {
+        url: `${BASE}${path}`,
+        lastModified: row.updatedAt || row.publishedAt || now,
+        changeFrequency: row.type === "COMPARISON" ? "weekly" : "monthly",
+        priority: row.type === "COMPARISON" ? 0.66 : row.type === "BLOG" ? 0.6 : 0.64,
+      };
+    })
+    .filter(Boolean);
+
   return dedupeByUrl([
     ...staticPages,
     ...carPages,
@@ -240,5 +257,6 @@ export default async function sitemap() {
     ...bodyFacetHubPages,
     ...priceFacetPages,
     ...dutyPages,
+    ...contentPages,
   ]);
 }

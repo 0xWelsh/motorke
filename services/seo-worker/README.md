@@ -6,7 +6,7 @@ Phase 1.5 / Phase 3 crawler service. Runs **outside** Vercel (Railway, Fly, EC2)
 
 - **Fiber** — HTTP API
 - **Colly** — crawl URLs, status codes, titles
-- **Redis** — optional queue (Phase 3; not wired yet)
+- **Persistence** — crawl results are stored by the Next.js app (`/api/cron/seo-crawl` or `seo-monitor`), not in this service
 
 ## Run locally
 

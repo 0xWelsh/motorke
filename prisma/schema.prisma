@@ -536,3 +536,110 @@ model Setting {
 
   @@map("settings")
 }
+
+enum SeoContentStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum SeoContentType {
+  BLOG
+  COMPARISON
+  LANDING
+}
+
+model SearchQueryLog {
+  id           String   @id @default(cuid())
+  query        String
+  normalized   String
+  sessionKey   String?
+  userId       String?
+  resultCount  Int?
+  createdAt    DateTime @default(now())
+
+  @@index([normalized, createdAt])
+  @@index([createdAt])
+  @@map("search_query_logs")
+}
+
+model SeoContentPage {
+  id          String           @id @default(cuid())
+  type        SeoContentType
+  slug        String           @unique
+  title       String
+  description String?
+  body        String?          @db.Text
+  meta        Json?
+  status      SeoContentStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([type, status])
+  @@map("seo_content_pages")
+}
+
+model SeoAuditRun {
+  id        String   @id @default(cuid())
+  ok        Boolean
+  summary   Json
+  issues    Json
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@map("seo_audit_runs")
+}
+
+model SeoCrawlRun {
+  id        String          @id @default(cuid())
+  ok        Boolean
+  source    String          @default("cron")
+  meta      Json?
+  createdAt DateTime        @default(now())
+  entries   SeoCrawlEntry[]
+
+  @@index([createdAt])
+  @@map("seo_crawl_runs")
+}
+
+model SeoCrawlEntry {
+  id         String      @id @default(cuid())
+  runId      String
+  run        SeoCrawlRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  url        String
+  status     Int         @default(0)
+  title      String?
+  error      String?
+  durationMs Int         @default(0)
+
+  @@index([runId])
+  @@map("seo_crawl_entries")
+}
+
+model SeoGscSync {
+  id        String      @id @default(cuid())
+  siteUrl   String
+  startDate DateTime    @db.Date
+  endDate   DateTime    @db.Date
+  syncedAt  DateTime    @default(now())
+  rows      SeoGscRow[]
+
+  @@index([syncedAt])
+  @@map("seo_gsc_syncs")
+}
+
+model SeoGscRow {
+  id          String     @id @default(cuid())
+  syncId      String
+  sync        SeoGscSync @relation(fields: [syncId], references: [id], onDelete: Cascade)
+  dimension   String
+  key         String
+  clicks      Int        @default(0)
+  impressions Int        @default(0)
+  ctr         Float      @default(0)
+  position    Float      @default(0)
+
+  @@unique([syncId, dimension, key])
+  @@index([syncId, dimension])
+  @@map("seo_gsc_rows")
+}

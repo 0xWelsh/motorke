@@ -1,5 +1,5 @@
-import { GoogleAuth } from "google-auth-library";
 import { absoluteUrl } from "@/lib/site-url";
+import { getGoogleAuthClient, parseGoogleServiceAccount } from "@/lib/google-service-account";
 
 const INDEXING_SCOPE = "https://www.googleapis.com/auth/indexing";
 const INDEXING_ENDPOINT = "https://indexing.googleapis.com/v3/urlNotifications:publish";
@@ -11,17 +11,6 @@ function indexingEnabled() {
   );
 }
 
-function parseServiceAccount() {
-  const raw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
-  if (!raw?.trim()) return null;
-  try {
-    return JSON.parse(raw);
-  } catch {
-    console.warn("[seo] GOOGLE_SERVICE_ACCOUNT_JSON is not valid JSON");
-    return null;
-  }
-}
-
 /**
  * Request Google Indexing API URL_UPDATED for a canonical listing URL.
  * Requires Search Console property + service account with access.
@@ -30,8 +19,7 @@ function parseServiceAccount() {
 export async function requestGoogleUrlIndexing(pathname) {
   if (!indexingEnabled()) return { skipped: true, reason: "disabled" };
 
-  const credentials = parseServiceAccount();
-  if (!credentials) return { skipped: true, reason: "no_credentials" };
+  if (!parseGoogleServiceAccount()) return { skipped: true, reason: "no_credentials" };
 
   const url = absoluteUrl(pathname);
   if (!url.startsWith("https://")) {
@@ -39,11 +27,8 @@ export async function requestGoogleUrlIndexing(pathname) {
   }
 
   try {
-    const auth = new GoogleAuth({
-      credentials,
-      scopes: [INDEXING_SCOPE],
-    });
-    const client = await auth.getClient();
+    const client = await getGoogleAuthClient([INDEXING_SCOPE]);
+    if (!client) return { skipped: true, reason: "no_credentials" };
     const res = await client.request({
       url: INDEXING_ENDPOINT,
       method: "POST",

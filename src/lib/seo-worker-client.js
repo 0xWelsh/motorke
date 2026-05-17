@@ -1,24 +1,37 @@
 /**
- * Optional client for the Go SEO worker (services/seo-worker).
+ * Client for the Go SEO worker (services/seo-worker).
  */
 
-export async function crawlSiteSmoke(paths = []) {
+function workerConfig() {
   const base = (process.env.SEO_WORKER_URL || "").replace(/\/$/, "");
+  const secret = process.env.SEO_WORKER_SECRET;
+  const headers = { "Content-Type": "application/json" };
+  if (secret) headers.Authorization = `Bearer ${secret}`;
+  return { base, headers };
+}
+
+async function postJson(path, body, timeoutMs = 60_000) {
+  const { base, headers } = workerConfig();
   if (!base) return { skipped: true, reason: "SEO_WORKER_URL not set" };
 
-  const headers = { "Content-Type": "application/json" };
-  const secret = process.env.SEO_WORKER_SECRET;
-  if (secret) headers.Authorization = `Bearer ${secret}`;
-
-  const res = await fetch(`${base}/crawl/site`, {
+  const res = await fetch(`${base}${path}`, {
     method: "POST",
     headers,
-    body: JSON.stringify({ paths }),
-    signal: AbortSignal.timeout(60_000),
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(timeoutMs),
   });
 
   if (!res.ok) {
     return { ok: false, status: res.status, error: await res.text() };
   }
   return res.json();
+}
+
+export async function crawlSiteSmoke(paths = []) {
+  return postJson("/crawl/site", { paths });
+}
+
+export async function crawlUrls(urls = []) {
+  if (!urls.length) return { ok: true, results: [] };
+  return postJson("/crawl", { urls: urls.slice(0, 50) });
 }

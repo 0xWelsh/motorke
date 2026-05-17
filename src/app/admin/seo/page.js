@@ -2,6 +2,8 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/auth";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import { runSeoAudit } from "@/lib/seo-audit";
+import { getSeoMonitorDashboard } from "@/lib/seo-monitor";
+import AdminSeoMonitor from "@/components/admin/AdminSeoMonitor";
 import { Search, ExternalLink, AlertTriangle, CheckCircle2 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -9,14 +11,14 @@ export const metadata = { title: "SEO — Welsh Motorhub Admin" };
 
 export default async function AdminSeoPage() {
   await requireAdmin();
-  const report = await runSeoAudit();
+  const [report, monitor] = await Promise.all([runSeoAudit(), getSeoMonitorDashboard()]);
 
   return (
     <div className="mk-page-shell animate-in fade-in slide-in-from-bottom-2 duration-700 max-w-5xl">
       <AdminPageHeader
         eyebrow="Technical SEO"
         title="SEO health"
-        description="Listing slugs, metadata readiness, and sitemap targets. Use Search Console for rankings and impressions (Phase 3)."
+        description="Listing health, crawl monitoring, and Search Console rankings (Phase 3)."
         actions={
           <Link
             href="/api/admin/seo/audit"
@@ -99,16 +101,30 @@ export default async function AdminSeoPage() {
         </section>
       )}
 
+      <AdminSeoMonitor monitor={monitor} />
+
       <section className="mt-10 rounded-xl border border-slate-200 dark:border-zinc-800 p-5 text-sm text-slate-600 dark:text-slate-400">
-        <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">Next steps</h2>
+        <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">Setup</h2>
         <ul className="list-disc pl-5 space-y-2">
           <li>Run <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">npm run db:backfill-slugs</code> if slugs are missing.</li>
-          <li>Submit sitemap in Google Search Console.</li>
           <li>
-            Optional: set <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">GOOGLE_INDEXING_ENABLED=true</code> and{" "}
-            <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">GOOGLE_SERVICE_ACCOUNT_JSON</code> for Indexing API on new listings.
+            Cron: <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">/api/cron/seo-monitor?secret=CRON_SECRET</code> (audit + crawl + GSC).
           </li>
-          <li>Deploy the Go SEO worker (<code className="text-xs">services/seo-worker</code>) for crawl monitoring (Phase 3).</li>
+          <li>
+            GSC: <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">GSC_SYNC_ENABLED=true</code>,{" "}
+            <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">GSC_SITE_URL</code>, service account with Search Console access.
+          </li>
+          <li>
+            Optional Go worker: <code className="text-xs">SEO_WORKER_URL</code> + deploy{" "}
+            <code className="text-xs">services/seo-worker</code>.
+          </li>
+          <li>
+            <Link href="/admin/content" className="text-[#2F855A] font-semibold hover:opacity-80">
+              Content engine
+            </Link>
+            {" "}
+            (Phase 2).
+          </li>
         </ul>
       </section>
     </div>

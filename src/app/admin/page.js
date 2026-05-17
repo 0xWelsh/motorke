@@ -295,6 +295,14 @@ export default async function AdminDashboard({ searchParams }) {
           <p className="mt-2 text-sm font-bold text-slate-800 dark:text-zinc-100">Slugs, sitemap, audit</p>
           <p className="text-[11px] font-semibold text-slate-500">Listing health before Search Console deep dives.</p>
         </Link>
+        <Link
+          href="/admin/content"
+          className="bg-white dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 px-4 py-3 hover:border-[#2F855A]/50 transition-colors"
+        >
+          <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">Content engine</p>
+          <p className="mt-2 text-sm font-bold text-slate-800 dark:text-zinc-100">Blog, guides, comparisons</p>
+          <p className="text-[11px] font-semibold text-slate-500">Phase 2 SEO — trending searches and programmatic pages.</p>
+        </Link>
       </div>
 
       <div className="bg-white dark:bg-[#111111] border border-[#ede7dd] dark:border-zinc-800 px-4 py-4 mb-8 sm:mb-10">

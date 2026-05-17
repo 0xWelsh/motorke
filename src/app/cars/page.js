@@ -9,6 +9,7 @@ import CarsSearch from "@/components/CarsSearch";
 import CarsInventorySearch from "@/components/CarsInventorySearch";
 import CarCard from "@/components/CarCard";
 import CarsQuickActions from "@/components/CarsQuickActions";
+import TrendingSearches from "@/components/TrendingSearches";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
 import { unstable_cache } from "next/cache";
 import { cookies, headers } from "next/headers";
@@ -679,6 +680,8 @@ export default async function CarsPage({ searchParams }) {
         />
 
         <CarsQuickActions />
+
+        <TrendingSearches className="mb-6" />
 
         {/* Main layout: sidebar + top rows */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 gap-y-6 lg:gap-y-8">

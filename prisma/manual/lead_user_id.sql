@@ -1,5 +1,8 @@
--- Run in Supabase → SQL Editor if `npx prisma migrate deploy` cannot reach the DB.
+-- Run in Supabase → SQL Editor if the portal crashes with:
+--   P2022: column `leads.userId` does not exist
+-- Or if `npx prisma migrate deploy` cannot reach the DB.
 -- Safe to run more than once (IF NOT EXISTS guards).
+-- Permanent fix: deploy migration 20260520120000_ensure_leads_user_id.
 
 ALTER TABLE "leads" ADD COLUMN IF NOT EXISTS "userId" TEXT;
 

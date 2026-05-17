@@ -126,3 +126,21 @@ export function listingBreadcrumbs(car) {
     { name: `${car.make} ${car.model}`, path: carListingPath(car) },
   ]);
 }
+
+/** Article JSON-LD for blog / guide content pages. */
+export function articleJsonLd({ headline, description, datePublished, dateModified, url }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline,
+    description: description || headline,
+    datePublished: datePublished || undefined,
+    dateModified: dateModified || datePublished || undefined,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    publisher: {
+      "@type": "Organization",
+      name: "Welsh Motorhub",
+      logo: { "@type": "ImageObject", url: absoluteMediaUrl(BRAND_MARK_SQUARE) },
+    },
+  };
+}
