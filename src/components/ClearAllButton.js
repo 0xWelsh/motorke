@@ -38,14 +38,13 @@ export default function ClearAllButton({ dealerId = null }) {
   }
 
   return (
-    <button type="button" onClick={handleClick} disabled={loading} style={{
-      fontSize: 13, border: "1px solid #fecaca", borderRadius: 10,
-      padding: "9px 16px", color: "#dc2626", background: "#fef2f2",
-      cursor: loading ? "not-allowed" : "pointer",
-      fontFamily: "inherit", fontWeight: 700,
-      opacity: loading ? 0.6 : 1,
-    }}>
-      {loading ? "Deleting…" : "🗑 Clear all listings"}
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={loading}
+      className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border-2 border-rose-300 bg-rose-600 px-4 py-3 text-[11px] font-black uppercase tracking-[0.1em] text-white shadow-sm transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-60 dark:border-rose-800 dark:bg-rose-700 dark:hover:bg-rose-600"
+    >
+      {loading ? "Deleting…" : "Clear all listings"}
     </button>
   );
 }

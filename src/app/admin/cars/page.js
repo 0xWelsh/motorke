@@ -5,7 +5,6 @@ import { db } from "@/lib/db";
 import { formatCarPrice } from "@/lib/utils";
 import Link from "next/link";
 import DeleteButton from "@/components/DeleteButton";
-import ClearAllButton from "@/components/ClearAllButton";
 import {
   Search,
   ChevronRight,
@@ -18,6 +17,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import ExportButton from "@/components/admin/ExportButton";
+import AdminCarsDangerZone from "@/components/admin/AdminCarsDangerZone";
 import EmptyState from "@/components/ui/EmptyState";
 import DataTableShell from "@/components/ui/DataTableShell";
 import { carListingPath } from "@/lib/car-listing-url";
@@ -75,16 +75,28 @@ export default async function AdminCarsPage({ searchParams }) {
   const from = total === 0 ? 0 : (page - 1) * limit + 1;
   const to = Math.min(page * limit, total);
 
+  const exportRows = cars.map((c) => ({
+    ID: c.id,
+    Make: c.make,
+    Model: c.model,
+    Year: c.year,
+    Price: c.price,
+    Dealer: c.dealer.name,
+    Leads: c._count.leads,
+    Status: c.available ? "Live" : "Hidden",
+    CreatedAt: c.createdAt,
+  }));
+
   return (
-    <div className="mk-page-shell animate-in fade-in slide-in-from-bottom-2 duration-700">
+    <div className="mk-page-shell animate-in fade-in slide-in-from-bottom-2 duration-700 max-w-full overflow-x-hidden">
       {/* Hero */}
-      <section className="mb-8 rounded-2xl border border-[#e7e7e9] bg-white px-6 py-7 dark:border-zinc-800 dark:bg-[#111111] lg:mb-10 sm:px-8 sm:py-8">
+      <section className="relative mb-6 overflow-hidden rounded-2xl border border-[#e7e7e9] bg-white px-4 py-5 dark:border-zinc-800 dark:bg-[#111111] sm:mb-8 sm:px-6 sm:py-7 lg:px-8">
         <div
           className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[#2F855A]/10 blur-3xl dark:bg-[#2F855A]/5"
           aria-hidden
         />
-        <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <div className="min-w-0 flex-1">
+        <div className="relative space-y-5 lg:flex lg:items-end lg:justify-between lg:gap-8 lg:space-y-0">
+          <div className="min-w-0 lg:flex-1">
             <div className="mb-2 flex items-center gap-2">
               <span
                 className="inline-flex h-2 w-2 rounded-full bg-[#2F855A] shadow-[0_0_12px_rgba(47,133,90,0.65)]"
@@ -94,16 +106,14 @@ export default async function AdminCarsPage({ searchParams }) {
                 Inventory
               </span>
             </div>
-            <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white sm:text-4xl">Cars</h1>
-            <p className="mt-2 max-w-xl text-sm font-medium leading-relaxed text-slate-500 dark:text-zinc-400">
-              Search and manage listings across all dealers. Pagination shows {limit} rows per page. Export pulls the{' '}
-              <span className="font-semibold text-slate-800 dark:text-zinc-200">current results</span>.
+            <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-3xl lg:text-4xl">Cars</h1>
+            <p className="mt-2 text-sm font-medium leading-relaxed text-slate-500 dark:text-zinc-400">
+              {limit} per page · export uses current filter
             </p>
           </div>
 
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center lg:flex-nowrap xl:justify-end">
-            {/* One-line stats (mobile + desktop aligned) */}
-            <div className="flex items-stretch gap-2 w-full sm:max-w-[22rem]">
+          <div className="w-full space-y-3 lg:max-w-sm lg:shrink-0">
+            <div className="grid grid-cols-3 gap-2">
               {[
                 { label: "Matches", value: total, tone: "text-slate-900 dark:text-white" },
                 { label: "Live", value: totalLive, tone: "text-emerald-700 dark:text-emerald-400" },
@@ -111,37 +121,27 @@ export default async function AdminCarsPage({ searchParams }) {
               ].map((s) => (
                 <div
                   key={s.label}
-                  className="flex-1 rounded-xl border border-[#e7e7e9] bg-[#fafafa] px-2.5 py-2 text-center dark:border-zinc-800 dark:bg-zinc-900/60"
+                  className="rounded-xl border border-[#e7e7e9] bg-[#fafafa] px-2 py-2.5 text-center dark:border-zinc-800 dark:bg-zinc-900/60"
                 >
-                  <p className={`text-lg font-black tabular-nums sm:text-xl ${s.tone}`}>{s.value}</p>
+                  <p className={`text-lg font-black tabular-nums leading-none ${s.tone}`}>{s.value}</p>
                   <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">{s.label}</p>
                 </div>
               ))}
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
-              <ExportButton
-                label="CSV"
-                filename="welsh-motorhub-inventory.csv"
-                data={cars.map((c) => ({
-                  ID: c.id,
-                  Make: c.make,
-                  Model: c.model,
-                  Year: c.year,
-                  Price: c.price,
-                  Dealer: c.dealer.name,
-                  Leads: c._count.leads,
-                  Status: c.available ? "Live" : "Hidden",
-                  CreatedAt: c.createdAt,
-                }))}
-              />
-              <ClearAllButton />
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               <Link
                 href="/admin/cars/new"
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#2F855A] px-4 py-3 text-[11px] font-black uppercase tracking-[0.1em] text-white transition hover:bg-[#38A169] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F855A] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#101012]"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#2F855A] px-4 py-3.5 text-[11px] font-black uppercase tracking-[0.1em] text-white transition hover:bg-[#38A169] sm:col-span-2 lg:col-span-1"
               >
                 <Plus size={18} strokeWidth={2.25} /> New car
               </Link>
+              <ExportButton
+                label="Export CSV"
+                filename="welsh-motorhub-inventory.csv"
+                data={exportRows}
+                className="w-full justify-center py-3.5"
+              />
             </div>
           </div>
         </div>
@@ -163,7 +163,7 @@ export default async function AdminCarsPage({ searchParams }) {
             defaultValue={search}
             placeholder="Make, model, variant, or description…"
             autoComplete="off"
-            className="peer w-full rounded-xl border border-[#e2e2e6] bg-[#fafafa] py-3 pl-11 pr-24 text-[13px] font-medium text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-[#2F855A]/45 focus:bg-white focus:ring-2 focus:ring-[#2F855A]/15 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white dark:placeholder:text-zinc-600"
+            className="peer w-full rounded-xl border border-[#e2e2e6] bg-[#fafafa] py-3 pl-11 pr-[5.5rem] text-base md:text-[13px] font-medium text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-[#2F855A]/45 focus:bg-white focus:ring-2 focus:ring-[#2F855A]/15 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white dark:placeholder:text-zinc-600"
           />
           <button
             type="submit"
@@ -184,7 +184,118 @@ export default async function AdminCarsPage({ searchParams }) {
         )}
       </form>
 
-      {/* Table */}
+      <AdminCarsDangerZone />
+
+      {/* Mobile inventory cards */}
+      <div className="mb-6 space-y-3 lg:hidden">
+        <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-500 dark:text-zinc-500">
+          {total === 0 ? "No listings" : `Showing ${from}–${to} of ${total}`}
+        </p>
+        {cars.length === 0 ? (
+          <EmptyState
+            title="No listings found"
+            message={search ? "Try different keywords or clear the filter." : "Add a vehicle to populate inventory."}
+            actionHref="/admin/cars/new"
+            actionLabel="Add car"
+            secondaryHref={search ? "/admin/cars" : null}
+            secondaryLabel={search ? "Clear search" : null}
+            icon={<Car size={28} className="text-slate-400 dark:text-zinc-500" />}
+          />
+        ) : (
+          cars.map((car) => {
+            const thumb = car.images[0]?.url || null;
+            return (
+              <article
+                key={car.id}
+                className="overflow-hidden rounded-2xl border border-[#e7e7e9] bg-white shadow-sm dark:border-zinc-800 dark:bg-[#111111]"
+              >
+                <div className="flex gap-3 p-3">
+                  <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-xl border border-[#ececf0] bg-slate-100 dark:border-zinc-700 dark:bg-zinc-800">
+                    {thumb ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={thumb} alt="" className="h-full w-full object-cover" loading="lazy" />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-slate-400">
+                        <Car size={22} strokeWidth={1.5} />
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <Link
+                        href={carListingPath(car)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="line-clamp-2 text-sm font-bold leading-snug text-slate-900 dark:text-white"
+                      >
+                        {car.year} {car.make} {car.model}
+                      </Link>
+                      {car.available ? (
+                        <span className="shrink-0 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[9px] font-black uppercase text-emerald-800 dark:border-emerald-900/70 dark:bg-emerald-950/50 dark:text-emerald-400">
+                          Live
+                        </span>
+                      ) : (
+                        <span className="shrink-0 rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-[9px] font-black uppercase text-slate-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400">
+                          Hidden
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-1 truncate text-xs font-semibold text-slate-600 dark:text-zinc-400">{car.dealer.name}</p>
+                    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
+                      <span className="font-black tabular-nums text-slate-900 dark:text-white">{formatCarPrice(car.price)}</span>
+                      <span className="inline-flex items-center gap-1">
+                        <MessageSquare size={12} aria-hidden />
+                        {car._count.leads} leads
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between gap-2 border-t border-[#ececf0] bg-[#fafafa] px-3 py-2.5 dark:border-zinc-800 dark:bg-zinc-900/40">
+                  <div className="flex items-center gap-1.5">
+                    <Link
+                      href={carListingPath(car)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-lg border border-[#ececf0] bg-white p-2.5 text-slate-600 dark:border-zinc-700 dark:bg-zinc-900"
+                      title="View live"
+                    >
+                      <ExternalLink size={16} strokeWidth={2} />
+                    </Link>
+                    <Link
+                      href={`/admin/cars/${car.id}/edit`}
+                      className="rounded-lg border border-[#ececf0] bg-white p-2.5 text-slate-600 dark:border-zinc-700 dark:bg-zinc-900"
+                      title="Edit"
+                    >
+                      <Edit3 size={16} strokeWidth={2} />
+                    </Link>
+                    <form action={`/api/admin/cars/${car.id}/toggle-visibility`} method="POST" className="inline">
+                      <button
+                        type="submit"
+                        className={`rounded-lg border p-2.5 ${
+                          car.available
+                            ? "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800/70 dark:bg-emerald-950/40 dark:text-emerald-300"
+                            : "border-slate-200 bg-white text-slate-700 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200"
+                        }`}
+                        aria-label={car.available ? "Hide listing" : "Publish listing"}
+                      >
+                        {car.available ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
+                      </button>
+                    </form>
+                  </div>
+                  <DeleteButton
+                    compact
+                    action={`/api/admin/cars/${car.id}/delete`}
+                    message="Permanently delete this car from inventory?"
+                  />
+                </div>
+              </article>
+            );
+          })
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden lg:block">
       <DataTableShell>
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#ececf0] px-5 py-3.5 dark:border-zinc-800">
           <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-500 dark:text-zinc-500">
@@ -341,7 +452,7 @@ export default async function AdminCarsPage({ searchParams }) {
                             )}
                           </button>
                         </form>
-                        <DeleteButton action={`/api/admin/cars/${car.id}/delete`} message="Permanently delete this car from inventory?" />
+                        <DeleteButton compact action={`/api/admin/cars/${car.id}/delete`} message="Permanently delete this car from inventory?" />
                       </div>
                     </td>
                   </tr>
@@ -363,9 +474,10 @@ export default async function AdminCarsPage({ searchParams }) {
           />
         )}
       </DataTableShell>
+      </div>
 
       {pages > 1 && (
-        <nav className="mt-8 flex flex-wrap justify-center gap-2" aria-label="Pagination">
+        <nav className="mt-6 flex flex-wrap items-center justify-center gap-2 sm:mt-8" aria-label="Pagination">
           {page > 1 ? (
             <Link
               href={adminCarsHref(search, page - 1)}
@@ -380,19 +492,24 @@ export default async function AdminCarsPage({ searchParams }) {
               Previous
             </span>
           )}
-          {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
-            <Link
-              key={p}
-              href={adminCarsHref(search, p)}
-              className={`flex h-10 min-w-[2.5rem] items-center justify-center rounded-xl text-[13px] font-bold transition ${
-                p === page
-                  ? "bg-[#2F855A] text-white"
-                  : "border border-[#ddd4c8] bg-white text-slate-700 hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
-              }`}
-            >
-              {p}
-            </Link>
-          ))}
+          <div className="hidden max-w-full flex-wrap justify-center gap-1 sm:flex">
+            {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
+              <Link
+                key={p}
+                href={adminCarsHref(search, p)}
+                className={`flex h-10 min-w-[2.5rem] items-center justify-center rounded-xl text-[13px] font-bold transition ${
+                  p === page
+                    ? "bg-[#2F855A] text-white"
+                    : "border border-[#ddd4c8] bg-white text-slate-700 hover:border-[#2F855A] hover:text-[#2F855A] dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+                }`}
+              >
+                {p}
+              </Link>
+            ))}
+          </div>
+          <span className="w-full text-center text-[11px] font-semibold text-slate-500 sm:hidden">
+            Page {page} of {pages}
+          </span>
           {page < pages ? (
             <Link
               href={adminCarsHref(search, page + 1)}
