@@ -376,12 +376,12 @@ export default async function HomePage() {
           
           {/* Page Header - Full Width */}
           <div className="mb-5 sm:mb-6 md:mb-8 lg:mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center lg:text-left">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-white leading-[0.92] tracking-tight mb-4 lg:max-w-4xl drop-shadow-sm">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-[#111827] dark:text-white leading-[0.92] tracking-tight mb-4 lg:max-w-4xl">
               Buy cars with<br />
-              <span className="editorial-heading text-[#6ee7a8]">dealer-level clarity.</span>
+              <span className="editorial-heading text-[#38A169]">dealer-level clarity.</span>
             </h1>
 
-            <p className="text-base md:text-lg lg:text-[1.15rem] text-slate-200 leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto lg:mx-0">
+            <p className="text-base md:text-lg lg:text-[1.15rem] text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto lg:mx-0">
               Find verified Kenyan inventory with transparent ownership costs in minutes.
               Compare up to three cars, inspect real running-cost and road-readiness signals, then contact real dealers directly.
             </p>
@@ -415,16 +415,16 @@ export default async function HomePage() {
                 </TrackedLink>
               </div>
 
-              <div className="mt-6 sm:mt-7 p-4 border border-white/15 bg-black/35 backdrop-blur-md" style={{ borderRadius: "var(--radius)" }}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-300 mb-3 text-center lg:text-left">Quick compare</p>
-                <p className="text-sm text-slate-100 leading-relaxed mb-4 text-center lg:text-left">
+              <div className="mt-6 sm:mt-7 p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3 text-center lg:text-left">Quick compare</p>
+                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4 text-center lg:text-left">
                   Side-by-side specs, annual TCO, and road readiness in one clean sheet.
                 </p>
                 <TrackedLink
                   href="/compare"
                   eventName="homepage_quick_compare_click"
                   eventPayload={{ area: "hero_card" }}
-                  className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-white hover:text-[#6ee7a8] transition-colors justify-center lg:justify-start w-full lg:w-auto"
+                  className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors justify-center lg:justify-start w-full lg:w-auto"
                 >
                   Start comparing <ArrowRight className="w-4 h-4" />
                 </TrackedLink>
@@ -436,9 +436,9 @@ export default async function HomePage() {
                   { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
                   { label: "Updated", value: "Daily" },
                 ].map((item) => (
-                  <div key={item.label} className="p-3 border border-white/15 bg-black/35 backdrop-blur-md" style={{ borderRadius: "var(--radius)" }}>
-                    <p className="text-lg sm:text-xl font-bold text-white">{item.value}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-300 mt-1">{item.label}</p>
+                  <div key={item.label} className="p-3 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
+                    <p className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white">{item.value}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mt-1">{item.label}</p>
                   </div>
                 ))}
               </div>
@@ -453,26 +453,17 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Hero lot photo — darkened for readable type on the left */}
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        {/* Mercedes Brand Background Texture */}
+        <div className="absolute inset-0 -z-0 overflow-hidden pointer-events-none">
           <Image
             src={HERO_BACKGROUND}
             fill
-            sizes="100vw"
-            className="object-cover object-center scale-[1.02]"
+            className="object-cover opacity-[0.2] sm:opacity-[0.16] lg:opacity-[0.12]"
             alt=""
             priority
-            quality={90}
           />
-          <div className="absolute inset-0 bg-black/40" aria-hidden />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(105deg, rgba(2, 6, 23, 0.92) 0%, rgba(15, 23, 42, 0.78) 32%, rgba(15, 23, 42, 0.45) 58%, rgba(15, 23, 42, 0.22) 78%, rgba(15, 23, 42, 0.08) 100%)",
-            }}
-            aria-hidden
-          />
+          {/* Softer left wash on small screens so the photo shows through; text stays readable */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white/88 via-white/45 dark:from-[#0a0a0a]/88 dark:via-[#0a0a0a]/48 to-transparent lg:hidden" />
         </div>
       </section>
 
