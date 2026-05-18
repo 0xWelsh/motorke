@@ -71,6 +71,7 @@ export async function buildNetworkWeeklyReportPayload() {
   const now = new Date();
   const periodEnd = now;
   const periodStart = addDays(now, -7);
+  const prevPeriodEnd = periodStart;
   const prevPeriodStart = addDays(now, -14);
 
   const [
