@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 /**
- * Seed blog, landing guides, and inventory-driven comparison pages.
+ * Seed blog, landing guides, and comparison pages.
  * Run: npm run db:seed-seo-content
  */
 import { PrismaClient } from "@prisma/client";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { BLOG_EXTRA, CURATED_COMPARISONS, GUIDES } from "./seo-editorial-content.mjs";
 
 function applyEnvFile(filename, overridesExisting) {
   const p = resolve(process.cwd(), filename);
@@ -132,6 +133,7 @@ Most facilities want 10–30% deposit and comprehensive insurance assigned to th
 
 Dealers on Welsh Motorhub often work with common bank panels — ask early whether a specific listing qualifies before you inspect.`,
   },
+  ...BLOG_EXTRA,
 ];
 
 const LANDING = [
@@ -174,6 +176,13 @@ Stop-start traffic in Nairobi and moderate daily mileage can make hybrids econom
 
 Battery health indicators, service history, and whether your mechanic is comfortable with the model. Filter fuel type to hybrid on search to compare live prices.`,
   },
+  ...GUIDES.map(({ slug, title, description, body, meta }) => ({
+    slug,
+    title,
+    description,
+    body,
+    meta,
+  })),
 ];
 
 async function seedEditorial() {
@@ -186,7 +195,24 @@ async function seedEditorial() {
   }
 }
 
-async function seedComparisons() {
+async function seedCuratedComparisons() {
+  for (const row of CURATED_COMPARISONS) {
+    const slug = buildComparisonSlug(row.makeA, row.modelA, row.makeB, row.modelB);
+    const title = `${row.makeA} ${row.modelA} vs ${row.makeB} ${row.modelB}: which to buy in Kenya?`;
+    const description = `Compare ${row.makeA} ${row.modelA} and ${row.makeB} ${row.modelB} for Kenyan buyers — live listings and buying tips.`;
+    await upsertPage({
+      type: "COMPARISON",
+      slug,
+      title,
+      description,
+      body: `## ${row.makeA} ${row.modelA} vs ${row.makeB} ${row.modelB}\n\n${row.body}\n\nBrowse live inventory on Welsh Motorhub for both models before you decide.`,
+      meta: { makeA: row.makeA, modelA: row.modelA, makeB: row.makeB, modelB: row.modelB },
+    });
+  }
+  return CURATED_COMPARISONS.length;
+}
+
+async function seedInventoryComparisons() {
   const grouped = await db.car.groupBy({
     by: ["make", "model"],
     where: { available: true },
@@ -196,19 +222,23 @@ async function seedComparisons() {
   const models = grouped
     .filter((g) => g._count._all >= 2)
     .sort((a, b) => b._count._all - a._count._all)
-    .slice(0, 14);
+    .slice(0, 20);
 
   const pairs = [];
   for (let i = 0; i < models.length; i += 1) {
     for (let j = i + 1; j < models.length; j += 1) {
       pairs.push({ a: models[i], b: models[j] });
-      if (pairs.length >= 20) break;
+      if (pairs.length >= 40) break;
     }
-    if (pairs.length >= 20) break;
+    if (pairs.length >= 40) break;
   }
 
+  let created = 0;
   for (const { a, b } of pairs) {
     const slug = buildComparisonSlug(a.make, a.model, b.make, b.model);
+    const existing = await db.seoContentPage.findUnique({ where: { slug }, select: { id: true } });
+    if (existing) continue;
+
     const title = `${a.make} ${a.model} vs ${b.make} ${b.model}: which to buy in Kenya?`;
     const description = `Compare ${a.make} ${a.model} and ${b.make} ${b.model} for Kenyan buyers — live listings and buying tips.`;
     await upsertPage({
@@ -221,15 +251,21 @@ async function seedComparisons() {
 Compare live inventory, pricing, and dealer options on Welsh Motorhub before you decide.`,
       meta: { makeA: a.make, modelA: a.model, makeB: b.make, modelB: b.model },
     });
+    created += 1;
   }
 
-  return pairs.length;
+  return created;
 }
 
 async function main() {
   await seedEditorial();
-  const comparisons = await seedComparisons();
-  console.log(`SEO content seeded: ${BLOG.length} blog, ${LANDING.length} landing, ${comparisons} comparisons`);
+  const curated = await seedCuratedComparisons();
+  const inventory = await seedInventoryComparisons();
+  const guideCount = LANDING.length;
+  const blogCount = BLOG.length;
+  console.log(
+    `SEO content seeded: ${blogCount} blog, ${guideCount} guides (landing), ${curated} curated comparisons, ${inventory} inventory comparisons (new)`
+  );
 }
 
 main()

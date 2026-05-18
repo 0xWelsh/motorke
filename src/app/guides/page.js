@@ -19,9 +19,9 @@ export const metadata = {
 
 export default async function GuidesIndexPage() {
   const [landings, comparisons, blogPosts] = await Promise.all([
-    listPublishedSeoPages({ type: "LANDING", take: 20 }),
-    listPublishedSeoPages({ type: "COMPARISON", take: 16 }),
-    listPublishedSeoPages({ type: "BLOG", take: 6 }),
+    listPublishedSeoPages({ type: "LANDING", take: 120 }),
+    listPublishedSeoPages({ type: "COMPARISON", take: 80 }),
+    listPublishedSeoPages({ type: "BLOG", take: 24 }),
   ]);
 
   return (
