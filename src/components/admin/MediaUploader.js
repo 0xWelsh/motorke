@@ -267,7 +267,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
             ? "z-50 border-emerald-500 shadow-2xl ring-2 ring-emerald-500/40"
             : !included
               ? "border-slate-400 ring-2 ring-slate-400/40 opacity-90"
-              : "border-slate-200 dark:border-slate-800 active:scale-[0.99]"
+              : "max-md:border-0 max-md:ring-1 max-md:ring-slate-200/80 md:border-slate-200 dark:max-md:ring-zinc-700 dark:md:border-slate-800 active:scale-[0.99]"
         }`}
         style={{ cursor: isLifted ? "grabbing" : "grab" }}
       >
@@ -316,8 +316,10 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
   return (
     <div className="w-full space-y-4">
       <div
-        className={`relative w-full h-36 sm:h-48 border-2 border-dashed rounded-xl sm:rounded-2xl flex flex-col items-center justify-center p-3 sm:p-4 transition-all duration-500 overflow-hidden group cursor-pointer ${
-          dragActive ? "border-[#2F855A] bg-[#2F855A]/5 scale-[1.01]" : "border-slate-200 dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#0a0a0a] hover:border-slate-300 dark:hover:border-slate-700"
+        className={`relative flex h-36 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl p-3 transition-all duration-500 group max-md:border max-md:border-dashed max-md:border-slate-200 max-md:bg-slate-50 sm:h-48 sm:rounded-2xl sm:border-2 dark:max-md:border-zinc-700 dark:max-md:bg-zinc-900/40 ${
+          dragActive
+            ? "border-[#2F855A] bg-[#2F855A]/5 scale-[1.01]"
+            : "max-md:border-slate-200 md:border-slate-200 md:border-dashed md:bg-[#fbfcfe] dark:max-md:border-zinc-700 dark:md:border-slate-800 dark:md:bg-[#0a0a0a] md:hover:border-slate-300 dark:md:hover:border-slate-700"
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -332,7 +334,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
         <input ref={inputRef} type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleFiles(e.target.files)} />
 
         <div className="relative z-10 flex flex-col items-center pointer-events-none">
-          <div className="w-12 h-12 rounded-2xl bg-white dark:bg-[#111111] shadow-lg flex items-center justify-center mb-3 text-[#2F855A] border border-slate-100 dark:border-slate-800 group-hover:scale-110 transition-transform duration-500">
+          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#2F855A] shadow-lg transition-transform duration-500 group-hover:scale-110 max-md:border-0 dark:bg-[#111111] md:border md:border-slate-100 dark:md:border-slate-800">
             <UploadCloud size={24} />
           </div>
           <p className="text-base font-black text-slate-900 dark:text-white tracking-tight">Drop listing photos</p>
@@ -351,7 +353,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
       </div>
 
       {files.length > 0 && (
-        <div className="bg-[#fbfcfe] dark:bg-[#0a0a0a] border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-sm">
+        <div className="max-md:p-0 max-md:shadow-none rounded-2xl bg-[#fbfcfe] p-4 shadow-sm max-md:border-0 max-md:bg-transparent dark:bg-[#0a0a0a] md:border md:border-slate-200 dark:md:border-slate-800">
           <div className="flex items-center justify-between mb-4 gap-2">
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-2 h-2 rounded-full bg-[#2F855A] shrink-0" />
@@ -395,7 +397,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
             <p className="text-[11px] font-semibold text-slate-500 mt-3">Add more shots so buyers see the full vehicle.</p>
           )}
 
-          <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/50 flex items-center gap-3">
+          <div className="mt-4 flex items-center gap-3 max-md:border-t-0 max-md:pt-2 md:border-t md:border-slate-100 md:pt-4 dark:md:border-slate-800/50">
             <Info size={14} className="text-[#2F855A] shrink-0" />
             <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider leading-snug">
               New photos are ticked by default (upload). Untick any you do not want on the listing. Long-press, then drag to reorder — first checked photo becomes cover.

@@ -266,6 +266,13 @@ function buildAutoDescription(values = {}, features = []) {
   return bits.join(" ");
 }
 
+/** Section panels: bordered on desktop, flat full-width on mobile. */
+const formSectionShell =
+  "max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:rounded-none max-md:shadow-none bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5";
+
+const formSectionSplit =
+  "max-md:pb-6 max-md:mb-6 max-md:border-b max-md:border-slate-200/90 dark:max-md:border-zinc-800/90";
+
 /** Label sits inside the control — compact, dealer-friendly. */
 function InfieldGroup({ label, required, className = "", children }) {
   return (
@@ -861,7 +868,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     <form
       ref={formRef}
       onSubmit={handleSubmit}
-      className={`relative space-y-4 sm:space-y-6 animate-in fade-in duration-700 ${formBottomPadding}`}
+      className={`relative w-full min-w-0 max-w-none space-y-4 sm:space-y-6 animate-in fade-in duration-700 ${formBottomPadding}`}
     >
       {error && (
         <div className="bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-black uppercase tracking-widest rounded-xl sm:rounded-2xl px-4 py-3 sm:px-6 sm:py-4 flex items-center gap-3">
@@ -890,7 +897,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
       {useMobileDock ? (
         <div
-          className="lg:hidden sticky top-0 z-[15] -mx-1 px-1 py-2 mb-1 bg-white/92 dark:bg-[#0a0a0a]/92 backdrop-blur-md border border-[#ddd4c8]/80 dark:border-slate-800 rounded-xl shadow-sm flex gap-1.5 overflow-x-auto overscroll-x-contain [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+          className="lg:hidden sticky top-0 z-[15] -mx-3 mb-2 flex gap-1.5 overflow-x-auto overscroll-x-contain border-b border-slate-200/90 bg-white/95 px-3 py-2.5 backdrop-blur-md dark:border-zinc-800/90 dark:bg-zinc-950/95 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           aria-label="Jump to section"
         >
           {[
@@ -903,7 +910,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               key={id}
               type="button"
               onClick={() => scrollToSection(id)}
-              className="shrink-0 px-2.5 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-[0.14em] bg-slate-100 dark:bg-[#151515] text-slate-800 dark:text-slate-100 border border-[#ddd4c8] dark:border-slate-700 active:scale-[0.98]"
+              className="shrink-0 rounded-lg bg-slate-100 px-2.5 py-1.5 text-[9px] font-black uppercase tracking-[0.14em] text-slate-800 active:scale-[0.98] dark:bg-zinc-900 dark:text-zinc-100"
             >
               {label}
             </button>
@@ -911,8 +918,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
       ) : null}
 
-      <div className={`space-y-5 sm:space-y-6 ${useMobileDock ? "max-md:space-y-4" : ""}`}>
-        <div id="portal-car-listing" className="scroll-mt-28 md:scroll-mt-8">
+      <div className={`space-y-5 sm:space-y-6 ${useMobileDock ? "max-md:space-y-0" : ""}`}>
+        <div id="portal-car-listing" className={`scroll-mt-28 md:scroll-mt-8 ${useMobileDock ? formSectionSplit : ""}`}>
           <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-3">Listing</p>
 
           <div className="space-y-8">
@@ -1105,11 +1112,11 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           </div>
         </div>
 
-        <div id="portal-car-photos" className="scroll-mt-28 md:scroll-mt-8">
-          <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5">
+        <div id="portal-car-photos" className={`scroll-mt-28 md:scroll-mt-8 ${useMobileDock ? formSectionSplit : ""}`}>
+          <div className={formSectionShell}>
             <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-3 sm:mb-4">Photos</p>
             {uploading && (
-              <div className="text-center mb-8 p-6 bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl">
+              <div className="mb-8 rounded-2xl bg-[#fbfcfe] p-6 text-center max-md:border-0 dark:bg-zinc-900/50 md:border md:border-[#ddd4c8] dark:md:border-slate-800">
                 <div className="w-10 h-10 border-4 border-[#ff5a2f] border-t-transparent rounded-2xl animate-spin mx-auto mb-4" />
                 <p className="text-sm font-bold text-slate-900 dark:text-white uppercase">Uploading Images...</p>
                 <p className="text-[11px] font-bold text-slate-500 mt-2">Image {uploadProgress.done} of {uploadProgress.total}</p>
@@ -1122,9 +1129,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           </div>
         </div>
 
-        <div id="portal-car-details" className="scroll-mt-28 md:scroll-mt-8">
-          <div className="space-y-4 sm:space-y-6">
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5">
+        <div id="portal-car-details" className={`scroll-mt-28 md:scroll-mt-8 ${useMobileDock ? formSectionSplit : ""}`}>
+          <div className="space-y-4 sm:space-y-6 max-md:space-y-0">
+            <div className={`${formSectionShell} ${useMobileDock ? formSectionSplit : ""}`}>
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                   <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">Description</p>
                   <button
@@ -1149,7 +1156,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 </InfieldGroup>
                 <p className="mt-2 text-[11px] font-medium text-slate-500">Honest detail builds trust.</p>
               </div>
-              <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5">
+              <div className={`${formSectionShell} ${useMobileDock ? formSectionSplit : ""}`}>
                 <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-3">Features</p>
                 <InfieldGroup label="List features, comma-separated">
                   <textarea
@@ -1167,16 +1174,16 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   Separate with commas. We trim spaces and skip empty items when you publish ({parsedFeatures.length} listed).
                 </p>
               </div>
-            <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5">
+            <div className={formSectionShell}>
               <div className="flex items-center justify-between gap-3 mb-4 sm:mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">Advanced specs</h3>
+                  <div className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                  <h3 className="text-base font-bold tracking-tight text-slate-900 dark:text-white sm:text-lg">Advanced specs</h3>
                 </div>
                 <button
                   type="button"
                   onClick={() => setAdvancedOpen((prev) => !prev)}
-                  className="inline-flex items-center gap-2 rounded-2xl border border-[#ddd4c8] dark:border-slate-700 px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+                  className="inline-flex items-center gap-2 rounded-2xl bg-slate-100 px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-slate-600 hover:text-slate-900 max-md:border-0 dark:bg-zinc-900 dark:text-slate-300 dark:hover:text-white md:border md:border-[#ddd4c8] dark:md:border-slate-700"
                 >
                   {advancedOpen ? "Collapse" : "Expand"}
                   <ChevronRight size={14} className={`transition-transform ${advancedOpen ? "rotate-90" : ""}`} />
@@ -1232,13 +1239,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           </div>
         </div>
 
-        <div
-          id="portal-car-preview"
-          className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-3 sm:p-4 scroll-mt-28 md:scroll-mt-8"
-        >
+        <div id="portal-car-preview" className={`${formSectionShell} scroll-mt-28 md:scroll-mt-8 max-md:!pb-0 max-md:!mb-0 max-md:!border-b-0`}>
           <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Preview</p>
           <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
-            <div className="w-full sm:w-36 h-20 sm:h-24 rounded-lg sm:rounded-xl overflow-hidden bg-slate-100 border border-slate-200 dark:border-slate-800 flex items-center justify-center shrink-0">
+            <div className="flex h-20 w-full shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-100 max-md:border-0 sm:h-24 sm:w-36 sm:rounded-xl md:border md:border-slate-200 dark:bg-zinc-900 dark:md:border-slate-800">
               {previewCoverSrc ? (
                 <img src={previewCoverSrc} alt="" className="w-full h-full object-cover" />
               ) : (

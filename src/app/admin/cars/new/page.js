@@ -2,6 +2,7 @@
 export const dynamic = "force-dynamic";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
+import Link from "next/link";
 import CarForm from "@/components/CarForm";
 
 export const metadata = { title: "Add Car — Admin" };
@@ -15,10 +16,17 @@ export default async function AdminNewCarPage({ searchParams }) {
     typeof raw === "string" && raw.trim() && dealers.some((d) => d.id === raw.trim()) ? raw.trim() : null;
 
   return (
-    <div className="p-6 lg:p-8 w-full">
-      <div className="mb-8">
-        <a href="/admin/cars" className="text-xs text-white/40 hover:text-white transition-colors">← All cars</a>
-        <h1 className="text-3xl font-black mt-2">Add new car</h1>
+    <div className="animate-in fade-in duration-700 w-full min-w-0 max-w-none">
+      <div className="mb-4 sm:mb-6">
+        <Link
+          href="/admin/cars"
+          className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-slate-500 transition hover:text-[#2F855A] dark:text-zinc-400 dark:hover:text-emerald-400"
+        >
+          <span aria-hidden>←</span> All cars
+        </Link>
+        <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-3xl">
+          Add new car
+        </h1>
         {initialDealerId ? (
           <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-zinc-400">
             Assigning to{" "}
