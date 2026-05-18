@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { BarChart3, Globe, Radar } from "lucide-react";
+import { BarChart3, Gauge, Globe, ListTodo, Radar } from "lucide-react";
+import AdminGscTrendChart from "@/components/admin/AdminGscTrendChart";
 
 function fmtDate(d) {
   if (!d) return "—";
@@ -13,8 +14,26 @@ function pct(n) {
   return `${(Number(n) * 100).toFixed(1)}%`;
 }
 
+function jobStatusClass(status) {
+  if (status === "DONE") return "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300";
+  if (status === "FAILED") return "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300";
+  if (status === "RUNNING") return "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300";
+  return "bg-slate-100 text-slate-600 dark:bg-zinc-800 dark:text-slate-300";
+}
+
 export default function AdminSeoMonitor({ monitor }) {
-  const { crawlRun, crawlFailures, gscSync, gscQueries, gscPages, auditRun, config } = monitor;
+  const {
+    crawlRun,
+    crawlFailures,
+    gscSync,
+    gscQueries,
+    gscPages,
+    gscDaily,
+    pageSpeedRuns,
+    recentJobs,
+    auditRun,
+    config,
+  } = monitor;
 
   return (
     <div className="space-y-8 mt-10">
@@ -32,25 +51,27 @@ export default function AdminSeoMonitor({ monitor }) {
         </Link>
       </div>
 
-      <div className="grid sm:grid-cols-3 gap-3 text-xs">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
         <div className="rounded-xl border border-slate-200 dark:border-zinc-800 px-4 py-3">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">SEO worker</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Job queue</p>
+          <p className="mt-1 font-semibold text-slate-900 dark:text-white">{config.jobQueue || "postgres"}</p>
+        </div>
+        <div className="rounded-xl border border-slate-200 dark:border-zinc-800 px-4 py-3">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">PageSpeed</p>
           <p className="mt-1 font-semibold text-slate-900 dark:text-white">
-            {config.workerUrl ? "Configured" : "Not set (local HEAD fallback)"}
+            {config.pageSpeedEnabled ? "API key set" : "No PSI key"}
           </p>
         </div>
         <div className="rounded-xl border border-slate-200 dark:border-zinc-800 px-4 py-3">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">GSC sync</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Alerts</p>
           <p className="mt-1 font-semibold text-slate-900 dark:text-white">
-            {config.gscEnabled ? "Enabled" : "Disabled"}
+            {config.alertsEnabled ? "Email" : "Off"}
+            {config.slackEnabled ? " + Slack" : ""}
           </p>
-          {config.gscSiteUrl ? (
-            <p className="text-[10px] text-slate-500 mt-1 truncate">{config.gscSiteUrl}</p>
-          ) : null}
         </div>
         <div className="rounded-xl border border-slate-200 dark:border-zinc-800 px-4 py-3">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Last audit saved</p>
-          <p className="mt-1 font-semibold text-slate-900 dark:text-white">{fmtDate(auditRun?.createdAt)}</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">GSC</p>
+          <p className="mt-1 font-semibold text-slate-900 dark:text-white">{config.gscEnabled ? "On" : "Off"}</p>
         </div>
       </div>
 
@@ -154,9 +175,65 @@ export default function AdminSeoMonitor({ monitor }) {
         )}
       </section>
 
+      <section className="rounded-xl border border-slate-200 dark:border-zinc-800 overflow-hidden">
+        <div className="px-4 py-3 border-b border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/50 flex items-center gap-2">
+          <BarChart3 className="w-4 h-4 text-slate-500" />
+          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-600">Search trend (daily)</h3>
+        </div>
+        <AdminGscTrendChart series={gscDaily} />
+      </section>
+
+      <section className="rounded-xl border border-slate-200 dark:border-zinc-800 overflow-hidden">
+        <div className="px-4 py-3 border-b border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/50 flex items-center gap-2">
+          <Gauge className="w-4 h-4 text-slate-500" />
+          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-600">PageSpeed Insights</h3>
+        </div>
+        {!pageSpeedRuns?.length ? (
+          <p className="px-4 py-4 text-sm text-slate-500">
+            {config.pageSpeedEnabled
+              ? "No runs yet — queued via seo-monitor cron."
+              : "Set GOOGLE_PAGESPEED_API_KEY (Google Cloud Console)."}
+          </p>
+        ) : (
+          <ul className="divide-y divide-slate-100 dark:divide-zinc-800">
+            {pageSpeedRuns.map((r) => (
+              <li key={r.id} className="px-4 py-2 text-xs flex flex-wrap justify-between gap-2">
+                <span className="text-slate-800 dark:text-slate-200 truncate max-w-[60%]">{r.url}</span>
+                <span className="text-slate-500 tabular-nums shrink-0">
+                  {r.strategy} · perf {r.performance ?? "—"}
+                  {r.lcpMs != null ? ` · LCP ${Math.round(r.lcpMs)}ms` : ""}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="rounded-xl border border-slate-200 dark:border-zinc-800 overflow-hidden">
+        <div className="px-4 py-3 border-b border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/50 flex items-center gap-2">
+          <ListTodo className="w-4 h-4 text-slate-500" />
+          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-600">Job queue</h3>
+        </div>
+        {!recentJobs?.length ? (
+          <p className="px-4 py-4 text-sm text-slate-500">No jobs yet.</p>
+        ) : (
+          <ul className="divide-y divide-slate-100 dark:divide-zinc-800 max-h-48 overflow-y-auto">
+            {recentJobs.map((j) => (
+              <li key={j.id} className="px-4 py-2 text-xs flex items-center justify-between gap-2">
+                <span className="font-mono text-slate-700 dark:text-slate-300">{j.type}</span>
+                <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${jobStatusClass(j.status)}`}>
+                  {j.status}
+                </span>
+                <span className="text-slate-500 tabular-nums shrink-0">{fmtDate(j.createdAt)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
       <p className="text-xs text-slate-500 flex items-center gap-2">
         <Globe className="w-3.5 h-3.5" />
-        Combined cron:{" "}
+        Cron enqueues + processes jobs:{" "}
         <code className="bg-slate-100 dark:bg-zinc-800 px-1">/api/cron/seo-monitor?secret=CRON_SECRET</code>
       </p>
     </div>

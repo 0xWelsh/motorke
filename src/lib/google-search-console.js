@@ -111,3 +111,37 @@ export async function fetchGscPerformance({ days = 28 } = {}) {
     ].filter((r) => r.key),
   };
 }
+
+/** Site-wide clicks/impressions per day for trend charts. */
+export async function fetchGscDailySeries({ days = 28 } = {}) {
+  if (!gscEnabled()) return { skipped: true, reason: "disabled" };
+
+  const siteUrl = getGscSiteUrl();
+  if (!siteUrl) return { skipped: true, reason: "no_site_url" };
+
+  const endDate = daysAgo(2);
+  const startDate = daysAgo(days + 2);
+
+  const daily = await querySearchAnalytics(siteUrl, {
+    startDate,
+    endDate,
+    dimensions: ["date"],
+    rowLimit: Math.min(days + 5, 100),
+  });
+
+  if (daily.skipped) return daily;
+  if (!daily.ok) return { ok: false, error: "gsc_daily_failed" };
+
+  const rows = (daily.rows || [])
+    .map((row) => ({
+      date: row.keys?.[0] || "",
+      clicks: row.clicks ?? 0,
+      impressions: row.impressions ?? 0,
+      ctr: row.ctr ?? 0,
+      position: row.position ?? 0,
+    }))
+    .filter((r) => r.date)
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  return { ok: true, siteUrl, rows };
+}

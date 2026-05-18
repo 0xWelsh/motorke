@@ -108,7 +108,11 @@ export default async function AdminSeoPage() {
         <ul className="list-disc pl-5 space-y-2">
           <li>Run <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">npm run db:backfill-slugs</code> if slugs are missing.</li>
           <li>
-            Cron: <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">/api/cron/seo-monitor?secret=CRON_SECRET</code> (audit + crawl + GSC).
+            Cron: <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">/api/cron/seo-monitor?secret=CRON_SECRET</code> — Postgres job queue (crawl, GSC, daily trend, PageSpeed, audit).
+          </li>
+          <li>
+            PageSpeed: <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">GOOGLE_PAGESPEED_API_KEY</code> · Alerts: support email + optional{" "}
+            <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">SLACK_WEBHOOK_URL</code>
           </li>
           <li>
             GSC: <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">GSC_SYNC_ENABLED=true</code>,{" "}

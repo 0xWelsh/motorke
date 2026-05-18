@@ -643,3 +643,69 @@ model SeoGscRow {
   @@index([syncId, dimension])
   @@map("seo_gsc_rows")
 }
+
+enum SeoJobStatus {
+  PENDING
+  RUNNING
+  DONE
+  FAILED
+}
+
+enum SeoJobType {
+  CRAWL
+  GSC_SYNC
+  GSC_DAILY
+  PAGESPEED
+  AUDIT
+  CONTENT_SYNC
+}
+
+model SeoJob {
+  id          String       @id @default(cuid())
+  type        SeoJobType
+  status      SeoJobStatus @default(PENDING)
+  payload     Json?
+  result      Json?
+  error       String?
+  attempts    Int          @default(0)
+  maxAttempts Int          @default(3)
+  scheduledAt DateTime     @default(now())
+  startedAt   DateTime?
+  finishedAt  DateTime?
+  createdAt   DateTime     @default(now())
+
+  @@index([status, scheduledAt])
+  @@index([type, createdAt])
+  @@map("seo_jobs")
+}
+
+model SeoGscDailyMetric {
+  id          String   @id @default(cuid())
+  date        DateTime @db.Date
+  clicks      Int      @default(0)
+  impressions Int      @default(0)
+  ctr         Float    @default(0)
+  position    Float    @default(0)
+  syncedAt    DateTime @default(now())
+
+  @@unique([date])
+  @@index([date])
+  @@map("seo_gsc_daily_metrics")
+}
+
+model SeoPageSpeedRun {
+  id              String   @id @default(cuid())
+  url             String
+  strategy        String
+  performance     Int?
+  accessibility   Int?
+  bestPractices   Int?
+  seoScore        Int?
+  lcpMs           Float?
+  fcpMs           Float?
+  cls             Float?
+  createdAt       DateTime @default(now())
+
+  @@index([url, strategy, createdAt])
+  @@map("seo_pagespeed_runs")
+}
