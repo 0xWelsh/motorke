@@ -92,27 +92,30 @@ export async function generateMetadata({ params }) {
 }
 
 
-const getCarData = unstable_cache(
-  async (ref) => {
-    return db.car.findFirst({
-      where: {
-        available: true,
-        ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
-        OR: [{ id: ref }, { publicSlug: ref }],
-      },
-      include: {
-        images: { orderBy: { order: "asc" } },
-        dealer: {
-          include: {
-            users: { select: { avatarUrl: true }, take: 1 },
+function getCarData(ref) {
+  const cached = unstable_cache(
+    async () => {
+      return db.car.findFirst({
+        where: {
+          available: true,
+          ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+          OR: [{ id: ref }, { publicSlug: ref }],
+        },
+        include: {
+          images: { orderBy: { order: "asc" } },
+          dealer: {
+            include: {
+              users: { select: { avatarUrl: true }, take: 1 },
+            },
           },
         },
-      },
-    });
-  },
-  ["car-detail-v2"],
-  { revalidate: 600, tags: ["cars"] }
-);
+      });
+    },
+    ["car-detail-v3", ref],
+    { revalidate: 120, tags: ["cars", `car-detail:${ref}`] }
+  );
+  return cached();
+}
 
 const getSimilarCars = unstable_cache(
   async (carId, make, dealerId, bodyType, year, price) => {
@@ -157,7 +160,7 @@ const getSimilarCars = unstable_cache(
       .map((entry) => entry.candidate);
   },
   ["similar-cars"],
-  { revalidate: 3600, tags: ["cars"] }
+  { revalidate: 600, tags: ["cars"] }
 );
 
 async function getCarReviews(carId) {

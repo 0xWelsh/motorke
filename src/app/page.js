@@ -223,7 +223,7 @@ const getCachedData = unstable_cache(
     return { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews: combinedReviews };
   },
   ["homepage-minimal-v5"],
-  { revalidate: 900, tags: ["homepage"] }
+  { revalidate: 300, tags: ["homepage"] }
 );
 
 const getCachedHomeEnriched = unstable_cache(
@@ -278,7 +278,7 @@ const getCachedHomeEnriched = unstable_cache(
     };
   },
   ["homepage-enriched-v1"],
-  { revalidate: 300, tags: ["homepage"] }
+  { revalidate: 120, tags: ["homepage"] }
 );
 
 export const metadata = {

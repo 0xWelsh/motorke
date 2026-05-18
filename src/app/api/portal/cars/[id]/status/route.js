@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { revalidateInventoryForCar } from "@/lib/revalidate-inventory";
 
 export async function POST(request, { params }) {
   const { id } = await params;
@@ -25,6 +26,8 @@ export async function POST(request, { params }) {
       where: { id },
       data: { available: Boolean(available) },
     });
+
+    await revalidateInventoryForCar(id);
 
     return NextResponse.json({ success: true, available: Boolean(available) });
   } catch (err) {

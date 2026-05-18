@@ -211,7 +211,7 @@ const getDefaultCarsPage = unstable_cache(
     return { cars, total };
   },
   ["cars-default-page-v1"],
-  { revalidate: 60, tags: ["cars-listing"] }
+  { revalidate: 30, tags: ["cars-listing"] }
 );
 
 // Allowed per-page sizes. 14 is the design default (6 top tier + 8 below);

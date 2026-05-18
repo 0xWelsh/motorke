@@ -5,6 +5,7 @@ import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { MIN_BULK_UPLOAD_CARS } from "@/lib/bulk-upload-policy";
 import { finalizeNewCarPublicSlug } from "@/lib/car-public-slug";
+import { revalidateInventory } from "@/lib/revalidate-inventory";
 
 const VALID_FUEL = ["PETROL", "DIESEL", "HYBRID", "ELECTRIC", "LPG"];
 const VALID_TRANS = ["AUTOMATIC", "MANUAL", "CVT"];
@@ -109,6 +110,8 @@ export async function POST(request) {
         errors.push(`Row ${i + 2}: ${err.message}`);
       }
     }
+
+    revalidateInventory();
 
     return NextResponse.json({ success: true, count, errors });
   } catch (err) {

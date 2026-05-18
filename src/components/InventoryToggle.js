@@ -1,8 +1,10 @@
 "use client";
 // src/components/InventoryToggle.js
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function InventoryToggle({ carId, available: initialAvailable }) {
+  const router = useRouter();
   const [available, setAvailable] = useState(initialAvailable);
   const [loading,   setLoading]   = useState(false);
 
@@ -13,7 +15,10 @@ export default function InventoryToggle({ carId, available: initialAvailable }) 
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ available: !available }),
     });
-    if (res.ok) setAvailable(!available);
+    if (res.ok) {
+      setAvailable(!available);
+      router.refresh();
+    }
     setLoading(false);
   }
 

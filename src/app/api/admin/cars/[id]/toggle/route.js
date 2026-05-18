@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { revalidateInventoryForCar } from "@/lib/revalidate-inventory";
 
 export async function POST(request, { params }) {
   const { id } = await params;
@@ -23,6 +24,8 @@ export async function POST(request, { params }) {
     where: { id: id },
     data:  { available: !car.available },
   });
+
+  await revalidateInventoryForCar(id);
 
   return NextResponse.redirect(new URL(request.headers.get("referer") || "/admin/cars", request.url));
 }

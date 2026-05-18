@@ -7,6 +7,7 @@ import { trackRequest } from "@/lib/telemetry";
 import { logAuditEvent } from "@/lib/audit-trail";
 import { ensureCarPublicSlugInTx } from "@/lib/car-public-slug";
 import { notifyListingPublished } from "@/lib/seo-indexing";
+import { revalidateInventoryForCar } from "@/lib/revalidate-inventory";
 
 export async function POST(request) {
   const started = Date.now();
@@ -26,6 +27,7 @@ export async function POST(request) {
   try {
     const body = await request.json();
     const car = await createCar(body);
+    await revalidateInventoryForCar(car.id);
     notifyListingPublished(car);
     logAuditEvent({
       actorId: session.user.id,

@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { finalizeNewCarPublicSlug } from "@/lib/car-public-slug";
 import { carListingPath } from "@/lib/car-listing-url";
+import { revalidateInventoryForCar } from "@/lib/revalidate-inventory";
 
 export async function POST(request) {
   try {
@@ -66,6 +67,7 @@ export async function POST(request) {
     });
 
     const finalized = await finalizeNewCarPublicSlug(car);
+    await revalidateInventoryForCar(finalized.id);
 
     return NextResponse.redirect(new URL(carListingPath(finalized), request.url));
   } catch (err) {

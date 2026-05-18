@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { deleteImage } from "@/lib/storage";
 import { NextResponse } from "next/server";
+import { revalidateInventoryForCar } from "@/lib/revalidate-inventory";
 
 export async function POST(request, { params }) {
   const { id } = await params;
@@ -36,6 +37,8 @@ export async function POST(request, { params }) {
       });
     });
   }
+
+  await revalidateInventoryForCar(id);
 
   // Delete from DB (cascade removes images + leads)
   await db.lead.deleteMany({ where: { carId: id } });

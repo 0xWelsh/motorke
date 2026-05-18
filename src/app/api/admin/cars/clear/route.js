@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { revalidateInventory } from "@/lib/revalidate-inventory";
 
 export async function POST(request) {
   const session = await getSessionFromRequest();
@@ -18,6 +19,8 @@ export async function POST(request) {
   await db.lead.deleteMany({ where });
   await db.carImage.deleteMany({ where: { car: where } });
   const { count } = await db.car.deleteMany({ where });
+
+  revalidateInventory();
 
   return NextResponse.json({ success: true, count });
 }

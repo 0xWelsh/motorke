@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { db } from "@/lib/db";
 import { requireDealer } from "@/lib/auth";
 import Link from "next/link";
