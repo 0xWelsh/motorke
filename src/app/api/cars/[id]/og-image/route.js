@@ -1,90 +1,83 @@
-// Proxies the listing hero image through our own domain so WhatsApp /
-// Facebook crawlers (which can be picky about third-party hosts, TLS,
-// or stale signed URLs) fetch from welshmotorhub.co.ke first. Falls back
-// to the static brand OG image on any error.
+// Proxies listing photos as same-origin 1200×630 JPEG for WhatsApp / Facebook crawlers.
 
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
-import { isCarImageStorageUrl, normalizeListingHeroImageUrl } from "@/lib/listing-image-url";
+import {
+  buildBrandFallbackOgJpeg,
+  buildWhatsAppOgJpeg,
+  fetchListingImageBytes,
+  OG_IMAGE_DIMENSIONS,
+} from "@/lib/og-listing-image";
 
 export const runtime = "nodejs";
-export const maxDuration = 15;
+export const maxDuration = 25;
 
-const MAX_BYTES = 6 * 1024 * 1024;
-const TIMEOUT_MS = 9000;
+const CACHE_HEADERS = {
+  "Content-Type": "image/jpeg",
+  "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800",
+};
 
-function supabaseOriginOnly() {
-  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  if (!raw) return null;
-  try {
-    return new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`).origin;
-  } catch {
-    return null;
-  }
+async function jpegResponse(buf) {
+  return new Response(buf, { status: 200, headers: CACHE_HEADERS });
 }
 
-function redirectToBrand() {
-  const target = new URL(BRAND_OG_IMAGE, getSiteOrigin());
-  return NextResponse.redirect(target, 307);
+function orderedImageUrls(car) {
+  const rows = Array.isArray(car?.images) ? car.images : [];
+  const sorted = [...rows].sort((a, b) => {
+    if (a.isPrimary !== b.isPrimary) return a.isPrimary ? -1 : 1;
+    return (a.order ?? 0) - (b.order ?? 0);
+  });
+  const seen = new Set();
+  const urls = [];
+  for (const row of sorted) {
+    const u = row?.url?.trim();
+    if (!u || seen.has(u)) continue;
+    seen.add(u);
+    urls.push(u);
+  }
+  return urls;
 }
 
 export async function GET(_req, { params }) {
-  const { id } = await params;
-  const origin = supabaseOriginOnly();
+  const ref = (await params)?.id;
 
-  const car = await db.car.findFirst({
-    where: {
-      id,
-      available: true,
-      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
-    },
-    select: {
-      images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }], take: 1 },
-    },
-  });
+  const car = ref
+    ? await db.car.findFirst({
+        where: {
+          available: true,
+          ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+          OR: [{ id: ref }, { publicSlug: ref }],
+        },
+        select: {
+          id: true,
+          images: {
+            orderBy: [{ isPrimary: "desc" }, { order: "asc" }],
+            select: { url: true, isPrimary: true, order: true },
+          },
+        },
+      })
+    : null;
 
-  const raw = car?.images?.[0]?.url;
-  const imageUrl = normalizeListingHeroImageUrl(raw);
-  if (!imageUrl || !isCarImageStorageUrl(imageUrl, origin)) {
-    return redirectToBrand();
+  const candidates = orderedImageUrls(car);
+
+  for (const rawUrl of candidates) {
+    const bytes = await fetchListingImageBytes(rawUrl);
+    if (!bytes) continue;
+    try {
+      const jpeg = await buildWhatsAppOgJpeg(bytes);
+      return jpegResponse(jpeg);
+    } catch {
+      // corrupt / unsupported — try next image
+    }
   }
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
-    const upstream = await fetch(imageUrl, {
-      signal: controller.signal,
-      headers: { Accept: "image/*" },
-      redirect: "follow",
-      cache: "no-store",
-    });
-    if (!upstream.ok) {
-      return redirectToBrand();
-    }
-    const ct = (upstream.headers.get("content-type") || "image/jpeg").split(";")[0].trim();
-    if (!ct.startsWith("image/")) {
-      return redirectToBrand();
-    }
-    const len = upstream.headers.get("content-length");
-    if (len && Number(len) > MAX_BYTES) {
-      return redirectToBrand();
-    }
-    const buf = Buffer.from(await upstream.arrayBuffer());
-    if (buf.length > MAX_BYTES) {
-      return redirectToBrand();
-    }
-    return new Response(buf, {
-      status: 200,
-      headers: {
-        "Content-Type": ct,
-        "Cache-Control": "public, max-age=3600, s-maxage=604800, stale-while-revalidate=86400",
-      },
-    });
+    const fallback = await buildBrandFallbackOgJpeg();
+    return jpegResponse(fallback);
   } catch {
-    return redirectToBrand();
-  } finally {
-    clearTimeout(timer);
+    return NextResponse.json({ error: "og_image_unavailable" }, { status: 503 });
   }
 }
+
+export { OG_IMAGE_DIMENSIONS };

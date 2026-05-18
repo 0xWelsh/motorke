@@ -30,20 +30,46 @@ export function normalizeListingHeroImageUrl(url) {
 }
 
 /**
+ * Storage object path after the bucket name (e.g. cars/{carId}/file.jpg).
+ * @param {string} urlString
+ * @returns {string|null}
+ */
+export function extractCarImageStoragePath(urlString) {
+  if (!urlString || typeof urlString !== "string") return null;
+  const markers = [
+    `/object/public/${BUCKET}/`,
+    `/object/sign/${BUCKET}/`,
+    `/object/${BUCKET}/`,
+  ];
+  for (const marker of markers) {
+    const idx = urlString.indexOf(marker);
+    if (idx === -1) continue;
+    const rest = urlString.slice(idx + marker.length).split("?")[0];
+    if (rest && !rest.includes("..")) return rest;
+  }
+  return null;
+}
+
+/**
  * True if the URL is our Supabase Storage car bucket (public or signed).
  * Used to block SSRF in the OG image proxy.
  * @param {string} urlString
  * @param {string|null} supabaseOrigin e.g. https://xyz.supabase.co
  */
 export function isCarImageStorageUrl(urlString, supabaseOrigin) {
-  if (!urlString || !supabaseOrigin) return false;
+  if (!urlString) return false;
+  const normalized = normalizeListingHeroImageUrl(urlString);
+  if (!normalized) return false;
+
+  if (!supabaseOrigin) return false;
   try {
-    const u = new URL(urlString);
+    const u = new URL(normalized);
     const o = new URL(supabaseOrigin);
     if (u.origin !== o.origin) return false;
     const p = u.pathname;
     return (
       p.includes(`/object/public/${BUCKET}/`) ||
+      p.includes(`/object/${BUCKET}/`) ||
       (p.includes(`/object/sign/${BUCKET}/`) && u.searchParams.has("token"))
     );
   } catch {

@@ -74,8 +74,10 @@ export async function generateMetadata({ params }) {
       images: [
         {
           url: ogImageUrl,
+          secureUrl: ogImageUrl,
           width: 1200,
           height: 630,
+          type: "image/jpeg",
           alt: title,
         },
       ],
