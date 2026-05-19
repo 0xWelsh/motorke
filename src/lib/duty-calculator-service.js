@@ -1,9 +1,7 @@
 import { db } from "@/lib/db";
-import { calculateDutyBreakdown, getAgeYearsFromYear } from "@/lib/duty";
+import { calculateDutyBreakdown, FREIGHT_PROXY_KES, getAgeYearsFromYear } from "@/lib/duty";
 import { getDutyRates } from "@/lib/duty-rates";
 import { buildDutyVehicleSlug, dutyVehicleLabel, normalizeDutySlug } from "@/lib/duty-vehicle-slug";
-
-const FREIGHT_PROXY_KES = 2750 * 135;
 
 function isDutyDbUnavailable(err) {
   const code = err?.code;
@@ -190,14 +188,20 @@ export async function computeDutyEstimate(input) {
     freightProxyKes: FREIGHT_PROXY_KES,
     breakdown: {
       customsValue: Math.round(breakdown.customsValue),
+      importDuty: Math.round(breakdown.importDuty),
+      importDutyRate: breakdown.importDutyRate,
       idf: Math.round(breakdown.idf),
       excise: Math.round(breakdown.excise),
       exciseRate: breakdown.exciseRate,
       exciseLabel: breakdown.exciseLabel,
       vat: Math.round(breakdown.vat),
       rdl: Math.round(breakdown.rdl),
-      totalTaxes: Math.round(breakdown.total),
-      estimatedLanded: Math.round(breakdown.landed),
+      totalTaxes: Math.round(breakdown.totalTaxes),
+      freightProxyKes: FREIGHT_PROXY_KES,
+      cifKes: Math.round(crspKes + FREIGHT_PROXY_KES),
+      vehicleReferenceKes: crspKes,
+      totalToImport: Math.round(crspKes + FREIGHT_PROXY_KES + breakdown.totalTaxes),
+      estimatedLanded: Math.round(crspKes + FREIGHT_PROXY_KES + breakdown.totalTaxes),
     },
     slug: input.slug || buildDutyVehicleSlug(input),
   };

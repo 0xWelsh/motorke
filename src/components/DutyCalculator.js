@@ -136,7 +136,7 @@ export default function DutyCalculator({
 
   const handleShare = async () => {
     const text = estimate
-      ? `Import duty estimate for ${estimate.label}: ${formatPrice(estimate.breakdown.totalTaxes)} taxes (Welsh Motorhub)`
+      ? `Import estimate for ${estimate.label}: about ${formatPrice(estimate.breakdown.totalToImport)} all-in (Welsh Motorhub)`
       : "Kenya import duty calculator — Welsh Motorhub";
     if (navigator.share) {
       try {
@@ -157,11 +157,23 @@ export default function DutyCalculator({
 
   const breakdownCards = estimate
     ? [
-        { label: "Depreciated customs value", value: formatPrice(estimate.breakdown.customsValue) },
-        { label: "Import declaration fee (IDF)", value: formatPrice(estimate.breakdown.idf) },
+        { label: "KRA customs value (depreciated)", value: formatPrice(estimate.breakdown.customsValue) },
+        {
+          label: `Import duty (${Math.round((estimate.breakdown.importDutyRate || 0.35) * 100)}%)`,
+          value: formatPrice(estimate.breakdown.importDuty),
+        },
         { label: `Excise (${estimate.breakdown.exciseLabel})`, value: formatPrice(estimate.breakdown.excise) },
         { label: "VAT (16%)", value: formatPrice(estimate.breakdown.vat) },
-        { label: "Railway development levy", value: formatPrice(estimate.breakdown.rdl) },
+        { label: "Import declaration fee (IDF)", value: formatPrice(estimate.breakdown.idf) },
+        { label: "Railway development levy (RDL)", value: formatPrice(estimate.breakdown.rdl) },
+      ]
+    : [];
+
+  const costLines = estimate
+    ? [
+        { label: "Vehicle reference (CRSP)", value: formatPrice(estimate.breakdown.vehicleReferenceKes) },
+        { label: "Shipping & export estimate", value: formatPrice(estimate.breakdown.freightProxyKes) },
+        { label: "Taxes & levies (total)", value: formatPrice(estimate.breakdown.totalTaxes), highlight: true },
       ]
     : [];
 
@@ -289,16 +301,39 @@ export default function DutyCalculator({
               className="p-5 sm:p-6 bg-[#b91c1c] dark:bg-red-700 text-white"
               style={{ borderRadius: "var(--radius)" }}
             >
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-100 mb-1">Estimated total taxes</p>
-              <p className="text-3xl sm:text-4xl font-bold tabular-nums">{formatPrice(estimate.breakdown.totalTaxes)}</p>
-              <p className="text-xs text-red-100/90 mt-2">
-                Landed reference (incl. CRSP proxy): {formatPrice(estimate.breakdown.estimatedLanded)}
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-100 mb-1">
+                Estimated total to import
               </p>
+              <p className="text-3xl sm:text-5xl font-bold tabular-nums leading-none">
+                {formatPrice(estimate.breakdown.totalToImport)}
+              </p>
+              <p className="text-xs sm:text-sm text-red-100/90 mt-3 max-w-lg leading-relaxed">
+                CRSP vehicle value + shipping estimate + all statutory taxes. Excludes clearing-agent fees, port
+                handling, and your actual overseas purchase price if it differs from CRSP.
+              </p>
+            </div>
+
+            <div
+              className="grid gap-2 sm:grid-cols-3 border border-slate-200 dark:border-zinc-800 p-4 bg-slate-50/50 dark:bg-zinc-900/30"
+              style={{ borderRadius: "var(--radius)" }}
+            >
+              {costLines.map((line) => (
+                <div key={line.label} className="flex flex-col gap-1">
+                  <p className="text-[10px] text-slate-500 uppercase tracking-wide">{line.label}</p>
+                  <p
+                    className={`text-sm font-bold tabular-nums ${
+                      line.highlight ? "text-[#b91c1c] dark:text-red-400" : "text-slate-900 dark:text-white"
+                    }`}
+                  >
+                    {line.value}
+                  </p>
+                </div>
+              ))}
             </div>
 
             <DutyTaxBreakdownChart breakdown={estimate.breakdown} />
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
               {breakdownCards.map((card) => (
                 <div
                   key={card.label}
@@ -333,15 +368,21 @@ export default function DutyCalculator({
             </div>
 
             <p className="text-[11px] leading-relaxed text-slate-500 dark:text-slate-400">
-              Estimates use KRA-style depreciation, excise bands, VAT, IDF, and RDL. CRSP values are illustrative until
-              updated from official schedules. Not a binding KRA assessment.
+              Indicative only: import duty 35%, excise on (customs value + import duty), VAT 16% on the duty stack, IDF
+              2.5%, RDL 2%. CRSP is from our reference table — confirm with KRA or your clearing agent before payment.
             </p>
           </div>
         )}
       </div>
 
       {estimate && !loading && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md p-3 sm:hidden safe-area-pb">
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md p-3 sm:hidden safe-area-pb space-y-2">
+          <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">
+            Est. total to import{" "}
+            <span className="text-[#b91c1c] dark:text-red-400 tabular-nums">
+              {formatPrice(estimate.breakdown.totalToImport)}
+            </span>
+          </p>
           <TrackedLink
             href={marketplaceHref}
             eventName="duty_mobile_sticky_stock"

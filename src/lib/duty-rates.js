@@ -12,9 +12,11 @@ const dutyRatesSchema = z.object({
   source: z.string().optional(),
   effectiveFrom: z.string().optional(),
   fetchedAt: z.string().optional(),
+  importDutyRate: z.coerce.number().min(0).max(1).optional(),
   idfRate: z.coerce.number().min(0).max(1),
   vatRate: z.coerce.number().min(0).max(1),
-  rdlAmount: z.coerce.number().min(0),
+  rdlRate: z.coerce.number().min(0).max(1).optional(),
+  rdlAmount: z.coerce.number().min(0).optional(),
   depreciationBands: z
     .array(
       z.object({
@@ -51,9 +53,11 @@ function normalizeRates(rawRates) {
   const exciseBands = [...parsed.excise.bands].sort((a, b) => a.minCC - b.minCC);
 
   return {
+    importDutyRate: parsed.importDutyRate ?? DEFAULT_DUTY_RATES.importDutyRate,
     idfRate: parsed.idfRate,
     vatRate: parsed.vatRate,
-    rdlAmount: parsed.rdlAmount,
+    rdlRate: parsed.rdlRate ?? DEFAULT_DUTY_RATES.rdlRate,
+    rdlAmount: parsed.rdlAmount ?? DEFAULT_DUTY_RATES.rdlAmount,
     depreciationBands,
     excise: {
       electricRate: parsed.excise.electricRate,

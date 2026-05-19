@@ -3,7 +3,7 @@ import Link from "next/link";
 const SECTIONS = [
   {
     title: "How Kenya vehicle import duty is calculated",
-    body: `Used imports are assessed on a depreciated customs value derived from the Customs Reference Survey Price (CRSP), plus declaration fees, excise (by engine size and fuel type), VAT at 16%, and the railway development levy. Welsh Motorhub applies the same structural steps importers expect from KRA schedules — use our calculator above, then compare real dealer stock.`,
+    body: `Used imports are assessed on a depreciated customs value from the Customs Reference Survey Price (CRSP). Import duty (35%), excise (by engine size, on customs value + import duty), VAT at 16% on that stack, plus IDF (2.5%) and railway levy (2%). Our calculator totals CRSP + shipping estimate + all taxes so you see an indicative “total to import” figure — then browse matching dealer stock.`,
   },
   {
     title: "The 8-year import rule",

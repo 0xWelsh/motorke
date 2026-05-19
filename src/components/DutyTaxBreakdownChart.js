@@ -3,8 +3,9 @@
 import { formatPrice } from "@/lib/utils";
 
 const SEGMENTS = [
+  { key: "importDuty", label: "Import duty", color: "bg-slate-900 dark:bg-slate-100" },
+  { key: "excise", label: "Excise", color: "bg-slate-600 dark:bg-slate-300" },
   { key: "vat", label: "VAT (16%)", color: "bg-red-600 dark:bg-red-500" },
-  { key: "excise", label: "Excise", color: "bg-slate-800 dark:bg-slate-200" },
   { key: "idf", label: "IDF", color: "bg-emerald-600 dark:bg-emerald-500" },
   { key: "rdl", label: "RDL", color: "bg-amber-500 dark:bg-amber-400" },
 ];

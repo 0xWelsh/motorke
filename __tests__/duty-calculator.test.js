@@ -1,21 +1,41 @@
 /** @jest-environment node */
 
-import { calculateDutyBreakdown, getAgeYearsFromYear } from "@/lib/duty";
+import { calculateDutyBreakdown, getAgeYearsFromYear, FREIGHT_PROXY_KES } from "@/lib/duty";
 
 describe("duty calculator engine", () => {
   test("returns positive tax breakdown for typical SUV CRSP", () => {
     const ageYears = getAgeYearsFromYear(2018);
     const result = calculateDutyBreakdown({
-      cifKes: 3_200_000 + 2750 * 135,
+      cifKes: 3_200_000 + FREIGHT_PROXY_KES,
       ageYears,
       engineCC: 2200,
       isElectric: false,
     });
 
     expect(result.customsValue).toBeGreaterThan(0);
-    expect(result.total).toBeGreaterThan(0);
+    expect(result.importDuty).toBeGreaterThan(0);
+    expect(result.totalTaxes).toBeGreaterThan(500_000);
     expect(result.vat).toBeGreaterThan(0);
     expect(result.excise).toBeGreaterThan(0);
-    expect(result.landed).toBeGreaterThan(result.total);
+    expect(result.landed).toBeGreaterThan(result.totalTaxes);
+  });
+
+  test("2019 Mazda CX-5 2000cc uses KRA-style stacking (taxes materially above old formula)", () => {
+    const crsp = 3_100_000;
+    const cif = crsp + FREIGHT_PROXY_KES;
+    const ageYears = getAgeYearsFromYear(2019);
+    const result = calculateDutyBreakdown({
+      cifKes: cif,
+      ageYears,
+      engineCC: 2000,
+      isElectric: false,
+    });
+
+    const totalToImport = crsp + FREIGHT_PROXY_KES + result.totalTaxes;
+
+    expect(result.importDuty).toBeCloseTo(result.customsValue * 0.35, -2);
+    expect(result.excise).toBeCloseTo((result.customsValue + result.importDuty) * 0.25, -2);
+    expect(result.totalTaxes).toBeGreaterThan(1_000_000);
+    expect(totalToImport).toBeGreaterThan(crsp + FREIGHT_PROXY_KES + 1_000_000);
   });
 });
