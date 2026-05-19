@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -18,7 +18,8 @@ import { trackUiEvent } from "@/lib/analytics";
 import { BRAND_HEADER_LOGO } from "@/lib/site-url";
 
 export default function Navbar({ user }) {
-  const router    = useRouter();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [open,      setOpen]      = useState(false);
   const [mobileSearch, setMobileSearch] = useState(false);
@@ -99,14 +100,36 @@ export default function Navbar({ user }) {
     { href: "/duty",    label: "Duty" },
   ];
 
+  function closeMenus() {
+    setOpen(false);
+    setUserMenu(false);
+    setMobileSearch(false);
+    setShowSuggestions(false);
+  }
+
+  function navigateTo(href, e) {
+    if (e?.metaKey || e?.ctrlKey || e?.shiftKey || e?.altKey || e?.button !== 0) return;
+    e?.preventDefault();
+    closeMenus();
+    if (href === pathname) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    router.push(href);
+  }
+
   return (
     <>
-      <nav className="sticky top-0 z-[70] w-full flex items-center h-16 md:h-20 bg-white dark:bg-[#0a0a0a] border-b border-gray-100 dark:border-zinc-900 shadow-sm transition-colors duration-300">
+      <nav className="sticky top-0 z-[100] isolate w-full flex items-center h-16 md:h-20 bg-white dark:bg-[#0a0a0a] border-b border-gray-100 dark:border-zinc-900 shadow-sm transition-colors duration-300">
         <div className="w-full px-6 md:px-12">
-          <div className="flex items-center justify-between gap-8 h-full">
+          <div className="flex items-center justify-between gap-4 lg:gap-6 min-w-0 h-full">
 
             {/* LOGO — horizontal wordmark (not the favicon mark) */}
-            <Link href="/" className="flex shrink-0 items-center transition-transform active:scale-95">
+            <Link
+              href="/"
+              onClick={(e) => navigateTo("/", e)}
+              className="relative z-20 flex shrink-0 items-center transition-transform active:scale-95"
+            >
               <div className="relative h-12 w-52 shrink-0 md:h-14 md:w-72 lg:h-16 lg:w-80">
                 <Image
                   src={BRAND_HEADER_LOGO}
@@ -120,22 +143,29 @@ export default function Navbar({ user }) {
             </Link>
 
             {/* NAV LINKS (Desktop) */}
-            <div className="hidden lg:flex items-center gap-6">
+            <div className="relative z-20 hidden lg:flex shrink-0 items-center gap-4 xl:gap-6">
               {links.map(({ href, label }) => (
-                <Link key={href} href={href}
-                  className="text-[13px] font-bold uppercase tracking-widest text-slate-900 dark:text-white transition-all hover:opacity-70">
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={(e) => navigateTo(href, e)}
+                  className="shrink-0 text-[13px] font-bold uppercase tracking-widest text-slate-900 dark:text-white transition-all hover:opacity-70"
+                >
                   {label}
                 </Link>
               ))}
-              <Link href="/contact" 
-                className="px-6 py-2 text-[13px] font-bold uppercase tracking-widest border border-slate-900 dark:border-white text-slate-900 dark:text-white transition-all hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:!text-[#0a0a0a]"
-                style={{ borderRadius: 'var(--radius)' }}>
+              <Link
+                href="/contact"
+                onClick={(e) => navigateTo("/contact", e)}
+                className="shrink-0 px-6 py-2 text-[13px] font-bold uppercase tracking-widest border border-slate-900 dark:border-white text-slate-900 dark:text-white transition-all hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:!text-[#0a0a0a]"
+                style={{ borderRadius: "var(--radius)" }}
+              >
                 Contact
               </Link>
             </div>
 
             {/* SEARCH (Minimalist) */}
-            <div ref={searchRef} className="hidden md:flex flex-1 max-w-sm relative group">
+            <div ref={searchRef} className="relative z-10 hidden md:flex min-w-0 flex-1 max-w-sm">
               <form onSubmit={handleSearch} className="w-full relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#718096]" />
                 <input
@@ -325,7 +355,7 @@ export default function Navbar({ user }) {
               <div className="flex items-center justify-between gap-3">
                 <Link
                   href="/"
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => navigateTo("/", e)}
                   className="flex min-w-0 shrink-0 items-center"
                 >
                   <div className="relative h-10 w-44 shrink-0 sm:h-11 sm:w-52">
@@ -386,7 +416,7 @@ export default function Navbar({ user }) {
                 />
                 <MobileMenuRow
                   href="/"
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => navigateTo("/", e)}
                   icon={<Home className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
                   label="Home"
                   analyticsEvent="mobile_menu_home_click"

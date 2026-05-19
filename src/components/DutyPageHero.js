@@ -9,7 +9,7 @@ export default function DutyPageHero({ compact = false }) {
   }
 
   return (
-    <section className="relative mb-10 lg:mb-12 overflow-hidden">
+    <section className="relative mb-10 lg:mb-12 overflow-hidden pointer-events-none">
       {/* Ambient blurred wash */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden>
         <Image
@@ -59,7 +59,7 @@ export default function DutyPageHero({ compact = false }) {
         aria-hidden
       />
 
-      <div className="relative home-shell pt-4 pb-10 sm:pt-5 sm:pb-12 lg:pt-6 lg:pb-14">
+      <div className="relative home-shell pointer-events-auto pt-4 pb-10 sm:pt-5 sm:pb-12 lg:pt-6 lg:pb-14">
         <div className="max-w-6xl mx-auto">
           <div className="max-w-2xl lg:max-w-[52%]">
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600 dark:text-red-500 mb-2">
