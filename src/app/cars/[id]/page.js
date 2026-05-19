@@ -58,7 +58,7 @@ export async function generateMetadata({ params }) {
   const origin = getSiteOrigin();
   const canonicalPath = carListingPath(car);
   const url = `${origin}${canonicalPath}`;
-  const ogImageUrl = `${origin}/api/cars/${car.id}/og-image`;
+  const ogImageUrl = `${origin}/api/cars/${car.id}/og-image?v=branded`;
 
   return {
     title,
