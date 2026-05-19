@@ -8,6 +8,8 @@ import { carsHubPathForDutyVehicle } from "@/lib/duty-vehicle-slug";
 import TrackedLink from "@/components/TrackedLink";
 import DutyPopularChips from "@/components/DutyPopularChips";
 import DutyTaxBreakdownChart from "@/components/DutyTaxBreakdownChart";
+import DutyImportEligibilityBanner from "@/components/DutyImportEligibilityBanner";
+import { getImportYearWindow } from "@/lib/duty-import-eligibility";
 
 function sessionKey() {
   if (typeof window === "undefined") return null;
@@ -35,6 +37,7 @@ export default function DutyCalculator({
   onVehicleChange = null,
   popularVehicles = [],
 }) {
+  const importWindow = getImportYearWindow();
   const searchId = useId();
   const resultsRef = useRef(null);
   const [query, setQuery] = useState(initialVehicle?.label || "");
@@ -218,10 +221,13 @@ export default function DutyCalculator({
                 className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-zinc-800 border-b border-slate-100 dark:border-zinc-800 last:border-0"
                 onClick={() => applyVehicle(v)}
               >
-                <span className="font-semibold text-slate-900 dark:text-white">{v.label}</span>
-                <span className="block text-xs text-slate-500 mt-0.5">
-                  {v.engineCC}cc · {FUEL_LABELS[v.fuelType] || v.fuelType} · CRSP {formatPrice(v.crspKes)}
-                </span>
+                  <span className="font-semibold text-slate-900 dark:text-white">{v.label}</span>
+                  <span className="block text-xs text-slate-500 mt-0.5">
+                    {v.engineCC}cc · {FUEL_LABELS[v.fuelType] || v.fuelType} · CRSP {formatPrice(v.crspKes)}
+                    {v.importEligibility?.status === "ineligible" && (
+                      <span className="ml-2 text-red-600 dark:text-red-400 font-bold">· Over 8yr limit</span>
+                    )}
+                  </span>
               </button>
             </li>
           ))}
@@ -238,6 +244,15 @@ export default function DutyCalculator({
   return (
     <div className="space-y-6">
       {searchBlock}
+
+      <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+        Kenya&apos;s <strong className="font-semibold text-slate-700 dark:text-slate-300">8-year import rule</strong>
+        : for {importWindow.referenceYear}, model year{" "}
+        <strong className="font-semibold text-slate-700 dark:text-slate-300">
+          {importWindow.oldestImportableYear} or newer
+        </strong>{" "}
+        is typically registrable.
+      </p>
 
       {popularVehicles.length > 0 && (
         <DutyPopularChips
@@ -297,19 +312,32 @@ export default function DutyCalculator({
               </div>
             </div>
 
+            <DutyImportEligibilityBanner eligibility={estimate.importEligibility} />
+
             <div
-              className="p-5 sm:p-6 bg-[#b91c1c] dark:bg-red-700 text-white"
+              className={`p-5 sm:p-6 ${
+                estimate.importEligibility?.status === "ineligible"
+                  ? "bg-slate-500 dark:bg-zinc-600"
+                  : "bg-[#b91c1c] dark:bg-red-700"
+              } text-white`}
               style={{ borderRadius: "var(--radius)" }}
             >
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-100 mb-1">
-                Estimated total to import
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80 mb-1">
+                {estimate.importEligibility?.status === "ineligible"
+                  ? "Tax estimate only — not registrable"
+                  : "Estimated total to import"}
               </p>
-              <p className="text-3xl sm:text-5xl font-bold tabular-nums leading-none">
+              <p
+                className={`text-3xl sm:text-5xl font-bold tabular-nums leading-none ${
+                  estimate.importEligibility?.status === "ineligible" ? "line-through opacity-75" : ""
+                }`}
+              >
                 {formatPrice(estimate.breakdown.totalToImport)}
               </p>
-              <p className="text-xs sm:text-sm text-red-100/90 mt-3 max-w-lg leading-relaxed">
-                CRSP vehicle value + shipping estimate + all statutory taxes. Excludes clearing-agent fees, port
-                handling, and your actual overseas purchase price if it differs from CRSP.
+              <p className="text-xs sm:text-sm text-white/90 mt-3 max-w-lg leading-relaxed">
+                {estimate.importEligibility?.status === "ineligible"
+                  ? "Duties may still apply at customs, but NTSA will not register this vehicle for Kenyan roads."
+                  : "CRSP vehicle value + shipping estimate + all statutory taxes. Excludes clearing-agent fees, port handling, and your actual overseas purchase price if it differs from CRSP."}
               </p>
             </div>
 

@@ -81,6 +81,10 @@ export default function DutyPageHero({ compact = false, children = null }) {
               </li>
               <li className="inline-flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden />
+                8-year import eligibility check
+              </li>
+              <li className="inline-flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden />
                 Verified dealer stock
               </li>
             </ul>

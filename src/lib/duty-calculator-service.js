@@ -1,6 +1,11 @@
 import { db } from "@/lib/db";
 import { calculateDutyBreakdown, FREIGHT_PROXY_KES, getAgeYearsFromYear } from "@/lib/duty";
 import { getDutyRates } from "@/lib/duty-rates";
+import {
+  assessImportEligibility,
+  getImportYearWindow,
+  isImportableModelYear,
+} from "@/lib/duty-import-eligibility";
 import { buildDutyVehicleSlug, dutyVehicleLabel, normalizeDutySlug } from "@/lib/duty-vehicle-slug";
 
 function isDutyDbUnavailable(err) {
@@ -100,6 +105,7 @@ const FEATURED_POPULAR_SLUGS = [
 
 export function serializeDutyVehicleForClient(vehicle) {
   if (!vehicle) return null;
+  const importEligibility = assessImportEligibility(vehicle.year);
   return {
     id: vehicle.id,
     make: vehicle.make,
@@ -111,6 +117,7 @@ export function serializeDutyVehicleForClient(vehicle) {
     crspKes: vehicle.crspKes,
     slug: buildDutyVehicleSlug(vehicle) || vehicle.slug,
     label: dutyVehicleLabel(vehicle),
+    importEligibility,
   };
 }
 
@@ -132,7 +139,9 @@ export async function getPopularDutyVehicles({ take = 8 } = {}) {
         where: { id: { in: trendingIds }, active: true },
       });
       const byId = new Map(trending.map((v) => [v.id, v]));
-      const ordered = trendingIds.map((id) => byId.get(id)).filter(Boolean);
+      const ordered = trendingIds
+        .map((id) => byId.get(id))
+        .filter((v) => v && isImportableModelYear(v.year));
       if (ordered.length >= 4) return ordered.slice(0, take);
     }
 
@@ -144,10 +153,13 @@ export async function getPopularDutyVehicles({ take = 8 } = {}) {
     });
     const featuredBySlug = new Map(featured.map((v) => [buildDutyVehicleSlug(v) || v.slug, v]));
     const curated = FEATURED_POPULAR_SLUGS.map((slug) => featuredBySlug.get(slug)).filter(Boolean);
-    if (curated.length > 0) return curated.slice(0, take);
+    if (curated.length > 0) {
+      return curated.filter((v) => isImportableModelYear(v.year)).slice(0, take);
+    }
 
+    const { oldestImportableYear } = getImportYearWindow();
     return await db.dutyVehicle.findMany({
-      where: { active: true },
+      where: { active: true, year: { gte: oldestImportableYear } },
       orderBy: [{ year: "desc" }, { make: "asc" }],
       take,
     });
@@ -176,6 +188,8 @@ export async function computeDutyEstimate(input) {
     rates,
   });
 
+  const importEligibility = assessImportEligibility(year);
+
   return {
     label: input.label || dutyVehicleLabel(input),
     make: input.make,
@@ -185,6 +199,7 @@ export async function computeDutyEstimate(input) {
     fuelType,
     crspKes,
     ageYears,
+    importEligibility,
     freightProxyKes: FREIGHT_PROXY_KES,
     breakdown: {
       customsValue: Math.round(breakdown.customsValue),

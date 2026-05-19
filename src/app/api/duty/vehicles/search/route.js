@@ -2,8 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { searchDutyVehicles } from "@/lib/duty-calculator-service";
-import { dutyVehiclePathSlug } from "@/lib/duty-vehicle-slug";
+import { searchDutyVehicles, serializeDutyVehicleForClient } from "@/lib/duty-calculator-service";
 
 const querySchema = z.object({
   q: z.string().min(1).max(80),
@@ -24,17 +23,6 @@ export async function GET(request) {
   const vehicles = await searchDutyVehicles(parsed.data.q, parsed.data.limit);
   return NextResponse.json({
     query: parsed.data.q,
-    vehicles: vehicles.map((v) => ({
-      id: v.id,
-      make: v.make,
-      model: v.model,
-      trim: v.trim,
-      year: v.year,
-      engineCC: v.engineCC,
-      fuelType: v.fuelType,
-      crspKes: v.crspKes,
-      slug: dutyVehiclePathSlug(v),
-      label: `${v.year} ${v.make} ${v.model}${v.trim ? ` ${v.trim}` : ""}`,
-    })),
+    vehicles: vehicles.map((v) => serializeDutyVehicleForClient(v)).filter(Boolean),
   });
 }
