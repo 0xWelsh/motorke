@@ -115,7 +115,7 @@ export async function POST(request) {
       }
     }
 
-    revalidateInventory();
+    revalidateInventory({ refreshHomepage: true });
 
     return NextResponse.json({ success: true, count, errors });
   } catch (err) {

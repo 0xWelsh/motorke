@@ -67,7 +67,7 @@ export async function POST(request) {
     });
 
     const finalized = await finalizeNewCarPublicSlug(car);
-    await revalidateInventoryForCar(finalized.id);
+    await revalidateInventoryForCar(finalized.id, { refreshHomepage: true });
 
     return NextResponse.redirect(new URL(carListingPath(finalized), request.url));
   } catch (err) {

@@ -25,7 +25,7 @@ export async function POST(request, { params }) {
     data:  { available: !car.available },
   });
 
-  await revalidateInventoryForCar(id);
+  await revalidateInventoryForCar(id, { refreshHomepage: true });
 
   return NextResponse.redirect(new URL(request.headers.get("referer") || "/admin/cars", request.url));
 }

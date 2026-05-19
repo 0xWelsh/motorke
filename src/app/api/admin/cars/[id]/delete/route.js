@@ -38,7 +38,7 @@ export async function POST(request, { params }) {
     });
   }
 
-  await revalidateInventoryForCar(id);
+  await revalidateInventoryForCar(id, { refreshHomepage: true });
 
   // Delete from DB (cascade removes images + leads)
   await db.lead.deleteMany({ where: { carId: id } });

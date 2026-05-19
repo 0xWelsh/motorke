@@ -27,7 +27,7 @@ export async function POST(request, { params }) {
       data: { available: Boolean(available) },
     });
 
-    await revalidateInventoryForCar(id);
+    await revalidateInventoryForCar(id, { refreshHomepage: true });
 
     return NextResponse.json({ success: true, available: Boolean(available) });
   } catch (err) {

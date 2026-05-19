@@ -20,7 +20,7 @@ export async function POST(request) {
   await db.carImage.deleteMany({ where: { car: where } });
   const { count } = await db.car.deleteMany({ where });
 
-  revalidateInventory();
+  revalidateInventory({ refreshHomepage: true });
 
   return NextResponse.json({ success: true, count });
 }

@@ -1,23 +1,31 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { db } from "@/lib/db";
 
-/** Tags used by unstable_cache on public inventory surfaces */
-const INVENTORY_CACHE_TAGS = [
+/** Listing/browse caches — safe to bust on every edit */
+const LISTING_CACHE_TAGS = [
   "cars",
   "cars-listing",
   "makes",
-  "homepage",
   "dealers-index",
   "market-analysis",
 ];
 
 /**
  * Invalidate cached public inventory after create/update/delete/toggle.
- * Call from API routes immediately after a successful DB write.
+ * @param {{ refreshHomepage?: boolean }} opts — homepage rebuild is heavy; only on publish/hide/delete
  */
-export function revalidateInventory({ carId, publicSlug, dealerSlug } = {}) {
-  for (const tag of INVENTORY_CACHE_TAGS) {
+export function revalidateInventory({
+  carId,
+  publicSlug,
+  dealerSlug,
+  refreshHomepage = false,
+} = {}) {
+  for (const tag of LISTING_CACHE_TAGS) {
     revalidateTag(tag);
+  }
+  if (refreshHomepage) {
+    revalidateTag("homepage");
+    revalidatePath("/");
   }
 
   if (carId) {
@@ -28,7 +36,6 @@ export function revalidateInventory({ carId, publicSlug, dealerSlug } = {}) {
   }
 
   revalidatePath("/cars");
-  revalidatePath("/");
   revalidatePath("/portal/inventory");
   revalidatePath("/admin/cars");
 
@@ -43,30 +50,41 @@ export function revalidateInventory({ carId, publicSlug, dealerSlug } = {}) {
   }
 }
 
-/** Load slug/dealer and invalidate listing + detail caches for one car. */
-export async function revalidateInventoryForCar(carId) {
+/**
+ * @param {string} carId
+ * @param {{ refreshHomepage?: boolean }} opts
+ */
+export async function revalidateInventoryForCar(carId, opts = {}) {
+  const { refreshHomepage = false } = opts;
+
   if (!carId) {
-    revalidateInventory();
+    revalidateInventory({ refreshHomepage });
     return;
   }
 
-  const car = await db.car.findUnique({
-    where: { id: carId },
-    select: {
-      id: true,
-      publicSlug: true,
-      dealer: { select: { slug: true } },
-    },
-  });
+  try {
+    const car = await db.car.findUnique({
+      where: { id: carId },
+      select: {
+        id: true,
+        publicSlug: true,
+        dealer: { select: { slug: true } },
+      },
+    });
 
-  if (!car) {
-    revalidateInventory({ carId });
-    return;
+    if (!car) {
+      revalidateInventory({ carId, refreshHomepage });
+      return;
+    }
+
+    revalidateInventory({
+      carId: car.id,
+      publicSlug: car.publicSlug || undefined,
+      dealerSlug: car.dealer?.slug || undefined,
+      refreshHomepage,
+    });
+  } catch (err) {
+    console.error("[revalidate] car lookup failed, busting listing caches:", err?.message || err);
+    revalidateInventory({ carId, refreshHomepage });
   }
-
-  revalidateInventory({
-    carId: car.id,
-    publicSlug: car.publicSlug || undefined,
-    dealerSlug: car.dealer?.slug || undefined,
-  });
 }

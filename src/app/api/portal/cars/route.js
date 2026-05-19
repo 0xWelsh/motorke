@@ -50,7 +50,7 @@ export async function POST(request) {
     body.dealerId = session.user.dealerId;
 
     const car = await createCarRecord(body);
-    await revalidateInventoryForCar(car.id);
+    await revalidateInventoryForCar(car.id, { refreshHomepage: true });
     notifyListingPublished(car);
     logAuditEvent({
       actorId: session.user.id,

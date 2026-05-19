@@ -27,7 +27,7 @@ export async function POST(request) {
   try {
     const body = await request.json();
     const car = await createCar(body);
-    await revalidateInventoryForCar(car.id);
+    await revalidateInventoryForCar(car.id, { refreshHomepage: true });
     notifyListingPublished(car);
     logAuditEvent({
       actorId: session.user.id,
