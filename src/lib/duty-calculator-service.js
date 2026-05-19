@@ -60,7 +60,6 @@ export async function getDutyVehicleBySlug(slug) {
     // Fallback when stored slug drifted from make/model/trim/year (re-seed without slug update).
     const vehicles = await db.dutyVehicle.findMany({
       where: { active: true },
-      take: 250,
     });
     return (
       vehicles.find(
@@ -77,9 +76,89 @@ export async function getDutyVehicleBySlug(slug) {
 
 export async function getDutyVehicleById(id) {
   if (!id) return null;
-  return db.dutyVehicle.findFirst({
-    where: { id: String(id), active: true },
-  });
+  try {
+    return await db.dutyVehicle.findFirst({
+      where: { id: String(id), active: true },
+    });
+  } catch (err) {
+    if (!isDutyDbUnavailable(err)) {
+      console.error("[duty] getDutyVehicleById:", err?.message || err);
+    }
+    return null;
+  }
+}
+
+/** Vehicles surfaced as “popular” chips — trending calculations first, then curated imports. */
+const FEATURED_POPULAR_SLUGS = [
+  "toyota-prado-tx-2018",
+  "mazda-cx-5-2018",
+  "toyota-harrier-premium-2019",
+  "toyota-land-cruiser-v8-2018",
+  "subaru-forester-2018",
+  "honda-cr-v-2018",
+  "toyota-rav4-2019",
+  "nissan-x-trail-2018",
+];
+
+export function serializeDutyVehicleForClient(vehicle) {
+  if (!vehicle) return null;
+  return {
+    id: vehicle.id,
+    make: vehicle.make,
+    model: vehicle.model,
+    trim: vehicle.trim,
+    year: vehicle.year,
+    engineCC: vehicle.engineCC,
+    fuelType: vehicle.fuelType,
+    crspKes: vehicle.crspKes,
+    slug: buildDutyVehicleSlug(vehicle) || vehicle.slug,
+    label: dutyVehicleLabel(vehicle),
+  };
+}
+
+export async function getPopularDutyVehicles({ take = 8 } = {}) {
+  try {
+    const grouped = await db.dutyCalculation.groupBy({
+      by: ["dutyVehicleId"],
+      where: { dutyVehicleId: { not: null } },
+      _count: { _all: true },
+    });
+
+    const trendingIds = grouped
+      .sort((a, b) => (b._count._all ?? 0) - (a._count._all ?? 0))
+      .map((g) => g.dutyVehicleId)
+      .filter(Boolean)
+      .slice(0, take * 2);
+    if (trendingIds.length > 0) {
+      const trending = await db.dutyVehicle.findMany({
+        where: { id: { in: trendingIds }, active: true },
+      });
+      const byId = new Map(trending.map((v) => [v.id, v]));
+      const ordered = trendingIds.map((id) => byId.get(id)).filter(Boolean);
+      if (ordered.length >= 4) return ordered.slice(0, take);
+    }
+
+    const featured = await db.dutyVehicle.findMany({
+      where: {
+        active: true,
+        slug: { in: FEATURED_POPULAR_SLUGS },
+      },
+    });
+    const featuredBySlug = new Map(featured.map((v) => [buildDutyVehicleSlug(v) || v.slug, v]));
+    const curated = FEATURED_POPULAR_SLUGS.map((slug) => featuredBySlug.get(slug)).filter(Boolean);
+    if (curated.length > 0) return curated.slice(0, take);
+
+    return await db.dutyVehicle.findMany({
+      where: { active: true },
+      orderBy: [{ year: "desc" }, { make: "asc" }],
+      take,
+    });
+  } catch (err) {
+    if (!isDutyDbUnavailable(err)) {
+      console.error("[duty] getPopularDutyVehicles:", err?.message || err);
+    }
+    return [];
+  }
 }
 
 export async function computeDutyEstimate(input) {

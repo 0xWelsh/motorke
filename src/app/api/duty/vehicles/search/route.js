@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { searchDutyVehicles } from "@/lib/duty-calculator-service";
+import { dutyVehiclePathSlug } from "@/lib/duty-vehicle-slug";
 
 const querySchema = z.object({
   q: z.string().min(1).max(80),
@@ -32,7 +33,7 @@ export async function GET(request) {
       engineCC: v.engineCC,
       fuelType: v.fuelType,
       crspKes: v.crspKes,
-      slug: v.slug,
+      slug: dutyVehiclePathSlug(v),
       label: `${v.year} ${v.make} ${v.model}${v.trim ? ` ${v.trim}` : ""}`,
     })),
   });
