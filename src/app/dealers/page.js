@@ -3,6 +3,8 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import Image from "next/image";
+import Script from "next/script";
+import { buildDealersDirectoryItemList } from "@/lib/seo-dealer";
 import { ArrowUpRight, Building2, MapPin, ShieldCheck } from "lucide-react";
 import NearbyDealersList from "@/components/NearbyDealersList";
 import DealersLocationButton from "@/components/DealersLocationButton";
@@ -15,9 +17,15 @@ const DEALERS_HERO_IMAGE = "/images/backgrounds/car-dealership.jpg";
 export const metadata = {
   title: "Trusted car dealers in Kenya",
   description:
-    "Discover verified car dealerships across Kenya. View locations, inventory counts, and open each dealer showroom on Welsh Motorhub.",
+    "Search car dealers by name, county, or showroom on Welsh Motorhub. Find verified yards in Nairobi, Kiambu, Mombasa, and across Kenya with live inventory.",
   alternates: { canonical: "/dealers" },
-  keywords: ["car dealers Kenya", "Welsh Motorhub dealers", "verified dealerships", "automotive showroom Kenya"],
+  keywords: [
+    "car dealers Kenya",
+    "Welsh Motorhub dealers",
+    "verified dealerships",
+    "automotive showroom Kenya",
+    "find car dealer by name Kenya",
+  ],
   openGraph: {
     title: "Trusted car dealers in Kenya | Welsh Motorhub",
     description:
@@ -150,9 +158,19 @@ export default async function DealersPage({ searchParams }) {
   const counties = [...new Set(enriched.map((d) => d.county).filter(Boolean))].sort();
   const shownVerified = rankedDealers.filter((d) => d.verified).length;
   const shownCars = rankedDealers.reduce((s, d) => s + d.activeCars, 0);
+  const dealersDirectoryLd = buildDealersDirectoryItemList(
+    baseDealers.map((d) => ({ name: d.name, slug: d.slug }))
+  );
 
   return (
     <div className="bg-gradient-to-b from-[#f8fafc] via-white to-white dark:from-[#0a0a0a] dark:via-[#0b0b0b] dark:to-[#0a0a0a] min-h-screen pb-20">
+      {dealersDirectoryLd ? (
+        <Script
+          id="dealers-directory-jsonld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(dealersDirectoryLd) }}
+        />
+      ) : null}
       <div className="pt-2 md:pt-3">
         <div className="relative w-full h-[240px] sm:h-[300px] lg:h-[340px] overflow-hidden bg-slate-950">
           <Image
@@ -358,9 +376,18 @@ function DealerCard({ dealer }) {
   const distance = formatDistance(dealer.distanceValue);
 
   return (
-    <Link href={`/dealers/${dealer.slug}`} className="group flex flex-col h-full bg-white dark:bg-[#111111] shadow-sm hover:shadow-lg border border-slate-100/90 dark:border-slate-800 transition-all hover:border-[#22c55e]/45 dark:hover:border-[#22c55e]/40" style={{ borderRadius: "12px" }}>
+    <Link
+      href={`/dealers/${dealer.slug}`}
+      aria-label={`${dealer.name} cars for sale in ${dealer.location || dealer.county || "Kenya"} — Welsh Motorhub`}
+      className="group flex flex-col h-full bg-white dark:bg-[#111111] shadow-sm hover:shadow-lg border border-slate-100/90 dark:border-slate-800 transition-all hover:border-[#22c55e]/45 dark:hover:border-[#22c55e]/40"
+      style={{ borderRadius: "12px" }}
+    >
       <div className="relative aspect-[2.2/1] min-h-[88px] bg-slate-100 dark:bg-slate-900 overflow-hidden" style={{ borderTopLeftRadius: "12px", borderTopRightRadius: "12px" }}>
-        <img src={bannerImage} alt={dealer.name} className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-[1.1s] ease-out" />
+        <img
+          src={bannerImage}
+          alt={`${dealer.name} showroom in ${dealer.location || dealer.county || "Kenya"}`}
+          className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-[1.1s] ease-out"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
         <div className="absolute top-2 left-2 flex flex-wrap gap-1">
            {dealer.verified && <span className="bg-[#22c55e] text-white text-[7px] font-black px-1.5 py-0.5 uppercase tracking-widest" style={{ borderRadius: "4px" }}>Verified</span>}

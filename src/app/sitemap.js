@@ -66,7 +66,13 @@ export default async function sitemap() {
     }),
     db.dealer.findMany({
       where: dealerWhere,
-      select: { slug: true, updatedAt: true, logoUrl: true, bannerUrl: true },
+      select: {
+        slug: true,
+        updatedAt: true,
+        logoUrl: true,
+        bannerUrl: true,
+        _count: { select: { cars: { where: { available: true } } } },
+      },
     }),
     db.car.findMany({
       where: carWhere,
@@ -157,11 +163,12 @@ export default async function sitemap() {
 
   const dealerPages = dealers.map((dealer) => {
     const images = [toAbsImage(dealer.bannerUrl), toAbsImage(dealer.logoUrl)].filter(Boolean);
+    const activeCars = dealer._count?.cars ?? 0;
     return {
       url: `${BASE}/dealers/${dealer.slug}`,
       lastModified: dealer.updatedAt,
+      priority: activeCars > 0 ? 0.88 : 0.72,
       changeFrequency: "weekly",
-      priority: 0.75,
       ...(images.length ? { images } : {}),
     };
   });

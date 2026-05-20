@@ -35,26 +35,18 @@ import { slugifyCarSegment } from "@/lib/seo-car-slug";
 import { facetPathSegment } from "@/lib/seo-car-facets";
 import { carListingPath } from "@/lib/car-listing-url";
 import { BODY_TYPE_LABELS, FUEL_LABELS } from "@/lib/constants";
+import {
+  buildCarListingDealerMetadata,
+  buildListingSellerSchema,
+  dealerShowroomPath,
+} from "@/lib/seo-dealer";
 
 export async function generateMetadata({ params }) {
   const { id: ref } = await params;
   const car = await getCarData(ref);
   if (!car) return {};
 
-  const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} for sale in Kenya`;
-  const priceStr = formatCarPrice(car);
-  const loc = car.location || car.dealer?.location || "Kenya";
-  const mileStr = car.mileage ? formatMileage(car.mileage) : null;
-  const dealerName = car.dealer?.name || "Verified dealer";
-  const description = [
-    `${priceStr}`,
-    mileStr,
-    loc,
-    dealerName,
-  ]
-    .filter(Boolean)
-    .join(" · ")
-    .concat(` · ${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} on Welsh Motorhub — browse more verified cars.`);
+  const { title, description } = buildCarListingDealerMetadata(car, car.dealer);
   const origin = getSiteOrigin();
   const canonicalPath = carListingPath(car);
   const url = `${origin}${canonicalPath}`;
@@ -335,20 +327,7 @@ export default async function CarDetailPage({ params }) {
       itemCondition: conditionLd,
       availability: car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       url: listingUrl,
-      seller: {
-        "@type": "AutoDealer",
-        name: car.dealer?.name || "Welsh Motorhub dealer",
-        ...(car.dealer?.logoUrl ? { image: absoluteMediaUrl(car.dealer.logoUrl, BRAND_MARK_SQUARE) } : {}),
-        ...(car.dealer?.location
-          ? {
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: car.dealer.location,
-                addressCountry: "KE",
-              },
-            }
-          : {}),
-      },
+      seller: buildListingSellerSchema(car.dealer),
     },
     ...(ratingAvg && ratingCount > 0
       ? {
@@ -363,19 +342,28 @@ export default async function CarDetailPage({ params }) {
       : {}),
   };
 
+  const breadcrumbItems = [
+    { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+    { "@type": "ListItem", position: 2, name: "Cars", item: absoluteUrl("/cars") },
+  ];
+  if (dealer?.slug && dealer?.name) {
+    breadcrumbItems.push({
+      "@type": "ListItem",
+      position: 3,
+      name: dealer.name,
+      item: absoluteUrl(dealerShowroomPath(dealer.slug)),
+    });
+  }
+  breadcrumbItems.push({
+    "@type": "ListItem",
+    position: breadcrumbItems.length + 1,
+    name: `${car.year} ${car.make} ${car.model}`,
+    item: listingUrl,
+  });
   const breadcrumbLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
-      { "@type": "ListItem", position: 2, name: "Inventory", item: absoluteUrl("/cars") },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: `${car.make} ${car.model}`,
-        item: listingUrl,
-      },
-    ],
+    itemListElement: breadcrumbItems,
   };
 
   return (
@@ -540,9 +528,26 @@ export default async function CarDetailPage({ params }) {
                       Send an Enquiry
                     </h3>
                     <p className="mt-2 text-[12px] sm:text-[13px] leading-snug text-slate-500 dark:text-slate-400">
-                      Reach <span className="font-semibold text-slate-700 dark:text-slate-300">{dealer.name}</span>
-                      {" "}about this car. Typical response within a few hours.
+                      Reach{" "}
+                      {dealer.slug ? (
+                        <Link
+                          href={dealerShowroomPath(dealer.slug)}
+                          className="font-semibold text-[#38A169] hover:underline"
+                        >
+                          {dealer.name}
+                        </Link>
+                      ) : (
+                        <span className="font-semibold text-slate-700 dark:text-slate-300">{dealer.name}</span>
+                      )}{" "}
+                      about this car. Typical response within a few hours.
                     </p>
+                    {dealer.slug ? (
+                      <p className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">
+                        <Link href={dealerShowroomPath(dealer.slug)} className="font-bold text-[#38A169] hover:underline">
+                          View all cars from {dealer.name}
+                        </Link>
+                      </p>
+                    ) : null}
                   </header>
                   <div>
                     <EnquiryForm

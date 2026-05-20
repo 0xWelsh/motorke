@@ -1,6 +1,7 @@
 import { absoluteMediaUrl, absoluteUrl, BRAND_MARK_SQUARE } from "@/lib/site-url";
 import { carListingPath } from "@/lib/car-listing-url";
 import { formatCarPrice } from "@/lib/utils";
+import { buildListingSellerSchema } from "@/lib/seo-dealer";
 
 const FUEL_TYPE_LD = {
   PETROL: "Gasoline",
@@ -102,10 +103,7 @@ export function buildVehicleListingSchema(car, { reviews } = {}) {
       priceValidUntil,
       availability: car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       url: listingUrl,
-      seller: {
-        "@type": "AutoDealer",
-        name: car.dealer?.name || "Welsh Motorhub dealer",
-      },
+      seller: buildListingSellerSchema(car.dealer),
     },
     ...(ratingAvg && ratingCount > 0
       ? {

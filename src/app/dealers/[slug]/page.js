@@ -14,6 +14,16 @@ import { calculateDistance } from "@/lib/geolocation";
 import { absoluteUrl, BRAND_OG_IMAGE } from "@/lib/site-url";
 import { telHrefFromMsisdn } from "@/lib/phone-hints";
 import { carListingPath } from "@/lib/car-listing-url";
+import {
+  buildDealerAutoDealerSchema,
+  buildDealerBreadcrumbSchema,
+  buildDealerFaqSchema,
+  buildDealerInventoryItemList,
+  buildDealerMetadata,
+  buildDealerSeoParagraph,
+  buildDealerWebPageSchema,
+  dealerShowroomUrl,
+} from "@/lib/seo-dealer";
 
 // Force dynamic and no-cache
 export const dynamic = "force-dynamic";
@@ -36,16 +46,14 @@ export async function generateMetadata(props) {
       location: true,
       bannerUrl: true,
       logoUrl: true,
+      verified: true,
+      _count: { select: { cars: { where: { available: true } } } },
     },
   });
 
   if (!dealer) return { title: "Dealer Not Found" };
 
-  const place = dealer.location || dealer.county || "Kenya";
-  const title = `${dealer.name} — dealer showroom in ${place}`;
-  const description =
-    (dealer.description && dealer.description.trim().slice(0, 158)) ||
-    `View live inventory and reviews for ${dealer.name} in ${place}. Contact the dealer on Welsh Motorhub.`;
+  const meta = buildDealerMetadata(dealer, { stockCount: dealer._count?.cars ?? 0 });
 
   const ogCand = dealer.bannerUrl || dealer.logoUrl;
   const ogImage = ogCand
@@ -54,25 +62,14 @@ export async function generateMetadata(props) {
       : absoluteUrl(ogCand.startsWith("/") ? ogCand : `/${ogCand}`)
     : absoluteUrl(BRAND_OG_IMAGE);
 
-  const canonical = `/dealers/${dealer.slug}`;
-
   return {
-    title,
-    description,
-    alternates: { canonical },
+    ...meta,
     openGraph: {
-      title,
-      description,
-      url: absoluteUrl(canonical),
-      siteName: "Welsh Motorhub",
-      locale: "en_KE",
-      images: [{ url: ogImage, alt: `${dealer.name} on Welsh Motorhub` }],
-      type: "website",
+      ...meta.openGraph,
+      images: [{ url: ogImage, alt: `${dealer.name} showroom on Welsh Motorhub` }],
     },
     twitter: {
-      card: "summary_large_image",
-      title,
-      description,
+      ...meta.twitter,
       images: [ogImage],
     },
   };
@@ -264,93 +261,41 @@ export default async function DealerPage(props) {
     return absoluteUrl(u.startsWith("/") ? u : `/${u}`);
   };
 
-  const showroomPublicUrl = absoluteUrl(`/dealers/${dealer.slug}`);
+  const showroomPublicUrl = dealerShowroomUrl(dealer.slug);
 
-  // ── Schema.org enrichments ──────────────────────────────────────────────
+  const makeCounts = {};
+  for (const car of dealer.cars) {
+    if (car.make) makeCounts[car.make] = (makeCounts[car.make] || 0) + 1;
+  }
+  const topMakes = Object.entries(makeCounts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([make]) => make);
+
+  const dealerSeoParagraph = buildDealerSeoParagraph(dealer, {
+    stockCount: dealer.cars.length,
+    topMakes,
+  });
+
   const prices = dealer.cars.map((c) => Number(c.price)).filter((p) => Number.isFinite(p) && p > 0);
   const minPrice = prices.length ? Math.min(...prices) : null;
   const maxPrice = prices.length ? Math.max(...prices) : null;
-  const priceRange = minPrice && maxPrice
-    ? `KES ${minPrice.toLocaleString("en-KE")} - KES ${maxPrice.toLocaleString("en-KE")}`
-    : undefined;
+  const priceRange =
+    minPrice && maxPrice
+      ? `KES ${minPrice.toLocaleString("en-KE")} - KES ${maxPrice.toLocaleString("en-KE")}`
+      : undefined;
 
-  const dealerSameAs = [
-    dealer.instagramUrl,
-    dealer.facebookUrl,
-    dealer.tiktokUrl,
-    dealer.website,
-  ]
-    .filter(Boolean)
-    .map(withProtocol)
-    .filter(Boolean);
-
-  const openingHoursSpecification = [
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-      opens: "08:00",
-      closes: "18:00",
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: "Sunday",
-      opens: "10:00",
-      closes: "16:00",
-    },
-  ];
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "AutoDealer",
-    "@id": showroomPublicUrl,
-    name: dealer.name,
-    url: showroomPublicUrl,
-    image: absAsset(dealer.bannerUrl || dealer.logoUrl),
-    logo: absAsset(dealer.logoUrl),
-    description: dealer.description || dealerSummary,
-    address: {
-      "@type": "PostalAddress",
-      ...(dealer.address ? { streetAddress: dealer.address } : {}),
-      addressLocality: dealer.location || dealer.county || "Nairobi",
-      addressRegion: dealer.county || "Nairobi",
-      addressCountry: "KE",
-    },
-    telephone: dealer.phone || dealer.whatsapp || undefined,
-    ...(dealer.email ? { email: dealer.email } : {}),
-    ...(dealerLat != null && dealerLng != null
-      ? { geo: { "@type": "GeoCoordinates", latitude: dealerLat, longitude: dealerLng } }
-      : {}),
-    ...(priceRange ? { priceRange } : {}),
-    areaServed: { "@type": "Country", name: "Kenya" },
-    openingHoursSpecification,
-    ...(dealerSameAs.length ? { sameAs: dealerSameAs } : {}),
-    ...(totalReviews > 0
-      ? {
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: Number(averageRating.toFixed(2)),
-            reviewCount: totalReviews,
-            bestRating: 5,
-            worstRating: 1,
-          },
-        }
-      : {}),
-    parentOrganization: {
-      "@type": "Organization",
-      name: "Welsh Motorhub",
-      url: absoluteUrl("/"),
-    },
-  };
-
-  const dealerBreadcrumbLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
-      { "@type": "ListItem", position: 2, name: "Dealers", item: absoluteUrl("/dealers") },
-      { "@type": "ListItem", position: 3, name: dealer.name, item: showroomPublicUrl },
-    ],
-  };
+  const jsonLd = buildDealerAutoDealerSchema(dealer, {
+    stockCount: dealer.cars.length,
+    averageRating,
+    totalReviews,
+    priceRange,
+    absAsset,
+    dealerSummary,
+  });
+  const dealerBreadcrumbLd = buildDealerBreadcrumbSchema(dealer);
+  const dealerWebPageLd = buildDealerWebPageSchema(dealer, jsonLd);
+  const dealerFaqLd = buildDealerFaqSchema(dealer, { stockCount: dealer.cars.length });
+  const dealerInventoryLd = buildDealerInventoryItemList(dealer, dealer.cars);
 
   return (
     <div className="bg-gradient-to-b from-[#f8fafc] via-white to-white dark:from-[#0a0a0a] dark:via-[#0b0b0b] dark:to-[#0a0a0a] min-h-screen">
@@ -365,6 +310,11 @@ export default async function DealerPage(props) {
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(dealerBreadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(dealerWebPageLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(dealerFaqLd) }} />
+      {dealerInventoryLd ? (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(dealerInventoryLd) }} />
+      ) : null}
 
       <div className="relative w-full overflow-x-hidden">
         {/* Banner — taller on lg+ so the entire dealer card (about
@@ -595,11 +545,23 @@ export default async function DealerPage(props) {
               <DealerInventory cars={inventoryWithDistance} dealerSlug={dealer.slug} />
             </section>
 
-            <section className="bg-white dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
-              <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-4">About {dealer.name}</h3>
+            <section
+              className="bg-white dark:bg-[#111111] p-5 sm:p-6 shadow-xl"
+              style={{ borderRadius: "14px" }}
+              aria-labelledby="dealer-about-heading"
+            >
+              <h2
+                id="dealer-about-heading"
+                className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-4"
+              >
+                About {dealer.name} in Kenya
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-4">
-                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{dealer.description || dealerSummary}</p>
+                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{dealerSeoParagraph}</p>
+                  {dealer.description?.trim() && dealer.description.trim() !== dealerSummary ? (
+                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{dealer.description.trim()}</p>
+                  ) : null}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {["Verified inventory", "Inspected vehicles", "Trade-in accepted", "Financing support", "After-sales assistance", "Import options available"].map((item) => (
                       <div key={item} className="inline-flex items-center gap-2 text-[11px] font-semibold text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 px-3 py-2" style={{ borderRadius: "10px" }}>
