@@ -48,33 +48,43 @@ export default function DutyCalculator({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
+  const [purchasePrice, setPurchasePrice] = useState("");
 
   const debouncedQuery = useDebounced(query);
+  const debouncedPurchase = useDebounced(purchasePrice, 400);
 
-  const runCalculate = useCallback(async (vehicle) => {
-    if (!vehicle?.id) return;
-    setLoading(true);
-    setError("");
-    try {
-      const res = await fetch("/api/duty/calculate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          vehicleId: vehicle.id,
-          searchQuery: vehicle.label || query,
-          sessionKey: sessionKey(),
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Calculation failed");
-      setEstimate(data.estimate);
-    } catch (e) {
-      setError(e.message || "Could not calculate duty");
-      setEstimate(null);
-    } finally {
-      setLoading(false);
-    }
-  }, [query]);
+  const runCalculate = useCallback(
+    async (vehicle, purchaseOverride) => {
+      if (!vehicle?.id) return;
+      setLoading(true);
+      setError("");
+      try {
+        const purchaseRaw = purchaseOverride ?? debouncedPurchase;
+        const purchaseParsed = purchaseRaw ? parseInt(String(purchaseRaw).replace(/\D/g, ""), 10) : NaN;
+        const res = await fetch("/api/duty/calculate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            vehicleId: vehicle.id,
+            searchQuery: vehicle.label || query,
+            sessionKey: sessionKey(),
+            ...(Number.isFinite(purchaseParsed) && purchaseParsed > 0
+              ? { purchasePriceKes: purchaseParsed }
+              : {}),
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Calculation failed");
+        setEstimate(data.estimate);
+      } catch (e) {
+        setError(e.message || "Could not calculate duty");
+        setEstimate(null);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [query, debouncedPurchase],
+  );
 
   const applyVehicle = useCallback(
     (vehicle) => {
@@ -95,6 +105,12 @@ export default function DutyCalculator({
       applyVehicle(initialVehicle);
     }
   }, [initialVehicle?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (selected?.id && debouncedPurchase !== undefined) {
+      runCalculate(selected, debouncedPurchase);
+    }
+  }, [debouncedPurchase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const vehicle = selected || initialVehicle;
@@ -128,6 +144,7 @@ export default function DutyCalculator({
     setSelected(null);
     setEstimate(null);
     setQuery("");
+    setPurchasePrice("");
     setError("");
   };
 
@@ -139,8 +156,12 @@ export default function DutyCalculator({
 
   const handleShare = async () => {
     const text = estimate
-      ? `Import estimate for ${estimate.label}: about ${formatPrice(estimate.breakdown.totalToImport)} all-in (Welsh Motorhub)`
-      : "Kenya import duty calculator — Welsh Motorhub";
+      ? `Import taxes for ${estimate.label}: ${formatPrice(estimate.breakdown.totalTaxes)} (Welsh Motorhub)${
+          estimate.breakdown.totalLandedWithPurchase
+            ? `. All-in ~${formatPrice(estimate.breakdown.totalLandedWithPurchase)} with your purchase price`
+            : ""
+        }`
+      : "Kenya import duty calculator, Welsh Motorhub";
     if (navigator.share) {
       try {
         await navigator.share({ title: "Import duty estimate", text, url: shareUrl });
@@ -162,21 +183,35 @@ export default function DutyCalculator({
     ? [
         { label: "KRA customs value (depreciated)", value: formatPrice(estimate.breakdown.customsValue) },
         {
-          label: `Import duty (${Math.round((estimate.breakdown.importDutyRate || 0.35) * 100)}%)`,
+          label: `Import duty (${Math.round((estimate.breakdown.importDutyRate || 0.35) * 100)}% of CV)`,
           value: formatPrice(estimate.breakdown.importDuty),
         },
-        { label: `Excise (${estimate.breakdown.exciseLabel})`, value: formatPrice(estimate.breakdown.excise) },
-        { label: "VAT (16%)", value: formatPrice(estimate.breakdown.vat) },
-        { label: "Import declaration fee (IDF)", value: formatPrice(estimate.breakdown.idf) },
-        { label: "Railway development levy (RDL)", value: formatPrice(estimate.breakdown.rdl) },
+        {
+          label: `Excise (${estimate.breakdown.exciseLabel}) on CV + duty`,
+          value: formatPrice(estimate.breakdown.excise),
+        },
+        {
+          label: "VAT (16%) on CV + duty + excise",
+          value: formatPrice(estimate.breakdown.vat),
+        },
+        { label: "IDF (2.5% of CV)", value: formatPrice(estimate.breakdown.idf) },
+        { label: "RDL (2% of CV)", value: formatPrice(estimate.breakdown.rdl) },
       ]
     : [];
 
   const costLines = estimate
     ? [
-        { label: "Vehicle reference (CRSP)", value: formatPrice(estimate.breakdown.vehicleReferenceKes) },
+        {
+          label: "CRSP (KRA tax benchmark only)",
+          value: formatPrice(estimate.breakdown.crspReferenceKes),
+          note: "Not paid to seller",
+        },
         { label: "Shipping & export estimate", value: formatPrice(estimate.breakdown.freightProxyKes) },
-        { label: "Taxes & levies (total)", value: formatPrice(estimate.breakdown.totalTaxes), highlight: true },
+        {
+          label: "Statutory taxes & levies",
+          value: formatPrice(estimate.breakdown.totalTaxes),
+          highlight: true,
+        },
       ]
     : [];
 
@@ -254,6 +289,28 @@ export default function DutyCalculator({
         is typically registrable.
       </p>
 
+      {selected && (
+        <div className="space-y-2">
+          <label htmlFor="purchase-price" className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+            Your overseas purchase price (optional)
+          </label>
+          <input
+            id="purchase-price"
+            type="text"
+            inputMode="numeric"
+            value={purchasePrice}
+            onChange={(e) => setPurchasePrice(e.target.value)}
+            placeholder="e.g. 1,500,000, what you pay abroad (CIF/FOB)"
+            className="w-full h-11 px-4 text-sm font-medium border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-slate-900 dark:text-white"
+            style={{ borderRadius: "var(--radius)" }}
+          />
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+            CRSP is only used by KRA to calculate tax. Enter what you will actually pay for the car to see a realistic
+            all-in total.
+          </p>
+        </div>
+      )}
+
       {popularVehicles.length > 0 && (
         <DutyPopularChips
           vehicles={popularVehicles}
@@ -306,9 +363,12 @@ export default function DutyCalculator({
                   </span>
                 </p>
               </div>
-              <div className="shrink-0 text-left sm:text-right">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1">CRSP reference</p>
-                <p className="text-lg font-bold text-slate-900 dark:text-white tabular-nums">{formatPrice(estimate.crspKes)}</p>
+              <div className="shrink-0 text-left sm:text-right max-w-[200px]">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1">CRSP (tax benchmark)</p>
+                <p className="text-lg font-bold text-slate-900 dark:text-white tabular-nums">
+                  {formatPrice(estimate.breakdown.crspReferenceKes)}
+                </p>
+                <p className="text-[10px] text-slate-500 mt-1">Not paid to the seller</p>
               </div>
             </div>
 
@@ -324,22 +384,40 @@ export default function DutyCalculator({
             >
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80 mb-1">
                 {estimate.importEligibility?.status === "ineligible"
-                  ? "Tax estimate only — not registrable"
-                  : "Estimated total to import"}
+                  ? "Tax estimate only, not registrable"
+                  : "Estimated taxes & levies (KRA)"}
               </p>
               <p
                 className={`text-3xl sm:text-5xl font-bold tabular-nums leading-none ${
                   estimate.importEligibility?.status === "ineligible" ? "line-through opacity-75" : ""
                 }`}
               >
-                {formatPrice(estimate.breakdown.totalToImport)}
+                {formatPrice(estimate.breakdown.totalTaxes)}
               </p>
               <p className="text-xs sm:text-sm text-white/90 mt-3 max-w-lg leading-relaxed">
                 {estimate.importEligibility?.status === "ineligible"
                   ? "Duties may still apply at customs, but NTSA will not register this vehicle for Kenyan roads."
-                  : "CRSP vehicle value + shipping estimate + all statutory taxes. Excludes clearing-agent fees, port handling, and your actual overseas purchase price if it differs from CRSP."}
+                  : "Import duty, excise, VAT, IDF & RDL, compounded per KRA. CRSP is not included (it is only used to derive customs value)."}
               </p>
             </div>
+
+            {estimate.breakdown.totalLandedWithPurchase && (
+              <div
+                className="p-4 sm:p-5 border-2 border-slate-900 dark:border-white bg-slate-50 dark:bg-zinc-900"
+                style={{ borderRadius: "var(--radius)" }}
+              >
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1">
+                  Your estimated all-in cost
+                </p>
+                <p className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tabular-nums">
+                  {formatPrice(estimate.breakdown.totalLandedWithPurchase)}
+                </p>
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                  Purchase price + shipping ({formatPrice(estimate.breakdown.freightProxyKes)}) + taxes (
+                  {formatPrice(estimate.breakdown.totalTaxes)}). Excludes clearing-agent fees.
+                </p>
+              </div>
+            )}
 
             <div
               className="grid gap-2 sm:grid-cols-3 border border-slate-200 dark:border-zinc-800 p-4 bg-slate-50/50 dark:bg-zinc-900/30"
@@ -355,8 +433,19 @@ export default function DutyCalculator({
                   >
                     {line.value}
                   </p>
+                  {line.note && (
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500">{line.note}</p>
+                  )}
                 </div>
               ))}
+              <div className="flex flex-col gap-1 sm:col-span-3 pt-2 border-t border-slate-200 dark:border-zinc-800">
+                <p className="text-[10px] text-slate-500 uppercase tracking-wide">
+                  Taxes + shipping (excl. vehicle purchase)
+                </p>
+                <p className="text-sm font-bold tabular-nums text-slate-900 dark:text-white">
+                  {formatPrice(estimate.breakdown.clearingEstimate)}
+                </p>
+              </div>
             </div>
 
             <DutyTaxBreakdownChart breakdown={estimate.breakdown} />
@@ -397,7 +486,7 @@ export default function DutyCalculator({
 
             <p className="text-[11px] leading-relaxed text-slate-500 dark:text-slate-400">
               Indicative only: import duty 35%, excise on (customs value + import duty), VAT 16% on the duty stack, IDF
-              2.5%, RDL 2%. CRSP is from our reference table — confirm with KRA or your clearing agent before payment.
+              2.5%, RDL 2%. CRSP is from our reference table. Confirm with KRA or your clearing agent before payment.
             </p>
           </div>
         )}
@@ -406,9 +495,9 @@ export default function DutyCalculator({
       {estimate && !loading && (
         <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md p-3 sm:hidden safe-area-pb space-y-2">
           <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">
-            Est. total to import{" "}
+            Est. KRA taxes{" "}
             <span className="text-[#b91c1c] dark:text-red-400 tabular-nums">
-              {formatPrice(estimate.breakdown.totalToImport)}
+              {formatPrice(estimate.breakdown.totalTaxes)}
             </span>
           </p>
           <TrackedLink

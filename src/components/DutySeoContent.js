@@ -3,19 +3,19 @@ import Link from "next/link";
 const SECTIONS = [
   {
     title: "How Kenya vehicle import duty is calculated",
-    body: `Used imports are assessed on a depreciated customs value from the Customs Reference Survey Price (CRSP). Import duty (35%), excise (by engine size, on customs value + import duty), VAT at 16% on that stack, plus IDF (2.5%) and railway levy (2%). Our calculator totals CRSP + shipping estimate + all taxes so you see an indicative “total to import” figure — then browse matching dealer stock.`,
+    body: `Used imports are assessed on a depreciated customs value from the Customs Reference Survey Price (CRSP). Import duty (35%), excise on (customs value + import duty), VAT on that full stack, plus IDF (2.5% of customs value) and RDL (2% of customs value). CRSP is a KRA benchmark for tax. You do not pay it to the seller. Add your real overseas purchase price in the calculator for an all-in landed estimate.`,
   },
   {
     title: "The 8-year import rule",
-    body: `Kenya restricts registration of vehicles older than eight years from the year of first registration. That affects which model years buyers target from Japan, UK, and UAE — and which excise band applies. Always confirm the registration year on the logbook before you commit to a landed cost.`,
+    body: `Kenya restricts registration of vehicles older than eight years from the year of first registration. That affects which model years buyers target from Japan, UK, and UAE, and which excise band applies. Always confirm the registration year on the logbook before you commit to a landed cost.`,
   },
   {
     title: "Excise duty on petrol, diesel, and hybrids",
-    body: `Excise scales with engine capacity: smaller CC bands pay lower rates; hybrids and electric vehicles can qualify for reduced excise. Our estimator picks the band automatically from the vehicle you select — useful when comparing a 1.5L hatchback against a 2.8L diesel SUV.`,
+    body: `Excise scales with engine capacity: smaller CC bands pay lower rates; hybrids and electric vehicles can qualify for reduced excise. Our estimator picks the band automatically from the vehicle you select, useful when comparing a 1.5L hatchback against a 2.8L diesel SUV.`,
   },
   {
-    title: "After your estimate — find the car",
-    body: `Every calculation links to matching inventory from verified dealers on Welsh Motorhub. Filter by make, model, and location, then contact the dealer directly — no middleman markup on the listing price.`,
+    title: "After your estimate, find the car",
+    body: `Every calculation links to matching inventory from verified dealers on Welsh Motorhub. Filter by make, model, and location, then contact the dealer directly. No middleman markup on the listing price.`,
   },
 ];
 

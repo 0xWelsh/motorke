@@ -177,6 +177,10 @@ export async function computeDutyEstimate(input) {
   const engineCC = Number(input.engineCC) || 1500;
   const fuelType = input.fuelType || "PETROL";
   const crspKes = Math.max(0, Number(input.crspKes) || 0);
+  const purchasePriceKes =
+    input.purchasePriceKes != null && Number(input.purchasePriceKes) > 0
+      ? Math.round(Number(input.purchasePriceKes))
+      : null;
   const ageYears = getAgeYearsFromYear(year);
   const isElectric = fuelType === "ELECTRIC";
 
@@ -189,6 +193,12 @@ export async function computeDutyEstimate(input) {
   });
 
   const importEligibility = assessImportEligibility(year);
+  const totalTaxes = Math.round(breakdown.totalTaxes);
+  const freightProxyKes = FREIGHT_PROXY_KES;
+  const clearingEstimate = totalTaxes + freightProxyKes;
+  const totalLandedWithPurchase = purchasePriceKes
+    ? purchasePriceKes + clearingEstimate
+    : null;
 
   return {
     label: input.label || dutyVehicleLabel(input),
@@ -201,22 +211,29 @@ export async function computeDutyEstimate(input) {
     ageYears,
     importEligibility,
     freightProxyKes: FREIGHT_PROXY_KES,
+    purchasePriceKes,
     breakdown: {
-      customsValue: Math.round(breakdown.customsValue),
-      importDuty: Math.round(breakdown.importDuty),
+      customsValue: breakdown.customsValue,
+      importDuty: breakdown.importDuty,
       importDutyRate: breakdown.importDutyRate,
-      idf: Math.round(breakdown.idf),
-      excise: Math.round(breakdown.excise),
+      exciseBase: breakdown.exciseBase,
+      idf: breakdown.idf,
+      excise: breakdown.excise,
       exciseRate: breakdown.exciseRate,
       exciseLabel: breakdown.exciseLabel,
-      vat: Math.round(breakdown.vat),
-      rdl: Math.round(breakdown.rdl),
-      totalTaxes: Math.round(breakdown.totalTaxes),
-      freightProxyKes: FREIGHT_PROXY_KES,
-      cifKes: Math.round(crspKes + FREIGHT_PROXY_KES),
-      vehicleReferenceKes: crspKes,
-      totalToImport: Math.round(crspKes + FREIGHT_PROXY_KES + breakdown.totalTaxes),
-      estimatedLanded: Math.round(crspKes + FREIGHT_PROXY_KES + breakdown.totalTaxes),
+      vatBase: breakdown.vatBase,
+      vat: breakdown.vat,
+      rdl: breakdown.rdl,
+      totalTaxes,
+      freightProxyKes,
+      cifForTaxKes: Math.round(crspKes + freightProxyKes),
+      crspReferenceKes: crspKes,
+      /** Taxes + shipping to port — excludes overseas vehicle purchase. */
+      clearingEstimate,
+      totalLandedWithPurchase,
+      /** @deprecated Misleading — was CRSP + freight + tax. Use totalTaxes or totalLandedWithPurchase. */
+      totalToImport: totalLandedWithPurchase ?? clearingEstimate,
+      estimatedLanded: totalLandedWithPurchase ?? clearingEstimate,
     },
     slug: input.slug || buildDutyVehicleSlug(input),
   };

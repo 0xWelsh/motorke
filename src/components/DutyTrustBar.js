@@ -33,7 +33,7 @@ export default function DutyTrustBar({ lastUpdated = null }) {
           <div>
             <p className="text-xs font-bold text-slate-900 dark:text-white">For buyers &amp; dealers</p>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-              Illustrative CRSP references — not a binding KRA assessment. Always confirm before payment.
+              Illustrative CRSP references, not a binding KRA assessment. Always confirm before payment.
             </p>
           </div>
         </div>

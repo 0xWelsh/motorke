@@ -2,6 +2,7 @@
 export const FREIGHT_PROXY_KES = 2750 * 135;
 
 export const DEFAULT_DUTY_RATES = {
+  /** EAC CET — 35% for many motor vehicles; some classes still at 25%. */
   importDutyRate: 0.35,
   idfRate: 0.025,
   vatRate: 0.16,
@@ -64,24 +65,31 @@ function getExciseBand(engineCC, bands) {
 }
 
 function resolveRdl(customsValue, rates) {
+  const cv = Math.max(0, asNumber(customsValue));
   const rdlRate = rates.rdlRate;
   if (rdlRate != null && rdlRate > 0) {
-    return customsValue * asNumber(rdlRate, 0);
+    return cv * asNumber(rdlRate, 0);
   }
   return asNumber(rates.rdlAmount, 0);
 }
 
 /**
- * KRA-style import tax stack:
- * - Customs value = depreciated CIF (CRSP + freight proxy)
- * - Import duty on CV; excise on (CV + import duty); VAT on (CV + import duty + excise)
- * - IDF and RDL on customs value
+ * KRA-style import tax stack (CRSP + freight proxy → depreciated customs value).
+ * CRSP is a valuation schedule for tax — not the price paid to the overseas seller.
+ *
+ * Sequence:
+ * 1. Customs value (depreciated CIF)
+ * 2. Import duty = CV × rate
+ * 3. Excise = (CV + import duty) × rate
+ * 4. VAT = (CV + import duty + excise) × 16%
+ * 5. IDF = CV × 2.5%
+ * 6. RDL = CV × 2%
  */
 export function calculateDutyBreakdown({ cifKes, ageYears, engineCC, isElectric, rates = getDefaultDutyRates() }) {
-  const customsValue = depreciate(cifKes, ageYears, rates);
+  const customsValue = Math.round(depreciate(cifKes, ageYears, rates));
 
   const importDutyRate = asNumber(rates.importDutyRate, 0.35);
-  const importDuty = customsValue * importDutyRate;
+  const importDuty = Math.round(customsValue * importDutyRate);
 
   const matchedBand = getExciseBand(engineCC, rates.excise?.bands || []);
   const exciseRate = isElectric
@@ -91,31 +99,32 @@ export function calculateDutyBreakdown({ cifKes, ageYears, engineCC, isElectric,
       : asNumber(rates.excise?.defaultRate, 0);
 
   const exciseBase = customsValue + importDuty;
-  const excise = exciseBase * exciseRate;
+  const excise = Math.round(exciseBase * exciseRate);
 
   const vatBase = customsValue + importDuty + excise;
-  const vat = vatBase * asNumber(rates.vatRate, 0.16);
+  const vat = Math.round(vatBase * asNumber(rates.vatRate, 0.16));
 
-  const idf = customsValue * asNumber(rates.idfRate, 0.025);
-  const rdl = resolveRdl(customsValue, rates);
+  const idf = Math.round(customsValue * asNumber(rates.idfRate, 0.025));
+  const rdl = Math.round(resolveRdl(customsValue, rates));
 
   const totalTaxes = importDuty + excise + vat + idf + rdl;
-  const cif = asNumber(cifKes, 0);
-  const landed = cif + totalTaxes;
 
   return {
     customsValue,
     importDuty,
     importDutyRate,
+    exciseBase,
     excise,
     exciseRate,
     exciseLabel: isElectric ? "EV rate" : matchedBand?.label || "default",
+    vatBase,
     vat,
     idf,
     rdl,
     total: totalTaxes,
     totalTaxes,
-    landed,
+    /** @deprecated Use totalTaxes — CRSP must not be summed as a purchase price. */
+    landed: totalTaxes,
   };
 }
 
@@ -129,12 +138,12 @@ export function estimateDuty(price, year, options = {}) {
     rates: options.rates || getDefaultDutyRates(),
   });
 
-  /** Typical clearing / agency buffer on top of statutory taxes. */
   return Math.round(breakdown.totalTaxes + 150_000);
 }
 
 import { getDutyRates } from "./duty-rates";
 
+/** Listing price + freight + taxes when duty not yet paid (price = seller/listing amount). */
 export async function computeLandedPriceForDb(price, dutyPaid, year, engineCC, fuelType) {
   let isDutyPaid = true;
   if (dutyPaid === false || dutyPaid === "false" || dutyPaid === 0) {

@@ -25,7 +25,7 @@ export function assessImportEligibility(modelYear, referenceYear = new Date().ge
       status: "ineligible",
       ageYears,
       oldestImportableYear,
-      message: `A ${year} model is about ${ageYears} years old — over Kenya’s ${KENYA_MAX_IMPORT_AGE_YEARS}-year import limit. Newest eligible model year is typically ${oldestImportableYear} or later.`,
+      message: `A ${year} model is about ${ageYears} years old, over Kenya’s ${KENYA_MAX_IMPORT_AGE_YEARS}-year import limit. Newest eligible model year is typically ${oldestImportableYear} or later.`,
     };
   }
 
@@ -35,7 +35,7 @@ export function assessImportEligibility(modelYear, referenceYear = new Date().ge
       status: "borderline",
       ageYears,
       oldestImportableYear,
-      message: `At the ${KENYA_MAX_IMPORT_AGE_YEARS}-year ceiling — confirm first-registration month with NTSA or your clearing agent before you ship.`,
+      message: `At the ${KENYA_MAX_IMPORT_AGE_YEARS}-year ceiling. Confirm first-registration month with NTSA or your clearing agent before you ship.`,
     };
   }
 

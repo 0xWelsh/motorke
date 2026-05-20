@@ -68,7 +68,7 @@ export default function DutyPageHero({ compact = false, children = null }) {
               <span className="text-red-600 dark:text-red-500">duty calculator</span>
             </h1>
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-              Instant KRA-style tax breakdown for popular imports — then browse matching verified dealer stock.
+              Instant KRA-style tax breakdown for popular imports, then browse matching verified dealer stock.
             </p>
             <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400 mb-6">
               <li className="inline-flex items-center gap-1.5">

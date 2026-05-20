@@ -50,7 +50,7 @@ export default function DutyImportEligibilityBanner({ eligibility, compact = fal
         <p className="text-[11px] text-red-900/90 dark:text-red-200/90 mt-1 leading-relaxed">{message}</p>
         <p className="text-[11px] font-semibold text-red-800 dark:text-red-300 mt-2">
           For {new Date().getFullYear()}, target model year {oldestImportableYear} or newer. Tax estimate below is
-          illustrative only — NTSA will not register this age.
+          illustrative only. NTSA will not register this age.
         </p>
       </div>
     </div>

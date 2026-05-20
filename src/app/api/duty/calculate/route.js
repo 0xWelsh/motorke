@@ -20,6 +20,8 @@ const bodySchema = z.object({
   trim: z.string().max(80).optional(),
   searchQuery: z.string().max(120).optional(),
   sessionKey: z.string().max(64).optional(),
+  /** Overseas purchase / CIF in KES — for all-in landed estimate (not CRSP). */
+  purchasePriceKes: z.coerce.number().int().positive().optional(),
 });
 
 export async function POST(request) {
@@ -66,6 +68,7 @@ export async function POST(request) {
     engineCC,
     fuelType,
     crspKes,
+    purchasePriceKes: data.purchasePriceKes,
     slug: vehicle?.slug,
     label: vehicle ? dutyVehicleLabel(vehicle) : undefined,
   });
