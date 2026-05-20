@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
 import { modelHubPath } from "@/lib/seo-model-wiki";
+import { resolveDutyPathForCar } from "@/lib/seo-duty";
 
 export default function CarModelWiki({ car, wiki }) {
   if (!wiki?.paragraphs?.length) return null;
 
   const hubHref = modelHubPath(car.make, car.model);
+  const dutyPath = resolveDutyPathForCar(car);
 
   return (
     <section
@@ -48,7 +50,7 @@ export default function CarModelWiki({ car, wiki }) {
           Browse all {car.make} {car.model} for sale in Kenya
         </Link>
         {" · "}
-        <Link href="/duty" className="font-bold text-[#38A169] hover:underline">
+        <Link href={dutyPath} className="font-bold text-[#38A169] hover:underline">
           Import duty calculator
         </Link>
       </p>

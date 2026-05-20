@@ -62,6 +62,29 @@ Optional indexing env vars (see root `.env.example`): `GOOGLE_INDEXING_*`, `GSC_
 
 ---
 
+## Import duty calculator (`/duty`)
+
+Programmatic SEO for the duty tool:
+
+| Piece | Location |
+|-------|----------|
+| Hub metadata | `src/app/duty/layout.js` |
+| Per-vehicle pages | `/duty/{make-model-trim-year}` from `duty_vehicles` CRSP table |
+| Keyword clusters | `data/seo/duty-clusters.json` + hub entry in `keyword-clusters.json` |
+| Listing “Related” links | `src/lib/seo-keyword-clusters.js` → model-specific `/duty/...` when make/model match |
+| JSON-LD | `src/components/DutyJsonLd.js` (WebApplication + FAQPage + breadcrumbs) |
+| On-page related links | `src/components/DutyRelatedSearches.js` |
+| Sitemap | `/duty` priority 0.88 + all `duty_vehicles` slugs |
+
+**Operational steps**
+
+1. Import CRSP catalog: Admin → **Duty CRSP** or `npm run db:import-crsp -- data/duty-crsp/starter-catalog.csv` (creates `/duty/{slug}` URLs in sitemap).
+2. Add high-intent rows to `data/seo/duty-clusters.json` when you add popular vehicles (match `dutyPath` to real slug from admin or `buildDutyVehicleSlug`).
+3. Request indexing (optional): set `GOOGLE_INDEXING_ENABLED=1` + service account — same as listings; ping `/duty` and new slugs after large CRSP imports.
+4. GSC: monitor queries like `import duty calculator`, `land cruiser duty kenya`; internal links from listings now surface duty URLs automatically.
+
+---
+
 ## Keyword clusters (`keyword-clusters.json`)
 
 Maps high-intent Kenyan search phrases to internal URLs (hubs, guides, showrooms). Used on listing pages for “Related searches”.

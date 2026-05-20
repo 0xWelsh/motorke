@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { getSessionFromRequest } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { parseDutyCrspCsv, upsertDutyCrspRows } from "@/lib/duty-crsp-import";
+import { notifyDutyCatalogUpdated } from "@/lib/seo-duty-indexing";
 
 export async function POST(request) {
   const session = await getSessionFromRequest();
@@ -52,6 +53,10 @@ export async function POST(request) {
   });
 
   const total = await db.dutyVehicle.count({ where: { active: true } });
+
+  if (!dryRun && result.upserted > 0) {
+    notifyDutyCatalogUpdated(rows);
+  }
 
   return NextResponse.json({
     ok: true,

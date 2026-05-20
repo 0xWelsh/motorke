@@ -8,6 +8,9 @@ export default function CarListingRelatedSearches({ car }) {
       model: car.model,
       bodyType: car.bodyType,
       price: car.price,
+      dutyPaid: car.dutyPaid,
+      year: car.year,
+      trim: car.variant,
     },
     { take: 6 }
   );

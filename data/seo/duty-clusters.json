@@ -1,0 +1,50 @@
+[
+  {
+    "keywords": ["land cruiser duty kenya", "land cruiser v8 import tax", "kra land cruiser estimate"],
+    "dutyPath": "/duty/toyota-land-cruiser-v8-2018",
+    "make": "Toyota",
+    "model": "Land Cruiser"
+  },
+  {
+    "keywords": ["prado duty kenya", "toyota prado import tax", "prado tx duty estimate"],
+    "dutyPath": "/duty/toyota-prado-tx-2018",
+    "make": "Toyota",
+    "model": "Prado"
+  },
+  {
+    "keywords": ["harrier duty kenya", "toyota harrier import tax"],
+    "dutyPath": "/duty/toyota-harrier-premium-2019",
+    "make": "Toyota",
+    "model": "Harrier"
+  },
+  {
+    "keywords": ["rav4 duty kenya", "toyota rav4 hybrid import tax"],
+    "dutyPath": "/duty/toyota-rav4-2019",
+    "make": "Toyota",
+    "model": "RAV4"
+  },
+  {
+    "keywords": ["mazda cx-5 duty kenya", "cx5 import tax kenya"],
+    "dutyPath": "/duty/mazda-cx-5-2018",
+    "make": "Mazda",
+    "model": "CX-5"
+  },
+  {
+    "keywords": ["subaru forester duty", "forester import tax kenya"],
+    "dutyPath": "/duty/subaru-forester-2018",
+    "make": "Subaru",
+    "model": "Forester"
+  },
+  {
+    "keywords": ["honda vezel duty", "vezel hybrid import kenya"],
+    "dutyPath": "/duty/honda-vezel-2018",
+    "make": "Honda",
+    "model": "Vezel"
+  },
+  {
+    "keywords": ["bmw x3 duty kenya", "bmw import tax estimate"],
+    "dutyPath": "/duty/bmw-x3-2018",
+    "make": "BMW",
+    "model": "X3"
+  }
+]

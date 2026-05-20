@@ -4,6 +4,7 @@ import {
 } from "@/lib/duty-calculator-service";
 import { getDutyRates } from "@/lib/duty-rates";
 import DutyPageClient from "@/components/DutyPageClient";
+import DutyJsonLd from "@/components/DutyJsonLd";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ export default async function DutyCalculatorPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a]">
+      <DutyJsonLd pathname="/duty" />
       <DutyPageClient popularVehicles={popularVehicles} ratesLastUpdated={ratesLastUpdated} />
     </div>
   );

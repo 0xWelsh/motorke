@@ -9,6 +9,7 @@ import {
 import { dutyVehicleLabel, dutyVehiclePathSlug } from "@/lib/duty-vehicle-slug";
 import { getDutyRates } from "@/lib/duty-rates";
 import { getSiteOrigin } from "@/lib/site-url";
+import DutyJsonLd from "@/components/DutyJsonLd";
 
 export const dynamic = "force-dynamic";
 
@@ -49,8 +50,11 @@ export default async function DutyVehiclePage({ params }) {
   const ratesLastUpdated =
     ratesPayload?.meta?.lastUpdated || ratesPayload?.rates?.metadata?.fetchedAt || null;
 
+  const pathSlug = dutyVehiclePathSlug(vehicle);
+
   return (
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a]">
+      <DutyJsonLd vehicle={vehicle} pathname={`/duty/${pathSlug}`} />
       <div className="home-shell pt-[4.75rem] md:pt-24 pb-8">
         <div className="max-w-6xl mx-auto">
           <nav className="text-xs text-slate-500 mb-4" aria-label="Breadcrumb">

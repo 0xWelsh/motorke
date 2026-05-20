@@ -159,7 +159,7 @@ export default async function sitemap() {
     { url: `${BASE}/guides`, lastModified: now, changeFrequency: "daily", priority: 0.7 },
     { url: `${BASE}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE}/faq`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${BASE}/duty`, lastModified: now, changeFrequency: "weekly", priority: 0.72 },
+    { url: `${BASE}/duty`, lastModified: now, changeFrequency: "weekly", priority: 0.88 },
     { url: `${BASE}/mission`, lastModified: now, changeFrequency: "yearly", priority: 0.35 },
     { url: `${BASE}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.25 },
     { url: `${BASE}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.25 },

@@ -1,5 +1,6 @@
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
 import { facetPathSegment } from "@/lib/seo-car-facets";
+import { resolveDutyPathForCar } from "@/lib/seo-duty";
 
 /**
  * Related hub links for a listing (internal linking).
@@ -33,7 +34,10 @@ export function relatedHubLinksForCar(car) {
     if (c) links.push({ href: `/cars/${make}/${c}`, label: `${car.make} in ${county}` });
   }
 
-  links.push({ href: "/duty", label: "Import duty calculator" });
+  links.push({
+    href: resolveDutyPathForCar(car),
+    label: car.dutyPaid === false ? "Import duty estimate" : "Import duty calculator",
+  });
 
   return links;
 }

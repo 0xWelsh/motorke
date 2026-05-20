@@ -6,6 +6,7 @@ import DutySimilarStock from "@/components/DutySimilarStock";
 import DutyTrustBar from "@/components/DutyTrustBar";
 import DutySeoContent from "@/components/DutySeoContent";
 import DutyPageHero from "@/components/DutyPageHero";
+import DutyRelatedSearches from "@/components/DutyRelatedSearches";
 
 export default function DutyPageClient({
   initialVehicle = null,
@@ -67,6 +68,7 @@ export default function DutyPageClient({
 
           <DutyTrustBar lastUpdated={ratesLastUpdated} />
           <DutySeoContent />
+          <DutyRelatedSearches vehicle={initialVehicle} />
         </div>
       </div>
     </>
