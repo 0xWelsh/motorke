@@ -102,7 +102,7 @@ export default function DutyPageHero({ compact = false, children = null }) {
               </TrackedLink>
               <Link
                 href="#duty-calculator"
-                className="h-11 sm:h-12 inline-flex items-center justify-center gap-1.5 bg-slate-900 text-white dark:bg-[#f7f6f3] dark:text-[#0a0a0a] dark:border dark:border-zinc-600 px-4 text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-all hover:opacity-90 dark:hover:bg-white"
+                className="h-11 sm:h-12 inline-flex items-center justify-center gap-1.5 bg-[#b91c1c] hover:bg-[#991b1b] text-white px-4 text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
                 style={{ borderRadius: "var(--radius)" }}
               >
                 Calculate <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden />
