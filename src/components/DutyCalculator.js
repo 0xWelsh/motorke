@@ -242,7 +242,12 @@ export default function DutyCalculator({
 
   const breakdownCards = estimate
     ? [
-        { label: "KRA customs value (depreciated)", value: formatPrice(estimate.breakdown.customsValue) },
+        {
+          label: estimate.breakdown.crspRatio
+            ? `KRA customs value (depreciated CRSP × ${estimate.breakdown.crspRatio})`
+            : "KRA customs value",
+          value: formatPrice(estimate.breakdown.customsValue),
+        },
         {
           label: `Import duty (${Math.round((estimate.breakdown.importDutyRate || 0.35) * 100)}% of CV)`,
           value: formatPrice(estimate.breakdown.importDuty),
@@ -255,7 +260,7 @@ export default function DutyCalculator({
           label: "VAT (16%) on CV + duty + excise",
           value: formatPrice(estimate.breakdown.vat),
         },
-        { label: "IDF (2.5% of CV)", value: formatPrice(estimate.breakdown.idf) },
+        { label: "IDF (3.5% of CV)", value: formatPrice(estimate.breakdown.idf) },
         { label: "RDL (2% of CV)", value: formatPrice(estimate.breakdown.rdl) },
       ]
     : [];
@@ -571,8 +576,9 @@ export default function DutyCalculator({
             </div>
 
             <p className="text-[11px] leading-relaxed text-slate-500 dark:text-slate-400">
-              Indicative only: import duty 35%, excise on (customs value + import duty), VAT 16% on the duty stack, IDF
-              2.5%, RDL 2%. CRSP is from our reference table. Confirm with KRA or your clearing agent before payment.
+              Indicative only: customs value = depreciated CRSP × schedule ratio, then import duty 35%, excise on
+              (CV + duty), VAT 16%, IDF 3.5%, RDL 2%. CRSP is from our reference table. Confirm with KRA or your
+              clearing agent before payment.
             </p>
           </div>
         )}

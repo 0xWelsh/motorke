@@ -3,7 +3,7 @@ import Link from "next/link";
 const SECTIONS = [
   {
     title: "How Kenya vehicle import duty is calculated",
-    body: `Used imports are assessed on a depreciated customs value from the Customs Reference Survey Price (CRSP). Import duty (35%), excise on (customs value + import duty), VAT on that full stack, plus IDF (2.5% of customs value) and RDL (2% of customs value). CRSP is a KRA benchmark for tax. You do not pay it to the seller. Add your real overseas purchase price in the calculator for an all-in landed estimate.`,
+    body: `Used imports are assessed on a depreciated CRSP, then multiplied by the KRA schedule ratio to get customs value. Import duty (35%), excise on (customs value + import duty), VAT on that full stack, plus IDF (3.5% of customs value) and RDL (2% of customs value). CRSP is a KRA benchmark for tax. You do not pay it to the seller. Add your real overseas purchase price in the calculator for an all-in landed estimate.`,
   },
   {
     title: "The 8-year import rule",
@@ -11,7 +11,7 @@ const SECTIONS = [
   },
   {
     title: "Excise duty on petrol, diesel, and hybrids",
-    body: `Excise scales with engine capacity: smaller CC bands pay lower rates; hybrids and electric vehicles can qualify for reduced excise. Our estimator picks the band automatically from the vehicle you select, useful when comparing a 1.5L hatchback against a 2.8L diesel SUV.`,
+    body: `Excise scales with engine capacity and fuel type: up to 15% for small petrol engines, 25% for mid-size, and 35% for large petrol (>3000cc) or diesel (>2500cc). Hybrids and electric vehicles can qualify for reduced excise. Our estimator picks the band from the vehicle you select.`,
   },
   {
     title: "After your estimate, find the car",

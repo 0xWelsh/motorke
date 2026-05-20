@@ -25,6 +25,17 @@ const dutyRatesSchema = z.object({
       })
     )
     .min(1),
+  crspRatioBands: z
+    .array(
+      z.object({
+        minCC: z.coerce.number().int().min(0),
+        maxCC: z.coerce.number().int().positive().nullable().optional(),
+        fuelTypes: z.array(z.string()).optional(),
+        ratio: z.coerce.number().gt(0).lte(1),
+        label: z.string().optional(),
+      })
+    )
+    .optional(),
   excise: z.object({
     electricRate: z.coerce.number().min(0).max(1),
     defaultRate: z.coerce.number().min(0).max(1).optional(),
@@ -33,6 +44,7 @@ const dutyRatesSchema = z.object({
         z.object({
           minCC: z.coerce.number().int().min(0),
           maxCC: z.coerce.number().int().positive().nullable(),
+          fuelTypes: z.array(z.string()).optional(),
           rate: z.coerce.number().min(0).max(1),
           label: z.string().optional(),
         })
@@ -51,6 +63,9 @@ function normalizeRates(rawRates) {
   });
 
   const exciseBands = [...parsed.excise.bands].sort((a, b) => a.minCC - b.minCC);
+  const crspRatioBands = parsed.crspRatioBands
+    ? [...parsed.crspRatioBands].sort((a, b) => a.minCC - b.minCC)
+    : DEFAULT_DUTY_RATES.crspRatioBands;
 
   return {
     importDutyRate: parsed.importDutyRate ?? DEFAULT_DUTY_RATES.importDutyRate,
@@ -59,6 +74,7 @@ function normalizeRates(rawRates) {
     rdlRate: parsed.rdlRate ?? DEFAULT_DUTY_RATES.rdlRate,
     rdlAmount: parsed.rdlAmount ?? DEFAULT_DUTY_RATES.rdlAmount,
     depreciationBands,
+    crspRatioBands,
     excise: {
       electricRate: parsed.excise.electricRate,
       defaultRate: parsed.excise.defaultRate ?? DEFAULT_DUTY_RATES.excise.defaultRate,

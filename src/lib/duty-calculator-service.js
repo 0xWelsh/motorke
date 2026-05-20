@@ -185,9 +185,10 @@ export async function computeDutyEstimate(input) {
   const isElectric = fuelType === "ELECTRIC";
 
   const breakdown = calculateDutyBreakdown({
-    cifKes: crspKes + FREIGHT_PROXY_KES,
+    crspKes,
     ageYears,
     engineCC,
+    fuelType,
     isElectric,
     rates,
   });
@@ -214,6 +215,8 @@ export async function computeDutyEstimate(input) {
     purchasePriceKes,
     breakdown: {
       customsValue: breakdown.customsValue,
+      depreciatedCrsp: breakdown.depreciatedCrsp,
+      crspRatio: breakdown.crspRatio,
       importDuty: breakdown.importDuty,
       importDutyRate: breakdown.importDutyRate,
       exciseBase: breakdown.exciseBase,

@@ -10,7 +10,7 @@ const MERCEDES_HERO = "/images/mercedes.jpg";
 const FLOATING_CARDS = [
   { label: "Import duty", value: "Est. KES 1.2M+" },
   { label: "VAT (16%)", value: "On CIF + excise" },
-  { label: "IDF", value: "2.5% of CIF" },
+  { label: "IDF", value: "3.5% of CV" },
   { label: "Excise", value: "By engine CC" },
 ];
 
