@@ -9,6 +9,12 @@ import {
   fuelFacetLabel,
   resolveFacetSlugSegment,
 } from "@/lib/seo-car-facets";
+import {
+  globalHubIntroCopy,
+  globalHubTitleAndDescription,
+  globalHubWhereClause,
+  resolveGlobalCarHubSlug,
+} from "@/lib/seo-global-hubs";
 
 export function hubCarWhere() {
   return {
@@ -79,6 +85,7 @@ export async function resolveModelFromSlug(make, slug) {
  *   | { kind: 'make_fuel'; make: string; fuelType: string; path: string }
  *   | { kind: 'make_body'; make: string; bodyType: string; path: string }
  *   | { kind: 'make_price_band'; make: string; band: import("@/lib/seo-car-facets").SEO_PRICE_BANDS[number]; path: string }
+ *   | { kind: 'global_body' | 'global_body_price' | 'global_price'; path: string; h1?: string }
  *   | null
  * >}
  */
@@ -88,6 +95,9 @@ export async function resolveCarHub(partsRaw) {
 
   if (parts.length === 1) {
     const a = parts[0];
+    const globalHub = resolveGlobalCarHubSlug(a);
+    if (globalHub) return globalHub;
+
     const county = countyFromSlug(a);
     if (county) {
       return { kind: "county", county, path: `/cars/${slugifyCarSegment(county)}` };
@@ -197,6 +207,10 @@ export function hubTitleAndDescription(resolved, total) {
         title: `${resolved.make} (${resolved.band.label}) — cars for sale | Welsh Motorhub`,
         description: `Browse ${n} ${resolved.make} listings in this price range from verified Kenyan dealers on Welsh Motorhub.`,
       };
+    case "global_body":
+    case "global_body_price":
+    case "global_price":
+      return globalHubTitleAndDescription(resolved, total);
     default:
       return {
         title: "Browse cars | Welsh Motorhub",
@@ -251,9 +265,20 @@ export async function hubWhereClause(resolved) {
         ...buildMakeWhere(resolved.make),
         ...resolved.band.where,
       };
+    case "global_body":
+    case "global_body_price":
+    case "global_price":
+      return globalHubWhereClause(resolved, () => base);
     default:
       return base;
   }
+}
+
+export function hubIntroParagraph(resolved, total) {
+  if (resolved.kind === "global_body" || resolved.kind === "global_body_price" || resolved.kind === "global_price") {
+    return globalHubIntroCopy(resolved, total);
+  }
+  return null;
 }
 
 export async function getSiblingHubLinks(make) {

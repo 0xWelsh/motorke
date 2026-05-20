@@ -10,6 +10,8 @@ import { slugifyCarSegment, SEO_COUNTIES } from "@/lib/seo-car-slug";
 import { SEO_PRICE_BANDS, facetPathSegment } from "@/lib/seo-car-facets";
 import { carListingPath } from "@/lib/car-listing-url";
 import { listSeoPagesForSitemap, contentPublicPath } from "@/lib/seo-content";
+import { listGlobalHubSitemapEntries } from "@/lib/seo-global-hubs";
+import { listLocationHubSlugs } from "@/lib/seo-location-hubs";
 
 const BASE = getSiteOrigin();
 
@@ -134,6 +136,20 @@ export default async function sitemap() {
   );
   const priceFacetPages = priceFacetPagesNested.flat();
 
+  const globalHubPages = listGlobalHubSitemapEntries().map((hub) => ({
+    url: `${BASE}${hub.path}`,
+    lastModified: now,
+    changeFrequency: "daily",
+    priority: hub.priority,
+  }));
+
+  const showroomPages = listLocationHubSlugs().map((slug) => ({
+    url: `${BASE}/showrooms/${slug}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.84,
+  }));
+
   const staticPages = [
     { url: BASE, lastModified: now, changeFrequency: "daily", priority: 1.0 },
     { url: `${BASE}/cars`, lastModified: now, changeFrequency: "daily", priority: 0.95 },
@@ -254,6 +270,8 @@ export default async function sitemap() {
 
   return dedupeByUrl([
     ...staticPages,
+    ...globalHubPages,
+    ...showroomPages,
     ...carPages,
     ...dealerPages,
     ...makeHubPages,

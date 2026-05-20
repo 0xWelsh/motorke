@@ -40,6 +40,9 @@ import {
   buildListingSellerSchema,
   dealerShowroomPath,
 } from "@/lib/seo-dealer";
+import { getModelWikiContent } from "@/lib/seo-model-wiki";
+import CarModelWiki from "@/components/CarModelWiki";
+import CarListingRelatedSearches from "@/components/CarListingRelatedSearches";
 
 export async function generateMetadata({ params }) {
   const { id: ref } = await params;
@@ -220,6 +223,7 @@ export default async function CarDetailPage({ params }) {
     image: primaryImg?.url,
   };
 
+  const modelWiki = getModelWikiContent(car);
   const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motorhub.`;
 
   const listingUrl = absoluteUrl(carListingPath(car));
@@ -599,6 +603,9 @@ export default async function CarDetailPage({ params }) {
             </div>
           </div>
         </div>
+
+        <CarModelWiki car={car} wiki={modelWiki} />
+        <CarListingRelatedSearches car={car} />
 
         <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border border-[#EDF2F7] dark:border-zinc-800 bg-[#F7FAFC] dark:bg-zinc-900/40 px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-slate-600 dark:text-zinc-400">
           <span className="sr-only md:not-sr-only md:inline text-[#718096] font-black tracking-widest">Explore:</span>

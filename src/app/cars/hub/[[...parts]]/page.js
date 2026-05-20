@@ -9,6 +9,7 @@ import { absoluteUrl, getSiteOrigin } from "@/lib/site-url";
 import {
   hubTitleAndDescription,
   hubWhereClause,
+  hubIntroParagraph,
   resolveCarHub,
   getSiblingHubLinks,
   getCountyHubLinks,
@@ -16,7 +17,7 @@ import {
 } from "@/lib/seo-car-hubs";
 import { db } from "@/lib/db";
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
-import { fuelFacetLabel, priceBandSearchParams } from "@/lib/seo-car-facets";
+import { fuelFacetLabel, priceBandSearchParams, SEO_PRICE_BANDS } from "@/lib/seo-car-facets";
 import { BODY_TYPE_LABELS } from "@/lib/constants";
 import { carListingPath } from "@/lib/car-listing-url";
 
@@ -262,6 +263,11 @@ export default async function CarHubPage({ params, searchParams }) {
         });
         out.push({ name: resolved.band.label, href: path });
         break;
+      case "global_body":
+      case "global_body_price":
+      case "global_price":
+        out.push({ name: resolved.h1 || "Browse", href: path });
+        break;
       default:
         break;
     }
@@ -271,7 +277,8 @@ export default async function CarHubPage({ params, searchParams }) {
   const crumbs = buildCrumbs();
 
   const h1 =
-    resolved.kind === "county"
+    resolved.h1 ||
+    (resolved.kind === "county"
       ? `Cars for sale in ${resolved.county}`
       : resolved.kind === "make"
         ? `${resolved.make} for sale`
@@ -285,7 +292,9 @@ export default async function CarHubPage({ params, searchParams }) {
                 ? `${resolved.make} ${BODY_TYPE_LABELS[resolved.bodyType] || resolved.bodyType} for sale`
                 : resolved.kind === "make_price_band"
                   ? `${resolved.make} (${resolved.band.label}) for sale`
-                  : "Cars for sale";
+                  : "Cars for sale");
+
+  const introCopy = hubIntroParagraph(resolved, total);
 
   const qsAllFilters = () => {
     if (resolved.kind === "make") return `/cars?make=${encodeURIComponent(resolved.make)}`;
@@ -306,6 +315,25 @@ export default async function CarHubPage({ params, searchParams }) {
       const pq = priceBandSearchParams(resolved.band);
       const u = new URLSearchParams();
       u.set("make", resolved.make);
+      if (pq.minPrice != null) u.set("minPrice", String(pq.minPrice));
+      if (pq.maxPrice != null) u.set("maxPrice", String(pq.maxPrice));
+      return `/cars?${u.toString()}`;
+    }
+    if (resolved.kind === "global_body") {
+      return `/cars?bodyType=${encodeURIComponent(resolved.bodyType)}`;
+    }
+    if (resolved.kind === "global_body_price") {
+      const band = SEO_PRICE_BANDS.find((b) => b.slug === resolved.bandSlug);
+      const pq = band ? priceBandSearchParams(band) : {};
+      const u = new URLSearchParams();
+      u.set("bodyType", resolved.bodyType);
+      if (pq.minPrice != null) u.set("minPrice", String(pq.minPrice));
+      if (pq.maxPrice != null) u.set("maxPrice", String(pq.maxPrice));
+      return `/cars?${u.toString()}`;
+    }
+    if (resolved.kind === "global_price") {
+      const pq = priceBandSearchParams(resolved.band);
+      const u = new URLSearchParams();
       if (pq.minPrice != null) u.set("minPrice", String(pq.minPrice));
       if (pq.maxPrice != null) u.set("maxPrice", String(pq.maxPrice));
       return `/cars?${u.toString()}`;
@@ -372,7 +400,7 @@ export default async function CarHubPage({ params, searchParams }) {
           </p>
           <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-3xl">{h1}</h1>
           <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-zinc-400">
-            {hubTitleAndDescription(resolved, total).description}{" "}
+            {introCopy || hubTitleAndDescription(resolved, total).description}{" "}
             <Link href={qsAllFilters()} className="font-semibold text-[#38A169] underline-offset-4 hover:underline">
               Open advanced filters
             </Link>

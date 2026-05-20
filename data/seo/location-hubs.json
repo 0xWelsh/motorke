@@ -1,0 +1,32 @@
+{
+  "kiambu-road": {
+    "label": "Kiambu Road",
+    "county": "Nairobi",
+    "locationMatch": ["Kiambu Road", "Kiambu", "Ridgeways", "Runda"],
+    "description": "Kiambu Road is one of Nairobi's densest corridors for used car yards and showrooms. Browse dealers listing live stock on Welsh Motorhub."
+  },
+  "ngong-road": {
+    "label": "Ngong Road",
+    "county": "Nairobi",
+    "locationMatch": ["Ngong Road", "Ngong", "Karen", "Langata"],
+    "description": "Ngong Road and adjoining estates host established dealerships and importers. Compare verified listings without driving yard to yard."
+  },
+  "mombasa-road": {
+    "label": "Mombasa Road",
+    "county": "Nairobi",
+    "locationMatch": ["Mombasa Road", "Industrial Area", "South B", "South C"],
+    "description": "Mombasa Road industrial and showroom belt supplies Nairobi buyers with SUVs, sedans, and commercial vehicles — see who's in stock today."
+  },
+  "westlands": {
+    "label": "Westlands",
+    "county": "Nairobi",
+    "locationMatch": ["Westlands", "Parklands", "Waiyaki Way"],
+    "description": "Westlands remains a premium pocket for executive imports and European brands on Welsh Motorhub."
+  },
+  "mombasa": {
+    "label": "Mombasa",
+    "county": "Mombasa",
+    "locationMatch": ["Mombasa", "Nyali", "Bamburi", "Likoni"],
+    "description": "Coastal buyers shop Mombasa and Nyali dealers for corrosion-checked imports and locally registered stock."
+  }
+}

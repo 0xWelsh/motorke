@@ -46,6 +46,7 @@ describe("seo-dealer", () => {
     const meta = buildCarListingDealerMetadata(car, dealer);
     expect(meta.title).toContain("AutoMax Motors");
     expect(meta.title).toContain("2019 Mazda CX-8");
+    expect(meta.title).toContain("Verified Showroom Price");
     expect(meta.description).toContain("AutoMax Motors");
   });
 

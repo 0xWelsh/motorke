@@ -340,7 +340,7 @@ export function buildCarListingDealerMetadata(car, dealer) {
   const dealerName = dealer?.name || "Verified dealer";
   const place = car.location || dealer?.location || dealer?.county || "Kenya";
 
-  const title = `${vehicle} at ${dealerName} | for sale in Kenya`;
+  const title = `${vehicle} at ${dealerName} | Verified Showroom Price Kenya`;
   const priceStr = formatCarPrice(car);
   const description = `${vehicle} listed by ${dealerName} in ${place} at ${priceStr}. View photos, specs, and contact ${dealerName} on Welsh Motorhub.`;
 

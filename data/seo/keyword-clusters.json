@@ -1,0 +1,52 @@
+[
+  {
+    "keywords": ["toyota prado tx", "prado tx-l kenya", "toyota prado price kenya"],
+    "hubPath": "/cars/toyota/land-cruiser-prado",
+    "guidePath": "/guides/toyota-prado-price-kenya"
+  },
+  {
+    "keywords": ["toyota harrier kenya", "harrier hybrid nairobi", "harrier price kenya"],
+    "hubPath": "/cars/toyota/harrier",
+    "guidePath": "/guides/toyota-harrier-buying-guide-kenya"
+  },
+  {
+    "keywords": ["mazda cx-5 kenya", "cx5 price kenya", "mazda cx5 nairobi"],
+    "hubPath": "/cars/mazda/cx-5",
+    "guidePath": "/guides/mazda-cx-5-price-kenya"
+  },
+  {
+    "keywords": ["mazda cx-8 kenya", "cx-8 for sale", "cx8 xdl kenya"],
+    "hubPath": "/cars/mazda/cx-8",
+    "guidePath": null
+  },
+  {
+    "keywords": ["suvs under 3 million", "suv under 3m nairobi", "cheap suv kenya"],
+    "hubPath": "/cars/suvs-under-3-million",
+    "guidePath": "/guides/suvs-under-4-million-kenya"
+  },
+  {
+    "keywords": ["cars kiambu road", "car yards kiambu road", "showrooms kiambu road"],
+    "hubPath": "/showrooms/kiambu-road",
+    "guidePath": null
+  },
+  {
+    "keywords": ["used cars ngong road", "car dealers ngong road"],
+    "hubPath": "/showrooms/ngong-road",
+    "guidePath": null
+  },
+  {
+    "keywords": ["import duty calculator", "kra duty estimate", "land cruiser duty kenya"],
+    "hubPath": "/duty",
+    "guidePath": null
+  },
+  {
+    "keywords": ["honda vezel kenya", "vezel hybrid price"],
+    "hubPath": "/cars/honda/vezel",
+    "guidePath": "/guides/honda-vezel-price-kenya"
+  },
+  {
+    "keywords": ["subaru forester kenya", "forester awd nairobi"],
+    "hubPath": "/cars/subaru/forester",
+    "guidePath": null
+  }
+]
