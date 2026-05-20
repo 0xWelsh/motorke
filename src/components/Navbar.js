@@ -42,6 +42,12 @@ export default function Navbar({ user }) {
   }, [open]);
 
   useEffect(() => {
+    setOpen(false);
+    setMobileSearch(false);
+    setUserMenu(false);
+  }, [pathname]);
+
+  useEffect(() => {
     if (!open) return;
     const onKey = (e) => {
       if (e.key === "Escape") setOpen(false);
@@ -423,35 +429,35 @@ export default function Navbar({ user }) {
                 />
                 <MobileMenuRow
                   href="/cars"
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => navigateTo("/cars", e)}
                   icon={<CarFront className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
                   label="Cars"
                   analyticsEvent="mobile_menu_cars_click"
                 />
                 <MobileMenuRow
                   href="/dealers"
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => navigateTo("/dealers", e)}
                   icon={<Store className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
                   label="Dealers"
                   analyticsEvent="mobile_menu_dealers_click"
                 />
                 <MobileMenuRow
                   href="/compare"
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => navigateTo("/compare", e)}
                   icon={<GitCompare className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
                   label="Compare"
                   analyticsEvent="mobile_menu_compare_click"
                 />
                 <MobileMenuRow
                   href="/duty"
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => navigateTo("/duty", e)}
                   icon={<Calculator className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
                   label="Duty"
                   analyticsEvent="mobile_menu_duty_click"
                 />
                 <MobileMenuRow
                   href="/contact"
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => navigateTo("/contact", e)}
                   icon={<Mail className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />}
                   label="Contact"
                   analyticsEvent="mobile_menu_contact_click"

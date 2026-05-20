@@ -73,7 +73,8 @@ export async function POST(request) {
     label: vehicle ? dutyVehicleLabel(vehicle) : undefined,
   });
 
-  await recordDutyCalculation(
+  // Log in background so navigation is not blocked waiting on DB write.
+  void recordDutyCalculation(
     {
       dutyVehicleId: vehicle?.id,
       make: result.make,

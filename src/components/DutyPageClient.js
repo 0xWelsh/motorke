@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import DutyCalculator from "@/components/DutyCalculator";
 import DutySimilarStock from "@/components/DutySimilarStock";
 import DutyTrustBar from "@/components/DutyTrustBar";
@@ -20,6 +20,16 @@ export default function DutyPageClient({
       : { make: null, model: null },
   );
 
+  const handleVehicleChange = useCallback((vehicle) => {
+    setStockFilter((prev) => {
+      const next = vehicle?.make
+        ? { make: vehicle.make, model: vehicle.model ?? null }
+        : { make: null, model: null };
+      if (prev.make === next.make && prev.model === next.model) return prev;
+      return next;
+    });
+  }, []);
+
   return (
     <>
       {showHero && (
@@ -33,7 +43,7 @@ export default function DutyPageClient({
           <div className="lg:grid lg:grid-cols-12 lg:gap-10 xl:gap-12 items-start">
             <div
               id="duty-calculator"
-              className={`lg:col-span-8 min-w-0 ${showHero ? "-mt-6 sm:-mt-8 relative z-10" : ""}`}
+              className={`lg:col-span-8 min-w-0 scroll-mt-24 ${showHero ? "-mt-6 sm:-mt-8 relative z-10" : ""}`}
             >
               <div
                 className={
@@ -46,13 +56,7 @@ export default function DutyPageClient({
                   initialVehicle={initialVehicle}
                   pageSlug={pageSlug}
                   popularVehicles={popularVehicles}
-                  onVehicleChange={(vehicle) => {
-                    if (vehicle?.make) {
-                      setStockFilter({ make: vehicle.make, model: vehicle.model });
-                    } else {
-                      setStockFilter({ make: null, model: null });
-                    }
-                  }}
+                  onVehicleChange={handleVehicleChange}
                 />
               </div>
             </div>

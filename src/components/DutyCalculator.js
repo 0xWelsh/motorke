@@ -42,6 +42,10 @@ export default function DutyCalculator({
   const searchId = useId();
   const resultsRef = useRef(null);
   const manualEstimateRef = useRef(null);
+  const onVehicleChangeRef = useRef(onVehicleChange);
+  const purchaseDebounceSkipRef = useRef(true);
+  const calculateAbortRef = useRef(null);
+  onVehicleChangeRef.current = onVehicleChange;
   const [query, setQuery] = useState(initialVehicle?.label || "");
   const [customPanelOpen, setCustomPanelOpen] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
@@ -59,6 +63,11 @@ export default function DutyCalculator({
   const runEstimate = useCallback(
     async ({ vehicle, manual, purchaseOverride }) => {
       if (!vehicle?.id && !manual) return;
+
+      calculateAbortRef.current?.abort();
+      const controller = new AbortController();
+      calculateAbortRef.current = controller;
+
       setLoading(true);
       setError("");
       try {
@@ -91,9 +100,11 @@ export default function DutyCalculator({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
+          signal: controller.signal,
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Calculation failed");
+        if (controller.signal.aborted) return;
         setEstimate(data.estimate);
         if (manual) {
           manualEstimateRef.current = manual;
@@ -102,10 +113,11 @@ export default function DutyCalculator({
           manualEstimateRef.current = null;
         }
       } catch (e) {
+        if (e?.name === "AbortError") return;
         setError(e.message || "Could not calculate duty");
         setEstimate(null);
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     },
     [query, debouncedPurchase],
@@ -134,22 +146,28 @@ export default function DutyCalculator({
   }, [initialVehicle?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (selected?.id && debouncedPurchase !== undefined) {
+    if (purchaseDebounceSkipRef.current) {
+      purchaseDebounceSkipRef.current = false;
+      return;
+    }
+    if (selected?.id) {
       runEstimate({ vehicle: selected, purchaseOverride: debouncedPurchase });
-    } else if (manualEstimateRef.current && debouncedPurchase !== undefined) {
+    } else if (manualEstimateRef.current) {
       runEstimate({ manual: manualEstimateRef.current, purchaseOverride: debouncedPurchase });
     }
-  }, [debouncedPurchase]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [debouncedPurchase, selected?.id, runEstimate]);
 
   useEffect(() => {
     if (selected) {
-      onVehicleChange?.(selected);
+      onVehicleChangeRef.current?.(selected);
     } else if (estimate?.make) {
-      onVehicleChange?.({ make: estimate.make, model: estimate.model });
+      onVehicleChangeRef.current?.({ make: estimate.make, model: estimate.model });
     } else {
-      onVehicleChange?.(null);
+      onVehicleChangeRef.current?.(null);
     }
-  }, [selected, estimate?.make, estimate?.model, onVehicleChange]);
+  }, [selected, estimate?.make, estimate?.model]);
+
+  useEffect(() => () => calculateAbortRef.current?.abort(), []);
 
   useEffect(() => {
     if (!debouncedQuery || debouncedQuery.length < 1 || selected) {
