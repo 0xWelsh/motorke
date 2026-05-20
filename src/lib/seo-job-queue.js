@@ -5,6 +5,7 @@ import { syncGscToDatabase } from "@/lib/seo-gsc-sync";
 import { syncGscDailyMetrics } from "@/lib/seo-gsc-daily";
 import { runPageSpeedSuite } from "@/lib/seo-pagespeed";
 import { syncComparisonPagesFromInventory } from "@/lib/seo-comparison-generator";
+import { runListingSeoJob } from "@/lib/car-seo-pipeline";
 import { alertAuditIssues, alertCrawlFailure } from "@/lib/seo-alerts";
 
 const MONITOR_JOB_TYPES = [
@@ -75,6 +76,11 @@ async function executeSeoJob(job) {
     case "CONTENT_SYNC": {
       const pages = await syncComparisonPagesFromInventory({ maxPairs: 30 });
       return { ok: true, synced: pages.length };
+    }
+    case "LISTING_SEO": {
+      const carId = job.payload?.carId;
+      if (!carId) return { ok: false, error: "missing_carId" };
+      return runListingSeoJob(String(carId));
     }
     default:
       return { ok: false, error: `unknown_job_type:${job.type}` };

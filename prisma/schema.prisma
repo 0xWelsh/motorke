@@ -658,6 +658,24 @@ enum SeoJobType {
   PAGESPEED
   AUDIT
   CONTENT_SYNC
+  LISTING_SEO
+}
+
+/// Kenya buyer-guide copy keyed by make/model (template, curated import, or AI).
+model ModelSeoGuide {
+  id         String   @id @default(cuid())
+  make       String
+  model      String
+  headline   String
+  paragraphs String[]
+  bullets    String[] @default([])
+  source     String   @default("template")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([make, model])
+  @@index([make])
+  @@map("model_seo_guides")
 }
 
 model SeoJob {

@@ -8,7 +8,9 @@ import { PWARegister } from "@/components/PWARegister";
 import AnalyticsBootstrap from "@/components/AnalyticsBootstrap";
 import { getSession } from "@/lib/auth";
 import CookieConsent from "@/components/CookieConsent";
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
+import { SaveDataProvider } from "@/components/SaveDataProvider";
+import { isSaveDataRequest, SAVE_DATA_COOKIE } from "@/lib/save-data";
 
 import { Playfair_Display } from "next/font/google";
 import { BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
@@ -108,6 +110,9 @@ export const viewport = {
 export default async function RootLayout({ children }) {
   const headerList = await headers();
   const shellPath = headerList.get("x-pathname") || "/";
+  const cookieStore = await cookies();
+  const saveData =
+    isSaveDataRequest(headerList) || cookieStore.get(SAVE_DATA_COOKIE)?.value === "1";
 
   const session = await getSession();
   const user    = session?.user ? {
@@ -177,12 +182,14 @@ export default async function RootLayout({ children }) {
       <body className={`${playfair.variable} bg-background text-slate-900 dark:text-white min-h-screen antialiased flex flex-col font-sans transition-colors duration-300`}>
         <PWARegister />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <AnalyticsBootstrap />
-          <CompareProvider>
-            <SiteChrome user={user} shellPath={shellPath}>
-              {children}
-            </SiteChrome>
-          </CompareProvider>
+          <SaveDataProvider saveData={saveData}>
+            <AnalyticsBootstrap />
+            <CompareProvider>
+              <SiteChrome user={user} shellPath={shellPath}>
+                {children}
+              </SiteChrome>
+            </CompareProvider>
+          </SaveDataProvider>
           <ScrollToTop />
           <CookieConsent />
         </ThemeProvider>

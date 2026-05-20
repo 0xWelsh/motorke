@@ -2,13 +2,21 @@
 // src/components/ImageGallery.js
 // Mosaic-capable image gallery with lightbox for car detail page
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import Image from "@/components/SafeImage";
 import { Share2, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { useSaveData } from "@/components/SaveDataProvider";
+import { saveDataGalleryLimits } from "@/lib/save-data";
 
 const LIGHTBOX_AUTO_MS = 4200;
 
 export default function ImageGallery({ images, title }) {
+  const saveData = useSaveData();
+  const limits = useMemo(
+    () => saveDataGalleryLimits(saveData, images?.length || 0),
+    [saveData, images?.length]
+  );
+
   const primaryIdx = images?.findIndex((img) => img.isPrimary) ?? -1;
   const initialActive = primaryIdx >= 0 ? primaryIdx : 0;
   const [active, setActive] = useState(initialActive);
@@ -27,12 +35,12 @@ export default function ImageGallery({ images, title }) {
   }, [lightbox]);
 
   useEffect(() => {
-    if (!lightbox || images.length < 2 || slideshowPaused) return undefined;
+    if (!limits.lightboxAutoplay || !lightbox || images.length < 2 || slideshowPaused) return undefined;
     const id = window.setInterval(() => {
       setActive((i) => (i === images.length - 1 ? 0 : i + 1));
     }, LIGHTBOX_AUTO_MS);
     return () => window.clearInterval(id);
-  }, [lightbox, images.length, slideshowPaused, active]);
+  }, [lightbox, images.length, slideshowPaused, active, limits.lightboxAutoplay]);
 
   const handleTouchStart = (e) => {
     touchStartX.current = e.changedTouches?.[0]?.clientX ?? null;
@@ -75,7 +83,7 @@ export default function ImageGallery({ images, title }) {
   }, [lightbox]);
 
   useEffect(() => {
-    if (!images?.length || typeof window === "undefined") return;
+    if (!limits.preloadAdjacent || !images?.length || typeof window === "undefined") return;
     // Preload adjacent images only to keep swipe transitions smooth without over-fetching.
     const nextIdx = active === images.length - 1 ? 0 : active + 1;
     const prevIdx = active === 0 ? images.length - 1 : active - 1;
@@ -84,7 +92,7 @@ export default function ImageGallery({ images, title }) {
       preloader.decoding = "async";
       preloader.src = url;
     });
-  }, [active, images]);
+  }, [active, images, limits.preloadAdjacent]);
 
   const handleShare = async (e) => {
     e.stopPropagation();
@@ -105,8 +113,9 @@ export default function ImageGallery({ images, title }) {
   }
 
   const current = images[active];
-  const mosaicMode = images.length >= 5;
-  const remainingCount = Math.max(0, images.length - 5);
+  const mosaicMode = limits.mosaicMode;
+  const remainingCount = Math.max(0, images.length - limits.maxThumbs);
+  const visibleThumbs = images.slice(0, limits.maxThumbs);
 
   return (
     <>
@@ -179,7 +188,7 @@ export default function ImageGallery({ images, title }) {
             </button>
           </button>
 
-          {images.slice(1, 5).map((img, i) => {
+          {visibleThumbs.slice(1, limits.maxThumbs).map((img, i) => {
             const idx = i + 1;
             const isLastVisible = idx === 4;
 

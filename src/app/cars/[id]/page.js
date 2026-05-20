@@ -40,7 +40,7 @@ import {
   buildListingSellerSchema,
   dealerShowroomPath,
 } from "@/lib/seo-dealer";
-import { getModelWikiContent } from "@/lib/seo-model-wiki";
+import { resolveModelWikiForCar } from "@/lib/seo-model-wiki";
 import CarModelWiki from "@/components/CarModelWiki";
 import CarListingRelatedSearches from "@/components/CarListingRelatedSearches";
 
@@ -223,7 +223,7 @@ export default async function CarDetailPage({ params }) {
     image: primaryImg?.url,
   };
 
-  const modelWiki = getModelWikiContent(car);
+  const modelWiki = await resolveModelWikiForCar(car);
   const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motorhub.`;
 
   const listingUrl = absoluteUrl(carListingPath(car));

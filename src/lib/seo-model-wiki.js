@@ -1,8 +1,19 @@
 import modelWikiData from "../../data/seo/model-wiki.json";
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
 import { BODY_TYPE_LABELS, FUEL_LABELS } from "@/lib/constants";
+import { db } from "@/lib/db";
 
 const WIKI = modelWikiData;
+
+function rowToWiki(row) {
+  if (!row) return null;
+  return {
+    headline: row.headline,
+    paragraphs: row.paragraphs || [],
+    bullets: row.bullets || [],
+    source: row.source || "template",
+  };
+}
 
 function wikiKey(make, model) {
   return `${slugifyCarSegment(make)}|${slugifyCarSegment(model)}`;
@@ -20,18 +31,35 @@ export function getModelWikiContent(car) {
   if (entry) {
     return {
       headline: entry.headline,
-      paragraphs: [
-        entry.summary,
-        entry.specs,
-        entry.kenyaNotes,
-        entry.buyerTip,
-      ].filter(Boolean),
+      paragraphs: [entry.summary, entry.specs, entry.kenyaNotes, entry.buyerTip].filter(Boolean),
       bullets: [],
       source: "curated",
     };
   }
 
   return buildGeneratedModelWiki(car);
+}
+
+/** Prefer DB guide (auto-generated on publish), then JSON file, then inline template. */
+export async function resolveModelWikiForCar(car) {
+  if (!car?.make || !car?.model) return null;
+
+  try {
+    const row = await db.modelSeoGuide.findUnique({
+      where: {
+        make_model: {
+          make: String(car.make).trim(),
+          model: String(car.model).trim(),
+        },
+      },
+    });
+    const fromDb = rowToWiki(row);
+    if (fromDb?.paragraphs?.length) return fromDb;
+  } catch {
+    /* table may not exist until migrate */
+  }
+
+  return getModelWikiContent(car);
 }
 
 function buildGeneratedModelWiki(car) {

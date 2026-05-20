@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { looksLikeCarListingId, looksLikeCarPublicSlug } from "@/lib/seo-car-slug";
+import { SAVE_DATA_COOKIE } from "@/lib/save-data";
 
 const SESSION_COOKIE = "welsh-motors_session";
 const MAINT_BYPASS_COOKIE = "welsh-maint-bypass";
@@ -112,6 +113,16 @@ export function middleware(request) {
   }
 
   const response = NextResponse.next({ request: { headers: requestHeaders } });
+
+  if (request.headers.get("save-data") === "on") {
+    response.cookies.set({
+      name: SAVE_DATA_COOKIE,
+      value: "1",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+      sameSite: "lax",
+    });
+  }
 
   // Issue a stable per-device rotation id used by the public /cars
   // listing to give every visitor their own deterministic shuffle.

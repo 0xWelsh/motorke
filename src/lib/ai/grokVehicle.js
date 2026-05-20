@@ -85,6 +85,11 @@ function normalizeStringList(values = [], limit = 40) {
   return out.slice(0, limit);
 }
 
+/** Shared JSON Grok call for other server modules (model wiki, etc.). */
+export async function callGrokJson(messages, timeoutMs = DEFAULT_TIMEOUT_MS) {
+  return callGrok(messages, timeoutMs);
+}
+
 export async function suggestModelsWithGrok({ make, inventoryModels = [], limit = 30 }) {
   const mk = String(make || "").trim();
   if (!mk) return [];

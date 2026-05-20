@@ -1,5 +1,8 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { db } from "@/lib/db";
+import { slugifyCarSegment } from "@/lib/seo-car-slug";
+import { GLOBAL_CAR_HUB_SLUGS } from "@/lib/seo-global-hubs";
+import { SEO_PRICE_BANDS } from "@/lib/seo-car-facets";
 
 /** Listing/browse caches — safe to bust on every edit */
 const LISTING_CACHE_TAGS = [
@@ -54,6 +57,42 @@ export function revalidateInventory({
  * @param {string} carId
  * @param {{ refreshHomepage?: boolean }} opts
  */
+/** Bust programmatic hub URLs when stock changes (make/model/price/body). */
+export function revalidateHubPathsForCar(car) {
+  if (!car?.make) return;
+
+  const makeSlug = slugifyCarSegment(car.make);
+  const modelSlug = car.model ? slugifyCarSegment(car.model) : null;
+
+  revalidatePath(`/cars/${makeSlug}`);
+  if (modelSlug) revalidatePath(`/cars/${makeSlug}/${modelSlug}`);
+
+  if (car.bodyType === "SUV") {
+    for (const hub of Object.values(GLOBAL_CAR_HUB_SLUGS)) {
+      if (hub.bodyType === "SUV") revalidatePath(hub.path);
+    }
+  }
+
+  const price = Number(car.price);
+  if (Number.isFinite(price) && price > 0) {
+    for (const band of SEO_PRICE_BANDS) {
+      const w = band.where?.price;
+      if (!w || typeof w !== "object") continue;
+      const gte = w.gte != null ? Number(w.gte) : 0;
+      const lt = w.lt != null ? Number(w.lt) : Infinity;
+      if (price >= gte && price < lt) {
+        revalidatePath(`/cars/price-${band.slug}`);
+        if (car.bodyType === "SUV") {
+          const suvHub = Object.values(GLOBAL_CAR_HUB_SLUGS).find(
+            (h) => h.kind === "global_body_price" && h.bandSlug === band.slug
+          );
+          if (suvHub) revalidatePath(suvHub.path);
+        }
+      }
+    }
+  }
+}
+
 export async function revalidateInventoryForCar(carId, opts = {}) {
   const { refreshHomepage = false } = opts;
 
@@ -83,6 +122,12 @@ export async function revalidateInventoryForCar(carId, opts = {}) {
       dealerSlug: car.dealer?.slug || undefined,
       refreshHomepage,
     });
+
+    const full = await db.car.findUnique({
+      where: { id: carId },
+      select: { make: true, model: true, bodyType: true, price: true },
+    });
+    if (full) revalidateHubPathsForCar(full);
   } catch (err) {
     console.error("[revalidate] car lookup failed, busting listing caches:", err?.message || err);
     revalidateInventory({ carId, refreshHomepage });
