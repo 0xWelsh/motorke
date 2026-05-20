@@ -3,14 +3,14 @@ export const maxDuration = 120;
 
 import { NextResponse } from "next/server";
 import { runSeoMonitorPipeline } from "@/lib/seo-monitor";
+import { isCronAuthorised } from "@/lib/cron-auth";
 
 /**
- * Cron: GET /api/cron/seo-monitor?secret=CRON_SECRET
- * Persists audit, crawl smoke test, and GSC sync (when enabled).
+ * Cron: enqueue + process SEO monitor jobs (crawl, GSC, audit, LISTING_SEO queue).
+ * Vercel Cron, or GET /api/cron/seo-monitor?secret=CRON_SECRET
  */
 export async function GET(request) {
-  const secret = request.nextUrl.searchParams.get("secret");
-  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
+  if (!isCronAuthorised(request)) {
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
 

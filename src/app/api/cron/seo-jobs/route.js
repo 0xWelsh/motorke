@@ -3,11 +3,11 @@ export const maxDuration = 120;
 
 import { NextResponse } from "next/server";
 import { processPendingSeoJobs } from "@/lib/seo-job-queue";
+import { isCronAuthorised } from "@/lib/cron-auth";
 
-/** Process pending SEO jobs only (no enqueue). */
+/** Process pending SEO jobs (LISTING_SEO, crawl, GSC, etc.). Vercel Cron or ?secret= / Bearer. */
 export async function GET(request) {
-  const secret = request.nextUrl.searchParams.get("secret");
-  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
+  if (!isCronAuthorised(request)) {
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
 
