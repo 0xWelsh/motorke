@@ -6,7 +6,7 @@ import { searchDutyVehicles, serializeDutyVehicleForClient } from "@/lib/duty-ca
 
 const querySchema = z.object({
   q: z.string().min(1).max(80),
-  limit: z.coerce.number().int().min(1).max(24).optional().default(12),
+  limit: z.coerce.number().int().min(1).max(30).optional().default(20),
 });
 
 export async function GET(request) {

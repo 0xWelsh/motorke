@@ -9,6 +9,7 @@ import TrackedLink from "@/components/TrackedLink";
 import DutyPopularChips from "@/components/DutyPopularChips";
 import DutyTaxBreakdownChart from "@/components/DutyTaxBreakdownChart";
 import DutyImportEligibilityBanner from "@/components/DutyImportEligibilityBanner";
+import DutyCustomEstimate from "@/components/DutyCustomEstimate";
 import { getImportYearWindow } from "@/lib/duty-import-eligibility";
 
 function sessionKey() {
@@ -40,7 +41,9 @@ export default function DutyCalculator({
   const importWindow = getImportYearWindow();
   const searchId = useId();
   const resultsRef = useRef(null);
+  const manualEstimateRef = useRef(null);
   const [query, setQuery] = useState(initialVehicle?.label || "");
+  const [customPanelOpen, setCustomPanelOpen] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [searching, setSearching] = useState(false);
   const [selected, setSelected] = useState(initialVehicle);
@@ -53,29 +56,51 @@ export default function DutyCalculator({
   const debouncedQuery = useDebounced(query);
   const debouncedPurchase = useDebounced(purchasePrice, 400);
 
-  const runCalculate = useCallback(
-    async (vehicle, purchaseOverride) => {
-      if (!vehicle?.id) return;
+  const runEstimate = useCallback(
+    async ({ vehicle, manual, purchaseOverride }) => {
+      if (!vehicle?.id && !manual) return;
       setLoading(true);
       setError("");
       try {
         const purchaseRaw = purchaseOverride ?? debouncedPurchase;
         const purchaseParsed = purchaseRaw ? parseInt(String(purchaseRaw).replace(/\D/g, ""), 10) : NaN;
+        const purchaseField =
+          Number.isFinite(purchaseParsed) && purchaseParsed > 0 ? { purchasePriceKes: purchaseParsed } : {};
+
+        const body = vehicle?.id
+          ? {
+              vehicleId: vehicle.id,
+              searchQuery: vehicle.label || query,
+              sessionKey: sessionKey(),
+              ...purchaseField,
+            }
+          : {
+              make: manual.make,
+              model: manual.model,
+              trim: manual.trim,
+              year: manual.year,
+              engineCC: manual.engineCC,
+              fuelType: manual.fuelType,
+              crspKes: manual.crspKes,
+              searchQuery: `${manual.year} ${manual.make} ${manual.model}`.trim(),
+              sessionKey: sessionKey(),
+              ...purchaseField,
+            };
+
         const res = await fetch("/api/duty/calculate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            vehicleId: vehicle.id,
-            searchQuery: vehicle.label || query,
-            sessionKey: sessionKey(),
-            ...(Number.isFinite(purchaseParsed) && purchaseParsed > 0
-              ? { purchasePriceKes: purchaseParsed }
-              : {}),
-          }),
+          body: JSON.stringify(body),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Calculation failed");
         setEstimate(data.estimate);
+        if (manual) {
+          manualEstimateRef.current = manual;
+          setSelected(null);
+        } else {
+          manualEstimateRef.current = null;
+        }
       } catch (e) {
         setError(e.message || "Could not calculate duty");
         setEstimate(null);
@@ -92,12 +117,14 @@ export default function DutyCalculator({
       setSelected(vehicle);
       setQuery(vehicle.label);
       setSuggestions([]);
-      runCalculate(vehicle);
+      setCustomPanelOpen(false);
+      manualEstimateRef.current = null;
+      runEstimate({ vehicle });
       requestAnimationFrame(() => {
         resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
       });
     },
-    [runCalculate],
+    [runEstimate],
   );
 
   useEffect(() => {
@@ -108,14 +135,21 @@ export default function DutyCalculator({
 
   useEffect(() => {
     if (selected?.id && debouncedPurchase !== undefined) {
-      runCalculate(selected, debouncedPurchase);
+      runEstimate({ vehicle: selected, purchaseOverride: debouncedPurchase });
+    } else if (manualEstimateRef.current && debouncedPurchase !== undefined) {
+      runEstimate({ manual: manualEstimateRef.current, purchaseOverride: debouncedPurchase });
     }
   }, [debouncedPurchase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    const vehicle = selected || initialVehicle;
-    onVehicleChange?.(vehicle || null);
-  }, [selected, initialVehicle, onVehicleChange]);
+    if (selected) {
+      onVehicleChange?.(selected);
+    } else if (estimate?.make) {
+      onVehicleChange?.({ make: estimate.make, model: estimate.model });
+    } else {
+      onVehicleChange?.(null);
+    }
+  }, [selected, estimate?.make, estimate?.model, onVehicleChange]);
 
   useEffect(() => {
     if (!debouncedQuery || debouncedQuery.length < 1 || selected) {
@@ -126,9 +160,15 @@ export default function DutyCalculator({
     (async () => {
       setSearching(true);
       try {
-        const res = await fetch(`/api/duty/vehicles/search?q=${encodeURIComponent(debouncedQuery)}`);
+        const res = await fetch(
+          `/api/duty/vehicles/search?q=${encodeURIComponent(debouncedQuery)}&limit=20`,
+        );
         const data = await res.json();
-        if (!cancelled) setSuggestions(data.vehicles || []);
+        if (!cancelled) {
+          const list = data.vehicles || [];
+          setSuggestions(list);
+          if (list.length === 0 && debouncedQuery.length >= 2) setCustomPanelOpen(true);
+        }
       } catch {
         if (!cancelled) setSuggestions([]);
       } finally {
@@ -146,6 +186,8 @@ export default function DutyCalculator({
     setQuery("");
     setPurchasePrice("");
     setError("");
+    manualEstimateRef.current = null;
+    setCustomPanelOpen(false);
   };
 
   const shareUrl = useMemo(() => {
@@ -175,9 +217,10 @@ export default function DutyCalculator({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const marketplaceHref = selected
-    ? carsHubPathForDutyVehicle({ make: selected.make, model: selected.model })
-    : "/cars";
+  const stockMake = selected?.make ?? estimate?.make;
+  const stockModel = selected?.model ?? estimate?.model;
+  const marketplaceHref =
+    stockMake ? carsHubPathForDutyVehicle({ make: stockMake, model: stockModel }) : "/cars";
 
   const breakdownCards = estimate
     ? [
@@ -289,7 +332,32 @@ export default function DutyCalculator({
         is typically registrable.
       </p>
 
-      {selected && (
+      {!searching && query.trim().length >= 2 && !selected && suggestions.length === 0 && (
+        <p
+          className="text-xs text-amber-800 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 px-3 py-2"
+          style={{ borderRadius: "var(--radius)" }}
+        >
+          No catalog match for &ldquo;{query.trim()}&rdquo;. Enter your vehicle manually below.
+        </p>
+      )}
+
+      <DutyCustomEstimate
+        open={customPanelOpen}
+        onOpenChange={setCustomPanelOpen}
+        loading={loading}
+        onSubmit={(manual) => {
+          const label = `${manual.year} ${manual.make} ${manual.model}${manual.trim ? ` ${manual.trim}` : ""}`;
+          setQuery(label);
+          setSuggestions([]);
+          setCustomPanelOpen(false);
+          runEstimate({ manual });
+          requestAnimationFrame(() => {
+            resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          });
+        }}
+      />
+
+      {(selected || estimate) && (
         <div className="space-y-2">
           <label htmlFor="purchase-price" className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
             Your overseas purchase price (optional)

@@ -17,6 +17,7 @@
     "db:migrate": "prisma migrate dev",
     "db:backfill-slugs": "node scripts/backfill-car-public-slugs.mjs",
     "db:seed-duty": "node prisma/seed-duty-vehicles.mjs",
+    "db:import-crsp": "node scripts/import-duty-crsp.mjs",
     "db:seed-seo-content": "node scripts/seed-seo-content.mjs",
     "seo:audit": "node scripts/seo-audit.mjs",
     "seo:sync-gsc": "node scripts/seo-sync-gsc.mjs",

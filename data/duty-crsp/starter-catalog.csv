@@ -1,0 +1,70 @@
+make,model,trim,year,engineCC,fuelType,bodyType,crspKes,notes
+Toyota,Land Cruiser,V8,2018,4500,DIESEL,SUV,8500000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Land Cruiser,VX,2016,4600,DIESEL,SUV,7200000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Prado,TX,2018,2800,DIESEL,SUV,5400000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Prado,TZ-G,2017,2800,DIESEL,SUV,5100000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Harrier,Premium,2019,2500,HYBRID,SUV,4200000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Harrier,,2018,2000,PETROL,SUV,3600000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,RAV4,,2019,2500,HYBRID,SUV,3800000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Fielder,,2017,1500,PETROL,WAGON,1650000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Vitz,,2018,1000,PETROL,HATCHBACK,1050000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Axio,,2018,1500,PETROL,SEDAN,1450000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Premio,,2017,1800,PETROL,SEDAN,1750000,Starter catalog. Replace with official KRA CRSP when available.
+Mazda,CX-5,,2018,2200,DIESEL,SUV,3200000,Starter catalog. Replace with official KRA CRSP when available.
+Mazda,CX-5,,2019,2000,PETROL,SUV,3100000,Starter catalog. Replace with official KRA CRSP when available.
+Mazda,Demio,,2018,1300,PETROL,HATCHBACK,1200000,Starter catalog. Replace with official KRA CRSP when available.
+Subaru,Forester,,2018,2000,PETROL,SUV,2900000,Starter catalog. Replace with official KRA CRSP when available.
+Subaru,Outback,,2017,2500,PETROL,WAGON,3100000,Starter catalog. Replace with official KRA CRSP when available.
+Nissan,X-Trail,,2018,2000,PETROL,SUV,2750000,Starter catalog. Replace with official KRA CRSP when available.
+Nissan,Note,,2018,1200,PETROL,HATCHBACK,1100000,Starter catalog. Replace with official KRA CRSP when available.
+Honda,Fit,,2018,1300,PETROL,HATCHBACK,1250000,Starter catalog. Replace with official KRA CRSP when available.
+Honda,CR-V,,2018,2000,PETROL,SUV,3000000,Starter catalog. Replace with official KRA CRSP when available.
+Mitsubishi,Outlander,,2018,2400,PETROL,SUV,2850000,Starter catalog. Replace with official KRA CRSP when available.
+Mitsubishi,Pajero,,2016,3200,DIESEL,SUV,4500000,Starter catalog. Replace with official KRA CRSP when available.
+Mercedes-Benz,C-Class,C200,2016,2000,PETROL,SEDAN,3400000,Starter catalog. Replace with official KRA CRSP when available.
+BMW,X3,,2018,2000,DIESEL,SUV,4100000,Starter catalog. Replace with official KRA CRSP when available.
+Volkswagen,Tiguan,,2018,2000,PETROL,SUV,3300000,Starter catalog. Replace with official KRA CRSP when available.
+Isuzu,D-Max,,2018,3000,DIESEL,PICKUP,3600000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Hilux,,2018,2800,DIESEL,PICKUP,4200000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Noah,,2017,2000,PETROL,MPV,2400000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Alphard,,2018,2500,PETROL,MPV,4800000,Starter catalog. Replace with official KRA CRSP when available.
+Lexus,RX,,2018,2000,PETROL,SUV,4600000,Starter catalog. Replace with official KRA CRSP when available.
+Lexus,LX,,2017,5700,PETROL,SUV,9500000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Wish,,2018,1800,PETROL,MPV,2100000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Wish,,2019,1800,PETROL,MPV,2200000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Crown,,2018,2500,HYBRID,SEDAN,3800000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Fortuner,,2019,2800,DIESEL,SUV,5200000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,RAV4,,2018,2000,PETROL,SUV,3500000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Vanguard,,2017,3500,PETROL,SUV,4000000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Sienta,,2018,1500,PETROL,MPV,1650000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Rush,,2019,1500,PETROL,SUV,1850000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Mark X,,2016,2500,PETROL,SEDAN,2900000,Starter catalog. Replace with official KRA CRSP when available.
+Nissan,Serena,,2018,2000,PETROL,MPV,2300000,Starter catalog. Replace with official KRA CRSP when available.
+Nissan,Tiida,,2018,1500,PETROL,HATCHBACK,1150000,Starter catalog. Replace with official KRA CRSP when available.
+Nissan,Patrol,,2017,5600,PETROL,SUV,7500000,Starter catalog. Replace with official KRA CRSP when available.
+Nissan,Juke,,2018,1600,PETROL,SUV,1900000,Starter catalog. Replace with official KRA CRSP when available.
+Honda,Vezel,,2018,1500,HYBRID,SUV,2400000,Starter catalog. Replace with official KRA CRSP when available.
+Honda,Vezel,,2019,1500,HYBRID,SUV,2500000,Starter catalog. Replace with official KRA CRSP when available.
+Honda,Stream,,2017,1800,PETROL,MPV,1750000,Starter catalog. Replace with official KRA CRSP when available.
+Honda,Freed,,2018,1500,HYBRID,MPV,1950000,Starter catalog. Replace with official KRA CRSP when available.
+Suzuki,Swift,,2018,1200,PETROL,HATCHBACK,1050000,Starter catalog. Replace with official KRA CRSP when available.
+Suzuki,Vitara,,2019,1600,PETROL,SUV,2200000,Starter catalog. Replace with official KRA CRSP when available.
+Suzuki,Jimny,,2018,660,PETROL,SUV,1650000,Starter catalog. Replace with official KRA CRSP when available.
+Mazda,Axela,,2018,2000,PETROL,SEDAN,1550000,Starter catalog. Replace with official KRA CRSP when available.
+Mazda,Atenza,,2017,2000,DIESEL,SEDAN,2400000,Starter catalog. Replace with official KRA CRSP when available.
+Subaru,Impreza,,2018,1600,PETROL,SEDAN,2100000,Starter catalog. Replace with official KRA CRSP when available.
+Subaru,XV,,2019,2000,PETROL,SUV,2650000,Starter catalog. Replace with official KRA CRSP when available.
+Mitsubishi,RVR,,2018,1800,PETROL,SUV,2100000,Starter catalog. Replace with official KRA CRSP when available.
+Mitsubishi,L200,,2018,2400,DIESEL,PICKUP,3900000,Starter catalog. Replace with official KRA CRSP when available.
+Volkswagen,Polo,,2018,1400,PETROL,HATCHBACK,1800000,Starter catalog. Replace with official KRA CRSP when available.
+Volkswagen,Passat,,2017,2000,DIESEL,SEDAN,2900000,Starter catalog. Replace with official KRA CRSP when available.
+Audi,Q5,,2018,2000,DIESEL,SUV,4500000,Starter catalog. Replace with official KRA CRSP when available.
+Audi,A4,,2017,2000,PETROL,SEDAN,3200000,Starter catalog. Replace with official KRA CRSP when available.
+Ford,Ranger,,2019,3200,DIESEL,PICKUP,4300000,Starter catalog. Replace with official KRA CRSP when available.
+Land Rover,Range Rover Sport,,2017,3000,DIESEL,SUV,8200000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Prado,TX,2019,2800,DIESEL,SUV,5600000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Prado,TX,2020,2800,DIESEL,SUV,5800000,Starter catalog. Replace with official KRA CRSP when available.
+Mazda,CX-5,,2020,2200,DIESEL,SUV,3350000,Starter catalog. Replace with official KRA CRSP when available.
+Mazda,CX-5,,2021,2000,PETROL,SUV,3450000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Harrier,,2020,2500,HYBRID,SUV,4400000,Starter catalog. Replace with official KRA CRSP when available.
+Toyota,Land Cruiser Prado,GX,2018,2700,DIESEL,SUV,5000000,Starter catalog. Replace with official KRA CRSP when available.
