@@ -8,7 +8,7 @@
 import { PrismaClient } from "@prisma/client";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { parseDutyCrspCsv, upsertDutyCrspRows } from "../src/lib/duty-crsp-import.js";
+import { parseDutyCrspCsv, upsertDutyCrspRows } from "../scripts/lib/duty-crsp-import.mjs";
 
 function applyEnvFile(filename, overridesExisting) {
   const p = resolve(process.cwd(), filename);
