@@ -535,8 +535,8 @@ export default function DutyCalculator({
               <TrackedLink
                 href={marketplaceHref}
                 eventName="duty_view_matching_stock"
-                eventPayload={{ make: selected?.make, model: selected?.model }}
-                className="flex-1 inline-flex h-12 items-center justify-center gap-2 px-5 bg-slate-900 dark:bg-white text-white dark:!text-black text-[10px] font-bold uppercase tracking-widest hover:opacity-95 transition-opacity"
+                eventPayload={{ make: stockMake, model: stockModel }}
+                className="flex-1 inline-flex h-12 items-center justify-center gap-2 px-5 bg-[#38A169] hover:bg-[#2F855A] text-white text-[10px] font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
                 style={{ borderRadius: "var(--radius)" }}
               >
                 View matching stock <ArrowUpRight className="w-4 h-4" aria-hidden />
@@ -571,8 +571,8 @@ export default function DutyCalculator({
           <TrackedLink
             href={marketplaceHref}
             eventName="duty_mobile_sticky_stock"
-            eventPayload={{ make: selected?.make, model: selected?.model }}
-            className="flex h-11 w-full items-center justify-center gap-2 bg-[#b91c1c] text-white text-[10px] font-bold uppercase tracking-widest"
+            eventPayload={{ make: stockMake, model: stockModel }}
+            className="flex h-11 w-full items-center justify-center gap-2 bg-[#38A169] hover:bg-[#2F855A] text-white text-[10px] font-bold uppercase tracking-widest"
             style={{ borderRadius: "var(--radius)" }}
           >
             View matching stock <ArrowUpRight className="w-4 h-4" />

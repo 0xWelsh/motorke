@@ -31,19 +31,30 @@ export default function DutyPageClient({
       <div className="home-shell pb-28 sm:pb-32">
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="lg:grid lg:grid-cols-12 lg:gap-10 xl:gap-12 items-start">
-            <div className="lg:col-span-8 min-w-0 -mt-4 sm:-mt-6">
-              <DutyCalculator
-                initialVehicle={initialVehicle}
-                pageSlug={pageSlug}
-                popularVehicles={popularVehicles}
-                onVehicleChange={(vehicle) => {
-                  if (vehicle?.make) {
-                    setStockFilter({ make: vehicle.make, model: vehicle.model });
-                  } else {
-                    setStockFilter({ make: null, model: null });
-                  }
-                }}
-              />
+            <div
+              id="duty-calculator"
+              className={`lg:col-span-8 min-w-0 ${showHero ? "-mt-6 sm:-mt-8 relative z-10" : ""}`}
+            >
+              <div
+                className={
+                  showHero
+                    ? "rounded-[var(--radius)] border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 shadow-lg p-4 sm:p-5"
+                    : ""
+                }
+              >
+                <DutyCalculator
+                  initialVehicle={initialVehicle}
+                  pageSlug={pageSlug}
+                  popularVehicles={popularVehicles}
+                  onVehicleChange={(vehicle) => {
+                    if (vehicle?.make) {
+                      setStockFilter({ make: vehicle.make, model: vehicle.model });
+                    } else {
+                      setStockFilter({ make: null, model: null });
+                    }
+                  }}
+                />
+              </div>
             </div>
             <div className="lg:col-span-4 mt-8 lg:mt-0 lg:sticky lg:top-24">
               <DutySimilarStock make={stockFilter.make} model={stockFilter.model} />

@@ -53,7 +53,11 @@ export default async function DutyVehiclePage({ params }) {
     <div className="min-h-screen bg-white dark:bg-[#0a0a0a]">
       <div className="home-shell pt-[4.75rem] md:pt-24 pb-8">
         <div className="max-w-6xl mx-auto">
-          <nav className="text-xs text-slate-500 mb-4">
+          <nav className="text-xs text-slate-500 mb-4" aria-label="Breadcrumb">
+            <Link href="/" className="hover:text-slate-900 dark:hover:text-white font-medium">
+              Home
+            </Link>
+            <span className="mx-2">/</span>
             <Link href="/duty" className="hover:text-slate-900 dark:hover:text-white">
               Duty calculator
             </Link>
