@@ -1,4 +1,4 @@
-import { callGrokJson } from "@/lib/ai/grok-vehicle";
+import { callGrokJson } from "@/lib/ai/grokVehicle";
 
 /**
  * Optional AI model guide (Kenya-localized). Returns null without XAI_API_KEY.
