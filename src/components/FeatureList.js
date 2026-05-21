@@ -9,17 +9,13 @@ export default function FeatureList({ features, className = "" }) {
 
   return (
     <ul
-      className={`overflow-hidden rounded-lg border border-slate-200/90 dark:border-zinc-800 ring-1 ring-black/[0.03] dark:ring-white/[0.04] ${className}`}
+      className={`grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 ${className}`}
       aria-label="Vehicle features"
     >
       {list.map((feature, index) => (
         <li
           key={`${index}-${feature}`}
-          className={`px-4 py-3 text-[13px] sm:text-sm font-semibold leading-snug text-slate-800 dark:text-slate-200 border-b border-slate-100/90 dark:border-zinc-800/80 last:border-b-0 ${
-            index % 2 === 0
-              ? "bg-white dark:bg-[#0a0a0a]"
-              : "bg-slate-50/90 dark:bg-zinc-900/55"
-          }`}
+          className="rounded-md border border-slate-200/85 dark:border-zinc-800 bg-slate-50/70 dark:bg-zinc-900/45 px-2.5 py-2 text-[12px] sm:text-[13px] font-semibold leading-snug text-slate-800 dark:text-slate-200"
         >
           {feature}
         </li>

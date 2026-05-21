@@ -413,7 +413,7 @@ export default async function CarDetailPage({ params }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 lg:items-start">
           {/* ── Main column: gallery + detail content ── */}
-          <div className="lg:col-span-8 flex flex-col gap-10 sm:gap-12">
+          <div className="lg:col-span-8 flex flex-col gap-7 sm:gap-8">
             <div className="overflow-hidden" style={{ borderRadius: "var(--radius)" }}>
               <ImageGallery images={car.images} title={title} />
             </div>
@@ -462,11 +462,11 @@ export default async function CarDetailPage({ params }) {
               ) : null}
             </header>
 
-            <div className="space-y-12 sm:space-y-16">
+            <div className="space-y-7 sm:space-y-9">
               <div>
                 <div>
-                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-6">Description</h2>
-                   <div className="text-[15px] text-[#4A5568] dark:text-slate-400 leading-[1.8] font-medium">
+                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-4">Description</h2>
+                   <div className="text-[14px] sm:text-[15px] text-[#4A5568] dark:text-slate-400 leading-[1.65] font-medium">
                       {specString ? (
                         <>
                           <span className="text-[#111827] dark:text-white font-bold">{specString}</span>
@@ -478,19 +478,19 @@ export default async function CarDetailPage({ params }) {
                    </div>
                 </div>
 
-                <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
-                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-5">Vehicle Details</h2>
-                   <div className="max-w-lg lg:max-w-none">
-                     <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-6 lg:gap-x-8 gap-y-0 text-[12px] md:text-[13px]">
+                <div className="pt-7 sm:pt-8 border-t border-slate-100 dark:border-zinc-900">
+                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-3.5">Vehicle Details</h2>
+                   <div>
+                     <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-5 lg:gap-x-6 gap-y-0 text-[12px] sm:text-[13px]">
                       {detailSpecs.map((item, idx) => {
                         const iconSrc = specIconSrcForDetailLabel(item.label);
                         return (
                           <div
                             key={item.label}
-                            className={`flex items-center gap-2 md:gap-2.5 py-2.5 md:py-3 border-b border-slate-50 dark:border-zinc-900/50 ${idx < 2 ? "border-t border-slate-50 dark:border-zinc-900/50" : ""}`}
+                            className={`flex items-center gap-2 py-2 sm:py-2.5 border-b border-slate-50 dark:border-zinc-900/50 ${idx < 2 ? "border-t border-slate-50 dark:border-zinc-900/50" : ""}`}
                           >
                             <div
-                              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${
+                              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${
                                 iconSrc
                                   ? "bg-[#f7faf8] dark:bg-white/[0.06] ring-1 ring-slate-200/80 dark:ring-white/10"
                                   : ""
@@ -516,8 +516,8 @@ export default async function CarDetailPage({ params }) {
                 </div>
 
                 {featureList.length > 0 && (
-                  <div className="pt-10 border-t border-slate-100 dark:border-zinc-900">
-                    <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-4">Features</h2>
+                  <div className="pt-7 sm:pt-8 border-t border-slate-100 dark:border-zinc-900">
+                    <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-3">Features</h2>
                     <FeatureList features={featureList} />
                   </div>
                 )}
@@ -571,8 +571,8 @@ export default async function CarDetailPage({ params }) {
             </div>
 
             {similar.length > 0 ? (
-              <div className="pt-10 sm:pt-16 border-t border-[#EDF2F7] dark:border-zinc-800">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-4 mb-6 sm:mb-10">
+              <div className="pt-8 sm:pt-10 border-t border-[#EDF2F7] dark:border-zinc-800">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-4 mb-5 sm:mb-7">
                   <div>
                     <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169]">People Are Also Interested In</h2>
                     <p className="mt-2 text-[13px] sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl leading-snug">
