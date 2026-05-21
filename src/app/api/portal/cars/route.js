@@ -8,6 +8,7 @@ import { logAuditEvent } from "@/lib/audit-trail";
 import { ensureCarPublicSlugInTx } from "@/lib/car-public-slug";
 import { notifyListingPublished } from "@/lib/seo-indexing";
 import { revalidateInventoryForCar } from "@/lib/revalidate-inventory";
+import { mapCarImagesWithAlt } from "@/lib/car-listing-seo";
 
 export async function POST(request) {
   const started = Date.now();
@@ -137,15 +138,18 @@ async function createCarRecord(body) {
       available:    true,
       images: images?.length
         ? {
-            create: (() => {
-              const primaryIdx = images.findIndex(img => img.isPrimary);
-              const finalPrimaryIdx = primaryIdx !== -1 ? primaryIdx : 0;
-              return images.map((img, i) => ({
-                url:       img.url,
-                isPrimary: i === finalPrimaryIdx,
-                order:     i,
-              }));
-            })(),
+            create: mapCarImagesWithAlt(
+              {
+                year: parseInt(year),
+                make: make.trim(),
+                model: model.trim(),
+                variant: variant?.trim() || null,
+                engineCC: engineCC ? parseInt(engineCC) : null,
+                fuelType: fuelType || "PETROL",
+                bodyType: bodyType || "SEDAN",
+              },
+              images,
+            ),
           }
         : undefined,
     },

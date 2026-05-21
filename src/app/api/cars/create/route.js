@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { finalizeNewCarPublicSlug } from "@/lib/car-public-slug";
 import { carListingPath } from "@/lib/car-listing-url";
 import { revalidateInventoryForCar } from "@/lib/revalidate-inventory";
+import { buildCarImageAlt } from "@/lib/car-listing-seo";
 
 export async function POST(request) {
   try {
@@ -56,11 +57,26 @@ export async function POST(request) {
         // Create primary image if URL provided
         images: get("imageUrl")
           ? {
-              create: [{
-                url:       get("imageUrl"),
-                isPrimary: true,
-                order:     0,
-              }],
+              create: [
+                {
+                  url: get("imageUrl"),
+                  isPrimary: true,
+                  order: 0,
+                  alt: buildCarImageAlt(
+                    {
+                      year: getInt("year"),
+                      make: get("make").trim(),
+                      model: get("model").trim(),
+                      variant: get("variant")?.trim() || null,
+                      engineCC: getInt("engineCC"),
+                      fuelType: get("fuelType"),
+                      bodyType: get("bodyType"),
+                    },
+                    1,
+                    { isPrimary: true },
+                  ),
+                },
+              ],
             }
           : undefined,
       },

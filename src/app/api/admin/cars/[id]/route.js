@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { revalidateInventoryForCar } from "@/lib/revalidate-inventory";
+import { mapCarImagesWithAlt } from "@/lib/car-listing-seo";
 
 export async function PUT(request, { params }) {
   const { id } = await params;
@@ -62,15 +63,23 @@ export async function PUT(request, { params }) {
 
     // Replace images if provided
     if (images && images.length > 0) {
+      const carForAlt = await db.car.findUnique({
+        where: { id },
+        select: {
+          year: true,
+          make: true,
+          model: true,
+          variant: true,
+          engineCC: true,
+          fuelType: true,
+          bodyType: true,
+        },
+      });
       await db.carImage.deleteMany({ where: { carId: id } });
-      const primaryIdx = images.findIndex(img => img.isPrimary);
-      const finalPrimaryIdx = primaryIdx !== -1 ? primaryIdx : 0;
       await db.carImage.createMany({
-        data: images.map((img, i) => ({
-          carId:     id,
-          url:       img.url,
-          isPrimary: i === finalPrimaryIdx,
-          order:     i,
+        data: mapCarImagesWithAlt(carForAlt || {}, images).map((row) => ({
+          carId: id,
+          ...row,
         })),
       });
     }

@@ -89,15 +89,15 @@ function balanceFeaturedInFirstRow(dealers, rowSize = 3) {
 
 
 export const metadata = {
-  title: "Cars & Dealer Network Kenya",
+  title: "Buy Used Cars in Kenya",
   description:
-    "Find verified Kenyan vehicle inventory from trusted dealerships. Compare total cost of ownership, inspect specs side by side, and contact dealers on Welsh Motorhub.",
+    "Find verified cars from trusted dealers in Kenya. Compare total ownership costs, inspect specs, and contact dealers directly on Welsh Motorhub.",
   alternates: { canonical: "/" },
   openGraph: {
     url: absoluteUrl("/"),
-    title: "Welsh Motorhub — Find Your Car in Kenya",
+    title: "Buy Used Cars in Kenya | Welsh Motorhub",
     description:
-      "Find verified Kenyan vehicle inventory from trusted dealerships. Compare costs and specs, contact dealers directly.",
+      "Verified vehicle inventory from trusted Kenyan dealers. Compare costs, specs, and contact sellers directly.",
     type: "website",
   },
 };

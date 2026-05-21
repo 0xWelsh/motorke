@@ -1,6 +1,5 @@
 import { absoluteUrl } from "@/lib/site-url";
 import { carListingPath } from "@/lib/car-listing-url";
-import { formatCarPrice } from "@/lib/utils";
 import { buildBreadcrumbListSchema } from "@/lib/seo-schema";
 
 export function dealerShowroomPath(slug) {
@@ -334,15 +333,4 @@ export function buildListingSellerSchema(dealer) {
   };
 }
 
-export function buildCarListingDealerMetadata(car, dealer) {
-  const variant = car.variant ? ` ${car.variant}` : "";
-  const vehicle = `${car.year} ${car.make} ${car.model}${variant}`;
-  const dealerName = dealer?.name || "Verified dealer";
-  const place = car.location || dealer?.location || dealer?.county || "Kenya";
-
-  const title = `${vehicle} at ${dealerName} | Verified Showroom Price Kenya`;
-  const priceStr = formatCarPrice(car);
-  const description = `${vehicle} listed by ${dealerName} in ${place} at ${priceStr}. View photos, specs, and contact ${dealerName} on Welsh Motorhub.`;
-
-  return { title, description, dealerName, place };
-}
+export { buildCarListingDealerMetadata } from "@/lib/car-listing-seo";

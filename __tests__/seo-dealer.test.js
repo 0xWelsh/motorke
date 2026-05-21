@@ -41,13 +41,25 @@ describe("seo-dealer", () => {
     expect(seller.url).toContain("/dealers/automax-motors");
   });
 
-  test("buildCarListingDealerMetadata includes dealer in title", () => {
-    const car = { year: 2019, make: "Mazda", model: "CX-8", variant: "XDL", price: 4_200_000 };
+  test("buildCarListingDealerMetadata is price-forward with sale intent", () => {
+    const car = {
+      year: 2019,
+      make: "Mazda",
+      model: "CX-8",
+      variant: "XDL",
+      price: 4_200_000,
+      fuelType: "DIESEL",
+      engineCC: 2200,
+      bodyType: "SUV",
+      location: "Nairobi",
+    };
     const meta = buildCarListingDealerMetadata(car, dealer);
-    expect(meta.title).toContain("AutoMax Motors");
     expect(meta.title).toContain("2019 Mazda CX-8");
-    expect(meta.title).toContain("Verified Showroom Price");
+    expect(meta.title).toMatch(/for Sale Kenya/);
+    expect(meta.title).toMatch(/KSh/);
+    expect(meta.description).toMatch(/^Buy a /);
     expect(meta.description).toContain("AutoMax Motors");
+    expect(meta.h1).toMatch(/for Sale in/i);
   });
 
   test("dealerShowroomPath is stable", () => {

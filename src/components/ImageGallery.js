@@ -440,7 +440,7 @@ export default function ImageGallery({ images, title }) {
                 >
                   <Image
                     src={img.url}
-                    alt=""
+                    alt={img.alt || `${title} thumbnail ${i + 1}`}
                     fill
                     loading="lazy"
                     decoding="async"

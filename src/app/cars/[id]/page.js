@@ -54,13 +54,14 @@ export async function generateMetadata({ params }) {
   const canonicalPath = carListingPath(car);
   const url = `${origin}${canonicalPath}`;
   const ogImageUrl = `${origin}/api/cars/${car.id}/og-image`;
+  const documentTitle = `${title} | Welsh Motorhub`;
 
   return {
-    title,
+    title: { absolute: documentTitle },
     description,
     alternates: { canonical: canonicalPath },
     openGraph: {
-      title,
+      title: documentTitle,
       description,
       url,
       locale: "en_KE",
@@ -79,7 +80,7 @@ export async function generateMetadata({ params }) {
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: documentTitle,
       description,
       images: [ogImageUrl],
     },
@@ -206,7 +207,7 @@ export default async function CarDetailPage({ params }) {
   const similar = await getSimilarCars(car.id, car.make, car.dealerId, car.bodyType, car.year, car.price);
   const reviewsData = await getCarReviews(car.id);
 
-  const title    = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
+  const { title, h1: listingH1 } = buildCarListingDealerMetadata(car, dealer);
   const titleWithoutYear = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const primaryImg = car.images.find((i) => i.isPrimary) || car.images[0];
   const specItems = buildCarSpecSummaryItems(car);
@@ -423,7 +424,7 @@ export default async function CarDetailPage({ params }) {
                 </div>
                 
                 <h1 className="text-2xl sm:text-3xl font-semibold text-[#111827] dark:text-white tracking-tight leading-[1.2] mb-6">
-                  {car.make} {car.model} {car.variant ? `( ${car.variant} )` : ""}
+                  {listingH1}
                 </h1>
 
                 <div className="flex flex-wrap items-center gap-1.5 mb-8 text-lg sm:text-xl">
