@@ -20,12 +20,12 @@ export default function DealerShowroomShare({
   const [fbHint, setFbHint] = useState(null); // "copied" | "manual" | null
 
   const url = (showroomUrl || "").trim();
-  const meta = [stockCount ? `${stockCount} cars in stock` : null, location].filter(Boolean).join(" · ");
-  const shareTitle = `${dealerName} — Welsh Motorhub showroom`;
+  const meta = [stockCount ? `${stockCount} cars in stock` : null, location].filter(Boolean).join(", ");
+  const shareTitle = `${dealerName} | Welsh Motorhub showroom`;
 
   const shareLines = [
     "WELSH MOTORHUB",
-    "Verified dealer showroom · Kenya",
+    "Verified dealer showroom, Kenya",
     "",
     url,
     "",
@@ -36,10 +36,10 @@ export default function DealerShowroomShare({
     url,
   ];
 
-  // Facebook caption — Facebook will render the OG preview from the URL itself,
+  // Facebook caption, Facebook will render the OG preview from the URL itself,
   // so we keep this caption clean and post-style without re-pasting the link.
   const fbCaption = [
-    `${dealerName} — verified showroom on Welsh Motorhub.`,
+    `${dealerName}, verified showroom on Welsh Motorhub.`,
     meta || null,
     "",
     "Tap to browse the live inventory and contact the dealer directly.",
@@ -73,7 +73,7 @@ export default function DealerShowroomShare({
       try {
         await navigator.share({
           title: shareTitle,
-          text: meta ? `${shareTitle}${meta ? ` · ${meta}` : ""}` : shareTitle,
+          text: meta ? `${shareTitle}${meta ? `, ${meta}` : ""}` : shareTitle,
           url,
         });
         emitShare("native");
@@ -154,7 +154,7 @@ export default function DealerShowroomShare({
         >
           <FaFacebookF className="w-3.5 h-3.5 shrink-0" aria-hidden />
           {fbHint === "copied"
-            ? "Caption copied — paste in FB"
+            ? "Caption copied, paste in FB"
             : fbHint === "manual"
               ? "Paste caption in FB"
               : "Facebook"}

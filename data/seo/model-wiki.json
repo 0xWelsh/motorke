@@ -3,7 +3,7 @@
     "headline": "Toyota Land Cruiser in Kenya",
     "summary": "The Land Cruiser is Kenya's benchmark full-size 4x4 for estates, upcountry travel, and status-conscious buyers who want V8 torque and ladder-frame durability.",
     "specs": "Typical imports run 4.0L–4.6L petrol or 4.5L diesel V8 with permanent 4WD. Fuel use is heavy in Nairobi traffic (often 5–8 km/L on diesel V8 depending on driving).",
-    "kenyaNotes": "Check frame rust, suspension bushings, and cooling system history. Many units are ex-Gulf or Japan imports — verify auction grade and service records before paying a deposit.",
+    "kenyaNotes": "Check frame rust, suspension bushings, and cooling system history. Many units are ex-Gulf or Japan imports, verify auction grade and service records before paying a deposit.",
     "buyerTip": "Compare against Prado if you need seven seats with lower running costs, or Land Cruiser 300 if budget allows a newer platform."
   },
   "toyota|prado": {
@@ -11,14 +11,14 @@
     "summary": "Prado is the default family 4x4 in Kenya: seven-seat flexibility, strong resale, and wide workshop support from Nairobi to the coast.",
     "specs": "Common trims include TX, TZ-G, and VX with 2.7L petrol or 2.8L diesel (GDJ150 era). Diesel is preferred for torque and fuel economy on long trips.",
     "kenyaNotes": "Inspect rear differential whine, AdBlue system on newer diesels, and any accident repairs on the rear door and quarter panels. TX-L and TZ-G hold value best in Nairobi.",
-    "buyerTip": "Match trim to your use — TX for value, VX if you want premium cabin kit without full Land Cruiser running costs."
+    "buyerTip": "Match trim to your use, TX for value, VX if you want premium cabin kit without full Land Cruiser running costs."
   },
   "toyota|land-cruiser-prado": {
     "headline": "Toyota Land Cruiser Prado in Kenya",
     "summary": "Prado is the default family 4x4 in Kenya: seven-seat flexibility, strong resale, and wide workshop support from Nairobi to the coast.",
     "specs": "Common trims include TX, TZ-G, and VX with 2.7L petrol or 2.8L diesel (GDJ150 era). Diesel is preferred for torque and fuel economy on long trips.",
     "kenyaNotes": "Inspect rear differential whine, AdBlue system on newer diesels, and any accident repairs on the rear door and quarter panels. TX-L and TZ-G hold value best in Nairobi.",
-    "buyerTip": "Match trim to your use — TX for value, VX if you want premium cabin kit without full Land Cruiser running costs."
+    "buyerTip": "Match trim to your use, TX for value, VX if you want premium cabin kit without full Land Cruiser running costs."
   },
   "toyota|harrier": {
     "headline": "Toyota Harrier in Kenya",
@@ -29,35 +29,35 @@
   },
   "toyota|rav4": {
     "headline": "Toyota RAV4 in Kenya",
-    "summary": "RAV4 is the compact family SUV sweet spot — easier parking than Prado, still credible for light weekend travel.",
+    "summary": "RAV4 is the compact family SUV sweet spot, easier parking than Prado, still credible for light weekend travel.",
     "specs": "2.0L and 2.5L petrol plus hybrid variants appear frequently. AWD is useful on murram but not a hardcore off-roader.",
     "kenyaNotes": "Timing chain service history matters on high-mileage petrol units. Confirm spare key and infotainment faults before handover.",
     "buyerTip": "Compare Honda CR-V and Mazda CX-5 listings at similar year and mileage."
   },
   "mazda|cx-5": {
     "headline": "Mazda CX-5 in Kenya",
-    "summary": "CX-5 offers sharp handling and a premium cabin feel at a lower price point than equivalent Harrier years — popular with Nairobi commuters.",
+    "summary": "CX-5 offers sharp handling and a premium cabin feel at a lower price point than equivalent Harrier years, popular with Nairobi commuters.",
     "specs": "2.0L and 2.5L Skyactiv petrol dominate imports. Fuel economy is reasonable for class (roughly 9–12 km/L mixed use when maintained).",
     "kenyaNotes": "Watch for worn rear shocks on rough estate roads and check for Mazda recall work on older KE registrations.",
     "buyerTip": "A well-kept CX-5 often undercuts Harrier on total cost of ownership."
   },
   "mazda|cx-8": {
     "headline": "Mazda CX-8 in Kenya",
-    "summary": "CX-8 brings three-row seating in a road-biased package — alternative to Prado for families who rarely do serious off-road.",
+    "summary": "CX-8 brings three-row seating in a road-biased package, alternative to Prado for families who rarely do serious off-road.",
     "specs": "2.5L turbo petrol is common on XDL trims. Expect premium pricing versus CX-5 for newer year bands.",
     "kenyaNotes": "Third-row space suits children more than adults. Verify all power doors and tailgate on high-spec imports.",
     "buyerTip": "If you need true 4x4 duty, Prado still wins; CX-8 wins on tarmac comfort."
   },
   "honda|cr-v": {
     "headline": "Honda CR-V in Kenya",
-    "summary": "CR-V is the rational alternative to RAV4 — spacious cabin, strong reliability reputation, and steady resale in urban Kenya.",
+    "summary": "CR-V is the rational alternative to RAV4, spacious cabin, strong reliability reputation, and steady resale in urban Kenya.",
     "specs": "1.5L turbo and 2.4L petrol generations both appear. CVT models need disciplined transmission fluid history.",
     "kenyaNotes": "Check for flood damage on Japan imports and confirm VIN matches logbook before transfer.",
-    "buyerTip": "Filter by year and mileage together — a cheap high-km CR-V can cost more in suspension and brakes."
+    "buyerTip": "Filter by year and mileage together, a cheap high-km CR-V can cost more in suspension and brakes."
   },
   "honda|vezel": {
     "headline": "Honda Vezel in Kenya",
-    "summary": "Vezel is a compact hybrid SUV staple for Nairobi — efficient in traffic and easy to park in tight estates.",
+    "summary": "Vezel is a compact hybrid SUV staple for Nairobi, efficient in traffic and easy to park in tight estates.",
     "specs": "1.5L hybrid with i-DCD or S+ systems depending on generation. Battery and inverter checks are non-negotiable.",
     "kenyaNotes": "Specialist hybrid diagnostics beat generic OBD scans. Confirm Kenya registration year vs manufacture month to avoid duty surprises on imports.",
     "buyerTip": "Pair with a duty estimate if you are shipping rather than buying locally registered stock."
@@ -66,7 +66,7 @@
     "headline": "Subaru Forester in Kenya",
     "summary": "Forester appeals to buyers who want symmetrical AWD and a practical wagon body for mixed tarmac and light murram.",
     "specs": "2.0L petrol and occasional turbo variants. Expect slightly higher parts cost than Toyota/Mazda mainstream models.",
-    "kenyaNotes": "Head gasket history on older EJ engines is a known talking point — demand compression and leak-down tests on suspect units.",
+    "kenyaNotes": "Head gasket history on older EJ engines is a known talking point, demand compression and leak-down tests on suspect units.",
     "buyerTip": "Great value if maintenance is documented; walk away from mystery overheating histories."
   },
   "nissan|x-trail": {
@@ -78,7 +78,7 @@
   },
   "mercedes-benz|e-class": {
     "headline": "Mercedes-Benz E-Class in Kenya",
-    "summary": "E-Class remains a prestige sedan and wagon choice for executives — strong street presence in Nairobi and Mombasa.",
+    "summary": "E-Class remains a prestige sedan and wagon choice for executives, strong street presence in Nairobi and Mombasa.",
     "specs": "Petrol and diesel four-cylinders and V6s appear depending on year. Budget for premium tyres, brakes, and electronic repairs.",
     "kenyaNotes": "Confirm spare key, COMAND/MBUX functionality, and any air-suspension faults on higher trims.",
     "buyerTip": "A full dealer service history justifies a premium over grey imports with unknown maintenance."

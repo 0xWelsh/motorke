@@ -46,7 +46,7 @@ export default function LocationPicker({ defaultLat, defaultLng }) {
           <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[400] pointer-events-none bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 px-4 py-2 shadow-sm rounded-2xl text-center">
             <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-900 dark:text-white">Click map to pin</p>
             <p className="text-[10px] text-slate-500 mt-0.5 normal-case tracking-normal font-medium">
-              Or save with address — we geocode in Kenya if no pin
+              Or save with address, we geocode in Kenya if no pin
             </p>
           </div>
         )}

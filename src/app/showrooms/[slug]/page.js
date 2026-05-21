@@ -130,8 +130,8 @@ export default async function ShowroomLocationPage({ params }) {
         </h1>
         <p className="text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mb-2">{hub.description}</p>
         <p className="text-sm text-slate-500 dark:text-slate-400 mb-10">
-          {dealers.length} showroom{dealers.length === 1 ? "" : "s"} · {cars.length} live listing
-          {cars.length === 1 ? "" : "s"} · {hub.county} County
+          {dealers.length} showroom{dealers.length === 1 ? "" : "s"}, {cars.length} live listing
+          {cars.length === 1 ? "" : "s"}, {hub.county} County
         </p>
 
         {dealers.length > 0 ? (

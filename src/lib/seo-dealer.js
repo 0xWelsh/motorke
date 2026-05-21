@@ -36,7 +36,7 @@ export function buildDealerMetadata(dealer, { stockCount = 0 } = {}) {
   const stock = Math.max(0, Number(stockCount) || 0);
   const stockLine = stock > 0 ? `${stock} car${stock === 1 ? "" : "s"} in stock` : "live showroom";
 
-  const title = `${name} Kenya | ${stockLine} — Welsh Motorhub`;
+  const title = `${name} Kenya | ${stockLine} | Welsh Motorhub`;
   const description =
     (dealer.description && dealer.description.trim().length >= 40
       ? dealer.description.trim().slice(0, 155)

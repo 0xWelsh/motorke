@@ -76,14 +76,14 @@ export function globalHubTitleAndDescription(resolved, total) {
   switch (resolved.kind) {
     case "global_body":
       return {
-        title: `${base} | Verified dealer stock — Welsh Motorhub`,
+        title: `${base} | Verified dealer stock | Welsh Motorhub`,
         description: `Browse ${n} verified ${BODY_TYPE_LABELS[resolved.bodyType]?.toLowerCase() || "vehicle"} listings from Kenyan dealers. Compare prices and contact sellers on Welsh Motorhub.`,
       };
     case "global_body_price": {
       const bl = BODY_TYPE_LABELS[resolved.bodyType] || resolved.bodyType;
       const band = SEO_PRICE_BANDS.find((b) => b.slug === resolved.bandSlug);
       return {
-        title: `${resolved.h1} | ${bl} listings Kenya — Welsh Motorhub`,
+        title: `${resolved.h1} | ${bl} listings Kenya | Welsh Motorhub`,
         description: `Shop ${n} ${String(bl).toLowerCase()} vehicles ${band?.label || "in this budget"} from verified dealers. Live stock updated on Welsh Motorhub.`,
       };
     }

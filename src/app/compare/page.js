@@ -4,7 +4,7 @@ import CompareClient from "./CompareClient";
 export const metadata = {
   title: "Compare cars side by side (Kenya)",
   description:
-    "Compare up to three Kenyan vehicle listings side by side: price, specs, duties, efficiency, and running costs — all on Welsh Motorhub.",
+    "Compare up to three Kenyan vehicle listings side by side: price, specs, duties, efficiency, and running costs on Welsh Motorhub.",
   alternates: { canonical: "/compare" },
   openGraph: {
     title: "Compare vehicles | Welsh Motorhub",

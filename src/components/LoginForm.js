@@ -24,7 +24,7 @@ export default function LoginForm({ error }) {
   // A real captcha token from Turnstile/reCAPTCHA is at least 30 chars and
   // doesn't look like our internal fallback markers. We deliberately do not
   // accept `usingSecurityFallback` as a substitute when a provider is
-  // configured — server would reject those tokens anyway and we shouldn't
+  // configured, server would reject those tokens anyway and we shouldn't
   // pretend on the client that the form is submittable.
   const hasUsableToken =
     captchaToken.length >= 20 &&
@@ -55,7 +55,7 @@ export default function LoginForm({ error }) {
           </Link>
           <AuthCarousel />
           <div className="mt-auto p-12 text-[10px] font-bold uppercase tracking-[0.3em] text-white/30">
-            © 2026 Welsh Motorhub Kenya • Part of Welsh Group
+            © 2026 Welsh Motorhub Kenya, Part of Welsh Group
           </div>
         </div>
       </div>

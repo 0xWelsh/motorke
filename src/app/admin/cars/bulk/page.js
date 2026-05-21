@@ -4,7 +4,7 @@ import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import BulkUpload from "@/components/BulkUpload";
 
-export const metadata = { title: "Bulk Upload Cars — Admin" };
+export const metadata = { title: "Bulk Upload Cars | Admin" };
 
 export default async function BulkUploadPage() {
   await requireAdmin();

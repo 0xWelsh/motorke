@@ -36,8 +36,8 @@ export function buildCarSpecSummaryItems(car) {
   if (positiveNum(car.torque)) parts.push(`${Math.round(Number(car.torque))} Nm`);
   if (positiveNum(car.engineCC)) {
     let eng = `${(Number(car.engineCC) / 1000).toFixed(1)}L`;
-    if (positiveNum(car.cylinders)) eng += ` · ${Number(car.cylinders)} cyl`;
-    if (car.turbo) eng += " · Turbo";
+    if (positiveNum(car.cylinders)) eng += `, ${Number(car.cylinders)} cyl`;
+    if (car.turbo) eng += ", Turbo";
     parts.push(eng);
   }
   if (car.transmission) parts.push(car.transmission === "AUTOMATIC" ? "AT" : "MT");

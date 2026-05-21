@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export const metadata = { title: "Market Updates — Welsh Motorhub Dealer Portal" };
+export const metadata = { title: "Market Updates | Welsh Motorhub Dealer Portal" };
 
 /**
  * Premium dashboard for car dealers to track world automotive news

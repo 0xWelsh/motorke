@@ -57,10 +57,10 @@ export function buildCarListingTitle(car) {
   const variant = car.variant ? ` ${car.variant}` : "";
   const price = formatPriceForTitle(car.price);
   let title = `${car.year} ${car.make} ${car.model}${variant} for Sale Kenya`;
-  if (price) title += ` · ${price}`;
+  if (price) title += ` ${price}`;
   if (title.length > 58) {
     title = `${car.year} ${car.make} ${car.model} for Sale Kenya`;
-    if (price) title += ` · ${price}`;
+    if (price) title += ` ${price}`;
   }
   return title;
 }
@@ -84,7 +84,7 @@ export function buildCarImageAlt(car, photoIndex, { isPrimary = false } = {}) {
   const base = `${car.year} ${car.make} ${car.model}${variant}`;
   const spec = buildCarSpecSnippet(car);
   const suffix = isPrimary ? "main photo" : `photo ${photoIndex}`;
-  return spec ? `${base} ${spec} — ${suffix}` : `${base} — ${suffix}`;
+  return spec ? `${base} ${spec}, ${suffix}` : `${base}, ${suffix}`;
 }
 
 /** Map API image payloads to DB rows with alt text. */

@@ -50,7 +50,7 @@ export default function HotThisWeek({ trending = [] }) {
         </div>
 
         <p className="text-[11px] text-slate-400 font-semibold mt-4 pt-4 border-t border-yellow-100">
-          Updated daily • Based on views, saves, and enquiries
+          Updated daily, Based on views, saves, and enquiries
         </p>
       </div>
     </div>

@@ -35,7 +35,7 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
   };
 
   const specItems = buildCarSpecSummaryItems(car);
-  const specString = specItems.join(" • ");
+  const specString = specItems.join(", ");
   const featureChips = meaningfulFeatureList(car.features);
   const eventPayload = {
     car_id: car.id,

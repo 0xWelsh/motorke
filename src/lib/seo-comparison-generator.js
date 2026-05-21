@@ -12,7 +12,7 @@ export function buildComparisonTitle(makeA, modelA, makeB, modelB) {
 }
 
 export function buildComparisonDescription(makeA, modelA, makeB, modelB) {
-  return `Compare ${makeA} ${modelA} and ${makeB} ${modelB} for Kenyan buyers — pricing context, use cases, and live listings on Welsh Motorhub.`;
+  return `Compare ${makeA} ${modelA} and ${makeB} ${modelB} for Kenyan buyers, pricing context, use cases, and live listings on Welsh Motorhub.`;
 }
 
 export function buildComparisonBody(makeA, modelA, makeB, modelB) {
@@ -36,7 +36,7 @@ Inventory changes weekly. Filter by make and model on our marketplace to see wha
 
 ## Next step
 
-Use the side-by-side compare tool with real listings you shortlist — specs, duty estimates, and dealer contact in one place.`;
+Use the side-by-side compare tool with real listings you shortlist, specs, duty estimates, and dealer contact in one place.`;
 }
 
 /** Discover popular make/model pairs with enough stock for SEO comparison pages. */

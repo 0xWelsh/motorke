@@ -22,7 +22,7 @@ import EmptyState from "@/components/ui/EmptyState";
 import DataTableShell from "@/components/ui/DataTableShell";
 import { carListingPath } from "@/lib/car-listing-url";
 
-export const metadata = { title: "Cars Inventory — Welsh Motorhub Admin" };
+export const metadata = { title: "Cars Inventory | Welsh Motorhub Admin" };
 
 /** Build `/admin/cars` href with consistent query-string handling */
 function adminCarsHref(search, pageNum = 1) {

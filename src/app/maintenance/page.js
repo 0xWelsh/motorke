@@ -5,7 +5,7 @@
 export const dynamic = "force-static";
 
 export const metadata = {
-  title: "We'll be right back · Welsh Motorhub",
+  title: "We'll be right back | Welsh Motorhub",
   description:
     "Welsh Motorhub is undergoing brief maintenance. We'll be back online shortly.",
   robots: { index: false, follow: false },

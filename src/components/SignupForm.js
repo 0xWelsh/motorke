@@ -140,7 +140,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
           </Link>
           <AuthCarousel />
           <div className="mt-auto p-10 text-[10px] font-bold uppercase tracking-[0.3em] text-white/30">
-            © 2026 Welsh Motorhub Kenya • Professional Network
+            © 2026 Welsh Motorhub Kenya, Professional Network
           </div>
         </div>
       </div>

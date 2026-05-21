@@ -128,12 +128,12 @@ function faqSchema(resolved, total) {
       {
         question: "Can I browse more inventory from other brands?",
         answer:
-          `Yes — open Advanced filters from this page or browse all verified cars across Kenya.`,
+          `Yes. Open Advanced filters from this page or browse all verified cars across Kenya.`,
       },
       {
         question: "Are listings from verified dealerships?",
         answer:
-          "Welsh Motorhub lists dealer-published vehicles — contact dealers directly via WhatsApp or phone from each listing.",
+          "Welsh Motorhub lists dealer-published vehicles. Contact dealers directly via WhatsApp or phone from each listing.",
       },
     ];
   } else {
@@ -141,7 +141,7 @@ function faqSchema(resolved, total) {
       {
         question: "How do I contact a dealer about a listing?",
         answer:
-          "Each vehicle page shows WhatsApp and phone options where the dealer supplied them — message or call from the listing detail view.",
+          "Each vehicle page shows WhatsApp and phone options where the dealer supplied them. Message or call from the listing detail view.",
       },
     ];
   }
@@ -396,7 +396,7 @@ export default async function CarHubPage({ params, searchParams }) {
 
         <header className="mb-6 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white px-4 py-5 dark:border-zinc-800 dark:from-zinc-950 dark:to-zinc-900 sm:px-6">
           <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#38A169]">
-            Verified dealer inventory · Kenya
+            Verified dealer inventory, Kenya
           </p>
           <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-3xl">{h1}</h1>
           <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-zinc-400">
@@ -417,7 +417,7 @@ export default async function CarHubPage({ params, searchParams }) {
           >
             <Search className="w-11 h-11 text-slate-300 dark:text-zinc-700 mx-auto mb-4" />
             <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No listings here right now</h2>
-            <p className="text-slate-500 mb-6">Try the main inventory search — stock changes daily.</p>
+            <p className="text-slate-500 mb-6">Try the main inventory search. Stock changes daily.</p>
             <Link
               href="/cars"
               className="inline-flex bg-[#111827] dark:bg-[#38A169] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest"

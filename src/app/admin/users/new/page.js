@@ -14,7 +14,7 @@ import {
   Lightbulb
 } from "lucide-react";
 
-export const metadata = { title: "Create Identity — Admin" };
+export const metadata = { title: "Create Identity | Admin" };
 
 export default async function AdminNewUserPage(props) {
   await requireAdmin();

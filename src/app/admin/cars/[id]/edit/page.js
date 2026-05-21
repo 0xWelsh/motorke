@@ -6,7 +6,7 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import CarForm from "@/components/CarForm";
 
-export const metadata = { title: "Edit Car — Admin" };
+export const metadata = { title: "Edit Car | Admin" };
 
 export default async function AdminEditCarPage({ params }) {
   await requireAdmin();

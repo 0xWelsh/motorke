@@ -7,7 +7,7 @@ import AdminSeoMonitor from "@/components/admin/AdminSeoMonitor";
 import { Search, ExternalLink, AlertTriangle, CheckCircle2 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "SEO — Welsh Motorhub Admin" };
+export const metadata = { title: "SEO | Welsh Motorhub Admin" };
 
 export default async function AdminSeoPage() {
   await requireAdmin();

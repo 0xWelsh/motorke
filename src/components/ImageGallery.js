@@ -458,7 +458,7 @@ export default function ImageGallery({ images, title }) {
                </span>
                {images.length > 1 && !slideshowPaused && (
                  <p className="text-[9px] font-semibold tracking-wide text-white/35 px-4">
-                   Auto slideshow · swipe or tap arrows to pause
+                   Auto slideshow. Swipe or tap arrows to pause.
                  </p>
                )}
             </div>

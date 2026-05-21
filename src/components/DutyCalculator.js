@@ -324,7 +324,7 @@ export default function DutyCalculator({
               >
                   <span className="font-semibold text-slate-900 dark:text-white">{v.label}</span>
                   <span className="block text-xs text-slate-500 mt-0.5">
-                    {v.engineCC}cc · {FUEL_LABELS[v.fuelType] || v.fuelType} · CRSP {formatPrice(v.crspKes)}
+                    {v.engineCC}cc, {FUEL_LABELS[v.fuelType] || v.fuelType}, CRSP {formatPrice(v.crspKes)}
                     {v.importEligibility?.status === "ineligible" && (
                       <span className="ml-2 text-red-600 dark:text-red-400 font-bold">· Over 8yr limit</span>
                     )}

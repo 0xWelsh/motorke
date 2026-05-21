@@ -147,7 +147,7 @@ export default function CarsSearch({
           nextState.fuelType || null,
           nextState.maxPrice ? `<= ${Number(nextState.maxPrice).toLocaleString()}` : null,
         ].filter(Boolean);
-        const label = labelParts.join(" • ") || "Custom cars search";
+        const label = labelParts.join(", ") || "Custom cars search";
         const entry = { label, query, createdAt: Date.now() };
         const deduped = [entry, ...prev.filter((item) => item.query !== query)].slice(0, 6);
         window.localStorage.setItem(RECENT_CAR_SEARCHES_KEY, JSON.stringify(deduped));

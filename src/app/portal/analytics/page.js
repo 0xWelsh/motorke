@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import PdfBlobDownloadButton from "@/components/PdfBlobDownloadButton";
 
-export const metadata = { title: "Analytics — Welsh Motorhub Dealer Portal" };
+export const metadata = { title: "Analytics | Welsh Motorhub Dealer Portal" };
 
 export default async function AnalyticsPage() {
   const user = await requireDealer();

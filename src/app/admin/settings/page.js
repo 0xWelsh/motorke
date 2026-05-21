@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { getSupportEmail } from "@/lib/site-contact";
 import { Settings, Save, AlertCircle } from "lucide-react";
 
-export const metadata = { title: "Settings — Welsh Motorhub Admin" };
+export const metadata = { title: "Settings | Welsh Motorhub Admin" };
 
 export default async function AdminSettingsPage({ searchParams }) {
   await requireAdmin();

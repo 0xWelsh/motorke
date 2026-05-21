@@ -21,7 +21,7 @@ export default function ComparisonSeoListings({ make, model, cars }) {
         </Link>
       </div>
       {cars.length === 0 ? (
-        <p className="text-sm text-slate-500">No live listings right now — check back soon.</p>
+        <p className="text-sm text-slate-500">No live listings right now, check back soon.</p>
       ) : (
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {cars.map((car) => {

@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: buildPageTitle("Car buying guides & blog"),
   description:
-    "Practical articles for Kenyan car buyers — imports, duty, financing, and how to shop verified listings on Welsh Motorhub.",
+    "Practical articles for Kenyan car buyers: imports, duty, financing, and how to shop verified listings on Welsh Motorhub.",
   ...buildCanonicalMetadata("/blog"),
 };
 
@@ -24,7 +24,7 @@ export default async function BlogIndexPage() {
         </p>
 
         {posts.length === 0 ? (
-          <p className="text-sm text-slate-500">Articles are being published — check back soon.</p>
+          <p className="text-sm text-slate-500">Articles are being published. Check back soon.</p>
         ) : (
           <ul className="space-y-4">
             {posts.map((post) => (
@@ -47,7 +47,7 @@ export default async function BlogIndexPage() {
           <Link href="/guides" className="text-[#2F855A] font-semibold hover:opacity-80">
             Browse all guides
           </Link>
-          {" · "}
+          {", "}
           <Link href="/cars" className="text-[#2F855A] font-semibold hover:opacity-80">
             Search cars
           </Link>

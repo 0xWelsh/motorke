@@ -7,7 +7,7 @@ import {
 } from "@/lib/phone-hints";
 import LocationPicker from "@/components/LocationPicker";
 
-export const metadata = { title: "Add Dealership — Admin" };
+export const metadata = { title: "Add Dealership | Admin" };
 
 const COUNTIES = [
   "Nairobi","Mombasa","Kisumu","Nakuru","Uasin Gishu","Kiambu","Machakos",

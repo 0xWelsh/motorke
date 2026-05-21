@@ -49,7 +49,7 @@ export default function CarModelWiki({ car, wiki }) {
         <Link href={hubHref} className="font-bold text-[#38A169] hover:underline">
           Browse all {car.make} {car.model} for sale in Kenya
         </Link>
-        {" · "}
+        {", "}
         <Link href={dutyPath} className="font-bold text-[#38A169] hover:underline">
           Import duty calculator
         </Link>

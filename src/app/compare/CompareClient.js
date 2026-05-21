@@ -770,7 +770,7 @@ export default function CompareClient({ initialCars }) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Welsh Motorhub — Comparison Report</title>
+    <title>Welsh Motorhub | Comparison Report</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -825,7 +825,7 @@ export default function CompareClient({ initialCars }) {
   </head>
   <body>
     <h1>Welsh Motorhub Comparison Report</h1>
-    <p class="meta">${escapeHtml(title)}<br/>Generated: ${escapeHtml(printedAt)} · Preset: ${escapeHtml(preset)}</p>
+    <p class="meta">${escapeHtml(title)}<br/>Generated: ${escapeHtml(printedAt)}, preset: ${escapeHtml(preset)}</p>
     <p class="note">Tip: open this file in your browser and use Print → &quot;Save as PDF&quot; if you need a PDF copy.</p>
 
     <div class="section-title">Quick Summary</div>
@@ -1087,7 +1087,7 @@ export default function CompareClient({ initialCars }) {
         hint: data.message || data.error || "Could not generate a paragraph.",
       });
     } catch {
-      setFreeAi({ status: "err", text: "", hint: "Network error — try again." });
+      setFreeAi({ status: "err", text: "", hint: "Network error. Try again." });
     }
   }
 
@@ -1109,7 +1109,7 @@ export default function CompareClient({ initialCars }) {
         setPickReasons({
           status: "done",
           byCarId,
-          hint: "AI-generated suggestions—not a substitute for your own judgement.",
+          hint: "AI-generated suggestions, not a substitute for your own judgement.",
         });
         return;
       }
@@ -1123,7 +1123,7 @@ export default function CompareClient({ initialCars }) {
         hint: data.message || data.error || "Could not generate pick lines.",
       });
     } catch {
-      setPickReasons({ status: "err", byCarId: {}, hint: "Network error — try again." });
+      setPickReasons({ status: "err", byCarId: {}, hint: "Network error. Try again." });
     }
   }
 
@@ -1529,7 +1529,7 @@ export default function CompareClient({ initialCars }) {
               <div>
                 <h2 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-2">Performance mix</h2>
                 <p className="text-xs sm:text-sm text-white/60 font-medium leading-relaxed mb-4">
-                  Relative balance of comfort, economy, and value in this set — same scoring as the table below.
+                  Relative balance of comfort, economy, and value in this set, using the same scoring as the table below.
                 </p>
                 <div className="space-y-3">
                    {fullComparedCars.map((car, ci) => {
@@ -1670,7 +1670,7 @@ export default function CompareClient({ initialCars }) {
               <p className="text-[11px] text-slate-600 dark:text-slate-400 mb-3 leading-relaxed">
                 The points above are generated from the numbers in this comparison. You can also ask for a short
                 narrative paragraph that restates the same facts in everyday language. Availability depends on how the
-                site is configured—if it is not available, the comparison table and bullets are still the full result.
+                site is configured. If AI is not available, the comparison table and bullets are still the full result.
               </p>
               <button
                 type="button"
@@ -1729,7 +1729,7 @@ export default function CompareClient({ initialCars }) {
                         </span>
                         {line || (
                           <span className="text-[12px] text-slate-500 dark:text-slate-500">
-                            No line returned for this car — try again.
+                            No line returned for this car. Try again.
                           </span>
                         )}
                       </li>
@@ -2034,7 +2034,7 @@ export default function CompareClient({ initialCars }) {
           style={currentTutorialKey === "export" ? { borderRadius: "var(--radius)" } : undefined}
         >
         <p className="lg:hidden text-center text-[11px] text-slate-500 dark:text-slate-500 py-1 mb-2">
-          Download report or share link — use the bar at the bottom of the screen.
+          Download report or share link using the bar at the bottom of the screen.
         </p>
         <div className="max-lg:hidden pt-10 sm:pt-12 lg:pt-16 border-t border-slate-100 dark:border-slate-800">
            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
@@ -2062,7 +2062,7 @@ export default function CompareClient({ initialCars }) {
                     className="inline-flex items-center justify-center min-h-[3.25rem] min-w-[12rem] px-6 sm:px-8 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white text-xs font-bold uppercase tracking-widest hover:border-[#111827] dark:hover:border-white transition-all shadow-sm"
                     style={{ borderRadius: 'var(--radius)' }}
                   >
-                    {saveState === "copied" ? "URL copied" : saveState === "failed" ? "Copy failed — retry" : "Copy share link"}
+                    {saveState === "copied" ? "URL copied" : saveState === "failed" ? "Copy failed, retry" : "Copy share link"}
                   </button>
                  </div>
                  {pdfHint ? (

@@ -17,7 +17,7 @@ const faqs = {
     },
     {
       q: "How do I know the car I'm buying is actually available?",
-      a: "Every listing is live and tied to the dealer's inventory system. If a car is sold, the dealer must update their inventory immediately. Our 'Mark as Sold' feature ensures no ghost listings. If you find a car marked available but it's sold, contact us immediately—we'll investigate.",
+      a: "Every listing is live and tied to the dealer's inventory system. If a car is sold, the dealer must update their inventory immediately. Our 'Mark as Sold' feature ensures no ghost listings. If you find a car marked available but it's sold, contact us immediately and we'll investigate.",
     },
     {
       q: "Can I negotiate the price on Welsh Motorhub?",
@@ -41,7 +41,7 @@ const faqs = {
     },
     {
       q: "How do I get better deal notifications?",
-      a: "When you save a car, Welsh Motorhub learns your preferences. If a similar car appears at a lower price, we'll email you. Check your notifications regularly—sometimes deals move fast.",
+      a: "When you save a car, Welsh Motorhub learns your preferences. If a similar car appears at a lower price, we'll email you. Check your notifications regularly; sometimes deals move fast.",
     },
     {
       q: "Is my personal data safe on Welsh Motorhub?",
@@ -55,7 +55,7 @@ const faqs = {
     },
     {
       q: "Why list on Welsh Motorhub instead of managing my own website?",
-      a: "Welsh Motorhub brings 1000s of verified buyers to you monthly. You skip building a website, handling payments, or managing leads manually. Our platform does it—you focus on selling.",
+      a: "Welsh Motorhub brings 1000s of verified buyers to you monthly. You skip building a website, handling payments, or managing leads manually. Our platform handles leads; you focus on selling.",
     },
     {
       q: "How do I upload my inventory quickly?",
@@ -75,7 +75,7 @@ const faqs = {
     },
     {
       q: "How do reviews work for dealers?",
-      a: "Buyers leave public reviews after purchase or enquiry. Your rating is transparent—5 stars builds trust, low ratings hurt visibility. Respond to reviews professionally and fix legitimate issues.",
+      a: "Buyers leave public reviews after purchase or enquiry. Your rating is transparent: 5 stars builds trust, low ratings hurt visibility. Respond to reviews professionally and fix legitimate issues.",
     },
     {
       q: "Can I list cars from auctions or franchises?",
@@ -83,7 +83,7 @@ const faqs = {
     },
     {
       q: "What's the contract between Welsh Motorhub and me as a dealer?",
-      a: "You keep 100% of sale price. Dealer platform access is free while we scale traffic — no commissions through us either. Paid plans may arrive later with notice; we're aligned either way.",
+      a: "You keep 100% of sale price. Dealer platform access is free while we scale traffic, with no commissions through us. Paid plans may arrive later with notice; we're aligned either way.",
     },
     {
       q: "Will Welsh Motorhub help me handle customer service?",
@@ -113,7 +113,7 @@ const faqs = {
     },
     {
       q: "What's your refund policy if I'm unhappy?",
-      a: "Today there are no subscriptions to cancel — access is free. If we introduce paid tiers, we'll publish a refund and cancellation policy before anyone is charged.",
+      a: "Today there are no subscriptions to cancel; access is free. If we introduce paid tiers, we'll publish a refund and cancellation policy before anyone is charged.",
     },
   ],
   "Trust & Security": [
@@ -131,7 +131,7 @@ const faqs = {
     },
     {
       q: "Is it safe to call a dealer from Welsh Motorhub?",
-      a: "Yes. Phone numbers are from verified dealer profiles. If a number seems fake or scammy, report it—we investigate and may ban the dealer.",
+      a: "Yes. Phone numbers are from verified dealer profiles. If a number seems fake or scammy, report it and we will investigate and may ban the dealer.",
     },
     {
       q: "What's your data privacy policy?",

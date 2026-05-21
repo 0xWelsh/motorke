@@ -32,8 +32,8 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
   const mainCar = cars[carIndex % cars.length];
   const secondaryCar = cars[(carIndex + 1) % cars.length];
   const currentReview = reviews[reviewIndex];
-  const mainVariant = [mainCar.model, mainCar.variant].filter(Boolean).join(" · ");
-  const secondaryVariant = [secondaryCar.model, secondaryCar.variant].filter(Boolean).join(" · ");
+  const mainVariant = [mainCar.model, mainCar.variant].filter(Boolean).join(", ");
+  const secondaryVariant = [secondaryCar.model, secondaryCar.variant].filter(Boolean).join(", ");
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full h-full min-h-[380px] max-h-[520px] animate-in fade-in slide-in-from-right-8 duration-1000">

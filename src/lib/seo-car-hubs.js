@@ -76,7 +76,7 @@ export async function resolveModelFromSlug(make, slug) {
 }
 
 /**
- * @param {string[]} partsRaw — URL segments after /cars/hub → e.g. ['toyota'] or ['toyota','nairobi']
+ * @param {string[]} partsRaw, URL segments after /cars/hub → e.g. ['toyota'] or ['toyota','nairobi']
  * @returns {Promise<
  *   | { kind: 'county'; county: string; path: string }
  *   | { kind: 'make'; make: string; path: string }
@@ -176,12 +176,12 @@ export function hubTitleAndDescription(resolved, total) {
     case "make":
       return {
         title: `${resolved.make} cars for sale in Kenya | Welsh Motorhub`,
-        description: `Shop ${n} verified ${resolved.make} listings across Kenya. Filter by year, price, fuel, and body type — dealer inventory on Welsh Motorhub.`,
+        description: `Shop ${n} verified ${resolved.make} listings across Kenya. Filter by year, price, fuel, and body type, dealer inventory on Welsh Motorhub.`,
       };
     case "make_model":
       return {
         title: `${resolved.make} ${resolved.model} for sale in Kenya | Welsh Motorhub`,
-        description: `Find ${resolved.make} ${resolved.model} cars for sale — ${n} live listings from verified Kenyan dealers on Welsh Motorhub.`,
+        description: `Find ${resolved.make} ${resolved.model} cars for sale, ${n} live listings from verified Kenyan dealers on Welsh Motorhub.`,
       };
     case "make_county":
       return {
@@ -192,7 +192,7 @@ export function hubTitleAndDescription(resolved, total) {
       const fl = fuelFacetLabel(resolved.fuelType);
       return {
         title: `${resolved.make} ${fl} cars for sale in Kenya | Welsh Motorhub`,
-        description: `${n} ${resolved.make} ${fl.toLowerCase()} listings from verified Kenyan dealers — compare prices and specs on Welsh Motorhub.`,
+        description: `${n} ${resolved.make} ${fl.toLowerCase()} listings from verified Kenyan dealers, compare prices and specs on Welsh Motorhub.`,
       };
     }
     case "make_body": {
@@ -204,7 +204,7 @@ export function hubTitleAndDescription(resolved, total) {
     }
     case "make_price_band":
       return {
-        title: `${resolved.make} (${resolved.band.label}) — cars for sale | Welsh Motorhub`,
+        title: `${resolved.make} (${resolved.band.label}), cars for sale | Welsh Motorhub`,
         description: `Browse ${n} ${resolved.make} listings in this price range from verified Kenyan dealers on Welsh Motorhub.`,
       };
     case "global_body":

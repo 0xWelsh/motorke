@@ -15,7 +15,7 @@ import {
 } from "@/lib/phone-hints";
 import { User, Mail, Shield, Calendar, Plus, Building2, MapPin, Globe, Phone } from "lucide-react";
 
-export const metadata = { title: "Profile Settings — Welsh Motorhub Dealer Portal" };
+export const metadata = { title: "Profile Settings | Welsh Motorhub Dealer Portal" };
 
 const COUNTIES = [
   "Nairobi", "Mombasa", "Kisumu", "Nakuru", "Uasin Gishu", "Kiambu", "Machakos",

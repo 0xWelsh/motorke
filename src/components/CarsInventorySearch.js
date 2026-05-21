@@ -190,7 +190,7 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
               }
             }}
             autoComplete="off"
-            placeholder="Make, model, year — suggestions from live stock"
+            placeholder="Make, model, year, suggestions from live stock"
             className="w-full border border-slate-200 bg-white py-2.5 pl-10 pr-10 text-sm font-semibold text-[#111827] outline-none placeholder:text-slate-400 focus:border-[#38A169] dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:placeholder:text-slate-500"
             style={{ borderRadius: "var(--radius)" }}
           />

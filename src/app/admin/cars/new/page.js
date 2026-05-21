@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import CarForm from "@/components/CarForm";
 
-export const metadata = { title: "Add Car — Admin" };
+export const metadata = { title: "Add Car | Admin" };
 
 export default async function AdminNewCarPage({ searchParams }) {
   await requireAdmin();

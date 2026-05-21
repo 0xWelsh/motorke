@@ -185,7 +185,7 @@ export default async function HomePage() {
           <div className="mb-5 sm:mb-6 md:mb-8 lg:mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center lg:text-left">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-[#111827] dark:text-white leading-[0.92] tracking-tight mb-4 lg:max-w-4xl">
               Buy cars with<br />
-              <span className="editorial-heading text-[#38A169]">dealer-level clarity.</span>
+              <span className="editorial-hero-accent text-[#38A169]">dealer-level clarity.</span>
             </h1>
 
             <p className="text-base md:text-lg lg:text-[1.15rem] text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto lg:mx-0">
@@ -366,22 +366,22 @@ export default async function HomePage() {
                 {
                   title: "Yard-first listings",
                   icon: <Building2 className="h-6 w-6" aria-hidden />,
-                  desc: "Cars come from partner dealers with a physical presence—not scraped dumps or anonymous “DM for price” threads.",
+                  desc: "Cars come from partner dealers with a physical presence, not scraped dumps or anonymous “DM for price” threads.",
                 },
                 {
                   title: "Straight to the seller",
                   icon: <MessageCircle className="h-6 w-6" aria-hidden />,
-                  desc: "You reach the dealership’s line. Ask about finance, trade-in, or viewing—without a mystery broker in the middle.",
+                  desc: "You reach the dealership’s line. Ask about finance, trade-in, or viewing without a mystery broker in the middle.",
                 },
                 {
                   title: "Compare before you commit",
                   icon: <GitCompare className="h-6 w-6" aria-hidden />,
-                  desc: "Use specs, photos, and our tools to shortlist seriously, so your next step is a viewing—not another wild goose chase.",
+                  desc: "Use specs, photos, and our tools to shortlist seriously, so your next step is a viewing, not another wild goose chase.",
                 },
                 {
                   title: "Stock that keeps pace",
                   icon: <RefreshCw className="h-6 w-6" aria-hidden />,
-                  desc: "We expect listings to reflect what’s still on the floor. When something moves, it should come down—quickly.",
+                  desc: "We expect listings to reflect what’s still on the floor. When something moves, it should come down quickly.",
                 },
               ].map((item, i) => (
                 <div key={i} className="flex h-full flex-col gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">

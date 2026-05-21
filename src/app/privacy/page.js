@@ -76,7 +76,7 @@ function getPrivacySections(support) {
     subsections: [
       { heading: "7.1 Session Cookies", content: "We use session cookies to keep you logged in and maintain security. These are deleted when you close your browser." },
       { heading: "7.2 Analytics Cookies", content: "Tools like Google Analytics track page views and user behavior to help us improve the platform. These data are anonymized and aggregated." },
-      { heading: "7.3 Opt-Out", content: `Most browsers allow you to disable cookies via settings. Some platform features may not work without cookies (like login). You can also opt out of analytics tracking—contact ${support}.` },
+      { heading: "7.3 Opt-Out", content: `Most browsers allow you to disable cookies via settings. Some platform features may not work without cookies (like login). You can also opt out of analytics tracking; contact ${support}.` },
     ],
   },
   {

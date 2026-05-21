@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import PdfBlobDownloadButton from "@/components/PdfBlobDownloadButton";
 
-export const metadata = { title: "Admin Dashboard — Welsh Motorhub" };
+export const metadata = { title: "Admin Dashboard | Welsh Motorhub" };
 
 export default async function AdminDashboard({ searchParams }) {
   await requireAdmin();
@@ -330,7 +330,7 @@ export default async function AdminDashboard({ searchParams }) {
             <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Top Events (7d)</p>
             <p className="text-sm font-bold text-slate-700 dark:text-slate-200 break-words leading-relaxed">
               {trackingTopEvents.length
-                ? trackingTopEvents.map((row) => `${row.name} (${row._count._all})`).join(" · ")
+                ? trackingTopEvents.map((row) => `${row.name} (${row._count._all})`).join(", ")
                 : "No tracked events yet"}
             </p>
           </div>

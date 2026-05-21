@@ -17,7 +17,7 @@ import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import DataTableShell from "@/components/ui/DataTableShell";
 import { carListingPath } from "@/lib/car-listing-url";
 
-export const metadata = { title: "Leads — Welsh Motorhub Admin" };
+export const metadata = { title: "Leads | Welsh Motorhub Admin" };
 
 function adminLeadsHref({ page: pageNum = 1, dealerId = "", search = "" } = {}) {
   const p = new URLSearchParams();

@@ -14,7 +14,7 @@ import LocationPicker from "@/components/LocationPicker";
 import AdminAvatarUpload from "@/components/AdminAvatarUpload";
 import { MapPin } from "lucide-react";
 
-export const metadata = { title: "Edit Dealership — Admin" };
+export const metadata = { title: "Edit Dealership | Admin" };
 
 const COUNTIES = [
   "Nairobi","Mombasa","Kisumu","Nakuru","Uasin Gishu","Kiambu","Machakos",

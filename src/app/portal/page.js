@@ -26,7 +26,7 @@ import {
   Rocket
 } from "lucide-react";
 
-export const metadata = { title: "Dashboard — Welsh Motorhub Dealer Portal" };
+export const metadata = { title: "Dashboard | Welsh Motorhub Dealer Portal" };
 
 function pctChange(current, previous) {
   if (!previous && !current) return 0;

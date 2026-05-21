@@ -71,7 +71,7 @@ function buildGeneratedModelWiki(car) {
   const cc = car.engineCC ? `${car.engineCC}cc` : "this engine size";
 
   return {
-    headline: `${make} ${model} — buyer notes for Kenya`,
+    headline: `${make} ${model}, buyer notes for Kenya`,
     paragraphs: [
       `This ${year} ${make} ${model} is listed as a ${body.toLowerCase()} with ${fuel.toLowerCase()} power (${cc}). Kenyan buyers typically compare year, mileage, registration status, and dealer service history before paying a deposit.`,
       `For ${body.toLowerCase()} imports, inspect panel gaps, underbody rust, and cooling or hybrid systems where applicable. Ask for a recent inspection report or Japan auction sheet if the unit was imported.`,

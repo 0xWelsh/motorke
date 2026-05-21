@@ -35,8 +35,8 @@ function CompactListing({ car }) {
           {title}
         </p>
         <p className="text-[11px] text-slate-500 mt-0.5">
-          {car.engineCC ? `${car.engineCC}cc` : "n/a"} · {FUEL_LABELS[car.fuelType] || car.fuelType}
-          {car.mileage ? ` · ${formatMileage(car.mileage)}` : ""}
+          {car.engineCC ? `${car.engineCC}cc` : "n/a"}, {FUEL_LABELS[car.fuelType] || car.fuelType}
+          {car.mileage ? `, ${formatMileage(car.mileage)}` : ""}
         </p>
         <p className="text-sm font-bold text-[#b91c1c] dark:text-red-400 mt-1 tabular-nums">
           {formatCarPrice(car)}

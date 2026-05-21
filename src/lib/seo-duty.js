@@ -105,7 +105,7 @@ export function buildDutyCalculatorJsonLd({ vehicle = null, pathname = DUTY_HUB 
       name: "What is CRSP for vehicle imports?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "CRSP is the Commissioner’s Recommended Selling Price — a KRA benchmark used to derive customs value for tax. It is not the price you pay the overseas seller.",
+        text: "CRSP is the Commissioner’s Recommended Selling Price, a KRA benchmark used to derive customs value for tax. It is not the price you pay the overseas seller.",
       },
     },
     {

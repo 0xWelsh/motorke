@@ -214,7 +214,7 @@ export default async function CarDetailPage({ params }) {
   const titleWithoutYear = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const primaryImg = car.images.find((i) => i.isPrimary) || car.images[0];
   const specItems = buildCarSpecSummaryItems(car);
-  const specString = specItems.join(" • ");
+  const specString = specItems.join(", ");
   const detailSpecs = buildCarDetailSpecRows(car);
   const featureList = meaningfulFeatureList(car.features);
 
@@ -470,11 +470,11 @@ export default async function CarDetailPage({ params }) {
                       {specString ? (
                         <>
                           <span className="text-[#111827] dark:text-white font-bold">{specString}</span>
-                          {(car.description || "").trim() ? " • " : null}
+                          {(car.description || "").trim() ? ". " : null}
                         </>
                       ) : null}
                       {car.description?.trim() ||
-                        "Representing excellence in engineering, this unit undergoes a rigorous 150-point inspection before listing. Our network ensures every vehicle meets stringent quality and performance benchmarks."}
+                        "No description from the dealer yet. Message them for condition, service history, and viewing times."}
                    </div>
                 </div>
 
@@ -576,7 +576,7 @@ export default async function CarDetailPage({ params }) {
                   <div>
                     <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169]">People Are Also Interested In</h2>
                     <p className="mt-2 text-[13px] sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl leading-snug">
-                      Similar listings from our network — swipe sideways on your phone.
+                      Similar listings from our network. Swipe sideways on your phone.
                     </p>
                   </div>
                   <Link

@@ -20,7 +20,7 @@ import {
 import EmptyState from "@/components/ui/EmptyState";
 import DealerFlagToggles from "@/components/admin/DealerFlagToggles";
 
-export const metadata = { title: "Dealers — Welsh Motorhub Admin" };
+export const metadata = { title: "Dealers | Welsh Motorhub Admin" };
 
 const avatarGradients = [
   "from-[#111111] to-[#2a2a2a]",
@@ -194,7 +194,7 @@ export default async function AdminDealersPage() {
                       {[dealer.location, dealer.county]
                         .filter(Boolean)
                         .filter((v, i, a) => a.indexOf(v) === i)
-                        .join(" · ") || "Kenya"}
+                        .join(", ") || "Kenya"}
                     </span>
                   </div>
                   {dealer.phone ? (

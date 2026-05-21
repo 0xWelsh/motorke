@@ -17,7 +17,7 @@ import {
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import DataTableShell from "@/components/ui/DataTableShell";
 
-export const metadata = { title: "Users — Welsh Motorhub Admin" };
+export const metadata = { title: "Users | Welsh Motorhub Admin" };
 
 export default async function AdminUsersPage(props) {
   const searchParams = await props.searchParams;

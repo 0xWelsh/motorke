@@ -36,7 +36,7 @@ export default async function HeroReviews() {
             </p>
             <p className="text-[9px] font-bold text-slate-600">
               {review.user?.name || "Verified Buyer"}
-              {review.dealer?.county ? ` · ${review.dealer.county}` : ""}
+              {review.dealer?.county ? `, ${review.dealer.county}` : ""}
             </p>
           </div>
         ))}

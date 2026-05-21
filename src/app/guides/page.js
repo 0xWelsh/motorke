@@ -31,7 +31,7 @@ export default async function GuidesIndexPage() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-2">Content</p>
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-3">Buyer guides</h1>
           <p className="text-slate-600 dark:text-slate-400 max-w-2xl">
-            Curated pages for SEO and discovery — compare popular models, read buying advice, and jump straight into inventory.
+            Curated pages for SEO and discovery, compare popular models, read buying advice, and jump straight into inventory.
           </p>
         </header>
 

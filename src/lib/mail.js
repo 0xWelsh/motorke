@@ -513,7 +513,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
                 ${newCar.year} ${newCar.make} ${newCar.model}
               </h3>
               <p style="margin: 0 0 8px; font-size: 13px; color: #64748b;">
-                ${newCar.mileage ? `${parseInt(newCar.mileage).toLocaleString()} km • ` : ''}${newCar.location}
+                ${newCar.mileage ? `${parseInt(newCar.mileage).toLocaleString()} km, ` : ''}${newCar.location}
               </p>
               <p style="margin: 0; font-size: 20px; font-weight: 900; color: #ff5a2f;">
                 KSh ${parseInt(newCar.price).toLocaleString("en-KE")}

@@ -4,7 +4,7 @@ import LocationPicker from "@/components/LocationPicker";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 
-export const metadata = { title: "Add Branch — Admin" };
+export const metadata = { title: "Add Branch | Admin" };
 
 const COUNTIES = [
   "Nairobi","Mombasa","Kisumu","Nakuru","Uasin Gishu","Kiambu","Machakos",

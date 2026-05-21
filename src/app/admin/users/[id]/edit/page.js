@@ -17,7 +17,7 @@ import {
   Key
 } from "lucide-react";
 
-export const metadata = { title: "Edit User — Admin" };
+export const metadata = { title: "Edit User | Admin" };
 
 export default async function AdminEditUserPage(props) {
   await requireAdmin();
