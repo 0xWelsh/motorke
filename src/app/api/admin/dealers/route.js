@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { resolveDealerCoordinates } from "@/lib/geocode";
 
 function slugify(str) {
   return str
@@ -31,8 +32,14 @@ export async function POST(request) {
     const county = formData.get("county")?.toString() || "Nairobi";
     const location = formData.get("location")?.toString().trim() || "";
     const address = formData.get("address")?.toString().trim() || null;
-    const latRaw = formData.get("lat")?.toString();
-    const lngRaw = formData.get("lng")?.toString();
+
+    const coords = await resolveDealerCoordinates({
+      lat: formData.get("lat"),
+      lng: formData.get("lng"),
+      address,
+      location,
+      county,
+    });
     const phone = formData.get("phone")?.toString().trim() || "";
     const whatsapp = formData.get("whatsapp")?.toString().trim() || null;
     const email = formData.get("email")?.toString().trim() || null;
@@ -55,8 +62,8 @@ export async function POST(request) {
             county,
             location,
             address,
-            lat: latRaw ? parseFloat(latRaw) : null,
-            lng: lngRaw ? parseFloat(lngRaw) : null,
+            lat: coords.lat,
+            lng: coords.lng,
             phone,
             whatsapp,
             email,

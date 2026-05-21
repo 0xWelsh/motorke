@@ -1,121 +1,109 @@
 "use client";
-/**
- * SearchMapLeaflet.js
- * Pure Leaflet map for search results — one pin per dealer, popup lists their cars.
- */
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { carListingPath } from "@/lib/car-listing-url";
+import { createDealerDivIcon, escapeMapHtml } from "@/lib/map-pin";
 
 function formatPrice(p) {
   if (!p) return null;
   if (p >= 1_000_000) return `KSh ${(p / 1_000_000).toFixed(1)}M`;
-  if (p >= 1_000)     return `KSh ${(p / 1_000).toFixed(0)}K`;
+  if (p >= 1_000) return `KSh ${(p / 1_000).toFixed(0)}K`;
   return `KSh ${p}`;
 }
 
 export default function SearchMapLeaflet({ dealers }) {
-  const mapRef      = useRef(null);
+  const mapRef = useRef(null);
   const instanceRef = useRef(null);
 
   useEffect(() => {
     if (!mapRef.current || instanceRef.current) return;
 
-    delete L.Icon.Default.prototype._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-      iconUrl:       "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-      shadowUrl:     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-    });
-
-    // Default centre = Nairobi
     const map = L.map(mapRef.current, {
       center: [-1.2921, 36.8219],
       zoom: 7,
       scrollWheelZoom: false,
     });
 
-    // Use OSM tiles for broader network compatibility.
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 19,
     }).addTo(map);
 
     const markers = [];
 
     dealers.forEach((dealer) => {
-      const icon = L.divIcon({
-        html: `
-          <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
-            <div style="
-              background:#111111;color:#fff;
-              font-size:10px;font-weight:900;letter-spacing:0.5px;
-              padding:3px 8px;
-              border:2px solid #fff;
-              box-shadow:0 2px 6px rgba(0,0,0,0.2);
-              white-space:nowrap;
-            ">
-              ${dealer.name} · ${dealer.cars.length}
-            </div>
-            <div style="width:2px;height:6px;background:#ff5a2f"></div>
-            <div style="width:7px;height:7px;border-radius:50%;background:#ff5a2f;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.3)"></div>
-          </div>
-        `,
-        iconSize: [null, null],
-        iconAnchor: [0, 0],
-        className: "",
+      const lat = Number(dealer.lat);
+      const lng = Number(dealer.lng);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+      const icon = createDealerDivIcon(L, {
+        label: dealer.name,
+        badge: String(dealer.cars.length),
+        verified: dealer.verified,
       });
 
-      const carListHtml = dealer.cars.slice(0, 5).map((c) => {
-        const price = formatPrice(c.price);
-        const href = carListingPath(c);
-        return `
+      const carListHtml = dealer.cars
+        .slice(0, 5)
+        .map((c) => {
+          const price = formatPrice(c.price);
+          const href = carListingPath(c);
+          const title = escapeMapHtml(`${c.year} ${c.make} ${c.model}`);
+          return `
           <a href="${href}" style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid #f1f5f9;text-decoration:none;color:inherit">
-            <span style="font-size:11px;font-weight:700;color:#0f172a;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif">${c.year} ${c.make} ${c.model}</span>
+            <span style="font-size:11px;font-weight:700;color:#0f172a">${title}</span>
             ${price ? `<span style="font-size:11px;font-weight:800;color:#ff5a2f;white-space:nowrap">${price}</span>` : ""}
           </a>
         `;
-      }).join("");
+        })
+        .join("");
 
       const moreCount = dealer.cars.length - 5;
-
       const popup = `
         <div style="min-width:220px;font-family:system-ui,sans-serif">
           <div style="margin-bottom:8px">
-            <p style="font-weight:900;font-size:13px;margin:0 0 2px">${dealer.name}</p>
-            ${dealer.location ? `<p style="font-size:11px;color:#64748b;margin:0">${dealer.location}${dealer.county ? `, ${dealer.county}` : ""}</p>` : ""}
+            <p style="font-weight:900;font-size:13px;margin:0 0 2px">${escapeMapHtml(dealer.name)}</p>
+            ${dealer.location ? `<p style="font-size:11px;color:#64748b;margin:0">${escapeMapHtml(dealer.location)}${dealer.county ? `, ${escapeMapHtml(dealer.county)}` : ""}</p>` : ""}
           </div>
           <div style="margin-bottom:8px">${carListHtml}</div>
           ${moreCount > 0 ? `<p style="font-size:10px;color:#94a3b8;margin:4px 0 6px">+${moreCount} more ${moreCount === 1 ? "car" : "cars"}</p>` : ""}
-          <a href="/dealers/${dealer.slug}" style="font-size:11px;font-weight:800;color:#ff5a2f;text-decoration:none;text-transform:uppercase;letter-spacing:0.08em">
+          <a href="/dealers/${escapeMapHtml(dealer.slug)}" style="font-size:11px;font-weight:800;color:#ff5a2f;text-decoration:none;text-transform:uppercase;letter-spacing:0.08em">
             View Dealer →
           </a>
         </div>
       `;
 
-      const m = L.marker([dealer.lat, dealer.lng], { icon, title: dealer.name })
+      const m = L.marker([lat, lng], { icon, title: dealer.name })
         .addTo(map)
         .bindPopup(popup, { maxWidth: 280 })
-        .on("mouseover", function () { this.openPopup(); });
+        .on("mouseover", function () {
+          this.openPopup();
+        });
 
       markers.push(m);
     });
 
-    // Fit bounds to all dealer pins
     if (markers.length > 0) {
       const group = L.featureGroup(markers);
-      map.fitBounds(group.getBounds(), { padding: [40, 40], maxZoom: 13 });
+      map.fitBounds(group.getBounds(), { padding: [48, 48], maxZoom: 14 });
     }
 
     instanceRef.current = map;
 
-    // FIX: Ensure map tiles load correctly
-    setTimeout(() => {
-      map.invalidateSize();
-    }, 100);
+    const refresh = () => map.invalidateSize();
+    const t1 = setTimeout(refresh, 100);
+    const t2 = setTimeout(refresh, 400);
+    const ro =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(() => refresh())
+        : null;
+    ro?.observe(mapRef.current);
 
     return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      ro?.disconnect();
       map.remove();
       instanceRef.current = null;
     };

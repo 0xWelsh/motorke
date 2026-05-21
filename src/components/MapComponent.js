@@ -1,28 +1,18 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { createPickerDivIcon } from "@/lib/map-pin";
 
-if (typeof window !== "undefined") {
-  delete L.Icon.Default.prototype._getIconUrl;
-  L.Icon.Default.mergeOptions({
-    iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  });
-}
-
-function LocationMarker({ position, setPosition }) {
+function LocationMarker({ position, setPosition, icon }) {
   useMapEvents({
     click(e) {
       if (setPosition) setPosition(e.latlng);
     },
   });
 
-  return position === null ? null : (
-    <Marker position={position}></Marker>
-  );
+  return position === null ? null : <Marker position={position} icon={icon} />;
 }
 
 function MapResizer() {
@@ -30,8 +20,6 @@ function MapResizer() {
 
   useEffect(() => {
     const refresh = () => map.invalidateSize();
-
-    // Initial delayed refresh handles hidden/animated containers.
     const t1 = setTimeout(refresh, 100);
     const t2 = setTimeout(refresh, 400);
 
@@ -52,13 +40,19 @@ function MapResizer() {
 }
 
 export default function MapComponent({ defaultLat, defaultLng, onChange }) {
-  // Default to Nairobi coordinates if none provided
-  const initialPosition = defaultLat && defaultLng 
-    ? { lat: parseFloat(defaultLat), lng: parseFloat(defaultLng) } 
-    : { lat: -1.2921, lng: 36.8219 };
-    
-  // If editing an existing location, start with it pinned
-  const [position, setPosition] = useState(defaultLat && defaultLng ? initialPosition : null);
+  const initialPosition =
+    defaultLat && defaultLng
+      ? { lat: parseFloat(defaultLat), lng: parseFloat(defaultLng) }
+      : { lat: -1.2921, lng: 36.8219 };
+
+  const [position, setPosition] = useState(
+    defaultLat && defaultLng ? initialPosition : null,
+  );
+
+  const pickerIcon = useMemo(() => {
+    if (typeof window === "undefined") return undefined;
+    return createPickerDivIcon(L);
+  }, []);
 
   useEffect(() => {
     if (position && onChange) {
@@ -70,10 +64,10 @@ export default function MapComponent({ defaultLat, defaultLng, onChange }) {
 
   return (
     <div className="w-full h-full rounded-2xl overflow-hidden border border-[#ddd4c8] dark:border-slate-800 z-0">
-      <MapContainer 
-        center={initialPosition} 
-        zoom={defaultLat && defaultLng ? 15 : 12} 
-        scrollWheelZoom={true} 
+      <MapContainer
+        center={initialPosition}
+        zoom={defaultLat && defaultLng ? 16 : 12}
+        scrollWheelZoom
         style={{ width: "100%", height: "100%" }}
       >
         <MapResizer />
@@ -81,7 +75,11 @@ export default function MapComponent({ defaultLat, defaultLng, onChange }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <LocationMarker position={position} setPosition={setPosition} />
+        <LocationMarker
+          position={position}
+          setPosition={setPosition}
+          icon={pickerIcon}
+        />
       </MapContainer>
     </div>
   );

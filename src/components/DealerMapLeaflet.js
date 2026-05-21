@@ -4,18 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { formatDistance } from '@/lib/geolocation';
-
-// Fix Leaflet marker icons
-const defaultIcon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
-
-L.Marker.prototype.options.icon = defaultIcon;
+import { createDealerDivIcon, escapeMapHtml } from '@/lib/map-pin';
 
 export default function DealerMapLeaflet({ dealers, userLocation }) {
   const mapRef = useRef(null);
@@ -62,33 +51,20 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
 
     // Add dealer markers
     dealers.forEach((dealer) => {
-      if (!dealer.lat || !dealer.lng) return;
+      const lat = Number(dealer.lat);
+      const lng = Number(dealer.lng);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
 
-      const customIcon = L.divIcon({
-        html: `
-          <div class="flex flex-col items-center">
-            <div class="bg-[#111111] text-white rounded-2xl font-bold text-xs shadow-lg border-2 border-white flex items-center justify-center w-9 h-9" style="line-height: 1;">
-              ${dealer.name?.[0]?.toUpperCase() || '?'}
-            </div>
-            ${
-              dealer.distance
-                ? `<div class="text-slate-900 dark:text-white text-[11px] font-bold bg-[#ff5a2f] px-1.5 py-0.5 rounded-2xl mt-1 shadow-md whitespace-nowrap">
-                     ${formatDistance(dealer.distance)}
-                   </div>`
-                : ''
-            }
-          </div>
-        `,
-        iconSize: [50, dealer.distance ? 60 : 45],
-        iconAnchor: [25, dealer.distance ? 50 : 35],
-        popupAnchor: [0, dealer.distance ? -35 : -20],
-        className: 'leaflet-custom-marker',
+      const customIcon = createDealerDivIcon(L, {
+        label: dealer.name,
+        verified: dealer.verified,
+        badge: dealer.distance ? formatDistance(dealer.distance) : undefined,
       });
 
       const popupContent = `
         <div class="space-y-2 min-w-[220px]">
-          <h3 class="font-bold text-slate-900 dark:text-white text-sm">${dealer.name}</h3>
-          <p class="text-xs text-slate-600">${dealer.location}</p>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm">${escapeMapHtml(dealer.name)}</h3>
+          <p class="text-xs text-slate-600">${escapeMapHtml(dealer.location || "")}</p>
           ${
             dealer.distance
               ? `<div class="flex items-center gap-1.5 text-xs font-semibold text-[#ff5a2f] bg-blue-50 px-2 py-1 rounded">
@@ -108,7 +84,7 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
         </div>
       `;
 
-      const marker = L.marker([dealer.lat, dealer.lng], {
+      const marker = L.marker([lat, lng], {
         icon: customIcon,
         title: dealer.name,
       })

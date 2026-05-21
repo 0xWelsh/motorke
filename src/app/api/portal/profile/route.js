@@ -4,64 +4,7 @@ import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { normalizeKenyanPhone } from "@/lib/phone-verification";
-
-function toNullableCoordinate(value) {
-  if (value == null) return null;
-  const raw = String(value).trim();
-  if (!raw) return null;
-  const parsed = Number(raw);
-  return Number.isFinite(parsed) ? parsed : null;
-}
-
-function inValidRange(lat, lng) {
-  return (
-    typeof lat === "number" &&
-    typeof lng === "number" &&
-    lat >= -90 &&
-    lat <= 90 &&
-    lng >= -180 &&
-    lng <= 180
-  );
-}
-
-function extractCoordsFromMapsUrl(url) {
-  if (!url) return null;
-  const normalized = decodeURIComponent(url);
-  const patterns = [
-    /@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/,            // .../@-1.2921,36.8219,...
-    /[?&](?:q|ll)=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/, // ...?q=-1.2921,36.8219
-    /!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/,         // ...!3d-1.2921!4d36.8219
-  ];
-
-  for (const pattern of patterns) {
-    const match = normalized.match(pattern);
-    if (!match) continue;
-    const lat = Number(match[1]);
-    const lng = Number(match[2]);
-    if (inValidRange(lat, lng)) return { lat, lng };
-  }
-
-  return null;
-}
-
-async function resolveMapsCoords(rawUrl) {
-  const trimmed = rawUrl?.trim();
-  if (!trimmed) return null;
-
-  // First pass directly from provided URL.
-  const direct = extractCoordsFromMapsUrl(trimmed);
-  if (direct) return direct;
-
-  // Second pass for short links that redirect (e.g. maps.app.goo.gl).
-  try {
-    const response = await fetch(trimmed, { redirect: "follow" });
-    const finalUrl = response?.url;
-    if (!finalUrl) return null;
-    return extractCoordsFromMapsUrl(finalUrl);
-  } catch {
-    return null;
-  }
-}
+import { resolveDealerCoordinates } from "@/lib/geocode";
 
 export async function POST(request) {
   const session = await getSessionFromRequest();
@@ -79,43 +22,39 @@ export async function POST(request) {
   const location = formData.get("location")?.toString().trim();
   const phone = formData.get("phone")?.toString().trim();
   const mapsUrl = formData.get("googleMapsUrl")?.toString().trim() || "";
+  const address = formData.get("address")?.toString().trim() || null;
+  const county = formData.get("county")?.toString().trim() || "Nairobi";
 
   if (!name || !location || !phone) {
     return NextResponse.redirect(new URL("/portal/profile?error=required", request.url), 303);
   }
 
-  const manualLat = toNullableCoordinate(formData.get("lat"));
-  const manualLng = toNullableCoordinate(formData.get("lng"));
-  const mapsCoords = await resolveMapsCoords(mapsUrl);
-
-  let lat = null;
-  let lng = null;
-
-  if (mapsCoords) {
-    lat = mapsCoords.lat;
-    lng = mapsCoords.lng;
-  } else if (inValidRange(manualLat, manualLng)) {
-    lat = manualLat;
-    lng = manualLng;
-  }
+  const coords = await resolveDealerCoordinates({
+    lat: formData.get("lat"),
+    lng: formData.get("lng"),
+    address,
+    location,
+    county,
+    mapsUrl,
+  });
 
   await db.dealer.update({
     where: { id: session.user.dealerId },
     data: {
       name,
       phone,
-      whatsapp:    formData.get("whatsapp")?.toString().trim() || null,
-      email:       formData.get("email")?.toString().trim() || null,
+      whatsapp: formData.get("whatsapp")?.toString().trim() || null,
+      email: formData.get("email")?.toString().trim() || null,
       location,
-      county:      formData.get("county")?.toString().trim() || "Nairobi",
-      address:     formData.get("address")?.toString().trim() || null,
-      lat,
-      lng,
+      county,
+      address,
+      lat: coords.lat,
+      lng: coords.lng,
       description: formData.get("description")?.toString().trim() || null,
-      website:     formData.get("website")?.toString().trim() || null,
+      website: formData.get("website")?.toString().trim() || null,
       instagramUrl: formData.get("instagramUrl")?.toString().trim() || null,
-      facebookUrl:  formData.get("facebookUrl")?.toString().trim() || null,
-      tiktokUrl:    formData.get("tiktokUrl")?.toString().trim() || null,
+      facebookUrl: formData.get("facebookUrl")?.toString().trim() || null,
+      tiktokUrl: formData.get("tiktokUrl")?.toString().trim() || null,
     },
   });
 
@@ -133,5 +72,6 @@ export async function POST(request) {
     }
   }
 
-  return NextResponse.redirect(new URL("/portal/profile?saved=1", request.url), 303);
+  const saved = coords.source === "geocode" ? "geocoded" : "1";
+  return NextResponse.redirect(new URL(`/portal/profile?saved=${saved}`, request.url), 303);
 }
