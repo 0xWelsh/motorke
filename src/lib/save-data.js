@@ -26,7 +26,8 @@ export function saveDataGalleryLimits(saveData, imageCount) {
       maxThumbs: imageCount,
       preloadAdjacent: true,
       lightboxAutoplay: true,
-      mosaicMode: imageCount >= 5,
+      // Slideshow + thumb strip on all viewports; mosaic grid was desktop-only and confused buyers.
+      mosaicMode: false,
     };
   }
   return {
