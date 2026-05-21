@@ -89,7 +89,7 @@ function balanceFeaturedInFirstRow(dealers, rowSize = 3) {
 
 
 export const metadata = {
-  title: "Buy Used Cars in Kenya",
+  title: "Buy Used and New Cars in Kenya",
   description:
     "Find verified cars from trusted dealers in Kenya. Compare total ownership costs, inspect specs, and contact dealers directly on Welsh Motorhub.",
   alternates: { canonical: "/" },
