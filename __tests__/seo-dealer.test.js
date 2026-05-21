@@ -59,7 +59,8 @@ describe("seo-dealer", () => {
     expect(meta.title).toMatch(/KSh/);
     expect(meta.description).toMatch(/^Buy a /);
     expect(meta.description).toContain("AutoMax Motors");
-    expect(meta.h1).toMatch(/for Sale in/i);
+    expect(meta.h1).toBe("2019 Mazda CX-8 XDL");
+    expect(meta.h1).not.toMatch(/for Sale/i);
   });
 
   test("dealerShowroomPath is stable", () => {

@@ -32,11 +32,19 @@ export function buildCarSpecSnippet(car) {
 }
 
 /**
- * SEO H1 — year, model, key specs, sale intent, location.
+ * Listing page H1 — vehicle name only (no “for sale in …”; use hubs for that).
  */
-export function buildCarListingH1(car, dealer) {
+export function buildCarListingH1(car) {
   const variant = car.variant ? ` ${car.variant}` : "";
-  const spec = buildCarSpecSnippet(car);
+  return `${car.year} ${car.make} ${car.model}${variant}`;
+}
+
+/**
+ * Hub / inventory context headings — sale intent + location.
+ */
+export function buildCarContextHeading(car, dealer, { includeSpecs = true } = {}) {
+  const variant = car.variant ? ` ${car.variant}` : "";
+  const spec = includeSpecs ? buildCarSpecSnippet(car) : "";
   const specPart = spec ? ` ${spec}` : "";
   const place = car.location || dealer?.location || dealer?.county || "Kenya";
   return `${car.year} ${car.make} ${car.model}${variant}${specPart} for Sale in ${place}`;
@@ -98,7 +106,7 @@ export function buildCarListingDealerMetadata(car, dealer) {
   return {
     title: buildCarListingTitle(car),
     description: buildCarListingDescription(car, dealer),
-    h1: buildCarListingH1(car, dealer),
+    h1: buildCarListingH1(car),
     dealerName,
     place,
   };

@@ -23,11 +23,10 @@ const sampleCar = {
 const dealer = { name: "Test Motors", location: "Kiambu Road", county: "Nairobi" };
 
 describe("car-listing-seo", () => {
-  test("H1 includes year, specs, and sale intent", () => {
-    const h1 = buildCarListingH1(sampleCar, dealer);
-    expect(h1).toMatch(/2019 Mazda CX-8/);
-    expect(h1).toMatch(/for Sale in/i);
-    expect(h1).toMatch(/Diesel|2\.2L/i);
+  test("H1 is vehicle name only (no for-sale location copy)", () => {
+    const h1 = buildCarListingH1(sampleCar);
+    expect(h1).toBe("2019 Mazda CX-8 XDL PACKAGE");
+    expect(h1).not.toMatch(/for Sale/i);
   });
 
   test("title is compact and price-forward", () => {
