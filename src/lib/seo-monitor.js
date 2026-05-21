@@ -80,7 +80,7 @@ export async function runSeoMonitorPipeline() {
   );
 
   const enqueued = await enqueueSeoMonitorBatch();
-  const processed = await processPendingSeoJobs({ limit: 10 });
+  const processed = await processPendingSeoJobs({ limit: 40 });
 
   return { enqueued, processed };
 }

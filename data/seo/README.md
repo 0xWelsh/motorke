@@ -36,10 +36,12 @@ Expected JSON: `{ "ok": true, "processed": { ... } }` (may show zero jobs if the
 
 | Path | Schedule | Purpose |
 |------|----------|---------|
-| `/api/cron/seo-jobs` | Every 15 min | Drain `LISTING_SEO` and other pending SEO jobs |
-| `/api/cron/seo-monitor` | Daily 03:00 UTC | Enqueue crawl/GSC/audit batch + process queue |
+| `/api/cron/seo-monitor` | Daily 03:00 UTC | Enqueue crawl/GSC/audit batch + process up to 40 pending SEO jobs |
+| `/api/cron/seo-jobs` | Manual / external | Drain queue only — **not** in `vercel.json` on Hobby (Vercel blocks sub-daily crons) |
 
-After changing `vercel.json`, push to `main` and confirm under **Vercel → Project → Cron Jobs** that both entries appear.
+On **Vercel Hobby**, only daily cron expressions deploy. A `*/15` schedule blocks the whole deployment. For faster queue processing, call `seo-jobs` from an external cron (e.g. cron-job.org) with `Authorization: Bearer CRON_SECRET`, or upgrade to Pro and re-add a 15-minute `seo-jobs` entry.
+
+After changing `vercel.json`, push to `main` and confirm under **Vercel → Project → Cron Jobs** that entries validate on deploy.
 
 ### 4. Optional AI — `XAI_API_KEY`
 
@@ -55,7 +57,7 @@ When set, queued `LISTING_SEO` jobs can upgrade model guides and fill very short
 ### 5. Verify after a new listing
 
 1. Publish a car (admin or portal).
-2. Within ~15 minutes, cron should process `LISTING_SEO` (or hit `/api/cron/seo-jobs` manually).
+2. Within ~24 hours the daily `seo-monitor` cron processes `LISTING_SEO`, or hit `/api/cron/seo-jobs` manually for immediate runs.
 3. Admin SEO monitor (if enabled) shows recent jobs under recent queue activity.
 
 Optional indexing env vars (see root `.env.example`): `GOOGLE_INDEXING_*`, `GSC_*`, `SEO_WORKER_URL`.
@@ -106,7 +108,7 @@ When a car is published (`finalizeNewCarPublicSlug` / admin or portal create):
 
 Process queue (pick one):
 
-- **Vercel Cron** (recommended): `vercel.json` hits `/api/cron/seo-jobs` every 15 minutes when `CRON_SECRET` is set in project env.
+- **Vercel Cron** (Hobby): daily `/api/cron/seo-monitor` at 03:00 UTC processes the queue when `CRON_SECRET` is set.
 - **Manual:** `GET https://welshmotorhub.co.ke/api/cron/seo-jobs?secret=YOUR_CRON_SECRET`
 - **Bearer:** `curl -H "Authorization: Bearer YOUR_CRON_SECRET" https://welshmotorhub.co.ke/api/cron/seo-jobs`
 

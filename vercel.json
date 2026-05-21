@@ -17,10 +17,6 @@
       "schedule": "30 6 * * *"
     },
     {
-      "path": "/api/cron/seo-jobs",
-      "schedule": "*/15 * * * *"
-    },
-    {
       "path": "/api/cron/seo-monitor",
       "schedule": "0 3 * * *"
     }
