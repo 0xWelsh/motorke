@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { resolveDealerCoordinates } from "@/lib/geocode";
 
 export async function POST(request, { params }) {
   const { id } = await params;
@@ -20,17 +21,27 @@ export async function POST(request, { params }) {
   }
 
   try {
+    const county = formData.get("county")?.toString() || "Nairobi";
+    const address = formData.get("address")?.toString().trim() || null;
+    const coords = await resolveDealerCoordinates({
+      lat: formData.get("lat"),
+      lng: formData.get("lng"),
+      address,
+      location,
+      county,
+    });
+
     await db.dealerBranch.create({
       data: {
         dealerId: id,
         name,
         location,
-        county:   formData.get("county")?.toString() || "Nairobi",
-        address:  formData.get("address")?.toString().trim() || null,
+        county,
+        address,
         phone:    formData.get("phone")?.toString().trim() || null,
         whatsapp: formData.get("whatsapp")?.toString().trim() || null,
-        lat:      formData.get("lat") ? parseFloat(formData.get("lat")) : null,
-        lng:      formData.get("lng") ? parseFloat(formData.get("lng")) : null,
+        lat: coords.lat,
+        lng: coords.lng,
       }
     });
 
