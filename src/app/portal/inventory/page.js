@@ -8,6 +8,7 @@ import { formatCarPrice } from "@/lib/utils";
 import { absoluteUrl } from "@/lib/site-url";
 import { carListingPath } from "@/lib/car-listing-url";
 import InventoryToggle from "@/components/InventoryToggle";
+import { isInSoldGracePeriod } from "@/lib/car-sold-status";
 import PortalInventoryFilters from "@/components/PortalInventoryFilters";
 import InventorySharePrompt from "@/components/InventorySharePrompt";
 import { 
@@ -297,7 +298,7 @@ export default async function InventoryPage({ searchParams }) {
         {[
           { key: "all",  label: "All", count: totalCount },
           { key: "live", label: "Available",     count: liveCount },
-          { key: "sold", label: "Sold/Drafts",    count: soldCount },
+          { key: "sold", label: "Sold", count: soldCount },
         ].map(({ key, label, count }) => (
           <Link key={key} href={preserveFilterHref(key)}
             className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-2xl text-[10px] sm:text-[11px] uppercase font-black tracking-[0.08em] sm:tracking-[0.10em] transition-all flex items-center gap-1 sm:gap-2 flex-shrink-0 ${
@@ -343,11 +344,13 @@ export default async function InventoryPage({ searchParams }) {
                 {/* Overlay Badges */}
                 <div className="absolute top-3 left-3 flex flex-col gap-2">
                   <span className={`text-[11px] uppercase font-black tracking-[0.15em] font-semibold px-3 py-1 rounded text-white ${
-                    car.available 
-                      ? "bg-[#111111]" 
-                      : "bg-slate-400"
+                    car.available
+                      ? "bg-[#111111]"
+                      : isInSoldGracePeriod(car)
+                        ? "bg-amber-600"
+                        : "bg-slate-500"
                   }`}>
-                    {car.available ? "Live" : "Draft"}
+                    {car.available ? "Live" : isInSoldGracePeriod(car) ? "Sold" : "Hidden"}
                   </span>
                   {car.featured && (
                     <span className="bg-amber-100 text-amber-900 text-[11px] uppercase font-black tracking-[0.15em] font-semibold px-3 py-1 rounded">
@@ -400,7 +403,11 @@ export default async function InventoryPage({ searchParams }) {
                     className="flex items-center justify-center gap-2 bg-[#fbfcfe] dark:bg-[#111111] hover:bg-slate-200 text-slate-900 dark:text-white text-[10px] sm:text-[11px] uppercase font-black tracking-[0.1em] sm:tracking-[0.15em] font-semibold p-2 sm:p-2.5 rounded-2xl transition-all">
                     <Edit3 size={14} /> Edit
                   </Link>
-                  <InventoryToggle carId={car.id} available={car.available} />
+                  <InventoryToggle
+                    carId={car.id}
+                    available={car.available}
+                    soldAt={car.soldAt?.toISOString?.() ?? car.soldAt ?? null}
+                  />
                 </div>
                 <div className="mt-2.5 sm:mt-3 space-y-2">
                   <div className="grid grid-cols-3 gap-1.5">

@@ -95,7 +95,7 @@ export const metadata = {
   alternates: { canonical: "/" },
   openGraph: {
     url: absoluteUrl("/"),
-    title: "Buy Used Cars in Kenya | Welsh Motorhub",
+    title: "Buy Used and New Cars in Kenya | Welsh Motorhub",
     description:
       "Verified vehicle inventory from trusted Kenyan dealers. Compare costs, specs, and contact sellers directly.",
     type: "website",

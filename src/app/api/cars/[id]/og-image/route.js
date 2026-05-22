@@ -3,6 +3,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
+import { publicDetailVisibilityClause } from "@/lib/car-sold-status";
 import {
   buildBrandFallbackOgJpeg,
   buildWhatsAppOgJpeg,
@@ -44,9 +45,11 @@ export async function GET(_req, { params }) {
   const car = ref
     ? await db.car.findFirst({
         where: {
-          available: true,
-          ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
-          OR: [{ id: ref }, { publicSlug: ref }],
+          AND: [
+            publicDetailVisibilityClause(),
+            { OR: [{ id: ref }, { publicSlug: ref }] },
+            ...(PUBLIC_ONLY_VERIFIED_DEALERS ? [{ dealer: { verified: true } }] : []),
+          ],
         },
         select: {
           id: true,

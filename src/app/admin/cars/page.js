@@ -21,6 +21,7 @@ import AdminCarsDangerZone from "@/components/admin/AdminCarsDangerZone";
 import EmptyState from "@/components/ui/EmptyState";
 import DataTableShell from "@/components/ui/DataTableShell";
 import { carListingPath } from "@/lib/car-listing-url";
+import { isInSoldGracePeriod } from "@/lib/car-sold-status";
 
 export const metadata = { title: "Cars Inventory | Welsh Motorhub Admin" };
 
@@ -83,7 +84,7 @@ export default async function AdminCarsPage({ searchParams }) {
     Price: c.price,
     Dealer: c.dealer.name,
     Leads: c._count.leads,
-    Status: c.available ? "Live" : "Hidden",
+    Status: c.available ? "Live" : isInSoldGracePeriod(c) ? "Sold" : "Hidden",
     CreatedAt: c.createdAt,
   }));
 
@@ -234,6 +235,10 @@ export default async function AdminCarsPage({ searchParams }) {
                         <span className="shrink-0 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[9px] font-black uppercase text-emerald-800 dark:border-emerald-900/70 dark:bg-emerald-950/50 dark:text-emerald-400">
                           Live
                         </span>
+                      ) : isInSoldGracePeriod(car) ? (
+                        <span className="shrink-0 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] font-black uppercase text-amber-900 dark:border-amber-900/70 dark:bg-amber-950/50 dark:text-amber-300">
+                          Sold
+                        </span>
                       ) : (
                         <span className="shrink-0 rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-[9px] font-black uppercase text-slate-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400">
                           Hidden
@@ -276,7 +281,7 @@ export default async function AdminCarsPage({ searchParams }) {
                             ? "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800/70 dark:bg-emerald-950/40 dark:text-emerald-300"
                             : "border-slate-200 bg-white text-slate-700 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200"
                         }`}
-                        aria-label={car.available ? "Hide listing" : "Publish listing"}
+                        aria-label={car.available ? "Mark as sold" : "Mark as live"}
                       >
                         {car.available ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
                       </button>
@@ -410,6 +415,10 @@ export default async function AdminCarsPage({ searchParams }) {
                         <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-emerald-800 dark:border-emerald-900/70 dark:bg-emerald-950/50 dark:text-emerald-400">
                           Live
                         </span>
+                      ) : isInSoldGracePeriod(car) ? (
+                        <span className="inline-flex rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-amber-900 dark:border-amber-900/70 dark:bg-amber-950/50 dark:text-amber-300">
+                          Sold
+                        </span>
                       ) : (
                         <span className="inline-flex rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-slate-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400">
                           Hidden
@@ -442,8 +451,8 @@ export default async function AdminCarsPage({ searchParams }) {
                                 ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 dark:border-emerald-800/70 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-950/70"
                                 : "border-slate-200 bg-[#f6f7f9] text-slate-700 hover:bg-white hover:border-[#ddd4c8] dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
                             }`}
-                            title={car.available ? "Hide listing" : "Publish listing"}
-                            aria-label={car.available ? "Hide listing" : "Publish listing"}
+                            title={car.available ? "Mark as sold" : "Mark as live"}
+                            aria-label={car.available ? "Mark as sold" : "Mark as live"}
                           >
                             {car.available ? (
                               <ToggleRight size={16} strokeWidth={2.25} />

@@ -46,6 +46,11 @@ import CarListingRelatedSearches from "@/components/CarListingRelatedSearches";
 import ListingContactActions from "@/components/ListingContactActions";
 import ListingPriceBlock from "@/components/ListingPriceBlock";
 import { buildListingHighlightChips } from "@/lib/car-listing-highlights";
+import {
+  daysRemainingOnSite,
+  isInSoldGracePeriod,
+  publicDetailVisibilityClause,
+} from "@/lib/car-sold-status";
 
 export async function generateMetadata({ params }) {
   const { id: ref } = await params;
@@ -96,9 +101,11 @@ function getCarData(ref) {
     async () => {
       return db.car.findFirst({
         where: {
-          available: true,
-          ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
-          OR: [{ id: ref }, { publicSlug: ref }],
+          AND: [
+            publicDetailVisibilityClause(),
+            { OR: [{ id: ref }, { publicSlug: ref }] },
+            ...(PUBLIC_ONLY_VERIFIED_DEALERS ? [{ dealer: { verified: true } }] : []),
+          ],
         },
         include: {
           images: { orderBy: { order: "asc" } },
@@ -205,8 +212,9 @@ export default async function CarDetailPage({ params }) {
   const isSaved = !!savedCar;
 
   const { car, dealer } = { car: carData, dealer: carData.dealer };
+  const soldGrace = isInSoldGracePeriod(car);
+  const daysLeftOnSite = daysRemainingOnSite(car);
 
-  
   const similar = await getSimilarCars(car.id, car.make, car.dealerId, car.bodyType, car.year, car.price);
   const reviewsData = await getCarReviews(car.id);
 
@@ -411,6 +419,24 @@ export default async function CarDetailPage({ params }) {
           <span className="font-sans text-slate-900 dark:text-white truncate max-w-[200px] opacity-60 group-hover:opacity-100 transition-opacity">{car.make} {car.model}</span>
         </nav>
 
+        {soldGrace ? (
+          <div
+            className="mb-6 sm:mb-8 rounded-xl border border-amber-200/90 bg-amber-50 px-4 py-3.5 sm:px-5 sm:py-4 dark:border-amber-900/50 dark:bg-amber-950/30"
+            role="status"
+          >
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-800 dark:text-amber-300">
+              Sold
+            </p>
+            <p className="mt-1.5 text-sm text-amber-950/90 dark:text-amber-100/90 leading-relaxed">
+              This unit has sold. Browse similar cars below or message {dealer.name} to ask what else they have in
+              stock
+              {daysLeftOnSite != null && daysLeftOnSite > 0
+                ? ` (this page comes down in ${daysLeftOnSite} day${daysLeftOnSite === 1 ? "" : "s"}).`
+                : "."}
+            </p>
+          </div>
+        ) : null}
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 lg:items-start">
           {/* ── Main column: gallery + detail content ── */}
           <div className="lg:col-span-8 flex flex-col gap-7 sm:gap-8">
@@ -420,8 +446,14 @@ export default async function CarDetailPage({ params }) {
 
             {/* Mobile / tablet: title & price below gallery */}
             <header className="lg:hidden space-y-4">
-              <span className="inline-block bg-[#38A169]/10 text-[#38A169] text-[10px] font-black px-2 py-1 uppercase tracking-widest rounded-[2px]">
-                {car.available ? "AVAILABLE" : "RESERVED"}
+              <span
+                className={`inline-block text-[10px] font-black px-2 py-1 uppercase tracking-widest rounded-[2px] ${
+                  soldGrace
+                    ? "bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-200"
+                    : "bg-[#38A169]/10 text-[#38A169]"
+                }`}
+              >
+                {soldGrace ? "SOLD" : "AVAILABLE"}
               </span>
               <h1 className="text-2xl sm:text-3xl font-semibold text-[#111827] dark:text-white tracking-tight leading-[1.2]">
                 {listingH1}
@@ -614,8 +646,14 @@ export default async function CarDetailPage({ params }) {
           <aside className="lg:col-span-4 w-full min-w-0">
             <div className="flex flex-col gap-4 sm:gap-5 lg:sticky lg:top-20 lg:max-h-[calc(100vh-5.5rem)] lg:overflow-y-auto lg:overscroll-contain">
               <section className="hidden lg:block bg-white dark:bg-[#0a0a0a] border border-slate-200/90 dark:border-zinc-800 rounded-sm p-6 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.04] space-y-4">
-                <span className="inline-block bg-[#38A169]/10 text-[#38A169] text-[10px] font-black px-2 py-1 uppercase tracking-widest rounded-[2px]">
-                  {car.available ? "AVAILABLE" : "RESERVED"}
+                <span
+                  className={`inline-block text-[10px] font-black px-2 py-1 uppercase tracking-widest rounded-[2px] ${
+                    soldGrace
+                      ? "bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-200"
+                      : "bg-[#38A169]/10 text-[#38A169]"
+                  }`}
+                >
+                  {soldGrace ? "SOLD" : "AVAILABLE"}
                 </span>
                 <h1 className="text-2xl font-semibold text-[#111827] dark:text-white tracking-tight leading-[1.2]">
                   {listingH1}

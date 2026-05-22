@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { sendLeadAlertEmail } from "@/lib/mail";
 import { NextResponse } from "next/server";
+import { canAcceptListingEnquiry } from "@/lib/car-sold-status";
 
 const RATE_LIMIT_MS = 15000;
 const RATE_LIMIT_MAX_WINDOW = 8000;
@@ -192,6 +193,7 @@ export async function POST(request) {
         id: true,
         dealerId: true,
         available: true,
+        soldAt: true,
         year: true,
         make: true,
         model: true,
@@ -204,7 +206,7 @@ export async function POST(request) {
       },
     });
 
-    if (!car || !car.available || car.dealerId !== dealerId) {
+    if (!car || !canAcceptListingEnquiry(car) || car.dealerId !== dealerId) {
       return NextResponse.json({ error: "Invalid car or dealer" }, { status: 400 });
     }
 

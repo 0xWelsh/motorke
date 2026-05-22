@@ -71,7 +71,7 @@ const faqs = {
     },
     {
       q: "What if a car sells elsewhere? Can I remove it quickly?",
-      a: "Instant 'Mark as Sold' button. The car hides from search immediately. No awkward conversations with buyers.",
+      a: "Use Mark sold in your inventory. The car drops out of search right away but stays on its public page for seven days so buyers can enquire about similar stock, then it is removed from the site.",
     },
     {
       q: "How do reviews work for dealers?",
