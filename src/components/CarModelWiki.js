@@ -26,7 +26,11 @@ export default function CarModelWiki({ car, wiki }) {
             {wiki.headline}
           </h2>
           <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
-            {wiki.source === "curated" ? "Kenya buyer guide" : "Listing buyer notes"}
+            {wiki.source === "curated"
+              ? "Kenya buyer guide"
+              : wiki.source === "listing"
+                ? "About this listing"
+                : "Listing buyer notes"}
           </p>
         </div>
       </div>

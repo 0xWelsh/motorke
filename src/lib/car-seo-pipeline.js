@@ -20,7 +20,7 @@ function normalizeMakeModel(make, model) {
 /**
  * Upsert template or curated wiki into DB (instant, no AI).
  */
-export async function ensureModelSeoGuide(make, model) {
+export async function ensureModelSeoGuide(make, model, carContext = null) {
   const { make: m, model: mod } = normalizeMakeModel(make, model);
   if (!m || !mod) return { skipped: true };
 
@@ -29,7 +29,14 @@ export async function ensureModelSeoGuide(make, model) {
   });
   if (existing) return { ok: true, id: existing.id, source: existing.source, created: false };
 
-  const wiki = getModelWikiContent({ make: m, model: mod, year: 2020, fuelType: "PETROL", bodyType: "SUV" });
+  const ctx = carContext || {
+    make: m,
+    model: mod,
+    year: 2020,
+    fuelType: "PETROL",
+    bodyType: "SEDAN",
+  };
+  const wiki = getModelWikiContent(ctx);
   if (!wiki?.paragraphs?.length) return { skipped: true, reason: "no_template" };
 
   const row = await db.modelSeoGuide.create({
@@ -168,7 +175,7 @@ export async function runListingSeoJob(carId) {
     return { ok: false, reason: "car_unavailable" };
   }
 
-  await ensureModelSeoGuide(car.make, car.model);
+  await ensureModelSeoGuide(car.make, car.model, car);
   const guide = await maybeGenerateAiModelGuide(car.make, car.model, car);
   const description = await maybeEnhanceCarDescription(car.id);
   const comparisons = await syncComparisonForMake(car.make);
@@ -198,7 +205,7 @@ export function scheduleListingSeo(car) {
   queueMicrotask(() => {
     (async () => {
       try {
-        await ensureModelSeoGuide(car.make, car.model);
+        await ensureModelSeoGuide(car.make, car.model, car);
         revalidateHubPathsForCar({
           make: car.make,
           model: car.model,
