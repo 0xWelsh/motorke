@@ -190,7 +190,7 @@ async function enrichHomepage(base) {
       )
     ),
     Promise.all(
-      (newArrivals || []).slice(0, 6).map(async (c) => ({ ...c, marketAnalysis: await analyzePrice(c) }))
+      (newArrivals || []).slice(0, 8).map(async (c) => ({ ...c, marketAnalysis: await analyzePrice(c) }))
     ),
   ]);
 

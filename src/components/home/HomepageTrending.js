@@ -8,7 +8,7 @@ import TrackedLink from "@/components/TrackedLink";
 export default function HomepageTrending({ cars = [] }) {
   if (!cars.length) return null;
 
-  const items = cars.slice(0, 4);
+  const items = cars.slice(0, 8);
 
   return (
     <section
@@ -41,7 +41,7 @@ export default function HomepageTrending({ cars = [] }) {
           </TrackedLink>
         </div>
 
-        <div className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:gap-6 items-stretch max-w-4xl mx-auto lg:max-w-5xl">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6 items-stretch">
           {items.map((car) => (
             <div key={car.id} className="h-full">
               <CarCard car={car} />

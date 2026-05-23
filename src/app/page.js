@@ -346,8 +346,8 @@ export default async function HomePage() {
                 See all arrivals <ArrowUpRight className="w-4 h-4" />
               </TrackedLink>
             </div>
-            <div className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:gap-6 items-stretch max-w-4xl mx-auto lg:max-w-5xl">
-              {newEnhanced.slice(0, 4).map((car) => (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6 items-stretch">
+              {newEnhanced.slice(0, 8).map((car) => (
                 <div key={car.id} className="h-full">
                   <CarCard car={car} />
                 </div>
