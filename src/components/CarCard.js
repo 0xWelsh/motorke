@@ -16,8 +16,9 @@ import { carListingPath } from "@/lib/car-listing-url";
  * @param {Object} car - The car data object.
  * @param {number} distance - Pre-calculated distance in km (optional).
  * @param {function} onRemove - Optional callback for a remove action.
+ * @param {boolean} showSpotlight - Paid homepage Spotlight badge.
  */
-export default function CarCard({ car, distance = null, onRemove = null }) {
+export default function CarCard({ car, distance = null, onRemove = null, showSpotlight = false }) {
   const primaryImg = car.images?.[0]?.url;
   const title = `${car.make} ${car.model}${car.variant ? ` ( ${car.variant} )` : ""}`;
   const distanceKm = Number.isFinite(distance) ? distance : (Number.isFinite(car?.distance) ? car.distance : null);
@@ -106,11 +107,19 @@ export default function CarCard({ car, distance = null, onRemove = null }) {
         <div className="pointer-events-none absolute inset-x-2 top-2 z-10 flex items-start justify-between gap-2 sm:inset-x-4 sm:top-4 sm:gap-2">
           <div
             className={
-              distanceLabel
+              distanceLabel || showSpotlight
                 ? "min-w-0 max-w-[calc(100%-5.5rem)] sm:max-w-[calc(100%-7rem)]"
                 : "min-w-0 flex-1"
             }
           >
+            {showSpotlight ? (
+              <span
+                className="pointer-events-auto mb-1 inline-flex max-w-full items-center bg-[#b91c1c] px-1.5 py-0.5 text-[7px] font-black uppercase tracking-[0.14em] text-white border border-white/25 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.16em]"
+                style={{ borderRadius: "2px" }}
+              >
+                Spotlight
+              </span>
+            ) : null}
             {distanceLabel ? (
               <span
                 className="pointer-events-auto inline-flex max-w-full items-center gap-1 bg-white/95 px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wide text-slate-900 dark:bg-[#111111]/95 dark:text-white sm:gap-1.5 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.12em] border border-slate-200/80 dark:border-zinc-700/80"

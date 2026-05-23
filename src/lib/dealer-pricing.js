@@ -101,7 +101,7 @@ export const DEALER_BOOST_ADDONS = [
     id: "spotlight_7d",
     name: "Spotlight",
     durationLabel: "7 days",
-    description: "One vehicle ranked higher in browse and search.",
+    description: "Homepage Spotlight section plus higher rank in browse and search.",
     price: 799,
   },
   {

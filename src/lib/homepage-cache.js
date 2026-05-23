@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { unstable_cache } from "next/cache";
 import { analyzePrice } from "@/lib/market";
+import { activeSpotlightWhere, spotlightCarInclude } from "@/lib/spotlight";
 
 export const EMPTY_HOMEPAGE_DATA = {
   featured: [],
@@ -10,6 +11,7 @@ export const EMPTY_HOMEPAGE_DATA = {
   newsItems: [],
   highlightReviews: [],
   spotlightEnhanced: [],
+  paidSpotlight: [],
   hotEnhanced: [],
   newEnhanced: [],
 };
@@ -163,11 +165,24 @@ async function enrichHomepage(base) {
   const baseSpotlight =
     hotSorted.length > 0 ? hotSorted : featured?.length ? featured : newArrivals;
 
-  const [spotlightEnhanced, hotEnhanced, newEnhanced] = await Promise.all([
+  const paidSpotlightRaw = await db.car.findMany({
+    where: activeSpotlightWhere(),
+    include: spotlightCarInclude(),
+    orderBy: [{ featuredWeight: "desc" }, { spotlightUntil: "asc" }],
+    take: 8,
+  });
+
+  const [spotlightEnhanced, paidSpotlight, hotEnhanced, newEnhanced] = await Promise.all([
     Promise.all(
       (baseSpotlight || []).map(async (car) =>
         car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) }
       )
+    ),
+    Promise.all(
+      (paidSpotlightRaw || []).map(async (car) => ({
+        ...car,
+        marketAnalysis: await analyzePrice(car),
+      }))
     ),
     Promise.all(
       (hotSorted || []).map(async (car) =>
@@ -187,6 +202,7 @@ async function enrichHomepage(base) {
     newsItems,
     highlightReviews,
     spotlightEnhanced,
+    paidSpotlight,
     hotEnhanced,
     newEnhanced,
   };
@@ -229,7 +245,7 @@ const getCachedHomeEnriched = unstable_cache(
       return EMPTY_HOMEPAGE_DATA;
     }
   },
-  ["homepage-enriched-v1"],
+  ["homepage-enriched-v2"],
   { revalidate: 120, tags: ["homepage"] }
 );
 
