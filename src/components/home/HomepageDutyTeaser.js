@@ -31,7 +31,7 @@ export default function HomepageDutyTeaser() {
             href="/duty"
             eventName="homepage_duty_click"
             eventPayload={{ area: "duty_teaser" }}
-            className="inline-flex h-12 shrink-0 items-center justify-center gap-2 bg-[#111827] px-6 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-[#2F855A] dark:bg-white dark:text-[#111827] dark:hover:bg-emerald-400"
+            className="inline-flex h-12 shrink-0 items-center justify-center gap-2 border border-transparent bg-[#111827] px-6 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-[#2F855A] dark:border-[#2F855A] dark:bg-[#2F855A] dark:text-white dark:hover:bg-[#276749] dark:hover:border-[#276749]"
             style={{ borderRadius: "var(--radius)" }}
           >
             Open calculator
