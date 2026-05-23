@@ -6,7 +6,7 @@ Internal reference for how the product works in production. Start here, then dri
 
 | Audience | Start with |
 |----------|------------|
-| **Dealers (share with yards)** | **[for-dealers.md](./for-dealers.md)** |
+| **Dealers (share with yards)** | **[for-dealers.md](./for-dealers.md)** · **[dealer-pricing-sheet.md](./dealer-pricing-sheet.md)** |
 | Founders / product | [product-and-ux.md](./product-and-ux.md) |
 | Developers | [product-and-ux.md](./product-and-ux.md) + [../README.md](../README.md) |
 | SEO / growth | [seo-and-content.md](./seo-and-content.md) → [../data/seo/README.md](../data/seo/README.md) |
@@ -17,6 +17,7 @@ Internal reference for how the product works in production. Start here, then dri
 | Doc | What it covers |
 |-----|----------------|
 | **[for-dealers.md](./for-dealers.md)** | **Dealer-facing guide** (plain language; share with showroom staff) |
+| **[dealer-pricing-sheet.md](./dealer-pricing-sheet.md)** | **Plans, free boosts per tier, add-on prices** (share before billing goes live) |
 | [product-and-ux.md](./product-and-ux.md) | Buyer, dealer, and admin journeys; listing lifecycle; key UI behaviour |
 | [seo-and-content.md](./seo-and-content.md) | SEO stack, hubs, duty, model stories, sitemap, crons |
 | [../data/seo/README.md](../data/seo/README.md) | Production SEO checklist, env vars, cron setup |

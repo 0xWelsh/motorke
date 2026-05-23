@@ -60,7 +60,7 @@ export default async function PortalPage({ searchParams }) {
   const startOfPrevMonth = new Date(startOfMonth);
   startOfPrevMonth.setMonth(startOfPrevMonth.getMonth() - 1);
 
-  const [cars, totalLeads, leadsThisMonth, leadsPrevMonth, viewsThisMonth, viewsPrevMonth, soldThisMonth, soldPrevMonth, recentLeads, dealerSubscription] = await Promise.all([
+  const [cars, totalLeads, leadsThisMonth, leadsPrevMonth, viewsThisMonth, viewsPrevMonth, soldThisMonth, soldPrevMonth, recentLeads] = await Promise.all([
     db.car.findMany({
       where:   { dealerId: user.dealerId },
       include: { images: { where: { isPrimary: true }, take: 1 } },
@@ -78,10 +78,6 @@ export default async function PortalPage({ searchParams }) {
       include: { car: { select: { make: true, model: true } } },
       orderBy: { createdAt: "desc" },
       take: 5,
-    }),
-    db.subscription.findUnique({
-      where: { dealerId: user.dealerId },
-      select: { plan: true, status: true, endDate: true },
     }),
   ]);
 
@@ -454,18 +450,14 @@ export default async function PortalPage({ searchParams }) {
                 <Crown className="w-4 h-4" />
               </span>
               <div>
-                <p className="text-sm font-bold text-slate-900">
-                  {dealerSubscription?.plan === "PRO" ? "Premium Dealer" : "Starter Dealer"}
-                </p>
+                <p className="text-sm font-bold text-slate-900">Early access</p>
                 <p className="text-[11px] text-slate-500">
-                  {dealerSubscription?.endDate
-                    ? `Active until ${new Intl.DateTimeFormat("en-KE", { day: "numeric", month: "short", year: "numeric" }).format(new Date(dealerSubscription.endDate))}`
-                    : "No expiry date set"}
+                  No billing yet · see plans &amp; pricing
                 </p>
               </div>
             </div>
             <Link href="/portal/subscription" className="mt-3 inline-flex w-full justify-center border border-slate-200 px-3 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-slate-700 hover:bg-slate-50">
-              Manage subscription
+              Plans &amp; billing
             </Link>
           </div>
 
@@ -476,9 +468,9 @@ export default async function PortalPage({ searchParams }) {
               </span>
               <h3 className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-700">Boost your listings</h3>
             </div>
-            <p className="mt-2 text-[12px] font-medium text-slate-600">Get more visibility and leads by promoting your top stock this week.</p>
+            <p className="mt-2 text-[12px] font-medium text-slate-600">Spotlight and boost pricing is on the billing page. Purchases open when billing goes live.</p>
             <Link href="/portal/subscription" className="mt-3 inline-flex w-full justify-center bg-[#2F855A] px-3 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-white hover:bg-[#276749]">
-              Create promotion
+              View plans &amp; boosts
             </Link>
           </div>
         </aside>
