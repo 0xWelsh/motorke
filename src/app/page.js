@@ -20,7 +20,6 @@ import Image from "next/image";
 import HeroShowcase from "@/components/HeroShowcase";
 import HeroGridShowcase from "@/components/HeroGridShowcase";
 import CarCard from "@/components/CarCard";
-import PartnerDealershipsSection from "@/components/PartnerDealershipsSection";
 import TrackedLink from "@/components/TrackedLink";
 import { getHomepageData } from "@/lib/homepage-cache";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
@@ -55,38 +54,6 @@ function getRotationOffset(size) {
     Math.floor((Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) - Date.UTC(now.getUTCFullYear(), 0, 0)) / 86400000);
   return (daySeed + slot) % size;
 }
-
-/** Homepage partner strip: featured and verified first, then inventory signal and boost. */
-function rankHomepageDealers(dealers) {
-  if (!dealers?.length) return [];
-  return [...dealers].sort((a, b) => {
-    if (a.featured !== b.featured) return a.featured ? -1 : 1;
-    if (a.verified !== b.verified) return a.verified ? -1 : 1;
-    const ca = a._count?.cars ?? 0;
-    const cb = b._count?.cars ?? 0;
-    if (cb !== ca) return cb - ca;
-    const boostDiff = (b.boostScore ?? 0) - (a.boostScore ?? 0);
-    if (boostDiff !== 0) return boostDiff;
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
-}
-
-/** On desktop 3-column row, move the featured dealer to the center tile when possible. */
-function balanceFeaturedInFirstRow(dealers, rowSize = 3) {
-  if (!dealers?.length || dealers.length < rowSize) return [...dealers];
-  const first = dealers.slice(0, rowSize);
-  const rest = dealers.slice(rowSize);
-  const featuredIdx = first.findIndex((d) => d.featured);
-  if (featuredIdx === -1) return [...dealers];
-  if (featuredIdx === 1) return [...first, ...rest];
-  if (featuredIdx === 0) {
-    const [feat, second, third] = first;
-    return [second, feat, third, ...rest].filter(Boolean);
-  }
-  const [left, mid, feat] = first;
-  return [left, feat, mid, ...rest];
-}
-
 
 export const metadata = {
   title: "Buy Used and New Cars in Kenya",
@@ -159,8 +126,6 @@ export default async function HomePage() {
   const heroPrimary = heroCars?.[0] || spotlightEnhanced?.[0] || null;
 
   const origin = getSiteOrigin();
-
-  const partnerDealers = balanceFeaturedInFirstRow(rankHomepageDealers(dealers || [])).slice(0, 6);
 
   // Pull section backdrops from the cars that section is actually
   // showing. Falls back to null when the section has no cars yet, in
@@ -332,8 +297,6 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-
-      {partnerDealers.length > 0 && <PartnerDealershipsSection dealers={partnerDealers} />}
 
       {/* Editorial Information Block */}
       <section className="relative py-12 sm:py-16 lg:py-20 xl:py-24 bg-[#1A202C] text-white overflow-hidden">
