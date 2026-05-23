@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { X, SlidersHorizontal } from "lucide-react";
 import { FUEL_LABELS, TRANSMISSION_LABELS } from "@/lib/constants";
+import { CARS_SORT_OPTIONS, normalizeCarsSort } from "@/lib/cars-inventory-sort";
 
 export default function CarsSearch({
   currentSearch = "",
@@ -40,7 +41,7 @@ export default function CarsSearch({
   const [county, setCounty] = useState(initialCounty);
   const [minPrice, setMinPrice] = useState(initialMinPrice);
   const [maxPrice, setMaxPrice] = useState(initialMaxPrice);
-  const [sort, setSort] = useState(initialSort);
+  const [sort, setSort] = useState(() => normalizeCarsSort(initialSort));
   const [mobileOpen, setMobileOpen] = useState(false);
   const router = useRouter();
 
@@ -55,7 +56,7 @@ export default function CarsSearch({
     setCounty(initialCounty);
     setMinPrice(initialMinPrice);
     setMaxPrice(initialMaxPrice);
-    setSort(initialSort);
+    setSort(normalizeCarsSort(initialSort));
   }, [
     initialMake,
     initialSteering,
@@ -298,18 +299,18 @@ export default function CarsSearch({
             <select
               value={sort}
               onChange={(e) => {
-                setSort(e.target.value);
-                pushWith({ sort: e.target.value });
+                const next = normalizeCarsSort(e.target.value);
+                setSort(next);
+                pushWith({ sort: next });
               }}
               className="w-full border border-slate-200 bg-white px-2 py-2 text-[11px] font-bold text-[#111827] outline-none focus:border-[#38A169] dark:border-zinc-800 dark:bg-zinc-950 dark:text-white"
               style={{ borderRadius: "2px" }}
             >
-              <option value="newest">Newest</option>
-              <option value="price_asc">Price ↑</option>
-              <option value="price_desc">Price ↓</option>
-              <option value="mileage_asc">Low mileage</option>
-              <option value="year_desc">Newest year</option>
-              <option value="views_desc">Most viewed</option>
+              {CARS_SORT_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
             </select>
           </div>
 

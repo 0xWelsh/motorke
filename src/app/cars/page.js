@@ -16,6 +16,8 @@ import { cookies, headers } from "next/headers";
 import { getSession } from "@/lib/auth";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { isSearchBot, rotationSeed, sortByTierAndSeed } from "@/lib/shuffle";
+import { buildCarsOrderBy, normalizeCarsSort } from "@/lib/cars-inventory-sort";
+import CarsInventorySort from "@/components/CarsInventorySort";
 import { buildMakeWhere } from "@/lib/make-filter";
 
 
@@ -237,7 +239,7 @@ export default async function CarsPage({ searchParams }) {
   const county = sp.county || "";
   const minPrice = sp.minPrice ? parseInt(sp.minPrice, 10) : undefined;
   const maxPrice = sp.maxPrice ? parseInt(sp.maxPrice, 10) : undefined;
-  const sort = sp.sort || "newest";
+  const sort = normalizeCarsSort(sp.sort);
 
   const userLat = sp.lat ? parseFloat(sp.lat) : null;
   const userLng = sp.lng ? parseFloat(sp.lng) : null;
@@ -310,19 +312,7 @@ export default async function CarsPage({ searchParams }) {
     }),
   };
 
-  const orderBy =
-    sort === "price_asc" ? [{ price: "asc" }] :
-    sort === "price_desc" ? [{ price: "desc" }] :
-    sort === "mileage_asc" ? [{ mileage: "asc" }] :
-    sort === "year_desc" ? [{ year: "desc" }] :
-    [
-      { featuredWeight: "desc" },
-      { dealer: { featured: "desc" } },
-      { dealer: { verified: "desc" } },
-      { dealer: { boostScore: "desc" } },
-      { views: "desc" },
-      { createdAt: "desc" }
-    ];
+  const orderBy = buildCarsOrderBy(sort);
 
   const carSelect = {
     id: true,
@@ -629,11 +619,12 @@ export default async function CarsPage({ searchParams }) {
           </div>
         </div>
 
-        <div className="mb-4 sm:mb-5 flex flex-wrap items-center justify-between gap-2 sm:gap-4">
-          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400">
+        <div className="mb-4 sm:mb-5 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+          <CarsInventorySort className="order-1 sm:order-none" />
+          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400 order-3 w-full sm:order-none sm:w-auto">
             Per page
           </p>
-          <div className="flex flex-wrap items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-1.5 order-2 sm:order-none">
             {PER_PAGE_OPTIONS.map((size) => {
               const isActive = limit === size;
               return (
