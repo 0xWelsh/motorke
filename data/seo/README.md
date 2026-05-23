@@ -97,7 +97,9 @@ Corridor pages at `/showrooms/{slug}` (e.g. Kiambu Road, Ngong Road).
 
 ## Model wiki (`model-wiki.json`)
 
-Curated buyer-guide copy. On publish, rows are copied into `model_seo_guides` (DB). Optional AI upgrade runs via `LISTING_SEO` job when `XAI_API_KEY` is set.
+Curated buyer-guide copy for the **story block on listing pages**. On publish, rows are copied into `model_seo_guides` (DB). Optional AI upgrade runs via `LISTING_SEO` job when `XAI_API_KEY` is set.
+
+**Body type accuracy:** each entry should include `bodyFamilies` (e.g. `["suv"]`, `["sedan","wagon"]`). The site only shows curated copy when the listing’s `bodyType` matches. Otherwise it uses listing-tailored text from the actual car record. See [../../docs/seo-and-content.md](../../docs/seo-and-content.md).
 
 ## Listing SEO bot
 
