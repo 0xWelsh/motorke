@@ -245,7 +245,7 @@ const getCachedHomeEnriched = unstable_cache(
       return EMPTY_HOMEPAGE_DATA;
     }
   },
-  ["homepage-enriched-v2"],
+  ["homepage-enriched-v3"],
   { revalidate: 120, tags: ["homepage"] }
 );
 
