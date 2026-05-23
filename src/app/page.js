@@ -1,26 +1,21 @@
 // src/app/page.js
 export const dynamic = "force-dynamic";
-import { formatPrice, formatCarPrice } from "@/lib/utils";
-import Link from "next/link";
-import NewsRibbon from "@/components/NewsRibbon";
-import HeroReviews from "@/components/HeroReviews";
 import BrowsePanel from "@/components/BrowsePanel";
 import {
   ArrowUpRight,
   ArrowRight,
-  Sparkles,
-  ChevronRight,
-  Bookmark,
   Building2,
   MessageCircle,
   GitCompare,
   RefreshCw,
 } from "lucide-react";
 import Image from "next/image";
-import HeroShowcase from "@/components/HeroShowcase";
 import HeroGridShowcase from "@/components/HeroGridShowcase";
 import CarCard from "@/components/CarCard";
 import TrackedLink from "@/components/TrackedLink";
+import HomepageShopLinks from "@/components/home/HomepageShopLinks";
+import HomepageTrending from "@/components/home/HomepageTrending";
+import HomepageDutyTeaser from "@/components/home/HomepageDutyTeaser";
 import { getHomepageData } from "@/lib/homepage-cache";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 
@@ -115,18 +110,14 @@ export default async function HomePage() {
     newEnhanced,
   } = await getHomepageData();
 
-  const showcaseItems = [
-    ...(featured || hotThisWeek || newArrivals || []).slice(0, 6).map(c => ({ ...c, type: 'car' })),
-    ...(highlightReviews || []).slice(0, 6).map(r => ({ ...r, type: 'review' }))
-  ].sort(() => Math.random() - 0.5);
-
   const heroPool = (hotEnhanced.length > 0 ? hotEnhanced : spotlightEnhanced).slice(0, 12);
   const heroRotated = rotateList(heroPool, getRotationOffset(heroPool.length));
   const heroCars = heroRotated.slice(0, 8);
-  const heroPrimary = heroCars?.[0] || spotlightEnhanced?.[0] || null;
 
   /** Paid Spotlight only — organic trending must not fill this block. */
   const spotlightCards = (paidSpotlight || []).slice(0, 8);
+  const spotlightIds = new Set(spotlightCards.map((c) => c.id));
+  const trendingCars = (hotEnhanced || []).filter((c) => !spotlightIds.has(c.id));
 
   const origin = getSiteOrigin();
 
@@ -239,6 +230,7 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <HomepageShopLinks />
 
       {/* Paid Spotlight — only active dealer placements (see spotlightUntil) */}
       {spotlightCards.length > 0 && (
@@ -311,6 +303,62 @@ export default async function HomePage() {
         </section>
       )}
 
+      <HomepageTrending cars={trendingCars} />
+
+      {/* Fresh Arrivals Section */}
+      {newEnhanced.length > 0 && (
+        <section className="relative py-10 sm:py-16 lg:py-24 border-y border-emerald-100/80 dark:border-emerald-950/30 overflow-hidden">
+          {newArrivalsBackdrop && (
+            <div className="absolute inset-0 -z-10 pointer-events-none">
+              <Image
+                src={newArrivalsBackdrop}
+                fill
+                sizes="100vw"
+                alt=""
+                className="object-cover opacity-[0.16] dark:opacity-[0.10]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-white/96 via-white/94 to-white dark:from-[#0a0a0a]/96 dark:via-[#0a0a0a]/94 dark:to-[#0a0a0a]" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(56,161,105,0.08),transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top_left,rgba(56,161,105,0.12),transparent_55%)]" />
+            </div>
+          )}
+          {!newArrivalsBackdrop && (
+            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-emerald-50/30 to-white dark:from-emerald-950/15 dark:to-[#0a0a0a]" />
+          )}
+          <div className="home-shell">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-10 gap-4">
+              <div className="max-w-2xl">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#2F855A] dark:text-emerald-400 mb-2">
+                  This week
+                </p>
+                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal editorial-heading text-[#111827] dark:text-white mb-3">
+                  Fresh arrivals
+                </h2>
+                <p className="text-[#475569] dark:text-slate-400 text-base sm:text-lg font-medium leading-relaxed">
+                  The newest listings added by verified dealers in the last seven days.
+                </p>
+              </div>
+              <TrackedLink
+                href="/cars?sort=newest"
+                eventName="homepage_fresh_arrivals_click"
+                eventPayload={{ area: "fresh_arrivals" }}
+                className="inline-flex h-11 items-center shrink-0 text-[#2F855A] dark:text-emerald-400 text-xs font-bold uppercase tracking-widest gap-2 hover:opacity-70 transition-opacity"
+              >
+                See all arrivals <ArrowUpRight className="w-4 h-4" />
+              </TrackedLink>
+            </div>
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:gap-6 items-stretch max-w-4xl mx-auto lg:max-w-5xl">
+              {newEnhanced.slice(0, 4).map((car) => (
+                <div key={car.id} className="h-full">
+                  <CarCard car={car} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <HomepageDutyTeaser />
+
       {/* Editorial Information Block */}
       <section className="relative py-12 sm:py-16 lg:py-20 xl:py-24 bg-[#1A202C] text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -373,57 +421,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Fresh Arrivals Section */}
-      {newEnhanced.length > 0 && (
-        <section className="relative py-10 sm:py-16 lg:py-24 border-y border-emerald-100/80 dark:border-emerald-950/30 overflow-hidden">
-          {newArrivalsBackdrop && (
-            <div className="absolute inset-0 -z-10 pointer-events-none">
-              <Image
-                src={newArrivalsBackdrop}
-                fill
-                sizes="100vw"
-                alt=""
-                className="object-cover opacity-[0.16] dark:opacity-[0.10]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-white/96 via-white/94 to-white dark:from-[#0a0a0a]/96 dark:via-[#0a0a0a]/94 dark:to-[#0a0a0a]" />
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(56,161,105,0.08),transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top_left,rgba(56,161,105,0.12),transparent_55%)]" />
-            </div>
-          )}
-          {!newArrivalsBackdrop && (
-            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-emerald-50/30 to-white dark:from-emerald-950/15 dark:to-[#0a0a0a]" />
-          )}
-          <div className="home-shell">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-10 gap-4">
-              <div className="max-w-2xl">
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#2F855A] dark:text-emerald-400 mb-2">
-                  This week
-                </p>
-                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal editorial-heading text-[#111827] dark:text-white mb-3">
-                  Fresh arrivals
-                </h2>
-                <p className="text-[#475569] dark:text-slate-400 text-base sm:text-lg font-medium leading-relaxed">
-                  The newest listings added by verified dealers in the last seven days.
-                </p>
-              </div>
-              <TrackedLink
-                href="/cars?sort=newest"
-                eventName="homepage_fresh_arrivals_click"
-                eventPayload={{ area: "fresh_arrivals" }}
-                className="inline-flex h-11 items-center shrink-0 text-[#2F855A] dark:text-emerald-400 text-xs font-bold uppercase tracking-widest gap-2 hover:opacity-70 transition-opacity"
-              >
-                See all arrivals <ArrowUpRight className="w-4 h-4" />
-              </TrackedLink>
-            </div>
-            <div className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:gap-6 items-stretch max-w-4xl mx-auto lg:max-w-5xl">
-              {newEnhanced.slice(0, 4).map((car) => (
-                <div key={car.id} className="h-full">
-                  <CarCard car={car} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
     </div>
   );
