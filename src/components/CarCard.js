@@ -11,16 +11,35 @@ import FeatureMarquee from "./FeatureMarquee";
 import { trackUiEvent } from "@/lib/analytics";
 import { carListingPath } from "@/lib/car-listing-url";
 import { isActiveHotBadge } from "@/lib/hot-badge";
+import { isActiveSpotlight } from "@/lib/spotlight";
+import { getListingBoostVisuals } from "@/lib/listing-boost-visuals";
+import { clsx } from "clsx";
 
 /**
  * Universal premium CarCard matching the G99 reference design.
  * @param {Object} car - The car data object.
  * @param {number} distance - Pre-calculated distance in km (optional).
  * @param {function} onRemove - Optional callback for a remove action.
- * @param {boolean} showSpotlight - Paid homepage Spotlight badge.
+ * @param {boolean} showSpotlight - Show Spotlight badge on the card.
+ * @param {boolean} spotlightProminent - Stronger orange/red outline (homepage row).
+ * @param {boolean} hideSpotlightBadge - Outline only, no badge (homepage row).
  */
-export default function CarCard({ car, distance = null, onRemove = null, showSpotlight = false }) {
+export default function CarCard({
+  car,
+  distance = null,
+  onRemove = null,
+  showSpotlight = false,
+  spotlightProminent = false,
+  hideSpotlightBadge = false,
+}) {
+  const spotlightActive = showSpotlight || isActiveSpotlight(car) || spotlightProminent;
+  const showSpotlightBadge =
+    !hideSpotlightBadge && (showSpotlight || isActiveSpotlight(car));
   const showHot = isActiveHotBadge(car);
+  const boost = getListingBoostVisuals(car, {
+    spotlight: spotlightActive,
+    prominent: spotlightProminent,
+  });
   const primaryImg = car.images?.[0]?.url;
   const title = `${car.make} ${car.model}${car.variant ? ` ( ${car.variant} )` : ""}`;
   const distanceKm = Number.isFinite(distance) ? distance : (Number.isFinite(car?.distance) ? car.distance : null);
@@ -83,9 +102,27 @@ export default function CarCard({ car, distance = null, onRemove = null, showSpo
   }
 
   return (
-    <article className="group flex flex-col bg-white dark:bg-[#0a0a0a] border-2 border-slate-100 dark:border-zinc-900 transition-all hover:shadow-2xl overflow-hidden" style={{ borderRadius: '4px' }}>
+    <article
+      className={clsx(
+        "group flex flex-col bg-white dark:bg-[#0a0a0a] border-2 transition-all hover:shadow-2xl overflow-hidden",
+        boost.cardBorderClass
+      )}
+      style={{ borderRadius: "4px" }}
+      {...(boost.active
+        ? {
+            "data-boost": boost.spotlight && boost.hot ? "spotlight-hot" : boost.spotlight ? "spotlight" : "hot",
+          }
+        : {})}
+    >
       {/* Image Container */}
-      <Link href={carListingPath(car)} onClick={() => onCarClick("image")} className="relative aspect-[16/11] bg-slate-50 dark:bg-zinc-900 overflow-hidden block">
+      <Link
+        href={carListingPath(car)}
+        onClick={() => onCarClick("image")}
+        className={clsx(
+          "relative aspect-[16/11] bg-slate-50 dark:bg-zinc-900 overflow-hidden block",
+          boost.imageFrameClass
+        )}
+      >
         {primaryImg ? (
           <SafeImage
             src={primaryImg}
@@ -109,7 +146,7 @@ export default function CarCard({ car, distance = null, onRemove = null, showSpo
         <div className="pointer-events-none absolute inset-x-2 top-2 z-10 flex items-start justify-between gap-2 sm:inset-x-4 sm:top-4 sm:gap-2">
           <div
             className={
-              distanceLabel || showSpotlight || showHot
+              distanceLabel || showSpotlightBadge || showHot
                 ? "min-w-0 max-w-[calc(100%-5.5rem)] sm:max-w-[calc(100%-7rem)]"
                 : "min-w-0 flex-1"
             }
@@ -122,7 +159,7 @@ export default function CarCard({ car, distance = null, onRemove = null, showSpo
                 Hot
               </span>
             ) : null}
-            {showSpotlight ? (
+            {showSpotlightBadge ? (
               <span
                 className="pointer-events-auto mb-1 inline-flex max-w-full items-center bg-[#b91c1c] px-1.5 py-0.5 text-[7px] font-black uppercase tracking-[0.14em] text-white border border-white/25 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.16em]"
                 style={{ borderRadius: "2px" }}

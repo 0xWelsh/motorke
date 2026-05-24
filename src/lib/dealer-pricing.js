@@ -94,14 +94,14 @@ export const DEALER_BOOST_ADDONS = [
     id: "hot_badge_7d",
     name: "Hot badge",
     durationLabel: "7 days",
-    description: "Visual badge on one listing.",
+    description: "Orange outline and badge on one listing in browse.",
     price: 299,
   },
   {
     id: "spotlight_7d",
     name: "Spotlight",
     durationLabel: "7 days",
-    description: "Homepage Spotlight section plus higher rank in browse and search.",
+    description: "Red outline and badge on your listing, plus higher rank in browse and search.",
     price: 799,
   },
   {

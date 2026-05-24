@@ -37,6 +37,8 @@ const hubCarSelect = {
   transmission: true,
   featured: true,
   featuredWeight: true,
+  spotlightUntil: true,
+  hotBadgeUntil: true,
   views: true,
   createdAt: true,
   badges: true,

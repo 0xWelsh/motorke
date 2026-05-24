@@ -7,14 +7,25 @@ import Image from "@/components/SafeImage";
 import { Share2, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSaveData } from "@/components/SaveDataProvider";
 import { saveDataGalleryLimits } from "@/lib/save-data";
+import { getListingBoostVisuals } from "@/lib/listing-boost-visuals";
+import { clsx } from "clsx";
 
 const LIGHTBOX_AUTO_MS = 4200;
 
-export default function ImageGallery({ images, title }) {
+export default function ImageGallery({
+  images,
+  title,
+  spotlightUntil = null,
+  hotBadgeUntil = null,
+}) {
   const saveData = useSaveData();
   const limits = useMemo(
     () => saveDataGalleryLimits(saveData, images?.length || 0),
     [saveData, images?.length]
+  );
+  const boost = useMemo(
+    () => getListingBoostVisuals({ spotlightUntil, hotBadgeUntil }),
+    [spotlightUntil, hotBadgeUntil]
   );
 
   const primaryIdx = images?.findIndex((img) => img.isPrimary) ?? -1;
@@ -119,6 +130,18 @@ export default function ImageGallery({ images, title }) {
 
   return (
     <>
+      <div
+        className={clsx(
+          boost.active && boost.galleryShellClass,
+          boost.active && "overflow-hidden rounded-[var(--radius,4px)]"
+        )}
+        {...(boost.active
+          ? {
+              "data-boost":
+                boost.spotlight && boost.hot ? "spotlight-hot" : boost.spotlight ? "spotlight" : "hot",
+            }
+          : {})}
+      >
       {mosaicMode ? (
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] gap-1.5 sm:gap-2">
           <button
@@ -128,7 +151,10 @@ export default function ImageGallery({ images, title }) {
             }}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
-            className="relative lg:row-span-2 aspect-[4/3] lg:aspect-auto lg:h-full rounded-sm overflow-hidden bg-[#fbfcfe] dark:bg-[#111111] group border border-[#ddd4c8] dark:border-slate-800"
+            className={clsx(
+              "relative lg:row-span-2 aspect-[4/3] lg:aspect-auto lg:h-full rounded-sm overflow-hidden bg-[#fbfcfe] dark:bg-[#111111] group border border-[#ddd4c8] dark:border-slate-800",
+              boost.galleryHeroClass
+            )}
             aria-label="Open hero image"
           >
             <Image
@@ -225,7 +251,10 @@ export default function ImageGallery({ images, title }) {
       ) : (
         <>
           <div
-            className="relative aspect-[16/10] sm:aspect-[16/9] w-full bg-[#fbfcfe] dark:bg-[#111111] overflow-hidden cursor-pointer"
+            className={clsx(
+              "relative aspect-[16/10] sm:aspect-[16/9] w-full bg-[#fbfcfe] dark:bg-[#111111] overflow-hidden cursor-pointer",
+              boost.galleryHeroClass
+            )}
             onClick={() => setLightbox(true)}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
@@ -362,6 +391,7 @@ export default function ImageGallery({ images, title }) {
           )}
         </>
       )}
+      </div>
 
       {lightbox && (
         <div className="fixed inset-0 z-[100] bg-black/95 flex flex-col items-center justify-center">

@@ -51,8 +51,8 @@ export default async function PortalBoostsPage() {
               Boosts
             </h1>
             <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 max-w-xl">
-              Put your best stock in front of buyers. Spotlight hits the homepage section;
-              Hot badge stands out in browse; Dealer lift raises your whole showroom.
+              Put your best stock in front of buyers. Spotlight adds a red outline and ranks
+              higher in browse; Hot badge adds an orange outline; Dealer lift raises your whole showroom.
             </p>
           </div>
           {DEALER_PRICING_EARLY_ACCESS ? (

@@ -14,6 +14,8 @@ import InventorySharePrompt from "@/components/InventorySharePrompt";
 import DealerBoostApply from "@/components/DealerBoostApply";
 import { isActiveSpotlight } from "@/lib/spotlight";
 import { isActiveHotBadge } from "@/lib/hot-badge";
+import { getListingBoostVisuals } from "@/lib/listing-boost-visuals";
+import { clsx } from "clsx";
 import { 
   Plus, 
   Car as CarIcon, 
@@ -333,10 +335,23 @@ export default async function InventoryPage({ searchParams }) {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-          {cars.map(car => (
-            <div key={car.id} className="group bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl overflow-hidden transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,0.04)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)] flex flex-col h-full">
+          {cars.map(car => {
+            const boost = getListingBoostVisuals(car);
+            return (
+            <div
+              key={car.id}
+              className={clsx(
+                "group bg-white dark:bg-[#111111] border-2 rounded-2xl overflow-hidden transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,0.04)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[4px_4px_0px_0px_rgba(0,0,0,0.05)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)]-[8px_8px_0px_0px_rgba(0,0,0,0.05)] flex flex-col h-full",
+                boost.active ? boost.cardBorderClass : "border-[#ddd4c8] dark:border-slate-800"
+              )}
+            >
               {/* Image & Status Badge */}
-              <div className="relative aspect-[16/11] bg-[#fbfcfe] dark:bg-[#111111] overflow-hidden shrink-0">
+              <div
+                className={clsx(
+                  "relative aspect-[16/11] bg-[#fbfcfe] dark:bg-[#111111] overflow-hidden shrink-0",
+                  boost.imageFrameClass
+                )}
+              >
                 {car.images[0]
                   ? <Image src={car.images[0].url} alt={`${car.make} ${car.model}`} width={640} height={440} className="w-full h-full object-cover" />
                   : <div className="flex items-center justify-center h-full bg-[#fbfcfe] dark:bg-[#111111]">
@@ -462,7 +477,8 @@ export default async function InventoryPage({ searchParams }) {
                 </Link>
               </div>
             </div>
-          ))}
+          );
+          })}
         </div>
       )}
     </div>

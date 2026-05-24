@@ -15,6 +15,7 @@ import CarCard from "@/components/CarCard";
 import TrackedLink from "@/components/TrackedLink";
 import HomepageShopLinks from "@/components/home/HomepageShopLinks";
 import HomepageTrending from "@/components/home/HomepageTrending";
+import HomepageSpotlight from "@/components/home/HomepageSpotlight";
 import HomepageDutyTeaser from "@/components/home/HomepageDutyTeaser";
 import { getHomepageData } from "@/lib/homepage-cache";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
@@ -233,76 +234,7 @@ export default async function HomePage() {
 
       <HomepageShopLinks />
 
-      {/* Paid Spotlight — only active dealer placements (see spotlightUntil) */}
-      {spotlightCards.length > 0 && (
-        <section className="relative py-10 sm:py-16 lg:py-24 xl:py-28 border-y border-red-100/80 dark:border-red-950/40 overflow-hidden">
-          {spotlightBackdrop && (
-            <div className="absolute inset-0 -z-10 pointer-events-none">
-              <Image
-                src={spotlightBackdrop}
-                fill
-                sizes="100vw"
-                alt=""
-                className="object-cover opacity-[0.22] dark:opacity-[0.14]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-white/96 via-white/94 to-white dark:from-[#0a0a0a]/96 dark:via-[#0a0a0a]/94 dark:to-[#0a0a0a]" />
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.08),transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.14),transparent_55%)]" />
-            </div>
-          )}
-          {!spotlightBackdrop && (
-            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-red-50/40 to-white dark:from-red-950/20 dark:to-[#0a0a0a]" />
-          )}
-          <div className="home-shell">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-10 gap-4">
-              <div className="max-w-2xl">
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-red-600 dark:text-red-400 mb-2">
-                  Spotlight
-                </p>
-                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal editorial-heading text-[#111827] dark:text-white mb-3">
-                  Featured on the homepage
-                </h2>
-                <p className="text-[#475569] dark:text-slate-400 text-base sm:text-lg font-medium leading-relaxed">
-                  Paid placements from verified dealers. Spotlight listings rank higher in search and stay pinned here for the full boost period.
-                </p>
-              </div>
-              <TrackedLink
-                href="/cars?sort=views_desc"
-                eventName="homepage_view_trending_click"
-                eventPayload={{ area: "spotlight_footer" }}
-                className="inline-flex h-11 items-center text-[#b91c1c] dark:text-red-300 text-xs font-bold uppercase tracking-widest gap-2 hover:opacity-70 transition-opacity shrink-0"
-              >
-                Browse all cars <ArrowUpRight className="w-4 h-4" />
-              </TrackedLink>
-            </div>
-
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6 items-stretch">
-              {spotlightCards.map((car, index) => (
-                <div
-                  key={car.id}
-                  className={[
-                    "h-full",
-                    index === 0 && spotlightCards.length >= 3 ? "col-span-2 lg:col-span-2 lg:row-span-2" : "",
-                  ].join(" ")}
-                >
-                  <CarCard car={car} showSpotlight />
-                </div>
-              ))}
-            </div>
-
-            <p className="mt-6 sm:mt-8 text-center text-[11px] font-semibold text-slate-500 dark:text-zinc-500">
-              Dealers: put your stock in Spotlight from{" "}
-              <TrackedLink
-                href="/portal/subscription"
-                eventName="homepage_spotlight_dealer_cta"
-                eventPayload={{ area: "spotlight_footer" }}
-                className="font-black uppercase tracking-[0.12em] text-[#2F855A] hover:underline"
-              >
-                Plans &amp; billing
-              </TrackedLink>
-            </p>
-          </div>
-        </section>
-      )}
+      <HomepageSpotlight cars={spotlightCards} />
 
       <HomepageTrending cars={trendingCars} />
 

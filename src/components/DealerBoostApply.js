@@ -6,8 +6,8 @@ import { Zap, Loader2 } from "lucide-react";
 import { clsx } from "clsx";
 
 const BOOST_OPTIONS = [
-  { type: "spotlight_7d", label: "Spotlight 7d", hint: "Homepage + search rank" },
-  { type: "hot_badge_7d", label: "Hot badge 7d", hint: "Badge on listing" },
+  { type: "spotlight_7d", label: "Spotlight 7d", hint: "Red outline + search rank" },
+  { type: "hot_badge_7d", label: "Hot badge 7d", hint: "Orange outline + badge" },
   { type: "spotlight_30d", label: "Spotlight 30d", hint: "Longer run" },
 ];
 

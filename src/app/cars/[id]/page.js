@@ -441,7 +441,12 @@ export default async function CarDetailPage({ params }) {
           {/* ── Main column: gallery + detail content ── */}
           <div className="lg:col-span-8 flex flex-col gap-7 sm:gap-8">
             <div className="overflow-hidden" style={{ borderRadius: "var(--radius)" }}>
-              <ImageGallery images={car.images} title={title} />
+              <ImageGallery
+                images={car.images}
+                title={title}
+                spotlightUntil={car.spotlightUntil}
+                hotBadgeUntil={car.hotBadgeUntil}
+              />
             </div>
 
             {/* Mobile / tablet: title & price below gallery */}
