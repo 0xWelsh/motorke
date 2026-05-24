@@ -6,7 +6,11 @@
  * - All MAIL_FROM_* values must be addresses Zoho accepts for SMTP_USER (mailbox or alias).
  */
 
+import { digitsOnlyPhone } from "@/lib/phone-hints";
+
 const DEFAULT_SUPPORT = "hello@welshmotorhub.co.ke";
+const DEFAULT_SUPPORT_WHATSAPP_MESSAGE =
+  "Hi Welsh Motorhub team, I need help with the website.";
 const DEFAULT_FROM_NOREPLY = '"Welsh Motorhub" <noreply@welshmotorhub.co.ke>';
 
 /** Shown in footer, contact, FAQ, etc. — inlined on client where NEXT_PUBLIC_* is set. */
@@ -16,6 +20,25 @@ export const PUBLIC_SUPPORT_EMAIL =
 /** Optional public support line (e.g. +254 7XX XXX XXX). */
 export const PUBLIC_SUPPORT_PHONE =
   process.env.NEXT_PUBLIC_SUPPORT_PHONE?.trim() || "";
+
+/** WhatsApp MSISDN for buyer support (digits only in wa.me). Falls back to phone. */
+export const PUBLIC_SUPPORT_WHATSAPP =
+  process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP?.trim() ||
+  process.env.NEXT_PUBLIC_SUPPORT_PHONE?.trim() ||
+  "";
+
+export const PUBLIC_SUPPORT_WHATSAPP_MESSAGE =
+  process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP_MESSAGE?.trim() ||
+  DEFAULT_SUPPORT_WHATSAPP_MESSAGE;
+
+/** wa.me link for marketplace support, or null when no number is configured. */
+export function getSupportWhatsAppHref(
+  message = PUBLIC_SUPPORT_WHATSAPP_MESSAGE
+) {
+  const digits = digitsOnlyPhone(PUBLIC_SUPPORT_WHATSAPP);
+  if (!digits) return null;
+  return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+}
 
 /** Support inbox (server email HTML + optional override). */
 export function getSupportEmail() {
