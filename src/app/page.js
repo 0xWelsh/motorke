@@ -123,7 +123,6 @@ export default async function HomePage() {
 
   const origin = getSiteOrigin();
 
-  const spotlightBackdrop = pickSectionBackdrop(spotlightCards);
   const newArrivalsBackdrop = pickSectionBackdrop(newEnhanced);
 
   return (
