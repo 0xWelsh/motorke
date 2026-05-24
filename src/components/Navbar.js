@@ -126,7 +126,7 @@ export default function Navbar({ user }) {
 
   return (
     <>
-      <nav className="sticky top-0 z-[100] isolate w-full flex items-center h-16 md:h-20 bg-white dark:bg-[#0a0a0a] border-b border-gray-100 dark:border-zinc-900 shadow-sm transition-colors duration-300">
+      <nav className="sticky top-0 z-[100] isolate w-full flex items-center h-16 md:h-20 bg-white/90 dark:bg-[#0a0a0a]/90 border-b border-slate-200/80 dark:border-white/10 shadow-[0_8px_30px_-20px_rgba(0,0,0,0.12)] backdrop-blur-xl transition-colors duration-300">
         <div className="w-full px-6 md:px-12">
           <div className="flex items-center justify-between gap-4 lg:gap-6 min-w-0 h-full">
 
@@ -155,7 +155,7 @@ export default function Navbar({ user }) {
                   key={href}
                   href={href}
                   onClick={(e) => navigateTo(href, e)}
-                  className="shrink-0 text-[13px] font-bold uppercase tracking-widest text-slate-900 dark:text-white transition-all hover:opacity-70"
+                  className="shrink-0 text-[12px] font-bold uppercase tracking-[0.16em] text-slate-800 dark:text-white/90 transition-colors hover:text-[#2F855A] dark:hover:text-[#6ee7a8]"
                 >
                   {label}
                 </Link>
@@ -163,7 +163,7 @@ export default function Navbar({ user }) {
               <Link
                 href="/contact"
                 onClick={(e) => navigateTo("/contact", e)}
-                className="shrink-0 px-6 py-2 text-[13px] font-bold uppercase tracking-widest border border-slate-900 dark:border-white text-slate-900 dark:text-white transition-all hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:!text-[#0a0a0a]"
+                className="shrink-0 px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.16em] border border-slate-300/90 dark:border-white/25 text-slate-800 dark:text-white transition-all hover:border-slate-900 hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:!text-[#0a0a0a] shadow-sm"
                 style={{ borderRadius: "var(--radius)" }}
               >
                 Contact
@@ -179,8 +179,8 @@ export default function Navbar({ user }) {
                   onChange={e => setSearch(e.target.value)}
                   onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                   placeholder="Search vehicles..."
-                  className="w-full h-11 pl-11 pr-5 text-sm font-medium outline-none transition-all bg-[#EDF2F7] dark:bg-zinc-900 focus:bg-white dark:focus:bg-black border border-transparent focus:border-slate-900 dark:focus:border-white text-slate-900 dark:text-white"
-                  style={{ borderRadius: 'var(--radius)' }}
+                  className="w-full h-11 pl-11 pr-5 text-sm font-medium outline-none transition-all bg-slate-100/90 dark:bg-zinc-900/90 focus:bg-white dark:focus:bg-black border border-transparent focus:border-[#38A169]/40 dark:focus:border-[#38A169]/50 focus:ring-2 focus:ring-[#38A169]/10 text-slate-900 dark:text-white shadow-inner"
+                  style={{ borderRadius: "var(--radius)" }}
                 />
               </form>
               {showSuggestions && (
@@ -253,9 +253,11 @@ export default function Navbar({ user }) {
                   <Link href="/login" className="text-sm font-bold text-slate-900 dark:text-white transition-opacity hover:opacity-70">
                     Sign In
                   </Link>
-                  <Link href="/signup" 
-                    className="h-10 px-5 flex items-center justify-center text-xs font-bold uppercase tracking-widest bg-[#38A169] text-white hover:opacity-90 transition-all active:scale-95"
-                    style={{ borderRadius: 'var(--radius)' }}>
+                  <Link
+                    href="/signup"
+                    className="h-10 px-5 flex items-center justify-center text-[11px] font-bold uppercase tracking-[0.16em] bg-[#38A169] text-white shadow-[0_8px_24px_-8px_rgba(56,161,105,0.55)] hover:bg-[#2F855A] transition-all active:scale-[0.98]"
+                    style={{ borderRadius: "var(--radius)" }}
+                  >
                     Join
                   </Link>
                 </div>
