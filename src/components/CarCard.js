@@ -23,7 +23,7 @@ import { clsx } from "clsx";
  * @param {boolean} showSpotlight - Show Spotlight badge on the card.
  * @param {boolean} spotlightProminent - Stronger orange/red outline (homepage row).
  * @param {boolean} hideSpotlightBadge - Outline only, no badge (homepage row).
- * @param {boolean} compact - Shorter card for homepage Spotlight row.
+ * @param {boolean} compact - Shorter card below lg (homepage rows); full size on desktop.
  */
 export default function CarCard({
   car,
@@ -123,7 +123,7 @@ export default function CarCard({
         onClick={() => onCarClick("image")}
         className={clsx(
           "relative bg-slate-50 dark:bg-zinc-900 overflow-hidden block",
-          compact ? "aspect-[16/10]" : "aspect-[16/11]",
+          compact ? "aspect-[16/10] lg:aspect-[16/11]" : "aspect-[16/11]",
           boost.imageFrameClass
         )}
       >
@@ -150,7 +150,7 @@ export default function CarCard({
         <div
           className={clsx(
             "pointer-events-none absolute inset-x-2 top-2 z-10 flex items-start justify-between gap-2",
-            !compact && "sm:inset-x-4 sm:top-4 sm:gap-2"
+            compact ? "lg:inset-x-4 lg:top-4 lg:gap-2" : "sm:inset-x-4 sm:top-4 sm:gap-2"
           )}
         >
           <div
@@ -212,13 +212,23 @@ export default function CarCard({
       </Link>
 
       {/* Content Area */}
-      <div className={clsx("flex flex-col flex-1", compact ? "p-2 sm:p-2.5" : "p-2.5 sm:p-5")}>
+      <div
+        className={clsx(
+          "flex flex-col flex-1",
+          compact ? "p-2 sm:p-2.5 lg:p-5" : "p-2.5 sm:p-5"
+        )}
+      >
         {/* Title & Year */}
-        <div className={clsx("flex items-start gap-1.5", compact ? "mb-1.5" : "gap-2 sm:gap-3 mb-2.5 sm:mb-3")}>
+        <div
+          className={clsx(
+            "flex items-start gap-1.5",
+            compact ? "mb-1.5 lg:gap-3 lg:mb-3" : "gap-2 sm:gap-3 mb-2.5 sm:mb-3"
+          )}
+        >
           <span
             className={clsx(
-              "font-black text-slate-400 uppercase tracking-widest shrink-0",
-              compact ? "mt-0.5 text-[8px]" : "mt-0.5 sm:mt-1 text-[9px] sm:text-[11px]"
+              "font-black text-slate-400 uppercase tracking-widest shrink-0 mt-0.5",
+              compact ? "text-[8px] lg:text-[11px] lg:mt-1" : "sm:mt-1 text-[9px] sm:text-[11px]"
             )}
           >
             {car.year}
@@ -227,7 +237,9 @@ export default function CarCard({
             <h3
               className={clsx(
                 "font-black font-sans text-slate-900 dark:text-white tracking-tight leading-snug hover:text-[#38A169] transition-colors line-clamp-2",
-                compact ? "text-[11px] sm:text-[13px]" : "text-[12px] sm:text-[17px] sm:tracking-tighter"
+                compact
+                  ? "text-[11px] sm:text-[13px] lg:text-[17px] lg:tracking-tighter"
+                  : "text-[12px] sm:text-[17px] sm:tracking-tighter"
               )}
               title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}
             >
@@ -237,12 +249,17 @@ export default function CarCard({
         </div>
 
         {/* High-Density Info Area */}
-        <div className={clsx("flex-1", compact ? "space-y-1.5" : "space-y-2.5 sm:space-y-4")}>
+        <div
+          className={clsx(
+            "flex-1",
+            compact ? "space-y-1.5 lg:space-y-4" : "space-y-2.5 sm:space-y-4"
+          )}
+        >
           <p
             className={clsx(
-              "font-medium text-slate-500 dark:text-slate-400 leading-snug",
+              "font-medium text-slate-500 dark:text-slate-400",
               compact
-                ? "text-[9px] sm:text-[10px] line-clamp-1 min-h-0"
+                ? "text-[9px] sm:text-[10px] line-clamp-1 min-h-0 leading-snug lg:text-[11px] lg:leading-relaxed lg:line-clamp-3 lg:min-h-[56px]"
                 : "min-h-[46px] sm:min-h-[56px] text-[10px] sm:text-[11px] leading-relaxed line-clamp-2 sm:line-clamp-3"
             )}
           >
@@ -250,20 +267,28 @@ export default function CarCard({
               <span
                 className={clsx(
                   "text-slate-900 dark:text-slate-200 font-bold",
-                  compact ? "block truncate" : "block mb-0.5 sm:mb-1"
+                  compact ? "block truncate lg:truncate-none lg:mb-1" : "block mb-0.5 sm:mb-1"
                 )}
               >
                 {specString}
               </span>
             ) : null}
-            {!compact && (car.description || "Premium verified vehicle available in our showroom.")}
+            {compact ? (
+              <span className="hidden lg:inline">
+                {car.description || "Premium verified vehicle available in our showroom."}
+              </span>
+            ) : (
+              car.description || "Premium verified vehicle available in our showroom."
+            )}
           </p>
 
           {/* Secondary Badges Row */}
           <div
             className={clsx(
               "flex flex-wrap content-start",
-              compact ? "gap-1 min-h-0" : "min-h-[30px] sm:min-h-[36px] gap-1.5 sm:gap-2"
+              compact
+                ? "gap-1 min-h-0 lg:min-h-[36px] lg:gap-2"
+                : "min-h-[30px] sm:min-h-[36px] gap-1.5 sm:gap-2"
             )}
           >
             {[
@@ -276,7 +301,7 @@ export default function CarCard({
                 className={clsx(
                   "bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest rounded-none border border-slate-100 dark:border-zinc-800 whitespace-nowrap",
                   compact
-                    ? "text-[8px] px-1.5 py-0.5"
+                    ? "text-[8px] px-1.5 py-0.5 lg:text-[10px] lg:px-3 lg:py-1.5"
                     : "text-[9px] sm:text-[10px] px-2 py-1 sm:px-3 sm:py-1.5"
                 )}
               >
@@ -286,8 +311,8 @@ export default function CarCard({
           </div>
 
           {/* Listing features as horizontal scroll chips (card width) */}
-          {!compact && featureChips.length > 0 && (
-            <div className="pt-1 -mx-1">
+          {featureChips.length > 0 && (
+            <div className={compact ? "hidden lg:block pt-1 -mx-1" : "pt-1 -mx-1"}>
               <p className="text-[9px] font-black uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500 mb-2">Features</p>
               <FeatureMarquee features={featureChips} variant="card" />
             </div>
@@ -298,14 +323,16 @@ export default function CarCard({
         <div
           className={clsx(
             "border-t border-slate-100 dark:border-zinc-900 flex items-center justify-between gap-2",
-            compact ? "mt-2 pt-2" : "mt-3.5 sm:mt-6 pt-3 sm:pt-4"
+            compact ? "mt-2 pt-2 lg:mt-6 lg:pt-4" : "mt-3.5 sm:mt-6 pt-3 sm:pt-4"
           )}
         >
           <div className="flex items-center min-w-0">
             <span
               className={clsx(
                 "font-black text-slate-900 dark:text-white tracking-tight truncate",
-                compact ? "text-[12px] sm:text-[14px]" : "text-[13px] sm:text-lg sm:tracking-tighter"
+                compact
+                  ? "text-[12px] sm:text-[14px] lg:text-lg lg:tracking-tighter"
+                  : "text-[13px] sm:text-lg sm:tracking-tighter"
               )}
             >
               {formatCarPrice(car)}
@@ -316,9 +343,9 @@ export default function CarCard({
             href={carListingPath(car)}
             onClick={() => onCarClick("cta")}
             className={clsx(
-              "group/btn inline-flex items-center gap-1.5 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-white font-black uppercase tracking-widest hover:bg-[#111827] hover:text-white dark:hover:bg-white dark:hover:text-black transition-all",
+              "group/btn inline-flex items-center bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-white font-black uppercase tracking-widest hover:bg-[#111827] hover:text-white dark:hover:bg-white dark:hover:text-black transition-all",
               compact
-                ? "px-2 py-1 text-[8px] sm:text-[9px]"
+                ? "gap-1.5 px-2 py-1 text-[8px] sm:text-[9px] lg:gap-2 lg:px-4 lg:py-2 lg:text-[10px]"
                 : "gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 text-[9px] sm:text-[10px]"
             )}
             style={{ borderRadius: "2px" }}
@@ -327,11 +354,16 @@ export default function CarCard({
             <div
               className={clsx(
                 "flex items-center justify-center bg-slate-200 dark:bg-zinc-800 group-hover/btn:bg-[#38A169] group-hover/btn:text-white transition-colors",
-                compact ? "w-3.5 h-3.5" : "w-4 h-4 sm:w-5 sm:h-5"
+                compact ? "w-3.5 h-3.5 lg:w-5 lg:h-5" : "w-4 h-4 sm:w-5 sm:h-5"
               )}
               style={{ borderRadius: "1px" }}
             >
-              <ArrowUpRight className={clsx(compact ? "w-2.5 h-2.5" : "w-3 h-3", "translate-y-[0.5px]")} />
+              <ArrowUpRight
+                className={clsx(
+                  compact ? "w-2.5 h-2.5 lg:w-3 lg:h-3" : "w-3 h-3",
+                  "translate-y-[0.5px]"
+                )}
+              />
             </div>
           </Link>
         </div>
