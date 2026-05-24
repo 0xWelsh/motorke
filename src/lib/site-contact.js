@@ -13,6 +13,10 @@ const DEFAULT_FROM_NOREPLY = '"Welsh Motorhub" <noreply@welshmotorhub.co.ke>';
 export const PUBLIC_SUPPORT_EMAIL =
   process.env.NEXT_PUBLIC_MAIL_SUPPORT || DEFAULT_SUPPORT;
 
+/** Optional public support line (e.g. +254 7XX XXX XXX). */
+export const PUBLIC_SUPPORT_PHONE =
+  process.env.NEXT_PUBLIC_SUPPORT_PHONE?.trim() || "";
+
 /** Support inbox (server email HTML + optional override). */
 export function getSupportEmail() {
   return (

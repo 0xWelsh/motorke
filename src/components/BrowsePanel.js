@@ -6,37 +6,10 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight, MapPin, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
+import { BRANDS, BODY_TYPES } from "@/lib/browse-catalog";
 
-const BRANDS = [
-  { name: "Toyota",     img: "logo_toyota.png" },
-  { name: "Nissan",     img: "logo_nissan.png" },
-  { name: "Honda",      img: "logo_honda.png" },
-  { name: "Mitsubishi", img: "logo_mitsubishi.png" },
-  { name: "Isuzu",      img: "logo_isuzu.png" },
-  { name: "Subaru",     img: "logo_subaru.png" },
-  { name: "Suzuki",     img: "logo_suzuki.png" },
-  { name: "Mazda",      img: "logo_mazda.png" },
-  { name: "Daihatsu",   img: "logo_daihatsu.png" },
-  { name: "BMW",        img: "logo_bmw.png" },
-  { name: "Volkswagen", img: "logo_volkswagen.png" },
-  { name: "Mercedes", make: "Mercedes-Benz", img: "logo_mercedes.png" },
-];
-
-const COUNTIES = ["Nairobi", "Mombasa", "Nakuru", "Kisumu", "Uasin Gishu", "Kiambu", "Machakos", "Meru"];
-
-// Body type entries — label, query value, and a top-view silhouette emoji / icon URL
-const BODY_TYPES = [
-  { label: "Sedan",      value: "SEDAN",     img: "/images/bodies/icon_type-sedan.svg"      },
-  { label: "Hatchback",  value: "HATCHBACK",  img: "/images/bodies/icon_type-hatchback.svg"  },
-  { label: "SUV",        value: "SUV",        img: "/images/bodies/icon_type-suv.svg"        },
-  { label: "Pickup",     value: "PICKUP",     img: "/images/bodies/icon_type-pick-up.svg"     },
-  { label: "Convertible",value: "CONVERTIBLE",img: "/images/bodies/icon_type-convertible.svg"},
-  { label: "Coupe",      value: "COUPE",      img: "/images/bodies/icon_type-coupe.svg"      },
-  { label: "Minivan",    value: "MINIVAN",    img: "/images/bodies/icon_type-mini-van.svg"    },
-  { label: "Wagon",      value: "WAGON",      img: "/images/bodies/icon_type-station-wagon.svg"      },
-  { label: "Bus",        value: "BUS",        img: "/images/bodies/icon_type-bus.svg"        },
-  { label: "Truck",      value: "TRUCK",      img: "/images/bodies/icon_type-truck.svg"      },
-];
+const FLOATING_PANEL =
+  "rounded-xl bg-white/95 dark:bg-[#131313]/95 p-2.5 sm:p-3 shadow-[0_18px_50px_-28px_rgba(0,0,0,0.22)] dark:shadow-[0_18px_50px_-28px_rgba(0,0,0,0.55)] ring-1 ring-black/[0.05] dark:ring-white/[0.07]";
 
 function BrandLogo({ name, make, img }) {
   const [failed, setFailed] = useState(false);
@@ -231,7 +204,7 @@ export default function BrowsePanel() {
 
       {/* Popular Brands & Body Types - tighter grouping */}
       <div className="flex flex-col gap-2.5 sm:gap-3">
-        <div className="rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-gradient-to-b from-white/90 to-[#faf9f7] dark:from-[#131313]/95 dark:to-[#0f0f0f]/90 p-2 sm:p-2.5">
+        <div className={FLOATING_PANEL}>
           <div className="flex items-center justify-between px-1 sm:px-2 mb-2">
             <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
               Shop by brand
@@ -251,7 +224,7 @@ export default function BrowsePanel() {
             ))}
           </ScrollableRow>
         </div>
-        <div className="rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-gradient-to-b from-white/90 to-[#faf9f7] dark:from-[#131313]/95 dark:to-[#0f0f0f]/90 p-2 sm:p-2.5">
+        <div className={FLOATING_PANEL}>
           <div className="flex items-center justify-between px-1 sm:px-2 mb-2">
             <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
               Shop by shape

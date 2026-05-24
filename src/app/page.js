@@ -17,6 +17,7 @@ import HomepageShopLinks from "@/components/home/HomepageShopLinks";
 import HomepageTrending from "@/components/home/HomepageTrending";
 import HomepageSpotlight from "@/components/home/HomepageSpotlight";
 import HomepageDutyTeaser from "@/components/home/HomepageDutyTeaser";
+import HomepageHeroCarFinder from "@/components/home/HomepageHeroCarFinder";
 import { getHomepageData } from "@/lib/homepage-cache";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 
@@ -215,6 +216,8 @@ export default async function HomePage() {
               />
             </div>
           </div>
+
+          <HomepageHeroCarFinder />
         </div>
 
         {/* Mercedes Brand Background Texture */}
