@@ -8,18 +8,8 @@ import { useRouter } from "next/navigation";
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
 import { BRANDS, BODY_TYPES } from "@/lib/browse-catalog";
 
-const FLOATING_PANEL_DEFAULT =
+const FLOATING_PANEL =
   "rounded-xl bg-white/95 dark:bg-[#131313]/95 p-2.5 sm:p-3 shadow-[0_18px_50px_-28px_rgba(0,0,0,0.22)] dark:shadow-[0_18px_50px_-28px_rgba(0,0,0,0.55)] ring-1 ring-black/[0.05] dark:ring-white/[0.07]";
-
-const FLOATING_PANEL_HERO =
-  "rounded-xl border border-white/10 bg-white/[0.04] p-2.5 sm:p-3 shadow-[0_16px_40px_-20px_rgba(0,0,0,0.5)] backdrop-blur-md";
-
-const QUICK_SEARCH_CHIPS = [
-  { label: "SUV under 3M", href: "/cars?bodyType=SUV&maxPrice=3000000" },
-  { label: "Fuel Efficient", href: "/cars?fuelType=HYBRID" },
-  { label: "Family Cars", href: "/cars?bodyType=MINIVAN" },
-  { label: "Low Maintenance", href: "/cars?make=Toyota" },
-];
 
 function BrandLogo({ name, make, img }) {
   const [failed, setFailed] = useState(false);
@@ -162,9 +152,7 @@ function LocationCard({ name }) {
   );
 }
 
-export default function BrowsePanel({ variant = "default" }) {
-  const isHero = variant === "hero";
-  const floatingPanel = isHero ? FLOATING_PANEL_HERO : FLOATING_PANEL_DEFAULT;
+export default function BrowsePanel() {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [loadingLoc, setLoadingLoc] = useState(false);
@@ -194,62 +182,31 @@ export default function BrowsePanel({ variant = "default" }) {
   };
 
   return (
-    <div className="w-full space-y-3 sm:space-y-4">
-      <form onSubmit={handleSearch} className="relative w-full group">
-        <Search
-          className={`absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
-            isHero ? "text-slate-400 group-focus-within:text-[#6ee7a8]" : "text-slate-400 group-focus-within:text-[#38A169]"
-          }`}
-        />
-        <input
+    <div className="w-full space-y-3 sm:space-y-4 pt-2">
+      {/* Search Bar with Geolocation */}
+      <form onSubmit={handleSearch} className="relative mb-6 sm:mb-8 w-full group">
+        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#38A169] transition-colors" />
+        <input 
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="What car are you looking for?"
-          className={
-            isHero
-              ? "w-full rounded-xl border border-white/15 bg-black/35 py-4 pl-12 sm:pl-14 pr-[7.5rem] sm:pr-32 text-base font-semibold text-white shadow-inner shadow-black/20 placeholder:font-normal placeholder:text-slate-500 focus:outline-none focus:border-[#38A169]/60 focus:ring-2 focus:ring-[#38A169]/20 transition-all backdrop-blur-sm"
-              : "w-full bg-white dark:bg-[#0a0a0a] border border-[#e8e2d9] dark:border-zinc-800 text-slate-900 dark:text-white py-4 pl-14 pr-[120px] font-bold text-base shadow-sm focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all placeholder:font-normal placeholder:text-slate-400"
-          }
-          style={isHero ? undefined : { borderRadius: "var(--radius)" }}
+          className="w-full bg-white dark:bg-[#0a0a0a] border border-[#e8e2d9] dark:border-zinc-800 text-slate-900 dark:text-white rounded-none py-4 pl-14 pr-[120px] font-bold text-base shadow-sm focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all placeholder:font-normal placeholder:text-slate-400"
         />
-        <button
-          type="submit"
+        <button 
+          type="submit" 
           disabled={loadingLoc}
-          className={
-            isHero
-              ? "absolute right-1.5 top-1.5 bottom-1.5 min-w-[5.5rem] sm:min-w-[6.5rem] rounded-lg bg-[#38A169] px-4 sm:px-5 text-[10px] sm:text-xs font-black uppercase tracking-[0.14em] text-white transition-all hover:bg-[#2F855A] disabled:opacity-70 shadow-[0_8px_24px_-6px_rgba(56,161,105,0.55)]"
-              : "absolute right-2 top-2 bottom-2 bg-[#38A169] hover:bg-[#2F855A] text-white px-6 font-black text-xs uppercase tracking-widest transition-all disabled:opacity-70 flex items-center justify-center min-w-[100px]"
-          }
-          style={isHero ? undefined : { borderRadius: "var(--radius)" }}
+          className="absolute right-2 top-2 bottom-2 bg-[#38A169] hover:bg-[#2F855A] text-white px-6 rounded-none font-black text-xs uppercase tracking-widest transition-all disabled:opacity-70 flex items-center justify-center min-w-[100px]"
         >
-          {loadingLoc ? "Locating..." : "Search"}
+          {loadingLoc ? "Locating..." : "Explore"}
         </button>
       </form>
 
-      <div className="flex flex-wrap justify-center gap-2">
-        {QUICK_SEARCH_CHIPS.map((chip) => (
-          <Link
-            key={chip.label}
-            href={chip.href}
-            className={
-              isHero
-                ? "rounded-full border border-white/12 bg-white/[0.06] px-3 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.1em] text-slate-300 backdrop-blur-sm transition-all hover:border-[#38A169]/40 hover:bg-white/10 hover:text-white"
-                : "rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-slate-600 transition-all hover:border-[#38A169] hover:text-[#2F855A] dark:border-zinc-800 dark:bg-zinc-950 dark:text-slate-300"
-            }
-          >
-            {chip.label}
-          </Link>
-        ))}
-      </div>
 
+      {/* Popular Brands & Body Types - tighter grouping */}
       <div className="flex flex-col gap-2.5 sm:gap-3">
-        <div className={floatingPanel}>
+        <div className={FLOATING_PANEL}>
           <div className="flex items-center justify-between px-1 sm:px-2 mb-2">
-            <p
-              className={`text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] ${
-                isHero ? "text-slate-400" : "text-slate-500 dark:text-slate-300"
-              }`}
-            >
+            <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
               Shop by brand
             </p>
             <Link
@@ -267,13 +224,9 @@ export default function BrowsePanel({ variant = "default" }) {
             ))}
           </ScrollableRow>
         </div>
-        <div className={floatingPanel}>
+        <div className={FLOATING_PANEL}>
           <div className="flex items-center justify-between px-1 sm:px-2 mb-2">
-            <p
-              className={`text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] ${
-                isHero ? "text-slate-400" : "text-slate-500 dark:text-slate-300"
-              }`}
-            >
+            <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
               Shop by shape
             </p>
           </div>

@@ -5,19 +5,12 @@ import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { BRANDS, BODY_TYPES, COUNTIES } from "@/lib/browse-catalog";
 
-const selectClsDefault =
+const selectCls =
   "w-full border border-slate-200 bg-white px-3 py-2.5 text-[12px] font-semibold text-[#111827] outline-none focus:border-[#38A169] dark:border-zinc-800 dark:bg-zinc-950 dark:text-white";
 
-const selectClsHero =
-  "w-full rounded-lg border border-white/12 bg-black/30 px-3 py-2.5 text-[12px] font-semibold text-white outline-none focus:border-[#38A169]/50 focus:ring-2 focus:ring-[#38A169]/15 backdrop-blur-sm";
+const labelCls = "text-[9px] font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400";
 
-const labelClsDefault = "text-[9px] font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400";
-const labelClsHero = "text-[9px] font-black uppercase tracking-[0.16em] text-slate-400";
-
-export default function HomepageHeroCarFinder({ variant = "default" }) {
-  const isHero = variant === "hero";
-  const selectCls = isHero ? selectClsHero : selectClsDefault;
-  const labelCls = isHero ? labelClsHero : labelClsDefault;
+export default function HomepageHeroCarFinder() {
   const router = useRouter();
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
@@ -103,25 +96,13 @@ export default function HomepageHeroCarFinder({ variant = "default" }) {
 
   return (
     <div
-      className={
-        isHero
-          ? "w-full hero-glass-panel rounded-2xl p-4 sm:p-5 md:p-6"
-          : "mt-8 sm:mt-10 lg:mt-12 w-full max-w-4xl mx-auto rounded-2xl border border-slate-200/80 bg-white/95 dark:bg-[#111111]/95 p-4 sm:p-5 md:p-6 shadow-[0_20px_50px_-28px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] dark:border-zinc-800"
-      }
-      style={isHero ? undefined : { borderRadius: "var(--radius)" }}
+      className="mt-8 sm:mt-10 lg:mt-12 w-full max-w-4xl mx-auto rounded-2xl border border-slate-200/80 bg-white/95 dark:bg-[#111111]/95 p-4 sm:p-5 md:p-6 shadow-[0_20px_50px_-28px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] dark:border-zinc-800"
+      style={{ borderRadius: "var(--radius)" }}
     >
-      <p
-        className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 text-center ${
-          isHero ? "text-[#6ee7a8]" : "text-[#38A169]"
-        }`}
-      >
+      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#38A169] mb-1 text-center">
         Find your car
       </p>
-      <h2
-        className={`text-lg sm:text-xl font-bold text-center mb-4 sm:mb-5 ${
-          isHero ? "text-white" : "text-[#111827] dark:text-white"
-        }`}
-      >
+      <h2 className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white text-center mb-4 sm:mb-5">
         What are you looking for?
       </h2>
 
