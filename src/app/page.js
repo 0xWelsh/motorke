@@ -17,6 +17,7 @@ import HomepageShopLinks from "@/components/home/HomepageShopLinks";
 import HomepageTrending from "@/components/home/HomepageTrending";
 import HomepageSpotlight from "@/components/home/HomepageSpotlight";
 import HomepageDutyTeaser from "@/components/home/HomepageDutyTeaser";
+import HomepageHeroTrustPills from "@/components/home/HomepageHeroTrustPills";
 import { getHomepageData } from "@/lib/homepage-cache";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 
@@ -134,86 +135,84 @@ export default async function HomePage() {
           __html: JSON.stringify(homeStructuredData(origin)),
         }}
       />
-      {/* Dynamic Hero Section */}
-      <section className="relative pt-3 pb-6 sm:pt-4 sm:pb-8 md:pt-6 md:pb-10 lg:pt-8 lg:pb-12 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
+      {/* Hero — Motor Kenya–style: copy + visual row, then full-width search card */}
+      <section className="relative pt-4 pb-8 sm:pt-6 sm:pb-10 lg:pt-10 lg:pb-14 overflow-hidden border-b border-gray-100 dark:border-zinc-900 bg-[#f8faf9] dark:bg-[#0a0a0a]">
         <div className="home-shell relative z-10">
-          
-          {/* Page Header - Full Width */}
-          <div className="mb-5 sm:mb-6 md:mb-8 lg:mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center lg:text-left">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-[#111827] dark:text-white leading-[0.92] tracking-tight mb-4 lg:max-w-4xl">
-              Buy cars with<br />
-              <span className="editorial-hero-accent text-[#38A169]">dealer-level clarity.</span>
-            </h1>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-10 mb-6 sm:mb-8 lg:mb-10 animate-in fade-in slide-in-from-bottom-6 duration-1000">
+            <div className="w-full lg:w-[52%] xl:w-[50%] text-center lg:text-left">
+              <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-[#38A169] mb-3 sm:mb-4">
+                Kenya&apos;s verified car marketplace
+              </p>
 
-            <p className="text-base md:text-lg lg:text-[1.15rem] text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto lg:mx-0">
-              Find verified Kenyan inventory with transparent ownership costs in minutes.
-              Compare up to three cars, inspect real running-cost and road-readiness signals, then contact real dealers directly.
-            </p>
-          </div>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.5rem] font-bold text-[#111827] dark:text-white leading-[1.02] tracking-tight mb-4">
+                Find your next car with{" "}
+                <span className="editorial-hero-accent text-[#38A169]">confidence.</span>
+              </h1>
 
-          {/* Side-by-Side Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 lg:items-start animate-in fade-in duration-1000 delay-200">
-            <div className="lg:col-span-6 xl:col-span-6 text-center lg:text-left">
-              <div className="w-full text-left">
-                <BrowsePanel />
+              <p className="text-sm sm:text-base md:text-lg text-[#2D3748] dark:text-slate-300 leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium mb-5 sm:mb-6">
+                Browse dealer stock across Kenya, compare running costs, and reach sellers by phone or WhatsApp — no middleman on the sale.
+              </p>
+
+              <div className="mb-5 sm:mb-6 max-w-xl mx-auto lg:mx-0">
+                <HomepageHeroTrustPills />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 mt-5 sm:mt-8 w-full sm:max-w-xl lg:mx-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 max-w-md mx-auto lg:mx-0 lg:max-w-lg">
                 <TrackedLink
                   href="/cars"
                   eventName="homepage_explore_inventory_click"
                   eventPayload={{ area: "hero" }}
-                  className="h-12 w-full inline-flex items-center justify-center bg-[#38A169] hover:bg-[#2F855A] text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
-                  style={{ borderRadius: 'var(--radius)' }}
+                  className="h-11 sm:h-12 w-full inline-flex items-center justify-center bg-[#38A169] hover:bg-[#2F855A] text-white px-5 text-[11px] sm:text-xs font-bold uppercase tracking-widest transition-all"
+                  style={{ borderRadius: "var(--radius)" }}
                 >
-                  Explore Inventory
+                  Explore inventory
                 </TrackedLink>
                 <TrackedLink
                   href="/compare"
                   eventName="homepage_compare_cars_click"
                   eventPayload={{ area: "hero" }}
-                  className="h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#111827] dark:hover:border-white"
-                  style={{ borderRadius: 'var(--radius)' }}
+                  className="h-11 sm:h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-5 text-[11px] sm:text-xs font-bold uppercase tracking-widest transition-all hover:border-[#38A169]"
+                  style={{ borderRadius: "var(--radius)" }}
                 >
-                  Compare Cars
+                  Compare cars
                 </TrackedLink>
-              </div>
-
-              <div className="mt-6 sm:mt-7 p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3 text-center lg:text-left">Quick compare</p>
-                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4 text-center lg:text-left">
-                  Side-by-side specs, annual TCO, and road readiness in one clean sheet.
-                </p>
-                <TrackedLink
-                  href="/compare"
-                  eventName="homepage_quick_compare_click"
-                  eventPayload={{ area: "hero_card" }}
-                  className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors justify-center lg:justify-start w-full lg:w-auto"
-                >
-                  Start comparing <ArrowRight className="w-4 h-4" />
-                </TrackedLink>
-              </div>
-
-              <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-5">
-                {[
-                  { label: "Verified dealers", value: `${dealers.length}+` },
-                  { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
-                  { label: "Updated", value: "Daily" },
-                ].map((item) => (
-                  <div key={item.label} className="p-3 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70" style={{ borderRadius: "var(--radius)" }}>
-                    <p className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white">{item.value}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mt-1">{item.label}</p>
-                  </div>
-                ))}
               </div>
             </div>
 
-            <div className="hidden lg:block lg:col-span-6 xl:col-span-6 lg:pl-3 xl:pl-5">
-              <HeroGridShowcase 
-                cars={heroCars.length >= 2 ? heroCars : spotlightEnhanced.slice(0, 6)} 
-                reviews={highlightReviews} 
+            <div className="w-full lg:w-[48%] xl:w-[50%] hidden md:block lg:pl-2">
+              <HeroGridShowcase
+                cars={heroCars.length >= 2 ? heroCars : spotlightEnhanced.slice(0, 6)}
+                reviews={highlightReviews}
               />
             </div>
+          </div>
+
+          <div
+            className="relative z-10 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-zinc-800 bg-white dark:bg-[#111111] shadow-[0_20px_50px_-24px_rgba(0,0,0,0.2)] dark:shadow-[0_20px_50px_-24px_rgba(0,0,0,0.5)] p-4 sm:p-5 md:p-6 animate-in fade-in duration-1000 delay-150"
+          >
+            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 mb-3 sm:mb-4">
+              I&apos;m looking for
+            </p>
+            <BrowsePanel />
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-5 sm:mt-6 max-w-3xl lg:max-w-none">
+            {[
+              { label: "Verified dealers", value: `${dealers.length}+` },
+              { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
+              { label: "Updated", value: "Daily" },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="p-3 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/80 text-center lg:text-left"
+                style={{ borderRadius: "var(--radius)" }}
+              >
+                <p className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white">{item.value}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mt-1">
+                  {item.label}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 
