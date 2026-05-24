@@ -13,6 +13,7 @@ export const EMPTY_HOMEPAGE_DATA = {
   spotlightEnhanced: [],
   paidSpotlight: [],
   hotEnhanced: [],
+  mostViewedEnhanced: [],
   newEnhanced: [],
 };
 
@@ -172,7 +173,11 @@ async function enrichHomepage(base) {
     take: 8,
   });
 
-  const [spotlightEnhanced, paidSpotlight, hotEnhanced, newEnhanced] = await Promise.all([
+  const mostViewed = [...hotCandidatesWithAnalysis]
+    .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
+    .slice(0, 12);
+
+  const [spotlightEnhanced, paidSpotlight, hotEnhanced, mostViewedEnhanced, newEnhanced] = await Promise.all([
     Promise.all(
       (baseSpotlight || []).map(async (car) =>
         car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) }
@@ -186,6 +191,11 @@ async function enrichHomepage(base) {
     ),
     Promise.all(
       (hotSorted || []).map(async (car) =>
+        car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) }
+      )
+    ),
+    Promise.all(
+      (mostViewed || []).map(async (car) =>
         car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) }
       )
     ),
@@ -204,6 +214,7 @@ async function enrichHomepage(base) {
     spotlightEnhanced,
     paidSpotlight,
     hotEnhanced,
+    mostViewedEnhanced,
     newEnhanced,
   };
 }
@@ -245,7 +256,7 @@ const getCachedHomeEnriched = unstable_cache(
       return EMPTY_HOMEPAGE_DATA;
     }
   },
-  ["homepage-enriched-v3"],
+  ["homepage-enriched-v4"],
   { revalidate: 120, tags: ["homepage"] }
 );
 

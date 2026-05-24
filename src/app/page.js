@@ -107,6 +107,7 @@ export default async function HomePage() {
     spotlightEnhanced,
     paidSpotlight,
     hotEnhanced,
+    mostViewedEnhanced,
     newEnhanced,
   } = await getHomepageData();
 
@@ -117,7 +118,7 @@ export default async function HomePage() {
   /** Paid Spotlight only — organic trending must not fill this block. */
   const spotlightCards = (paidSpotlight || []).slice(0, 8);
   const spotlightIds = new Set(spotlightCards.map((c) => c.id));
-  const trendingCars = (hotEnhanced || []).filter((c) => !spotlightIds.has(c.id));
+  const trendingCars = (mostViewedEnhanced || []).filter((c) => !spotlightIds.has(c.id));
 
   const origin = getSiteOrigin();
 
