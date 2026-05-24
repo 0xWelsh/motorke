@@ -24,8 +24,8 @@ describe("listing-boost-visuals", () => {
 
   it("uses prominent outline for homepage spotlight row", () => {
     const v = getListingBoostVisuals({ spotlightUntil: future }, { prominent: true });
-    expect(v.cardBorderClass).toContain("orange");
-    expect(v.cardBorderClass).toContain("3px");
+    expect(v.cardBorderClass).toMatch(/orange.*\/\d+/);
+    expect(v.imageFrameClass).toContain("ring-orange-400/30");
   });
 
   it("layers both when spotlight and hot are active", () => {

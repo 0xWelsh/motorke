@@ -23,13 +23,13 @@ export function getListingBoostVisuals(car, opts = {}) {
       hot,
       active: true,
       cardBorderClass:
-        "border-[3px] border-orange-500 dark:border-orange-400 shadow-[0_0_0_1px_rgba(249,115,22,0.55),0_8px_28px_-10px_rgba(220,38,38,0.5)]",
+        "border border-orange-300/50 dark:border-orange-500/35",
       imageFrameClass:
-        "ring-[3px] ring-inset ring-orange-500/95 shadow-[inset_0_0_0_2px_rgba(220,38,38,0.42)]",
+        "ring-1 ring-inset ring-orange-400/30 dark:ring-orange-500/25",
       galleryShellClass:
-        "border-[3px] border-orange-500 dark:border-orange-400 shadow-[0_0_0_1px_rgba(249,115,22,0.4)]",
+        "border border-orange-300/50 dark:border-orange-500/35",
       galleryHeroClass:
-        "ring-[3px] ring-inset ring-orange-500/95 shadow-[inset_0_0_0_2px_rgba(220,38,38,0.42)]",
+        "ring-1 ring-inset ring-orange-400/30 dark:ring-orange-500/25",
     };
   }
 

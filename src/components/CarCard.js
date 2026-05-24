@@ -23,6 +23,7 @@ import { clsx } from "clsx";
  * @param {boolean} showSpotlight - Show Spotlight badge on the card.
  * @param {boolean} spotlightProminent - Stronger orange/red outline (homepage row).
  * @param {boolean} hideSpotlightBadge - Outline only, no badge (homepage row).
+ * @param {boolean} compact - Shorter card for homepage Spotlight row.
  */
 export default function CarCard({
   car,
@@ -31,6 +32,7 @@ export default function CarCard({
   showSpotlight = false,
   spotlightProminent = false,
   hideSpotlightBadge = false,
+  compact = false,
 }) {
   const spotlightActive = showSpotlight || isActiveSpotlight(car) || spotlightProminent;
   const showSpotlightBadge =
@@ -104,7 +106,8 @@ export default function CarCard({
   return (
     <article
       className={clsx(
-        "group flex flex-col bg-white dark:bg-[#0a0a0a] border-2 transition-all hover:shadow-2xl overflow-hidden",
+        "group flex flex-col bg-white dark:bg-[#0a0a0a] transition-all hover:shadow-2xl overflow-hidden",
+        spotlightProminent ? "border" : "border-2",
         boost.cardBorderClass
       )}
       style={{ borderRadius: "4px" }}
@@ -119,7 +122,8 @@ export default function CarCard({
         href={carListingPath(car)}
         onClick={() => onCarClick("image")}
         className={clsx(
-          "relative aspect-[16/11] bg-slate-50 dark:bg-zinc-900 overflow-hidden block",
+          "relative bg-slate-50 dark:bg-zinc-900 overflow-hidden block",
+          compact ? "aspect-[16/10]" : "aspect-[16/11]",
           boost.imageFrameClass
         )}
       >
@@ -143,7 +147,12 @@ export default function CarCard({
         )}
 
         {/* Top overlays: single row avoids overlap on narrow (mobile) cards */}
-        <div className="pointer-events-none absolute inset-x-2 top-2 z-10 flex items-start justify-between gap-2 sm:inset-x-4 sm:top-4 sm:gap-2">
+        <div
+          className={clsx(
+            "pointer-events-none absolute inset-x-2 top-2 z-10 flex items-start justify-between gap-2",
+            !compact && "sm:inset-x-4 sm:top-4 sm:gap-2"
+          )}
+        >
           <div
             className={
               distanceLabel || showSpotlightBadge || showHot
@@ -203,41 +212,81 @@ export default function CarCard({
       </Link>
 
       {/* Content Area */}
-      <div className="p-2.5 sm:p-5 flex flex-col flex-1">
+      <div className={clsx("flex flex-col flex-1", compact ? "p-2 sm:p-2.5" : "p-2.5 sm:p-5")}>
         {/* Title & Year */}
-        <div className="flex items-start gap-2 sm:gap-3 mb-2.5 sm:mb-3">
-          <span className="mt-0.5 sm:mt-1 text-[9px] sm:text-[11px] font-black text-slate-400 uppercase tracking-widest">
+        <div className={clsx("flex items-start gap-1.5", compact ? "mb-1.5" : "gap-2 sm:gap-3 mb-2.5 sm:mb-3")}>
+          <span
+            className={clsx(
+              "font-black text-slate-400 uppercase tracking-widest shrink-0",
+              compact ? "mt-0.5 text-[8px]" : "mt-0.5 sm:mt-1 text-[9px] sm:text-[11px]"
+            )}
+          >
             {car.year}
           </span>
           <Link href={carListingPath(car)} onClick={() => onCarClick("title")}>
-            <h3 className="text-[12px] sm:text-[17px] font-black font-sans text-slate-900 dark:text-white tracking-tight sm:tracking-tighter leading-snug hover:text-[#38A169] transition-colors line-clamp-2" title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}>
+            <h3
+              className={clsx(
+                "font-black font-sans text-slate-900 dark:text-white tracking-tight leading-snug hover:text-[#38A169] transition-colors line-clamp-2",
+                compact ? "text-[11px] sm:text-[13px]" : "text-[12px] sm:text-[17px] sm:tracking-tighter"
+              )}
+              title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}
+            >
               {car.make} {car.model} {car.variant ? `(${car.variant})` : ""}
             </h3>
           </Link>
         </div>
 
         {/* High-Density Info Area */}
-        <div className="flex-1 space-y-2.5 sm:space-y-4">
-          <p className="min-h-[46px] sm:min-h-[56px] text-[10px] sm:text-[11px] font-medium text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 sm:line-clamp-3">
-             {specString && <span className="text-slate-900 dark:text-slate-200 font-bold block mb-0.5 sm:mb-1">{specString}</span>}
-             {car.description || "Premium verified vehicle available in our showroom."}
+        <div className={clsx("flex-1", compact ? "space-y-1.5" : "space-y-2.5 sm:space-y-4")}>
+          <p
+            className={clsx(
+              "font-medium text-slate-500 dark:text-slate-400 leading-snug",
+              compact
+                ? "text-[9px] sm:text-[10px] line-clamp-1 min-h-0"
+                : "min-h-[46px] sm:min-h-[56px] text-[10px] sm:text-[11px] leading-relaxed line-clamp-2 sm:line-clamp-3"
+            )}
+          >
+            {specString ? (
+              <span
+                className={clsx(
+                  "text-slate-900 dark:text-slate-200 font-bold",
+                  compact ? "block truncate" : "block mb-0.5 sm:mb-1"
+                )}
+              >
+                {specString}
+              </span>
+            ) : null}
+            {!compact && (car.description || "Premium verified vehicle available in our showroom.")}
           </p>
 
           {/* Secondary Badges Row */}
-          <div className="min-h-[30px] sm:min-h-[36px] flex flex-wrap gap-1.5 sm:gap-2 content-start">
+          <div
+            className={clsx(
+              "flex flex-wrap content-start",
+              compact ? "gap-1 min-h-0" : "min-h-[30px] sm:min-h-[36px] gap-1.5 sm:gap-2"
+            )}
+          >
             {[
               car.steering && (car.steering === "RHD" ? "RHD" : car.steering === "LHD" ? "LHD" : null),
               positiveNum(car.engineCC) ? `${Number(car.engineCC)} CC` : null,
               car.fuelType && (FUEL_LABELS[car.fuelType] || car.fuelType.toUpperCase()),
             ].filter(Boolean).map((badge, idx) => (
-              <span key={idx} className="bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-slate-400 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest px-2 py-1 sm:px-3 sm:py-1.5 rounded-none border border-slate-100 dark:border-zinc-800 whitespace-nowrap">
+              <span
+                key={idx}
+                className={clsx(
+                  "bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest rounded-none border border-slate-100 dark:border-zinc-800 whitespace-nowrap",
+                  compact
+                    ? "text-[8px] px-1.5 py-0.5"
+                    : "text-[9px] sm:text-[10px] px-2 py-1 sm:px-3 sm:py-1.5"
+                )}
+              >
                 {badge}
               </span>
             ))}
           </div>
 
           {/* Listing features as horizontal scroll chips (card width) */}
-          {featureChips.length > 0 && (
+          {!compact && featureChips.length > 0 && (
             <div className="pt-1 -mx-1">
               <p className="text-[9px] font-black uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500 mb-2">Features</p>
               <FeatureMarquee features={featureChips} variant="card" />
@@ -246,22 +295,43 @@ export default function CarCard({
         </div>
 
         {/* Bottom Bar: Price & Action */}
-        <div className="mt-3.5 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-100 dark:border-zinc-900 flex items-center justify-between gap-2">
+        <div
+          className={clsx(
+            "border-t border-slate-100 dark:border-zinc-900 flex items-center justify-between gap-2",
+            compact ? "mt-2 pt-2" : "mt-3.5 sm:mt-6 pt-3 sm:pt-4"
+          )}
+        >
           <div className="flex items-center min-w-0">
-            <span className="text-[13px] sm:text-lg font-black text-slate-900 dark:text-white tracking-tight sm:tracking-tighter truncate">
-               {formatCarPrice(car)}
+            <span
+              className={clsx(
+                "font-black text-slate-900 dark:text-white tracking-tight truncate",
+                compact ? "text-[12px] sm:text-[14px]" : "text-[13px] sm:text-lg sm:tracking-tighter"
+              )}
+            >
+              {formatCarPrice(car)}
             </span>
           </div>
 
-          <Link 
-            href={carListingPath(car)} 
+          <Link
+            href={carListingPath(car)}
             onClick={() => onCarClick("cta")}
-            className="group/btn inline-flex items-center gap-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-white px-2.5 sm:px-4 py-1.5 sm:py-2 text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-[#111827] hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
-            style={{ borderRadius: '2px' }}
+            className={clsx(
+              "group/btn inline-flex items-center gap-1.5 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-white font-black uppercase tracking-widest hover:bg-[#111827] hover:text-white dark:hover:bg-white dark:hover:text-black transition-all",
+              compact
+                ? "px-2 py-1 text-[8px] sm:text-[9px]"
+                : "gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 text-[9px] sm:text-[10px]"
+            )}
+            style={{ borderRadius: "2px" }}
           >
             View
-            <div className="w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center bg-slate-200 dark:bg-zinc-800 group-hover/btn:bg-[#38A169] group-hover/btn:text-white transition-colors" style={{ borderRadius: '1px' }}>
-              <ArrowUpRight className="w-3 h-3 translate-y-[0.5px]" />
+            <div
+              className={clsx(
+                "flex items-center justify-center bg-slate-200 dark:bg-zinc-800 group-hover/btn:bg-[#38A169] group-hover/btn:text-white transition-colors",
+                compact ? "w-3.5 h-3.5" : "w-4 h-4 sm:w-5 sm:h-5"
+              )}
+              style={{ borderRadius: "1px" }}
+            >
+              <ArrowUpRight className={clsx(compact ? "w-2.5 h-2.5" : "w-3 h-3", "translate-y-[0.5px]")} />
             </div>
           </Link>
         </div>

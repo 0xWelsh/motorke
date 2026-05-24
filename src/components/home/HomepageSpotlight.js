@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import CarCard from "@/components/CarCard";
 import TrackedLink from "@/components/TrackedLink";
+import { getSpotlightGridLayout } from "@/lib/spotlight-grid";
 
 /**
  * Homepage Spotlight row — editorial title, no paid/featured copy.
@@ -10,17 +11,18 @@ export default function HomepageSpotlight({ cars = [] }) {
   if (!cars.length) return null;
 
   const items = cars.slice(0, 8);
+  const { gridClass, getItemClass } = getSpotlightGridLayout(items.length);
 
   return (
     <section
       aria-labelledby="homepage-spotlight-heading"
-      className="border-b border-slate-100 bg-white py-10 sm:py-16 lg:py-20 dark:border-zinc-900 dark:bg-[#0a0a0a]"
+      className="border-b border-slate-100 bg-white py-8 sm:py-12 dark:border-zinc-900 dark:bg-[#0a0a0a]"
     >
       <div className="home-shell">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-10 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 sm:mb-7 gap-3">
           <h2
             id="homepage-spotlight-heading"
-            className="text-[clamp(2.75rem,8vw,5.5rem)] leading-[0.92] tracking-[-0.03em] editorial-heading font-semibold bg-gradient-to-r from-[#dc2626] via-[#ea580c] to-[#dc2626] bg-clip-text text-transparent dark:from-[#f87171] dark:via-[#fb923c] dark:to-[#f87171]"
+            className="text-[clamp(1.75rem,4.5vw,2.75rem)] leading-[1] tracking-[-0.02em] editorial-heading font-semibold bg-gradient-to-r from-[#dc2626] via-[#ea580c] to-[#dc2626] bg-clip-text text-transparent dark:from-[#f87171] dark:via-[#fb923c] dark:to-[#f87171]"
           >
             Spotlight
           </h2>
@@ -34,16 +36,15 @@ export default function HomepageSpotlight({ cars = [] }) {
           </TrackedLink>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6 items-stretch">
+        <div className={`${gridClass} items-stretch`}>
           {items.map((car, index) => (
-            <div
-              key={car.id}
-              className={[
-                "h-full",
-                index === 0 && items.length >= 3 ? "col-span-2 lg:col-span-2 lg:row-span-2" : "",
-              ].join(" ")}
-            >
-              <CarCard car={car} spotlightProminent hideSpotlightBadge />
+            <div key={car.id} className={`h-full min-w-0 ${getItemClass(index)}`}>
+              <CarCard
+                car={car}
+                compact
+                spotlightProminent
+                hideSpotlightBadge
+              />
             </div>
           ))}
         </div>
