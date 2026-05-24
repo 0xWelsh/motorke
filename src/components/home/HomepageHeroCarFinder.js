@@ -21,7 +21,7 @@ export default function HomepageHeroCarFinder({ variant = "default" }) {
   const router = useRouter();
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
-  const [carVariant, setCarVariant] = useState("");
+  const [variant, setVariant] = useState("");
   const [bodyType, setBodyType] = useState("");
   const [county, setCounty] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -35,7 +35,7 @@ export default function HomepageHeroCarFinder({ variant = "default" }) {
       setModels([]);
       setModel("");
       setVariants([]);
-      setCarVariant("");
+      setVariant("");
       return;
     }
 
@@ -62,7 +62,7 @@ export default function HomepageHeroCarFinder({ variant = "default" }) {
   useEffect(() => {
     if (!make || !model) {
       setVariants([]);
-      setCarVariant("");
+      setVariant("");
       return;
     }
 
@@ -96,7 +96,7 @@ export default function HomepageHeroCarFinder({ variant = "default" }) {
     if (bodyType) params.set("bodyType", bodyType);
     if (county) params.set("county", county);
     if (maxPrice) params.set("maxPrice", maxPrice);
-    if (carVariant.trim()) params.set("search", carVariant.trim());
+    if (variant.trim()) params.set("search", variant.trim());
     const q = params.toString();
     router.push(q ? `/cars?${q}` : "/cars");
   }
@@ -137,7 +137,7 @@ export default function HomepageHeroCarFinder({ variant = "default" }) {
               onChange={(e) => {
                 setMake(e.target.value);
                 setModel("");
-                setCarVariant("");
+                setVariant("");
               }}
               className={selectCls}
               style={{ borderRadius: "var(--radius)" }}
@@ -161,7 +161,7 @@ export default function HomepageHeroCarFinder({ variant = "default" }) {
               disabled={!make || loadingModels}
               onChange={(e) => {
                 setModel(e.target.value);
-                setCarVariant("");
+                setVariant("");
               }}
               className={`${selectCls} disabled:opacity-50`}
               style={{ borderRadius: "var(--radius)" }}
@@ -181,9 +181,9 @@ export default function HomepageHeroCarFinder({ variant = "default" }) {
             </label>
             <select
               id="hero-variant"
-              value={carVariant}
+              value={variant}
               disabled={!model || loadingVariants}
-              onChange={(e) => setCarVariant(e.target.value)}
+              onChange={(e) => setVariant(e.target.value)}
               className={`${selectCls} disabled:opacity-50`}
               style={{ borderRadius: "var(--radius)" }}
             >
