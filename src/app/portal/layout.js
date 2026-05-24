@@ -7,7 +7,8 @@ import {
   MessageSquare, 
   BarChart2, 
   Package, 
-  CreditCard, 
+  CreditCard,
+  Zap,
   Settings, 
   LogOut,
   ExternalLink,
@@ -28,6 +29,7 @@ const links = [
   { href: "/portal/inventory", label: "Inventory", Icon: Package },
   { href: "/portal/leads", label: "Leads", Icon: MessageSquare, badge: "New" },
   { href: "/portal/analytics", label: "Analytics", Icon: BarChart2 },
+  { href: "/portal/boosts", label: "Boosts", Icon: Zap },
   { href: "/portal/subscription", label: "Plans", Icon: CreditCard },
   { href: "/portal/profile", label: "Settings", Icon: Settings },
 ];
@@ -125,6 +127,11 @@ export default function PortalLayout({ children }) {
       commandMatches.map(([, key, value]) => [key.toLowerCase(), value.replace(/^"|"$/g, "")])
     );
 
+    if (lower.includes("boost")) {
+      router.push("/portal/boosts");
+      setDrawerOpen(false);
+      return;
+    }
     if (lower.includes("plan") || lower.includes("subscription")) {
       router.push("/portal/subscription");
       setDrawerOpen(false);
@@ -251,6 +258,7 @@ export default function PortalLayout({ children }) {
              <HeaderNavLink href="/portal/inventory" label="Inventory" Icon={Package} pathname={path} />
              <HeaderNavLink href="/portal/leads" label="Leads" Icon={MessageSquare} pathname={path} />
              <HeaderNavLink href="/portal/analytics" label="Analytics" Icon={BarChart2} pathname={path} />
+             <HeaderNavLink href="/portal/boosts" label="Boosts" Icon={Zap} pathname={path} />
              <HeaderNavLink href="/portal/profile" label="Settings" Icon={Settings} pathname={path} />
            </nav>
          </div>

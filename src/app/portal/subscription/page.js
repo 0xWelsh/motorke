@@ -5,6 +5,7 @@ import {
   DEALER_BILLING_ACTIVE,
   DEALER_PRICING_EARLY_ACCESS,
 } from "@/lib/dealer-pricing";
+import { getOrCreateBoostBalance } from "@/lib/dealer-boosts";
 import { getSupportEmail } from "@/lib/site-contact";
 import { Gift, Sparkles } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -21,7 +22,7 @@ export default async function SubscriptionPage() {
 
   const dealerId = session.user.dealerId;
 
-  const [liveCarCount, subscription] = await Promise.all([
+  const [liveCarCount, subscription, boostBalanceRow] = await Promise.all([
     db.car.count({
       where: { dealerId, available: true },
     }),
@@ -29,6 +30,7 @@ export default async function SubscriptionPage() {
       where: { dealerId },
       select: { plan: true, status: true, endDate: true },
     }),
+    getOrCreateBoostBalance(dealerId),
   ]);
 
   const support = getSupportEmail();
@@ -91,7 +93,13 @@ export default async function SubscriptionPage() {
         </div>
       )}
 
-      <DealerBillingPlans liveCarCount={liveCarCount} />
+      <DealerBillingPlans
+        liveCarCount={liveCarCount}
+        boostBalance={{
+          spotlight7d: boostBalanceRow.spotlight7d,
+          hotBadge7d: boostBalanceRow.hotBadge7d,
+        }}
+      />
     </div>
   );
 }

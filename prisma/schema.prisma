@@ -106,10 +106,13 @@ model Dealer {
   lng          Float?
   verified     Boolean              @default(false)
   featured     Boolean              @default(false)
-  boostScore   Int                  @default(0)
-  createdAt    DateTime             @default(now())
-  updatedAt    DateTime             @updatedAt
-  cars         Car[]
+  boostScore      Int                  @default(0)
+  dealerLiftUntil DateTime?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  cars            Car[]
+  boostBalance    DealerBoostBalance?
+  boostEvents     ListingBoostEvent[]
   branches     DealerBranch[]
   leads        Lead[]
   reviews      DealerReview[]
@@ -184,7 +187,9 @@ model Car {
   featured            Boolean            @default(false)
   featuredWeight      Int                @default(0)
   spotlightUntil      DateTime?
+  hotBadgeUntil       DateTime?
   views               Int                @default(0)
+  boostEvents         ListingBoostEvent[]
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
   branchId            String?
@@ -338,6 +343,39 @@ model MarketingEvent {
   @@index([name, createdAt])
   @@index([userId, createdAt])
   @@map("marketing_events")
+}
+
+model DealerBoostBalance {
+  id           String   @id @default(cuid())
+  dealerId     String   @unique
+  spotlight7d  Int      @default(0)
+  spotlight30d Int      @default(0)
+  hotBadge7d   Int      @default(0)
+  dealerLift14d Int     @default(0)
+  periodStart  DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  dealer       Dealer   @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+
+  @@map("dealer_boost_balances")
+}
+
+model ListingBoostEvent {
+  id        String   @id @default(cuid())
+  dealerId  String
+  carId     String?
+  boostType String
+  days      Int
+  endsAt    DateTime
+  source    String   @default("portal")
+  charged   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  dealer    Dealer   @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+  car       Car?     @relation(fields: [carId], references: [id], onDelete: SetNull)
+
+  @@index([dealerId, createdAt(sort: Desc)])
+  @@index([carId])
+  @@map("listing_boost_events")
 }
 
 model Subscription {

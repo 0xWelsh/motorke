@@ -468,9 +468,11 @@ export default async function PortalPage({ searchParams }) {
               </span>
               <h3 className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-700">Boost your listings</h3>
             </div>
-            <p className="mt-2 text-[12px] font-medium text-slate-600">Spotlight and boost pricing is on the billing page. Purchases open when billing goes live.</p>
-            <Link href="/portal/subscription" className="mt-3 inline-flex w-full justify-center bg-[#2F855A] px-3 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-white hover:bg-[#276749]">
-              View plans &amp; boosts
+            <p className="mt-2 text-[12px] font-medium text-slate-600">
+              Apply Spotlight, Hot badge, or Dealer lift now. No charge during early access.
+            </p>
+            <Link href="/portal/boosts" className="mt-3 inline-flex w-full justify-center bg-[#2F855A] px-3 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-white hover:bg-[#276749]">
+              Open boosts
             </Link>
           </div>
         </aside>

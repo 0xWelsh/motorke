@@ -11,6 +11,9 @@ import InventoryToggle from "@/components/InventoryToggle";
 import { isInSoldGracePeriod } from "@/lib/car-sold-status";
 import PortalInventoryFilters from "@/components/PortalInventoryFilters";
 import InventorySharePrompt from "@/components/InventorySharePrompt";
+import DealerBoostApply from "@/components/DealerBoostApply";
+import { isActiveSpotlight } from "@/lib/spotlight";
+import { isActiveHotBadge } from "@/lib/hot-badge";
 import { 
   Plus, 
   Car as CarIcon, 
@@ -352,7 +355,17 @@ export default async function InventoryPage({ searchParams }) {
                   }`}>
                     {car.available ? "Live" : isInSoldGracePeriod(car) ? "Sold" : "Hidden"}
                   </span>
-                  {car.featured && (
+                  {isActiveSpotlight(car) && (
+                    <span className="bg-[#b91c1c] text-white text-[11px] uppercase font-black tracking-[0.15em] font-semibold px-3 py-1 rounded">
+                      Spotlight
+                    </span>
+                  )}
+                  {isActiveHotBadge(car) && (
+                    <span className="bg-orange-500 text-white text-[11px] uppercase font-black tracking-[0.15em] font-semibold px-3 py-1 rounded">
+                      Hot
+                    </span>
+                  )}
+                  {car.featured && !isActiveSpotlight(car) && (
                     <span className="bg-amber-100 text-amber-900 text-[11px] uppercase font-black tracking-[0.15em] font-semibold px-3 py-1 rounded">
                       Featured
                     </span>
@@ -409,6 +422,15 @@ export default async function InventoryPage({ searchParams }) {
                     soldAt={car.soldAt?.toISOString?.() ?? car.soldAt ?? null}
                   />
                 </div>
+                {car.available ? (
+                  <DealerBoostApply
+                    carId={car.id}
+                    carLabel={`${car.year} ${car.make} ${car.model}`}
+                    spotlightActive={isActiveSpotlight(car)}
+                    hotActive={isActiveHotBadge(car)}
+                    compact
+                  />
+                ) : null}
                 <div className="mt-2.5 sm:mt-3 space-y-2">
                   <div className="grid grid-cols-3 gap-1.5">
                     {SHARE_TEMPLATE_OPTIONS.map((item) => (

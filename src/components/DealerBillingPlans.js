@@ -15,14 +15,16 @@ import {
   suggestPlanForLiveCount,
 } from "@/lib/dealer-pricing";
 import { getSupportEmail } from "@/lib/site-contact";
+import Link from "next/link";
 import { CheckCircle2, Lock, Zap } from "lucide-react";
 
 /**
- * @param {{ liveCarCount?: number, suggestedPlanId?: string }} props
+ * @param {{ liveCarCount?: number, suggestedPlanId?: string, boostBalance?: { spotlight7d: number, hotBadge7d: number } | null }} props
  */
 export default function DealerBillingPlans({
   liveCarCount = 0,
   suggestedPlanId,
+  boostBalance = null,
 }) {
   const support = getSupportEmail();
   const suggested =
@@ -68,12 +70,28 @@ export default function DealerBillingPlans({
           </div>
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-400">Boost credits</p>
-            <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white">—</p>
-            <p className="mt-0.5 text-xs text-slate-500 dark:text-zinc-500">
-              {DEALER_BILLING_ACTIVE
-                ? "Shown here when your plan is active"
-                : "Available when billing opens"}
-            </p>
+            {boostBalance ? (
+              <>
+                <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white tabular-nums">
+                  {boostBalance.spotlight7d} Spotlight · {boostBalance.hotBadge7d} Hot
+                </p>
+                <Link
+                  href="/portal/boosts"
+                  className="mt-1 inline-flex text-xs font-semibold text-[#2F855A] hover:underline"
+                >
+                  Apply boosts
+                </Link>
+              </>
+            ) : (
+              <>
+                <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white">—</p>
+                <p className="mt-0.5 text-xs text-slate-500 dark:text-zinc-500">
+                  {DEALER_BILLING_ACTIVE
+                    ? "Shown here when your plan is active"
+                    : "Use boosts in the portal (no charge yet)"}
+                </p>
+              </>
+            )}
           </div>
         </div>
       </section>

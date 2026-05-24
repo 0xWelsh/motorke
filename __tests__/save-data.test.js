@@ -18,6 +18,9 @@ describe("save-data", () => {
   test("full gallery when not save-data", () => {
     const limits = saveDataGalleryLimits(false, 12);
     expect(limits.preloadAdjacent).toBe(true);
-    expect(limits.mosaicMode).toBe(true);
+    expect(limits.maxThumbs).toBe(12);
+    expect(limits.lightboxAutoplay).toBe(true);
+    // Slideshow + thumbs on all viewports (mosaic grid retired)
+    expect(limits.mosaicMode).toBe(false);
   });
 });

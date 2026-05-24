@@ -7,6 +7,7 @@ import {
   spotlightActivationData,
   spotlightDeactivationData,
 } from "@/lib/spotlight";
+import { revalidateInventoryForCar } from "@/lib/revalidate-inventory";
 
 /**
  * Admin-only: grant or revoke paid Spotlight on a listing (for testing before billing).
@@ -34,6 +35,8 @@ export async function POST(request, { params }) {
     data,
     select: { id: true, make: true, model: true, spotlightUntil: true, featuredWeight: true },
   });
+
+  await revalidateInventoryForCar(id, { refreshHomepage: days > 0 });
 
   return NextResponse.json({ success: true, car });
 }
