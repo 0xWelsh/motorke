@@ -1,8 +1,13 @@
 "use client";
 import { ArrowUp } from "lucide-react";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { getSupportWhatsAppHref } from "@/lib/site-contact";
 
 export default function ScrollToTop() {
+  const pathname = usePathname() || "";
+  const stackedAboveWhatsApp =
+    pathname === "/" && Boolean(getSupportWhatsAppHref());
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleVisibility = () => {
@@ -30,7 +35,11 @@ export default function ScrollToTop() {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-40 w-12 h-12 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center animate-in fade-in"
+          className={`fixed z-40 w-12 h-12 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center animate-in fade-in ${
+            stackedAboveWhatsApp
+              ? "bottom-[5.75rem] right-4 sm:bottom-[6.25rem] sm:right-6"
+              : "bottom-8 right-8"
+          }`}
           aria-label="Scroll to top"
         >
           <ArrowUp size={20} />
