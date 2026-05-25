@@ -153,14 +153,15 @@ export default async function HomePage() {
             </p>
           </div>
 
-          {/* Side-by-Side Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 lg:items-start animate-in fade-in duration-1000 delay-200">
-            <div className="lg:col-span-6 xl:col-span-6 text-center">
-              <div className="w-full max-w-xl mx-auto">
+          {/* Side-by-Side Content Grid — centered block, equal column height on desktop */}
+          <div className="mx-auto w-full max-w-6xl animate-in fade-in duration-1000 delay-200">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 lg:items-stretch">
+            <div className="flex flex-col text-center">
+              <div className="w-full max-w-lg mx-auto">
                 <BrowsePanel />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 mt-5 sm:mt-8 w-full sm:max-w-xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 mt-5 sm:mt-8 w-full max-w-lg mx-auto">
                 <TrackedLink
                   href="/cars"
                   eventName="homepage_explore_inventory_click"
@@ -181,8 +182,8 @@ export default async function HomePage() {
                 </TrackedLink>
               </div>
 
-              {/* Find your car + Quick compare — side by side, row under hot deals on desktop */}
-              <div className="mt-6 sm:mt-7 grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-xl md:max-w-none mx-auto lg:max-w-none items-stretch">
+              {/* Find your car + Quick compare — side by side, centered under CTAs */}
+              <div className="mt-6 sm:mt-7 grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl mx-auto items-stretch">
                 <HomepageHeroCarFinder embedded />
                 <div
                   className="flex h-full flex-col p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70 text-center md:text-left"
@@ -205,7 +206,7 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-5 max-w-xl mx-auto lg:max-w-none">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-5 max-w-lg mx-auto">
                 {[
                   { label: "Verified dealers", value: `${dealers.length}+` },
                   { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
@@ -219,11 +220,13 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="hidden lg:block lg:col-span-6 xl:col-span-6 lg:pl-3 xl:pl-5">
-              <HeroGridShowcase 
-                cars={heroCars.length >= 2 ? heroCars : spotlightEnhanced.slice(0, 6)} 
-                reviews={highlightReviews} 
+            <div className="hidden lg:flex lg:flex-col lg:min-h-0 lg:h-full">
+              <HeroGridShowcase
+                fillHeight
+                cars={heroCars.length >= 2 ? heroCars : spotlightEnhanced.slice(0, 6)}
+                reviews={highlightReviews}
               />
+            </div>
             </div>
           </div>
         </div>

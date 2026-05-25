@@ -7,7 +7,7 @@ import { Star, Quote, ArrowRight, Flame } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { carListingPath } from "@/lib/car-listing-url";
 
-export default function HeroGridShowcase({ cars = [], reviews = [] }) {
+export default function HeroGridShowcase({ cars = [], reviews = [], fillHeight = false }) {
   const [carIndex, setCarIndex] = useState(0);
   const [reviewIndex, setReviewIndex] = useState(0);
 
@@ -35,13 +35,16 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
   const mainVariant = [mainCar.model, mainCar.variant].filter(Boolean).join(", ");
   const secondaryVariant = [secondaryCar.model, secondaryCar.variant].filter(Boolean).join(", ");
 
+  const gridClass = fillHeight
+    ? "grid grid-cols-2 gap-2 w-full h-full min-h-[480px] animate-in fade-in slide-in-from-right-8 duration-1000"
+    : "grid grid-cols-1 md:grid-cols-2 gap-2 w-full h-full min-h-[380px] max-h-[520px] animate-in fade-in slide-in-from-right-8 duration-1000";
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full h-full min-h-[380px] max-h-[520px] animate-in fade-in slide-in-from-right-8 duration-1000">
-      
+    <div className={gridClass}>
       {/* Primary Hot Deal - Large Vertical Card with Full Frame Image */}
-      <Link 
+      <Link
         href={carListingPath(mainCar)}
-        className="relative group overflow-hidden bg-black shadow-xl rounded-none flex flex-col transition-all hover:ring-1 hover:ring-[#38A169]/50"
+        className="relative group overflow-hidden bg-black shadow-xl rounded-none flex flex-col h-full min-h-0 transition-all hover:ring-1 hover:ring-[#38A169]/50"
       >
         <div className="absolute inset-0 z-0 transition-transform duration-1000 group-hover:scale-110">
           <Image 
@@ -91,12 +94,11 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
       </Link>
 
       {/* Right Column - Two Square-ish Cards */}
-      <div className="grid grid-rows-2 gap-2">
-        
+      <div className={`grid gap-2 min-h-0 ${fillHeight ? "grid-rows-2 h-full" : "grid-rows-2"}`}>
         {/* Secondary Hot Deal */}
-        <Link 
+        <Link
           href={carListingPath(secondaryCar)}
-          className="relative group overflow-hidden bg-[#111111] border border-zinc-900 shadow-lg rounded-none transition-all hover:bg-zinc-800"
+          className="relative group overflow-hidden bg-[#111111] border border-zinc-900 shadow-lg rounded-none transition-all hover:bg-zinc-800 h-full min-h-0"
         >
           <div className="absolute inset-0 z-0">
             <Image 
@@ -125,7 +127,7 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
         </Link>
 
         {/* Reviews Slideshow */}
-        <div className="relative bg-[#111111] border border-zinc-900 shadow-lg rounded-none overflow-hidden p-4 md:p-5 flex flex-col">
+        <div className="relative bg-[#111111] border border-zinc-900 shadow-lg rounded-none overflow-hidden p-4 md:p-5 flex flex-col h-full min-h-0">
           <Quote className="absolute top-4 right-5 w-12 h-12 text-white/5 pointer-events-none" />
           <div className="relative z-10 flex flex-col h-full">
             <AnimatePresence mode="wait">
