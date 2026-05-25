@@ -10,11 +10,11 @@ const selectCls =
 
 const labelCls = "text-[9px] font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400";
 
-export default function HomepageHeroCarFinder({ className = "" }) {
+export default function HomepageHeroCarFinder({ embedded = false }) {
   const router = useRouter();
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
-  const [variant, setVariant] = useState("");
+  const [carVariant, setCarVariant] = useState("");
   const [bodyType, setBodyType] = useState("");
   const [county, setCounty] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -28,7 +28,7 @@ export default function HomepageHeroCarFinder({ className = "" }) {
       setModels([]);
       setModel("");
       setVariants([]);
-      setVariant("");
+      setCarVariant("");
       return;
     }
 
@@ -55,7 +55,7 @@ export default function HomepageHeroCarFinder({ className = "" }) {
   useEffect(() => {
     if (!make || !model) {
       setVariants([]);
-      setVariant("");
+      setCarVariant("");
       return;
     }
 
@@ -89,25 +89,41 @@ export default function HomepageHeroCarFinder({ className = "" }) {
     if (bodyType) params.set("bodyType", bodyType);
     if (county) params.set("county", county);
     if (maxPrice) params.set("maxPrice", maxPrice);
-    if (variant.trim()) params.set("search", variant.trim());
+    if (carVariant.trim()) params.set("search", carVariant.trim());
     const q = params.toString();
     router.push(q ? `/cars?${q}` : "/cars");
   }
 
+  const fieldGrid = embedded
+    ? "grid grid-cols-1 sm:grid-cols-2 gap-2.5"
+    : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3";
+
   return (
     <div
-      className={`w-full rounded-xl border border-slate-200/90 bg-white/95 dark:bg-[#111111]/92 p-4 sm:p-5 shadow-[0_12px_40px_-24px_rgba(0,0,0,0.15)] dark:border-zinc-800 dark:shadow-[0_12px_40px_-24px_rgba(0,0,0,0.4)] ${className}`}
+      className={
+        embedded
+          ? "h-full w-full rounded-xl border border-slate-200/90 bg-white/95 p-3 sm:p-4 shadow-sm dark:border-zinc-800 dark:bg-[#111111]/92"
+          : "mt-8 sm:mt-10 lg:mt-12 w-full max-w-4xl mx-auto rounded-2xl border border-slate-200/80 bg-white/95 dark:bg-[#111111]/95 p-4 sm:p-5 md:p-6 shadow-[0_20px_50px_-28px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] dark:border-zinc-800"
+      }
       style={{ borderRadius: "var(--radius)" }}
     >
-      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#38A169] mb-1 text-center">
+      <p
+        className={`text-[10px] font-black uppercase tracking-[0.2em] text-[#38A169] mb-1 ${
+          embedded ? "text-left" : "text-center"
+        }`}
+      >
         Find your car
       </p>
-      <h2 className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white text-center mb-4 sm:mb-5">
+      <h2
+        className={`font-bold text-[#111827] dark:text-white mb-3 sm:mb-4 ${
+          embedded ? "text-base text-left" : "text-lg sm:text-xl text-center mb-4 sm:mb-5"
+        }`}
+      >
         What are you looking for?
       </h2>
 
-      <form onSubmit={handleSearch} className="space-y-3 sm:space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <form onSubmit={handleSearch} className="space-y-3">
+        <div className={fieldGrid}>
           <div className="space-y-1">
             <label htmlFor="hero-make" className={labelCls}>
               Brand
@@ -118,7 +134,7 @@ export default function HomepageHeroCarFinder({ className = "" }) {
               onChange={(e) => {
                 setMake(e.target.value);
                 setModel("");
-                setVariant("");
+                setCarVariant("");
               }}
               className={selectCls}
               style={{ borderRadius: "var(--radius)" }}
@@ -142,7 +158,7 @@ export default function HomepageHeroCarFinder({ className = "" }) {
               disabled={!make || loadingModels}
               onChange={(e) => {
                 setModel(e.target.value);
-                setVariant("");
+                setCarVariant("");
               }}
               className={`${selectCls} disabled:opacity-50`}
               style={{ borderRadius: "var(--radius)" }}
@@ -162,9 +178,9 @@ export default function HomepageHeroCarFinder({ className = "" }) {
             </label>
             <select
               id="hero-variant"
-              value={variant}
+              value={carVariant}
               disabled={!model || loadingVariants}
-              onChange={(e) => setVariant(e.target.value)}
+              onChange={(e) => setCarVariant(e.target.value)}
               className={`${selectCls} disabled:opacity-50`}
               style={{ borderRadius: "var(--radius)" }}
             >

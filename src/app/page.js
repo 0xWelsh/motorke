@@ -22,7 +22,7 @@ import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
 import { getHomepageData } from "@/lib/homepage-cache";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 
-const HERO_BACKGROUND = "/images/mercedes.jpg";
+const HERO_BACKGROUND = "/images/backgrounds/hero-section-background.jpeg";
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
 
 /** Pick the first usable car photo from a list to use as a section
@@ -136,57 +136,37 @@ export default async function HomePage() {
           __html: JSON.stringify(homeStructuredData(origin)),
         }}
       />
-      {/* Hero — taller, fuller layout; listings visible from md+ */}
-      <section className="relative overflow-hidden border-b border-slate-200/80 dark:border-zinc-900 bg-slate-100/90 dark:bg-[#080808] min-h-[calc(100dvh-7.5rem)] lg:min-h-[min(880px,92dvh)]">
-        <div className="absolute inset-0 pointer-events-none">
-          <Image
-            src={HERO_BACKGROUND}
-            fill
-            className="object-cover object-[center_40%]"
-            alt=""
-            priority
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/92 via-white/78 to-white/95 dark:from-[#0a0a0a]/94 dark:via-[#0a0a0a]/82 dark:to-[#0a0a0a]/96" />
-          <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/55 to-white/25 dark:from-[#0a0a0a]/92 dark:via-[#0a0a0a]/70 dark:to-[#0a0a0a]/35 lg:to-transparent" />
-        </div>
-
-        <div className="home-shell relative z-10 flex flex-col py-5 sm:py-7 md:py-9 lg:py-10 min-h-[inherit]">
-          <div className="mb-5 sm:mb-6 text-center lg:text-left animate-in fade-in slide-in-from-bottom-6 duration-1000">
-            <h1 className="text-[2.15rem] sm:text-5xl md:text-[3.35rem] lg:text-[3.75rem] font-bold text-[#111827] dark:text-white leading-[0.94] tracking-tight mb-3 max-w-4xl mx-auto lg:mx-0">
-              Buy cars with{" "}
-              <span className="editorial-hero-accent text-[#38A169] block sm:inline">
-                dealer-level clarity.
-              </span>
+      {/* Dynamic Hero Section */}
+      <section className="relative pt-3 pb-6 sm:pt-4 sm:pb-8 md:pt-6 md:pb-10 lg:pt-8 lg:pb-12 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
+        <div className="home-shell relative z-10">
+          
+          {/* Page Header - Full Width */}
+          <div className="mb-5 sm:mb-6 md:mb-8 lg:mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-[#111827] dark:text-white leading-[0.92] tracking-tight mb-4 max-w-4xl mx-auto">
+              Buy cars with<br />
+              <span className="editorial-hero-accent text-[#38A169]">dealer-level clarity.</span>
             </h1>
-            <p className="text-sm sm:text-base md:text-lg text-[#2D3748] dark:text-slate-300 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">
-              Verified Kenyan inventory, transparent running costs, and direct dealer contact — compare up to three cars in minutes.
+
+            <p className="text-base md:text-lg lg:text-[1.15rem] text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto">
+              Find verified Kenyan inventory with transparent ownership costs in minutes.
+              Compare up to three cars, inspect real running-cost and road-readiness signals, then contact real dealers directly.
             </p>
           </div>
 
-          <div className="grid flex-1 grid-cols-1 lg:grid-cols-2 gap-5 md:gap-6 lg:gap-8 lg:items-stretch animate-in fade-in duration-1000 delay-150">
-            {(heroCars.length >= 2 || spotlightEnhanced.length >= 2) && (
-              <div className="order-1 lg:order-2 flex min-h-[340px] sm:min-h-[400px] lg:min-h-[520px]">
-                <HeroGridShowcase
-                  className="flex-1 w-full"
-                  cars={heroCars.length >= 2 ? heroCars : spotlightEnhanced.slice(0, 6)}
-                  reviews={highlightReviews}
-                />
-              </div>
-            )}
-
-            <div className="order-2 lg:order-1 flex flex-col gap-4 sm:gap-5 text-center lg:text-left">
-              <div className="w-full rounded-xl border border-slate-200/90 bg-white/95 p-3 sm:p-4 shadow-[0_12px_40px_-24px_rgba(0,0,0,0.15)] dark:border-zinc-800 dark:bg-[#111111]/92 dark:shadow-[0_12px_40px_-24px_rgba(0,0,0,0.45)]">
-                <BrowsePanel compact />
+          {/* Side-by-Side Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 lg:items-start animate-in fade-in duration-1000 delay-200">
+            <div className="lg:col-span-6 xl:col-span-6 text-center">
+              <div className="w-full max-w-xl mx-auto">
+                <BrowsePanel />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 mt-5 sm:mt-8 w-full sm:max-w-xl mx-auto">
                 <TrackedLink
                   href="/cars"
                   eventName="homepage_explore_inventory_click"
                   eventPayload={{ area: "hero" }}
-                  className="h-11 sm:h-12 w-full inline-flex items-center justify-center bg-[#38A169] hover:bg-[#2F855A] text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.99] active:scale-[0.97]"
-                  style={{ borderRadius: "var(--radius)" }}
+                  className="h-12 w-full inline-flex items-center justify-center bg-[#38A169] hover:bg-[#2F855A] text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
+                  style={{ borderRadius: 'var(--radius)' }}
                 >
                   Explore Inventory
                 </TrackedLink>
@@ -194,55 +174,71 @@ export default async function HomePage() {
                   href="/compare"
                   eventName="homepage_compare_cars_click"
                   eventPayload={{ area: "hero" }}
-                  className="h-11 sm:h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#38A169] dark:hover:border-[#38A169]/60"
-                  style={{ borderRadius: "var(--radius)" }}
+                  className="h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#111827] dark:hover:border-white"
+                  style={{ borderRadius: 'var(--radius)' }}
                 >
                   Compare Cars
                 </TrackedLink>
               </div>
 
-              <HomepageHeroCarFinder className="mt-0" />
-
-              <div
-                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3.5 sm:p-4 border border-slate-200/90 bg-white/90 dark:bg-[#111111]/80 dark:border-zinc-800 rounded-xl"
-                style={{ borderRadius: "var(--radius)" }}
-              >
-                <p className="text-sm text-slate-600 dark:text-slate-300 leading-snug sm:text-left">
-                  <span className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">
-                    Quick compare
-                  </span>
-                  Specs, annual TCO, and road readiness in one sheet.
-                </p>
-                <TrackedLink
-                  href="/compare"
-                  eventName="homepage_quick_compare_click"
-                  eventPayload={{ area: "hero_card" }}
-                  className="inline-flex shrink-0 items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors"
+              {/* Find your car + Quick compare — side by side, row under hot deals on desktop */}
+              <div className="mt-6 sm:mt-7 grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-xl md:max-w-none mx-auto lg:max-w-none items-stretch">
+                <HomepageHeroCarFinder embedded />
+                <div
+                  className="flex h-full flex-col p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70 text-center md:text-left"
+                  style={{ borderRadius: "var(--radius)" }}
                 >
-                  Start comparing <ArrowRight className="w-4 h-4" />
-                </TrackedLink>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">
+                    Quick compare
+                  </p>
+                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4 flex-1">
+                    Side-by-side specs, annual TCO, and road readiness in one clean sheet.
+                  </p>
+                  <TrackedLink
+                    href="/compare"
+                    eventName="homepage_quick_compare_click"
+                    eventPayload={{ area: "hero_card" }}
+                    className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors justify-center md:justify-start w-full"
+                  >
+                    Start comparing <ArrowRight className="w-4 h-4" />
+                  </TrackedLink>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-5 max-w-xl mx-auto lg:max-w-none">
+                {[
+                  { label: "Verified dealers", value: `${dealers.length}+` },
+                  { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
+                  { label: "Updated", value: "Daily" },
+                ].map((item) => (
+                  <div key={item.label} className="p-3 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70 text-center" style={{ borderRadius: "var(--radius)" }}>
+                    <p className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white">{item.value}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mt-1">{item.label}</p>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
 
-          <div className="mt-5 sm:mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
-            {[
-              { label: "Verified dealers", value: `${dealers.length}+` },
-              { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
-              { label: "Updated", value: "Daily" },
-              { label: "Duty calculator", value: "Free" },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="p-3 sm:p-3.5 border border-slate-200/90 bg-white/92 dark:bg-[#111111]/85 dark:border-zinc-800 text-center rounded-xl shadow-sm"
-              >
-                <p className="text-base sm:text-lg font-bold text-[#111827] dark:text-white">{item.value}</p>
-                <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mt-1">
-                  {item.label}
-                </p>
-              </div>
-            ))}
+            <div className="hidden lg:block lg:col-span-6 xl:col-span-6 lg:pl-3 xl:pl-5">
+              <HeroGridShowcase 
+                cars={heroCars.length >= 2 ? heroCars : spotlightEnhanced.slice(0, 6)} 
+                reviews={highlightReviews} 
+              />
+            </div>
           </div>
+        </div>
+
+        {/* Mercedes Brand Background Texture */}
+        <div className="absolute inset-0 -z-0 overflow-hidden pointer-events-none">
+          <Image
+            src={HERO_BACKGROUND}
+            fill
+            className="object-cover opacity-[0.2] sm:opacity-[0.16] lg:opacity-[0.12]"
+            alt=""
+            priority
+          />
+          {/* Softer left wash on small screens so the photo shows through; text stays readable */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white/88 via-white/45 dark:from-[#0a0a0a]/88 dark:via-[#0a0a0a]/48 to-transparent lg:hidden" />
         </div>
       </section>
 

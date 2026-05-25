@@ -7,7 +7,7 @@ import { Star, Quote, ArrowRight, Flame } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { carListingPath } from "@/lib/car-listing-url";
 
-export default function HeroGridShowcase({ cars = [], reviews = [], className = "" }) {
+export default function HeroGridShowcase({ cars = [], reviews = [] }) {
   const [carIndex, setCarIndex] = useState(0);
   const [reviewIndex, setReviewIndex] = useState(0);
 
@@ -36,9 +36,7 @@ export default function HeroGridShowcase({ cars = [], reviews = [], className = 
   const secondaryVariant = [secondaryCar.model, secondaryCar.variant].filter(Boolean).join(", ");
 
   return (
-    <div
-      className={`grid grid-cols-1 md:grid-cols-2 gap-2 w-full h-full min-h-[340px] sm:min-h-[400px] lg:min-h-[520px] lg:max-h-none animate-in fade-in slide-in-from-right-8 duration-1000 ${className}`}
-    >
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full h-full min-h-[380px] max-h-[520px] animate-in fade-in slide-in-from-right-8 duration-1000">
       
       {/* Primary Hot Deal - Large Vertical Card with Full Frame Image */}
       <Link 
