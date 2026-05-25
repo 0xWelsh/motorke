@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { isTransientDbError, settleNamed, withDbRetry } from "@/lib/db-retry";
 import { unstable_cache } from "next/cache";
 import { analyzePrice } from "@/lib/market";
 import { activeSpotlightWhere, spotlightCarInclude } from "@/lib/spotlight";
@@ -52,8 +53,8 @@ async function loadHomepageBase() {
   const week = new Date();
   week.setDate(week.getDate() - 7);
 
-  const [featured, hotThisWeek, newArrivals, dealers, newsItems, dealerReviews, carReviews] =
-    await Promise.all([
+  const { data, failures } = await settleNamed({
+    featured: () =>
       db.car.findMany({
         where: { available: true, featured: true },
         include: {
@@ -63,6 +64,7 @@ async function loadHomepageBase() {
         take: 8,
         orderBy: { createdAt: "desc" },
       }),
+    hotThisWeek: () =>
       db.car.findMany({
         where: { available: true },
         include: {
@@ -72,6 +74,7 @@ async function loadHomepageBase() {
         },
         take: 100,
       }),
+    newArrivals: () =>
       db.car.findMany({
         where: { available: true, createdAt: { gte: week } },
         include: {
@@ -81,6 +84,7 @@ async function loadHomepageBase() {
         take: 8,
         orderBy: { createdAt: "desc" },
       }),
+    dealers: () =>
       db.dealer.findMany({
         where: { OR: [{ featured: true }, { verified: true }] },
         include: {
@@ -95,6 +99,7 @@ async function loadHomepageBase() {
           { createdAt: "desc" },
         ],
       }),
+    newsItems: () =>
       db.article.findMany({
         orderBy: { publishedAt: "desc" },
         take: 8,
@@ -106,6 +111,7 @@ async function loadHomepageBase() {
           publishedAt: true,
         },
       }),
+    dealerReviews: () =>
       db.dealerReview.findMany({
         where: { comment: { not: null }, rating: { gte: 4 } },
         include: {
@@ -115,6 +121,7 @@ async function loadHomepageBase() {
         take: 10,
         orderBy: { createdAt: "desc" },
       }),
+    carReviews: () =>
       db.carReview.findMany({
         where: { comment: { not: null }, rating: { gte: 4 } },
         include: {
@@ -130,7 +137,24 @@ async function loadHomepageBase() {
         take: 10,
         orderBy: { createdAt: "desc" },
       }),
-    ]);
+  });
+
+  if (failures.length) {
+    const summary = failures
+      .map((f) => `${f.key}: ${f.reason?.message || f.reason}`)
+      .join("; ");
+    console.warn("[homepage-cache] partial base load:", summary);
+  }
+
+  const {
+    featured,
+    hotThisWeek,
+    newArrivals,
+    dealers,
+    newsItems,
+    dealerReviews,
+    carReviews,
+  } = data;
 
   const combinedReviews = [
     ...(dealerReviews || []).map((r) => ({ ...r, source: "dealer" })),
@@ -144,7 +168,30 @@ async function loadHomepageBase() {
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 12);
 
-  return { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews: combinedReviews };
+  const payload = {
+    featured,
+    hotThisWeek,
+    newArrivals,
+    dealers,
+    newsItems,
+    highlightReviews: combinedReviews,
+  };
+
+  const hasContent =
+    payload.featured?.length ||
+    payload.hotThisWeek?.length ||
+    payload.newArrivals?.length ||
+    payload.dealers?.length;
+
+  if (
+    !hasContent &&
+    failures.length > 0 &&
+    failures.every((f) => isTransientDbError(f.reason))
+  ) {
+    throw failures[0].reason;
+  }
+
+  return payload;
 }
 
 async function enrichHomepage(base) {
@@ -166,12 +213,17 @@ async function enrichHomepage(base) {
   const baseSpotlight =
     hotSorted.length > 0 ? hotSorted : featured?.length ? featured : newArrivals;
 
-  const paidSpotlightRaw = await db.car.findMany({
-    where: activeSpotlightWhere(),
-    include: spotlightCarInclude(),
-    orderBy: [{ featuredWeight: "desc" }, { spotlightUntil: "asc" }],
-    take: 8,
-  });
+  let paidSpotlightRaw = [];
+  try {
+    paidSpotlightRaw = await db.car.findMany({
+      where: activeSpotlightWhere(),
+      include: spotlightCarInclude(),
+      orderBy: [{ featuredWeight: "desc" }, { spotlightUntil: "asc" }],
+      take: 8,
+    });
+  } catch (err) {
+    console.warn("[homepage-cache] paid spotlight load failed:", err?.message || err);
+  }
 
   const mostViewed = [...hotCandidatesWithAnalysis]
     .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
@@ -222,7 +274,7 @@ async function enrichHomepage(base) {
 const getCachedData = unstable_cache(
   async () => {
     try {
-      return await loadHomepageBase();
+      return await withDbRetry(() => loadHomepageBase(), { retries: 2, baseDelayMs: 600 });
     } catch (err) {
       console.error("[homepage-cache] base load failed:", err?.message || err);
       return {
@@ -235,7 +287,7 @@ const getCachedData = unstable_cache(
       };
     }
   },
-  ["homepage-minimal-v5"],
+  ["homepage-minimal-v6"],
   { revalidate: 300, tags: ["homepage"] }
 );
 
@@ -250,13 +302,14 @@ const getCachedHomeEnriched = unstable_cache(
       if (!hasCars && !base.dealers?.length) {
         return { ...EMPTY_HOMEPAGE_DATA, ...base };
       }
-      return await enrichHomepage(base);
+      return await withDbRetry(() => enrichHomepage(base), { retries: 1, baseDelayMs: 500 });
     } catch (err) {
       console.error("[homepage-cache] enrich failed:", err?.message || err);
-      return EMPTY_HOMEPAGE_DATA;
+      const base = await getCachedData().catch(() => ({}));
+      return { ...EMPTY_HOMEPAGE_DATA, ...base };
     }
   },
-  ["homepage-enriched-v4"],
+  ["homepage-enriched-v5"],
   { revalidate: 120, tags: ["homepage"] }
 );
 
