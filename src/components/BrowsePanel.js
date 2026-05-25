@@ -152,7 +152,7 @@ function LocationCard({ name }) {
   );
 }
 
-export default function BrowsePanel() {
+export default function BrowsePanel({ compact = false }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [loadingLoc, setLoadingLoc] = useState(false);
@@ -182,9 +182,11 @@ export default function BrowsePanel() {
   };
 
   return (
-    <div className="w-full space-y-3 sm:space-y-4 pt-2">
-      {/* Search Bar with Geolocation */}
-      <form onSubmit={handleSearch} className="relative mb-6 sm:mb-8 w-full group">
+    <div className={`w-full space-y-3 ${compact ? "sm:space-y-3" : "sm:space-y-4 pt-2"}`}>
+      <form
+        onSubmit={handleSearch}
+        className={`relative w-full group ${compact ? "mb-3 sm:mb-4" : "mb-6 sm:mb-8"}`}
+      >
         <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#38A169] transition-colors" />
         <input 
           value={query}

@@ -10,7 +10,7 @@ const selectCls =
 
 const labelCls = "text-[9px] font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400";
 
-export default function HomepageHeroCarFinder() {
+export default function HomepageHeroCarFinder({ className = "" }) {
   const router = useRouter();
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
@@ -96,7 +96,7 @@ export default function HomepageHeroCarFinder() {
 
   return (
     <div
-      className="mt-8 sm:mt-10 lg:mt-12 w-full max-w-4xl mx-auto rounded-2xl border border-slate-200/80 bg-white/95 dark:bg-[#111111]/95 p-4 sm:p-5 md:p-6 shadow-[0_20px_50px_-28px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] dark:border-zinc-800"
+      className={`w-full rounded-xl border border-slate-200/90 bg-white/95 dark:bg-[#111111]/92 p-4 sm:p-5 shadow-[0_12px_40px_-24px_rgba(0,0,0,0.15)] dark:border-zinc-800 dark:shadow-[0_12px_40px_-24px_rgba(0,0,0,0.4)] ${className}`}
       style={{ borderRadius: "var(--radius)" }}
     >
       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#38A169] mb-1 text-center">
