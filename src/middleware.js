@@ -33,7 +33,9 @@ function isMaintenanceAllowed(pathname) {
   if (pathname.startsWith("/portal")) return true;
   if (pathname === "/login" || pathname === "/signup") return true;
   if (pathname === "/duty" || pathname.startsWith("/duty/")) return true;
-  if (pathname === "/robots.txt" || pathname === "/sitemap.xml") return true;
+  if (pathname === "/robots.txt" || pathname === "/sitemap.xml" || pathname === "/BingSiteAuth.xml") {
+    return true;
+  }
   if (pathname === "/manifest.json" || pathname === "/manifest.webmanifest") return true;
   if (/^\/(favicon|icon|apple-icon|android-chrome|logo|brand)/i.test(pathname)) return true;
   if (/\.(?:png|jpe?g|gif|svg|webp|avif|ico|css|js|map|txt|xml|json|woff2?|ttf|otf)$/i.test(pathname)) {
