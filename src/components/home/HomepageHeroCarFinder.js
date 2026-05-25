@@ -10,7 +10,7 @@ const selectCls =
 
 const labelCls = "text-[9px] font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400";
 
-export default function HomepageHeroCarFinder({ embedded = false }) {
+export default function HomepageHeroCarFinder({ embedded = false, className = "" }) {
   const router = useRouter();
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
@@ -102,8 +102,8 @@ export default function HomepageHeroCarFinder({ embedded = false }) {
     <div
       className={
         embedded
-          ? "h-full w-full rounded-xl border border-slate-200/90 bg-white/95 p-3 sm:p-4 shadow-sm dark:border-zinc-800 dark:bg-[#111111]/92"
-          : "mt-8 sm:mt-10 lg:mt-12 w-full max-w-4xl mx-auto rounded-2xl border border-slate-200/80 bg-white/95 dark:bg-[#111111]/95 p-4 sm:p-5 md:p-6 shadow-[0_20px_50px_-28px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] dark:border-zinc-800"
+          ? `h-full w-full rounded-xl border border-slate-200/90 bg-white/95 p-3 sm:p-4 shadow-sm dark:border-zinc-800 dark:bg-[#111111]/92 ${className}`.trim()
+          : `mt-8 sm:mt-10 lg:mt-12 w-full max-w-4xl mx-auto rounded-2xl border border-slate-200/80 bg-white/95 dark:bg-[#111111]/95 p-4 sm:p-5 md:p-6 shadow-[0_20px_50px_-28px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] dark:border-zinc-800 ${className}`.trim()
       }
       style={{ borderRadius: "var(--radius)" }}
     >

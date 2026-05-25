@@ -153,80 +153,91 @@ export default async function HomePage() {
             </p>
           </div>
 
-          {/* Side-by-Side Content Grid — centered block, equal column height on desktop */}
+          {/* Side-by-Side — centered; hot deals keep fixed size; Find your car fills space below them */}
           <div className="mx-auto w-full max-w-6xl animate-in fade-in duration-1000 delay-200">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 lg:items-stretch">
-            <div className="flex flex-col text-center">
-              <div className="w-full max-w-lg mx-auto">
-                <BrowsePanel />
-              </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 lg:items-start">
+              <div className="flex flex-col text-center order-2 lg:order-1">
+                <div className="w-full max-w-lg mx-auto">
+                  <BrowsePanel />
+                </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 mt-5 sm:mt-8 w-full max-w-lg mx-auto">
-                <TrackedLink
-                  href="/cars"
-                  eventName="homepage_explore_inventory_click"
-                  eventPayload={{ area: "hero" }}
-                  className="h-12 w-full inline-flex items-center justify-center bg-[#38A169] hover:bg-[#2F855A] text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
-                  style={{ borderRadius: 'var(--radius)' }}
-                >
-                  Explore Inventory
-                </TrackedLink>
-                <TrackedLink
-                  href="/compare"
-                  eventName="homepage_compare_cars_click"
-                  eventPayload={{ area: "hero" }}
-                  className="h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#111827] dark:hover:border-white"
-                  style={{ borderRadius: 'var(--radius)' }}
-                >
-                  Compare Cars
-                </TrackedLink>
-              </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 mt-5 sm:mt-8 w-full max-w-lg mx-auto">
+                  <TrackedLink
+                    href="/cars"
+                    eventName="homepage_explore_inventory_click"
+                    eventPayload={{ area: "hero" }}
+                    className="h-12 w-full inline-flex items-center justify-center bg-[#38A169] hover:bg-[#2F855A] text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
+                    style={{ borderRadius: "var(--radius)" }}
+                  >
+                    Explore Inventory
+                  </TrackedLink>
+                  <TrackedLink
+                    href="/compare"
+                    eventName="homepage_compare_cars_click"
+                    eventPayload={{ area: "hero" }}
+                    className="h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#111827] dark:hover:border-white"
+                    style={{ borderRadius: "var(--radius)" }}
+                  >
+                    Compare Cars
+                  </TrackedLink>
+                </div>
 
-              {/* Find your car + Quick compare — side by side, centered under CTAs */}
-              <div className="mt-6 sm:mt-7 grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl mx-auto items-stretch">
-                <HomepageHeroCarFinder embedded />
                 <div
-                  className="flex h-full flex-col p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70 text-center md:text-left"
+                  className="mt-6 sm:mt-7 p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70 max-w-lg mx-auto text-center"
                   style={{ borderRadius: "var(--radius)" }}
                 >
                   <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">
                     Quick compare
                   </p>
-                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4 flex-1">
+                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
                     Side-by-side specs, annual TCO, and road readiness in one clean sheet.
                   </p>
                   <TrackedLink
                     href="/compare"
                     eventName="homepage_quick_compare_click"
                     eventPayload={{ area: "hero_card" }}
-                    className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors justify-center md:justify-start w-full"
+                    className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors justify-center w-full"
                   >
                     Start comparing <ArrowRight className="w-4 h-4" />
                   </TrackedLink>
                 </div>
+
+                {/* Mobile / tablet: finder below compare when hot deals are not in this column */}
+                <div className="mt-6 lg:hidden max-w-lg mx-auto w-full">
+                  <HomepageHeroCarFinder embedded />
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-5 max-w-lg mx-auto">
+                  {[
+                    { label: "Verified dealers", value: `${dealers.length}+` },
+                    { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
+                    { label: "Updated", value: "Daily" },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className="p-3 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70 text-center"
+                      style={{ borderRadius: "var(--radius)" }}
+                    >
+                      <p className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white">{item.value}</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mt-1">
+                        {item.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-5 max-w-lg mx-auto">
-                {[
-                  { label: "Verified dealers", value: `${dealers.length}+` },
-                  { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
-                  { label: "Updated", value: "Daily" },
-                ].map((item) => (
-                  <div key={item.label} className="p-3 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70 text-center" style={{ borderRadius: "var(--radius)" }}>
-                    <p className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white">{item.value}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mt-1">{item.label}</p>
-                  </div>
-                ))}
+              <div className="order-1 lg:order-2 flex flex-col gap-4">
+                <div className="shrink-0 w-full max-w-xl mx-auto lg:max-w-none">
+                  <HeroGridShowcase
+                    cars={heroCars.length >= 2 ? heroCars : spotlightEnhanced.slice(0, 6)}
+                    reviews={highlightReviews}
+                  />
+                </div>
+                <div className="hidden lg:block flex-1 min-h-[12rem]">
+                  <HomepageHeroCarFinder embedded className="h-full min-h-[12rem]" />
+                </div>
               </div>
-            </div>
-
-            <div className="hidden lg:flex lg:flex-col lg:min-h-0 lg:h-full">
-              <HeroGridShowcase
-                fillHeight
-                cars={heroCars.length >= 2 ? heroCars : spotlightEnhanced.slice(0, 6)}
-                reviews={highlightReviews}
-              />
-            </div>
             </div>
           </div>
         </div>
