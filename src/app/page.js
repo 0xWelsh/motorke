@@ -20,6 +20,7 @@ import HomepageDutyTeaser from "@/components/home/HomepageDutyTeaser";
 import HomepageHeroCarFinder from "@/components/home/HomepageHeroCarFinder";
 import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
 import { getHomepageData } from "@/lib/homepage-cache";
+import { isActiveListingBoost } from "@/lib/listing-boost";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 
 const HERO_BACKGROUND = "/images/backgrounds/hero-section-background.jpeg";
@@ -51,6 +52,19 @@ function getRotationOffset(size) {
     now.getUTCFullYear() * 1000 +
     Math.floor((Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) - Date.UTC(now.getUTCFullYear(), 0, 0)) / 86400000);
   return (daySeed + slot) % size;
+}
+
+/** Deterministic shuffle for SSR when no boosted listings are available. */
+function shuffleWithSeed(items, seed = 0) {
+  if (!Array.isArray(items) || items.length < 2) return items || [];
+  const arr = [...items];
+  let s = seed || 1;
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    s = (s * 1103515245 + 12345) & 0x7fffffff;
+    const j = s % (i + 1);
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 
 export const metadata = {
@@ -107,16 +121,38 @@ export default async function HomePage() {
     dealers,
     newsItems,
     highlightReviews,
-    spotlightEnhanced,
+    heroBoosted,
+    heroFallback,
     paidSpotlight,
-    hotEnhanced,
     mostViewedEnhanced,
     newEnhanced,
   } = await getHomepageData();
 
-  const heroPool = (hotEnhanced.length > 0 ? hotEnhanced : spotlightEnhanced).slice(0, 12);
-  const heroRotated = rotateList(heroPool, getRotationOffset(heroPool.length));
-  const heroCars = heroRotated.slice(0, 8);
+  const boostedHero = (heroBoosted || []).filter((car) => isActiveListingBoost(car));
+  const fallbackHeroPool =
+    (heroFallback?.length ? heroFallback : null) ||
+    [...(featured || []), ...(newArrivals || [])];
+  const heroSeed = getRotationOffset(fallbackHeroPool.length);
+
+  let heroPool;
+  if (boostedHero.length > 0) {
+    const rotatedBoosted = rotateList(boostedHero, getRotationOffset(boostedHero.length));
+    if (rotatedBoosted.length >= 2) {
+      heroPool = rotatedBoosted;
+    } else {
+      // Grid needs two cards; pad with one random listing when only one boost is active.
+      const boostedIds = new Set(rotatedBoosted.map((c) => c.id));
+      const filler = shuffleWithSeed(
+        fallbackHeroPool.filter((c) => !boostedIds.has(c.id)),
+        heroSeed
+      )[0];
+      heroPool = filler ? [...rotatedBoosted, filler] : rotatedBoosted;
+    }
+  } else {
+    heroPool = shuffleWithSeed(fallbackHeroPool, heroSeed);
+  }
+  heroPool = heroPool.slice(0, 12);
+  const heroCars = heroPool.slice(0, 8);
 
   /** Paid Spotlight only — organic trending must not fill this block. */
   const spotlightCards = (paidSpotlight || []).slice(0, 8);
@@ -230,7 +266,7 @@ export default async function HomePage() {
               <div className="order-1 lg:order-2 flex flex-col gap-4">
                 <div className="shrink-0 w-full max-w-xl mx-auto lg:max-w-none">
                   <HeroGridShowcase
-                    cars={heroCars.length >= 2 ? heroCars : spotlightEnhanced.slice(0, 6)}
+                    cars={heroCars.length >= 2 ? heroCars : heroPool.slice(0, 6)}
                     reviews={highlightReviews}
                   />
                 </div>

@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { isTransientDbError, settleNamed, withDbRetry } from "@/lib/db-retry";
 import { unstable_cache } from "next/cache";
 import { analyzePrice } from "@/lib/market";
+import { activeListingBoostWhere } from "@/lib/listing-boost";
 import { activeSpotlightWhere, spotlightCarInclude } from "@/lib/spotlight";
 
 export const EMPTY_HOMEPAGE_DATA = {
@@ -13,6 +14,8 @@ export const EMPTY_HOMEPAGE_DATA = {
   highlightReviews: [],
   spotlightEnhanced: [],
   paidSpotlight: [],
+  heroBoosted: [],
+  heroFallback: [],
   hotEnhanced: [],
   mostViewedEnhanced: [],
   newEnhanced: [],
@@ -121,6 +124,16 @@ async function loadHomepageBase() {
         take: 10,
         orderBy: { createdAt: "desc" },
       }),
+    heroFallback: () =>
+      db.car.findMany({
+        where: { available: true },
+        include: {
+          images: { where: { isPrimary: true }, take: 1 },
+          dealer: { select: { id: true, name: true, location: true, verified: true, slug: true } },
+        },
+        take: 24,
+        orderBy: { createdAt: "desc" },
+      }),
     carReviews: () =>
       db.carReview.findMany({
         where: { comment: { not: null }, rating: { gte: 4 } },
@@ -154,6 +167,7 @@ async function loadHomepageBase() {
     newsItems,
     dealerReviews,
     carReviews,
+    heroFallback,
   } = data;
 
   const combinedReviews = [
@@ -175,6 +189,7 @@ async function loadHomepageBase() {
     dealers,
     newsItems,
     highlightReviews: combinedReviews,
+    heroFallback,
   };
 
   const hasContent =
@@ -195,7 +210,8 @@ async function loadHomepageBase() {
 }
 
 async function enrichHomepage(base) {
-  const { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews } = base;
+  const { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews, heroFallback } =
+    base;
 
   const hotCandidates = (hotThisWeek || [])
     .filter((car) => car && car._count?.carViews > 0)
@@ -225,11 +241,29 @@ async function enrichHomepage(base) {
     console.warn("[homepage-cache] paid spotlight load failed:", err?.message || err);
   }
 
+  let heroBoostedRaw = [];
+  try {
+    heroBoostedRaw = await db.car.findMany({
+      where: activeListingBoostWhere(),
+      include: spotlightCarInclude(),
+      orderBy: [
+        { featuredWeight: "desc" },
+        { spotlightUntil: "asc" },
+        { hotBadgeUntil: "asc" },
+        { createdAt: "desc" },
+      ],
+      take: 16,
+    });
+  } catch (err) {
+    console.warn("[homepage-cache] hero boosted load failed:", err?.message || err);
+  }
+
   const mostViewed = [...hotCandidatesWithAnalysis]
     .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
     .slice(0, 12);
 
-  const [spotlightEnhanced, paidSpotlight, hotEnhanced, mostViewedEnhanced, newEnhanced] = await Promise.all([
+  const [spotlightEnhanced, paidSpotlight, heroBoosted, hotEnhanced, mostViewedEnhanced, newEnhanced, heroFallbackEnhanced] =
+    await Promise.all([
     Promise.all(
       (baseSpotlight || []).map(async (car) =>
         car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) }
@@ -237,6 +271,12 @@ async function enrichHomepage(base) {
     ),
     Promise.all(
       (paidSpotlightRaw || []).map(async (car) => ({
+        ...car,
+        marketAnalysis: await analyzePrice(car),
+      }))
+    ),
+    Promise.all(
+      (heroBoostedRaw || []).map(async (car) => ({
         ...car,
         marketAnalysis: await analyzePrice(car),
       }))
@@ -254,6 +294,12 @@ async function enrichHomepage(base) {
     Promise.all(
       (newArrivals || []).slice(0, 8).map(async (c) => ({ ...c, marketAnalysis: await analyzePrice(c) }))
     ),
+    Promise.all(
+      (heroFallback || []).map(async (car) => ({
+        ...car,
+        marketAnalysis: await analyzePrice(car),
+      }))
+    ),
   ]);
 
   return {
@@ -265,6 +311,8 @@ async function enrichHomepage(base) {
     highlightReviews,
     spotlightEnhanced,
     paidSpotlight,
+    heroBoosted,
+    heroFallback: heroFallbackEnhanced,
     hotEnhanced,
     mostViewedEnhanced,
     newEnhanced,
@@ -309,7 +357,7 @@ const getCachedHomeEnriched = unstable_cache(
       return { ...EMPTY_HOMEPAGE_DATA, ...base };
     }
   },
-  ["homepage-enriched-v5"],
+  ["homepage-enriched-v6"],
   { revalidate: 120, tags: ["homepage"] }
 );
 
