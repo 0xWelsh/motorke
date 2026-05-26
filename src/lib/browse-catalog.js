@@ -10,9 +10,19 @@ export const BRANDS = [
   { name: "Suzuki", img: "logo_suzuki.png" },
   { name: "Mazda", img: "logo_mazda.png" },
   { name: "Daihatsu", img: "logo_daihatsu.png" },
+  { name: "Ford", img: "logo_ford.png" },
+  { name: "Hyundai", img: "logo_hyundai.png" },
+  { name: "Kia", img: "logo_kia.png" },
   { name: "BMW", img: "logo_bmw.png" },
-  { name: "Volkswagen", img: "logo_volkswagen.png" },
+  { name: "Audi", img: "logo_audi.png" },
   { name: "Mercedes", make: "Mercedes-Benz", img: "logo_mercedes.png" },
+  { name: "Volkswagen", img: "logo_volkswagen.png" },
+  { name: "Lexus", img: "logo_lexus.png" },
+  { name: "Land Rover", make: "Land Rover", img: "logo_land-rover.png" },
+  { name: "Jeep", img: "logo_jeep.png" },
+  { name: "Volvo", img: "logo_volvo.png" },
+  { name: "Jaguar", img: "logo_jaguar.png" },
+  { name: "Citroën", make: "Citroen", img: "logo_citroen.png" },
 ];
 
 export const COUNTIES = [

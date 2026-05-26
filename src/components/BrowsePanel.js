@@ -152,7 +152,12 @@ function LocationCard({ name }) {
   );
 }
 
-export default function BrowsePanel() {
+/**
+ * @param {{ layout?: "full" | "hero-mobile" }} props
+ *   hero-mobile — search + shop by brand only (homepage mobile hero)
+ */
+export default function BrowsePanel({ layout = "full" }) {
+  const heroMobile = layout === "hero-mobile";
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [loadingLoc, setLoadingLoc] = useState(false);
@@ -182,15 +187,18 @@ export default function BrowsePanel() {
   };
 
   return (
-    <div className="w-full space-y-3 sm:space-y-4 pt-2">
+    <div className={`w-full space-y-3 sm:space-y-4 ${heroMobile ? "pt-0" : "pt-2"}`}>
       {/* Search Bar with Geolocation */}
-      <form onSubmit={handleSearch} className="relative mb-6 sm:mb-8 w-full group">
+      <form
+        onSubmit={handleSearch}
+        className={`relative w-full group ${heroMobile ? "mb-3" : "mb-6 sm:mb-8"}`}
+      >
         <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#38A169] transition-colors" />
         <input 
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="What car are you looking for?"
-          className="w-full bg-white dark:bg-[#0a0a0a] border border-[#e8e2d9] dark:border-zinc-800 text-slate-900 dark:text-white rounded-none py-4 pl-14 pr-[120px] font-bold text-base shadow-sm focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all placeholder:font-normal placeholder:text-slate-400"
+          className="w-full bg-white dark:bg-[#0a0a0a] border border-[#e8e2d9] dark:border-zinc-800 text-slate-900 dark:text-white rounded-none py-3.5 sm:py-4 pl-14 pr-[120px] font-bold text-base shadow-sm focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all placeholder:font-normal placeholder:text-slate-400"
         />
         <button 
           type="submit" 
@@ -224,6 +232,7 @@ export default function BrowsePanel() {
             ))}
           </ScrollableRow>
         </div>
+        {!heroMobile && (
         <div className={FLOATING_PANEL}>
           <div className="flex items-center justify-between px-1 sm:px-2 mb-2">
             <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
@@ -238,6 +247,7 @@ export default function BrowsePanel() {
             ))}
           </ScrollableRow>
         </div>
+        )}
       </div>
 
     </div>

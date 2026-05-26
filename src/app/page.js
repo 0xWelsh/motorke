@@ -177,8 +177,8 @@ export default async function HomePage() {
         <div className="home-shell relative z-10">
           
           {/* Page Header - Full Width */}
-          <div className="mb-5 sm:mb-6 md:mb-8 lg:mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-[#111827] dark:text-white leading-[0.92] tracking-tight mb-4 max-w-4xl mx-auto">
+          <div className="mb-4 sm:mb-6 md:mb-8 lg:mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-[#111827] dark:text-white leading-[0.92] tracking-tight mb-3 sm:mb-4 max-w-4xl mx-auto">
               Buy cars with<br />
               <span className="editorial-hero-accent text-[#38A169]">dealer-level clarity.</span>
             </h1>
@@ -189,11 +189,16 @@ export default async function HomePage() {
             </p>
           </div>
 
+          {/* Mobile: search + shop by brand immediately below headline, above hot deals */}
+          <div className="lg:hidden mb-4 max-w-lg mx-auto w-full animate-in fade-in duration-700">
+            <BrowsePanel layout="hero-mobile" />
+          </div>
+
           {/* Side-by-Side — centered; hot deals keep fixed size; Find your car fills space below them */}
           <div className="mx-auto w-full max-w-6xl animate-in fade-in duration-1000 delay-200">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 lg:items-start">
               <div className="flex flex-col text-center order-2 lg:order-1">
-                <div className="w-full max-w-lg mx-auto">
+                <div className="hidden lg:block w-full max-w-lg mx-auto">
                   <BrowsePanel />
                 </div>
 
