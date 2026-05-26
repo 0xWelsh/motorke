@@ -196,9 +196,9 @@ export default async function HomePage() {
           {/* Side-by-Side — centered; hot deals keep fixed size; Find your car fills space below them */}
           <div className="mx-auto w-full max-w-6xl animate-in fade-in duration-1000 delay-200">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 lg:items-start">
-              <div className="flex flex-col text-center order-2 lg:order-1">
-                <div className="hidden lg:block w-full max-w-lg mx-auto">
-                  <BrowsePanel />
+              <div className="flex flex-col text-center order-2 lg:order-1 lg:text-left">
+                <div className="hidden lg:block w-full min-w-0">
+                  <BrowsePanel layout="desktop-hero" />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 mt-5 sm:mt-8 w-full max-w-lg mx-auto">

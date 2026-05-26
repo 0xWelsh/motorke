@@ -153,11 +153,13 @@ function LocationCard({ name }) {
 }
 
 /**
- * @param {{ layout?: "full" | "hero-mobile" }} props
+ * @param {{ layout?: "full" | "hero-mobile" | "desktop-hero" }} props
  *   hero-mobile — search + shop by brand only (homepage mobile hero)
+ *   desktop-hero — full-width search in homepage left column
  */
 export default function BrowsePanel({ layout = "full" }) {
   const heroMobile = layout === "hero-mobile";
+  const desktopHero = layout === "desktop-hero";
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [loadingLoc, setLoadingLoc] = useState(false);
@@ -187,11 +189,11 @@ export default function BrowsePanel({ layout = "full" }) {
   };
 
   return (
-    <div className={`w-full space-y-3 sm:space-y-4 ${heroMobile ? "pt-0" : "pt-2"}`}>
+    <div className={`w-full space-y-3 sm:space-y-4 ${heroMobile || desktopHero ? "pt-0" : "pt-2"}`}>
       {/* Search Bar with Geolocation */}
       <form
         onSubmit={handleSearch}
-        className={`relative w-full group ${heroMobile ? "mb-3" : "mb-6 sm:mb-8"}`}
+        className={`relative w-full max-w-none group ${heroMobile ? "mb-3" : desktopHero ? "mb-5" : "mb-6 sm:mb-8"}`}
       >
         <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#38A169] transition-colors" />
         <input 
