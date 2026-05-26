@@ -8,7 +8,6 @@ import HumanCheck from "./HumanCheck";
 import GoogleAuthButton, { GoogleAuthDivider } from "./GoogleAuthButton";
 
 import AuthCarousel from "./AuthCarousel";
-import AuthBrandLogo from "./AuthBrandLogo";
 
 export default function LoginForm({ error }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -48,7 +47,6 @@ export default function LoginForm({ error }) {
           <div className="absolute inset-0 bg-gradient-to-tr from-black via-black/40 to-transparent" />
         </div>
         <div className="relative z-10 w-full h-full flex flex-col">
-          <AuthBrandLogo href="/" onDark className="p-8 lg:p-10" />
           <AuthCarousel />
           <div className="mt-auto p-12 text-[10px] font-bold uppercase tracking-[0.3em] text-white/30">
             © 2026 Welsh Motorhub Kenya, Part of Welsh Group
@@ -59,8 +57,6 @@ export default function LoginForm({ error }) {
       {/* Right: Form Side */}
       <div className="w-full lg:w-1/2 flex flex-col items-stretch px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-12 lg:pt-16 relative bg-white dark:bg-[#0a0a0a] overflow-y-auto">
         <div className="w-full max-w-md mx-auto lg:max-w-lg">
-          <AuthBrandLogo href="/" className="lg:hidden justify-center mb-6" />
-
           <header className="mb-6 text-left">
             <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-3">
               Sign In.

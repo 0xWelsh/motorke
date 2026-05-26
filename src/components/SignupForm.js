@@ -51,7 +51,6 @@ function PasswordMeter({ password }) {
 }
 
 import AuthCarousel from "./AuthCarousel";
-import AuthBrandLogo from "./AuthBrandLogo";
 
 export default function SignupForm({ error: initialError, initialRole }) {
   const initialErrorMessage =
@@ -133,7 +132,6 @@ export default function SignupForm({ error: initialError, initialRole }) {
           <div className="absolute inset-0 bg-gradient-to-tr from-black via-black/40 to-transparent" />
         </div>
         <div className="relative z-10 w-full h-full flex flex-col">
-          <AuthBrandLogo href="/" onDark className="p-8 lg:p-10" />
           <AuthCarousel />
           <div className="mt-auto p-10 text-[10px] font-bold uppercase tracking-[0.3em] text-white/30">
             © 2026 Welsh Motorhub Kenya, Professional Network
@@ -144,8 +142,6 @@ export default function SignupForm({ error: initialError, initialRole }) {
       {/* Right: Form Side */}
       <div className="w-full lg:w-3/5 flex flex-col items-stretch px-4 py-5 sm:px-6 sm:py-8 lg:px-10 lg:py-12 lg:pt-16 relative bg-white dark:bg-[#0a0a0a] overflow-y-auto">
         <div className="w-full max-w-xl mx-auto lg:max-w-2xl">
-          <AuthBrandLogo href="/" className="lg:hidden justify-center mb-5" />
-
           <header className="mb-5 text-left">
             <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-2">
               Sign Up.
