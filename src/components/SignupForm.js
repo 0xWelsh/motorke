@@ -51,6 +51,7 @@ function PasswordMeter({ password }) {
 }
 
 import AuthCarousel from "./AuthCarousel";
+import AuthBrandLogo from "./AuthBrandLogo";
 
 export default function SignupForm({ error: initialError, initialRole }) {
   const initialErrorMessage =
@@ -132,12 +133,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
           <div className="absolute inset-0 bg-gradient-to-tr from-black via-black/40 to-transparent" />
         </div>
         <div className="relative z-10 w-full h-full flex flex-col">
-          <Link href="/" className="p-10 flex items-center gap-3 group">
-             <div className="w-10 h-10 bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center group-hover:bg-[#38A169] transition-all">
-                <img src="/headerlogo.png" alt="Logo" className="w-6 h-6 object-contain" />
-             </div>
-             <span className="text-xl font-black uppercase tracking-widest text-white">Welsh Motorhub</span>
-          </Link>
+          <AuthBrandLogo href="/" onDark className="p-8 lg:p-10" />
           <AuthCarousel />
           <div className="mt-auto p-10 text-[10px] font-bold uppercase tracking-[0.3em] text-white/30">
             © 2026 Welsh Motorhub Kenya, Professional Network
@@ -146,15 +142,11 @@ export default function SignupForm({ error: initialError, initialRole }) {
       </div>
 
       {/* Right: Form Side */}
-      <div className="w-full lg:w-3/5 flex flex-col items-center p-6 sm:p-12 lg:p-16 lg:pt-24 relative bg-white dark:bg-[#0a0a0a] overflow-y-auto">
-        <div className="w-full max-w-lg">
-          {/* Mobile Logo */}
-          <Link href="/" className="lg:hidden flex items-center justify-center gap-2 mb-6">
-             <img src="/headerlogo.png" alt="Logo" className="w-6 h-6 object-contain" />
-             <span className="text-lg font-black uppercase tracking-widest text-slate-900 dark:text-white">Welsh Motorhub</span>
-          </Link>
+      <div className="w-full lg:w-3/5 flex flex-col items-stretch px-4 py-5 sm:px-6 sm:py-8 lg:px-10 lg:py-12 lg:pt-16 relative bg-white dark:bg-[#0a0a0a] overflow-y-auto">
+        <div className="w-full max-w-xl mx-auto lg:max-w-2xl">
+          <AuthBrandLogo href="/" className="lg:hidden justify-center mb-5" />
 
-          <header className="mb-6 text-left">
+          <header className="mb-5 text-left">
             <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-2">
               Sign Up.
             </h2>
@@ -162,7 +154,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
           </header>
 
           {/* Role Toggle */}
-          <div className="flex gap-2 mb-6 bg-slate-50 dark:bg-zinc-900 p-1 border border-slate-100 dark:border-zinc-800">
+          <div className="flex gap-2 mb-5 bg-slate-50 dark:bg-zinc-900 p-1 border border-slate-100 dark:border-zinc-800">
             <button 
               type="button" 
               onClick={() => setRole("BUYER")}
@@ -210,7 +202,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
             </p>
           )}
 
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-3">
             <input type="hidden" name="captchaToken" value={captchaToken} readOnly />
             <input type="text" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
             <input type="hidden" name="role" value={role} />
@@ -225,7 +217,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
                 onChange={(e) => setEmail(e.target.value)}
                 required 
                 placeholder="you@email.com" 
-                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
+                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
                 style={{ borderRadius: '2px' }}
               />
             </div>
@@ -238,7 +230,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
                 type="text" 
                 required 
                 placeholder="John Doe" 
-                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
+                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
                 style={{ borderRadius: '2px' }}
               />
             </div>
@@ -254,13 +246,13 @@ export default function SignupForm({ error: initialError, initialRole }) {
                   onChange={(e) => setPassword(e.target.value)}
                   required 
                   placeholder="••••••••" 
-                  className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700 pr-12"
+                  className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700 pr-12"
                   style={{ borderRadius: '2px' }}
                 />
                 <button 
                   type="button" 
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 bottom-4 text-slate-300 hover:text-[#38A169]"
+                  className="absolute right-3 bottom-3 text-slate-300 hover:text-[#38A169]"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -276,7 +268,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
                 type={showPassword ? "text" : "password"}
                 required 
                 placeholder="••••••••" 
-                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
+                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
                 style={{ borderRadius: '2px' }}
               />
             </div>
@@ -296,7 +288,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
                     type="text" 
                     required
                     placeholder="Japanese Car Exports" 
-                    className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
+                    className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
                     style={{ borderRadius: '2px' }}
                   />
                 </div>
@@ -311,7 +303,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
                     autoComplete="tel"
                     required
                     placeholder={PHONE_PLACEHOLDER_INTERNATIONAL}
-                    className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
+                    className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
                     style={{ borderRadius: '2px' }}
                   />
                   <p className="mt-2 text-[10px] font-medium text-slate-500 leading-snug">{PHONE_COUNTRY_CODE_HELPER}</p>
@@ -323,7 +315,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
                     id="county"
                     name="county"
                     required
-                    className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all appearance-none cursor-pointer"
+                    className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all appearance-none cursor-pointer"
                     style={{ borderRadius: '2px' }}
                   >
                     <option value="" className="text-slate-900 dark:text-white dark:bg-[#0a0a0a]">Select a county</option>
@@ -337,7 +329,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
 
             <div className="md:col-span-2 pt-2">
               <div className="mb-4">
-                <HumanCheck value={captchaToken} onChange={setCaptchaToken} onFallbackChange={setUsingSecurityFallback} />
+                <HumanCheck value={captchaToken} onChange={setCaptchaToken} onFallbackChange={setUsingSecurityFallback} compactMobile />
               </div>
               <button 
                 type="submit" 
@@ -351,7 +343,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
             </div>
           </form>
 
-          <footer className="mt-8 pt-4 border-t border-slate-100 dark:border-zinc-900 text-center">
+          <footer className="mt-6 pt-4 border-t border-slate-100 dark:border-zinc-900 text-center">
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
               Already have an account?{" "}
               <Link href="/login" className="text-[#38A169] hover:underline underline-offset-4 decoration-2">

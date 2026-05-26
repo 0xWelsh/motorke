@@ -8,6 +8,7 @@ import HumanCheck from "./HumanCheck";
 import GoogleAuthButton, { GoogleAuthDivider } from "./GoogleAuthButton";
 
 import AuthCarousel from "./AuthCarousel";
+import AuthBrandLogo from "./AuthBrandLogo";
 
 export default function LoginForm({ error }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -47,12 +48,7 @@ export default function LoginForm({ error }) {
           <div className="absolute inset-0 bg-gradient-to-tr from-black via-black/40 to-transparent" />
         </div>
         <div className="relative z-10 w-full h-full flex flex-col">
-          <Link href="/" className="p-12 flex items-center gap-3 group">
-             <div className="w-10 h-10 bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center group-hover:bg-[#38A169] transition-all">
-                <img src="/headerlogo.png" alt="Logo" className="w-6 h-6 object-contain" />
-             </div>
-             <span className="text-xl font-black uppercase tracking-widest text-white">Welsh Motorhub</span>
-          </Link>
+          <AuthBrandLogo href="/" onDark className="p-8 lg:p-10" />
           <AuthCarousel />
           <div className="mt-auto p-12 text-[10px] font-bold uppercase tracking-[0.3em] text-white/30">
             © 2026 Welsh Motorhub Kenya, Part of Welsh Group
@@ -61,15 +57,11 @@ export default function LoginForm({ error }) {
       </div>
 
       {/* Right: Form Side */}
-      <div className="w-full lg:w-1/2 flex flex-col items-center p-8 sm:p-12 lg:p-20 lg:pt-32 relative bg-white dark:bg-[#0a0a0a] overflow-y-auto">
-        <div className="w-full max-w-sm">
-          {/* Mobile Logo */}
-          <Link href="/" className="lg:hidden flex items-center justify-center gap-3 mb-12">
-             <img src="/headerlogo.png" alt="Logo" className="w-8 h-8 object-contain" />
-             <span className="text-xl font-black uppercase tracking-widest text-slate-900 dark:text-white">Welsh Motorhub</span>
-          </Link>
+      <div className="w-full lg:w-1/2 flex flex-col items-stretch px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-12 lg:pt-16 relative bg-white dark:bg-[#0a0a0a] overflow-y-auto">
+        <div className="w-full max-w-md mx-auto lg:max-w-lg">
+          <AuthBrandLogo href="/" className="lg:hidden justify-center mb-6" />
 
-          <header className="mb-10 text-left">
+          <header className="mb-6 text-left">
             <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-3">
               Sign In.
             </h2>
@@ -101,12 +93,12 @@ export default function LoginForm({ error }) {
           </div>
           <GoogleAuthDivider />
 
-          <form action="/api/auth/login" method="POST" className="space-y-6">
+          <form action="/api/auth/login" method="POST" className="space-y-4">
             <input type="hidden" name="captchaToken" value={captchaToken} readOnly />
             <input type="text" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
             <div>
-              <label htmlFor="emailAddress" className="block text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-3">Email</label>
+              <label htmlFor="emailAddress" className="block text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-2">Email</label>
               <input 
                 id="emailAddress"
                 name="email" 
@@ -115,13 +107,13 @@ export default function LoginForm({ error }) {
                 onChange={(e) => setEmail(e.target.value)}
                 required 
                 placeholder="dealership@welshmotors.co.ke" 
-                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
+                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700"
                 style={{ borderRadius: '2px' }}
               />
             </div>
 
             <div className="relative">
-              <label htmlFor="securePassword" className="block text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-3">Password</label>
+              <label htmlFor="securePassword" className="block text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-2">Password</label>
               <input 
                 id="securePassword"
                 name="password" 
@@ -130,13 +122,13 @@ export default function LoginForm({ error }) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••" 
-                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700 pr-12"
+                className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-100 dark:border-zinc-800 px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169] transition-all placeholder:text-slate-300 dark:placeholder:text-zinc-700 pr-12"
                 style={{ borderRadius: '2px' }}
               />
               <button 
                 type="button" 
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 bottom-4 text-slate-300 hover:text-[#38A169] transition-colors"
+                className="absolute right-3 bottom-3 text-slate-300 hover:text-[#38A169] transition-colors"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -153,14 +145,14 @@ export default function LoginForm({ error }) {
               </Link>
             </div>
 
-            <div className="pt-4">
-               <HumanCheck value={captchaToken} onChange={setCaptchaToken} onFallbackChange={setUsingSecurityFallback} />
+            <div className="pt-2">
+               <HumanCheck value={captchaToken} onChange={setCaptchaToken} onFallbackChange={setUsingSecurityFallback} compactMobile />
             </div>
 
             <button 
               type="submit" 
               disabled={!canSubmit}
-              className="w-full bg-[#38A169] hover:bg-[#2F855A] disabled:bg-slate-100 dark:disabled:bg-zinc-900 disabled:text-slate-400 text-white py-5 px-6 font-black uppercase tracking-[0.2em] text-xs transition-all hover:scale-[0.98] active:scale-95 flex items-center justify-center gap-3 group"
+              className="w-full bg-[#38A169] hover:bg-[#2F855A] disabled:bg-slate-100 dark:disabled:bg-zinc-900 disabled:text-slate-400 text-white py-4 px-6 font-black uppercase tracking-[0.2em] text-xs transition-all hover:scale-[0.98] active:scale-95 flex items-center justify-center gap-3 group"
               style={{ borderRadius: '2px' }}
             >
               Sign In
@@ -168,7 +160,7 @@ export default function LoginForm({ error }) {
             </button>
           </form>
 
-          <footer className="mt-12 pt-8 border-t border-slate-100 dark:border-zinc-900">
+          <footer className="mt-8 pt-6 border-t border-slate-100 dark:border-zinc-900">
              <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 text-center">
                 New to the platform?{" "}
                 <Link href="/signup" className="text-[#38A169] hover:underline underline-offset-4 decoration-2">

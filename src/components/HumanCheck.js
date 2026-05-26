@@ -4,7 +4,7 @@ import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 
-export default function HumanCheck({ value, onChange, onFallbackChange }) {
+export default function HumanCheck({ value, onChange, onFallbackChange, compactMobile = false }) {
   const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
   const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   const widgetRef = useRef(null);
@@ -151,7 +151,7 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
   // No provider configured
   if (!provider) {
     return (
-      <div className="rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#111111] px-4 py-3 text-xs font-semibold text-slate-500">
+      <div className="rounded-md sm:rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#111111] px-3 py-2 sm:px-4 sm:py-3 text-xs font-semibold text-slate-500">
         Security verification disabled (development mode)
       </div>
     );
@@ -161,8 +161,15 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
     if (typeof window !== "undefined") window.location.reload();
   }
 
+  const mobileShellClass = compactMobile
+    ? "rounded-md border border-[#ddd4c8] dark:border-slate-800 bg-white dark:bg-[#111111] p-1.5 flex justify-start overflow-hidden max-w-[280px] sm:max-w-none sm:rounded-2xl sm:p-3 sm:justify-center"
+    : "rounded-md sm:rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-white dark:bg-[#111111] p-1.5 sm:p-3 flex justify-start sm:justify-center";
+  const mobileWidgetClass = compactMobile
+    ? "inline-block origin-left scale-[0.92] sm:scale-100 sm:origin-center"
+    : "inline-block";
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-2 sm:space-y-3">
       <Script
         id={provider === "recaptcha" ? "wmh-recaptcha" : "wmh-turnstile"}
         src={provider === "recaptcha" ? "https://www.google.com/recaptcha/api.js?render=explicit" : "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"}
@@ -181,14 +188,14 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
       />
 
       {!scriptReady && !scriptTimeout && !scriptError && (
-        <div className="rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#111111] px-4 py-6 flex items-center justify-center gap-3">
+        <div className="rounded-md sm:rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-[#fbfcfe] dark:bg-[#111111] px-3 py-4 sm:px-4 sm:py-6 flex items-center justify-start sm:justify-center gap-2 sm:gap-3">
           <Loader2 size={16} className="animate-spin text-slate-400" />
-          <p className="text-xs font-semibold text-slate-600">Loading security check...</p>
+          <p className="text-[11px] sm:text-xs font-semibold text-slate-600">Loading security check...</p>
         </div>
       )}
 
       {(scriptTimeout || scriptError) && !scriptReady && (
-        <div className="space-y-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3">
+        <div className="space-y-2 sm:space-y-3 rounded-md sm:rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2.5 sm:px-4 sm:py-3">
           <p className="text-xs font-semibold text-amber-900">
             We couldn&rsquo;t load the security check. Check your connection and reload the page to try again.
           </p>
@@ -203,12 +210,12 @@ export default function HumanCheck({ value, onChange, onFallbackChange }) {
       )}
 
       {scriptReady && !scriptError && (
-        <div className="flex justify-center rounded-2xl border border-[#ddd4c8] dark:border-slate-800 bg-white p-3">
-          <div ref={widgetRef} className="inline-block" />
+        <div className={mobileShellClass}>
+          <div ref={widgetRef} className={mobileWidgetClass} />
         </div>
       )}
 
-      <p className="text-[11px] font-medium text-slate-500">
+      <p className={`font-medium text-slate-500 ${compactMobile ? "text-[10px] sm:text-[11px]" : "text-[11px]"}`}>
         {provider === "recaptcha" ? "Protected by Google reCAPTCHA" : "Powered by Cloudflare Turnstile"}
       </p>
     </div>
