@@ -318,7 +318,7 @@ export default async function HomePage() {
                   Fresh arrivals
                 </h2>
                 <p className="text-[#475569] dark:text-slate-400 text-base sm:text-lg font-medium leading-relaxed">
-                  The newest listings added by verified dealers in the last seven days.
+                  Cars that have been added this week.
                 </p>
               </div>
               <TrackedLink
@@ -344,7 +344,7 @@ export default async function HomePage() {
       <HomepageDutyTeaser />
 
       {/* Editorial Information Block */}
-      <section className="relative py-12 sm:py-16 lg:py-20 xl:py-24 bg-[#1A202C] text-white overflow-hidden">
+      <section className="relative py-8 sm:py-16 lg:py-20 xl:py-24 bg-[#1A202C] text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
             src={DIFFERENCE_BACKGROUND}
@@ -355,25 +355,27 @@ export default async function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-[#1A202C] via-[#1A202C]/80 to-transparent" />
         </div>
         <div className="home-shell relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-12 items-center">
             <div>
-              <p className="text-[#38A169] text-xs font-bold uppercase tracking-[0.32em] mb-5">The Difference</p>
-              <h2 className="text-3xl sm:text-5xl font-bold leading-[1.1] mb-6">
+              <p className="text-[#38A169] text-[10px] sm:text-xs font-bold uppercase tracking-[0.28em] sm:tracking-[0.32em] mb-3 sm:mb-5">
+                The Difference
+              </p>
+              <h2 className="text-2xl sm:text-5xl font-bold leading-[1.12] mb-4 sm:mb-6">
                 Less scrolling.<br />
                 <span className="editorial-heading text-[#718096]">More real cars.</span>
               </h2>
-              <p className="text-base sm:text-lg text-[#A0AEC0] leading-relaxed max-w-xl font-medium">
+              <p className="text-sm sm:text-lg text-[#A0AEC0] leading-relaxed max-w-xl font-medium">
                 Welsh Motorhub is built around dealer inventory that you can tie to a real showroom; so you compare in one place,
                 then move the conversation straight to WhatsApp or a phone call when you are ready. Fewer phantom posts, fewer
                 dead ends.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-stretch">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6 items-stretch">
               {[
                 {
                   title: "Yard-first listings",
-                  icon: <Building2 className="h-6 w-6" aria-hidden />,
+                  icon: <Building2 className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
                   desc: "Cars come from partner dealers with a physical presence, not scraped dumps or anonymous “DM for price” threads.",
                 },
                 {
