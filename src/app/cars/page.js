@@ -676,7 +676,7 @@ export default async function CarsPage({ searchParams }) {
 
         <CarsQuickActions />
 
-        <TrendingSearches className="mb-6" />
+        <TrendingSearches className="mb-4" />
 
         {/* Main layout: sidebar + top rows */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 gap-y-6 lg:gap-y-8">

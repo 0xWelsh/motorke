@@ -128,18 +128,19 @@ export default function SearchSuggestions({
                     label: "Result",
                   };
 
-                // Highlight matching parts
-                const matchIndex = suggestion.value
-                  .toLowerCase()
-                  .indexOf(inputValue.toLowerCase());
-                const beforeMatch = suggestion.value.substring(0, matchIndex);
-                const matchText = suggestion.value.substring(
-                  matchIndex,
-                  matchIndex + inputValue.length
-                );
-                const afterMatch = suggestion.value.substring(
-                  matchIndex + inputValue.length
-                );
+                // Highlight matching parts (if there's a non-empty input).
+                // When inputValue is empty (e.g. recent searches dropdown), avoid rendering an empty <mark>.
+                const hasInput = Boolean(String(inputValue || "").trim());
+                const matchIndex = hasInput
+                  ? suggestion.value.toLowerCase().indexOf(String(inputValue).toLowerCase())
+                  : -1;
+                const beforeMatch = hasInput ? suggestion.value.substring(0, matchIndex) : "";
+                const matchText = hasInput
+                  ? suggestion.value.substring(matchIndex, matchIndex + String(inputValue).length)
+                  : "";
+                const afterMatch = hasInput
+                  ? suggestion.value.substring(matchIndex + String(inputValue).length)
+                  : suggestion.value;
 
                 return (
                   <button
@@ -150,7 +151,7 @@ export default function SearchSuggestions({
                     <div className="shrink-0">{typeInfo.icon}</div>
                     <div className="flex-1 text-left min-w-0">
                       <p className="text-xs font-sans font-semibold text-slate-900 dark:text-white">
-                        {matchIndex >= 0 ? (
+                        {hasInput && matchIndex >= 0 ? (
                           <>
                             {beforeMatch}
                             <mark className="bg-blue-100 no-underline">{matchText}</mark>

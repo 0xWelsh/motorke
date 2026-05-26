@@ -243,7 +243,7 @@ export default function CarsSearch({
           <h2 className="text-base font-black uppercase tracking-tight text-[#111827] dark:text-white">Filters</h2>
         </div>
 
-        <form method="GET" onSubmit={handleSubmit} className="space-y-3">
+        <form method="GET" onSubmit={handleSubmit} className="space-y-4">
           {/* Budget */}
           <div className="space-y-1.5">
             <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Budget</label>

@@ -48,6 +48,7 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const router = useRouter();
   const wrapRef = useRef(null);
 
@@ -60,8 +61,15 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
   useEffect(() => {
     const t = debouncedTerm?.trim() || "";
     if (t.length < 1) {
-      setSuggestions([]);
-      setShowSuggestions(false);
+      if (isFocused) {
+        const recent = loadRecentSearches();
+        const mapped = toRecentSuggestionItems(recent);
+        setSuggestions(mapped);
+        setShowSuggestions(mapped.length > 0);
+      } else {
+        setSuggestions([]);
+        setShowSuggestions(false);
+      }
       return;
     }
 
@@ -92,11 +100,33 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
     function onDocDown(e) {
       if (wrapRef.current && !wrapRef.current.contains(e.target)) {
         setShowSuggestions(false);
+        setIsFocused(false);
       }
     }
     document.addEventListener("mousedown", onDocDown);
     return () => document.removeEventListener("mousedown", onDocDown);
   }, []);
+
+  function loadRecentSearches() {
+    try {
+      const raw = window.localStorage.getItem(RECENT_CAR_SEARCHES_KEY) || "[]";
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed
+        .filter((x) => x && typeof x.label === "string" && x.label.trim())
+        .slice(0, 6);
+    } catch {
+      return [];
+    }
+  }
+
+  function toRecentSuggestionItems(items) {
+    // Shape compatible with SearchSuggestions component.
+    return items.map((it) => ({
+      type: "make",
+      value: it.label,
+    }));
+  }
 
   function pushQuery(overrides = {}) {
     const params = buildCarsQuery(search.trim(), mergeFromUrl, overrides);
@@ -185,9 +215,17 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onFocus={() => {
-              if ((debouncedTerm || search).trim().length >= 1 && suggestions.length > 0) {
-                setShowSuggestions(true);
+              setIsFocused(true);
+              const current = (search || "").trim();
+              // Before typing anything, show recent searches (if available).
+              if (current.length < 1) {
+                const recent = loadRecentSearches();
+                const mapped = toRecentSuggestionItems(recent);
+                setSuggestions(mapped);
+                setShowSuggestions(mapped.length > 0);
+                return;
               }
+              if (suggestions.length > 0) setShowSuggestions(true);
             }}
             autoComplete="off"
             placeholder="Make, model, year, suggestions from live stock"
