@@ -24,6 +24,7 @@ import { isActiveListingBoost } from "@/lib/listing-boost";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
+const HOMEPAGE_HERO_BACKGROUND = "/images/backgrounds/herosectionbackgroud.jpeg";
 
 /** Pick the first usable car photo from a list to use as a section
  *  backdrop. Falls back to null when the section has no cars yet so
@@ -172,7 +173,18 @@ export default async function HomePage() {
         }}
       />
       {/* Dynamic Hero Section */}
-      <section className="relative pt-3 pb-6 sm:pt-4 sm:pb-8 md:pt-6 md:pb-10 lg:pt-8 lg:pb-12 overflow-hidden border-b border-sky-100/80 dark:border-sky-950/40 bg-[#e8f3fb] dark:bg-[#0c1524]">
+      <section className="relative pt-3 pb-6 sm:pt-4 sm:pb-8 md:pt-6 md:pb-10 lg:pt-8 lg:pb-12 overflow-hidden border-b border-sky-100/80 dark:border-sky-950/40">
+        <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
+          <Image
+            src={HOMEPAGE_HERO_BACKGROUND}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center scale-[1.02]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#e8f3fb]/94 via-[#e8f3fb]/88 to-[#e8f3fb]/80 dark:from-[#0c1524]/96 dark:via-[#0c1524]/92 dark:to-[#0c1524]/86" />
+        </div>
         <div className="home-shell relative z-10">
           
           {/* Page Header - Full Width */}
