@@ -4,6 +4,7 @@ import {
   HOMEPAGE_COUNTY_LINKS,
   HOMEPAGE_FUEL_LINKS,
   HOMEPAGE_POPULAR_LINKS,
+  HOMEPAGE_POPULAR_SUV_LINKS,
 } from "@/lib/homepage-discovery-links";
 
 describe("homepage-discovery-links", () => {
@@ -30,7 +31,8 @@ describe("homepage-discovery-links", () => {
     expect(HOMEPAGE_COUNTY_LINKS.find((l) => l.label === "Nairobi")?.href).toBe("/cars/nairobi");
   });
 
-  it("exposes popular shortcuts", () => {
+  it("exposes grouped popular shortcuts", () => {
+    expect(HOMEPAGE_POPULAR_SUV_LINKS).toHaveLength(3);
     expect(HOMEPAGE_POPULAR_LINKS.some((l) => l.href === "/cars/suvs-under-3-million")).toBe(
       true,
     );

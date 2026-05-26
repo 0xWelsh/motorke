@@ -54,17 +54,32 @@ export const HOMEPAGE_COUNTY_LINKS = SEO_COUNTIES.map((county) => ({
   label: county,
 }));
 
-/** Curated combos + sort shortcuts that resolve on /cars or global hubs. */
-export const HOMEPAGE_POPULAR_LINKS = [
+/** SUV + budget combo hubs. */
+export const HOMEPAGE_POPULAR_SUV_LINKS = [
   { href: GLOBAL_CAR_HUB_SLUGS["suvs-under-2-million"].path, label: "SUVs under 2M" },
   { href: GLOBAL_CAR_HUB_SLUGS["suvs-under-3-million"].path, label: "SUVs under 3M" },
   { href: GLOBAL_CAR_HUB_SLUGS["suvs-under-4-million"].path, label: "SUVs under 4M" },
+];
+
+/** Sort shortcuts on /cars. */
+export const HOMEPAGE_POPULAR_SORT_LINKS = [
   { href: "/cars?sort=newest", label: "Newest listed" },
   { href: "/cars?sort=views_desc", label: "Most viewed" },
   { href: "/cars?sort=price_asc", label: "Lowest price" },
   { href: "/cars?sort=year_desc", label: "Newest year" },
+];
+
+/** Transmission and mixed inventory shortcuts. */
+export const HOMEPAGE_POPULAR_SPEC_LINKS = [
   { href: "/cars?transmission=AUTOMATIC", label: "Automatic" },
   { href: "/cars?transmission=MANUAL", label: "Manual" },
   { href: "/cars?fuelType=DIESEL&bodyType=SUV", label: "Diesel SUVs" },
   { href: "/cars?bodyType=PICKUP&sort=price_asc", label: "Budget pickups" },
+];
+
+/** @deprecated Use grouped popular exports; kept for tests/imports. */
+export const HOMEPAGE_POPULAR_LINKS = [
+  ...HOMEPAGE_POPULAR_SUV_LINKS,
+  ...HOMEPAGE_POPULAR_SORT_LINKS,
+  ...HOMEPAGE_POPULAR_SPEC_LINKS,
 ];
