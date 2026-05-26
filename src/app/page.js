@@ -23,7 +23,6 @@ import { getHomepageData } from "@/lib/homepage-cache";
 import { isActiveListingBoost } from "@/lib/listing-boost";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 
-const HERO_BACKGROUND = "/images/backgrounds/hero-section-background.jpeg";
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
 
 /** Pick the first usable car photo from a list to use as a section
@@ -173,7 +172,7 @@ export default async function HomePage() {
         }}
       />
       {/* Dynamic Hero Section */}
-      <section className="relative pt-3 pb-6 sm:pt-4 sm:pb-8 md:pt-6 md:pb-10 lg:pt-8 lg:pb-12 overflow-hidden border-b border-gray-100 dark:border-zinc-900">
+      <section className="relative pt-3 pb-6 sm:pt-4 sm:pb-8 md:pt-6 md:pb-10 lg:pt-8 lg:pb-12 overflow-hidden border-b border-sky-100/80 dark:border-sky-950/40 bg-[#e8f3fb] dark:bg-[#0c1524]">
         <div className="home-shell relative z-10">
           
           {/* Page Header - Full Width */}
@@ -281,19 +280,6 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Mercedes Brand Background Texture */}
-        <div className="absolute inset-0 -z-0 overflow-hidden pointer-events-none">
-          <Image
-            src={HERO_BACKGROUND}
-            fill
-            className="object-cover opacity-[0.2] sm:opacity-[0.16] lg:opacity-[0.12]"
-            alt=""
-            priority
-          />
-          {/* Softer left wash on small screens so the photo shows through; text stays readable */}
-          <div className="absolute inset-0 bg-gradient-to-r from-white/88 via-white/45 dark:from-[#0a0a0a]/88 dark:via-[#0a0a0a]/48 to-transparent lg:hidden" />
         </div>
       </section>
 
