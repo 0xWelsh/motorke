@@ -183,7 +183,22 @@ export default async function HomePage() {
             sizes="100vw"
             className="object-cover object-center scale-[1.02]"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#e8f3fb]/94 via-[#e8f3fb]/88 to-[#e8f3fb]/80 dark:from-[#0c1524]/96 dark:via-[#0c1524]/92 dark:to-[#0c1524]/86" />
+          {/* Light mode: soft white/sky wash so the lot photo stays ambient, not busy */}
+          <div
+            className="absolute inset-0 dark:hidden"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(255,255,255,0.97) 0%, rgba(244,249,253,0.94) 42%, rgba(232,243,251,0.88) 100%)",
+            }}
+          />
+          {/* Dark mode: deep navy fade so type and cards stay crisp */}
+          <div
+            className="absolute inset-0 hidden dark:block"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(10,10,10,0.96) 0%, rgba(12,21,36,0.93) 45%, rgba(12,21,36,0.88) 100%)",
+            }}
+          />
         </div>
         <div className="home-shell relative z-10">
           
