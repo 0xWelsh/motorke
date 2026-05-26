@@ -24,6 +24,7 @@ import { clsx } from "clsx";
  * @param {boolean} spotlightProminent - Stronger orange/red outline (homepage row).
  * @param {boolean} hideSpotlightBadge - Outline only, no badge (homepage row).
  * @param {boolean} compact - Shorter card below lg (homepage rows); full size on desktop.
+ * @param {boolean} spacious - Slightly larger card for brand/hub listing grids.
  */
 export default function CarCard({
   car,
@@ -33,6 +34,7 @@ export default function CarCard({
   spotlightProminent = false,
   hideSpotlightBadge = false,
   compact = false,
+  spacious = false,
 }) {
   const spotlightActive = showSpotlight || isActiveSpotlight(car) || spotlightProminent;
   const showSpotlightBadge =
@@ -123,7 +125,11 @@ export default function CarCard({
         onClick={() => onCarClick("image")}
         className={clsx(
           "relative bg-slate-50 dark:bg-zinc-900 overflow-hidden block",
-          compact ? "aspect-[16/10] lg:aspect-[16/11]" : "aspect-[16/11]",
+          compact
+            ? "aspect-[16/10] lg:aspect-[16/11]"
+            : spacious
+              ? "aspect-[16/10] sm:aspect-[16/9]"
+              : "aspect-[16/11]",
           boost.imageFrameClass
         )}
       >
@@ -133,7 +139,11 @@ export default function CarCard({
             alt={title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-700"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes={
+              spacious
+                ? "(max-width: 1024px) 100vw, 33vw"
+                : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            }
             fallback={
               <div className="w-full h-full flex items-center justify-center text-slate-300">
                 <ImageOff className="w-8 h-8" aria-hidden />
@@ -215,7 +225,7 @@ export default function CarCard({
       <div
         className={clsx(
           "flex flex-col flex-1",
-          compact ? "p-2 sm:p-2.5 lg:p-5" : "p-2.5 sm:p-5"
+          compact ? "p-2 sm:p-2.5 lg:p-5" : spacious ? "p-3.5 sm:p-6" : "p-2.5 sm:p-5"
         )}
       >
         {/* Title & Year */}
