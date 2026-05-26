@@ -232,7 +232,11 @@ export default function CarCard({
         <div
           className={clsx(
             "flex items-start gap-1.5",
-            compact ? "mb-1.5 lg:gap-3 lg:mb-3" : "gap-2 sm:gap-3 mb-2.5 sm:mb-3"
+            compact
+              ? "mb-1.5 lg:gap-3 lg:mb-3"
+              : spacious
+                ? "gap-2.5 sm:gap-3 mb-3 sm:mb-4"
+                : "gap-2 sm:gap-3 mb-2.5 sm:mb-3"
           )}
         >
           <span
@@ -249,7 +253,9 @@ export default function CarCard({
                 "font-black font-sans text-slate-900 dark:text-white tracking-tight leading-snug hover:text-[#38A169] transition-colors line-clamp-2",
                 compact
                   ? "text-[11px] sm:text-[13px] lg:text-[17px] lg:tracking-tighter"
-                  : "text-[12px] sm:text-[17px] sm:tracking-tighter"
+                  : spacious
+                    ? "text-[14px] sm:text-[18px] sm:tracking-tighter"
+                    : "text-[12px] sm:text-[17px] sm:tracking-tighter"
               )}
               title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}
             >
@@ -262,7 +268,7 @@ export default function CarCard({
         <div
           className={clsx(
             "flex-1",
-            compact ? "space-y-1.5 lg:space-y-4" : "space-y-2.5 sm:space-y-4"
+            compact ? "space-y-1.5 lg:space-y-4" : spacious ? "space-y-3 sm:space-y-4" : "space-y-2.5 sm:space-y-4"
           )}
         >
           <p
@@ -270,7 +276,9 @@ export default function CarCard({
               "font-medium text-slate-500 dark:text-slate-400",
               compact
                 ? "text-[9px] sm:text-[10px] line-clamp-1 min-h-0 leading-snug lg:text-[11px] lg:leading-relaxed lg:line-clamp-3 lg:min-h-[56px]"
-                : "min-h-[46px] sm:min-h-[56px] text-[10px] sm:text-[11px] leading-relaxed line-clamp-2 sm:line-clamp-3"
+                : spacious
+                  ? "min-h-[48px] sm:min-h-[60px] text-[11px] sm:text-[12px] leading-relaxed line-clamp-2 sm:line-clamp-3"
+                  : "min-h-[46px] sm:min-h-[56px] text-[10px] sm:text-[11px] leading-relaxed line-clamp-2 sm:line-clamp-3"
             )}
           >
             {specString ? (
@@ -333,7 +341,7 @@ export default function CarCard({
         <div
           className={clsx(
             "border-t border-slate-100 dark:border-zinc-900 flex items-center justify-between gap-2",
-            compact ? "mt-2 pt-2 lg:mt-6 lg:pt-4" : "mt-3.5 sm:mt-6 pt-3 sm:pt-4"
+            compact ? "mt-2 pt-2 lg:mt-6 lg:pt-4" : spacious ? "mt-4 sm:mt-6 pt-3.5 sm:pt-4" : "mt-3.5 sm:mt-6 pt-3 sm:pt-4"
           )}
         >
           <div className="flex items-center min-w-0">
@@ -342,7 +350,9 @@ export default function CarCard({
                 "font-black text-slate-900 dark:text-white tracking-tight truncate",
                 compact
                   ? "text-[12px] sm:text-[14px] lg:text-lg lg:tracking-tighter"
-                  : "text-[13px] sm:text-lg sm:tracking-tighter"
+                  : spacious
+                    ? "text-[15px] sm:text-xl sm:tracking-tighter"
+                    : "text-[13px] sm:text-lg sm:tracking-tighter"
               )}
             >
               {formatCarPrice(car)}

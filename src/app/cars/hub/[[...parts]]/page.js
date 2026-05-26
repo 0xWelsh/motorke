@@ -429,9 +429,9 @@ export default async function CarHubPage({ params, searchParams }) {
             </Link>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-3">
             {cars.map((car) => (
-              <CarCard key={car.id} car={car} />
+              <CarCard key={car.id} car={car} spacious />
             ))}
           </div>
         )}
