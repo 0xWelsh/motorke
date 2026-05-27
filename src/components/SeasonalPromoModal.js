@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X, Sparkles } from "lucide-react";
+import { X, EyeOff } from "lucide-react";
 import {
   getActiveSeasonalPromo,
   seasonalPromoStorageKey,
@@ -48,19 +48,10 @@ export default function SeasonalPromoModal() {
       <button
         type="button"
         onClick={() => persist("open")}
-        className="fixed bottom-20 right-4 z-[10040] flex items-center gap-2 rounded-full border border-[#38A169]/50 bg-[#1a3d2e] px-2 py-2 pr-4 text-white shadow-[0_12px_32px_rgba(26,61,46,0.45)] transition-all hover:scale-[1.03] hover:bg-[#234d3a] active:scale-95 sm:bottom-6 sm:right-6 animate-in fade-in slide-in-from-bottom-4 duration-500"
+        className="fixed bottom-4 left-4 z-[10040] h-12 w-12 border border-[#38A169]/55 bg-[#1a3d2e] text-white shadow-[0_10px_24px_rgba(26,61,46,0.45)] transition-all hover:scale-[1.03] hover:bg-[#234d3a] active:scale-95 sm:bottom-6 sm:left-6 animate-in fade-in slide-in-from-bottom-4 duration-500 overflow-hidden"
         aria-label={`Open ${promo.fabLabel} greeting`}
       >
-        <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full ring-2 ring-[#d4af37]/60">
-          <Image src={promo.image} alt="" fill className="object-cover object-left" sizes="44px" />
-        </span>
-        <span className="flex flex-col items-start leading-tight">
-          <span className="text-[9px] font-black uppercase tracking-[0.14em] text-[#d4af37]">
-            Welsh Motorhub
-          </span>
-          <span className="text-[11px] font-bold">{promo.fabLabel}</span>
-        </span>
-        <Sparkles className="h-4 w-4 text-[#d4af37] shrink-0" aria-hidden />
+        <Image src={promo.image} alt="" fill className="object-cover object-left" sizes="48px" />
       </button>
     );
   }
@@ -83,16 +74,25 @@ export default function SeasonalPromoModal() {
         <button
           type="button"
           onClick={minimize}
-          className="absolute -top-2 -right-2 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-[#111827]/90 text-white shadow-lg transition-colors hover:bg-[#ef3340] hover:border-[#ef3340]"
+          className="absolute top-2 right-2 z-20 flex h-9 w-9 items-center justify-center border border-white/30 bg-[#111827]/90 text-white shadow-lg transition-colors hover:bg-[#ef3340] hover:border-[#ef3340]"
           aria-label="Close greeting"
         >
           <X className="h-5 w-5" />
+        </button>
+        <button
+          type="button"
+          onClick={() => persist("dismissed")}
+          className="absolute top-2 right-12 z-20 inline-flex h-9 items-center gap-1 border border-white/30 bg-[#111827]/90 px-2.5 text-[10px] font-bold uppercase tracking-[0.1em] text-white shadow-lg transition-colors hover:bg-slate-900"
+          aria-label="Do not show this greeting again"
+        >
+          <EyeOff className="h-3.5 w-3.5" />
+          Don't show again
         </button>
 
         <Link
           href={promo.href}
           onClick={() => minimize()}
-          className="block overflow-hidden rounded-2xl ring-1 ring-white/20 shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#38A169]"
+          className="block overflow-hidden shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#38A169]"
         >
           <Image
             src={promo.image}
@@ -104,10 +104,6 @@ export default function SeasonalPromoModal() {
             sizes="(max-width: 640px) 100vw, 640px"
           />
         </Link>
-
-        <p className="mt-3 text-center text-[11px] font-medium text-white/80">
-          Tap the image to explore cars, or close to keep browsing.
-        </p>
       </div>
     </div>
   );

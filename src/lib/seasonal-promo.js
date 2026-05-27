@@ -12,8 +12,8 @@ export const SEASONAL_PROMOS = [
     image: "/images/promos/eid-mubarak-2026.png",
     alt: "Eid Mubarak from Welsh Motorhub — explore verified cars in Kenya",
     href: "/cars",
-    startsAt: "2026-05-26",
-    endsAt: "2026-06-04",
+    startsAt: "2026-05-27",
+    endsAt: "2026-05-27",
     fabLabel: "Eid Mubarak",
   },
 ];
