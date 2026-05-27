@@ -106,7 +106,7 @@ export default async function DealerPage(props) {
           cylinders: true,
           turbo: true,
           updatedAt: true,
-          images: { take: 1, orderBy: { order: "asc" } },
+          images: { take: 8, orderBy: { order: "asc" } },
         },
         orderBy: { createdAt: "desc" },
       },

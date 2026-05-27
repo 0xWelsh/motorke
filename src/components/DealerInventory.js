@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import CarCard from "@/components/CarCard";
 import DealerInventoryStripCard from "@/components/DealerInventoryStripCard";
+import DealerInventoryFeaturedStrip from "@/components/DealerInventoryFeaturedStrip";
 
 export default function DealerInventory({ cars, dealerSlug }) {
   const [query, setQuery] = useState("");
@@ -40,6 +41,8 @@ export default function DealerInventory({ cars, dealerSlug }) {
   const pageCars = filteredCars.slice(pageStart, pageStart + PAGE_SIZE);
   const topCars = pageCars.slice(0, 6);
   const lowerCars = pageCars.slice(6);
+  const mobileFeatured = page === 1 && activeFilter === "ALL" && !query ? pageCars[0] : null;
+  const mobileStripCars = mobileFeatured ? pageCars.slice(1) : pageCars;
 
   useEffect(() => {
     setPage(1);
@@ -93,15 +96,21 @@ export default function DealerInventory({ cars, dealerSlug }) {
         </div>
       ) : (
         <div className="space-y-6">
-          {/* Mobile: single column horizontal strips */}
-          <div className="flex flex-col gap-2 lg:hidden">
-            {pageCars.map((car) => (
-              <div key={`strip-${car.id}`} className="space-y-1">
-                <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400">
-                  {getFreshnessLabel(car.updatedAt) || "Recently listed"}
-                </p>
-                <DealerInventoryStripCard car={car} />
-              </div>
+          {/* Mobile: edge-to-edge packed strips; latest listing gets a small slideshow */}
+          <div className="-mx-4 flex flex-col sm:-mx-6 lg:hidden">
+            {mobileFeatured ? (
+              <DealerInventoryFeaturedStrip
+                car={mobileFeatured}
+                freshnessLabel={getFreshnessLabel(mobileFeatured.updatedAt) || "Just listed"}
+              />
+            ) : null}
+            {mobileStripCars.map((car) => (
+              <DealerInventoryStripCard
+                key={`strip-${car.id}`}
+                car={car}
+                showFreshness
+                freshnessLabel={getFreshnessLabel(car.updatedAt) || "Recently listed"}
+              />
             ))}
           </div>
 
