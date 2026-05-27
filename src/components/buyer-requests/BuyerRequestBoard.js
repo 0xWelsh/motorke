@@ -72,7 +72,7 @@ export default function BuyerRequestBoard() {
           <select
             value={county}
             onChange={(e) => setCounty(e.target.value)}
-            className="border border-slate-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] px-3 py-2 text-xs font-bold uppercase tracking-wide"
+            className="border border-sky-200/90 dark:border-sky-900/70 bg-white dark:bg-[#111827] px-3 py-2 text-xs font-bold uppercase tracking-wide"
             style={{ borderRadius: "var(--radius)" }}
           >
             <option value="">All counties</option>
@@ -94,7 +94,7 @@ export default function BuyerRequestBoard() {
           <button
             type="button"
             onClick={load}
-            className="inline-flex items-center justify-center w-10 h-10 border border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-slate-300"
+            className="inline-flex items-center justify-center w-10 h-10 border border-sky-200/90 dark:border-sky-900/70 bg-white dark:bg-[#111827] text-slate-600 dark:text-slate-300"
             style={{ borderRadius: "var(--radius)" }}
             aria-label="Refresh requests"
           >
@@ -115,7 +115,7 @@ export default function BuyerRequestBoard() {
           style={{ borderRadius: "var(--radius)" }}
         >
           No open requests right now. Check back soon or{" "}
-          <a href="/request-car" className="text-[#38A169] font-bold hover:underline">
+          <a href="/request-car" className="text-[#2563eb] dark:text-sky-300 font-bold hover:underline">
             post your own
           </a>
           .
@@ -125,12 +125,12 @@ export default function BuyerRequestBoard() {
           {requests.map((req) => (
             <li
               key={req.id}
-              className="border border-slate-200 dark:border-zinc-800 bg-white dark:bg-[#111111] p-4 sm:p-5 flex flex-col"
+              className="border border-sky-200/90 dark:border-sky-900/70 bg-white dark:bg-[#111827] p-4 sm:p-5 flex flex-col"
               style={{ borderRadius: "var(--radius)" }}
             >
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#38A169]">
+                  <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#2563eb] dark:text-sky-300">
                     {req.publicCode}
                   </p>
                   <h3 className="text-lg font-black text-slate-900 dark:text-white leading-tight">
