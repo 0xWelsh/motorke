@@ -65,26 +65,23 @@ export default function HomepageShopLinks({ embedded = false }) {
   const content = (
         <details className="group">
           <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center justify-between gap-3">
               <div className="min-w-0 text-left">
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-zinc-500 mb-1.5">
-                  Browse
-                </p>
                 <h2
                   id="homepage-shop-heading"
-                  className="text-2xl sm:text-3xl font-normal editorial-heading text-[#111827] dark:text-white"
+                  className="text-xl sm:text-2xl font-normal editorial-heading text-[#111827] dark:text-white leading-tight"
                 >
                   Start with a filter
                 </h2>
-                <p className="mt-1.5 max-w-2xl text-sm font-medium text-slate-600 dark:text-zinc-400 group-open:hidden">
+                <p className="mt-1 max-w-2xl text-[13px] sm:text-sm font-medium text-slate-600 dark:text-zinc-400 group-open:hidden leading-snug">
                   Body type, budget, fuel, county and quick shortcuts.
                 </p>
-                <p className="mt-2 text-[11px] font-black uppercase tracking-[0.14em] text-[#38A169] group-open:hidden">
+                <p className="mt-1.5 text-[10px] sm:text-[11px] font-black uppercase tracking-[0.14em] text-[#38A169] group-open:hidden">
                   Tap to expand
                 </p>
               </div>
               <span
-                className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[#38A169]/40 bg-[#38A169]/10 text-[#38A169] transition-transform group-open:rotate-180 dark:border-[#4ade80]/40 dark:bg-[#22c55e]/15 dark:text-[#4ade80]"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[#38A169]/40 bg-[#38A169]/10 text-[#38A169] transition-transform group-open:rotate-180 dark:border-[#4ade80]/40 dark:bg-[#22c55e]/15 dark:text-[#4ade80]"
                 aria-hidden
               >
                 <ChevronDown className="h-4 w-4" />
@@ -92,7 +89,7 @@ export default function HomepageShopLinks({ embedded = false }) {
             </div>
           </summary>
 
-          <div className="mt-5 sm:mt-6 grid gap-5 sm:gap-6">
+          <div className="mt-4 sm:mt-5 grid gap-4 sm:gap-5">
             <FilterGroup title="Body type">
               <FilterChips
                 items={HOMEPAGE_BODY_LINKS}
@@ -163,7 +160,7 @@ export default function HomepageShopLinks({ embedded = false }) {
 
   if (embedded) {
     return (
-      <div className="w-full rounded-xl bg-white/90 dark:bg-[#111111]/70 ring-1 ring-black/[0.05] dark:ring-white/[0.07] p-3 sm:p-4 shadow-[0_18px_50px_-28px_rgba(0,0,0,0.18)]">
+      <div className="w-full rounded-xl bg-white/90 dark:bg-[#111111]/70 ring-1 ring-black/[0.05] dark:ring-white/[0.07] p-2.5 sm:p-3 shadow-[0_18px_50px_-28px_rgba(0,0,0,0.18)]">
         {content}
       </div>
     );
