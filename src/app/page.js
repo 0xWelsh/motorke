@@ -121,6 +121,7 @@ export default async function HomePage() {
     newArrivals,
     dealers,
     newsItems,
+    highlightReviews,
     heroBoosted,
     heroFallback,
     paidSpotlight,
@@ -209,21 +210,28 @@ export default async function HomePage() {
               <span className="editorial-hero-accent text-[#38A169]">dealer-level clarity.</span>
             </h1>
 
-            <p className="text-base md:text-lg lg:text-[1.15rem] text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto">
+            <p className="text-base md:text-lg lg:text-[1.15rem] text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto lg:hidden">
               Verified Kenyan inventory, transparent ownership costs, and direct dealer access.
+            </p>
+            <p className="hidden lg:block text-base md:text-lg lg:text-[1.15rem] text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto">
+              Find verified Kenyan inventory with transparent ownership costs in minutes.
+              Compare up to three cars, inspect real running-cost and road-readiness signals, then contact real dealers directly.
             </p>
           </div>
 
-          <div className="mx-auto w-full max-w-6xl space-y-4 sm:space-y-5 animate-in fade-in duration-1000 delay-200">
-            <div className="w-full max-w-lg mx-auto lg:max-w-none">
-              <BrowsePanel layout="desktop-hero" />
+          {/* Mobile hero — stacked filters, strips, and finder */}
+          <div className="lg:hidden mx-auto w-full max-w-6xl space-y-4 sm:space-y-5 animate-in fade-in duration-1000 delay-200">
+            <div className="mb-4 max-w-lg mx-auto w-full">
+              <BrowsePanel layout="hero-mobile" />
             </div>
 
-            <HomepageShopLinks embedded />
+            <div className="w-full max-w-lg mx-auto">
+              <HomepageShopLinks embedded />
+            </div>
 
             <HeroGridShowcase cars={heroCars.length >= 2 ? heroCars : heroPool.slice(0, 6)} />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 w-full max-w-lg mx-auto lg:max-w-none">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 w-full max-w-lg mx-auto">
               <TrackedLink
                 href="/cars"
                 eventName="homepage_explore_inventory_click"
@@ -245,7 +253,7 @@ export default async function HomePage() {
             </div>
 
             <div
-              className="p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70 max-w-lg mx-auto lg:max-w-none text-center lg:text-left"
+              className="p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70 max-w-lg mx-auto text-center"
               style={{ borderRadius: "var(--radius)" }}
             >
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">
@@ -258,17 +266,17 @@ export default async function HomePage() {
                 href="/compare"
                 eventName="homepage_quick_compare_click"
                 eventPayload={{ area: "hero_card" }}
-                className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors justify-center lg:justify-start w-full"
+                className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors justify-center w-full"
               >
                 Start comparing <ArrowRight className="w-4 h-4" />
               </TrackedLink>
             </div>
 
-            <div className="w-full max-w-lg mx-auto lg:max-w-none">
+            <div className="w-full max-w-lg mx-auto">
               <HomepageHeroCarFinder embedded />
             </div>
 
-            <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-lg mx-auto lg:max-w-none">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-lg mx-auto">
               {[
                 { label: "Verified dealers", value: `${dealers.length}+` },
                 { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
@@ -287,8 +295,95 @@ export default async function HomePage() {
               ))}
             </div>
           </div>
+
+          {/* Desktop hero — original two-column layout */}
+          <div className="hidden lg:block mx-auto w-full max-w-6xl animate-in fade-in duration-1000 delay-200">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 lg:items-start">
+              <div className="flex flex-col text-center lg:text-left">
+                <div className="w-full min-w-0">
+                  <BrowsePanel layout="desktop-hero" />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 mt-5 sm:mt-8 w-full max-w-lg mx-auto lg:max-w-none lg:mx-0">
+                  <TrackedLink
+                    href="/cars"
+                    eventName="homepage_explore_inventory_click"
+                    eventPayload={{ area: "hero" }}
+                    className="h-12 w-full inline-flex items-center justify-center bg-[#38A169] hover:bg-[#2F855A] text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
+                    style={{ borderRadius: "var(--radius)" }}
+                  >
+                    Explore Inventory
+                  </TrackedLink>
+                  <TrackedLink
+                    href="/compare"
+                    eventName="homepage_compare_cars_click"
+                    eventPayload={{ area: "hero" }}
+                    className="h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#111827] dark:hover:border-white"
+                    style={{ borderRadius: "var(--radius)" }}
+                  >
+                    Compare Cars
+                  </TrackedLink>
+                </div>
+
+                <div
+                  className="mt-6 sm:mt-7 p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70 max-w-lg mx-auto lg:max-w-none text-center lg:text-left"
+                  style={{ borderRadius: "var(--radius)" }}
+                >
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">
+                    Quick compare
+                  </p>
+                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                    Side-by-side specs, annual TCO, and road readiness in one clean sheet.
+                  </p>
+                  <TrackedLink
+                    href="/compare"
+                    eventName="homepage_quick_compare_click"
+                    eventPayload={{ area: "hero_card" }}
+                    className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors justify-center lg:justify-start w-full"
+                  >
+                    Start comparing <ArrowRight className="w-4 h-4" />
+                  </TrackedLink>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-5 max-w-lg mx-auto lg:max-w-none lg:mx-0">
+                  {[
+                    { label: "Verified dealers", value: `${dealers.length}+` },
+                    { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
+                    { label: "Updated", value: "Daily" },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className="p-3 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70 text-center"
+                      style={{ borderRadius: "var(--radius)" }}
+                    >
+                      <p className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white">{item.value}</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mt-1">
+                        {item.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <div className="shrink-0 w-full max-w-xl mx-auto lg:max-w-none">
+                  <HeroGridShowcase
+                    cars={heroCars.length >= 2 ? heroCars : heroPool.slice(0, 6)}
+                    reviews={highlightReviews}
+                  />
+                </div>
+                <div className="flex-1 min-h-[12rem]">
+                  <HomepageHeroCarFinder embedded className="h-full min-h-[12rem]" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
+
+      <div className="hidden lg:block">
+        <HomepageShopLinks />
+      </div>
 
       <HomepageSpotlight cars={spotlightCards} />
 

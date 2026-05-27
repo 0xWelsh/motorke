@@ -32,17 +32,23 @@ function SuspendedChip({ children, className = "" }) {
   );
 }
 
-function BrandLogo({ name, make, img }) {
+function ChipWrapper({ floating, children }) {
+  if (!floating) return children;
+  return <SuspendedChip>{children}</SuspendedChip>;
+}
+
+function BrandLogo({ name, make, img, floating = false }) {
   const [failed, setFailed] = useState(false);
   const src = `/images/logos/${img}`;
   const makeQuery = make || name;
 
+  const linkClass = floating
+    ? "group flex flex-col items-center justify-center gap-1.5 p-2.5 sm:p-3 w-[72px] sm:w-[78px] lg:w-[86px] rounded-xl bg-white/80 dark:bg-white/[0.06] backdrop-blur-md ring-1 ring-white/60 dark:ring-white/10 hover:bg-white dark:hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300"
+    : "group flex flex-col items-center justify-center gap-1.5 p-2 sm:p-2.5 w-[72px] sm:w-[78px] lg:w-[86px] rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300";
+
   return (
-    <SuspendedChip>
-      <Link
-        href={`/cars/${slugifyCarSegment(makeQuery)}`}
-        className="group flex flex-col items-center justify-center gap-1.5 p-2.5 sm:p-3 w-[72px] sm:w-[78px] lg:w-[86px] rounded-xl bg-white/80 dark:bg-white/[0.06] backdrop-blur-md ring-1 ring-white/60 dark:ring-white/10 hover:bg-white dark:hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300"
-      >
+    <ChipWrapper floating={floating}>
+      <Link href={`/cars/${slugifyCarSegment(makeQuery)}`} className={linkClass}>
         <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center">
           {failed ? (
             <span className="text-lg font-black text-slate-700 dark:text-slate-300">{name[0]}</span>
@@ -61,19 +67,20 @@ function BrandLogo({ name, make, img }) {
           {name}
         </span>
       </Link>
-    </SuspendedChip>
+    </ChipWrapper>
   );
 }
 
-function BodyTypeCard({ label, value, img }) {
+function BodyTypeCard({ label, value, img, floating = false }) {
   const [failed, setFailed] = useState(false);
 
+  const linkClass = floating
+    ? "group flex flex-col items-center justify-center gap-1.5 p-2.5 sm:p-3 w-[80px] sm:w-[88px] lg:w-[96px] rounded-xl bg-white/80 dark:bg-white/[0.06] backdrop-blur-md ring-1 ring-white/60 dark:ring-white/10 hover:bg-white dark:hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300"
+    : "group flex flex-col items-center justify-center gap-1.5 p-2 sm:p-2.5 w-[80px] sm:w-[88px] lg:w-[96px] rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300";
+
   return (
-    <SuspendedChip>
-      <Link
-        href={`/cars?bodyType=${value}`}
-        className="group flex flex-col items-center justify-center gap-1.5 p-2.5 sm:p-3 w-[80px] sm:w-[88px] lg:w-[96px] rounded-xl bg-white/80 dark:bg-white/[0.06] backdrop-blur-md ring-1 ring-white/60 dark:ring-white/10 hover:bg-white dark:hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300"
-      >
+    <ChipWrapper floating={floating}>
+      <Link href={`/cars?bodyType=${value}`} className={linkClass}>
         <div className="w-[56px] h-7 sm:w-[60px] sm:h-7.5 lg:w-[66px] lg:h-8 flex items-center justify-center">
           {!failed ? (
             <Image
@@ -92,11 +99,11 @@ function BodyTypeCard({ label, value, img }) {
           {label}
         </span>
       </Link>
-    </SuspendedChip>
+    </ChipWrapper>
   );
 }
 
-function ScrollableRow({ children }) {
+function ScrollableRow({ children, trackScrollOffset = false }) {
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -105,7 +112,7 @@ function ScrollableRow({ children }) {
   const checkScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft: left, scrollWidth, clientWidth } = scrollRef.current;
-      setScrollLeft(left);
+      if (trackScrollOffset) setScrollLeft(left);
       setCanScrollLeft(left > 0);
       setCanScrollRight(Math.ceil(left + clientWidth) < scrollWidth);
     }
@@ -124,8 +131,7 @@ function ScrollableRow({ children }) {
     }
   };
 
-  return (
-    <ScrollOffsetContext.Provider value={scrollLeft}>
+  const row = (
       <div className="relative group/row">
         {canScrollLeft && (
           <div className="absolute left-0 top-0 bottom-8 w-16 z-10 pointer-events-none flex items-center pr-2 -ml-2">
@@ -163,8 +169,10 @@ function ScrollableRow({ children }) {
           </div>
         )}
       </div>
-    </ScrollOffsetContext.Provider>
   );
+
+  if (!trackScrollOffset) return row;
+  return <ScrollOffsetContext.Provider value={scrollLeft}>{row}</ScrollOffsetContext.Provider>;
 }
 
 function ShopRowSection({ title, action }) {
@@ -188,6 +196,7 @@ function ShopRowSection({ title, action }) {
 export default function BrowsePanel({ layout = "full" }) {
   const heroMobile = layout === "hero-mobile";
   const desktopHero = layout === "desktop-hero";
+  const floatingChips = heroMobile;
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [loadingLoc, setLoadingLoc] = useState(false);
@@ -251,10 +260,10 @@ export default function BrowsePanel({ layout = "full" }) {
               </Link>
             }
           />
-          <ScrollableRow>
+          <ScrollableRow trackScrollOffset={floatingChips}>
             {BRANDS.map((b) => (
               <div key={b.name} className="snap-start shrink-0">
-                <BrandLogo name={b.name} make={b.make} img={b.img} />
+                <BrandLogo name={b.name} make={b.make} img={b.img} floating={floatingChips} />
               </div>
             ))}
           </ScrollableRow>
@@ -263,10 +272,10 @@ export default function BrowsePanel({ layout = "full" }) {
         {!heroMobile && (
           <div>
             <ShopRowSection title="Shop by shape" />
-            <ScrollableRow>
+            <ScrollableRow trackScrollOffset={floatingChips}>
               {BODY_TYPES.map((bt) => (
                 <div key={bt.value} className="snap-start shrink-0">
-                  <BodyTypeCard {...bt} />
+                  <BodyTypeCard {...bt} floating={floatingChips} />
                 </div>
               ))}
             </ScrollableRow>

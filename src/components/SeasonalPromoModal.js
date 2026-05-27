@@ -38,6 +38,8 @@ export default function SeasonalPromoModal() {
 
   if (!promo || !ready || view === "dismissed" || !isHomepage) return null;
 
+  const mobileOnly = "lg:hidden";
+
   const persist = (next) => {
     setView(next);
     try {
@@ -54,7 +56,7 @@ export default function SeasonalPromoModal() {
       <button
         type="button"
         onClick={() => persist("open")}
-        className={`${HOMEPAGE_FAB_CLASS} animate-in fade-in slide-in-from-bottom-4 duration-500`}
+        className={`${HOMEPAGE_FAB_CLASS} ${mobileOnly} animate-in fade-in slide-in-from-bottom-4 duration-500`}
         aria-label={`Open ${promo.fabLabel} greeting`}
       >
         <Image src={promo.image} alt="" fill className="object-cover object-center" sizes="56px" />
@@ -64,7 +66,7 @@ export default function SeasonalPromoModal() {
 
   return (
     <div
-      className="fixed inset-0 z-[10050] flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-300"
+      className={`fixed inset-0 z-[10050] flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-300 ${mobileOnly}`}
       role="dialog"
       aria-modal="true"
       aria-label={promo.alt}

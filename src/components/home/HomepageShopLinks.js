@@ -168,7 +168,101 @@ export default function HomepageShopLinks({ embedded = false }) {
 
   return (
     <section className="border-b border-slate-100 bg-white py-4 sm:py-5 dark:border-zinc-900 dark:bg-[#0a0a0a]">
-      <div className="home-shell">{content}</div>
+      <div className="home-shell">
+        <details className="group">
+          <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0 text-left">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-zinc-500 mb-1.5">
+                  Browse
+                </p>
+                <h2
+                  id="homepage-shop-heading"
+                  className="text-2xl sm:text-3xl font-normal editorial-heading text-[#111827] dark:text-white"
+                >
+                  Start with a filter
+                </h2>
+                <p className="mt-1.5 max-w-2xl text-sm font-medium text-slate-600 dark:text-zinc-400 group-open:hidden">
+                  Body type, budget, fuel, county, and quick shortcuts — tap to expand.
+                </p>
+              </div>
+              <span
+                className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-sky-200/90 bg-[#dbeaf8] text-[#111827] transition-transform group-open:rotate-180 dark:border-sky-800/70 dark:bg-sky-950/45 dark:text-sky-50"
+                aria-hidden
+              >
+                <ChevronDown className="h-4 w-4" />
+              </span>
+            </div>
+          </summary>
+
+          <div className="mt-5 sm:mt-6 grid gap-5 sm:gap-6">
+            <FilterGroup title="Body type">
+              <FilterChips
+                items={HOMEPAGE_BODY_LINKS}
+                eventName="homepage_body_link_click"
+                area="shop_body"
+                className="grid grid-cols-3 gap-1.5 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 sm:gap-2"
+              />
+            </FilterGroup>
+
+            <div className="grid gap-5 sm:gap-6 lg:grid-cols-5">
+              <FilterGroup title="Budget" className="lg:col-span-2">
+                <FilterChips
+                  items={HOMEPAGE_BUDGET_LINKS}
+                  eventName="homepage_budget_link_click"
+                  area="shop_budget"
+                  className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 sm:gap-2"
+                />
+              </FilterGroup>
+
+              <FilterGroup title="Quick picks" className="lg:col-span-3">
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <FilterSubRow
+                    label="SUV deals"
+                    items={HOMEPAGE_POPULAR_SUV_LINKS}
+                    eventName="homepage_popular_link_click"
+                    area="shop_popular_suv"
+                    columns="grid-cols-1"
+                  />
+                  <FilterSubRow
+                    label="Sort by"
+                    items={HOMEPAGE_POPULAR_SORT_LINKS}
+                    eventName="homepage_popular_link_click"
+                    area="shop_popular_sort"
+                    columns="grid-cols-2"
+                  />
+                  <FilterSubRow
+                    label="Specs"
+                    items={HOMEPAGE_POPULAR_SPEC_LINKS}
+                    eventName="homepage_popular_link_click"
+                    area="shop_popular_spec"
+                    columns="grid-cols-2"
+                  />
+                </div>
+              </FilterGroup>
+            </div>
+
+            <div className="grid gap-5 sm:gap-6 sm:grid-cols-2">
+              <FilterGroup title="Fuel">
+                <FilterChips
+                  items={HOMEPAGE_FUEL_LINKS}
+                  eventName="homepage_fuel_link_click"
+                  area="shop_fuel"
+                  className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 sm:gap-2"
+                />
+              </FilterGroup>
+              <FilterGroup title="Location">
+                <FilterChips
+                  items={HOMEPAGE_COUNTY_LINKS}
+                  eventName="homepage_county_link_click"
+                  area="shop_county"
+                  className="grid grid-cols-2 gap-1.5 sm:grid-cols-4 sm:gap-2"
+                />
+              </FilterGroup>
+            </div>
+          </div>
+        </details>
+      </div>
     </section>
   );
 }

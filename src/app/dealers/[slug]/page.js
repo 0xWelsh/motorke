@@ -336,9 +336,9 @@ export default async function DealerPage(props) {
               ))}
             </div>
           )}
-          {/* Mobile & desktop: single dark fade so banner text stays readable in both themes */}
+          {/* Mobile: vertical fade for in-banner dealer details */}
           <div
-            className="pointer-events-none absolute inset-0"
+            className="pointer-events-none absolute inset-0 lg:hidden"
             style={{
               background:
                 "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0.9) 100%)",
