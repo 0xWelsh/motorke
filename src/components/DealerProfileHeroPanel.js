@@ -28,11 +28,11 @@ export default function DealerProfileHeroPanel({
   const mobile = variant === "mobile";
 
   const nameCls = mobile
-    ? "text-lg font-black tracking-tight leading-tight text-white dark:text-slate-900"
+    ? "text-lg font-black tracking-tight leading-tight text-white"
     : "text-xl sm:text-2xl lg:text-[1.75rem] font-black text-white tracking-tight leading-tight";
 
   const metaCls = mobile
-    ? "flex flex-wrap items-center gap-x-2 gap-y-1 text-[9px] font-bold uppercase tracking-[0.1em] text-white/90 dark:text-slate-700"
+    ? "flex flex-wrap items-center gap-x-2 gap-y-1 text-[9px] font-bold uppercase tracking-[0.1em] text-white/90"
     : "flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white/80";
 
   const summaryCls = mobile
@@ -40,11 +40,11 @@ export default function DealerProfileHeroPanel({
     : "mt-2 text-[13px] sm:text-sm text-white/85 leading-relaxed line-clamp-2";
 
   const pillCls = mobile
-    ? "inline-flex items-center gap-1 bg-white/15 border border-white/20 px-2 py-0.5 text-[9px] font-black text-white dark:bg-slate-900/10 dark:border-slate-900/15 dark:text-slate-900"
+    ? "inline-flex items-center gap-1 bg-white/15 border border-white/20 px-2 py-0.5 text-[9px] font-black text-white"
     : "inline-flex items-center gap-1.5 bg-white/10 border border-white/15 px-2.5 py-1 text-[10px] font-black text-white";
 
-  const dotCls = mobile ? "text-white/40 dark:text-slate-500" : "text-white/30";
-  const accentIcon = mobile ? "text-[#4ade80] dark:text-[#16a34a]" : "text-[#22c55e]";
+  const dotCls = mobile ? "text-white/40" : "text-white/30";
+  const accentIcon = mobile ? "text-[#4ade80]" : "text-[#22c55e]";
 
   return (
     <div className={`flex gap-2.5 sm:gap-3 items-start ${mobile ? "" : "flex-col sm:flex-row sm:gap-4"}`}>
@@ -79,7 +79,7 @@ export default function DealerProfileHeroPanel({
             <span
               className={`inline-flex items-center gap-0.5 text-[9px] font-black uppercase tracking-[0.12em] border ${
                 mobile
-                  ? "bg-[#22c55e]/20 text-[#bbf7d0] border-[#22c55e]/40 dark:bg-[#16a34a]/15 dark:text-[#166534] dark:border-[#16a34a]/35"
+                  ? "bg-[#22c55e]/20 text-[#bbf7d0] border-[#22c55e]/40"
                   : "bg-[#22c55e]/15 text-[#22c55e] border-[#22c55e]/40"
               } px-1.5 py-0.5`}
               style={{ borderRadius: "999px" }}
@@ -109,7 +109,7 @@ export default function DealerProfileHeroPanel({
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#22c55e]" />
               </span>
             ) : (
-              <Activity className={`w-2.5 h-2.5 ${mobile ? "text-white/60 dark:text-slate-500" : "text-white/50"}`} />
+              <Activity className={`w-2.5 h-2.5 ${mobile ? "text-white/60" : "text-white/50"}`} />
             )}
             {lastActiveLabel}
           </span>
