@@ -19,6 +19,7 @@ import HomepageSpotlight from "@/components/home/HomepageSpotlight";
 import HomepageDutyTeaser from "@/components/home/HomepageDutyTeaser";
 import HomepageHeroCarFinder from "@/components/home/HomepageHeroCarFinder";
 import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
+import SeasonalPromoModal from "@/components/SeasonalPromoModal";
 import { getHomepageData } from "@/lib/homepage-cache";
 import { isActiveListingBoost } from "@/lib/listing-boost";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
@@ -412,6 +413,7 @@ export default async function HomePage() {
       </section>
 
       <HomepageSupportWhatsApp />
+      <SeasonalPromoModal />
     </div>
   );
 }

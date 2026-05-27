@@ -3,13 +3,19 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { X, EyeOff } from "lucide-react";
 import {
   getActiveSeasonalPromo,
   seasonalPromoStorageKey,
 } from "@/lib/seasonal-promo";
 
+const HOMEPAGE_FAB_CLASS =
+  "fixed z-50 flex h-14 w-14 items-center justify-center rounded-full overflow-hidden ring-2 ring-white/90 shadow-[0_8px_32px_rgba(26,61,46,0.4)] transition-all hover:scale-105 active:scale-95 dark:ring-zinc-900/80 bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-4 sm:bottom-6 sm:left-6";
+
 export default function SeasonalPromoModal() {
+  const pathname = usePathname() || "";
+  const isHomepage = pathname === "/";
   const promo = getActiveSeasonalPromo();
   const [view, setView] = useState("open");
   const [ready, setReady] = useState(false);
@@ -30,7 +36,7 @@ export default function SeasonalPromoModal() {
     setReady(true);
   }, [promo]);
 
-  if (!promo || !ready || view === "dismissed") return null;
+  if (!promo || !ready || view === "dismissed" || !isHomepage) return null;
 
   const persist = (next) => {
     setView(next);
@@ -48,10 +54,10 @@ export default function SeasonalPromoModal() {
       <button
         type="button"
         onClick={() => persist("open")}
-        className="fixed bottom-4 left-4 z-[10040] h-12 w-12 border border-[#38A169]/55 bg-[#1a3d2e] text-white shadow-[0_10px_24px_rgba(26,61,46,0.45)] transition-all hover:scale-[1.03] hover:bg-[#234d3a] active:scale-95 sm:bottom-6 sm:left-6 animate-in fade-in slide-in-from-bottom-4 duration-500 overflow-hidden"
+        className={`${HOMEPAGE_FAB_CLASS} animate-in fade-in slide-in-from-bottom-4 duration-500`}
         aria-label={`Open ${promo.fabLabel} greeting`}
       >
-        <Image src={promo.image} alt="" fill className="object-cover object-left" sizes="48px" />
+        <Image src={promo.image} alt="" fill className="object-cover object-center" sizes="56px" />
       </button>
     );
   }
