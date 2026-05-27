@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X, EyeOff } from "lucide-react";
+import { X } from "lucide-react";
 import {
   getActiveSeasonalPromo,
   seasonalPromoStorageKey,
@@ -25,8 +25,8 @@ export default function SeasonalPromoModal() {
     const key = seasonalPromoStorageKey(promo.id);
     try {
       const saved = window.localStorage.getItem(key);
-      if (saved === "minimized" || saved === "dismissed") {
-        setView(saved);
+      if (saved === "minimized") {
+        setView("minimized");
       } else {
         setView("open");
       }
@@ -36,7 +36,7 @@ export default function SeasonalPromoModal() {
     setReady(true);
   }, [promo]);
 
-  if (!promo || !ready || view === "dismissed" || !isHomepage) return null;
+  if (!promo || !ready || !isHomepage) return null;
 
   const mobileOnly = "lg:hidden";
 
@@ -86,15 +86,6 @@ export default function SeasonalPromoModal() {
           aria-label="Close greeting"
         >
           <X className="h-5 w-5" />
-        </button>
-        <button
-          type="button"
-          onClick={() => persist("dismissed")}
-          className="absolute top-2 right-12 z-20 inline-flex h-9 items-center gap-1 border border-white/30 bg-[#111827]/90 px-2.5 text-[10px] font-bold uppercase tracking-[0.1em] text-white shadow-lg transition-colors hover:bg-slate-900"
-          aria-label="Do not show this greeting again"
-        >
-          <EyeOff className="h-3.5 w-3.5" />
-          Don't show again
         </button>
 
         <Link

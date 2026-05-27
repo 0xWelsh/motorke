@@ -190,7 +190,7 @@ function ShopRowSection({ title, action }) {
 
 /**
  * @param {{ layout?: "full" | "hero-mobile" | "desktop-hero" }} props
- *   hero-mobile — search + shop by brand only (homepage mobile hero)
+ *   hero-mobile — search + shop by brand + shop by shape (homepage mobile hero)
  *   desktop-hero — full-width search in homepage left column
  */
 export default function BrowsePanel({ layout = "full" }) {
@@ -269,18 +269,16 @@ export default function BrowsePanel({ layout = "full" }) {
           </ScrollableRow>
         </div>
 
-        {!heroMobile && (
-          <div>
-            <ShopRowSection title="Shop by shape" />
-            <ScrollableRow trackScrollOffset={floatingChips}>
-              {BODY_TYPES.map((bt) => (
-                <div key={bt.value} className="snap-start shrink-0">
-                  <BodyTypeCard {...bt} floating={floatingChips} />
-                </div>
-              ))}
-            </ScrollableRow>
-          </div>
-        )}
+        <div>
+          <ShopRowSection title="Shop by shape" />
+          <ScrollableRow trackScrollOffset={floatingChips}>
+            {BODY_TYPES.map((bt) => (
+              <div key={bt.value} className="snap-start shrink-0">
+                <BodyTypeCard {...bt} floating={floatingChips} />
+              </div>
+            ))}
+          </ScrollableRow>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 /**
- * Date-gated seasonal promos shown on first visit (modal) with optional FAB when minimized.
+ * Date-gated seasonal promos (modal + optional FAB when minimized).
  * Add entries here for future holidays — only the first active promo is shown.
+ * No permanent dismiss: promo disappears when `endsAt` passes.
  */
 
 /** @typedef {{ id: string, image: string, alt: string, href: string, startsAt: string, endsAt: string, fabLabel: string }} SeasonalPromo */
