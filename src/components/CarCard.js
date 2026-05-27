@@ -363,7 +363,7 @@ export default function CarCard({
             href={carListingPath(car)}
             onClick={() => onCarClick("cta")}
             className={clsx(
-              "group/btn inline-flex items-center bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-white font-black uppercase tracking-widest hover:bg-[#111827] hover:text-white dark:hover:bg-white dark:hover:text-black transition-all",
+              "group/btn inline-flex items-center bg-slate-50 dark:bg-white border border-slate-200 dark:border-zinc-200 text-slate-900 dark:text-black font-black uppercase tracking-widest hover:bg-[#111827] hover:text-white dark:hover:bg-slate-100 dark:hover:text-black transition-all",
               compact
                 ? "gap-1.5 px-2 py-1 text-[8px] sm:text-[9px] lg:gap-2 lg:px-4 lg:py-2 lg:text-[10px]"
                 : "gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 text-[9px] sm:text-[10px]"

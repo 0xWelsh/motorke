@@ -36,7 +36,7 @@ export default function DealerProfileHeroPanel({
     : "flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white/80";
 
   const summaryCls = mobile
-    ? "mt-1.5 text-[11px] font-medium leading-snug text-white/90 line-clamp-2 dark:text-slate-800"
+    ? "mt-1.5 text-[11px] font-medium leading-snug text-white/90 line-clamp-2"
     : "mt-2 text-[13px] sm:text-sm text-white/85 leading-relaxed line-clamp-2";
 
   const pillCls = mobile
