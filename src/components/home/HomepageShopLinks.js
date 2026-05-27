@@ -61,10 +61,8 @@ function FilterSubRow({ label, items, eventName, area, columns = "grid-cols-2 sm
   );
 }
 
-export default function HomepageShopLinks() {
-  return (
-    <section className="border-b border-slate-100 bg-white py-4 sm:py-5 dark:border-zinc-900 dark:bg-[#0a0a0a]">
-      <div className="home-shell">
+export default function HomepageShopLinks({ embedded = false }) {
+  const content = (
         <details className="group">
           <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
             <div className="flex items-start justify-between gap-4">
@@ -158,7 +156,19 @@ export default function HomepageShopLinks() {
             </div>
           </div>
         </details>
+  );
+
+  if (embedded) {
+    return (
+      <div className="w-full rounded-xl bg-white/90 dark:bg-[#111111]/70 ring-1 ring-black/[0.05] dark:ring-white/[0.07] p-3 sm:p-4 shadow-[0_18px_50px_-28px_rgba(0,0,0,0.18)]">
+        {content}
       </div>
+    );
+  }
+
+  return (
+    <section className="border-b border-slate-100 bg-white py-4 sm:py-5 dark:border-zinc-900 dark:bg-[#0a0a0a]">
+      <div className="home-shell">{content}</div>
     </section>
   );
 }
