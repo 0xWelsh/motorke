@@ -8,6 +8,7 @@ import {
   MessageCircle,
   GitCompare,
   RefreshCw,
+  Search,
 } from "lucide-react";
 import Image from "next/image";
 import HeroGridShowcase from "@/components/HeroGridShowcase";
@@ -252,6 +253,17 @@ export default async function HomePage() {
               </TrackedLink>
             </div>
 
+            <TrackedLink
+              href="/request-car"
+              eventName="homepage_request_car_click"
+              eventPayload={{ area: "hero_mobile" }}
+              className="h-12 w-full max-w-lg mx-auto inline-flex items-center justify-center gap-2 border-2 border-[#38A169] bg-[#38A169]/10 text-[#1a3d2e] dark:text-[#bbf7d0] px-6 text-xs font-bold uppercase tracking-widest transition-all hover:bg-[#38A169]/20"
+              style={{ borderRadius: "var(--radius)" }}
+            >
+              <Search className="w-4 h-4" aria-hidden />
+              Request a Car
+            </TrackedLink>
+
             <div
               className="p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70 max-w-lg mx-auto text-center"
               style={{ borderRadius: "var(--radius)" }}
@@ -324,6 +336,17 @@ export default async function HomePage() {
                     Compare Cars
                   </TrackedLink>
                 </div>
+
+                <TrackedLink
+                  href="/request-car"
+                  eventName="homepage_request_car_click"
+                  eventPayload={{ area: "hero_desktop" }}
+                  className="mt-3 h-12 w-full max-w-lg lg:max-w-none mx-auto lg:mx-0 inline-flex items-center justify-center gap-2 border-2 border-[#38A169] bg-[#38A169]/10 text-[#1a3d2e] dark:text-[#bbf7d0] px-6 text-xs font-bold uppercase tracking-widest transition-all hover:bg-[#38A169]/20"
+                  style={{ borderRadius: "var(--radius)" }}
+                >
+                  <Search className="w-4 h-4" aria-hidden />
+                  Request a Car
+                </TrackedLink>
 
                 <div
                   className="mt-6 sm:mt-7 p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70 max-w-lg mx-auto lg:max-w-none text-center lg:text-left"

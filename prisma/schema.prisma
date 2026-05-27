@@ -31,6 +31,7 @@ model User {
   carViews        CarView[]
   marketingEvents MarketingEvent[]
   leads           Lead[]
+  buyerRequests   BuyerRequest[]
   dealer          Dealer?          @relation(fields: [dealerId], references: [id], onDelete: Cascade)
 
   @@map("users")
@@ -767,4 +768,50 @@ model SeoPageSpeedRun {
 
   @@index([url, strategy, createdAt])
   @@map("seo_pagespeed_runs")
+}
+
+enum BuyerRequestStatus {
+  OPEN
+  MATCHED
+  CLOSED
+  EXPIRED
+}
+
+/// Buyer "car wanted" request — sellers respond via Welsh Motorhub (phone hidden on public board).
+model BuyerRequest {
+  id              String             @id @default(cuid())
+  publicCode      String             @unique
+  userId          String?
+  name            String
+  phone           String
+  make            String
+  model           String
+  variant         String?
+  yearMin         Int?
+  yearMax         Int?
+  budgetMin       Int?
+  budgetMax       Int
+  bodyType        BodyType?
+  fuelType        FuelType?
+  transmission    Transmission?
+  mileageMin      Int?
+  mileageMax      Int?
+  county          String
+  timeline        String             @default("ASAP")
+  conditionPref   String             @default("EITHER")
+  features        String[]           @default([])
+  notes           String?
+  consentWhatsapp Boolean            @default(true)
+  status          BuyerRequestStatus @default(OPEN)
+  expiresAt       DateTime
+  offerClicks     Int                @default(0)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  user            User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([status, expiresAt])
+  @@index([county, status])
+  @@index([make, model])
+  @@index([createdAt])
+  @@map("buyer_requests")
 }

@@ -155,6 +155,8 @@ export default async function sitemap() {
     { url: `${BASE}/cars`, lastModified: now, changeFrequency: "daily", priority: 0.95 },
     { url: `${BASE}/dealers`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE}/compare`, lastModified: now, changeFrequency: "weekly", priority: 0.65 },
+    { url: `${BASE}/request-car`, lastModified: now, changeFrequency: "weekly", priority: 0.82 },
+    { url: `${BASE}/requests`, lastModified: now, changeFrequency: "hourly", priority: 0.78 },
     { url: `${BASE}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.62 },
     { url: `${BASE}/guides`, lastModified: now, changeFrequency: "daily", priority: 0.7 },
     { url: `${BASE}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
