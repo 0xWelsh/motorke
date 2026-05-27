@@ -66,7 +66,7 @@ export default function BuyerRequestBoard() {
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
         <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xl">
           Live buyer demand. Tap <strong className="text-slate-800 dark:text-white">Send offer</strong> to
-          message Welsh Motorhub with this request ID — we route verified offers to the buyer on WhatsApp.
+          message Welsh Motorhub with this request ID. We route verified offers to the buyer on WhatsApp.
         </p>
         <div className="flex items-center gap-2 shrink-0">
           <select

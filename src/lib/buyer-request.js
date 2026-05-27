@@ -6,12 +6,12 @@ import { BODY_TYPES, COUNTIES } from "@/lib/browse-catalog";
 
 export const BUYER_REQUEST_TIMELINES = [
   { value: "ASAP", label: "ASAP (within a few days)" },
-  { value: "WEEKS_1_2", label: "1–2 weeks" },
+  { value: "WEEKS_1_2", label: "1 to 2 weeks" },
   { value: "MONTH_PLUS", label: "1 month or more" },
 ];
 
 export const BUYER_REQUEST_CONDITIONS = [
-  { value: "EITHER", label: "Local or import — either works" },
+  { value: "EITHER", label: "Local or import, either works" },
   { value: "LOCAL", label: "Kenya stock only" },
   { value: "IMPORT", label: "Open to import" },
 ];
@@ -196,7 +196,7 @@ export function serializeBuyerRequestPublic(row) {
     row.yearMin && row.yearMax
       ? row.yearMin === row.yearMax
         ? String(row.yearMin)
-        : `${row.yearMin}–${row.yearMax}`
+        : `${row.yearMin} to ${row.yearMax}`
       : row.yearMin
         ? `${row.yearMin}+`
         : row.yearMax
@@ -205,7 +205,7 @@ export function serializeBuyerRequestPublic(row) {
 
   const budgetPart =
     row.budgetMin != null
-      ? `${formatKes(row.budgetMin)} – ${formatKes(row.budgetMax)}`
+      ? `${formatKes(row.budgetMin)} to ${formatKes(row.budgetMax)}`
       : `Up to ${formatKes(row.budgetMax)}`;
 
   return {

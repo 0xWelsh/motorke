@@ -11,8 +11,22 @@ import {
 } from "@/lib/buyer-request";
 
 const inputCls =
-  "w-full border border-slate-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] px-3 py-2.5 text-sm font-medium text-slate-900 dark:text-white outline-none focus:border-[#38A169] transition-colors";
-const labelCls = "text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400 mb-1 block";
+  "w-full border border-slate-200 dark:border-zinc-800 bg-slate-50/80 dark:bg-[#0a0a0a] px-3 py-2.5 text-sm font-medium text-slate-900 dark:text-white outline-none focus:border-[#38A169] focus:ring-2 focus:ring-[#38A169]/20 transition-colors";
+const labelCls = "text-[10px] font-black uppercase tracking-[0.14em] text-[#2d6a4a] dark:text-[#86efac] mb-1 block";
+
+function FormSection({ title, hint, children }) {
+  return (
+    <div className="rounded-lg border border-slate-100 dark:border-zinc-800/80 bg-slate-50/50 dark:bg-zinc-950/40 p-4 sm:p-5 space-y-4">
+      <div>
+        <h2 className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-800 dark:text-white">
+          {title}
+        </h2>
+        {hint ? <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{hint}</p> : null}
+      </div>
+      {children}
+    </div>
+  );
+}
 
 export default function BuyerRequestForm() {
   const [loading, setLoading] = useState(false);
@@ -96,7 +110,7 @@ export default function BuyerRequestForm() {
         </h2>
         <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-md mx-auto mb-4">
           Your reference is <span className="font-black text-[#38A169]">{success}</span>. Verified sellers
-          will send offers through Welsh Motorhub on WhatsApp — usually within a few hours.
+          will send offers through Welsh Motorhub on WhatsApp, usually within a few hours.
         </p>
         <div className="flex flex-col sm:flex-row gap-2 justify-center">
           <Link
@@ -119,7 +133,7 @@ export default function BuyerRequestForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
       <div className="sr-only" aria-hidden>
         <label htmlFor="br-website">Website</label>
         <input
@@ -131,6 +145,7 @@ export default function BuyerRequestForm() {
         />
       </div>
 
+      <FormSection title="Your details" hint="We use this to route offers to you on WhatsApp.">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className={labelCls} htmlFor="br-name">
@@ -162,7 +177,9 @@ export default function BuyerRequestForm() {
           />
         </div>
       </div>
+      </FormSection>
 
+      <FormSection title="The car you want">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div>
           <label className={labelCls} htmlFor="br-make">
@@ -274,7 +291,7 @@ export default function BuyerRequestForm() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div>
           <label className={labelCls} htmlFor="br-body">
             Body type
@@ -350,7 +367,7 @@ export default function BuyerRequestForm() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>
           <label className={labelCls} htmlFor="br-mileage-min">
             Max mileage from (km)
@@ -417,9 +434,11 @@ export default function BuyerRequestForm() {
           ))}
         </select>
       </div>
+      </FormSection>
 
+      <FormSection title="Extras">
       <div>
-        <p className={labelCls}>Nice-to-have features</p>
+        <p className={labelCls}>Nice to have features</p>
         <div className="flex flex-wrap gap-2">
           {BUYER_REQUEST_FEATURE_OPTIONS.map((feature) => {
             const active = form.features.includes(feature);
@@ -457,8 +476,9 @@ export default function BuyerRequestForm() {
           onChange={(e) => setField("notes", e.target.value)}
         />
       </div>
+      </FormSection>
 
-      <label className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+      <label className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed rounded-lg border border-emerald-100 dark:border-emerald-900/40 bg-emerald-50/60 dark:bg-emerald-950/20 p-3">
         <input
           type="checkbox"
           className="mt-0.5"
