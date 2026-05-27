@@ -210,8 +210,7 @@ export default async function HomePage() {
             </h1>
 
             <p className="text-base md:text-lg lg:text-[1.15rem] text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto">
-              Find verified Kenyan inventory with transparent ownership costs in minutes.
-              Compare up to three cars, inspect real running-cost and road-readiness signals, then contact real dealers directly.
+              Verified Kenyan inventory, transparent ownership costs, and direct dealer access.
             </p>
           </div>
 

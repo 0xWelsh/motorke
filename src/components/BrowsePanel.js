@@ -160,6 +160,7 @@ function LocationCard({ name }) {
 export default function BrowsePanel({ layout = "full" }) {
   const heroMobile = layout === "hero-mobile";
   const desktopHero = layout === "desktop-hero";
+  const brandPanelTightPadding = heroMobile || desktopHero ? "p-2 sm:p-2.5" : "";
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [loadingLoc, setLoadingLoc] = useState(false);
@@ -214,8 +215,8 @@ export default function BrowsePanel({ layout = "full" }) {
 
       {/* Popular Brands & Body Types - tighter grouping */}
       <div className="flex flex-col gap-2.5 sm:gap-3">
-        <div className={FLOATING_PANEL}>
-          <div className="flex items-center justify-between px-1 sm:px-2 mb-2">
+        <div className={`${FLOATING_PANEL} ${brandPanelTightPadding}`}>
+          <div className="flex items-center justify-between px-1 sm:px-2 mb-1.5">
             <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
               Shop by brand
             </p>
