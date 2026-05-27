@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Phone, Mail, Globe, ShieldCheck, MessageCircle, Star, Clock3, CarFront, Activity, CalendarDays } from "lucide-react";
+import { Phone, Mail, Globe, ShieldCheck, MessageCircle } from "lucide-react";
 import { SiInstagram, SiFacebook, SiTiktok } from "react-icons/si";
 import { getSession } from "@/lib/auth";
 import DealerReviews from "@/components/DealerReviews";
@@ -10,6 +10,7 @@ import DealerInventory from "@/components/DealerInventory";
 import DealerLocationMap from "@/components/DealerLocationMap";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
 import DealerShowroomShare from "@/components/DealerShowroomShare";
+import DealerProfileHeroPanel from "@/components/DealerProfileHeroPanel";
 import { calculateDistance } from "@/lib/geolocation";
 import { absoluteUrl, BRAND_OG_IMAGE } from "@/lib/site-url";
 import { telHrefFromMsisdn } from "@/lib/phone-hints";
@@ -323,7 +324,7 @@ export default async function DealerPage(props) {
             keep the original "card overlaps bottom of banner" pattern
             because forcing everything inside on small screens would
             cramp the layout. */}
-        <div className="relative h-[200px] sm:h-[280px] lg:h-[460px] xl:h-[500px] w-full overflow-hidden bg-[#0b0f17]">
+        <div className="relative h-[min(72vw,300px)] min-h-[248px] sm:min-h-[280px] lg:h-[460px] xl:h-[500px] w-full overflow-hidden bg-[#0b0f17]">
           {dealer.bannerUrl ? (
             <img src={dealer.bannerUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
           ) : (
@@ -335,12 +336,44 @@ export default async function DealerPage(props) {
               ))}
             </div>
           )}
-          {/* Layered overlays: strong wash on the left for legibility,
-              a soft top fade so the navbar shadow lands cleanly, and a
-              subtle emerald radial accent that nods to the brand. */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/15 lg:from-black/90 lg:via-black/55 lg:to-black/10" />
-          <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/40 to-transparent pointer-events-none" />
+          {/* Mobile: dark fade (light mode) / light fade (dark mode) so banner text stays readable */}
+          <div
+            className="pointer-events-none absolute inset-0 lg:hidden dark:hidden"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0.88) 100%)",
+            }}
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute inset-0 hidden dark:block lg:hidden"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(10,10,10,0.2) 0%, rgba(248,250,252,0.72) 42%, rgba(248,250,252,0.94) 100%)",
+            }}
+            aria-hidden
+          />
+          {/* Desktop overlays */}
+          <div className="absolute inset-0 hidden lg:block bg-gradient-to-r from-black/85 via-black/55 to-black/15 lg:from-black/90 lg:via-black/55 lg:to-black/10" />
+          <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/40 to-transparent pointer-events-none hidden lg:block" />
           <div className="hidden lg:block absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(34,197,94,0.18),transparent_60%)] pointer-events-none" />
+
+          {/* Mobile: dealer details squeezed inside the banner */}
+          <div className="lg:hidden absolute inset-x-0 bottom-0 z-10 px-4 pb-3.5 pt-10">
+            <DealerProfileHeroPanel
+              variant="mobile"
+              dealer={dealer}
+              dealerSummary={dealerSummary}
+              startedYear={startedYear}
+              lastActiveLabel={lastActiveLabel}
+              isActiveToday={isActiveToday}
+              averageRating={averageRating}
+              totalReviews={totalReviews}
+              responseTimeLabel={responseTimeLabel}
+              yearsActive={yearsActive}
+              stockCount={dealer.cars.length}
+            />
+          </div>
           {/* Tiny scanline / grid texture for editorial feel — barely visible but adds depth on dark photos */}
           <div
             className="hidden lg:block absolute inset-0 opacity-[0.05] pointer-events-none"
@@ -357,117 +390,27 @@ export default async function DealerPage(props) {
             (overlap the banner edge), absolute at the bottom of the
             banner on lg+ (squeezed inside the banner for a single
             cinematic block above the inventory). */}
-        <div className="relative z-[2] mx-auto w-full max-w-[1380px] px-4 pb-4 sm:px-6 sm:pb-5 xl:px-8 lg:absolute lg:inset-x-0 lg:bottom-0 lg:pb-6">
-          <div className="-mt-7 sm:-mt-9 lg:mt-0">
+        <div className="relative z-[2] mx-auto w-full max-w-[1380px] px-4 pb-0 sm:px-6 xl:px-8 lg:absolute lg:inset-x-0 lg:bottom-0 lg:pb-6 hidden lg:block">
+          <div className="lg:mt-0">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-end">
               <section
                 className="lg:col-span-8 bg-black/40 dark:bg-black/55 backdrop-blur-md p-4 sm:p-5 shadow-2xl min-w-0 border border-white/10 ring-1 ring-white/5"
                 style={{ borderRadius: "14px" }}
               >
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start">
-                  {/* Logo with an emerald gradient ring when verified */}
-                  <div
-                    className={`relative w-16 h-16 sm:w-[72px] sm:h-[72px] shrink-0 ${
-                      dealer.verified
-                        ? "p-[2px] bg-gradient-to-br from-[#22c55e] via-[#16a34a] to-emerald-700 shadow-[0_0_24px_-6px_rgba(34,197,94,0.55)]"
-                        : "p-[2px] bg-white/10"
-                    }`}
-                    style={{ borderRadius: "12px" }}
-                  >
-                    <div
-                      className="w-full h-full bg-white p-2 flex items-center justify-center overflow-hidden"
-                      style={{ borderRadius: "10px" }}
-                    >
-                      {dealer.logoUrl ? (
-                        <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-cover" />
-                      ) : (
-                        <span className="text-2xl font-black text-slate-400">{dealer.name[0]}</span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="min-w-0 w-full">
-                    {/* Name + verified pill */}
-                    <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                      <h1 className="text-xl sm:text-2xl lg:text-[1.75rem] font-black text-white tracking-tight leading-tight">
-                        {dealer.name}
-                      </h1>
-                      {dealer.verified && (
-                        <span
-                          className="inline-flex items-center gap-1 bg-[#22c55e]/15 text-[#22c55e] text-[10px] font-black px-2 py-0.5 uppercase tracking-[0.14em] border border-[#22c55e]/40"
-                          style={{ borderRadius: "999px" }}
-                        >
-                          <ShieldCheck className="w-3 h-3" /> Verified
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Slim emerald accent line under the name — magazine touch */}
-                    <div className="hidden lg:block h-[2px] w-10 bg-gradient-to-r from-[#22c55e] to-transparent mb-2.5" aria-hidden />
-
-                    {/* Meta row — location · since · live status */}
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white/80">
-                      <span className="inline-flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-[#22c55e]" /> {dealer.location || dealer.county}
-                      </span>
-                      <span className="text-white/30" aria-hidden>·</span>
-                      <span className="inline-flex items-center gap-1">
-                        <CalendarDays className="w-3 h-3 text-[#22c55e]" /> Since {startedYear}
-                      </span>
-                      <span className="text-white/30" aria-hidden>·</span>
-                      <span className="inline-flex items-center gap-1.5">
-                        {isActiveToday ? (
-                          <span className="relative flex h-1.5 w-1.5">
-                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#22c55e] opacity-75" />
-                            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#22c55e]" />
-                          </span>
-                        ) : (
-                          <Activity className="w-3 h-3 text-white/50" />
-                        )}
-                        {lastActiveLabel}
-                      </span>
-                    </div>
-
-                    {/* Description, clamped */}
-                    <p className="mt-2 text-[13px] sm:text-sm text-white/85 leading-relaxed line-clamp-2">
-                      {dealerSummary}
-                    </p>
-
-                    {/* Inline glass pills — replaces both the 3-box grid
-                        and the bottom "vehicles in stock" row for a
-                        single compact stat strip. */}
-                    <div className="mt-3 flex flex-wrap items-center gap-1.5 sm:gap-2">
-                      <span
-                        className="inline-flex items-center gap-1.5 bg-white/10 border border-white/15 px-2.5 py-1 text-[10px] font-black text-white"
-                        style={{ borderRadius: "999px" }}
-                      >
-                        <Star className="w-3 h-3 text-amber-400" fill="currentColor" />
-                        <span className="tabular-nums">{averageRating > 0 ? averageRating.toFixed(1) : "—"}</span>
-                        <span className="opacity-60 font-bold uppercase tracking-[0.1em]">({totalReviews})</span>
-                      </span>
-                      <span
-                        className="inline-flex items-center gap-1.5 bg-white/10 border border-white/15 px-2.5 py-1 text-[10px] font-black text-white uppercase tracking-[0.1em]"
-                        style={{ borderRadius: "999px" }}
-                      >
-                        <Clock3 className="w-3 h-3 text-[#22c55e]" />
-                        {responseTimeLabel}
-                      </span>
-                      <span
-                        className="inline-flex items-center gap-1.5 bg-white/10 border border-white/15 px-2.5 py-1 text-[10px] font-black text-white uppercase tracking-[0.1em]"
-                        style={{ borderRadius: "999px" }}
-                      >
-                        <CarFront className="w-3 h-3 text-[#22c55e]" />
-                        <span className="tabular-nums normal-case">{dealer.cars.length}</span> in stock
-                      </span>
-                      <span
-                        className="inline-flex items-center gap-1.5 bg-white/10 border border-white/15 px-2.5 py-1 text-[10px] font-black text-white uppercase tracking-[0.1em]"
-                        style={{ borderRadius: "999px" }}
-                      >
-                        <span className="tabular-nums normal-case">{yearsActive}+</span> yrs
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                <DealerProfileHeroPanel
+                  variant="desktop"
+                  dealer={dealer}
+                  dealerSummary={dealerSummary}
+                  startedYear={startedYear}
+                  lastActiveLabel={lastActiveLabel}
+                  isActiveToday={isActiveToday}
+                  averageRating={averageRating}
+                  totalReviews={totalReviews}
+                  responseTimeLabel={responseTimeLabel}
+                  yearsActive={yearsActive}
+                  stockCount={dealer.cars.length}
+                />
+                <div className="hidden lg:block h-[2px] w-10 bg-gradient-to-r from-[#22c55e] to-transparent mt-2" aria-hidden />
               </section>
 
               <aside className="lg:col-span-4 hidden lg:block">
@@ -530,11 +473,11 @@ export default async function DealerPage(props) {
         </div>
       </div>
 
-      <div className="w-full mx-auto px-4 sm:px-6 xl:px-10 2xl:px-12 max-w-[1880px] mt-5 sm:mt-6 lg:mt-5 relative z-10 pb-20">
+      <div className="w-full mx-auto px-4 sm:px-6 xl:px-10 2xl:px-12 max-w-[1880px] mt-4 sm:mt-5 lg:mt-5 relative z-10 pb-28 lg:pb-20">
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-9 space-y-6">
-            <section id="inventory" className="bg-white dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
+            <section id="inventory" className="bg-white dark:bg-[#111111] p-4 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
               <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 gap-3">
                 <div>
                   <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-2">Featured Vehicles</h2>

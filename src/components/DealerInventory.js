@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import CarCard from "@/components/CarCard";
+import DealerInventoryStripCard from "@/components/DealerInventoryStripCard";
 
 export default function DealerInventory({ cars, dealerSlug }) {
   const [query, setQuery] = useState("");
@@ -46,7 +47,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-10">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 lg:mb-10">
         <div className="relative flex-1">
           <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
@@ -92,8 +93,21 @@ export default function DealerInventory({ cars, dealerSlug }) {
         </div>
       ) : (
         <div className="space-y-6">
+          {/* Mobile: single column horizontal strips */}
+          <div className="flex flex-col gap-2 lg:hidden">
+            {pageCars.map((car) => (
+              <div key={`strip-${car.id}`} className="space-y-1">
+                <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400">
+                  {getFreshnessLabel(car.updatedAt) || "Recently listed"}
+                </p>
+                <DealerInventoryStripCard car={car} />
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop: grid cards */}
           {topCars.length > 0 && (
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
+            <div className="hidden lg:grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
               {topCars.map((car) => (
                 <div key={`top-${car.id}`} className="space-y-2">
                   <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
@@ -105,7 +119,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
             </div>
           )}
           {lowerCars.length > 0 && (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+            <div className="hidden lg:grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
               {lowerCars.map((car) => (
                 <div key={`lower-${car.id}`} className="space-y-2">
                   <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
