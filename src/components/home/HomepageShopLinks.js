@@ -77,11 +77,14 @@ export default function HomepageShopLinks({ embedded = false }) {
                   Start with a filter
                 </h2>
                 <p className="mt-1.5 max-w-2xl text-sm font-medium text-slate-600 dark:text-zinc-400 group-open:hidden">
-                  Body type, budget, fuel, county, and quick shortcuts — tap to expand.
+                  Body type, budget, fuel, county and quick shortcuts.
+                </p>
+                <p className="mt-2 text-[11px] font-black uppercase tracking-[0.14em] text-[#38A169] group-open:hidden">
+                  Tap to expand
                 </p>
               </div>
               <span
-                className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-sky-200/90 bg-[#dbeaf8] text-[#111827] transition-transform group-open:rotate-180 dark:border-sky-800/70 dark:bg-sky-950/45 dark:text-sky-50"
+                className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[#38A169]/40 bg-[#38A169]/10 text-[#38A169] transition-transform group-open:rotate-180 dark:border-[#4ade80]/40 dark:bg-[#22c55e]/15 dark:text-[#4ade80]"
                 aria-hidden
               >
                 <ChevronDown className="h-4 w-4" />
