@@ -8,6 +8,7 @@ import { PWARegister } from "@/components/PWARegister";
 import AnalyticsBootstrap from "@/components/AnalyticsBootstrap";
 import { getSession } from "@/lib/auth";
 import CookieConsent from "@/components/CookieConsent";
+import SeasonalPromoModal from "@/components/SeasonalPromoModal";
 import { headers, cookies } from "next/headers";
 import { SaveDataProvider } from "@/components/SaveDataProvider";
 import { isSaveDataRequest, SAVE_DATA_COOKIE } from "@/lib/save-data";
@@ -192,6 +193,7 @@ export default async function RootLayout({ children }) {
             </CompareProvider>
           </SaveDataProvider>
           <ScrollToTop />
+          <SeasonalPromoModal />
           <CookieConsent />
         </ThemeProvider>
       </body>
