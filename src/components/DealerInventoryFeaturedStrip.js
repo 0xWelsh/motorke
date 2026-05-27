@@ -93,7 +93,7 @@ export default function DealerInventoryFeaturedStrip({ car, freshnessLabel }) {
             </p>
             <Link
               href={carListingPath(car)}
-              className="inline-flex shrink-0 items-center gap-0.5 bg-slate-900 px-2 py-1 text-[8px] font-black uppercase tracking-[0.1em] text-white dark:bg-white dark:text-black"
+              className="inline-flex shrink-0 items-center gap-0.5 bg-slate-900 px-2 py-1 text-[8px] font-black uppercase tracking-[0.1em] text-white dark:bg-white dark:text-black dark:hover:bg-slate-100 dark:hover:text-black"
               style={{ borderRadius: "4px" }}
             >
               View

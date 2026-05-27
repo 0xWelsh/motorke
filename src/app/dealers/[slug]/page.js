@@ -336,20 +336,12 @@ export default async function DealerPage(props) {
               ))}
             </div>
           )}
-          {/* Mobile: dark fade (light mode) / light fade (dark mode) so banner text stays readable */}
+          {/* Mobile & desktop: single dark fade so banner text stays readable in both themes */}
           <div
-            className="pointer-events-none absolute inset-0 lg:hidden dark:hidden"
+            className="pointer-events-none absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0.88) 100%)",
-            }}
-            aria-hidden
-          />
-          <div
-            className="pointer-events-none absolute inset-0 hidden dark:block lg:hidden"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(10,10,10,0.2) 0%, rgba(248,250,252,0.72) 42%, rgba(248,250,252,0.94) 100%)",
+                "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0.9) 100%)",
             }}
             aria-hidden
           />
@@ -478,13 +470,6 @@ export default async function DealerPage(props) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-9 space-y-6">
             <section id="inventory" className="bg-white dark:bg-[#111111] p-4 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 gap-3">
-                <div>
-                  <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-2">Featured Vehicles</h2>
-                  <h3 className="text-2xl sm:text-[30px] font-black text-slate-900 dark:text-white tracking-tight inline-flex items-center gap-2">Live Cars <span className="inline-block w-2 h-2 bg-[#ef3340]" style={{ borderRadius: "999px" }} /></h3>
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{dealer.cars.length} Units Available</span>
-              </div>
               <DealerInventory cars={inventoryWithDistance} dealerSlug={dealer.slug} />
             </section>
 
