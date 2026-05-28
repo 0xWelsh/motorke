@@ -117,9 +117,11 @@ model Dealer {
   branches     DealerBranch[]
   leads        Lead[]
   reviews      DealerReview[]
-  subscription Subscription?
-  users        User[]
-  gallery      DealerGalleryMedia[]
+  subscription            Subscription?
+  users                   User[]
+  gallery                 DealerGalleryMedia[]
+  buyerRequestOffers      BuyerRequestOffer[]
+  buyerRequestPassUntil   DateTime?
 
   @@index([county])
   @@map("dealers")
@@ -808,10 +810,24 @@ model BuyerRequest {
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
   user            User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  offers          BuyerRequestOffer[]
 
   @@index([status, expiresAt])
   @@index([county, status])
   @@index([make, model])
   @@index([createdAt])
   @@map("buyer_requests")
+}
+
+model BuyerRequestOffer {
+  id             String       @id @default(cuid())
+  dealerId       String
+  buyerRequestId String
+  createdAt      DateTime     @default(now())
+  dealer         Dealer       @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+  buyerRequest   BuyerRequest @relation(fields: [buyerRequestId], references: [id], onDelete: Cascade)
+
+  @@unique([dealerId, buyerRequestId])
+  @@index([dealerId, createdAt])
+  @@map("buyer_request_offers")
 }

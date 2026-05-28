@@ -16,6 +16,22 @@
  * @property {number} maxConcurrentSpotlight
  */
 
+/** Free buyer-request offers per dealer per Nairobi calendar day (see buyer-request-offers.js). */
+export const BUYER_REQUEST_FREE_OFFERS_PER_DAY = 1;
+
+/** Monthly add-on: unlimited offers on /requests (sets dealer.buyerRequestPassUntil). */
+export const BUYER_REQUEST_MONTHLY_PASS = {
+  id: "buyer_requests_monthly",
+  name: "Buyer requests pass",
+  durationDays: 30,
+  price: 2999,
+  description:
+    "Unlimited Send offer clicks on live buyer requests for 30 days. Stacks with listing plans that include requests.",
+};
+
+/** When billing is on, these listing plans include unlimited buyer-request offers. */
+export const DEALER_PLANS_WITH_UNLIMITED_BUYER_OFFERS = ["standard", "business", "enterprise"];
+
 /** When true, M-Pesa checkout, caps, and boost purchases are enabled. */
 export const DEALER_BILLING_ACTIVE = false;
 
@@ -124,6 +140,13 @@ export const DEALER_BOOST_ADDONS = [
     durationLabel: "14 days",
     description: "Visibility lift for your whole showroom.",
     price: 1999,
+  },
+  {
+    id: BUYER_REQUEST_MONTHLY_PASS.id,
+    name: BUYER_REQUEST_MONTHLY_PASS.name,
+    durationLabel: "30 days",
+    description: BUYER_REQUEST_MONTHLY_PASS.description,
+    price: BUYER_REQUEST_MONTHLY_PASS.price,
   },
   {
     id: "showroom_highlight_30d",

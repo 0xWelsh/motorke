@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { MessageCircle, Loader2, RefreshCw } from "lucide-react";
 import { FUEL_LABELS } from "@/lib/constants";
 
@@ -15,6 +16,7 @@ export default function BuyerRequestBoard() {
   const [error, setError] = useState("");
   const [county, setCounty] = useState("");
   const [offerLoadingId, setOfferLoadingId] = useState(null);
+  const [quota, setQuota] = useState(null);
 
   async function load() {
     setLoading(true);
@@ -41,6 +43,13 @@ export default function BuyerRequestBoard() {
     load();
   }, [county]);
 
+  useEffect(() => {
+    fetch("/api/buyer-requests/offer-quota")
+      .then((res) => res.json())
+      .then((data) => setQuota(data))
+      .catch(() => setQuota(null));
+  }, []);
+
   async function sendOffer(requestId) {
     setOfferLoadingId(requestId);
     try {
@@ -48,14 +57,33 @@ export default function BuyerRequestBoard() {
         method: "POST",
       });
       const data = await res.json().catch(() => ({}));
+      if (res.status === 401) {
+        window.location.href = data.loginUrl || "/login?callbackUrl=/requests";
+        return;
+      }
+      if (res.status === 403 && data.code === "DAILY_LIMIT") {
+        const goUpgrade = window.confirm(
+          `${data.error}\n\nOpen Plans & billing now?`
+        );
+        if (goUpgrade) {
+          window.location.href = data.upgradeUrl || "/portal/subscription";
+        }
+        return;
+      }
       if (!res.ok || !data?.whatsappHref) {
         alert(data?.error || "Could not open WhatsApp. Try again or contact support.");
         return;
       }
       window.open(data.whatsappHref, "_blank", "noopener,noreferrer");
-      setRequests((prev) =>
-        prev.map((r) => (r.id === requestId ? { ...r, offerClicks: (r.offerClicks || 0) + 1 } : r))
-      );
+      if (!data.alreadySent) {
+        setRequests((prev) =>
+          prev.map((r) => (r.id === requestId ? { ...r, offerClicks: (r.offerClicks || 0) + 1 } : r))
+        );
+        setQuota((prev) => {
+          if (!prev || prev.unlimited || prev.freeRemaining == null) return prev;
+          return { ...prev, usedToday: (prev.usedToday || 0) + 1, freeRemaining: 0 };
+        });
+      }
     } finally {
       setOfferLoadingId(null);
     }
@@ -64,10 +92,37 @@ export default function BuyerRequestBoard() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
-        <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xl">
-          Live buyer demand. Tap <strong className="text-slate-800 dark:text-white">Send offer</strong> to
-          message Welsh Motorhub with this request ID. We route verified offers to the buyer on WhatsApp.
-        </p>
+        <div className="max-w-xl space-y-2">
+          <p className="text-sm text-slate-600 dark:text-slate-400">
+            Live buyer demand. <strong className="text-slate-800 dark:text-white">Dealer sign-in required.</strong>{" "}
+            Tap Send offer to message Welsh Motorhub with the request ID — we route offers to the buyer.
+          </p>
+          {quota?.loggedIn && quota.isDealer ? (
+            quota.unlimited ? (
+              <p className="text-xs font-semibold text-[#2563eb] dark:text-sky-300">
+                Unlimited buyer request offers on your plan.
+              </p>
+            ) : quota.freeRemaining != null && quota.freeRemaining > 0 ? (
+              <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                {quota.freeRemaining} free offer{quota.freeRemaining === 1 ? "" : "s"} left today (Nairobi time).
+              </p>
+            ) : (
+              <p className="text-xs font-semibold text-amber-800 dark:text-amber-200">
+                Daily free offer used.{" "}
+                <Link href="/portal/subscription" className="underline font-bold">
+                  Upgrade for unlimited
+                </Link>
+              </p>
+            )
+          ) : !quota?.loggedIn ? (
+            <p className="text-xs text-slate-600 dark:text-slate-400">
+              <Link href="/login?callbackUrl=/requests" className="font-bold text-[#2563eb] dark:text-sky-300 hover:underline">
+                Sign in as a dealer
+              </Link>{" "}
+              to send offers (1 free per day).
+            </p>
+          ) : null}
+        </div>
         <div className="flex items-center gap-2 shrink-0">
           <select
             value={county}

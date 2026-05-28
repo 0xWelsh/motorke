@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import BuyerRequestAdminRowActions from "@/components/admin/BuyerRequestAdminRowActions";
 import DataTableShell from "@/components/ui/DataTableShell";
 import { FUEL_LABELS } from "@/lib/constants";
 import { formatPrice } from "@/lib/utils";
@@ -46,13 +47,14 @@ export default async function AdminBuyerRequestsPage() {
                 <th className="py-3 pr-4">County</th>
                 <th className="py-3 pr-4">Status</th>
                 <th className="py-3 pr-4">Offers</th>
-                <th className="py-3">Expires</th>
+                <th className="py-3 pr-4">Expires</th>
+                <th className="py-3 text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
               {rows.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-10 text-center text-slate-500">
+                  <td colSpan={9} className="py-10 text-center text-slate-500">
                     No buyer requests yet.
                   </td>
                 </tr>
@@ -109,8 +111,15 @@ export default async function AdminBuyerRequestsPage() {
                         </span>
                       </td>
                       <td className="py-3 pr-4 tabular-nums">{row.offerClicks}</td>
-                      <td className="py-3 text-xs text-slate-500 whitespace-nowrap">
+                      <td className="py-3 pr-4 text-xs text-slate-500 whitespace-nowrap">
                         {new Date(row.expiresAt).toLocaleDateString("en-KE")}
+                      </td>
+                      <td className="py-3 text-right">
+                        <BuyerRequestAdminRowActions
+                          requestId={row.id}
+                          publicCode={row.publicCode}
+                          status={displayStatus}
+                        />
                       </td>
                     </tr>
                   );
