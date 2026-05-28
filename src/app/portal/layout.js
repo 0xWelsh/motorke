@@ -11,7 +11,7 @@ import {
   Zap,
   Settings, 
   LogOut,
-  ExternalLink,
+  ArrowLeft,
   ShieldCheck,
   Menu,
   X,
@@ -245,6 +245,15 @@ export default function PortalLayout({ children }) {
              <Menu size={18} />
              <span className="text-[11px] font-bold uppercase tracking-widest">Menu</span>
            </button>
+           <Link
+             href="/"
+             className="hidden lg:inline-flex items-center gap-2 px-3 py-2 border border-[#2F855A] bg-[#38A169] text-white hover:bg-[#2F855A] transition-colors shadow-sm shrink-0"
+             style={{ borderRadius: "10px" }}
+             aria-label="Back to marketplace"
+           >
+             <ArrowLeft size={16} strokeWidth={2.5} aria-hidden />
+             <span className="text-[11px] font-bold uppercase tracking-widest">Marketplace</span>
+           </Link>
            <div className="hidden lg:flex flex-col min-w-0">
               <span className="text-[11px] uppercase font-black tracking-[0.10em] font-bold text-slate-900 dark:text-white">Welsh Motorhub</span>
               <p className="text-[11px] uppercase font-black tracking-[0.15em] font-semibold text-[#ff5a2f] mt-0.5 flex items-center gap-1">
@@ -366,6 +375,15 @@ export default function PortalLayout({ children }) {
 
         {/* Navigation */}
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar">
+          <Link
+            href="/"
+            onClick={handleNavClick}
+            className="flex items-center justify-center gap-2.5 w-full mb-4 px-4 py-3 border-2 border-[#2F855A] bg-[#38A169] text-white hover:bg-[#2F855A] shadow-[4px_4px_0px_0px_rgba(47,133,90,0.25)] transition-colors rounded-2xl text-[11px] font-black uppercase tracking-[0.14em]"
+          >
+            <ArrowLeft size={18} strokeWidth={2.5} aria-hidden />
+            Back to marketplace
+          </Link>
+
           {/* OVERVIEW Section */}
           <div className="mb-4">
             <p className="text-[11px] uppercase font-black tracking-[0.15em] font-bold text-slate-700 uppercase tracking-wide px-4 py-2 mb-2">Overview</p>
@@ -428,13 +446,6 @@ export default function PortalLayout({ children }) {
             >
               <span className="inline-flex items-center gap-2"><LifeBuoy size={14} /> Need help?</span>
               <span className="text-[#2F855A]">Support</span>
-            </Link>
-            <Link 
-              href="/"
-              onClick={handleNavClick}
-              className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:text-slate-900 dark:text-white text-[11px] uppercase font-black tracking-[0.15em] font-semibold rounded-2xl transition-all"
-            >
-              <ExternalLink size={14} /> Marketplace
             </Link>
             <form action="/api/auth/logout" method="POST">
               <button 
