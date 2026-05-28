@@ -207,8 +207,8 @@ export default async function HomePage() {
           {/* Page Header - Full Width */}
           <div className="mb-4 sm:mb-6 md:mb-8 lg:mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center">
             <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-[#111827] dark:text-white leading-[0.92] tracking-tight mb-3 sm:mb-4 max-w-4xl mx-auto">
-              Buy cars with<br />
-              <span className="editorial-hero-accent text-[#38A169]">dealer-level clarity.</span>
+              Precision<br />
+              <span className="editorial-hero-accent text-[#38A169]">For Precision Machines</span>
             </h1>
 
             <p className="text-base md:text-lg lg:text-[1.15rem] text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto lg:hidden">
