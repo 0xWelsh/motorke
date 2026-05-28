@@ -47,7 +47,8 @@ async function fetchWithTimeout(url, init = {}) {
  * @param {string} url
  * @returns {Promise<Buffer|null>}
  */
-async function fetchPublicImageBytes(url) {
+/** Fetch any public HTTPS image (dealer banners, external logos). */
+export async function fetchRemoteImageBytes(url) {
   try {
     const res = await fetchWithTimeout(url, { headers: { Accept: "image/*" } });
     if (!res.ok) return null;
@@ -94,7 +95,7 @@ export async function fetchListingImageBytes(rawUrl) {
   if (cfg) {
     try {
       if (new URL(normalized).origin === cfg.origin) {
-        const publicBuf = await fetchPublicImageBytes(normalized);
+        const publicBuf = await fetchRemoteImageBytes(normalized);
         if (publicBuf) return publicBuf;
       }
     } catch {

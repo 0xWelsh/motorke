@@ -7,7 +7,7 @@ import { trackUiEvent } from "@/lib/analytics";
 import { shareToFacebookWithCaption } from "@/lib/share-helpers";
 
 /**
- * @param {{ showroomUrl: string; dealerName: string; stockCount?: number; location?: string; layout?: "stacked" | "mobileBar" }} props
+ * @param {{ showroomUrl: string; dealerName: string; stockCount?: number; location?: string; layout?: "stacked" | "mobileBar"; previewImageUrl?: string | null }} props
  */
 export default function DealerShowroomShare({
   showroomUrl,
@@ -15,9 +15,10 @@ export default function DealerShowroomShare({
   stockCount = 0,
   location,
   layout = "stacked",
+  previewImageUrl = null,
 }) {
   const [copied, setCopied] = useState(false);
-  const [fbHint, setFbHint] = useState(null); // "copied" | "manual" | null
+  const [fbHint, setFbHint] = useState(null); // "ready" | "manual" | null
 
   const url = (showroomUrl || "").trim();
   const meta = [stockCount ? `${stockCount} cars in stock` : null, location].filter(Boolean).join(", ");
@@ -87,27 +88,49 @@ export default function DealerShowroomShare({
 
   async function shareFacebook() {
     if (!url) return;
-    const copiedOk = await shareToFacebookWithCaption(url, fbCaption);
-    setFbHint(copiedOk ? "copied" : "manual");
-    setTimeout(() => setFbHint(null), 4000);
+    const result = await shareToFacebookWithCaption(url, fbCaption, {
+      imageUrl: previewImageUrl,
+    });
+    setFbHint(result.textCopied ? "ready" : "manual");
+    setTimeout(() => setFbHint(null), 5000);
     emitShare("facebook");
   }
+
+  const fbButtonLabel =
+    fbHint === "ready"
+      ? "Paste in Facebook"
+      : fbHint === "manual"
+        ? "Paste caption in FB"
+        : "Facebook";
 
   const waText = encodeURIComponent(shareLines.join("\n"));
   const waUrl = `https://wa.me/?text=${waText}`;
 
   if (layout === "mobileBar") {
     return (
-      <button
-        type="button"
-        onClick={() => shareNative()}
-        disabled={!url}
-        className="w-full inline-flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3.5 text-center text-[11px] font-bold uppercase tracking-widest disabled:opacity-50 border border-slate-200 dark:border-slate-700"
-        style={{ borderRadius: "var(--radius)" }}
-      >
-        <Share2 className="w-4 h-4 shrink-0" aria-hidden />
-        {copied ? "Link copied" : "Share showroom"}
-      </button>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={() => shareNative()}
+          disabled={!url}
+          className="flex-1 inline-flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3.5 text-center text-[11px] font-bold uppercase tracking-widest disabled:opacity-50 border border-slate-200 dark:border-slate-700"
+          style={{ borderRadius: "var(--radius)" }}
+        >
+          <Share2 className="w-4 h-4 shrink-0" aria-hidden />
+          {copied ? "Link copied" : "Share"}
+        </button>
+        <button
+          type="button"
+          onClick={() => shareFacebook()}
+          disabled={!url}
+          className="flex-1 inline-flex items-center justify-center gap-2 bg-[#1877F2]/12 border border-[#1877F2]/30 text-[#1877F2] py-3.5 text-center text-[11px] font-bold uppercase tracking-widest disabled:opacity-50"
+          style={{ borderRadius: "var(--radius)" }}
+          title="Caption copies to clipboard — tap Paste in Facebook"
+        >
+          <FaFacebookF className="w-4 h-4 shrink-0" aria-hidden />
+          {fbHint === "ready" ? "Paste in FB" : fbHint === "manual" ? "Paste caption" : "Facebook"}
+        </button>
+      </div>
     );
   }
 
@@ -150,14 +173,10 @@ export default function DealerShowroomShare({
           disabled={!url}
           className="w-full inline-flex items-center justify-center gap-2 bg-[#1877F2]/12 border border-[#1877F2]/30 text-[#1877F2] px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] hover:bg-[#1877F2]/18 transition-colors disabled:opacity-50"
           style={{ borderRadius: "10px" }}
-          title="Caption is copied to your clipboard so you can paste it in Facebook"
+          title="Caption copies to your clipboard — tap Paste in Facebook"
         >
           <FaFacebookF className="w-3.5 h-3.5 shrink-0" aria-hidden />
-          {fbHint === "copied"
-            ? "Caption copied, paste in FB"
-            : fbHint === "manual"
-              ? "Paste caption in FB"
-              : "Facebook"}
+          {fbButtonLabel}
         </button>
       </div>
     </div>

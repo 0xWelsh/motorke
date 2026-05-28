@@ -456,6 +456,7 @@ export default async function DealerPage(props) {
                       dealerName={dealer.name}
                       stockCount={dealer.cars.length}
                       location={dealer.location || dealer.county || undefined}
+                      previewImageUrl={`/api/dealers/${dealer.slug}/og-image`}
                     />
                   </div>
                 </div>
@@ -580,6 +581,7 @@ export default async function DealerPage(props) {
              dealerName={dealer.name}
              stockCount={dealer.cars.length}
              location={dealer.location || dealer.county || undefined}
+             previewImageUrl={`/api/dealers/${dealer.slug}/og-image`}
            />
          </div>
          <div className="flex items-center gap-3">

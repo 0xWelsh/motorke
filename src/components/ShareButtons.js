@@ -16,6 +16,7 @@ import { shareToFacebookWithCaption } from "@/lib/share-helpers";
  * @param {string} [props.dealerName]
  * @param {string} [props.location]
  * @param {string|null} [props.mileageLabel] e.g. "45,000 km"
+ * @param {string|null} [props.previewImageUrl] Same-origin OG JPEG for clipboard image paste
  */
 export default function ShareButtons({
   listingUrl,
@@ -25,9 +26,10 @@ export default function ShareButtons({
   dealerName,
   location,
   mileageLabel,
+  previewImageUrl,
 }) {
   const [copied, setCopied] = useState(false);
-  const [fbHint, setFbHint] = useState(null); // "copied" | "manual" | null
+  const [fbHint, setFbHint] = useState(null); // "ready" | "manual" | null
 
   const listUrl = (listingUrl || "").trim();
   const moreUrl = (browseUrl || "").trim();
@@ -74,10 +76,19 @@ export default function ShareButtons({
 
   async function shareFacebook() {
     if (!listUrl) return;
-    const copiedOk = await shareToFacebookWithCaption(listUrl, fbCaption);
-    setFbHint(copiedOk ? "copied" : "manual");
-    setTimeout(() => setFbHint(null), 4000);
+    const result = await shareToFacebookWithCaption(listUrl, fbCaption, {
+      imageUrl: previewImageUrl,
+    });
+    setFbHint(result.textCopied ? "ready" : "manual");
+    setTimeout(() => setFbHint(null), 5000);
   }
+
+  const fbButtonLabel =
+    fbHint === "ready"
+      ? "✓ Paste in Facebook"
+      : fbHint === "manual"
+        ? "Paste caption in FB"
+        : "📘 Share on Facebook";
 
   return (
     <div className="flex w-full max-w-md flex-col gap-2.5 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-center">
@@ -95,13 +106,9 @@ export default function ShareButtons({
         disabled={!listUrl}
         className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 whitespace-nowrap text-xs bg-[#1877F2]/12 border border-[#1877F2]/25 text-[#1877F2] hover:bg-[#1877F2]/18 rounded-xl px-4 py-2.5 font-semibold transition-colors disabled:opacity-50 sm:flex-initial sm:rounded-2xl sm:py-2"
         aria-label="Share on Facebook (caption auto-copied)"
-        title="Caption is copied to your clipboard, paste it in the Facebook composer"
+        title="Caption and photo copy to your clipboard — tap Paste in the Facebook composer"
       >
-        {fbHint === "copied"
-          ? "✓ Caption copied, paste in FB"
-          : fbHint === "manual"
-            ? "Paste caption in FB"
-            : "📘 Share on Facebook"}
+        {fbButtonLabel}
       </button>
       <button
         type="button"
