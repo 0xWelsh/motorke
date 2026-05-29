@@ -52,8 +52,7 @@ export default function GlobalFooter() {
           {/* Brand Info */}
           <div className="lg:col-span-2">
             <div className="mb-5">
-              <Link href="/" className="group inline-flex items-center gap-2 transition-opacity active:opacity-80">
-                <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-[#2F855A] group-hover:bg-[#38A169] transition-colors" />
+              <Link href="/" className="group inline-flex items-center transition-opacity active:opacity-80">
                 <span className="text-[11px] font-black uppercase tracking-[0.24em] text-slate-900 dark:text-white">
                   Welsh Motorhub
                 </span>

@@ -39,8 +39,23 @@ function ChipWrapper({ floating, children }) {
 
 function formatChipCount(count) {
   const n = Number(count) || 0;
-  if (n <= 0) return null;
+  if (n <= 0) return "0";
   return n === 1 ? "1 car" : `${n.toLocaleString()} cars`;
+}
+
+const BRAND_CHIP_CLASS =
+  "group flex flex-col items-center justify-center gap-1 p-2.5 sm:p-3 w-[76px] sm:w-[82px] lg:w-[88px] min-h-[92px] h-[92px] shrink-0";
+const BODY_CHIP_CLASS =
+  "group flex flex-col items-center justify-center gap-1 p-2.5 sm:p-3 w-[76px] sm:w-[82px] lg:w-[88px] min-h-[92px] h-[92px] shrink-0";
+
+function ChipCount({ count, className = "text-[9px]" }) {
+  return (
+    <span
+      className={`${className} font-bold tabular-nums leading-none min-h-[12px] flex items-center justify-center text-[#38A169]/85 dark:text-[#68d391]/90`}
+    >
+      {formatChipCount(count)}
+    </span>
+  );
 }
 
 function BrandLogo({ name, make, img, count, floating = false }) {
@@ -49,13 +64,13 @@ function BrandLogo({ name, make, img, count, floating = false }) {
   const makeQuery = make || name;
 
   const linkClass = floating
-    ? "group flex flex-col items-center justify-center gap-1.5 p-2.5 sm:p-3 w-[72px] sm:w-[78px] lg:w-[86px] rounded-xl bg-white/80 dark:bg-white/[0.06] backdrop-blur-md ring-1 ring-white/60 dark:ring-white/10 hover:bg-white dark:hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300"
-    : "group flex flex-col items-center justify-center gap-1.5 p-2 sm:p-2.5 w-[72px] sm:w-[78px] lg:w-[86px] rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300";
+    ? `${BRAND_CHIP_CLASS} rounded-xl bg-white/80 dark:bg-white/[0.06] backdrop-blur-md ring-1 ring-white/60 dark:ring-white/10 hover:bg-white dark:hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300`
+    : `${BRAND_CHIP_CLASS} rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300`;
 
   return (
     <ChipWrapper floating={floating}>
       <Link href={`/cars/${slugifyCarSegment(makeQuery)}`} className={linkClass}>
-        <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center">
+        <div className="w-8 h-8 sm:w-9 sm:h-9 flex shrink-0 items-center justify-center">
           {failed ? (
             <span className="text-lg font-black text-slate-700 dark:text-slate-300">{name[0]}</span>
           ) : (
@@ -69,17 +84,10 @@ function BrandLogo({ name, make, img, count, floating = false }) {
             />
           )}
         </div>
-        <span className="text-[10px] sm:text-[11px] lg:text-xs font-sans font-semibold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight">
+        <span className="text-[10px] sm:text-[11px] font-sans font-semibold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight line-clamp-2 min-h-[2.5em] flex items-center justify-center w-full px-0.5">
           {name}
         </span>
-        {(() => {
-          const label = formatChipCount(count);
-          return label ? (
-            <span className="text-[9px] font-bold tabular-nums text-[#38A169]/85 dark:text-[#68d391]/90 leading-none">
-              {label}
-            </span>
-          ) : null;
-        })()}
+        <ChipCount count={count} />
       </Link>
     </ChipWrapper>
   );
@@ -89,13 +97,13 @@ function BodyTypeCard({ label, value, img, count, floating = false }) {
   const [failed, setFailed] = useState(false);
 
   const linkClass = floating
-    ? "group flex flex-col items-center justify-center gap-1.5 p-2.5 sm:p-3 w-[80px] sm:w-[88px] lg:w-[96px] rounded-xl bg-white/80 dark:bg-white/[0.06] backdrop-blur-md ring-1 ring-white/60 dark:ring-white/10 hover:bg-white dark:hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300"
-    : "group flex flex-col items-center justify-center gap-1.5 p-2 sm:p-2.5 w-[80px] sm:w-[88px] lg:w-[96px] rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300";
+    ? `${BODY_CHIP_CLASS} rounded-xl bg-white/80 dark:bg-white/[0.06] backdrop-blur-md ring-1 ring-white/60 dark:ring-white/10 hover:bg-white dark:hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300`
+    : `${BODY_CHIP_CLASS} rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300";
 
   return (
     <ChipWrapper floating={floating}>
       <Link href={`/cars?bodyType=${value}`} className={linkClass}>
-        <div className="w-[56px] h-7 sm:w-[60px] sm:h-7.5 lg:w-[66px] lg:h-8 flex items-center justify-center">
+        <div className="w-[56px] h-7 sm:h-8 flex shrink-0 items-center justify-center">
           {!failed ? (
             <Image
               src={img}
@@ -109,17 +117,10 @@ function BodyTypeCard({ label, value, img, count, floating = false }) {
             <span className="text-2xl">🚗</span>
           )}
         </div>
-        <span className="text-[9px] sm:text-[10px] lg:text-[10px] font-black text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight">
+        <span className="text-[9px] sm:text-[10px] font-black text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight line-clamp-2 min-h-[2.5em] flex items-center justify-center w-full px-0.5">
           {label}
         </span>
-        {(() => {
-          const countLabel = formatChipCount(count);
-          return countLabel ? (
-            <span className="text-[8px] font-bold tabular-nums text-[#38A169]/85 dark:text-[#68d391]/90 leading-none">
-              {countLabel}
-            </span>
-          ) : null;
-        })()}
+        <ChipCount count={count} className="text-[8px]" />
       </Link>
     </ChipWrapper>
   );
