@@ -37,7 +37,13 @@ function ChipWrapper({ floating, children }) {
   return <SuspendedChip>{children}</SuspendedChip>;
 }
 
-function BrandLogo({ name, make, img, floating = false }) {
+function formatChipCount(count) {
+  const n = Number(count) || 0;
+  if (n <= 0) return null;
+  return n === 1 ? "1 car" : `${n.toLocaleString()} cars`;
+}
+
+function BrandLogo({ name, make, img, count, floating = false }) {
   const [failed, setFailed] = useState(false);
   const src = `/images/logos/${img}`;
   const makeQuery = make || name;
@@ -66,12 +72,20 @@ function BrandLogo({ name, make, img, floating = false }) {
         <span className="text-[10px] sm:text-[11px] lg:text-xs font-sans font-semibold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight">
           {name}
         </span>
+        {(() => {
+          const label = formatChipCount(count);
+          return label ? (
+            <span className="text-[9px] font-bold tabular-nums text-[#38A169]/85 dark:text-[#68d391]/90 leading-none">
+              {label}
+            </span>
+          ) : null;
+        })()}
       </Link>
     </ChipWrapper>
   );
 }
 
-function BodyTypeCard({ label, value, img, floating = false }) {
+function BodyTypeCard({ label, value, img, count, floating = false }) {
   const [failed, setFailed] = useState(false);
 
   const linkClass = floating
@@ -98,6 +112,14 @@ function BodyTypeCard({ label, value, img, floating = false }) {
         <span className="text-[9px] sm:text-[10px] lg:text-[10px] font-black text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight">
           {label}
         </span>
+        {(() => {
+          const countLabel = formatChipCount(count);
+          return countLabel ? (
+            <span className="text-[8px] font-bold tabular-nums text-[#38A169]/85 dark:text-[#68d391]/90 leading-none">
+              {countLabel}
+            </span>
+          ) : null;
+        })()}
       </Link>
     </ChipWrapper>
   );
@@ -189,11 +211,13 @@ function ShopRowSection({ title, action }) {
 }
 
 /**
- * @param {{ layout?: "full" | "hero-mobile" | "desktop-hero" }} props
+ * @param {{ layout?: "full" | "hero-mobile" | "desktop-hero", inventoryCounts?: { brands?: Record<string, number>, bodyTypes?: Record<string, number> } }} props
  *   hero-mobile — search + shop by brand + shop by shape (homepage mobile hero)
  *   desktop-hero — full-width search in homepage left column
  */
-export default function BrowsePanel({ layout = "full" }) {
+export default function BrowsePanel({ layout = "full", inventoryCounts = null }) {
+  const brandCounts = inventoryCounts?.brands || {};
+  const bodyTypeCounts = inventoryCounts?.bodyTypes || {};
   const heroMobile = layout === "hero-mobile";
   const desktopHero = layout === "desktop-hero";
   const floatingChips = heroMobile;
@@ -263,7 +287,13 @@ export default function BrowsePanel({ layout = "full" }) {
           <ScrollableRow trackScrollOffset={floatingChips}>
             {BRANDS.map((b) => (
               <div key={b.name} className="snap-start shrink-0">
-                <BrandLogo name={b.name} make={b.make} img={b.img} floating={floatingChips} />
+                <BrandLogo
+                  name={b.name}
+                  make={b.make}
+                  img={b.img}
+                  count={brandCounts[b.name]}
+                  floating={floatingChips}
+                />
               </div>
             ))}
           </ScrollableRow>
@@ -274,7 +304,7 @@ export default function BrowsePanel({ layout = "full" }) {
           <ScrollableRow trackScrollOffset={floatingChips}>
             {BODY_TYPES.map((bt) => (
               <div key={bt.value} className="snap-start shrink-0">
-                <BodyTypeCard {...bt} floating={floatingChips} />
+                <BodyTypeCard {...bt} count={bodyTypeCounts[bt.value]} floating={floatingChips} />
               </div>
             ))}
           </ScrollableRow>

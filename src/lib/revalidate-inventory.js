@@ -9,6 +9,7 @@ const LISTING_CACHE_TAGS = [
   "cars",
   "cars-listing",
   "makes",
+  "browse-counts",
   "dealers-index",
   "market-analysis",
 ];

@@ -22,6 +22,7 @@ import HomepageHeroCarFinder from "@/components/home/HomepageHeroCarFinder";
 import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
 import SeasonalPromoModal from "@/components/SeasonalPromoModal";
 import { getHomepageData } from "@/lib/homepage-cache";
+import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 import { isActiveListingBoost } from "@/lib/listing-boost";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 
@@ -116,6 +117,11 @@ function homeStructuredData(origin) {
 }
 
 export default async function HomePage() {
+  const [homepageBundle, browseInventoryCounts] = await Promise.all([
+    getHomepageData(),
+    getBrowseInventoryCounts(),
+  ]);
+
   const {
     featured,
     hotThisWeek,
@@ -128,7 +134,7 @@ export default async function HomePage() {
     paidSpotlight,
     mostViewedEnhanced,
     newEnhanced,
-  } = await getHomepageData();
+  } = homepageBundle;
 
   const boostedHero = (heroBoosted || []).filter((car) => isActiveListingBoost(car));
   const fallbackHeroPool =
@@ -223,7 +229,7 @@ export default async function HomePage() {
           {/* Mobile hero — stacked filters, strips, and finder */}
           <div className="lg:hidden mx-auto w-full max-w-6xl space-y-4 sm:space-y-5 animate-in fade-in duration-1000 delay-200">
             <div className="mb-4 max-w-lg mx-auto w-full">
-              <BrowsePanel layout="hero-mobile" />
+              <BrowsePanel layout="hero-mobile" inventoryCounts={browseInventoryCounts} />
             </div>
 
             <div className="w-full max-w-lg mx-auto">
@@ -313,7 +319,7 @@ export default async function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 lg:items-start">
               <div className="flex flex-col text-center lg:text-left">
                 <div className="w-full min-w-0">
-                  <BrowsePanel layout="desktop-hero" />
+                  <BrowsePanel layout="desktop-hero" inventoryCounts={browseInventoryCounts} />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 mt-5 sm:mt-8 w-full max-w-lg mx-auto lg:max-w-none lg:mx-0">
