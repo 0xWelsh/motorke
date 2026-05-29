@@ -98,7 +98,7 @@ function BodyTypeCard({ label, value, img, count, floating = false }) {
 
   const linkClass = floating
     ? `${BODY_CHIP_CLASS} rounded-xl bg-white/80 dark:bg-white/[0.06] backdrop-blur-md ring-1 ring-white/60 dark:ring-white/10 hover:bg-white dark:hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300`
-    : `${BODY_CHIP_CLASS} rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300";
+    : `${BODY_CHIP_CLASS} rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300`;
 
   return (
     <ChipWrapper floating={floating}>
