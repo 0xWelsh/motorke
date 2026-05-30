@@ -122,6 +122,7 @@ model Dealer {
   gallery                 DealerGalleryMedia[]
   buyerRequestOffers      BuyerRequestOffer[]
   buyerRequestPassUntil   DateTime?
+  growthProspects         GrowthProspect[]
 
   @@index([county])
   @@map("dealers")
@@ -830,4 +831,107 @@ model BuyerRequestOffer {
   @@unique([dealerId, buyerRequestId])
   @@index([dealerId, createdAt])
   @@map("buyer_request_offers")
+}
+
+enum GrowthProspectStatus {
+  DISCOVERED
+  CONTACT_COLLECTED
+  OUTREACH_PLANNED
+  CONTACTED
+  INTERESTED
+  ONBOARDED
+  DECLINED
+  DORMANT
+}
+
+enum GrowthOutreachChannel {
+  WHATSAPP
+  CALL
+  EMAIL
+  VISIT
+  SMS
+  OTHER
+}
+
+enum GrowthOutreachStatus {
+  PLANNED
+  SENT
+  REPLIED
+  NO_RESPONSE
+  BOUNCED
+  CANCELLED
+}
+
+/// Dealer acquisition pipeline (Welsh MotorHub Growth Agent).
+model GrowthProspect {
+  id                 String                 @id @default(cuid())
+  name               String
+  source             String                 @default("manual")
+  sourceUrl          String?
+  phone              String?
+  whatsapp           String?
+  email              String?
+  website            String?
+  facebookUrl        String?
+  instagramUrl       String?
+  location           String?
+  county             String                 @default("Nairobi")
+  address            String?
+  lat                Float?
+  lng                Float?
+  status             GrowthProspectStatus   @default(DISCOVERED)
+  tags               String[]               @default([])
+  notes              String?
+  inventoryUrl       String?
+  inventoryCount     Int                    @default(0)
+  inventoryCountPrev Int?
+  inventoryCheckedAt DateTime?
+  matchedDealerId    String?
+  outreachCount      Int                    @default(0)
+  lastOutreachAt     DateTime?
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  matchedDealer      Dealer?                @relation(fields: [matchedDealerId], references: [id], onDelete: SetNull)
+  outreachEvents     GrowthOutreachEvent[]
+  inventorySnapshots GrowthInventorySnapshot[]
+
+  @@index([status, county])
+  @@index([matchedDealerId])
+  @@index([phone])
+  @@index([createdAt])
+  @@map("growth_prospects")
+}
+
+model GrowthOutreachEvent {
+  id          String                @id @default(cuid())
+  prospectId  String
+  channel     GrowthOutreachChannel
+  status      GrowthOutreachStatus  @default(PLANNED)
+  direction   String                @default("OUTBOUND")
+  subject     String?
+  body        String?
+  scheduledAt DateTime?
+  completedAt DateTime?
+  createdBy   String?
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  prospect    GrowthProspect        @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+
+  @@index([prospectId, createdAt])
+  @@index([status, scheduledAt])
+  @@map("growth_outreach_events")
+}
+
+model GrowthInventorySnapshot {
+  id             String         @id @default(cuid())
+  prospectId     String
+  source         String
+  inventoryCount Int
+  delta          Int            @default(0)
+  rawNote        String?
+  capturedAt     DateTime       @default(now())
+  prospect       GrowthProspect @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+
+  @@index([prospectId, capturedAt])
+  @@map("growth_inventory_snapshots")
 }
