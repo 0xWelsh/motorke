@@ -1,6 +1,6 @@
-export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { unstable_cache } from "next/cache";
 import { z } from "zod";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { logSearchQuery } from "@/lib/seo-trending";
@@ -33,84 +33,74 @@ function tokenWhere(token) {
   return { OR: textOr };
 }
 
-export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-  const rawParams = Object.fromEntries(searchParams.entries());
-
-  const parsed = querySchema.safeParse(rawParams);
-  if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid parameters", details: parsed.error.issues }, { status: 400 });
-  }
-
-  const { query, limit, includeCarListings } = parsed.data;
-  const showCars = includeCarListings === "true";
-
+function buildCarTextFilter(query) {
   const words = query
     .trim()
     .split(/\s+/)
     .filter(Boolean)
     .slice(0, 4);
   const tokenClauses = words.map(tokenWhere).filter(Boolean);
-  const carTextFilter =
-    tokenClauses.length > 0
-      ? { AND: tokenClauses }
-      : {
-          OR: [
-            { make: { contains: query, mode: "insensitive" } },
-            { model: { contains: query, mode: "insensitive" } },
-            { variant: { contains: query, mode: "insensitive" } },
-          ],
-        };
+  if (tokenClauses.length > 0) {
+    return { AND: tokenClauses };
+  }
+  return {
+    OR: [
+      { make: { contains: query, mode: "insensitive" } },
+      { model: { contains: query, mode: "insensitive" } },
+      { variant: { contains: query, mode: "insensitive" } },
+    ],
+  };
+}
 
-  const cars = showCars
-    ? await db.car.findMany({
-        where: {
-          available: true,
-          ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
-          ...carTextFilter,
-        },
-        include: {
-          images: { where: { isPrimary: true }, take: 1 },
-          dealer: { select: { name: true, location: true, verified: true } },
-        },
-        take: 8,
-        orderBy: { createdAt: "desc" },
-      })
-    : [];
+function verifiedWhere(extra = {}) {
+  return {
+    available: true,
+    ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+    ...extra,
+  };
+}
 
-  const makes = await db.car.findMany({
-    where: {
-      make: { contains: query, mode: "insensitive" },
-      available: true,
-      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
-    },
-    select: { make: true },
-    distinct: ["make"],
-    take: limit,
-  });
+async function loadSuggestions(normalizedQuery, limit, showCars) {
+  const carTextFilter = buildCarTextFilter(normalizedQuery);
 
-  const models = await db.car.findMany({
-    where: {
-      model: { contains: query, mode: "insensitive" },
-      available: true,
-      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
-    },
-    select: { model: true },
-    distinct: ["model"],
-    take: limit,
-  });
-
-  const variants = await db.car.findMany({
-    where: {
-      variant: { contains: query, mode: "insensitive" },
-      available: true,
-      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
-      NOT: { variant: null },
-    },
-    select: { variant: true },
-    distinct: ["variant"],
-    take: Math.floor(limit / 2),
-  });
+  const [cars, makes, models, variants] = await Promise.all([
+    showCars
+      ? db.car.findMany({
+          where: verifiedWhere(carTextFilter),
+          include: {
+            images: { where: { isPrimary: true }, take: 1 },
+            dealer: { select: { name: true, location: true, verified: true } },
+          },
+          take: 8,
+          orderBy: { createdAt: "desc" },
+        })
+      : Promise.resolve([]),
+    db.car.findMany({
+      where: verifiedWhere({
+        make: { contains: normalizedQuery, mode: "insensitive" },
+      }),
+      select: { make: true },
+      distinct: ["make"],
+      take: limit,
+    }),
+    db.car.findMany({
+      where: verifiedWhere({
+        model: { contains: normalizedQuery, mode: "insensitive" },
+      }),
+      select: { model: true },
+      distinct: ["model"],
+      take: limit,
+    }),
+    db.car.findMany({
+      where: verifiedWhere({
+        variant: { contains: normalizedQuery, mode: "insensitive" },
+        NOT: { variant: null },
+      }),
+      select: { variant: true },
+      distinct: ["variant"],
+      take: Math.floor(limit / 2),
+    }),
+  ]);
 
   const carSuggestions = cars.map((car) => ({
     type: "car",
@@ -138,12 +128,34 @@ export async function GET(request) {
     ...new Map(attributeSuggestions.map((s) => [s.value.toLowerCase(), s])).values(),
   ];
 
-  const allSuggestions = [...carSuggestions, ...uniqueAttributes].slice(0, limit);
+  return [...carSuggestions, ...uniqueAttributes].slice(0, limit);
+}
 
-  logSearchQuery({ query, resultCount: allSuggestions.length }).catch(() => {});
+const getCachedSuggestions = unstable_cache(
+  loadSuggestions,
+  ["search-suggestions-v1"],
+  { revalidate: 90, tags: ["cars-listing", "search-suggestions"] },
+);
+
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const rawParams = Object.fromEntries(searchParams.entries());
+
+  const parsed = querySchema.safeParse(rawParams);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid parameters", details: parsed.error.issues }, { status: 400 });
+  }
+
+  const { query, limit, includeCarListings } = parsed.data;
+  const showCars = includeCarListings === "true";
+  const normalizedQuery = query.trim().toLowerCase();
+
+  const suggestions = await getCachedSuggestions(normalizedQuery, limit, showCars);
+
+  logSearchQuery({ query, resultCount: suggestions.length }).catch(() => {});
 
   return NextResponse.json({
     query,
-    suggestions: allSuggestions,
+    suggestions,
   });
 }

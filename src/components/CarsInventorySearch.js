@@ -159,21 +159,23 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
       return;
     }
 
+    const trimmed = search.trim();
+    // Navigate immediately — don't block on geolocation (saves up to 5s on first search).
+    pushQuery({ search: trimmed });
+
     if (!mergeFromUrl.lat && !mergeFromUrl.lng && typeof window !== "undefined" && "geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const lat = String(position.coords.latitude);
           const lng = String(position.coords.longitude);
-          pushQuery({ search: search.trim(), lat, lng });
+          const params = buildCarsQuery(trimmed, mergeFromUrl, { search: trimmed, lat, lng });
+          const query = params.toString();
+          router.replace(query ? `/cars?${query}` : "/cars", { scroll: false });
         },
-        () => {
-          pushQuery({ search: search.trim() });
-        },
+        () => {},
         { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
       );
-      return;
     }
-    pushQuery({ search: search.trim() });
   }
 
   function requestLocation() {

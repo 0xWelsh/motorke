@@ -1,3 +1,7 @@
+jest.mock("next/cache", () => ({
+  unstable_cache: (fn) => fn,
+}));
+
 jest.mock("@/lib/db", () => ({
   db: {
     car: {
