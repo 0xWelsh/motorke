@@ -1,0 +1,12 @@
+# Deploy this service only — set Railway "Root Directory" to: services/growth-agent
+# Do NOT deploy the repo root (that runs Next.js and needs a full Vercel-style build).
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5

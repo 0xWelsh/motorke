@@ -14,6 +14,44 @@ Runs **outside Vercel** (Railway, Fly, EC2) on port **8091** by default.
 | 4 | Monitor inventory | `POST /monitor/inventory` (platform dealers with `matchedDealerId`) |
 | 5 | Export leads | `GET /export/prospects.csv` · `GET /export/outreach.csv` |
 
+## Deploy on Railway
+
+Railway must deploy **this folder only**, not the repo root. If you deploy the root, Railway runs `npm run build` and fails with `DATABASE_URL is not set`.
+
+### Setup
+
+1. Railway → your project → **growth-agent service** → **Settings**
+2. **Root Directory** → `services/growth-agent`
+3. **Variables** (same Supabase DB as production):
+
+   | Variable | Value |
+   |----------|--------|
+   | `DATABASE_URL` | Supabase transaction pooler (`:6543`, `pgbouncer=true`) |
+   | `GROWTH_AGENT_SECRET` | Long random string (copy to Vercel too) |
+
+4. **Networking** → **Generate domain** (service shows "Unexposed" until you do this)
+5. Redeploy
+
+Build uses the included `Dockerfile` + `railway.toml` (Go binary, not Next.js).
+
+### Connect Vercel
+
+```
+GROWTH_AGENT_URL=https://YOUR-RAILWAY-DOMAIN.up.railway.app
+GROWTH_AGENT_SECRET=same-as-railway
+```
+
+Redeploy Vercel, then open `/admin/growth`.
+
+### Verify
+
+```bash
+curl https://YOUR-RAILWAY-DOMAIN/health
+# {"ok":true,"service":"growth-agent"}
+```
+
+---
+
 ## Run locally
 
 ```bash
