@@ -3,6 +3,7 @@ import { isTransientDbError, settleNamed, withDbRetry } from "@/lib/db-retry";
 import { unstable_cache } from "next/cache";
 import { analyzePrice } from "@/lib/market";
 import { activeListingBoostWhere } from "@/lib/listing-boost";
+import { loadRotatingSpotlightPool, mergeHomepageSpotlight } from "@/lib/homepage-spotlight";
 import { activeSpotlightWhere, spotlightCarInclude } from "@/lib/spotlight";
 
 export const EMPTY_HOMEPAGE_DATA = {
@@ -14,6 +15,7 @@ export const EMPTY_HOMEPAGE_DATA = {
   highlightReviews: [],
   spotlightEnhanced: [],
   paidSpotlight: [],
+  homepageSpotlight: [],
   heroBoosted: [],
   heroFallback: [],
   hotEnhanced: [],
@@ -241,6 +243,13 @@ async function enrichHomepage(base) {
     console.warn("[homepage-cache] paid spotlight load failed:", err?.message || err);
   }
 
+  let rotatingSpotlightRaw = [];
+  try {
+    rotatingSpotlightRaw = await loadRotatingSpotlightPool();
+  } catch (err) {
+    console.warn("[homepage-cache] rotating spotlight load failed:", err?.message || err);
+  }
+
   let heroBoostedRaw = [];
   try {
     heroBoostedRaw = await db.car.findMany({
@@ -262,6 +271,20 @@ async function enrichHomepage(base) {
     .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
     .slice(0, 12);
 
+  const paidSpotlightEnriched = await Promise.all(
+    (paidSpotlightRaw || []).map(async (car) => ({
+      ...car,
+      marketAnalysis: await analyzePrice(car),
+    })),
+  );
+  const rotatingSpotlightEnriched = await Promise.all(
+    (rotatingSpotlightRaw || []).map(async (car) => ({
+      ...car,
+      marketAnalysis: await analyzePrice(car),
+    })),
+  );
+  const homepageSpotlight = mergeHomepageSpotlight(paidSpotlightEnriched, rotatingSpotlightEnriched);
+
   const [spotlightEnhanced, paidSpotlight, heroBoosted, hotEnhanced, mostViewedEnhanced, newEnhanced, heroFallbackEnhanced] =
     await Promise.all([
     Promise.all(
@@ -269,12 +292,7 @@ async function enrichHomepage(base) {
         car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) }
       )
     ),
-    Promise.all(
-      (paidSpotlightRaw || []).map(async (car) => ({
-        ...car,
-        marketAnalysis: await analyzePrice(car),
-      }))
-    ),
+    Promise.resolve(paidSpotlightEnriched),
     Promise.all(
       (heroBoostedRaw || []).map(async (car) => ({
         ...car,
@@ -311,6 +329,7 @@ async function enrichHomepage(base) {
     highlightReviews,
     spotlightEnhanced,
     paidSpotlight,
+    homepageSpotlight,
     heroBoosted,
     heroFallback: heroFallbackEnhanced,
     hotEnhanced,
@@ -357,7 +376,7 @@ const getCachedHomeEnriched = unstable_cache(
       return { ...EMPTY_HOMEPAGE_DATA, ...base };
     }
   },
-  ["homepage-enriched-v6"],
+  ["homepage-enriched-v7"],
   { revalidate: 120, tags: ["homepage"] }
 );
 

@@ -4,7 +4,8 @@ import TrackedLink from "@/components/TrackedLink";
 import { getSpotlightGridLayout } from "@/lib/spotlight-grid";
 
 /**
- * Homepage Spotlight row — editorial title, no paid/featured copy.
+ * Homepage Spotlight row — eight listings, rotated from inventory every few hours.
+ * Paid spotlight boosts replace slots when active.
  * @param {{ cars: object[] }} props
  */
 export default function HomepageSpotlight({ cars = [] }) {

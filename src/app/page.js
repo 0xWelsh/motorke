@@ -131,7 +131,7 @@ export default async function HomePage() {
     highlightReviews,
     heroBoosted,
     heroFallback,
-    paidSpotlight,
+    homepageSpotlight,
     mostViewedEnhanced,
     newEnhanced,
   } = homepageBundle;
@@ -162,8 +162,8 @@ export default async function HomePage() {
   heroPool = heroPool.slice(0, 12);
   const heroCars = heroPool.slice(0, 8);
 
-  /** Paid Spotlight only — organic trending must not fill this block. */
-  const spotlightCards = (paidSpotlight || []).slice(0, 8);
+  /** Rotating random inventory (paid boosts fill slots first when active). */
+  const spotlightCards = (homepageSpotlight || []).slice(0, 8);
   const spotlightIds = new Set(spotlightCards.map((c) => c.id));
   const trendingCars = (mostViewedEnhanced || []).filter((c) => !spotlightIds.has(c.id));
 
