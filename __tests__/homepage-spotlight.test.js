@@ -32,8 +32,10 @@ describe("homepage-spotlight", () => {
     expect(merged.map((c) => c.id)).toEqual(["paid-1", "paid-2", "r-1", "r-2"]);
   });
 
-  it("builds a time-based seed with day and six-hour slot", () => {
-    const noon = new Date("2026-05-30T12:00:00.000Z").getTime();
-    expect(homepageSpotlightSeed(noon)).toMatch(/^homepage-spotlight:\d+:\d+$/);
+  it("builds a time-based seed that changes every 30 minutes", () => {
+    const start = new Date("2026-05-30T12:00:00.000Z").getTime();
+    const later = new Date("2026-05-30T12:35:00.000Z").getTime();
+    expect(homepageSpotlightSeed(start)).toMatch(/^homepage-spotlight:\d+:\d+$/);
+    expect(homepageSpotlightSeed(start)).not.toBe(homepageSpotlightSeed(later));
   });
 });

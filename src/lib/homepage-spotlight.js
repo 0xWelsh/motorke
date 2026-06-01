@@ -9,6 +9,9 @@ export const HOMEPAGE_SPOTLIGHT_COUNT = 8;
 /** Max rows loaded per rotation window (keeps query bounded on large catalogs). */
 export const HOMEPAGE_SPOTLIGHT_POOL_SIZE = 500;
 
+/** How often the Spotlight shuffle seed changes (minutes, UTC). */
+export const HOMEPAGE_SPOTLIGHT_ROTATE_MINUTES = 30;
+
 function hashSeed(str) {
   let h = 2166136261;
   const s = String(str || "");
@@ -19,9 +22,11 @@ function hashSeed(str) {
   return h >>> 0;
 }
 
-/** Changes every 6 hours so the Spotlight row cycles through inventory. */
+/** Changes every {@link HOMEPAGE_SPOTLIGHT_ROTATE_MINUTES} so the row cycles through inventory. */
 export function homepageSpotlightSeed(now = Date.now()) {
-  const slot = Math.floor(new Date(now).getUTCHours() / 6);
+  const d = new Date(now);
+  const minutesOfDay = d.getUTCHours() * 60 + d.getUTCMinutes();
+  const slot = Math.floor(minutesOfDay / HOMEPAGE_SPOTLIGHT_ROTATE_MINUTES);
   return `homepage-spotlight:${dayBucket(now)}:${slot}`;
 }
 

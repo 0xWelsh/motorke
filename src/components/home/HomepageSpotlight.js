@@ -4,7 +4,7 @@ import TrackedLink from "@/components/TrackedLink";
 import { getSpotlightGridLayout } from "@/lib/spotlight-grid";
 
 /**
- * Homepage Spotlight row — eight listings, rotated from inventory every few hours.
+ * Homepage Spotlight row — eight listings, rotated from inventory every 30 minutes.
  * Paid spotlight boosts replace slots when active.
  * @param {{ cars: object[] }} props
  */
