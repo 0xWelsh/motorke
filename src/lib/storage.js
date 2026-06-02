@@ -7,20 +7,20 @@ const SUPABASE_ANON   = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const SERVICE_KEY     = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const BUCKET          = "car-images";
 
-let bucketReady = false;
+let readyBuckets = new Set();
 
 /**
  * Ensure the storage bucket exists (runs once per server lifecycle).
  */
-async function ensureBucket() {
-  if (bucketReady) return;
+async function ensureBucket(bucketName = BUCKET) {
+  if (readyBuckets.has(bucketName)) return;
 
   const headers = { "Authorization": `Bearer ${SERVICE_KEY}`, "Content-Type": "application/json" };
 
   // Check if bucket exists
-  const check = await fetch(`${SUPABASE_URL}/storage/v1/bucket/${BUCKET}`, { headers });
+  const check = await fetch(`${SUPABASE_URL}/storage/v1/bucket/${bucketName}`, { headers });
   if (check.ok) {
-    bucketReady = true;
+    readyBuckets.add(bucketName);
     return;
   }
 
@@ -28,34 +28,35 @@ async function ensureBucket() {
   const create = await fetch(`${SUPABASE_URL}/storage/v1/bucket`, {
     method: "POST",
     headers,
-    body: JSON.stringify({ id: BUCKET, name: BUCKET, public: true }),
+    body: JSON.stringify({ id: bucketName, name: bucketName, public: true }),
   });
 
   if (!create.ok) {
     const err = await create.text();
-    console.error("Bucket creation response:", err);
+    console.error(`Bucket "${bucketName}" creation response:`, err);
     // If it already exists (race condition), that's fine
     if (!err.includes("already exists")) {
-      throw new Error(`Failed to create bucket: ${err}`);
+      throw new Error(`Failed to create bucket "${bucketName}": ${err}`);
     }
   }
 
-  bucketReady = true;
-  console.log(`✓ Storage bucket "${BUCKET}" ready`);
+  readyBuckets.add(bucketName);
+  console.log(`✓ Storage bucket "${bucketName}" ready`);
 }
 
 /**
  * Upload a file buffer to Supabase Storage.
  * Returns the public URL.
  *
- * @param {Buffer} buffer     - File contents
- * @param {string} filename   - e.g. "cars/abc123/photo-0.jpg"
- * @param {string} mimeType   - e.g. "image/jpeg"
+ * @param {Buffer} buffer       - File contents
+ * @param {string} filename     - e.g. "cars/abc123/photo-0.jpg"
+ * @param {string} mimeType     - e.g. "image/jpeg"
+ * @param {string} bucketName   - Optional bucket name (defaults to car-images)
  */
-export async function uploadImage(buffer, filename, mimeType) {
-  await ensureBucket();
+export async function uploadImage(buffer, filename, mimeType, bucketName = BUCKET) {
+  await ensureBucket(bucketName);
 
-  const url = `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${filename}`;
+  const url = `${SUPABASE_URL}/storage/v1/object/${bucketName}/${filename}`;
 
   const res = await fetch(url, {
     method:  "POST",
@@ -73,7 +74,7 @@ export async function uploadImage(buffer, filename, mimeType) {
   }
 
   // Return the public URL
-  return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${filename}`;
+  return `${SUPABASE_URL}/storage/v1/object/public/${bucketName}/${filename}`;
 }
 
 /**

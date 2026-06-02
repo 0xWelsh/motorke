@@ -2,8 +2,7 @@ export const dynamic = "force-dynamic";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { uploadImage } from "@/lib/storage";
 
 export async function POST(request) {
   try {
@@ -38,13 +37,10 @@ export async function POST(request) {
     const buffer = Buffer.from(bytes);
     const ext = file.name.split(".").pop();
     const folder = targetType === "dealer" ? "logos" : "avatars";
-    const filename = `${targetType}-${targetId}-${Date.now()}.${ext}`;
+    const filename = `${folder}/${targetType}-${targetId}-${Date.now()}.${ext}`;
 
-    const uploadsDir = path.join(process.cwd(), "public", "uploads", folder);
-    await mkdir(uploadsDir, { recursive: true });
-    await writeFile(path.join(uploadsDir, filename), buffer);
-
-    const imageUrl = `/uploads/${folder}/${filename}`;
+    // Upload to Supabase Storage instead of local filesystem
+    const imageUrl = await uploadImage(buffer, filename, file.type);
 
     if (targetType === "dealer") {
       await db.dealer.update({
