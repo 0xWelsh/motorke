@@ -205,6 +205,15 @@ export function estimateAnnualTco(car, policy = DEFAULT_KENYA_COMPARISON_POLICY)
   };
 }
 
+export function estimateLandedPrice(car) {
+  if (car?.dutyPaid) return car.price;
+  if (car?.computedLandedPrice) return car.computedLandedPrice;
+  // If we don't have a computed landed price for an unpaid car, 
+  // we can't easily calculate it client-side without the CRSP database.
+  // We return null to indicate it's unknown/to-be-calculated.
+  return null;
+}
+
 export function computeComparisonInsights(car, policy = DEFAULT_KENYA_COMPARISON_POLICY) {
   const derivedImportEligibility = deriveImportEligibility(car?.year, new Date(), policy);
 
@@ -213,5 +222,6 @@ export function computeComparisonInsights(car, policy = DEFAULT_KENYA_COMPARISON
     roadSuitabilityScore: computeRoadSuitabilityScore(car, policy),
     spareAvailabilityScore: resolveSpareAvailabilityScore(car, policy),
     tco: estimateAnnualTco(car, policy),
+    landedPrice: estimateLandedPrice(car),
   };
 }

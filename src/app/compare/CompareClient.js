@@ -369,6 +369,20 @@ export default function CompareClient({ initialCars }) {
       name: "Core",
       specs: [
         { id: "price", label: "Price", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: c?.price != null ? formatCarPrice(c) : "N/A", raw: c?.price }), rank: "min" },
+        { 
+          id: "landedPrice", 
+          label: "Total Landed", 
+          tags: ["all", "city", "longtrip"], 
+          pick: (c) => {
+            const lp = getInsights(c)?.landedPrice;
+            const isEstimated = !c?.dutyPaid && !c?.computedLandedPrice;
+            return { 
+              value: lp != null ? formatPrice(lp) : (isEstimated ? "Calculate Duty" : "N/A"), 
+              raw: lp 
+            };
+          }, 
+          rank: "min" 
+        },
         { id: "monthlyLoan", label: "Est. Loan (48m@14%)", tags: ["all", "city", "family", "performance"], pick: (c) => ({ value: c?.price != null ? formatPrice(estimateMonthlyLoan(c?.price)) : "N/A", raw: estimateMonthlyLoan(c?.price) }), rank: "min" },
         { id: "year", label: "Year", tags: ["all", "city", "family", "longtrip", "performance"], pick: (c) => ({ value: toDisplay(c?.year), raw: c?.year }), rank: "max" },
         { id: "mileage", label: "Mileage", tags: ["all", "city", "longtrip", "family"], pick: (c) => ({ value: c?.mileage != null ? formatMileage(c.mileage) : "N/A", raw: c?.mileage }), rank: "min" },
@@ -1933,7 +1947,14 @@ export default function CompareClient({ initialCars }) {
                                    {(car?.images?.[0]?.url || car?.image) ? <Image src={car?.images?.[0]?.url || car?.image} alt={car.model} fill className="object-cover" /> : null}
                                 </div>
                                 <p className="text-[9px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-widest mb-0.5">{car.year}</p>
-                                <h3 className="text-sm sm:text-base font-bold font-sans text-[#111827] dark:text-white leading-snug line-clamp-2">{car.make} {car.model}</h3>
+                                <h3 className="text-sm sm:text-base font-bold font-sans text-[#111827] dark:text-white leading-snug line-clamp-2">
+                                  {car.make} {car.model}
+                                </h3>
+                                {overallWinner?.id === car.id && (
+                                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#38A169] text-white text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1 shadow-xl z-20 border border-white/20" style={{ borderRadius: '20px' }}>
+                                    Top Pick
+                                  </div>
+                                )}
                                 {hydrated && (
                                    <div className="mt-2 flex flex-wrap gap-1.5">
                                       <span className="px-1.5 py-0.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[7px] font-bold text-[#718096] dark:text-slate-400 uppercase tracking-widest" style={{ borderRadius: '4px' }}>ROAD {getInsights(car)?.roadSuitabilityScore}</span>

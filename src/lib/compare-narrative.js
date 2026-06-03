@@ -76,8 +76,10 @@ export function buildCompareNarrative({
   }
 
   if (winnerByPrice && cars.length > 1) {
-    const price = formatCarPrice(winnerByPrice);
-    bullets.push(`Lowest listed price in this set: ${winnerByPrice.make} ${winnerByPrice.model} (${price}).`);
+    const lp = insightsMap.get(winnerByPrice.id)?.landedPrice;
+    const price = lp != null ? formatPrice(lp) : formatCarPrice(winnerByPrice);
+    const label = lp != null ? "landed price" : "listed price";
+    bullets.push(`Lowest ${label} in this set: ${winnerByPrice.make} ${winnerByPrice.model} (${price}).`);
   }
 
   if (winnerLowestTco) {
