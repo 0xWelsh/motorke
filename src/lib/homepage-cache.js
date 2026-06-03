@@ -75,8 +75,15 @@ async function loadHomepageBase() {
         include: {
           images: { where: { isPrimary: true }, take: 1 },
           dealer: { select: { id: true, name: true, location: true, verified: true, slug: true } },
-          _count: { select: { carViews: true } },
+          _count: { 
+            select: { 
+              carViews: { 
+                where: { viewedAt: { gte: week } } 
+              } 
+            } 
+          },
         },
+        orderBy: { views: "desc" },
         take: 100,
       }),
     newArrivals: () =>
