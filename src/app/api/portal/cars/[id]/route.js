@@ -5,6 +5,8 @@ import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { revalidateInventoryForCar } from "@/lib/revalidate-inventory";
 import { mapCarImagesWithAlt } from "@/lib/car-listing-seo";
+import { notifyBuyerWatchlist } from "@/lib/whatsapp";
+import { carListingPath } from "@/lib/car-listing-url";
 
 export async function PUT(request, { params }) {
   const { id } = await params;
@@ -14,7 +16,10 @@ export async function PUT(request, { params }) {
   }
 
   // Verify this car belongs to the dealer
-  const existing = await db.car.findUnique({ where: { id: id } });
+  const existing = await db.car.findUnique({ 
+    where: { id: id },
+    include: { dealer: true }
+  });
   if (!existing || existing.dealerId !== session.user.dealerId) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -29,7 +34,10 @@ export async function PUT(request, { params }) {
       color, seats, description, features, badges, images,
       negotiable, imported, registered,
     } = body;
-    console.log("🏁 PORTAL UPDATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
+
+    const newPrice = parseInt(price);
+    const oldPrice = existing.price;
+    const isPriceDrop = newPrice < oldPrice;
 
     await db.car.update({
       where: { id: id },
@@ -38,7 +46,7 @@ export async function PUT(request, { params }) {
         model:        model.trim(),
         variant:      variant?.trim() || null,
         year:         parseInt(year),
-        price: parseInt(price),
+        price:        newPrice,
         mileage:      mileage ? parseInt(mileage) : null,
         condition:    condition || "USED",
         fuelType,
@@ -68,6 +76,29 @@ export async function PUT(request, { params }) {
         // featured intentionally excluded — only admin can change
       },
     });
+
+    // Notify buyers on price drop
+    if (isPriceDrop) {
+      const savedBy = await db.savedCar.findMany({
+        where: { carId: id },
+        include: { user: true }
+      });
+
+      const carTitle = `${existing.year} ${existing.make} ${existing.model}`;
+      const carUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke"}${carListingPath(existing)}`;
+
+      for (const saved of savedBy) {
+        if (saved.user?.phone) {
+          await notifyBuyerWatchlist(saved.user.phone, {
+            carTitle,
+            carUrl,
+            updateType: "PRICE_DROP",
+            oldPrice: oldPrice.toLocaleString(),
+            newPrice: newPrice.toLocaleString()
+          });
+        }
+      }
+    }
 
     // Replace images if new ones provided
     if (images && images.length > 0) {

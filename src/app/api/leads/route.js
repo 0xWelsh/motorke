@@ -5,6 +5,7 @@ import { getSessionFromRequest } from "@/lib/auth";
 import { sendLeadAlertEmail } from "@/lib/mail";
 import { NextResponse } from "next/server";
 import { canAcceptListingEnquiry } from "@/lib/car-sold-status";
+import { notifyDealerOfLead } from "@/lib/whatsapp";
 
 const RATE_LIMIT_MS = 15000;
 const RATE_LIMIT_MAX_WINDOW = 8000;
@@ -41,6 +42,7 @@ async function dispatchLeadNotifications({ lead, car, dealerId, buyerUserId }) {
         select: {
           id: true,
           email: true,
+          phone: true,
         },
       }),
       db.user.findMany({
@@ -84,6 +86,17 @@ async function dispatchLeadNotifications({ lead, car, dealerId, buyerUserId }) {
 
     if (notificationRows.length) {
       await db.notification.createMany({ data: notificationRows });
+    }
+
+    // Dispatch WhatsApp to Dealer Users
+    for (const dealerUser of dealerUsers) {
+      if (dealerUser.phone && isValidKenyanPhone(normalizeKenyanPhone(dealerUser.phone))) {
+        await notifyDealerOfLead(normalizeKenyanPhone(dealerUser.phone), {
+          buyerName,
+          carTitle,
+          leadId: lead.id
+        });
+      }
     }
 
     const dealerEmailRecipients = [
