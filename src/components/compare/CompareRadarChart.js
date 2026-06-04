@@ -43,7 +43,7 @@ export default function CompareRadarChart({
                   </div>
                   <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800/50 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-[#111827] dark:bg-white transition-all duration-700 ease-out" 
+                      className="h-full bg-[#111827] dark:bg-[#38A169] transition-all duration-700 ease-out" 
                       style={{ width: `${(scoreMaps.overallMap.get(car.id) || 0) * 100}%` }} 
                     />
                   </div>

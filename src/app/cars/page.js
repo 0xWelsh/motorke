@@ -776,7 +776,7 @@ export default async function CarsPage({ searchParams }) {
                 <Search className="w-12 h-12 text-[#CBD5E0] dark:text-slate-700 mx-auto mb-6" />
                 <h2 className="text-2xl font-bold text-[#111827] dark:text-white mb-2">No matches found</h2>
                 <p className="text-[#718096] dark:text-slate-400 font-medium mb-8">Try adjusting your filters or resetting your search.</p>
-                <Link href="/cars" className="inline-flex bg-[#111827] dark:bg-white dark:text-[#111827] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
+                <Link href="/cars" className="inline-flex bg-[#111827] dark:bg-[#38A169] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[1.02] active:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
                   Clear All Filters
                 </Link>
               </div>
@@ -857,7 +857,7 @@ export default async function CarsPage({ searchParams }) {
                     <Link key={p} href={getPageLink(p)}
                       className={`w-12 h-12 flex items-center justify-center text-xs font-bold transition-all ${
                         p === page
-                          ? "bg-[#111827] dark:bg-white text-white dark:!text-black shadow-lg"
+                          ? "bg-[#111827] dark:bg-[#38A169] text-white shadow-lg"
                           : "border border-[#EDF2F7] dark:border-slate-800 text-[#718096] dark:text-slate-400 hover:bg-[#F7FAFC] dark:hover:bg-white/5"
                       }`}
                       style={{ borderRadius: 'var(--radius)' }}

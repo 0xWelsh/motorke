@@ -57,7 +57,7 @@ export default function CompareSpecsMatrix({
                     onClick={() => setActiveMobileSlot(idx)}
                     className={`shrink-0 px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest border transition-colors shadow-sm ${
                       activeMobileSlot === idx
-                        ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:!text-black dark:border-white"
+                        ? "bg-[#111827] text-white border-[#111827] dark:bg-[#38A169] dark:border-[#38A169]"
                         : "bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300"
                     }`}
                     style={{ borderRadius: "var(--radius)" }}
@@ -96,7 +96,7 @@ export default function CompareSpecsMatrix({
                         {SLOT_KEYS.map((_, idx) => {
                           const c = comparedSlots[idx];
                           return (
-                            <div key={idx} className={`px-1.5 py-1.5 border-r border-slate-200 dark:border-slate-700 last:border-r-0 min-w-0 ${idx === activeMobileSlot ? "bg-[#111827]/5 dark:bg-white/10" : ""}`}>
+                            <div key={idx} className={`px-1.5 py-1.5 border-r border-slate-200 dark:border-slate-700 last:border-r-0 min-w-0 ${idx === activeMobileSlot ? "bg-[#111827]/5 dark:bg-[#38A169]/20" : ""}`}>
                               {c ? (
                                 <p className="text-[9px] font-bold uppercase tracking-wide text-slate-700 dark:text-slate-200 truncate">
                                   {c.make} {c.model}

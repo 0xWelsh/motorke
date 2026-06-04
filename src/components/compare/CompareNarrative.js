@@ -18,8 +18,8 @@ export default function CompareNarrative({
       style={{ borderRadius: "var(--radius)" }}
     >
       <div className="flex items-start gap-4 mb-6">
-        <div className="shrink-0 w-10 h-10 bg-[#111827] dark:bg-white flex items-center justify-center rounded-full shadow-lg">
-          <CircleHelp className="w-5 h-5 text-white dark:text-black" />
+        <div className="shrink-0 w-10 h-10 bg-[#111827] dark:bg-[#38A169] flex items-center justify-center rounded-full shadow-lg">
+          <CircleHelp className="w-5 h-5 text-white" />
         </div>
         <div>
           <h3 className="text-xl font-bold text-[#111827] dark:text-white">The Buyer’s Verdict</h3>
@@ -37,7 +37,7 @@ export default function CompareNarrative({
               <button
                 type="button"
                 onClick={requestFreeAi}
-                className="h-11 px-6 bg-[#111827] dark:bg-white text-white dark:text-black text-[10px] font-black uppercase tracking-widest shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
+                className="h-11 px-6 bg-[#111827] dark:bg-[#38A169] text-white text-[10px] font-black uppercase tracking-widest shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
                 style={{ borderRadius: "var(--radius)" }}
               >
                 Generate Smart Narrative
