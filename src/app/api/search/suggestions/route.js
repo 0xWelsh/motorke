@@ -11,7 +11,7 @@ const querySchema = z.object({
   includeCarListings: z.enum(["true", "false"]).optional().default("true"),
 });
 
-/** One search token → OR clause on make/model/variant/year (if token is a year). */
+/** One search token → OR clause on multiple fields. */
 function tokenWhere(token) {
   const trimmed = token.trim();
   if (!trimmed) return null;
@@ -23,9 +23,12 @@ function tokenWhere(token) {
     asNum <= new Date().getFullYear() + 1;
 
   const textOr = [
-    { make: { contains: trimmed, mode: "insensitive" } },
-    { model: { contains: trimmed, mode: "insensitive" } },
-    { variant: { contains: trimmed, mode: "insensitive" } },
+    { make:     { contains: trimmed, mode: "insensitive" } },
+    { model:    { contains: trimmed, mode: "insensitive" } },
+    { variant:  { contains: trimmed, mode: "insensitive" } },
+    { color:    { contains: trimmed, mode: "insensitive" } },
+    { bodyType: { contains: trimmed, mode: "insensitive" } },
+    { fuelType: { contains: trimmed, mode: "insensitive" } },
   ];
   if (isYear) {
     return { OR: [{ year: asNum }, ...textOr] };
@@ -40,8 +43,11 @@ function buildCarTextFilter(query) {
     .filter(Boolean)
     .slice(0, 4);
   const tokenClauses = words.map(tokenWhere).filter(Boolean);
+
   if (tokenClauses.length > 0) {
-    return { AND: tokenClauses };
+    // For suggestions, we use OR to be more discoverable, 
+    // but the ranking in loadSuggestions will prioritize better matches.
+    return { OR: tokenClauses };
   }
   return {
     OR: [
@@ -102,33 +108,60 @@ async function loadSuggestions(normalizedQuery, limit, showCars) {
     }),
   ]);
 
-  const carSuggestions = cars.map((car) => ({
-    type: "car",
-    id: car.id,
-    publicSlug: car.publicSlug,
-    value: [car.year, car.make, car.model, car.variant].filter(Boolean).join(" "),
-    year: car.year,
-    make: car.make,
-    model: car.model,
-    price: car.price,
-    mileage: car.mileage,
-    image: car.images[0]?.url || null,
-    dealerName: car.dealer?.name,
-    dealerVerified: car.dealer?.verified,
-    location: car.dealer?.location,
-  }));
+  const carSuggestions = cars.map((car) => {
+    const make = car.make.toLowerCase();
+    const model = car.model.toLowerCase();
+    const variant = (car.variant || "").toLowerCase();
+    const fullName = `${car.year} ${make} ${model} ${variant}`.toLowerCase();
+    const terms = normalizedQuery.split(/\s+/).filter(Boolean);
+    
+    let score = 0;
+    let matchCount = 0;
+    
+    terms.forEach(term => {
+      let termMatched = false;
+      if (fullName.includes(term)) {
+        score += 10;
+        termMatched = true;
+      }
+      if (make === term) score += 30;
+      if (model === term) score += 20;
+      if (termMatched) matchCount++;
+    });
+
+    const coverage = matchCount / terms.length;
+    const finalScore = score * coverage;
+
+    return {
+      type: "car",
+      id: car.id,
+      publicSlug: car.publicSlug,
+      value: [car.year, car.make, car.model, car.variant].filter(Boolean).join(" "),
+      year: car.year,
+      make: car.make,
+      model: car.model,
+      price: car.price,
+      mileage: car.mileage,
+      image: car.images[0]?.url || null,
+      dealerName: car.dealer?.name,
+      dealerVerified: car.dealer?.verified,
+      location: car.dealer?.location,
+      _relevance: finalScore,
+    };
+  }).sort((a, b) => b._relevance - a._relevance);
 
   const attributeSuggestions = [
-    ...makes.map((car) => ({ type: "make", value: car.make })),
-    ...models.map((car) => ({ type: "model", value: car.model })),
-    ...variants.map((car) => ({ type: "variant", value: car.variant })),
+    ...makes.map((car) => ({ type: "make", value: car.make, _relevance: car.make.toLowerCase() === normalizedQuery ? 100 : 50 })),
+    ...models.map((car) => ({ type: "model", value: car.model, _relevance: car.model.toLowerCase() === normalizedQuery ? 90 : 40 })),
+    ...variants.map((car) => ({ type: "variant", value: car.variant, _relevance: 30 })),
   ];
 
   const uniqueAttributes = [
     ...new Map(attributeSuggestions.map((s) => [s.value.toLowerCase(), s])).values(),
-  ];
+  ].sort((a, b) => b._relevance - a._relevance);
 
-  return [...carSuggestions, ...uniqueAttributes].slice(0, limit);
+  // Interleave cars and attributes, but keep highly relevant attributes at top
+  return [...carSuggestions.slice(0, 4), ...uniqueAttributes, ...carSuggestions.slice(4)].slice(0, limit);
 }
 
 const getCachedSuggestions = unstable_cache(

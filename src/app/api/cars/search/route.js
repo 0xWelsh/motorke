@@ -8,20 +8,27 @@ import { GO_SEARCH_ACTIVE_ENABLED, PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/fe
 import { trackRequest } from "@/lib/telemetry";
 
 const getSearchResults = unstable_cache(
-  async (query) => {
+  async (normalizedQuery) => {
+    const tokens = normalizedQuery.split(/\s+/).filter(t => t.length >= 2);
+    if (!tokens.length) return [];
+
+    // Search logic: Match cars that contain ANY of the search tokens in key fields
     const cars = await db.car.findMany({
       where: {
         available: true,
         ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
-        OR: [
-          { make:  { contains: query, mode: "insensitive" } },
-          { model: { contains: query, mode: "insensitive" } },
-        ],
+        OR: tokens.flatMap(token => ([
+          { make:    { contains: token, mode: "insensitive" } },
+          { model:   { contains: token, mode: "insensitive" } },
+          { variant: { contains: token, mode: "insensitive" } },
+          { color:   { contains: token, mode: "insensitive" } },
+          { bodyType: { contains: token, mode: "insensitive" } },
+        ])),
       },
       include: {
         images: { where: { isPrimary: true }, take: 1 },
       },
-      take: 5,
+      take: 20, // Take more for better in-memory ranking
     });
 
     return cars.map(car => ({
@@ -29,11 +36,14 @@ const getSearchResults = unstable_cache(
       make: car.make,
       model: car.model,
       year: car.year,
-      price: car.price, engineCC: car.engineCC, fuelType: car.fuelType,
+      price: car.price, 
+      engineCC: car.engineCC, 
+      fuelType: car.fuelType,
+      variant: car.variant,
       image: car.images[0]?.url || null,
     }));
   },
-  ["car-search"],
+  ["car-search-v2"],
   { revalidate: 600, tags: ["cars"] }
 );
 
@@ -42,52 +52,52 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q") || "";
 
-  if (query.length < 2) {
-    trackRequest({
-      route: "/api/cars/search",
-      method: "GET",
-      status: 200,
-      durationMs: Date.now() - started,
-      ok: true,
-    });
+  if (query.trim().length < 2) {
     return NextResponse.json([]);
   }
 
   try {
     const normalized = query.trim();
-    const terms = normalized.split(/\s+/).filter(Boolean);
-    const results = await getSearchResults(normalized);
+    const terms = normalized.toLowerCase().split(/\s+/).filter(Boolean);
+    const rawResults = await getSearchResults(normalized);
 
-    const ranked = [...results].sort((a, b) => {
-      const score = (item) => {
-        const haystack = `${item.make} ${item.model}`.toLowerCase();
-        const exact = haystack === normalized.toLowerCase() ? 10 : 0;
-        const starts = haystack.startsWith(normalized.toLowerCase()) ? 5 : 0;
-        const tokenHits = terms.reduce((sum, t) => (haystack.includes(t.toLowerCase()) ? sum + 1 : sum), 0);
-        return exact + starts + tokenHits;
-      };
-      return score(b) - score(a);
-    });
+    // Smarter Weighted Ranking
+    const ranked = rawResults.map(item => {
+      const make = item.make.toLowerCase();
+      const model = item.model.toLowerCase();
+      const variant = (item.variant || "").toLowerCase();
+      const fullName = `${make} ${model} ${variant}`.trim();
+      
+      let score = 0;
 
-    // Safe migration path:
-    // - Shadow mode compares Node vs Go without changing response payload.
-    // - Active mode can be enabled later once shadow mismatch rate is low.
+      // 1. Exact full name match (highest priority)
+      if (fullName === normalized.toLowerCase()) score += 100;
+      
+      // 2. Exact make match
+      if (terms.includes(make)) score += 40;
+      
+      // 3. Exact model match
+      if (terms.includes(model)) score += 30;
+
+      // 4. Token hits
+      terms.forEach(term => {
+        if (fullName.includes(term)) score += 10;
+        if (make.startsWith(term) || model.startsWith(term)) score += 5;
+      });
+
+      // 5. Freshness/Relevance bonus (if price is provided, etc.)
+      
+      return { ...item, _score: score };
+    })
+    .sort((a, b) => b._score - a._score)
+    .slice(0, 8); // Return top 8 best matches
+
+    // Shadow mode for Go Search optimization
     if (!GO_SEARCH_ACTIVE_ENABLED) {
-      const requester =
-        request.headers.get("x-forwarded-for") ||
-        request.headers.get("x-real-ip") ||
-        request.headers.get("user-agent") ||
-        "unknown";
+      const requester = request.headers.get("x-forwarded-for") || "unknown";
       void runGoSearchShadow({ query: normalized, nodeResults: ranked, requester });
     }
 
-    trackRequest({
-      route: "/api/cars/search",
-      method: "GET",
-      status: 200,
-      durationMs: Date.now() - started,
-      ok: true,
-    });
     return NextResponse.json(ranked);
   } catch (error) {
     console.error("Search error:", error);

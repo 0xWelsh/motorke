@@ -87,31 +87,62 @@ function levenshtein(a = "", b = "") {
 
 function getSearchScore(car, searchTokens = []) {
   if (!searchTokens.length) return 0;
-  const haystack = normalizeText(
-    `${car.make || ""} ${car.model || ""} ${car.variant || ""} ${car.dealer?.name || ""}`
-  );
-  const words = haystack.split(" ").filter(Boolean);
-  let totalScore = 0;
+  
+  const make = normalizeText(car.make || "");
+  const model = normalizeText(car.model || "");
+  const variant = normalizeText(car.variant || "");
+  const description = normalizeText(car.description || "");
+  const bodyType = normalizeText(car.bodyType || "");
+  
+  const fullName = `${make} ${model} ${variant}`.trim();
+  const tokens = searchTokens.map(t => t.toLowerCase());
 
-  for (const token of searchTokens) {
-    if (!token) continue;
-    let best = 0;
-    for (const word of words) {
-      if (!word) continue;
-      if (word.includes(token) || token.includes(word)) {
-        best = Math.max(best, 1);
-        continue;
+  let score = 0;
+  let matches = 0;
+
+  tokens.forEach(token => {
+    let tokenScore = 0;
+    
+    // 1. Brand/Make (Highest weight)
+    if (make === token) tokenScore += 50;
+    else if (make.includes(token)) tokenScore += 20;
+
+    // 2. Model (High weight)
+    if (model === token) tokenScore += 40;
+    else if (model.includes(token)) tokenScore += 15;
+
+    // 3. Variant/Full Name
+    if (fullName.includes(token)) tokenScore += 10;
+    
+    // 4. Body Type & Description
+    if (bodyType === token) tokenScore += 20;
+    if (description.includes(token)) tokenScore += 5;
+
+    // 5. Fuzzy Match (Typo tolerance)
+    if (tokenScore === 0 && token.length >= 4) {
+      const words = fullName.split(" ").filter(Boolean);
+      for (const word of words) {
+        const dist = levenshtein(word, token);
+        if (dist <= 1) {
+          tokenScore += 8;
+          break;
+        }
       }
-      const lenGap = Math.abs(word.length - token.length);
-      if (lenGap > 1) continue;
-      const dist = levenshtein(word, token);
-      if (dist <= 1) best = Math.max(best, 0.82);
-      else if (dist === 2 && token.length >= 6) best = Math.max(best, 0.68);
     }
-    totalScore += best;
-  }
 
-  return totalScore / searchTokens.length;
+    if (tokenScore > 0) {
+      score += tokenScore;
+      matches += 1;
+    }
+  });
+
+  // Multiplier for matching multiple tokens (Ensures "Toyota Prado" ranks higher than "Toyota")
+  const coverageMultiplier = matches / tokens.length;
+  
+  // Bonus if ALL tokens matched
+  const completionBonus = matches === tokens.length ? 1.5 : 1.0;
+
+  return (score * coverageMultiplier * completionBonus) / 100;
 }
 
 function median(values = []) {
@@ -312,6 +343,17 @@ export default async function CarsPage({ searchParams }) {
         county: { equals: county, mode: "insensitive" },
       },
     }),
+    // Keyword Search: If search tokens exist, match ANY of them against key fields
+    ...(searchTokens.length > 0 ? {
+      OR: searchTokens.flatMap(token => ([
+        { make:    { contains: token, mode: "insensitive" } },
+        { model:   { contains: token, mode: "insensitive" } },
+        { variant: { contains: token, mode: "insensitive" } },
+        { color:   { contains: token, mode: "insensitive" } },
+        { bodyType: { contains: token, mode: "insensitive" } },
+        { description: { contains: token, mode: "insensitive" } },
+      ]))
+    } : {}),
   };
 
   const orderBy = buildCarsOrderBy(sort);
@@ -489,7 +531,7 @@ export default async function CarsPage({ searchParams }) {
   const searchMatchedCars = searchTokens.length > 0
     ? rawCars
         .map((car) => ({ car, searchScore: getSearchScore(car, searchTokens) }))
-        .filter((item) => item.searchScore >= 0.6)
+        .filter((item) => item.searchScore >= 0.4)
         .sort((a, b) => b.searchScore - a.searchScore)
         .map((item) => item.car)
     : rawCars;
