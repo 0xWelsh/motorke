@@ -1,5 +1,6 @@
 import { db } from "./db";
 import { unstable_cache } from "next/cache";
+import { withDbRetry } from "./db-retry";
 
 /**
  * Basic Price Analysis for a vehicle
@@ -10,10 +11,10 @@ export async function analyzePrice(car) {
   if (!car?.make || !car?.model || !car?.price) return null;
 
   try {
-    const similar = await getSimilarPriceSample(car.make, car.model, car.year);
+    const similar = await withDbRetry(() => getSimilarPriceSample(car.make, car.model, car.year));
 
     if (similar.length < 3) {
-      const broader = await getBroaderPriceSample(car.make, car.model);
+      const broader = await withDbRetry(() => getBroaderPriceSample(car.make, car.model));
       if (broader.length < 3) return null;
       return calculateMetric(car.price, broader.map(s => s.price));
     }

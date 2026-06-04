@@ -16,6 +16,7 @@ import {
   getPopularMakeLinks,
 } from "@/lib/seo-car-hubs";
 import { db } from "@/lib/db";
+import { withDbRetry } from "@/lib/db-retry";
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
 import { fuelFacetLabel, priceBandSearchParams, SEO_PRICE_BANDS } from "@/lib/seo-car-facets";
 import { BODY_TYPE_LABELS } from "@/lib/constants";
@@ -77,7 +78,7 @@ export async function generateMetadata({ params, searchParams }) {
   redirectIfAliasHub(parts || [], resolved.path, page);
 
   const where = await hubWhereClause(resolved);
-  const total = await db.car.count({ where });
+  const total = await withDbRetry(() => db.car.count({ where }));
   const { title, description } = hubTitleAndDescription(resolved, total);
 
   const path = resolved.path;
@@ -184,8 +185,8 @@ export default async function CarHubPage({ params, searchParams }) {
   const where = await hubWhereClause(resolved);
 
   const [total, cars, siblingMakes, countyLinks, popularMakes] = await Promise.all([
-    db.car.count({ where }),
-    db.car.findMany({
+    withDbRetry(() => db.car.count({ where })),
+    withDbRetry(() => db.car.findMany({
       where,
       select: hubCarSelect,
       orderBy: [

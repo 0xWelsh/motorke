@@ -227,13 +227,12 @@ async function enrichHomepage(base) {
     .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
     .slice(0, 12);
 
-  const hotCandidatesWithAnalysis = await Promise.all(
-    hotCandidates.map(async (car) => ({
-      ...car,
-      marketAnalysis: await analyzePrice(car),
-    }))
-  );
-  const hotSorted = rankHotDeals(hotCandidatesWithAnalysis);
+  // ENRICHMENT: Process in sequence or small batches to avoid P2024 pool exhaustion
+  for (const car of hotCandidates) {
+    car.marketAnalysis = await analyzePrice(car);
+  }
+  
+  const hotSorted = rankHotDeals(hotCandidates);
 
   const baseSpotlight =
     hotSorted.length > 0 ? hotSorted : featured?.length ? featured : newArrivals;
@@ -274,58 +273,52 @@ async function enrichHomepage(base) {
     console.warn("[homepage-cache] hero boosted load failed:", err?.message || err);
   }
 
-  const mostViewed = [...hotCandidatesWithAnalysis]
+  const mostViewed = [...hotCandidates]
     .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
     .slice(0, 12);
 
-  const paidSpotlightEnriched = await Promise.all(
-    (paidSpotlightRaw || []).map(async (car) => ({
-      ...car,
-      marketAnalysis: await analyzePrice(car),
-    })),
-  );
-  const rotatingSpotlightEnriched = await Promise.all(
-    (rotatingSpotlightRaw || []).map(async (car) => ({
-      ...car,
-      marketAnalysis: await analyzePrice(car),
-    })),
-  );
+  const paidSpotlightEnriched = [];
+  for (const car of paidSpotlightRaw) {
+    paidSpotlightEnriched.push({ ...car, marketAnalysis: await analyzePrice(car) });
+  }
+
+  const rotatingSpotlightEnriched = [];
+  for (const car of rotatingSpotlightRaw) {
+    rotatingSpotlightEnriched.push({ ...car, marketAnalysis: await analyzePrice(car) });
+  }
+
   const homepageSpotlight = mergeHomepageSpotlight(paidSpotlightEnriched, rotatingSpotlightEnriched);
 
-  const [spotlightEnhanced, paidSpotlight, heroBoosted, hotEnhanced, mostViewedEnhanced, newEnhanced, heroFallbackEnhanced] =
-    await Promise.all([
-    Promise.all(
-      (baseSpotlight || []).map(async (car) =>
-        car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) }
-      )
-    ),
-    Promise.resolve(paidSpotlightEnriched),
-    Promise.all(
-      (heroBoostedRaw || []).map(async (car) => ({
-        ...car,
-        marketAnalysis: await analyzePrice(car),
-      }))
-    ),
-    Promise.all(
-      (hotSorted || []).map(async (car) =>
-        car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) }
-      )
-    ),
-    Promise.all(
-      (mostViewed || []).map(async (car) =>
-        car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) }
-      )
-    ),
-    Promise.all(
-      (newArrivals || []).slice(0, 8).map(async (c) => ({ ...c, marketAnalysis: await analyzePrice(c) }))
-    ),
-    Promise.all(
-      (heroFallback || []).map(async (car) => ({
-        ...car,
-        marketAnalysis: await analyzePrice(car),
-      }))
-    ),
-  ]);
+  // Final batch enrichment (Safe sequence)
+  const spotlightEnhanced = [];
+  for (const car of (baseSpotlight || [])) {
+    spotlightEnhanced.push(car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) });
+  }
+
+  const heroBoosted = [];
+  for (const car of (heroBoostedRaw || [])) {
+    heroBoosted.push({ ...car, marketAnalysis: await analyzePrice(car) });
+  }
+
+  const hotEnhanced = [];
+  for (const car of (hotSorted || [])) {
+    hotEnhanced.push(car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) });
+  }
+
+  const mostViewedEnhanced = [];
+  for (const car of (mostViewed || [])) {
+    mostViewedEnhanced.push(car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) });
+  }
+
+  const newEnhanced = [];
+  for (const car of (newArrivals || []).slice(0, 8)) {
+    newEnhanced.push({ ...car, marketAnalysis: await analyzePrice(car) });
+  }
+
+  const heroFallbackEnhanced = [];
+  for (const car of (heroFallback || [])) {
+    heroFallbackEnhanced.push({ ...car, marketAnalysis: await analyzePrice(car) });
+  }
 
   return {
     featured,
@@ -335,7 +328,7 @@ async function enrichHomepage(base) {
     newsItems,
     highlightReviews,
     spotlightEnhanced,
-    paidSpotlight,
+    paidSpotlight: paidSpotlightEnriched,
     homepageSpotlight,
     heroBoosted,
     heroFallback: heroFallbackEnhanced,

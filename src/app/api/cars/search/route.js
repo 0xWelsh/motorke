@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { unstable_cache } from "next/cache";
+import { withDbRetry } from "@/lib/db-retry";
 import { runGoSearchShadow } from "@/lib/go-search";
 import { GO_SEARCH_ACTIVE_ENABLED, PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { trackRequest } from "@/lib/telemetry";
@@ -13,7 +14,7 @@ const getSearchResults = unstable_cache(
     if (!tokens.length) return [];
 
     // Search logic: Match cars that contain ANY of the search tokens in key fields
-    const cars = await db.car.findMany({
+    const cars = await withDbRetry(() => db.car.findMany({
       where: {
         available: true,
         ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
@@ -28,7 +29,7 @@ const getSearchResults = unstable_cache(
         images: { where: { isPrimary: true }, take: 1 },
       },
       take: 20, // Take more for better in-memory ranking
-    });
+    }));
 
     return cars.map(car => ({
       id: car.id,
