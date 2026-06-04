@@ -350,7 +350,6 @@ export default async function CarsPage({ searchParams }) {
         { model:   { contains: token, mode: "insensitive" } },
         { variant: { contains: token, mode: "insensitive" } },
         { color:   { contains: token, mode: "insensitive" } },
-        { bodyType: { contains: token, mode: "insensitive" } },
         { description: { contains: token, mode: "insensitive" } },
       ]))
     } : {}),

@@ -22,7 +22,6 @@ const getSearchResults = unstable_cache(
           { model:   { contains: token, mode: "insensitive" } },
           { variant: { contains: token, mode: "insensitive" } },
           { color:   { contains: token, mode: "insensitive" } },
-          { bodyType: { contains: token, mode: "insensitive" } },
         ])),
       },
       include: {

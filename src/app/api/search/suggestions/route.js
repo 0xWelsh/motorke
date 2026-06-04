@@ -27,8 +27,6 @@ function tokenWhere(token) {
     { model:    { contains: trimmed, mode: "insensitive" } },
     { variant:  { contains: trimmed, mode: "insensitive" } },
     { color:    { contains: trimmed, mode: "insensitive" } },
-    { bodyType: { contains: trimmed, mode: "insensitive" } },
-    { fuelType: { contains: trimmed, mode: "insensitive" } },
   ];
   if (isYear) {
     return { OR: [{ year: asNum }, ...textOr] };
