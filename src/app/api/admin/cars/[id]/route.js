@@ -5,6 +5,7 @@ import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { revalidateInventoryForCar } from "@/lib/revalidate-inventory";
 import { mapCarImagesWithAlt } from "@/lib/car-listing-seo";
+import { matchCarToSearchAlerts } from "@/lib/search-alerts";
 
 export async function PUT(request, { params }) {
   const { id } = await params;
@@ -85,6 +86,9 @@ export async function PUT(request, { params }) {
     }
 
     await revalidateInventoryForCar(id);
+    
+    // Trigger WhatsApp alerts for matching buyers
+    matchCarToSearchAlerts(id).catch(e => console.error("Admin Match Alert Error:", e));
 
     return NextResponse.json({ success: true, redirectTo: "/admin/cars" });
   } catch (err) {

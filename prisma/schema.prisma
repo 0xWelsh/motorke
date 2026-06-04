@@ -427,6 +427,28 @@ model Article {
   @@map("articles")
 }
 
+model SearchAlert {
+  id              String        @id @default(cuid())
+  phone           String
+  email           String?
+  make            String?
+  model           String?
+  minPrice        Int?
+  maxPrice        Int?
+  minYear         Int?
+  bodyType        BodyType?
+  fuelType        FuelType?
+  transmission    Transmission?
+  active          Boolean       @default(true)
+  lastNotifiedAt  DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([phone])
+  @@index([active])
+  @@map("search_alerts")
+}
+
 enum UserRole {
   ADMIN
   DEALER

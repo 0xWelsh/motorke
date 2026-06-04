@@ -19,7 +19,7 @@ import { isSearchBot, rotationSeed, sortByTierAndSeed } from "@/lib/shuffle";
 import { buildCarsOrderBy, normalizeCarsSort } from "@/lib/cars-inventory-sort";
 import CarsInventorySort from "@/components/CarsInventorySort";
 import { buildMakeWhere } from "@/lib/make-filter";
-
+import SearchAlertButton from "@/components/SearchAlertButton";
 
 export const metadata = {
   title: "Browse cars for sale in Kenya",
@@ -677,6 +677,29 @@ export default async function CarsPage({ searchParams }) {
         <CarsQuickActions />
 
         <TrendingSearches className="mb-4" />
+
+        {/* Search Alerts — Only shown when searching or filtering by make to ensure high intent */}
+        {(search || make || model || bodyType) && (
+          <div className="mb-6 animate-in fade-in slide-in-from-top-2 duration-700">
+            <div className="bg-[#38A169]/5 dark:bg-[#38A169]/10 border border-[#38A169]/20 p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4" style={{ borderRadius: "var(--radius)" }}>
+              <div className="flex items-center gap-3 text-center sm:text-left">
+                <div className="shrink-0 w-10 h-10 bg-[#38A169] rounded-full flex items-center justify-center text-white shadow-lg">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-black text-[#111827] dark:text-white uppercase tracking-tight">Can't find the perfect match?</h4>
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">Get a WhatsApp alert the moment a {make || model || "similar"} car is listed.</p>
+                </div>
+              </div>
+              <SearchAlertButton 
+                filters={{ 
+                  make, model, bodyType, fuelType, 
+                  maxPrice, minYOM, search 
+                }} 
+              />
+            </div>
+          </div>
+        )}
 
         {/* Main layout: sidebar + top rows */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 gap-y-6 lg:gap-y-8">

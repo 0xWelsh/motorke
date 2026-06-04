@@ -9,6 +9,7 @@ import { ensureCarPublicSlugInTx } from "@/lib/car-public-slug";
 import { notifyListingPublished } from "@/lib/seo-indexing";
 import { revalidateInventoryForCar } from "@/lib/revalidate-inventory";
 import { mapCarImagesWithAlt } from "@/lib/car-listing-seo";
+import { matchCarToSearchAlerts } from "@/lib/search-alerts";
 
 export async function POST(request) {
   const started = Date.now();
@@ -52,6 +53,11 @@ export async function POST(request) {
 
     const car = await createCarRecord(body);
     await revalidateInventoryForCar(car.id, { refreshHomepage: true });
+    
+    // Trigger WhatsApp alerts for matching buyers
+    // We don't await this to keep response time fast
+    matchCarToSearchAlerts(car.id).catch(e => console.error("Match Alert Error:", e));
+
     notifyListingPublished(car);
     logAuditEvent({
       actorId: session.user.id,
