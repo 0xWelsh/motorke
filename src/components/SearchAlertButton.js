@@ -71,7 +71,7 @@ export default function SearchAlertButton({ filters = {} }) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#111827] dark:bg-white text-white dark:text-[#111827] text-[11px] font-black uppercase tracking-[0.12em] shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
+        className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#111827] dark:bg-[#38A169] text-white text-[11px] font-black uppercase tracking-[0.12em] shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
         style={{ borderRadius: "12px" }}
       >
         <Bell className="w-3.5 h-3.5" />
@@ -109,7 +109,7 @@ export default function SearchAlertButton({ filters = {} }) {
                   </p>
                   <button 
                     onClick={() => setIsOpen(false)}
-                    className="w-full h-12 bg-[#111827] dark:bg-white text-white dark:text-[#111827] text-xs font-bold uppercase tracking-widest rounded-xl"
+                    className="w-full h-12 bg-[#111827] dark:bg-[#38A169] text-white text-xs font-bold uppercase tracking-widest rounded-xl"
                   >
                     Got it, thanks
                   </button>
