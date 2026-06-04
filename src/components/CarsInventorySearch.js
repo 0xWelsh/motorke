@@ -264,7 +264,7 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
         </div>
         <button
           type="submit"
-          className="inline-flex shrink-0 items-center justify-center gap-2 bg-[#111827] px-8 py-3.5 text-xs font-black uppercase tracking-[0.2em] text-white transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-black/5 dark:bg-white dark:text-[#111827]"
+          className="inline-flex shrink-0 items-center justify-center gap-2 bg-[#111827] px-8 py-3.5 text-xs font-black uppercase tracking-[0.2em] text-white transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-black/5 dark:bg-[#38A169] dark:text-white"
           style={{ borderRadius: "14px" }}
         >
           <Search className="h-4 w-4" aria-hidden />

@@ -476,7 +476,7 @@ export default function CarsSearch({
           <div className="flex flex-col gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
             <button
               type="submit"
-              className="bg-[#111827] py-4 text-[11px] font-black uppercase tracking-[0.2em] text-white transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl dark:bg-white dark:text-[#111827]"
+              className="bg-[#111827] py-4 text-[11px] font-black uppercase tracking-[0.2em] text-white transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl dark:bg-[#38A169] dark:text-white"
               style={{ borderRadius: "14px" }}
             >
               Apply Filter
