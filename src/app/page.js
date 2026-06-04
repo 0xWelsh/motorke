@@ -20,11 +20,14 @@ import HomepageSpotlight from "@/components/home/HomepageSpotlight";
 import HomepageDutyTeaser from "@/components/home/HomepageDutyTeaser";
 import HomepageHeroCarFinder from "@/components/home/HomepageHeroCarFinder";
 import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
+import HomepageCompareDiscovery from "@/components/home/HomepageCompareDiscovery";
 import SeasonalPromoModal from "@/components/SeasonalPromoModal";
 import { getHomepageData } from "@/lib/homepage-cache";
 import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 import { isActiveListingBoost } from "@/lib/listing-boost";
-import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
+import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin, absoluteMediaUrl } from "@/lib/site-url";
+import { carListingPath } from "@/lib/car-listing-url";
+import { listPublishedSeoPages, SEO_CONTENT_TYPES } from "@/lib/seo-content";
 
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
 const HOMEPAGE_HERO_BACKGROUND = "/images/backgrounds/herosectionbackgroud.jpeg";
@@ -71,20 +74,37 @@ function shuffleWithSeed(items, seed = 0) {
 }
 
 export const metadata = {
-  title: "Buy Used and New Cars in Kenya",
+  title: "Buy Used and New Cars in Kenya | Verified Nairobi & Mombasa Dealers",
   description:
-    "Find verified cars from trusted dealers in Kenya. Compare total ownership costs, inspect specs, and contact dealers directly on Welsh Motorhub.",
+    "Find verified used cars for sale in Nairobi, Mombasa, and across Kenya. Compare total ownership costs, inspect specs, and contact trusted car dealers directly on Welsh Motorhub.",
   alternates: { canonical: "/" },
   openGraph: {
     url: absoluteUrl("/"),
-    title: "Buy Used and New Cars in Kenya | Welsh Motorhub",
+    title: "Buy Used and New Cars for sale in Kenya | Welsh Motorhub",
     description:
-      "Verified vehicle inventory from trusted Kenyan dealers. Compare costs, specs, and contact sellers directly.",
+      "Verified vehicle inventory from trusted Kenyan dealers in Nairobi and Mombasa. Compare costs, specs, and contact sellers directly.",
     type: "website",
   },
 };
 
-function homeStructuredData(origin) {
+function homeStructuredData(origin, spotlightCars = [], newCars = []) {
+  const allCars = [...spotlightCars, ...newCars.slice(0, 8)];
+  
+  const productSchemas = allCars.map((car, idx) => ({
+    "@type": "Product",
+    "name": `${car.year} ${car.make} ${car.model} ${car.variant || ""}`.trim(),
+    "image": absoluteMediaUrl(car?.images?.[0]?.url || car?.image),
+    "description": `Verified ${car.condition} ${car.make} ${car.model} for sale by ${car.dealer?.name || "verified dealer"} in ${car.dealer?.location || "Kenya"}.`,
+    "offers": {
+      "@type": "Offer",
+      "url": absoluteUrl(carListingPath(car)),
+      "priceCurrency": "KES",
+      "price": car.price,
+      "availability": "https://schema.org/InStock",
+      "itemCondition": car.condition === "NEW" ? "https://schema.org/NewCondition" : "https://schema.org/UsedCondition"
+    }
+  }));
+
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -112,14 +132,25 @@ function homeStructuredData(origin) {
           "query-input": "required name=search_term_string",
         },
       },
+      {
+        "@type": "ItemList",
+        "name": "Featured Cars in Kenya",
+        "numberOfItems": productSchemas.length,
+        "itemListElement": productSchemas.map((p, i) => ({
+          "@type": "ListItem",
+          "position": i + 1,
+          "item": p
+        }))
+      }
     ],
   };
 }
 
 export default async function HomePage() {
-  const [homepageBundle, browseInventoryCounts] = await Promise.all([
+  const [homepageBundle, browseInventoryCounts, seoComparisons] = await Promise.all([
     getHomepageData(),
     getBrowseInventoryCounts(),
+    listPublishedSeoPages({ type: SEO_CONTENT_TYPES.COMPARISON, take: 4 }),
   ]);
 
   const {
@@ -177,7 +208,7 @@ export default async function HomePage() {
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(homeStructuredData(origin)),
+          __html: JSON.stringify(homeStructuredData(origin, spotlightCards, newEnhanced)),
         }}
       />
       {/* Dynamic Hero Section */}
@@ -417,6 +448,8 @@ export default async function HomePage() {
       <HomepageSpotlight cars={spotlightCards} />
 
       <HomepageTrending cars={trendingCars} />
+
+      <HomepageCompareDiscovery comparisons={seoComparisons} />
 
       {/* Fresh Arrivals Section */}
       {newEnhanced.length > 0 && (
