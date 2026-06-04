@@ -17,12 +17,6 @@ export default function HomepageCompareDiscovery({ comparisons = [] }) {
       <div className="home-shell">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 sm:mb-10">
           <div className="max-w-2xl">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 bg-[#38A169]/10 rounded-full flex items-center justify-center">
-                <GitCompare className="w-4 h-4 text-[#38A169]" />
-              </div>
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#38A169]">Buyer Intelligence</span>
-            </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-[#111827] dark:text-white mb-3">
               Popular <span className="text-[#38A169]">Comparisons</span>
             </h2>
