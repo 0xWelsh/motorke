@@ -145,6 +145,7 @@ export default function SearchSuggestions({
                 return (
                   <button
                     key={`${suggestion.type}-${index}`}
+                    type="button"
                     onClick={() => onSelect(suggestion.value)}
                     className="w-full flex items-center gap-2 px-3 py-2 hover:bg-[#fbfcfe] dark:hover:bg-zinc-800 transition-colors group border-b border-slate-50 dark:border-zinc-800 last:border-0 text-xs"
                   >

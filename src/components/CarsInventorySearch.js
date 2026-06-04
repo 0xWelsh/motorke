@@ -191,6 +191,15 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
     );
   }
 
+  function handleKeyDown(e) {
+    if (e.key === "Enter") {
+      setShowSuggestions(false);
+      // Form onSubmit (handleSubmit) will handle the search for 'search' state
+    } else if (e.key === "Escape") {
+      setShowSuggestions(false);
+    }
+  }
+
   return (
     <section
       ref={wrapRef}
@@ -216,6 +225,7 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
             name="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleKeyDown}
             onFocus={() => {
               setIsFocused(true);
               const current = (search || "").trim();
