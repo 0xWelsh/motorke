@@ -67,25 +67,29 @@ export async function GET(request) {
       const variant = (item.variant || "").toLowerCase();
       const fullName = `${make} ${model} ${variant}`.trim();
       
+      // Aggressive normalization for "cx5" vs "cx-5"
+      const normalize = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+      const normFullName = normalize(fullName);
+      const normQuery = normalize(normalized);
+      const normTerms = terms.map(normalize).filter(Boolean);
+
       let score = 0;
 
       // 1. Exact full name match (highest priority)
-      if (fullName === normalized.toLowerCase()) score += 100;
+      if (normFullName === normQuery) score += 100;
       
       // 2. Exact make match
-      if (terms.includes(make)) score += 40;
+      if (normTerms.includes(normalize(make))) score += 40;
       
       // 3. Exact model match
-      if (terms.includes(model)) score += 30;
+      if (normTerms.includes(normalize(model))) score += 30;
 
       // 4. Token hits
-      terms.forEach(term => {
-        if (fullName.includes(term)) score += 10;
-        if (make.startsWith(term) || model.startsWith(term)) score += 5;
+      normTerms.forEach(term => {
+        if (normFullName.includes(term)) score += 10;
+        if (normalize(make).startsWith(term) || normalize(model).startsWith(term)) score += 5;
       });
 
-      // 5. Freshness/Relevance bonus (if price is provided, etc.)
-      
       return { ...item, _score: score };
     })
     .sort((a, b) => b._score - a._score)

@@ -57,7 +57,7 @@ function normalizeText(value = "") {
   return String(value || "")
     .toLowerCase()
     .normalize("NFKD")
-    .replace(/[^\w\s-]/g, " ")
+    .replace(/[^\w\s]/g, "") // Strip punctuation (hyphens, dots, etc.) to match "cx5" with "cx-5"
     .replace(/\s+/g, " ")
     .trim();
 }

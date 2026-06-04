@@ -113,21 +113,26 @@ async function loadSuggestions(normalizedQuery, limit, showCars) {
     const fullName = `${car.year} ${make} ${model} ${variant}`.toLowerCase();
     const terms = normalizedQuery.split(/\s+/).filter(Boolean);
     
+    // Aggressive normalization for "cx5" vs "cx-5"
+    const normalize = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const normFullName = normalize(fullName);
+    const normTerms = terms.map(normalize).filter(Boolean);
+
     let score = 0;
     let matchCount = 0;
     
-    terms.forEach(term => {
+    normTerms.forEach(term => {
       let termMatched = false;
-      if (fullName.includes(term)) {
+      if (normFullName.includes(term)) {
         score += 10;
         termMatched = true;
       }
-      if (make === term) score += 30;
-      if (model === term) score += 20;
+      if (normalize(make) === term) score += 30;
+      if (normalize(model) === term) score += 20;
       if (termMatched) matchCount++;
     });
 
-    const coverage = matchCount / terms.length;
+    const coverage = matchCount / (normTerms.length || 1);
     const finalScore = score * coverage;
 
     return {

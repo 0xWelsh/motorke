@@ -194,24 +194,24 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
   return (
     <section
       ref={wrapRef}
-      className="mb-4 sm:mb-5 border border-slate-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#111111] p-2.5 sm:p-3"
-      style={{ borderRadius: "var(--radius)" }}
+      className="mb-6 sm:mb-8 border border-slate-100 dark:border-zinc-800 bg-white dark:bg-[#111111] p-3 sm:p-4 shadow-sm"
+      style={{ borderRadius: "16px" }}
       aria-label="Search inventory"
     >
-      <div className="mb-1.5 flex items-center justify-between gap-2">
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#2F855A]">Search inventory</p>
+      <div className="mb-2 flex items-center justify-between gap-2 px-1">
+        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#38A169]">Global Search</p>
         <button
           type="button"
           onClick={requestLocation}
-          className="inline-flex shrink-0 items-center gap-1 text-[10px] font-black uppercase tracking-[0.12em] text-[#2F855A] hover:text-[#276749] transition-colors"
+          className="inline-flex shrink-0 items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.1em] text-slate-500 hover:text-[#38A169] transition-colors"
         >
           <MapPin size={12} aria-hidden />
-          {mergeFromUrl.lat && mergeFromUrl.lng ? "Nearest first (on)" : "Use location"}
+          {mergeFromUrl.lat && mergeFromUrl.lng ? "Location Active" : "Find Nearest"}
         </button>
       </div>
-      <form onSubmit={handleSubmit} className="relative flex flex-col gap-2 sm:flex-row sm:items-stretch">
+      <form onSubmit={handleSubmit} className="relative flex flex-col gap-2.5 sm:flex-row sm:items-stretch">
         <div className="relative min-w-0 flex-1">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden />
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden />
           <input
             name="search"
             value={search}
@@ -219,7 +219,6 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
             onFocus={() => {
               setIsFocused(true);
               const current = (search || "").trim();
-              // Before typing anything, show recent searches (if available).
               if (current.length < 1) {
                 const recent = loadRecentSearches();
                 const mapped = toRecentSuggestionItems(recent);
@@ -230,9 +229,9 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
               if (suggestions.length > 0) setShowSuggestions(true);
             }}
             autoComplete="off"
-            placeholder="Make, model, year, suggestions from live stock"
-            className="w-full border border-slate-200 bg-white py-2.5 pl-10 pr-10 text-sm font-semibold text-[#111827] outline-none placeholder:text-slate-400 focus:border-[#38A169] dark:border-zinc-700 dark:bg-zinc-950 dark:text-white dark:placeholder:text-slate-500"
-            style={{ borderRadius: "var(--radius)" }}
+            placeholder="Search make, model, body, or color..."
+            className="w-full border border-slate-200 bg-slate-50/50 py-3.5 pl-11 pr-12 text-sm font-bold text-[#111827] outline-none placeholder:text-slate-400 focus:border-[#38A169] focus:bg-white dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-white dark:placeholder:text-slate-500 dark:focus:bg-zinc-900 transition-all"
+            style={{ borderRadius: "14px" }}
           />
           {search ? (
             <button
@@ -241,7 +240,7 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
                 setSearch("");
                 pushQuery({ search: "" });
               }}
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors"
               aria-label="Clear search"
             >
               <X className="h-4 w-4" />
@@ -253,7 +252,7 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
               suggestions={suggestions}
               loading={loadingSuggestions}
               inputValue={debouncedTerm || search}
-              className="left-0 right-0 top-full z-50 mt-1.5 max-w-none min-w-0 sm:max-w-[min(100%,36rem)]"
+              className="left-0 right-0 top-[calc(100%+8px)] z-50 max-w-none min-w-0 sm:max-w-[min(100%,40rem)] shadow-2xl"
               onClose={() => setShowSuggestions(false)}
               onSelect={(value) => {
                 setSearch(value);
@@ -265,8 +264,8 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
         </div>
         <button
           type="submit"
-          className="inline-flex shrink-0 items-center justify-center gap-2 bg-[#111827] px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] text-white transition-transform hover:scale-[0.99] active:scale-[0.98] dark:bg-white dark:!text-black"
-          style={{ borderRadius: "var(--radius)" }}
+          className="inline-flex shrink-0 items-center justify-center gap-2 bg-[#111827] px-8 py-3.5 text-xs font-black uppercase tracking-[0.2em] text-white transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-black/5 dark:bg-white dark:text-[#111827]"
+          style={{ borderRadius: "14px" }}
         >
           <Search className="h-4 w-4" aria-hidden />
           Search
