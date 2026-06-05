@@ -222,12 +222,12 @@ export default async function HomePage() {
             sizes="100vw"
             className="object-cover object-center scale-[1.02]"
           />
-          {/* Light mode: soft white/sky wash so the lot photo stays ambient, not busy */}
+          {/* Light mode: soft white/sky wash so the background photo is more visible while keeping text crisp */}
           <div
             className="absolute inset-0 dark:hidden"
             style={{
               background:
-                "linear-gradient(180deg, rgba(255,255,255,0.97) 0%, rgba(244,249,253,0.94) 42%, rgba(232,243,251,0.88) 100%)",
+                "linear-gradient(180deg, rgba(255,255,255,0.80) 0%, rgba(244,249,253,0.76) 42%, rgba(232,243,251,0.70) 100%)",
             }}
           />
           {/* Dark mode: deep navy fade so type and cards stay crisp */}
