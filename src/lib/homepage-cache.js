@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { isTransientDbError, settleNamed, withDbRetry } from "@/lib/db-retry";
 import { unstable_cache } from "next/cache";
-import { analyzePrice } from "@/lib/market";
+import { analyzePrice, analyzePriceBatch } from "@/lib/market";
 import { activeListingBoostWhere } from "@/lib/listing-boost";
 import { loadRotatingSpotlightPool, mergeHomepageSpotlight } from "@/lib/homepage-spotlight";
 import { activeSpotlightWhere, spotlightCarInclude } from "@/lib/spotlight";
@@ -227,10 +227,11 @@ async function enrichHomepage(base) {
     .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
     .slice(0, 12);
 
-  // ENRICHMENT: Process in sequence or small batches to avoid P2024 pool exhaustion
-  for (const car of hotCandidates) {
-    car.marketAnalysis = await analyzePrice(car);
-  }
+  // ENRICHMENT: Use batch processing to avoid P2024 pool exhaustion with controlled concurrency
+  const hotWithAnalysis = await analyzePriceBatch(hotCandidates);
+  hotCandidates.forEach((car, idx) => {
+    car.marketAnalysis = hotWithAnalysis[idx].marketAnalysis;
+  });
   
   const hotSorted = rankHotDeals(hotCandidates);
 
@@ -277,48 +278,58 @@ async function enrichHomepage(base) {
     .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
     .slice(0, 12);
 
-  const paidSpotlightEnriched = [];
-  for (const car of paidSpotlightRaw) {
-    paidSpotlightEnriched.push({ ...car, marketAnalysis: await analyzePrice(car) });
-  }
+  // Batch process all spotlight cars at once to avoid connection pool exhaustion
+  const allSpotlightCars = [...paidSpotlightRaw, ...rotatingSpotlightRaw];
+  const spotlightWithAnalysis = await analyzePriceBatch(allSpotlightCars);
 
-  const rotatingSpotlightEnriched = [];
-  for (const car of rotatingSpotlightRaw) {
-    rotatingSpotlightEnriched.push({ ...car, marketAnalysis: await analyzePrice(car) });
-  }
+  const paidSpotlightEnriched = spotlightWithAnalysis.slice(0, paidSpotlightRaw.length);
+  const rotatingSpotlightEnriched = spotlightWithAnalysis.slice(paidSpotlightRaw.length);
 
   const homepageSpotlight = mergeHomepageSpotlight(paidSpotlightEnriched, rotatingSpotlightEnriched);
 
-  // Final batch enrichment (Safe sequence)
-  const spotlightEnhanced = [];
-  for (const car of (baseSpotlight || [])) {
-    spotlightEnhanced.push(car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) });
-  }
+  // Final batch enrichment: collect all remaining cars needing analysis, then batch process
+  const remainingCars = [
+    ...((baseSpotlight || []).filter(c => !c.marketAnalysis)),
+    ...(heroBoostedRaw || []),
+    ...((hotSorted || []).filter(c => !c.marketAnalysis)),
+    ...(mostViewed || []),
+    ...(newArrivals || []).slice(0, 8),
+    ...(heroFallback || []),
+  ];
 
-  const heroBoosted = [];
-  for (const car of (heroBoostedRaw || [])) {
-    heroBoosted.push({ ...car, marketAnalysis: await analyzePrice(car) });
-  }
+  const remainingWithAnalysis = await analyzePriceBatch(remainingCars);
+  const analysisMap = new Map(remainingWithAnalysis.map((car, idx) => {
+    const key = `${car.make}|${car.model}|${car.year}`;
+    return [key, car.marketAnalysis];
+  }));
 
-  const hotEnhanced = [];
-  for (const car of (hotSorted || [])) {
-    hotEnhanced.push(car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) });
-  }
+  const spotlightEnhanced = (baseSpotlight || []).map(car =>
+    car.marketAnalysis ? car : { ...car, marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`) }
+  );
 
-  const mostViewedEnhanced = [];
-  for (const car of (mostViewed || [])) {
-    mostViewedEnhanced.push(car.marketAnalysis ? car : { ...car, marketAnalysis: await analyzePrice(car) });
-  }
+  const heroBoosted = (heroBoostedRaw || []).map(car => ({
+    ...car,
+    marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`)
+  }));
 
-  const newEnhanced = [];
-  for (const car of (newArrivals || []).slice(0, 8)) {
-    newEnhanced.push({ ...car, marketAnalysis: await analyzePrice(car) });
-  }
+  const hotEnhanced = (hotSorted || []).map(car =>
+    car.marketAnalysis ? car : { ...car, marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`) }
+  );
 
-  const heroFallbackEnhanced = [];
-  for (const car of (heroFallback || [])) {
-    heroFallbackEnhanced.push({ ...car, marketAnalysis: await analyzePrice(car) });
-  }
+  const mostViewedEnhanced = (mostViewed || []).map(car => ({
+    ...car,
+    marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`)
+  }));
+
+  const newEnhanced = (newArrivals || []).slice(0, 8).map(car => ({
+    ...car,
+    marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`)
+  }));
+
+  const heroFallbackEnhanced = (heroFallback || []).map(car => ({
+    ...car,
+    marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`)
+  }));
 
   return {
     featured,
