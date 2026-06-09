@@ -1,3 +1,17 @@
+export const dynamic = "force-dynamic";
+import { requireAdmin } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { formatPrice } from "@/lib/utils";
+import Link from "next/link";
+import AdminTrendsChart from "@/components/admin/AdminTrendsChart";
+import AdminOverviewPieChart from "@/components/admin/AdminOverviewPieChart";
+import RunWatchAlertsButton from "@/components/admin/RunWatchAlertsButton";
+import { getGoSearchShadowMetrics } from "@/lib/go-search";
+import { 
+  Car, Building2, MessageSquare, Users, ChevronRight,
+  Plus, Activity, Bolt, AlertCircle, ShieldAlert, BadgeCheck, ServerCog,
+  FileDown,
+} from "lucide-react";
 import AdminActionFeed from "@/components/admin/AdminActionFeed";
 import AdminSparkline from "@/components/admin/AdminSparkline";
 
