@@ -164,6 +164,18 @@ h1, h2, h3, h4, h5, h6 {
   border-color: var(--mk-primary);
 }
 
+/* Refined semantic typography */
+.meta-label {
+  @apply text-[10px] font-bold uppercase tracking-[0.16em];
+  color: var(--text-faint);
+}
+
+.text-brand-primary { color: var(--brand); }
+.text-brand-accent { color: var(--brand-accent); }
+.text-body { color: var(--text); }
+.text-body-muted { color: var(--text-muted); }
+.text-body-faint { color: var(--text-faint); }
+
 
 .mk-inline-action {
   font-size: 11px;

@@ -243,15 +243,15 @@ export default async function HomePage() {
           
           {/* Page Header - Full Width */}
           <div className="mb-4 sm:mb-6 md:mb-8 lg:mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center">
-            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-[#111827] dark:text-white leading-[0.92] tracking-tight mb-3 sm:mb-4 max-w-4xl mx-auto">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-bold text-slate-900 dark:text-white leading-[0.92] tracking-tight mb-3 sm:mb-4 max-w-4xl mx-auto">
               Precision pricing<br />
-              <span className="editorial-hero-accent text-[#38A169]">For Precision Machines</span>
+              <span className="editorial-hero-accent text-brand-accent">For Precision Machines</span>
             </h1>
 
-            <p className="text-base md:text-lg lg:text-[1.15rem] text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto lg:hidden">
+            <p className="text-base md:text-lg lg:text-[1.15rem] text-body-muted dark:text-slate-300 leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto lg:hidden">
               Verified Kenyan inventory, transparent ownership costs, and direct dealer access.
             </p>
-            <p className="hidden lg:block text-base md:text-lg lg:text-[1.15rem] text-[#2D3748] dark:text-[#b9c5e0] leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto">
+            <p className="hidden lg:block text-base md:text-lg lg:text-[1.15rem] text-body-muted dark:text-slate-300 leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto">
               Find verified Kenyan inventory with transparent ownership costs in minutes.
               Compare up to three cars, inspect real running-cost and road-readiness signals, then contact real dealers directly.
             </p>
@@ -274,7 +274,7 @@ export default async function HomePage() {
                 href="/cars"
                 eventName="homepage_explore_inventory_click"
                 eventPayload={{ area: "hero" }}
-                className="h-12 w-full inline-flex items-center justify-center bg-[#38A169] hover:bg-[#2F855A] text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
+                className="h-12 w-full inline-flex items-center justify-center bg-brand-accent hover:opacity-90 text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
                 style={{ borderRadius: "var(--radius)" }}
               >
                 Explore Inventory
@@ -283,7 +283,7 @@ export default async function HomePage() {
                 href="/compare"
                 eventName="homepage_compare_cars_click"
                 eventPayload={{ area: "hero" }}
-                className="h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#111827] dark:hover:border-white"
+                className="h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-slate-900 dark:hover:border-white"
                 style={{ borderRadius: "var(--radius)" }}
               >
                 Compare Cars
@@ -294,7 +294,7 @@ export default async function HomePage() {
               href="/request-car"
               eventName="homepage_request_car_click"
               eventPayload={{ area: "hero_mobile" }}
-              className="h-12 w-full max-w-lg mx-auto inline-flex items-center justify-center gap-2 border-2 border-[#38A169] bg-[#38A169]/10 text-[#1a3d2e] dark:text-[#bbf7d0] px-6 text-xs font-bold uppercase tracking-widest transition-all hover:bg-[#38A169]/20"
+              className="h-12 w-full max-w-lg mx-auto inline-flex items-center justify-center gap-2 border-2 border-brand-accent bg-brand-accent/10 text-brand-accent dark:text-emerald-400 px-6 text-xs font-bold uppercase tracking-widest transition-all hover:bg-brand-accent/20"
               style={{ borderRadius: "var(--radius)" }}
             >
               <Search className="w-4 h-4" aria-hidden />
@@ -305,17 +305,17 @@ export default async function HomePage() {
               className="p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70 max-w-lg mx-auto text-center"
               style={{ borderRadius: "var(--radius)" }}
             >
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">
+              <p className="meta-label mb-3">
                 Quick compare
               </p>
-              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+              <p className="text-sm text-body-muted dark:text-slate-300 leading-relaxed mb-4">
                 Side-by-side specs, annual TCO, and road readiness in one clean sheet.
               </p>
               <TrackedLink
                 href="/compare"
                 eventName="homepage_quick_compare_click"
                 eventPayload={{ area: "hero_card" }}
-                className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors justify-center w-full"
+                className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-900 dark:text-white hover:text-brand-accent transition-colors justify-center w-full"
               >
                 Start comparing <ArrowRight className="w-4 h-4" />
               </TrackedLink>
@@ -336,8 +336,8 @@ export default async function HomePage() {
                   className="p-3 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70 text-center"
                   style={{ borderRadius: "var(--radius)" }}
                 >
-                  <p className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white">{item.value}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mt-1">
+                  <p className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">{item.value}</p>
+                  <p className="meta-label mt-1">
                     {item.label}
                   </p>
                 </div>
@@ -358,7 +358,7 @@ export default async function HomePage() {
                     href="/cars"
                     eventName="homepage_explore_inventory_click"
                     eventPayload={{ area: "hero" }}
-                    className="h-12 w-full inline-flex items-center justify-center bg-[#38A169] hover:bg-[#2F855A] text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
+                    className="h-12 w-full inline-flex items-center justify-center bg-brand-accent hover:opacity-90 text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
                     style={{ borderRadius: "var(--radius)" }}
                   >
                     Explore Inventory
@@ -367,7 +367,7 @@ export default async function HomePage() {
                     href="/compare"
                     eventName="homepage_compare_cars_click"
                     eventPayload={{ area: "hero" }}
-                    className="h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-[#111827] dark:hover:border-white"
+                    className="h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-slate-900 dark:hover:border-white"
                     style={{ borderRadius: "var(--radius)" }}
                   >
                     Compare Cars
@@ -378,7 +378,7 @@ export default async function HomePage() {
                   href="/request-car"
                   eventName="homepage_request_car_click"
                   eventPayload={{ area: "hero_desktop" }}
-                  className="mt-3 h-12 w-full max-w-lg lg:max-w-none mx-auto lg:mx-0 inline-flex items-center justify-center gap-2 border-2 border-[#38A169] bg-[#38A169]/10 text-[#1a3d2e] dark:text-[#bbf7d0] px-6 text-xs font-bold uppercase tracking-widest transition-all hover:bg-[#38A169]/20"
+                  className="mt-3 h-12 w-full max-w-lg lg:max-w-none mx-auto lg:mx-0 inline-flex items-center justify-center gap-2 border-2 border-brand-accent bg-brand-accent/10 text-brand-accent dark:text-emerald-400 px-6 text-xs font-bold uppercase tracking-widest transition-all hover:bg-brand-accent/20"
                   style={{ borderRadius: "var(--radius)" }}
                 >
                   <Search className="w-4 h-4" aria-hidden />
@@ -389,17 +389,17 @@ export default async function HomePage() {
                   className="mt-6 sm:mt-7 p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70 max-w-lg mx-auto lg:max-w-none text-center lg:text-left"
                   style={{ borderRadius: "var(--radius)" }}
                 >
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">
+                  <p className="meta-label mb-3">
                     Quick compare
                   </p>
-                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                  <p className="text-sm text-body-muted dark:text-slate-300 leading-relaxed mb-4">
                     Side-by-side specs, annual TCO, and road readiness in one clean sheet.
                   </p>
                   <TrackedLink
                     href="/compare"
                     eventName="homepage_quick_compare_click"
                     eventPayload={{ area: "hero_card" }}
-                    className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#111827] dark:text-white hover:text-[#38A169] transition-colors justify-center lg:justify-start w-full"
+                    className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-900 dark:text-white hover:text-brand-accent transition-colors justify-center lg:justify-start w-full"
                   >
                     Start comparing <ArrowRight className="w-4 h-4" />
                   </TrackedLink>
@@ -416,8 +416,8 @@ export default async function HomePage() {
                       className="p-3 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70 text-center"
                       style={{ borderRadius: "var(--radius)" }}
                     >
-                      <p className="text-lg sm:text-xl font-bold text-[#111827] dark:text-white">{item.value}</p>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500 mt-1">
+                      <p className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">{item.value}</p>
+                      <p className="meta-label mt-1">
                         {item.label}
                       </p>
                     </div>
@@ -473,13 +473,13 @@ export default async function HomePage() {
           <div className="home-shell">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-10 gap-4">
               <div className="max-w-2xl">
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#2F855A] dark:text-emerald-400 mb-2">
+                <p className="meta-label text-brand-accent mb-2">
                   This week
                 </p>
-                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal editorial-heading text-[#111827] dark:text-white mb-3">
+                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal editorial-heading text-slate-900 dark:text-white mb-3">
                   Fresh arrivals
                 </h2>
-                <p className="text-[#475569] dark:text-slate-400 text-base sm:text-lg font-medium leading-relaxed">
+                <p className="text-body-muted dark:text-slate-400 text-base sm:text-lg font-medium leading-relaxed">
                   Cars that have been added this week.
                 </p>
               </div>
@@ -519,14 +519,14 @@ export default async function HomePage() {
         <div className="home-shell relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-12 items-center">
             <div>
-              <p className="text-[#38A169] text-[10px] sm:text-xs font-bold uppercase tracking-[0.28em] sm:tracking-[0.32em] mb-3 sm:mb-5">
+              <p className="meta-label text-brand-accent mb-3 sm:mb-5">
                 The Difference
               </p>
               <h2 className="text-2xl sm:text-5xl font-bold leading-[1.12] mb-4 sm:mb-6">
                 Less scrolling.<br />
-                <span className="editorial-heading text-[#718096]">More real cars.</span>
+                <span className="editorial-heading text-slate-400">More real cars.</span>
               </h2>
-              <p className="text-sm sm:text-lg text-[#A0AEC0] leading-relaxed max-w-xl font-medium">
+              <p className="text-sm sm:text-lg text-slate-400 leading-relaxed max-w-xl font-medium">
                 Welsh Motorhub is built around dealer inventory that you can tie to a real showroom; so you compare in one place,
                 then move the conversation straight to WhatsApp or a phone call when you are ready. Fewer phantom posts, fewer
                 dead ends.
@@ -557,11 +557,11 @@ export default async function HomePage() {
                 },
               ].map((item, i) => (
                 <div key={i} className="flex h-full flex-col gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
-                  <div className="text-[#38A169]" aria-hidden>
+                  <div className="text-brand-accent" aria-hidden>
                     {item.icon}
                   </div>
                   <h3 className="font-bold text-lg">{item.title}</h3>
-                  <p className="text-sm text-[#A0AEC0] leading-relaxed font-medium">{item.desc}</p>
+                  <p className="text-sm text-slate-400 leading-relaxed font-medium">{item.desc}</p>
                 </div>
               ))}
             </div>
