@@ -198,7 +198,7 @@ export default async function CarHubPage({ params, searchParams }) {
       ],
       skip: (page - 1) * HUB_PER_PAGE,
       take: HUB_PER_PAGE,
-    }),
+    })),
     resolved.kind === "make" ||
     resolved.kind === "make_model" ||
     resolved.kind === "make_county" ||
