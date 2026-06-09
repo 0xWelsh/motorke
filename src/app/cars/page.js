@@ -207,7 +207,8 @@ const defaultCarsSelect = {
       name: true,
       slug: true,
       location: true,
-      verified: true,
+      type: true,
+      verificationStatus: true,
       lat: true,
       lng: true,
       county: true,
@@ -222,12 +223,12 @@ const getDefaultCarsPage = unstable_cache(
   async () => {
     const where = {
       available: true,
-      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verificationStatus: "VERIFIED" } }),
     };
     const orderBy = [
       { featuredWeight: "desc" },
       { dealer: { featured: "desc" } },
-      { dealer: { verified: "desc" } },
+      { dealer: { verificationStatus: "desc" } },
       { dealer: { boostScore: "desc" } },
       { views: "desc" },
       { createdAt: "desc" },

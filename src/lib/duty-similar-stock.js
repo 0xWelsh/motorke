@@ -14,7 +14,7 @@ const listingSelect = {
   publicSlug: true,
   featured: true,
   images: { where: { isPrimary: true }, take: 1, select: { url: true, alt: true } },
-  dealer: { select: { name: true, location: true, verified: true, slug: true } },
+  dealer: { select: { name: true, location: true, type: true, verificationStatus: true, slug: true } },
 };
 
 /**
@@ -39,7 +39,7 @@ export async function findSimilarStock({ make, model, limit = 4 }) {
       available: true,
       make: { equals: m, mode: "insensitive" },
       ...modelClause,
-      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verificationStatus: "VERIFIED" } }),
     },
     select: listingSelect,
     orderBy: [{ featured: "desc" }, { views: "desc" }, { createdAt: "desc" }],

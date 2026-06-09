@@ -64,7 +64,7 @@ async function loadHomepageBase() {
         where: { available: true, featured: true },
         include: {
           images: { where: { isPrimary: true }, take: 1 },
-          dealer: { select: { id: true, name: true, location: true, verified: true, slug: true } },
+          dealer: { select: { id: true, name: true, location: true, type: true, verificationStatus: true, slug: true } },
         },
         take: 8,
         orderBy: { createdAt: "desc" },
@@ -74,7 +74,7 @@ async function loadHomepageBase() {
         where: { available: true },
         include: {
           images: { where: { isPrimary: true }, take: 1 },
-          dealer: { select: { id: true, name: true, location: true, verified: true, slug: true } },
+          dealer: { select: { id: true, name: true, location: true, type: true, verificationStatus: true, slug: true } },
           _count: { 
             select: { 
               carViews: { 
@@ -98,7 +98,7 @@ async function loadHomepageBase() {
       }),
     dealers: () =>
       db.dealer.findMany({
-        where: { OR: [{ featured: true }, { verified: true }] },
+        where: { OR: [{ featured: true }, { verificationStatus: "VERIFIED" }] },
         include: {
           _count: { select: { cars: { where: { available: true } } } },
           users: { select: { avatarUrl: true }, take: 1 },
@@ -106,7 +106,7 @@ async function loadHomepageBase() {
         take: 8,
         orderBy: [
           { featured: "desc" },
-          { verified: "desc" },
+          { verificationStatus: "desc" },
           { boostScore: "desc" },
           { createdAt: "desc" },
         ],
@@ -138,7 +138,7 @@ async function loadHomepageBase() {
         where: { available: true },
         include: {
           images: { where: { isPrimary: true }, take: 1 },
-          dealer: { select: { id: true, name: true, location: true, verified: true, slug: true } },
+          dealer: { select: { id: true, name: true, location: true, type: true, verificationStatus: true, slug: true } },
         },
         take: 24,
         orderBy: { createdAt: "desc" },

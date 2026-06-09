@@ -104,7 +104,7 @@ function getCarData(ref) {
           AND: [
             publicDetailVisibilityClause(),
             { OR: [{ id: ref }, { publicSlug: ref }] },
-            ...(PUBLIC_ONLY_VERIFIED_DEALERS ? [{ dealer: { verified: true } }] : []),
+            ...(PUBLIC_ONLY_VERIFIED_DEALERS ? [{ dealer: { verificationStatus: "VERIFIED" } }] : []),
           ],
         },
         include: {
@@ -128,13 +128,13 @@ const getSimilarCars = unstable_cache(
     const candidates = await db.car.findMany({
       where: {
         available: true,
-        ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+        ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verificationStatus: "VERIFIED" } }),
         id:        { not: carId },
         OR: [{ dealerId }, { make }, { bodyType }],
       },
       include: {
         images: { where: { isPrimary: true }, take: 1 },
-        dealer: { select: { name: true, location: true, verified: true } },
+        dealer: { select: { name: true, location: true, type: true, verificationStatus: true } },
       },
       take: 24,
     });

@@ -51,7 +51,7 @@ export function mergeHomepageSpotlight(paid = [], rotated = [], count = HOMEPAGE
 function availableInventoryWhere() {
   return {
     available: true,
-    ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+    ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verificationStatus: "VERIFIED" } }),
   };
 }
 

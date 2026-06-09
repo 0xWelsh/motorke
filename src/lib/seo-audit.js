@@ -18,7 +18,7 @@ const DESC_MAX = 160;
 export async function runSeoAudit() {
   const carWhere = {
     available: true,
-    ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+    ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verificationStatus: "VERIFIED" } }),
   };
 
   const cars = await db.car.findMany({

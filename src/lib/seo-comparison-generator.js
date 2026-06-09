@@ -4,7 +4,7 @@ import { buildComparisonSlug } from "@/lib/seo-content";
 
 const carWhere = {
   available: true,
-  ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+  ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verificationStatus: "VERIFIED" } }),
 };
 
 export function buildComparisonTitle(makeA, modelA, makeB, modelB) {
@@ -119,7 +119,7 @@ export async function fetchComparisonInventory(make, model, take = 4) {
     where: { ...carWhere, make, model },
     include: {
       images: { where: { isPrimary: true }, take: 1 },
-      dealer: { select: { name: true, verified: true } },
+      dealer: { select: { name: true, type: true, verificationStatus: true } },
     },
     orderBy: { createdAt: "desc" },
     take,

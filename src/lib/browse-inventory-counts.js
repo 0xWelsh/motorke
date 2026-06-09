@@ -8,7 +8,7 @@ import { possibleMakesFromFilterSlug } from "@/lib/make-filter";
 function publicInventoryWhere() {
   return {
     available: true,
-    ...(PUBLIC_ONLY_VERIFIED_DEALERS ? { dealer: { verified: true } } : {}),
+    ...(PUBLIC_ONLY_VERIFIED_DEALERS ? { dealer: { verificationStatus: "VERIFIED" } } : {}),
   };
 }
 

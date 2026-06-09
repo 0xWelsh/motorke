@@ -8,7 +8,7 @@ export const SPOTLIGHT_BROWSE_WEIGHT = 40;
 const CAR_CARD_INCLUDE = {
   images: { where: { isPrimary: true }, take: 1 },
   dealer: {
-    select: { id: true, name: true, location: true, verified: true, slug: true, county: true },
+    select: { id: true, name: true, location: true, type: true, verificationStatus: true, slug: true, county: true },
   },
 };
 

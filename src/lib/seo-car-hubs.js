@@ -19,7 +19,7 @@ import {
 export function hubCarWhere() {
   return {
     available: true,
-    ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+    ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verificationStatus: "VERIFIED" } }),
   };
 }
 
@@ -226,7 +226,7 @@ export async function hubWhereClause(resolved) {
       return {
         ...base,
         dealer: {
-          ...(PUBLIC_ONLY_VERIFIED_DEALERS && { verified: true }),
+          ...(PUBLIC_ONLY_VERIFIED_DEALERS && { verificationStatus: "VERIFIED" }),
           county: { equals: resolved.county, mode: "insensitive" },
         },
       };
@@ -243,7 +243,7 @@ export async function hubWhereClause(resolved) {
         ...base,
         ...buildMakeWhere(resolved.make),
         dealer: {
-          ...(PUBLIC_ONLY_VERIFIED_DEALERS && { verified: true }),
+          ...(PUBLIC_ONLY_VERIFIED_DEALERS && { verificationStatus: "VERIFIED" }),
           county: { equals: resolved.county, mode: "insensitive" },
         },
       };

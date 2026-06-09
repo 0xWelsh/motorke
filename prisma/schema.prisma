@@ -105,7 +105,12 @@ model Dealer {
   address      String?
   lat          Float?
   lng          Float?
-  verified     Boolean              @default(false)
+  type                      DealerType           @default(BROKER)
+  verified                  Boolean              @default(false)
+  verificationStatus        VerificationStatus   @default(UNVERIFIED)
+  verificationApprovedAt    DateTime?
+  verificationApprovedBy    String?
+  verificationRejectionReason String?
   featured     Boolean              @default(false)
   boostScore      Int                  @default(0)
   dealerLiftUntil DateTime?
@@ -123,7 +128,10 @@ model Dealer {
   buyerRequestOffers      BuyerRequestOffer[]
   buyerRequestPassUntil   DateTime?
   growthProspects         GrowthProspect[]
+  verificationRequests    VerificationRequest[]
 
+  @@index([type])
+  @@index([verificationStatus])
   @@index([county])
   @@map("dealers")
 }
@@ -283,6 +291,22 @@ model DealerReview {
   @@index([dealerId, createdAt])
   @@index([rating])
   @@map("dealer_reviews")
+}
+
+model VerificationRequest {
+  id        String   @id @default(cuid())
+  dealerId  String
+  status    String   @default("SUBMITTED")
+  reason    String?
+  submittedAt DateTime @default(now())
+  reviewedAt DateTime?
+  reviewedBy String?
+  documents String[] @default([])
+  dealer    Dealer   @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+
+  @@index([dealerId, submittedAt(sort: Desc)])
+  @@index([status])
+  @@map("verification_requests")
 }
 
 model CarReview {
@@ -453,6 +477,19 @@ enum UserRole {
   ADMIN
   DEALER
   BUYER
+}
+
+enum DealerType {
+  DEALERSHIP
+  BROKER
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  SUSPENDED
+  REJECTED
 }
 
 enum Condition {
