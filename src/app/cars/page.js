@@ -627,7 +627,7 @@ export default async function CarsPage({ searchParams }) {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--surface)] pb-20">
+    <div className="min-h-screen bg-[var(--surface)] pb-12">
       <TrackEventOnMount
         name="cars_listing_view"
         payload={{
@@ -642,10 +642,10 @@ export default async function CarsPage({ searchParams }) {
           result_count: total,
         }}
       />
-      <div className="w-full px-2.5 sm:px-8 pt-3 sm:pt-4 overflow-x-hidden">
+      <div className="w-full px-2.5 sm:px-8 pt-2 sm:pt-3 overflow-x-hidden">
         
         {/* Breadcrumb strip — standard editorial style */}
-        <div className="mb-4 sm:mb-6 flex items-center justify-between gap-3 sm:gap-4 border-b border-[var(--brand-faint)] pb-2.5 sm:pb-3 min-w-0">
+        <div className="mb-3 sm:mb-4 flex items-center justify-between gap-3 sm:gap-4 border-b border-[var(--brand-faint)] pb-2 sm:pb-2.5 min-w-0">
           <div className="meta-label flex min-w-0 items-center gap-2 sm:gap-3 truncate">
             <Link href="/" className="hidden sm:inline hover:text-[var(--brand-primary)] transition-colors">Home</Link>
             <ChevronRight className="hidden sm:block w-3 h-3 shrink-0" />
@@ -659,13 +659,13 @@ export default async function CarsPage({ searchParams }) {
                 ? <>Showing <span className="text-[var(--brand-primary)]">{rangeStart}–{rangeEnd}</span> of {total}</>
                 : <>0 of {total}</>}
             </div>
-            <p className="hidden sm:block mt-1 text-[11px] font-semibold text-slate-500 dark:text-zinc-400">
+            <p className="hidden sm:block mt-0.5 text-[10px] font-semibold text-slate-500 dark:text-zinc-400">
               Allow location to see nearest cars first.
             </p>
           </div>
         </div>
 
-        <div className="mb-4 sm:mb-5 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+        <div className="mb-3 sm:mb-4 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
           <CarsInventorySort className="order-1 sm:order-none" />
           <p className="meta-label order-3 w-full sm:order-none sm:w-auto">
             Per page
@@ -681,7 +681,7 @@ export default async function CarsPage({ searchParams }) {
                   prefetch={false}
                   aria-current={isActive ? "page" : undefined}
                   className={[
-                    "px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.14em] border transition-all",
+                    "px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] border transition-all",
                     isActive
                       ? "bg-[var(--brand-primary)] text-white border-[var(--brand-primary)] shadow-sm"
                       : "bg-[var(--surface)] text-[var(--text-main)] border-[var(--brand-faint)] hover:border-[var(--brand-primary)]",
@@ -716,27 +716,25 @@ export default async function CarsPage({ searchParams }) {
           }}
         />
 
-        {/* Main layout: sidebar + top rows */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-3 gap-y-6 lg:gap-y-8">
-          {/* Sidebar */}
-          <div id="cars-filter-sidebar" className="self-start lg:col-span-1">
-            <CarsSearch
-              currentSearch={search}
-              currentModel={model}
-              initialMake={make}
-              initialSteering={steering}
-              initialMinYOM={sp.minYOM || ""}
-              initialMaxYOM={sp.maxYOM || ""}
-              initialBodyType={bodyType}
-              initialFuelType={fuelType}
-              initialTransmission={transmission}
-              initialCounty={county}
-              initialMinPrice={minPrice != null ? String(minPrice) : ""}
-              initialMaxPrice={maxPrice != null ? String(maxPrice) : ""}
-              initialSort={sort}
-              initialLat={sp.lat || ""}
-              initialLng={sp.lng || ""}
-              listPerPage={String(limit)}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="lg:block">
+            <CarsSidebarFilters
+              activeFilters={{
+                make,
+                model,
+                steering,
+                minYOM: sp.minYOM || "",
+                maxYOM: sp.maxYOM || "",
+                bodyType,
+                fuelType,
+                transmission,
+                county,
+                minPrice,
+                maxPrice,
+                sort,
+                lat: sp.lat,
+                lng: sp.lng,
+              }}
               allMakes={allMakes}
               bodyTypeLabels={BODY_TYPE_LABELS}
               counties={COUNTIES}
@@ -746,11 +744,11 @@ export default async function CarsPage({ searchParams }) {
           {/* Top two rows: 3 columns beside sidebar */}
           <div className="min-w-0 lg:col-span-3">
             {sortedCars.length === 0 && (
-              <div className="py-24 text-center bg-[var(--surface-overlay)] border border-[var(--brand-faint)]" style={{ borderRadius: '16px' }}>
-                <Search className="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto mb-6" />
-                <h2 className="text-2xl font-black text-[var(--text-main)] tracking-tight mb-2">No matches found</h2>
-                <p className="text-slate-500 dark:text-slate-400 font-medium mb-8">Try adjusting your filters or resetting your search.</p>
-                <Link href="/cars" className="inline-flex bg-[var(--brand-primary)] text-white px-8 py-3.5 text-[11px] font-black uppercase tracking-widest transition-all hover:brightness-110 active:scale-95" style={{ borderRadius: '8px' }}>
+              <div className="py-20 text-center bg-[var(--surface-overlay)] border border-[var(--brand-faint)]" style={{ borderRadius: '16px' }}>
+                <Search className="w-10 h-10 text-slate-300 dark:text-slate-700 mx-auto mb-4" />
+                <h2 className="text-xl font-black text-[var(--text-main)] tracking-tight mb-2">No matches found</h2>
+                <p className="text-slate-500 dark:text-slate-400 font-medium mb-6">Try adjusting your filters or resetting your search.</p>
+                <Link href="/cars" className="inline-flex bg-[var(--brand-primary)] text-white px-8 py-3 text-[10px] font-black uppercase tracking-widest transition-all hover:brightness-110 active:scale-95" style={{ borderRadius: '8px' }}>
                   Clear All Filters
                 </Link>
               </div>
@@ -767,7 +765,7 @@ export default async function CarsPage({ searchParams }) {
 
         {/* Row 3 onward: full width under sidebar, 4 columns on desktop */}
         {lowerCars.length > 0 && (
-          <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+          <div className="mt-3 grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
             {lowerCars.map((car) => (
               <CarCard key={`lower-${car.id}`} car={car} distance={car.distanceValue ?? null} />
             ))}
@@ -775,14 +773,14 @@ export default async function CarsPage({ searchParams }) {
         )}
 
         {personalizedCarsWithDistance.length > 0 && (
-          <section className="mt-16 border border-[var(--brand-faint)] bg-[var(--surface-overlay)] p-6 sm:p-8" style={{ borderRadius: "24px" }}>
-            <div className="flex items-center justify-between mb-8">
+          <section className="mt-12 border border-[var(--brand-faint)] bg-[var(--surface-overlay)] p-5 sm:p-6" style={{ borderRadius: "20px" }}>
+            <div className="flex items-center justify-between mb-6">
               <div>
                 <p className="meta-label text-[var(--brand-primary)] flex items-center gap-2">
                   <Sparkles className="w-3.5 h-3.5" />
                   Personalized Feed
                 </p>
-                <h3 className="text-2xl font-black text-[var(--text-main)] tracking-tight mt-1">Picked for you</h3>
+                <h3 className="text-xl font-black text-[var(--text-main)] tracking-tight mt-1">Picked for you</h3>
               </div>
               <Link href="/cars?sort=views_desc" className="meta-label text-slate-500 hover:text-[var(--brand-primary)] transition-colors">
                 Explore more →
@@ -790,7 +788,7 @@ export default async function CarsPage({ searchParams }) {
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
               {personalizedCarsWithDistance.map((car) => (
-                <div key={`personal-${car.id}`} className="space-y-1.5">
+                <div key={`personal-${car.id}`} className="space-y-1">
                   <p className="meta-label text-[var(--brand-primary)]">
                     {car.recommendationReasons?.[0] || "Picked for you"}
                   </p>
@@ -799,10 +797,10 @@ export default async function CarsPage({ searchParams }) {
                       <span>Why am I seeing this?</span>
                       <span className="transition-transform group-open:rotate-45">+</span>
                     </summary>
-                    <div className="mt-2 border border-[var(--brand-faint)] bg-[var(--surface)] p-3 shadow-sm" style={{ borderRadius: "8px" }}>
-                      <ul className="space-y-1.5">
+                    <div className="mt-1 border border-[var(--brand-faint)] bg-[var(--surface)] p-2.5 shadow-sm" style={{ borderRadius: "8px" }}>
+                      <ul className="space-y-1">
                         {(car.recommendationReasons?.length ? car.recommendationReasons : ["Aligned with your recent browsing"]).map((reason, idx) => (
-                          <li key={`${car.id}-reason-${idx}`} className="text-[11px] font-bold text-slate-600 dark:text-slate-400">
+                          <li key={`${car.id}-reason-${idx}`} className="text-[10px] font-bold text-slate-600 dark:text-slate-400">
                             • {reason}
                           </li>
                         ))}
@@ -817,22 +815,22 @@ export default async function CarsPage({ searchParams }) {
         )}
 
         {/* Bottom Discovery & Alert Sections */}
-        <div className="mt-16 sm:mt-24 space-y-10 border-t border-[var(--brand-faint)] pt-10">
+        <div className="mt-12 sm:mt-16 space-y-8 border-t border-[var(--brand-faint)] pt-8">
           <CarsQuickActions />
           
-          <TrendingSearches className="mb-4" />
+          <TrendingSearches className="mb-2" />
 
           {/* Search Alerts — Only shown when searching or filtering by make to ensure high intent */}
           {(search || make || model || bodyType) && (
-            <div className="mb-6 animate-in fade-in slide-in-from-top-2 duration-700">
-              <div className="bg-[var(--brand-primary)]/[0.03] dark:bg-[var(--brand-primary)]/[0.08] border border-[var(--brand-primary)]/20 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6" style={{ borderRadius: "20px" }}>
+            <div className="mb-4 animate-in fade-in slide-in-from-top-2 duration-700">
+              <div className="bg-[var(--brand-primary)]/[0.03] dark:bg-[var(--brand-primary)]/[0.08] border border-[var(--brand-primary)]/20 p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-5" style={{ borderRadius: "16px" }}>
                 <div className="flex items-center gap-4 text-center sm:text-left">
-                  <div className="shrink-0 w-12 h-12 bg-[var(--brand-primary)] rounded-2xl flex items-center justify-center text-white shadow-xl rotate-3">
-                    <Sparkles className="w-6 h-6" />
+                  <div className="shrink-0 w-10 h-10 bg-[var(--brand-primary)] rounded-xl flex items-center justify-center text-white shadow-xl rotate-3">
+                    <Sparkles className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-black text-[var(--text-main)] tracking-tight">Can't find the perfect match?</h4>
-                    <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mt-1">Get a WhatsApp alert the moment a {make || model || "similar"} car is listed.</p>
+                    <h4 className="text-base font-black text-[var(--text-main)] tracking-tight">Can't find the perfect match?</h4>
+                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">Get a WhatsApp alert when a matches listed.</p>
                   </div>
                 </div>
                 <SearchAlertButton 
@@ -846,38 +844,62 @@ export default async function CarsPage({ searchParams }) {
           )}
         </div>
 
-        {/* Pagination — Refined & Tokenized */}
+        {/* Pagination — Sequential logic: show page range around current */}
         {totalPages > 1 && (
-          <div className="mt-20 flex justify-center items-center gap-2 border-t border-[var(--brand-faint)] pt-12">
+          <div className="mt-12 flex justify-center items-center gap-2 border-t border-[var(--brand-faint)] pt-8">
             {page > 1 && (
-              <Link href={getPageLink(page - 1)} className="w-12 h-12 flex items-center justify-center border border-[var(--brand-faint)] text-[var(--text-main)] hover:bg-[var(--surface-overlay)] transition-all" style={{ borderRadius: '10px' }}>
+              <Link href={getPageLink(page - 1)} className="w-10 h-10 flex items-center justify-center border border-[var(--brand-faint)] text-[var(--text-main)] hover:bg-[var(--surface-overlay)] transition-all" style={{ borderRadius: '8px' }}>
                 <ChevronRight className="w-4 h-4 rotate-180" />
               </Link>
             )}
-            <div className="flex gap-2">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-                if (p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)) {
+            <div className="flex gap-1.5 sm:gap-2">
+              {(() => {
+                const pages = [];
+                const rangeWidth = 2; // Show 2 before and 2 after
+                let start = Math.max(1, page - rangeWidth);
+                let end = Math.min(totalPages, page + rangeWidth);
+
+                // Adjust start/end to always show 5 pages if possible
+                if (end - start < 4) {
+                    if (start === 1) end = Math.min(totalPages, start + 4);
+                    else if (end === totalPages) start = Math.max(1, end - 4);
+                }
+
+                if (start > 1) {
+                  pages.push(1);
+                  if (start > 2) pages.push('...');
+                }
+
+                for (let i = start; i <= end; i++) {
+                  pages.push(i);
+                }
+
+                if (end < totalPages) {
+                  if (end < totalPages - 1) pages.push('...');
+                  pages.push(totalPages);
+                }
+
+                return pages.map((p, idx) => {
+                  if (p === '...') {
+                    return <span key={`ellipsis-${idx}`} className="w-10 h-10 flex items-center justify-center text-slate-400 font-bold">...</span>;
+                  }
                   return (
                     <Link key={p} href={getPageLink(p)}
-                      className={`w-12 h-12 flex items-center justify-center text-xs font-black transition-all ${
+                      className={`w-10 h-10 flex items-center justify-center text-[11px] font-black transition-all ${
                         p === page
-                          ? "bg-[var(--brand-primary)] text-white shadow-lg scale-110"
+                          ? "bg-[var(--brand-primary)] text-white shadow-md scale-105"
                           : "border border-[var(--brand-faint)] text-slate-400 hover:text-[var(--text-main)] hover:bg-[var(--surface-overlay)]"
                       }`}
-                      style={{ borderRadius: '10px' }}
+                      style={{ borderRadius: '8px' }}
                     >
                       {p}
                     </Link>
                   );
-                }
-                if ((p === 2 && page > 3) || (p === totalPages - 1 && page < totalPages - 2)) {
-                  return <span key={p} className="w-12 h-12 flex items-end justify-center text-slate-300 dark:text-slate-700 pb-3 font-bold">...</span>;
-                }
-                return null;
-              })}
+                });
+              })()}
             </div>
             {page < totalPages && (
-              <Link href={getPageLink(page + 1)} className="w-12 h-12 flex items-center justify-center border border-[var(--brand-faint)] text-[var(--text-main)] hover:bg-[var(--surface-overlay)] transition-all" style={{ borderRadius: '10px' }}>
+              <Link href={getPageLink(page + 1)} className="w-10 h-10 flex items-center justify-center border border-[var(--brand-faint)] text-[var(--text-main)] hover:bg-[var(--surface-overlay)] transition-all" style={{ borderRadius: '8px' }}>
                 <ChevronRight className="w-4 h-4" />
               </Link>
             )}

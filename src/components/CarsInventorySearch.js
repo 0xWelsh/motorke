@@ -203,7 +203,7 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
   return (
     <section
       ref={wrapRef}
-      className="mb-6 sm:mb-8 border border-[var(--brand-faint)] bg-[var(--surface-overlay)] p-3 sm:p-5 shadow-sm"
+      className="mb-4 sm:mb-5 border border-[var(--brand-faint)] bg-[var(--surface-overlay)] p-3 sm:p-5 shadow-sm"
       style={{ borderRadius: "20px" }}
       aria-label="Search inventory"
     >
