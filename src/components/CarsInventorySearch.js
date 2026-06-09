@@ -203,22 +203,22 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
   return (
     <section
       ref={wrapRef}
-      className="mb-6 sm:mb-8 border border-slate-100 dark:border-zinc-800 bg-white dark:bg-[#111111] p-3 sm:p-4 shadow-sm"
-      style={{ borderRadius: "16px" }}
+      className="mb-6 sm:mb-8 border border-[var(--brand-faint)] bg-[var(--surface-overlay)] p-3 sm:p-5 shadow-sm"
+      style={{ borderRadius: "20px" }}
       aria-label="Search inventory"
     >
-      <div className="mb-2 flex items-center justify-between gap-2 px-1">
-        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#38A169]">Global Search</p>
+      <div className="mb-3 flex items-center justify-between gap-2 px-1">
+        <p className="meta-label text-[var(--brand-primary)]">Global Search</p>
         <button
           type="button"
           onClick={requestLocation}
-          className="inline-flex shrink-0 items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.1em] text-slate-500 hover:text-[#38A169] transition-colors"
+          className="meta-label text-slate-500 hover:text-[var(--brand-primary)] transition-colors flex items-center gap-1.5"
         >
           <MapPin size={12} aria-hidden />
           {mergeFromUrl.lat && mergeFromUrl.lng ? "Location Active" : "Find Nearest"}
         </button>
       </div>
-      <form onSubmit={handleSubmit} className="relative flex flex-col gap-2.5 sm:flex-row sm:items-stretch">
+      <form onSubmit={handleSubmit} className="relative flex flex-col gap-3 sm:flex-row sm:items-stretch">
         <div className="relative min-w-0 flex-1">
           <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden />
           <input
@@ -240,8 +240,8 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
             }}
             autoComplete="off"
             placeholder="Search make, model, body, or color..."
-            className="w-full border border-slate-200 bg-slate-50/50 py-3.5 pl-11 pr-12 text-sm font-bold text-[#111827] outline-none placeholder:text-slate-400 focus:border-[#38A169] focus:bg-white dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-white dark:placeholder:text-slate-500 dark:focus:bg-zinc-900 transition-all"
-            style={{ borderRadius: "14px" }}
+            className="w-full border border-[var(--brand-faint)] bg-[var(--surface)] py-4 pl-11 pr-12 text-sm font-bold text-[var(--text-main)] outline-none placeholder:text-slate-400 focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/5 transition-all"
+            style={{ borderRadius: "12px" }}
           />
           {search ? (
             <button
@@ -262,7 +262,7 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
               suggestions={suggestions}
               loading={loadingSuggestions}
               inputValue={debouncedTerm || search}
-              className="left-0 right-0 top-[calc(100%+8px)] z-50 max-w-none min-w-0 sm:max-w-[min(100%,40rem)] shadow-2xl"
+              className="left-0 right-0 top-[calc(100%+8px)] z-50 max-w-none min-w-0 sm:max-w-[min(100%,40rem)] shadow-[0_20px_50px_rgba(0,0,0,0.2)]"
               onClose={() => setShowSuggestions(false)}
               onSelect={(value) => {
                 setSearch(value);
@@ -274,8 +274,8 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
         </div>
         <button
           type="submit"
-          className="inline-flex shrink-0 items-center justify-center gap-2 bg-[#111827] px-8 py-3.5 text-xs font-black uppercase tracking-[0.2em] text-white transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-black/5 dark:bg-[#38A169] dark:text-white"
-          style={{ borderRadius: "14px" }}
+          className="inline-flex shrink-0 items-center justify-center gap-2 bg-[var(--brand-primary)] px-8 py-3.5 text-[11px] font-black uppercase tracking-[0.2em] text-white transition-all hover:brightness-110 active:scale-95 shadow-lg shadow-[var(--brand-primary)]/10"
+          style={{ borderRadius: "12px" }}
         >
           <Search className="h-4 w-4" aria-hidden />
           Search

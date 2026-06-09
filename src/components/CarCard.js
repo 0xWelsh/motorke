@@ -108,11 +108,10 @@ export default function CarCard({
   return (
     <article
       className={clsx(
-        "group flex flex-col bg-white dark:bg-[#0a0a0a] transition-all hover:shadow-2xl overflow-hidden",
-        spotlightProminent ? "border" : "border-2",
-        boost.cardBorderClass
+        "group flex flex-col bg-[var(--surface)] transition-all hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:-translate-y-1 overflow-hidden border",
+        boost.cardBorderClass || "border-[var(--brand-faint)]"
       )}
-      style={{ borderRadius: "4px" }}
+      style={{ borderRadius: "12px" }}
       {...(boost.active
         ? {
             "data-boost": boost.spotlight && boost.hot ? "spotlight-hot" : boost.spotlight ? "spotlight" : "hot",
@@ -124,7 +123,7 @@ export default function CarCard({
         href={carListingPath(car)}
         onClick={() => onCarClick("image")}
         className={clsx(
-          "relative bg-slate-50 dark:bg-zinc-900 overflow-hidden block",
+          "relative bg-[var(--surface-overlay)] overflow-hidden block",
           compact
             ? "aspect-[16/10] lg:aspect-[16/11]"
             : spacious
@@ -156,7 +155,7 @@ export default function CarCard({
           </div>
         )}
 
-        {/* Top overlays: single row avoids overlap on narrow (mobile) cards */}
+        {/* Top overlays: glassmorphic design */}
         <div
           className={clsx(
             "pointer-events-none absolute inset-x-2 top-2 z-10 flex items-start justify-between gap-2",
@@ -173,7 +172,7 @@ export default function CarCard({
             {showHot ? (
               <span
                 className="pointer-events-auto mb-1 inline-flex max-w-full items-center bg-orange-600 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-[0.14em] text-white border border-white/25 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.16em]"
-                style={{ borderRadius: "2px" }}
+                style={{ borderRadius: "4px" }}
               >
                 Hot
               </span>
@@ -181,15 +180,15 @@ export default function CarCard({
             {showSpotlightBadge ? (
               <span
                 className="pointer-events-auto mb-1 inline-flex max-w-full items-center bg-[#b91c1c] px-1.5 py-0.5 text-[7px] font-black uppercase tracking-[0.14em] text-white border border-white/25 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.16em]"
-                style={{ borderRadius: "2px" }}
+                style={{ borderRadius: "4px" }}
               >
                 Spotlight
               </span>
             ) : null}
             {distanceLabel ? (
               <span
-                className="pointer-events-auto inline-flex max-w-full items-center gap-1 bg-white/95 px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wide text-slate-900 dark:bg-[#111111]/95 dark:text-white sm:gap-1.5 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.12em] border border-slate-200/80 dark:border-zinc-700/80"
-                style={{ borderRadius: "2px" }}
+                className="pointer-events-auto inline-flex max-w-full items-center gap-1 bg-white/80 backdrop-blur-md px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wide text-slate-900 dark:bg-black/60 dark:text-white sm:gap-1.5 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.12em] border border-white/20 dark:border-white/10 shadow-sm"
+                style={{ borderRadius: "6px" }}
                 title={`${distanceLabel} away`}
               >
                 <MapPin className="h-2.5 w-2.5 shrink-0 text-[#38A169] sm:h-3 sm:w-3" aria-hidden />
@@ -205,15 +204,15 @@ export default function CarCard({
                 event.stopPropagation();
                 handleShare();
               }}
-              className="inline-flex h-6 w-6 items-center justify-center bg-white/95 text-slate-700 transition-colors hover:bg-white dark:bg-[#111111]/95 dark:text-slate-200 dark:hover:bg-[#151515] sm:h-8 sm:w-8 border border-slate-200/80 dark:border-zinc-700/80"
-              style={{ borderRadius: "2px" }}
+              className="inline-flex h-6 w-6 items-center justify-center bg-white/80 backdrop-blur-md text-slate-700 transition-colors hover:bg-white dark:bg-black/60 dark:text-slate-200 dark:hover:bg-black sm:h-8 sm:w-8 border border-white/20 dark:border-white/10 shadow-sm"
+              style={{ borderRadius: "6px" }}
               aria-label="Share car"
             >
               <Share2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
             </button>
             <span
-              className="bg-[#38A169] px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wide text-white border border-white/20 sm:px-2 sm:py-1 sm:text-[9px] sm:tracking-[0.12em]"
-              style={{ borderRadius: "2px" }}
+              className="bg-[#38A169]/90 backdrop-blur-md px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wide text-white border border-white/20 sm:px-2 sm:py-1 sm:text-[9px] sm:tracking-[0.12em] shadow-sm"
+              style={{ borderRadius: "4px" }}
             >
               Available
             </span>
@@ -241,7 +240,7 @@ export default function CarCard({
         >
           <span
             className={clsx(
-              "font-black text-slate-400 uppercase tracking-widest shrink-0 mt-0.5",
+              "meta-label shrink-0 mt-0.5",
               compact ? "text-[8px] lg:text-[11px] lg:mt-1" : "sm:mt-1 text-[9px] sm:text-[11px]"
             )}
           >
@@ -317,7 +316,7 @@ export default function CarCard({
               <span
                 key={idx}
                 className={clsx(
-                  "bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest rounded-none border border-slate-100 dark:border-zinc-800 whitespace-nowrap",
+                  "meta-label rounded-lg border border-[var(--brand-faint)] bg-[var(--surface-overlay)] whitespace-nowrap",
                   compact
                     ? "text-[8px] px-1.5 py-0.5 lg:text-[10px] lg:px-3 lg:py-1.5"
                     : "text-[9px] sm:text-[10px] px-2 py-1 sm:px-3 sm:py-1.5"
@@ -331,7 +330,7 @@ export default function CarCard({
           {/* Listing features as horizontal scroll chips (card width) */}
           {featureChips.length > 0 && (
             <div className={compact ? "hidden lg:block pt-1 -mx-1" : "pt-1 -mx-1"}>
-              <p className="text-[9px] font-black uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500 mb-2">Features</p>
+              <p className="meta-label mb-2">Features</p>
               <FeatureMarquee features={featureChips} variant="card" />
             </div>
           )}
@@ -340,7 +339,7 @@ export default function CarCard({
         {/* Bottom Bar: Price & Action */}
         <div
           className={clsx(
-            "border-t border-slate-100 dark:border-zinc-900 flex items-center justify-between gap-2",
+            "border-t border-[var(--brand-faint)] flex items-center justify-between gap-2",
             compact ? "mt-2 pt-2 lg:mt-6 lg:pt-4" : spacious ? "mt-4 sm:mt-6 pt-3.5 sm:pt-4" : "mt-3.5 sm:mt-6 pt-3 sm:pt-4"
           )}
         >
@@ -363,25 +362,25 @@ export default function CarCard({
             href={carListingPath(car)}
             onClick={() => onCarClick("cta")}
             className={clsx(
-              "group/btn inline-flex items-center bg-slate-50 dark:bg-[#38A169] border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white font-black uppercase tracking-widest hover:bg-[#111827] hover:text-white dark:hover:bg-[#2F855A] transition-all",
+              "group/btn inline-flex items-center bg-[var(--brand-primary)] border border-white/10 text-white font-black uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all",
               compact
                 ? "gap-1.5 px-2 py-1 text-[8px] sm:text-[9px] lg:gap-2 lg:px-4 lg:py-2 lg:text-[10px]"
                 : "gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 text-[9px] sm:text-[10px]"
             )}
-            style={{ borderRadius: "2px" }}
+            style={{ borderRadius: "8px" }}
           >
             View
             <div
               className={clsx(
-                "flex items-center justify-center bg-slate-200 dark:bg-zinc-800 group-hover/btn:bg-[#38A169] group-hover/btn:text-white transition-colors",
+                "flex items-center justify-center bg-white/20 group-hover/btn:bg-white/40 transition-colors",
                 compact ? "w-3.5 h-3.5 lg:w-5 lg:h-5" : "w-4 h-4 sm:w-5 sm:h-5"
               )}
-              style={{ borderRadius: "1px" }}
+              style={{ borderRadius: "4px" }}
             >
               <ArrowUpRight
                 className={clsx(
                   compact ? "w-2.5 h-2.5 lg:w-3 lg:h-3" : "w-3 h-3",
-                  "translate-y-[0.5px]"
+                  "translate-y-[0px]"
                 )}
               />
             </div>

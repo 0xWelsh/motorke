@@ -28,7 +28,7 @@ function CarsInventorySortInner({ className = "" }) {
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <ArrowUpDown className="h-3.5 w-3.5 shrink-0 text-[#38A169]" aria-hidden />
+      <ArrowUpDown className="h-3.5 w-3.5 shrink-0 text-[var(--brand-primary)]" aria-hidden />
       <label className="sr-only" htmlFor="cars-inventory-sort">
         Sort inventory
       </label>
@@ -36,8 +36,8 @@ function CarsInventorySortInner({ className = "" }) {
         id="cars-inventory-sort"
         value={current}
         onChange={onChange}
-        className="min-w-[10.5rem] max-w-full border border-slate-200 bg-white px-2.5 py-1.5 text-[11px] font-bold text-[#111827] outline-none focus:border-[#38A169] dark:border-zinc-800 dark:bg-zinc-950 dark:text-white"
-        style={{ borderRadius: "var(--radius)" }}
+        className="min-w-[10.5rem] max-w-full border border-[var(--brand-faint)] bg-[var(--surface)] px-3 py-2 text-[11px] font-black uppercase tracking-wider text-[var(--text-main)] outline-none focus:border-[var(--brand-primary)] transition-all"
+        style={{ borderRadius: "8px" }}
       >
         {CARS_SORT_OPTIONS.map((opt) => (
           <option key={opt.value} value={opt.value}>
@@ -52,8 +52,8 @@ function CarsInventorySortInner({ className = "" }) {
 function CarsInventorySortFallback({ className = "" }) {
   return (
     <div
-      className={`h-8 min-w-[10.5rem] border border-slate-200 bg-slate-50 dark:border-zinc-800 dark:bg-zinc-900 ${className}`}
-      style={{ borderRadius: "var(--radius)" }}
+      className={`h-9 min-w-[10.5rem] border border-[var(--brand-faint)] bg-[var(--surface-overlay)] animate-pulse ${className}`}
+      style={{ borderRadius: "8px" }}
       aria-hidden
     />
   );

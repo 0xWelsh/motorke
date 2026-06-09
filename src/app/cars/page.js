@@ -627,7 +627,7 @@ export default async function CarsPage({ searchParams }) {
   };
 
   return (
-    <div className="min-h-screen bg-white pb-20">
+    <div className="min-h-screen bg-[var(--surface)] pb-20">
       <TrackEventOnMount
         name="cars_listing_view"
         payload={{
@@ -644,19 +644,19 @@ export default async function CarsPage({ searchParams }) {
       />
       <div className="w-full px-2.5 sm:px-8 pt-3 sm:pt-4 overflow-x-hidden">
         
-        {/* Breadcrumb strip — compact on mobile, full on desktop */}
-        <div className="mb-4 sm:mb-6 flex items-center justify-between gap-3 sm:gap-4 border-b border-slate-100 dark:border-zinc-900 pb-2.5 sm:pb-3 min-w-0">
-          <div className="flex min-w-0 items-center gap-2 sm:gap-3 text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400 truncate">
-            <Link href="/" className="hidden sm:inline hover:text-[#111827] dark:hover:text-white transition-colors">Home</Link>
+        {/* Breadcrumb strip — standard editorial style */}
+        <div className="mb-4 sm:mb-6 flex items-center justify-between gap-3 sm:gap-4 border-b border-[var(--brand-faint)] pb-2.5 sm:pb-3 min-w-0">
+          <div className="meta-label flex min-w-0 items-center gap-2 sm:gap-3 truncate">
+            <Link href="/" className="hidden sm:inline hover:text-[var(--brand-primary)] transition-colors">Home</Link>
             <ChevronRight className="hidden sm:block w-3 h-3 shrink-0" />
-            <Link href="/cars" className="hover:text-[#111827] dark:hover:text-white transition-colors truncate">Vehicles</Link>
+            <Link href="/cars" className="hover:text-[var(--brand-primary)] transition-colors truncate">Vehicles</Link>
             <ChevronRight className="w-3 h-3 shrink-0" />
-            <span className="text-[#111827] dark:text-white truncate">Available</span>
+            <span className="text-[var(--text-main)] truncate">Available</span>
           </div>
           <div className="shrink-0 text-right">
-            <div className="text-[10px] font-black uppercase tracking-[0.14em] sm:tracking-[0.18em] text-[#718096] dark:text-slate-400 whitespace-nowrap">
+            <div className="meta-label whitespace-nowrap">
               {shownOnPageCount > 0
-                ? <>Showing <span className="text-[#111827] dark:text-white">{rangeStart}–{rangeEnd}</span> of {total}</>
+                ? <>Showing <span className="text-[var(--brand-primary)]">{rangeStart}–{rangeEnd}</span> of {total}</>
                 : <>0 of {total}</>}
             </div>
             <p className="hidden sm:block mt-1 text-[11px] font-semibold text-slate-500 dark:text-zinc-400">
@@ -667,7 +667,7 @@ export default async function CarsPage({ searchParams }) {
 
         <div className="mb-4 sm:mb-5 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
           <CarsInventorySort className="order-1 sm:order-none" />
-          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#718096] dark:text-slate-400 order-3 w-full sm:order-none sm:w-auto">
+          <p className="meta-label order-3 w-full sm:order-none sm:w-auto">
             Per page
           </p>
           <div className="flex flex-wrap items-center gap-1.5 order-2 sm:order-none">
@@ -681,12 +681,12 @@ export default async function CarsPage({ searchParams }) {
                   prefetch={false}
                   aria-current={isActive ? "page" : undefined}
                   className={[
-                    "px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.14em] border transition-colors",
+                    "px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.14em] border transition-all",
                     isActive
-                      ? "bg-[#111827] text-white border-[#111827] dark:bg-[#2F855A] dark:text-white dark:border-[#2F855A]"
-                      : "bg-white text-[#111827] border-[#EDF2F7] hover:border-[#111827] dark:bg-[#111111] dark:text-white dark:border-slate-800 dark:hover:border-[#2F855A]",
+                      ? "bg-[var(--brand-primary)] text-white border-[var(--brand-primary)] shadow-sm"
+                      : "bg-[var(--surface)] text-[var(--text-main)] border-[var(--brand-faint)] hover:border-[var(--brand-primary)]",
                   ].join(" ")}
-                  style={{ borderRadius: "var(--radius)" }}
+                  style={{ borderRadius: "6px" }}
                 >
                   {size}
                 </Link>
@@ -746,11 +746,11 @@ export default async function CarsPage({ searchParams }) {
           {/* Top two rows: 3 columns beside sidebar */}
           <div className="min-w-0 lg:col-span-3">
             {sortedCars.length === 0 && (
-              <div className="py-32 text-center bg-[#F7FAFC] dark:bg-[#111111] border border-[#EDF2F7] dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
-                <Search className="w-12 h-12 text-[#CBD5E0] dark:text-slate-700 mx-auto mb-6" />
-                <h2 className="text-2xl font-bold text-[#111827] dark:text-white mb-2">No matches found</h2>
-                <p className="text-[#718096] dark:text-slate-400 font-medium mb-8">Try adjusting your filters or resetting your search.</p>
-                <Link href="/cars" className="inline-flex bg-[#111827] dark:bg-[#38A169] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[1.02] active:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
+              <div className="py-24 text-center bg-[var(--surface-overlay)] border border-[var(--brand-faint)]" style={{ borderRadius: '16px' }}>
+                <Search className="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto mb-6" />
+                <h2 className="text-2xl font-black text-[var(--text-main)] tracking-tight mb-2">No matches found</h2>
+                <p className="text-slate-500 dark:text-slate-400 font-medium mb-8">Try adjusting your filters or resetting your search.</p>
+                <Link href="/cars" className="inline-flex bg-[var(--brand-primary)] text-white px-8 py-3.5 text-[11px] font-black uppercase tracking-widest transition-all hover:brightness-110 active:scale-95" style={{ borderRadius: '8px' }}>
                   Clear All Filters
                 </Link>
               </div>
@@ -775,35 +775,35 @@ export default async function CarsPage({ searchParams }) {
         )}
 
         {personalizedCarsWithDistance.length > 0 && (
-          <section className="mt-8 border border-slate-200 bg-white p-4 sm:p-5" style={{ borderRadius: "var(--radius)" }}>
-            <div className="flex items-center justify-between mb-4">
+          <section className="mt-16 border border-[var(--brand-faint)] bg-[var(--surface-overlay)] p-6 sm:p-8" style={{ borderRadius: "24px" }}>
+            <div className="flex items-center justify-between mb-8">
               <div>
-                <p className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.12em] text-[#2F855A]">
+                <p className="meta-label text-[var(--brand-primary)] flex items-center gap-2">
                   <Sparkles className="w-3.5 h-3.5" />
                   Personalized Feed
                 </p>
-                <h3 className="text-lg font-black text-slate-900 tracking-tight">Picked for you based on your browsing</h3>
+                <h3 className="text-2xl font-black text-[var(--text-main)] tracking-tight mt-1">Picked for you</h3>
               </div>
-              <Link href="/cars?sort=views_desc" className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-600 hover:text-[#2F855A]">
+              <Link href="/cars?sort=views_desc" className="meta-label text-slate-500 hover:text-[var(--brand-primary)] transition-colors">
                 Explore more →
               </Link>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
               {personalizedCarsWithDistance.map((car) => (
                 <div key={`personal-${car.id}`} className="space-y-1.5">
-                  <p className="text-[10px] font-black uppercase tracking-[0.11em] text-[#2F855A]">
+                  <p className="meta-label text-[var(--brand-primary)]">
                     {car.recommendationReasons?.[0] || "Picked for you"}
                   </p>
                   <details className="group">
-                    <summary className="list-none inline-flex cursor-pointer items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.11em] text-slate-500 hover:text-slate-700">
+                    <summary className="meta-label list-none inline-flex cursor-pointer items-center gap-1.5 text-slate-500 hover:text-slate-700">
                       <span>Why am I seeing this?</span>
                       <span className="transition-transform group-open:rotate-45">+</span>
                     </summary>
-                    <div className="mt-1 border border-slate-200 bg-slate-50 p-2">
-                      <ul className="space-y-1">
+                    <div className="mt-2 border border-[var(--brand-faint)] bg-[var(--surface)] p-3 shadow-sm" style={{ borderRadius: "8px" }}>
+                      <ul className="space-y-1.5">
                         {(car.recommendationReasons?.length ? car.recommendationReasons : ["Aligned with your recent browsing"]).map((reason, idx) => (
-                          <li key={`${car.id}-reason-${idx}`} className="text-[11px] font-semibold text-slate-600">
-                            - {reason}
+                          <li key={`${car.id}-reason-${idx}`} className="text-[11px] font-bold text-slate-600 dark:text-slate-400">
+                            • {reason}
                           </li>
                         ))}
                       </ul>
@@ -817,7 +817,7 @@ export default async function CarsPage({ searchParams }) {
         )}
 
         {/* Bottom Discovery & Alert Sections */}
-        <div className="mt-16 sm:mt-24 space-y-10 border-t border-slate-100 dark:border-slate-800 pt-10">
+        <div className="mt-16 sm:mt-24 space-y-10 border-t border-[var(--brand-faint)] pt-10">
           <CarsQuickActions />
           
           <TrendingSearches className="mb-4" />
@@ -825,14 +825,14 @@ export default async function CarsPage({ searchParams }) {
           {/* Search Alerts — Only shown when searching or filtering by make to ensure high intent */}
           {(search || make || model || bodyType) && (
             <div className="mb-6 animate-in fade-in slide-in-from-top-2 duration-700">
-              <div className="bg-[#38A169]/5 dark:bg-[#38A169]/10 border border-[#38A169]/20 p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4" style={{ borderRadius: "var(--radius)" }}>
-                <div className="flex items-center gap-3 text-center sm:text-left">
-                  <div className="shrink-0 w-10 h-10 bg-[#38A169] rounded-full flex items-center justify-center text-white shadow-lg">
-                    <Sparkles className="w-5 h-5" />
+              <div className="bg-[var(--brand-primary)]/[0.03] dark:bg-[var(--brand-primary)]/[0.08] border border-[var(--brand-primary)]/20 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6" style={{ borderRadius: "20px" }}>
+                <div className="flex items-center gap-4 text-center sm:text-left">
+                  <div className="shrink-0 w-12 h-12 bg-[var(--brand-primary)] rounded-2xl flex items-center justify-center text-white shadow-xl rotate-3">
+                    <Sparkles className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-black text-[#111827] dark:text-white uppercase tracking-tight">Can't find the perfect match?</h4>
-                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">Get a WhatsApp alert the moment a {make || model || "similar"} car is listed.</p>
+                    <h4 className="text-lg font-black text-[var(--text-main)] tracking-tight">Can't find the perfect match?</h4>
+                    <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mt-1">Get a WhatsApp alert the moment a {make || model || "similar"} car is listed.</p>
                   </div>
                 </div>
                 <SearchAlertButton 
@@ -846,11 +846,11 @@ export default async function CarsPage({ searchParams }) {
           )}
         </div>
 
-        {/* Pagination */}
+        {/* Pagination — Refined & Tokenized */}
         {totalPages > 1 && (
-          <div className="mt-20 flex justify-center items-center gap-2 border-t border-slate-100 pt-10">
+          <div className="mt-20 flex justify-center items-center gap-2 border-t border-[var(--brand-faint)] pt-12">
             {page > 1 && (
-              <Link href={getPageLink(page - 1)} className="w-12 h-12 flex items-center justify-center border border-[#EDF2F7] dark:border-slate-800 text-[#111827] dark:text-white hover:bg-[#F7FAFC] dark:hover:bg-white/5 transition-colors" style={{ borderRadius: 'var(--radius)' }}>
+              <Link href={getPageLink(page - 1)} className="w-12 h-12 flex items-center justify-center border border-[var(--brand-faint)] text-[var(--text-main)] hover:bg-[var(--surface-overlay)] transition-all" style={{ borderRadius: '10px' }}>
                 <ChevronRight className="w-4 h-4 rotate-180" />
               </Link>
             )}
@@ -859,25 +859,25 @@ export default async function CarsPage({ searchParams }) {
                 if (p === 1 || p === totalPages || (p >= page - 1 && p <= page + 1)) {
                   return (
                     <Link key={p} href={getPageLink(p)}
-                      className={`w-12 h-12 flex items-center justify-center text-xs font-bold transition-all ${
+                      className={`w-12 h-12 flex items-center justify-center text-xs font-black transition-all ${
                         p === page
-                          ? "bg-[#111827] dark:bg-[#38A169] text-white shadow-lg"
-                          : "border border-[#EDF2F7] dark:border-slate-800 text-[#718096] dark:text-slate-400 hover:bg-[#F7FAFC] dark:hover:bg-white/5"
+                          ? "bg-[var(--brand-primary)] text-white shadow-lg scale-110"
+                          : "border border-[var(--brand-faint)] text-slate-400 hover:text-[var(--text-main)] hover:bg-[var(--surface-overlay)]"
                       }`}
-                      style={{ borderRadius: 'var(--radius)' }}
+                      style={{ borderRadius: '10px' }}
                     >
                       {p}
                     </Link>
                   );
                 }
                 if ((p === 2 && page > 3) || (p === totalPages - 1 && page < totalPages - 2)) {
-                  return <span key={p} className="w-12 h-12 flex items-end justify-center text-[#CBD5E0] dark:text-slate-700 pb-3">...</span>;
+                  return <span key={p} className="w-12 h-12 flex items-end justify-center text-slate-300 dark:text-slate-700 pb-3 font-bold">...</span>;
                 }
                 return null;
               })}
             </div>
             {page < totalPages && (
-              <Link href={getPageLink(page + 1)} className="w-12 h-12 flex items-center justify-center border border-[#EDF2F7] dark:border-slate-800 text-[#111827] dark:text-white hover:bg-[#F7FAFC] dark:hover:bg-white/5 transition-colors" style={{ borderRadius: 'var(--radius)' }}>
+              <Link href={getPageLink(page + 1)} className="w-12 h-12 flex items-center justify-center border border-[var(--brand-faint)] text-[var(--text-main)] hover:bg-[var(--surface-overlay)] transition-all" style={{ borderRadius: '10px' }}>
                 <ChevronRight className="w-4 h-4" />
               </Link>
             )}
