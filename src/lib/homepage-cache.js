@@ -238,17 +238,7 @@ async function enrichHomepage(base) {
   const baseSpotlight =
     hotSorted.length > 0 ? hotSorted : featured?.length ? featured : newArrivals;
 
-  let paidSpotlightRaw = [];
-  try {
-    paidSpotlightRaw = await db.car.findMany({
-      where: activeSpotlightWhere(),
-      include: spotlightCarInclude(),
-      orderBy: [{ featuredWeight: "desc" }, { spotlightUntil: "asc" }],
-      take: 8,
-    });
-  } catch (err) {
-    console.warn("[homepage-cache] paid spotlight load failed:", err?.message || err);
-  }
+  const paidSpotlightRaw = [];
 
   let rotatingSpotlightRaw = [];
   try {

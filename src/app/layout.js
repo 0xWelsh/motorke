@@ -12,7 +12,7 @@ import { headers, cookies } from "next/headers";
 import { SaveDataProvider } from "@/components/SaveDataProvider";
 import { isSaveDataRequest, SAVE_DATA_COOKIE } from "@/lib/save-data";
 
-import { Playfair_Display } from "next/font/google";
+import { Playfair_Display, DM_Sans } from "next/font/google";
 import { BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
 
 const playfair = Playfair_Display({
@@ -20,6 +20,12 @@ const playfair = Playfair_Display({
   variable: "--font-serif",
   weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["400", "500", "700"],
 });
 
 export const metadata = {
@@ -180,7 +186,7 @@ export default async function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }}
         />
       </head>
-      <body className={`${playfair.variable} bg-background text-slate-900 dark:text-white min-h-screen antialiased flex flex-col font-sans transition-colors duration-300`}>
+      <body className={`${playfair.variable} ${dmSans.variable} bg-background text-slate-900 dark:text-white min-h-screen antialiased flex flex-col font-sans transition-colors duration-300`}>
         <PWARegister />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <SaveDataProvider saveData={saveData}>

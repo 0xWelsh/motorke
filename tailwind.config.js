@@ -32,9 +32,9 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans:    ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
-        serif:   ["Lora", "ui-serif", "Georgia", "Cambria", "Times New Roman", "serif"],
-        display: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+        sans:    ["var(--font-sans)"],
+        serif:   ["var(--font-serif)", "Lora", "ui-serif", "Georgia", "Cambria", "Times New Roman", "serif"],
+        display: ["var(--font-sans)"],
         mono:    ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "monospace"],
       },
       fontSize: {
