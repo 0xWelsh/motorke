@@ -1,5 +1,6 @@
 // src/app/layout.js
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import { CompareProvider } from "@/components/CompareContext";
 import SiteChrome from "@/components/SiteChrome";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -200,6 +201,7 @@ export default async function RootLayout({ children }) {
           <ScrollToTop />
           <CookieConsent />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
