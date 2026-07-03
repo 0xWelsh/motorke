@@ -29,3 +29,6 @@
 [2026-07-03T10:31:04.593Z]   Years error Toyota Tercel: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Tercel?format=json
 [2026-07-03T10:31:05.028Z]   Years error Toyota Celica: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Celica?format=json
 [2026-07-03T10:31:05.546Z]   Years error Toyota Supra: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Supra?format=json
+[2026-07-03T10:45:46.626Z] === Car Model Specs Seeder (NHTSA + CarQuery + Wikimedia) ===
+[2026-07-03T10:45:46.630Z] Targeting 25 makes
+[2026-07-03T10:45:48.041Z] ERROR: Could not fetch CarQuery makes list: fetch failed

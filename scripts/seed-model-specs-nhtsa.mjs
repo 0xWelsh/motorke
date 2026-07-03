@@ -1,8 +1,7 @@
 // scripts/seed-model-specs-nhtsa.mjs
-// Fetches car model specs from NHTSA (model list) + CarQuery API (specs) + Wikimedia photos
-// Run: node scripts/seed-model-specs-nhtsa.mjs
-// Safe to run multiple times — upserts by (make, model, variant, yearStart)
-
+// Seeds CarModelSpec from NHTSA API + Wikimedia Commons
+// NHTSA is the official US govt vehicle database — free, no auth, reliable
+// Run: node scripts/seed-model-specs-nhtsa.mjs  (resumable)
 import { PrismaClient } from "@prisma/client";
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from "fs";
 import { join, dirname } from "path";
@@ -15,9 +14,7 @@ const prisma = new PrismaClient({
 
 const LOG_FILE = join(__dirname, "..", "logs", "seed-nhtsa.log");
 const PROGRESS_FILE = join(__dirname, "..", "logs", "seed-nhtsa-progress.json");
-const DELAY_MS = 600;
 
-// Popular Kenyan-market makes
 const TARGET_MAKES = [
   "Toyota", "Nissan", "Honda", "Mazda", "Subaru", "Suzuki", "Mitsubishi",
   "Isuzu", "BMW", "Mercedes-Benz", "Volkswagen", "Audi", "Land Rover",
@@ -25,30 +22,14 @@ const TARGET_MAKES = [
   "Lexus", "Jeep", "Daihatsu", "Chrysler", "Dodge",
 ];
 
+// Map NHTSA body class values to your enum
 const BODY_MAP = {
-  "SUV": "SUV", "SUV/Crossover": "SUV", "Crossover": "SUV",
-  "Sedan": "SEDAN", "Saloon": "SEDAN", "Wagon": "WAGON",
+  "SUV": "SUV", "Sport Utility Vehicle": "SUV", "Crossover": "SUV",
+  "Minivan": "MINIVAN", "Van": "MINIVAN", "Bus": "MINIVAN",
+  "Sedan": "SEDAN", "Saloon": "SEDAN",
   "Hatchback": "HATCHBACK", "Coupe": "COUPE", "Convertible": "CONVERTIBLE",
-  "Pickup": "PICKUP", "Minivan": "MINIVAN", "Van": "MINIVAN",
-  "Off-Road": "SUV", "Truck": "PICKUP",
-};
-
-const FUEL_MAP = {
-  "Gasoline": "PETROL", "Gas": "PETROL", "Petrol": "PETROL",
-  "Diesel": "DIESEL", "Hybrid": "HYBRID", "Electric": "ELECTRIC",
-  "Flex Fuel": "PETROL", "Flex": "PETROL",
-  "Natural Gas": "PETROL", "Propane": "PETROL",
-};
-
-const TRANS_MAP = {
-  "Manual": "MANUAL", "Automatic": "AUTOMATIC", "CVT": "CVT",
-  "Automated Manual": "AUTOMATIC",
-};
-
-const DRIVE_MAP = {
-  "4WD": "FOURWD", "4-Wheel Drive": "FOURWD", "AWD": "AWD",
-  "All-Wheel Drive": "AWD", "Front-Wheel Drive": "FWD",
-  "FWD": "FWD", "Rear-Wheel Drive": "RWD", "RWD": "RWD",
+  "Wagon": "WAGON", "Station Wagon": "WAGON",
+  "Pickup": "PICKUP", "Cab": "PICKUP",
 };
 
 function log(msg) {
@@ -66,66 +47,118 @@ function sleep(ms) {
 
 async function fetchJson(url) {
   const res = await fetch(url, {
-    headers: { "User-Agent": "WelshMotorhub/1.0 (seed)" },
+    headers: { "User-Agent": "WelshMotorhub/1.0" },
     signal: AbortSignal.timeout(20000),
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status} from ${url}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
 
-// ── NHTSA — just for model names ──────────────────────
+// ── NHTSA API ──────────────────────────────────────────
 
-async function getNHTSAModels(make) {
-  const url = `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${encodeURIComponent(make)}?format=json`;
-  const data = await fetchJson(url);
+async function getModels(make) {
+  const data = await fetchJson(
+    `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${encodeURIComponent(make)}?format=json`
+  );
   return [...new Set((data.Results || []).map((r) => r.Model_Name).filter(Boolean))];
 }
 
-function normalizeModelName(name) {
-  return name
-    .replace(/^\d+/g, "")        // leading numbers
-    .replace(/[-/]/g, " ")       // hyphens/slashes to spaces
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-// ── CarQuery API — main data source ────────────────────
-
-async function getCarQueryMakes() {
-  const data = await fetchJson("https://www.carqueryapi.com/api/0.3/?cmd=getMakes");
-  return data.Makes || [];
-}
-
-async function getCarQueryModels(makeId) {
-  const data = await fetchJson(
-    `https://www.carqueryapi.com/api/0.3/?cmd=getModels&make=${makeId}`
-  );
-  return data.Models || [];
-}
-
-async function getCarQueryTrims(makeId, model, year) {
-  const url = `https://www.carqueryapi.com/api/0.3/?cmd=getTrims&make=${makeId}&year=${year}&model=${encodeURIComponent(model)}`;
+// Get ALL models for a make + year (no model filter — returns everything for that year)
+async function getModelsForYear(make, year) {
+  const url = `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/modelyear/${year}?format=json`;
   const data = await fetchJson(url);
-  return data.Trims || [];
+  return (data.Results || []).map((r) => r.Model_Name).filter(Boolean);
+}
+
+// Get detailed variable values for a specific make/model/year
+async function getSpecsForYearModel(make, model, year) {
+  const url = `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/${encodeURIComponent(make)}/model/${encodeURIComponent(model)}/modelyear/${year}?format=json`;
+  try {
+    const data = await fetchJson(url);
+    const rows = data.Results || [];
+    if (!rows.length) return null;
+
+    // Collect unique values across all trims
+    const vals = {};
+    for (const row of rows) {
+      for (const [key, val] of Object.entries(row)) {
+        if (val && val !== "" && val !== "N/A" && val !== "Not Available" && val !== "Not Required") {
+          if (!vals[key]) vals[key] = new Set();
+          vals[key].add(String(val));
+        }
+      }
+    }
+    const get = (k) => {
+      const s = vals[k];
+      return s ? [...s][0] : null;
+    };
+
+    const bodyRaw = get("BodyClass") || get("BodyType") || "";
+    let bodyType = null;
+    for (const [k, v] of Object.entries(BODY_MAP)) {
+      if (bodyRaw.toLowerCase().includes(k.toLowerCase())) { bodyType = v; break; }
+    }
+
+    const fuelRaw = (get("FuelTypePrimary") || get("FuelType") || "").toLowerCase();
+    let fuelType = null;
+    if (fuelRaw.includes("diesel")) fuelType = "DIESEL";
+    else if (fuelRaw.includes("hybrid")) fuelType = "HYBRID";
+    else if (fuelRaw.includes("electric")) fuelType = "ELECTRIC";
+    else if (fuelRaw.includes("gas") || fuelRaw.includes("petrol") || fuelRaw.includes("flex")) fuelType = "PETROL";
+
+    const transRaw = (get("TransmissionStyle") || get("TransmissionType") || "").toLowerCase();
+    let transmission = null;
+    if (transRaw.includes("cvt")) transmission = "CVT";
+    else if (transRaw.includes("auto")) transmission = "AUTOMATIC";
+    else if (transRaw.includes("manual")) transmission = "MANUAL";
+
+    const driveRaw = (get("DriveType") || "").toLowerCase();
+    let drivetrain = null;
+    if (driveRaw.includes("4-wheel") || driveRaw.includes("4wd") || driveRaw.includes("part-time")) drivetrain = "FOURWD";
+    else if (driveRaw.includes("all-wheel") || driveRaw.includes("awd")) drivetrain = "AWD";
+    else if (driveRaw.includes("front")) drivetrain = "FWD";
+    else if (driveRaw.includes("rear")) drivetrain = "RWD";
+
+    const cylinders = get("EngineCylinders") ? parseInt(get("EngineCylinders")) : null;
+    let engineCC = null;
+    const disp = get("DisplacementCC") || get("EngineDisplacementCC") || get("Displacement");
+    if (disp) {
+      const n = parseFloat(String(disp).replace(/[^0-9.]/g, ""));
+      if (!isNaN(n)) engineCC = n < 100 ? Math.round(n * 16.387) : Math.round(n); // ci to cc
+    }
+    const horsepower = get("EngineHP") || get("EngineHorsepower");
+    const hp = horsepower ? parseInt(horsepower) : null;
+
+    return {
+      bodyType,
+      fuelType,
+      transmission,
+      drivetrain,
+      engineCC: (engineCC && engineCC > 0) ? engineCC : null,
+      cylinders: (cylinders && cylinders > 0) ? cylinders : null,
+      horsepower: (hp && hp > 0) ? hp : null,
+    };
+  } catch {
+    return null;
+  }
 }
 
 // ── Wikimedia ──────────────────────────────────────────
 
 async function getWikimediaImage(make, model) {
-  const query = `${make} ${model}`;
-  const url = `https://commons.wikimedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=3&format=json&srnamespace=6`;
   try {
-    const data = await fetchJson(url);
+    const data = await fetchJson(
+      `https://commons.wikimedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(make + " " + model)}&srlimit=3&format=json&srnamespace=6`
+    );
     const pages = data.query?.search || [];
     if (!pages.length) return null;
-
     for (const page of pages) {
-      const title = page.title;
-      const imgUrl = `https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(title)}&prop=imageinfo&iiprop=url&format=json&iiurlwidth=800`;
-      const imgData = await fetchJson(imgUrl);
-      const imgPages = imgData.query?.pages || {};
-      const info = Object.values(imgPages)[0]?.imageinfo?.[0];
+      const imgData = await fetchJson(
+        `https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(page.title)}&prop=imageinfo&iiprop=url&format=json&iiurlwidth=800`
+      );
+      const info = Object.values(imgData.query?.pages || {})[0]?.imageinfo?.[0];
       if (info?.url) return info.url;
+      await sleep(200);
     }
     return null;
   } catch {
@@ -133,49 +166,13 @@ async function getWikimediaImage(make, model) {
   }
 }
 
-// ── Merge specs ────────────────────────────────────────
-
-function parseTrim(t) {
-  const fuel = FUEL_MAP[t.model_fuel_type] || null;
-  const hasHybrid = t.model_hybrid?.toLowerCase() === "yes" || t.model_engine_type?.toLowerCase() === "hybrid";
-  const fuelType = hasHybrid ? "HYBRID" : fuel;
-
-  const trans = TRANS_MAP[t.model_transmission_type] || null;
-  const drive = DRIVE_MAP[t.model_drive] || null;
-  const body = BODY_MAP[t.model_body] || null;
-
-  const engineCC = t.model_engine_cc ? parseInt(t.model_engine_cc) : null;
-  const cylinders = t.model_engine_cyl ? parseInt(t.model_engine_cyl) : null;
-  const horsepower = t.model_engine_power_ps ? parseInt(t.model_engine_power_ps) : null;
-  const torque = t.model_engine_torque_nm ? parseInt(t.model_engine_torque_nm) : null;
-  const seats = t.model_seats ? parseInt(t.model_seats) : null;
-  const doors = t.model_doors ? parseInt(t.model_doors) : null;
-  const weight = t.model_weight_kg ? parseInt(t.model_weight_kg) : null;
-  const tank = t.model_fuel_tank_l ? parseInt(t.model_fuel_tank_l) : null;
-
-  return {
-    bodyType: (body && !isNaN(body)) ? null : body,
-    engineCC: (engineCC && engineCC > 0 && !isNaN(engineCC)) ? engineCC : null,
-    cylinders: (cylinders && cylinders > 0) ? cylinders : null,
-    horsepower: (horsepower && horsepower > 0) ? horsepower : null,
-    torque: (torque && torque > 0) ? torque : null,
-    fuelType,
-    transmission: trans,
-    drivetrain: drive,
-    seats: (seats && seats > 0) ? seats : null,
-    doors: (doors && doors > 0) ? doors : null,
-    curbWeightKg: (weight && weight > 0) ? weight : null,
-    fuelTankLiters: (tank && tank > 0) ? tank : null,
-  };
-}
-
 // ── Main ───────────────────────────────────────────────
 
 async function main() {
-  log("=== Car Model Specs Seeder (NHTSA + CarQuery + Wikimedia) ===");
+  log("=== NHTSA Model Specs Seeder ===");
   log(`Targeting ${TARGET_MAKES.length} makes`);
 
-  let progress = { completed: [], skipped: [], photos: {} };
+  let progress = { completed: [], skipped: [] };
   if (existsSync(PROGRESS_FILE)) {
     try {
       progress = JSON.parse(readFileSync(PROGRESS_FILE, "utf-8"));
@@ -183,197 +180,91 @@ async function main() {
     } catch {}
   }
 
-  // Load CarQuery makes list
-  let cqMakes = [];
-  try {
-    cqMakes = await getCarQueryMakes();
-    log(`CarQuery: ${cqMakes.length} makes available`);
-  } catch (e) {
-    log(`ERROR: Could not fetch CarQuery makes list: ${e.message}`);
-    process.exit(1);
-  }
-
   let totalCreated = 0;
-  let totalUpdated = 0;
 
   for (const make of TARGET_MAKES) {
     log(`\n--- ${make} ---`);
 
-    // NHTSA model list
-    let nhtsaModels = [];
+    // 1. Get all models from NHTSA
+    let models;
     try {
-      nhtsaModels = await getNHTSAModels(make);
-      log(`  NHTSA: ${nhtsaModels.length} models`);
-    } catch (e) {
-      log(`  NHTSA error: ${e.message}`);
-      continue;
-    }
+      models = await getModels(make);
+      log(`  Models: ${models.length}`);
+    } catch (e) { log(`  Skip: ${e.message}`); continue; }
 
-    // CarQuery make id
-    const cqMake = cqMakes.find(
-      (m) => m.make_display?.toLowerCase() === make.toLowerCase()
-      || m.make_name?.toLowerCase() === make.toLowerCase()
-    );
-    if (!cqMake) {
-      log(`  No CarQuery make ID for ${make}, skipping`);
-      continue;
-    }
-    const makeId = cqMake.make_id;
-    log(`  CarQuery ID: ${makeId}`);
-
-    // CarQuery models for this make
-    let cqModels = [];
-    try {
-      cqModels = await getCarQueryModels(makeId);
-      log(`  CarQuery: ${cqModels.length} models`);
-    } catch (e) {
-      log(`  CarQuery models error: ${e.message}`);
-      continue;
-    }
-    await sleep(DELAY_MS);
-
-    if (!cqModels.length) {
-      log(`  No CarQuery models, skipping ${make}`);
-      continue;
-    }
-
-    // Build lookup from NHTSA model names to CarQuery model names
-    const cqModelMap = {};
-    for (const cm of cqModels) {
-      const norm = normalizeModelName(cm.model_name).toLowerCase();
-      cqModelMap[norm] = cm.model_name;
-    }
-
-    // Match NHTSA model names to CarQuery model names
-    for (const nhtsaModel of nhtsaModels) {
-      const normNhtsa = normalizeModelName(nhtsaModel).toLowerCase();
-      let cqName = cqModelMap[normNhtsa];
-
-      // Fuzzy match if no exact match
-      if (!cqName) {
-        const match = Object.entries(cqModelMap).find(([k]) =>
-          k.includes(normNhtsa) || normNhtsa.includes(k)
-        );
-        if (match) cqName = match[1];
-      }
-
-      if (!cqName) {
-        continue;
-      }
-
-      const key = `${make}||${cqName}`;
-      if (progress.completed.includes(key) || progress.skipped.includes(key)) continue;
-
-      log(`  Processing: ${make} ${cqName}`);
-
-      // Get CarQuery model detail to know available years
-      const cqModelRow = cqModels.find((m) => m.model_name === cqName);
-      if (!cqModelRow) continue;
-
-      const yearsStr = cqModelRow.model_years || "";
-      const years = yearsStr.split(",").map(Number).filter((y) => y >= 2000 && y <= 2025).sort((a, b) => a - b);
-
-      if (years.length < 2) {
-        log(`    Only ${years.length} years, skipping`);
-        progress.skipped.push(key);
-        continue;
-      }
-
-      log(`    Years: ${years[0]}–${years[years.length - 1]} (${years.length})`);
-
-      // Get trims for middle year (best coverage)
-      const repYear = years[Math.floor(years.length / 2)];
-      let trims = [];
+    // 2. For each model, get years by checking multiple sample years
+    const modelYears = {};
+    const sampleYears = [2005, 2010, 2015, 2018, 2020, 2022, 2024];
+    for (const year of sampleYears) {
       try {
-        trims = await getCarQueryTrims(makeId, cqName, repYear);
-        await sleep(DELAY_MS);
-      } catch (e) {
-        log(`    CarQuery trims error: ${e.message}`);
-        await sleep(DELAY_MS);
-      }
-
-      // Merge specs from all trims
-      let merged = { bodyType: null, engineCC: null, cylinders: null, horsepower: null,
-        torque: null, fuelType: null, transmission: null, drivetrain: null,
-        seats: null, doors: null, curbWeightKg: null, fuelTankLiters: null };
-
-      if (trims.length > 0) {
-        const specsList = trims.map(parseTrim);
-        // Take first non-null value for each field across all trims
-        for (const s of specsList) {
-          for (const [k, v] of Object.entries(s)) {
-            if (v != null && merged[k] == null) merged[k] = v;
-          }
+        const yearModels = await getModelsForYear(make, year);
+        for (const m of yearModels) {
+          if (!modelYears[m]) modelYears[m] = [];
+          modelYears[m].push(year);
         }
-        log(`    ${trims.length} trims, specs: ${merged.engineCC ? `${Math.round(merged.engineCC / 10) / 100}L` : "—"} / ${merged.horsepower || "?"}hp`);
-      } else {
-        log(`    No trims found for ${repYear}`);
-      }
+      } catch {}
+      await sleep(200);
+    }
+
+    // 3. Process models with 2+ detected years
+    for (const [model, years] of Object.entries(modelYears)) {
+      const key = `${make}||${model}`;
+      if (progress.completed.includes(key)) continue;
+      if (years.length < 2) { progress.skipped.push(key); continue; }
+
+      log(`  ${model}: ${years[0]}–${years[years.length - 1]} (${years.length} sample yrs)`);
+
+      // Get specs from a representative year
+      const repYear = years[Math.floor(years.length / 2)];
+      const specs = await getSpecsForYearModel(make, model, repYear);
+      if (specs) log(`    ${specs.engineCC ? `${Math.round(specs.engineCC / 10) / 100}L` : ""} ${specs.horsepower ? `${specs.horsepower}hp` : ""} ${specs.fuelType || ""}`.trim() || "    basic data");
 
       // Wikimedia photo
-      let imageUrl = progress.photos[key];
-      if (!imageUrl) {
-        imageUrl = await getWikimediaImage(make, cqName);
-        if (imageUrl) progress.photos[key] = imageUrl;
-        await sleep(300);
-      }
+      let imageUrl;
+      try { imageUrl = await getWikimediaImage(make, model); } catch {}
+      if (imageUrl) log(`    photo found`);
+      else log(`    no photo`);
 
-      // Upsert
       try {
-        const payload = {
-          make,
-          model: cqName,
-          variant: null,
-          yearStart: years[0],
-          yearEnd: years[years.length - 1],
-          bodyType: merged.bodyType || null,
-          vehicleType: "CAR",
-          engineCC: merged.engineCC || null,
-          cylinders: merged.cylinders || null,
-          horsepower: merged.horsepower || null,
-          torque: merged.torque || null,
-          fuelType: merged.fuelType || null,
-          transmission: merged.transmission || null,
-          drivetrain: merged.drivetrain || null,
-          steering: null,
-          seats: merged.seats || null,
-          doors: merged.doors || null,
-          airbags: null,
-          groundClearanceMm: null,
-          turbo: false,
-          sunroof: false,
-          curbWeightKg: merged.curbWeightKg || null,
-          fuelTankLiters: merged.fuelTankLiters || null,
-          standardFeatures: [],
-          imageUrl,
-          source: "carquery+nhtsa+wikimedia",
-          verified: false,
-          published: false,
-        };
-
-        const result = await prisma.carModelSpec.upsert({
-          where: {
-            make_model_variant_yearStart: {
-              make, model: cqName, variant: "", yearStart: years[0],
-            },
+        await prisma.carModelSpec.upsert({
+          where: { make_model_variant_yearStart: { make, model, variant: "", yearStart: years[0] } },
+          create: {
+            make, model, variant: null,
+            yearStart: years[0], yearEnd: years[years.length - 1],
+            bodyType: specs?.bodyType || null, vehicleType: "CAR",
+            engineCC: specs?.engineCC || null,
+            cylinders: specs?.cylinders || null,
+            horsepower: specs?.horsepower || null,
+            fuelType: specs?.fuelType || null,
+            transmission: specs?.transmission || null,
+            drivetrain: specs?.drivetrain || null,
+            steering: null, seats: null, doors: null, airbags: null,
+            groundClearanceMm: null, turbo: false, sunroof: false,
+            curbWeightKg: null, fuelTankLiters: null, standardFeatures: [],
+            imageUrl, source: "nhtsa", verified: false, published: false,
           },
-          create: payload,
-          update: payload,
+          update: {
+            yearEnd: years[years.length - 1],
+            bodyType: specs?.bodyType || null,
+            engineCC: specs?.engineCC || null,
+            cylinders: specs?.cylinders || null,
+            horsepower: specs?.horsepower || null,
+            fuelType: specs?.fuelType || null,
+            transmission: specs?.transmission || null,
+            drivetrain: specs?.drivetrain || null,
+            imageUrl: imageUrl || undefined,
+          },
         });
-
-        if (result) totalCreated++;
+        totalCreated++;
         progress.completed.push(key);
       } catch (e) {
-        log(`    Upsert error: ${e.message}`);
+        log(`    upsert error: ${e.message}`);
         progress.skipped.push(key);
       }
 
-      // Save progress every 5 models
       if (progress.completed.length % 5 === 0) {
         mkdirSync(dirname(PROGRESS_FILE), { recursive: true });
         writeFileSync(PROGRESS_FILE, JSON.stringify(progress, null, 2));
-        const count = await prisma.carModelSpec.count({ where: { published: true } });
-        log(`  [checkpoint] ${progress.completed.length} done, ${count} published in DB`);
       }
     }
   }
@@ -382,20 +273,11 @@ async function main() {
   writeFileSync(PROGRESS_FILE, JSON.stringify(progress, null, 2));
 
   const total = await prisma.carModelSpec.count();
-  const published = await prisma.carModelSpec.count({ where: { published: true } });
   log(`\n=== Done ===`);
-  log(`Processed: ${totalCreated} new/updated`);
-  log(`Total specs in DB: ${total}`);
-  log(`Published: ${published}`);
-  log(`\nNext steps:`);
-  log(`1. Review unpublished specs at /admin/model-specs`);
-  log(`2. Publish individual specs from the admin panel`);
-  log(`3. Visit /models to see the encyclopedia`);
+  log(`Seeded: ${totalCreated}`);
+  log(`Total in DB: ${total}`);
+  log(`\nReview at /admin/model-specs then publish`);
 }
 
-main()
-  .catch((e) => {
-    console.error("FATAL:", e);
-    process.exit(1);
-  })
+main().catch((e) => { console.error("FATAL:", e); process.exit(1); })
   .finally(() => prisma.$disconnect());
