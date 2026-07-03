@@ -1,7 +1,7 @@
 // src/app/api/admin/model-specs/route.js
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function GET(request) {
   await requireAdmin();
@@ -55,10 +55,13 @@ export async function POST(request) {
         : (body.standardFeatures || "").split(",").map((s) => s.trim()).filter(Boolean),
       source: body.source || "admin",
       verified: body.verified === true || body.verified === "true",
+      published: body.published === true || body.published === "true",
+      imageUrl: body.imageUrl || null,
     },
   });
 
   revalidatePath("/admin/model-specs");
+  revalidateTag("model-specs");
   return Response.json({ ok: true, spec });
 }
 
@@ -77,7 +80,7 @@ export async function PUT(request) {
     "engineCC", "cylinders", "horsepower", "torque", "fuelType", "transmission",
     "drivetrain", "steering", "seats", "doors", "airbags", "groundClearanceMm",
     "turbo", "sunroof", "curbWeightKg", "fuelTankLiters",
-    "source", "verified",
+    "source", "verified", "imageUrl",
   ];
 
   for (const field of fields) {
@@ -86,7 +89,7 @@ export async function PUT(request) {
         "airbags", "groundClearanceMm", "curbWeightKg", "fuelTankLiters", "yearStart", "yearEnd"
       ].includes(field)) {
         updateData[field] = data[field] ? Number(data[field]) : null;
-      } else if (["turbo", "sunroof", "verified"].includes(field)) {
+      } else if (["turbo", "sunroof", "verified", "published"].includes(field)) {
         updateData[field] = data[field] === true || data[field] === "true";
       } else {
         updateData[field] = data[field] || null;
@@ -106,6 +109,7 @@ export async function PUT(request) {
   });
 
   revalidatePath("/admin/model-specs");
+  revalidateTag("model-specs");
   return Response.json({ ok: true, spec });
 }
 

@@ -101,7 +101,8 @@ export default function Navbar({ user }) {
  const links = [
  { href: "/", label: "Home" },
   { href: "/cars", label: "Cars" },
- { href: "/compare", label: "Compare" },
+  { href: "/models", label: "Models" },
+  { href: "/compare", label: "Compare" },
   { href: "/duty", label: "Duty" },
  ];
 

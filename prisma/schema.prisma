@@ -258,6 +258,8 @@ model CarModelSpec {
   yearEnd         Int?
   bodyType        BodyType?
   vehicleType     VehicleType?
+  published       Boolean            @default(false)
+  imageUrl        String?
   engineCC        Int?
   cylinders       Int?
   horsepower      Int?

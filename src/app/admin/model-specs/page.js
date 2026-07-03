@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { Database, Plus, Search, Pencil, Trash2, X, Check, Loader2 } from "lucide-react";
+import { Database, Plus, Search, Pencil, Trash2, X, Check, Loader2, Globe, GlobeOff } from "lucide-react";
 import {
   BODY_TYPE_LABELS, FUEL_LABELS, TRANSMISSION_LABELS, DRIVETRAIN_LABELS,
   STEERING_LABELS, VEHICLE_TYPE_LABELS,
@@ -12,7 +12,7 @@ const EMPTY_FORM = {
   torque: "", fuelType: "", transmission: "", drivetrain: "", steering: "RHD",
   seats: "", doors: "", airbags: "", groundClearanceMm: "",
   turbo: false, sunroof: false,
-  curbWeightKg: "", fuelTankLiters: "", standardFeatures: "", source: "admin", verified: false,
+  curbWeightKg: "", fuelTankLiters: "", standardFeatures: "", source: "admin", verified: false, published: false, imageUrl: "",
 };
 
 export default function ModelSpecsAdmin() {
@@ -70,6 +70,8 @@ export default function ModelSpecsAdmin() {
       standardFeatures: (spec.standardFeatures || []).join(", "),
       source: spec.source || "admin",
       verified: spec.verified || false,
+      published: spec.published || false,
+      imageUrl: spec.imageUrl || "",
     });
   };
 
@@ -83,9 +85,7 @@ export default function ModelSpecsAdmin() {
     setMessage(null);
     try {
       const payload = { ...form };
-      const url = editingId
-        ? `/api/admin/model-specs`
-        : `/api/admin/model-specs`;
+      const url = `/api/admin/model-specs`;
       const method = editingId ? "PUT" : "POST";
       if (editingId) payload.id = editingId;
 
@@ -106,6 +106,24 @@ export default function ModelSpecsAdmin() {
       setMessage({ type: "error", text: e.message });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const togglePublished = async (spec) => {
+    const payload = { id: spec.id, published: !spec.published };
+    try {
+      const res = await fetch(`/api/admin/model-specs`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setMessage({ type: "success", text: spec.published ? "Unpublished." : "Published." });
+        load();
+      }
+    } catch (e) {
+      setMessage({ type: "error", text: e.message });
     }
   };
 
@@ -207,6 +225,7 @@ export default function ModelSpecsAdmin() {
             <InputField field="groundClearanceMm" label="Clearance mm" type="number" />
             <InputField field="curbWeightKg" label="Curb weight kg" type="number" />
             <InputField field="fuelTankLiters" label="Tank liters" type="number" />
+            <InputField field="imageUrl" label="Image URL" placeholder="https://upload.wikimedia.org/..." />
           </div>
 
           <div className="flex items-center gap-6 mb-6">
@@ -224,6 +243,11 @@ export default function ModelSpecsAdmin() {
               <input type="checkbox" checked={form.verified} onChange={(e) => update("verified", e.target.checked)}
                 className="w-4 h-4 accent-emerald-600" />
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">Verified</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" checked={form.published} onChange={(e) => update("published", e.target.checked)}
+                className="w-4 h-4 accent-emerald-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">Published</span>
             </label>
           </div>
 
@@ -272,7 +296,8 @@ export default function ModelSpecsAdmin() {
                 <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">HP</th>
                 <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Body</th>
                 <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Fuel</th>
-                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Verified</th>
+                <th className="text-center py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Published</th>
+                <th className="text-center py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Verified</th>
                 <th className="text-right py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Actions</th>
               </tr>
             </thead>
@@ -287,7 +312,19 @@ export default function ModelSpecsAdmin() {
                   <td className="py-3 px-3 text-xs text-slate-600">{spec.horsepower || "—"}</td>
                   <td className="py-3 px-3 text-xs text-slate-500">{spec.bodyType || "—"}</td>
                   <td className="py-3 px-3 text-xs text-slate-500">{spec.fuelType || "—"}</td>
-                  <td className="py-3 px-3">
+                  <td className="py-3 px-3 text-center">
+                    <button onClick={() => togglePublished(spec)}
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold transition-all ${
+                        spec.published
+                          ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400"
+                          : "bg-slate-100 text-slate-400 hover:bg-slate-200 dark:bg-zinc-800 dark:text-zinc-500"
+                      }`}
+                    >
+                      {spec.published ? <Globe size={12} /> : <GlobeOff size={12} />}
+                      {spec.published ? "Live" : "Draft"}
+                    </button>
+                  </td>
+                  <td className="py-3 px-3 text-center">
                     {spec.verified
                       ? <span className="text-emerald-600 font-bold text-xs">Yes</span>
                       : <span className="text-slate-400 text-xs">No</span>}
