@@ -1,0 +1,31 @@
+[2026-07-03T10:30:48.602Z] 
+--- Processing make: Toyota ---
+[2026-07-03T10:30:48.602Z] Targeting 26 makes
+[2026-07-03T10:30:48.597Z] === NHTSA + Wikimedia Model Specs Seeder ===
+[2026-07-03T10:30:50.214Z]   NHTSA: 58 models found
+[2026-07-03T10:30:50.695Z]   Years error Toyota Scion xA: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Scion%20xA?format=json
+[2026-07-03T10:30:52.538Z]   Years error Toyota Scion tC: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Scion%20tC?format=json
+[2026-07-03T10:30:52.966Z]   Years error Toyota Corolla: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Corolla?format=json
+[2026-07-03T10:30:53.591Z]   Years error Toyota Prius: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Prius?format=json
+[2026-07-03T10:30:53.999Z]   Years error Toyota Scion xB: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Scion%20xB?format=json
+[2026-07-03T10:30:54.603Z]   Years error Toyota Land Cruiser: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Land%20Cruiser?format=json
+[2026-07-03T10:30:55.062Z]   Years error Toyota Highlander: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Highlander?format=json
+[2026-07-03T10:30:55.714Z]   Years error Toyota 4Runner: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/4Runner?format=json
+[2026-07-03T10:30:56.163Z]   Years error Toyota RAV4: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/RAV4?format=json
+[2026-07-03T10:30:56.845Z]   Years error Toyota Tacoma: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Tacoma?format=json
+[2026-07-03T10:30:57.359Z]   Years error Toyota Scion FR-S: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Scion%20FR-S?format=json
+[2026-07-03T10:30:57.877Z]   Years error Toyota FJ Cruiser: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/FJ%20Cruiser?format=json
+[2026-07-03T10:30:58.482Z]   Years error Toyota Yaris: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Yaris?format=json
+[2026-07-03T10:30:59.115Z]   Years error Toyota Avalon: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Avalon?format=json
+[2026-07-03T10:30:59.914Z]   Years error Toyota Corolla Matrix: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Corolla%20Matrix?format=json
+[2026-07-03T10:31:00.427Z]   Years error Toyota Tundra: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Tundra?format=json
+[2026-07-03T10:31:00.848Z]   Years error Toyota Sienna: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Sienna?format=json
+[2026-07-03T10:31:01.344Z]   Years error Toyota Camry: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Camry?format=json
+[2026-07-03T10:31:01.861Z]   Years error Toyota Camry Solara: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Camry%20Solara?format=json
+[2026-07-03T10:31:02.373Z]   Years error Toyota Sequoia: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Sequoia?format=json
+[2026-07-03T10:31:03.090Z]   Years error Toyota Scion xD: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Scion%20xD?format=json
+[2026-07-03T10:31:03.601Z]   Years error Toyota Venza: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Venza?format=json
+[2026-07-03T10:31:04.093Z]   Years error Toyota FCHV-adv: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/FCHV-adv?format=json
+[2026-07-03T10:31:04.593Z]   Years error Toyota Tercel: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Tercel?format=json
+[2026-07-03T10:31:05.028Z]   Years error Toyota Celica: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Celica?format=json
+[2026-07-03T10:31:05.546Z]   Years error Toyota Supra: HTTP 404 from https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMakeYear/make/Toyota/model/Supra?format=json
