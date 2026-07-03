@@ -2,8 +2,8 @@
 export const FREIGHT_PROXY_KES = 2750 * 135;
 
 export const DEFAULT_DUTY_RATES = {
-  /** EAC CET — 35% for many motor vehicles; some classes still at 25%. */
-  importDutyRate: 0.35,
+  /** EAC CET — 25% for most passenger vehicles (HS 8703). */
+  importDutyRate: 0.25,
   /** Import Declaration Fee — 3.5% of customs value (KRA standard). */
   idfRate: 0.035,
   vatRate: 0.16,

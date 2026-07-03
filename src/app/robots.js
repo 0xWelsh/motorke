@@ -10,7 +10,6 @@ export default function robots() {
         allow: ["/", "/cars", "/dealers", "/compare", "/contact", "/faq", "/duty", "/mission", "/terms", "/privacy"],
         disallow: [
           "/admin",
-          "/portal",
           "/login",
           "/signup",
           "/verify",

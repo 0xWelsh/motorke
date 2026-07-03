@@ -34,12 +34,7 @@ export default function SiteTopBar() {
             <Link href="/contact" className="hover:text-emerald-100 transition-colors whitespace-nowrap">
               Contact
             </Link>
-            <Link
-              href="/portal"
-              className="rounded-full bg-white/12 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider hover:bg-white/20 transition-colors whitespace-nowrap"
-            >
-              Dealer portal
-            </Link>
+
           </div>
         </div>
       </div>

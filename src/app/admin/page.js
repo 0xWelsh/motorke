@@ -4,16 +4,10 @@ import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
 import Link from "next/link";
 import AdminTrendsChart from "@/components/admin/AdminTrendsChart";
-import AdminOverviewPieChart from "@/components/admin/AdminOverviewPieChart";
-import RunWatchAlertsButton from "@/components/admin/RunWatchAlertsButton";
-import { getGoSearchShadowMetrics } from "@/lib/go-search";
-import { 
-  Car, Building2, MessageSquare, Users, ChevronRight,
-  Plus, Activity, Bolt, AlertCircle, ShieldAlert, BadgeCheck, ServerCog,
-  FileDown,
-} from "lucide-react";
 import AdminActionFeed from "@/components/admin/AdminActionFeed";
-import AdminSparkline from "@/components/admin/AdminSparkline";
+import RunWatchAlertsButton from "@/components/admin/RunWatchAlertsButton";
+import RecacheHomepageButton from "@/components/admin/RecacheHomepageButton";
+import { Car, Users, Bolt, Plus } from "lucide-react";
 
 export const metadata = { title: "Admin Dashboard | Welsh Motorhub" };
 
@@ -21,293 +15,346 @@ export default async function AdminDashboard({ searchParams }) {
   await requireAdmin();
 
   const resolvedParams = await searchParams;
-  const range = resolvedParams?.range || "30"; // "7", "30", "all"
+  const range = resolvedParams?.range || "30";
   const now = new Date();
-  
-  let startDate = new Date(0); // All time
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  let startDate = new Date(0);
   let rangeLabel = "All Time";
   if (range === "7") {
     startDate = new Date(now - 7 * 24 * 60 * 60 * 1000);
-    rangeLabel = "Last 7 Days";
+    rangeLabel = "7d";
   } else if (range === "30") {
     startDate = new Date(now - 30 * 24 * 60 * 60 * 1000);
-    rangeLabel = "Last 30 Days";
+    rangeLabel = "30d";
   }
 
   const [
-    totalCars, totalDealers, totalLeads, totalUsers,
-    carsInRange, leadsInRange, 
-    inventoryValueAgg, pendingDealers, pendingDealersCount, carsToday, leadsToday,
-    premiumSubs, freeSubs,
-    rawCarsForChart, rawLeadsForChart,
-    listingsThisWeek, listingsPrevWeek, leadsThisWeek, leadsPrevWeek, activeListings, staleListings, respondedThisWeek,
-    trackingEvents7d, trackingEvents30d, trackingTopEvents
+    totalCars, totalLeads, totalUsers,
+    carsInRange, leadsInRange,
+    inventoryValueAgg,
+    carsToday, leadsToday, viewsToday,
+    rawCarsForChart, rawLeadsForChart, rawViewsForChart,
+    listingsThisWeek, listingsPrevWeek, leadsThisWeek, leadsPrevWeek,
+    staleListings,
+    recentCars, recentLeads,
   ] = await Promise.all([
     db.car.count({ where: { available: true } }),
-    db.dealer.count(),
     db.lead.count(),
-    db.user.count({ where: { role: "BUYER" } }),
+    db.user.count(),
     db.car.count({ where: { createdAt: { gte: startDate } } }),
     db.lead.count({ where: { createdAt: { gte: startDate } } }),
     db.car.aggregate({ _sum: { price: true }, where: { available: true } }),
-    db.dealer.findMany({ where: { verified: false }, take: 6, orderBy: { createdAt: "desc" }, select: { id: true, name: true, createdAt: true } }),
-    db.dealer.count({ where: { verified: false } }),
-    db.car.count({ where: { createdAt: { gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) } } }),
-    db.lead.count({ where: { createdAt: { gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) } } }),
-    db.subscription.count({ where: { plan: "PRO", status: "ACTIVE" } }),
-    db.subscription.count({ where: { plan: "FREE", status: "ACTIVE" } }),
-    db.car.findMany({ where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } }, select: { createdAt: true } }),
-    db.lead.findMany({ where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } }, select: { createdAt: true } }),
+    db.car.count({ where: { createdAt: { gte: todayStart } } }),
+    db.lead.count({ where: { createdAt: { gte: todayStart } } }),
+    db.marketingEvent.count({ where: { createdAt: { gte: todayStart } } }),
+    db.car.findMany({
+      where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } },
+      select: { createdAt: true },
+    }),
+    db.lead.findMany({
+      where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } },
+      select: { createdAt: true },
+    }),
+    db.marketingEvent.findMany({
+      where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } },
+      select: { createdAt: true },
+    }),
     db.car.count({ where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) } } }),
-    db.car.count({ where: { createdAt: { gte: new Date(now - 14 * 24 * 60 * 60 * 1000), lt: new Date(now - 7 * 24 * 60 * 60 * 1000) } } }),
+    db.car.count({
+      where: {
+        createdAt: {
+          gte: new Date(now - 14 * 24 * 60 * 60 * 1000),
+          lt: new Date(now - 7 * 24 * 60 * 60 * 1000),
+        },
+      },
+    }),
     db.lead.count({ where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) } } }),
-    db.lead.count({ where: { createdAt: { gte: new Date(now - 14 * 24 * 60 * 60 * 1000), lt: new Date(now - 7 * 24 * 60 * 60 * 1000) } } }),
-    db.car.count({ where: { available: true } }),
-    db.car.count({ where: { available: true, updatedAt: { lt: new Date(now - 30 * 24 * 60 * 60 * 1000) } } }),
-    db.lead.count({ where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) }, status: { not: "NEW" } } }),
-    db.marketingEvent.count({ where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) } } }),
-    db.marketingEvent.count({ where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } } }),
-    db.marketingEvent.groupBy({
-      by: ["name"],
-      where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) } },
-      _count: { _all: true },
-      orderBy: { _count: { id: "desc" } },
-      take: 3,
+    db.lead.count({
+      where: {
+        createdAt: {
+          gte: new Date(now - 14 * 24 * 60 * 60 * 1000),
+          lt: new Date(now - 7 * 24 * 60 * 60 * 1000),
+        },
+      },
+    }),
+    db.car.count({
+      where: {
+        available: true,
+        updatedAt: { lt: new Date(now - 30 * 24 * 60 * 60 * 1000) },
+      },
+    }),
+    db.car.findMany({
+      take: 6,
+      orderBy: { createdAt: "desc" },
+      select: { id: true, make: true, model: true, createdAt: true },
+    }),
+    db.lead.findMany({
+      take: 4,
+      orderBy: { createdAt: "desc" },
+      select: { id: true, name: true, createdAt: true },
     }),
   ]);
 
   const ago = (ts) => {
     if (!ts) return "never";
-    const deltaMs = now.getTime() - ts;
-    if (deltaMs < 60_000) return "just now";
-    const mins = Math.floor(deltaMs / 60_000);
-    if (mins < 60) return `${mins}m ago`;
-    const hours = Math.floor(mins / 60);
-    if (hours < 24) return `${hours}h ago`;
-    return `${Math.floor(hours / 24)}d ago`;
+    const d = now.getTime() - ts;
+    if (d < 60_000) return "now";
+    const m = Math.floor(d / 60_000);
+    if (m < 60) return `${m}m`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h`;
+    return `${Math.floor(h / 24)}d`;
   };
 
-  const formatCompact = (num) => {
-    if (!num) return "0";
-    if (num >= 1e9) return `KSh ${(num / 1e9).toFixed(1)}B`;
-    if (num >= 1e6) return `KSh ${(num / 1e6).toFixed(1)}M`;
-    return formatPrice(num);
+  const fmt = (n) => {
+    if (!n) return "0";
+    if (n >= 1e9) return `${(n / 1e9).toFixed(1)}B`;
+    if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
+    if (n >= 1e3) return `${(n / 1e3).toFixed(1)}K`;
+    return formatPrice(n);
   };
+
   const totalValue = inventoryValueAgg?._sum?.price || 0;
 
-  // Chart & Sparkline Aggregation
+  // Chart
   const chartMap = {};
   for (let i = 0; i < 30; i++) {
     const d = new Date(now.getTime() - (29 - i) * 24 * 60 * 60 * 1000);
-    const dateStr = d.toLocaleDateString('en-US', { day: "numeric", month: "short" });
-    chartMap[dateStr] = { date: dateStr, cars: 0, leads: 0 };
+    const k = d.toLocaleDateString("en-US", { day: "numeric", month: "short" });
+    chartMap[k] = { date: k, cars: 0, leads: 0, views: 0 };
   }
-  rawCarsForChart.forEach(c => {
-    const key = c.createdAt.toLocaleDateString('en-US', { day: "numeric", month: "short" });
-    if (chartMap[key]) chartMap[key].cars += 1;
+  rawCarsForChart.forEach((c) => {
+    const k = c.createdAt.toLocaleDateString("en-US", { day: "numeric", month: "short" });
+    if (chartMap[k]) chartMap[k].cars += 1;
   });
-  rawLeadsForChart.forEach(l => {
-    const key = l.createdAt.toLocaleDateString('en-US', { day: "numeric", month: "short" });
-    if (chartMap[key]) chartMap[key].leads += 1;
+  rawLeadsForChart.forEach((l) => {
+    const k = l.createdAt.toLocaleDateString("en-US", { day: "numeric", month: "short" });
+    if (chartMap[k]) chartMap[k].leads += 1;
+  });
+  rawViewsForChart.forEach((v) => {
+    const k = v.createdAt.toLocaleDateString("en-US", { day: "numeric", month: "short" });
+    if (chartMap[k]) chartMap[k].views += 1;
   });
   const chartData = Object.values(chartMap);
-  const carsTrend = chartData.map(d => d.cars);
-  const leadsTrend = chartData.map(d => d.leads);
 
-  // Actions for the Action Center
   const actions = [
-    ...pendingDealers.map(d => ({
-      id: `dealer-${d.id}`,
-      type: 'approval',
-      title: 'New Dealer Approval',
-      subtitle: `${d.name} has registered and is waiting for account verification.`,
-      href: `/admin/dealers/${d.id}`,
-      timeAgo: ago(d.createdAt),
-      priority: 'high'
-    })),
-    ...(staleListings > 0 ? [{
-      id: 'stale-listings',
-      type: 'stale',
-      title: 'Stale Inventory Audit',
-      subtitle: `${staleListings} listings have not been updated in over 30 days.`,
-      href: '/admin/cars?filter=stale',
-      timeAgo: 'Weekly',
-      priority: 'medium'
-    }] : []),
-    ...(leadsInRange > 100 ? [{
-      id: 'lead-growth',
-      type: 'lead',
-      title: 'High Performance Alert',
-      subtitle: `The platform generated ${leadsInRange} leads in ${rangeLabel.toLowerCase()}.`,
-      href: '/admin/leads',
-      timeAgo: 'Performance',
-      priority: 'low'
-    }] : []),
+    ...(staleListings > 0
+      ? [{
+          id: "stale",
+          type: "stale",
+          title: "Stale Inventory",
+          subtitle: `${staleListings} listings untouched for 30+ days.`,
+          href: "/admin/cars",
+          timeAgo: "weekly",
+          priority: "medium",
+        }]
+      : []),
+    ...(leadsInRange > 100
+      ? [{
+          id: "leads",
+          type: "lead",
+          title: "High Lead Volume",
+          subtitle: `${leadsInRange} leads in ${rangeLabel}.`,
+          href: "/admin/leads",
+          timeAgo: rangeLabel,
+          priority: "low",
+        }]
+      : []),
   ];
 
-  const goSearchShadow = getGoSearchShadowMetrics();
-  const mrr = premiumSubs * 45000;
+  const activity = [
+    ...recentCars.map((c) => ({
+      id: `c-${c.id}`, type: "car", label: `${c.make} ${c.model}`,
+      href: `/admin/cars/${c.id}/edit`, time: c.createdAt,
+    })),
+    ...recentLeads.map((l) => ({
+      id: `l-${l.id}`, type: "lead", label: l.name || "Buyer",
+      href: "/admin/leads", time: l.createdAt,
+    })),
+  ].sort((a, b) => b.time - a.time).slice(0, 8);
+
+  const cG = listingsPrevWeek > 0
+    ? Math.round(((listingsThisWeek - listingsPrevWeek) / listingsPrevWeek) * 100)
+    : listingsThisWeek > 0 ? 100 : 0;
+
+  const lG = leadsPrevWeek > 0
+    ? Math.round(((leadsThisWeek - leadsPrevWeek) / leadsPrevWeek) * 100)
+    : leadsThisWeek > 0 ? 100 : 0;
+
+  const stat = (label, value, opts = {}) => (
+    <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3">
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">{label}</p>
+      <div className="mt-1 flex items-baseline gap-2">
+        <span className="text-xl font-bold text-white tabular-nums">{typeof value === "number" ? value.toLocaleString() : value}</span>
+        {opts.trend != null && (
+          <span className={`text-xs font-bold tabular-nums ${opts.trend >= 0 ? "text-emerald-500" : "text-rose-500"}`}>
+            {opts.trend >= 0 ? "+" : ""}{opts.trend}%
+          </span>
+        )}
+      </div>
+    </div>
+  );
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      
-      {/* ── HEADER & RANGE ── */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-             Control Center
-          </h2>
-          <p className="mt-1.5 text-sm font-medium text-slate-500 dark:text-zinc-400">
-            Real-time platform signals and operational tasks.
-          </p>
-        </div>
-        
-        <div className="flex items-center gap-2 rounded-xl bg-slate-100 p-1 dark:bg-zinc-900/50">
+    <div className="space-y-4">
+
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-lg font-bold text-white tracking-tight">Dashboard</h1>
+        <div className="flex items-center gap-1 rounded-lg bg-zinc-900/60 p-0.5">
           {[
-            { v: "7", label: "7D" },
-            { v: "30", label: "30D" },
-            { v: "all", label: "All Time" }
-          ].map(opt => (
-            <Link 
-              key={opt.v} href={`?range=${opt.v}`} 
-              className={`rounded-lg px-4 py-1.5 text-xs font-bold transition-all ${
-                range === opt.v
-                  ? "bg-white text-emerald-700 shadow-sm dark:bg-emerald-600 dark:text-white"
-                  : "text-slate-500 hover:text-slate-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+            { v: "7", l: "7d" },
+            { v: "30", l: "30d" },
+            { v: "all", l: "All" },
+          ].map((o) => (
+            <Link
+              key={o.v}
+              href={`?range=${o.v}`}
+              className={`rounded-md px-3 py-1 text-[11px] font-bold transition ${
+                range === o.v
+                  ? "bg-emerald-600 text-white"
+                  : "text-zinc-500 hover:text-zinc-200"
               }`}
             >
-              {opt.label}
+              {o.l}
             </Link>
           ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* ── MAIN CONTENT: ACTION CENTER & TRENDS ── */}
-        <div className="lg:col-span-2 space-y-8">
-          
-          {/* Action Center Feed */}
-          <section>
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-sm font-black uppercase tracking-[0.15em] text-slate-400 dark:text-zinc-500 flex items-center gap-2">
-                <ShieldAlert size={14} className="text-emerald-500" />
-                Action Queue
-              </h3>
-              <span className="text-[10px] font-bold text-slate-400">
-                {actions.length} {actions.length === 1 ? 'task' : 'tasks'} remaining
+      {/* Stats grid */}
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+        {stat("Live Listings", totalCars)}
+        {stat("Views Today", viewsToday)}
+        {stat("Total Leads", totalLeads)}
+        {stat("Leads Today", leadsToday, { trend: lG })}
+        {stat("Added Today", carsToday, { trend: cG })}
+        {stat("Stale", staleListings)}
+      </div>
+
+      {/* Two column */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+
+        {/* Left - 3/4 */}
+        <div className="lg:col-span-3 space-y-4">
+
+          {/* Chart */}
+          <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+                All Metrics &middot; 30d
               </span>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-2 shadow-sm dark:border-zinc-800 dark:bg-zinc-950/50">
-              <AdminActionFeed actions={actions} />
-            </div>
-          </section>
+            <AdminTrendsChart data={chartData} />
+          </div>
 
-          {/* Core Analytics Grid */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950/50">
-              <div className="relative z-10">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Listings</p>
-                <div className="mt-1 flex items-baseline gap-2">
-                  <h4 className="text-3xl font-black text-slate-900 dark:text-white">{totalCars.toLocaleString()}</h4>
-                  <span className="text-xs font-bold text-emerald-600">+{carsInRange}</span>
-                </div>
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 opacity-40 group-hover:opacity-100 transition-opacity">
-                <AdminSparkline data={carsTrend} width={400} height={60} color="#10b981" fill />
-              </div>
+          {/* Activity */}
+          <div className="rounded-xl border border-zinc-800 bg-zinc-900/60">
+            <div className="px-4 py-3 border-b border-zinc-800">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+                Recent Activity
+              </span>
             </div>
-
-            <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950/50">
-              <div className="relative z-10">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Buyer Leads</p>
-                <div className="mt-1 flex items-baseline gap-2">
-                  <h4 className="text-3xl font-black text-slate-900 dark:text-white">{totalLeads.toLocaleString()}</h4>
-                  <span className="text-xs font-bold text-blue-600">+{leadsInRange}</span>
-                </div>
+            {activity.length > 0 ? (
+              <div className="divide-y divide-zinc-800">
+                {activity.map((e) => (
+                  <Link
+                    key={e.id}
+                    href={e.href}
+                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-zinc-800/40 transition-colors"
+                  >
+                    <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${
+                      e.type === "car" ? "bg-blue-950/40 text-blue-400" : "bg-emerald-950/40 text-emerald-400"
+                    }`}>
+                      {e.type === "car" ? <Car size={12} /> : <Users size={12} />}
+                    </div>
+                    <span className="flex-1 text-sm font-medium text-white truncate">{e.label}</span>
+                    <span className="text-[11px] font-medium text-zinc-500 tabular-nums">{ago(e.time)}</span>
+                  </Link>
+                ))}
               </div>
-              <div className="absolute bottom-0 left-0 right-0 opacity-40 group-hover:opacity-100 transition-opacity">
-                <AdminSparkline data={leadsTrend} width={400} height={60} color="#3b82f6" fill />
-              </div>
-            </div>
-          </section>
-
-          {/* Secondary Trends Chart */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950/50">
-            <AdminTrendsChart data={chartData} rangeLabel={rangeLabel} />
-          </section>
+            ) : (
+              <p className="text-sm text-zinc-500 text-center py-8">No recent activity</p>
+            )}
+          </div>
         </div>
 
-        {/* ── SIDEBAR: PERFORMANCE & QUICK LINKS ── */}
-        <div className="space-y-8">
-          
-          {/* Revenue & Growth Snapshot */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950/50">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">Market Health</h3>
-            <div className="space-y-6">
-              <div>
-                <p className="text-xs font-bold text-slate-500 dark:text-zinc-400">Estimated MRR</p>
-                <p className="text-2xl font-black text-slate-900 dark:text-white mt-1">{formatCompact(mrr)}</p>
-                <div className="mt-2 flex items-center gap-1">
-                  <div className="h-1 flex-1 rounded-full bg-emerald-500" style={{ width: `${(premiumSubs / (premiumSubs + freeSubs || 1)) * 100}%` }} />
-                  <div className="h-1 flex-[3] rounded-full bg-slate-100 dark:bg-zinc-800" />
-                </div>
-                <p className="mt-2 text-[10px] font-bold text-slate-400">
-                  {premiumSubs} Premium · {freeSubs} Free
-                </p>
-              </div>
+        {/* Right - 1/4 */}
+        <div className="space-y-4">
 
-              <div className="pt-6 border-t border-slate-100 dark:border-zinc-900">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-bold text-slate-500 dark:text-zinc-400">Inventory Value</p>
-                  <Bolt size={14} className="text-amber-500" />
-                </div>
-                <p className="text-xl font-black text-slate-900 dark:text-white mt-1">{formatCompact(totalValue)}</p>
-              </div>
-
-              <div className="pt-6 border-t border-slate-100 dark:border-zinc-900">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-bold text-slate-500 dark:text-zinc-400">Search Accuracy</p>
-                  <ServerCog size={14} className={goSearchShadow.flags.shadowEnabled ? "text-emerald-500" : "text-slate-300"} />
-                </div>
-                <p className="text-xl font-black text-slate-900 dark:text-white mt-1">
-                  {(100 - goSearchShadow.rates.mismatchRate).toFixed(1)}%
-                </p>
-              </div>
+          {/* Attention Queue */}
+          <div className="rounded-xl border border-zinc-800 bg-zinc-900/60">
+            <div className="px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+                Queue
+              </span>
+              <span className="text-[10px] font-bold text-zinc-500">{actions.length}</span>
             </div>
-          </section>
+            <AdminActionFeed actions={actions} />
+          </div>
 
-          {/* Quick Management Links */}
-          <section className="space-y-3">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Management</h3>
-            <div className="grid grid-cols-1 gap-2">
+          {/* Stats */}
+          <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 space-y-4">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Inventory Value</p>
+              <p className="text-lg font-bold text-white mt-0.5 tabular-nums">{fmt(totalValue)}</p>
+            </div>
+            <div className="pt-3 border-t border-zinc-800 space-y-2">
               {[
-                { label: "Marketplace Reports", href: "/api/admin/reports/network-weekly-pdf", Icon: FileDown },
-                { label: "Technical SEO Audit", href: "/admin/seo", Icon: Activity },
-                { label: "User Management", href: "/admin/users", Icon: Users },
-                { label: "System Maintenance", href: "/admin/settings", Icon: Bolt },
-              ].map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/50 p-4 transition-all hover:border-emerald-500/30 hover:bg-white dark:border-zinc-900 dark:bg-zinc-900/50 dark:hover:bg-zinc-900"
-                >
-                  <div className="flex items-center gap-3">
-                    <link.Icon size={18} className="text-slate-400 group-hover:text-emerald-500" />
-                    <span className="text-sm font-bold text-slate-700 dark:text-zinc-200">{link.label}</span>
-                  </div>
-                  <ChevronRight size={14} className="text-slate-300" />
-                </Link>
+                { l: "Live Listings", v: totalCars },
+                { l: "Users", v: totalUsers },
+                { l: "Leads", v: totalLeads },
+              ].map((s) => (
+                <div key={s.l} className="flex items-center justify-between">
+                  <span className="text-xs text-zinc-500">{s.l}</span>
+                  <span className="text-xs font-bold text-white tabular-nums">{s.v.toLocaleString()}</span>
+                </div>
               ))}
             </div>
-          </section>
+          </div>
 
-          {/* Admin Tools */}
-          <div className="flex flex-wrap gap-2">
+          {/* Actions */}
+          <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 space-y-2">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Quick</span>
+            <div className="grid grid-cols-2 gap-1.5">
+              <Link
+                href="/admin/cars/new"
+                className="flex items-center justify-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-[11px] font-bold text-zinc-300 hover:border-emerald-500/40 hover:text-emerald-400 transition-colors"
+              >
+                <Plus size={14} /> Car
+              </Link>
+              <Link
+                href="/admin/users"
+                className="flex items-center justify-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-[11px] font-bold text-zinc-300 hover:border-emerald-500/40 hover:text-emerald-400 transition-colors"
+              >
+                <Users size={14} /> Users
+              </Link>
+            </div>
             <RunWatchAlertsButton />
+            <RecacheHomepageButton />
           </div>
         </div>
       </div>
+
+      {/* Management links */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+        {[
+          { l: "Reports", h: "/api/admin/reports/network-weekly-pdf" },
+          { l: "SEO Audit", h: "/admin/seo" },
+          { l: "Users", h: "/admin/users" },
+          { l: "Settings", h: "/admin/settings" },
+        ].map((link) => (
+          <Link
+            key={link.h}
+            href={link.h}
+            className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-2.5 text-xs font-medium text-zinc-400 hover:text-white hover:border-zinc-700 transition-colors"
+          >
+            {link.l}
+          </Link>
+        ))}
+      </div>
+
     </div>
   );
 }

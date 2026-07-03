@@ -2,10 +2,8 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
-import { sendLeadAlertEmail } from "@/lib/mail";
 import { NextResponse } from "next/server";
 import { canAcceptListingEnquiry } from "@/lib/car-sold-status";
-import { notifyDealerOfLead } from "@/lib/whatsapp";
 
 const RATE_LIMIT_MS = 15000;
 const RATE_LIMIT_MAX_WINDOW = 8000;
@@ -32,92 +30,36 @@ function buildCarTitle(car) {
 
 async function dispatchLeadNotifications({ lead, car, dealerId, buyerUserId }) {
   try {
-    const [dealerUsers, adminUsers] = await Promise.all([
-      db.user.findMany({
-        where: {
-          role: "DEALER",
-          dealerId,
-          active: true,
-        },
-        select: {
-          id: true,
-          email: true,
-          phone: true,
-        },
-      }),
-      db.user.findMany({
-        where: {
-          role: "ADMIN",
-          active: true,
-        },
-        select: {
-          id: true,
-        },
-      }),
-    ]);
+    const adminUsers = await db.user.findMany({
+      where: { role: "ADMIN", active: true },
+      select: { id: true },
+    });
 
     const carTitle = buildCarTitle(car);
     const buyerName = lead.name || "Buyer";
-    const notificationRows = [
-      ...dealerUsers.map((user) => ({
-        userId: user.id,
-        type: "LEAD_NEW",
-        title: `New enquiry for ${carTitle}`,
-        message: `${buyerName} sent an enquiry.`,
-        link: `/portal/leads?lead=${lead.id}`,
-      })),
-      ...adminUsers.map((user) => ({
-        userId: user.id,
-        type: "LEAD_NEW",
-        title: `New lead submitted (${carTitle})`,
-        message: `${buyerName} reached out to dealer ${car?.dealer?.name || "Unknown Dealer"}.`,
-        link: `/admin/leads?lead=${lead.id}`,
-      })),
-      ...(buyerUserId
-        ? [{
-            userId: buyerUserId,
-            type: "LEAD_SENT",
-            title: `Enquiry sent for ${carTitle}`,
-            message: `Your enquiry was delivered to ${car?.dealer?.name || "the dealer"}.`,
-            link: "/account?tab=enquiries",
-          }]
-        : []),
-    ];
+
+    // Notify team (admins)
+    const notificationRows = adminUsers.map((user) => ({
+      userId: user.id,
+      type: "LEAD_NEW",
+      title: `New lead submitted (${carTitle})`,
+      message: `${buyerName} reached out about ${car?.dealer?.name || "a listed vehicle"}.`,
+      link: `/admin/leads?lead=${lead.id}`,
+    }));
+
+    // Notify buyer if logged in
+    if (buyerUserId) {
+      notificationRows.push({
+        userId: buyerUserId,
+        type: "LEAD_SENT",
+        title: `Enquiry sent for ${carTitle}`,
+        message: `Thanks! Our team will contact you regarding the ${carTitle}.`,
+        link: "/account?tab=enquiries",
+      });
+    }
 
     if (notificationRows.length) {
       await db.notification.createMany({ data: notificationRows });
-    }
-
-    // Dispatch WhatsApp to Dealer Users
-    for (const dealerUser of dealerUsers) {
-      if (dealerUser.phone && isValidKenyanPhone(normalizeKenyanPhone(dealerUser.phone))) {
-        await notifyDealerOfLead(normalizeKenyanPhone(dealerUser.phone), {
-          buyerName,
-          carTitle,
-          leadId: lead.id
-        });
-      }
-    }
-
-    const dealerEmailRecipients = [
-      ...new Set([
-        ...(dealerUsers.map((user) => user.email).filter(Boolean)),
-        car?.dealer?.email,
-      ]),
-    ];
-
-    if (dealerEmailRecipients.length) {
-      await sendLeadAlertEmail({
-        to: dealerEmailRecipients,
-        dealerName: car?.dealer?.name,
-        carTitle,
-        buyerName: lead.name,
-        buyerPhone: lead.phone,
-        buyerEmail: lead.email,
-        buyerMessage: lead.message,
-        channel: lead.channel,
-        leadId: lead.id,
-      });
     }
   } catch (notificationError) {
     console.error("Lead notification dispatch error:", notificationError);

@@ -67,7 +67,24 @@ export default async function ShowroomLocationPage({ params }) {
         ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
         dealer: dealerWhere,
       },
-      include: {
+      select: {
+        id: true,
+        publicSlug: true,
+        make: true,
+        model: true,
+        variant: true,
+        year: true,
+        price: true,
+        mileage: true,
+        transmission: true,
+        fuelType: true,
+        engineCC: true,
+        vehicleType: true,
+        bodyType: true,
+        description: true,
+        available: true,
+        soldAt: true,
+        views: true,
         images: { where: { isPrimary: true }, take: 1 },
         dealer: { select: { name: true, slug: true, verified: true, location: true } },
       },
@@ -160,8 +177,8 @@ export default async function ShowroomLocationPage({ params }) {
           <section>
             <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#38A169] mb-4">Featured listings</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {cars.map((car) => (
-                <CarCard key={car.id} car={car} />
+              {cars.map((car, index) => (
+                <CarCard key={car.id} car={car} priority={index < 2} />
               ))}
             </div>
             <p className="mt-8">

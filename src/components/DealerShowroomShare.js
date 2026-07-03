@@ -22,25 +22,12 @@ export default function DealerShowroomShare({
 
   const url = (showroomUrl || "").trim();
   const meta = [stockCount ? `${stockCount} cars in stock` : null, location].filter(Boolean).join(", ");
-  const shareTitle = `${dealerName} | Welsh Motorhub showroom`;
+  const shareTitle = `${dealerName} | WELSH showroom`;
 
-  const shareLines = [
-    "WELSH MOTORHUB",
-    "Verified dealer showroom, Kenya",
-    "",
-    url,
-    "",
-    `▸ ${dealerName}`,
-    ...(meta ? [`▸ ${meta}`] : []),
-    "",
-    "Browse inventory & contact:",
-    url,
-  ];
+  const shortText = `${dealerName} — verified showroom${meta ? ` (${meta})` : ""} on WELSH.`;
 
-  // Facebook caption, Facebook will render the OG preview from the URL itself,
-  // so we keep this caption clean and post-style without re-pasting the link.
   const fbCaption = [
-    `${dealerName}, verified showroom on Welsh Motorhub.`,
+    `${dealerName}, verified showroom on WELSH.`,
     meta || null,
     "",
     "Tap to browse the live inventory and contact the dealer directly.",
@@ -103,8 +90,9 @@ export default function DealerShowroomShare({
         ? "Paste caption in FB"
         : "Facebook";
 
-  const waText = encodeURIComponent(shareLines.join("\n"));
+  const waText = encodeURIComponent(`${shortText}\n\n${url}`);
   const waUrl = `https://wa.me/?text=${waText}`;
+  const tgText = encodeURIComponent(`${shortText}\n${url}`);
 
   if (layout === "mobileBar") {
     return (
@@ -166,6 +154,16 @@ export default function DealerShowroomShare({
           style={{ borderRadius: "10px" }}
         >
           WhatsApp
+        </a>
+        <a
+          href={`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${tgText}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => emitShare("telegram")}
+          className="w-full inline-flex items-center justify-center bg-[#0088CC]/12 border border-[#0088CC]/25 text-[#0088CC] px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] hover:bg-[#0088CC]/18 transition-colors"
+          style={{ borderRadius: "10px" }}
+        >
+          Telegram
         </a>
         <button
           type="button"

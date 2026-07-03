@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, ImageOff } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
+import { getThumbnailUrl } from "@/lib/image-transform";
 import { formatCarPrice } from "@/lib/utils";
 import { buildCarSpecSummaryItems } from "@/lib/car-display";
 import { carListingPath } from "@/lib/car-listing-url";
@@ -38,7 +39,7 @@ export default function DealerInventoryFeaturedStrip({ car, freshnessLabel }) {
           {activeSrc ? (
             <SafeImage
               key={activeSrc}
-              src={activeSrc}
+              src={getThumbnailUrl(activeSrc)}
               alt={title}
               fill
               className="object-cover transition-opacity duration-500"
@@ -93,7 +94,7 @@ export default function DealerInventoryFeaturedStrip({ car, freshnessLabel }) {
             </p>
             <Link
               href={carListingPath(car)}
-              className="inline-flex shrink-0 items-center gap-0.5 bg-slate-900 px-2 py-1 text-[8px] font-black uppercase tracking-[0.1em] text-white dark:bg-white dark:text-black dark:hover:bg-slate-100 dark:hover:text-black"
+              className="inline-flex shrink-0 items-center gap-0.5 bg-slate-900 px-2 py-1 text-[8px] font-black uppercase tracking-[0.1em] text-white dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700"
               style={{ borderRadius: "4px" }}
             >
               View

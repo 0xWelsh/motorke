@@ -7,5 +7,5 @@ export default async function DashboardPage() {
   const session = await getSession();
   if (!session) redirect("/login");
   if (session.user.role === "ADMIN") redirect("/admin");
-  redirect("/portal");
+  redirect("/");
 }

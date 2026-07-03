@@ -10,7 +10,7 @@ export default function BuyerRequestAdminRowActions({ requestId, publicCode, sta
   const [error, setError] = useState("");
 
   if (status === "CLOSED") {
-    return <span className="text-[10px] font-bold uppercase text-slate-400">Removed</span>;
+    return <span className="text-[10px] font-bold uppercase text-zinc-600">Removed</span>;
   }
 
   async function removeRequest() {
@@ -44,12 +44,12 @@ export default function BuyerRequestAdminRowActions({ requestId, publicCode, sta
         type="button"
         onClick={removeRequest}
         disabled={loading}
-        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-black uppercase tracking-wide text-red-700 border border-red-200 bg-red-50 hover:bg-red-100 disabled:opacity-60 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60"
+        className="inline-flex items-center gap-1.5 rounded-md border border-rose-800/50 bg-rose-950/30 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide text-rose-300 hover:bg-rose-950/60 disabled:opacity-60 transition-colors"
       >
         {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
         Remove
       </button>
-      {error ? <p className="text-[10px] text-red-600 max-w-[120px] text-right">{error}</p> : null}
+      {error ? <p className="text-[10px] text-rose-500 max-w-[120px] text-right">{error}</p> : null}
     </div>
   );
 }

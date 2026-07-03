@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Phone, Mail, Globe, ShieldCheck, MessageCircle } from "lucide-react";
+import { ShieldCheck, MessageCircle, Phone } from "lucide-react";
 import { SiInstagram, SiFacebook, SiTiktok } from "react-icons/si";
 import { getSession } from "@/lib/auth";
 import DealerReviews from "@/components/DealerReviews";
@@ -13,8 +13,10 @@ import DealerShowroomShare from "@/components/DealerShowroomShare";
 import DealerProfileHeroPanel from "@/components/DealerProfileHeroPanel";
 import { calculateDistance } from "@/lib/geolocation";
 import { absoluteUrl, BRAND_OG_IMAGE } from "@/lib/site-url";
-import { telHrefFromMsisdn } from "@/lib/phone-hints";
 import { carListingPath } from "@/lib/car-listing-url";
+import { PUBLIC_SUPPORT_WHATSAPP, PUBLIC_SUPPORT_PHONE } from "@/lib/site-contact";
+import { whatsappLink } from "@/lib/utils";
+import { telHrefFromMsisdn } from "@/lib/phone-hints";
 import {
   buildDealerAutoDealerSchema,
   buildDealerBreadcrumbSchema,
@@ -56,7 +58,7 @@ export async function generateMetadata(props) {
 
   const meta = buildDealerMetadata(dealer, { stockCount: dealer._count?.cars ?? 0 });
 
-  const ogCand = dealer.bannerUrl || dealer.logoUrl;
+  const ogCand = dealer.logoUrl || dealer.bannerUrl;
   const ogImage = ogCand
     ? /^https?:\/\//i.test(ogCand)
       ? ogCand
@@ -67,7 +69,7 @@ export async function generateMetadata(props) {
     ...meta,
     openGraph: {
       ...meta.openGraph,
-      images: [{ url: ogImage, alt: `${dealer.name} showroom on Welsh Motorhub` }],
+      images: [{ url: ogImage, alt: `${dealer.name} showroom` }],
     },
     twitter: {
       ...meta.twitter,
@@ -166,76 +168,19 @@ export default async function DealerPage(props) {
   const isActiveToday = inventoryFreshnessDays != null && inventoryFreshnessDays <= 0;
   const lastActiveLabel =
     inventoryFreshnessDays == null ? "Activity unavailable" : isActiveToday ? "Active today" : `Active ${inventoryFreshnessLabel}`;
-  const responseTimeLabel = dealer.whatsapp
-    ? "Replies in ~10 mins"
-    : dealer.phone
-      ? "Replies in ~30 mins"
-      : "Replies via enquiry";
-  const dealerRatingTags = [];
-  if (totalReviews >= 8 && averageRating >= 4.5) {
-    dealerRatingTags.push("Fair Pricing", "Clean Logbooks", "Good After-sales");
-  } else if (totalReviews >= 3 && averageRating >= 4) {
-    dealerRatingTags.push("Fair Pricing", "Smooth Process");
-  } else if (totalReviews > 0) {
-    dealerRatingTags.push("Rated by Buyers");
-  }
+  const responseTimeLabel = dealer.responseTime || "Replies via enquiry";
 
-  const whatsappNumber = dealer.whatsapp?.replace(/\D/g, "") || "";
-  const whatsappPrefill = encodeURIComponent(
-    `Hi, I'm viewing your showroom on Welsh Motorhub and I'd like to ask about your available cars.`
-  );
-  const whatsappChatHref = whatsappNumber
-    ? `https://wa.me/${whatsappNumber}?text=${whatsappPrefill}`
+  const teamWhatsapp = PUBLIC_SUPPORT_WHATSAPP;
+  const teamWhatsappHref = teamWhatsapp
+    ? `https://wa.me/${teamWhatsapp.replace(/\D/g, "")}?text=${encodeURIComponent("Hi, I'm interested in a car I saw on WELSH.")}`
     : null;
-  const dealerTelHref = dealer.phone ? telHrefFromMsisdn(dealer.phone) : "";
-
-  // Contact links array
-  const contactLinks = [];
-  if (dealerTelHref) {
-    contactLinks.push({
-      icon: <Phone className="w-4 h-4" />,
-      label: "Call Us",
-      href: dealerTelHref,
-    });
-  }
-  if (dealer.whatsapp) {
-    contactLinks.push({
-      icon: <MessageCircle className="w-4 h-4" />,
-      label: "WhatsApp",
-      href: whatsappChatHref,
-      external: true,
-    });
-  }
-  if (dealer.website) {
-    contactLinks.push({
-      icon: <Globe className="w-4 h-4" />,
-      label: "Website",
-      href: withProtocol(dealer.website),
-      external: true,
-    });
-  }
-  if (dealer.email) {
-    contactLinks.push({
-      icon: <Mail className="w-4 h-4" />,
-      label: "Email",
-      href: `mailto:${dealer.email}`,
-    });
-  }
+  const teamTelHref = PUBLIC_SUPPORT_PHONE ? telHrefFromMsisdn(PUBLIC_SUPPORT_PHONE) : "";
 
   const socialLinks = [
     { key: "instagram", label: "Instagram", href: withProtocol(dealer.instagramUrl), icon: <SiInstagram className="w-3.5 h-3.5" style={{ color: "#E4405F" }} /> },
     { key: "facebook", label: "Facebook", href: withProtocol(dealer.facebookUrl), icon: <SiFacebook className="w-3.5 h-3.5" style={{ color: "#1877F2" }} /> },
     { key: "tiktok", label: "TikTok", href: withProtocol(dealer.tiktokUrl), icon: <SiTiktok className="w-3.5 h-3.5 text-slate-900 dark:text-white" /> },
   ].filter((item) => Boolean(item.href));
-  const socialProof = socialLinks.map((item) => ({
-    ...item,
-    metric:
-      item.key === "instagram"
-        ? "12.4k followers"
-        : item.key === "facebook"
-          ? "8.1k followers"
-          : "85k likes",
-  }));
 
   // Generate the gallery for the hero section
   const dealerGallery = dealer.cars
@@ -411,44 +356,35 @@ export default async function DealerPage(props) {
                   style={{ borderRadius: "14px" }}
                 >
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#22c55e]">Get in touch</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#22c55e]">Contact Welsh Motorhub</p>
                     <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
-                      Direct line
+                      Our team
                     </span>
                   </div>
-                  {dealer.whatsapp && (
-                    <a
-                      href={whatsappChatHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full mb-2 inline-flex items-center justify-center gap-1.5 bg-[#ef3340] hover:bg-[#d12a36] text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors"
-                      style={{ borderRadius: "10px" }}
-                    >
-                      <MessageCircle className="w-3.5 h-3.5" />
-                      Start Live Enquiry
-                    </a>
-                  )}
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 mb-3 leading-relaxed">
+                    Interested in a vehicle? Our team will help you through the process.
+                  </p>
                   <div className="grid grid-cols-2 gap-2">
-                    {dealerTelHref ? (
+                    {teamTelHref ? (
                       <a
-                        href={dealerTelHref}
+                        href={teamTelHref}
                         className="inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors"
                         style={{ borderRadius: "10px" }}
                       >
                         <Phone className="w-3.5 h-3.5" /> Call
                       </a>
                     ) : null}
-                    {dealer.website && (
+                    {teamWhatsappHref ? (
                       <a
-                        href={withProtocol(dealer.website)}
+                        href={teamWhatsappHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors"
+                        className="inline-flex items-center justify-center gap-1.5 bg-[#38A169] hover:bg-emerald-700 text-white px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors"
                         style={{ borderRadius: "10px" }}
                       >
-                        <Globe className="w-3.5 h-3.5" /> Web
+                        <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
                       </a>
-                    )}
+                    ) : null}
                   </div>
                   <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
                     <DealerShowroomShare
@@ -520,9 +456,6 @@ export default async function DealerPage(props) {
               <h4 className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-600 dark:text-slate-400 mb-3">Dealer info</h4>
               <div className="space-y-2.5 mb-4 text-[12px] font-semibold text-slate-700 dark:text-slate-300">
                 <div className="flex justify-between gap-3"><span className="text-slate-500">Business type</span><span>Dealership</span></div>
-                <div className="flex justify-between gap-3"><span className="text-slate-500">Phone</span><span dir="ltr" className="text-right">{dealer.phone || "Not shared"}</span></div>
-                <div className="flex justify-between gap-3"><span className="text-slate-500">Email</span><span className="truncate">{dealer.email || "Not shared"}</span></div>
-                <div className="flex justify-between gap-3"><span className="text-slate-500">Website</span><span className="truncate">{dealer.website || "Not shared"}</span></div>
                 <div className="flex justify-between gap-3"><span className="text-slate-500">Verified</span><span>{dealer.verified ? "Yes" : "Pending"}</span></div>
               </div>
               <div className="border-t border-slate-200 dark:border-slate-700 pt-3 mb-4">
@@ -538,20 +471,19 @@ export default async function DealerPage(props) {
               <DealerLocationMap dealer={dealer} />
             </section>
 
-            <section className="bg-[#F8FAFC] dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 mb-3">Social & Media</h4>
-              {socialProof.length > 0 ? (
-                <div className="space-y-2">
-                  {socialProof.map((item) => (
-                    <a key={item.key} href={item.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-between w-full text-[12px] font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 px-3 py-2.5" style={{ borderRadius: "10px" }}>
-                      <span className="inline-flex items-center gap-2">{item.icon}{item.label}</span>
-                      <span className="text-[10px] uppercase tracking-[0.12em] text-slate-500">{item.metric}</span>
-                    </a>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-slate-500">No social profiles linked yet.</p>
-              )}
+              <section className="bg-[#F8FAFC] dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
+                <h4 className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 mb-3">Social & Media</h4>
+                {socialLinks.length > 0 ? (
+                  <div className="space-y-2">
+                    {socialLinks.map((item) => (
+                      <a key={item.key} href={item.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-start gap-2 w-full text-[12px] font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 px-3 py-2.5" style={{ borderRadius: "10px" }}>
+                        {item.icon}{item.label}
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-500">No social profiles linked yet.</p>
+                )}
               {recentShowcaseCars.length > 0 && (
                 <div className="mt-4">
                   <div className="flex items-center justify-between mb-2">
@@ -585,17 +517,17 @@ export default async function DealerPage(props) {
            />
          </div>
          <div className="flex items-center gap-3">
-           {dealerTelHref ? (
-             <a href={dealerTelHref} className="flex-1 bg-[#111827] dark:bg-white text-white dark:!text-black py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
-                Call
-             </a>
-           ) : null}
-           {dealer.whatsapp && (
-             <a href={whatsappChatHref} className="flex-1 bg-[#38A169] text-white py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
-                WhatsApp
-             </a>
-           )}
-         </div>
+            {teamTelHref ? (
+              <a href={teamTelHref} className="flex-1 bg-[#111827] dark:bg-white text-white dark:!text-black py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
+                 Call Welsh Motorhub
+              </a>
+            ) : null}
+            {teamWhatsappHref ? (
+              <a href={teamWhatsappHref} target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#38A169] text-white py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
+                 WhatsApp
+              </a>
+            ) : null}
+          </div>
          {socialLinks.length > 0 && (
            <div className="mt-3 grid grid-cols-3 gap-3">
              {socialLinks.map((item) => (

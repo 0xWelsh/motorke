@@ -5,7 +5,8 @@ import Image from "next/image";
 import { X, Search, Check, Minus } from "lucide-react";
 import { carListingPath } from "@/lib/car-listing-url";
 import { formatCarPrice } from "@/lib/utils";
-import { isAllNA, isDifferent, getBest, carPhotoUrl, importTone } from "./compare-utils";
+import { getThumbnailUrl } from "@/lib/image-transform";
+import { isAllNA, isDifferent, isMissing, getBest, carPhotoUrl, importTone } from "./compare-utils";
 import { SLOT_KEYS } from "./compare-config";
 
 export default function CompareSpecsMatrix({
@@ -26,13 +27,23 @@ export default function CompareSpecsMatrix({
   const mobileCar = comparedSlots[activeMobileSlot] || null;
   const mobileQuickSpecs = [
     { id: "price", label: "Price", rank: "min", pick: (c) => ({ value: formatCarPrice(c), raw: c?.price }) },
-    { id: "annualTco", label: "Annual TCO", rank: "min", pick: (c) => ({ value: getInsights(c)?.tco?.annualTotal ? formatCarPrice({ price: getInsights(c).tco.annualTotal }) : "N/A", raw: getInsights(c)?.tco?.annualTotal }) },
-    { id: "road", label: "Road", rank: "max", pick: (c) => ({ value: `${getInsights(c)?.roadSuitabilityScore ?? "N/A"}/100`, raw: getInsights(c)?.roadSuitabilityScore }) },
+    { id: "annualTco", label: "Annual TCO", rank: "min", pick: (c) => ({ value: getInsights(c)?.tco?.annualTotal ? formatCarPrice({ price: getInsights(c).tco.annualTotal }) : "Not specified", raw: getInsights(c)?.tco?.annualTotal }) },
+    { id: "road", label: "Road", rank: "max", pick: (c) => ({ value: `${getInsights(c)?.roadSuitabilityScore ?? "Not specified"}/100`, raw: getInsights(c)?.roadSuitabilityScore }) },
     { id: "import", label: "Imported", rank: "booltrue", pick: (c) => ({ value: c?.imported ? "Yes" : "No", raw: c?.imported }) },
   ];
 
   const mobileFilledSlots = [0, 1, 2].filter((idx) => comparedSlots[idx]);
   const mobileEmptySlots = [0, 1, 2].filter((idx) => !comparedSlots[idx]);
+
+  const visibleSpecs = specGroups.flatMap((g) =>
+    g.specs.filter((spec) => {
+      if (!shouldShowSpec(spec)) return false;
+      if (isAllNA(spec, fullComparedCars)) return false;
+      if (showDiffOnly && !isDifferent(spec, fullComparedCars) && fullComparedCars.length > 1) return false;
+      return true;
+    })
+  );
+  const totalVisible = visibleSpecs.length;
 
   return (
     <div
@@ -115,15 +126,16 @@ export default function CompareSpecsMatrix({
                               <div className="px-1.5 py-1.5 border-t border-r border-slate-200 dark:border-slate-700 text-[9px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 leading-snug">
                                 {spec.label}
                               </div>
-                              {SLOT_KEYS.map((_, idx) => {
+                        {SLOT_KEYS.map((_, idx) => {
                                 const c = comparedSlots[idx];
                                 if (!c) {
                                   return <div key={`${spec.id}-${idx}`} className="px-1.5 py-1.5 border-t border-r border-slate-200 dark:border-slate-700 last:border-r-0 text-[10px] text-slate-400 dark:text-slate-600">—</div>;
                                 }
                                 const { value, raw } = spec.pick(c);
                                 const isBest = best != null && raw === best;
+                                const missing = isMissing(raw);
                                 return (
-                                  <div key={`${spec.id}-${idx}`} className={`px-1.5 py-1.5 border-t border-r border-slate-200 dark:border-slate-700 last:border-r-0 text-[10px] font-bold tabular-nums leading-snug min-w-0 ${isBest ? "text-[#111827] dark:text-white" : "text-slate-600 dark:text-slate-300"}`}>
+                                  <div key={`${spec.id}-${idx}`} className={`px-1.5 py-1.5 border-t border-r border-slate-200 dark:border-slate-700 last:border-r-0 text-[10px] font-bold tabular-nums leading-snug min-w-0 ${missing ? "text-slate-300 dark:text-slate-600 italic" : isBest ? "text-[#111827] dark:text-white" : "text-slate-600 dark:text-slate-300"}`}>
                                     {value}
                                   </div>
                                 );
@@ -148,7 +160,7 @@ export default function CompareSpecsMatrix({
                         if (isAllNA(spec, fullComparedCars)) return null;
                         const diff = isDifferent(spec, fullComparedCars);
                         if (showDiffOnly && !diff && fullComparedCars.length > 1) return null;
-                        const { value } = spec.pick(mobileCar);
+                        const { value, raw } = spec.pick(mobileCar);
                         return (
                           <div
                             key={spec.id}
@@ -159,7 +171,7 @@ export default function CompareSpecsMatrix({
                             <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider min-w-0 max-w-[48%] leading-snug">
                               {spec.label}
                             </span>
-                            <span className="text-[11px] font-bold text-right text-slate-900 dark:text-slate-100 tabular-nums break-words max-w-[52%]">
+                            <span className={`text-[11px] font-bold text-right tabular-nums break-words max-w-[52%] ${isMissing(raw) ? "text-slate-300 dark:text-slate-700 italic" : "text-slate-900 dark:text-slate-100"}`}>
                               {value}
                             </span>
                           </div>
@@ -194,7 +206,7 @@ export default function CompareSpecsMatrix({
                           <X className="w-3 h-3 dark:text-white" />
                         </button>
                         <div className="aspect-[16/9] bg-slate-50 dark:bg-slate-900 overflow-hidden mb-3 border border-black dark:border-white" style={{ borderRadius: 'var(--radius)' }}>
-                          {carPhotoUrl(car) ? <Image src={carPhotoUrl(car)} alt={car.model} fill className="object-cover" /> : null}
+                          {carPhotoUrl(car) ? <Image src={getThumbnailUrl(carPhotoUrl(car))} alt={car.model} fill className="object-cover" /> : null}
                         </div>
                         <p className="text-[9px] font-bold text-[#A0AEC0] dark:text-slate-600 uppercase tracking-widest mb-0.5">{car.year}</p>
                         <h3 className="text-sm sm:text-base font-bold font-sans text-[#111827] dark:text-white leading-snug line-clamp-2">
@@ -255,9 +267,10 @@ export default function CompareSpecsMatrix({
                           const { value, raw } = spec.pick(car);
                           const best = getBest(spec, fullComparedCars);
                           const isBest = best != null && raw === best;
+                          const missing = isMissing(raw);
                           return (
                             <div key={idx} className="px-3 py-2.5 sm:px-4 sm:py-3 border-r border-slate-100 dark:border-slate-800 last:border-r-0 text-right font-bold tabular-nums min-w-0">
-                              <span className={`text-[11px] sm:text-xs inline-block text-right leading-snug ${isBest ? 'text-[#111827] dark:text-white' : 'text-[#718096] dark:text-slate-500'}`}>{value}</span>
+                              <span className={`text-[11px] sm:text-xs inline-block text-right leading-snug ${missing ? 'text-slate-300 dark:text-slate-700 italic' : isBest ? 'text-[#111827] dark:text-white' : 'text-[#718096] dark:text-slate-500'}`}>{value}</span>
                               {isBest && <div className="mt-0.5 text-[7px] font-bold text-[#38A169] uppercase tracking-widest text-right">Optimized</div>}
                             </div>
                           );
@@ -269,6 +282,36 @@ export default function CompareSpecsMatrix({
               </div>
             ))}
           </div>
+
+          {/* Coverage Footer */}
+          {totalVisible > 0 && (
+            <div className="border-t border-slate-200 dark:border-slate-700">
+              <div className="grid grid-cols-[minmax(112px,140px)_1fr_1fr_1fr] sm:grid-cols-[minmax(160px,220px)_1fr_1fr_1fr] bg-slate-50 dark:bg-slate-900/30">
+                <div className="px-3 py-3 sm:px-4 sm:py-3 border-r border-slate-100 dark:border-slate-800 flex items-center bg-white dark:bg-[#0a0a0a] sticky left-0 z-30">
+                  <span className="text-[8px] font-bold text-[#A0AEC0] dark:text-slate-500 uppercase tracking-wider">Data coverage</span>
+                </div>
+                {SLOT_KEYS.map((_, idx) => {
+                  const car = comparedSlots[idx];
+                  if (!car) return <div key={idx} className="px-3 py-3 sm:px-4 sm:py-3 border-r border-slate-100 dark:border-slate-800 last:border-r-0" />;
+                  const filled = visibleSpecs.filter((s) => !isMissing(s.pick(car).raw)).length;
+                  const pct = totalVisible > 0 ? Math.round((filled / totalVisible) * 100) : 0;
+                  return (
+                    <div key={idx} className="px-3 py-3 sm:px-4 sm:py-3 border-r border-slate-100 dark:border-slate-800 last:border-r-0 text-right min-w-0">
+                      <span className="text-[10px] font-bold tabular-nums text-[#718096] dark:text-slate-400">
+                        {filled}/{totalVisible} <span className="text-[8px] font-normal text-[#A0AEC0] dark:text-slate-600">specs</span>
+                      </span>
+                      <div className="w-full bg-slate-200 dark:bg-slate-800 h-1 mt-1.5 rounded-full overflow-hidden" style={{ borderRadius: "2px" }}>
+                        <div
+                          className="h-full rounded-full transition-all bg-[#38A169]"
+                          style={{ width: `${pct}%`, borderRadius: "2px" }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

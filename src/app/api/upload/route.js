@@ -2,12 +2,14 @@
 // Receives a file from the CarForm, uploads to Supabase Storage
 // Returns { url } — the public URL stored in the database
 
+import sharp from "sharp";
 import { uploadImage, imagePath } from "@/lib/storage";
 import { applyListingWatermark } from "@/lib/watermark";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
 const MAX_SIZE_MB = 8;
+const MAX_DIMENSION = 2000;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 export async function POST(request) {
@@ -42,15 +44,25 @@ export async function POST(request) {
       );
     }
 
+    // Resize to cap the longest dimension so phones aren't downloading
+    // 4000px originals. Failure is non-fatal — fall back to raw buffer.
+    let processedBuffer = buffer;
+    try {
+      processedBuffer = await sharp(buffer, { failOn: "none" })
+        .resize({ width: MAX_DIMENSION, height: MAX_DIMENSION, fit: "inside", withoutEnlargement: true })
+        .toBuffer();
+    } catch (resizeError) {
+      console.error("Image resize failed:", resizeError);
+      processedBuffer = buffer;
+    }
+
     // Apply the brand watermark before upload. Failure is non-fatal —
     // we'd rather have an un-watermarked listing than block the dealer
     // from uploading.
-    let processedBuffer = buffer;
     try {
-      processedBuffer = await applyListingWatermark(buffer, file.type);
+      processedBuffer = await applyListingWatermark(processedBuffer, file.type);
     } catch (watermarkError) {
       console.error("Watermark processing failed:", watermarkError);
-      processedBuffer = buffer;
     }
 
     // Generate a unique path

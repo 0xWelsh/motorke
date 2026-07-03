@@ -36,12 +36,12 @@ export function buildDealerMetadata(dealer, { stockCount = 0 } = {}) {
   const stock = Math.max(0, Number(stockCount) || 0);
   const stockLine = stock > 0 ? `${stock} car${stock === 1 ? "" : "s"} in stock` : "live showroom";
 
-  const title = `${name} Kenya | ${stockLine} | Welsh Motorhub`;
+  const title = `${name} Kenya | ${stockLine}`;
   const description =
     (dealer.description && dealer.description.trim().length >= 40
       ? dealer.description.trim().slice(0, 155)
       : null) ||
-    `Find ${name} on Welsh Motorhub: ${stockLine} in ${place}, Kenya. Browse verified listings, read buyer reviews, and contact ${name} by phone or WhatsApp.`;
+    `Find ${name}: ${stockLine} in ${place}, Kenya. Browse verified listings, read buyer reviews, and contact ${name} by phone or WhatsApp.`;
 
   const keywords = buildDealerSearchPhrases(dealer);
   const canonical = dealerShowroomPath(dealer.slug);
@@ -52,16 +52,16 @@ export function buildDealerMetadata(dealer, { stockCount = 0 } = {}) {
     keywords,
     alternates: { canonical },
     openGraph: {
-      title: `${name} | Welsh Motorhub`,
+      title,
       description,
       url: absoluteUrl(canonical),
-      siteName: "Welsh Motorhub",
+      siteName: name,
       locale: "en_KE",
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: `${name} | Welsh Motorhub`,
+      title,
       description,
     },
   };
@@ -241,8 +241,7 @@ export function buildDealerAutoDealerSchema(dealer, options = {}) {
       addressRegion: dealer.county || "Nairobi",
       addressCountry: "KE",
     },
-    telephone: dealer.phone || dealer.whatsapp || undefined,
-    ...(dealer.email ? { email: dealer.email } : {}),
+    telephone: process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP || process.env.NEXT_PUBLIC_SUPPORT_PHONE || undefined,
     ...(dealerLat != null && dealerLng != null
       ? { geo: { "@type": "GeoCoordinates", latitude: dealerLat, longitude: dealerLng } }
       : {}),

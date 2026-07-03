@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Phone } from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa";
+import { Phone, MessageCircle } from "lucide-react";
 import { telHrefFromMsisdn } from "@/lib/phone-hints";
 import { recordLeadIntent } from "@/lib/record-lead";
 import { trackUiEvent } from "@/lib/analytics";
@@ -78,10 +77,11 @@ export default function MobileListingContactBar({
           onClick={onWhatsApp}
           className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-5 py-3.5 text-[13px] font-bold text-white shadow-sm transition hover:bg-[#20bd5a] active:scale-[0.98]"
         >
-          <FaWhatsapp className="h-6 w-6 shrink-0" aria-hidden />
+          <MessageCircle className="h-6 w-6 shrink-0" aria-hidden />
           <span className="pr-0.5">WhatsApp</span>
         </a>
-      ) : callHref ? (
+      ) : null}
+      {callHref ? (
         <Link
           href={callHref}
           onClick={onCall}

@@ -16,7 +16,7 @@ export async function POST(request) {
     const confirm = formData.get("confirm")?.toString();
 
     if (!password || password.length < 6 || password !== confirm) {
-      return NextResponse.redirect(new URL("/portal/profile?error=password_mismatch", request.url), 303);
+      return NextResponse.redirect(new URL("/account?profile=error=password_mismatch", request.url), 303);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,10 +26,10 @@ export async function POST(request) {
       data: { passwordHash: hashedPassword }
     });
 
-    return NextResponse.redirect(new URL("/portal/profile?saved=1", request.url), 303);
+    return NextResponse.redirect(new URL("/account?profile=saved=1", request.url), 303);
 
   } catch (error) {
     console.error("Password update error:", error);
-    return NextResponse.redirect(new URL("/portal/profile?error=unknown", request.url), 303);
+    return NextResponse.redirect(new URL("/account?profile=error=unknown", request.url), 303);
   }
 }

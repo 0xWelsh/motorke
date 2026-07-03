@@ -19,14 +19,15 @@ import { BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-serif",
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  weight: ["400", "600", "700"],
+  display: "swap",
 });
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   weight: ["400", "500", "700"],
+  display: "swap",
 });
 
 export const metadata = {
@@ -174,6 +175,8 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Preconnect to Supabase Storage for faster image loading */}
+        <link rel="preconnect" href="https://bbseolknavwpjzvotdct.supabase.co" />
         {/* Country / region signals for "Welsh Motorhub" vs Wales disambiguation in search */}
         <meta name="geo.region" content="KE" />
         <meta name="geo.placename" content="Nairobi, Kenya" />

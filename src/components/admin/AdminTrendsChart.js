@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import {
   AreaChart,
   Area,
@@ -8,64 +7,88 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Legend,
 } from "recharts";
 
-export default function AdminTrendsChart({ data, rangeLabel = "Last 30 Days" }) {
-  // data should be an array of objects: { date: "Mon", leads: 12, cars: 5 }
+export default function AdminTrendsChart({ data }) {
   return (
-    <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm mb-16 relative">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">Platform Engagement</h3>
-          <p className="text-sm font-medium text-slate-500 mt-1">Leads vs Cars Listed ({rangeLabel})</p>
-        </div>
-        <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-wider">
-           <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#2F855A]" /> Leads
-           </div>
-           <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-slate-900" /> Listings
-           </div>
-        </div>
-      </div>
-
-      <div className="h-[300px] w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
-            <defs>
-              <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#2F855A" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#2F855A" stopOpacity={0}/>
-              </linearGradient>
-              <linearGradient id="colorCars" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#0f172a" stopOpacity={0.1}/>
-                <stop offset="95%" stopColor="#0f172a" stopOpacity={0}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-            <XAxis 
-              dataKey="date" 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fontSize: 12, fill: "#64748b", fontWeight: 600 }} 
-              dy={10}
-            />
-            <YAxis 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fontSize: 12, fill: "#64748b", fontWeight: 600 }}
-            />
-            <Tooltip 
-              contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-              itemStyle={{ fontWeight: 'bold' }}
-              labelStyle={{ fontWeight: 'bold', color: '#64748b', marginBottom: '4px' }}
-            />
-            <Area type="monotone" dataKey="cars" stroke="#0f172a" strokeWidth={3} fillOpacity={1} fill="url(#colorCars)" />
-            <Area type="monotone" dataKey="leads" stroke="#2F855A" strokeWidth={3} fillOpacity={1} fill="url(#colorLeads)" />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
+    <div className="h-[200px] w-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={data} margin={{ top: 8, right: 4, left: -20, bottom: 0 }}>
+          <defs>
+            <linearGradient id="c" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
+              <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="l" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
+              <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="v" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.15} />
+              <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#27272a" />
+          <XAxis
+            dataKey="date"
+            axisLine={false}
+            tickLine={false}
+            tick={{ fontSize: 10, fill: "#71717a", fontWeight: 600 }}
+            dy={8}
+            interval="preserveStartEnd"
+          />
+          <YAxis
+            axisLine={false}
+            tickLine={false}
+            tick={{ fontSize: 10, fill: "#71717a", fontWeight: 600 }}
+          />
+          <Tooltip
+            contentStyle={{
+              borderRadius: "8px",
+              border: "1px solid #27272a",
+              background: "#18181b",
+              padding: "8px 12px",
+              fontSize: "12px",
+            }}
+            itemStyle={{ fontWeight: 700, padding: "2px 0" }}
+            labelStyle={{ fontWeight: 600, color: "#a1a1aa", marginBottom: "4px", fontSize: "11px" }}
+          />
+          <Legend
+            wrapperStyle={{ fontSize: "10px", fontWeight: 700, color: "#71717a", paddingTop: "8px" }}
+            iconType="circle"
+            iconSize={6}
+          />
+          <Area
+            type="monotone"
+            dataKey="cars"
+            name="Listings"
+            stroke="#3b82f6"
+            strokeWidth={2}
+            fillOpacity={1}
+            fill="url(#c)"
+          />
+          <Area
+            type="monotone"
+            dataKey="leads"
+            name="Leads"
+            stroke="#10b981"
+            strokeWidth={2}
+            fillOpacity={1}
+            fill="url(#l)"
+          />
+          <Area
+            type="monotone"
+            dataKey="views"
+            name="Views"
+            stroke="#f59e0b"
+            strokeWidth={2}
+            fillOpacity={1}
+            fill="url(#v)"
+          />
+        </AreaChart>
+      </ResponsiveContainer>
     </div>
   );
 }

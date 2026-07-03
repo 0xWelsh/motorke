@@ -157,7 +157,7 @@ export default async function AdminNewUserPage(props) {
                  </li>
                  <li className="flex gap-3 relative">
                     <span className="w-5 h-5 shrink-0 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black text-[11px]">4</span>
-                    <span>The partner will log in at <code className="font-bold text-slate-900 dark:text-white">/portal</code> and start uploading cars.</span>
+                     <span>The partner will log in to the <code className="font-bold text-slate-900 dark:text-white">admin panel</code> and start uploading cars.</span>
                  </li>
               </ol>
            </div>

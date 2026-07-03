@@ -94,7 +94,7 @@ export async function getDealerOfferQuota(dealerId) {
     freeRemaining,
     freePerDay: BUYER_REQUEST_FREE_OFFERS_PER_DAY,
     billingActive: DEALER_BILLING_ACTIVE,
-    upgradeUrl: "/portal/subscription",
+    upgradeUrl: "/",
   };
 }
 
@@ -114,7 +114,7 @@ export async function assertDealerCanSendOffer(dealerId) {
       code: "DAILY_LIMIT",
       message:
         "You have used your free buyer request offer for today. Upgrade to Standard plan or add a monthly Requests pass for unlimited offers.",
-      upgradeUrl: "/portal/subscription",
+    upgradeUrl: "/",
     };
   }
 

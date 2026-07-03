@@ -46,6 +46,6 @@ export async function POST(request, { params }) {
   await db.car.delete({ where: { id: id } });
 
   // Redirect back to the right list
-  const dest = session.user.role === "ADMIN" ? "/admin/cars" : "/portal";
+  const dest = session.user.role === "ADMIN" ? "/admin/cars" : "/admin/cars";
   return NextResponse.redirect(new URL(dest, request.url));
 }

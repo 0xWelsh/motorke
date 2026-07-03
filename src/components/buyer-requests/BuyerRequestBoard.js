@@ -66,7 +66,7 @@ export default function BuyerRequestBoard() {
           `${data.error}\n\nOpen Plans & billing now?`
         );
         if (goUpgrade) {
-          window.location.href = data.upgradeUrl || "/portal/subscription";
+          window.location.href = data.upgradeUrl || "/";
         }
         return;
       }
@@ -109,9 +109,9 @@ export default function BuyerRequestBoard() {
             ) : (
               <p className="text-xs font-semibold text-amber-800 dark:text-amber-200">
                 Daily free offer used.{" "}
-                <Link href="/portal/subscription" className="underline font-bold">
+                <span className="underline font-bold">
                   Upgrade for unlimited
-                </Link>
+                </span>
               </p>
             )
           ) : !quota?.loggedIn ? (

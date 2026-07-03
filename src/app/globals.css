@@ -20,6 +20,9 @@
   --brand-accent: #38A169; /* Chakra green.500 */
   --brand-primary: #38A169; /* Alias for accent */
   --brand-faint:   #E2E8F0; /* Light borders */
+  --accent-red:    #DC2626; /* Red-600 — urgency / sale / hot */
+  --accent-red-light: #FEE2E2; /* Red-100 bg */
+  --accent-red-dark:  #991B1B; /* Red-800 for dark mode text */
   
   --text:         #1A202C;
   --text-main:    #1A202C;
@@ -106,10 +109,38 @@ h1, h2, h3, h4, h5, h6 {
   animation-play-state: paused;
 }
 
+@keyframes odometer-sweep {
+  0%, 8% { transform: rotate(-100deg); animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+  42%   { transform: rotate(100deg);  animation-timing-function: cubic-bezier(0.55, 0, 0.78, 0); }
+  50%   { transform: rotate(100deg);  animation-timing-function: steps(1); }
+  92%, 100% { transform: rotate(-100deg); animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+}
+.animate-odometer-sweep {
+  animation: odometer-sweep 2.4s ease-in-out infinite;
+}
+
+@keyframes odometer-arc {
+  0%, 8%  { stroke-dashoffset: var(--arc-length); }
+  42%     { stroke-dashoffset: 0; }
+  50%     { stroke-dashoffset: 0; }
+  92%, 100% { stroke-dashoffset: var(--arc-length); }
+}
+.animate-odometer-arc {
+  animation: odometer-arc 2.4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .feature-marquee-track {
     animation: none !important;
     transform: none !important;
+  }
+  .animate-odometer-sweep {
+    animation: none !important;
+    transform: rotate(100deg) !important;
+  }
+  .animate-odometer-arc {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
   }
 }
 
@@ -379,13 +410,19 @@ h1, h2, h3, h4, h5, h6 {
 .dark {
   --bg:           #0a0a0a;
   --surface:      #111111;
+  --surface-overlay: #18181b;
   --text:         #f7f6f3;
+  --text-main:    #f7f6f3;
   --text-muted:   #d1d5db; /* Gray-300 */
   --text-faint:   #9ca3af; /* Gray-400 */
   
   --border:       #27272a;
   --border-light: #18181b;
   
+  --accent-red:    #EF4444; /* Red-500 brighter in dark */
+  --accent-red-light: #7F1D1D; /* Red-900 bg */
+  --accent-red-dark:  #FCA5A5; /* Red-300 text */
+
   color-scheme: dark;
 }
 
@@ -398,6 +435,46 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #18181b !important;
   color: #ffffff !important;
 }
+
+/* Red Accent Utilities */
+.mk-badge-red {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--accent-red);
+  padding: 2px 8px;
+  border-radius: 4px;
+  line-height: 1.3;
+}
+.dark .mk-badge-red {
+  background: #DC2626;
+  color: #fff;
+}
+
+.mk-badge-red-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-red);
+  background: transparent;
+  border: 1px solid var(--accent-red);
+  padding: 1px 7px;
+  border-radius: 4px;
+  line-height: 1.3;
+}
+
+.text-accent-red { color: var(--accent-red); }
+.bg-accent-red { background-color: var(--accent-red); color: #fff; }
+.border-accent-red { border-color: var(--accent-red); }
 
 /* Keep Neon Orange Native */
 .dark .text-\[\#ff5a2f\] { color: #ff5a2f !important; }

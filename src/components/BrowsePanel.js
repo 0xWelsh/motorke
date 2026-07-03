@@ -212,14 +212,16 @@ function ShopRowSection({ title, action }) {
 }
 
 /**
- * @param {{ layout?: "full" | "hero-mobile" | "desktop-hero", inventoryCounts?: { brands?: Record<string, number>, bodyTypes?: Record<string, number> } }} props
+ * @param {{ layout?: "full" | "hero-mobile" | "hero-mobile-slim" | "desktop-hero", inventoryCounts?: { brands?: Record<string, number>, bodyTypes?: Record<string, number> } }} props
  *   hero-mobile — search + shop by brand + shop by shape (homepage mobile hero)
+ *   hero-mobile-slim — search + shop by brand only (compact mobile hero)
  *   desktop-hero — full-width search in homepage left column
  */
 export default function BrowsePanel({ layout = "full", inventoryCounts = null }) {
   const brandCounts = inventoryCounts?.brands || {};
   const bodyTypeCounts = inventoryCounts?.bodyTypes || {};
-  const heroMobile = layout === "hero-mobile";
+  const heroMobile = layout === "hero-mobile" || layout === "hero-mobile-slim";
+  const heroMobileSlim = layout === "hero-mobile-slim";
   const desktopHero = layout === "desktop-hero";
   const floatingChips = heroMobile;
   const router = useRouter();
@@ -300,16 +302,18 @@ export default function BrowsePanel({ layout = "full", inventoryCounts = null })
           </ScrollableRow>
         </div>
 
-        <div>
-          <ShopRowSection title="Shop by shape" />
-          <ScrollableRow trackScrollOffset={floatingChips}>
-            {BODY_TYPES.map((bt) => (
-              <div key={bt.value} className="snap-start shrink-0">
-                <BodyTypeCard {...bt} count={bodyTypeCounts[bt.value]} floating={floatingChips} />
-              </div>
-            ))}
-          </ScrollableRow>
-        </div>
+        {!heroMobileSlim && (
+          <div>
+            <ShopRowSection title="Shop by shape" />
+            <ScrollableRow trackScrollOffset={floatingChips}>
+              {BODY_TYPES.map((bt) => (
+                <div key={bt.value} className="snap-start shrink-0">
+                  <BodyTypeCard {...bt} count={bodyTypeCounts[bt.value]} floating={floatingChips} />
+                </div>
+              ))}
+            </ScrollableRow>
+          </div>
+        )}
       </div>
     </div>
   );

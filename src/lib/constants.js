@@ -1,5 +1,10 @@
 // src/lib/constants.js
 
+export const VEHICLE_TYPE_LABELS = {
+  CAR: "Car",
+  MOTORBIKE: "Motorbike",
+};
+
 export const BODY_TYPE_LABELS = {
   SEDAN:       "Sedan",
   SUV:         "SUV / 4x4",

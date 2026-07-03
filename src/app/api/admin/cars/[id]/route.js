@@ -17,11 +17,11 @@ export async function PUT(request, { params }) {
   try {
     const body = await request.json();
     const {
-      make, model, variant, year, price, mileage,
+      make, model, variant, year, price, mileage, vehicleType,
       fuelType, transmission, bodyType, engineCC, drivetrain, steering,
       cylinders, horsepower, torque, turbo, sunroof, airbags,
       color, seats, description, features, badges, images,
-      negotiable, imported, featured, registered, dealerId, videoUrl,
+      negotiable, imported, featured, registered, dealerId, videoUrl, location, importCountry, dutyPaid,
     } = body;
     console.log("🏁 UPDATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
@@ -30,11 +30,12 @@ export async function PUT(request, { params }) {
       where: { id: id },
       data: {
         dealerId,
+        vehicleType:  vehicleType || "CAR",
         make:         make.trim(),
         model:        model.trim(),
         variant:      variant?.trim() || null,
         year:         parseInt(year),
-        price: parseInt(price),
+        price: price != null && String(price).trim() !== "" ? parseInt(price) : 0,
         mileage:      mileage ? parseInt(mileage) : null,
         fuelType,
         transmission,
@@ -55,9 +56,11 @@ export async function PUT(request, { params }) {
         badges:       Array.isArray(badges) ? badges : [],
         videoUrl:     videoUrl?.trim() || null,
         negotiable:   Boolean(negotiable),
-        dutyPaid:     true,
+        dutyPaid:     dutyPaid === false || dutyPaid === "false" ? false : true,
         registered:   registered === false || registered === "false" ? false : true,
         imported:     Boolean(imported),
+        importCountry: importCountry?.trim() || null,
+        location:     location?.trim() || null,
         featured:     Boolean(featured),
       },
     });
@@ -85,7 +88,7 @@ export async function PUT(request, { params }) {
       });
     }
 
-    await revalidateInventoryForCar(id);
+    await revalidateInventoryForCar(id, { refreshHomepage: true });
     
     // Trigger WhatsApp alerts for matching buyers
     matchCarToSearchAlerts(id).catch(e => console.error("Admin Match Alert Error:", e));

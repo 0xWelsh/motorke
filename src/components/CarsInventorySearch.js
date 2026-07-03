@@ -28,6 +28,8 @@ function buildCarsQuery(searchTrim, mergeFromUrl, overrides = {}) {
     "county",
     "minPrice",
     "maxPrice",
+    "vehicleType",
+    "condition",
     "sort",
     "lat",
     "lng",

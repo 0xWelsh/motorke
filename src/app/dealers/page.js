@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
 import { buildDealersDirectoryItemList } from "@/lib/seo-dealer";
-import { ArrowUpRight, Building2, MapPin, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, Building2, MapPin, ShieldCheck, Crown } from "lucide-react";
 import NearbyDealersList from "@/components/NearbyDealersList";
 import DealersLocationButton from "@/components/DealersLocationButton";
 import DealersSortSelect from "@/components/DealersSortSelect";
@@ -51,10 +51,10 @@ function formatDistance(km) {
 }
 
 function responseTier(responseRate, totalLeads) {
-  if (!totalLeads || totalLeads < 5) return { label: "New dealer", tone: "text-slate-500 bg-slate-100 dark:bg-slate-800/70 dark:text-slate-300" };
-  if (responseRate >= 0.7) return { label: "Fast replies", tone: "text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300" };
-  if (responseRate >= 0.4) return { label: "Responsive", tone: "text-sky-700 bg-sky-50 dark:bg-sky-950/40 dark:text-sky-300" };
-  return { label: "Slow replies", tone: "text-amber-700 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-300" };
+  if (!totalLeads || totalLeads < 10) return null;
+  if (responseRate >= 0.5) return { label: "Fast replies", tone: "text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300" };
+  if (responseRate >= 0.2) return { label: "Responsive", tone: "text-sky-700 bg-sky-50 dark:bg-sky-950/40 dark:text-sky-300" };
+  return null;
 }
 
 const getDealersBaseData = unstable_cache(
@@ -390,7 +390,7 @@ function DealerCard({ dealer }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
         <div className="absolute top-2 left-2 flex flex-wrap gap-1">
-           {dealer.verified && <span className="bg-[#22c55e] text-white text-[7px] font-black px-1.5 py-0.5 uppercase tracking-widest" style={{ borderRadius: "4px" }}>Verified</span>}
+           {dealer.verified && <span className="bg-yellow-500/15 text-yellow-500 text-[7px] font-black px-1.5 py-0.5 uppercase tracking-widest inline-flex items-center gap-0.5" style={{ borderRadius: "4px" }}><Crown className="w-2 h-2" aria-hidden />Verified</span>}
            {dealer.featured && <span className="bg-[#111827] text-white text-[7px] font-black px-1.5 py-0.5 uppercase tracking-widest" style={{ borderRadius: "4px" }}>Premium</span>}
         </div>
       </div>
@@ -408,9 +408,11 @@ function DealerCard({ dealer }) {
                     <MapPin className="w-2.5 h-2.5" /> {distance}
                   </span>
                 ) : null}
-                <span className={`inline-flex items-center text-[8px] font-black px-1.5 py-0.5 uppercase tracking-widest ${response.tone}`} style={{ borderRadius: "4px" }}>
-                  {response.label}
-                </span>
+                {response ? (
+                  <span className={`inline-flex items-center text-[8px] font-black px-1.5 py-0.5 uppercase tracking-widest ${response.tone}`} style={{ borderRadius: "4px" }}>
+                    {response.label}
+                  </span>
+                ) : null}
               </div>
            </div>
            <div className="w-9 h-9 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center shrink-0 overflow-hidden" style={{ borderRadius: "8px" }}>

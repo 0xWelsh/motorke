@@ -1,18 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 import TrackedLink from "@/components/TrackedLink";
-
-const MERCEDES_HERO = "/images/mercedes.jpg";
-
-const FLOATING_CARDS = [
-  { label: "Import duty", value: "Est. KES 1.2M+" },
-  { label: "VAT (16%)", value: "On CIF + excise" },
-  { label: "IDF", value: "3.5% of CV" },
-  { label: "Excise", value: "By engine CC" },
-];
 
 export default function DutyPageHero({ compact = false, children = null }) {
   if (compact) {
@@ -20,48 +10,8 @@ export default function DutyPageHero({ compact = false, children = null }) {
   }
 
   return (
-    <section className="relative mb-0 overflow-hidden border-b border-slate-100 dark:border-zinc-900">
-      <div className="absolute inset-0 pointer-events-none z-0" aria-hidden>
-        <Image
-          src={MERCEDES_HERO}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-[70%_center] scale-105 opacity-40 dark:opacity-25"
-        />
-      </div>
-
-      <div className="hidden lg:block absolute inset-y-0 right-0 w-[min(50%,560px)] pointer-events-none z-0" aria-hidden>
-        <Image
-          src={MERCEDES_HERO}
-          alt=""
-          fill
-          sizes="560px"
-          className="object-cover object-center opacity-95 dark:opacity-80 contrast-[1.05]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/70 to-transparent dark:from-[#0a0a0a] dark:via-[#0a0a0a]/80 dark:to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-transparent dark:from-[#0a0a0a]/60" />
-        <ul className="absolute bottom-8 right-6 space-y-2 w-44">
-          {FLOATING_CARDS.map((card) => (
-            <li
-              key={card.label}
-              className="px-3 py-2 border border-white/20 bg-black/55 backdrop-blur-sm text-white shadow-lg"
-              style={{ borderRadius: "var(--radius)" }}
-            >
-              <p className="text-[9px] font-bold uppercase tracking-widest text-red-300">{card.label}</p>
-              <p className="text-xs font-semibold mt-0.5 tabular-nums">{card.value}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div
-        className="absolute inset-0 pointer-events-none z-0 bg-gradient-to-br from-white via-white/92 to-white/75 dark:from-[#0a0a0a] dark:via-[#0a0a0a]/95 dark:to-[#0a0a0a]/88 lg:bg-gradient-to-r lg:from-white lg:via-white/90 lg:to-white/55 dark:lg:from-[#0a0a0a] dark:lg:via-[#0a0a0a]/95 dark:lg:to-transparent"
-        aria-hidden
-      />
-
-      <div className="relative z-10 home-shell pt-2 pb-4 sm:pb-6 lg:pb-8">
+    <section className="relative mb-0 overflow-hidden border-b border-slate-200 dark:border-zinc-900 bg-red-50/70 dark:bg-[#0a0a0a]">
+      <div className="home-shell pt-2 pb-4 sm:pb-6 lg:pb-8">
         <div className="max-w-6xl mx-auto">
           <nav className="text-xs text-slate-500 mb-4" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-slate-900 dark:hover:text-white font-medium">

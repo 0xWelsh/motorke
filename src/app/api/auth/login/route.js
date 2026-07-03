@@ -80,7 +80,6 @@ export async function POST(request) {
     // Redirect based on role
     let dest = "/";
     if (user.role === "ADMIN")  dest = "/admin";
-    if (user.role === "DEALER") dest = "/portal";
     
     return NextResponse.redirect(new URL(dest, request.url));
   } catch (err) {

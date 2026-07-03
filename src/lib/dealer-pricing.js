@@ -1,6 +1,6 @@
 /**
  * Dealer listing plans, included boosts, and add-on boost prices (KES).
- * Used by /portal/subscription and dealer-facing docs.
+ * Used by dealer-facing docs and pricing pages.
  */
 
 /** @typedef {'basic' | 'standard' | 'business' | 'enterprise'} DealerPlanId */

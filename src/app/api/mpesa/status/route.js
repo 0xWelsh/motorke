@@ -19,10 +19,20 @@ export async function GET(request) {
 
     const payment = await db.payment.findFirst({
       where: { reference: checkoutRequestId, method: "MPESA" },
+      include: { subscription: true },
     });
 
     if (!payment) {
       return NextResponse.json({ status: "PENDING" });
+    }
+
+    // Only the dealer who owns the subscription or an admin can check this payment
+    const isOwner = session.user.dealerId
+      && payment.subscription.dealerId === session.user.dealerId;
+    const isAdmin = session.user.role === "ADMIN";
+
+    if (!isOwner && !isAdmin) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     return NextResponse.json({ status: payment.status });

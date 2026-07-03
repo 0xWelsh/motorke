@@ -13,7 +13,7 @@ export default async function AccountPage({ searchParams }) {
   const sp = await searchParams;
   const user = await requireAuth();
   if (user.role === "ADMIN")  redirect("/admin");
-  if (user.role === "DEALER") redirect("/portal");
+  if (user.role === "DEALER") redirect("/");
 
   const tab = sp.tab || "profile";
 

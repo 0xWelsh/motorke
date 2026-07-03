@@ -40,8 +40,6 @@ export function revalidateInventory({
   }
 
   revalidatePath("/cars");
-  revalidatePath("/portal/inventory");
-  revalidatePath("/portal/boosts");
   revalidatePath("/admin/cars");
 
   if (carId) {

@@ -136,7 +136,6 @@ export async function upsertGoogleUser({ email, name, googleId, avatarUrl }) {
 
 export function destinationForRole(role) {
   if (role === "ADMIN") return "/admin";
-  if (role === "DEALER") return "/portal";
   return "/";
 }
 

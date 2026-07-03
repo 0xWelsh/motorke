@@ -8,7 +8,7 @@ const ROTATION_COOKIE = "wmh-rot";
 const ROTATION_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
 
 function generateRotationId() {
-  const bytes = new Uint8Array(8);
+  const bytes = new Uint8Array(16);
   if (typeof globalThis.crypto?.getRandomValues === "function") {
     globalThis.crypto.getRandomValues(bytes);
   } else {
@@ -24,13 +24,12 @@ function isMaintenanceOn() {
 
 // Paths that must keep working even when the site is in maintenance mode.
 // Static assets, the maintenance page itself, the bypass endpoint, login,
-// and the admin/portal shells (so the team can still operate the system).
+// and the admin shell (so the team can still operate the system).
 function isMaintenanceAllowed(pathname) {
   if (pathname === "/maintenance") return true;
   if (pathname.startsWith("/api/")) return true;
   if (pathname.startsWith("/_next/")) return true;
   if (pathname.startsWith("/admin")) return true;
-  if (pathname.startsWith("/portal")) return true;
   if (pathname === "/login" || pathname === "/signup") return true;
   if (pathname === "/duty" || pathname.startsWith("/duty/")) return true;
   if (pathname === "/robots.txt" || pathname === "/sitemap.xml" || pathname === "/BingSiteAuth.xml") {
@@ -104,8 +103,8 @@ export function middleware(request) {
     }
   }
 
-  // Session-based route protection ENABLED for /admin and /portal
-  if (pathname.startsWith("/admin") || pathname.startsWith("/portal")) {
+  // Session-based route protection for /admin
+  if (pathname.startsWith("/admin")) {
     const session = request.cookies.get(SESSION_COOKIE);
     if (!session?.value) {
       const loginUrl = new URL("/login", request.url);
@@ -141,37 +140,31 @@ export function middleware(request) {
     });
   }
 
-  // Security Headers
-  response.headers.set(
-    "Content-Security-Policy",
-    "default-src 'self'; " +
-    `script-src 'self' 'unsafe-inline' ${isProd ? "" : "'unsafe-eval' "}*.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com cdn.jsdelivr.net; ` +
-    "style-src 'self' 'unsafe-inline' *.googleapis.com *.fontshare.com fonts.googleapis.com; " +
-    "img-src 'self' data: blob: https: *.supabase.co *.unsplash.com *.openstreetmap.org tile.openstreetmap.org a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org; " +
-    "font-src 'self' *.fontshare.com fonts.gstatic.com; " +
-    "connect-src 'self' *.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com *.supabase.co *.safaricom.co.ke vercel.com *.openstreetmap.org tile.openstreetmap.org a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org; " +
-    "frame-src 'self' *.google.com *.recaptcha.net *.cloudflare.com; " +
-    "object-src 'none'; " +
-    "base-uri 'self'; " +
-    "form-action 'self';"
-  );
+  // Security Headers — apply CSP only on page routes (not API, to avoid breaking binary responses)
+  if (!pathname.startsWith("/api/")) {
+    response.headers.set(
+      "Content-Security-Policy",
+      "default-src 'self'; " +
+      `script-src 'self' 'unsafe-inline' ${isProd ? "" : "'unsafe-eval' "}*.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com cdn.jsdelivr.net; ` +
+      "style-src 'self' 'unsafe-inline' *.googleapis.com *.fontshare.com fonts.googleapis.com; " +
+      "img-src 'self' data: blob: https: *.supabase.co *.unsplash.com *.openstreetmap.org tile.openstreetmap.org a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org; " +
+      "font-src 'self' *.fontshare.com fonts.gstatic.com; " +
+      "connect-src 'self' *.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com *.supabase.co *.safaricom.co.ke vercel.com *.openstreetmap.org tile.openstreetmap.org a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org; " +
+      "frame-src 'self' *.google.com *.recaptcha.net *.cloudflare.com; " +
+      "object-src 'none'; " +
+      "base-uri 'self'; " +
+      "form-action 'self';"
+    );
+  }
 
-  // Prevent MIME type sniffing
+  // Generic security headers — apply to all routes
   response.headers.set("X-Content-Type-Options", "nosniff");
-
-  // Clickjacking protection
   response.headers.set("X-Frame-Options", "DENY");
-
-  // XSS Protection (legacy browsers)
   response.headers.set("X-XSS-Protection", "1; mode=block");
-
-  // Referrer Policy
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
   response.headers.set("Cross-Origin-Resource-Policy", "same-site");
   response.headers.set("Origin-Agent-Cluster", "?1");
-
-  // Permissions Policy (formerly Feature Policy)
   response.headers.set(
     "Permissions-Policy",
     "camera=(), microphone=(), geolocation=(self), payment=()"
@@ -190,7 +183,7 @@ export function middleware(request) {
 
 export const config = {
   matcher: [
-    // Pages only — skip /api so binary routes (e.g. PDF) are not wrapped by page CSP / header pass-through quirks
-    "/((?!api|_next/static|_next/image|favicon.ico|public).*)",
+    // Apply security headers to all routes (pages + API)
+    "/((?!_next/static|_next/image|favicon.ico|public).*)",
   ],
 };

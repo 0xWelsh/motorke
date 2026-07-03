@@ -4,6 +4,7 @@ import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { BODY_TYPE_LABELS } from "@/lib/constants";
 import { buildMakeWhere, possibleMakesFromFilterSlug } from "@/lib/make-filter";
 import { countyFromSlug, slugifyCarSegment, SEO_COUNTIES } from "@/lib/seo-car-slug";
+import { publicDetailVisibilityClause } from "@/lib/car-sold-status";
 import {
   facetPathSegment,
   fuelFacetLabel,
@@ -18,7 +19,7 @@ import {
 
 export function hubCarWhere() {
   return {
-    available: true,
+    ...publicDetailVisibilityClause(),
     ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verificationStatus: "VERIFIED" } }),
   };
 }

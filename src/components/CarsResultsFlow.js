@@ -39,9 +39,9 @@ export default function CarsResultsFlow({ cars, sidebarId = "cars-filter-sidebar
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 min-[2200px]:grid-cols-4 gap-4">
-        {topCars.map((car) => (
+        {topCars.map((car, index) => (
           <div key={`top-${car.id}`} data-flow-card="true">
-            <CarCard car={car} distance={car.distanceValue ?? null} />
+            <CarCard car={car} distance={car.distanceValue ?? null} priority={index < 2} />
           </div>
         ))}
       </div>

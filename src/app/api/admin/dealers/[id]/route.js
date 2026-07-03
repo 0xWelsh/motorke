@@ -1,5 +1,6 @@
 // src/app/api/admin/dealers/[id]/route.js  — POST update
 export const dynamic = "force-dynamic";
+import crypto from "crypto";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
@@ -46,9 +47,10 @@ export async function POST(request, { params }) {
         instagramUrl: formData.get("instagramUrl")?.toString().trim() || null,
         facebookUrl:  formData.get("facebookUrl")?.toString().trim() || null,
         tiktokUrl:    formData.get("tiktokUrl")?.toString().trim() || null,
-        description: formData.get("description")?.toString().trim() || null,
-        verified:    formData.get("verified") === "on",
-        featured:    formData.get("featured") === "on",
+        description:  formData.get("description")?.toString().trim() || null,
+        responseTime: formData.get("responseTime")?.toString().trim() || null,
+        verified:     formData.get("verified") === "on",
+        featured:     formData.get("featured") === "on",
       },
     });
 
@@ -56,17 +58,19 @@ export async function POST(request, { params }) {
       const existingUser = await db.user.findUnique({ where: { email } });
       if (!existingUser) {
         const { hash } = require("bcryptjs");
-        const defaultPasswordHash = await hash("Welsh Motorhub123!", 10);
+        const tempPassword = crypto.randomBytes(16).toString("hex");
+        const passwordHash = await hash(tempPassword, 10);
         await db.user.create({
           data: {
             email,
-            passwordHash: defaultPasswordHash,
+            passwordHash,
             name: name,
             role: "DEALER",
             dealerId: id,
             active: true
           }
         });
+        console.log(`[AUDIT] Admin ${session.user.email} created dealer user ${email}`);
       } else if (!existingUser.dealerId) {
         await db.user.update({
           where: { id: existingUser.id },

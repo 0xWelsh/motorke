@@ -8,6 +8,7 @@ import { formatCarPrice, formatMileage } from "@/lib/utils";
 import { FUEL_LABELS } from "@/lib/constants";
 import { carListingPath } from "@/lib/car-listing-url";
 import TrackedLink from "@/components/TrackedLink";
+import { getThumbnailUrl } from "@/lib/image-transform";
 
 function CompactListing({ car }) {
   const title = `${car.year} ${car.make} ${car.model}`;
@@ -23,7 +24,7 @@ function CompactListing({ car }) {
     >
       <div className="relative w-20 h-16 shrink-0 bg-slate-100 dark:bg-zinc-800 overflow-hidden" style={{ borderRadius: "var(--radius)" }}>
         {car.image ? (
-          <Image src={car.image} alt="" fill className="object-cover" sizes="80px" />
+          <Image src={getThumbnailUrl(car.image, 160)} alt="" fill className="object-cover" sizes="80px" />
         ) : (
           <div className="flex h-full items-center justify-center text-slate-400">
             <Car className="w-6 h-6" aria-hidden />
@@ -86,7 +87,7 @@ export default function DutySimilarStock({ make, model }) {
         style={{ borderRadius: "var(--radius)" }}
       >
         <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-4">
-          Similar stock on Welsh Motorhub
+          Similar stock for sale
         </h2>
 
         {!make && (

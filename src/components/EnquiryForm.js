@@ -11,6 +11,7 @@ import {
   PHONE_PLACEHOLDER_INTERNATIONAL,
   telHrefFromMsisdn,
 } from "@/lib/phone-hints";
+import { PUBLIC_SUPPORT_WHATSAPP, PUBLIC_SUPPORT_PHONE } from "@/lib/site-contact";
 import { trackUiEvent } from "@/lib/analytics";
 
 function normalizeKenyanPhone(value) {
@@ -48,10 +49,12 @@ export default function EnquiryForm({
   const [lastSubmitAt, setLastSubmitAt] = useState(0);
   const [errorText, setErrorText] = useState("");
 
-  const waLink = dealer.whatsapp
-    ? whatsappLink(dealer.whatsapp, carTitle, dealer.name)
+  const teamWhatsapp = PUBLIC_SUPPORT_WHATSAPP;
+  const teamPhone = PUBLIC_SUPPORT_PHONE;
+  const waLink = teamWhatsapp
+    ? whatsappLink(teamWhatsapp, carTitle, "Welsh Motorhub")
     : null;
-  const callHref = dealer.phone ? telHrefFromMsisdn(dealer.phone) : "";
+  const callHref = teamPhone ? telHrefFromMsisdn(teamPhone) : "";
   const callLink = callHref || null;
 
   const quickMessages = [
@@ -123,7 +126,7 @@ export default function EnquiryForm({
       });
     } catch {
       setState("error");
-      setErrorText("Something went wrong. Please try WhatsApp instead.");
+      setErrorText("Something went wrong. Please try our WhatsApp instead.");
     }
   }
 
@@ -188,7 +191,7 @@ export default function EnquiryForm({
       <div className="text-center py-12 px-6 bg-slate-50 dark:bg-zinc-900 border border-emerald-100 dark:border-emerald-900/30" style={{ borderRadius: '2px' }}>
         <p className="font-extrabold text-[#111827] dark:text-white mb-2 uppercase tracking-widest text-xs">Enquiry Sent</p>
         <p className="text-xs text-slate-500 leading-relaxed">
-          {dealer.name} will contact you shortly regarding the <span className="font-bold text-slate-900 dark:text-white">{carTitle}</span>.
+          Thanks! Our team will contact you shortly regarding the <span className="font-bold text-slate-900 dark:text-white">{carTitle}</span>.
         </p>
       </div>
     );
@@ -198,7 +201,7 @@ export default function EnquiryForm({
     <div className="space-y-6">
       {state === "error" && (
         <p className="text-[11px] font-bold text-rose-600 bg-rose-50 dark:bg-rose-900/10 border border-rose-100 dark:border-rose-900/30 px-4 py-3">
-          {errorText || "Submission failed. Please try WhatsApp."}
+          {errorText || "Submission failed. Please try our WhatsApp."}
         </p>
       )}
 

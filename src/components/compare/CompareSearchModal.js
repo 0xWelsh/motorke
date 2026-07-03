@@ -3,6 +3,7 @@
 import { X } from "lucide-react";
 import Image from "next/image";
 import { formatCarPrice } from "@/lib/utils";
+import { getThumbnailUrl } from "@/lib/image-transform";
 
 export default function CompareSearchModal({
   activeSlot,
@@ -68,7 +69,7 @@ export default function CompareSearchModal({
               style={{ borderRadius: "var(--radius)" }}
             >
               <div className="relative w-12 h-12 bg-slate-100 dark:bg-slate-800 overflow-hidden border border-black dark:border-white shrink-0" style={{ borderRadius: "var(--radius)" }}>
-                {res.image ? <Image src={res.image} alt={res.model} fill className="object-cover" /> : null}
+                {res.image ? <Image src={getThumbnailUrl(res.image)} alt={res.model} fill className="object-cover" /> : null}
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-bold text-[#111827] dark:text-white truncate">{res.year} {res.make} {res.model}</p>

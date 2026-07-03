@@ -14,6 +14,9 @@ import { isMissing, shouldShowSpec, formatKesCompact } from "@/components/compar
 import CompareSpecsMatrix from "@/components/compare/CompareSpecsMatrix";
 import CompareTcoSummary from "@/components/compare/CompareTcoSummary";
 import CompareRadarChart from "@/components/compare/CompareRadarChart";
+import CompareTcoBarChart from "@/components/compare/CompareTcoBarChart";
+import CompareCostOverTimeChart from "@/components/compare/CompareCostOverTimeChart";
+import ComparePriceValueChart from "@/components/compare/ComparePriceValueChart";
 import CompareNarrative from "@/components/compare/CompareNarrative";
 import CompareSearchModal from "@/components/compare/CompareSearchModal";
 
@@ -381,7 +384,12 @@ export default function CompareClient({ initialCars }) {
 
             <div className="flex flex-col gap-8 lg:gap-10">
               <CompareTcoSummary kenyaLensSummary={kenyaLensSummary} fullComparedCars={fullComparedCars} currentTutorialKey={currentTutorialKey} />
-              <CompareRadarChart fullComparedCars={fullComparedCars} scoreMaps={scoreMaps} currentTutorialKey={currentTutorialKey} initialCarsById={initialCarsById} />
+              <CompareRadarChart fullComparedCars={fullComparedCars} scoreMaps={scoreMaps} initialCarsById={initialCarsById} />
+              <CompareTcoBarChart fullComparedCars={fullComparedCars} initialCarsById={initialCarsById} getInsights={getInsights} />
+              <CompareCostOverTimeChart fullComparedCars={fullComparedCars} initialCarsById={initialCarsById} getInsights={getInsights} />
+              {fullComparedCars.length >= 2 && (
+                <ComparePriceValueChart fullComparedCars={fullComparedCars} initialCarsById={initialCarsById} scoreMaps={scoreMaps} />
+              )}
               <CompareNarrative 
                 freeAi={freeAi} requestFreeAi={requestFreeAi} 
                 pickReasons={pickReasons} requestPickReasons={requestPickReasons} 

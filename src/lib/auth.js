@@ -118,6 +118,20 @@ export async function requireAdmin() {
   return user;
 }
 
+/**
+ * Like requireAdmin but additionally restricts to a single super-admin email.
+ * Set SUPER_ADMIN_EMAIL in .env.local to lock down sensitive pages.
+ * Falls back to requireAdmin() if the env var is not set.
+ */
+export async function requireSuperAdmin() {
+  const user = await requireAdmin();
+  const superEmail = process.env.SUPER_ADMIN_EMAIL;
+  if (superEmail && user.email !== superEmail) {
+    redirect("/admin");
+  }
+  return user;
+}
+
 /** Use in Server Components — redirects if not dealer */
 export async function requireDealer() {
   const user = await requireAuth();

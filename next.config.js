@@ -28,7 +28,8 @@ const nextConfig = {
   // Prevent Prisma from being bundled into the server graph.
   serverExternalPackages: ["@prisma/client", "prisma"],
   // Allow network devices to connect to dev server for HMR
-  allowedDevOrigins: ["192.168.0.111"],
+  allowedDevOrigins: ["192.168.0.111", "10.0.2.2"],
+  // Android emulator uses 10.0.2.2 to reach host localhost
 };
 
 module.exports = nextConfig;

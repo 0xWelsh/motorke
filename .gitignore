@@ -19,6 +19,9 @@ vercel.env
 # Prisma
 # prisma/migrations/ (Removed for Vercel deployment)
 
+# WAHA WhatsApp session
+waha-sessions/
+
 # Build
 build/
 dist/
@@ -49,3 +52,10 @@ yarn-error.log*
 /adjust-*.js
 /cjs_duty.js
 public/duty-calculator-hero.png
+
+# Capacitor native platforms
+android/
+ios/
+*.apk
+*.aab
+*.keystore

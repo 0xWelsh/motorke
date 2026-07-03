@@ -1,182 +1,50 @@
-// src/app/cars/page.js
 import { db } from "@/lib/db";
-import { formatPrice, formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
-import { BODY_TYPE_LABELS, FUEL_LABELS, BADGE_OPTIONS } from "@/lib/constants";
+import { BODY_TYPE_LABELS, FUEL_LABELS } from "@/lib/constants";
 import Link from "next/link";
-import { ChevronRight, Search, Sparkles } from "lucide-react";
-import Image from "next/image";
-import CarsSearch from "@/components/CarsSearch";
-import CarsInventorySearch from "@/components/CarsInventorySearch";
+import { ChevronRight, Sparkles } from "lucide-react";
 import CarCard from "@/components/CarCard";
+import CarsInfiniteGrid from "@/components/CarsInfiniteGrid";
 import CarsQuickActions from "@/components/CarsQuickActions";
+import SearchMapToggle from "@/components/SearchMapToggle";
 import TrendingSearches from "@/components/TrendingSearches";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
 import { unstable_cache } from "next/cache";
-import { cookies, headers } from "next/headers";
 import { getSession } from "@/lib/auth";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
-import { isSearchBot, rotationSeed, sortByTierAndSeed } from "@/lib/shuffle";
 import { buildCarsOrderBy, normalizeCarsSort } from "@/lib/cars-inventory-sort";
 import CarsInventorySort from "@/components/CarsInventorySort";
+import CarsSidebarFilters from "@/components/CarsSidebarFilters";
 import { buildMakeWhere } from "@/lib/make-filter";
 import SearchAlertButton from "@/components/SearchAlertButton";
+import { getPersonalizedRecommendations } from "@/lib/car-recommendations";
+import { publicDetailVisibilityClause } from "@/lib/car-sold-status";
 
-export const metadata = {
-  title: "Browse cars for sale in Kenya",
-  description:
-    "Search verified cars for sale across Kenya. Filter by make, price, body type, county, and dealership. Compare listings and contact dealers on Welsh Motorhub.",
-  alternates: { canonical: "/cars" },
-  keywords: [
-    "used cars Kenya",
-    "cars Nairobi",
-    "car inventory Kenya",
-    "vehicle search",
-    "Welsh Motorhub cars",
-  ],
-  openGraph: {
-    title: "Browse cars for sale in Kenya | Welsh Motorhub",
-    description:
-      "Verified vehicle inventory from trusted Kenyan dealers. Smart filters, transparent pricing context, and dealer contact in one place.",
-    type: "website",
-    url: "/cars",
-  },
-};
+const PER_PAGE = 24;
 
-function distance(lat1, lng1, lat2, lng2) {
-  if ([lat1, lng1, lat2, lng2].some((value) => value == null || Number.isNaN(value))) return 9999;
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLng = (lng2 - lng1) * Math.PI / 180;
-  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLng/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+export async function generateMetadata({ searchParams }) {
+  const sp = await searchParams;
+  const make = sp.make || "";
+  const model = sp.model || "";
+  const search = sp.search || "";
+  const county = sp.county || "";
+
+  const parts = ["Verified Cars for Sale in Kenya"];
+  if (make) parts.unshift(`${make}${model ? ` ${model}` : ""}`);
+  if (county) parts.push(`in ${county}`);
+  const title = `${parts.join(" — ")} | Trusted Dealers on Welsh Motorhub`;
+  const desc = make
+    ? `Browse verified ${make}${model ? ` ${model}` : ""} cars for sale${county ? ` in ${county}` : " across Kenya"}. Transparent pricing, trusted dealers, direct contact.`
+    : "Find verified cars from trusted Kenyan dealers. Transparent pricing, no middleman. Filter by make, price, body type, and county.";
+
+  return {
+    title,
+    description: desc,
+    alternates: { canonical: "/cars" },
+    openGraph: { title, description: desc, type: "website", url: "/cars" },
+  };
 }
 
-const COUNTIES = ["Nairobi","Mombasa","Nakuru","Kisumu","Uasin Gishu","Kiambu","Machakos","Meru"];
-
-function normalizeText(value = "") {
-  return String(value || "")
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[^\w\s]/g, "") // Strip punctuation (hyphens, dots, etc.) to match "cx5" with "cx-5"
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function levenshtein(a = "", b = "") {
-  const s = String(a);
-  const t = String(b);
-  if (!s.length) return t.length;
-  if (!t.length) return s.length;
-  const dp = Array.from({ length: t.length + 1 }, (_, i) => i);
-  for (let i = 1; i <= s.length; i += 1) {
-    let prev = i - 1;
-    dp[0] = i;
-    for (let j = 1; j <= t.length; j += 1) {
-      const temp = dp[j];
-      const cost = s[i - 1] === t[j - 1] ? 0 : 1;
-      dp[j] = Math.min(
-        dp[j] + 1,
-        dp[j - 1] + 1,
-        prev + cost
-      );
-      prev = temp;
-    }
-  }
-  return dp[t.length];
-}
-
-function getSearchScore(car, searchTokens = []) {
-  if (!searchTokens.length) return 0;
-  
-  const make = normalizeText(car.make || "");
-  const model = normalizeText(car.model || "");
-  const variant = normalizeText(car.variant || "");
-  const description = normalizeText(car.description || "");
-  const bodyType = normalizeText(car.bodyType || "");
-  
-  const fullName = `${make} ${model} ${variant}`.trim();
-  const tokens = searchTokens.map(t => t.toLowerCase());
-
-  let score = 0;
-  let matches = 0;
-
-  tokens.forEach(token => {
-    let tokenScore = 0;
-    
-    // 1. Brand/Make (Highest weight)
-    if (make === token) tokenScore += 50;
-    else if (make.includes(token)) tokenScore += 20;
-
-    // 2. Model (High weight)
-    if (model === token) tokenScore += 40;
-    else if (model.includes(token)) tokenScore += 15;
-
-    // 3. Variant/Full Name
-    if (fullName.includes(token)) tokenScore += 10;
-    
-    // 4. Body Type & Description
-    if (bodyType === token) tokenScore += 20;
-    if (description.includes(token)) tokenScore += 5;
-
-    // 5. Fuzzy Match (Typo tolerance)
-    if (tokenScore === 0 && token.length >= 4) {
-      const words = fullName.split(" ").filter(Boolean);
-      for (const word of words) {
-        const dist = levenshtein(word, token);
-        if (dist <= 1) {
-          tokenScore += 8;
-          break;
-        }
-      }
-    }
-
-    if (tokenScore > 0) {
-      score += tokenScore;
-      matches += 1;
-    }
-  });
-
-  // Multiplier for matching multiple tokens (Ensures "Toyota Prado" ranks higher than "Toyota")
-  const coverageMultiplier = matches / tokens.length;
-  
-  // Bonus if ALL tokens matched
-  const completionBonus = matches === tokens.length ? 1.5 : 1.0;
-
-  return (score * coverageMultiplier * completionBonus) / 100;
-}
-
-function median(values = []) {
-  if (!values.length) return null;
-  const sorted = [...values].sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  if (sorted.length % 2 === 0) {
-    return (sorted[mid - 1] + sorted[mid]) / 2;
-  }
-  return sorted[mid];
-}
-
-function normalizeCounter(items = []) {
-  return items.reduce((acc, value) => {
-    if (!value) return acc;
-    acc[value] = (acc[value] || 0) + 1;
-    return acc;
-  }, {});
-}
-
-const getAllMakes = unstable_cache(
-  async () => {
-    return db.car.findMany({
-      where: { available: true },
-      distinct: ["make"],
-      select: { make: true },
-      orderBy: { make: "asc" },
-    });
-  },
-  ["all-makes"],
-  { revalidate: 3600, tags: ["makes"] }
-);
-
-const defaultCarsSelect = {
+const carSelect = {
   id: true,
   publicSlug: true,
   make: true,
@@ -186,6 +54,8 @@ const defaultCarsSelect = {
   price: true,
   engineCC: true,
   mileage: true,
+  vehicleType: true,
+  condition: true,
   bodyType: true,
   fuelType: true,
   transmission: true,
@@ -197,10 +67,9 @@ const defaultCarsSelect = {
   createdAt: true,
   badges: true,
   description: true,
-  images: {
-    where: { isPrimary: true },
-    take: 1,
-  },
+  available: true,
+  soldAt: true,
+  images: { take: 1, orderBy: { isPrimary: "desc" } },
   dealer: {
     select: {
       id: true,
@@ -209,6 +78,7 @@ const defaultCarsSelect = {
       location: true,
       type: true,
       verificationStatus: true,
+      verified: true,
       lat: true,
       lng: true,
       county: true,
@@ -219,48 +89,34 @@ const defaultCarsSelect = {
   },
 };
 
-const getDefaultCarsPage = unstable_cache(
+const getAllMakes = unstable_cache(
   async () => {
-    const where = {
-      available: true,
-      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verificationStatus: "VERIFIED" } }),
-    };
-    const orderBy = [
-      { featuredWeight: "desc" },
-      { dealer: { featured: "desc" } },
-      { dealer: { verificationStatus: "desc" } },
-      { dealer: { boostScore: "desc" } },
-      { views: "desc" },
-      { createdAt: "desc" },
-    ];
-
-    const [cars, total] = await Promise.all([
-      db.car.findMany({
-        where,
-        select: defaultCarsSelect,
-        orderBy,
-        take: 14,
-      }),
-      db.car.count({ where }),
-    ]);
-
-    return { cars, total };
+    return db.car.findMany({
+      where: { available: true },
+      distinct: ["make"],
+      select: { make: true },
+      orderBy: { make: "asc" },
+    });
   },
-  ["cars-default-page-v1"],
-  { revalidate: 30, tags: ["cars-listing"] }
+  ["all-makes"],
+  { revalidate: 3600, tags: ["makes"] },
 );
 
-// Allowed per-page sizes. 14 is the design default (6 top tier + 8 below);
-// 28/56/84 are 2x/4x/6x multiples so the grid still fills cleanly.
-const PER_PAGE_OPTIONS = [14, 28, 56, 84];
-const DEFAULT_PER_PAGE = 14;
+const getAllCounties = unstable_cache(
+  async () => {
+    const rows = await db.dealer.findMany({
+      distinct: ["county"],
+      select: { county: true },
+      orderBy: { county: "asc" },
+    });
+    return rows.map((r) => r.county).filter(Boolean);
+  },
+  ["all-counties"],
+  { revalidate: 3600, tags: ["counties"] },
+);
 
 export default async function CarsPage({ searchParams }) {
   const sp = await searchParams;
-  const rawPage = Number.parseInt(sp.page || "1", 10);
-  const page = Number.isFinite(rawPage) && rawPage > 0 ? rawPage : 1;
-  const rawPerPage = Number.parseInt(sp.perPage || "", 10);
-  const limit = PER_PAGE_OPTIONS.includes(rawPerPage) ? rawPerPage : DEFAULT_PER_PAGE;
   const search = sp.search || "";
   const make = sp.make || "";
   const model = sp.model || "";
@@ -273,357 +129,105 @@ export default async function CarsPage({ searchParams }) {
   const county = sp.county || "";
   const minPrice = sp.minPrice ? parseInt(sp.minPrice, 10) : undefined;
   const maxPrice = sp.maxPrice ? parseInt(sp.maxPrice, 10) : undefined;
+  const vehicleType = sp.vehicleType || "";
+  const condition = sp.condition || "";
   const sort = normalizeCarsSort(sp.sort);
-
-  const userLat = sp.lat ? parseFloat(sp.lat) : null;
-  const userLng = sp.lng ? parseFloat(sp.lng) : null;
   const session = await getSession();
   const userId = session?.user?.id;
 
-  const searchTokens = normalizeText(search).split(" ").filter(Boolean).slice(0, 6);
-
-  // Visitor-stable, day-rotating seed. Within each quality tier the
-  // listing order is reshuffled per visitor so older cars get fair
-  // exposure instead of living on page 7 forever. Search engine bots
-  // skip the shuffle to keep the SEO surface consistent across crawls.
-  const headerStore = await headers();
-  const cookieStore = await cookies();
-  const userAgent = headerStore.get("user-agent") || "";
-  const ipHeader = headerStore.get("x-forwarded-for") || headerStore.get("x-real-ip") || "";
-  const ip = ipHeader.split(",")[0]?.trim() || "0.0.0.0";
-  const cookieRotationId = cookieStore.get("wmh-rot")?.value || null;
-  const isBot = isSearchBot(userAgent);
-  const seed = rotationSeed({ userId, cookieRotationId, ip, userAgent });
-
-  // Rotation only applies to the unfiltered/text-free browse experience
-  // on the default sort. Explicit sorts (price, year, mileage) and
-  // typed searches stay deterministic so users see what they asked for.
-  const wantsRotation = sort === "newest" && !searchTokens.length && !isBot;
-  // Distance ranking re-orders results by proximity + freshness; that
-  // would undo the seeded shuffle so we only run it when we are not
-  // rotating (i.e. on searches that include "newest" sort).
-  const shouldUseDistanceRanking = sort === "newest" && !wantsRotation;
-
-  let effectiveLat = userLat;
-  let effectiveLng = userLng;
-  if (shouldUseDistanceRanking && (effectiveLat == null || effectiveLng == null)) {
-    effectiveLat = effectiveLat ?? session?.user?.lat ?? null;
-    effectiveLng = effectiveLng ?? session?.user?.lng ?? null;
-  }
-
-  const isDefaultFastPath =
-    !search &&
-    !make &&
-    !model &&
-    !steering &&
-    !minYOM &&
-    !maxYOM &&
-    !bodyType &&
-    !fuelType &&
-    !transmission &&
-    !county &&
-    !minPrice &&
-    !maxPrice &&
-    sort === "newest" &&
-    page === 1 &&
-    isBot; // crawlers keep the cached, deterministic 14-card first page
   const where = {
-    available: true,
+    ...publicDetailVisibilityClause(),
     ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
     ...buildMakeWhere(make),
-    ...(model        && { model: { equals: model, mode: "insensitive" } }),
-    ...(steering     && { steering }),
+    ...(model && { model: { equals: model, mode: "insensitive" } }),
+    ...(steering && { steering }),
     ...(minYOM || maxYOM ? { year: { ...(minYOM && { gte: minYOM }), ...(maxYOM && { lte: maxYOM }) } } : {}),
-    ...(bodyType     && { bodyType }),
-    ...(fuelType     && { fuelType }),
+    ...(bodyType && { bodyType }),
+    ...(fuelType && { fuelType }),
     ...(transmission && { transmission }),
     ...(minPrice || maxPrice ? { price: { ...(minPrice && { gte: minPrice }), ...(maxPrice && { lte: maxPrice }) } } : {}),
+    ...(vehicleType && { vehicleType }),
+    ...(condition && { condition }),
     ...(county && {
       dealer: {
         ...(PUBLIC_ONLY_VERIFIED_DEALERS && { verified: true }),
         county: { equals: county, mode: "insensitive" },
       },
     }),
-    // Keyword Search: If search tokens exist, match ANY of them against key fields
-    ...(searchTokens.length > 0 ? {
-      OR: searchTokens.flatMap(token => ([
-        { make:    { contains: token, mode: "insensitive" } },
-        { model:   { contains: token, mode: "insensitive" } },
-        { variant: { contains: token, mode: "insensitive" } },
-        { color:   { contains: token, mode: "insensitive" } },
-        { description: { contains: token, mode: "insensitive" } },
-      ]))
+    ...(search ? {
+      OR: ["make", "model", "variant", "description"].map(field => ({
+        [field]: { contains: search, mode: "insensitive" },
+      })),
     } : {}),
   };
 
   const orderBy = buildCarsOrderBy(sort);
 
-  const carSelect = {
-    id: true,
-    publicSlug: true,
-    make: true,
-    model: true,
-    variant: true,
-    year: true,
-    price: true,
-    engineCC: true,
-    mileage: true,
-    bodyType: true,
-    fuelType: true,
-    transmission: true,
-    featured: true,
-    featuredWeight: true,
-    spotlightUntil: true,
-    hotBadgeUntil: true,
-    views: true,
-    createdAt: true,
-    badges: true,
-    description: true,
-    images: {
-      where: { isPrimary: true },
-      take: 1,
-    },
-    dealer: {
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        location: true,
-        verified: true,
-        featured: true,
-        boostScore: true,
-        lat: true,
-        lng: true,
-        county: true,
-        whatsapp: true,
-      },
-    },
-  };
-
-  const ROTATION_POOL_SIZE = 600;
-  const [carsData, allMakes, personalizedCarsRaw] = await Promise.all([
-    isDefaultFastPath
-      ? getDefaultCarsPage()
-      : Promise.all([
-          db.car.findMany({
-            where,
-            select: carSelect,
-            orderBy,
-            ...(searchTokens.length > 0
-              ? { take: 300 }
-              : wantsRotation
-              ? { take: ROTATION_POOL_SIZE }
-              : { skip: (page - 1) * limit, take: limit }),
-          }),
-          db.car.count({ where }),
-        ]).then(([cars, total]) => ({ cars, total })),
+  const [initialCars, total, allMakes, allCounties, personalizedCarsRaw] = await Promise.all([
+    db.car.findMany({
+      where,
+      select: carSelect,
+      orderBy,
+      take: PER_PAGE,
+    }),
+    db.car.count({ where }),
     getAllMakes(),
+    getAllCounties(),
     userId
-      ? db.carView.findMany({
-          where: { userId },
-          select: {
-            car: {
-              select: {
-                id: true,
-                make: true,
-                bodyType: true,
-                fuelType: true,
-                price: true,
-                dealer: {
-                  select: {
-                    verified: true,
-                    county: true,
-                  },
-                },
-              },
-            },
-          },
-          orderBy: { viewedAt: "desc" },
-          take: 20,
-        }).then(async (views) => {
-          const recentCars = views.map((item) => item.car).filter(Boolean);
-          if (!recentCars.length) return [];
-          const makeCounts = normalizeCounter(recentCars.map((car) => car.make));
-          const bodyCounts = normalizeCounter(recentCars.map((car) => car.bodyType));
-          const fuelCounts = normalizeCounter(recentCars.map((car) => car.fuelType));
-          const countyCounts = normalizeCounter(recentCars.map((car) => car.dealer?.county));
-          const prices = recentCars.map((car) => Number(car.price)).filter((value) => Number.isFinite(value) && value > 0);
-          const preferredPrice = median(prices);
-          const verifiedViews = recentCars.filter((car) => car.dealer?.verified).length;
-          const prefersVerified = verifiedViews / recentCars.length >= 0.55;
-          const topMake = Object.keys(makeCounts).sort((a, b) => makeCounts[b] - makeCounts[a])[0];
-          const topBody = Object.keys(bodyCounts).sort((a, b) => bodyCounts[b] - bodyCounts[a])[0];
-          const topFuel = Object.keys(fuelCounts).sort((a, b) => fuelCounts[b] - fuelCounts[a])[0];
-          const topCounty = Object.keys(countyCounts).sort((a, b) => countyCounts[b] - countyCounts[a])[0];
-
-          const candidateCars = await db.car.findMany({
-            where: {
-              available: true,
-              ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
-              ...(prefersVerified ? { dealer: { ...(PUBLIC_ONLY_VERIFIED_DEALERS ? { verified: true } : {}), verified: true } } : {}),
-              ...(topMake || topBody || topFuel || topCounty
-                ? {
-                    OR: [
-                      ...(topMake ? [{ make: { equals: topMake, mode: "insensitive" } }] : []),
-                      ...(topBody ? [{ bodyType: topBody }] : []),
-                      ...(topFuel ? [{ fuelType: topFuel }] : []),
-                      ...(topCounty ? [{ dealer: { ...(PUBLIC_ONLY_VERIFIED_DEALERS ? { verified: true } : {}), county: { equals: topCounty, mode: "insensitive" } } }] : []),
-                    ],
-                  }
-                : {}),
-            },
-            select: carSelect,
-            orderBy: [{ createdAt: "desc" }],
-            take: 36,
-          });
-
-          const scoreValue = (counts, key, maxWeight) => {
-            if (!key || !counts[key]) return 0;
-            return Math.min(maxWeight, counts[key] * maxWeight);
-          };
-          return candidateCars
-            .map((car) => {
-              const priceDistance =
-                preferredPrice && Number.isFinite(car.price)
-                  ? Math.abs(Number(car.price) - preferredPrice) / Math.max(preferredPrice, 1)
-                  : 1;
-              const priceScore = preferredPrice ? Math.max(0, 24 - Math.min(24, priceDistance * 100)) : 8;
-              const countyScore = topCounty && car.dealer?.county === topCounty ? 10 : 0;
-              const isNearUser =
-                effectiveLat != null && effectiveLng != null && car.dealer?.lat != null && car.dealer?.lng != null;
-              const distanceKm = isNearUser
-                ? distance(effectiveLat, effectiveLng, car.dealer.lat, car.dealer.lng)
-                : null;
-              const distanceScore =
-                distanceKm != null
-                  ? Math.max(0, 14 - Math.min(14, distanceKm))
-                  : 0;
-              const verifiedScore = prefersVerified && car.dealer?.verified ? 10 : car.dealer?.verified ? 5 : 0;
-              const affinityScore =
-                scoreValue(makeCounts, car.make, 28) +
-                scoreValue(bodyCounts, car.bodyType, 18) +
-                scoreValue(fuelCounts, car.fuelType, 12);
-              const freshness = Math.max(0, 8 - Math.min(8, (Date.now() - new Date(car.createdAt).getTime()) / 86400000));
-              const reasons = [];
-              if (makeCounts[car.make] >= 2) reasons.push(`You often view ${car.make}`);
-              if (car.bodyType && bodyCounts[car.bodyType] >= 2) reasons.push(`Matches your ${BODY_TYPE_LABELS[car.bodyType] || car.bodyType} preference`);
-              if (car.fuelType && fuelCounts[car.fuelType] >= 2) reasons.push(`Fuel choice: ${FUEL_LABELS[car.fuelType] || car.fuelType}`);
-              if (preferredPrice && priceDistance <= 0.18) reasons.push("Within your usual price range");
-              if (topCounty && car.dealer?.county === topCounty) reasons.push(`Popular in ${topCounty} for you`);
-              if (distanceKm != null && distanceKm <= 25) reasons.push("Near your location");
-              if (prefersVerified && car.dealer?.verified) reasons.push("From a verified dealer you prefer");
-              if (!reasons.length && car.dealer?.verified) reasons.push("From a verified dealer");
-              if (!reasons.length) reasons.push("Aligned with your recent browsing");
-              return { car, score: affinityScore + priceScore + countyScore + distanceScore + verifiedScore + freshness, reasons };
-            })
-            .sort((a, b) => b.score - a.score)
-            .map((item) => ({
-              ...item.car,
-              recommendationReasons: item.reasons.slice(0, 2),
-            }))
-            .slice(0, 10);
-        })
+      ? getPersonalizedRecommendations(userId, null, null, carSelect)
       : Promise.resolve([]),
   ]);
-  const rawCars = carsData.cars;
-  const totalFromDb = carsData.total;
 
-  const searchMatchedCars = searchTokens.length > 0
-    ? rawCars
-        .map((car) => ({ car, searchScore: getSearchScore(car, searchTokens) }))
-        .filter((item) => item.searchScore >= 0.4)
-        .sort((a, b) => b.searchScore - a.searchScore)
-        .map((item) => item.car)
-    : rawCars;
-  const total = searchTokens.length > 0 ? searchMatchedCars.length : totalFromDb;
-  // When rotation is active, sortByTierAndSeed re-orders the pool so
-  // featured/verified cars still anchor the top but the rest cycle per
-  // visitor/day. The DB returned up to ROTATION_POOL_SIZE rows in
-  // quality order; we sort by (tier, seededRank) and then slice the
-  // requested page locally.
-  const cars = searchTokens.length > 0
-    ? searchMatchedCars.slice((page - 1) * limit, page * limit)
-    : wantsRotation
-    ? sortByTierAndSeed(searchMatchedCars, seed).slice((page - 1) * limit, page * limit)
-    : searchMatchedCars;
-
-  const sortedCars = shouldUseDistanceRanking
-    ? [...cars].sort((a, b) => {
-        const distanceA = effectiveLat != null && effectiveLng != null
-          ? distance(effectiveLat, effectiveLng, a.dealer?.lat, a.dealer?.lng)
-          : null;
-        const distanceB = effectiveLat != null && effectiveLng != null
-          ? distance(effectiveLat, effectiveLng, b.dealer?.lat, b.dealer?.lng)
-          : null;
-        const distanceScore = (d) => (d == null || !Number.isFinite(d) ? 0 : Math.max(0, 20 - Math.min(20, d)));
-        const freshnessScore = (createdAt) => {
-          const days = Math.max(0, (Date.now() - new Date(createdAt).getTime()) / 86400000);
-          return Math.max(0, 20 - Math.min(20, days));
-        };
-        const rankScore = (car, d) =>
-          (Number(car.featuredWeight || 0) * 6) +
-          (car.dealer?.featured ? 22 : 0) +
-          (car.dealer?.verified ? 8 : 0) +
-          Math.min(Number(car.dealer?.boostScore || 0), 30) +
-          Math.min(Number(car.views || 0) / 25, 12) +
-          freshnessScore(car.createdAt) +
-          distanceScore(d);
-        return rankScore(b, distanceB) - rankScore(a, distanceA);
-      })
-    : cars;
-  const carsWithDistance = sortedCars.map((car) => ({
-    ...car,
-    distanceValue:
-      effectiveLat != null && effectiveLng != null && car.dealer?.lat != null && car.dealer?.lng != null
-        ? distance(effectiveLat, effectiveLng, car.dealer.lat, car.dealer.lng)
-        : null,
-  }));
-  const visibleIds = new Set(carsWithDistance.map((car) => car.id));
+  const visibleIds = new Set(initialCars.map(c => c.id));
   const personalizedCars = (personalizedCarsRaw || [])
-    .filter((car) => !visibleIds.has(car.id))
+    .filter(c => !visibleIds.has(c.id))
     .slice(0, 4);
-  const personalizedCarsWithDistance = personalizedCars.map((car) => ({
-    ...car,
-    distanceValue:
-      effectiveLat != null && effectiveLng != null && car.dealer?.lat != null && car.dealer?.lng != null
-        ? distance(effectiveLat, effectiveLng, car.dealer.lat, car.dealer.lng)
-        : null,
-  }));
-  const topCars = carsWithDistance.slice(0, 6);
-  const lowerCars = carsWithDistance.slice(6);
 
-  // The rotation pool is capped (ROTATION_POOL_SIZE rows) so pagination
-  // must stop at the last page that actually contains cars; otherwise
-  // buyers can click into empty pages once the catalog grows past the
-  // pool. Once the catalog regularly exceeds the pool we should switch
-  // to a SQL-side seeded order, but for now this guard keeps the UX
-  // honest.
-  const navigableTotal = wantsRotation
-    ? Math.min(total, searchMatchedCars.length)
-    : total;
-  const totalPages = Math.max(1, Math.ceil(navigableTotal / limit));
-  const shownOnPageCount = sortedCars.length;
-  const rangeStart = shownOnPageCount === 0 ? 0 : (page - 1) * limit + 1;
-  const rangeEnd = (page - 1) * limit + shownOnPageCount;
-
-  const getPageLink = (p) => {
-    const params = new URLSearchParams(sp);
-    params.set("page", p);
-    return `/cars?${params.toString()}`;
-  };
-
-  // Per-page selector links — preserve every other filter / sort and
-  // reset to page 1 because the row numbering changes with the new size.
-  const getPerPageLink = (size) => {
-    const params = new URLSearchParams(sp);
-    if (size === DEFAULT_PER_PAGE) {
-      params.delete("perPage");
-    } else {
-      params.set("perPage", String(size));
-    }
-    params.delete("page");
-    const qs = params.toString();
+  function removeFilter(params, key) {
+    const p = new URLSearchParams(params.toString());
+    p.delete(key);
+    p.delete("page");
+    const qs = p.toString();
     return qs ? `/cars?${qs}` : "/cars";
+  }
+
+  const filterChips = [];
+  if (make) filterChips.push({ label: make, href: removeFilter(sp, "make") });
+  if (model) filterChips.push({ label: `Model: ${model}`, href: removeFilter(sp, "model") });
+  if (bodyType) filterChips.push({ label: BODY_TYPE_LABELS[bodyType] || bodyType, href: removeFilter(sp, "bodyType") });
+  if (fuelType) filterChips.push({ label: FUEL_LABELS[fuelType] || fuelType, href: removeFilter(sp, "fuelType") });
+  if (transmission) filterChips.push({ label: transmission === "AUTOMATIC" ? "Automatic" : transmission === "MANUAL" ? "Manual" : transmission, href: removeFilter(sp, "transmission") });
+  if (steering) filterChips.push({ label: steering === "RHD" ? "RHD" : "LHD", href: removeFilter(sp, "steering") });
+  if (vehicleType) filterChips.push({ label: vehicleType === "MOTORBIKE" ? "Motorbike" : "Car", href: removeFilter(sp, "vehicleType") });
+  if (condition) filterChips.push({ label: condition === "NEW" ? "New" : "Used", href: removeFilter(sp, "condition") });
+  if (county) filterChips.push({ label: county, href: removeFilter(sp, "county") });
+  if (minPrice || maxPrice) {
+    const label = `${minPrice ? `KSh ${(minPrice / 1000000).toFixed(1)}M` : ""}${minPrice && maxPrice ? " – " : ""}${maxPrice ? `KSh ${(maxPrice / 1000000).toFixed(1)}M` : ""}`;
+    filterChips.push({ label, href: (() => { const p = new URLSearchParams(sp.toString()); p.delete("minPrice"); p.delete("maxPrice"); p.delete("page"); return `/cars?${p.toString()}`; })() });
+  }
+  if (minYOM || maxYOM) {
+    const label = `${minYOM || ""}${minYOM && maxYOM ? " – " : ""}${maxYOM || ""}`;
+    filterChips.push({ label: `Year: ${label}`, href: (() => { const p = new URLSearchParams(sp.toString()); p.delete("minYOM"); p.delete("maxYOM"); p.delete("page"); return `/cars?${p.toString()}`; })() });
+  }
+
+  const noFiltersActive = !search && !make && !model && !steering && !minYOM && !maxYOM && !bodyType && !fuelType && !transmission && !county && !minPrice && !maxPrice && !vehicleType && !condition;
+
+  const stringFilters = {
+    search: search || "",
+    make: make || "",
+    model: model || "",
+    steering: steering || "",
+    minYOM: sp.minYOM || "",
+    maxYOM: sp.maxYOM || "",
+    bodyType: bodyType || "",
+    fuelType: fuelType || "",
+    transmission: transmission || "",
+    county: county || "",
+    minPrice: sp.minPrice || "",
+    maxPrice: sp.maxPrice || "",
+    vehicleType: vehicleType || "",
+    condition: condition || "",
+    sort: sort || "",
   };
 
   return (
@@ -638,14 +242,13 @@ export default async function CarsPage({ searchParams }) {
           transmission: transmission || "",
           county: county || "",
           sort: sort || "newest",
-          page,
           result_count: total,
         }}
       />
-      <div className="w-full px-2.5 sm:px-8 pt-2 sm:pt-3 overflow-x-hidden">
-        
-        {/* Breadcrumb strip — standard editorial style */}
-        <div className="mb-3 sm:mb-4 flex items-center justify-between gap-3 sm:gap-4 border-b border-[var(--brand-faint)] pb-2 sm:pb-2.5 min-w-0">
+      <div className="w-full px-2.5 sm:px-8 pt-2 sm:pt-3">
+
+        {/* Breadcrumb strip */}
+        <div className="mb-3 sm:mb-4 flex items-center gap-3 sm:gap-4 pb-2 sm:pb-2.5 min-w-0">
           <div className="meta-label flex min-w-0 items-center gap-2 sm:gap-3 truncate">
             <Link href="/" className="hidden sm:inline hover:text-[var(--brand-primary)] transition-colors">Home</Link>
             <ChevronRight className="hidden sm:block w-3 h-3 shrink-0" />
@@ -653,127 +256,71 @@ export default async function CarsPage({ searchParams }) {
             <ChevronRight className="w-3 h-3 shrink-0" />
             <span className="text-[var(--text-main)] truncate">Available</span>
           </div>
-          <div className="shrink-0 text-right">
-            <div className="meta-label whitespace-nowrap">
-              {shownOnPageCount > 0
-                ? <>Showing <span className="text-[var(--brand-primary)]">{rangeStart}–{rangeEnd}</span> of {total}</>
-                : <>0 of {total}</>}
-            </div>
-            <p className="hidden sm:block mt-0.5 text-[10px] font-semibold text-slate-500 dark:text-zinc-400">
-              Allow location to see nearest cars first.
-            </p>
-          </div>
         </div>
 
-        <div className="mb-3 sm:mb-4 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
-          <CarsInventorySort className="order-1 sm:order-none" />
-          <p className="meta-label order-3 w-full sm:order-none sm:w-auto">
-            Per page
-          </p>
-          <div className="flex flex-wrap items-center gap-1.5 order-2 sm:order-none">
-            {PER_PAGE_OPTIONS.map((size) => {
-              const isActive = limit === size;
-              return (
-                <Link
-                  key={size}
-                  href={getPerPageLink(size)}
-                  scroll={false}
-                  prefetch={false}
-                  aria-current={isActive ? "page" : undefined}
-                  className={[
-                    "px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] border transition-all",
-                    isActive
-                      ? "bg-[var(--brand-primary)] text-white border-[var(--brand-primary)] shadow-sm"
-                      : "bg-[var(--surface)] text-[var(--text-main)] border-[var(--brand-faint)] hover:border-[var(--brand-primary)]",
-                  ].join(" ")}
-                  style={{ borderRadius: "6px" }}
-                >
-                  {size}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
+        <h1 className="text-xl sm:text-2xl font-black text-[var(--text-main)] tracking-tight mb-4">
+          {make && model
+            ? `${make} ${model} for Sale${county ? ` in ${county}` : " in Kenya"}`
+            : make
+            ? `${make} Cars for Sale${county ? ` in ${county}` : " in Kenya"}`
+            : county
+            ? `Cars for Sale in ${county}, Kenya`
+            : search
+            ? `"${search}" — Verified Cars in Kenya`
+            : "Verified Cars for Sale in Kenya"}
+        </h1>
 
-        <CarsInventorySearch
-          initialSearch={search}
-          mergeFromUrl={{
-            make,
-            model,
-            steering,
-            minYOM: sp.minYOM || "",
-            maxYOM: sp.maxYOM || "",
-            bodyType,
-            fuelType,
-            transmission,
-            county,
-            minPrice: minPrice != null ? String(minPrice) : "",
-            maxPrice: maxPrice != null ? String(maxPrice) : "",
-            sort,
-            lat: sp.lat || "",
-            lng: sp.lng || "",
-            perPage: String(limit),
-          }}
-        />
-
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
-          <div className="lg:block">
-            <CarsSidebarFilters
-              activeFilters={{
-                make,
-                model,
-                steering,
-                minYOM: sp.minYOM || "",
-                maxYOM: sp.maxYOM || "",
-                bodyType,
-                fuelType,
-                transmission,
-                county,
-                minPrice,
-                maxPrice,
-                sort,
-                lat: sp.lat,
-                lng: sp.lng,
-              }}
-              allMakes={allMakes}
-              bodyTypeLabels={BODY_TYPE_LABELS}
-              counties={COUNTIES}
-            />
-          </div>
-
-          {/* Top two rows: 3 columns beside sidebar */}
-          <div className="min-w-0 lg:col-span-3">
-            {sortedCars.length === 0 && (
-              <div className="py-20 text-center bg-[var(--surface-overlay)] border border-[var(--brand-faint)]" style={{ borderRadius: '16px' }}>
-                <Search className="w-10 h-10 text-slate-300 dark:text-slate-700 mx-auto mb-4" />
-                <h2 className="text-xl font-black text-[var(--text-main)] tracking-tight mb-2">No matches found</h2>
-                <p className="text-slate-500 dark:text-slate-400 font-medium mb-6">Try adjusting your filters or resetting your search.</p>
-                <Link href="/cars" className="inline-flex bg-[var(--brand-primary)] text-white px-8 py-3 text-[10px] font-black uppercase tracking-widest transition-all hover:brightness-110 active:scale-95" style={{ borderRadius: '8px' }}>
-                  Clear All Filters
-                </Link>
-              </div>
-            )}
-            {topCars.length > 0 && (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
-                {topCars.map((car) => (
-                  <CarCard key={`top-${car.id}`} car={car} distance={car.distanceValue ?? null} />
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Row 3 onward: full width under sidebar, 4 columns on desktop */}
-        {lowerCars.length > 0 && (
-          <div className="mt-3 grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
-            {lowerCars.map((car) => (
-              <CarCard key={`lower-${car.id}`} car={car} distance={car.distanceValue ?? null} />
+        {!noFiltersActive && (
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            {filterChips.map((chip) => (
+              <Link
+                key={chip.label}
+                href={chip.href}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-white dark:bg-[#111] text-slate-700 dark:text-white hover:line-through transition-all"
+                style={{ borderRadius: "6px" }}
+              >
+                {chip.label}
+                <span className="text-slate-400 dark:text-zinc-300">&times;</span>
+              </Link>
             ))}
           </div>
         )}
 
-        {personalizedCarsWithDistance.length > 0 && (
-          <section className="mt-12 border border-[var(--brand-faint)] bg-[var(--surface-overlay)] p-5 sm:p-6" style={{ borderRadius: "20px" }}>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <CarsInventorySort />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="hidden lg:block">
+            <CarsSidebarFilters
+              activeFilters={{ make, model, steering, minYOM: sp.minYOM || "", maxYOM: sp.maxYOM || "", bodyType, fuelType, transmission, county, minPrice, maxPrice, vehicleType, condition, sort, lat: sp.lat, lng: sp.lng }}
+              allMakes={allMakes}
+              bodyTypeLabels={BODY_TYPE_LABELS}
+              counties={allCounties}
+            />
+          </div>
+
+          <div className="min-w-0 lg:col-span-3">
+            <CarsInfiniteGrid
+              initialCars={initialCars}
+              initialTotal={total}
+              filters={stringFilters}
+              noFiltersActive={noFiltersActive}
+            />
+
+            {initialCars.length > 0 && (
+              <div className="flex justify-center mt-4 sm:mt-6">
+                <SearchMapToggle
+                  cars={initialCars.filter((c) => c.dealer?.lat && c.dealer?.lng)}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Personalized section */}
+        {personalizedCars.length > 0 && (
+          <section className="mt-12 bg-[var(--surface-overlay)] p-5 sm:p-6" style={{ borderRadius: "20px" }}>
             <div className="flex items-center justify-between mb-6">
               <div>
                 <p className="meta-label text-[var(--brand-primary)] flex items-center gap-2">
@@ -782,32 +329,32 @@ export default async function CarsPage({ searchParams }) {
                 </p>
                 <h3 className="text-xl font-black text-[var(--text-main)] tracking-tight mt-1">Picked for you</h3>
               </div>
-              <Link href="/cars?sort=views_desc" className="meta-label text-slate-500 hover:text-[var(--brand-primary)] transition-colors">
+              <Link href="/cars?sort=views_desc" className="meta-label text-slate-500 dark:text-zinc-300 hover:text-[var(--brand-primary)] transition-colors">
                 Explore more →
               </Link>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
-              {personalizedCarsWithDistance.map((car) => (
+              {personalizedCars.map((car) => (
                 <div key={`personal-${car.id}`} className="space-y-1">
                   <p className="meta-label text-[var(--brand-primary)]">
                     {car.recommendationReasons?.[0] || "Picked for you"}
                   </p>
                   <details className="group">
-                    <summary className="meta-label list-none inline-flex cursor-pointer items-center gap-1.5 text-slate-500 hover:text-slate-700">
+                    <summary className="meta-label list-none inline-flex cursor-pointer items-center gap-1.5 text-slate-500 dark:text-zinc-300 hover:text-slate-700">
                       <span>Why am I seeing this?</span>
                       <span className="transition-transform group-open:rotate-45">+</span>
                     </summary>
-                    <div className="mt-1 border border-[var(--brand-faint)] bg-[var(--surface)] p-2.5 shadow-sm" style={{ borderRadius: "8px" }}>
+                    <div className="mt-1 bg-[var(--surface)] p-2.5 shadow-sm" style={{ borderRadius: "8px" }}>
                       <ul className="space-y-1">
                         {(car.recommendationReasons?.length ? car.recommendationReasons : ["Aligned with your recent browsing"]).map((reason, idx) => (
-                          <li key={`${car.id}-reason-${idx}`} className="text-[10px] font-bold text-slate-600 dark:text-slate-400">
+                          <li key={`${car.id}-reason-${idx}`} className="text-[10px] font-bold text-slate-600 dark:text-zinc-300">
                             • {reason}
                           </li>
                         ))}
                       </ul>
                     </div>
                   </details>
-                  <CarCard car={car} distance={car.distanceValue ?? null} />
+                  <CarCard car={car} />
                 </div>
               ))}
             </div>
@@ -815,96 +362,30 @@ export default async function CarsPage({ searchParams }) {
         )}
 
         {/* Bottom Discovery & Alert Sections */}
-        <div className="mt-12 sm:mt-16 space-y-8 border-t border-[var(--brand-faint)] pt-8">
+        <div className="mt-12 sm:mt-16 space-y-8 pt-8">
           <CarsQuickActions />
-          
+
           <TrendingSearches className="mb-2" />
 
-          {/* Search Alerts — Only shown when searching or filtering by make to ensure high intent */}
           {(search || make || model || bodyType) && (
             <div className="mb-4 animate-in fade-in slide-in-from-top-2 duration-700">
-              <div className="bg-[var(--brand-primary)]/[0.03] dark:bg-[var(--brand-primary)]/[0.08] border border-[var(--brand-primary)]/20 p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-5" style={{ borderRadius: "16px" }}>
+              <div className="bg-[var(--brand-primary)]/[0.03] dark:bg-[var(--brand-primary)]/[0.08] p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-5" style={{ borderRadius: "16px" }}>
                 <div className="flex items-center gap-4 text-center sm:text-left">
                   <div className="shrink-0 w-10 h-10 bg-[var(--brand-primary)] rounded-xl flex items-center justify-center text-white shadow-xl rotate-3">
                     <Sparkles className="w-5 h-5" />
                   </div>
                   <div>
                     <h4 className="text-base font-black text-[var(--text-main)] tracking-tight">Can't find the perfect match?</h4>
-                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">Get a WhatsApp alert when a matches listed.</p>
+                    <p className="text-xs font-semibold text-slate-500 dark:text-zinc-300 mt-0.5">Get a WhatsApp alert when a matches listed.</p>
                   </div>
                 </div>
-                <SearchAlertButton 
-                  filters={{ 
-                    make, model, bodyType, fuelType, 
-                    maxPrice, minYOM, search 
-                  }} 
+                <SearchAlertButton
+                  filters={{ make, model, bodyType, fuelType, maxPrice, minYOM, search }}
                 />
               </div>
             </div>
           )}
         </div>
-
-        {/* Pagination — Sequential logic: show page range around current */}
-        {totalPages > 1 && (
-          <div className="mt-12 flex justify-center items-center gap-2 border-t border-[var(--brand-faint)] pt-8">
-            {page > 1 && (
-              <Link href={getPageLink(page - 1)} className="w-10 h-10 flex items-center justify-center border border-[var(--brand-faint)] text-[var(--text-main)] hover:bg-[var(--surface-overlay)] transition-all" style={{ borderRadius: '8px' }}>
-                <ChevronRight className="w-4 h-4 rotate-180" />
-              </Link>
-            )}
-            <div className="flex gap-1.5 sm:gap-2">
-              {(() => {
-                const pages = [];
-                const rangeWidth = 2; // Show 2 before and 2 after
-                let start = Math.max(1, page - rangeWidth);
-                let end = Math.min(totalPages, page + rangeWidth);
-
-                // Adjust start/end to always show 5 pages if possible
-                if (end - start < 4) {
-                    if (start === 1) end = Math.min(totalPages, start + 4);
-                    else if (end === totalPages) start = Math.max(1, end - 4);
-                }
-
-                if (start > 1) {
-                  pages.push(1);
-                  if (start > 2) pages.push('...');
-                }
-
-                for (let i = start; i <= end; i++) {
-                  pages.push(i);
-                }
-
-                if (end < totalPages) {
-                  if (end < totalPages - 1) pages.push('...');
-                  pages.push(totalPages);
-                }
-
-                return pages.map((p, idx) => {
-                  if (p === '...') {
-                    return <span key={`ellipsis-${idx}`} className="w-10 h-10 flex items-center justify-center text-slate-400 font-bold">...</span>;
-                  }
-                  return (
-                    <Link key={p} href={getPageLink(p)}
-                      className={`w-10 h-10 flex items-center justify-center text-[11px] font-black transition-all ${
-                        p === page
-                          ? "bg-[var(--brand-primary)] text-white shadow-md scale-105"
-                          : "border border-[var(--brand-faint)] text-slate-400 hover:text-[var(--text-main)] hover:bg-[var(--surface-overlay)]"
-                      }`}
-                      style={{ borderRadius: '8px' }}
-                    >
-                      {p}
-                    </Link>
-                  );
-                });
-              })()}
-            </div>
-            {page < totalPages && (
-              <Link href={getPageLink(page + 1)} className="w-10 h-10 flex items-center justify-center border border-[var(--brand-faint)] text-[var(--text-main)] hover:bg-[var(--surface-overlay)] transition-all" style={{ borderRadius: '8px' }}>
-                <ChevronRight className="w-4 h-4" />
-              </Link>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );

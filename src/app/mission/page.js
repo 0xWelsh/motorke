@@ -125,9 +125,9 @@ export default function MissionPage() {
               <Link href="/cars" className="inline-flex items-center justify-center h-12 px-8 sm:px-10 bg-[#111827] dark:bg-white text-white dark:!text-black border border-[#111827] dark:border-white text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98] shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
                  Browse Verified Assets
               </Link>
-              <Link href="/portal" className="inline-flex items-center justify-center h-12 px-8 sm:px-10 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98] shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
-                 Partner Enquiry
-              </Link>
+               <Link href="/contact" className="inline-flex items-center justify-center h-12 px-8 sm:px-10 bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-[#111827] dark:text-white text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98] shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+                  Partner Enquiry
+               </Link>
            </div>
         </div>
       </section>

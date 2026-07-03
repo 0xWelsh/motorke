@@ -9,6 +9,9 @@ import { ensureCarPublicSlugInTx } from "@/lib/car-public-slug";
 import { notifyListingPublished } from "@/lib/seo-indexing";
 import { revalidateInventoryForCar } from "@/lib/revalidate-inventory";
 import { mapCarImagesWithAlt } from "@/lib/car-listing-seo";
+import { postCarToWhatsAppChannel } from "@/lib/whatsapp-channel";
+import { broadcastCar, isBroadcastConfigured } from "@/lib/waha";
+import { getSiteOrigin } from "@/lib/site-url";
 
 export async function POST(request) {
   const started = Date.now();
@@ -45,6 +48,18 @@ export async function POST(request) {
       durationMs: Date.now() - started,
       ok: true,
     });
+    const origin = getSiteOrigin();
+    const autoPost = body.postToWhatsApp !== false;
+    if (autoPost) {
+      queueMicrotask(() => {
+        postCarToWhatsAppChannel(car, origin).catch(() => {});
+      });
+      if (isBroadcastConfigured()) {
+        queueMicrotask(() => {
+          broadcastCar(car, origin).catch(() => {});
+        });
+      }
+    }
     return NextResponse.json({ success: true, redirectTo: `/admin/cars`, car }, { status: 201 });
   } catch (err) {
     console.error(err);
@@ -63,23 +78,30 @@ export async function POST(request) {
 // Shared create logic (used by admin and dealer portal)
 export async function createCar(body) {
   const {
-    dealerId, make, model, variant, year, price, mileage,
-    fuelType, transmission, bodyType, engineCC, drivetrain, steering,
+    dealerId: rawDealerId, make, model, variant, year, price, mileage,
+    vehicleType, fuelType, transmission, bodyType, engineCC, drivetrain, steering,
     cylinders, horsepower, torque, turbo, sunroof, airbags,
     color, seats, description, features, badges, images, videoUrl,
-    negotiable, imported, featured, registered,
+    negotiable, imported, featured, registered, location, importCountry, dutyPaid,
   } = body;
   console.log("🏁 CREATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
   return db.$transaction(async (tx) => {
+    let dealerId = rawDealerId;
+    if (!dealerId) {
+      const { getOrCreateInHouseDealer } = await import("@/lib/in-house-dealer");
+      const dealer = await getOrCreateInHouseDealer();
+      dealerId = dealer.id;
+    }
     const car = await tx.car.create({
       data: {
       dealerId,
+      vehicleType:  vehicleType || "CAR",
       make:         make.trim(),
       model:        model.trim(),
       variant:      variant?.trim() || null,
       year:         parseInt(year),
-      price: parseInt(price),
+      price: price != null && String(price).trim() !== "" ? parseInt(price) : 0,
       mileage:      mileage ? parseInt(mileage) : null,
       fuelType:     fuelType || "PETROL",
       transmission: transmission || "AUTOMATIC",
@@ -100,12 +122,13 @@ export async function createCar(body) {
       badges:       Array.isArray(badges) ? badges : [],
       videoUrl:     videoUrl?.trim() || null,
       negotiable:   Boolean(negotiable),
-      dutyPaid:     true,
+      dutyPaid:     dutyPaid === false || dutyPaid === "false" ? false : true,
       registered:   registered === false || registered === "false" ? false : true,
       imported:     Boolean(imported),
-      importCountry: imported ? "Japan" : null,
+      importCountry: importCountry?.trim() || null,
       featured:     Boolean(featured),
       available:    true,
+      location:     location?.trim() || null,
       images: images?.length
         ? {
             create: mapCarImagesWithAlt(

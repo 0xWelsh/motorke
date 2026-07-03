@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Settings, Bookmark, MessageSquare, History, Phone, ShieldCheck, Clock, MapPin, Eye, EyeOff } from "lucide-react";
 import { formatCarPrice, whatsappLink } from "@/lib/utils";
 import { PHONE_COUNTRY_CODE_HELPER, PHONE_PLACEHOLDER_INTERNATIONAL, telHrefFromMsisdn } from "@/lib/phone-hints";
+import { PUBLIC_SUPPORT_WHATSAPP, PUBLIC_SUPPORT_PHONE } from "@/lib/site-contact";
 import { clsx } from "clsx";
 import BuyerLocationSettings from "./BuyerLocationSettings";
 import CarCard from "./CarCard";
@@ -67,7 +68,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
     const cur = fd.get("current"), np = fd.get("new"), cf = fd.get("confirm");
     if (np !== cf) { setPwErr("Passwords don't match."); return; }
     if (np.length < 8) { setPwErr("Must be at least 8 characters."); return; }
-    const res = await fetch("/api/portal/password", {
+    const res = await fetch("/api/profile/password", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ current: cur, newPassword: np, confirm: cf }),
     });
@@ -291,14 +292,14 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                       )}
                       
                       <div className="flex flex-wrap gap-2">
-                        {e.dealer.phone && telHrefFromMsisdn(e.dealer.phone) ? (
-                          <a href={telHrefFromMsisdn(e.dealer.phone)} className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-2xl text-xs font-semibold transition">
-                            <Phone size={14} /> Call
+                        {PUBLIC_SUPPORT_PHONE && telHrefFromMsisdn(PUBLIC_SUPPORT_PHONE) ? (
+                          <a href={telHrefFromMsisdn(PUBLIC_SUPPORT_PHONE)} className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-2xl text-xs font-semibold transition">
+                            <Phone size={14} /> Call Welsh Motorhub
                           </a>
                         ) : null}
-                        {e.dealer.whatsapp ? (
+                        {PUBLIC_SUPPORT_WHATSAPP ? (
                           <a
-                            href={whatsappLink(e.dealer.whatsapp, `${e.car.year} ${e.car.make} ${e.car.model}`, e.dealer.name)}
+                            href={whatsappLink(PUBLIC_SUPPORT_WHATSAPP, `${e.car.year} ${e.car.make} ${e.car.model}`, "Welsh Motorhub")}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-emerald-700 text-slate-900 dark:text-white px-4 py-2 rounded-2xl text-xs font-semibold transition"

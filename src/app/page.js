@@ -1,5 +1,4 @@
 // src/app/page.js
-export const dynamic = "force-dynamic";
 import BrowsePanel from "@/components/BrowsePanel";
 import {
   ArrowUpRight,
@@ -11,7 +10,8 @@ import {
   Search,
 } from "lucide-react";
 import Image from "next/image";
-import HeroGridShowcase from "@/components/HeroGridShowcase";
+import Link from "next/link";
+import HeroGridShowcase from "@/components/LazyHeroGridShowcase";
 import CarCard from "@/components/CarCard";
 import TrackedLink from "@/components/TrackedLink";
 import HomepageShopLinks from "@/components/home/HomepageShopLinks";
@@ -21,16 +21,29 @@ import HomepageDutyTeaser from "@/components/home/HomepageDutyTeaser";
 import HomepageHeroCarFinder from "@/components/home/HomepageHeroCarFinder";
 import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
 import HomepageCompareDiscovery from "@/components/home/HomepageCompareDiscovery";
+import HeroCarousel from "@/components/home/HeroCarousel";
 import SeasonalPromoModal from "@/components/SeasonalPromoModal";
 import { getHomepageData } from "@/lib/homepage-cache";
 import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
-import { isActiveListingBoost } from "@/lib/listing-boost";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin, absoluteMediaUrl } from "@/lib/site-url";
 import { carListingPath } from "@/lib/car-listing-url";
 import { listPublishedSeoPages, SEO_CONTENT_TYPES } from "@/lib/seo-content";
 
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
-const HOMEPAGE_HERO_BACKGROUND = "/images/backgrounds/herosectionbackgroud.jpeg";
+
+/** Deterministic shuffle seeded by time window so ISR caching works. */
+function seededShuffle(arr, seed) {
+  const out = [...arr];
+  let m = out.length;
+  let s = seed;
+  while (m) {
+    m--;
+    s = (s * 9301 + 49297) % 233280;
+    const i = Math.floor((s / 233280) * (m + 1));
+    [out[m], out[i]] = [out[i], out[m]];
+  }
+  return out;
+}
 
 /** Pick the first usable car photo from a list to use as a section
  *  backdrop. Falls back to null when the section has no cars yet so
@@ -43,35 +56,9 @@ function pickSectionBackdrop(cars) {
   return null;
 }
 
-function rotateList(items, offset = 0) {
-  if (!Array.isArray(items) || items.length === 0) return [];
-  const safeOffset = ((offset % items.length) + items.length) % items.length;
-  return [...items.slice(safeOffset), ...items.slice(0, safeOffset)];
-}
-
-function getRotationOffset(size) {
-  if (!size) return 0;
-  const now = new Date();
-  // Rotate every 6 hours so the same cars don't dominate all day.
-  const slot = Math.floor(now.getUTCHours() / 6);
-  const daySeed =
-    now.getUTCFullYear() * 1000 +
-    Math.floor((Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) - Date.UTC(now.getUTCFullYear(), 0, 0)) / 86400000);
-  return (daySeed + slot) % size;
-}
-
-/** Deterministic shuffle for SSR when no boosted listings are available. */
-function shuffleWithSeed(items, seed = 0) {
-  if (!Array.isArray(items) || items.length < 2) return items || [];
-  const arr = [...items];
-  let s = seed || 1;
-  for (let i = arr.length - 1; i > 0; i -= 1) {
-    s = (s * 1103515245 + 12345) & 0x7fffffff;
-    const j = s % (i + 1);
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
+// Revalidate every 60 seconds — the data cache already runs at 120s,
+// so this gives ISR HTML caching on top for much faster repeat visits.
+export const revalidate = 60;
 
 export const metadata = {
   title: "Buy Used and New Cars in Kenya | Verified Nairobi & Mombasa Dealers",
@@ -95,14 +82,18 @@ function homeStructuredData(origin, spotlightCars = [], newCars = []) {
     "name": `${car.year} ${car.make} ${car.model} ${car.variant || ""}`.trim(),
     "image": absoluteMediaUrl(car?.images?.[0]?.url || car?.image),
     "description": `Verified ${car.condition} ${car.make} ${car.model} for sale by ${car.dealer?.name || "verified dealer"} in ${car.dealer?.location || "Kenya"}.`,
-    "offers": {
-      "@type": "Offer",
-      "url": absoluteUrl(carListingPath(car)),
-      "priceCurrency": "KES",
-      "price": car.price,
-      "availability": "https://schema.org/InStock",
-      "itemCondition": car.condition === "NEW" ? "https://schema.org/NewCondition" : "https://schema.org/UsedCondition"
-    }
+    ...(car.price
+      ? {
+          "offers": {
+            "@type": "Offer",
+            "url": absoluteUrl(carListingPath(car)),
+            "priceCurrency": "KES",
+            "price": car.price,
+            "availability": "https://schema.org/InStock",
+            "itemCondition": car.condition === "NEW" ? "https://schema.org/NewCondition" : "https://schema.org/UsedCondition"
+          }
+        }
+      : {}),
   }));
 
   return {
@@ -160,37 +151,16 @@ export default async function HomePage() {
     dealers,
     newsItems,
     highlightReviews,
-    heroBoosted,
     heroFallback,
     homepageSpotlight,
     mostViewedEnhanced,
     newEnhanced,
   } = homepageBundle;
 
-  const boostedHero = (heroBoosted || []).filter((car) => isActiveListingBoost(car));
-  const fallbackHeroPool =
-    (heroFallback?.length ? heroFallback : null) ||
-    [...(featured || []), ...(newArrivals || [])];
-  const heroSeed = getRotationOffset(fallbackHeroPool.length);
-
-  let heroPool;
-  if (boostedHero.length > 0) {
-    const rotatedBoosted = rotateList(boostedHero, getRotationOffset(boostedHero.length));
-    if (rotatedBoosted.length >= 2) {
-      heroPool = rotatedBoosted;
-    } else {
-      // Grid needs two cards; pad with one random listing when only one boost is active.
-      const boostedIds = new Set(rotatedBoosted.map((c) => c.id));
-      const filler = shuffleWithSeed(
-        fallbackHeroPool.filter((c) => !boostedIds.has(c.id)),
-        heroSeed
-      )[0];
-      heroPool = filler ? [...rotatedBoosted, filler] : rotatedBoosted;
-    }
-  } else {
-    heroPool = shuffleWithSeed(fallbackHeroPool, heroSeed);
-  }
-  heroPool = heroPool.slice(0, 12);
+  const heroPool = seededShuffle(
+    [...(heroFallback?.length ? heroFallback : [...(featured || []), ...(newArrivals || [])])],
+    Math.floor(Date.now() / 60000),
+  );
   const heroCars = heroPool.slice(0, 8);
 
   /** Rotating random inventory (paid boosts fill slots first when active). */
@@ -214,30 +184,11 @@ export default async function HomePage() {
       {/* Dynamic Hero Section */}
       <section className="relative pt-3 pb-6 sm:pt-4 sm:pb-8 md:pt-6 md:pb-10 lg:pt-8 lg:pb-12 overflow-hidden border-b border-sky-100/80 dark:border-sky-950/40">
         <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
-          <Image
-            src={HOMEPAGE_HERO_BACKGROUND}
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center scale-[1.02]"
-          />
-          {/* Light mode: soft white/sky wash so the background photo is more visible while keeping text crisp */}
-          <div
-            className="absolute inset-0 dark:hidden"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0.80) 0%, rgba(244,249,253,0.76) 42%, rgba(232,243,251,0.70) 100%)",
-            }}
-          />
-          {/* Dark mode: deep navy fade so type and cards stay crisp */}
-          <div
-            className="absolute inset-0 hidden dark:block"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(10,10,10,0.96) 0%, rgba(12,21,36,0.93) 45%, rgba(12,21,36,0.88) 100%)",
-            }}
-          />
+          <div className="absolute inset-0 dark:hidden">
+            <img src="/images/backgrounds/car-dealership.jpg" alt="" className="w-full h-full object-cover" loading="lazy" />
+            <div className="absolute inset-0 bg-white/85" />
+          </div>
+          <div className="absolute inset-0 hidden dark:block bg-[#0a0a0a]" />
         </div>
         <div className="home-shell relative z-10">
           
@@ -257,17 +208,13 @@ export default async function HomePage() {
             </p>
           </div>
 
-          {/* Mobile hero — stacked filters, strips, and finder */}
+          {/* Mobile hero — compact: search, brands, carousel, CTAs */}
           <div className="lg:hidden mx-auto w-full max-w-6xl space-y-4 sm:space-y-5 animate-in fade-in duration-1000 delay-200">
             <div className="mb-4 max-w-lg mx-auto w-full">
-              <BrowsePanel layout="hero-mobile" inventoryCounts={browseInventoryCounts} />
+              <BrowsePanel layout="hero-mobile-slim" inventoryCounts={browseInventoryCounts} />
             </div>
 
-            <div className="w-full max-w-lg mx-auto">
-              <HomepageShopLinks embedded />
-            </div>
-
-            <HeroGridShowcase cars={heroCars.length >= 2 ? heroCars : heroPool.slice(0, 6)} />
+            <HeroCarousel cars={heroCars} />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 w-full max-w-lg mx-auto">
               <TrackedLink
@@ -280,68 +227,15 @@ export default async function HomePage() {
                 Explore Inventory
               </TrackedLink>
               <TrackedLink
-                href="/compare"
-                eventName="homepage_compare_cars_click"
-                eventPayload={{ area: "hero" }}
-                className="h-12 w-full inline-flex items-center justify-center bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:border-slate-900 dark:hover:border-white"
+                href="/request-car"
+                eventName="homepage_request_car_click"
+                eventPayload={{ area: "hero_mobile" }}
+                className="h-12 w-full inline-flex items-center justify-center gap-2 border-2 border-brand-accent bg-brand-accent/10 text-brand-accent dark:text-emerald-400 px-6 text-xs font-bold uppercase tracking-widest transition-all hover:bg-brand-accent/20"
                 style={{ borderRadius: "var(--radius)" }}
               >
-                Compare Cars
+                <Search className="w-4 h-4" aria-hidden />
+                Request a Car
               </TrackedLink>
-            </div>
-
-            <TrackedLink
-              href="/request-car"
-              eventName="homepage_request_car_click"
-              eventPayload={{ area: "hero_mobile" }}
-              className="h-12 w-full max-w-lg mx-auto inline-flex items-center justify-center gap-2 border-2 border-brand-accent bg-brand-accent/10 text-brand-accent dark:text-emerald-400 px-6 text-xs font-bold uppercase tracking-widest transition-all hover:bg-brand-accent/20"
-              style={{ borderRadius: "var(--radius)" }}
-            >
-              <Search className="w-4 h-4" aria-hidden />
-              Request a Car
-            </TrackedLink>
-
-            <div
-              className="p-4 border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#111111]/70 max-w-lg mx-auto text-center"
-              style={{ borderRadius: "var(--radius)" }}
-            >
-              <p className="meta-label mb-3">
-                Quick compare
-              </p>
-              <p className="text-sm text-body-muted dark:text-slate-300 leading-relaxed mb-4">
-                Side-by-side specs, annual TCO, and road readiness in one clean sheet.
-              </p>
-              <TrackedLink
-                href="/compare"
-                eventName="homepage_quick_compare_click"
-                eventPayload={{ area: "hero_card" }}
-                className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-900 dark:text-white hover:text-brand-accent transition-colors justify-center w-full"
-              >
-                Start comparing <ArrowRight className="w-4 h-4" />
-              </TrackedLink>
-            </div>
-
-            <div className="w-full max-w-lg mx-auto">
-              <HomepageHeroCarFinder embedded />
-            </div>
-
-            <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-lg mx-auto">
-              {[
-                { label: "Verified dealers", value: `${dealers.length}+` },
-                { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
-                { label: "Updated", value: "Daily" },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  className="p-3 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70 text-center"
-                  style={{ borderRadius: "var(--radius)" }}
-                >
-                  <p className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">{item.value}</p>
-                  <p className="meta-label mt-1">
-                    {item.label}
-                  </p>
-                </div>
-              ))}
             </div>
           </div>
 
@@ -441,9 +335,32 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <div className="hidden lg:block">
-        <HomepageShopLinks />
+      {/* Quick filter chips */}
+      <div className="home-shell relative -mt-3 sm:-mt-4 mb-6 sm:mb-8 z-20">
+        <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
+          {[
+            { label: "All Inventory", href: "/cars" },
+            { label: "Toyota", href: "/cars?make=Toyota" },
+            { label: "Nissan", href: "/cars?make=Nissan" },
+            { label: "Subaru", href: "/cars?make=Subaru" },
+            { label: "BMW", href: "/cars?make=BMW" },
+            { label: "Mercedes", href: "/cars?make=Mercedes-Benz" },
+            { label: "Under KSh 2M", href: "/cars?maxPrice=2000000" },
+            { label: "SUV", href: "/cars?bodyType=SUV" },
+            { label: "Nairobi", href: "/cars?location=Nairobi" },
+          ].map((chip) => (
+            <Link
+              key={chip.label}
+              href={chip.href}
+              className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#111]/80 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all"
+            >
+              {chip.label}
+            </Link>
+          ))}
+        </div>
       </div>
+
+      <HomepageShopLinks />
 
       <HomepageSpotlight cars={spotlightCards} />
 
@@ -493,15 +410,42 @@ export default async function HomePage() {
               </TrackedLink>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6 items-stretch">
-              {newEnhanced.slice(0, 8).map((car) => (
+              {newEnhanced.slice(0, 8).map((car, index) => (
                 <div key={car.id} className="h-full">
-                  <CarCard car={car} compact />
+                  <CarCard car={car} compact priority={index < 2} />
                 </div>
               ))}
             </div>
           </div>
         </section>
       )}
+
+      {/* Car finder & trust stats (moved from hero) */}
+      <div className="lg:hidden space-y-5 mt-2 mb-0">
+        <div className="home-shell">
+          <HomepageHeroCarFinder embedded />
+        </div>
+        <div className="home-shell">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-lg mx-auto">
+            {[
+              { label: "Verified dealers", value: `${dealers.length}+` },
+              { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
+              { label: "Updated", value: "Daily" },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="p-3 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70 text-center"
+                style={{ borderRadius: "var(--radius)" }}
+              >
+                <p className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">{item.value}</p>
+                <p className="meta-label mt-1">
+                  {item.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       <HomepageDutyTeaser />
 

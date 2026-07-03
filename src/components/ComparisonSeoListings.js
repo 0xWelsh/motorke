@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { formatCarPrice } from "@/lib/utils";
 import { carListingPath } from "@/lib/car-listing-url";
+import { getThumbnailUrl } from "@/lib/image-transform";
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
 
 export default function ComparisonSeoListings({ make, model, cars }) {
@@ -35,7 +36,7 @@ export default function ComparisonSeoListings({ make, model, cars }) {
                 >
                   <div className="relative w-20 h-14 shrink-0 bg-slate-100 dark:bg-zinc-900 overflow-hidden">
                     {img ? (
-                      <Image src={img} alt="" fill className="object-cover" sizes="80px" />
+                      <Image src={getThumbnailUrl(img)} alt="" fill className="object-cover" sizes="80px" />
                     ) : null}
                   </div>
                   <div className="min-w-0">

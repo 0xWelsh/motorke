@@ -14,9 +14,14 @@ export async function POST(request, { params }) {
   const formData = await request.formData();
   const password = formData.get("password")?.toString();
 
-  if (!password || password.length < 8) {
+  const pwErrors = [];
+  if (!password || password.length < 8) pwErrors.push("short");
+  if (!/[A-Z]/.test(password)) pwErrors.push("uppercase");
+  if (!/[a-z]/.test(password)) pwErrors.push("lowercase");
+  if (!/[0-9]/.test(password)) pwErrors.push("number");
+  if (pwErrors.length) {
     return NextResponse.redirect(
-      new URL(`/admin/users/${id}/edit?error=short`, request.url)
+      new URL(`/admin/users/${id}/edit?error=${pwErrors.join("+")}`, request.url)
     );
   }
 

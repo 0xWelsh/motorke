@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useCompare } from "./CompareContext";
 import Link from "next/link";
 import Image from "next/image";
+import { getThumbnailUrl } from "@/lib/image-transform";
 
 // Floating compare bar — GSMArena style with thumbnails
 export function CompareBar() {
@@ -33,7 +34,7 @@ export function CompareBar() {
             <div key={car.id} className="relative group shrink-0">
               <div className="w-12 h-12 overflow-hidden bg-white dark:bg-slate-900 border border-white/20 shadow-lg transition-transform hover:scale-110" style={{ borderRadius: 'var(--radius)' }}>
                 {car.image ? (
-                  <Image src={car.image} alt={car.model} fill className="object-cover" />
+                  <Image src={getThumbnailUrl(car.image)} alt={car.model} fill className="object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-xs">🚗</div>
                 )}

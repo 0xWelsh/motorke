@@ -16,7 +16,7 @@ export function formatPrice(amount) {
 }
 
 export function formatCarPrice(car) {
-  if (!car || car.price == null) return "N/A";
+  if (!car || car.price == null || car.price === 0) return "Contact for price";
   return formatPrice(car.price);
 }
 
@@ -34,6 +34,7 @@ export {
   TRANSMISSION_LABELS,
   STEERING_LABELS,
   DRIVETRAIN_LABELS,
+  VEHICLE_TYPE_LABELS,
   BADGE_OPTIONS,
 } from "./constants";
 

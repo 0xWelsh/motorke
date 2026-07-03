@@ -47,9 +47,19 @@ async function fetchWithTimeout(url, init = {}) {
  * @param {string} url
  * @returns {Promise<Buffer|null>}
  */
-/** Fetch any public HTTPS image (dealer banners, external logos). */
+const ALLOWED_IMAGE_HOSTS = [
+  "supabase.co",
+  "supabase.in",
+  "unsplash.com",
+  "images.unsplash.com",
+];
+
+/** Fetch any public HTTPS image (dealer banners, external logos) — host-allowlisted. */
 export async function fetchRemoteImageBytes(url) {
   try {
+    const parsed = new URL(url);
+    const isAllowed = ALLOWED_IMAGE_HOSTS.some((h) => parsed.hostname.endsWith(h));
+    if (!isAllowed) return null;
     const res = await fetchWithTimeout(url, { headers: { Accept: "image/*" } });
     if (!res.ok) return null;
     const ct = (res.headers.get("content-type") || "").toLowerCase();
@@ -110,7 +120,47 @@ export async function fetchListingImageBytes(rawUrl) {
   return null;
 }
 
+const CAPTION_H = 140;
+
 /**
+ * Resize to max 1200px wide, keep aspect ratio, no caption bar — just the bare image.
+ * @param {Buffer} input
+ * @returns {Promise<Buffer>}
+ */
+export async function buildPlainOgJpeg(input) {
+  const meta = await sharp(input).metadata();
+  const imgW = meta.width || OG_WIDTH;
+  const imgH = meta.height || OG_HEIGHT;
+
+  const maxW = OG_WIDTH;
+  let targetW = Math.min(imgW, maxW);
+  let targetH = Math.round(imgH * (targetW / imgW));
+
+  if (targetW < 300) {
+    targetW = 300;
+    targetH = Math.round(imgH * (targetW / imgW));
+  }
+
+  let quality = 82;
+  let out = await sharp(input)
+    .rotate()
+    .resize(targetW, targetH, { fit: "contain", withoutEnlargement: false })
+    .jpeg({ quality, mozjpeg: true })
+    .toBuffer();
+
+  while (out.length > MAX_OG_BYTES && quality > 48) {
+    quality -= 8;
+    out = await sharp(input)
+      .rotate()
+      .resize(targetW, targetH, { fit: "contain", withoutEnlargement: false })
+      .jpeg({ quality, mozjpeg: true })
+      .toBuffer();
+  }
+  return out;
+}
+
+/**
+ * Resize to fixed 1200×630 cover (used by dealer OG images and fallback).
  * @param {Buffer} input
  * @returns {Promise<Buffer>}
  */
@@ -130,6 +180,77 @@ export async function buildWhatsAppOgJpeg(input) {
       .jpeg({ quality, mozjpeg: true })
       .toBuffer();
   }
+  return out;
+}
+
+function escapeXml(s) {
+  return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function buildCaptionSvg(carMeta, width) {
+  const title = escapeXml(carMeta?.title || "Car");
+  const price = carMeta?.price != null ? `KSh ${Number(carMeta.price).toLocaleString("en-KE")}` : "";
+  const metaParts = [];
+  if (carMeta.mileage) metaParts.push(`${Number(carMeta.mileage).toLocaleString("en-KE")} km`);
+  if (carMeta.location) metaParts.push(carMeta.location);
+  const meta = escapeXml(metaParts.join(" | "));
+  const dealer = escapeXml(carMeta?.dealerName || "");
+
+  const line = `<line x1="0" y1="0" x2="${width}" y2="0" stroke="#2a2a2a" stroke-width="1"/>`;
+  const t = `<text x="16" y="38" font-family="sans-serif" font-size="26" fill="#fff">${title}</text>`;
+  const p = price ? `<text x="${width - 16}" y="38" font-family="sans-serif" font-size="24" fill="#4ade80" text-anchor="end">${price}</text>` : "";
+  const m = meta ? `<text x="16" y="72" font-family="sans-serif" font-size="17" fill="#9ca3af">${meta}</text>` : "";
+  const d = dealer ? `<text x="${width - 16}" y="72" font-family="sans-serif" font-size="15" fill="#9ca3af" text-anchor="end">${dealer}</text>` : "";
+  const u = `<text x="16" y="108" font-family="sans-serif" font-size="13" fill="#666">WELSH</text>`;
+
+  return Buffer.from(`<svg width="${width}" height="${CAPTION_H}" xmlns="http://www.w3.org/2000/svg"><rect width="${width}" height="${CAPTION_H}" fill="#0a0a0a"/>${line}${t}${p}${m}${d}${u}</svg>`);
+}
+
+/**
+ * Build a branded OG image — full original photo + caption bar at the bottom.
+ * No cropping — the photo keeps its natural aspect ratio, resized to max 1200px wide.
+ * @param {Buffer} imageBuffer
+ * @param {object|null} carMeta
+ * @param {string} carMeta.title
+ * @param {number} carMeta.price
+ * @param {number} [carMeta.mileage]
+ * @param {string} [carMeta.location]
+ * @param {string} [carMeta.dealerName]
+ * @returns {Promise<Buffer>}
+ */
+export async function buildBrandedOgJpeg(imageBuffer, carMeta) {
+  const meta = await sharp(imageBuffer).metadata();
+  const imgW = meta.width || OG_WIDTH;
+  const imgH = meta.height || OG_HEIGHT;
+
+  const maxW = OG_WIDTH;
+  let targetW = Math.min(imgW, maxW);
+  let targetH = Math.round(imgH * (targetW / imgW));
+
+  if (targetW < 300) {
+    targetW = 300;
+    targetH = Math.round(imgH * (targetW / imgW));
+  }
+
+  const resized = await sharp(imageBuffer)
+    .rotate()
+    .resize(targetW, targetH, { fit: "contain", withoutEnlargement: false })
+    .jpeg({ quality: 82, mozjpeg: true })
+    .toBuffer();
+
+  const totalH = targetH + CAPTION_H;
+  const caption = buildCaptionSvg(carMeta, targetW);
+
+  const out = await sharp({
+    create: { width: targetW, height: totalH, channels: 3, background: { r: 10, g: 10, b: 10 } },
+  })
+    .composite([
+      { input: resized, top: 0, left: 0 },
+      { input: caption, top: targetH, left: 0 },
+    ])
+    .jpeg({ quality: 82, mozjpeg: true })
+    .toBuffer();
+
   return out;
 }
 

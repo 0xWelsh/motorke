@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Phone } from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa";
+import { Phone, MessageCircle } from "lucide-react";
 import { recordLeadIntent } from "@/lib/record-lead";
 import { trackUiEvent } from "@/lib/analytics";
 
@@ -70,7 +69,7 @@ export default function ListingContactActions({
           onClick={onWhatsApp}
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-[12px] font-bold text-white shadow-sm transition hover:bg-[#20bd5a] active:scale-[0.98]"
         >
-          <FaWhatsapp className="h-4 w-4 shrink-0" aria-hidden />
+          <MessageCircle className="h-4 w-4 shrink-0" aria-hidden />
           WhatsApp
         </a>
       ) : null}
@@ -81,7 +80,7 @@ export default function ListingContactActions({
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-[12px] font-bold text-slate-900 shadow-sm transition hover:bg-slate-50 active:scale-[0.98] dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800"
         >
           <Phone className="h-4 w-4 shrink-0" aria-hidden />
-          Call dealer
+          Call Us
         </Link>
       ) : null}
     </div>

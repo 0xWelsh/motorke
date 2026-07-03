@@ -10,11 +10,10 @@
  *   fonts on Vercel cold starts — the only failure mode left is "PNG
  *   asset missing," which trips during build, not in production.
  *
- *   Why we don't render the dealer name on photos: per the standard
- *   classifieds pattern (Jiji, Cheki, OLX), only the marketplace brand
- *   is watermarked. The dealer name appears in the listing UI, not on
- *   the image. This keeps the watermark consistent, professional, and
- *   immune to variable-text font issues.
+ *   The watermark is a bold brush-font "WELSH MOTORHUB" centered and
+ *   rotated, at very low opacity — like faint ink on paper. It is
+ *   composited at the image centre so it spans the content regardless
+ *   of how the photo is cropped.
  *
  * Controlled via env:
  *   LISTING_WATERMARK_ENABLED=false  → skip watermarking (default: enabled)
@@ -26,17 +25,12 @@ import sharp from "sharp";
 
 const WATERMARK_ENABLED = process.env.LISTING_WATERMARK_ENABLED !== "false";
 
-// Watermark width as a fraction of the source image width.
-const WATERMARK_WIDTH_RATIO = 0.22;
-// Lower-bound and upper-bound watermark width (px) so tiny thumbnails
-// don't get an invisible mark and large hero shots don't get an
-// overpowering one.
-const MIN_WATERMARK_WIDTH = 140;
-const MAX_WATERMARK_WIDTH = 520;
-// Padding from the bottom-right edge (px) relative to source size.
-const EDGE_PADDING_RATIO = 0.022;
-const MIN_EDGE_PADDING = 14;
-const MAX_EDGE_PADDING = 36;
+// Watermark width as a fraction of the source image width. Centre
+// watermarks should be larger than corner logos to remain visible
+// across the full image area.
+const WATERMARK_WIDTH_RATIO = 0.45;
+const MIN_WATERMARK_WIDTH = 200;
+const MAX_WATERMARK_WIDTH = 800;
 
 /** Cache the watermark PNG buffer once per server lifecycle. */
 let cachedBrandWatermark = undefined;
@@ -86,9 +80,6 @@ export async function applyListingWatermark(buffer, mimeType /* customText ignor
   const targetWidth = Math.round(
     clamp(width * WATERMARK_WIDTH_RATIO, MIN_WATERMARK_WIDTH, MAX_WATERMARK_WIDTH)
   );
-  const padding = Math.round(
-    clamp(width * EDGE_PADDING_RATIO, MIN_EDGE_PADDING, MAX_EDGE_PADDING)
-  );
 
   // Resize the watermark PNG (opacity is already baked into the asset).
   let overlay;
@@ -107,13 +98,17 @@ export async function applyListingWatermark(buffer, mimeType /* customText ignor
     return buffer;
   }
 
+  // Centre the watermark on the image.
+  const left = Math.max(0, Math.round((width - overlayWidth) / 2));
+  const top = Math.max(0, Math.round((height - overlayHeight) / 2));
+
   let composited;
   try {
     composited = image.composite([
       {
         input: overlay,
-        left: Math.max(0, width - overlayWidth - padding),
-        top: Math.max(0, height - overlayHeight - padding),
+        left,
+        top,
       },
     ]);
   } catch (err) {
@@ -128,7 +123,7 @@ export async function applyListingWatermark(buffer, mimeType /* customText ignor
     if (mimeType === "image/webp") {
       return await composited.webp({ quality: 90 }).toBuffer();
     }
-    return await composited.jpeg({ quality: 88, mozjpeg: true }).toBuffer();
+    return await composited.jpeg({ quality: 75, mozjpeg: true }).toBuffer();
   } catch (err) {
     console.warn("[watermark] Encode failed, returning original:", err?.message || err);
     return buffer;

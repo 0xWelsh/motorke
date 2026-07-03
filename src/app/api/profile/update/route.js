@@ -14,7 +14,7 @@ export async function POST(request) {
     const name = formData.get("name")?.toString().trim();
 
     if (!name || name.length < 2) {
-      return NextResponse.redirect(new URL("/portal/profile?error=invalid", request.url), 303);
+      return NextResponse.redirect(new URL("/account?profile=error=invalid", request.url), 303);
     }
 
     await db.user.update({
@@ -22,10 +22,10 @@ export async function POST(request) {
       data: { name }
     });
 
-    return NextResponse.redirect(new URL("/portal/profile?saved=1", request.url), 303);
+    return NextResponse.redirect(new URL("/account?profile=saved=1", request.url), 303);
 
   } catch (error) {
     console.error("Profile update error:", error);
-    return NextResponse.redirect(new URL("/portal/profile?error=unknown", request.url), 303);
+    return NextResponse.redirect(new URL("/account?profile=error=unknown", request.url), 303);
   }
 }

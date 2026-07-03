@@ -1,69 +1,70 @@
 // src/components/compare/CompareRadarChart.js
 "use client";
-import { Info } from "lucide-react";
+import {
+  RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
+  ResponsiveContainer, Tooltip, Legend,
+} from "recharts";
 
-export default function CompareRadarChart({
-  fullComparedCars,
-  scoreMaps,
-  currentTutorialKey,
-  initialCarsById
-}) {
+const DIMENSIONS = [
+  { key: "performance", label: "Performance", color: "#38A169" },
+  { key: "comfort", label: "Comfort", color: "#3182CE" },
+  { key: "economy", label: "Economy", color: "#D69E2E" },
+  { key: "value", label: "Value", color: "#E53E3E" },
+];
+
+const CAR_COLORS = ["#38A169", "#3182CE", "#D69E2E"];
+
+export default function CompareRadarChart({ fullComparedCars, scoreMaps, initialCarsById }) {
   if (fullComparedCars.length === 0) return null;
 
+  const radarData = DIMENSIONS.map((dim) => {
+    const point = { dimension: dim.label };
+    fullComparedCars.forEach((car) => {
+      const map = dim.key === "performance" ? scoreMaps.performanceMap
+        : dim.key === "comfort" ? scoreMaps.comfortMap
+        : dim.key === "economy" ? scoreMaps.economyMap
+        : scoreMaps.valueMap;
+      const raw = map.get(car.id) || 0;
+      point[car.id] = Math.round(raw * 100);
+    });
+    return point;
+  });
+
   return (
-    <div
-      id="compare-radar"
-      data-tour="radar"
-      className={`order-4 scroll-mt-24 bg-white dark:bg-[#0f0f0f] border border-slate-100 dark:border-slate-800 p-5 sm:p-6 lg:p-8 ${currentTutorialKey === "radar" ? "ring-2 ring-[#38A169] ring-offset-2 ring-offset-white dark:ring-offset-[#0a0a0a]" : ""}`}
-      style={{ borderRadius: "var(--radius)" }}
-    >
-      <div className="flex flex-col lg:flex-row gap-10 items-center">
-        <div className="flex-1 space-y-6">
-          <div className="flex items-center gap-3">
-            <h3 className="text-xl font-bold text-[#111827] dark:text-white">Performance Radar</h3>
-            <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-[9px] font-bold text-slate-500 uppercase tracking-widest rounded">Beta Analysis</span>
-          </div>
-          <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
-            This normalized scoring represents how each car stacks up relative to the others in this set. 
-            A higher area indicates better all-round capability in that dimension.
-          </p>
-          <div className="space-y-4">
-            {fullComparedCars.map((car) => {
-              const hydrated = !!(car && initialCarsById.has(car.id));
-              if (!hydrated) return null;
-              return (
-                <div key={car.id} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-500">
-                      {car.make} {car.model}
-                    </span>
-                    <span className="text-[11px] font-bold text-[#38A169]">
-                      {Math.round((scoreMaps.overallMap.get(car.id) || 0) * 100)}%
-                    </span>
-                  </div>
-                  <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800/50 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-[#111827] dark:bg-[#38A169] transition-all duration-700 ease-out" 
-                      style={{ width: `${(scoreMaps.overallMap.get(car.id) || 0) * 100}%` }} 
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        
-        {/* Placeholder for SVG Radar or advanced viz if needed */}
-        <div className="w-full lg:w-72 aspect-square relative flex items-center justify-center bg-slate-50 dark:bg-[#111111] border border-slate-100 dark:border-slate-800" style={{ borderRadius: "var(--radius)" }}>
-           <div className="text-center space-y-1 p-6">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Composite Score</p>
-              <p className="text-4xl font-black text-[#111827] dark:text-white">
-                {fullComparedCars.length > 0 ? Math.round(Math.max(...[...scoreMaps.overallMap.values()]) * 100) : 0}
-              </p>
-              <p className="text-[9px] font-bold text-[#38A169] uppercase tracking-widest">Max in set</p>
-           </div>
-        </div>
+    <div className="order-3 lg:order-3 scroll-mt-24 bg-white dark:bg-[#0f0f0f] border border-slate-100 dark:border-slate-800 p-5 sm:p-6 lg:p-8"
+      style={{ borderRadius: "var(--radius)" }}>
+      <div className="flex items-center gap-3 mb-6">
+        <h3 className="text-xl font-bold text-[#111827] dark:text-white">Performance Radar</h3>
+        <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-[9px] font-bold text-slate-500 uppercase tracking-widest rounded">
+          Realtime
+        </span>
       </div>
+      <ResponsiveContainer width="100%" height={360}>
+        <RadarChart data={radarData}>
+          <PolarGrid stroke="#e2e8f0" />
+          <PolarAngleAxis dataKey="dimension" tick={{ fontSize: 10, fontWeight: 700, fill: "#718096" }} />
+          <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fontSize: 9, fill: "#a0aec0" }} />
+          <Tooltip
+            contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0", fontSize: "12px" }}
+            formatter={(value) => [`${value}/100`, ""]}
+          />
+          {fullComparedCars.map((car, idx) => (
+            <Radar
+              key={car.id}
+              name={`${car.make} ${car.model}`}
+              dataKey={car.id}
+              stroke={CAR_COLORS[idx] || "#718096"}
+              fill={CAR_COLORS[idx] || "#718096"}
+              fillOpacity={0.08}
+              strokeWidth={2}
+            />
+          ))}
+          <Legend
+            wrapperStyle={{ fontSize: "10px", fontWeight: 700 }}
+            formatter={(value) => <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400">{value}</span>}
+          />
+        </RadarChart>
+      </ResponsiveContainer>
     </div>
   );
 }

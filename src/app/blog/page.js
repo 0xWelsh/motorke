@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Calendar, ArrowRight } from "lucide-react";
 import { listPublishedSeoPages, blogPagePath } from "@/lib/seo-content";
 import { buildPageTitle, buildCanonicalMetadata } from "@/lib/seo-metadata";
 
@@ -26,21 +27,37 @@ export default async function BlogIndexPage() {
         {posts.length === 0 ? (
           <p className="text-sm text-slate-500">Articles are being published. Check back soon.</p>
         ) : (
-          <ul className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
             {posts.map((post) => (
-              <li key={post.id}>
-                <Link
-                  href={blogPagePath(post.slug)}
-                  className="block rounded-xl border border-slate-200 dark:border-zinc-800 px-5 py-4 hover:border-slate-400 dark:hover:border-zinc-600 transition-colors"
-                >
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">{post.title}</h2>
+              <Link
+                key={post.id}
+                href={blogPagePath(post.slug)}
+                className="group flex flex-col bg-white dark:bg-zinc-900/60 border border-slate-200/80 dark:border-zinc-800 rounded-sm hover:shadow-md hover:border-slate-300 dark:hover:border-zinc-700 transition-all"
+              >
+                <div className="flex-1 flex flex-col p-5 sm:p-6">
+                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#38A169] mb-2.5">
+                    <Calendar className="w-3 h-3" aria-hidden />
+                    {post.publishedAt
+                      ? new Date(post.publishedAt).toLocaleDateString("en-KE", { year: "numeric", month: "short", day: "numeric" })
+                      : null}
+                  </div>
+                  <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-[#38A169] transition-colors leading-snug">
+                    {post.title}
+                  </h2>
                   {post.description ? (
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">{post.description}</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed line-clamp-3">
+                      {post.description}
+                    </p>
                   ) : null}
-                </Link>
-              </li>
+                  <div className="mt-auto pt-4">
+                    <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-[#38A169] transition-colors">
+                      Read <ArrowRight className="w-3 h-3" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
             ))}
-          </ul>
+          </div>
         )}
 
         <p className="mt-10 text-sm text-slate-500">

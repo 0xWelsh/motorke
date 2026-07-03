@@ -249,7 +249,7 @@ export default function DutyCalculator({
           value: formatPrice(estimate.breakdown.customsValue),
         },
         {
-          label: `Import duty (${Math.round((estimate.breakdown.importDutyRate || 0.35) * 100)}% of CV)`,
+          label: `Import duty (${Math.round((estimate.breakdown.importDutyRate || 0.25) * 100)}% of CV)`,
           value: formatPrice(estimate.breakdown.importDuty),
         },
         {
@@ -576,7 +576,7 @@ export default function DutyCalculator({
             </div>
 
             <p className="text-[11px] leading-relaxed text-slate-500 dark:text-slate-400">
-              Indicative only: customs value = depreciated CRSP × schedule ratio, then import duty 35%, excise on
+              Indicative only: customs value = depreciated CRSP × schedule ratio, then import duty 25%, excise on
               (CV + duty), VAT 16%, IDF 3.5%, RDL 2%. CRSP is from our reference table. Confirm with KRA or your
               clearing agent before payment.
             </p>

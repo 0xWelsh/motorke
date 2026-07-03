@@ -11,6 +11,16 @@ const querySchema = z.object({
   includeCarListings: z.enum(["true", "false"]).optional().default("true"),
 });
 
+/** Generate hyphen-inserted variants so "cx5" matches "CX-5" */
+function expandToken(trimmed) {
+  if (trimmed.length < 3 || trimmed.includes("-")) return [trimmed];
+  const variants = [trimmed];
+  for (let i = 1; i < trimmed.length; i++) {
+    variants.push(trimmed.slice(0, i) + "-" + trimmed.slice(i));
+  }
+  return variants;
+}
+
 /** One search token → OR clause on multiple fields. */
 function tokenWhere(token) {
   const trimmed = token.trim();
@@ -22,12 +32,13 @@ function tokenWhere(token) {
     asNum >= 1980 &&
     asNum <= new Date().getFullYear() + 1;
 
-  const textOr = [
-    { make:     { contains: trimmed, mode: "insensitive" } },
-    { model:    { contains: trimmed, mode: "insensitive" } },
-    { variant:  { contains: trimmed, mode: "insensitive" } },
-    { color:    { contains: trimmed, mode: "insensitive" } },
-  ];
+  const tokens = expandToken(trimmed);
+  const textOr = tokens.flatMap(t => [
+    { make:     { contains: t, mode: "insensitive" } },
+    { model:    { contains: t, mode: "insensitive" } },
+    { variant:  { contains: t, mode: "insensitive" } },
+    { color:    { contains: t, mode: "insensitive" } },
+  ]);
   if (isYear) {
     return { OR: [{ year: asNum }, ...textOr] };
   }
@@ -47,12 +58,13 @@ function buildCarTextFilter(query) {
     // but the ranking in loadSuggestions will prioritize better matches.
     return { OR: tokenClauses };
   }
+  const tokens = expandToken(query);
   return {
-    OR: [
-      { make: { contains: query, mode: "insensitive" } },
-      { model: { contains: query, mode: "insensitive" } },
-      { variant: { contains: query, mode: "insensitive" } },
-    ],
+    OR: tokens.flatMap(t => [
+      { make: { contains: t, mode: "insensitive" } },
+      { model: { contains: t, mode: "insensitive" } },
+      { variant: { contains: t, mode: "insensitive" } },
+    ]),
   };
 }
 
@@ -81,7 +93,7 @@ async function loadSuggestions(normalizedQuery, limit, showCars) {
       : Promise.resolve([]),
     db.car.findMany({
       where: verifiedWhere({
-        make: { contains: normalizedQuery, mode: "insensitive" },
+        OR: expandToken(normalizedQuery).map(t => ({ make: { contains: t, mode: "insensitive" } })),
       }),
       select: { make: true },
       distinct: ["make"],
@@ -89,7 +101,7 @@ async function loadSuggestions(normalizedQuery, limit, showCars) {
     }),
     db.car.findMany({
       where: verifiedWhere({
-        model: { contains: normalizedQuery, mode: "insensitive" },
+        OR: expandToken(normalizedQuery).map(t => ({ model: { contains: t, mode: "insensitive" } })),
       }),
       select: { model: true },
       distinct: ["model"],
@@ -97,7 +109,7 @@ async function loadSuggestions(normalizedQuery, limit, showCars) {
     }),
     db.car.findMany({
       where: verifiedWhere({
-        variant: { contains: normalizedQuery, mode: "insensitive" },
+        OR: expandToken(normalizedQuery).map(t => ({ variant: { contains: t, mode: "insensitive" } })),
         NOT: { variant: null },
       }),
       select: { variant: true },
@@ -190,8 +202,12 @@ export async function GET(request) {
 
   logSearchQuery({ query, resultCount: suggestions.length }).catch(() => {});
 
-  return NextResponse.json({
-    query,
-    suggestions,
-  });
+  return NextResponse.json(
+    { query, suggestions },
+    {
+      headers: {
+        "Cache-Control": "public, max-age=45, s-maxage=90, stale-while-revalidate=300",
+      },
+    },
+  );
 }

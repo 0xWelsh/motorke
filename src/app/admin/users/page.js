@@ -1,168 +1,282 @@
-// src/app/admin/users/page.js
 export const dynamic = "force-dynamic";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import {
-  Users,
+  Search,
   UserPlus,
-  ShieldCheck,
-  Store,
-  User as UserIcon,
   Edit3,
-  RefreshCw,
   Ban,
   CheckCircle2,
+  RefreshCw,
+  Users,
 } from "lucide-react";
-import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import DataTableShell from "@/components/ui/DataTableShell";
+import EmptyState from "@/components/ui/EmptyState";
 
 export const metadata = { title: "Users | Welsh Motorhub Admin" };
+
+function usersHref(opts = {}) {
+  const p = new URLSearchParams();
+  if (opts.search) p.set("search", opts.search);
+  const qs = p.toString();
+  return qs ? `/admin/users?${qs}` : "/admin/users";
+}
 
 export default async function AdminUsersPage(props) {
   const searchParams = await props.searchParams;
   await requireAdmin();
+  const search = searchParams?.search || "";
   const deleted = searchParams?.deleted;
 
+  const where = search
+    ? {
+        OR: [
+          { name: { contains: search, mode: "insensitive" } },
+          { email: { contains: search, mode: "insensitive" } },
+        ],
+      }
+    : {};
+
   const users = await db.user.findMany({
-    include: { dealer: { select: { name: true } } },
+    where,
     orderBy: { createdAt: "desc" },
   });
 
-  const roleStyles = {
-    ADMIN: "bg-slate-900 text-white border-slate-900",
-    DEALER:
-      "bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/50",
-    BUYER: "bg-slate-100 text-slate-600 border-slate-200 dark:border-zinc-800 dark:bg-zinc-900",
+  const total = users.length;
+  const adminCount = users.filter((u) => u.role === "ADMIN").length;
+  const buyerCount = users.filter((u) => u.role === "BUYER").length;
+  const dealerCount = users.filter((u) => u.role === "DEALER").length;
+
+  const roleDot = {
+    ADMIN: "bg-emerald-500",
+    DEALER: "bg-amber-500",
+    BUYER: "bg-zinc-500",
   };
 
-  const dealerCount = users.filter((u) => u.role === "DEALER").length;
-  const buyerCount = users.filter((u) => u.role === "BUYER").length;
+  const rowBg = (i) => i % 2 === 0 ? "bg-zinc-900/20" : "bg-transparent";
 
   return (
-    <div className="animate-in fade-in duration-700">
-      <AdminPageHeader
-        eyebrow="Access"
-        title="Users"
-        description="Buyer accounts, dealer logins, and admin identities."
-        stats={[
-          { label: "Total", value: users.length },
-          { label: "Dealers", value: dealerCount, tone: "text-emerald-700 dark:text-emerald-400" },
-          { label: "Buyers", value: buyerCount },
-        ]}
-        actions={
-          <Link
-            href="/admin/users/new"
-            className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-emerald-600"
-          >
-            <UserPlus size={16} /> Add user
-          </Link>
-        }
-      />
+    <div className="space-y-4">
 
+      {/* Header */}
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-lg font-bold text-white tracking-tight">Users</h1>
+          <div className="mt-1 flex items-center gap-3 text-[11px] text-zinc-500">
+            <span>{total} total</span>
+            <span className="text-emerald-500">{adminCount} admin</span>
+            <span>{buyerCount} buyer</span>
+            {dealerCount > 0 && <span className="text-amber-500">{dealerCount} dealer</span>}
+          </div>
+        </div>
+        <Link
+          href="/admin/users/new"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-[11px] font-bold text-white hover:bg-emerald-500 transition-colors shrink-0"
+        >
+          <UserPlus size={15} /> Add user
+        </Link>
+      </div>
+
+      {/* Search */}
+      <form action="/admin/users" method="GET" className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-2">
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-zinc-500" />
+            <input
+              name="search"
+              defaultValue={search}
+              placeholder="Search by name or email…"
+              autoComplete="off"
+              className="w-full rounded-md border border-zinc-800 bg-zinc-950/60 py-2 pl-9 pr-3 text-sm text-white placeholder:text-zinc-600 outline-none transition focus:border-emerald-500/50 focus:bg-zinc-950"
+            />
+          </div>
+          <button
+            type="submit"
+            className="rounded-md bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-500 transition-colors"
+          >
+            Search
+          </button>
+          {search && (
+            <Link
+              href="/admin/users"
+              className="rounded-md border border-zinc-800 px-3 py-2 text-xs font-bold text-zinc-400 hover:text-white transition-colors"
+            >
+              Clear
+            </Link>
+          )}
+        </div>
+      </form>
+
+      {/* Deleted flash */}
       {deleted && (
-        <div className="mb-6 rounded-xl border border-emerald-200/80 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-800/45 dark:bg-emerald-950/35 dark:text-emerald-300">
+        <div className="rounded-lg border border-emerald-800/45 bg-emerald-950/35 px-4 py-2.5 text-sm text-emerald-300">
           Profile deleted successfully.
         </div>
       )}
 
-      <DataTableShell>
-        <table className="w-full min-w-[880px] text-left text-sm">
-          <thead>
-            <tr className="border-b border-slate-100 bg-slate-50/80 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:border-zinc-800 dark:bg-zinc-900/50">
-              {["User", "Role", "Dealer", "Status", "Joined", ""].map((h) => (
-                <th key={h || "actions"} className="px-5 py-3">
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
-            {users.map((user) => (
-              <tr key={user.id} className="group transition-colors hover:bg-slate-50/80 dark:hover:bg-zinc-900/40">
-                <td className="px-5 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-slate-100 text-sm font-bold text-slate-700 transition group-hover:bg-slate-900 group-hover:text-white dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200">
-                      {user.name[0]}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-slate-900 dark:text-white">{user.name}</p>
-                      <p className="text-xs text-slate-500">{user.email}</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-5 py-4">
-                  <span
-                    className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide ${roleStyles[user.role]}`}
-                  >
-                    {user.role === "ADMIN" && <ShieldCheck size={10} />}
-                    {user.role === "DEALER" && <Store size={10} />}
-                    {user.role === "BUYER" && <UserIcon size={10} />}
-                    {user.role}
-                  </span>
-                </td>
-                <td className="max-w-[160px] truncate px-5 py-4 text-slate-600 dark:text-zinc-400">
-                  {user.dealer?.name || "—"}
-                </td>
-                <td className="px-5 py-4">
-                  <span
-                    className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
-                      user.active ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400"
-                    }`}
-                  >
-                    {user.active ? <CheckCircle2 size={12} /> : <Ban size={12} />}
+      {/* Table */}
+      <div className="hidden lg:block">
+        <DataTableShell>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px] text-left">
+              <thead>
+                <tr className="border-b border-zinc-800 bg-zinc-900/40">
+                  {["User", "Role", "Status", "Joined", ""].map((h) => (
+                    <th key={h || "actions"} className="whitespace-nowrap px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-zinc-500">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-800/60">
+                {users.map((user, i) => (
+                  <tr key={user.id} className={`transition-colors hover:bg-zinc-800/30 ${rowBg(i)}`}>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-zinc-700 bg-zinc-900 text-sm font-bold text-zinc-300">
+                          {user.name[0]}
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold text-white">{user.name}</p>
+                          <p className="text-xs text-zinc-500">{user.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-300">
+                        <span className={`h-1.5 w-1.5 rounded-full ${roleDot[user.role]}`} />
+                        {user.role}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
+                        user.active ? "text-emerald-400" : "text-zinc-500"
+                      }`}>
+                        {user.active ? <CheckCircle2 size={12} /> : <Ban size={12} />}
+                        {user.active ? "Active" : "Locked"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-xs text-zinc-500">
+                      {new Date(user.createdAt).toLocaleDateString("en-KE", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Link
+                          href={`/admin/users/${user.id}/edit`}
+                          className="rounded-md border border-zinc-800 bg-zinc-950/60 p-1.5 text-zinc-500 hover:text-white hover:border-zinc-700 transition-colors inline-flex"
+                          title="Edit"
+                        >
+                          <Edit3 size={14} />
+                        </Link>
+                        <form action={`/api/admin/users/${user.id}/toggle`} method="POST" className="inline">
+                          <button
+                            type="submit"
+                            className={`rounded-md border p-1.5 transition-colors ${
+                              user.active
+                                ? "border-zinc-800 bg-zinc-950/60 text-zinc-500 hover:text-zinc-200 hover:border-zinc-700"
+                                : "border-emerald-800/50 bg-emerald-950/30 text-emerald-400 hover:bg-emerald-950/60"
+                            }`}
+                            title={user.active ? "Lock account" : "Unlock account"}
+                          >
+                            {user.active ? <Ban size={14} /> : <CheckCircle2 size={14} />}
+                          </button>
+                        </form>
+                        <Link
+                          href={`/admin/users/${user.id}/edit#security`}
+                          className="rounded-md border border-zinc-800 bg-zinc-950/60 p-1.5 text-zinc-500 hover:text-white hover:border-zinc-700 transition-colors inline-flex"
+                          title="Reset security"
+                        >
+                          <RefreshCw size={14} />
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {users.length === 0 && (
+            <EmptyState
+              title="No users found"
+              message={search ? "Try a different search term." : "No users have been created yet."}
+              actionHref="/admin/users/new"
+              actionLabel="Add user"
+              secondaryHref={search ? "/admin/users" : null}
+              secondaryLabel={search ? "Clear search" : null}
+              icon={<Users size={28} className="text-zinc-500" />}
+            />
+          )}
+        </DataTableShell>
+      </div>
+
+      {/* Mobile cards */}
+      <div className="space-y-2 lg:hidden">
+        {users.length === 0 ? (
+          <EmptyState
+            title="No users found"
+            message={search ? "Try a different search term." : "No users have been created yet."}
+            actionHref="/admin/users/new"
+            actionLabel="Add user"
+            secondaryHref={search ? "/admin/users" : null}
+            secondaryLabel={search ? "Clear search" : null}
+            icon={<Users size={28} className="text-zinc-500" />}
+          />
+        ) : null}
+        {users.map((user) => (
+          <div key={user.id} className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-3">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-zinc-700 bg-zinc-900 text-sm font-bold text-zinc-300">
+                {user.name[0]}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-sm font-bold text-white truncate">{user.name}</p>
+                  <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
+                    user.active ? "text-emerald-400" : "text-zinc-500"
+                  }`}>
+                    {user.active ? <CheckCircle2 size={11} /> : <Ban size={11} />}
                     {user.active ? "Active" : "Locked"}
                   </span>
-                </td>
-                <td className="px-5 py-4 text-slate-600 dark:text-zinc-400">
-                  {new Date(user.createdAt).toLocaleDateString("en-KE", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </td>
-                <td className="px-5 py-4 text-right">
-                  <div className="flex items-center justify-end gap-2 sm:opacity-0 sm:group-hover:opacity-100">
-                    <Link
-                      href={`/admin/users/${user.id}/edit`}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-emerald-500/40 hover:text-emerald-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200"
-                    >
-                      <Edit3 size={14} /> Edit
-                    </Link>
-                    <form action={`/api/admin/users/${user.id}/toggle`} method="POST">
-                      <button
-                        type="submit"
-                        className={`rounded-lg p-2 transition ${
-                          user.active
-                            ? "text-slate-400 hover:text-slate-900"
-                            : "text-emerald-600 hover:text-emerald-800"
-                        }`}
-                        title={user.active ? "Lock account" : "Unlock account"}
-                      >
-                        {user.active ? <Ban size={18} /> : <CheckCircle2 size={18} />}
-                      </button>
-                    </form>
-                    <Link
-                      href={`/admin/users/${user.id}/edit#security`}
-                      className="rounded-lg p-2 text-slate-400 transition hover:text-emerald-600"
-                      title="Reset security"
-                    >
-                      <RefreshCw size={16} />
-                    </Link>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {users.length === 0 && (
-          <div className="py-16 text-center">
-            <Users size={32} className="mx-auto mb-3 text-slate-300" />
-            <p className="text-sm font-medium text-slate-600">No users found</p>
+                </div>
+                <p className="text-xs text-zinc-500 truncate">{user.email}</p>
+                <div className="mt-1 flex items-center gap-2">
+                  <span className={`inline-flex items-center gap-1 text-[10px] font-semibold text-zinc-400`}>
+                    <span className={`h-1.5 w-1.5 rounded-full ${roleDot[user.role]}`} />
+                    {user.role}
+                  </span>
+                  <span className="text-[10px] text-zinc-600">
+                    {new Date(user.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" })}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-zinc-800">
+              <Link
+                href={`/admin/users/${user.id}/edit`}
+                className="rounded-md border border-zinc-800 bg-zinc-950/60 px-3 py-1.5 text-[11px] font-bold text-zinc-400 hover:text-white transition-colors"
+              >
+                Edit
+              </Link>
+              <form action={`/api/admin/users/${user.id}/toggle`} method="POST" className="inline">
+                <button
+                  type="submit"
+                  className={`rounded-md border px-3 py-1.5 text-[11px] font-bold transition-colors ${
+                    user.active
+                      ? "border-zinc-800 bg-zinc-950/60 text-zinc-500 hover:text-zinc-200"
+                      : "border-emerald-800/50 bg-emerald-950/30 text-emerald-400 hover:bg-emerald-950/60"
+                  }`}
+                >
+                  {user.active ? "Lock" : "Unlock"}
+                </button>
+              </form>
+            </div>
           </div>
-        )}
-      </DataTableShell>
+        ))}
+      </div>
     </div>
   );
 }

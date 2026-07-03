@@ -18,7 +18,6 @@ export default function SiteChrome({ user, children, shellPath = "/" }) {
   const pathname = clientPath || shellPath || "/";
   const appShell =
     pathname.startsWith("/admin") ||
-    pathname.startsWith("/portal") ||
     pathname === "/maintenance";
 
   if (appShell) {

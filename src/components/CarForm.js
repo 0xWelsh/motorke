@@ -1,15 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronRight, Info } from "lucide-react";
+import { Check, ChevronRight, Info, Database, Loader2 } from "lucide-react";
 import MediaUploader from "./admin/MediaUploader";
+import useSpecAutoFill from "@/hooks/useSpecAutoFill";
 import {
   BODY_TYPE_LABELS,
   DRIVETRAIN_LABELS,
   FUEL_LABELS,
-  HYBRID_BATTERY_LABELS,
   STEERING_LABELS,
   TRANSMISSION_LABELS,
+  VEHICLE_TYPE_LABELS,
 } from "@/lib/utils";
 
 const MAKES = [
@@ -198,32 +199,34 @@ function buildBaseSeed(car, currentYear, initialDealerId, dealers) {
     make: car?.make || "",
     model: car?.model || "",
     variant: car?.variant || "",
-    year: car?.year || currentYear,
-    condition: car?.condition || "USED",
+    year: car?.year || "",
+    condition: car?.condition || "",
     price: car?.price || "",
     mileage: car?.mileage || "",
-    fuelType: car?.fuelType || "PETROL",
-    transmission: car?.transmission || "AUTOMATIC",
-    bodyType: car?.bodyType || "SEDAN",
+    fuelType: car?.fuelType || "",
+    transmission: car?.transmission || "",
+    bodyType: car?.bodyType || "",
     engineCC: car?.engineCC || "",
     groundClearanceMm: car?.groundClearanceMm || "",
-    hybridBatteryTech: car?.hybridBatteryTech || "NA",
+    hybridBatteryTech: "",
     spareAvailability: car?.spareAvailability || "",
     cylinders: car?.cylinders || "",
     horsepower: car?.horsepower || "",
     torque: car?.torque || "",
     drivetrain: car?.drivetrain ?? "",
-    steering: car?.steering || "RHD",
+    steering: car?.steering || "",
     airbags: car?.airbags || "",
     seats: car?.seats || "",
     color: car?.color || "",
     description: car?.description || "",
-    negotiable: car?.negotiable ?? true,
-    imported: car?.imported ?? true,
-    registered: car?.registered ?? true,
+    negotiable: car?.negotiable ?? false,
+    imported: car?.imported ?? null,
+    registered: car?.registered ?? null,
     turbo: car?.turbo ?? false,
     sunroof: car?.sunroof ?? false,
     featured: car?.featured ?? false,
+    location: car?.location || "",
+    importCountry: car?.importCountry || "",
   };
 }
 
@@ -240,50 +243,14 @@ function collectFormValues(form) {
   return values;
 }
 
-function buildAutoDescription(values = {}, features = []) {
-  const bits = [];
-  const year = values.year || "";
-  const make = values.make || "";
-  const model = values.model || "";
-  const variant = values.variant || "";
-  const title = [year, make, model, variant].filter(Boolean).join(" ").trim();
-  if (title) bits.push(`${title} is available and ready for viewing.`);
-
-  const specLine = [
-    values.transmission ? `${values.transmission.toLowerCase()} transmission` : "",
-    values.fuelType ? `${values.fuelType.toLowerCase()} engine` : "",
-    values.mileage ? `${Number(values.mileage).toLocaleString("en-KE")} km mileage` : "",
-    values.color ? `${values.color} finish` : "",
-  ].filter(Boolean).join(", ");
-  if (specLine) bits.push(`Key specs include ${specLine}.`);
-
-  if (Array.isArray(features) && features.length > 0) {
-    const top = features.slice(0, 6).join(", ");
-    bits.push(`Highlighted features: ${top}${features.length > 6 ? ", and more." : "."}`);
-  }
-
-  bits.push("Contact the dealer for inspection, test drive, and final offer.");
-  return bits.join(" ");
-}
-
-/** Section panels: bordered on desktop, flat full-width on mobile. */
-const formSectionShell =
-  "max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:rounded-none max-md:shadow-none bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5";
-
-const formSectionSplit =
-  "max-md:pb-6 max-md:mb-6 max-md:border-b max-md:border-slate-200/90 dark:max-md:border-zinc-800/90";
-
-/** Label sits inside the control — compact, dealer-friendly. */
 function InfieldGroup({ label, required, className = "", children }) {
   return (
-    <div
-      className={`rounded-2xl border border-[#e5e0d8] dark:border-slate-700 bg-gradient-to-br from-white via-[#fcfbfa] to-[#f3f0ea] dark:from-[#181818] dark:via-[#131313] dark:to-[#0f0f0f] px-3.5 pt-2 pb-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] dark:shadow-none transition focus-within:border-[#ff5a2f] focus-within:ring-2 focus-within:ring-[#ff5a2f]/18 ${className}`}
-    >
-      <div className="text-[10px] font-black uppercase tracking-[0.16em] text-[#ff5a2f]">
+    <div className={`space-y-1 ${className}`}>
+      <label className="text-[10px] font-black uppercase tracking-[0.16em] text-zinc-400">
         {label}
-        {required ? <span className="text-slate-400 dark:text-slate-500"> *</span> : null}
-      </div>
-      <div className="mt-1">{children}</div>
+        {required ? <span className="text-zinc-600"> *</span> : null}
+      </label>
+      {children}
     </div>
   );
 }
@@ -293,7 +260,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const years = Array.from({ length: 40 }, (_, i) => currentYear - i);
 
   const isEdit = method === "PUT" && !!car;
-  const isPortal = action?.startsWith("/api/portal/");
+  const isPortal = false;
   /** Dealer portal + admin car create/edit all need the same mobile/desktop publish chrome */
   const useMobileDock = Boolean(isPortal || action?.startsWith("/api/admin/cars"));
   const isNew = !isEdit;
@@ -324,6 +291,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [formSeed, setFormSeed] = useState(baseSeed);
   /** Bumps when a fresh portal "new" form is initialized so uncontrolled fields (e.g. price) remount empty. */
   const [formInstanceKey, setFormInstanceKey] = useState(0);
+  const [vehicleType, setVehicleType] = useState(car?.vehicleType || "CAR");
 
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ done: 0, total: 0 });
@@ -347,7 +315,13 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     () => parseCommaFeatures(featuresTextareaRef.current?.value ?? ""),
     [featuresRev]
   );
-  const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [advancedOpen, setAdvancedOpen] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("carform_advanced_open");
+      if (saved !== null) return saved === "true";
+    }
+    return false;
+  });
   const [selectedMake, setSelectedMake] = useState((baseSeed.make || "").trim());
   const [modelOptions, setModelOptions] = useState([]);
   const [loadingModels, setLoadingModels] = useState(false);
@@ -355,25 +329,52 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [selectedModel, setSelectedModel] = useState((baseSeed.model || "").trim());
   const [selectedYear, setSelectedYear] = useState(String(baseSeed.year || currentYear));
   const [selectedDealerId, setSelectedDealerId] = useState(baseSeed.dealerId || dealers?.[0]?.id || "");
+  const [variantValue, setVariantValue] = useState((baseSeed.variant || "").trim());
   const [variantOptions, setVariantOptions] = useState([]);
   const [loadingVariants, setLoadingVariants] = useState(false);
   const [variantSources, setVariantSources] = useState(["inventory"]);
-  const [descriptionTouched, setDescriptionTouched] = useState(Boolean((formSeed.description || "").trim()));
+  const descriptionTouched = true;
   const [liveDraft, setLiveDraft] = useState({});
 
   const formRef = useRef(null);
   const [publishReady, setPublishReady] = useState(false);
+  const { filling: autoFilling, filledFields } = useSpecAutoFill(formRef, {
+    make: selectedMake,
+    model: selectedModel,
+    variant: variantValue,
+    year: selectedYear,
+  });
   const initializedNewFormRef = useRef(false);
+
+  useEffect(() => {
+    localStorage.setItem("carform_advanced_open", advancedOpen);
+  }, [advancedOpen]);
+
+  useEffect(() => {
+    if (car) {
+      const hasAdvanced =
+        car.groundClearanceMm ||
+        car.spareAvailability ||
+        car.cylinders ||
+        car.horsepower ||
+        car.torque ||
+        car.airbags ||
+        car.seats ||
+        car.turbo ||
+        car.sunroof;
+      if (hasAdvanced) setAdvancedOpen(true);
+    }
+  }, [car]);
   const saveTimeoutRef = useRef(null);
   const uploadedLocalMapRef = useRef(new Map());
   const pendingUploadIdsRef = useRef(new Set());
   /** Latest uploader file list (for post-upload payload if user toggles include while uploading). */
   const latestUploaderSelectionRef = useRef([]);
-  const inputCls = "w-full bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-[#ff5a2f] transition-all";
-  const selectCls = "w-full bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-900 dark:text-white outline-none focus:border-[#ff5a2f] transition-all appearance-none";
+  const inputCls = "w-full border border-zinc-700 rounded-lg px-3 py-2.5 text-sm font-semibold text-white bg-zinc-900 placeholder:text-zinc-500 outline-none focus:border-emerald-500 transition-all";
+  const selectCls = `${inputCls} appearance-none`;
   const inField =
-    "block w-full min-h-[1.5rem] border-0 bg-transparent p-0 text-base font-semibold text-slate-900 dark:text-white outline-none ring-0 focus:ring-0 placeholder:text-slate-400";
-  const inFieldSelect = `${inField} appearance-none cursor-pointer pr-1`;
+    "block w-full border border-zinc-700 rounded-lg px-3 py-2.5 text-sm font-semibold text-white bg-zinc-900 outline-none focus:border-emerald-500 transition-all placeholder:text-zinc-500";
+  const inFieldSelect = `${inField} appearance-none cursor-pointer`;
   const previewTitle = `${liveDraft.year || selectedYear || ""} ${liveDraft.make || selectedMake || ""} ${liveDraft.model || selectedModel || ""}`.trim() || "Your listing preview";
   const previewVariant = liveDraft.variant || "";
   const previewDescription = String(liveDraft.description || formSeed.description || "").trim();
@@ -576,7 +577,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     }
     const priceRaw = form.querySelector('input[name="price"]')?.value ?? "";
     const p = parsePriceInputToKesInt(priceRaw);
-    if (!Number.isFinite(p) || p < 1) {
+    if (priceRaw.trim() !== "" && (!Number.isFinite(p) || p < 1)) {
       setPublishReady(false);
       return;
     }
@@ -599,25 +600,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       form.removeEventListener("change", sync);
     };
   }, [recalcPublishReady]);
-
-  const applyGeneratedDescription = useCallback((force = false) => {
-    if (descriptionTouched && !force) return;
-    const values = { ...liveDraft, make: selectedMake || liveDraft.make, model: selectedModel || liveDraft.model, year: selectedYear || liveDraft.year };
-    const generated = buildAutoDescription(values, parsedFeatures);
-    const form = formRef.current;
-    const field = form?.querySelector('textarea[name="description"]');
-    if (field) {
-      field.value = generated;
-      field.dispatchEvent(new Event("input", { bubbles: true }));
-      field.dispatchEvent(new Event("change", { bubbles: true }));
-    }
-  }, [descriptionTouched, liveDraft, parsedFeatures, selectedMake, selectedModel, selectedYear]);
-
-  useEffect(() => {
-    const existingDescription = formRef.current?.querySelector('textarea[name="description"]')?.value || "";
-    if (existingDescription.trim()) return;
-    applyGeneratedDescription(false);
-  }, [applyGeneratedDescription]);
 
   function normalizeImagePayload(list) {
     const unique = [];
@@ -736,6 +718,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     const fd = new FormData(e.target);
     const data = Object.fromEntries(fd.entries());
 
+    data.vehicleType = vehicleType;
     data.images = images;
     const featuresRaw =
       featuresTextareaRef.current?.value ??
@@ -751,17 +734,18 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         ? String(data.price)
         : String(formRef.current?.querySelector('input[name="price"]')?.value ?? "");
     data.price = parsePriceInputToKesInt(priceRaw);
-    if (!Number.isFinite(data.price) || data.price < 1) {
+    if (priceRaw.trim() !== "" && (!Number.isFinite(data.price) || data.price < 1)) {
       setError("Enter a valid price in KES (whole numbers only).");
       setSubmitting(false);
       return;
     }
+    if (priceRaw.trim() === "") data.price = null;
 
     data.mileage = data.mileage ? parseInt(data.mileage, 10) : null;
     data.engineCC = data.engineCC ? parseInt(data.engineCC, 10) : null;
     data.groundClearanceMm = data.groundClearanceMm ? parseInt(data.groundClearanceMm, 10) : null;
     data.spareAvailability = data.spareAvailability ? parseInt(data.spareAvailability, 10) : null;
-    data.hybridBatteryTech = data.hybridBatteryTech ? data.hybridBatteryTech : null;
+    data.hybridBatteryTech = null;
     data.cylinders = data.cylinders ? parseInt(data.cylinders, 10) : null;
     data.horsepower = data.horsepower ? parseInt(data.horsepower, 10) : null;
     data.torque = data.torque ? parseInt(data.torque, 10) : null;
@@ -769,7 +753,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     data.seats = data.seats ? parseInt(data.seats, 10) : null;
 
     data.negotiable = isEdit ? !!car?.negotiable : false;
-    data.imported = isEdit ? !!car?.imported : true;
+    data.imported = data.imported === "true";
     data.featured = isEdit ? !!car?.featured : false;
     data.turbo = data.turbo === "on";
     data.sunroof = data.sunroof === "on";
@@ -791,8 +775,8 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       localStorage.setItem(
         defaultsKey,
         JSON.stringify({
+          vehicleType: data.vehicleType,
           make: data.make,
-          fuelType: data.fuelType,
           transmission: data.transmission,
           bodyType: data.bodyType,
           condition: data.condition,
@@ -808,7 +792,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         localStorage.removeItem(legacyDraftKey);
       }
       
-      window.location.href = result.redirectTo || (isPortal ? "/portal" : "/admin/cars");
+      window.location.href = result.redirectTo || "/admin/cars";
     } catch (err) {
       setError(err.message);
       setSubmitting(false);
@@ -821,42 +805,29 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   const publishBlocked = submitting || uploading || !publishReady;
 
-  const mobileCancelHref = isPortal ? "/portal" : "/admin/cars";
+  const mobileCancelHref = "/admin/cars";
 
   const mobileDock = useMobileDock ? (
     <div
-      className="lg:hidden fixed left-0 right-0 max-w-[100vw] z-[9999] border-t border-[#ddd4c8] dark:border-slate-800 bg-white dark:bg-[#0a0a0a] px-3 pt-2.5 pb-[max(0.65rem,env(safe-area-inset-bottom))] shadow-[0_-12px_32px_rgba(0,0,0,0.12)]"
+      className="lg:hidden fixed left-0 right-0 z-[9999] border-t border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 px-3 pt-2.5 pb-[max(0.65rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(0,0,0,0.08)]"
       style={{ bottom: 0 }}
       role="region"
       aria-label="Listing actions"
     >
       <div className="flex items-stretch gap-2 max-w-7xl mx-auto">
-        <a
-          href={mobileCancelHref}
-          className="flex-1 min-w-0 inline-flex items-center justify-center px-3 py-3.5 bg-slate-100 dark:bg-[#151515] hover:bg-slate-200 dark:hover:bg-[#1f1f1f] text-slate-800 dark:text-slate-100 font-bold rounded-xl text-[10px] uppercase tracking-wider text-center border border-slate-200/80 dark:border-slate-700"
+        <a href={mobileCancelHref}
+          className="flex-1 inline-flex items-center justify-center px-3 py-3 bg-zinc-800 text-zinc-300 font-bold rounded-md text-[10px] uppercase tracking-wider"
         >
           Cancel
         </a>
-        <button
-          type="button"
-          disabled={publishBlocked}
-          aria-disabled={publishBlocked}
-          title={publishBlocked && !submitting && !uploading ? "Complete required fields and a valid KES price" : undefined}
-          onClick={() => {
-            if (publishBlocked) return;
-            formRef.current?.requestSubmit();
-          }}
-          className="flex-[1.35] min-w-0 inline-flex items-center justify-center gap-1.5 px-3 py-3.5 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-45 disabled:pointer-events-none disabled:cursor-not-allowed text-white font-black rounded-xl text-[11px] uppercase tracking-wider"
+        <button type="button" disabled={publishBlocked}
+          onClick={() => { if (publishBlocked) return; formRef.current?.requestSubmit(); }}
+          className="flex-[1.35] inline-flex items-center justify-center gap-1.5 px-3 py-3 bg-emerald-600 disabled:opacity-45 text-white font-black rounded-md text-[10px] uppercase tracking-wider"
         >
           {submitting ? "Saving…" : isEdit ? "Save" : "Publish"}
-          {!submitting && <Check size={15} aria-hidden />}
+          {!submitting && <Check size={14} aria-hidden />}
         </button>
       </div>
-      {!publishReady && !submitting && !uploading ? (
-        <p className="mt-2 text-center text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400 px-1 leading-snug">
-          Fill all required fields and a valid price (KES) to publish
-        </p>
-      ) : null}
     </div>
   ) : null;
 
@@ -896,388 +867,336 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       {dealers.length === 1 && dealers[0] && <input type="hidden" name="dealerId" value={dealers[0].id} />}
 
       {useMobileDock ? (
-        <div
-          className="lg:hidden sticky top-0 z-[15] -mx-3 mb-2 flex gap-1.5 overflow-x-auto overscroll-x-contain border-b border-slate-200/90 bg-white/95 px-3 py-2.5 backdrop-blur-md dark:border-zinc-800/90 dark:bg-zinc-950/95 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-          aria-label="Jump to section"
-        >
-          {[
-            { id: "portal-car-listing", label: "Listing" },
-            { id: "portal-car-photos", label: "Photos" },
-            { id: "portal-car-details", label: "Details" },
-            { id: "portal-car-preview", label: "Preview" },
-          ].map(({ id, label }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => scrollToSection(id)}
-              className="shrink-0 rounded-lg bg-slate-100 px-2.5 py-1.5 text-[9px] font-black uppercase tracking-[0.14em] text-slate-800 active:scale-[0.98] dark:bg-zinc-900 dark:text-zinc-100"
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+          <div
+            className="lg:hidden sticky top-0 z-[15] -mx-3 mb-2 flex gap-1.5 overflow-x-auto border-b border-zinc-800 bg-zinc-950/95 px-3 py-2.5 backdrop-blur-sm [scrollbar-width:none]"
+            aria-label="Jump to section"
+          >
+            {[
+              { id: "portal-car-photos", label: "Photos" },
+              { id: "portal-car-listing", label: "Listing" },
+              { id: "car-pricing", label: "Pricing" },
+              { id: "car-engine", label: "Engine" },
+              { id: "car-body", label: "Body" },
+              { id: "car-usage", label: "Usage" },
+              { id: "car-description", label: "Details" },
+              { id: "portal-car-preview", label: "Preview" },
+            ].map(({ id, label }) => (
+              <button key={id} type="button" onClick={() => scrollToSection(id)}
+                className="shrink-0 rounded bg-zinc-800 px-2.5 py-1.5 text-[9px] font-black uppercase tracking-wider text-zinc-300"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
       ) : null}
 
-      <div className={`space-y-5 sm:space-y-6 ${useMobileDock ? "max-md:space-y-0" : ""}`}>
-        <div id="portal-car-listing" className={`scroll-mt-28 md:scroll-mt-8 ${useMobileDock ? formSectionSplit : ""}`}>
-          <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-3">Listing</p>
+      <div className="space-y-4 sm:space-y-5">
 
-          <div className="space-y-8">
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">Vehicle identity</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
-            <div>
-              <InfieldGroup label="Make" required>
-                <input
-                  name="make"
-                  list="make-list"
-                  required
-                  defaultValue={formSeed.make}
-                  placeholder="Toyota"
-                  className={inField}
-                  onChange={(e) => {
-                    const nextMake = e.target.value.trim();
-                    const currentMake = selectedMake.trim();
-                    if (nextMake.toLowerCase() !== currentMake.toLowerCase()) {
-                      const modelInput = formRef.current?.querySelector('input[name="model"]');
-                      const variantInput = formRef.current?.querySelector('input[name="variant"]');
-                      if (modelInput) modelInput.value = "";
-                      if (variantInput) variantInput.value = "";
-                      setSelectedModel("");
-                      setVariantOptions([]);
-                      setVariantSources(["inventory"]);
-                    }
-                    setSelectedMake(nextMake);
-                  }}
-                />
-              </InfieldGroup>
-              <datalist id="make-list">
-                {MAKES.map((make) => <option key={make} value={make} />)}
-              </datalist>
-            </div>
-            <div>
-              <InfieldGroup label="Model" required>
-                <input
-                  name="model"
-                  list="model-list"
-                  required
-                  defaultValue={formSeed.model}
-                  placeholder={selectedMake ? `${selectedMake} model` : "Model"}
-                  className={inField}
-                  onChange={(e) => {
-                    const nextModel = e.target.value.trim();
-                    const currentModel = selectedModel.trim();
-                    if (nextModel.toLowerCase() !== currentModel.toLowerCase()) {
-                      const variantInput = formRef.current?.querySelector('input[name="variant"]');
-                      if (variantInput) variantInput.value = "";
-                      setVariantOptions([]);
-                      setVariantSources(["inventory"]);
-                    }
-                    setSelectedModel(nextModel);
-                  }}
-                />
-              </InfieldGroup>
-              <datalist id="model-list">
-                {modelOptions.map((model) => <option key={model} value={model} />)}
-              </datalist>
-              <p className="mt-1.5 text-[10px] font-medium text-slate-500">
-                {selectedMake ? (loadingModels ? "Loading models…" : `${modelOptions.length} suggestions`) : "Pick make first"}
-              </p>
-            </div>
-            <div>
-              <InfieldGroup label="Variant">
-                <input
-                  name="variant"
-                  list="variant-list"
-                  defaultValue={formSeed.variant}
-                  placeholder="Trim / grade"
-                  className={inField}
-                />
-              </InfieldGroup>
-              <datalist id="variant-list">
-                {variantOptions.map((variant) => <option key={variant} value={variant} />)}
-              </datalist>
-              <p className="mt-1.5 text-[10px] font-medium text-slate-500">
-                {selectedMake && selectedModel ? (loadingVariants ? "Loading variants…" : `${variantOptions.length} suggestions`) : "After make & model"}
-              </p>
-            </div>
-
-            <InfieldGroup label="Year" required>
-              <select
-                name="year"
-                defaultValue={formSeed.year}
-                required
-                className={inFieldSelect}
-                onChange={(e) => setSelectedYear(e.target.value)}
-              >
-                {years.map((year) => <option key={year} value={year}>{year}</option>)}
-              </select>
-            </InfieldGroup>
+        {/* Photos — moved to the very top */}
+        <div id="portal-car-photos" className="scroll-mt-28 md:scroll-mt-8">
+          <div className="border border-dashed border-zinc-700 rounded-lg p-4 sm:p-6 bg-zinc-900">
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-3">Photos</p>
+            {uploading && (
+              <div className="mb-6 text-center">
+                <div className="w-8 h-8 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                <p className="text-sm font-bold text-white">Uploading...</p>
+                <p className="text-xs text-zinc-500 mt-1">{uploadProgress.done} of {uploadProgress.total}</p>
               </div>
+            )}
+            <div className={uploading ? "opacity-50 pointer-events-none" : ""}>
+              <MediaUploader initialImages={images} onFilesSelected={handleFilesSelected} maxFiles={15} />
             </div>
+          </div>
+        </div>
 
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">Price &amp; registration</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
+        {/* Identity */}
+        <div id="portal-car-listing" className="scroll-mt-28 md:scroll-mt-8">
+          <div className="border border-zinc-700 rounded-lg p-4 sm:p-5 bg-zinc-900">
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-3">Listing</p>
+            <div className="flex gap-2 mb-4">
+              {Object.entries(VEHICLE_TYPE_LABELS).map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setVehicleType(value)}
+                  className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-md border transition-all ${
+                    vehicleType === value
+                      ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
+                      : "border-zinc-700 text-zinc-400"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div>
+                <InfieldGroup label="Make" required>
+                  <input name="make" list="make-list" required defaultValue={formSeed.make} placeholder="e.g. Toyota" className={inField}
+                    onChange={(e) => {
+                      const nextMake = e.target.value.trim();
+                      if (nextMake.toLowerCase() !== selectedMake.trim().toLowerCase()) {
+                        const modelInput = formRef.current?.querySelector('input[name="model"]');
+                        const variantInput = formRef.current?.querySelector('input[name="variant"]');
+                        if (modelInput) modelInput.value = "";
+                        if (variantInput) variantInput.value = "";
+                        setSelectedModel("");
+                        setVariantOptions([]);
+                        setVariantSources(["inventory"]);
+                      }
+                      setSelectedMake(nextMake);
+                    }}
+                  />
+                </InfieldGroup>
+                <datalist id="make-list">
+                  {MAKES.map((make) => <option key={make} value={make} />)}
+                </datalist>
+              </div>
+              <div>
+                <InfieldGroup label="Model" required>
+                  <input name="model" list="model-list" required defaultValue={formSeed.model}
+                    placeholder={selectedMake || "Model"} className={inField}
+                    onChange={(e) => {
+                      const nextModel = e.target.value.trim();
+                      if (nextModel.toLowerCase() !== selectedModel.trim().toLowerCase()) {
+                        const variantInput = formRef.current?.querySelector('input[name="variant"]');
+                        if (variantInput) variantInput.value = "";
+                        setVariantOptions([]);
+                        setVariantSources(["inventory"]);
+                      }
+                      setSelectedModel(nextModel);
+                    }}
+                  />
+                </InfieldGroup>
+                <datalist id="model-list">
+                  {modelOptions.map((model) => <option key={model} value={model} />)}
+                </datalist>
+              </div>
+              <div>
+                <InfieldGroup label="Variant">
+                  <input name="variant" list="variant-list" defaultValue={formSeed.variant}
+                    placeholder="Trim / grade" className={inField}
+                    onChange={(e) => setVariantValue(e.target.value.trim())}
+                  />
+                </InfieldGroup>
+                <datalist id="variant-list">
+                  {variantOptions.map((variant) => <option key={variant} value={variant} />)}
+                </datalist>
+              </div>
+              <InfieldGroup label="Year" required>
+                <select name="year" defaultValue={formSeed.year} required className={inFieldSelect}
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                >
+                  {years.map((year) => <option key={year} value={year}>{year}</option>)}
+                </select>
+              </InfieldGroup>
+              <InfieldGroup label="Location">
+                <input name="location" defaultValue={formSeed.location} placeholder="e.g. Nairobi, Westlands" className={inField} />
+              </InfieldGroup>
+            </div>
+          </div>
+        </div>
+
+        {/* Pricing */}
+        <div id="car-pricing" className="border border-zinc-700 rounded-lg p-4 sm:p-5 bg-zinc-900">
+          <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-3">Pricing</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <InfieldGroup label="Price (KES)">
+              <input key={`price-${car?.id ?? "new"}-${formInstanceKey}`} name="price" type="text" inputMode="text"
+                autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} enterKeyHint="done"
+                defaultValue={(car?.price ?? formSeed.price) != null && (car?.price ?? formSeed.price) !== "" ? String(car?.price ?? formSeed.price) : ""}
+                placeholder="e.g. 2,500,000" className={inField}
+              />
+            </InfieldGroup>
             <InfieldGroup label="Condition" required>
               <select name="condition" defaultValue={formSeed.condition} required className={inFieldSelect}>
                 {CONDITIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
               </select>
             </InfieldGroup>
-            <InfieldGroup label="Kenya registration" required>
-              <select name="registered" defaultValue={formSeed.registered ? "true" : "false"} required className={inFieldSelect}>
-                <option value="true">Registered</option>
-                <option value="false">Not registered</option>
-              </select>
-            </InfieldGroup>
-            <div>
-              <InfieldGroup label="Price (KES)" required>
-                <input
-                  key={`price-${car?.id ?? "new"}-${formInstanceKey}`}
-                  name="price"
-                  type="text"
-                  inputMode="text"
-                  autoComplete="off"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                  spellCheck={false}
-                  enterKeyHint="done"
-                  required
-                  defaultValue={
-                    (car?.price ?? formSeed.price) != null && (car?.price ?? formSeed.price) !== ""
-                      ? String(car?.price ?? formSeed.price)
-                      : ""
-                  }
-                  placeholder="e.g. 2,500,000 or 2.5M"
-                  className={`${inField} min-h-[1.75rem]`}
-                />
-              </InfieldGroup>
-              <p className="mt-1.5 text-[10px] font-medium text-slate-500">
-                We leave your typing as-is here; commas and optional M (millions) are read when you publish.
-              </p>
-            </div>
-
             <InfieldGroup label="Mileage (km)">
-              <input name="mileage" type="number" inputMode="numeric" defaultValue={formSeed.mileage} placeholder="52000" className={inField} />
-            </InfieldGroup>
-              </div>
-            </div>
-
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-3">Specs</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-            <InfieldGroup label="Fuel" required>
-              <select name="fuelType" defaultValue={formSeed.fuelType} required className={inFieldSelect}>
-                {Object.entries(FUEL_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-              </select>
-            </InfieldGroup>
-            <InfieldGroup label="Engine (CC)">
-              <input
-                name="engineCC"
-                type="number"
-                inputMode="numeric"
-                defaultValue={formSeed.engineCC != null && formSeed.engineCC !== "" ? String(formSeed.engineCC) : ""}
-                placeholder="e.g. 2000"
-                className={inField}
-              />
+              <input name="mileage" type="number" inputMode="numeric" defaultValue={formSeed.mileage} placeholder="52,000" className={inField} />
             </InfieldGroup>
             <InfieldGroup label="Transmission" required>
               <select name="transmission" defaultValue={formSeed.transmission} required className={inFieldSelect}>
                 {Object.entries(TRANSMISSION_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
               </select>
             </InfieldGroup>
-            <InfieldGroup label="Color" required>
-              <input name="color" required defaultValue={formSeed.color} placeholder="Pearl white" className={inField} />
+          </div>
+        </div>
+
+        {/* Engine & Drivetrain */}
+        <div id="car-engine" className="border border-zinc-700 rounded-lg p-4 sm:p-5 bg-zinc-900">
+          <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-3">Engine &amp; Drivetrain</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <InfieldGroup label="Fuel" required>
+              <select name="fuelType" defaultValue={formSeed.fuelType} required className={inFieldSelect}>
+                {Object.entries(FUEL_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+              </select>
             </InfieldGroup>
+            <InfieldGroup label="Engine (CC)">
+              <input name="engineCC" type="number" inputMode="numeric"
+                defaultValue={formSeed.engineCC != null && formSeed.engineCC !== "" ? String(formSeed.engineCC) : ""}
+                placeholder="e.g. 2000" className={inField}
+              />
+            </InfieldGroup>
+            <InfieldGroup label="Cylinders">
+              <input name="cylinders" type="number" inputMode="numeric" defaultValue={formSeed.cylinders} placeholder="4" className={inField} />
+            </InfieldGroup>
+            <InfieldGroup label="Horsepower">
+              <input name="horsepower" type="number" inputMode="numeric" defaultValue={formSeed.horsepower} placeholder="180" className={inField} />
+            </InfieldGroup>
+            <InfieldGroup label="Torque (Nm)">
+              <input name="torque" type="number" inputMode="numeric" defaultValue={formSeed.torque} placeholder="280" className={inField} />
+            </InfieldGroup>
+            <InfieldGroup label="Drivetrain">
+              <select name="drivetrain" defaultValue={formSeed.drivetrain || ""} className={inFieldSelect}>
+                <option value="">Select</option>
+                {Object.entries(DRIVETRAIN_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+              </select>
+            </InfieldGroup>
+            <div className="flex items-end pb-2 gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="turbo" defaultChecked={!!formSeed.turbo} className="w-4 h-4 accent-emerald-500" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Turbo</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        {/* Body & Dimensions */}
+        <div id="car-body" className="border border-zinc-700 rounded-lg p-4 sm:p-5 bg-zinc-900">
+          <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-3">Body &amp; Dimensions</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <InfieldGroup label="Body type" required>
               <select name="bodyType" defaultValue={formSeed.bodyType} required className={inFieldSelect}>
                 {Object.entries(BODY_TYPE_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
               </select>
             </InfieldGroup>
-            <InfieldGroup label="Drivetrain">
-              <select name="drivetrain" defaultValue={formSeed.drivetrain || ""} className={inFieldSelect}>
-                <option value="">Select drivetrain…</option>
-                {Object.entries(DRIVETRAIN_LABELS).map(([value, label]) => (
-                  <option key={value} value={value}>{label}</option>
-                ))}
-              </select>
+            <InfieldGroup label="Color" required>
+              <input name="color" required defaultValue={formSeed.color} placeholder="e.g. Pearl white" className={inField} />
             </InfieldGroup>
             <InfieldGroup label="Steering">
               <select name="steering" defaultValue={formSeed.steering} className={inFieldSelect}>
                 {Object.entries(STEERING_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
               </select>
             </InfieldGroup>
-              </div>
+            <InfieldGroup label="Ground clearance">
+              <input name="groundClearanceMm" type="number" inputMode="numeric" defaultValue={formSeed.groundClearanceMm} placeholder="195 mm" className={inField} />
+            </InfieldGroup>
+            <InfieldGroup label="Seats">
+              <input name="seats" type="number" inputMode="numeric" defaultValue={formSeed.seats} placeholder="5" className={inField} />
+            </InfieldGroup>
+            <InfieldGroup label="Airbags">
+              <input name="airbags" type="number" inputMode="numeric" defaultValue={formSeed.airbags} placeholder="6" className={inField} />
+            </InfieldGroup>
+            <div className="flex items-end pb-2">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="sunroof" defaultChecked={!!formSeed.sunroof} className="w-4 h-4 accent-emerald-500" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Sunroof</span>
+              </label>
             </div>
           </div>
         </div>
 
-        <div id="portal-car-photos" className={`scroll-mt-28 md:scroll-mt-8 ${useMobileDock ? formSectionSplit : ""}`}>
-          <div className={formSectionShell}>
-            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-3 sm:mb-4">Photos</p>
-            {uploading && (
-              <div className="mb-8 rounded-2xl bg-[#fbfcfe] p-6 text-center max-md:border-0 dark:bg-zinc-900/50 md:border md:border-[#ddd4c8] dark:md:border-slate-800">
-                <div className="w-10 h-10 border-4 border-[#ff5a2f] border-t-transparent rounded-2xl animate-spin mx-auto mb-4" />
-                <p className="text-sm font-bold text-slate-900 dark:text-white uppercase">Uploading Images...</p>
-                <p className="text-[11px] font-bold text-slate-500 mt-2">Image {uploadProgress.done} of {uploadProgress.total}</p>
+        {/* Usage & Registration */}
+        <div id="car-usage" className="border border-zinc-700 rounded-lg p-4 sm:p-5 bg-zinc-900">
+          <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-3">Usage &amp; Registration</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <InfieldGroup label="Kenya reg" required>
+              <select name="registered" defaultValue={formSeed.registered == null ? "" : formSeed.registered ? "true" : "false"} required className={inFieldSelect}>
+                <option value="" disabled>Select</option>
+                <option value="true">Registered</option>
+                <option value="false">Not registered</option>
+              </select>
+            </InfieldGroup>
+            <InfieldGroup label="Origin">
+              <select name="imported" defaultValue={formSeed.imported == null ? "" : formSeed.imported ? "true" : "false"} className={inFieldSelect}>
+                <option value="" disabled>Select</option>
+                <option value="false">Locally used</option>
+                <option value="true">Foreign used (imported)</option>
+              </select>
+            </InfieldGroup>
+            <InfieldGroup label="Import country">
+              <select name="importCountry" defaultValue={formSeed.importCountry || ""} className={inFieldSelect}>
+                <option value="">Select</option>
+                <option value="Japan">Japan</option>
+                <option value="UK">UK</option>
+                <option value="USA">USA</option>
+                <option value="UAE">UAE</option>
+                <option value="Germany">Germany</option>
+                <option value="South Africa">South Africa</option>
+                <option value="Thailand">Thailand</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Other">Other</option>
+              </select>
+            </InfieldGroup>
+          </div>
+        </div>
+
+        {/* Description */}
+        <div id="car-description" className="border border-zinc-700 rounded-lg p-4 sm:p-5 bg-zinc-900 space-y-4">
+          <div>
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-2">Description</p>
+            <textarea name="description" rows={4} defaultValue={formSeed.description}
+              placeholder="Condition, service history, tyres, known issues…"
+              className="w-full border border-zinc-700 rounded-lg px-3 py-2.5 text-sm text-white bg-zinc-950 outline-none focus:border-emerald-500/50 transition-all resize-y min-h-[6rem] placeholder:text-zinc-600"
+            />
+          </div>
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-2">Features</p>
+            <textarea ref={featuresTextareaRef} data-field="features"
+              key={`features-${car?.id ?? "new"}-${formInstanceKey}`}
+              defaultValue={initialFeaturesDisplay} onInput={bumpFeaturesInput} rows={2}
+              placeholder="Leather seats, Sunroof, Reverse camera…"
+              className="w-full border border-zinc-700 rounded-lg px-3 py-2.5 text-sm text-white bg-zinc-950 outline-none focus:border-emerald-500/50 transition-all resize-y min-h-[3.5rem] placeholder:text-zinc-600"
+            />
+            <p className="mt-1.5 text-[10px] text-zinc-500">{parsedFeatures.length} feature{parsedFeatures.length === 1 ? "" : "s"} — comma-separated</p>
+            {parsedFeatures.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {parsedFeatures.map((f, i) => (
+                  <span key={i} className="inline-flex items-center gap-1 rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1 text-[10px] font-semibold text-zinc-300">
+                    {f}
+                  </span>
+                ))}
               </div>
             )}
-            <div className={uploading ? "opacity-50 pointer-events-none" : ""}>
-              <MediaUploader initialImages={images} onFilesSelected={handleFilesSelected} maxFiles={15} />
-            </div>
-            <p className="mt-3 text-[11px] font-medium text-slate-500">Uploads start in the background.</p>
           </div>
         </div>
 
-        <div id="portal-car-details" className={`scroll-mt-28 md:scroll-mt-8 ${useMobileDock ? formSectionSplit : ""}`}>
-          <div className="space-y-4 sm:space-y-6 max-md:space-y-0">
-            <div className={`${formSectionShell} ${useMobileDock ? formSectionSplit : ""}`}>
-                <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-                  <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">Description</p>
-                  <button
-                    type="button"
-                    onClick={() => applyGeneratedDescription(true)}
-                    className="px-3 py-1.5 rounded-xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-wider"
-                  >
-                    Generate from specs
-                  </button>
-                </div>
-                <InfieldGroup label="Tell buyers about the car">
-                  <textarea
-                    name="description"
-                    rows={5}
-                    defaultValue={formSeed.description}
-                    onChange={() => {
-                      setDescriptionTouched(true);
-                    }}
-                    placeholder="Condition, service history, tyres, known issues…"
-                    className={`${inField} resize-y min-h-[7.5rem] text-sm leading-relaxed`}
-                  />
-                </InfieldGroup>
-                <p className="mt-2 text-[11px] font-medium text-slate-500">Honest detail builds trust.</p>
+        {/* Preview */}
+        <div id="portal-car-preview" className="scroll-mt-28 md:scroll-mt-8">
+          <div className="border border-zinc-700 rounded-lg p-4 sm:p-5 bg-zinc-900">
+            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">Preview</p>
+            <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+              <div className="flex h-20 w-full shrink-0 items-center justify-center overflow-hidden rounded bg-zinc-800 sm:h-24 sm:w-36">
+                {previewCoverSrc ? (
+                  <img src={previewCoverSrc} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-[10px] text-zinc-500 font-semibold">No photo</span>
+                )}
               </div>
-              <div className={`${formSectionShell} ${useMobileDock ? formSectionSplit : ""}`}>
-                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500 mb-3">Features</p>
-                <InfieldGroup label="List features, comma-separated">
-                  <textarea
-                    ref={featuresTextareaRef}
-                    data-field="features"
-                    key={`features-${car?.id ?? "new"}-${formInstanceKey}`}
-                    defaultValue={initialFeaturesDisplay}
-                    onInput={bumpFeaturesInput}
-                    rows={3}
-                    placeholder="Leather seats, Sunroof, Reverse camera…"
-                    className={`${inField} resize-y min-h-[4.5rem] text-sm leading-relaxed`}
-                  />
-                </InfieldGroup>
-                <p className="mt-2 text-[11px] font-medium text-slate-500">
-                  Separate with commas. We trim spaces and skip empty items when you publish ({parsedFeatures.length} listed).
-                </p>
+              <div className="min-w-0">
+                <p className="text-sm font-black text-white truncate">{previewTitle}</p>
+                {previewVariant && <p className="text-xs font-semibold text-zinc-500 truncate">{previewVariant}</p>}
+                <p className="text-sm font-bold text-emerald-400 mt-1">{previewPrice ? `KES ${Number(previewPrice).toLocaleString("en-KE")}` : "Contact for price"}</p>
+                <p className="text-xs text-zinc-500 mt-1 line-clamp-2">{previewDescription || "—"}</p>
               </div>
-            <div className={formSectionShell}>
-              <div className="flex items-center justify-between gap-3 mb-4 sm:mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-                  <h3 className="text-base font-bold tracking-tight text-slate-900 dark:text-white sm:text-lg">Advanced specs</h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setAdvancedOpen((prev) => !prev)}
-                  className="inline-flex items-center gap-2 rounded-2xl bg-slate-100 px-3 py-1.5 text-[11px] font-black uppercase tracking-wider text-slate-600 hover:text-slate-900 max-md:border-0 dark:bg-zinc-900 dark:text-slate-300 dark:hover:text-white md:border md:border-[#ddd4c8] dark:md:border-slate-700"
-                >
-                  {advancedOpen ? "Collapse" : "Expand"}
-                  <ChevronRight size={14} className={`transition-transform ${advancedOpen ? "rotate-90" : ""}`} />
-                </button>
-              </div>
-              {advancedOpen ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                  <InfieldGroup label="Ground clearance (mm)">
-                    <input name="groundClearanceMm" type="number" inputMode="numeric" defaultValue={formSeed.groundClearanceMm} placeholder="185" className={inField} />
-                  </InfieldGroup>
-                  <InfieldGroup label="Spare availability (1–10)">
-                    <input name="spareAvailability" type="number" inputMode="numeric" min="1" max="10" defaultValue={formSeed.spareAvailability} placeholder="8" className={inField} />
-                  </InfieldGroup>
-                  <InfieldGroup label="Hybrid battery">
-                    <select name="hybridBatteryTech" defaultValue={formSeed.hybridBatteryTech} className={inFieldSelect}>
-                      {Object.entries(HYBRID_BATTERY_LABELS).map(([value, label]) => (
-                        <option key={value} value={value}>{label}</option>
-                      ))}
-                    </select>
-                  </InfieldGroup>
-                  <InfieldGroup label="Cylinders">
-                    <input name="cylinders" type="number" inputMode="numeric" defaultValue={formSeed.cylinders} placeholder="4" className={inField} />
-                  </InfieldGroup>
-                  <InfieldGroup label="Horsepower">
-                    <input name="horsepower" type="number" inputMode="numeric" defaultValue={formSeed.horsepower} placeholder="180" className={inField} />
-                  </InfieldGroup>
-                  <InfieldGroup label="Torque (Nm)">
-                    <input name="torque" type="number" inputMode="numeric" defaultValue={formSeed.torque} placeholder="280" className={inField} />
-                  </InfieldGroup>
-                  <InfieldGroup label="Airbags">
-                    <input name="airbags" type="number" inputMode="numeric" defaultValue={formSeed.airbags} placeholder="6" className={inField} />
-                  </InfieldGroup>
-                  <InfieldGroup label="Seats">
-                    <input name="seats" type="number" inputMode="numeric" defaultValue={formSeed.seats} placeholder="5" className={inField} />
-                  </InfieldGroup>
-                  <div className="sm:col-span-2 lg:col-span-4 flex flex-wrap gap-6 pt-1">
-                    <label className="flex items-center gap-3 cursor-pointer">
-                      <input type="checkbox" name="turbo" defaultChecked={!!formSeed.turbo} className="w-4 h-4 accent-[#ff5a2f]" />
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">Turbo</span>
-                    </label>
-                    <label className="flex items-center gap-3 cursor-pointer">
-                      <input type="checkbox" name="sunroof" defaultChecked={!!formSeed.sunroof} className="w-4 h-4 accent-[#ff5a2f]" />
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">Sunroof</span>
-                    </label>
-                  </div>
-                </div>
-              ) : (
-                <p className="text-xs font-semibold text-slate-500">
-                  Advanced specs are collapsed by default for faster listing. Expand when needed.
-                </p>
-              )}
             </div>
           </div>
         </div>
 
-        <div id="portal-car-preview" className={`${formSectionShell} scroll-mt-28 md:scroll-mt-8 max-md:!pb-0 max-md:!mb-0 max-md:!border-b-0`}>
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Preview</p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
-            <div className="flex h-20 w-full shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-100 max-md:border-0 sm:h-24 sm:w-36 sm:rounded-xl md:border md:border-slate-200 dark:bg-zinc-900 dark:md:border-slate-800">
-              {previewCoverSrc ? (
-                <img src={previewCoverSrc} alt="" className="w-full h-full object-cover" />
-              ) : (
-                <span className="text-[11px] text-slate-400">No photo</span>
-              )}
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm font-black text-slate-900 dark:text-white truncate">{previewTitle}</p>
-              {previewVariant && <p className="text-xs font-semibold text-slate-500 truncate">{previewVariant}</p>}
-              <p className="text-sm font-bold text-[#ff5a2f] mt-1">{previewPrice ? `KES ${Number(previewPrice || 0).toLocaleString("en-KE")}` : "—"}</p>
-              <p className="text-xs text-slate-500 mt-1 line-clamp-2">{previewDescription || "—"}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="hidden lg:flex flex-col gap-2 pt-2 pb-4 border-t border-[#ddd4c8]/80 dark:border-slate-800 mt-2">
-          <div className="flex flex-wrap justify-between items-center gap-3">
-            <a href={mobileCancelHref} className="px-5 py-2.5 sm:px-6 sm:py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all">
-              Cancel
-            </a>
-            <button
-              type="submit"
-              disabled={publishBlocked}
-              title={publishBlocked && !submitting && !uploading ? "Complete required fields and a valid KES price" : undefined}
-              className="px-6 py-2.5 sm:px-8 sm:py-3 bg-[#ff5a2f] hover:bg-emerald-700 disabled:opacity-45 disabled:cursor-not-allowed text-slate-900 dark:text-white font-bold rounded-xl sm:rounded-2xl text-[11px] sm:text-xs uppercase tracking-wider transition-all inline-flex items-center justify-center gap-2"
-            >
-              {submitting ? "Saving..." : isEdit ? "Save" : "Publish"}
-              {!submitting && <Check size={16} />}
-            </button>
-          </div>
-          {useMobileDock && !publishReady && !submitting && !uploading ? (
-            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500 text-right">
-              Fill required fields and a valid price (KES) to enable Publish
-            </p>
-          ) : null}
+        {/* Desktop publish bar */}
+        <div className="hidden lg:flex items-center justify-between gap-3 pt-4 border-t border-zinc-700">
+          <a href={mobileCancelHref} className="px-4 py-2.5 text-[10px] font-black uppercase tracking-wider text-zinc-500 hover:text-white transition-colors">
+            Cancel
+          </a>
+          <button type="submit" disabled={publishBlocked}
+            title={publishBlocked && !submitting && !uploading ? "Complete required fields" : undefined}
+            className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-45 disabled:cursor-not-allowed text-white font-black rounded-md text-[11px] uppercase tracking-wider inline-flex items-center gap-2"
+          >
+            {submitting ? "Saving..." : isEdit ? "Save" : "Publish"}
+            {!submitting && <Check size={15} />}
+          </button>
         </div>
       </div>
 

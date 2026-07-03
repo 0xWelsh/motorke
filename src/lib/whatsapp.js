@@ -57,7 +57,7 @@ export async function notifyDealerOfLead(dealerPhone, leadData) {
     `👤 *Buyer:* ${buyerName}\n` +
     `🚗 *Vehicle:* ${carTitle}\n\n` +
     `View details in your portal:\n` +
-    `${siteUrl}/portal/leads?lead=${leadId}`;
+    `${siteUrl}/admin/cars`;
 
   return sendWhatsAppMessage({ to: dealerPhone, message: text });
 }

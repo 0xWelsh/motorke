@@ -45,6 +45,7 @@ export default function HomepageSpotlight({ cars = [] }) {
                 compact
                 spotlightProminent
                 hideSpotlightBadge
+                priority={index < 2}
               />
             </div>
           ))}

@@ -5,6 +5,7 @@ import { formatCarPrice } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import { carListingPath } from "@/lib/car-listing-url";
+import { getThumbnailUrl } from "@/lib/image-transform";
 
 export default function SearchSuggestions({ 
   suggestions = [],
@@ -59,7 +60,7 @@ export default function SearchSuggestions({
                     {car.image && (
                       <div className="w-10 h-10 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0 border border-black dark:border-white">
                         <Image
-                          src={car.image}
+                          src={getThumbnailUrl(car.image)}
                           alt={car.value}
                           width={40}
                           height={40}

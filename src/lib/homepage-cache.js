@@ -363,13 +363,6 @@ const getCachedHomeEnriched = unstable_cache(
   async () => {
     try {
       const base = await getCachedData();
-      const hasCars =
-        base.featured?.length ||
-        base.hotThisWeek?.length ||
-        base.newArrivals?.length;
-      if (!hasCars && !base.dealers?.length) {
-        return { ...EMPTY_HOMEPAGE_DATA, ...base };
-      }
       return await withDbRetry(() => enrichHomepage(base), { retries: 1, baseDelayMs: 500 });
     } catch (err) {
       console.error("[homepage-cache] enrich failed:", err?.message || err);

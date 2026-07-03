@@ -1,22 +1,20 @@
 // src/app/cars/[id]/page.js
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
 import { db } from "@/lib/db";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { unstable_cache } from "next/cache";
 import { formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
 import { telHrefFromMsisdn } from "@/lib/phone-hints";
-import { MessageCircle, ChevronRight, MapPin, Wallet, ShieldCheck, Phone } from "lucide-react";
-import EnquiryForm from "@/components/EnquiryForm";
-import MobileListingContactBar from "@/components/MobileListingContactBar";
+import { PUBLIC_SUPPORT_WHATSAPP, PUBLIC_SUPPORT_PHONE } from "@/lib/site-contact";
+import { getPreloadImageUrl } from "@/lib/image-transform";
+import { MapPin } from "lucide-react";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
-import { SaveButton, TrackRecentView } from "@/components/CarActions";
+import { TrackRecentView } from "@/components/CarActions";
 import { CompareButton } from "@/components/CompareSelector";
-import PrintButton from "@/components/PrintButton";
 import SpecSheet from "@/components/SpecSheet";
 import CarReviewsSection from "@/components/CarReviewsSection";
-import CarCard from "@/components/CarCard";
 import FeatureList from "@/components/FeatureList";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
 import Link from "next/link";
@@ -30,7 +28,6 @@ import {
   meaningfulFeatureList,
   positiveNum,
 } from "@/lib/car-display";
-import { specIconSrcForDetailLabel, specIconImageClassName } from "@/lib/spec-icons";
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
 import { facetPathSegment } from "@/lib/seo-car-facets";
 import { carListingPath } from "@/lib/car-listing-url";
@@ -43,8 +40,8 @@ import {
 import { resolveModelWikiForCar } from "@/lib/seo-model-wiki";
 import CarModelWiki from "@/components/CarModelWiki";
 import CarListingRelatedSearches from "@/components/CarListingRelatedSearches";
-import ListingContactActions from "@/components/ListingContactActions";
-import ListingPriceBlock from "@/components/ListingPriceBlock";
+import SimilarCarsSection from "@/components/SimilarCarsSection";
+import CarDetailMobileBar from "@/components/CarDetailMobileBar";
 import { buildListingHighlightChips } from "@/lib/car-listing-highlights";
 import {
   daysRemainingOnSite,
@@ -79,8 +76,6 @@ export async function generateMetadata({ params }) {
         {
           url: ogImageUrl,
           secureUrl: ogImageUrl,
-          width: 1200,
-          height: 630,
           type: "image/jpeg",
           alt: title,
         },
@@ -133,10 +128,10 @@ const getSimilarCars = unstable_cache(
         OR: [{ dealerId }, { make }, { bodyType }],
       },
       include: {
-        images: { where: { isPrimary: true }, take: 1 },
+        images: { take: 1, orderBy: { isPrimary: "desc" } },
         dealer: { select: { name: true, location: true, type: true, verificationStatus: true } },
       },
-      take: 24,
+      take: 10,
     });
 
     return candidates
@@ -162,7 +157,7 @@ const getSimilarCars = unstable_cache(
         if (b.score !== a.score) return b.score - a.score;
         return (b.candidate.createdAt?.getTime?.() || 0) - (a.candidate.createdAt?.getTime?.() || 0);
       })
-      .slice(0, 3)
+      .slice(0, 10)
       .map((entry) => entry.candidate);
   },
   ["similar-cars"],
@@ -204,21 +199,17 @@ export default async function CarDetailPage({ params }) {
   }
 
   const session    = await getSession();
-  const userId     = session?.userId || null;
-  const isLoggedIn = !!userId;
-  const savedCar   = userId ? await db.savedCar.findUnique({
-    where: { userId_carId: { userId, carId: carData.id } },
-  }).catch(() => null) : null;
-  const isSaved = !!savedCar;
 
   const { car, dealer } = { car: carData, dealer: carData.dealer };
   const soldGrace = isInSoldGracePeriod(car);
   const daysLeftOnSite = daysRemainingOnSite(car);
 
-  const similar = await getSimilarCars(car.id, car.make, car.dealerId, car.bodyType, car.year, car.price);
-  const reviewsData = await getCarReviews(car.id);
+  const similarPromise = getSimilarCars(car.id, car.make, car.dealerId, car.bodyType, car.year, car.price);
+  const reviewsPromise = getCarReviews(car.id);
+  const modelWikiPromise = resolveModelWikiForCar(car);
 
-  const { title, h1: listingH1 } = buildCarListingDealerMetadata(car, dealer);
+  const { title } = buildCarListingDealerMetadata(car, dealer);
+  const carName = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} ${car.year}${car.color ? ` ${car.color}` : ""}`;
   const titleWithoutYear = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const primaryImg = car.images.find((i) => i.isPrimary) || car.images[0];
   const specItems = buildCarSpecSummaryItems(car);
@@ -235,10 +226,13 @@ export default async function CarDetailPage({ params }) {
     image: primaryImg?.url,
   };
 
-  const modelWiki = await resolveModelWikiForCar(car);
+  const [similar, reviewsData, modelWiki] = await Promise.all([similarPromise, reviewsPromise, modelWikiPromise]);
   const highlightChips = buildListingHighlightChips(car, dealer);
-  const whatsappHref = dealer.whatsapp ? whatsappLink(dealer.whatsapp, title, dealer.name) : null;
-  const callHref = !dealer.whatsapp && dealer.phone ? telHrefFromMsisdn(dealer.phone) : null;
+  const teamWhatsapp = PUBLIC_SUPPORT_WHATSAPP;
+  const teamPhone = PUBLIC_SUPPORT_PHONE;
+  const whatsappHref = teamWhatsapp ? whatsappLink(teamWhatsapp, title, "Welsh Motorhub") : null;
+  const callHref = teamPhone ? telHrefFromMsisdn(teamPhone) : null;
+  const waDigits = teamWhatsapp ? String(teamWhatsapp).replace(/\D/g, "") : null;
   const locationLabel = car.location || dealer.location || dealer.county || "Kenya";
   const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motorhub.`;
 
@@ -339,16 +333,20 @@ export default async function CarDetailPage({ params }) {
           },
         }
       : {}),
-    offers: {
-      "@type": "Offer",
-      price: car.price,
-      priceCurrency: "KES",
-      priceValidUntil,
-      itemCondition: conditionLd,
-      availability: car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-      url: listingUrl,
-      seller: buildListingSellerSchema(car.dealer),
-    },
+    ...(car.price
+      ? {
+          offers: {
+            "@type": "Offer",
+            price: car.price,
+            priceCurrency: "KES",
+            priceValidUntil,
+            itemCondition: conditionLd,
+            availability: car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            url: listingUrl,
+            seller: buildListingSellerSchema(car.dealer),
+          },
+        }
+      : {}),
     ...(ratingAvg && ratingCount > 0
       ? {
           aggregateRating: {
@@ -386,8 +384,14 @@ export default async function CarDetailPage({ params }) {
     itemListElement: breadcrumbItems,
   };
 
+  const heroPreloadUrl = primaryImg?.url ? getPreloadImageUrl(primaryImg.url) : null;
+
   return (
-    <div className="bg-white min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
+    <>
+      {heroPreloadUrl && (
+        <link rel="preload" as="image" href={heroPreloadUrl} fetchPriority="high" />
+      )}
+      <div className="bg-white min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
       <TrackEventOnMount
         name="view_car"
         payload={{
@@ -409,399 +413,201 @@ export default async function CarDetailPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       
-      <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-3 sm:pt-4 pb-20">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-8 sm:mb-12">
-          <Link href="/" className="hover:opacity-70 transition-opacity">Home</Link>
-          <span className="opacity-40">/</span>
-          <Link href="/cars" className="hover:opacity-70 transition-opacity">Inventory</Link>
-          <span className="opacity-40">/</span>
-          <span className="font-sans text-slate-900 dark:text-white truncate max-w-[200px] opacity-60 group-hover:opacity-100 transition-opacity">{car.make} {car.model}</span>
-        </nav>
-
-        {soldGrace ? (
-          <div
-            className="mb-6 sm:mb-8 rounded-xl border border-amber-200/90 bg-amber-50 px-4 py-3.5 sm:px-5 sm:py-4 dark:border-amber-900/50 dark:bg-amber-950/30"
-            role="status"
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-3 sm:pt-4 pb-24 lg:pb-16">
+        {/* Top nav */}
+        <div className="flex items-center gap-2 mb-4 sm:mb-5">
+          <Link
+            href="/cars"
+            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+            aria-label="Back to inventory"
           >
-            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-800 dark:text-amber-300">
-              Sold
-            </p>
-            <p className="mt-1.5 text-sm text-amber-950/90 dark:text-amber-100/90 leading-relaxed">
-              This unit has sold. Browse similar cars below or message {dealer.name} to ask what else they have in
-              stock
-              {daysLeftOnSite != null && daysLeftOnSite > 0
-                ? ` (this page comes down in ${daysLeftOnSite} day${daysLeftOnSite === 1 ? "" : "s"}).`
-                : "."}
-            </p>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+          </Link>
+          <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-500 leading-none">
+            <Link href="/" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">Home</Link>
+            <span className="mx-1.5 opacity-40">/</span>
+            <Link href="/cars" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">Inventory</Link>
+            <span className="mx-1.5 opacity-40">/</span>
+            <span className="text-zinc-800 dark:text-zinc-200">{car.make} {car.model}</span>
           </div>
-        ) : null}
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 lg:items-start">
-          {/* ── Main column: gallery + detail content ── */}
-          <div className="lg:col-span-8 flex flex-col gap-7 sm:gap-8">
-            <div className="overflow-hidden" style={{ borderRadius: "var(--radius)" }}>
+        <div>
+          {/* ── Left column ── */}
+          <div className="min-w-0">
+
+            {/* Gallery — edge-to-edge mobile, contained desktop */}
+            <div className="-mx-4 sm:-mx-6 lg:mx-0">
               <ImageGallery
                 images={car.images}
                 title={title}
-                spotlightUntil={car.spotlightUntil}
-                hotBadgeUntil={car.hotBadgeUntil}
+                carId={car.id}
+                isLoggedIn={!!session?.user}
               />
             </div>
 
-            {/* Mobile / tablet: title & price below gallery */}
-            <header className="lg:hidden space-y-4">
-              <span
-                className={`inline-block text-[10px] font-black px-2 py-1 uppercase tracking-widest rounded-[2px] ${
-                  soldGrace
-                    ? "bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-200"
-                    : "bg-[#38A169]/10 text-[#38A169]"
-                }`}
-              >
-                {soldGrace ? "SOLD" : "AVAILABLE"}
-              </span>
-              <h1 className="text-2xl sm:text-3xl font-semibold text-[#111827] dark:text-white tracking-tight leading-[1.2]">
-                {listingH1}
-              </h1>
-              <ListingPriceBlock car={car} explainerId="car-price-explainer-mobile" />
-              <p className="text-sm text-slate-600 dark:text-slate-400 flex flex-wrap items-center gap-x-2 gap-y-1">
-                <MapPin className="w-3.5 h-3.5 text-[#38A169] shrink-0" aria-hidden />
-                <span>{locationLabel}</span>
-                <span className="text-slate-300 dark:text-zinc-600">·</span>
-                {dealer.slug ? (
-                  <Link href={dealerShowroomPath(dealer.slug)} className="font-semibold text-[#38A169] hover:underline">
-                    {dealer.name}
-                  </Link>
-                ) : (
-                  <span className="font-semibold">{dealer.name}</span>
-                )}
-                {dealer.verified ? (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-[#38A169]">
-                    <ShieldCheck className="w-3 h-3" aria-hidden />
-                    Verified
-                  </span>
-                ) : null}
-              </p>
-              {highlightChips.length > 0 ? (
-                <ul className="flex flex-wrap gap-2">
-                  {highlightChips.map((chip) => (
-                    <li
-                      key={chip.label}
-                      className="rounded-sm border border-slate-200/90 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold text-slate-700 dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-slate-200"
-                    >
-                      <span className="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider text-[9px] mr-1.5">
-                        {chip.label}
-                      </span>
-                      {chip.value}
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </header>
-
-            <div className="space-y-7 sm:space-y-9">
-              <div>
-                <div>
-                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-4">Description</h2>
-                   <div className="text-[14px] sm:text-[15px] text-[#4A5568] dark:text-slate-400 leading-[1.65] font-medium">
-                      {specString ? (
-                        <>
-                          <span className="text-[#111827] dark:text-white font-bold">{specString}</span>
-                          {(car.description || "").trim() ? ". " : null}
-                        </>
-                      ) : null}
-                      {car.description?.trim() ||
-                        "No description from the dealer yet. Message them for condition, service history, and viewing times."}
-                   </div>
-                </div>
-
-                <div className="pt-7 sm:pt-8 border-t border-slate-100 dark:border-zinc-900">
-                   <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-3.5">Vehicle Details</h2>
-                   <div>
-                     <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-5 lg:gap-x-6 gap-y-0 text-[12px] sm:text-[13px]">
-                      {detailSpecs.map((item, idx) => {
-                        const iconSrc = specIconSrcForDetailLabel(item.label);
-                        return (
-                          <div
-                            key={item.label}
-                            className={`flex items-center gap-2 py-2 sm:py-2.5 border-b border-slate-50 dark:border-zinc-900/50 ${idx < 2 ? "border-t border-slate-50 dark:border-zinc-900/50" : ""}`}
-                          >
-                            <div
-                              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md ${
-                                iconSrc
-                                  ? "bg-[#f7faf8] dark:bg-white/[0.06] ring-1 ring-slate-200/80 dark:ring-white/10"
-                                  : ""
-                              }`}
-                            >
-                              {iconSrc ? (
-                                <Image
-                                  src={iconSrc}
-                                  alt=""
-                                  width={22}
-                                  height={22}
-                                  className={specIconImageClassName(item.label)}
-                                />
-                              ) : null}
-                            </div>
-                            <span className="min-w-0 font-bold text-slate-400 dark:text-slate-600 shrink-0 text-[11px] md:text-[13px]">{item.label}</span>
-                            <span className="min-w-0 font-extrabold text-[#111827] dark:text-white text-right tabular-nums ml-auto pl-1.5">{item.value}</span>
-                          </div>
-                        );
-                      })}
-                     </div>
-                   </div>
-                </div>
-
-                {featureList.length > 0 && (
-                  <div className="pt-7 sm:pt-8 border-t border-slate-100 dark:border-zinc-900">
-                    <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-[#38A169] mb-3">Features</h2>
-                    <FeatureList features={featureList} />
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <CarModelWiki car={car} wiki={modelWiki} />
-            <CarListingRelatedSearches car={car} />
-
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-[#EDF2F7] dark:border-zinc-800 bg-[#F7FAFC] dark:bg-zinc-900/40 px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-slate-600 dark:text-zinc-400">
-              <span className="sr-only md:not-sr-only md:inline text-[#718096] font-black tracking-widest">Explore:</span>
-              <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-[#38A169] hover:underline">
-                All {car.make} for sale
-              </Link>
-              <span className="hidden sm:inline text-slate-300">·</span>
-              <Link
-                href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`}
-                className="text-[#38A169] hover:underline"
-              >
-                {car.make} {car.model}
-              </Link>
-              <span className="hidden sm:inline text-slate-300">·</span>
-              <Link
-                href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`}
-                className="text-[#38A169] hover:underline"
-              >
-                {car.make} {FUEL_LABELS[car.fuelType] || car.fuelType}
-              </Link>
-              <span className="hidden sm:inline text-slate-300">·</span>
-              <Link
-                href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("body", car.bodyType)}`}
-                className="text-[#38A169] hover:underline"
-              >
-                {car.make} {BODY_TYPE_LABELS[car.bodyType] || car.bodyType}
-              </Link>
-              {dealer.county ? (
-                <>
-                  <span className="hidden sm:inline text-slate-300">·</span>
-                  <Link href={`/cars/${slugifyCarSegment(dealer.county)}`} className="text-[#38A169] hover:underline">
-                    Cars in {dealer.county}
-                  </Link>
-                  <span className="hidden sm:inline text-slate-300">·</span>
-                  <Link
-                    href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(dealer.county)}`}
-                    className="text-[#38A169] hover:underline"
-                  >
-                    {car.make} in {dealer.county}
-                  </Link>
-                </>
-              ) : null}
-            </div>
-
-            {similar.length > 0 ? (
-              <div className="pt-8 sm:pt-10 border-t border-[#EDF2F7] dark:border-zinc-800">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-4 mb-5 sm:mb-7">
-                  <div>
-                    <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169]">People Are Also Interested In</h2>
-                    <p className="mt-2 text-[13px] sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl leading-snug">
-                      Similar listings from our network. Swipe sideways on your phone.
-                    </p>
-                  </div>
-                  <Link
-                    href={`/cars/${slugifyCarSegment(car.make)}`}
-                    className="shrink-0 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-[#38A169] transition-colors py-1"
-                  >
-                    All {car.make} →
-                  </Link>
-                </div>
-                <div className="relative -mx-4 sm:mx-0">
-                  <div className="flex md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-5 md:gap-6 overflow-x-auto md:overflow-visible px-4 sm:px-0 pb-2 md:pb-0 snap-x snap-mandatory md:snap-none scroll-px-4 no-scrollbar items-stretch">
-                    {similar.map((sc) => (
-                      <div
-                        key={sc.id}
-                        className="snap-center shrink-0 w-[min(88vw,19.5rem)] sm:w-[min(88vw,20rem)] md:w-auto md:shrink md:min-w-0 self-stretch"
-                      >
-                        <div className="h-full min-h-[clamp(22.5rem,72vw,25rem)] md:min-h-[25rem]">
-                          <CarCard car={sc} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+            {/* Sold banner */}
+            {soldGrace ? (
+              <div className="mt-4 rounded-xl border border-amber-200/90 bg-amber-50 px-4 py-3.5 dark:border-amber-900/50 dark:bg-amber-950/30" role="status">
+                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-800 dark:text-amber-300">Sold</p>
+                <p className="mt-1.5 text-sm text-amber-950/90 dark:text-amber-100/90 leading-relaxed">
+                  This unit has sold. Browse similar cars below or contact our team to find a similar vehicle for you
+                  ,{daysLeftOnSite != null && daysLeftOnSite > 0 ? ` (this page comes down in ${daysLeftOnSite} day${daysLeftOnSite === 1 ? "" : "s"}).` : "."}
+                </p>
               </div>
             ) : null}
 
-            <CarReviewsSection
-              carId={car.id}
-              initialReviews={reviewsData.reviews}
-              initialAvgRating={reviewsData.avgRating}
-            />
-          </div>
-
-          {/* ── Sticky sidebar: summary + enquiry (desktop) ── */}
-          <aside className="lg:col-span-4 w-full min-w-0">
-            <div className="flex flex-col gap-4 sm:gap-5 lg:sticky lg:top-20 lg:max-h-[calc(100vh-5.5rem)] lg:overflow-y-auto lg:overscroll-contain">
-              <section className="hidden lg:block bg-white dark:bg-[#0a0a0a] border border-slate-200/90 dark:border-zinc-800 rounded-sm p-6 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.04] space-y-4">
-                <span
-                  className={`inline-block text-[10px] font-black px-2 py-1 uppercase tracking-widest rounded-[2px] ${
-                    soldGrace
-                      ? "bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-200"
-                      : "bg-[#38A169]/10 text-[#38A169]"
-                  }`}
-                >
+            {/* Vehicle Title */}
+            <div className="mt-5">
+              <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-zinc-900 dark:text-white tracking-tight leading-[1.15]">
+                {carName}
+              </h1>
+              <p className="mt-1.5 text-lg font-bold text-emerald-600 dark:text-emerald-400">
+                {formatCarPrice(car)}
+              </p>
+              <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mt-2">
+                <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                <span>{locationLabel}</span>
+                <span className="text-zinc-300 dark:text-zinc-600">·</span>
+                <span className={`text-[10px] font-black px-1.5 py-0.5 uppercase tracking-widest rounded-[2px] ${
+                  soldGrace
+                    ? "bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-200"
+                    : "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                }`}>
                   {soldGrace ? "SOLD" : "AVAILABLE"}
                 </span>
-                <h1 className="text-2xl font-semibold text-[#111827] dark:text-white tracking-tight leading-[1.2]">
-                  {listingH1}
-                </h1>
-                <ListingPriceBlock car={car} explainerId="car-price-explainer-desktop" />
-                <p className="text-sm text-slate-600 dark:text-slate-400 leading-snug">
-                  <MapPin className="inline w-3.5 h-3.5 text-[#38A169] mr-1 -mt-0.5" aria-hidden />
-                  {locationLabel}
-                  <span className="text-slate-300 dark:text-zinc-600 mx-1">·</span>
-                  {dealer.slug ? (
-                    <Link href={dealerShowroomPath(dealer.slug)} className="font-semibold text-[#38A169] hover:underline">
-                      {dealer.name}
-                    </Link>
-                  ) : (
-                    <span className="font-semibold">{dealer.name}</span>
-                  )}
-                  {dealer.verified ? (
-                    <span className="ml-2 inline-flex items-center gap-0.5 text-[10px] font-black uppercase tracking-widest text-[#38A169]">
-                      <ShieldCheck className="w-3 h-3" aria-hidden />
-                      Verified
-                    </span>
-                  ) : null}
-                </p>
-                {highlightChips.length > 0 ? (
-                  <ul className="flex flex-wrap gap-2">
-                    {highlightChips.map((chip) => (
-                      <li
-                        key={`desktop-${chip.label}`}
-                        className="rounded-sm border border-slate-200/90 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold text-slate-700 dark:border-zinc-700 dark:bg-zinc-900/60 dark:text-slate-200"
-                      >
-                        <span className="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider text-[9px] mr-1.5">
-                          {chip.label}
-                        </span>
-                        {chip.value}
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-                <ListingContactActions
-                  carId={car.id}
-                  dealerId={dealer.id}
-                  carTitle={title}
-                  whatsappHref={whatsappHref}
-                  callHref={callHref}
-                />
-              </section>
-
-              <section className="bg-white dark:bg-[#0a0a0a] border border-slate-200/90 dark:border-zinc-800 rounded-2xl p-5 sm:p-8 lg:p-6 lg:rounded-sm shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.04]">
-                  <header className="mb-5 sm:mb-6 lg:mb-6">
-                    <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-[#38A169]">
-                      Send an Enquiry
-                    </h3>
-                    <p className="mt-2 text-[12px] sm:text-[13px] leading-snug text-slate-500 dark:text-slate-400">
-                      Reach{" "}
-                      {dealer.slug ? (
-                        <Link
-                          href={dealerShowroomPath(dealer.slug)}
-                          className="font-semibold text-[#38A169] hover:underline"
-                        >
-                          {dealer.name}
-                        </Link>
-                      ) : (
-                        <span className="font-semibold text-slate-700 dark:text-slate-300">{dealer.name}</span>
-                      )}{" "}
-                      about this car. Typical response within a few hours.
-                    </p>
-                    {dealer.slug ? (
-                      <p className="mt-2 text-[11px] text-slate-500 dark:text-slate-400">
-                        <Link href={dealerShowroomPath(dealer.slug)} className="font-bold text-[#38A169] hover:underline">
-                          View all cars from {dealer.name}
-                        </Link>
-                      </p>
-                    ) : null}
-                  </header>
-                  <div>
-                    <EnquiryForm
-                        carId={car.id}
-                        dealerId={dealer.id}
-                        carTitle={titleWithoutYear}
-                        dealer={dealer}
-                        userName={session?.user?.name || ""}
-                        userEmail={session?.user?.email || ""}
-                      />
-                  </div>
-
-                  <div className="mt-8 pt-6 sm:mt-10 sm:pt-8 border-t border-slate-100 dark:border-zinc-800/80 flex flex-col gap-4 sm:gap-5">
-                    <div className="px-4 py-3 sm:px-5 sm:py-3.5 bg-[#f8fafc] dark:bg-zinc-900/80 border border-slate-200/80 dark:border-zinc-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-xl sm:rounded-sm">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-[#38A169] shrink-0">Reference ID</span>
-                        <span className="text-[11px] sm:text-[10px] font-mono font-extrabold text-[#111827] dark:text-white tracking-wide tabular-nums break-all text-left sm:text-right">{car.id.slice(-8).toUpperCase()}</span>
-                    </div>
-                    <div className="flex items-center justify-center pt-1">
-                        <ShareButtons
-                          listingUrl={listingUrl}
-                          browseUrl={absoluteUrl("/cars")}
-                          title={title}
-                          price={formatCarPrice(car)}
-                          dealerName={dealer.name}
-                          location={car.location || dealer.location || "Kenya"}
-                          mileageLabel={positiveNum(car.mileage) ? formatMileage(car.mileage) : null}
-                          previewImageUrl={`/api/cars/${car.id}/og-image`}
-                        />
-                    </div>
-                  </div>
-               </section>
-
-               <section className="rounded-2xl lg:rounded-sm border border-slate-200/90 dark:border-zinc-800 bg-gradient-to-b from-emerald-50/50 via-white to-white dark:from-emerald-950/20 dark:via-[#0a0a0a] dark:to-[#0a0a0a] p-5 sm:p-6 ring-1 ring-black/[0.03] dark:ring-white/[0.04]">
-                  <div className="flex gap-3 mb-4">
-                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-600/15 text-[10px] font-black text-emerald-800 dark:text-emerald-300 border border-emerald-600/20" aria-hidden>
-                      VS
-                    </span>
-                    <div className="min-w-0">
-                      <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#38A169] mb-1">Match &amp; Compare</p>
-                      <p className="text-[12px] sm:text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed">
-                        Add up to three cars and open a side-by-side spec sheet on any device.
-                      </p>
-                    </div>
-                  </div>
-                  <CompareButton
-                    car={compareCar}
-                    className="w-full min-h-12 rounded-xl sm:rounded-sm inline-flex items-center justify-center bg-[#111827] text-white dark:bg-white dark:!text-black text-[10px] font-bold uppercase tracking-widest border border-[#111827] dark:border-white transition-transform active:scale-[0.99] hover:opacity-95"
-                  />
-               </section>
+              </div>
             </div>
-          </aside>
+
+            {/* Quick spec chips */}
+            <div className="flex flex-wrap gap-2 mt-4">
+              {(() => {
+                const chips = [];
+                if (car.year) chips.push({ label: "Year", value: String(car.year) });
+                if (positiveNum(car.mileage)) chips.push({ label: "Mileage", value: formatMileage(car.mileage) });
+                if (car.fuelType) chips.push({ label: "Fuel", value: FUEL_LABELS[car.fuelType] || car.fuelType });
+                if (car.transmission) chips.push({ label: "Gearbox", value: car.transmission === "AUTOMATIC" ? "Automatic" : "Manual" });
+                if (car.bodyType) chips.push({ label: "Body", value: BODY_TYPE_LABELS[car.bodyType] || car.bodyType });
+                if (locationLabel) chips.push({ label: "Location", value: locationLabel });
+                return chips;
+              })().map((chip) => (
+                <span
+                  key={chip.label}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[11px] font-semibold text-zinc-600 dark:text-zinc-300"
+                >
+                  {chip.value}
+                </span>
+              ))}
+            </div>
+
+            {/* Description */}
+            <section className="mt-8">
+              <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-emerald-600 mb-3">Description</h2>
+              <div className="text-[14px] sm:text-[15px] text-zinc-600 dark:text-zinc-400 leading-[1.7] font-medium">
+                {specString ? (
+                  <>
+                    <span className="text-zinc-900 dark:text-white font-bold">{specString}</span>
+                    {(car.description || "").trim() ? ". " : null}
+                  </>
+                ) : null}
+                {car.description?.trim() ||
+                  "No description from the dealer yet. Message them for condition, service history, and viewing times."}
+              </div>
+            </section>
+
+            {/* Specifications */}
+            <section className="mt-8">
+              <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-emerald-600 mb-4">Specifications</h2>
+              <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 divide-y divide-zinc-100 dark:divide-zinc-800/60">
+                {detailSpecs.map((item) => (
+                  <div key={item.label} className="flex items-center justify-between px-4 py-2.5 sm:px-5">
+                    <span className="text-[12px] sm:text-[13px] font-medium text-zinc-500 dark:text-zinc-400">{item.label}</span>
+                    <span className="text-[13px] sm:text-[14px] font-bold text-zinc-900 dark:text-white tabular-nums">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Features */}
+            {featureList.length > 0 && (
+              <section className="mt-8">
+                <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-emerald-600 mb-3">Features</h2>
+                <FeatureList features={featureList} />
+              </section>
+            )}
+
+            {/* Compare + Share */}
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-gradient-to-b from-emerald-50/50 via-white to-white dark:from-emerald-950/20 dark:via-[#0a0a0a] dark:to-[#0a0a0a] p-5">
+                <div className="flex gap-3 mb-3">
+                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-600/15 text-[10px] font-black text-emerald-800 dark:text-emerald-300 border border-emerald-600/20" aria-hidden>VS</span>
+                  <div>
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-600 mb-1">Compare</p>
+                    <p className="text-[12px] text-zinc-500 dark:text-zinc-400">Add up to 3 cars and compare side-by-side.</p>
+                  </div>
+                </div>
+                <CompareButton
+                  car={compareCar}
+                  className="w-full min-h-11 rounded-lg inline-flex items-center justify-center bg-zinc-900 text-white dark:bg-white dark:!text-black text-[10px] font-bold uppercase tracking-widest transition-transform active:scale-[0.99] hover:opacity-95"
+                />
+              </div>
+              <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-5 flex flex-col justify-center">
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-600 mb-3">Share this Listing</p>
+                <ShareButtons
+                  listingUrl={listingUrl}
+                  browseUrl={absoluteUrl("/cars")}
+                  title={title}
+                  price={formatCarPrice(car)}
+                  dealerName={dealer.name}
+                  location={car.location || dealer.location || "Kenya"}
+                  mileageLabel={positiveNum(car.mileage) ? formatMileage(car.mileage) : null}
+                  previewImageUrl={`/api/cars/${car.id}/og-image`}
+                />
+              </div>
+            </div>
+
+            {/* Explore links */}
+            <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/40 px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400 rounded-lg">
+              <span className="text-zinc-400 font-black tracking-widest">Explore:</span>
+              <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-emerald-600 hover:underline">All {car.make} for sale</Link>
+              <span className="hidden sm:inline text-zinc-300">·</span>
+              <Link href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`} className="text-emerald-600 hover:underline">{car.make} {car.model}</Link>
+              {car.fuelType && (<><span className="hidden sm:inline text-zinc-300">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`} className="text-emerald-600 hover:underline">{car.make} {FUEL_LABELS[car.fuelType] || car.fuelType}</Link></>)}
+              {car.bodyType && (<><span className="hidden sm:inline text-zinc-300">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("body", car.bodyType)}`} className="text-emerald-600 hover:underline">{car.make} {BODY_TYPE_LABELS[car.bodyType] || car.bodyType}</Link></>)}
+              {dealer.county ? (<><span className="hidden sm:inline text-zinc-300">·</span><Link href={`/cars/${slugifyCarSegment(dealer.county)}`} className="text-emerald-600 hover:underline">Cars in {dealer.county}</Link></>) : null}
+            </div>
+
+            {/* Car Model Wiki */}
+            <div className="mt-8"><CarModelWiki car={car} wiki={modelWiki} /></div>
+
+            {/* Related Searches */}
+            <div className="mt-8"><CarListingRelatedSearches car={car} /></div>
+
+            {/* Reviews */}
+            <div className="mt-8">
+              <CarReviewsSection
+                carId={car.id}
+                initialReviews={reviewsData.reviews}
+                initialAvgRating={reviewsData.avgRating}
+              />
+            </div>
+
+            {/* Similar cars */}
+            <div className="mt-8"><SimilarCarsSection cars={similar} make={car.make} /></div>
+          </div>
         </div>
       </div>
 
-      <div className="lg:hidden fixed inset-x-0 bottom-0 z-50 pointer-events-none px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2">
-        <MobileListingContactBar
-          carId={car.id}
-          dealerId={dealer.id}
-          carTitle={title}
-          dealerName={dealer.name}
-          priceLabel={formatCarPrice(car)}
-          whatsappHref={whatsappHref}
-          callHref={callHref}
-        />
-      </div>
+      {/* Mobile bottom bar */}
+      <CarDetailMobileBar
+        whatsappHref={whatsappHref}
+        callHref={callHref}
+        priceLabel={formatCarPrice(car)}
+      />
 
       <SpecSheet car={car} dealer={dealer} />
       <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
     </div>
+    </>
   );
 }
-
-// ── Similar cars section is the last thing rendered above ──

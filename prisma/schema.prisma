@@ -100,6 +100,7 @@ model Dealer {
   instagramUrl String?
   facebookUrl  String?
   tiktokUrl    String?
+  responseTime String?
   location     String
   county       String               @default("Nairobi")
   address      String?
@@ -171,6 +172,7 @@ model DealerBranch {
 model Car {
   id                  String             @id @default(cuid())
   dealerId            String
+  vehicleType         VehicleType        @default(CAR)
   make                String
   model               String
   variant             String?
@@ -220,6 +222,7 @@ model Car {
   turbo               Boolean            @default(false)
   printCount          Int                @default(0)
   whatsappClicks      Int                @default(0)
+  location            String?
   publicSlug          String?            @unique
   images              CarImage[]
   carViews            CarView[]
@@ -239,7 +242,49 @@ model Car {
   @@index([bodyType])
   @@index([fuelType])
   @@index([createdAt])
+  @@index([featured])
+  @@index([views])
+  @@index([featuredWeight])
+  @@index([spotlightUntil])
   @@map("cars")
+}
+
+model CarModelSpec {
+  id              String             @id @default(cuid())
+  make            String
+  model           String
+  variant         String?
+  yearStart       Int
+  yearEnd         Int?
+  bodyType        BodyType?
+  vehicleType     VehicleType?
+  engineCC        Int?
+  cylinders       Int?
+  horsepower      Int?
+  torque          Int?
+  fuelType        FuelType?
+  transmission    Transmission?
+  drivetrain      Drivetrain?
+  steering        Steering?
+  seats           Int?
+  doors           Int?
+  airbags         Int?
+  groundClearanceMm Int?
+  hybridBatteryTech HybridBatteryTech?
+  turbo           Boolean?
+  sunroof         Boolean?
+  curbWeightKg    Int?
+  fuelTankLiters  Int?
+  standardFeatures String[]
+  source          String?
+  verified        Boolean            @default(false)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@unique([make, model, variant, yearStart])
+  @@index([make, model])
+  @@index([make])
+  @@map("car_model_specs")
 }
 
 model CarImage {
@@ -251,6 +296,7 @@ model CarImage {
   order     Int     @default(0)
   car       Car     @relation(fields: [carId], references: [id], onDelete: Cascade)
 
+  @@index([carId, isPrimary])
   @@map("car_images")
 }
 
@@ -529,6 +575,11 @@ enum Drivetrain {
 enum Steering {
   RHD
   LHD
+}
+
+enum VehicleType {
+  CAR
+  MOTORBIKE
 }
 
 enum BodyType {
@@ -890,6 +941,28 @@ model BuyerRequestOffer {
   @@unique([dealerId, buyerRequestId])
   @@index([dealerId, createdAt])
   @@map("buyer_request_offers")
+}
+
+/// Gallery posts — event photography or magazine features.
+model GalleryPost {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  type          String   @default("event")
+  title         String
+  date          DateTime
+  location      String?
+  description   String?
+  coverImage    String?
+  images        Json?
+  magazineLink  String?
+  published     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([type, published])
+  @@index([date])
+  @@index([slug])
+  @@map("gallery_posts")
 }
 
 enum GrowthProspectStatus {

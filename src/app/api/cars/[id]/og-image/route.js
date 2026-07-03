@@ -6,7 +6,7 @@ import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { publicDetailVisibilityClause } from "@/lib/car-sold-status";
 import {
   buildBrandFallbackOgJpeg,
-  buildWhatsAppOgJpeg,
+  buildPlainOgJpeg,
   fetchListingImageBytes,
 } from "@/lib/og-listing-image";
 
@@ -53,6 +53,13 @@ export async function GET(_req, { params }) {
         },
         select: {
           id: true,
+          make: true,
+          model: true,
+          variant: true,
+          year: true,
+          price: true,
+          mileage: true,
+          dealer: { select: { name: true, location: true } },
           images: {
             orderBy: [{ isPrimary: "desc" }, { order: "asc" }],
             select: { url: true, isPrimary: true, order: true },
@@ -67,7 +74,7 @@ export async function GET(_req, { params }) {
     const bytes = await fetchListingImageBytes(rawUrl);
     if (!bytes) continue;
     try {
-      const jpeg = await buildWhatsAppOgJpeg(bytes);
+      const jpeg = await buildPlainOgJpeg(bytes);
       return jpegResponse(jpeg);
     } catch {
       // corrupt / unsupported — try next image

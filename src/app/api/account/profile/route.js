@@ -16,18 +16,24 @@ export async function POST(request) {
       return NextResponse.json({ error: "Name and email required" }, { status: 400 });
     }
 
-    // Check email not taken by another user
-    const existing = await db.user.findFirst({
-      where: { email: email.toLowerCase(), id: { not: session.user.id } },
+    // Check-and-update in an interactive transaction to prevent email race
+    const updated = await db.$transaction(async (tx) => {
+      const existing = await tx.user.findFirst({
+        where: { email: email.toLowerCase(), id: { not: session.user.id } },
+      });
+      if (existing) {
+        return { error: "Email already in use" };
+      }
+      await tx.user.update({
+        where: { id: session.user.id },
+        data:  { name: name.trim(), email: email.toLowerCase().trim() },
+      });
+      return { success: true };
     });
-    if (existing) {
-      return NextResponse.json({ error: "Email already in use" }, { status: 400 });
-    }
 
-    await db.user.update({
-      where: { id: session.user.id },
-      data:  { name: name.trim(), email: email.toLowerCase().trim() },
-    });
+    if (updated.error) {
+      return NextResponse.json({ error: updated.error }, { status: 400 });
+    }
 
     const normalizedPhone = normalizeKenyanPhone(phone);
     const phoneKey = `buyer-phone:${session.user.id}`;

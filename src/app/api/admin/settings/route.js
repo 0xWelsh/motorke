@@ -11,7 +11,7 @@ export async function POST(request) {
   }
 
   const formData = await request.formData();
-  const keys = ["platform_fee", "support_email"];
+  const keys = ["platform_fee", "support_email", "magazine_cover_url", "magazine_link"];
 
   try {
     for (const key of keys) {

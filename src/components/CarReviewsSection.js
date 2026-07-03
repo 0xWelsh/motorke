@@ -65,11 +65,9 @@ export default function CarReviewsSection({ carId, initialReviews = [], initialA
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-16">
-        <div className="lg:col-span-4">
-          <CarReviewForm carId={carId} onReviewSubmitted={handleReviewSubmitted} />
-        </div>
-        <div className="lg:col-span-8 space-y-4 sm:space-y-6">
+      <div className="space-y-6 sm:space-y-8">
+        <CarReviewForm carId={carId} onReviewSubmitted={handleReviewSubmitted} />
+        <div className="space-y-4 sm:space-y-6">
           {reviews.length > 0 ? (
             reviews.map((r) => (
               <div key={r.id} className="rounded-xl sm:rounded-2xl border border-[#EDF2F7] dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] p-4 sm:p-5">

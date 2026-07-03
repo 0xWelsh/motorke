@@ -17,6 +17,11 @@ module.exports = {
           light:   "var(--brand-light)",
           accent:  "var(--brand-accent)",
         },
+        "accent-red": {
+          DEFAULT: "var(--accent-red)",
+          light:   "var(--accent-red-light)",
+          dark:    "var(--accent-red-dark)",
+        },
         slate: {
           950: "#020617",
           900: "#0f172a",

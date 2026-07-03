@@ -1,6 +1,7 @@
 // src/app/api/cars/create/route.js
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
+import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { finalizeNewCarPublicSlug } from "@/lib/car-public-slug";
 import { carListingPath } from "@/lib/car-listing-url";
@@ -9,6 +10,11 @@ import { buildCarImageAlt } from "@/lib/car-listing-seo";
 
 export async function POST(request) {
   try {
+    const session = await getSessionFromRequest();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
+    }
+
     const formData = await request.formData();
 
     const get     = (key) => formData.get(key);
@@ -16,7 +22,7 @@ export async function POST(request) {
     const getBool = (key) => get(key) === "on" || get(key) === "true";
 
     // Validate required fields
-    const required = ["dealerId", "make", "model", "year", "price", "fuelType", "transmission", "bodyType"];
+    const required = ["make", "model", "year", "price", "fuelType", "transmission", "bodyType"];
     for (const field of required) {
       if (!get(field)) {
         return NextResponse.json({ error: `Missing required field: ${field}` }, { status: 400 });
@@ -30,9 +36,18 @@ export async function POST(request) {
       .map((f) => f.trim())
       .filter(Boolean);
 
+    // Resolve dealerId from session
+    const dealerId = session.user.role === "ADMIN"
+      ? get("dealerId")
+      : session.user.dealerId;
+
+    if (!dealerId) {
+      return NextResponse.json({ error: "Dealer account required to create listings" }, { status: 400 });
+    }
+
     const car = await db.car.create({
       data: {
-        dealerId:     get("dealerId"),
+        dealerId,
         make:         get("make").trim(),
         model:        get("model").trim(),
         variant:      get("variant")?.trim() || null,

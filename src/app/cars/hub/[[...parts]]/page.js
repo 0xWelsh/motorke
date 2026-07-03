@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
@@ -22,6 +22,7 @@ import { fuelFacetLabel, priceBandSearchParams, SEO_PRICE_BANDS } from "@/lib/se
 import { BODY_TYPE_LABELS } from "@/lib/constants";
 import { carListingPath } from "@/lib/car-listing-url";
 
+
 const HUB_PER_PAGE = 24;
 
 const hubCarSelect = {
@@ -33,6 +34,8 @@ const hubCarSelect = {
   price: true,
   engineCC: true,
   mileage: true,
+  vehicleType: true,
+  condition: true,
   bodyType: true,
   fuelType: true,
   transmission: true,
@@ -44,6 +47,8 @@ const hubCarSelect = {
   createdAt: true,
   badges: true,
   description: true,
+  available: true,
+  soldAt: true,
   publicSlug: true,
   images: { where: { isPrimary: true }, take: 1 },
   dealer: {
@@ -172,6 +177,93 @@ function breadcrumbsJsonLd(origin, crumbs) {
   };
 }
 
+async function buildModelAggs(resolved) {
+  const where = await hubWhereClause(resolved);
+  const make = resolved.make;
+  const model = resolved.model;
+
+  const [
+    priceAgg,
+    yearAgg,
+    engineAgg,
+    fuelDist,
+    transDist,
+    bodyDist,
+    dealerDist,
+    firstCar,
+  ] = await Promise.all([
+    withDbRetry(() => db.car.aggregate({ where, _min: { price: true }, _max: { price: true } })),
+    withDbRetry(() => db.car.aggregate({ where, _min: { year: true }, _max: { year: true } })),
+    withDbRetry(() => db.car.aggregate({ where, _min: { engineCC: true }, _max: { engineCC: true } })),
+    withDbRetry(() => db.car.groupBy({ by: ["fuelType"], where, _count: true, orderBy: { _count: { fuelType: "desc" } } })),
+    withDbRetry(() => db.car.groupBy({ by: ["transmission"], where, _count: true, orderBy: { _count: { transmission: "desc" } } })),
+    withDbRetry(() => db.car.groupBy({ by: ["bodyType"], where, _count: true, orderBy: { _count: { bodyType: "desc" } } })),
+    withDbRetry(() => db.car.groupBy({ by: ["dealerId"], where, _count: true, orderBy: { _count: { dealerId: "desc" } }, take: 10 })),
+    withDbRetry(() => db.car.findFirst({ where, select: { id: true }, orderBy: { createdAt: "desc" } })),
+  ]);
+
+  const dealerIds = dealerDist.map((d) => d.dealerId).filter(Boolean);
+  const dealers = dealerIds.length
+    ? await withDbRetry(() =>
+        db.dealer.findMany({
+          where: { id: { in: dealerIds } },
+          select: { id: true, name: true, slug: true },
+        })
+      )
+    : [];
+
+  const siblingWhere = await hubWhereClause({ kind: "make", make });
+  const siblingRows = await withDbRetry(() =>
+    db.car.findMany({
+      where: siblingWhere,
+      distinct: ["model"],
+      select: { model: true },
+      orderBy: { model: "asc" },
+    })
+  );
+  const siblingModels = siblingRows
+    .map((r) => r.model)
+    .filter(Boolean)
+    .filter((m) => m !== model)
+    .slice(0, 6);
+
+  const siblingCars = await Promise.all(
+    siblingModels.map(async (m) => {
+      const c = await withDbRetry(() =>
+        db.car.findFirst({
+          where: { ...siblingWhere, model: { equals: m, mode: "insensitive" } },
+          select: { id: true },
+          orderBy: { createdAt: "desc" },
+        })
+      );
+      return c ? { model: m, carId: c.id } : null;
+    })
+  );
+
+  const topFuel = fuelDist.find((f) => f.fuelType);
+  const topTrans = transDist.find((t) => t.transmission);
+  const topBody = bodyDist.find((b) => b.bodyType);
+
+  return {
+    priceMin: priceAgg._min.price,
+    priceMax: priceAgg._max.price,
+    yearMin: yearAgg._min.year,
+    yearMax: yearAgg._max.year,
+    engineMin: engineAgg._min.engineCC,
+    engineMax: engineAgg._max.engineCC,
+    topFuel: topFuel ? { label: topFuel.fuelType, count: topFuel._count } : null,
+    topTrans: topTrans ? { label: topTrans.transmission, count: topTrans._count } : null,
+    topBody: topBody
+      ? { label: BODY_TYPE_LABELS[topBody.bodyType] || topBody.bodyType, count: topBody._count }
+      : null,
+    dealers: dealers
+      .map((d) => ({ ...d, count: dealerDist.find((dd) => dd.dealerId === d.id)?._count ?? 0 }))
+      .sort((a, b) => b.count - a.count),
+    siblingLinks: siblingCars.filter(Boolean),
+    firstCarId: firstCar?.id ?? null,
+  };
+}
+
 export default async function CarHubPage({ params, searchParams }) {
   const { parts } = await params;
   const sp = await searchParams;
@@ -215,6 +307,9 @@ export default async function CarHubPage({ params, searchParams }) {
       : Promise.resolve([]),
     resolved.kind === "county" ? getPopularMakeLinks(16) : Promise.resolve([]),
   ]);
+
+  const modelAggs =
+    resolved.kind === "make_model" && total > 0 ? await buildModelAggs(resolved) : null;
 
   const origin = getSiteOrigin();
   const path = resolved.path;
@@ -413,6 +508,107 @@ export default async function CarHubPage({ params, searchParams }) {
           </p>
         </header>
 
+        {modelAggs ? (
+          <div className="mb-8 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white px-4 py-5 dark:border-zinc-800 dark:from-zinc-950 dark:to-zinc-900 sm:px-6">
+            <div className="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">Price range</p>
+                <p className="mt-0.5 text-lg font-black text-slate-900 dark:text-white">
+                  {modelAggs.priceMin != null
+                    ? `KSh ${Number(modelAggs.priceMin).toLocaleString("en-KE")}`
+                    : "—"}
+                  {" "}–{" "}
+                  {modelAggs.priceMax != null
+                    ? `KSh ${Number(modelAggs.priceMax).toLocaleString("en-KE")}`
+                    : "—"}
+                </p>
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">Year range</p>
+                <p className="mt-0.5 text-lg font-black text-slate-900 dark:text-white">
+                  {modelAggs.yearMin || "—"} – {modelAggs.yearMax || "—"}
+                </p>
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">Engine</p>
+                <p className="mt-0.5 text-lg font-black text-slate-900 dark:text-white">
+                  {modelAggs.engineMin ? `${modelAggs.engineMin} cc` : "—"}
+                  {modelAggs.engineMax && modelAggs.engineMax !== modelAggs.engineMin
+                    ? ` – ${modelAggs.engineMax} cc`
+                    : ""}
+                </p>
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">Dealers</p>
+                <p className="mt-0.5 text-lg font-black text-slate-900 dark:text-white">
+                  {modelAggs.dealers.length}
+                </p>
+              </div>
+            </div>
+
+            {(modelAggs.topFuel || modelAggs.topTrans || modelAggs.topBody) && (
+              <div className="mb-4 flex flex-wrap items-center gap-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">
+                  Most common:
+                </span>
+                {modelAggs.topFuel ? (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200">
+                    Fuel: {modelAggs.topFuel.label} ({modelAggs.topFuel.count})
+                  </span>
+                ) : null}
+                {modelAggs.topTrans ? (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200">
+                    {modelAggs.topTrans.label}: {modelAggs.topTrans.count}
+                  </span>
+                ) : null}
+                {modelAggs.topBody ? (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200">
+                    {modelAggs.topBody.label}: {modelAggs.topBody.count}
+                  </span>
+                ) : null}
+              </div>
+            )}
+
+            {modelAggs.dealers.length > 0 && (
+              <div className="mb-4">
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500 mb-1.5">
+                  Sold by
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {modelAggs.dealers.slice(0, 8).map((d) => (
+                    <Link
+                      key={d.id}
+                      href={`/dealers/${d.slug}`}
+                      className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:border-[#38A169] dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200"
+                    >
+                      {d.name} ({d.count})
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {modelAggs.siblingLinks.length > 0 && modelAggs.firstCarId && (
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500 mb-1.5">
+                  Compare
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {modelAggs.siblingLinks.map((s) => (
+                    <Link
+                      key={s.model}
+                      href={`/compare?a=${modelAggs.firstCarId}&b=${s.carId}`}
+                      className="rounded-lg border border-[#38A169]/20 bg-[#38A169]/5 px-2.5 py-1 text-xs font-semibold text-[#38A169] hover:bg-[#38A169]/10 dark:border-[#38A169]/30 dark:bg-[#38A169]/10"
+                    >
+                      {resolved.model} vs {s.model}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : null}
+
         {cars.length === 0 ? (
           <div
             className="py-20 text-center border border-[#EDF2F7] dark:border-zinc-800 bg-[#F7FAFC] dark:bg-[#111111]"
@@ -431,8 +627,8 @@ export default async function CarHubPage({ params, searchParams }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-3">
-            {cars.map((car) => (
-              <CarCard key={car.id} car={car} spacious />
+            {cars.map((car, index) => (
+              <CarCard key={car.id} car={car} spacious priority={index < 3} />
             ))}
           </div>
         )}

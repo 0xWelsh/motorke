@@ -2,7 +2,23 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { Sun, Moon } from "lucide-react";
+
+function SunIcon({ className }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="4.5" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </svg>
+  );
+}
+
+function MoonIcon({ className }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+    </svg>
+  );
+}
 
 export default function ThemeToggle({ simple = false }) {
   const [mounted, setMounted] = useState(false);
@@ -20,14 +36,14 @@ export default function ThemeToggle({ simple = false }) {
     return (
       <button
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="w-8 h-8 flex items-center justify-center text-slate-600 dark:text-slate-300 bg-transparent border-none shadow-none hover:bg-transparent hover:text-[#ff5a2f] transition-colors shrink-0"
-        aria-label="Toggle Dark Mode"
+        className="w-8 h-8 flex items-center justify-center text-slate-600 bg-transparent border-none shadow-none hover:text-amber-500 transition-colors shrink-0"
         style={{ boxShadow: "none", border: "none", background: "none" }}
+        aria-label="Toggle Dark Mode"
       >
         {theme === "dark" ? (
-          <Sun className="w-5 h-5" />
+          <SunIcon className="w-4.5 h-4.5" />
         ) : (
-          <Moon className="w-5 h-5" />
+          <MoonIcon className="w-4.5 h-4.5" />
         )}
       </button>
     );
@@ -40,9 +56,9 @@ export default function ThemeToggle({ simple = false }) {
       aria-label="Toggle Dark Mode"
     >
       {theme === "dark" ? (
-        <Sun className="w-4 h-4" />
+        <SunIcon className="w-4 h-4" />
       ) : (
-        <Moon className="w-4 h-4" />
+        <MoonIcon className="w-4 h-4" />
       )}
     </button>
   );

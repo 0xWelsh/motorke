@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import CompareClient from "./CompareClient";
+import { findMatchingSpec } from "@/lib/model-specs";
 
 export const metadata = {
   title: "Compare cars side by side (Kenya)",
@@ -32,6 +33,19 @@ export default async function ComparePage({ searchParams }) {
   // Sort by the order they were requested in URL
   const orderedCars = idsInUrl.map((id) => cars.find((c) => c.id === id)).filter(Boolean);
 
-  return <CompareClient initialCars={orderedCars} />;
+  // Attach reference specs to each car for deeper compare
+  const enriched = await Promise.all(
+    orderedCars.map(async (car) => {
+      const refSpec = await findMatchingSpec({
+        make: car.make,
+        model: car.model,
+        variant: car.variant,
+        year: car.year,
+      });
+      return { ...car, _refSpec: refSpec || null };
+    })
+  );
+
+  return <CompareClient initialCars={enriched} />;
 }
 

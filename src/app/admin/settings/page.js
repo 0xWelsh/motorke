@@ -67,7 +67,34 @@ export default async function AdminSettingsPage({ searchParams }) {
             </div>
          </div>
 
-         <button type="submit" className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-2xl px-6 py-4 font-bold transition-colors flex items-center justify-center gap-2">
+         <details className="group mt-8">
+           <summary className="cursor-pointer text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors select-none">
+             Circus Car Magazine Feature
+           </summary>
+           <div className="mt-4 space-y-4 border-t border-slate-100 dark:border-zinc-800 pt-4">
+             <p className="text-xs text-slate-500">These control the magazine feature section on the public gallery page.</p>
+             <div>
+               <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Cover Image URL</label>
+               <input
+                 name="magazine_cover_url"
+                 defaultValue={settings.magazine_cover_url || ""}
+                 className="w-full bg-[#f7f6f3] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-slate-900 font-medium"
+                 placeholder="https://..."
+               />
+             </div>
+             <div>
+               <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Purchase Link (Selar)</label>
+               <input
+                 name="magazine_link"
+                 defaultValue={settings.magazine_link || "https://selar.com/m/CircusCarMagazine"}
+                 className="w-full bg-[#f7f6f3] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-slate-900 font-medium"
+                 placeholder="https://selar.com/..."
+               />
+             </div>
+           </div>
+         </details>
+
+         <button type="submit" className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-2xl px-6 py-4 font-bold transition-colors flex items-center justify-center gap-2 mt-8">
             <Settings size={18} /> Update Configurations
          </button>
       </form>

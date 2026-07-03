@@ -1,5 +1,6 @@
 import { formatCarPrice } from "@/lib/utils";
 import { buildCarDetailSpecRows, meaningfulFeatureList } from "@/lib/car-display";
+import { getThumbnailUrl } from "@/lib/image-transform";
 
 export default function SpecSheet({ car, dealer }) {
   const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
@@ -30,17 +31,14 @@ export default function SpecSheet({ car, dealer }) {
         <div>
            {primaryImg && (
              <div className="aspect-[4/3] bg-gray-100 rounded-2xl overflow-hidden border border-gray-200">
-               <img src={primaryImg.url} alt={title} className="w-full h-full object-cover" />
+                <img src={getThumbnailUrl(primaryImg.url, 800)} alt={title} className="w-full h-full object-cover" />
              </div>
            )}
            <div className="mt-8">
              <h3 className="text-xs font-bold uppercase tracking-widest text-orange-600 mb-2">Dealer Information</h3>
              <p className="text-xl font-black text-black">{dealer.name}</p>
              <p className="text-sm text-gray-600">{dealer.location}</p>
-             <div className="mt-4 space-y-1">
-               {dealer.phone && <p className="text-sm font-bold">📞 {dealer.phone}</p>}
-               {dealer.email && <p className="text-sm font-bold">✉️ {dealer.email}</p>}
-             </div>
+              <p className="mt-4 text-sm font-bold text-gray-600">Contact Welsh Motorhub for more details.</p>
            </div>
         </div>
 

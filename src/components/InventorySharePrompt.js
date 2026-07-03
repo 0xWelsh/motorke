@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { MessageCircle, X } from "lucide-react";
+import { getThumbnailUrl } from "@/lib/image-transform";
 
 const SHARE_TEMPLATES = [
   { key: "clean", label: "Clean" },
@@ -18,7 +19,7 @@ export default function InventorySharePrompt({ car, whatsappHrefByTemplate }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const dismissHref = useMemo(() => pathname || "/portal/inventory", [pathname]);
+  const dismissHref = useMemo(() => pathname || "/admin/cars", [pathname]);
   const whatsappHref = whatsappHrefByTemplate?.[template] || whatsappHrefByTemplate?.clean || "";
   
   const dismissPrompt = () => {
@@ -56,7 +57,7 @@ export default function InventorySharePrompt({ car, whatsappHrefByTemplate }) {
       <div className="mt-3 flex items-center gap-3 rounded-xl border border-emerald-100 bg-white p-2.5">
         {car.imageUrl ? (
           <div className="relative h-14 w-20 overflow-hidden rounded-lg">
-            <Image src={car.imageUrl} alt={car.title} fill className="object-cover" />
+            <Image src={getThumbnailUrl(car.imageUrl, 320)} alt={car.title} fill className="object-cover" />
           </div>
         ) : (
           <div className="h-14 w-20 rounded-lg bg-slate-100" />

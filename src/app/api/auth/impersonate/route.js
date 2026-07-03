@@ -27,6 +27,21 @@ export async function POST(request) {
     return NextResponse.redirect(new URL(`/admin/dealers?error=NoUserFound`, request.url));
   }
 
+  // Audit log
+  console.log(
+    `[AUDIT] Admin ${session.user.email} (${session.user.id}) impersonated dealer ${targetDealerId} as user ${targetUser.email} (${targetUser.id})`
+  );
+
+  try {
+    await db.marketingEvent.create({
+      data: {
+        name: "admin_impersonation",
+        userId: session.user.id,
+        payload: { targetUserId: targetUser.id, targetDealerId: targetDealerId },
+      },
+    });
+  } catch (_) {}
+
   // Create a new session for the target user to impersonate them
   await createSession(targetUser.id);
 

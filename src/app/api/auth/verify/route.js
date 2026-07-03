@@ -73,7 +73,7 @@ export async function POST(request) {
       role: user.role,
     }).catch((e) => console.error("Welcome email:", e));
 
-    const redirectUrl = user.role === "DEALER" ? "/portal" : "/";
+    const redirectUrl = "/";
     return NextResponse.json({ success: true, redirect: redirectUrl });
 
   } catch (err) {

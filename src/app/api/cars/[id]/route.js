@@ -14,7 +14,14 @@ export async function GET(request, { params }) {
     },
     include: {
       images: { orderBy: { order: "asc" } },
-      dealer: true,
+      dealer: {
+        select: {
+          id: true, name: true, slug: true, description: true, logoUrl: true,
+          bannerUrl: true, location: true, county: true, lat: true, lng: true,
+          type: true, verified: true, featured: true, responseTime: true,
+          branches: true, gallery: true,
+        },
+      },
     },
   });
 

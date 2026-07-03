@@ -1,5 +1,6 @@
 // src/app/api/admin/dealers/route.js
 export const dynamic = "force-dynamic";
+import crypto from "crypto";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
@@ -48,6 +49,7 @@ export async function POST(request) {
     const facebookUrl = formData.get("facebookUrl")?.toString().trim() || null;
     const tiktokUrl = formData.get("tiktokUrl")?.toString().trim() || null;
     const description = formData.get("description")?.toString().trim() || null;
+    const responseTime = formData.get("responseTime")?.toString().trim() || null;
     const verified = formData.get("verified") === "on";
     const featured = formData.get("featured") === "on";
 
@@ -72,6 +74,7 @@ export async function POST(request) {
             facebookUrl,
             tiktokUrl,
             description,
+            responseTime,
             verified,
             featured,
           },
@@ -97,42 +100,19 @@ export async function POST(request) {
       const existingUser = await db.user.findUnique({ where: { email } });
       if (!existingUser) {
         const { hash } = require("bcryptjs");
-        const defaultPasswordHash = await hash("Welsh Motorhub123!", 10);
-        await db.user.create({
+        const tempPassword = crypto.randomBytes(16).toString("hex");
+        const passwordHash = await hash(tempPassword, 10);
+        const user = await db.user.create({
           data: {
             email,
-            passwordHash: defaultPasswordHash,
+            passwordHash,
             name: name,
             role: "DEALER",
             dealerId: created.id,
             active: true
           }
         });
-      } else if (!existingUser.dealerId) {
-        await db.user.update({
-          where: { id: existingUser.id },
-          data: { dealerId: created.id, role: "DEALER" }
-        });
-      }
-    }
-
-
-    // CREATE USER IF EMAIL IS PROVIDED
-    if (email) {
-      const existingUser = await db.user.findUnique({ where: { email } });
-      if (!existingUser) {
-        const { hash } = require("bcryptjs");
-        const defaultPasswordHash = await hash("Welsh Motorhub123!", 10);
-        await db.user.create({
-          data: {
-            email,
-            passwordHash: defaultPasswordHash,
-            name: name,
-            role: "DEALER",
-            dealerId: created.id,
-            active: true
-          }
-        });
+        console.log(`[AUDIT] Admin ${session.user.email} created dealer user ${email} — temporary password set`);
       } else if (!existingUser.dealerId) {
         await db.user.update({
           where: { id: existingUser.id },

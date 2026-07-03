@@ -42,9 +42,9 @@ export default function HomepageTrending({ cars = [] }) {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6 items-stretch w-full">
-          {items.map((car) => (
+          {items.map((car, index) => (
             <div key={car.id} className="h-full">
-              <CarCard car={car} compact />
+              <CarCard car={car} compact priority={index < 2} />
             </div>
           ))}
         </div>

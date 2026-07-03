@@ -9,7 +9,7 @@ export default function GlobalFooter() {
   const currentYear = new Date().getFullYear();
 
   // Hide footer on specific routes
-  if (pathname.startsWith("/portal") || pathname.startsWith("/admin") || pathname.startsWith("/account")) {
+  if (pathname.startsWith("/admin") || pathname.startsWith("/account")) {
     return null;
   }
 
@@ -21,7 +21,9 @@ export default function GlobalFooter() {
         { label: "Inventory", href: "/cars" },
         { label: "Dealers", href: "/dealers" },
         { label: "Compare", href: "/compare" },
+        { label: "Request a Car", href: "/request-car" },
         { label: "Sell Your Car", href: "/signup" },
+        { label: "Magazine", href: "https://selar.com/m/CircusCarMagazine", external: true },
       ],
     },
     {
@@ -93,6 +95,7 @@ export default function GlobalFooter() {
                     <li key={j}>
                       <Link
                         href={link.href}
+                        {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                         className="text-slate-600 dark:text-slate-300 hover:text-[#2F855A] dark:hover:text-[#4ade80] text-xs sm:text-sm transition-colors font-medium leading-snug"
                       >
                         {link.label}

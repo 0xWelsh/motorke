@@ -154,7 +154,7 @@ export async function sendWelcomeEmail({ email, name, role }) {
       : "Browse live listings, compare up to three cars side by side, save favourites, and contact dealers directly.",
     "",
     `Start here: ${siteUrl}/cars`,
-    isDealer ? `Dealer portal: ${siteUrl}/portal` : `Compare: ${siteUrl}/compare`,
+    isDealer ? `Admin panel: ${siteUrl}/admin` : `Compare: ${siteUrl}/compare`,
     "",
     `Questions? ${support}`,
     "",
@@ -163,7 +163,6 @@ export async function sendWelcomeEmail({ email, name, role }) {
 
   const ctaBrowse = `${siteUrl}/cars`;
   const ctaCompare = `${siteUrl}/compare`;
-  const ctaPortal = `${siteUrl}/portal`;
   const ctaSaved = `${siteUrl}/saved`;
 
   const htmlContent = `
@@ -201,7 +200,7 @@ export async function sendWelcomeEmail({ email, name, role }) {
                   </tr>
                   <tr>
                     <td style="padding:0;">
-                      <a href="${isDealer ? ctaPortal : ctaCompare}" style="display:block;text-align:center;background:#ffffff;color:#111827;text-decoration:none;padding:14px 18px;border-radius:6px;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;border:2px solid #111827;">${isDealer ? "Open dealer portal" : "Compare cars"}</a>
+                      <a href="${ctaCompare}" style="display:block;text-align:center;background:#ffffff;color:#111827;text-decoration:none;padding:14px 18px;border-radius:6px;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;border:2px solid #111827;">${isDealer ? "Browse admin panel" : "Compare cars"}</a>
                     </td>
                   </tr>
                 </table>
@@ -386,7 +385,7 @@ export async function sendLeadAlertEmail({
         <p style="margin: 10px 0 0;"><strong>Message:</strong> ${safeBuyerMessage}</p>
       </div>
 
-      <a href="${getSiteOrigin()}/portal/leads" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;border-radius:0px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Open Leads Dashboard</a>
+      <a href="${getSiteOrigin()}/admin/cars" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;border-radius:0px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Open Admin Panel</a>
 
       <p style="margin-top: 20px; color: #94a3b8; font-size: 12px;">Lead Ref: ${safeLeadId}</p>
       ${buildEmailFooter()}

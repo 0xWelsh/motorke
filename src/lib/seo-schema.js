@@ -96,15 +96,19 @@ export function buildVehicleListingSchema(car, { reviews } = {}) {
           },
         }
       : {}),
-    offers: {
-      "@type": "Offer",
-      price: car.price,
-      priceCurrency: "KES",
-      priceValidUntil,
-      availability: car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-      url: listingUrl,
-      seller: buildListingSellerSchema(car.dealer),
-    },
+    ...(car.price
+      ? {
+          offers: {
+            "@type": "Offer",
+            price: car.price,
+            priceCurrency: "KES",
+            priceValidUntil,
+            availability: car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            url: listingUrl,
+            seller: buildListingSellerSchema(car.dealer),
+          },
+        }
+      : {}),
     ...(ratingAvg && ratingCount > 0
       ? {
           aggregateRating: {
