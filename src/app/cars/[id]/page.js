@@ -108,6 +108,9 @@ function getCarData(ref) {
               users: { select: { avatarUrl: true }, take: 1 },
             },
           },
+          createdBy: {
+            select: { name: true, whatsapp: true, phone: true },
+          },
         },
       });
     },
@@ -217,11 +220,14 @@ export default async function CarDetailPage({ params }) {
 
   const [similar, reviewsData, modelWiki] = await Promise.all([similarPromise, reviewsPromise, modelWikiPromise]);
   const highlightChips = buildListingHighlightChips(car, dealer);
+  const creator = car.createdBy;
   const dealerWhatsapp = dealer.whatsapp || dealer.phone || "";
   const dealerPhone = dealer.phone || "";
-  const teamWhatsapp = dealerWhatsapp || PUBLIC_SUPPORT_WHATSAPP;
-  const teamPhone = dealerPhone || PUBLIC_SUPPORT_PHONE;
-  const whatsappHref = teamWhatsapp ? whatsappLink(teamWhatsapp, title, dealer.name || "BIDGARI") : null;
+  const creatorWhatsapp = creator?.whatsapp || creator?.phone || "";
+  const teamWhatsapp = creatorWhatsapp || dealerWhatsapp || PUBLIC_SUPPORT_WHATSAPP;
+  const teamPhone = creator?.phone || dealerPhone || PUBLIC_SUPPORT_PHONE;
+  const senderName = creator?.name || dealer.name || "BIDGARI";
+  const whatsappHref = teamWhatsapp ? whatsappLink(teamWhatsapp, title, senderName) : null;
   const callHref = teamPhone ? telHrefFromMsisdn(teamPhone) : null;
   const waDigits = teamWhatsapp ? String(teamWhatsapp).replace(/\D/g, "") : null;
   const locationLabel = car.location || dealer.location || dealer.county || "Kenya";

@@ -30,7 +30,7 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const car = await createCar(body);
+    const car = await createCar(body, { createdById: session.user.id });
     await revalidateInventoryForCar(car.id, { refreshHomepage: true });
     notifyListingPublished(car);
     logAuditEvent({
@@ -76,7 +76,7 @@ export async function POST(request) {
 }
 
 // Shared create logic (used by admin and dealer portal)
-export async function createCar(body) {
+export async function createCar(body, { createdById } = {}) {
   const {
     dealerId: rawDealerId, make, model, variant, year, price, mileage,
     vehicleType, fuelType, transmission, bodyType, engineCC, drivetrain, steering,
@@ -96,6 +96,7 @@ export async function createCar(body) {
     const car = await tx.car.create({
       data: {
       dealerId,
+      createdById,
       vehicleType:  vehicleType || "CAR",
       make:         make.trim(),
       model:        model.trim(),
