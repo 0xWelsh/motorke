@@ -217,9 +217,11 @@ export default async function CarDetailPage({ params }) {
 
   const [similar, reviewsData, modelWiki] = await Promise.all([similarPromise, reviewsPromise, modelWikiPromise]);
   const highlightChips = buildListingHighlightChips(car, dealer);
-  const teamWhatsapp = PUBLIC_SUPPORT_WHATSAPP;
-  const teamPhone = PUBLIC_SUPPORT_PHONE;
-  const whatsappHref = teamWhatsapp ? whatsappLink(teamWhatsapp, title, "BIDGARI") : null;
+  const dealerWhatsapp = dealer.whatsapp || dealer.phone || "";
+  const dealerPhone = dealer.phone || "";
+  const teamWhatsapp = dealerWhatsapp || PUBLIC_SUPPORT_WHATSAPP;
+  const teamPhone = dealerPhone || PUBLIC_SUPPORT_PHONE;
+  const whatsappHref = teamWhatsapp ? whatsappLink(teamWhatsapp, title, dealer.name || "BIDGARI") : null;
   const callHref = teamPhone ? telHrefFromMsisdn(teamPhone) : null;
   const waDigits = teamWhatsapp ? String(teamWhatsapp).replace(/\D/g, "") : null;
   const locationLabel = car.location || dealer.location || dealer.county || "Kenya";
