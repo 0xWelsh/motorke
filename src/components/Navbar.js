@@ -125,7 +125,7 @@ export default function Navbar({ user }) {
 
  return (
  <>
-    <nav className="sticky top-0 z-[100] isolate w-full flex items-center h-24 md:h-28 bg-white border-b border-gray-100 shadow-sm transition-colors duration-300">
+    <nav className="sticky top-0 z-[100] isolate w-full flex items-center h-20 md:h-24 bg-white border-b border-gray-100 shadow-sm transition-colors duration-300">
  <div className="w-full px-6 md:px-12">
  <div className="flex items-center justify-between gap-4 lg:gap-6 min-w-0 h-full">
 
