@@ -2,10 +2,8 @@
 export const revalidate = 60;
 import BrowsePanel from "@/components/BrowsePanel";
 import {
-  ArrowUpRight,
   ArrowRight,
   Building2,
-  MessageCircle,
   Search,
   Shield,
   BarChart3,
@@ -24,6 +22,7 @@ import HomepageNewArrivals from "@/components/home/HomepageNewArrivals";
 import HomepageDutyTeaser from "@/components/home/HomepageDutyTeaser";
 import HomepageHeroCarFinder from "@/components/home/HomepageHeroCarFinder";
 import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
+import HomepagePriceFilter from "@/components/home/HomepagePriceFilter";
 import HeroCarousel from "@/components/home/HeroCarousel";
 import SeasonalPromoModal from "@/components/SeasonalPromoModal";
 import { getHomepageData } from "@/lib/homepage-cache";
@@ -312,7 +311,6 @@ export default async function HomePage() {
             { label: "Subaru", href: "/cars?make=Subaru" },
             { label: "BMW", href: "/cars?make=BMW" },
             { label: "Mercedes", href: "/cars?make=Mercedes-Benz" },
-            { label: "Under KSh 2M", href: "/cars?maxPrice=2000000" },
             { label: "SUV", href: "/cars?bodyType=SUV" },
             { label: "Nairobi", href: "/cars?location=Nairobi" },
           ].map((chip) => (
@@ -324,6 +322,10 @@ export default async function HomePage() {
               {chip.label}
             </Link>
           ))}
+        </div>
+
+        <div className="mt-4 sm:mt-5">
+          <HomepagePriceFilter />
         </div>
       </div>
       </FadeIn>
