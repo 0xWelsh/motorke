@@ -1,18 +1,9 @@
 import { ArrowUpRight } from "lucide-react";
-import CarCard from "@/components/CarCard";
 import TrackedLink from "@/components/TrackedLink";
-import { getSpotlightGridLayout } from "@/lib/spotlight-grid";
+import ScrollableCarGrid from "@/components/home/ScrollableCarGrid";
 
-/**
- * Homepage Spotlight row — eight listings, rotated from inventory every 30 minutes.
- * Paid spotlight boosts replace slots when active.
- * @param {{ cars: object[] }} props
- */
 export default function HomepageSpotlight({ cars = [] }) {
   if (!cars.length) return null;
-
-  const items = cars.slice(0, 8);
-  const { gridClass, getItemClass } = getSpotlightGridLayout(items.length);
 
   return (
     <section
@@ -31,25 +22,13 @@ export default function HomepageSpotlight({ cars = [] }) {
             href="/cars"
             eventName="homepage_spotlight_browse_click"
             eventPayload={{ area: "spotlight_header" }}
-            className="inline-flex h-11 items-center shrink-0 text-[#111827] dark:text-white text-xs font-bold uppercase tracking-widest gap-2 hover:text-[#38A169] transition-colors"
+            className="inline-flex h-11 items-center shrink-0 text-slate-900 dark:text-white text-xs font-bold uppercase tracking-widest gap-2 hover:text-emerald-600 transition-colors"
           >
             Browse inventory <ArrowUpRight className="w-4 h-4" />
           </TrackedLink>
         </div>
 
-        <div className={`${gridClass} items-stretch`}>
-          {items.map((car, index) => (
-            <div key={car.id} className={`h-full min-w-0 ${getItemClass(index)}`}>
-              <CarCard
-                car={car}
-                compact
-                spotlightProminent
-                hideSpotlightBadge
-                priority={index < 2}
-              />
-            </div>
-          ))}
-        </div>
+        <ScrollableCarGrid cars={cars.slice(0, 8)} />
       </div>
     </section>
   );

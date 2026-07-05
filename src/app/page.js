@@ -1,13 +1,15 @@
 // src/app/page.js
+export const revalidate = 60;
 import BrowsePanel from "@/components/BrowsePanel";
 import {
   ArrowUpRight,
   ArrowRight,
   Building2,
   MessageCircle,
-  GitCompare,
-  RefreshCw,
   Search,
+  Shield,
+  BarChart3,
+  Phone,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,17 +19,17 @@ import TrackedLink from "@/components/TrackedLink";
 import HomepageShopLinks from "@/components/home/HomepageShopLinks";
 import HomepageTrending from "@/components/home/HomepageTrending";
 import HomepageSpotlight from "@/components/home/HomepageSpotlight";
+import HomepageDeals from "@/components/home/HomepageDeals";
+import HomepageNewArrivals from "@/components/home/HomepageNewArrivals";
 import HomepageDutyTeaser from "@/components/home/HomepageDutyTeaser";
 import HomepageHeroCarFinder from "@/components/home/HomepageHeroCarFinder";
 import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
-import HomepageCompareDiscovery from "@/components/home/HomepageCompareDiscovery";
 import HeroCarousel from "@/components/home/HeroCarousel";
 import SeasonalPromoModal from "@/components/SeasonalPromoModal";
 import { getHomepageData } from "@/lib/homepage-cache";
 import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin, absoluteMediaUrl } from "@/lib/site-url";
 import { carListingPath } from "@/lib/car-listing-url";
-import { listPublishedSeoPages, SEO_CONTENT_TYPES } from "@/lib/seo-content";
 import FadeIn from "@/components/ui/FadeIn";
 
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
@@ -45,21 +47,6 @@ function seededShuffle(arr, seed) {
   }
   return out;
 }
-
-/** Pick the first usable car photo from a list to use as a section
- *  backdrop. Falls back to null when the section has no cars yet so
- *  the section renders a clean gradient instead of a broken <img>. */
-function pickSectionBackdrop(cars) {
-  for (const car of cars || []) {
-    const url = car?.images?.[0]?.url;
-    if (typeof url === "string" && url) return url;
-  }
-  return null;
-}
-
-// Revalidate every 60 seconds — the data cache already runs at 120s,
-// so this gives ISR HTML caching on top for much faster repeat visits.
-export const revalidate = 60;
 
 export const metadata = {
   title: "Buy Used and New Cars in Kenya | Verified Nairobi & Mombasa Dealers",
@@ -139,10 +126,9 @@ function homeStructuredData(origin, spotlightCars = [], newCars = []) {
 }
 
 export default async function HomePage() {
-  const [homepageBundle, browseInventoryCounts, seoComparisons] = await Promise.all([
+  const [homepageBundle, browseInventoryCounts] = await Promise.all([
     getHomepageData(),
     getBrowseInventoryCounts(),
-    listPublishedSeoPages({ type: SEO_CONTENT_TYPES.COMPARISON, take: 4 }),
   ]);
 
   const {
@@ -156,6 +142,7 @@ export default async function HomePage() {
     homepageSpotlight,
     mostViewedEnhanced,
     newEnhanced,
+    dealsEnhanced,
   } = homepageBundle;
 
   const heroPool = seededShuffle(
@@ -164,14 +151,11 @@ export default async function HomePage() {
   );
   const heroCars = heroPool.slice(0, 8);
 
-  /** Rotating random inventory (paid boosts fill slots first when active). */
   const spotlightCards = (homepageSpotlight || []).slice(0, 8);
   const spotlightIds = new Set(spotlightCards.map((c) => c.id));
   const trendingCars = (mostViewedEnhanced || []).filter((c) => !spotlightIds.has(c.id));
 
   const origin = getSiteOrigin();
-
-  const newArrivalsBackdrop = pickSectionBackdrop(newEnhanced);
 
   return (
     <div className="min-h-screen pb-20 bg-white dark:bg-[#0a0a0a]">
@@ -299,25 +283,6 @@ export default async function HomePage() {
                     Start comparing <ArrowRight className="w-4 h-4" />
                   </TrackedLink>
                 </div>
-
-                <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-5 max-w-lg mx-auto lg:max-w-none lg:mx-0">
-                  {[
-                    { label: "Verified dealers", value: `${dealers.length}+` },
-                    { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
-                    { label: "Updated", value: "Daily" },
-                  ].map((item) => (
-                    <div
-                      key={item.label}
-                      className="p-3 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70 text-center"
-                      style={{ borderRadius: "var(--radius)" }}
-                    >
-                      <p className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">{item.value}</p>
-                      <p className="meta-label mt-1">
-                        {item.label}
-                      </p>
-                    </div>
-                  ))}
-                </div>
               </div>
 
               <div className="flex flex-col gap-4">
@@ -367,94 +332,22 @@ export default async function HomePage() {
 
       <FadeIn delay={0.1}><HomepageSpotlight cars={spotlightCards} /></FadeIn>
 
-      <FadeIn delay={0.15}><HomepageTrending cars={trendingCars} /></FadeIn>
+      <FadeIn delay={0.15}><HomepageNewArrivals cars={newEnhanced} /></FadeIn>
 
-      <FadeIn delay={0.2}><HomepageCompareDiscovery comparisons={seoComparisons} /></FadeIn>
+      <FadeIn delay={0.2}><HomepageDeals cars={dealsEnhanced} /></FadeIn>
 
-      {/* Fresh Arrivals Section */}
-      {newEnhanced.length > 0 && (
-        <FadeIn delay={0.25}>
-        <section className="relative py-10 sm:py-16 lg:py-24 border-y border-emerald-100/80 dark:border-emerald-950/30 overflow-hidden">
-          {newArrivalsBackdrop && (
-            <div className="absolute inset-0 -z-10 pointer-events-none">
-              <Image
-                src={newArrivalsBackdrop}
-                fill
-                sizes="100vw"
-                alt=""
-                className="object-cover opacity-[0.16] dark:opacity-[0.10]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-white/96 via-white/94 to-white dark:from-[#0a0a0a]/96 dark:via-[#0a0a0a]/94 dark:to-[#0a0a0a]" />
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(56,161,105,0.08),transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top_left,rgba(56,161,105,0.12),transparent_55%)]" />
-            </div>
-          )}
-          {!newArrivalsBackdrop && (
-            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-emerald-50/30 to-white dark:from-emerald-950/15 dark:to-[#0a0a0a]" />
-          )}
-          <div className="home-shell">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-10 gap-4">
-              <div className="max-w-2xl">
-                <p className="meta-label text-brand-accent mb-2">
-                  This week
-                </p>
-                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal editorial-heading text-slate-900 dark:text-white mb-3">
-                  Fresh arrivals
-                </h2>
-                <p className="text-body-muted dark:text-slate-400 text-base sm:text-lg font-medium leading-relaxed">
-                  Cars that have been added this week.
-                </p>
-              </div>
-              <TrackedLink
-                href="/cars?sort=newest"
-                eventName="homepage_fresh_arrivals_click"
-                eventPayload={{ area: "fresh_arrivals" }}
-                className="inline-flex h-11 items-center shrink-0 text-[#2F855A] dark:text-emerald-400 text-xs font-bold uppercase tracking-widest gap-2 hover:opacity-70 transition-opacity"
-              >
-                See all arrivals <ArrowUpRight className="w-4 h-4" />
-              </TrackedLink>
-            </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6 items-stretch">
-              {newEnhanced.slice(0, 8).map((car, index) => (
-                <div key={car.id} className="h-full">
-                  <CarCard car={car} compact priority={index < 2} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        </FadeIn>
-      )}
+      <FadeIn delay={0.25}><HomepageTrending cars={trendingCars} /></FadeIn>
 
-      {/* Car finder & trust stats (moved from hero) */}
-      <div className="lg:hidden space-y-5 mt-2 mb-0">
+      {/* Mobile car finder (visible below lg) */}
+      <div className="lg:hidden mt-8 mb-0">
         <div className="home-shell">
           <HomepageHeroCarFinder embedded />
-        </div>
-        <div className="home-shell">
-          <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-lg mx-auto">
-            {[
-              { label: "Verified dealers", value: `${dealers.length}+` },
-              { label: "Live listings", value: `${(hotThisWeek || []).length}+` },
-              { label: "Updated", value: "Daily" },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="p-3 border border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-[#111111]/70 text-center"
-                style={{ borderRadius: "var(--radius)" }}
-              >
-                <p className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">{item.value}</p>
-                <p className="meta-label mt-1">
-                  {item.label}
-                </p>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
       <FadeIn delay={0.3}><HomepageDutyTeaser /></FadeIn>
 
-      {/* Editorial Information Block */}
+      {/* The Difference */}
       <FadeIn delay={0.35}>
       <section className="relative py-8 sm:py-16 lg:py-20 xl:py-24 bg-[#1A202C] text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -473,37 +366,35 @@ export default async function HomePage() {
                 The Difference
               </p>
               <h2 className="text-2xl sm:text-5xl font-bold leading-[1.12] mb-4 sm:mb-6">
-                Less scrolling.<br />
-                <span className="editorial-heading text-slate-400">More real cars.</span>
+                Every shilling counts.<br />
+                <span className="editorial-heading text-slate-400">We help you spend it right.</span>
               </h2>
               <p className="text-sm sm:text-lg text-slate-400 leading-relaxed max-w-xl font-medium">
-                BIDGARI is built around dealer inventory that you can tie to a real showroom; so you compare in one place,
-                then move the conversation straight to WhatsApp or a phone call when you are ready. Fewer phantom posts, fewer
-                dead ends.
+                BIDGARI is purpose-built for the Kenyan market. We show you the full cost of ownership — not just the asking price — so you can compare apples to apples, skip the runaround, and buy with confidence.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6 items-stretch">
               {[
                 {
-                  title: "Yard-first listings",
+                  title: "Total cost clarity",
+                  icon: <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
+                  desc: "Our duty calculator and landed-price engine reveal what a car really costs once it hits Kenyan roads — no hidden import surprises.",
+                },
+                {
+                  title: "Dealer-verified inventory",
+                  icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
+                  desc: "Every listing ties back to a real dealership with a physical showroom. No anonymous sellers, no phantom posts.",
+                },
+                {
+                  title: "Compare in seconds",
                   icon: <Building2 className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
-                  desc: "Cars come from partner dealers with a physical presence, not scraped dumps or anonymous “DM for price” threads.",
+                  desc: "Pit up to three cars side by side — specs, running costs, and road-readiness — so you shortlist with data, not gut feel.",
                 },
                 {
-                  title: "Straight to the seller",
-                  icon: <MessageCircle className="h-6 w-6" aria-hidden />,
-                  desc: "You reach the dealership’s line. Ask about finance, trade-in, or viewing without a mystery broker in the middle.",
-                },
-                {
-                  title: "Compare before you commit",
-                  icon: <GitCompare className="h-6 w-6" aria-hidden />,
-                  desc: "Use specs, photos, and our tools to shortlist seriously, so your next step is a viewing, not another wild goose chase.",
-                },
-                {
-                  title: "Stock that keeps pace",
-                  icon: <RefreshCw className="h-6 w-6" aria-hidden />,
-                  desc: "We expect listings to reflect what’s still on the floor. When something moves, it should come down quickly.",
+                  title: "Direct to the dealer",
+                  icon: <Phone className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
+                  desc: "Call or WhatsApp the dealership directly from the listing. No brokers, no forms that vanish into thin air.",
                 },
               ].map((item, i) => (
                 <div key={i} className="flex h-full flex-col gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">

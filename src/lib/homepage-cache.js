@@ -21,6 +21,7 @@ export const EMPTY_HOMEPAGE_DATA = {
   hotEnhanced: [],
   mostViewedEnhanced: [],
   newEnhanced: [],
+  dealsEnhanced: [],
 };
 
 function scoreMarketValue(marketAnalysis) {
@@ -285,6 +286,7 @@ async function enrichHomepage(base) {
     ...(mostViewed || []),
     ...(newArrivals || []).slice(0, 8),
     ...(heroFallback || []),
+    ...(hotThisWeek || []),
   ];
 
   const remainingWithAnalysis = await analyzePriceBatch(remainingCars);
@@ -316,6 +318,19 @@ async function enrichHomepage(base) {
     marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`)
   }));
 
+  const dealsEnhanced = (hotThisWeek || [])
+    .map(car => ({
+      ...car,
+      marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`)
+    }))
+    .filter(car => car.marketAnalysis?.comparison !== undefined && car.marketAnalysis.comparison < 0)
+    .sort((a, b) => {
+      const compDiff = (a.marketAnalysis?.comparison ?? 0) - (b.marketAnalysis?.comparison ?? 0);
+      if (compDiff !== 0) return compDiff;
+      return (b.price || 0) - (a.price || 0);
+    })
+    .slice(0, 8);
+
   const heroFallbackEnhanced = (heroFallback || []).map(car => ({
     ...car,
     marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`)
@@ -336,6 +351,7 @@ async function enrichHomepage(base) {
     hotEnhanced,
     mostViewedEnhanced,
     newEnhanced,
+    dealsEnhanced,
   };
 }
 

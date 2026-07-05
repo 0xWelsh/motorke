@@ -1,53 +1,39 @@
 import { ArrowUpRight } from "lucide-react";
-import CarCard from "@/components/CarCard";
 import TrackedLink from "@/components/TrackedLink";
+import ScrollableCarGrid from "@/components/home/ScrollableCarGrid";
 
-/**
- * @param {{ cars: object[] }} props
- */
 export default function HomepageTrending({ cars = [] }) {
   if (!cars.length) return null;
 
-  const items = cars.slice(0, 8);
-
   return (
     <section
-      aria-labelledby="homepage-trending-heading"
-      className="border-b border-slate-100 bg-white py-10 sm:py-16 dark:border-zinc-900 dark:bg-[#0a0a0a]"
+      aria-labelledby="homepage-frequent-heading"
+      className="border-b border-slate-100 bg-white py-8 sm:py-12 dark:border-zinc-900 dark:bg-[#0a0a0a]"
     >
       <div className="home-shell">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-10 gap-4">
-          <div className="max-w-2xl">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 sm:mb-7 gap-3">
+          <div>
             <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-zinc-500 mb-2">
-              Trending
+              Buyers dig these
             </p>
             <h2
-              id="homepage-trending-heading"
-              className="text-4xl sm:text-5xl font-normal editorial-heading text-[#111827] dark:text-white mb-3"
+              id="homepage-frequent-heading"
+              className="text-[clamp(1.75rem,4.5vw,2.75rem)] leading-[1] tracking-[-0.02em] editorial-heading font-semibold text-slate-900 dark:text-white"
             >
-              Most viewed this week
+              Frequently searched
             </h2>
-            <p className="text-[#475569] dark:text-slate-400 text-base sm:text-lg font-medium leading-relaxed">
-              Listings buyers are opening right now. Updated from live view counts.
-            </p>
           </div>
           <TrackedLink
             href="/cars?sort=views_desc"
-            eventName="homepage_trending_click"
-            eventPayload={{ area: "trending" }}
-            className="inline-flex h-11 items-center shrink-0 text-[#111827] dark:text-white text-xs font-bold uppercase tracking-widest gap-2 hover:text-[#38A169] transition-colors"
+            eventName="homepage_frequent_click"
+            eventPayload={{ area: "frequent" }}
+            className="inline-flex h-11 items-center shrink-0 text-slate-900 dark:text-white text-xs font-bold uppercase tracking-widest gap-2 hover:text-emerald-600 transition-colors"
           >
             View all <ArrowUpRight className="w-4 h-4" />
           </TrackedLink>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6 items-stretch w-full">
-          {items.map((car, index) => (
-            <div key={car.id} className="h-full">
-              <CarCard car={car} compact priority={index < 2} />
-            </div>
-          ))}
-        </div>
+        <ScrollableCarGrid cars={cars.slice(0, 8)} />
       </div>
     </section>
   );
