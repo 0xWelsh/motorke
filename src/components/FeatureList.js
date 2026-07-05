@@ -6,19 +6,22 @@ export default function FeatureList({ features, className = "" }) {
   if (!list.length) return null;
 
   return (
-    <ul
-      className={`grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 ${className}`}
-      aria-label="Vehicle features"
-    >
-      {list.map((feature, index) => (
-        <li
-          key={`${index}-${feature}`}
-          className="flex items-center gap-2 rounded-md bg-amber-50 dark:bg-amber-950/20 border border-amber-200/70 dark:border-amber-800/30 px-2.5 py-2 text-[12px] sm:text-[13px] font-semibold leading-snug text-zinc-900 dark:text-white"
-        >
-          <Check className="w-3.5 h-3.5 shrink-0 text-amber-500 dark:text-amber-400" aria-hidden />
-          <span>{feature}</span>
-        </li>
-      ))}
-    </ul>
+    <div className="relative">
+      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-zinc-200 dark:bg-zinc-800 hidden sm:block" aria-hidden />
+      <ul
+        className={`grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 ${className}`}
+        aria-label="Vehicle features"
+      >
+        {list.map((feature, index) => (
+          <li
+            key={`${index}-${feature}`}
+            className="flex items-center gap-2 text-[13px] sm:text-[14px] leading-snug text-zinc-800 dark:text-zinc-200"
+          >
+            <Check className="w-4 h-4 shrink-0 text-emerald-500" aria-hidden />
+            <span>{feature}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
