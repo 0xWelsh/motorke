@@ -505,8 +505,8 @@ export default async function CarDetailPage({ params }) {
               <div className="grid grid-cols-2 gap-px rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-200 dark:bg-zinc-800">
                 {detailSpecs.map((item) => (
                   <div key={item.label} className="flex flex-col gap-0.5 bg-white dark:bg-[#0a0a0a] px-4 py-3">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-red-500">{item.label}</span>
-                    <span className="text-[13px] font-bold text-emerald-600">{item.value}</span>
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-900 dark:text-white/80">{item.label}</span>
+                    <span className="text-[13px] font-bold text-amber-500">{item.value}</span>
                   </div>
                 ))}
               </div>

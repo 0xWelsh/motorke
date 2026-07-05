@@ -1,3 +1,4 @@
+import { Check } from "lucide-react";
 import { meaningfulFeatureList } from "@/lib/car-display";
 
 export default function FeatureList({ features, className = "" }) {
@@ -12,9 +13,9 @@ export default function FeatureList({ features, className = "" }) {
       {list.map((feature, index) => (
         <li
           key={`${index}-${feature}`}
-          className="flex items-center gap-2.5 rounded-md border border-slate-200/85 dark:border-zinc-800 bg-slate-50/70 dark:bg-zinc-900/45 px-2.5 py-2 text-[12px] sm:text-[13px] font-semibold leading-snug text-slate-800 dark:text-slate-200"
+          className="flex items-center gap-2 rounded-md bg-amber-50 dark:bg-amber-950/20 border border-amber-200/70 dark:border-amber-800/30 px-2.5 py-2 text-[12px] sm:text-[13px] font-semibold leading-snug text-amber-800 dark:text-amber-300"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500 shrink-0" aria-hidden />
+          <Check className="w-3.5 h-3.5 shrink-0 text-amber-500 dark:text-amber-400" aria-hidden />
           <span>{feature}</span>
         </li>
       ))}
