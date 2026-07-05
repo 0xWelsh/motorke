@@ -6,7 +6,6 @@ import { getSession } from "@/lib/auth";
 import { unstable_cache } from "next/cache";
 import { formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
 import { telHrefFromMsisdn } from "@/lib/phone-hints";
-import { PUBLIC_SUPPORT_WHATSAPP, PUBLIC_SUPPORT_PHONE } from "@/lib/site-contact";
 import { getPreloadImageUrl } from "@/lib/image-transform";
 import { MapPin } from "lucide-react";
 import ImageGallery from "@/components/ImageGallery";
@@ -107,9 +106,6 @@ function getCarData(ref) {
             include: {
               users: { select: { avatarUrl: true }, take: 1 },
             },
-          },
-          createdBy: {
-            select: { name: true, whatsapp: true, phone: true },
           },
         },
       });
@@ -220,16 +216,11 @@ export default async function CarDetailPage({ params }) {
 
   const [similar, reviewsData, modelWiki] = await Promise.all([similarPromise, reviewsPromise, modelWikiPromise]);
   const highlightChips = buildListingHighlightChips(car, dealer);
-  const creator = car.createdBy;
-  const dealerWhatsapp = dealer.whatsapp || dealer.phone || "";
-  const dealerPhone = dealer.phone || "";
-  const creatorWhatsapp = creator?.whatsapp || creator?.phone || "";
-  const teamWhatsapp = creatorWhatsapp || dealerWhatsapp || PUBLIC_SUPPORT_WHATSAPP;
-  const teamPhone = creator?.phone || dealerPhone || PUBLIC_SUPPORT_PHONE;
-  const senderName = creator?.name || dealer.name || "BIDGARI";
-  const whatsappHref = teamWhatsapp ? whatsappLink(teamWhatsapp, title, senderName) : null;
-  const callHref = teamPhone ? telHrefFromMsisdn(teamPhone) : null;
-  const waDigits = teamWhatsapp ? String(teamWhatsapp).replace(/\D/g, "") : null;
+  const teamWhatsapp = "254717303587";
+  const teamPhone = "254717303587";
+  const whatsappHref = whatsappLink(teamWhatsapp, title, "Admin");
+  const callHref = telHrefFromMsisdn(teamPhone);
+  const waDigits = "254717303587";
   const locationLabel = car.location || dealer.location || dealer.county || "Kenya";
   const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on BIDGARI.`;
 
