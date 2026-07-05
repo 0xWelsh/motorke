@@ -1,6 +1,12 @@
 import modelWikiData from "../../data/seo/model-wiki.json";
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
-import { BODY_TYPE_LABELS, FUEL_LABELS } from "@/lib/constants";
+import {
+  BODY_TYPE_LABELS,
+  FUEL_LABELS,
+  TRANSMISSION_LABELS,
+  DRIVETRAIN_LABELS,
+} from "@/lib/constants";
+import { formatMileage } from "@/lib/utils";
 import { db } from "@/lib/db";
 
 const WIKI = modelWikiData;
@@ -107,27 +113,24 @@ export function buildListingLeadParagraph(car) {
   return `This ${year} ${make} ${model}${variant} is listed as a ${body} with ${fuel} power (${cc}).`;
 }
 
-function inspectionParagraphForBody(car) {
-  const family = wikiBodyFamily(car.bodyType);
-  const body = listingBodyLabel(car);
-
-  switch (family) {
-    case "suv":
-      return `For this ${body}, inspect 4WD components where fitted, underbody rust, rear differential noise, and cooling or hybrid systems. Ask for a Japan auction sheet or inspection report on imports.`;
-    case "sedan":
-      return `For this ${body}, check rear quarter panels, trunk floor rust, suspension bushings, and paint meter readings on repaired imports.`;
-    case "hatch":
-      return `For this ${body}, inspect hatch struts, rear hatch floor rust, and rear suspension wear from estate road use.`;
-    case "wagon":
-      return `For this ${body}, check tailgate alignment, load-area rust, and rear suspension on high-mileage units.`;
-    case "mpv":
-      return `For this ${body}, test all sliding doors and third-row latches, and confirm air-conditioning performance in every row.`;
-    case "pickup":
-    case "truck":
-      return `For this ${body}, inspect load bed rust, chassis rails, and any ladder-frame corrosion before transfer.`;
-    default:
-      return `For this ${body}, inspect panel gaps, underbody rust, and cooling or hybrid systems where applicable. Ask for a recent inspection report if the unit was imported.`;
+/**
+ * Estimate fuel economy (km/L mixed) based on engine size and fuel type.
+ */
+function estimateFuelEconomy(cc, fuelType) {
+  if (!cc) return null;
+  if (fuelType === "HYBRID") return "18-25";
+  if (fuelType === "DIESEL") {
+    if (cc < 2000) return "15-19";
+    if (cc < 3000) return "12-15";
+    return "9-12";
   }
+  if (fuelType === "PETROL") {
+    if (cc < 1500) return "14-17";
+    if (cc < 2000) return "11-14";
+    if (cc < 2500) return "9-12";
+    return "7-10";
+  }
+  return null;
 }
 
 /**
@@ -136,27 +139,77 @@ function inspectionParagraphForBody(car) {
 export function buildListingTailoredWiki(car) {
   const make = car.make;
   const model = car.model;
-  const body = listingBodyLabel(car);
+  const fuel = (FUEL_LABELS[car.fuelType] || car.fuelType || "").toLowerCase();
+  const trans = car.transmission
+    ? (TRANSMISSION_LABELS[car.transmission] || car.transmission).toLowerCase()
+    : null;
+  const drive = car.drivetrain
+    ? (DRIVETRAIN_LABELS[car.drivetrain] || car.drivetrain)
+    : null;
+  const mileageStr = car.mileage ? formatMileage(car.mileage) : null;
+  const engineCC = car.engineCC ? parseInt(car.engineCC, 10) : null;
+
+  // ── Paragraph 2: what to inspect (spec-specific) ──
+  let inspect = [];
+  if (car.fuelType === "DIESEL") {
+    inspect.push("diesel items: DPF condition, turbo health, and whether the timing belt has been replaced");
+  } else if (car.fuelType === "HYBRID") {
+    inspect.push("hybrid battery health, inverter coolant, and the real-world fuel economy the seller is reporting");
+  } else {
+    inspect.push("timing chain or belt service interval, oil leaks, and cooling system condition");
+  }
+  if (car.transmission === "CVT") {
+    inspect.push("CVT fluid change history — a dry CVT is costly to replace");
+  } else if (car.transmission === "AUTOMATIC") {
+    inspect.push("when the transmission fluid was last changed — rough shifts mean missed service");
+  }
+  if (engineCC && engineCC > 2500) inspect.push("cooling system health on this larger engine");
+
+  let specP2 = `For a ${car.year} ${make} ${model}`;
+  if (engineCC) specP2 += ` with a ${engineCC}cc`;
+  specP2 += ` ${fuel} engine`;
+  if (trans) specP2 += ` and ${trans}`;
+  if (mileageStr) specP2 += ` at ${mileageStr}`;
+  specP2 += `: check ${inspect.join("; ")}.`;
+
+  // ── Paragraph 3: dealer questions + running costs ──
+  let p3 = "Ask the dealer for the import documents, logbook, and service history. ";
+  if (mileageStr) {
+    p3 += `At ${mileageStr}, confirm major services (timing belt, transmission fluid, suspension) are done or due soon. `;
+  } else {
+    p3 += "Confirm the mileage and that the logbook year matches the advertised year. ";
+  }
+
+  const fuelEco = estimateFuelEconomy(engineCC, car.fuelType);
+  if (fuelEco) {
+    p3 += `Expect roughly ${fuelEco} km/L in mixed driving. `;
+  }
+  p3 += `Budget for annual insurance (3-5% of car value), NTSA transfer fees, and a pre-purchase inspection. Compare other ${make} ${model} listings on BIDGARI.`;
+
+  // ── Bullets ──
+  let testDriveTip = `Take a test drive on both smooth roads and rough patches to feel the `;
+  if (drive) {
+    testDriveTip += `${drive.toLowerCase()} response`;
+  } else {
+    testDriveTip += "drivetrain and suspension";
+  }
+  if (car.fuelType === "HYBRID") testDriveTip += ", and listen for the engine cutting in and out smoothly";
+  testDriveTip += ".";
 
   return {
     headline: `${car.year} ${make} ${car.model} (${BODY_TYPE_LABELS[car.bodyType] || car.bodyType})`,
     paragraphs: [
       buildListingLeadParagraph(car),
-      `${inspectionParagraphForBody(car)} Kenyan buyers should confirm logbook year, mileage, and dealer service history before paying a deposit.`,
-      `Use BIDGARI to compare other ${make} ${model} ${body} listings, estimate import duty if needed, and contact the dealer directly from this page.`,
+      specP2,
+      p3,
     ],
     bullets: [
-      "Confirm logbook year matches the advertised registration year",
-      "Test drive on your usual roads before you transfer funds",
-      "Budget for insurance, transfer, and first service after purchase",
+      `Compare prices on BIDGARI — see what similar ${make} ${model} listings are actually selling for near you`,
+      testDriveTip,
+      "Get a pre-purchase inspection by an independent mechanic before you pay any deposit",
     ],
     source: "listing",
   };
-}
-
-/** @deprecated Use buildListingTailoredWiki */
-export function buildGeneratedModelWiki(car) {
-  return buildListingTailoredWiki(car);
 }
 
 function curatedWikiFromEntry(entry) {

@@ -125,7 +125,7 @@ export default function Navbar({ user }) {
 
  return (
  <>
-  <nav className="sticky top-0 z-[100] isolate w-full flex items-center h-20 md:h-24 bg-white border-b border-gray-100 shadow-sm transition-colors duration-300">
+  <nav className="sticky top-0 z-[100] isolate w-full flex items-center h-20 md:h-24 lg:h-28 bg-white border-b border-gray-100 shadow-sm transition-colors duration-300">
  <div className="w-full px-6 md:px-12">
  <div className="flex items-center justify-between gap-4 lg:gap-6 min-w-0 h-full">
 
@@ -135,7 +135,7 @@ export default function Navbar({ user }) {
  onClick={(e) => navigateTo("/", e)}
  className="relative z-20 flex shrink-0 items-center transition-transform active:scale-95"
  >
-   <div className="relative h-[72px] w-64 shrink-0 md:h-[88px] md:w-80 lg:h-[88px] lg:w-96">
+    <div className="relative h-20 w-72 shrink-0 md:h-24 md:w-80 lg:h-28 lg:w-96">
   <Image
   src={BRAND_HEADER_LOGO}
    alt="BIDGARI"
@@ -370,7 +370,7 @@ export default function Navbar({ user }) {
  onClick={(e) => navigateTo("/", e)}
  className="flex min-w-0 shrink-0 items-center"
  >
-  <div className="relative h-[72px] w-48 shrink-0 sm:h-20 sm:w-64">
+   <div className="relative h-20 w-56 shrink-0 sm:h-24 sm:w-72">
   <Image
   src={BRAND_HEADER_LOGO}
    alt="BIDGARI"
