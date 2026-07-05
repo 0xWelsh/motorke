@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: buildPageTitle("Car buying guides & blog"),
   description:
-    "Practical articles for Kenyan car buyers: imports, duty, financing, and how to shop verified listings on Welsh Motorhub.",
+    "Practical articles for Kenyan car buyers: imports, duty, financing, and how to shop verified listings on BIDGARI.",
   ...buildCanonicalMetadata("/blog"),
 };
 

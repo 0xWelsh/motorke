@@ -10,7 +10,7 @@
  *   fonts on Vercel cold starts — the only failure mode left is "PNG
  *   asset missing," which trips during build, not in production.
  *
- *   The watermark is a bold brush-font "WELSH MOTORHUB" centered and
+ *   The watermark is a bold brush-font "BIDGARI" centered and
  *   rotated, at very low opacity — like faint ink on paper. It is
  *   composited at the image centre so it spans the content regardless
  *   of how the photo is cropped.

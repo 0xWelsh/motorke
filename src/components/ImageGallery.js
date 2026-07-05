@@ -38,6 +38,15 @@ export default function ImageGallery({ images, title, carId, isLoggedIn }) {
   const [lbDragging, setLbDragging] = useState(false);
   const menuRef = useRef(null);
 
+  // Check initial saved state on mount
+  useEffect(() => {
+    if (!isLoggedIn || !carId) return;
+    fetch(`/api/saved/${carId}`)
+      .then(r => r.json())
+      .then(data => setSaved(data.saved))
+      .catch(() => {});
+  }, [carId, isLoggedIn]);
+
   // Scroll → nav opacity
   useEffect(() => {
     const el = heroRef.current;

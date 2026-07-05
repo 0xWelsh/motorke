@@ -21,8 +21,8 @@ import {
   TrendingUp,
   Shield,
   Database,
-  Image,
   MessageCircle,
+  Bookmark,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { useState, useEffect } from "react";
@@ -37,12 +37,12 @@ const allLinks = [
   { href: "/admin/leads", label: "Leads", Icon: MessageSquare },
   { href: "/admin/growth", label: "Growth", Icon: TrendingUp },
   { href: "/admin/buyer-requests", label: "Buyer requests", Icon: ClipboardList },
-  { href: "/admin/gallery", label: "Gallery", Icon: Image },
   { href: "/admin/traffic", label: "Traffic", Icon: BarChart2 },
   { href: "/admin/duty-vehicles", label: "Duty CRSP", Icon: Calculator },
   { href: "/admin/model-specs", label: "Model Specs", Icon: Database },
   { href: "/admin/reviews", label: "Reviews", Icon: Star },
   { href: "/admin/super", label: "Super Admin", Icon: Shield },
+  { href: "/admin/watchlist", label: "Watchlist", Icon: Bookmark },
   { href: "/admin/whatsapp-bot", label: "WhatsApp Bot", Icon: MessageCircle },
 ];
 
@@ -155,12 +155,12 @@ export default function AdminLayout({ children }) {
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-black">
               <img
                 src="/headerlogo.png"
-                alt="Welsh Motorhub"
+                alt="BIDGARI"
                 className="h-7 w-7 rounded-md object-contain brightness-200 invert"
               />
             </div>
             <div className="min-w-0">
-              <p className="truncate text-sm font-bold text-white">Welsh Motorhub</p>
+              <p className="truncate text-sm font-bold text-white">BIDGARI</p>
               <p className="text-[11px] font-medium text-zinc-400">Admin console</p>
             </div>
           </Link>

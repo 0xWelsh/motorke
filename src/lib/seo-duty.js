@@ -113,7 +113,7 @@ export function buildDutyCalculatorJsonLd({ vehicle = null, pathname = DUTY_HUB 
       name: "Can I find cars matching my duty estimate?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes. Welsh Motorhub links each duty estimate to verified dealer stock for the same make and model so you can compare showroom prices after tax.",
+        text: "Yes. BIDGARI links each duty estimate to verified dealer stock for the same make and model so you can compare showroom prices after tax.",
       },
     },
   ];
@@ -135,7 +135,7 @@ export function buildDutyCalculatorJsonLd({ vehicle = null, pathname = DUTY_HUB 
     },
     provider: {
       "@type": "Organization",
-      name: "Welsh Motorhub",
+      name: "BIDGARI",
       url: absoluteUrl("/"),
     },
   };

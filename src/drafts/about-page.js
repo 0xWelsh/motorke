@@ -3,9 +3,9 @@ import { Shield, Users, MapPin, Building2, TrendingUp, Award, Quote } from "luci
 import Link from "next/link";
 
 export const metadata = {
-  title: "About Welsh Motorhub — Kenya's Trusted Car Marketplace",
+  title: "About BIDGARI — Kenya's Trusted Car Marketplace",
   description:
-    "Welsh Motorhub connects Kenyan car buyers with verified dealers. Transparent pricing, no middleman. Learn about our team, track record, and mission.",
+    "BIDGARI connects Kenyan car buyers with verified dealers. Transparent pricing, no middleman. Learn about our team, track record, and mission.",
   alternates: { canonical: "/about" },
 };
 
@@ -27,7 +27,7 @@ export default function AboutPage() {
                 <span className="editorial-heading text-[#38A169]">Trust.</span>
               </h1>
               <p className="text-xl text-[#718096] dark:text-slate-400 font-medium max-w-2xl leading-relaxed">
-                Welsh Motorhub is a Kenyan car marketplace that connects buyers with real verified dealers.
+                BIDGARI is a Kenyan car marketplace that connects buyers with real verified dealers.
                 No middlemen, no hidden fees. Just transparent pricing and cars that actually exist.
               </p>
             </div>
@@ -55,7 +55,7 @@ export default function AboutPage() {
             <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-600 mb-8">The Story</h2>
             <div className="space-y-6 text-base font-medium text-[#718096] dark:text-slate-400 leading-relaxed">
               <p>
-                I started Welsh Motorhub because I got tired of how hard it is to buy a car in Kenya.
+                I started BIDGARI because I got tired of how hard it is to buy a car in Kenya.
                 You see a listing online, you call the number, and the car is either sold or the price
                 is different from what was advertised. Sometimes the dealer is just a broker working
                 from a phone, and the car is parked at someone else&apos;s yard two towns away.
@@ -64,7 +64,7 @@ export default function AboutPage() {
                 The platform works like this. Every dealer on here is vetted before they can list.
                 We check that they actually have a physical yard, that their business is registered,
                 and that the cars they post are really in their inventory. When you see a price on
-                Welsh Motorhub, that is the price the dealer gave us. No last minute markups.
+                BIDGARI, that is the price the dealer gave us. No last minute markups.
               </p>
               <p>
                 For buyers, the whole point is that you can browse, compare, and contact the dealer

@@ -1,4 +1,4 @@
-# Welsh Motorhub — Dealer pricing
+# BIDGARI — Dealer pricing
 
 **Kenya car marketplace · List your stock · Keep 100% of the sale**
 
@@ -52,7 +52,7 @@ Choose the plan that matches how many vehicles you usually have **on the forecou
 
 ## What is included in every plan
 
-- Your **dealer profile** and **showroom page** on Welsh Motorhub  
+- Your **dealer profile** and **showroom page** on BIDGARI  
 - **Inventory portal** — add cars, photos, specs, price; mark sold when stock moves  
 - **Leads** — buyer enquiries and WhatsApp/call routing to **your** number  
 - Listed on **welshmotorhub.co.ke** search, filters, and maps (as features roll out)  
@@ -122,7 +122,7 @@ While we are building buyer traffic:
 
 ---
 
-**Welsh Motorhub**  
+**BIDGARI**  
 *Verified dealer stock · Kenya*  
 
 **hello@welshmotorhub.co.ke** · **welshmotorhub.co.ke**

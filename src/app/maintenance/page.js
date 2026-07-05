@@ -5,9 +5,9 @@
 export const dynamic = "force-static";
 
 export const metadata = {
-  title: "We'll be right back | Welsh Motorhub",
+  title: "We'll be right back | BIDGARI",
   description:
-    "Welsh Motorhub is undergoing brief maintenance. We'll be back online shortly.",
+    "BIDGARI is undergoing brief maintenance. We'll be back online shortly.",
   robots: { index: false, follow: false },
 };
 
@@ -23,7 +23,7 @@ export default function MaintenancePage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/favicon.png"
-            alt="Welsh Motorhub"
+            alt="BIDGARI"
             width={40}
             height={40}
             className="h-10 w-10 object-contain"
@@ -46,7 +46,7 @@ export default function MaintenancePage() {
         </h1>
 
         <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400 sm:text-base">
-          Welsh Motorhub is offline for a short window while we tidy a few things up.
+          BIDGARI is offline for a short window while we tidy a few things up.
           Your account, saved cars, and dealer inventory are safe.
         </p>
 
@@ -70,7 +70,7 @@ export default function MaintenancePage() {
         </div>
 
         <p className="mt-10 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-600">
-          Welsh Motorhub &middot; Kenya
+          BIDGARI &middot; Kenya
         </p>
       </div>
     </main>

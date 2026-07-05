@@ -52,7 +52,7 @@ export default function EnquiryForm({
   const teamWhatsapp = PUBLIC_SUPPORT_WHATSAPP;
   const teamPhone = PUBLIC_SUPPORT_PHONE;
   const waLink = teamWhatsapp
-    ? whatsappLink(teamWhatsapp, carTitle, "Welsh Motorhub")
+    ? whatsappLink(teamWhatsapp, carTitle, "BIDGARI")
     : null;
   const callHref = teamPhone ? telHrefFromMsisdn(teamPhone) : "";
   const callLink = callHref || null;

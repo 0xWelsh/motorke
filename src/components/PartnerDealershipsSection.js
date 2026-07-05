@@ -137,7 +137,7 @@ export default function PartnerDealershipsSection({ dealers }) {
                 </div>
 
                 <p className="mb-6 line-clamp-3 flex-1 text-sm leading-relaxed text-[#4A5568] dark:text-slate-300">
-                  {dealer.description || "Partnering with Welsh Motorhub to provide verified vehicles and transparent buyer contact."}
+                  {dealer.description || "Partnering with BIDGARI to provide verified vehicles and transparent buyer contact."}
                 </p>
 
                 <div
@@ -170,7 +170,7 @@ export default function PartnerDealershipsSection({ dealers }) {
                 Grow with us
               </p>
               <p className="mt-1 text-base font-semibold leading-snug text-[#111827] dark:text-white">
-                Want to partner with Welsh Motorhub? Join our network of trusted dealerships and reach serious buyers.
+                Want to partner with BIDGARI? Join our network of trusted dealerships and reach serious buyers.
               </p>
             </div>
           </div>

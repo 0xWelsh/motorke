@@ -141,7 +141,7 @@ export function articleJsonLd({ headline, description, datePublished, dateModifi
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     publisher: {
       "@type": "Organization",
-      name: "Welsh Motorhub",
+      name: "BIDGARI",
       logo: { "@type": "ImageObject", url: absoluteMediaUrl(BRAND_MARK_SQUARE) },
     },
   };

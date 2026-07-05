@@ -99,7 +99,7 @@ export default function NetworkWeeklyReportPdf({ report }) {
         <View style={styles.topBand} fixed />
 
         <View style={styles.brandRow}>
-          <Text style={styles.brand}>Welsh Motorhub · Admin</Text>
+          <Text style={styles.brand}>BIDGARI · Admin</Text>
           <Text style={styles.tag}>Network intelligence</Text>
         </View>
         <Text style={styles.h1}>Marketplace pulse</Text>
@@ -158,14 +158,14 @@ export default function NetworkWeeklyReportPdf({ report }) {
           dealers that buyer behaviour compounds beyond a single session.
         </Text>
 
-        <Text style={styles.conf}>Generated {report.generatedAtLabel} · Welsh Motorhub admin · Confidential</Text>
+        <Text style={styles.conf}>Generated {report.generatedAtLabel} · BIDGARI admin · Confidential</Text>
         <Text style={styles.pageNum} render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`} fixed />
       </Page>
 
       <Page size="A4" style={styles.page}>
         <View style={styles.topBand} fixed />
         <View style={styles.brandRow}>
-          <Text style={styles.brand}>Welsh Motorhub · Admin</Text>
+          <Text style={styles.brand}>BIDGARI · Admin</Text>
           <Text style={styles.tag}>Dealer scoreboard</Text>
         </View>
         <Text style={styles.h1}>Who drove traffic</Text>
@@ -216,7 +216,7 @@ export default function NetworkWeeklyReportPdf({ report }) {
           Use this digest in investor updates or dealer QBRs: it ties marketplace liquidity (views/leads) to individual
           partner performance without exposing buyer PII.
         </Text>
-        <Text style={styles.conf}>Welsh Motorhub · Network weekly · {report.periodLabel}</Text>
+        <Text style={styles.conf}>BIDGARI · Network weekly · {report.periodLabel}</Text>
         <Text style={styles.pageNum} render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`} fixed />
       </Page>
     </Document>

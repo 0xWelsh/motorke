@@ -171,42 +171,42 @@ export function hubTitleAndDescription(resolved, total) {
   switch (resolved.kind) {
     case "county":
       return {
-        title: `Cars for sale in ${resolved.county} | Welsh Motorhub`,
-        description: `Browse ${n}+ verified vehicles from trusted dealers in ${resolved.county}, Kenya. Compare prices, specs, and contact sellers on Welsh Motorhub.`,
+        title: `Cars for sale in ${resolved.county} | BIDGARI`,
+        description: `Browse ${n}+ verified vehicles from trusted dealers in ${resolved.county}, Kenya. Compare prices, specs, and contact sellers on BIDGARI.`,
       };
     case "make":
       return {
-        title: `${resolved.make} cars for sale in Kenya | Welsh Motorhub`,
-        description: `Shop ${n} verified ${resolved.make} listings across Kenya. Filter by year, price, fuel, and body type, dealer inventory on Welsh Motorhub.`,
+        title: `${resolved.make} cars for sale in Kenya | BIDGARI`,
+        description: `Shop ${n} verified ${resolved.make} listings across Kenya. Filter by year, price, fuel, and body type, dealer inventory on BIDGARI.`,
       };
     case "make_model":
       return {
-        title: `${resolved.make} ${resolved.model} for sale in Kenya | Welsh Motorhub`,
-        description: `Find ${resolved.make} ${resolved.model} cars for sale, ${n} live listings from verified Kenyan dealers on Welsh Motorhub.`,
+        title: `${resolved.make} ${resolved.model} for sale in Kenya | BIDGARI`,
+        description: `Find ${resolved.make} ${resolved.model} cars for sale, ${n} live listings from verified Kenyan dealers on BIDGARI.`,
       };
     case "make_county":
       return {
-        title: `${resolved.make} for sale in ${resolved.county} | Welsh Motorhub`,
-        description: `Browse ${n} ${resolved.make} vehicles listed by dealers in ${resolved.county}. Transparent pricing and direct contact on Welsh Motorhub.`,
+        title: `${resolved.make} for sale in ${resolved.county} | BIDGARI`,
+        description: `Browse ${n} ${resolved.make} vehicles listed by dealers in ${resolved.county}. Transparent pricing and direct contact on BIDGARI.`,
       };
     case "make_fuel": {
       const fl = fuelFacetLabel(resolved.fuelType);
       return {
-        title: `${resolved.make} ${fl} cars for sale in Kenya | Welsh Motorhub`,
-        description: `${n} ${resolved.make} ${fl.toLowerCase()} listings from verified Kenyan dealers, compare prices and specs on Welsh Motorhub.`,
+        title: `${resolved.make} ${fl} cars for sale in Kenya | BIDGARI`,
+        description: `${n} ${resolved.make} ${fl.toLowerCase()} listings from verified Kenyan dealers, compare prices and specs on BIDGARI.`,
       };
     }
     case "make_body": {
       const bl = BODY_TYPE_LABELS[resolved.bodyType] || resolved.bodyType;
       return {
-        title: `${resolved.make} ${bl} for sale in Kenya | Welsh Motorhub`,
-        description: `Shop ${n} ${resolved.make} ${String(bl).toLowerCase()} vehicles from dealers across Kenya on Welsh Motorhub.`,
+        title: `${resolved.make} ${bl} for sale in Kenya | BIDGARI`,
+        description: `Shop ${n} ${resolved.make} ${String(bl).toLowerCase()} vehicles from dealers across Kenya on BIDGARI.`,
       };
     }
     case "make_price_band":
       return {
-        title: `${resolved.make} (${resolved.band.label}), cars for sale | Welsh Motorhub`,
-        description: `Browse ${n} ${resolved.make} listings in this price range from verified Kenyan dealers on Welsh Motorhub.`,
+        title: `${resolved.make} (${resolved.band.label}), cars for sale | BIDGARI`,
+        description: `Browse ${n} ${resolved.make} listings in this price range from verified Kenyan dealers on BIDGARI.`,
       };
     case "global_body":
     case "global_body_price":
@@ -214,8 +214,8 @@ export function hubTitleAndDescription(resolved, total) {
       return globalHubTitleAndDescription(resolved, total);
     default:
       return {
-        title: "Browse cars | Welsh Motorhub",
-        description: "Verified cars for sale across Kenya on Welsh Motorhub.",
+        title: "Browse cars | BIDGARI",
+        description: "Verified cars for sale across Kenya on BIDGARI.",
       };
   }
 }

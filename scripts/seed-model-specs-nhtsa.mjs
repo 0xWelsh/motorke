@@ -47,7 +47,7 @@ function sleep(ms) {
 
 async function fetchJson(url) {
   const res = await fetch(url, {
-    headers: { "User-Agent": "WelshMotorhub/1.0" },
+    headers: { "User-Agent": "BIDGARI/1.0" },
     signal: AbortSignal.timeout(20000),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);

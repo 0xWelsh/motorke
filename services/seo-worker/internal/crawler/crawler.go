@@ -23,7 +23,7 @@ type Crawler struct {
 
 func New(baseURL string) *Crawler {
 	if baseURL == "" {
-		baseURL = "https://welshmotorhub.co.ke"
+		baseURL = "https://bidgari.co.ke"
 	}
 	return &Crawler{baseURL: strings.TrimRight(baseURL, "/")}
 }

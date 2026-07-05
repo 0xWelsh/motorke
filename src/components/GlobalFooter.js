@@ -56,15 +56,15 @@ export default function GlobalFooter() {
             <div className="mb-5">
               <Link href="/" className="group inline-flex items-center transition-opacity active:opacity-80">
                 <span className="text-[11px] font-black uppercase tracking-[0.24em] text-slate-900 dark:text-white">
-                  Welsh Motorhub
+                  BIDGARI
                 </span>
               </Link>
               <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
-                A trading name of Welsh Motors Ltd
+                Kenya's Car Marketplace
               </p>
             </div>
             <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-sm mb-5">
-              Welsh Motorhub brings dealer listings from across Kenya together in one place for browsing and comparing. Reach the showroom
+              BIDGARI brings dealer listings from across Kenya together in one place for browsing and comparing. Reach the showroom
               on WhatsApp or by phone when you are ready so you speak with the team behind the inventory, not a random middleman.
             </p>
             <div className="flex flex-wrap items-center gap-4">
@@ -111,7 +111,7 @@ export default function GlobalFooter() {
         {/* Bottom Bar */}
         <div className="pt-6 border-t border-slate-200 dark:border-slate-800/70 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6">
           <p className="text-slate-500 dark:text-slate-500 text-xs font-medium">
-            © {currentYear} Welsh Motors Ltd. All rights reserved.
+            © {currentYear} BIDGARI Ltd. All rights reserved.
           </p>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 text-slate-500 dark:text-slate-500">
             <span className="inline-flex items-center gap-2 text-xs">

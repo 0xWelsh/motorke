@@ -40,7 +40,7 @@ describe("car-listing-seo", () => {
   test("description is action-oriented and under 160 chars", () => {
     const desc = buildCarListingDescription(sampleCar, dealer);
     expect(desc).toMatch(/^Buy a /);
-    expect(desc).toMatch(/Welsh Motorhub/);
+    expect(desc).toMatch(/BIDGARI/);
     expect(desc.length).toBeLessThanOrEqual(160);
   });
 

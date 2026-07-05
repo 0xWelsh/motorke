@@ -1,6 +1,6 @@
 # Product and UX
 
-How Welsh Motorhub behaves for buyers, dealers, and admins. Code paths are pointers for developers.
+How BIDGARI behaves for buyers, dealers, and admins. Code paths are pointers for developers.
 
 ## Site map (roles)
 

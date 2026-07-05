@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: buildPageTitle("Buyer guides & trending searches"),
   description:
-    "Landing guides, model comparisons, and what Kenyan shoppers are searching for right now on Welsh Motorhub.",
+    "Landing guides, model comparisons, and what Kenyan shoppers are searching for right now on BIDGARI.",
   ...buildCanonicalMetadata("/guides"),
 };
 

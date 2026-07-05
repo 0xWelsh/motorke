@@ -1,5 +1,5 @@
 /**
- * Client for the Welsh MotorHub Growth Agent (Go sidecar).
+ * Client for the BIDGARI Growth Agent (Go sidecar).
  * Set GROWTH_AGENT_URL + GROWTH_AGENT_SECRET in Vercel env.
  */
 

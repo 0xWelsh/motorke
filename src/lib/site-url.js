@@ -4,7 +4,7 @@ const DEFAULT_ORIGIN = "https://welshmotorhub.co.ke";
 export const BRAND_OG_IMAGE = "/opengraph.png";
 export const BRAND_MARK_SQUARE = "/app-icon-source.png";
 /** Horizontal wordmark for site header only (not favicon / app icon). */
-export const BRAND_HEADER_LOGO = "/newlogo.jpeg";
+export const BRAND_HEADER_LOGO = "/images/bidgari-logo-header.png?v=2";
 
 /** Strip slashes for consistent URL concatenation */
 function normalizeOrigin(raw) {

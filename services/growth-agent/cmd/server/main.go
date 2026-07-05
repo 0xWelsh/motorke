@@ -34,7 +34,7 @@ func main() {
 		port = "8091"
 	}
 
-	app := fiber.New(fiber.Config{AppName: "welsh-motorhub-growth-agent"})
+	app := fiber.New(fiber.Config{AppName: "bidgari-growth-agent"})
 	app.Use(logger.New())
 	app.Use(cors.New())
 

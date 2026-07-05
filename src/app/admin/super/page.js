@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { Shield, UserPlus, TrendingUp, Eye, MessageSquare } from "lucide-react";
 import { CreateAdminForm, ViewBoosterForm, EventsBoosterForm, LeadsBoosterForm } from "./SuperAdminClient";
 
-export const metadata = { title: "Super Admin | Welsh Motorhub Admin" };
+export const metadata = { title: "Super Admin | BIDGARI Admin" };
 
 export default async function SuperAdminPage() {
   await requireSuperAdmin();

@@ -12,7 +12,7 @@ export function buildComparisonTitle(makeA, modelA, makeB, modelB) {
 }
 
 export function buildComparisonDescription(makeA, modelA, makeB, modelB) {
-  return `Compare ${makeA} ${modelA} and ${makeB} ${modelB} for Kenyan buyers, pricing context, use cases, and live listings on Welsh Motorhub.`;
+  return `Compare ${makeA} ${modelA} and ${makeB} ${modelB} for Kenyan buyers, pricing context, use cases, and live listings on BIDGARI.`;
 }
 
 export function buildComparisonBody(makeA, modelA, makeB, modelB) {

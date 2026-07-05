@@ -5,11 +5,11 @@ import { absoluteUrl } from "@/lib/site-url";
 export const metadata = {
   title: "Request a Car",
   description:
-    "Tell Welsh Motorhub what you want to buy. Verified dealers and sellers send offers on WhatsApp.",
+    "Tell BIDGARI what you want to buy. Verified dealers and sellers send offers on WhatsApp.",
   alternates: { canonical: "/request-car" },
   openGraph: {
     url: absoluteUrl("/request-car"),
-    title: "Request a Car | Welsh Motorhub",
+    title: "Request a Car | BIDGARI",
     description: "Post your ideal car spec and receive seller offers fast.",
   },
 };
@@ -24,7 +24,7 @@ export default function RequestCarPage() {
           </h1>
           <p className="text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
             Give us the details of the car you want. Verified sellers see your request without your phone
-            number and send offers through Welsh Motorhub, usually within a few hours.
+            number and send offers through BIDGARI, usually within a few hours.
           </p>
           <p className="mt-3 text-xs text-slate-600 dark:text-slate-400">
             Requests stay live for <strong className="text-slate-800 dark:text-slate-200">7 days</strong>.

@@ -95,7 +95,7 @@ export default function BuyerRequestBoard() {
         <div className="max-w-xl space-y-2">
           <p className="text-sm text-slate-600 dark:text-slate-400">
             Live buyer demand. <strong className="text-slate-800 dark:text-white">Dealer sign-in required.</strong>{" "}
-            Tap Send offer to message Welsh Motorhub with the request ID — we route offers to the buyer.
+            Tap Send offer to message BIDGARI with the request ID — we route offers to the buyer.
           </p>
           {quota?.loggedIn && quota.isDealer ? (
             quota.unlimited ? (

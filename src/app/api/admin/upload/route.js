@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { uploadImage } from "@/lib/storage";
+import { uploadImage, deleteImage } from "@/lib/storage";
 
 export async function POST(request) {
   try {
@@ -59,5 +59,51 @@ export async function POST(request) {
   } catch (error) {
     console.error("Admin avatar upload error:", error);
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request) {
+  try {
+    const session = await getSession();
+    if (!session || session.user.role !== "ADMIN") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { targetId, targetType } = await request.json();
+
+    if (!targetId || !targetType) {
+      return NextResponse.json({ error: "Missing target info" }, { status: 400 });
+    }
+
+    if (targetType === "dealer") {
+      const dealer = await db.dealer.findUnique({
+        where: { id: targetId },
+        select: { logoUrl: true },
+      });
+      if (dealer?.logoUrl) {
+        await deleteImage(dealer.logoUrl);
+      }
+      await db.dealer.update({
+        where: { id: targetId },
+        data: { logoUrl: null },
+      });
+    } else {
+      const user = await db.user.findUnique({
+        where: { id: targetId },
+        select: { avatarUrl: true },
+      });
+      if (user?.avatarUrl) {
+        await deleteImage(user.avatarUrl);
+      }
+      await db.user.update({
+        where: { id: targetId },
+        data: { avatarUrl: null },
+      });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Admin avatar delete error:", error);
+    return NextResponse.json({ error: "Failed to remove photo" }, { status: 500 });
   }
 }

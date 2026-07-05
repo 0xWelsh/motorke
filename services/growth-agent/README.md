@@ -1,4 +1,4 @@
-# Welsh MotorHub Growth Agent (Go)
+# BIDGARI Growth Agent (Go)
 
 Dealer acquisition sidecar: discover yards, collect contacts, track outreach, monitor inventory, export CSV.
 

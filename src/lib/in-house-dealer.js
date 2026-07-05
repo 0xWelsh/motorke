@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 
-const IN_HOUSE_NAME = "Welsh Motorhub";
+const IN_HOUSE_NAME = "BIDGARI";
 const IN_HOUSE_SLUG = "welsh-motorhub";
 
 export async function getOrCreateInHouseDealer() {

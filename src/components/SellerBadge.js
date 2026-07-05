@@ -32,7 +32,7 @@ export default function SellerBadge({ dealer, className = "", tooltip = true }) 
   };
 
   const tooltipText = {
-    VERIFIED: "Verified and approved by Welsh Motorhub",
+    VERIFIED: "Verified and approved by BIDGARI",
     PENDING: "Verification submitted, pending review",
     SUSPENDED: "Verification temporarily suspended",
     REJECTED: "Verification was rejected",

@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata = {
   title: "Our mission",
   description:
-    "Welsh Motorhub exists to make Kenya’s car market more transparent: trustworthy dealers, clearer total costs, and smarter comparison tools.",
+    "BIDGARI exists to make Kenya’s car market more transparent: trustworthy dealers, clearer total costs, and smarter comparison tools.",
   alternates: { canonical: "/mission" },
 };
 
@@ -24,7 +24,7 @@ export default function MissionPage() {
             <span className="editorial-heading text-[#718096] dark:text-slate-400">Transparency.</span>
           </h1>
           <p className="text-xl text-[#718096] dark:text-slate-400 font-medium max-w-2xl leading-relaxed mx-auto sm:mx-0">
-            Welsh Motorhub was established to bridge the information gap in the East African automotive market. 
+            BIDGARI was established to bridge the information gap in the East African automotive market. 
             We build tools for buyers who demand operational clarity and verified data.
           </p>
         </div>
@@ -44,7 +44,7 @@ export default function MissionPage() {
                 <div className="bg-slate-50 dark:bg-[#111111] p-10 sm:p-12 border border-slate-100 dark:border-slate-800 shadow-2xl" style={{ borderRadius: 'var(--radius)' }}>
                    <p className="text-lg text-[#111827] dark:text-white leading-relaxed font-medium">
                       The traditional car buying process was marked by opacity. Outdated listings, verification hurdles, and a lack of direct dealer performance metrics created friction. 
-                      <span className="block mt-6 text-[#38A169]">Welsh Motorhub was built to decentralize access to verified vehicle data.</span>
+                      <span className="block mt-6 text-[#38A169]">BIDGARI was built to decentralize access to verified vehicle data.</span>
                    </p>
                 </div>
              </div>

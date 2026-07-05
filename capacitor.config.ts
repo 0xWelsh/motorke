@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.welshmotorhub.app',
-  appName: 'Welsh Motorhub',
+  appId: 'com.bidgari.app',
+  appName: 'BIDGARI',
   webDir: '.next',
   server: {
     url: process.env.CAP_SERVER_URL || 'http://10.0.2.2:3000',
@@ -14,7 +14,7 @@ const config: CapacitorConfig = {
     },
   },
   ios: {
-    scheme: 'Welsh Motorhub',
+    scheme: 'BIDGARI',
   },
 };
 

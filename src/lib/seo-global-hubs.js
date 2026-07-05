@@ -76,26 +76,26 @@ export function globalHubTitleAndDescription(resolved, total) {
   switch (resolved.kind) {
     case "global_body":
       return {
-        title: `${base} | Verified dealer stock | Welsh Motorhub`,
-        description: `Browse ${n} verified ${BODY_TYPE_LABELS[resolved.bodyType]?.toLowerCase() || "vehicle"} listings from Kenyan dealers. Compare prices and contact sellers on Welsh Motorhub.`,
+        title: `${base} | Verified dealer stock | BIDGARI`,
+        description: `Browse ${n} verified ${BODY_TYPE_LABELS[resolved.bodyType]?.toLowerCase() || "vehicle"} listings from Kenyan dealers. Compare prices and contact sellers on BIDGARI.`,
       };
     case "global_body_price": {
       const bl = BODY_TYPE_LABELS[resolved.bodyType] || resolved.bodyType;
       const band = SEO_PRICE_BANDS.find((b) => b.slug === resolved.bandSlug);
       return {
-        title: `${resolved.h1} | ${bl} listings Kenya | Welsh Motorhub`,
-        description: `Shop ${n} ${String(bl).toLowerCase()} vehicles ${band?.label || "in this budget"} from verified dealers. Live stock updated on Welsh Motorhub.`,
+        title: `${resolved.h1} | ${bl} listings Kenya | BIDGARI`,
+        description: `Shop ${n} ${String(bl).toLowerCase()} vehicles ${band?.label || "in this budget"} from verified dealers. Live stock updated on BIDGARI.`,
       };
     }
     case "global_price":
       return {
-        title: `Used cars ${resolved.band.label} in Kenya | Welsh Motorhub`,
-        description: `${n} verified listings ${resolved.band.label} across Kenya. Filter by make, fuel, and county on Welsh Motorhub.`,
+        title: `Used cars ${resolved.band.label} in Kenya | BIDGARI`,
+        description: `${n} verified listings ${resolved.band.label} across Kenya. Filter by make, fuel, and county on BIDGARI.`,
       };
     default:
       return {
-        title: `${base} | Welsh Motorhub`,
-        description: `Browse verified cars for sale in Kenya on Welsh Motorhub.`,
+        title: `${base} | BIDGARI`,
+        description: `Browse verified cars for sale in Kenya on BIDGARI.`,
       };
   }
 }
@@ -141,7 +141,7 @@ export function globalHubIntroCopy(resolved, total) {
   const n = total;
   switch (resolved.kind) {
     case "global_body_price":
-      return `${n} live listings match this budget and body style. Welsh Motorhub aggregates verified dealer stock so you can compare ${resolved.h1.toLowerCase()} without scrolling generic classifieds.`;
+      return `${n} live listings match this budget and body style. BIDGARI aggregates verified dealer stock so you can compare ${resolved.h1.toLowerCase()} without scrolling generic classifieds.`;
     case "global_price":
       return `${n} vehicles are listed ${resolved.band.label}. Use this hub to shortlist by make, then open each listing for dealer contact and location.`;
     case "global_body":

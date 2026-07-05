@@ -239,7 +239,7 @@ export function serializeBuyerRequestPublic(row) {
 export function buildSellerOfferWhatsAppMessage(row) {
   const pub = serializeBuyerRequestPublic(row);
   const lines = [
-    `Hi Welsh Motorhub, I have an offer for buyer request ${pub.publicCode}.`,
+    `Hi BIDGARI, I have an offer for buyer request ${pub.publicCode}.`,
     "",
     `Vehicle: ${pub.title}${pub.variant ? ` (${pub.variant})` : ""}`,
     `Budget: ${pub.budgetLabel}`,

@@ -101,7 +101,6 @@ export default function Navbar({ user }) {
  const links = [
  { href: "/", label: "Home" },
   { href: "/cars", label: "Cars" },
-  { href: "/models", label: "Models" },
   { href: "/compare", label: "Compare" },
   { href: "/duty", label: "Duty" },
  ];
@@ -126,7 +125,7 @@ export default function Navbar({ user }) {
 
  return (
  <>
- <nav className="sticky top-0 z-[100] isolate w-full flex items-center h-16 md:h-20 bg-white border-b border-gray-100 shadow-sm transition-colors duration-300">
+  <nav className="sticky top-0 z-[100] isolate w-full flex items-center h-20 md:h-24 bg-white border-b border-gray-100 shadow-sm transition-colors duration-300">
  <div className="w-full px-6 md:px-12">
  <div className="flex items-center justify-between gap-4 lg:gap-6 min-w-0 h-full">
 
@@ -136,19 +135,19 @@ export default function Navbar({ user }) {
  onClick={(e) => navigateTo("/", e)}
  className="relative z-20 flex shrink-0 items-center transition-transform active:scale-95"
  >
- <div className="relative h-12 w-52 shrink-0 md:h-14 md:w-72 lg:h-16 lg:w-80">
- <Image
- src={BRAND_HEADER_LOGO}
- alt="Welsh Motorhub"
- fill
- className="object-contain object-left invert "
- priority
- sizes="(max-width: 768px) 208px, 320px"
- />
- </div>
- </Link>
+   <div className="relative h-[72px] w-64 shrink-0 md:h-[88px] md:w-80 lg:h-[88px] lg:w-96">
+  <Image
+  src={BRAND_HEADER_LOGO}
+   alt="BIDGARI"
+   fill
+   className="object-contain object-left"
+   priority
+   sizes="(max-width: 768px) 256px, 384px"
+   />
+  </div>
+  </Link>
 
- {/* NAV LINKS (Desktop) */}
+  {/* NAV LINKS (Desktop) */}
  <div className="relative z-20 hidden lg:flex shrink-0 items-center gap-4 xl:gap-6">
  {links.map(({ href, label }) => (
  <Link
@@ -371,14 +370,14 @@ export default function Navbar({ user }) {
  onClick={(e) => navigateTo("/", e)}
  className="flex min-w-0 shrink-0 items-center"
  >
- <div className="relative h-10 w-44 shrink-0 sm:h-11 sm:w-52">
- <Image
- src={BRAND_HEADER_LOGO}
- alt="Welsh Motorhub"
- fill
- className="object-contain object-left invert "
- sizes="(max-width: 640px) 176px, 208px"
- />
+  <div className="relative h-[72px] w-48 shrink-0 sm:h-20 sm:w-64">
+  <Image
+  src={BRAND_HEADER_LOGO}
+   alt="BIDGARI"
+   fill
+   className="object-contain object-left"
+   sizes="(max-width: 640px) 176px, 208px"
+   />
  </div>
  </Link>
  <button

@@ -41,7 +41,7 @@ export async function generateComparePickReasons({ preset, cars, ruleBullets = [
   }
 
   const lines = [
-    "Buyer is comparing vehicles in Kenya on Welsh Motorhub.",
+    "Buyer is comparing vehicles in Kenya on BIDGARI.",
     `Active comparison lens: ${String(preset || "all")}.`,
     `Cars in this set (${cars.length}):`,
   ];

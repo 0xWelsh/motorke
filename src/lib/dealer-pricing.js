@@ -42,7 +42,7 @@ export const DEALER_INCLUDED_EVERY_PLAN = [
   "Dealer profile and showroom page",
   "Inventory portal and lead inbox",
   "WhatsApp and call routing to your number",
-  "Search and discovery on Welsh Motorhub",
+  "Search and discovery on BIDGARI",
   "No commission on vehicle sales",
 ];
 

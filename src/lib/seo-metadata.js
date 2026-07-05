@@ -7,9 +7,9 @@ import { BRAND_OG_IMAGE } from "@/lib/site-url";
 
 export function buildPageTitle(primary, { template = true } = {}) {
   const t = String(primary || "").trim();
-  if (!t) return "Welsh Motorhub";
+  if (!t) return "BIDGARI";
   if (!template) return t;
-  return t.includes("Welsh Motorhub") ? t : `${t} | Welsh Motorhub`;
+  return t.includes("BIDGARI") ? t : `${t} | BIDGARI`;
 }
 
 export function buildCanonicalMetadata(pathname) {

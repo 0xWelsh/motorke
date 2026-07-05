@@ -1,7 +1,7 @@
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { uploadImage } from "@/lib/storage";
+import { uploadImage, deleteImage } from "@/lib/storage";
 
 export async function POST(request) {
   try {
@@ -48,5 +48,33 @@ export async function POST(request) {
   } catch (error) {
     console.error("Avatar upload error:", error);
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+  }
+}
+
+export async function DELETE() {
+  try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const user = await db.user.findUnique({
+      where: { id: session.user.id },
+      select: { avatarUrl: true },
+    });
+
+    if (user?.avatarUrl) {
+      await deleteImage(user.avatarUrl);
+    }
+
+    await db.user.update({
+      where: { id: session.user.id },
+      data: { avatarUrl: null },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Avatar delete error:", error);
+    return NextResponse.json({ error: "Failed to remove photo" }, { status: 500 });
   }
 }

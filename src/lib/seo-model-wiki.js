@@ -143,7 +143,7 @@ export function buildListingTailoredWiki(car) {
     paragraphs: [
       buildListingLeadParagraph(car),
       `${inspectionParagraphForBody(car)} Kenyan buyers should confirm logbook year, mileage, and dealer service history before paying a deposit.`,
-      `Use Welsh Motorhub to compare other ${make} ${model} ${body} listings, estimate import duty if needed, and contact the dealer directly from this page.`,
+      `Use BIDGARI to compare other ${make} ${model} ${body} listings, estimate import duty if needed, and contact the dealer directly from this page.`,
     ],
     bullets: [
       "Confirm logbook year matches the advertised registration year",

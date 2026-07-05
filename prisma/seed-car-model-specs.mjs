@@ -324,8 +324,8 @@ async function main() {
           make, model, variant, yearStart,
         },
       },
-      create: spec,
-      update: data,
+      create: { ...spec, published: true },
+      update: { ...data, published: true },
     });
   }
 

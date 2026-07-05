@@ -9,7 +9,7 @@ import { ClipboardList, MessageCircle } from "lucide-react";
 import { FUEL_LABELS } from "@/lib/constants";
 import { formatPrice } from "@/lib/utils";
 
-export const metadata = { title: "Buyer Requests | Welsh Motorhub Admin" };
+export const metadata = { title: "Buyer Requests | BIDGARI Admin" };
 
 function statusDot(status) {
   const map = {
@@ -79,7 +79,7 @@ export default async function AdminBuyerRequestsPage() {
                     const expired = new Date(row.expiresAt) < new Date();
                     const displayStatus = row.status === "OPEN" && expired ? "EXPIRED" : row.status;
                     const wa = `https://wa.me/${row.phone}?text=${encodeURIComponent(
-                      `Hi ${row.name}, Welsh Motorhub here about your car request ${row.publicCode} (${row.yearMin || ""} ${row.make} ${row.model}). We have options for you.`
+                      `Hi ${row.name}, BIDGARI here about your car request ${row.publicCode} (${row.yearMin || ""} ${row.make} ${row.model}). We have options for you.`
                     )}`;
                     return (
                       <tr key={row.id} className={`transition-colors hover:bg-zinc-800/30 ${i % 2 === 0 ? "bg-zinc-900/20" : "bg-transparent"}`}>
@@ -153,7 +153,7 @@ export default async function AdminBuyerRequestsPage() {
           const expired = new Date(row.expiresAt) < new Date();
           const displayStatus = row.status === "OPEN" && expired ? "EXPIRED" : row.status;
           const wa = `https://wa.me/${row.phone}?text=${encodeURIComponent(
-            `Hi ${row.name}, Welsh Motorhub here about your car request ${row.publicCode} (${row.yearMin || ""} ${row.make} ${row.model}). We have options for you.`
+            `Hi ${row.name}, BIDGARI here about your car request ${row.publicCode} (${row.yearMin || ""} ${row.make} ${row.model}). We have options for you.`
           )}`;
           return (
             <div key={row.id} className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-3 space-y-2">

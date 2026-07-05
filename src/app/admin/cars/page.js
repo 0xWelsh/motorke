@@ -22,7 +22,7 @@ import DataTableShell from "@/components/ui/DataTableShell";
 import { carListingPath } from "@/lib/car-listing-url";
 import { isInSoldGracePeriod } from "@/lib/car-sold-status";
 
-export const metadata = { title: "Cars Inventory | Welsh Motorhub Admin" };
+export const metadata = { title: "Cars Inventory | BIDGARI Admin" };
 
 function carsHref(opts = {}) {
   const p = new URLSearchParams();

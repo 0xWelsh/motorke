@@ -17,19 +17,19 @@ const DEALERS_HERO_IMAGE = "/images/backgrounds/car-dealership.jpg";
 export const metadata = {
   title: "Trusted car dealers in Kenya",
   description:
-    "Search car dealers by name, county, or showroom on Welsh Motorhub. Find verified yards in Nairobi, Kiambu, Mombasa, and across Kenya with live inventory.",
+    "Search car dealers by name, county, or showroom on BIDGARI. Find verified yards in Nairobi, Kiambu, Mombasa, and across Kenya with live inventory.",
   alternates: { canonical: "/dealers" },
   keywords: [
     "car dealers Kenya",
-    "Welsh Motorhub dealers",
+    "BIDGARI dealers",
     "verified dealerships",
     "automotive showroom Kenya",
     "find car dealer by name Kenya",
   ],
   openGraph: {
-    title: "Trusted car dealers in Kenya | Welsh Motorhub",
+    title: "Trusted car dealers in Kenya | BIDGARI",
     description:
-      "Browse Welsh Motorhub’s verified dealer network: counties, cars in stock, and direct links to each showroom.",
+      "Browse BIDGARI’s verified dealer network: counties, cars in stock, and direct links to each showroom.",
     type: "website",
     url: "/dealers",
   },
@@ -378,7 +378,7 @@ function DealerCard({ dealer }) {
   return (
     <Link
       href={`/dealers/${dealer.slug}`}
-      aria-label={`${dealer.name} cars for sale in ${dealer.location || dealer.county || "Kenya"} | Welsh Motorhub`}
+      aria-label={`${dealer.name} cars for sale in ${dealer.location || dealer.county || "Kenya"} | BIDGARI`}
       className="group flex flex-col h-full bg-white dark:bg-[#111111] shadow-sm hover:shadow-lg border border-slate-100/90 dark:border-slate-800 transition-all hover:border-[#22c55e]/45 dark:hover:border-[#22c55e]/40"
       style={{ borderRadius: "12px" }}
     >

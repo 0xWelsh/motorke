@@ -1,6 +1,6 @@
 // src/lib/whatsapp.js
 /**
- * Unified WhatsApp Provider for Welsh Motorhub.
+ * Unified WhatsApp Provider for BIDGARI.
  * Handles dispatching messages to dealers, buyers, and admins.
  * 
  * Future: Point WHATSAPP_GATEWAY_URL to a self-hosted Baileys/VPS server.
@@ -53,7 +53,7 @@ export async function notifyDealerOfLead(dealerPhone, leadData) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke";
   
   const text = 
-    `📢 *New Lead on Welsh Motorhub!*\n\n` +
+    `📢 *New Lead on BIDGARI!*\n\n` +
     `👤 *Buyer:* ${buyerName}\n` +
     `🚗 *Vehicle:* ${carTitle}\n\n` +
     `View details in your portal:\n` +

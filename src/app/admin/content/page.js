@@ -6,7 +6,7 @@ import { contentPublicPath } from "@/lib/seo-content";
 import { ExternalLink, FileText } from "lucide-react";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Content | Welsh Motorhub Admin" };
+export const metadata = { title: "Content | BIDGARI Admin" };
 
 export default async function AdminContentPage() {
   await requireAdmin();

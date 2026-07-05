@@ -1,5 +1,5 @@
 /**
- * Canonical support + transactional From addresses for Welsh Motorhub.
+ * Canonical support + transactional From addresses for BIDGARI.
  *
  * - Set NEXT_PUBLIC_MAIL_SUPPORT for every visible mailto / legal copy (client + server).
  * - Set MAIL_SUPPORT only if server should differ (optional).
@@ -10,8 +10,8 @@ import { digitsOnlyPhone } from "@/lib/phone-hints";
 
 const DEFAULT_SUPPORT = "hello@welshmotorhub.co.ke";
 const DEFAULT_SUPPORT_WHATSAPP_MESSAGE =
-  "Hi Welsh Motorhub team, I need help with the website.";
-const DEFAULT_FROM_NOREPLY = '"Welsh Motorhub" <noreply@welshmotorhub.co.ke>';
+  "Hi BIDGARI team, I need help with the website.";
+const DEFAULT_FROM_NOREPLY = '"BIDGARI" <noreply@welshmotorhub.co.ke>';
 
 /** Shown in footer, contact, FAQ, etc. — inlined on client where NEXT_PUBLIC_* is set. */
 export const PUBLIC_SUPPORT_EMAIL =
@@ -71,5 +71,5 @@ export function getMailFromMarketing() {
 
 /** Welcome / onboarding — defaults to hello@ for a human, trustworthy first touch. */
 export function getMailFromHello() {
-  return process.env.MAIL_FROM_HELLO || '"Welsh Motorhub" <hello@welshmotorhub.co.ke>';
+  return process.env.MAIL_FROM_HELLO || '"BIDGARI" <hello@welshmotorhub.co.ke>';
 }

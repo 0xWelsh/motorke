@@ -25,8 +25,8 @@ export function locationHubDealerWhere(hub) {
 }
 
 export function locationHubMetadata(hub, { dealerCount = 0, carCount = 0 } = {}) {
-  const title = `Car dealers on ${hub.label} Kenya | ${carCount} cars | Welsh Motorhub`;
-  const description = `${hub.description} ${dealerCount} dealer${dealerCount === 1 ? "" : "s"} and ${carCount} live listings on Welsh Motorhub.`;
+  const title = `Car dealers on ${hub.label} Kenya | ${carCount} cars | BIDGARI`;
+  const description = `${hub.description} ${dealerCount} dealer${dealerCount === 1 ? "" : "s"} and ${carCount} live listings on BIDGARI.`;
 
   return {
     title,

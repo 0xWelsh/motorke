@@ -216,12 +216,12 @@ export default function DutyCalculator({
 
   const handleShare = async () => {
     const text = estimate
-      ? `Import taxes for ${estimate.label}: ${formatPrice(estimate.breakdown.totalTaxes)} (Welsh Motorhub)${
+      ? `Import taxes for ${estimate.label}: ${formatPrice(estimate.breakdown.totalTaxes)} (BIDGARI)${
           estimate.breakdown.totalLandedWithPurchase
             ? `. All-in ~${formatPrice(estimate.breakdown.totalLandedWithPurchase)} with your purchase price`
             : ""
         }`
-      : "Kenya import duty calculator, Welsh Motorhub";
+      : "Kenya import duty calculator, BIDGARI";
     if (navigator.share) {
       try {
         await navigator.share({ title: "Import duty estimate", text, url: shareUrl });

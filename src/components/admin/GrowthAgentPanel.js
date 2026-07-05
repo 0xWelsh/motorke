@@ -32,7 +32,7 @@ function waHref(phone, name) {
   const digits = (phone || "").replace(/\D/g, "");
   if (!digits) return null;
   const text = encodeURIComponent(
-    `Hi ${name || "there"}, Welsh Motorhub here. We'd love to list your showroom on our verified marketplace.`
+    `Hi ${name || "there"}, BIDGARI here. We'd love to list your showroom on our verified marketplace.`
   );
   return `https://wa.me/${digits}?text=${text}`;
 }

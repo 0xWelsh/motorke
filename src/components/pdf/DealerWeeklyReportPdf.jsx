@@ -99,7 +99,7 @@ export default function DealerWeeklyReportPdf({ report }) {
         <View style={styles.topBand} fixed />
 
         <View style={styles.brandRow}>
-          <Text style={styles.brand}>Welsh Motorhub</Text>
+          <Text style={styles.brand}>BIDGARI</Text>
           <Text style={styles.tag}>Dealer proof pack</Text>
         </View>
         <Text style={styles.h1}>Showroom pulse</Text>
@@ -170,14 +170,14 @@ export default function DealerWeeklyReportPdf({ report }) {
           </Text>
         ) : null}
 
-        <Text style={styles.conf}>Generated {report.generatedAtLabel} · Welsh Motorhub dealer portal</Text>
+        <Text style={styles.conf}>Generated {report.generatedAtLabel} · BIDGARI dealer portal</Text>
         <Text style={styles.pageNum} render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`} fixed />
       </Page>
 
       <Page size="A4" style={styles.page}>
         <View style={styles.topBand} fixed />
         <View style={styles.brandRow}>
-          <Text style={styles.brand}>Welsh Motorhub</Text>
+          <Text style={styles.brand}>BIDGARI</Text>
           <Text style={styles.tag}>Top attention</Text>
         </View>
         <Text style={styles.h1}>Where buyers looked</Text>
@@ -208,7 +208,7 @@ export default function DealerWeeklyReportPdf({ report }) {
           see cause → effect.
         </Text>
 
-        <Text style={styles.conf}>Welsh Motorhub · Confidential showroom analytics · {report.periodLabel}</Text>
+        <Text style={styles.conf}>BIDGARI · Confidential showroom analytics · {report.periodLabel}</Text>
         <Text style={styles.pageNum} render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`} fixed />
       </Page>
     </Document>

@@ -98,7 +98,7 @@ export async function generateMetadata({ params, searchParams }) {
       description,
       url,
       locale: "en_KE",
-      siteName: "Welsh Motorhub",
+      siteName: "BIDGARI",
       type: "website",
     },
     twitter: {
@@ -115,20 +115,20 @@ function faqSchema(resolved, total) {
   if (resolved.kind === "make") {
     q = [
       {
-        question: `How many ${resolved.make} cars are listed on Welsh Motorhub?`,
+        question: `How many ${resolved.make} cars are listed on BIDGARI?`,
         answer: `There are currently ${n} verified ${resolved.make} listings from Kenyan dealerships. Inventory updates as dealers publish new vehicles.`,
       },
       {
         question: "Are these vehicles from verified dealers?",
         answer:
-          "Welsh Motorhub focuses on dealer inventory so buyers can compare stock and contact sellers directly.",
+          "BIDGARI focuses on dealer inventory so buyers can compare stock and contact sellers directly.",
       },
     ];
   } else if (resolved.kind === "county") {
     q = [
       {
         question: `Where can I buy a car in ${resolved.county}?`,
-        answer: `Browse ${n}+ listings from dealers serving ${resolved.county}. Compare prices and contact dealerships through Welsh Motorhub.`,
+        answer: `Browse ${n}+ listings from dealers serving ${resolved.county}. Compare prices and contact dealerships through BIDGARI.`,
       },
     ];
   } else if (resolved.kind === "make_fuel" || resolved.kind === "make_body" || resolved.kind === "make_price_band") {
@@ -141,7 +141,7 @@ function faqSchema(resolved, total) {
       {
         question: "Are listings from verified dealerships?",
         answer:
-          "Welsh Motorhub lists dealer-published vehicles. Contact dealers directly via WhatsApp or phone from each listing.",
+          "BIDGARI lists dealer-published vehicles. Contact dealers directly via WhatsApp or phone from each listing.",
       },
     ];
   } else {

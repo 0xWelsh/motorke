@@ -31,7 +31,7 @@ export async function generateMetadata({ searchParams }) {
   const parts = ["Verified Cars for Sale in Kenya"];
   if (make) parts.unshift(`${make}${model ? ` ${model}` : ""}`);
   if (county) parts.push(`in ${county}`);
-  const title = `${parts.join(" — ")} | Trusted Dealers on Welsh Motorhub`;
+  const title = `${parts.join(" — ")} | Trusted Dealers on BIDGARI`;
   const desc = make
     ? `Browse verified ${make}${model ? ` ${model}` : ""} cars for sale${county ? ` in ${county}` : " across Kenya"}. Transparent pricing, trusted dealers, direct contact.`
     : "Find verified cars from trusted Kenyan dealers. Transparent pricing, no middleman. Filter by make, price, body type, and county.";

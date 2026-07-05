@@ -118,7 +118,7 @@ export default function DealerBillingPlans({
           Choose a listing plan
         </h2>
         <p className="text-sm text-slate-600 dark:text-zinc-400 mb-4">
-          Based on how many cars you keep <strong className="font-semibold">live</strong> on Welsh Motorhub at once.
+          Based on how many cars you keep <strong className="font-semibold">live</strong> on BIDGARI at once.
         </p>
 
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

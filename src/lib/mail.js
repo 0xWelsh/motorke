@@ -34,7 +34,7 @@ function buildEmailFooter() {
   const support = getSupportEmail();
   return `
     <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid #e2e8f0;">
-      <p style="margin: 0 0 6px; font-size: 12px; color: #475569;">Welsh Motorhub</p>
+      <p style="margin: 0 0 6px; font-size: 12px; color: #475569;">BIDGARI</p>
       <p style="margin: 0; font-size: 12px; color: #64748b;">
         <a href="${siteUrl}/terms" style="color: #0f172a; text-decoration: underline;">Terms</a>
         &nbsp;•&nbsp;
@@ -108,7 +108,7 @@ export async function sendSystemAlertEmail({ subject, summary, details = {} }) {
           ? `<table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;margin-bottom:14px;">${detailRows}</table>`
           : ""
       }
-      <p style="margin:18px 0 0;font-size:12px;color:#94a3b8;">Automated message from Welsh Motorhub monitoring.</p>
+      <p style="margin:18px 0 0;font-size:12px;color:#94a3b8;">Automated message from BIDGARI monitoring.</p>
       ${buildEmailFooter()}
     </div>
   `;
@@ -117,7 +117,7 @@ export async function sendSystemAlertEmail({ subject, summary, details = {} }) {
     const info = await transporter.sendMail({
       from: getMailFromAlerts(),
       to: support,
-      subject: `[Welsh Motorhub] ${subject}`,
+      subject: `[BIDGARI] ${subject}`,
       html,
       replyTo: support,
     });
@@ -147,7 +147,7 @@ export async function sendWelcomeEmail({ email, name, role }) {
   const plainText = [
     `Hi ${rawFirst},`,
     "",
-    "Welcome to Welsh Motorhub — Kenya's marketplace for verified dealer inventory.",
+    "Welcome to BIDGARI — Kenya's marketplace for verified dealer inventory.",
     "",
     isDealer
       ? "Your dealer portal is ready. Add listings, respond to leads, and keep stock up to date."
@@ -158,7 +158,7 @@ export async function sendWelcomeEmail({ email, name, role }) {
     "",
     `Questions? ${support}`,
     "",
-    `Welsh Motorhub · ${siteUrl.replace(/^https?:\/\//, "")}`,
+    `BIDGARI · ${siteUrl.replace(/^https?:\/\//, "")}`,
   ].join("\n");
 
   const ctaBrowse = `${siteUrl}/cars`;
@@ -174,7 +174,7 @@ export async function sendWelcomeEmail({ email, name, role }) {
           <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;">
             <tr>
               <td style="background:#111827;padding:28px 28px 22px;text-align:left;">
-                <p style="margin:0;font-size:11px;font-weight:800;letter-spacing:0.22em;text-transform:uppercase;color:#6ee7b7;">Welsh Motorhub</p>
+                <p style="margin:0;font-size:11px;font-weight:800;letter-spacing:0.22em;text-transform:uppercase;color:#6ee7b7;">BIDGARI</p>
                 <p style="margin:10px 0 0;font-size:22px;font-weight:800;letter-spacing:-0.03em;line-height:1.1;color:#ffffff;">Welcome aboard</p>
                 <div style="margin-top:14px;height:3px;width:48px;background:#38A169;border-radius:2px;"></div>
               </td>
@@ -183,7 +183,7 @@ export async function sendWelcomeEmail({ email, name, role }) {
               <td style="padding:28px 28px 8px;">
                 <p style="margin:0 0 14px;font-size:17px;font-weight:700;color:#0f172a;">Hi ${firstName},</p>
                 <p style="margin:0 0 16px;font-size:15px;line-height:1.65;color:#475569;">
-                  Thanks for joining <strong style="color:#0f172a;">Welsh Motorhub</strong>. We connect you with <strong>real dealership inventory</strong> in Kenya — clear listings, side-by-side comparison, and direct contact with the seller.
+                  Thanks for joining <strong style="color:#0f172a;">BIDGARI</strong>. We connect you with <strong>real dealership inventory</strong> in Kenya — clear listings, side-by-side comparison, and direct contact with the seller.
                 </p>
                 <p style="margin:0 0 22px;font-size:15px;line-height:1.65;color:#475569;">
                   ${
@@ -226,7 +226,7 @@ export async function sendWelcomeEmail({ email, name, role }) {
             </tr>
           </table>
           <p style="margin:16px 0 0;font-size:11px;color:#94a3b8;text-align:center;max-width:520px;line-height:1.5;">
-            You received this because you created a Welsh Motorhub account. If that was not you, contact ${support}.
+            You received this because you created a BIDGARI account. If that was not you, contact ${support}.
           </p>
         </td>
       </tr>
@@ -247,7 +247,7 @@ export async function sendWelcomeEmail({ email, name, role }) {
       from: getMailFromHello(),
       replyTo: support,
       to: email,
-      subject: "Welcome to Welsh Motorhub",
+      subject: "Welcome to BIDGARI",
       text: plainText,
       html: htmlContent,
     });
@@ -281,12 +281,12 @@ export async function sendVerificationEmail(email, name, otp) {
   const htmlContent = `
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #1A1A1A;">
       <div style="margin-bottom: 32px; text-align: center;">
-        <span style="font-weight: 900; font-size: 22px; letter-spacing: -0.03em; color: #0f172a;">Welsh Motorhub</span>
+        <span style="font-weight: 900; font-size: 22px; letter-spacing: -0.03em; color: #0f172a;">BIDGARI</span>
         <p style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; color: #64748b; margin-top: 8px;">Verify your email</p>
       </div>
       <h1 style="font-size: 26px; font-weight: 800; margin-bottom: 16px; color: #0f172a;">Hi ${firstName},</h1>
       <p style="font-size: 16px; color: #475569; margin-bottom: 28px; line-height: 1.55;">
-        Thanks for joining <strong>Welsh Motorhub</strong> (${origin.replace(/^https?:\/\//, "")}). Enter this code to confirm your email and finish setting up your account.
+        Thanks for joining <strong>BIDGARI</strong> (${origin.replace(/^https?:\/\//, "")}). Enter this code to confirm your email and finish setting up your account.
       </p>
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 28px; text-align: center; border-radius: 8px; margin-bottom: 28px;">
          <span style="font-size: 40px; font-weight: 900; letter-spacing: 0.2em; color: #ea580c;">${otp}</span>
@@ -303,7 +303,7 @@ export async function sendVerificationEmail(email, name, otp) {
       from: getMailFromVerification(),
       replyTo: getSupportEmail(),
       to: email,
-      subject: "Your Welsh Motorhub verification code",
+      subject: "Your BIDGARI verification code",
       html: htmlContent,
     });
     return { success: true };
@@ -363,7 +363,7 @@ export async function sendLeadAlertEmail({
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 28px; color: #111827;">
       <h1 style="margin: 0 0 8px; font-size: 24px; font-weight: 800;">New Buyer Enquiry</h1>
       <p style="margin: 0 0 20px; color: #475569; font-size: 14px;">
-        A potential buyer has reached out on Welsh Motorhub.
+        A potential buyer has reached out on BIDGARI.
       </p>
 
       <div style="border: 1px solid #e2e8f0; border-radius: 0px; padding: 18px; margin-bottom: 14px;">
@@ -447,7 +447,7 @@ export async function sendPasswordResetEmail({ email, name, resetToken }) {
   const htmlContent = `
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 620px; margin: 0 auto; padding: 30px; color: #0f172a;">
       <h1 style="margin: 0 0 8px; font-size: 26px; font-weight: 800;">Reset your password</h1>
-      <p style="margin: 0 0 22px; font-size: 15px; color: #475569;">Hi ${safeName}, we received a request to reset your Welsh Motorhub account password.</p>
+      <p style="margin: 0 0 22px; font-size: 15px; color: #475569;">Hi ${safeName}, we received a request to reset your BIDGARI account password.</p>
 
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0px; padding: 18px; margin-bottom: 20px;">
         <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1.6;">For your security, this link expires in 30 minutes. If you did not request this reset, you can ignore this email.</p>
@@ -464,7 +464,7 @@ export async function sendPasswordResetEmail({ email, name, resetToken }) {
     await transporter.sendMail({
       from: getMailFromNoReply(),
       to: email,
-      subject: "Reset your Welsh Motorhub password",
+      subject: "Reset your BIDGARI password",
       html: htmlContent,
     });
     return { success: true };
@@ -535,7 +535,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
         </a>
 
         <p style="margin: 24px 0; font-size: 13px; color: #64748b; line-height: 1.6;">
-          This deal won't last long. Better deals go fast on Welsh Motorhub!
+          This deal won't last long. Better deals go fast on BIDGARI!
         </p>
       </div>
 
@@ -584,7 +584,7 @@ export async function sendEngagementFollowUpEmail({ userEmail, userName, carTitl
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">Hi ${safeName},</p>
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">
           You reached out to <strong>${safeDealer}</strong> a few days ago regarding the <strong>${safeCar}</strong>. 
-          Vehicles move incredibly fast on Welsh Motorhub, so we wanted to check in to see if you are still looking to buy or if you've already found your dream car.
+          Vehicles move incredibly fast on BIDGARI, so we wanted to check in to see if you are still looking to buy or if you've already found your dream car.
         </p>
 
         <div style="text-align: center; margin: 32px 0;">
@@ -638,7 +638,7 @@ export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName
         <h1 style="margin: 0 0 16px; font-size: 24px; font-weight: 900;">How was the service?</h1>
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">Hi ${safeName},</p>
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">
-          You recently contacted <strong>${safeDealer}</strong> through Welsh Motorhub. We carefully vet all our partners to ensure the highest quality experience, and your feedback is vital.
+          You recently contacted <strong>${safeDealer}</strong> through BIDGARI. We carefully vet all our partners to ensure the highest quality experience, and your feedback is vital.
         </p>
         
         <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; line-height: 1.6;">
@@ -817,7 +817,7 @@ export async function sendContactFormEmail({
 
   const html = `
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 28px; color: #111827;">
-      <p style="margin: 0 0 6px; font-size: 11px; color: #38A169; text-transform: uppercase; letter-spacing: .12em; font-weight: 800;">Welsh Motorhub · Contact Form</p>
+      <p style="margin: 0 0 6px; font-size: 11px; color: #38A169; text-transform: uppercase; letter-spacing: .12em; font-weight: 800;">BIDGARI · Contact Form</p>
       <h1 style="margin: 0 0 18px; font-size: 22px; font-weight: 800;">${subjectLabel}</h1>
 
       <div style="border: 1px solid #e2e8f0; padding: 16px; margin-bottom: 12px;">

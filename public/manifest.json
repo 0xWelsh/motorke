@@ -1,7 +1,7 @@
 {
-  "name": "Welsh Motorhub",
-  "short_name": "Welsh Motorhub",
-  "description": "Buy and sell verified vehicles from trusted dealers across Kenya via Welsh Motorhub",
+  "name": "BIDGARI",
+  "short_name": "BIDGARI",
+  "description": "Buy and sell verified vehicles from trusted dealers across Kenya via BIDGARI",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

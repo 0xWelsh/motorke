@@ -34,7 +34,7 @@ const cleanPhone = (value) => String(value || "").replace(/\D/g, "");
 
 function buildLeadMessage(lead) {
   const customerName = lead?.name || "there";
-  const dealerName = "Welsh Motorhub";
+  const dealerName = "BIDGARI";
   const carLabel = lead?.car ? `${lead.car.year} ${lead.car.make} ${lead.car.model}` : "the car";
   const priceLabel = lead?.car?.price ? fmt(lead.car.price) : "the listed price";
 

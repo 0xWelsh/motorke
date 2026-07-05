@@ -8,20 +8,20 @@ import { ChevronDown, HelpCircle, Shield, Zap, MapPin, CreditCard } from "lucide
 const faqs = {
   "For Buyers": [
     {
-      q: "How does Welsh Motorhub guarantee vehicle quality?",
-      a: "Every car listed on Welsh Motorhub comes from verified dealers or certified auction platforms. All vehicles include a detailed inspection history, mileage verification, and ownership records. We vet dealers for credibility before they list.",
+      q: "How does BIDGARI guarantee vehicle quality?",
+      a: "Every car listed on BIDGARI comes from verified dealers or certified auction platforms. All vehicles include a detailed inspection history, mileage verification, and ownership records. We vet dealers for credibility before they list.",
     },
     {
-      q: "Why should I buy through Welsh Motorhub instead of going direct to a dealer?",
-      a: "Welsh Motorhub gives you choice and clarity. Compare 1000+ curated vehicles from Kenya's best dealers in one place. You see real mileage, verified pricing, and can filter by what matters (price, condition, fuel type, location). Plus, our transparent dealer reviews help you make informed decisions.",
+      q: "Why should I buy through BIDGARI instead of going direct to a dealer?",
+      a: "BIDGARI gives you choice and clarity. Compare 1000+ curated vehicles from Kenya's best dealers in one place. You see real mileage, verified pricing, and can filter by what matters (price, condition, fuel type, location). Plus, our transparent dealer reviews help you make informed decisions.",
     },
     {
       q: "How do I know the car I'm buying is actually available?",
       a: "Every listing is live and tied to the dealer's inventory system. If a car is sold, the dealer must update their inventory immediately. Our 'Mark as Sold' feature ensures no ghost listings. If you find a car marked available but it's sold, contact us immediately and we'll investigate.",
     },
     {
-      q: "Can I negotiate the price on Welsh Motorhub?",
-      a: "Yes! Use the enquiry form or call the dealer directly (phone numbers are on every listing). Welsh Motorhub connects you; the final negotiation happens between you and the dealer. Some dealers are more flexible on price, especially for cash buyers or bulk purchases.",
+      q: "Can I negotiate the price on BIDGARI?",
+      a: "Yes! Use the enquiry form or call the dealer directly (phone numbers are on every listing). BIDGARI connects you; the final negotiation happens between you and the dealer. Some dealers are more flexible on price, especially for cash buyers or bulk purchases.",
     },
     {
       q: "What if I have a bad experience with a dealer?",
@@ -41,28 +41,28 @@ const faqs = {
     },
     {
       q: "How do I get better deal notifications?",
-      a: "When you save a car, Welsh Motorhub learns your preferences. If a similar car appears at a lower price, we'll email you. Check your notifications regularly; sometimes deals move fast.",
+      a: "When you save a car, BIDGARI learns your preferences. If a similar car appears at a lower price, we'll email you. Check your notifications regularly; sometimes deals move fast.",
     },
     {
-      q: "Is my personal data safe on Welsh Motorhub?",
+      q: "Is my personal data safe on BIDGARI?",
       a: "Yes. We use industry-standard encryption, don't sell your data to third parties, and comply with Kenya data protection laws. See our Privacy Policy for full details.",
     },
   ],
   "For Dealers": [
     {
-      q: "How much does it cost to list on Welsh Motorhub?",
-      a: "Welsh Motorhub offers a FREE tier (list up to 20 vehicles) and a PRO tier (unlimited listings + analytics + lead prioritization). PRO is KSh 3,999/month or KSh 39,990/year. Cancel anytime.",
+      q: "How much does it cost to list on BIDGARI?",
+      a: "BIDGARI offers a FREE tier (list up to 20 vehicles) and a PRO tier (unlimited listings + analytics + lead prioritization). PRO is KSh 3,999/month or KSh 39,990/year. Cancel anytime.",
     },
     {
-      q: "Why list on Welsh Motorhub instead of managing my own website?",
-      a: "Welsh Motorhub brings 1000s of verified buyers to you monthly. You skip building a website, handling payments, or managing leads manually. Our platform handles leads; you focus on selling.",
+      q: "Why list on BIDGARI instead of managing my own website?",
+      a: "BIDGARI brings 1000s of verified buyers to you monthly. You skip building a website, handling payments, or managing leads manually. Our platform handles leads; you focus on selling.",
     },
     {
       q: "How do I upload my inventory quickly?",
       a: "Use our bulk upload feature (CSV/Excel). Add up to 500 cars at once. Or add manually, one car at a time. Mobile app lets you photograph and upload on the spot.",
     },
     {
-      q: "Will Welsh Motorhub help me negotiate with buyers?",
+      q: "Will BIDGARI help me negotiate with buyers?",
       a: "No. We connect you; you handle the sale. Buyers use the enquiry form or call you directly. We recommend responding within 2 hours for best conversion rates.",
     },
     {
@@ -82,33 +82,33 @@ const faqs = {
       a: "Yes, as long as you have legal authority to sell them (trading license, auction certificate, etc.). We verify dealer credibility before approval.",
     },
     {
-      q: "What's the contract between Welsh Motorhub and me as a dealer?",
+      q: "What's the contract between BIDGARI and me as a dealer?",
       a: "You keep 100% of sale price. Dealer platform access is free while we scale traffic, with no commissions through us. Paid plans may arrive later with notice; we're aligned either way.",
     },
     {
-      q: "Will Welsh Motorhub help me handle customer service?",
+      q: "Will BIDGARI help me handle customer service?",
       a: "You're responsible for your customers. But we provide tools: messaging integration, lead assignment, customer history. Premium dealers get dedicated support.",
     },
   ],
   "Technical & Logistics": [
     {
-      q: "How should I interpret listed prices on Welsh Motorhub?",
-      a: "Prices shown on listings are the dealer's final listed prices on Welsh Motorhub. Always confirm the final transaction amount, optional add-ons, and transfer fees directly with the dealer before payment.",
+      q: "How should I interpret listed prices on BIDGARI?",
+      a: "Prices shown on listings are the dealer's final listed prices on BIDGARI. Always confirm the final transaction amount, optional add-ons, and transfer fees directly with the dealer before payment.",
     },
     {
       q: "Can I save my location to find cars nearby?",
-      a: "Yes! Enable location on your profile. Welsh Motorhub shows distance from your saved location to each vehicle. 'Nearby Dealers' feature highlights cars close to you. Update your location anytime.",
+      a: "Yes! Enable location on your profile. BIDGARI shows distance from your saved location to each vehicle. 'Nearby Dealers' feature highlights cars close to you. Update your location anytime.",
     },
     {
       q: "What phone numbers do I call if I have questions?",
       a: `Support: email ${PUBLIC_SUPPORT_EMAIL} or visit our contact page. Response time: 24-48 hours.`,
     },
     {
-      q: "Does Welsh Motorhub work on mobile?",
+      q: "Does BIDGARI work on mobile?",
       a: "100%. Fully responsive web app. Add to homescreen to use like a native app. Photos upload via camera. Optimized for 3G+.",
     },
     {
-      q: "Can I use Welsh Motorhub offline?",
+      q: "Can I use BIDGARI offline?",
       a: "Partially. Basic features (saved cars, recent views) work offline. New searches and live updates require internet. When you're online again, data syncs.",
     },
     {
@@ -123,14 +123,14 @@ const faqs = {
     },
     {
       q: "What if a dealer lists a stolen car?",
-      a: `Report it immediately at ${PUBLIC_SUPPORT_EMAIL} with proof. We work with law enforcement and will remove the car and ban the dealer. Welsh Motorhub has zero tolerance.`,
+      a: `Report it immediately at ${PUBLIC_SUPPORT_EMAIL} with proof. We work with law enforcement and will remove the car and ban the dealer. BIDGARI has zero tolerance.`,
     },
     {
       q: "Do you facilitate payment?",
       a: "No. Payment happens between you and the dealer. We recommend cash or M-Pesa at vehicle handover with ownership transfer paperwork signed. Use a lawyer if the deal is large (>2M KSh).",
     },
     {
-      q: "Is it safe to call a dealer from Welsh Motorhub?",
+      q: "Is it safe to call a dealer from BIDGARI?",
       a: "Yes. Phone numbers are from verified dealer profiles. If a number seems fake or scammy, report it and we will investigate and may ban the dealer.",
     },
     {
@@ -212,7 +212,7 @@ export default function FAQPage() {
             <span className="editorial-heading text-[#718096] dark:text-slate-400">Asked Questions.</span>
           </h1>
           <p className="text-[#718096] dark:text-slate-400 text-lg font-medium max-w-2xl mx-auto leading-relaxed">
-            Everything you need to know about buying, selling, and trusting the Welsh Motorhub network. 
+            Everything you need to know about buying, selling, and trusting the BIDGARI network. 
             Direct, transparent, and verified.
           </p>
         </div>

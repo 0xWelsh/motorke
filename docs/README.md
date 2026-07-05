@@ -1,4 +1,4 @@
-# Welsh Motorhub documentation
+# BIDGARI documentation
 
 Internal reference for how the product works in production. Start here, then drill into topic files.
 

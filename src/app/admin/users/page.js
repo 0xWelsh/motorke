@@ -14,7 +14,7 @@ import {
 import DataTableShell from "@/components/ui/DataTableShell";
 import EmptyState from "@/components/ui/EmptyState";
 
-export const metadata = { title: "Users | Welsh Motorhub Admin" };
+export const metadata = { title: "Users | BIDGARI Admin" };
 
 function usersHref(opts = {}) {
   const p = new URLSearchParams();

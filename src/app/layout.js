@@ -33,17 +33,14 @@ const dmSans = DM_Sans({
 export const metadata = {
   metadataBase: new URL(getSiteOrigin()),
     title: {
-      default: "Welsh Motorhub | Find Your Car in Kenya",
-      template: "%s | Welsh Motorhub",
+      default: "BIDGARI | Find Your Car in Kenya",
+      template: "%s | BIDGARI",
     },
     description:
-      "Welsh Motorhub is Kenya's verified car marketplace. Browse dealer inventory across Nairobi, Mombasa, Kisumu and beyond. Compare specs, duties, and running costs, then contact dealers directly.",
-    applicationName: "Welsh Motorhub",
+      "BIDGARI is Kenya's verified car marketplace. Browse dealer inventory across Nairobi, Mombasa, Kisumu and beyond. Compare specs, duties, and running costs, then contact dealers directly.",
+    applicationName: "BIDGARI",
     category: "automotive",
     keywords: [
-      "Welsh Motorhub",
-      "Welsh Motorhub Kenya",
-      "Welsh Motors Kenya",
       "used cars Kenya",
       "cars for sale Kenya",
       "car dealers Nairobi",
@@ -73,37 +70,37 @@ export const metadata = {
       googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
     },
     manifest: "/manifest.json",
-    appleWebApp: {
+      appleWebApp: {
       capable: true,
-      title: "Welsh Motorhub",
+      title: "BIDGARI",
       statusBarStyle: "default",
     },
     openGraph: {
       type: "website",
       locale: "en_KE",
-      siteName: "Welsh Motorhub",
+      siteName: "BIDGARI",
       url: getSiteOrigin(),
-      title: "Welsh Motorhub | Find Your Car in Kenya",
+      title: "BIDGARI | Find Your Car in Kenya",
       description:
         "Browse verified vehicles from trusted dealers across Kenya. Compare specs, costs, and contact dealers directly.",
-      images: [{ url: BRAND_OG_IMAGE, width: 1200, height: 630, alt: "Welsh Motorhub" }],
+      images: [{ url: BRAND_OG_IMAGE, width: 1200, height: 630, alt: "BIDGARI" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Welsh Motorhub | Find Your Car in Kenya",
+      title: "BIDGARI | Find Your Car in Kenya",
       description:
         "Browse verified vehicles from trusted dealers across Kenya. Compare specs, costs, and contact dealers directly.",
       images: [BRAND_OG_IMAGE],
   },
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "48x48" },
-      { url: "/favicon.png", type: "image/png", sizes: "96x96" },
-      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+      { url: "/favicon.ico?v=2", sizes: "48x48" },
+      { url: "/favicon.png?v=2", type: "image/png", sizes: "96x96" },
+      { url: "/icon-192.png?v=2", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png?v=2", sizes: "512x512", type: "image/png" },
     ],
-    shortcut: [{ url: "/favicon.ico" }],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: [{ url: "/favicon.ico?v=2" }],
+    apple: [{ url: "/icon-192.png?v=2", sizes: "180x180", type: "image/png" }],
   },
 };
 
@@ -144,14 +141,14 @@ export default async function RootLayout({ children }) {
   const organizationLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Welsh Motorhub",
-    legalName: "Welsh Motors Ltd",
-    alternateName: ["Welsh Motors", "Welsh Motorhub Kenya"],
+    name: "BIDGARI",
+    legalName: "BIDGARI Ltd",
+    alternateName: ["BIDGARI Kenya"],
     url: origin,
     logo: `${origin}/headerlogo.png`,
     image: `${origin}${BRAND_OG_IMAGE}`,
     description:
-      "Welsh Motorhub is Kenya's verified car marketplace connecting buyers with trusted dealers across the country.",
+      "BIDGARI is Kenya's verified car marketplace connecting buyers with trusted dealers across the country.",
     areaServed: { "@type": "Country", name: "Kenya" },
     address: { "@type": "PostalAddress", addressCountry: "KE", addressLocality: "Nairobi" },
     ...(sameAs.length ? { sameAs } : {}),
@@ -160,11 +157,11 @@ export default async function RootLayout({ children }) {
   const websiteLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Welsh Motorhub",
-    alternateName: "Welsh Motors",
+    name: "BIDGARI",
+    alternateName: "BIDGARI",
     url: origin,
     inLanguage: "en-KE",
-    publisher: { "@type": "Organization", name: "Welsh Motorhub" },
+    publisher: { "@type": "Organization", name: "BIDGARI" },
     potentialAction: {
       "@type": "SearchAction",
       target: { "@type": "EntryPoint", urlTemplate: `${origin}/cars?search={search_term_string}` },
@@ -177,7 +174,7 @@ export default async function RootLayout({ children }) {
       <head>
         {/* Preconnect to Supabase Storage for faster image loading */}
         <link rel="preconnect" href="https://bbseolknavwpjzvotdct.supabase.co" />
-        {/* Country / region signals for "Welsh Motorhub" vs Wales disambiguation in search */}
+        {/* Country / region signals for "BIDGARI" vs Wales disambiguation in search */}
         <meta name="geo.region" content="KE" />
         <meta name="geo.placename" content="Nairobi, Kenya" />
         <meta name="ICBM" content="-1.2921, 36.8219" />

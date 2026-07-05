@@ -1,6 +1,6 @@
-# Welsh Motorhub — Guide for car dealers
+# BIDGARI — Guide for car dealers
 
-**Who this is for:** showroom owners, sales managers, and staff who list vehicles on Welsh Motorhub.
+**Who this is for:** showroom owners, sales managers, and staff who list vehicles on BIDGARI.
 
 **What this explains:** what buyers see on the public website, what you control in the dealer portal, and the habits that keep your stock accurate and your leads flowing.
 
@@ -8,9 +8,9 @@ You can share this document with your team. Print it or save as PDF from your ed
 
 ---
 
-## 1. What Welsh Motorhub is
+## 1. What BIDGARI is
 
-Welsh Motorhub is a **Kenya car marketplace**. Buyers search and compare vehicles from **real dealerships** in one place. We send you **enquiries and phone/WhatsApp contact**; you close the sale at your yard.
+BIDGARI is a **Kenya car marketplace**. Buyers search and compare vehicles from **real dealerships** in one place. We send you **enquiries and phone/WhatsApp contact**; you close the sale at your yard.
 
 **We are not:**
 
@@ -59,7 +59,7 @@ Log in at **welshmotorhub.co.ke/login** with the email your account was created 
 | **Profile** | Dealership name, phone, location, logo, banner, description |
 | **Plans** | Current access and future pricing (see section 10) |
 
-If you cannot log in, contact Welsh Motorhub support (see section 12). Your admin contact at the platform may need to reset your user or link you to the correct dealership.
+If you cannot log in, contact BIDGARI support (see section 12). Your admin contact at the platform may need to reset your user or link you to the correct dealership.
 
 ---
 
@@ -130,7 +130,7 @@ A **lead** is typically:
 - Answer honestly about availability, price, viewing times, and logbook.  
 - Move the lead status in your process (contacted, viewing booked, sold, etc.) if you use those tools.
 
-Welsh Motorhub **does not** guarantee a minimum number of leads. More accurate listings, good photos, fair pricing, and fast replies improve results.
+BIDGARI **does not** guarantee a minimum number of leads. More accurate listings, good photos, fair pricing, and fast replies improve results.
 
 ---
 
@@ -153,13 +153,13 @@ Buyers may leave **reviews** after dealing with you. Your rating is visible on y
 
 - Reply professionally to fair criticism.  
 - Fix real issues (misdescribed cars, no-shows, sold cars still listed).  
-- **Verified** status is granted by Welsh Motorhub after checks; it is not automatic for every sign-up.
+- **Verified** status is granted by BIDGARI after checks; it is not automatic for every sign-up.
 
 Misleading listings or repeated complaints can affect your visibility on the platform.
 
 ---
 
-## 9. What Welsh Motorhub does not do
+## 9. What BIDGARI does not do
 
 | Topic | Position |
 |-------|----------|
@@ -232,4 +232,4 @@ WRONG TYPE  → Edit car → fix Sedan/SUV/etc. → saves wrong buyer story
 
 ---
 
-*Document version: May 2026. Describes Welsh Motorhub behaviour on the live platform. If the product changes, this file will be updated in the repository under `docs/for-dealers.md`.*
+*Document version: May 2026. Describes BIDGARI behaviour on the live platform. If the product changes, this file will be updated in the repository under `docs/for-dealers.md`.*

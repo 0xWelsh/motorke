@@ -9,7 +9,7 @@ export const metadata = {
   robots: { index: true, follow: true },
   openGraph: {
     url: absoluteUrl("/requests"),
-    title: "Open Car Requests | Welsh Motorhub",
+    title: "Open Car Requests | BIDGARI",
   },
 };
 

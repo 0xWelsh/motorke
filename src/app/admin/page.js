@@ -9,7 +9,7 @@ import RunWatchAlertsButton from "@/components/admin/RunWatchAlertsButton";
 import RecacheHomepageButton from "@/components/admin/RecacheHomepageButton";
 import { Car, Users, Bolt, Plus } from "lucide-react";
 
-export const metadata = { title: "Admin Dashboard | Welsh Motorhub" };
+export const metadata = { title: "Admin Dashboard | BIDGARI" };
 
 export default async function AdminDashboard({ searchParams }) {
   await requireAdmin();

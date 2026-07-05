@@ -38,7 +38,7 @@ export default function SpecSheet({ car, dealer }) {
              <h3 className="text-xs font-bold uppercase tracking-widest text-orange-600 mb-2">Dealer Information</h3>
              <p className="text-xl font-black text-black">{dealer.name}</p>
              <p className="text-sm text-gray-600">{dealer.location}</p>
-              <p className="mt-4 text-sm font-bold text-gray-600">Contact Welsh Motorhub for more details.</p>
+              <p className="mt-4 text-sm font-bold text-gray-600">Contact BIDGARI for more details.</p>
            </div>
         </div>
 
@@ -88,7 +88,7 @@ export default function SpecSheet({ car, dealer }) {
           <p className="text-[11px] text-gray-400 font-medium">Visit welshmotorhub.co.ke for full listing and interactive comparison.</p>
         </div>
         <div className="bg-black text-white px-4 py-2 text-[11px] font-black uppercase tracking-tighter">
-          Welsh Motorhub Showcase Cert.
+          BIDGARI Showcase Cert.
         </div>
       </div>
     </div>

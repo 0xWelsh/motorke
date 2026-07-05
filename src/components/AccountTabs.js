@@ -294,12 +294,12 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                       <div className="flex flex-wrap gap-2">
                         {PUBLIC_SUPPORT_PHONE && telHrefFromMsisdn(PUBLIC_SUPPORT_PHONE) ? (
                           <a href={telHrefFromMsisdn(PUBLIC_SUPPORT_PHONE)} className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-2xl text-xs font-semibold transition">
-                            <Phone size={14} /> Call Welsh Motorhub
+                            <Phone size={14} /> Call BIDGARI
                           </a>
                         ) : null}
                         {PUBLIC_SUPPORT_WHATSAPP ? (
                           <a
-                            href={whatsappLink(PUBLIC_SUPPORT_WHATSAPP, `${e.car.year} ${e.car.make} ${e.car.model}`, "Welsh Motorhub")}
+                            href={whatsappLink(PUBLIC_SUPPORT_WHATSAPP, `${e.car.year} ${e.car.make} ${e.car.model}`, "BIDGARI")}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-emerald-700 text-slate-900 dark:text-white px-4 py-2 rounded-2xl text-xs font-semibold transition"

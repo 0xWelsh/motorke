@@ -11,7 +11,7 @@ export const SEASONAL_PROMOS = [
   {
     id: "eid-al-adha-2026",
     image: "/images/promos/eid-mubarak-2026.png",
-    alt: "Eid Mubarak from Welsh Motorhub — explore verified cars in Kenya",
+    alt: "Eid Mubarak from BIDGARI — explore verified cars in Kenya",
     href: "/cars",
     startsAt: "2026-05-27",
     endsAt: "2026-05-31",

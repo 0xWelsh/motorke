@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import GrowthCharts from "@/components/admin/GrowthCharts";
 
-export const metadata = { title: "Growth | Welsh Motorhub Admin" };
+export const metadata = { title: "Growth | BIDGARI Admin" };
 
 function getWeekStart(date) {
   const d = new Date(date);

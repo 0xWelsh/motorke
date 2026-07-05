@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { MapPin, ImageOff, ArrowUpRight, Share2, Gauge, Settings, Fuel } from "lucide-react";
+import { MapPin, ImageOff, ArrowUpRight, Share2, Gauge, Settings, Fuel, X } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
 import { getThumbnailUrl, saveDataQuality } from "@/lib/image-transform";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
@@ -101,7 +101,7 @@ export default function CarCard({
   return (
     <article
       className={clsx(
-        "group flex flex-col bg-[var(--surface)] transition-all overflow-hidden border",
+        "group flex flex-col bg-[var(--surface)] transition-all overflow-hidden border hover:shadow-lg hover:-translate-y-0.5 duration-300 ease-out",
         boost.cardBorderClass || "border-[var(--brand-faint)]"
       )}
       style={{ borderRadius: "12px" }}
@@ -207,6 +207,21 @@ export default function CarCard({
             ) : null}
           </div>
           <div className="pointer-events-auto flex shrink-0 items-center gap-1 sm:gap-1.5">
+            {onRemove && (
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  onRemove(car.id);
+                }}
+                className="inline-flex h-6 w-6 items-center justify-center bg-white/80 backdrop-blur-md text-slate-700 transition-colors hover:bg-white dark:bg-black/60 dark:text-slate-200 dark:hover:bg-black sm:h-8 sm:w-8 border border-white/20 dark:border-white/10 shadow-sm"
+                style={{ borderRadius: "6px" }}
+                aria-label="Remove from watchlist"
+              >
+                <X className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+              </button>
+            )}
             <button
               type="button"
               onClick={(event) => {

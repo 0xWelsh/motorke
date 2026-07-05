@@ -236,7 +236,7 @@ function formatCarCaption(car, index) {
 
 function buildGreeting() {
   return (
-    "*Welsh Motorhub Bot* 🚗\n\n" +
+    "*BIDGARI Bot* 🚗\n\n" +
     "Send me a message to search cars in stock. Examples:\n\n" +
     "• \"show Toyota under 3M\"\n" +
     "• \"Nissan X-Trail 2020\"\n" +

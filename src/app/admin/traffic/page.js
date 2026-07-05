@@ -6,7 +6,7 @@ import { Eye, MousePointerClick, BarChart3, ExternalLink } from "lucide-react";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import { carListingPath } from "@/lib/car-listing-url";
 
-export const metadata = { title: "Traffic | Welsh Motorhub Admin" };
+export const metadata = { title: "Traffic | BIDGARI Admin" };
 
 function fmt(n) {
   return new Intl.NumberFormat("en-KE").format(n ?? 0);

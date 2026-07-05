@@ -3,7 +3,7 @@ import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import LoginForm from "@/components/LoginForm";
 
-export const metadata = { title: "Sign In | Welsh Motorhub" };
+export const metadata = { title: "Sign In | BIDGARI" };
 
 export default async function LoginPage(props) {
   let searchParams = {};

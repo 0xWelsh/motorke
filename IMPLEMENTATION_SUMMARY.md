@@ -1,10 +1,10 @@
-# Welsh MotorHub: Seller Type & Verification Implementation Summary
+# BIDGARI: Seller Type & Verification Implementation Summary
 
 ## Date Implemented
 **June 9, 2026**
 
 ## Overview
-Added comprehensive seller type (Dealership/Broker) and extensible verification status system to Welsh MotorHub. This enables:
+Added comprehensive seller type (Dealership/Broker) and extensible verification status system to BIDGARI. This enables:
 - Buyers to clearly identify dealerships vs independent brokers
 - Multi-level verification badging: Verified Dealership, Dealership, Verified Broker, Broker
 - Audit trail for verification approvals/rejections
@@ -389,4 +389,4 @@ All changes follow existing codebase patterns:
 ---
 
 Generated: June 9, 2026
-System: Welsh MotorHub Infrastructure
+System: BIDGARI Infrastructure

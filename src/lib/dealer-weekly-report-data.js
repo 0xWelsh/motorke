@@ -187,7 +187,7 @@ export async function buildWeeklyReportPayload(dealerId) {
           : "Quiet week on detail views — push fresh photos & sharp pricing.",
       sub:
         periodLeads.length > 0
-          ? `${periodLeads.length} lead${periodLeads.length === 1 ? "" : "s"} came through Welsh Motorhub in the last 7 days.`
+          ? `${periodLeads.length} lead${periodLeads.length === 1 ? "" : "s"} came through BIDGARI in the last 7 days.`
           : "Tip: share listing links on WhatsApp status to spike intent clicks.",
     },
   };

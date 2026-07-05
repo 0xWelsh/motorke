@@ -1,0 +1,240 @@
+[2026-07-04T10:53:14.498Z] === Kenyan Specs + Wikipedia Thumbnails ===
+[2026-07-04T10:53:14.505Z] 
+--- Phase 1: Updating specs (248 entries) ---
+[2026-07-04T10:53:17.572Z]   ✓ Toyota Harrier: 1987cc 150hp (3 records)
+[2026-07-04T10:53:18.455Z]   ✓ Toyota Vitz: 996cc 69hp (1 records)
+[2026-07-04T10:53:19.406Z]   ✓ Toyota Axio: 1496cc 109hp (1 records)
+[2026-07-04T10:53:20.356Z]   ✓ Toyota Fielder: 1496cc 109hp (2 records)
+[2026-07-04T10:53:21.255Z]   ✓ Toyota Land Cruiser Prado: 2694cc 163hp (1 records)
+[2026-07-04T10:53:22.415Z]   ✓ Toyota Hilux: 2393cc 150hp (1 records)
+[2026-07-04T10:53:23.429Z]   ✓ Toyota Premio: 1798cc 144hp (1 records)
+[2026-07-04T10:53:24.520Z]   ✓ Toyota Corolla: 1798cc 132hp (2 records)
+[2026-07-04T10:53:25.518Z]   ✓ Toyota RAV4: 1987cc 150hp (2 records)
+[2026-07-04T10:53:26.548Z]   ✓ Toyota Voxy: 1987cc 150hp (1 records)
+[2026-07-04T10:53:27.479Z]   ✓ Toyota Noah: 1987cc 150hp (1 records)
+[2026-07-04T10:53:28.384Z]   ✓ Toyota Aqua: 1497cc 74hp (1 records)
+[2026-07-04T10:53:30.509Z]   ✓ Toyota Camry: 2494cc 178hp (1 records)
+[2026-07-04T10:53:31.486Z]   ✓ Toyota Prius: 1798cc 98hp (1 records)
+[2026-07-04T10:53:32.915Z]   ✓ Toyota Highlander: 3456cc 270hp (1 records)
+[2026-07-04T10:53:34.086Z]   ✓ Toyota Land Cruiser: 4461cc 282hp (1 records)
+[2026-07-04T10:53:35.060Z]   ✓ Toyota 4Runner: 3956cc 270hp (1 records)
+[2026-07-04T10:53:36.332Z]   ✓ Toyota Tacoma: 2694cc 159hp (1 records)
+[2026-07-04T10:53:37.311Z]   ✓ Toyota Tundra: 5663cc 381hp (1 records)
+[2026-07-04T10:53:38.258Z]   ✓ Toyota Sequoia: 5663cc 381hp (1 records)
+[2026-07-04T10:53:39.279Z]   ✓ Toyota Sienna: 3456cc 296hp (1 records)
+[2026-07-04T10:53:40.191Z]   ✓ Toyota Avalon: 3456cc 268hp (1 records)
+[2026-07-04T10:53:41.149Z]   ✓ Toyota Yaris: 1496cc 106hp (1 records)
+[2026-07-04T10:53:42.047Z]   ✓ Toyota Celica: 1798cc 140hp (1 records)
+[2026-07-04T10:53:43.403Z]   ✓ Nissan Note: 1198cc 79hp (1 records)
+[2026-07-04T10:53:44.354Z]   ✓ Nissan X-Trail: 1997cc 144hp (1 records)
+[2026-07-04T10:53:45.248Z]   ✓ Nissan Juke: 1498cc 108hp (2 records)
+[2026-07-04T10:53:46.981Z]   ✓ Nissan Pathfinder: 3498cc 260hp (1 records)
+[2026-07-04T10:53:48.393Z]   ✓ Nissan Murano: 3498cc 260hp (1 records)
+[2026-07-04T10:53:50.885Z]   ✓ Nissan GT-R: 3799cc 565hp (1 records)
+[2026-07-04T10:53:51.827Z]   ✓ Honda Fit: 1318cc 99hp (2 records)
+[2026-07-04T10:53:52.704Z]   ✓ Honda Vezel: 1496cc 131hp (1 records)
+[2026-07-04T10:53:53.665Z]   ✓ Honda CR-V: 1997cc 150hp (2 records)
+[2026-07-04T10:53:54.546Z]   ✓ Honda Civic: 1799cc 140hp (1 records)
+[2026-07-04T10:53:55.479Z]   ✓ Honda Accord: 2356cc 185hp (1 records)
+[2026-07-04T10:53:57.076Z]   ✓ Honda Odyssey: 2356cc 175hp (1 records)
+[2026-07-04T10:53:58.293Z]   ✓ Honda HR-V: 1496cc 121hp (1 records)
+[2026-07-04T10:53:59.500Z]   ✓ Honda Pilot: 3471cc 280hp (1 records)
+[2026-07-04T10:54:00.411Z]   ✓ Mazda Demio: 1298cc 83hp (1 records)
+[2026-07-04T10:54:01.340Z]   ✓ Mazda CX-5: 1998cc 155hp (3 records)
+[2026-07-04T10:54:03.226Z]   ✓ Mazda CX-3: 1496cc 111hp (1 records)
+[2026-07-04T10:54:04.173Z]   ✓ Mazda CX-9: 3726cc 273hp (1 records)
+[2026-07-04T10:54:05.415Z]   ✓ Mazda Mazda2: 1496cc 111hp (1 records)
+[2026-07-04T10:54:06.390Z]   ✓ Mazda Mazda3: 1998cc 155hp (1 records)
+[2026-07-04T10:54:07.414Z]   ✓ Mazda Mazda6: 1998cc 155hp (1 records)
+[2026-07-04T10:54:08.632Z]   ✓ Subaru Forester: 1995cc 148hp (3 records)
+[2026-07-04T10:54:09.534Z]   ✓ Subaru Outback: 2498cc 175hp (2 records)
+[2026-07-04T10:54:10.447Z]   ✓ Subaru Legacy: 2498cc 175hp (1 records)
+[2026-07-04T10:54:11.380Z]   ✓ Subaru Impreza: 1995cc 148hp (1 records)
+[2026-07-04T10:54:12.571Z]   ✓ Subaru Crosstrek: 1995cc 148hp (1 records)
+[2026-07-04T10:54:13.674Z]   ✓ Subaru WRX: 2457cc 268hp (1 records)
+[2026-07-04T10:54:14.542Z]   ✓ Suzuki Swift: 1242cc 89hp (1 records)
+[2026-07-04T10:54:17.295Z]   ✓ Suzuki SX4: 1586cc 112hp (1 records)
+[2026-07-04T10:54:18.669Z]   ✓ Suzuki Grand Vitara: 1995cc 140hp (1 records)
+[2026-07-04T10:54:19.580Z]   ✓ Mitsubishi Pajero: 3200cc 197hp (1 records)
+[2026-07-04T10:54:20.536Z]   ✓ Mitsubishi Outlander: 1998cc 145hp (2 records)
+[2026-07-04T10:54:21.454Z]   ✓ Mitsubishi Lancer: 1499cc 109hp (1 records)
+[2026-07-04T10:54:23.466Z]   ✓ Mitsubishi Eclipse Cross: 1499cc 148hp (1 records)
+[2026-07-04T10:54:24.465Z]   ✓ Mitsubishi Mirage: 1193cc 78hp (1 records)
+[2026-07-04T10:54:25.623Z]   ✓ BMW X5: 2993cc 255hp (1 records)
+[2026-07-04T10:54:26.559Z]   ✓ BMW X3: 1995cc 184hp (1 records)
+[2026-07-04T10:54:28.008Z]   ✓ BMW X1: 1995cc 150hp (1 records)
+[2026-07-04T10:54:28.905Z]   ✓ BMW X6: 2993cc 255hp (1 records)
+[2026-07-04T10:54:30.233Z]   ✓ BMW Z4: 1995cc 184hp (1 records)
+[2026-07-04T10:54:31.134Z]   ✓ BMW i3: 647cc 170hp (1 records)
+[2026-07-04T10:54:32.045Z]   ✓ Mercedes-Benz C-Class: 1796cc 156hp (1 records)
+[2026-07-04T10:54:32.947Z]   ✓ Mercedes-Benz E-Class: 2148cc 170hp (1 records)
+[2026-07-04T10:54:34.555Z]   ✓ Mercedes-Benz S-Class: 2999cc 367hp (1 records)
+[2026-07-04T10:54:36.074Z]   ✓ Mercedes-Benz A-Class: 1595cc 156hp (1 records)
+[2026-07-04T10:54:37.235Z]   ✓ Mercedes-Benz G-Class: 2925cc 286hp (1 records)
+[2026-07-04T10:54:38.737Z]   ✓ Volkswagen Golf: 1395cc 150hp (1 records)
+[2026-07-04T10:54:39.649Z]   ✓ Volkswagen Passat: 1968cc 150hp (1 records)
+[2026-07-04T10:54:40.546Z]   ✓ Volkswagen Tiguan: 1984cc 184hp (1 records)
+[2026-07-04T10:54:41.888Z]   ✓ Volkswagen Touareg: 2967cc 204hp (1 records)
+[2026-07-04T10:54:42.798Z]   ✓ Volkswagen Jetta: 1395cc 147hp (1 records)
+[2026-07-04T10:54:43.744Z]   ✓ Volkswagen Beetle: 1984cc 210hp (1 records)
+[2026-07-04T10:54:45.128Z]   ✓ Audi A4: 1968cc 150hp (1 records)
+[2026-07-04T10:54:46.054Z]   ✓ Audi A6: 1968cc 190hp (1 records)
+[2026-07-04T10:54:46.976Z]   ✓ Audi Q5: 1968cc 190hp (1 records)
+[2026-07-04T10:54:47.906Z]   ✓ Audi Q7: 2967cc 210hp (1 records)
+[2026-07-04T10:54:48.866Z]   ✓ Audi A3: 1968cc 150hp (1 records)
+[2026-07-04T10:54:50.181Z]   ✓ Audi A8: 2967cc 218hp (1 records)
+[2026-07-04T10:54:51.090Z]   ✓ Audi Q3: 1968cc 150hp (1 records)
+[2026-07-04T10:54:52.020Z]   ✓ Audi TT: 1984cc 230hp (1 records)
+[2026-07-04T10:54:53.088Z]   ✓ Land Rover Range Rover: 2993cc 255hp (1 records)
+[2026-07-04T10:54:54.038Z]   ✓ Land Rover Range Rover Sport: 2993cc 255hp (1 records)
+[2026-07-04T10:54:54.973Z]   ✓ Land Rover Discovery: 2993cc 245hp (1 records)
+[2026-07-04T10:54:56.341Z]   ✓ Land Rover Discovery Sport: 1999cc 150hp (1 records)
+[2026-07-04T10:54:57.252Z]   ✓ Land Rover Range Rover Velar: 1999cc 180hp (1 records)
+[2026-07-04T10:54:58.176Z]   ✓ Volvo XC60: 1969cc 190hp (1 records)
+[2026-07-04T10:54:59.277Z]   ✓ Volvo XC90: 1969cc 235hp (1 records)
+[2026-07-04T10:55:00.184Z]   ✓ Volvo S60: 1969cc 190hp (1 records)
+[2026-07-04T10:55:01.094Z]   ✓ Volvo S80: 2400cc 215hp (1 records)
+[2026-07-04T10:55:02.185Z]   ✓ Volvo V60: 1969cc 190hp (1 records)
+[2026-07-04T10:55:03.093Z]   ✓ Ford Ranger: 2198cc 148hp (1 records)
+[2026-07-04T10:55:04.225Z]   ✓ Ford Focus: 1999cc 160hp (1 records)
+[2026-07-04T10:55:05.377Z]   ✓ Ford Escape: 1999cc 168hp (1 records)
+[2026-07-04T10:55:06.355Z]   ✓ Ford Explorer: 3497cc 290hp (1 records)
+[2026-07-04T10:55:07.336Z]   ✓ Ford F-150: 3497cc 290hp (1 records)
+[2026-07-04T10:55:08.332Z]   ✓ Ford Mustang: 4951cc 460hp (1 records)
+[2026-07-04T10:55:09.205Z]   ✓ Ford Edge: 1999cc 180hp (1 records)
+[2026-07-04T10:55:10.171Z]   ✓ Ford Fusion: 1999cc 175hp (1 records)
+[2026-07-04T10:55:11.078Z]   ✓ Hyundai Tucson: 1999cc 155hp (1 records)
+[2026-07-04T10:55:12.004Z]   ✓ Hyundai Santa Fe: 2199cc 197hp (1 records)
+[2026-07-04T10:55:12.942Z]   ✓ Hyundai Elantra: 1999cc 147hp (1 records)
+[2026-07-04T10:55:14.506Z]   ✓ Hyundai Kona: 1999cc 147hp (1 records)
+[2026-07-04T10:55:15.426Z]   ✓ Hyundai Sonata: 1999cc 180hp (1 records)
+[2026-07-04T10:55:16.785Z]   ✓ Kia Sportage: 1999cc 155hp (1 records)
+[2026-07-04T10:55:17.691Z]   ✓ Kia Sorento: 2199cc 197hp (1 records)
+[2026-07-04T10:55:18.833Z]   ✓ Kia Rio: 1396cc 108hp (1 records)
+[2026-07-04T10:55:20.058Z]   ✓ Kia Optima: 1999cc 163hp (1 records)
+[2026-07-04T10:55:21.169Z]   ✓ Kia Soul: 1591cc 130hp (1 records)
+[2026-07-04T10:55:22.129Z]   ✓ Kia Carnival: 2199cc 197hp (1 records)
+[2026-07-04T10:55:24.155Z]   ✓ Lexus RX: 3456cc 270hp (1 records)
+[2026-07-04T10:55:25.084Z]   ✓ Lexus NX: 1998cc 150hp (1 records)
+[2026-07-04T10:55:26.026Z]   ✓ Lexus IS: 2499cc 204hp (1 records)
+[2026-07-04T10:55:26.945Z]   ✓ Lexus ES: 2499cc 203hp (1 records)
+[2026-07-04T10:55:27.849Z]   ✓ Lexus LX: 5663cc 383hp (1 records)
+[2026-07-04T10:55:28.729Z]   ✓ Lexus GX: 4608cc 301hp (1 records)
+[2026-07-04T10:55:29.845Z]   ✓ Lexus GS: 2499cc 204hp (1 records)
+[2026-07-04T10:55:30.882Z]   ✓ Lexus SC: 4293cc 300hp (1 records)
+[2026-07-04T10:55:31.808Z]   ✓ Jaguar XF: 1999cc 163hp (1 records)
+[2026-07-04T10:55:32.752Z]   ✓ Jaguar XJ: 2993cc 275hp (1 records)
+[2026-07-04T10:55:33.757Z]   ✓ Jaguar F-Pace: 1999cc 163hp (1 records)
+[2026-07-04T10:55:35.001Z]   ✓ Jaguar E-Pace: 1999cc 150hp (1 records)
+[2026-07-04T10:55:35.918Z]   ✓ Jaguar I-Pace: 0cc 400hp (1 records)
+[2026-07-04T10:55:44.318Z]   ✓ Jeep Wrangler: 3604cc 285hp (1 records)
+[2026-07-04T10:55:46.145Z]   ✓ Jeep Grand Cherokee: 2987cc 243hp (1 records)
+[2026-07-04T10:55:47.022Z]   ✓ Jeep Cherokee: 2360cc 184hp (1 records)
+[2026-07-04T10:55:47.953Z]   ✓ Jeep Compass: 1998cc 125hp (1 records)
+[2026-07-04T10:55:48.869Z]   ✓ Jeep Renegade: 1598cc 110hp (1 records)
+[2026-07-04T10:55:49.760Z]   ✓ Jeep Patriot: 1998cc 158hp (1 records)
+[2026-07-04T10:55:52.454Z]   ✓ Chrysler 300: 3604cc 292hp (1 records)
+[2026-07-04T10:55:53.621Z]   ✓ Chrysler Pacifica: 3604cc 287hp (1 records)
+[2026-07-04T10:55:55.618Z]   ✓ Chrysler Sebring: 2736cc 186hp (1 records)
+[2026-07-04T10:55:56.526Z]   ✓ Chrysler Town and Country: 3604cc 283hp (1 records)
+[2026-07-04T10:55:57.792Z]   ✓ Dodge Challenger: 5654cc 375hp (1 records)
+[2026-07-04T10:55:58.847Z]   ✓ Dodge Charger: 5654cc 370hp (1 records)
+[2026-07-04T10:55:59.849Z]   ✓ Dodge Durango: 3604cc 295hp (1 records)
+[2026-07-04T10:56:01.126Z]   ✓ Dodge Journey: 2360cc 173hp (1 records)
+[2026-07-04T10:56:02.575Z]   ✓ Dodge Ram: 5654cc 395hp (1 records)
+[2026-07-04T10:56:03.006Z] 
+Specs: 155 records updated, 107 make/model pairs not found
+[2026-07-04T10:56:03.006Z] 
+--- Phase 2: Fetching Wikipedia thumbnails ---
+[2026-07-04T10:56:03.836Z] Models without photos: 689
+[2026-07-04T10:56:05.886Z]   ✓ Toyota Harrier: thumbnail found
+[2026-07-04T10:56:07.237Z]   ✓ Nissan Juke: thumbnail found
+[2026-07-04T10:56:08.546Z]   ✓ Subaru Forester: thumbnail found
+[2026-07-04T10:56:09.633Z]   ✓ Mitsubishi Pajero: thumbnail found
+[2026-07-04T10:56:10.676Z]   ✓ BMW X1: thumbnail found
+[2026-07-04T10:56:11.717Z]   ✓ BMW X6: thumbnail found
+[2026-07-04T10:56:12.928Z]   ✓ BMW Z4: thumbnail found
+[2026-07-04T10:56:13.974Z]   ✓ Mercedes-Benz C-Class: thumbnail found
+[2026-07-04T10:56:14.994Z]   ✓ Volkswagen Beetle: thumbnail found
+[2026-07-04T10:56:16.057Z]   ✓ Audi A4: thumbnail found
+[2026-07-04T10:56:17.201Z]   ✓ Land Rover Range Rover: thumbnail found
+[2026-07-04T10:56:18.255Z]   ✓ Volvo XC60: thumbnail found
+[2026-07-04T10:56:19.308Z]   ✓ Volvo V60: thumbnail found
+[2026-07-04T10:56:20.414Z]   ✓ Ford Edge: thumbnail found
+[2026-07-04T10:56:21.517Z]   ✓ Hyundai Santa Fe: thumbnail found
+[2026-07-04T10:56:22.869Z]   ✓ Hyundai Kona: thumbnail found
+[2026-07-04T10:56:24.225Z]   ✓ Kia Rio: thumbnail found
+[2026-07-04T10:56:25.468Z]   ✓ Nissan NV: thumbnail found
+[2026-07-04T10:56:30.897Z]   ✓ BMW M2: thumbnail found
+[2026-07-04T10:56:31.958Z]   ✓ Nissan GT-R: thumbnail found
+[2026-07-04T10:56:33.086Z]   ✓ Honda Vezel: thumbnail found
+[2026-07-04T10:56:34.225Z]   ✓ BMW 540i: thumbnail found
+[2026-07-04T10:56:35.296Z]   ✓ Toyota Vitz: thumbnail found
+[2026-07-04T10:56:36.960Z]   ✓ Toyota Axio: thumbnail found
+[2026-07-04T10:56:38.828Z]   ✓ Toyota Land Cruiser Prado: thumbnail found
+[2026-07-04T10:56:40.154Z]   ✓ Toyota Hilux: thumbnail found
+[2026-07-04T10:56:41.231Z]   ✓ Toyota Premio: thumbnail found
+[2026-07-04T10:56:42.283Z]   ✓ Toyota Corolla: thumbnail found
+[2026-07-04T10:56:43.324Z]   ✓ Toyota RAV4: thumbnail found
+[2026-07-04T10:56:45.894Z]   ✓ Toyota Aqua: thumbnail found
+[2026-07-04T10:56:47.308Z]   ✓ Nissan Note: thumbnail found
+[2026-07-04T10:56:48.913Z]   ✓ Nissan X-Trail: thumbnail found
+[2026-07-04T10:56:50.139Z]   ✓ Honda Fit: thumbnail found
+[2026-07-04T10:56:51.788Z]   ✓ Mazda Demio: thumbnail found
+[2026-07-04T10:56:53.006Z]   ✓ Mazda CX-5: thumbnail found
+[2026-07-04T10:56:54.254Z]   ✓ Subaru Outback: thumbnail found
+[2026-07-04T10:56:59.172Z]   ✓ Toyota Venza: thumbnail found
+[2026-07-04T10:57:01.720Z]   ✓ Toyota Prius C: thumbnail found
+[2026-07-04T10:57:03.367Z]   ✓ Toyota Mirai: thumbnail found
+[2026-07-04T10:57:04.785Z]   ✓ Toyota C-HR: thumbnail found
+[2026-07-04T10:57:06.933Z]   ✓ Nissan Altima: thumbnail found
+[2026-07-04T10:57:08.370Z]   ✓ Nissan Sentra: thumbnail found
+[2026-07-04T10:57:09.700Z]   ✓ Nissan Armada: thumbnail found
+[2026-07-04T10:57:10.827Z]   ✓ Nissan Xterra: thumbnail found
+[2026-07-04T10:57:12.247Z]   ✓ Nissan Quest: thumbnail found
+[2026-07-04T10:57:13.622Z]   ✓ Nissan Frontier: thumbnail found
+[2026-07-04T10:57:15.432Z]   ✓ Nissan Titan: thumbnail found
+[2026-07-04T10:57:17.083Z]   ✓ Nissan Maxima: thumbnail found
+[2026-07-04T10:57:18.716Z]   ✓ Nissan 350Z: thumbnail found
+[2026-07-04T10:57:20.312Z]   ✓ Toyota Camry: thumbnail found
+[2026-07-04T10:57:21.580Z]   ✓ Toyota Tacoma: thumbnail found
+[2026-07-04T10:57:23.009Z]   ✓ Toyota Tundra: thumbnail found
+[2026-07-04T10:57:24.308Z]   ✓ Toyota Sequoia: thumbnail found
+[2026-07-04T10:57:25.682Z]   ✓ Toyota Sienna: thumbnail found
+[2026-07-04T10:57:27.310Z]   ✓ Toyota Avalon: thumbnail found
+[2026-07-04T10:57:28.539Z]   ✓ Toyota Yaris: thumbnail found
+[2026-07-04T10:57:29.871Z]   ✓ Toyota Celica: thumbnail found
+[2026-07-04T10:57:31.740Z]   ✓ Nissan Pathfinder: thumbnail found
+[2026-07-04T10:57:33.352Z]   ✓ Nissan Murano: thumbnail found
+[2026-07-04T10:57:34.990Z]   ✓ Honda CR-V: thumbnail found
+[2026-07-04T10:57:36.425Z]   ✓ Suzuki Swift: thumbnail found
+[2026-07-04T10:57:37.857Z]   ✓ Mitsubishi Outlander: thumbnail found
+[2026-07-04T10:57:39.803Z]   ✓ Nissan Versa: thumbnail found
+[2026-07-04T10:57:41.319Z]   ✓ Nissan NV200: thumbnail found
+[2026-07-04T10:57:43.592Z]   ✓ Nissan Kicks: thumbnail found
+[2026-07-04T10:57:50.307Z]   ✓ Honda Pacific Coast: thumbnail found
+[2026-07-04T10:58:22.311Z]   ✓ Honda Accord: thumbnail found
+[2026-07-04T10:58:23.529Z]   ✓ Honda Pilot: thumbnail found
+[2026-07-04T10:58:51.282Z]   - Honda Rancher: no thumbnail
+[2026-07-04T10:59:04.535Z]   ✓ Honda CRF150R: thumbnail found
+[2026-07-04T10:59:06.232Z]   ✓ Honda CRF250L: thumbnail found
+[2026-07-04T10:59:09.608Z]   ✓ Honda CB500F: thumbnail found
+[2026-07-04T10:59:11.355Z]   ✓ Honda CB500X: thumbnail found
+[2026-07-04T10:59:12.885Z]   ✓ Honda CBR650F: thumbnail found
+[2026-07-04T10:59:14.468Z]   ✓ Honda CBR300R: thumbnail found
+[2026-07-04T10:59:23.350Z]   ✓ Honda Civic Type R: thumbnail found
+[2026-07-04T10:59:31.563Z]   ✓ Honda Passport: thumbnail found (alt)
+[2026-07-04T10:59:33.370Z]   ✓ Honda Monkey: thumbnail found (alt)
+[2026-07-04T10:59:37.256Z]   ✓ Honda CB300R: thumbnail found
+[2026-07-04T10:59:49.758Z]   ✓ Mazda Tribute: thumbnail found (alt)
+[2026-07-04T10:59:51.290Z]   ✓ Mazda MX-5: thumbnail found
+[2026-07-04T11:00:03.960Z]   ✓ Suzuki Bandit 1250S: thumbnail found
+[2026-07-04T11:00:07.887Z]   ✓ Suzuki GSX1300R: thumbnail found
+[2026-07-04T11:00:42.897Z]   ✓ Subaru Legacy: thumbnail found
+[2026-07-04T11:00:44.752Z]   ✓ Subaru Impreza: thumbnail found
+[2026-07-04T11:00:46.383Z]   ✓ Subaru WRX: thumbnail found
+[2026-07-04T11:03:02.308Z]   ✓ Suzuki Katana: thumbnail found
+[2026-07-04T11:03:02.883Z]   - Suzuki Boulevard: no thumbnail
+[2026-07-04T11:03:04.485Z]   ✓ Mitsubishi Raider: thumbnail found
+[2026-07-04T11:03:05.850Z]   ✓ Mitsubishi Diamante: thumbnail found
+[2026-07-04T11:03:09.513Z]   ✓ Mitsubishi Lancer Evolution: thumbnail found

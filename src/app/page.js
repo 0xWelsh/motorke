@@ -28,6 +28,7 @@ import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin, absoluteMediaUrl } from "@/lib/site-url";
 import { carListingPath } from "@/lib/car-listing-url";
 import { listPublishedSeoPages, SEO_CONTENT_TYPES } from "@/lib/seo-content";
+import FadeIn from "@/components/ui/FadeIn";
 
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
 
@@ -63,11 +64,11 @@ export const revalidate = 60;
 export const metadata = {
   title: "Buy Used and New Cars in Kenya | Verified Nairobi & Mombasa Dealers",
   description:
-    "Find verified used cars for sale in Nairobi, Mombasa, and across Kenya. Compare total ownership costs, inspect specs, and contact trusted car dealers directly on Welsh Motorhub.",
+    "Find verified used cars for sale in Nairobi, Mombasa, and across Kenya. Compare total ownership costs, inspect specs, and contact trusted car dealers directly on BIDGARI.",
   alternates: { canonical: "/" },
   openGraph: {
     url: absoluteUrl("/"),
-    title: "Buy Used and New Cars for sale in Kenya | Welsh Motorhub",
+    title: "Buy Used and New Cars for sale in Kenya | BIDGARI",
     description:
       "Verified vehicle inventory from trusted Kenyan dealers in Nairobi and Mombasa. Compare costs, specs, and contact sellers directly.",
     type: "website",
@@ -101,7 +102,7 @@ function homeStructuredData(origin, spotlightCars = [], newCars = []) {
     "@graph": [
       {
         "@type": "Organization",
-        name: "Welsh Motorhub",
+        name: "BIDGARI",
         url: origin,
         logo: absoluteUrl(BRAND_MARK_SQUARE),
         description:
@@ -113,7 +114,7 @@ function homeStructuredData(origin, spotlightCars = [], newCars = []) {
       },
       {
         "@type": "WebSite",
-        name: "Welsh Motorhub",
+        name: "BIDGARI",
         url: origin,
         description:
           "Browse used and new listings, compare vehicles, and connect with Kenyan dealerships.",
@@ -336,6 +337,7 @@ export default async function HomePage() {
       </section>
 
       {/* Quick filter chips */}
+      <FadeIn delay={0.15}>
       <div className="home-shell relative -mt-3 sm:-mt-4 mb-6 sm:mb-8 z-20">
         <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
           {[
@@ -359,17 +361,19 @@ export default async function HomePage() {
           ))}
         </div>
       </div>
+      </FadeIn>
 
       <HomepageShopLinks />
 
-      <HomepageSpotlight cars={spotlightCards} />
+      <FadeIn delay={0.1}><HomepageSpotlight cars={spotlightCards} /></FadeIn>
 
-      <HomepageTrending cars={trendingCars} />
+      <FadeIn delay={0.15}><HomepageTrending cars={trendingCars} /></FadeIn>
 
-      <HomepageCompareDiscovery comparisons={seoComparisons} />
+      <FadeIn delay={0.2}><HomepageCompareDiscovery comparisons={seoComparisons} /></FadeIn>
 
       {/* Fresh Arrivals Section */}
       {newEnhanced.length > 0 && (
+        <FadeIn delay={0.25}>
         <section className="relative py-10 sm:py-16 lg:py-24 border-y border-emerald-100/80 dark:border-emerald-950/30 overflow-hidden">
           {newArrivalsBackdrop && (
             <div className="absolute inset-0 -z-10 pointer-events-none">
@@ -418,6 +422,7 @@ export default async function HomePage() {
             </div>
           </div>
         </section>
+        </FadeIn>
       )}
 
       {/* Car finder & trust stats (moved from hero) */}
@@ -447,9 +452,10 @@ export default async function HomePage() {
         </div>
       </div>
 
-      <HomepageDutyTeaser />
+      <FadeIn delay={0.3}><HomepageDutyTeaser /></FadeIn>
 
       {/* Editorial Information Block */}
+      <FadeIn delay={0.35}>
       <section className="relative py-8 sm:py-16 lg:py-20 xl:py-24 bg-[#1A202C] text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
@@ -471,7 +477,7 @@ export default async function HomePage() {
                 <span className="editorial-heading text-slate-400">More real cars.</span>
               </h2>
               <p className="text-sm sm:text-lg text-slate-400 leading-relaxed max-w-xl font-medium">
-                Welsh Motorhub is built around dealer inventory that you can tie to a real showroom; so you compare in one place,
+                BIDGARI is built around dealer inventory that you can tie to a real showroom; so you compare in one place,
                 then move the conversation straight to WhatsApp or a phone call when you are ready. Fewer phantom posts, fewer
                 dead ends.
               </p>
@@ -512,8 +518,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      </FadeIn>
 
-      <HomepageSupportWhatsApp />
+      <FadeIn delay={0.4}><HomepageSupportWhatsApp /></FadeIn>
       <SeasonalPromoModal />
     </div>
   );

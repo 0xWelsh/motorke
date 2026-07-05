@@ -24,7 +24,7 @@ export function buildDealerSearchPhrases(dealer) {
     `${name} showroom`,
     `${name} ${place}`,
     `${name} used cars Kenya`,
-    `${name} Welsh Motorhub`,
+    `${name} BIDGARI`,
   ];
 
   return [...new Set(phrases.map((p) => p.trim()).filter(Boolean))];
@@ -78,13 +78,13 @@ export function buildDealerSeoParagraph(dealer, { stockCount = 0, topMakes = [] 
       : "popular makes";
 
   return [
-    `${name} lists ${stock > 0 ? `${stock} verified vehicle${stock === 1 ? "" : "s"}` : "vehicles"} on Welsh Motorhub`,
+    `${name} lists ${stock > 0 ? `${stock} verified vehicle${stock === 1 ? "" : "s"}` : "vehicles"} on BIDGARI`,
     `from ${place}${county !== place ? `, ${county} County` : ""}, Kenya.`,
     stock > 0 ? `Current stock highlights include ${makes}.` : "",
     `Search "${name}" or "${name} Kenya" to return to this showroom, compare prices, read reviews, and reach the dealer directly.`,
     dealer.verified
-      ? `${name} is a verified Welsh Motorhub partner dealership.`
-      : `Contact ${name} through Welsh Motorhub for availability and viewing appointments.`,
+      ? `${name} is a verified BIDGARI partner dealership.`
+      : `Contact ${name} through BIDGARI for availability and viewing appointments.`,
   ]
     .filter(Boolean)
     .join(" ");
@@ -106,7 +106,7 @@ export function buildDealerFaqSchema(dealer, { stockCount = 0 } = {}) {
         name: `Where can I find ${name} cars for sale in Kenya?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `Browse ${name}'s live inventory on Welsh Motorhub at ${showroomUrl}. The showroom lists ${stock > 0 ? `${stock} available vehicles` : "vehicles as they are listed"} in ${place}.`,
+          text: `Browse ${name}'s live inventory on BIDGARI at ${showroomUrl}. The showroom lists ${stock > 0 ? `${stock} available vehicles` : "vehicles as they are listed"} in ${place}.`,
         },
       },
       {
@@ -114,7 +114,7 @@ export function buildDealerFaqSchema(dealer, { stockCount = 0 } = {}) {
         name: `How do I contact ${name}?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `Open the ${name} showroom on Welsh Motorhub to call, WhatsApp, or send an enquiry. ${dealer.verified ? "This dealer is verified on the platform." : ""}`.trim(),
+          text: `Open the ${name} showroom on BIDGARI to call, WhatsApp, or send an enquiry. ${dealer.verified ? "This dealer is verified on the platform." : ""}`.trim(),
         },
       },
       {
@@ -123,8 +123,8 @@ export function buildDealerFaqSchema(dealer, { stockCount = 0 } = {}) {
         acceptedAnswer: {
           "@type": "Answer",
           text: address
-            ? `${name} is listed at ${address}. Use the map on the Welsh Motorhub showroom page for directions.`
-            : `${name} operates in ${place}, Kenya. See the showroom page on Welsh Motorhub for location details.`,
+            ? `${name} is listed at ${address}. Use the map on the BIDGARI showroom page for directions.`
+            : `${name} operates in ${place}, Kenya. See the showroom page on BIDGARI for location details.`,
         },
       },
     ],
@@ -146,7 +146,7 @@ export function buildDealerInventoryItemList(dealer, cars) {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: `${dealer.name} cars for sale`,
-    description: `Vehicles listed by ${dealer.name} on Welsh Motorhub`,
+    description: `Vehicles listed by ${dealer.name} on BIDGARI`,
     url: showroomUrl,
     numberOfItems: items.length,
     itemListElement: items,
@@ -160,11 +160,11 @@ export function buildDealerWebPageSchema(dealer, autoDealerSchema) {
     "@type": "WebPage",
     "@id": `${showroomUrl}#webpage`,
     url: showroomUrl,
-    name: `${dealer.name} | Welsh Motorhub`,
+    name: `${dealer.name} | BIDGARI`,
     description: autoDealerSchema?.description,
     isPartOf: {
       "@type": "WebSite",
-      name: "Welsh Motorhub",
+      name: "BIDGARI",
       url: absoluteUrl("/"),
     },
     about: { "@id": autoDealerSchema?.["@id"] || showroomUrl },
@@ -229,7 +229,7 @@ export function buildDealerAutoDealerSchema(dealer, options = {}) {
             itemOffered: {
               "@type": "Product",
               name: `${dealer.name} vehicle inventory`,
-              description: `${stockCount} vehicles listed on Welsh Motorhub`,
+              description: `${stockCount} vehicles listed on BIDGARI`,
             },
           },
         }
@@ -262,7 +262,7 @@ export function buildDealerAutoDealerSchema(dealer, options = {}) {
       : {}),
     parentOrganization: {
       "@type": "Organization",
-      name: "Welsh Motorhub",
+      name: "BIDGARI",
       url: absoluteUrl("/"),
     },
   };
@@ -292,7 +292,7 @@ export function buildDealersDirectoryItemList(dealers) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "Car dealers in Kenya on Welsh Motorhub",
+    name: "Car dealers in Kenya on BIDGARI",
     url: absoluteUrl("/dealers"),
     numberOfItems: items.length,
     itemListElement: items,
@@ -302,7 +302,7 @@ export function buildDealersDirectoryItemList(dealers) {
 /** Seller node on Vehicle JSON-LD — links listing to indexed showroom URL. */
 export function buildListingSellerSchema(dealer) {
   if (!dealer?.name) {
-    return { "@type": "AutoDealer", name: "Welsh Motorhub dealer", url: absoluteUrl("/dealers") };
+    return { "@type": "AutoDealer", name: "BIDGARI dealer", url: absoluteUrl("/dealers") };
   }
 
   const showroomUrl = dealer.slug ? dealerShowroomUrl(dealer.slug) : absoluteUrl("/dealers");

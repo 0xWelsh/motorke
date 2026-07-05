@@ -356,7 +356,7 @@ export default async function DealerPage(props) {
                   style={{ borderRadius: "14px" }}
                 >
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#22c55e]">Contact Welsh Motorhub</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#22c55e]">Contact BIDGARI</p>
                     <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
                       Our team
                     </span>
@@ -519,7 +519,7 @@ export default async function DealerPage(props) {
          <div className="flex items-center gap-3">
             {teamTelHref ? (
               <a href={teamTelHref} className="flex-1 bg-[#111827] dark:bg-white text-white dark:!text-black py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
-                 Call Welsh Motorhub
+                 Call BIDGARI
               </a>
             ) : null}
             {teamWhatsappHref ? (

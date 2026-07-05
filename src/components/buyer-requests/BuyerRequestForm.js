@@ -96,7 +96,7 @@ export default function BuyerRequestForm() {
         </h2>
         <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-md mx-auto mb-4">
           Your reference is <span className="font-black text-[#38A169]">{success}</span>. Verified sellers
-          will send offers through Welsh Motorhub on WhatsApp, usually within a few hours.
+          will send offers through BIDGARI on WhatsApp, usually within a few hours.
         </p>
         <div className="flex flex-col sm:flex-row gap-2 justify-center">
           <Link
@@ -465,7 +465,7 @@ export default function BuyerRequestForm() {
           checked={form.consentWhatsapp}
           onChange={(e) => setField("consentWhatsapp", e.target.checked)}
         />
-        I agree to be contacted on WhatsApp by verified sellers through Welsh Motorhub. My number is not
+        I agree to be contacted on WhatsApp by verified sellers through BIDGARI. My number is not
         shown publicly on the request board.
       </label>
 

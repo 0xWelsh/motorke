@@ -24,10 +24,10 @@ Latest listing-SEO migration: `20260522120000_model_seo_guide_listing_seo` (`mod
 Vercel Cron sends `Authorization: Bearer <CRON_SECRET>` (and `x-vercel-cron: 1`). Manual checks can use the query string or Bearer:
 
 ```bash
-curl -sS "https://welshmotorhub.co.ke/api/cron/seo-jobs?secret=YOUR_CRON_SECRET"
+curl -sS "https://bidgari.co.ke/api/cron/seo-jobs?secret=YOUR_CRON_SECRET"
 # or
 curl -sS -H "Authorization: Bearer YOUR_CRON_SECRET" \
-  "https://welshmotorhub.co.ke/api/cron/seo-jobs"
+  "https://bidgari.co.ke/api/cron/seo-jobs"
 ```
 
 Expected JSON: `{ "ok": true, "processed": { ... } }` (may show zero jobs if the queue is empty).
@@ -111,8 +111,8 @@ When a car is published (`finalizeNewCarPublicSlug` / admin or portal create):
 Process queue (pick one):
 
 - **Vercel Cron** (Hobby): daily `/api/cron/seo-monitor` at 03:00 UTC processes the queue when `CRON_SECRET` is set.
-- **Manual:** `GET https://welshmotorhub.co.ke/api/cron/seo-jobs?secret=YOUR_CRON_SECRET`
-- **Bearer:** `curl -H "Authorization: Bearer YOUR_CRON_SECRET" https://welshmotorhub.co.ke/api/cron/seo-jobs`
+- **Manual:** `GET https://bidgari.co.ke/api/cron/seo-jobs?secret=YOUR_CRON_SECRET`
+- **Bearer:** `curl -H "Authorization: Bearer YOUR_CRON_SECRET" https://bidgari.co.ke/api/cron/seo-jobs`
 
 Full SEO monitor (crawl, GSC, audit batch): `/api/cron/seo-monitor` daily at 03:00 UTC.
 

@@ -17,7 +17,7 @@ import { carListingPath } from "@/lib/car-listing-url";
 import EmptyState from "@/components/ui/EmptyState";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Leads | Welsh Motorhub Admin" };
+export const metadata = { title: "Leads | BIDGARI Admin" };
 
 const VALID_STATUSES = ["", "NEW", "CONTACTED", "INTERESTED", "NEGOTIATING", "SOLD", "DEAD"];
 
@@ -306,7 +306,7 @@ function LeadRow({ lead, index }) {
         {lead.phone && lead.phone !== "not-provided" ? (
           <a
             href={`https://wa.me/${lead.phone.replace(/\D/g, "").replace(/^0/, "254")}?text=${encodeURIComponent(
-              `Hello ${lead.name.split(" ")[0]}, I'm reaching out from Welsh Motorhub regarding your inquiry on the ${lead.car.year} ${lead.car.make} ${lead.car.model}.`
+              `Hello ${lead.name.split(" ")[0]}, I'm reaching out from BIDGARI regarding your inquiry on the ${lead.car.year} ${lead.car.make} ${lead.car.model}.`
             )}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -382,7 +382,7 @@ function LeadCard({ lead }) {
           {lead.phone && lead.phone !== "not-provided" ? (
             <a
               href={`https://wa.me/${lead.phone.replace(/\D/g, "").replace(/^0/, "254")}?text=${encodeURIComponent(
-                `Hello ${lead.name.split(" ")[0]}, I'm reaching out from Welsh Motorhub regarding your inquiry on the ${lead.car.year} ${lead.car.make} ${lead.car.model}.`
+                `Hello ${lead.name.split(" ")[0]}, I'm reaching out from BIDGARI regarding your inquiry on the ${lead.car.year} ${lead.car.make} ${lead.car.model}.`
               )}`}
               target="_blank"
               rel="noopener noreferrer"

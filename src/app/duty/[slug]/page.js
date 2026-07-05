@@ -22,7 +22,7 @@ export async function generateMetadata({ params }) {
     const label = dutyVehicleLabel(vehicle);
     return {
       title: `${label} import duty estimate Kenya`,
-      description: `Indicative KRA import duty, excise, VAT, and levies for a ${label}. Search verified ${vehicle.make} ${vehicle.model} cars on Welsh Motorhub.`,
+      description: `Indicative KRA import duty, excise, VAT, and levies for a ${label}. Search verified ${vehicle.make} ${vehicle.model} cars on BIDGARI.`,
       alternates: { canonical: `/duty/${dutyVehiclePathSlug(vehicle)}` },
       openGraph: {
         title: `${label} import duty estimate`,

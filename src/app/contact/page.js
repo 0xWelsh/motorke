@@ -127,7 +127,7 @@ export default function ContactPage() {
                 <CheckCircle className="w-10 h-10 sm:w-12 sm:h-12 text-[#38A169] mx-auto mb-4 sm:mb-6" />
                 <h3 className="text-2xl sm:text-3xl font-bold text-[#111827] dark:text-white mb-3 sm:mb-4">Message sent.</h3>
                 <p className="text-[#718096] dark:text-slate-400 font-medium text-sm sm:text-lg leading-relaxed">
-                  Thanks for reaching out. Someone from the Welsh Motorhub team will get back to you soon, usually within 24 hours.
+                  Thanks for reaching out. Someone from the BIDGARI team will get back to you soon, usually within 24 hours.
                 </p>
                 <button onClick={() => setSubmitted(false)} className="mt-6 sm:mt-8 text-[10px] font-bold uppercase tracking-widest text-[#38A169] hover:underline">Send another message</button>
               </div>
