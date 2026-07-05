@@ -12,7 +12,6 @@ import { MapPin } from "lucide-react";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
 import { TrackRecentView } from "@/components/CarActions";
-import { CompareButton } from "@/components/CompareSelector";
 import SpecSheet from "@/components/SpecSheet";
 import CarReviewsSection from "@/components/CarReviewsSection";
 import FeatureList from "@/components/FeatureList";
@@ -215,15 +214,6 @@ export default async function CarDetailPage({ params }) {
   const specString = specItems.join(", ");
   const detailSpecs = buildCarDetailSpecRows(car);
   const featureList = meaningfulFeatureList(car.features);
-
-  const compareCar = {
-    id: car.id,
-    year: car.year,
-    make: car.make,
-    model: `${car.make} ${car.model}`,
-    price: car.price,
-    image: primaryImg?.url,
-  };
 
   const [similar, reviewsData, modelWiki] = await Promise.all([similarPromise, reviewsPromise, modelWikiPromise]);
   const highlightChips = buildListingHighlightChips(car, dealer);
@@ -535,34 +525,19 @@ export default async function CarDetailPage({ params }) {
               </section>
             )}
 
-            {/* Compare + Share */}
-            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-gradient-to-b from-emerald-50/50 via-white to-white dark:from-emerald-950/20 dark:via-[#0a0a0a] dark:to-[#0a0a0a] p-5">
-                <div className="flex gap-3 mb-3">
-                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-600/15 text-[10px] font-black text-emerald-800 dark:text-emerald-300 border border-emerald-600/20" aria-hidden>VS</span>
-                  <div>
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-600 mb-1">Compare</p>
-                    <p className="text-[12px] text-zinc-500 dark:text-zinc-400">Add up to 3 cars and compare side-by-side.</p>
-                  </div>
-                </div>
-                <CompareButton
-                  car={compareCar}
-                  className="w-full min-h-11 rounded-lg inline-flex items-center justify-center bg-zinc-900 text-white dark:bg-white dark:!text-black text-[10px] font-bold uppercase tracking-widest transition-transform active:scale-[0.99] hover:opacity-95"
-                />
-              </div>
-              <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-5 flex flex-col justify-center">
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-600 mb-3">Share this Listing</p>
-                <ShareButtons
-                  listingUrl={listingUrl}
-                  browseUrl={absoluteUrl("/cars")}
-                  title={title}
-                  price={formatCarPrice(car)}
-                  dealerName={dealer.name}
-                  location={car.location || dealer.location || "Kenya"}
-                  mileageLabel={positiveNum(car.mileage) ? formatMileage(car.mileage) : null}
-                  previewImageUrl={`/api/cars/${car.id}/og-image`}
-                />
-              </div>
+            {/* Share */}
+            <div className="mt-8">
+              <h2 className="text-[12px] font-serif font-bold uppercase tracking-[0.15em] text-emerald-600 mb-4">Share this Listing</h2>
+              <ShareButtons
+                listingUrl={listingUrl}
+                browseUrl={absoluteUrl("/cars")}
+                title={title}
+                price={formatCarPrice(car)}
+                dealerName={dealer.name}
+                location={car.location || dealer.location || "Kenya"}
+                mileageLabel={positiveNum(car.mileage) ? formatMileage(car.mileage) : null}
+                previewImageUrl={`/api/cars/${car.id}/og-image`}
+              />
             </div>
 
             {/* Explore links */}
