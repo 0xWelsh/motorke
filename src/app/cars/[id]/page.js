@@ -124,14 +124,14 @@ const getSimilarCars = unstable_cache(
       where: {
         available: true,
         ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verificationStatus: "VERIFIED" } }),
-        id:        { not: carId },
-        OR: [{ dealerId }, { make }, { bodyType }],
+        id:  { not: carId },
+        make,
       },
       include: {
-        images: { take: 1, orderBy: { isPrimary: "desc" } },
+        images: { take: 3, orderBy: { isPrimary: "desc" } },
         dealer: { select: { name: true, location: true, type: true, verificationStatus: true } },
       },
-      take: 10,
+      take: 12,
     });
 
     return candidates
@@ -139,7 +139,6 @@ const getSimilarCars = unstable_cache(
         let score = 0;
 
         if (candidate.dealerId === dealerId) score += 45;
-        if (candidate.make === make) score += 28;
         if (candidate.bodyType === bodyType) score += 20;
 
         const yearGap = Math.abs((candidate.year || 0) - (year || 0));
@@ -157,7 +156,7 @@ const getSimilarCars = unstable_cache(
         if (b.score !== a.score) return b.score - a.score;
         return (b.candidate.createdAt?.getTime?.() || 0) - (a.candidate.createdAt?.getTime?.() || 0);
       })
-      .slice(0, 10)
+      .slice(0, 8)
       .map((entry) => entry.candidate);
   },
   ["similar-cars"],
@@ -500,10 +499,23 @@ export default async function CarDetailPage({ params }) {
               ))}
             </div>
 
+            {/* Specifications */}
+            <section className="mt-8">
+              <h2 className="text-[12px] font-serif font-bold uppercase tracking-[0.15em] text-emerald-600 mb-4">Specifications</h2>
+              <div className="grid grid-cols-2 gap-px rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-200 dark:bg-zinc-800">
+                {detailSpecs.map((item) => (
+                  <div key={item.label} className="flex flex-col gap-0.5 bg-white dark:bg-[#0a0a0a] px-4 py-3">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">{item.label}</span>
+                    <span className="text-[13px] font-bold text-zinc-900 dark:text-white">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+
             {/* Description */}
             <section className="mt-8">
-              <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-emerald-600 mb-3">Description</h2>
-              <div className="text-[14px] sm:text-[15px] text-zinc-600 dark:text-zinc-400 leading-[1.7] font-medium">
+              <h2 className="text-[12px] font-serif font-bold uppercase tracking-[0.15em] text-emerald-600 mb-4">Description</h2>
+              <div className="mt-4 text-[14px] sm:text-[15px] text-zinc-600 dark:text-zinc-400 leading-[1.7] font-medium">
                 {specString ? (
                   <>
                     <span className="text-zinc-900 dark:text-white font-bold">{specString}</span>
@@ -515,23 +527,10 @@ export default async function CarDetailPage({ params }) {
               </div>
             </section>
 
-            {/* Specifications */}
-            <section className="mt-8">
-              <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-emerald-600 mb-4">Specifications</h2>
-              <div className="grid grid-cols-2 gap-px rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-200 dark:bg-zinc-800">
-                {detailSpecs.map((item) => (
-                  <div key={item.label} className="flex flex-col gap-0.5 bg-white dark:bg-[#0a0a0a] px-4 py-3">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">{item.label}</span>
-                    <span className="text-[13px] font-bold text-zinc-900 dark:text-white">{item.value}</span>
-                  </div>
-                ))}
-              </div>
-            </section>
-
             {/* Features */}
             {featureList.length > 0 && (
               <section className="mt-8">
-                <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-emerald-600 mb-3">Features</h2>
+                <h2 className="text-[12px] font-serif font-bold uppercase tracking-[0.15em] text-emerald-600 mb-4">Features</h2>
                 <FeatureList features={featureList} />
               </section>
             )}
