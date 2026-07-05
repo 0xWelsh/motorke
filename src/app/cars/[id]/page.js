@@ -59,7 +59,7 @@ export async function generateMetadata({ params }) {
   const canonicalPath = carListingPath(car);
   const url = `${origin}${canonicalPath}`;
   const ogImageUrl = `${origin}/api/cars/${car.id}/og-image`;
-  const documentTitle = `${title} | BIDGARI`;
+  const documentTitle = `${title} | Welsh Motorhub`;
 
   return {
     title: { absolute: documentTitle },
@@ -70,7 +70,7 @@ export async function generateMetadata({ params }) {
       description,
       url,
       locale: "en_KE",
-      siteName: "BIDGARI",
+      siteName: "Welsh Motorhub",
       type: "website",
       images: [
         {
@@ -230,11 +230,11 @@ export default async function CarDetailPage({ params }) {
   const highlightChips = buildListingHighlightChips(car, dealer);
   const teamWhatsapp = PUBLIC_SUPPORT_WHATSAPP;
   const teamPhone = PUBLIC_SUPPORT_PHONE;
-  const whatsappHref = teamWhatsapp ? whatsappLink(teamWhatsapp, title, "BIDGARI") : null;
+  const whatsappHref = teamWhatsapp ? whatsappLink(teamWhatsapp, title, "Welsh Motorhub") : null;
   const callHref = teamPhone ? telHrefFromMsisdn(teamPhone) : null;
   const waDigits = teamWhatsapp ? String(teamWhatsapp).replace(/\D/g, "") : null;
   const locationLabel = car.location || dealer.location || dealer.county || "Kenya";
-  const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on BIDGARI.`;
+  const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motorhub.`;
 
   const listingUrl = absoluteUrl(carListingPath(car));
   const absImages = (car.images?.length ? car.images : [{ url: BRAND_MARK_SQUARE }]).map((i) =>
@@ -391,7 +391,7 @@ export default async function CarDetailPage({ params }) {
       {heroPreloadUrl && (
         <link rel="preload" as="image" href={heroPreloadUrl} fetchPriority="high" />
       )}
-      <div className="car-detail-showroom min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-0">
+      <div className="bg-white min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
       <TrackEventOnMount
         name="view_car"
         payload={{
@@ -413,27 +413,27 @@ export default async function CarDetailPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       
-      <div className="mx-auto w-full max-w-[1600px] px-0 sm:px-4 lg:px-6 pt-3 sm:pt-4 pb-24 lg:pb-16">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-3 sm:pt-4 pb-24 lg:pb-16">
         {/* Top nav */}
-        <div className="flex items-center gap-2 mb-4 sm:mb-5 px-4 sm:px-0">
+        <div className="flex items-center gap-2 mb-4 sm:mb-5">
           <Link
             href="/cars"
-            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:bg-white/10 transition-colors"
+            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
             aria-label="Back to inventory"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
           </Link>
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 leading-none">
-            <Link href="/" className="hover:text-slate-300 transition-colors">Home</Link>
+          <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-500 leading-none">
+            <Link href="/" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">Home</Link>
             <span className="mx-1.5 opacity-40">/</span>
-            <Link href="/cars" className="hover:text-slate-300 transition-colors">Inventory</Link>
+            <Link href="/cars" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">Inventory</Link>
             <span className="mx-1.5 opacity-40">/</span>
-            <span className="text-slate-200">{car.make} {car.model}</span>
+            <span className="text-zinc-800 dark:text-zinc-200">{car.make} {car.model}</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-0 lg:gap-8 xl:gap-12">
-          {/* ── Main content column ── */}
+        <div>
+          {/* ── Left column ── */}
           <div className="min-w-0">
 
             {/* Gallery — edge-to-edge mobile, contained desktop */}
@@ -457,54 +457,56 @@ export default async function CarDetailPage({ params }) {
               </div>
             ) : null}
 
-            {/* ── Mobile: Title + Price + Spec Chips (hidden on desktop) ── */}
-            <div className="lg:hidden mt-5">
-              <h1 className="font-serif text-xl sm:text-2xl font-bold tracking-tight leading-[1.15]">
+            {/* Vehicle Title */}
+            <div className="mt-5">
+              <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-zinc-900 dark:text-white tracking-tight leading-[1.15]">
                 {carName}
               </h1>
-              <p className="mt-1.5 text-lg font-bold text-emerald-400">
+              <p className="mt-1.5 text-lg font-bold text-emerald-600 dark:text-emerald-400">
                 {formatCarPrice(car)}
               </p>
-              <div className="flex items-center gap-2 text-xs mt-2">
-                <MapPin className="w-3.5 h-3.5 text-emerald-500" />
+              <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mt-2">
+                <MapPin className="w-3.5 h-3.5 text-emerald-600" />
                 <span>{locationLabel}</span>
-                <span className="opacity-30">·</span>
+                <span className="text-zinc-300 dark:text-zinc-600">·</span>
                 <span className={`text-[10px] font-black px-1.5 py-0.5 uppercase tracking-widest rounded-[2px] ${
                   soldGrace
-                    ? "bg-amber-900/30 text-amber-300"
-                    : "bg-emerald-900/30 text-emerald-300"
+                    ? "bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-200"
+                    : "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
                 }`}>
                   {soldGrace ? "SOLD" : "AVAILABLE"}
                 </span>
               </div>
-              <div className="flex flex-wrap gap-2 mt-4">
-                {(() => {
-                  const chips = [];
-                  if (car.year) chips.push({ label: "Year", value: String(car.year) });
-                  if (positiveNum(car.mileage)) chips.push({ label: "Mileage", value: formatMileage(car.mileage) });
-                  if (car.fuelType) chips.push({ label: "Fuel", value: FUEL_LABELS[car.fuelType] || car.fuelType });
-                  if (car.transmission) chips.push({ label: "Gearbox", value: car.transmission === "AUTOMATIC" ? "Automatic" : "Manual" });
-                  if (car.bodyType) chips.push({ label: "Body", value: BODY_TYPE_LABELS[car.bodyType] || car.bodyType });
-                  if (locationLabel) chips.push({ label: "Location", value: locationLabel });
-                  return chips;
-                })().map((chip) => (
-                  <span
-                    key={chip.label}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white/5 border border-white/10 rounded-lg text-[11px] font-semibold"
-                  >
-                    {chip.value}
-                  </span>
-                ))}
-              </div>
+            </div>
+
+            {/* Quick spec chips */}
+            <div className="flex flex-wrap gap-2 mt-4">
+              {(() => {
+                const chips = [];
+                if (car.year) chips.push({ label: "Year", value: String(car.year) });
+                if (positiveNum(car.mileage)) chips.push({ label: "Mileage", value: formatMileage(car.mileage) });
+                if (car.fuelType) chips.push({ label: "Fuel", value: FUEL_LABELS[car.fuelType] || car.fuelType });
+                if (car.transmission) chips.push({ label: "Gearbox", value: car.transmission === "AUTOMATIC" ? "Automatic" : "Manual" });
+                if (car.bodyType) chips.push({ label: "Body", value: BODY_TYPE_LABELS[car.bodyType] || car.bodyType });
+                if (locationLabel) chips.push({ label: "Location", value: locationLabel });
+                return chips;
+              })().map((chip) => (
+                <span
+                  key={chip.label}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[11px] font-semibold text-zinc-600 dark:text-zinc-300"
+                >
+                  {chip.value}
+                </span>
+              ))}
             </div>
 
             {/* Description */}
             <section className="mt-8">
-              <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-emerald-500 mb-3">Description</h2>
-              <div className="text-[14px] sm:text-[15px] leading-[1.7] font-medium text-slate-400">
+              <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-emerald-600 mb-3">Description</h2>
+              <div className="text-[14px] sm:text-[15px] text-zinc-600 dark:text-zinc-400 leading-[1.7] font-medium">
                 {specString ? (
                   <>
-                    <span className="font-bold text-slate-200">{specString}</span>
+                    <span className="text-zinc-900 dark:text-white font-bold">{specString}</span>
                     {(car.description || "").trim() ? ". " : null}
                   </>
                 ) : null}
@@ -515,12 +517,12 @@ export default async function CarDetailPage({ params }) {
 
             {/* Specifications */}
             <section className="mt-8">
-              <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-emerald-500 mb-4">Specifications</h2>
-              <div className="showroom-card divide-y divide-white/5">
+              <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-emerald-600 mb-4">Specifications</h2>
+              <div className="grid grid-cols-2 gap-px rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-200 dark:bg-zinc-800">
                 {detailSpecs.map((item) => (
-                  <div key={item.label} className="flex items-center justify-between px-4 py-2.5 sm:px-5">
-                    <span className="text-[12px] sm:text-[13px] font-medium text-slate-400">{item.label}</span>
-                    <span className="text-[13px] sm:text-[14px] font-bold text-slate-100 tabular-nums">{item.value}</span>
+                  <div key={item.label} className="flex flex-col gap-0.5 bg-white dark:bg-[#0a0a0a] px-4 py-3">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">{item.label}</span>
+                    <span className="text-[13px] font-bold text-zinc-900 dark:text-white">{item.value}</span>
                   </div>
                 ))}
               </div>
@@ -529,28 +531,28 @@ export default async function CarDetailPage({ params }) {
             {/* Features */}
             {featureList.length > 0 && (
               <section className="mt-8">
-                <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-emerald-500 mb-3">Features</h2>
+                <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-emerald-600 mb-3">Features</h2>
                 <FeatureList features={featureList} />
               </section>
             )}
 
-            {/* Compare + Share (mobile only) */}
-            <div className="lg:hidden mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="showroom-card p-5">
+            {/* Compare + Share */}
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-gradient-to-b from-emerald-50/50 via-white to-white dark:from-emerald-950/20 dark:via-[#0a0a0a] dark:to-[#0a0a0a] p-5">
                 <div className="flex gap-3 mb-3">
-                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-600/15 text-[10px] font-black text-emerald-300 border border-emerald-600/20" aria-hidden>VS</span>
+                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-600/15 text-[10px] font-black text-emerald-800 dark:text-emerald-300 border border-emerald-600/20" aria-hidden>VS</span>
                   <div>
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-500 mb-1">Compare</p>
-                    <p className="text-[12px] text-slate-400">Add up to 3 cars and compare side-by-side.</p>
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-600 mb-1">Compare</p>
+                    <p className="text-[12px] text-zinc-500 dark:text-zinc-400">Add up to 3 cars and compare side-by-side.</p>
                   </div>
                 </div>
                 <CompareButton
                   car={compareCar}
-                  className="w-full min-h-11 rounded-lg inline-flex items-center justify-center bg-white/10 hover:bg-white/15 text-white text-[10px] font-bold uppercase tracking-widest transition-all active:scale-[0.99]"
+                  className="w-full min-h-11 rounded-lg inline-flex items-center justify-center bg-zinc-900 text-white dark:bg-white dark:!text-black text-[10px] font-bold uppercase tracking-widest transition-transform active:scale-[0.99] hover:opacity-95"
                 />
               </div>
-              <div className="showroom-card p-5 flex flex-col justify-center">
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-500 mb-3">Share this Listing</p>
+              <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-5 flex flex-col justify-center">
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-600 mb-3">Share this Listing</p>
                 <ShareButtons
                   listingUrl={listingUrl}
                   browseUrl={absoluteUrl("/cars")}
@@ -565,14 +567,14 @@ export default async function CarDetailPage({ params }) {
             </div>
 
             {/* Explore links */}
-            <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border border-white/5 bg-white/[0.02] px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-slate-400 rounded-lg">
-              <span className="text-slate-500 font-black tracking-widest">Explore:</span>
-              <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-emerald-400 hover:underline">All {car.make} for sale</Link>
-              <span className="hidden sm:inline text-slate-600">·</span>
-              <Link href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`} className="text-emerald-400 hover:underline">{car.make} {car.model}</Link>
-              {car.fuelType && (<><span className="hidden sm:inline text-slate-600">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`} className="text-emerald-400 hover:underline">{car.make} {FUEL_LABELS[car.fuelType] || car.fuelType}</Link></>)}
-              {car.bodyType && (<><span className="hidden sm:inline text-slate-600">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("body", car.bodyType)}`} className="text-emerald-400 hover:underline">{car.make} {BODY_TYPE_LABELS[car.bodyType] || car.bodyType}</Link></>)}
-              {dealer.county ? (<><span className="hidden sm:inline text-slate-600">·</span><Link href={`/cars/${slugifyCarSegment(dealer.county)}`} className="text-emerald-400 hover:underline">Cars in {dealer.county}</Link></>) : null}
+            <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/40 px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400 rounded-lg">
+              <span className="text-zinc-400 font-black tracking-widest">Explore:</span>
+              <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-emerald-600 hover:underline">All {car.make} for sale</Link>
+              <span className="hidden sm:inline text-zinc-300">·</span>
+              <Link href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`} className="text-emerald-600 hover:underline">{car.make} {car.model}</Link>
+              {car.fuelType && (<><span className="hidden sm:inline text-zinc-300">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`} className="text-emerald-600 hover:underline">{car.make} {FUEL_LABELS[car.fuelType] || car.fuelType}</Link></>)}
+              {car.bodyType && (<><span className="hidden sm:inline text-zinc-300">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("body", car.bodyType)}`} className="text-emerald-600 hover:underline">{car.make} {BODY_TYPE_LABELS[car.bodyType] || car.bodyType}</Link></>)}
+              {dealer.county ? (<><span className="hidden sm:inline text-zinc-300">·</span><Link href={`/cars/${slugifyCarSegment(dealer.county)}`} className="text-emerald-600 hover:underline">Cars in {dealer.county}</Link></>) : null}
             </div>
 
             {/* Car Model Wiki */}
@@ -593,110 +595,6 @@ export default async function CarDetailPage({ params }) {
             {/* Similar cars */}
             <div className="mt-8"><SimilarCarsSection cars={similar} make={car.make} /></div>
           </div>
-
-          {/* ── Desktop Sidebar ── */}
-          <aside className="hidden lg:block">
-            <div className="sticky top-24 space-y-5">
-              {/* Price Card */}
-              <div className="showroom-card p-6">
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-500 mb-2">Price</p>
-                <p className="text-3xl font-bold tracking-tight">{formatCarPrice(car)}</p>
-                <div className="flex items-center gap-2 text-sm mt-2">
-                  <MapPin className="w-3.5 h-3.5 text-emerald-500" />
-                  <span className="text-slate-400">{locationLabel}</span>
-                  <span className="opacity-30">·</span>
-                  <span className={`text-[10px] font-black px-1.5 py-0.5 uppercase tracking-widest rounded ${
-                    soldGrace
-                      ? "bg-amber-900/30 text-amber-300"
-                      : "bg-emerald-900/30 text-emerald-300"
-                  }`}>
-                    {soldGrace ? "SOLD" : "AVAILABLE"}
-                  </span>
-                </div>
-              </div>
-
-              {/* Key Specs */}
-              <div className="showroom-card p-6">
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-500 mb-3">Specs</p>
-                <div className="space-y-2.5">
-                  {[
-                    { label: "Year", value: car.year },
-                    { label: "Mileage", value: positiveNum(car.mileage) ? formatMileage(car.mileage) : null },
-                    { label: "Fuel", value: FUEL_LABELS[car.fuelType] || car.fuelType },
-                    { label: "Transmission", value: car.transmission === "AUTOMATIC" ? "Automatic" : car.transmission },
-                    { label: "Body", value: BODY_TYPE_LABELS[car.bodyType] || car.bodyType },
-                    { label: "Engine", value: positiveNum(car.engineCC) ? `${car.engineCC}cc` : null },
-                    { label: "Drive", value: car.drivetrain || null },
-                  ].filter(s => s.value).map(s => (
-                    <div key={s.label} className="flex items-center justify-between">
-                      <span className="text-xs text-slate-500">{s.label}</span>
-                      <span className="text-xs font-semibold">{s.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* CTA Buttons */}
-              <div className="space-y-2.5">
-                {whatsappHref && (
-                  <a
-                    href={whatsappHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full min-h-12 flex items-center justify-center gap-2.5 rounded-xl font-bold text-xs uppercase tracking-widest bg-emerald-600 hover:bg-emerald-500 text-white transition-all active:scale-[0.98]"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                    WhatsApp Dealer
-                  </a>
-                )}
-                {callHref && (
-                  <a
-                    href={callHref}
-                    className="w-full min-h-12 flex items-center justify-center gap-2 rounded-xl font-bold text-xs uppercase tracking-widest border border-white/10 hover:bg-white/5 transition-all active:scale-[0.98]"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-                    Call Dealer
-                  </a>
-                )}
-              </div>
-
-              {/* Compare */}
-              <div className="showroom-card p-5">
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-500 mb-3">Compare</p>
-                <CompareButton
-                  car={compareCar}
-                  className="w-full min-h-11 rounded-lg inline-flex items-center justify-center bg-white/10 hover:bg-white/15 text-white text-[10px] font-bold uppercase tracking-widest transition-all active:scale-[0.99]"
-                />
-              </div>
-
-              {/* Share */}
-              <div className="showroom-card p-5">
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-500 mb-3">Share</p>
-                <ShareButtons
-                  listingUrl={listingUrl}
-                  browseUrl={absoluteUrl("/cars")}
-                  title={title}
-                  price={formatCarPrice(car)}
-                  dealerName={dealer.name}
-                  location={car.location || dealer.location || "Kenya"}
-                  mileageLabel={positiveNum(car.mileage) ? formatMileage(car.mileage) : null}
-                  previewImageUrl={`/api/cars/${car.id}/og-image`}
-                />
-              </div>
-
-              {/* Dealer */}
-              <div className="showroom-card p-5">
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-500 mb-3">Seller</p>
-                <p className="text-sm font-bold">{dealer.name}</p>
-                {dealer.location && (
-                  <p className="text-xs text-slate-400 mt-1">{dealer.location}</p>
-                )}
-                {dealer.county && (
-                  <p className="text-xs text-slate-500 mt-0.5">{dealer.county}</p>
-                )}
-              </div>
-            </div>
-          </aside>
         </div>
       </div>
 
