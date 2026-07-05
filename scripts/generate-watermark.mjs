@@ -69,7 +69,7 @@ function buildSvg() {
         fill="#ffffff"
         opacity="0.15"
         filter="url(#brush)"
-      >WELSH MOTORHUB</text>
+      >BIDGARI KENYA</text>
     </svg>`
   );
 }

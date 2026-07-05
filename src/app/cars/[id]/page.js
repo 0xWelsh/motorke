@@ -58,7 +58,7 @@ export async function generateMetadata({ params }) {
   const canonicalPath = carListingPath(car);
   const url = `${origin}${canonicalPath}`;
   const ogImageUrl = `${origin}/api/cars/${car.id}/og-image`;
-  const documentTitle = `${title} | Welsh Motorhub`;
+  const documentTitle = `${title} | BIDGARI`;
 
   return {
     title: { absolute: documentTitle },
@@ -69,7 +69,7 @@ export async function generateMetadata({ params }) {
       description,
       url,
       locale: "en_KE",
-      siteName: "Welsh Motorhub",
+      siteName: "BIDGARI",
       type: "website",
       images: [
         {
@@ -219,11 +219,11 @@ export default async function CarDetailPage({ params }) {
   const highlightChips = buildListingHighlightChips(car, dealer);
   const teamWhatsapp = PUBLIC_SUPPORT_WHATSAPP;
   const teamPhone = PUBLIC_SUPPORT_PHONE;
-  const whatsappHref = teamWhatsapp ? whatsappLink(teamWhatsapp, title, "Welsh Motorhub") : null;
+  const whatsappHref = teamWhatsapp ? whatsappLink(teamWhatsapp, title, "BIDGARI") : null;
   const callHref = teamPhone ? telHrefFromMsisdn(teamPhone) : null;
   const waDigits = teamWhatsapp ? String(teamWhatsapp).replace(/\D/g, "") : null;
   const locationLabel = car.location || dealer.location || dealer.county || "Kenya";
-  const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on Welsh Motorhub.`;
+  const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on BIDGARI.`;
 
   const listingUrl = absoluteUrl(carListingPath(car));
   const absImages = (car.images?.length ? car.images : [{ url: BRAND_MARK_SQUARE }]).map((i) =>
