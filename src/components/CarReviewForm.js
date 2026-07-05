@@ -51,24 +51,24 @@ export default function CarReviewForm({ carId, onReviewSubmitted }) {
   };
 
   return (
-    <div className="border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-6 bg-white">
-      <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Share Your Experience</h3>
+    <div className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0a] p-5 sm:p-6">
+      <p className="font-serif text-[12px] font-bold uppercase tracking-[0.15em] text-emerald-600 mb-4">Share your experience</p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Rating */}
         <div>
-          <label className="text-sm font-bold text-slate-700 mb-2 block">Rate this car</label>
-          <div className="flex gap-2">
+          <label className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest mb-2 block">Rate this car</label>
+          <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
                 type="button"
                 onClick={() => setRating(star)}
-                className="transition-transform hover:scale-110"
+                className="transition-transform hover:scale-110 p-1"
               >
                 <Star
-                  className={`w-8 h-8 ${
-                    star <= rating ? "fill-yellow-400 text-yellow-400" : "text-slate-300"
+                  className={`w-7 h-7 ${
+                    star <= rating ? "fill-amber-400 text-amber-400" : "text-zinc-300 dark:text-zinc-600"
                   }`}
                 />
               </button>
@@ -78,27 +78,27 @@ export default function CarReviewForm({ carId, onReviewSubmitted }) {
 
         {/* Comment */}
         <div>
-          <label className="text-sm font-bold text-slate-700 mb-2 block">Your review (optional)</label>
+          <label className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-widest mb-2 block">Your review (optional)</label>
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            placeholder="Share your experience with this car..."
+            placeholder="What stood out about this car?"
             maxLength={500}
-            className="w-full border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-3 text-sm font-semibold placeholder:text-slate-400 focus:border-[#ff5a2f] focus:ring-2 focus:ring-blue-100 outline-none"
+            className="w-full border border-zinc-200 dark:border-zinc-800 p-3 text-sm text-zinc-900 dark:text-white bg-white dark:bg-transparent placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-emerald-500"
             rows={4}
           />
-          <p className="text-xs text-slate-400 mt-1">{comment.length}/500</p>
+          <p className="text-xs text-zinc-400 mt-1">{comment.length}/500</p>
         </div>
 
         {/* Messages */}
-        {error && <p className="text-sm text-red-600 font-semibold bg-red-50 p-3 rounded">{error}</p>}
-        {success && <p className="text-sm text-emerald-700 font-semibold bg-emerald-50 p-3 rounded border border-emerald-200">Review submitted! Thank you.</p>}
+        {error && <p className="text-sm text-red-600 font-semibold bg-red-50 dark:bg-red-900/20 p-3">{error}</p>}
+        {success && <p className="text-sm text-emerald-700 font-semibold bg-emerald-50 dark:bg-emerald-900/20 p-3 border border-emerald-200 dark:border-emerald-800">Review submitted. Thank you!</p>}
 
         {/* Submit */}
         <button
           type="submit"
           disabled={loading || !rating}
-          className="w-full bg-slate-900 text-white font-bold py-3 rounded-2xl hover:bg-slate-800 disabled:bg-slate-400 transition-colors"
+          className="w-full bg-zinc-900 text-white text-sm font-bold py-3 hover:bg-zinc-800 disabled:bg-zinc-400 transition-colors"
         >
           {loading ? "Submitting..." : "Submit Review"}
         </button>
