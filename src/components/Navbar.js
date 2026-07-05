@@ -4,7 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  Search, User, X, ChevronDown, LogOut, Heart,
+  Search, User, X, Menu, ChevronDown, LogOut, Heart,
   LayoutDashboard, PlusCircle, ShieldCheck, Compass,
   ArrowUpRight, Bell, Settings, BarChart2, Shield,
   GitCompare, Calculator, Mail, ChevronRight, Home, BookOpen,
@@ -125,7 +125,7 @@ export default function Navbar({ user }) {
 
  return (
  <>
-   <nav className="sticky top-0 z-[100] isolate w-full flex items-center h-20 md:h-24 bg-white border-b border-gray-100 shadow-sm transition-colors duration-300">
+    <nav className="sticky top-0 z-[100] isolate w-full flex items-center h-24 md:h-28 bg-white border-b border-gray-100 shadow-sm transition-colors duration-300">
  <div className="w-full px-6 md:px-12">
  <div className="flex items-center justify-between gap-4 lg:gap-6 min-w-0 h-full">
 
@@ -135,14 +135,14 @@ export default function Navbar({ user }) {
  onClick={(e) => navigateTo("/", e)}
  className="relative z-20 flex shrink-0 items-center transition-transform active:scale-95"
  >
-    <div className="relative h-20 w-72 shrink-0 md:h-24 md:w-80 lg:h-28 lg:w-96">
+     <div className="relative h-28 w-80 shrink-0 md:h-32 md:w-96 lg:h-32 lg:w-[32rem]">
   <Image
   src={BRAND_HEADER_LOGO}
    alt="BIDGARI"
    fill
    className="object-contain object-left"
    priority
-   sizes="(max-width: 768px) 256px, 384px"
+    sizes="(max-width: 768px) 320px, 512px"
    />
   </div>
   </Link>
@@ -278,15 +278,7 @@ export default function Navbar({ user }) {
  aria-expanded={open}
  aria-label={open ? "Close menu" : "Open menu"}
  >
-  {open ? (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-5.5 h-5.5">
-      <path d="M18 6L6 18M6 6l12 12" />
-    </svg>
-  ) : (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-5.5 h-5.5">
-      <path d="M4 6h16M4 12h16M4 18h16" />
-    </svg>
-  )}
+   {open ? <X size={22} /> : <Menu size={22} />}
   </button>
  </div>
  </div>
@@ -370,13 +362,13 @@ export default function Navbar({ user }) {
  onClick={(e) => navigateTo("/", e)}
  className="flex min-w-0 shrink-0 items-center"
  >
-   <div className="relative h-20 w-56 shrink-0 sm:h-24 sm:w-72">
+    <div className="relative h-28 w-64 shrink-0 sm:h-32 sm:w-80">
   <Image
   src={BRAND_HEADER_LOGO}
    alt="BIDGARI"
    fill
    className="object-contain object-left"
-   sizes="(max-width: 640px) 176px, 208px"
+    sizes="(max-width: 640px) 256px, 320px"
    />
  </div>
  </Link>
