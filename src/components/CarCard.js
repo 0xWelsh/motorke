@@ -289,7 +289,7 @@ export default function CarCard({
         {/* Spec Chips */}
         <div className="flex-1">
           <div className={clsx(
-            "flex flex-wrap items-center gap-x-3 gap-y-1 text-slate-500 dark:text-slate-400",
+            "flex flex-wrap items-center gap-x-3 gap-y-1 text-red-600 dark:text-red-400",
             compact
               ? "text-[9px] lg:text-[11px]"
               : spacious
