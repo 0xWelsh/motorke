@@ -6,7 +6,6 @@ import {
   Search,
 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import HeroGridShowcase from "@/components/LazyHeroGridShowcase";
 import CarCard from "@/components/CarCard";
 import TrackedLink from "@/components/TrackedLink";
@@ -299,30 +298,7 @@ export default async function HomePage() {
       {/* Quick filter chips */}
       <FadeIn delay={0.15}>
       <div className="home-shell relative -mt-3 sm:-mt-4 mb-6 sm:mb-8 z-20">
-        <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
-          {[
-            { label: "All Inventory", href: "/cars" },
-            { label: "Toyota", href: "/cars?make=Toyota" },
-            { label: "Nissan", href: "/cars?make=Nissan" },
-            { label: "Subaru", href: "/cars?make=Subaru" },
-            { label: "BMW", href: "/cars?make=BMW" },
-            { label: "Mercedes", href: "/cars?make=Mercedes-Benz" },
-            { label: "SUV", href: "/cars?bodyType=SUV" },
-            { label: "Nairobi", href: "/cars?location=Nairobi" },
-          ].map((chip) => (
-            <Link
-              key={chip.label}
-              href={chip.href}
-              className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#111]/80 hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all"
-            >
-              {chip.label}
-            </Link>
-          ))}
-        </div>
-
-        <div className="mt-4 sm:mt-5">
-          <HomepagePriceFilter />
-        </div>
+        <HomepagePriceFilter />
       </div>
       </FadeIn>
 

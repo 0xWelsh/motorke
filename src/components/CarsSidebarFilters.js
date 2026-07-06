@@ -1,17 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { X, SlidersHorizontal } from "lucide-react";
+import { X, SlidersHorizontal, Search, RotateCcw } from "lucide-react";
 import { FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, VEHICLE_TYPE_LABELS } from "@/lib/constants";
 
-function FilterLink({ label, active, href }) {
-  const router = useRouter();
+const PRICE_PRESETS = [
+  { label: "Under 1M", minPrice: 0, maxPrice: 1000000 },
+  { label: "1M–2M", minPrice: 1000000, maxPrice: 2000000 },
+  { label: "2M–3M", minPrice: 2000000, maxPrice: 3000000 },
+  { label: "3M–5M", minPrice: 3000000, maxPrice: 5000000 },
+  { label: "Above 5M", minPrice: 5000000, maxPrice: 0 },
+];
 
+function ToggleChip({ label, active, onClick }) {
   return (
     <button
       type="button"
-      onClick={() => router.push(href)}
+      onClick={onClick}
       className={`w-full text-left px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all ${
         active
           ? "bg-brand-accent/10 text-brand-accent border-l-2 border-brand-accent"
@@ -48,16 +54,102 @@ function buildUrl(currentParams, updates) {
   return qs ? `/cars?${qs}` : "/cars";
 }
 
+const asStr = (v) => (v != null && v !== "" ? String(v) : "");
+
 export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyTypeLabels = {}, counties = [] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  function navigate(updates) {
-    router.push(buildUrl(searchParams, updates));
-  }
+  const [make, setMake] = useState(asStr(activeFilters.make));
+  const [model, setModel] = useState(asStr(activeFilters.model));
+  const [bodyType, setBodyType] = useState(asStr(activeFilters.bodyType));
+  const [fuelType, setFuelType] = useState(asStr(activeFilters.fuelType));
+  const [transmission, setTransmission] = useState(asStr(activeFilters.transmission));
+  const [steering, setSteering] = useState(asStr(activeFilters.steering));
+  const [vehicleType, setVehicleType] = useState(asStr(activeFilters.vehicleType));
+  const [condition, setCondition] = useState(asStr(activeFilters.condition));
+  const [county, setCounty] = useState(asStr(activeFilters.county));
+  const [pricePreset, setPricePreset] = useState(null);
+  const [minPrice, setMinPrice] = useState(asStr(activeFilters.minPrice));
+  const [maxPrice, setMaxPrice] = useState(asStr(activeFilters.maxPrice));
+  const [minYOM, setMinYOM] = useState(asStr(activeFilters.minYOM));
+  const [maxYOM, setMaxYOM] = useState(asStr(activeFilters.maxYOM));
 
-  const hasActiveFilters = Object.values(activeFilters).some((v) => v && v !== "");
+  const toggleValue = useCallback((setter, value) => {
+    setter((prev) => (prev === value ? "" : value));
+  }, []);
+
+  const selectPricePreset = useCallback((idx) => {
+    setPricePreset(idx);
+    setMinPrice("");
+    setMaxPrice("");
+  }, []);
+
+  const hasChanges =
+    make !== asStr(activeFilters.make) ||
+    model !== asStr(activeFilters.model) ||
+    bodyType !== asStr(activeFilters.bodyType) ||
+    fuelType !== asStr(activeFilters.fuelType) ||
+    transmission !== asStr(activeFilters.transmission) ||
+    steering !== asStr(activeFilters.steering) ||
+    vehicleType !== asStr(activeFilters.vehicleType) ||
+    condition !== asStr(activeFilters.condition) ||
+    county !== asStr(activeFilters.county) ||
+    minPrice !== asStr(activeFilters.minPrice) ||
+    maxPrice !== asStr(activeFilters.maxPrice) ||
+    minYOM !== asStr(activeFilters.minYOM) ||
+    maxYOM !== asStr(activeFilters.maxYOM) ||
+    pricePreset !== null;
+
+  const applyFilters = useCallback(() => {
+    const updates = {};
+
+    if (make) updates.make = make;
+    if (model) updates.model = model;
+    if (bodyType) updates.bodyType = bodyType;
+    if (fuelType) updates.fuelType = fuelType;
+    if (transmission) updates.transmission = transmission;
+    if (steering) updates.steering = steering;
+    if (vehicleType) updates.vehicleType = vehicleType;
+    if (condition) updates.condition = condition;
+    if (county) updates.county = county;
+
+    if (pricePreset !== null) {
+      const preset = PRICE_PRESETS[pricePreset];
+      if (preset.minPrice > 0) updates.minPrice = String(preset.minPrice);
+      if (preset.maxPrice > 0) updates.maxPrice = String(preset.maxPrice);
+    } else {
+      if (minPrice) updates.minPrice = minPrice;
+      if (maxPrice) updates.maxPrice = maxPrice;
+    }
+
+    if (minYOM) updates.minYOM = minYOM;
+    if (maxYOM) updates.maxYOM = maxYOM;
+
+    const url = buildUrl(searchParams, updates);
+    router.push(url);
+    setMobileOpen(false);
+  }, [make, model, bodyType, fuelType, transmission, steering, vehicleType, condition, county, pricePreset, minPrice, maxPrice, minYOM, maxYOM, searchParams, router]);
+
+  const resetFilters = useCallback(() => {
+    setMake("");
+    setModel("");
+    setBodyType("");
+    setFuelType("");
+    setTransmission("");
+    setSteering("");
+    setVehicleType("");
+    setCondition("");
+    setCounty("");
+    setPricePreset(null);
+    setMinPrice("");
+    setMaxPrice("");
+    setMinYOM("");
+    setMaxYOM("");
+  }, []);
+
+  const hasAnySelection = make || model || bodyType || fuelType || transmission || steering || vehicleType || condition || county || minPrice || maxPrice || minYOM || maxYOM || pricePreset !== null;
 
   const sidebarContent = (
     <div className="space-y-4">
@@ -65,14 +157,14 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white">
           Filters
         </h3>
-        {hasActiveFilters && (
+        {hasAnySelection && (
           <button
             type="button"
-            onClick={() => router.push("/cars")}
+            onClick={resetFilters}
             className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white transition-colors"
           >
-            <X className="w-3 h-3" />
-            Clear
+            <RotateCcw className="w-3 h-3" />
+            Reset
           </button>
         )}
       </div>
@@ -81,17 +173,17 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
         <div className="py-2 space-y-2">
           <FilterSection title="Make">
             <div className="max-h-[180px] overflow-y-auto space-y-0.5">
-              <FilterLink
+              <ToggleChip
                 label="All Makes"
-                active={!activeFilters.make}
-                href={buildUrl(searchParams, { make: "", model: "" })}
+                active={!make}
+                onClick={() => setMake("")}
               />
               {allMakes.map((m) => (
-                <FilterLink
+                <ToggleChip
                   key={m.make}
                   label={m.make}
-                  active={activeFilters.make === m.make}
-                  href={buildUrl(searchParams, { make: m.make, model: "" })}
+                  active={make === m.make}
+                  onClick={() => toggleValue(setMake, m.make)}
                 />
               ))}
             </div>
@@ -100,12 +192,9 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
           <FilterSection title="Model">
             <input
               type="text"
-              defaultValue={activeFilters.model || ""}
+              value={model}
               placeholder="e.g. Corolla"
-              onBlur={(e) => navigate({ model: e.target.value })}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") navigate({ model: e.target.value });
-              }}
+              onChange={(e) => setModel(e.target.value)}
               className="w-full mx-2.5 px-2 py-1.5 text-[11px] bg-transparent border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
               style={{ width: "calc(100% - 20px)" }}
             />
@@ -115,17 +204,17 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
         <div className="py-2 space-y-2">
           <FilterSection title="Body Type">
             <div className="max-h-[160px] overflow-y-auto space-y-0.5">
-              <FilterLink
+              <ToggleChip
                 label="All Types"
-                active={!activeFilters.bodyType}
-                href={buildUrl(searchParams, { bodyType: "" })}
+                active={!bodyType}
+                onClick={() => setBodyType("")}
               />
               {Object.entries(bodyTypeLabels).map(([value, label]) => (
-                <FilterLink
+                <ToggleChip
                   key={value}
                   label={label}
-                  active={activeFilters.bodyType === value}
-                  href={buildUrl(searchParams, { bodyType: value })}
+                  active={bodyType === value}
+                  onClick={() => toggleValue(setBodyType, value)}
                 />
               ))}
             </div>
@@ -135,11 +224,11 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
         <div className="py-2 space-y-2">
           <FilterSection title="Fuel">
             {Object.entries(FUEL_LABELS).map(([value, label]) => (
-              <FilterLink
+              <ToggleChip
                 key={value}
                 label={label}
-                active={activeFilters.fuelType === value}
-                href={buildUrl(searchParams, { fuelType: value })}
+                active={fuelType === value}
+                onClick={() => toggleValue(setFuelType, value)}
               />
             ))}
           </FilterSection>
@@ -148,11 +237,11 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
         <div className="py-2 space-y-2">
           <FilterSection title="Transmission">
             {Object.entries(TRANSMISSION_LABELS).map(([value, label]) => (
-              <FilterLink
+              <ToggleChip
                 key={value}
                 label={label}
-                active={activeFilters.transmission === value}
-                href={buildUrl(searchParams, { transmission: value })}
+                active={transmission === value}
+                onClick={() => toggleValue(setTransmission, value)}
               />
             ))}
           </FilterSection>
@@ -161,11 +250,11 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
         <div className="py-2 space-y-2">
           <FilterSection title="Steering">
             {Object.entries(STEERING_LABELS).map(([value, label]) => (
-              <FilterLink
+              <ToggleChip
                 key={value}
                 label={label}
-                active={activeFilters.steering === value}
-                href={buildUrl(searchParams, { steering: value })}
+                active={steering === value}
+                onClick={() => toggleValue(setSteering, value)}
               />
             ))}
           </FilterSection>
@@ -174,11 +263,11 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
         <div className="py-2 space-y-2">
           <FilterSection title="Type">
             {Object.entries(VEHICLE_TYPE_LABELS).map(([value, label]) => (
-              <FilterLink
+              <ToggleChip
                 key={value}
                 label={label}
-                active={activeFilters.vehicleType === value}
-                href={buildUrl(searchParams, { vehicleType: value })}
+                active={vehicleType === value}
+                onClick={() => toggleValue(setVehicleType, value)}
               />
             ))}
           </FilterSection>
@@ -186,49 +275,50 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
 
         <div className="py-2 space-y-2">
           <FilterSection title="Condition">
-            <FilterLink
+            <ToggleChip
               label="Used"
-              active={activeFilters.condition === "USED"}
-              href={buildUrl(searchParams, { condition: "USED" })}
+              active={condition === "USED"}
+              onClick={() => toggleValue(setCondition, "USED")}
             />
-            <FilterLink
+            <ToggleChip
               label="New"
-              active={activeFilters.condition === "NEW"}
-              href={buildUrl(searchParams, { condition: "NEW" })}
+              active={condition === "NEW"}
+              onClick={() => toggleValue(setCondition, "NEW")}
             />
           </FilterSection>
         </div>
 
         <div className="py-2 space-y-2">
           <FilterSection title="Price (KSh)">
+            <div className="flex flex-wrap gap-1.5 px-2.5 pb-2">
+              {PRICE_PRESETS.map((preset, i) => (
+                <button
+                  key={i}
+                  onClick={() => selectPricePreset(i)}
+                  className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wider border transition-all ${
+                    pricePreset === i
+                      ? "border-brand-accent bg-brand-accent/10 text-brand-accent"
+                      : "border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                  }`}
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
             <div className="flex items-center gap-1.5 px-2.5">
               <input
                 type="number"
-                defaultValue={activeFilters.minPrice || ""}
+                value={minPrice}
                 placeholder="Min"
-                onBlur={(e) => {
-                  const val = e.target.value;
-                  if (!val && !activeFilters.maxPrice) return navigate({ minPrice: "" });
-                  navigate({ minPrice: val, maxPrice: activeFilters.maxPrice || "" });
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") e.target.blur();
-                }}
+                onChange={(e) => { setMinPrice(e.target.value); setPricePreset(null); }}
                 className="w-full px-2 py-1.5 text-[11px] bg-transparent border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
               />
               <span className="text-[9px] text-slate-400 dark:text-zinc-400 shrink-0">—</span>
               <input
                 type="number"
-                defaultValue={activeFilters.maxPrice || ""}
+                value={maxPrice}
                 placeholder="Max"
-                onBlur={(e) => {
-                  const val = e.target.value;
-                  if (!val && !activeFilters.minPrice) return navigate({ maxPrice: "" });
-                  navigate({ maxPrice: val, minPrice: activeFilters.minPrice || "" });
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") e.target.blur();
-                }}
+                onChange={(e) => { setMaxPrice(e.target.value); setPricePreset(null); }}
                 className="w-full px-2 py-1.5 text-[11px] bg-transparent border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
               />
             </div>
@@ -240,31 +330,17 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
             <div className="flex items-center gap-1.5 px-2.5">
               <input
                 type="number"
-                defaultValue={activeFilters.minYOM || ""}
+                value={minYOM}
                 placeholder="From"
-                onBlur={(e) => {
-                  const val = e.target.value;
-                  if (!val && !activeFilters.maxYOM) return navigate({ minYOM: "" });
-                  navigate({ minYOM: val, maxYOM: activeFilters.maxYOM || "" });
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") e.target.blur();
-                }}
+                onChange={(e) => setMinYOM(e.target.value)}
                 className="w-full px-2 py-1.5 text-[11px] bg-transparent border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
               />
               <span className="text-[9px] text-slate-400 dark:text-zinc-400 shrink-0">—</span>
               <input
                 type="number"
-                defaultValue={activeFilters.maxYOM || ""}
+                value={maxYOM}
                 placeholder="To"
-                onBlur={(e) => {
-                  const val = e.target.value;
-                  if (!val && !activeFilters.minYOM) return navigate({ maxYOM: "" });
-                  navigate({ maxYOM: val, minYOM: activeFilters.minYOM || "" });
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") e.target.blur();
-                }}
+                onChange={(e) => setMaxYOM(e.target.value)}
                 className="w-full px-2 py-1.5 text-[11px] bg-transparent border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
               />
             </div>
@@ -274,23 +350,38 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
         <div className="py-2 space-y-2">
           <FilterSection title="County">
             <div className="max-h-[140px] overflow-y-auto space-y-0.5">
-              <FilterLink
+              <ToggleChip
                 label="All Counties"
-                active={!activeFilters.county}
-                href={buildUrl(searchParams, { county: "" })}
+                active={!county}
+                onClick={() => setCounty("")}
               />
               {counties.map((c) => (
-                <FilterLink
+                <ToggleChip
                   key={c}
                   label={c}
-                  active={activeFilters.county === c}
-                  href={buildUrl(searchParams, { county: c })}
+                  active={county === c}
+                  onClick={() => toggleValue(setCounty, c)}
                 />
               ))}
             </div>
           </FilterSection>
         </div>
       </div>
+
+      {/* Apply button */}
+      <button
+        type="button"
+        onClick={applyFilters}
+        disabled={!hasChanges}
+        className={`w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider border transition-all ${
+          hasChanges
+            ? "border-brand-accent bg-brand-accent text-white hover:opacity-90 cursor-pointer"
+            : "border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-[#111]/80 text-slate-400 dark:text-zinc-500 cursor-not-allowed"
+        }`}
+      >
+        <Search className="w-3.5 h-3.5" aria-hidden />
+        Apply Filters
+      </button>
     </div>
   );
 
@@ -300,12 +391,12 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
       <div className="lg:hidden">
         <button
           type="button"
-          onClick={() => setMobileOpen(true)}
+          onClick={() => { setMobileOpen(true); }}
           className="inline-flex items-center gap-2 px-3 py-2 text-[10px] font-black uppercase tracking-wider border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#111] text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-900 transition-all"
         >
           <SlidersHorizontal className="w-3.5 h-3.5" />
           Filters
-          {hasActiveFilters && (
+          {hasAnySelection && (
             <span className="w-1.5 h-1.5 rounded-full bg-brand-accent" />
           )}
         </button>
