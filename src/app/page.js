@@ -368,35 +368,35 @@ export default async function HomePage() {
                 The Difference
               </p>
               <h2 className="text-2xl sm:text-5xl font-bold leading-[1.12] mb-4 sm:mb-6">
-                See cars from real dealerships.<br />
-                <span className="editorial-heading text-slate-400">Without leaving home.</span>
+                Cars from dealers and private sellers.<br />
+                <span className="editorial-heading text-slate-400">All in one place.</span>
               </h2>
               <p className="text-sm sm:text-lg text-slate-400 leading-relaxed max-w-xl font-medium">
-                We work with dealers across Kenya to put their inventory online. You get to browse quality cars, compare them side by side, and contact the seller directly. No need to spend your weekend walking through yards just to find out what is available.
+                We work with dealers and individual sellers across Kenya to put their cars online. You browse, compare, and contact the seller directly without spending your weekend walking through yards.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6 items-stretch">
               {[
                 {
-                  title: "Quality inventory online",
+                  title: "Real cars from real sellers",
                   icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
-                  desc: "Every car you see is listed by a dealer with a physical showroom. What you see is what they have on the lot.",
+                  desc: "Every listing is tied to a dealer with a showroom or a private owner with a car to sell. What you see is what is available.",
                 },
                 {
-                  title: "Compare without the runaround",
+                  title: "Compare side by side",
                   icon: <Building2 className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
-                  desc: "Put up to three cars next to each other and look at specs, pricing, and running costs in one place. No hopping between websites.",
+                  desc: "Pick up to three cars and look at their specs, pricing, and running costs in one view. No hopping between tabs.",
                 },
                 {
                   title: "Know the full cost upfront",
                   icon: <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
-                  desc: "Our duty calculator and landed price tool show you what a car will cost once it hits Kenyan roads. No surprises when you go to register it.",
+                  desc: "Use our duty calculator and landed price tool to see what a car will cost once it hits Kenyan roads. Everything is clear before you commit.",
                 },
                 {
-                  title: "Talk to the dealer directly",
+                  title: "Talk to the seller directly",
                   icon: <Phone className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
-                  desc: "Call or WhatsApp the person selling the car right from the listing. No middlemen, no contact forms that go nowhere.",
+                  desc: "Call or WhatsApp the seller right from the listing. No middlemen and no contact forms that go to a black hole.",
                 },
               ].map((item, i) => (
                 <div key={i} className="flex h-full flex-col gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
