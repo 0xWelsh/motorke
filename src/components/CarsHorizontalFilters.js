@@ -117,7 +117,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
 
         <div className="flex items-center gap-1.5">
           <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-zinc-500 shrink-0">Trans</span>
-          {["AUTO", "MANUAL"].map((t) => (
+          {["AUTOMATIC", "MANUAL"].map((t) => (
             <button
               key={t}
               onClick={() => setTransmission((prev) => (prev === t ? "" : t))}
@@ -128,7 +128,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
               }`}
               style={{ borderRadius: "4px" }}
             >
-              {t === "AUTO" ? "Auto" : "Manual"}
+              {t === "AUTOMATIC" ? "Auto" : "Manual"}
             </button>
           ))}
         </div>

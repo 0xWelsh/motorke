@@ -120,7 +120,7 @@ export default async function CarsPage({ searchParams }) {
   const maxYOM = sp.maxYOM ? parseInt(sp.maxYOM, 10) : undefined;
   const bodyType = sp.bodyType || "";
   const fuelType = sp.fuelType || "";
-  const transmission = sp.transmission || "";
+  const transmission = sp.transmission === "AUTO" ? "AUTOMATIC" : (sp.transmission || "");
   const county = sp.county || "";
   const minPrice = sp.minPrice ? parseInt(sp.minPrice, 10) : undefined;
   const maxPrice = sp.maxPrice ? parseInt(sp.maxPrice, 10) : undefined;
