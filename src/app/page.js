@@ -3,11 +3,7 @@ export const revalidate = 60;
 import BrowsePanel from "@/components/BrowsePanel";
 import {
   ArrowRight,
-  Building2,
   Search,
-  Shield,
-  BarChart3,
-  Phone,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -380,29 +376,22 @@ export default async function HomePage() {
               {[
                 {
                   title: "Real cars from real sellers",
-                  icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
                   desc: "Every listing is tied to a dealer with a showroom or a private owner with a car to sell. What you see is what is available.",
                 },
                 {
                   title: "Compare side by side",
-                  icon: <Building2 className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
                   desc: "Pick up to three cars and look at their specs, pricing, and running costs in one view. No hopping between tabs.",
                 },
                 {
                   title: "Know the full cost upfront",
-                  icon: <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
                   desc: "Use our duty calculator and landed price tool to see what a car will cost once it hits Kenyan roads. Everything is clear before you commit.",
                 },
                 {
                   title: "Talk to the seller directly",
-                  icon: <Phone className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
                   desc: "Call or WhatsApp the seller right from the listing. No middlemen and no contact forms that go to a black hole.",
                 },
               ].map((item, i) => (
                 <div key={i} className="flex h-full flex-col gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
-                  <div className="text-brand-accent" aria-hidden>
-                    {item.icon}
-                  </div>
                   <h3 className="font-bold text-lg">{item.title}</h3>
                   <p className="text-sm text-slate-400 leading-relaxed font-medium">{item.desc}</p>
                 </div>
