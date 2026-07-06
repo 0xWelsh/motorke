@@ -225,27 +225,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [], bo
     <>
       {/* Mobile filter strip */}
       <div className="lg:hidden bg-white dark:bg-[#111] border border-slate-200 dark:border-zinc-800 p-3 space-y-2.5">
-        {/* Row 1: Brand chips */}
-        <div>
-          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
-            {allMakes.map((m) => (
-              <button
-                key={m.make}
-                onClick={() => toggleValue(setMake, m.make)}
-                className={`shrink-0 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider border transition-all ${
-                  make === m.make
-                    ? "border-brand-accent bg-brand-accent/10 text-brand-accent ring-1 ring-brand-accent/30"
-                    : "border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
-                }`}
-                style={{ borderRadius: "4px" }}
-              >
-                {m.make}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Row 2: Price presets + Transmission + More trigger */}
+        {/* Row 1: Price presets + Transmission + More trigger */}
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-0.5">
           <span className="text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-zinc-500 shrink-0">Price</span>
           {PRICE_PRESETS.slice(0, 4).map((preset, i) => (
