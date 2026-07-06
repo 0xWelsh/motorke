@@ -3,7 +3,6 @@ import { BODY_TYPE_LABELS, FUEL_LABELS } from "@/lib/constants";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import CarsInfiniteGrid from "@/components/CarsInfiniteGrid";
-import SearchMapToggle from "@/components/SearchMapToggle";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
 import { unstable_cache } from "next/cache";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
@@ -291,14 +290,6 @@ export default async function CarsPage({ searchParams }) {
             filters={stringFilters}
             noFiltersActive={noFiltersActive}
           />
-
-          {initialCars.length > 0 && (
-            <div className="flex justify-center mt-4 sm:mt-6">
-              <SearchMapToggle
-                cars={initialCars.filter((c) => c.dealer?.lat && c.dealer?.lng)}
-              />
-            </div>
-          )}
         </div>
       </div>
     </div>
