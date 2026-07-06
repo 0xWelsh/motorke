@@ -1,21 +1,17 @@
 import { db } from "@/lib/db";
 import { BODY_TYPE_LABELS, FUEL_LABELS } from "@/lib/constants";
 import Link from "next/link";
-import { ChevronRight, Sparkles } from "lucide-react";
-import CarCard from "@/components/CarCard";
+import { ChevronRight } from "lucide-react";
 import CarsInfiniteGrid from "@/components/CarsInfiniteGrid";
 import SearchMapToggle from "@/components/SearchMapToggle";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
 import { unstable_cache } from "next/cache";
-import { getSession } from "@/lib/auth";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { buildCarsOrderBy, normalizeCarsSort } from "@/lib/cars-inventory-sort";
 import CarsInventorySort from "@/components/CarsInventorySort";
 import CarsHorizontalFilters from "@/components/CarsHorizontalFilters";
 import CarsSearchBar from "@/components/CarsSearchBar";
 import { buildMakeWhere } from "@/lib/make-filter";
-import SearchAlertButton from "@/components/SearchAlertButton";
-import { getPersonalizedRecommendations } from "@/lib/car-recommendations";
 import { publicDetailVisibilityClause } from "@/lib/car-sold-status";
 
 const PER_PAGE = 24;
@@ -131,8 +127,6 @@ export default async function CarsPage({ searchParams }) {
   const vehicleType = sp.vehicleType || "";
   const condition = sp.condition || "";
   const sort = normalizeCarsSort(sp.sort);
-  const session = await getSession();
-  const userId = session?.user?.id;
 
   const where = {
     ...publicDetailVisibilityClause(),
@@ -162,7 +156,7 @@ export default async function CarsPage({ searchParams }) {
 
   const orderBy = buildCarsOrderBy(sort);
 
-  const [initialCars, total, allMakes, allCounties, personalizedCarsRaw] = await Promise.all([
+  const [initialCars, total, allMakes, allCounties] = await Promise.all([
     db.car.findMany({
       where,
       select: carSelect,
@@ -172,15 +166,7 @@ export default async function CarsPage({ searchParams }) {
     db.car.count({ where }),
     getAllMakes(),
     getAllCounties(),
-    userId
-      ? getPersonalizedRecommendations(userId, null, null, carSelect)
-      : Promise.resolve([]),
   ]);
-
-  const visibleIds = new Set(initialCars.map(c => c.id));
-  const personalizedCars = (personalizedCarsRaw || [])
-    .filter(c => !visibleIds.has(c.id))
-    .slice(0, 4);
 
   function removeFilter(params, key) {
     const p = new URLSearchParams(params.toString());
@@ -314,50 +300,6 @@ export default async function CarsPage({ searchParams }) {
             </div>
           )}
         </div>
-
-        {/* Personalized section */}
-        {personalizedCars.length > 0 && (
-          <section className="mt-12 bg-[var(--surface-overlay)] p-5 sm:p-6" style={{ borderRadius: "20px" }}>
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <p className="meta-label text-[var(--brand-primary)] flex items-center gap-2">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  Personalized Feed
-                </p>
-                <h3 className="text-xl font-black text-[var(--text-main)] tracking-tight mt-1">Picked for you</h3>
-              </div>
-              <Link href="/cars?sort=views_desc" className="meta-label text-slate-500 dark:text-zinc-300 hover:text-[var(--brand-primary)] transition-colors">
-                Explore more →
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
-              {personalizedCars.map((car) => (
-                <div key={`personal-${car.id}`} className="space-y-1">
-                  <p className="meta-label text-[var(--brand-primary)]">
-                    {car.recommendationReasons?.[0] || "Picked for you"}
-                  </p>
-                  <details className="group">
-                    <summary className="meta-label list-none inline-flex cursor-pointer items-center gap-1.5 text-slate-500 dark:text-zinc-300 hover:text-slate-700">
-                      <span>Why am I seeing this?</span>
-                      <span className="transition-transform group-open:rotate-45">+</span>
-                    </summary>
-                    <div className="mt-1 bg-[var(--surface)] p-2.5 shadow-sm" style={{ borderRadius: "8px" }}>
-                      <ul className="space-y-1">
-                        {(car.recommendationReasons?.length ? car.recommendationReasons : ["Aligned with your recent browsing"]).map((reason, idx) => (
-                          <li key={`${car.id}-reason-${idx}`} className="text-[10px] font-bold text-slate-600 dark:text-zinc-300">
-                            • {reason}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </details>
-                  <CarCard car={car} />
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
       </div>
     </div>
   );

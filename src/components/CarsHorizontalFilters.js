@@ -63,7 +63,8 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
   const resetFilters = useCallback(() => {
     setMake(""); setTransmission("");
     setPricePreset(null); setMinPrice(""); setMaxPrice("");
-  }, []);
+    router.push("/cars");
+  }, [router]);
 
   const hasAnySelection = make || transmission || minPrice || maxPrice || pricePreset !== null;
 
