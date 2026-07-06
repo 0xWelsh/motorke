@@ -14,6 +14,7 @@
   --bg:           #f5f0eb;
   --surface:      #f5f0eb;
   --surface-overlay: #ede7e0; /* Slightly deeper for depth */
+  --card-bg:      #f2f0ed; /* Card/dropdown/elevated background */
   --brand:        #1A202C; /* Chakra gray.800 */
   --brand-light:  #F7FAFC; /* Chakra gray.50 */
   --brand-secondary: #EDF2F7; /* Chakra gray.100 */
@@ -38,6 +39,11 @@
   --radius:       0.375rem; /* 6px - FlexMobi Standard */
   --mk-primary:   #2F855A;
   --mk-primary-600: #38A169;
+}
+
+/* Soften pure-white cards to a warm light grey */
+.bg-white {
+  background-color: var(--card-bg);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
