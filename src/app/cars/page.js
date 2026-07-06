@@ -14,6 +14,7 @@ import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { buildCarsOrderBy, normalizeCarsSort } from "@/lib/cars-inventory-sort";
 import CarsInventorySort from "@/components/CarsInventorySort";
 import CarsHorizontalFilters from "@/components/CarsHorizontalFilters";
+import CarsSearchBar from "@/components/CarsSearchBar";
 import { buildMakeWhere } from "@/lib/make-filter";
 import SearchAlertButton from "@/components/SearchAlertButton";
 import { getPersonalizedRecommendations } from "@/lib/car-recommendations";
@@ -287,14 +288,16 @@ export default async function CarsPage({ searchParams }) {
         )}
 
         <CarsHorizontalFilters
-          activeFilters={{ make, model, steering, minYOM: sp.minYOM || "", maxYOM: sp.maxYOM || "", bodyType, fuelType, transmission, county, minPrice, maxPrice, vehicleType, condition }}
+          activeFilters={{ make, transmission, minPrice, maxPrice }}
           allMakes={allMakes}
-          bodyTypeLabels={BODY_TYPE_LABELS}
-          counties={allCounties}
         />
 
         <div className="flex flex-wrap items-center justify-between gap-3 mt-4 mb-4">
           <CarsInventorySort />
+        </div>
+
+        <div className="mb-4">
+          <CarsSearchBar />
         </div>
 
         <div className="min-w-0">
