@@ -13,7 +13,7 @@ import { getSession } from "@/lib/auth";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { buildCarsOrderBy, normalizeCarsSort } from "@/lib/cars-inventory-sort";
 import CarsInventorySort from "@/components/CarsInventorySort";
-import CarsSidebarFilters from "@/components/CarsSidebarFilters";
+import CarsHorizontalFilters from "@/components/CarsHorizontalFilters";
 import { buildMakeWhere } from "@/lib/make-filter";
 import SearchAlertButton from "@/components/SearchAlertButton";
 import { getPersonalizedRecommendations } from "@/lib/car-recommendations";
@@ -286,36 +286,32 @@ export default async function CarsPage({ searchParams }) {
           </div>
         )}
 
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <CarsHorizontalFilters
+          activeFilters={{ make, model, steering, minYOM: sp.minYOM || "", maxYOM: sp.maxYOM || "", bodyType, fuelType, transmission, county, minPrice, maxPrice, vehicleType, condition }}
+          allMakes={allMakes}
+          bodyTypeLabels={BODY_TYPE_LABELS}
+          counties={allCounties}
+        />
+
+        <div className="flex flex-wrap items-center justify-between gap-3 mt-4 mb-4">
           <CarsInventorySort />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
-          <div className="hidden lg:block">
-            <CarsSidebarFilters
-              activeFilters={{ make, model, steering, minYOM: sp.minYOM || "", maxYOM: sp.maxYOM || "", bodyType, fuelType, transmission, county, minPrice, maxPrice, vehicleType, condition, sort, lat: sp.lat, lng: sp.lng }}
-              allMakes={allMakes}
-              bodyTypeLabels={BODY_TYPE_LABELS}
-              counties={allCounties}
-            />
-          </div>
+        <div className="min-w-0">
+          <CarsInfiniteGrid
+            initialCars={initialCars}
+            initialTotal={total}
+            filters={stringFilters}
+            noFiltersActive={noFiltersActive}
+          />
 
-          <div className="min-w-0 lg:col-span-3">
-            <CarsInfiniteGrid
-              initialCars={initialCars}
-              initialTotal={total}
-              filters={stringFilters}
-              noFiltersActive={noFiltersActive}
-            />
-
-            {initialCars.length > 0 && (
-              <div className="flex justify-center mt-4 sm:mt-6">
-                <SearchMapToggle
-                  cars={initialCars.filter((c) => c.dealer?.lat && c.dealer?.lng)}
-                />
-              </div>
-            )}
-          </div>
+          {initialCars.length > 0 && (
+            <div className="flex justify-center mt-4 sm:mt-6">
+              <SearchMapToggle
+                cars={initialCars.filter((c) => c.dealer?.lat && c.dealer?.lng)}
+              />
+            </div>
+          )}
         </div>
 
         {/* Personalized section */}
