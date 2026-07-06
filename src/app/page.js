@@ -368,35 +368,35 @@ export default async function HomePage() {
                 The Difference
               </p>
               <h2 className="text-2xl sm:text-5xl font-bold leading-[1.12] mb-4 sm:mb-6">
-                Every shilling counts.<br />
-                <span className="editorial-heading text-slate-400">We help you spend it right.</span>
+                See cars from real dealerships.<br />
+                <span className="editorial-heading text-slate-400">Without leaving home.</span>
               </h2>
               <p className="text-sm sm:text-lg text-slate-400 leading-relaxed max-w-xl font-medium">
-                BIDGARI is purpose-built for the Kenyan market. We show you the full cost of ownership — not just the asking price — so you can compare apples to apples, skip the runaround, and buy with confidence.
+                We work with dealers across Kenya to put their inventory online. You get to browse quality cars, compare them side by side, and contact the seller directly. No need to spend your weekend walking through yards just to find out what is available.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6 items-stretch">
               {[
                 {
-                  title: "Total cost clarity",
-                  icon: <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
-                  desc: "Our duty calculator and landed-price engine reveal what a car really costs once it hits Kenyan roads — no hidden import surprises.",
-                },
-                {
-                  title: "Dealer-verified inventory",
+                  title: "Quality inventory online",
                   icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
-                  desc: "Every listing ties back to a real dealership with a physical showroom. No anonymous sellers, no phantom posts.",
+                  desc: "Every car you see is listed by a dealer with a physical showroom. What you see is what they have on the lot.",
                 },
                 {
-                  title: "Compare in seconds",
+                  title: "Compare without the runaround",
                   icon: <Building2 className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
-                  desc: "Pit up to three cars side by side — specs, running costs, and road-readiness — so you shortlist with data, not gut feel.",
+                  desc: "Put up to three cars next to each other and look at specs, pricing, and running costs in one place. No hopping between websites.",
                 },
                 {
-                  title: "Direct to the dealer",
+                  title: "Know the full cost upfront",
+                  icon: <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
+                  desc: "Our duty calculator and landed price tool show you what a car will cost once it hits Kenyan roads. No surprises when you go to register it.",
+                },
+                {
+                  title: "Talk to the dealer directly",
                   icon: <Phone className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />,
-                  desc: "Call or WhatsApp the dealership directly from the listing. No brokers, no forms that vanish into thin air.",
+                  desc: "Call or WhatsApp the person selling the car right from the listing. No middlemen, no contact forms that go nowhere.",
                 },
               ].map((item, i) => (
                 <div key={i} className="flex h-full flex-col gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
