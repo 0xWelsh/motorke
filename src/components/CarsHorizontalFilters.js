@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { X, SlidersHorizontal, Search, RotateCcw, ChevronDown } from "lucide-react";
+import { X, SlidersHorizontal, Search, RotateCcw, ChevronDown, ChevronRight } from "lucide-react";
 import { FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, VEHICLE_TYPE_LABELS } from "@/lib/constants";
 
 const PRICE_PRESETS = [
@@ -233,17 +233,98 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [], bo
 
   return (
     <>
-      {/* Mobile filter button */}
-      <div className="lg:hidden">
-        <button
-          type="button"
-          onClick={() => setMobileOpen(true)}
-          className="inline-flex items-center gap-2 px-3 py-2 text-[10px] font-black uppercase tracking-wider border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#111] text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-900 transition-all"
-        >
-          <SlidersHorizontal className="w-3.5 h-3.5" />
-          Filters
-          {hasAnySelection && <span className="w-1.5 h-1.5 rounded-full bg-brand-accent" />}
-        </button>
+      {/* Mobile filter strip */}
+      <div className="lg:hidden bg-white dark:bg-[#111] border border-slate-200 dark:border-zinc-800 p-3 space-y-2.5">
+        {/* Row 1: Brand chips */}
+        <div>
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
+            {allMakes.map((m) => (
+              <button
+                key={m.make}
+                onClick={() => toggleValue(setMake, m.make)}
+                className={`shrink-0 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider border transition-all ${
+                  make === m.make
+                    ? "border-brand-accent bg-brand-accent/10 text-brand-accent ring-1 ring-brand-accent/30"
+                    : "border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                }`}
+                style={{ borderRadius: "4px" }}
+              >
+                {m.make}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Row 2: Price presets + Transmission + More trigger */}
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-0.5">
+          <span className="text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-zinc-500 shrink-0">Price</span>
+          {PRICE_PRESETS.slice(0, 4).map((preset, i) => (
+            <button
+              key={i}
+              onClick={() => { setPricePreset(i); setMinPrice(""); setMaxPrice(""); }}
+              className={`shrink-0 px-2 py-1 text-[9px] font-bold uppercase tracking-wider border transition-all ${
+                pricePreset === i
+                  ? "border-brand-accent bg-brand-accent/10 text-brand-accent"
+                  : "border-slate-200 dark:border-zinc-700 text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
+              }`}
+              style={{ borderRadius: "4px" }}
+            >
+              {preset.label}
+            </button>
+          ))}
+          <span className="w-px h-4 bg-slate-200 dark:bg-zinc-700 shrink-0" />
+          <span className="text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-zinc-500 shrink-0">Trans</span>
+          {["AUTO", "MANUAL"].map((t) => (
+            <button
+              key={t}
+              onClick={() => toggleValue(setTransmission, t)}
+              className={`shrink-0 px-2 py-1 text-[9px] font-bold uppercase tracking-wider border transition-all ${
+                transmission === t
+                  ? "border-brand-accent bg-brand-accent/10 text-brand-accent"
+                  : "border-slate-200 dark:border-zinc-700 text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
+              }`}
+              style={{ borderRadius: "4px" }}
+            >
+              {t === "AUTO" ? "Auto" : "Manual"}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => setMobileOpen(true)}
+            className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 text-[9px] font-black uppercase tracking-wider border border-slate-300 dark:border-zinc-600 text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-all"
+            style={{ borderRadius: "4px" }}
+          >
+            More <ChevronRight className="w-3 h-3" />
+          </button>
+        </div>
+
+        {/* Row 3: Apply + Reset */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={applyFilters}
+            disabled={!hasChanges}
+            className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider border transition-all ${
+              hasChanges
+                ? "border-brand-accent bg-brand-accent text-white hover:opacity-90 cursor-pointer"
+                : "border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-[#111]/80 text-slate-400 dark:text-zinc-500 cursor-not-allowed"
+            }`}
+            style={{ borderRadius: "4px" }}
+          >
+            <Search className="w-3 h-3" />
+            Apply Filters
+          </button>
+          {hasAnySelection && (
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="inline-flex items-center gap-1 px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider border border-slate-300 dark:border-zinc-600 text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-all"
+              style={{ borderRadius: "4px" }}
+            >
+              <RotateCcw className="w-2.5 h-2.5" /> Reset
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Mobile slide-over */}
@@ -252,7 +333,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [], bo
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
           <div className="absolute inset-y-0 left-0 w-[85vw] max-w-sm bg-white dark:bg-[#0a0a0a] shadow-2xl overflow-y-auto">
             <div className="sticky top-0 z-10 bg-white dark:bg-[#0a0a0a] border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Filters</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]">All Filters</span>
               <button type="button" onClick={() => setMobileOpen(false)} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"><X className="w-4 h-4" /></button>
             </div>
             <div className="px-4 py-3">{mobileContent}</div>
