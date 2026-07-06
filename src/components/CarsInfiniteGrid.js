@@ -1,9 +1,23 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
 import CarCard from "@/components/CarCard";
 import { carListingPath } from "@/lib/car-listing-url";
+
+function BidgariLoader() {
+  return (
+    <div className="flex items-center gap-1.5">
+      <span className="text-[11px] font-black tracking-[0.15em] text-zinc-400 dark:text-zinc-500">
+        BIDGARI
+      </span>
+      <span className="flex gap-0.5">
+        <span className="w-1 h-1 rounded-full bg-zinc-400 dark:bg-zinc-500 animate-pulse" style={{ animationDelay: "0ms" }} />
+        <span className="w-1 h-1 rounded-full bg-zinc-400 dark:bg-zinc-500 animate-pulse" style={{ animationDelay: "150ms" }} />
+        <span className="w-1 h-1 rounded-full bg-zinc-400 dark:bg-zinc-500 animate-pulse" style={{ animationDelay: "300ms" }} />
+      </span>
+    </div>
+  );
+}
 
 export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, noFiltersActive }) {
   const router = useRouter();
@@ -99,7 +113,9 @@ export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, n
       {/* Grid */}
       {cars.length === 0 ? (
         <div className="py-20 text-center bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 rounded-sm">
-          <Loader2 className="w-10 h-10 text-slate-300 dark:text-zinc-700 mx-auto mb-4" />
+          <div className="mx-auto mb-4 w-12 h-12 flex items-center justify-center">
+            <span className="text-lg font-black tracking-[0.2em] text-zinc-300 dark:text-zinc-600">B</span>
+          </div>
           <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-2">No matches found</h2>
           <p className="text-slate-500 dark:text-zinc-400 font-medium mb-6">Try adjusting your filters or resetting your search.</p>
         </div>
@@ -114,7 +130,7 @@ export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, n
           {/* Sentinel for infinite scroll */}
           {hasMore && (
             <div ref={sentinelRef} className="flex justify-center py-8">
-              {loading && <Loader2 className="w-6 h-6 animate-spin text-slate-400" />}
+              {loading && <BidgariLoader />}
             </div>
           )}
 

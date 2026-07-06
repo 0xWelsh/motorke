@@ -4,9 +4,7 @@ import Link from "next/link";
 import { ChevronRight, Sparkles } from "lucide-react";
 import CarCard from "@/components/CarCard";
 import CarsInfiniteGrid from "@/components/CarsInfiniteGrid";
-import CarsQuickActions from "@/components/CarsQuickActions";
 import SearchMapToggle from "@/components/SearchMapToggle";
-import TrendingSearches from "@/components/TrendingSearches";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
 import { unstable_cache } from "next/cache";
 import { getSession } from "@/lib/auth";
@@ -360,31 +358,6 @@ export default async function CarsPage({ searchParams }) {
           </section>
         )}
 
-        {/* Bottom Discovery & Alert Sections */}
-        <div className="mt-12 sm:mt-16 space-y-8 pt-8">
-          <CarsQuickActions />
-
-          <TrendingSearches className="mb-2" />
-
-          {(search || make || model || bodyType) && (
-            <div className="mb-4 animate-in fade-in slide-in-from-top-2 duration-700">
-              <div className="bg-[var(--brand-primary)]/[0.03] dark:bg-[var(--brand-primary)]/[0.08] p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-5" style={{ borderRadius: "16px" }}>
-                <div className="flex items-center gap-4 text-center sm:text-left">
-                  <div className="shrink-0 w-10 h-10 bg-[var(--brand-primary)] rounded-xl flex items-center justify-center text-white shadow-xl rotate-3">
-                    <Sparkles className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-base font-black text-[var(--text-main)] tracking-tight">Can't find the perfect match?</h4>
-                    <p className="text-xs font-semibold text-slate-500 dark:text-zinc-300 mt-0.5">Get a WhatsApp alert when a matches listed.</p>
-                  </div>
-                </div>
-                <SearchAlertButton
-                  filters={{ make, model, bodyType, fuelType, maxPrice, minYOM, search }}
-                />
-              </div>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );

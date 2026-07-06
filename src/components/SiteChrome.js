@@ -20,6 +20,8 @@ export default function SiteChrome({ user, children, shellPath = "/" }) {
     pathname.startsWith("/admin") ||
     pathname === "/maintenance";
 
+  const hideFooter = pathname.startsWith("/cars");
+
   if (appShell) {
     return (
       <ModalProvider>
@@ -36,7 +38,7 @@ export default function SiteChrome({ user, children, shellPath = "/" }) {
         <main className="flex-1">{children}</main>
         <CompareBar />
       </ModalProvider>
-      <GlobalFooter />
+      {!hideFooter && <GlobalFooter />}
     </>
   );
 }
