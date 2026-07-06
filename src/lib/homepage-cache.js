@@ -323,9 +323,9 @@ async function enrichHomepage(base) {
       ...car,
       marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`)
     }))
-    .filter(car => car.marketAnalysis?.comparison !== undefined && car.marketAnalysis.comparison < 0)
+    .filter(car => car.marketAnalysis?.comparison !== undefined && car.marketAnalysis.comparison > 0)
     .sort((a, b) => {
-      const compDiff = (a.marketAnalysis?.comparison ?? 0) - (b.marketAnalysis?.comparison ?? 0);
+      const compDiff = (b.marketAnalysis?.comparison ?? 0) - (a.marketAnalysis?.comparison ?? 0);
       if (compDiff !== 0) return compDiff;
       return (b.price || 0) - (a.price || 0);
     })
