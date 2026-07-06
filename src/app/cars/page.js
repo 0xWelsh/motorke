@@ -28,7 +28,7 @@ export async function generateMetadata({ searchParams }) {
   const search = sp.search || "";
   const county = sp.county || "";
 
-  const parts = ["Verified Cars for Sale in Kenya"];
+  const parts = ["Cars for sale in kenya"];
   if (make) parts.unshift(`${make}${model ? ` ${model}` : ""}`);
   if (county) parts.push(`in ${county}`);
   const title = `${parts.join(" — ")} | Trusted Dealers on BIDGARI`;
@@ -267,7 +267,7 @@ export default async function CarsPage({ searchParams }) {
             ? `Cars for Sale in ${county}, Kenya`
             : search
             ? `"${search}" — Verified Cars in Kenya`
-            : "Verified Cars for Sale in Kenya"}
+            : "Cars for sale in kenya"}
         </h1>
 
         {!noFiltersActive && (

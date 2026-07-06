@@ -137,16 +137,6 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [], bo
       </div>
 
       <div className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111] divide-y divide-slate-100 dark:divide-slate-800/50">
-        {/* Make */}
-        <div className="py-2 space-y-1">
-          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-zinc-400 px-2.5">Make</p>
-          <div className="max-h-[150px] overflow-y-auto space-y-0.5">
-            <button onClick={() => setMake("")} className={`w-full text-left px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all ${!make ? "bg-brand-accent/10 text-brand-accent border-l-2 border-brand-accent" : "text-slate-600 dark:text-zinc-300 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800/50"}`}>All Makes</button>
-            {allMakes.map((m) => (
-              <button key={m.make} onClick={() => toggleValue(setMake, m.make)} className={`w-full text-left px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all ${make === m.make ? "bg-brand-accent/10 text-brand-accent border-l-2 border-brand-accent" : "text-slate-600 dark:text-zinc-300 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800/50"}`}>{m.make}</button>
-            ))}
-          </div>
-        </div>
 
         {/* Model */}
         <div className="py-2 space-y-1">
