@@ -11,9 +11,9 @@
 
 :root {
   /* FlexMobi Palette — Premium Dark-Slate */
-  --bg:           #f7f7f5;
-  --surface:      #f7f7f5;
-  --surface-overlay: #efefec; /* Slightly deeper for depth */
+  --bg:           #f5f0eb;
+  --surface:      #f5f0eb;
+  --surface-overlay: #ede7e0; /* Slightly deeper for depth */
   --brand:        #1A202C; /* Chakra gray.800 */
   --brand-light:  #F7FAFC; /* Chakra gray.50 */
   --brand-secondary: #EDF2F7; /* Chakra gray.100 */
