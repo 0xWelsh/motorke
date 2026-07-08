@@ -8,7 +8,7 @@ import { applyListingWatermark } from "@/lib/watermark";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
-const MAX_SIZE_MB = 8;
+const MAX_SIZE_MB = 4;
 const MAX_DIMENSION = 2000;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 

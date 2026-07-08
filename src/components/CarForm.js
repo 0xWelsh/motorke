@@ -671,7 +671,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     const results = await Promise.allSettled(
       toUpload.map(async (file) => {
         const formData = new FormData();
-        formData.append("file", file.compressedFile || file);
+        formData.append("file", file);
         const res = await fetch("/api/upload", { method: "POST", body: formData });
         let data;
         try {

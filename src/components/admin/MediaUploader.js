@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { UploadCloud, CheckCircle2, Crown, Info, AlertTriangle } from "lucide-react";
+import { UploadCloud, CheckCircle2, Crown, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const LONG_PRESS_MS = 450;
@@ -10,42 +10,7 @@ function isIncluded(f) {
   return f.included !== false;
 }
 
-const MAX_IMG_DIM = 1200;
-const COMPRESS_QUALITY = 0.8;
-
-function compressImage(file) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      let { width, height } = img;
-      if (width > MAX_IMG_DIM || height > MAX_IMG_DIM) {
-        const ratio = Math.min(MAX_IMG_DIM / width, MAX_IMG_DIM / height);
-        width = Math.round(width * ratio);
-        height = Math.round(height * ratio);
-      }
-      const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, width, height);
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            const name = file.name.replace(/\.[^.]+$/, ".webp");
-            resolve(new File([blob], name, { type: "image/webp" }));
-          } else {
-            resolve(file);
-          }
-        },
-        "image/webp",
-        COMPRESS_QUALITY
-      );
-    };
-    img.onerror = () => resolve(file);
-    const previewUrl = URL.createObjectURL(file);
-    img.src = previewUrl;
-  });
-}
+/** First included item in list order is cover / primary. */
 function normalizeListingFlags(list) {
   const firstIncludedId = list.find((f) => isIncluded(f))?.id;
   // Never `{ ...f }` — spread strips File/Blob body so uploads become "No file provided".
@@ -67,7 +32,6 @@ function reorderToIndex(files, draggedId, toIndex) {
 
 export default function MediaUploader({ initialImages = [], onFilesSelected, maxFiles = 15 }) {
   const [dragActive, setDragActive] = useState(false);
-  const [uploadError, setUploadError] = useState(null);
   const [files, setFiles] = useState(() =>
     normalizeListingFlags(
       initialImages.map((img) => ({
@@ -142,21 +106,14 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
   }, []);
 
   const handleFiles = useCallback(
-    async (newFiles) => {
-      setUploadError(null);
+    (newFiles) => {
       const fileArray = Array.from(newFiles).filter((f) => f.type.startsWith("image/"));
-
-      const incoming = await Promise.all(
-        fileArray.map(async (f) => {
-          const preview = URL.createObjectURL(f);
-          const compressedFile = await compressImage(f);
-          return Object.assign(f, {
-            id: Math.random().toString(36).substr(2, 9),
-            preview,
-            compressedFile,
-            isPrimary: false,
-            included: true,
-          });
+      const incoming = fileArray.map((f) =>
+        Object.assign(f, {
+          id: Math.random().toString(36).substr(2, 9),
+          preview: URL.createObjectURL(f),
+          isPrimary: false,
+          included: true,
         })
       );
 
@@ -395,13 +352,6 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
           </div>
         )}
       </div>
-
-      {uploadError && (
-        <div className="flex items-start gap-2 rounded-xl bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 px-4 py-3">
-          <AlertTriangle size={16} className="text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
-          <p className="text-xs font-semibold text-rose-700 dark:text-rose-300">{uploadError}</p>
-        </div>
-      )}
 
       {files.length > 0 && (
         <div className="max-md:p-0 max-md:shadow-none rounded-2xl bg-[#fbfcfe] p-4 shadow-sm max-md:border-0 max-md:bg-transparent dark:bg-[#0a0a0a] md:border md:border-slate-200 dark:md:border-slate-800">
