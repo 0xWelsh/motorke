@@ -645,15 +645,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     );
     if (withKnownUrls.length) setImages(withKnownUrls);
 
-    const MAX_FILE_SIZE = 3 * 1024 * 1024;
     const toUpload = active.filter(
       (f) => !f.url && f.id && !uploadedLocalMapRef.current.has(f.id) && !pendingUploadIdsRef.current.has(f.id)
     );
-    const oversized = toUpload.filter((f) => f.size > MAX_FILE_SIZE);
-    if (oversized.length > 0) {
-      setError(`${oversized.length} file(s) exceed the 3MB limit: ${oversized.map((f) => f.name).join(", ")}`);
-      return;
-    }
     if (!toUpload.length) {
       const snapshot = latestUploaderSelectionRef.current || newFiles;
       const act = snapshot.filter((f) => f.included !== false);

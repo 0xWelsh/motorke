@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { UploadCloud, CheckCircle2, Crown, Info } from "lucide-react";
+import { UploadCloud, CheckCircle2, Crown, Info, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const LONG_PRESS_MS = 450;
@@ -32,6 +32,7 @@ function reorderToIndex(files, draggedId, toIndex) {
 
 export default function MediaUploader({ initialImages = [], onFilesSelected, maxFiles = 15 }) {
   const [dragActive, setDragActive] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
   const [files, setFiles] = useState(() =>
     normalizeListingFlags(
       initialImages.map((img) => ({
@@ -107,8 +108,15 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
 
   const handleFiles = useCallback(
     (newFiles) => {
+      setUploadError(null);
       const fileArray = Array.from(newFiles).filter((f) => f.type.startsWith("image/"));
-      const incoming = fileArray.map((f) =>
+      const oversized = fileArray.filter((f) => f.size > 3 * 1024 * 1024);
+      if (oversized.length > 0) {
+        setUploadError(
+          `${oversized.length} file(s) exceed the 3MB limit: ${oversized.map((f) => f.name).slice(0, 3).join(", ")}${oversized.length > 3 ? "..." : ""}`
+        );
+      }
+      const incoming = fileArray.filter((f) => f.size <= 3 * 1024 * 1024).map((f) =>
         Object.assign(f, {
           id: Math.random().toString(36).substr(2, 9),
           preview: URL.createObjectURL(f),
@@ -352,6 +360,13 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
           </div>
         )}
       </div>
+
+      {uploadError && (
+        <div className="flex items-start gap-2 rounded-xl bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 px-4 py-3">
+          <AlertTriangle size={16} className="text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
+          <p className="text-xs font-semibold text-rose-700 dark:text-rose-300">{uploadError}</p>
+        </div>
+      )}
 
       {files.length > 0 && (
         <div className="max-md:p-0 max-md:shadow-none rounded-2xl bg-[#fbfcfe] p-4 shadow-sm max-md:border-0 max-md:bg-transparent dark:bg-[#0a0a0a] md:border md:border-slate-200 dark:md:border-slate-800">
