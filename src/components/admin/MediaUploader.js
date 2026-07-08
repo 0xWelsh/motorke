@@ -339,6 +339,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
           </div>
           <p className="text-base font-black text-slate-900 dark:text-white tracking-tight">Drop listing photos</p>
           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.16em] mt-2 block">Tap or drag to add</p>
+          <p className="text-[9px] text-slate-400 mt-1">Max 3MB per file</p>
         </div>
 
         {dragActive && (
