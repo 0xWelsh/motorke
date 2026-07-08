@@ -39,6 +39,17 @@ function supabaseUrlToKey(url) {
   return url.slice(idx + SUPABASE_PUBLIC.length);
 }
 
+function adminFetchUrl(key) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!supabaseUrl) return null;
+  return `${supabaseUrl}/storage/v1/object/car-images/${key}`;
+}
+
+function adminHeaders() {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  return key ? { "Authorization": `Bearer ${key}` } : {};
+}
+
 function r2Url(key) {
   return `${R2_PUBLIC_URL}/${key}`;
 }
@@ -65,7 +76,13 @@ export async function GET(request) {
     if (!key) { results.skipped++; continue; }
 
     try {
-      const res = await fetch(img.url, { signal: AbortSignal.timeout(15000) });
+      let res = await fetch(img.url, { signal: AbortSignal.timeout(15000) });
+      if (res.status === 402) {
+        const adminUrl = adminFetchUrl(key);
+        if (adminUrl) {
+          res = await fetch(adminUrl, { headers: adminHeaders(), signal: AbortSignal.timeout(15000) });
+        }
+      }
       if (!res.ok) throw new Error(`fetch ${res.status}`);
       const buffer = Buffer.from(await res.arrayBuffer());
       const mimeType = res.headers.get("content-type") || "image/jpeg";
