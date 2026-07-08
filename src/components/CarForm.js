@@ -613,6 +613,37 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     return unique;
   }
 
+  async function compressIfNeeded(file) {
+    if (file.size <= 3.5 * 1024 * 1024) return file;
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        const MAX = 1600;
+        if (width > MAX || height > MAX) {
+          const ratio = Math.min(MAX / width, MAX / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+          (blob) => {
+            if (blob) resolve(new File([blob], file.name.replace(/\.[^.]+$/, ".webp"), { type: "image/webp" }));
+            else resolve(file);
+          },
+          "image/webp",
+          0.8
+        );
+      };
+      img.onerror = () => resolve(file);
+      const url = URL.createObjectURL(file);
+      img.src = url;
+    });
+  }
+
   async function handleFilesSelected(newFiles) {
     latestUploaderSelectionRef.current = newFiles;
 
@@ -670,8 +701,9 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
     const results = await Promise.allSettled(
       toUpload.map(async (file) => {
+        const toSend = await compressIfNeeded(file);
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("file", toSend);
         const res = await fetch("/api/upload", { method: "POST", body: formData });
         let data;
         try {
