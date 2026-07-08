@@ -10,7 +10,42 @@ function isIncluded(f) {
   return f.included !== false;
 }
 
-/** First included item in list order is cover / primary. */
+const MAX_IMG_DIM = 1200;
+const COMPRESS_QUALITY = 0.8;
+
+function compressImage(file) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > MAX_IMG_DIM || height > MAX_IMG_DIM) {
+        const ratio = Math.min(MAX_IMG_DIM / width, MAX_IMG_DIM / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            const name = file.name.replace(/\.[^.]+$/, ".webp");
+            resolve(new File([blob], name, { type: "image/webp" }));
+          } else {
+            resolve(file);
+          }
+        },
+        "image/webp",
+        COMPRESS_QUALITY
+      );
+    };
+    img.onerror = () => resolve(file);
+    const previewUrl = URL.createObjectURL(file);
+    img.src = previewUrl;
+  });
+}
 function normalizeListingFlags(list) {
   const firstIncludedId = list.find((f) => isIncluded(f))?.id;
   // Never `{ ...f }` — spread strips File/Blob body so uploads become "No file provided".
@@ -107,25 +142,23 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
   }, []);
 
   const handleFiles = useCallback(
-    (newFiles) => {
+    async (newFiles) => {
       setUploadError(null);
       const fileArray = Array.from(newFiles).filter((f) => f.type.startsWith("image/"));
-      const oversized = fileArray.filter((f) => f.size > 3 * 1024 * 1024);
-      if (oversized.length > 0) {
-        setUploadError(
-          `${oversized.length} file(s) exceed the 3MB limit: ${oversized.map((f) => f.name).slice(0, 3).join(", ")}${oversized.length > 3 ? "..." : ""}`
-        );
-      }
-      const incoming = fileArray.filter((f) => f.size <= 3 * 1024 * 1024).map((f) =>
-        Object.assign(f, {
-          id: Math.random().toString(36).substr(2, 9),
-          preview: URL.createObjectURL(f),
-          isPrimary: false,
-          included: true,
+
+      const compressed = await Promise.all(
+        fileArray.map(async (f) => {
+          const compressedFile = await compressImage(f);
+          return Object.assign(compressedFile, {
+            id: Math.random().toString(36).substr(2, 9),
+            preview: URL.createObjectURL(f),
+            isPrimary: false,
+            included: true,
+          });
         })
       );
 
-      const combined = normalizeListingFlags([...filesRef.current, ...incoming].slice(0, maxFiles));
+      const combined = normalizeListingFlags([...filesRef.current, ...compressed].slice(0, maxFiles));
       syncFiles(combined);
     },
     [maxFiles, syncFiles]
