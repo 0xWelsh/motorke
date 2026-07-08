@@ -146,19 +146,21 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
       setUploadError(null);
       const fileArray = Array.from(newFiles).filter((f) => f.type.startsWith("image/"));
 
-      const compressed = await Promise.all(
+      const incoming = await Promise.all(
         fileArray.map(async (f) => {
+          const preview = URL.createObjectURL(f);
           const compressedFile = await compressImage(f);
-          return Object.assign(compressedFile, {
+          return Object.assign(f, {
             id: Math.random().toString(36).substr(2, 9),
-            preview: URL.createObjectURL(f),
+            preview,
+            compressedFile,
             isPrimary: false,
             included: true,
           });
         })
       );
 
-      const combined = normalizeListingFlags([...filesRef.current, ...compressed].slice(0, maxFiles));
+      const combined = normalizeListingFlags([...filesRef.current, ...incoming].slice(0, maxFiles));
       syncFiles(combined);
     },
     [maxFiles, syncFiles]
