@@ -1,114 +1,92 @@
-// src/lib/storage.js
-// Supabase Storage for car images
-// Bucket is auto-created on first upload if it doesn't exist
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import sharp from "sharp";
 
-const SUPABASE_URL    = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_ANON   = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const SERVICE_KEY     = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const BUCKET          = "car-images";
+const R2_ENDPOINT = process.env.R2_ENDPOINT;
+const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID;
+const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY;
+const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || "bidgari";
+const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL;
 
-let readyBuckets = new Set();
+const THUMB_SIZES = [
+  { suffix: "-400w", width: 400 },
+  { suffix: "-800w", width: 800 },
+];
 
-/**
- * Ensure the storage bucket exists (runs once per server lifecycle).
- */
-async function ensureBucket(bucketName = BUCKET) {
-  if (readyBuckets.has(bucketName)) return;
+const s3 = new S3Client({
+  region: "auto",
+  endpoint: R2_ENDPOINT,
+  credentials: {
+    accessKeyId: R2_ACCESS_KEY_ID,
+    secretAccessKey: R2_SECRET_ACCESS_KEY,
+  },
+});
 
-  const headers = { "Authorization": `Bearer ${SERVICE_KEY}`, "Content-Type": "application/json" };
+async function s3Upload(key, buffer, mimeType) {
+  await s3.send(
+    new PutObjectCommand({
+      Bucket: R2_BUCKET_NAME,
+      Key: key,
+      Body: buffer,
+      ContentType: mimeType,
+    })
+  );
+}
 
-  // Check if bucket exists
-  const check = await fetch(`${SUPABASE_URL}/storage/v1/bucket/${bucketName}`, { headers });
-  if (check.ok) {
-    readyBuckets.add(bucketName);
-    return;
-  }
+export async function uploadImage(buffer, filename, mimeType, _bucketNameIgnored) {
+  await s3Upload(filename, buffer, mimeType);
 
-  // Create public bucket
-  const create = await fetch(`${SUPABASE_URL}/storage/v1/bucket`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({ id: bucketName, name: bucketName, public: true }),
-  });
-
-  if (!create.ok) {
-    const err = await create.text();
-    console.error(`Bucket "${bucketName}" creation response:`, err);
-    // If it already exists (race condition), that's fine
-    if (!err.includes("already exists")) {
-      throw new Error(`Failed to create bucket "${bucketName}": ${err}`);
+  if (filename.startsWith("cars/")) {
+    for (const { suffix, width } of THUMB_SIZES) {
+      try {
+        const thumb = await sharp(buffer, { failOn: "none" })
+          .resize({ width, withoutEnlargement: true })
+          .webp({ quality: 80 })
+          .toBuffer();
+        const thumbKey = filename.replace(/(\.[^.]+)$/, `${suffix}.webp`);
+        await s3Upload(thumbKey, thumb, "image/webp");
+      } catch (err) {
+        console.warn(`[storage] thumbnail ${suffix} failed:`, err?.message || err);
+      }
     }
   }
 
-  readyBuckets.add(bucketName);
-  console.log(`✓ Storage bucket "${bucketName}" ready`);
+  return `${R2_PUBLIC_URL}/${filename}`;
 }
 
-/**
- * Upload a file buffer to Supabase Storage.
- * Returns the public URL.
- *
- * @param {Buffer} buffer       - File contents
- * @param {string} filename     - e.g. "cars/abc123/photo-0.jpg"
- * @param {string} mimeType     - e.g. "image/jpeg"
- * @param {string} bucketName   - Optional bucket name (defaults to car-images)
- */
-export async function uploadImage(buffer, filename, mimeType, bucketName = BUCKET) {
-  await ensureBucket(bucketName);
-
-  const url = `${SUPABASE_URL}/storage/v1/object/${bucketName}/${filename}`;
-
-  const res = await fetch(url, {
-    method:  "POST",
-    headers: {
-      "Authorization": `Bearer ${SERVICE_KEY}`,
-      "Content-Type":  mimeType,
-      "x-upsert":      "true",
-    },
-    body: buffer,
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Supabase upload failed: ${err}`);
-  }
-
-  // Return the public URL
-  return `${SUPABASE_URL}/storage/v1/object/public/${bucketName}/${filename}`;
-}
-
-/**
- * Delete an image from Supabase Storage by its public URL.
- */
 export async function deleteImage(publicUrl) {
-  // Extract the path after the bucket name
-  const marker = `/object/public/${BUCKET}/`;
-  const idx    = publicUrl.indexOf(marker);
-  if (idx === -1) return;
-  const path = publicUrl.slice(idx + marker.length);
+  const key = extractKey(publicUrl);
+  if (!key) return;
 
-  const url = `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`;
-  try {
-    const res = await fetch(url, {
-      method:  "DELETE",
-      headers: { "Authorization": `Bearer ${SERVICE_KEY}` },
-    });
-    if (!res.ok) {
-      const detail = await res.text();
-      console.error("Failed to delete storage image:", { path, detail });
+  const keysToDelete = [key];
+  const base = key.replace(/(\.[^.]+)$/, "");
+  const ext = key.match(/\.[^.]+$/)?.[0] || "";
+  for (const { suffix } of THUMB_SIZES) {
+    if (key.startsWith("cars/")) {
+      keysToDelete.push(`${base}${suffix}.webp`);
     }
-  } catch (error) {
-    console.error("Storage delete request failed:", { path, error });
+  }
+
+  for (const k of keysToDelete) {
+    try {
+      await s3.send(new DeleteObjectCommand({ Bucket: R2_BUCKET_NAME, Key: k }));
+    } catch (err) {
+      console.warn(`[storage] delete failed for ${k}:`, err?.message || err);
+    }
   }
 }
 
-/**
- * Generate a unique storage path for a car image.
- * e.g. "cars/clx123abc/1710000000000-0.jpg"
- */
 export function imagePath(carId, index, mimeType) {
   const ext = mimeType === "image/png" ? "png"
             : mimeType === "image/webp" ? "webp"
             : "jpg";
   return `cars/${carId}/${Date.now()}-${index}.${ext}`;
+}
+
+function extractKey(publicUrl) {
+  if (!publicUrl || typeof publicUrl !== "string") return null;
+  const prefix = `${R2_PUBLIC_URL}/`;
+  if (publicUrl.startsWith(prefix)) {
+    return publicUrl.slice(prefix.length);
+  }
+  return null;
 }
