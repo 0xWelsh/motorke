@@ -381,6 +381,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const previewPrice = liveDraft.price || "";
   const previewCoverSrc = useMemo(() => {
     if (coverDisplaySrc) return coverDisplaySrc;
+    const latest = latestUploaderSelectionRef.current;
+    if (latest.length > 0) {
+      const p = latest.find((f) => f.isPrimary) || latest[0];
+      const src = p?.url || p?.preview || null;
+      if (src) return src;
+    }
     const p = images.find((i) => i.isPrimary) || images[0];
     return p?.url || null;
   }, [coverDisplaySrc, images]);
