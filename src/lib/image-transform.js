@@ -23,7 +23,7 @@ function isSupabaseUrl(url) {
 
 function r2Thumbnail(url, width) {
   const size = width <= 400 ? "-400w" : "-800w";
-  return url.replace(/(\/[^/]+)\.\w+$/, `${size}.webp`);
+  return url.replace(/(\/[^/]+)\.\w+$/, `$1${size}.webp`);
 }
 
 function supabaseTransform(url, width, quality) {
