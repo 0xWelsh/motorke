@@ -607,7 +607,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     for (const item of list) {
       if (!item?.url || seen.has(item.url)) continue;
       seen.add(item.url);
-      unique.push({ url: item.url, isPrimary: Boolean(item.isPrimary) });
+      unique.push({ id: item.id, url: item.url, isPrimary: Boolean(item.isPrimary) });
     }
     if (unique.length > 0 && !unique.some((img) => img.isPrimary)) unique[0].isPrimary = true;
     return unique;
@@ -670,6 +670,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
     const withKnownUrls = normalizeImagePayload(
       active.map((f) => ({
+        id: f.id,
         url: f.url || uploadedLocalMapRef.current.get(f.id) || null,
         isPrimary: f.isPrimary,
       }))
@@ -684,6 +685,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       const act = snapshot.filter((f) => f.included !== false);
       const finalPayload = normalizeImagePayload(
         act.map((f) => ({
+          id: f.id,
           url: f.url || uploadedLocalMapRef.current.get(f.id) || null,
           isPrimary: f.isPrimary,
         }))
@@ -725,6 +727,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     const act = snapshot.filter((f) => f.included !== false);
     const finalPayload = normalizeImagePayload(
       act.map((f) => ({
+        id: f.id,
         url: f.url || uploadedLocalMapRef.current.get(f.id) || null,
         isPrimary: f.isPrimary,
       }))
@@ -940,7 +943,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 <p className="text-xs text-zinc-500 mt-1">{uploadProgress.done} of {uploadProgress.total}</p>
               </div>
             )}
-            <div className={uploading ? "opacity-50 pointer-events-none" : ""}>
+            <div>
               <MediaUploader initialImages={images} onFilesSelected={handleFilesSelected} maxFiles={15} />
             </div>
           </div>

@@ -81,14 +81,17 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
   useEffect(() => {
     const hasExternalChanges = initialImages.length !== files.filter((f) => f.url).length;
     if (hasExternalChanges) {
-      setFiles(
+      setFiles((prevFiles) =>
         normalizeListingFlags(
-          initialImages.map((img) => ({
-            ...img,
-            included: true,
-            id: img.id || Math.random().toString(36).substr(2, 9),
-            preview: img.url || img.preview,
-          }))
+          initialImages.map((img) => {
+            const match = img.id ? prevFiles.find((f) => f.id === img.id) : null;
+            return {
+              ...img,
+              included: true,
+              id: img.id || Math.random().toString(36).substr(2, 9),
+              preview: match?.preview || img.url || img.preview || "",
+            };
+          })
         )
       );
     }
@@ -152,7 +155,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
     const ok = window.confirm("Remove all selected listing photos?");
     if (!ok) return;
     files.forEach((file) => {
-      if (file?.preview && !file.url) URL.revokeObjectURL(file.preview);
+      if (file?.preview) URL.revokeObjectURL(file.preview);
     });
     syncFiles([]);
   };
