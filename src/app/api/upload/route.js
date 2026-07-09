@@ -10,7 +10,7 @@ import { NextResponse } from "next/server";
 
 const MAX_SIZE_MB = 4;
 const MAX_DIMENSION = 2000;
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif", "image/avif"];
 
 export async function POST(request) {
   // Must be logged in
@@ -30,7 +30,7 @@ export async function POST(request) {
     // Validate type
     if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
-        { error: "Only JPG, PNG, and WEBP images are allowed" },
+        { error: "Only JPG, PNG, WEBP, HEIC, and AVIF images are allowed" },
         { status: 400 }
       );
     }
@@ -44,15 +44,29 @@ export async function POST(request) {
       );
     }
 
+    // Normalise HEIC/HEIF/AVIF to JPEG — sharp's libvips build on Vercel
+    // may not include libheif, so we convert early to a format sharp can
+    // always decode and re-encode.
+    const isHeic = ["image/heic", "image/heif", "image/avif"].includes(file.type);
+    const effectiveType = isHeic ? "image/jpeg" : file.type;
+
     // Resize to cap the longest dimension so phones aren't downloading
     // 4000px originals. Failure is non-fatal — fall back to raw buffer.
     let processedBuffer = buffer;
     try {
-      processedBuffer = await sharp(buffer, { failOn: "none" })
-        .resize({ width: MAX_DIMENSION, height: MAX_DIMENSION, fit: "inside", withoutEnlargement: true })
-        .toBuffer();
+      const pipeline = sharp(buffer, { failOn: "none" })
+        .resize({ width: MAX_DIMENSION, height: MAX_DIMENSION, fit: "inside", withoutEnlargement: true });
+      processedBuffer = isHeic
+        ? await pipeline.jpeg({ quality: 90 }).toBuffer()
+        : await pipeline.toBuffer();
     } catch (resizeError) {
       console.error("Image resize failed:", resizeError);
+      if (isHeic) {
+        return NextResponse.json(
+          { error: "HEIC/HEIF images aren't supported on this server. Please convert to JPEG or PNG first." },
+          { status: 400 }
+        );
+      }
       processedBuffer = buffer;
     }
 
@@ -60,7 +74,7 @@ export async function POST(request) {
     // we'd rather have an un-watermarked listing than block the dealer
     // from uploading.
     try {
-      processedBuffer = await applyListingWatermark(processedBuffer, file.type);
+      processedBuffer = await applyListingWatermark(processedBuffer, effectiveType);
     } catch (watermarkError) {
       console.error("Watermark processing failed:", watermarkError);
     }
@@ -69,10 +83,10 @@ export async function POST(request) {
     const path = imagePath(
       `tmp-${session.user.id}`,   // temp prefix; overwritten when car is saved
       Date.now(),
-      file.type
+      effectiveType
     );
 
-    const url = await uploadImage(processedBuffer, path, file.type);
+    const url = await uploadImage(processedBuffer, path, effectiveType);
     return NextResponse.json({ url });
   } catch (err) {
     console.error("Upload error:", err);

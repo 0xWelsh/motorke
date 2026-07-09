@@ -294,6 +294,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const [vehicleType, setVehicleType] = useState(car?.vehicleType || "CAR");
 
   const [uploading, setUploading] = useState(false);
+  const [uploadFailed, setUploadFailed] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ done: 0, total: 0 });
   const [images, setImages] = useState(
     car?.images?.map((img) => ({ url: img.url, isPrimary: img.isPrimary })) || []
@@ -380,13 +381,16 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const previewDescription = String(liveDraft.description || formSeed.description || "").trim();
   const previewPrice = liveDraft.price || "";
   const previewCoverSrc = useMemo(() => {
-    if (coverDisplaySrc) return coverDisplaySrc;
+    // Ref first — always has the latest files before any state flush
     const latest = latestUploaderSelectionRef.current;
     if (latest.length > 0) {
       const p = latest.find((f) => f.isPrimary) || latest[0];
       const src = p?.url || p?.preview || null;
       if (src) return src;
     }
+    // Fall back to explicitly set cover state
+    if (coverDisplaySrc) return coverDisplaySrc;
+    // Last resort — already-stored images
     const p = images.find((i) => i.isPrimary) || images[0];
     return p?.url || null;
   }, [coverDisplaySrc, images]);
@@ -461,6 +465,19 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   useEffect(() => {
     setCoverDisplaySrc(null);
   }, [car?.id, formInstanceKey]);
+
+  // Defensive sync: if coverDisplaySrc is null but the ref has included
+  // files, restore the preview from the ref. Handles edge cases where
+  // coverDisplaySrc gets cleared unexpectedly.
+  useEffect(() => {
+    if (coverDisplaySrc) return;
+    const latest = latestUploaderSelectionRef.current;
+    const activeInRef = latest.filter((f) => f.included !== false);
+    if (activeInRef.length === 0) return;
+    const p = activeInRef.find((f) => f.isPrimary) || activeInRef[0];
+    const src = p?.url || p?.preview || null;
+    if (src) setCoverDisplaySrc(src);
+  }, [coverDisplaySrc]);
 
   useEffect(() => {
     const currentModel =
@@ -620,37 +637,44 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   }
 
   async function compressIfNeeded(file) {
-    if (file.size <= 3.5 * 1024 * 1024) return file;
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        let { width, height } = img;
-        const MAX = 1600;
-        if (width > MAX || height > MAX) {
-          const ratio = Math.min(MAX / width, MAX / height);
-          width = Math.round(width * ratio);
-          height = Math.round(height * ratio);
-        }
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
-        canvas.toBlob(
-          (blob) => {
-            if (blob) resolve(new File([blob], file.name.replace(/\.[^.]+$/, ".webp"), { type: "image/webp" }));
-            else resolve(file);
-          },
-          "image/webp",
-          0.8
-        );
-      };
-      img.onerror = () => resolve(file);
-      const url = URL.createObjectURL(file);
-      img.src = url;
-    });
+    const isHeic = ["image/heic", "image/heif", "image/avif"].includes(file.type);
+    if (file.size <= 3.5 * 1024 * 1024 && !isHeic) return file;
+    const compressTo = (fmt, ext, quality) =>
+      new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          let { width, height } = img;
+          const MAX = 1600;
+          if (width > MAX || height > MAX) {
+            const r = Math.min(MAX / width, MAX / height);
+            width = Math.round(width * r);
+            height = Math.round(height * r);
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+          canvas.toBlob(
+            (blob) => {
+              if (blob) resolve(new File([blob], file.name.replace(/\.[^.]+$/, `.${ext}`), { type: fmt }));
+              else resolve(null);
+            },
+            fmt,
+            quality
+          );
+        };
+        img.onerror = () => resolve(null);
+        const url = URL.createObjectURL(file);
+        img.src = url;
+      });
+    let result = await compressTo("image/webp", "webp", 0.8);
+    if (!result) result = await compressTo("image/jpeg", "jpg", 0.9);
+    if (!result) result = await compressTo("image/png", "png", 0.9);
+    return result || file;
   }
 
   async function handleFilesSelected(newFiles) {
+    setUploadFailed(false);
     latestUploaderSelectionRef.current = newFiles;
 
     const primaryThumb = (list) => {
@@ -738,12 +762,20 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         isPrimary: f.isPrimary,
       }))
     );
-    setImages(finalPayload);
 
-    const primaryAfter = (finalPayload.find((i) => i.isPrimary) || finalPayload[0])?.url;
-    setCoverDisplaySrc(primaryAfter || primaryThumb(act));
+    // Only update images if we actually got results — otherwise keep the
+    // previous images state. This prevents a car from being published
+    // with zero images when every upload attempt fails.
+    if (finalPayload.length > 0) {
+      setImages(finalPayload);
+      const primaryAfter = (finalPayload.find((i) => i.isPrimary) || finalPayload[0])?.url;
+      setCoverDisplaySrc(primaryAfter || primaryThumb(act));
+    }
 
-    if (failures.length > 0) setError(`${failures.length} upload(s) failed: ${failures.join(", ")}`);
+    if (failures.length > 0) {
+      setUploadFailed(true);
+      setError(`${failures.length} upload(s) failed: ${failures.join(", ")}`);
+    }
 
     setUploading(false);
     setUploadProgress({ done: 0, total: 0 });
@@ -759,6 +791,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitting(true);
+    setUploadFailed(false);
     setError("");
 
     const fd = new FormData(e.target);
@@ -849,7 +882,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
-  const publishBlocked = submitting || uploading || !publishReady;
+  const publishBlocked = submitting || uploading || uploadFailed || !publishReady;
 
   const mobileCancelHref = "/admin/cars";
 
