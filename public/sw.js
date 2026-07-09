@@ -61,14 +61,16 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
+  // Don't intercept cross-origin requests — let the browser handle them
+  // directly. Intercepting them with fetch() inside the SW triggers CSP
+  // connect-src checks and blocks resources (e.g. R2 images, Google Fonts)
+  // that are allowed by img-src/style-src but not by connect-src.
+  if (url.origin !== self.location.origin) return;
+
   // Never let SW return a rejected/non-Response promise.
   event.respondWith(
     (async () => {
       try {
-        // Let browser handle cross-origin requests (avoids CSP/SW fetch errors).
-        if (url.origin !== self.location.origin) {
-          return await fetch(request);
-        }
 
         // Navigation/doc requests should be network-first (avoid stale portal/admin shells).
         if (request.mode === "navigate" || request.destination === "document") {
