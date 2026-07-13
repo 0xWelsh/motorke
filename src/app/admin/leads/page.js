@@ -13,6 +13,7 @@ import {
 import ExportButton from "@/components/admin/ExportButton";
 import DataTableShell from "@/components/ui/DataTableShell";
 import { LeadStatusBadge, LeadStatusSelect } from "@/components/admin/LeadStatusBadge";
+import DeleteLeadButton from "@/components/admin/DeleteLeadButton";
 import { carListingPath } from "@/lib/car-listing-url";
 import EmptyState from "@/components/ui/EmptyState";
 
@@ -303,18 +304,21 @@ function LeadRow({ lead, index }) {
         <span className="text-[10px]">{new Date(lead.createdAt).toLocaleTimeString("en-KE", { hour: "2-digit", minute: "2-digit" })}</span>
       </td>
       <td className="px-4 py-3 text-right">
-        {lead.phone && lead.phone !== "not-provided" ? (
-          <a
-            href={`https://wa.me/${lead.phone.replace(/\D/g, "").replace(/^0/, "254")}?text=${encodeURIComponent(
-              `Hello ${lead.name.split(" ")[0]}, I'm reaching out from BIDGARI regarding your inquiry on the ${lead.car.year} ${lead.car.make} ${lead.car.model}.`
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-950/60 px-2.5 py-1.5 text-[11px] font-bold text-emerald-400 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-colors"
-          >
-            <Smartphone size={12} /> WhatsApp
-          </a>
-        ) : null}
+        <div className="flex items-center justify-end gap-1.5">
+          {lead.phone && lead.phone !== "not-provided" ? (
+            <a
+              href={`https://wa.me/${lead.phone.replace(/\D/g, "").replace(/^0/, "254")}?text=${encodeURIComponent(
+                `Hello ${lead.name.split(" ")[0]}, I'm reaching out from BIDGARI regarding your inquiry on the ${lead.car.year} ${lead.car.make} ${lead.car.model}.`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-950/60 px-2.5 py-1.5 text-[11px] font-bold text-emerald-400 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-colors"
+            >
+              <Smartphone size={12} /> WhatsApp
+            </a>
+          ) : null}
+          <DeleteLeadButton leadId={lead.id} leadName={lead.name} />
+        </div>
       </td>
     </tr>
   );
@@ -379,6 +383,7 @@ function LeadCard({ lead }) {
         </span>
         <div className="flex items-center gap-1.5">
           <LeadStatusSelect leadId={lead.id} currentStatus={lead.status} />
+          <DeleteLeadButton leadId={lead.id} leadName={lead.name} />
           {lead.phone && lead.phone !== "not-provided" ? (
             <a
               href={`https://wa.me/${lead.phone.replace(/\D/g, "").replace(/^0/, "254")}?text=${encodeURIComponent(

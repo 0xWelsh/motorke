@@ -10,6 +10,7 @@
 }
 
 :root {
+  color-scheme: light;
   /* FlexMobi Palette — Premium Dark-Slate */
   --bg:           #f5f0eb;
   --surface:      #f5f0eb;
@@ -57,7 +58,7 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   /* Reserve scrollbar space so width/breakpoints stay stable across browsers. */
-  scrollbar-gutter: stable both-edges;
+  scrollbar-gutter: stable;
 }
 
 body {

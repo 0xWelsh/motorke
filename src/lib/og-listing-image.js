@@ -50,6 +50,7 @@ async function fetchWithTimeout(url, init = {}) {
 const ALLOWED_IMAGE_HOSTS = [
   "supabase.co",
   "supabase.in",
+  "r2.dev",
   "unsplash.com",
   "images.unsplash.com",
 ];
@@ -117,7 +118,8 @@ export async function fetchListingImageBytes(rawUrl) {
     return fetchStorageObjectBytes(path);
   }
 
-  return null;
+  // Fallback: try direct fetch for any allowlisted host (R2, etc.)
+  return fetchRemoteImageBytes(normalized);
 }
 
 const CAPTION_H = 140;

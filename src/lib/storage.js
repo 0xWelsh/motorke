@@ -8,6 +8,7 @@ const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || "bidgari";
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL;
 
 const THUMB_SIZES = [
+  { suffix: "-200w", width: 200 },
   { suffix: "-400w", width: 400 },
   { suffix: "-800w", width: 800 },
 ];

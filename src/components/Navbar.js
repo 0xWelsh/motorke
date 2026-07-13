@@ -135,7 +135,7 @@ export default function Navbar({ user }) {
  onClick={(e) => navigateTo("/", e)}
  className="relative z-20 flex shrink-0 items-center transition-transform active:scale-95"
  >
-     <div className="relative h-28 w-80 shrink-0 md:h-32 md:w-96 lg:h-32 lg:w-[32rem]">
+      <div className="relative h-28 w-52 shrink-0 md:h-32 md:w-96 lg:h-32 lg:w-[32rem]">
   <Image
   src={BRAND_HEADER_LOGO}
    alt="BIDGARI"

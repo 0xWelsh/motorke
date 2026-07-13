@@ -19,6 +19,12 @@ export function saveDataImageProps(saveData) {
   };
 }
 
+export function saveDataWidth(saveData, defaultWidth = 400) {
+  if (!saveData) return defaultWidth;
+  if (defaultWidth <= 200) return defaultWidth;
+  return 200;
+}
+
 /** Cap gallery thumbs preloaded on metered connections. */
 export function saveDataGalleryLimits(saveData, imageCount) {
   if (!saveData) {

@@ -1,7 +1,8 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "@/components/SafeImage";
-import { getHeroImageUrl, getGalleryImageUrl, getPreloadImageUrl, getThumbnailUrl, saveDataQuality } from "@/lib/image-transform";
+import { getHeroImageUrl, getGalleryImageUrl, getPreloadImageUrl, getThumbnailUrl, saveDataQuality, saveDataWidth } from "@/lib/image-transform";
+import { saveDataGalleryLimits } from "@/lib/save-data";
 import { useSaveData } from "@/components/SaveDataProvider";
 import { ArrowLeft, Heart, MoreHorizontal, X, Share2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -11,9 +12,10 @@ const MAX_ZOOM = 4;
 const DOUBLE_TAP_MS = 300;
 const DRAG_LOCK = 10;
 
-export default function ImageGallery({ images, title, carId, isLoggedIn }) {
+export default function ImageGallery({ images, title, carId, isLoggedIn, sold = false }) {
   const router = useRouter();
   const saveData = useSaveData();
+  const galleryLimits = saveDataGalleryLimits(saveData, images?.length || 0);
   const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
   const [navOpaque, setNavOpaque] = useState(false);
@@ -180,8 +182,9 @@ export default function ImageGallery({ images, title, carId, isLoggedIn }) {
   // ── Share ──
   const handleShare = async () => {
     setMenuOpen(false);
+    const shareTitle = sold ? `SOLD ${title}` : title;
     if (navigator.share) {
-      try { await navigator.share({ title, url: window.location.href }); } catch {}
+      try { await navigator.share({ title: shareTitle, url: window.location.href }); } catch {}
     } else {
       navigator.clipboard.writeText(window.location.href);
     }
@@ -324,8 +327,8 @@ export default function ImageGallery({ images, title, carId, isLoggedIn }) {
                   src={getGalleryImageUrl(img.url, saveDataQuality(saveData, 85))}
                   alt={img.alt || `${title} photo ${i + 1}`}
                   fill
-                  priority={i === 0}
-                  fetchPriority={i === 0 ? "high" : "auto"}
+                  priority={i === 0 && !saveData}
+                  fetchPriority={saveData ? "low" : i === 0 ? "high" : "auto"}
                   quality={saveDataQuality(saveData, 85)}
                   className="object-cover"
                   sizes="100vw"
@@ -486,7 +489,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn }) {
       {/* ── Thumbnail strip ── */}
       {images.length > 1 && (
         <div className="hidden lg:flex gap-1.5 mt-2 overflow-x-auto pb-1 scrollbar-thin">
-          {images.map((img, i) => (
+          {images.slice(0, galleryLimits.maxThumbs).map((img, i) => (
             <button
               key={i}
               type="button"
@@ -498,7 +501,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn }) {
               }`}
             >
               <Image
-                src={getThumbnailUrl(img.url, 160, saveDataQuality(saveData, 60))}
+                src={getThumbnailUrl(img.url, saveDataWidth(saveData, 160), saveDataQuality(saveData, 60))}
                 alt={img.alt || `${title} thumbnail ${i + 1}`}
                 fill
                 className="object-cover"
@@ -604,7 +607,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn }) {
               {/* Bottom gradient + thumbnail strip */}
               <div className="absolute bottom-0 left-0 right-0 z-[110] bg-gradient-to-t from-black/80 via-black/40 to-transparent pt-16 pb-4 px-4">
                 <div className="flex gap-2 overflow-x-auto scrollbar-none justify-center">
-                  {images.map((img, i) => (
+                  {images.slice(0, galleryLimits.maxThumbs).map((img, i) => (
                     <button
                       key={i}
                       type="button"
@@ -616,7 +619,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn }) {
                       }`}
                     >
                       <Image
-                        src={getThumbnailUrl(img.url, 160, saveDataQuality(saveData, 50))}
+                        src={getThumbnailUrl(img.url, saveDataWidth(saveData, 160), saveDataQuality(saveData, 50))}
                         alt={img.alt || `Thumbnail ${i + 1}`}
                         fill
                         loading="lazy"

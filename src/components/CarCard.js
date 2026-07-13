@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { MapPin, ImageOff, ArrowUpRight, Share2, Gauge, Settings, Fuel, X } from "lucide-react";
 import SafeImage from "@/components/SafeImage";
-import { getThumbnailUrl, saveDataQuality } from "@/lib/image-transform";
+import { getThumbnailUrl, saveDataQuality, saveDataWidth } from "@/lib/image-transform";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
 import { useSaveData } from "@/components/SaveDataProvider";
 import { trackUiEvent } from "@/lib/analytics";
@@ -73,10 +73,12 @@ export default function CarCard({
 
   function handleShare() {
     const titleText = `${car.year} ${car.make} ${car.model}`.replace(/\s+/g, " ").trim();
+    const isSold = !car.available || isInSoldGracePeriod(car);
+    const soldPrefix = isSold ? "SOLD " : "";
     const path = carListingPath(car);
     const shareUrl =
       typeof window !== "undefined" ? `${window.location.origin}${path}` : path;
-    const shareText = `${titleText} - ${formatCarPrice(car)}. View photos and details: ${shareUrl}`;
+    const shareText = `${soldPrefix}${titleText} - ${formatCarPrice(car)}. View photos and details: ${shareUrl}`;
 
     trackUiEvent("share_car_click", {
       ...eventPayload,
@@ -85,8 +87,8 @@ export default function CarCard({
 
     if (typeof navigator !== "undefined" && navigator.share) {
       navigator.share({
-        title: titleText,
-        text: `${titleText} - ${formatCarPrice(car)}`,
+        title: `${soldPrefix}${titleText}`,
+        text: `${soldPrefix}${titleText} - ${formatCarPrice(car)}`,
         url: shareUrl,
       }).catch(() => {});
       return;
@@ -127,7 +129,7 @@ export default function CarCard({
       >
         {primaryImg ? (
           <SafeImage
-            src={getThumbnailUrl(primaryImg, 400, saveDataQuality(saveData, 80))}
+            src={getThumbnailUrl(primaryImg, saveDataWidth(saveData, 400), saveDataQuality(saveData, 80))}
             alt={title}
             fill
             priority={priority}

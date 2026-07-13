@@ -10,10 +10,8 @@
  *   fonts on Vercel cold starts — the only failure mode left is "PNG
  *   asset missing," which trips during build, not in production.
  *
- *   The watermark is a bold brush-font "BIDGARI" centered and
- *   rotated, at very low opacity — like faint ink on paper. It is
- *   composited at the image centre so it spans the content regardless
- *   of how the photo is cropped.
+ *   The watermark is the brand logo (green "GARI" in "BIDGARI"),
+ *   horizontal, at moderate opacity, composited at the image centre.
  *
  * Controlled via env:
  *   LISTING_WATERMARK_ENABLED=false  → skip watermarking (default: enabled)
@@ -28,7 +26,7 @@ const WATERMARK_ENABLED = process.env.LISTING_WATERMARK_ENABLED !== "false";
 // Watermark width as a fraction of the source image width. Centre
 // watermarks should be larger than corner logos to remain visible
 // across the full image area.
-const WATERMARK_WIDTH_RATIO = 0.45;
+const WATERMARK_WIDTH_RATIO = 0.55;
 const MIN_WATERMARK_WIDTH = 200;
 const MAX_WATERMARK_WIDTH = 800;
 

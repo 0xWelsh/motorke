@@ -7,6 +7,27 @@ import { revalidateInventoryForCar } from "@/lib/revalidate-inventory";
 import { mapCarImagesWithAlt } from "@/lib/car-listing-seo";
 import { matchCarToSearchAlerts } from "@/lib/search-alerts";
 
+export async function GET(request, { params }) {
+  const { id } = await params;
+  const session = await getSessionFromRequest();
+  if (!session || session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
+  }
+
+  const car = await db.car.findUnique({
+    where: { id },
+    include: {
+      images: { orderBy: { order: "asc" } },
+    },
+  });
+
+  if (!car) {
+    return NextResponse.json({ error: "Car not found" }, { status: 404 });
+  }
+
+  return NextResponse.json(car);
+}
+
 export async function PUT(request, { params }) {
   const { id } = await params;
   const session = await getSessionFromRequest();

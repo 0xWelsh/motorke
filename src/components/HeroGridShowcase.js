@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Star, Quote, ArrowRight, Flame, Crown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { carListingPath } from "@/lib/car-listing-url";
-import { getThumbnailUrl, getHeroImageUrl, getGalleryImageUrl, saveDataQuality } from "@/lib/image-transform";
+import { getThumbnailUrl, getHeroImageUrl, getGalleryImageUrl, saveDataQuality, saveDataWidth } from "@/lib/image-transform";
 import { useSaveData } from "@/components/SaveDataProvider";
 import { isActiveSpotlight } from "@/lib/spotlight";
 import { isActiveHotBadge } from "@/lib/hot-badge";
@@ -55,7 +55,7 @@ function HeroGridShowcaseMobile({ cars, carIndex, saveData }) {
         >
           <div className="relative w-[44%] max-w-[200px] bg-black/30">
             <Image
-              src={getThumbnailUrl(mainCar.images?.[0]?.url, 400, saveDataQuality(saveData, 80)) || "/images/placeholder.jpg"}
+              src={getThumbnailUrl(mainCar.images?.[0]?.url, saveDataWidth(saveData, 400), saveDataQuality(saveData, 80)) || "/images/placeholder.jpg"}
               alt={mainCar.model}
               fill
               className="object-cover opacity-85 transition-opacity duration-500 group-hover:opacity-100"
@@ -116,7 +116,7 @@ function HeroGridShowcaseMobile({ cars, carIndex, saveData }) {
         >
           <div className="relative w-[44%] max-w-[200px] bg-[#111111]">
             <Image
-              src={getThumbnailUrl(secondaryCar.images?.[0]?.url, 400, saveDataQuality(saveData, 80)) || "/images/placeholder.jpg"}
+              src={getThumbnailUrl(secondaryCar.images?.[0]?.url, saveDataWidth(saveData, 400), saveDataQuality(saveData, 80)) || "/images/placeholder.jpg"}
               alt={secondaryCar.model}
               fill
               className="object-cover opacity-55 transition-opacity duration-500 group-hover:opacity-75"
@@ -185,12 +185,12 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
       >
         <div className="absolute inset-0 z-0 transition-transform duration-1000 group-hover:scale-110">
           <Image
-            src={getGalleryImageUrl(mainCar.images?.[0]?.url, saveDataQuality(saveData, 85)) || "/images/placeholder.jpg"}
+            src={getGalleryImageUrl(mainCar.images?.[0]?.url, saveDataQuality(saveData, 85), saveDataWidth(saveData, 800)) || "/images/placeholder.jpg"}
             alt={mainCar.model}
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 50vw"
-            priority
+            priority={!saveData}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent md:from-black md:via-black/40 md:to-transparent md:opacity-90" />
         </div>
@@ -247,7 +247,7 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
         >
           <div className="absolute inset-0 z-0">
             <Image
-              src={getThumbnailUrl(secondaryCar.images?.[0]?.url, 600, saveDataQuality(saveData, 80)) || "/images/placeholder.jpg"}
+              src={getThumbnailUrl(secondaryCar.images?.[0]?.url, saveDataWidth(saveData, 600), saveDataQuality(saveData, 80)) || "/images/placeholder.jpg"}
               alt={secondaryCar.model}
               fill
               className="object-cover transition-transform duration-1000 group-hover:scale-105 opacity-45 sm:opacity-30 group-hover:opacity-55 sm:group-hover:opacity-50"

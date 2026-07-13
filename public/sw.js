@@ -7,6 +7,8 @@
 
 const CACHE_NAME = "welsh-motorhub-v5";
 const RUNTIME_CACHE = "welsh-motorhub-runtime-v5";
+const R2_IMAGE_CACHE = "welsh-motorhub-r2images-v5";
+const MAX_R2_CACHE = 100;
 const OFFLINE_FALLBACK = new Response("Offline", {
   status: 503,
   statusText: "Service Unavailable",
@@ -45,7 +47,7 @@ self.addEventListener("activate", (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME && cacheName !== RUNTIME_CACHE) {
+          if (cacheName !== CACHE_NAME && cacheName !== RUNTIME_CACHE && cacheName !== R2_IMAGE_CACHE) {
             console.log("[SW] Deleting old cache:", cacheName);
             return caches.delete(cacheName);
           }
@@ -56,10 +58,42 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+// Limit cache entries (oldest deleted first).
+async function trimCache(cacheName, maxEntries) {
+  const cache = await caches.open(cacheName);
+  const keys = await cache.keys();
+  if (keys.length > maxEntries) {
+    const toDelete = keys.slice(0, keys.length - maxEntries);
+    await Promise.all(toDelete.map((r) => cache.delete(r)));
+  }
+}
+
 // Fetch: implement caching strategy
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
+
+  // Cache R2 images with stale-while-revalidate.
+  if (url.hostname.includes("r2.dev")) {
+    event.respondWith(
+      (async () => {
+        const cached = await caches.match(request);
+        const fetchPromise = fetch(request)
+          .then((response) => {
+            if (response && response.ok) {
+              caches.open(R2_IMAGE_CACHE).then((cache) => {
+                trimCache(R2_IMAGE_CACHE, MAX_R2_CACHE);
+                cache.put(request, response.clone());
+              });
+            }
+            return response;
+          })
+          .catch(() => cached || OFFLINE_FALLBACK.clone());
+        return cached || (await fetchPromise);
+      })()
+    );
+    return;
+  }
 
   // Don't intercept cross-origin requests — let the browser handle them
   // directly. Intercepting them with fetch() inside the SW triggers CSP

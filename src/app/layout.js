@@ -13,7 +13,7 @@ import { headers, cookies } from "next/headers";
 import { SaveDataProvider } from "@/components/SaveDataProvider";
 import { isSaveDataRequest, SAVE_DATA_COOKIE } from "@/lib/save-data";
 
-import { Playfair_Display, DM_Sans } from "next/font/google";
+import { Playfair_Display, DM_Sans, Roboto } from "next/font/google";
 import { BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
 
 const playfair = Playfair_Display({
@@ -27,6 +27,13 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   weight: ["400", "500", "700"],
+  display: "swap",
+});
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  variable: "--font-roboto",
+  weight: ["400", "500", "700", "900"],
   display: "swap",
 });
 
@@ -172,8 +179,11 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Preconnect to Supabase Storage for faster image loading */}
+        {/* Preconnect to image CDNs for faster loading */}
         <link rel="preconnect" href="https://bbseolknavwpjzvotdct.supabase.co" />
+        <link rel="preconnect" href="https://pub-8ae6a3f75e3144c6885061d2aa946e1a.r2.dev" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         {/* Country / region signals for "BIDGARI" vs Wales disambiguation in search */}
         <meta name="geo.region" content="KE" />
         <meta name="geo.placename" content="Nairobi, Kenya" />
@@ -187,9 +197,9 @@ export default async function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }}
         />
       </head>
-      <body className={`${playfair.variable} ${dmSans.variable} bg-background text-slate-900 dark:text-white min-h-screen antialiased flex flex-col font-sans transition-colors duration-300`}>
+      <body className={`${playfair.variable} ${dmSans.variable} ${roboto.variable} bg-background text-slate-900 min-h-screen antialiased flex flex-col font-sans`}>
         <PWARegister />
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
           <SaveDataProvider saveData={saveData}>
             <AnalyticsBootstrap />
             <CompareProvider>

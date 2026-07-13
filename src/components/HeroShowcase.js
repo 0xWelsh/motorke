@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Star, Quote, ArrowRight } from 'lucide-react';
 import { carListingPath } from "@/lib/car-listing-url";
-import { getHeroImageUrl, saveDataQuality } from "@/lib/image-transform";
+import { getHeroImageUrl, saveDataQuality, saveDataWidth } from "@/lib/image-transform";
 import { useSaveData } from "@/components/SaveDataProvider";
 
 export default function HeroShowcase({ items }) {
@@ -45,11 +45,11 @@ export default function HeroShowcase({ items }) {
           <div className="flex flex-col">
             <div className="relative aspect-[16/10] overflow-hidden">
               <Image 
-                src={getHeroImageUrl(current.images?.[0]?.url, saveDataQuality(saveData, 85)) || "/images/placeholder.jpg"} 
+                src={getHeroImageUrl(current.images?.[0]?.url, saveDataQuality(saveData, 85), saveDataWidth(saveData, 800)) || "/images/placeholder.jpg"} 
                 alt={current.model} 
                 fill 
                 className="object-cover"
-                priority
+                priority={!saveData}
               />
               <div className="absolute top-3 left-3">
                 <span className="bg-[#38A169] text-white text-[8px] font-bold px-2 py-1 uppercase tracking-widest" style={{ borderRadius: '1px' }}>

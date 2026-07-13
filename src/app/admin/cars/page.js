@@ -21,6 +21,7 @@ import EmptyState from "@/components/ui/EmptyState";
 import DataTableShell from "@/components/ui/DataTableShell";
 import { carListingPath } from "@/lib/car-listing-url";
 import { isInSoldGracePeriod } from "@/lib/car-sold-status";
+import TikTokVideoButton from "@/components/admin/TikTokVideoButton";
 
 export const metadata = { title: "Cars Inventory | BIDGARI Admin" };
 
@@ -66,7 +67,7 @@ export default async function AdminCarsPage({ searchParams }) {
       where,
       include: {
         _count: { select: { leads: true } },
-        images: { where: { isPrimary: true }, take: 1 },
+        images: { orderBy: { order: "asc" } },
       },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
@@ -278,6 +279,7 @@ export default async function AdminCarsPage({ searchParams }) {
                   action={`/api/admin/cars/${car.id}/delete`}
                   message="Permanently delete this car from inventory?"
                 />
+                <TikTokVideoButton car={car} />
               </div>
             </div>
           );
@@ -389,6 +391,7 @@ export default async function AdminCarsPage({ searchParams }) {
                             </button>
                           </form>
                           <DeleteButton compact action={`/api/admin/cars/${car.id}/delete`} message="Permanently delete this car from inventory?" />
+                          <TikTokVideoButton car={car} compact />
                         </div>
                       </td>
                     </tr>

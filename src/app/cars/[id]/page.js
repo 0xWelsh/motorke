@@ -40,6 +40,7 @@ import CarModelWiki from "@/components/CarModelWiki";
 import CarListingRelatedSearches from "@/components/CarListingRelatedSearches";
 import SimilarCarsSection from "@/components/SimilarCarsSection";
 import CarDetailMobileBar from "@/components/CarDetailMobileBar";
+import CarActionButtons from "@/components/CarActionButtons";
 import { buildListingHighlightChips } from "@/lib/car-listing-highlights";
 import {
   daysRemainingOnSite,
@@ -431,61 +432,62 @@ export default async function CarDetailPage({ params }) {
                 title={title}
                 carId={car.id}
                 isLoggedIn={!!session?.user}
+                sold={soldGrace}
               />
             </div>
 
-            {/* Sold banner */}
-            {soldGrace ? (
-              <div className="mt-4 rounded-xl border border-amber-200/90 bg-amber-50 px-4 py-3.5 dark:border-amber-900/50 dark:bg-amber-950/30" role="status">
-                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-800 dark:text-amber-300">Sold</p>
-                <p className="mt-1.5 text-sm text-amber-950/90 dark:text-amber-100/90 leading-relaxed">
-                  This unit has sold. Browse similar cars below or contact our team to find a similar vehicle for you
-                  ,{daysLeftOnSite != null && daysLeftOnSite > 0 ? ` (this page comes down in ${daysLeftOnSite} day${daysLeftOnSite === 1 ? "" : "s"}).` : "."}
-                </p>
-              </div>
-            ) : null}
-
             {/* Vehicle Title */}
             <div className="mt-5">
-              <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-zinc-900 dark:text-white tracking-tight leading-[1.15]">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-zinc-900 dark:text-white tracking-tight leading-[1.15]" style={{ fontFamily: 'var(--font-roboto)' }}>
                 {carName}
               </h1>
               <p className="mt-1.5 text-lg font-bold text-emerald-600 dark:text-emerald-400">
                 {formatCarPrice(car)}
               </p>
-              <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mt-2">
-                <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+              <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mt-2 flex-wrap">
+                <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 <span>{locationLabel}</span>
                 <span className="text-zinc-300 dark:text-zinc-600">·</span>
-                <span className={`text-[10px] font-black px-1.5 py-0.5 uppercase tracking-widest rounded-[2px] ${
-                  soldGrace
-                    ? "bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-200"
-                    : "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                <span className={`font-bold uppercase tracking-widest ${
+                  soldGrace ? "text-red-600" : "text-emerald-600"
                 }`}>
                   {soldGrace ? "SOLD" : "AVAILABLE"}
+                </span>
+                <span className="text-zinc-300 dark:text-zinc-600">·</span>
+                <span className="font-bold uppercase tracking-widest text-zinc-900 dark:text-zinc-100">
+                  {car.imported === false
+                    ? "LOCAL"
+                    : (() => {
+                        const flags = { Japan: "🇯🇵", UK: "🇬🇧", USA: "🇺🇸", UAE: "🇦🇪", Germany: "🇩🇪", "South Africa": "🇿🇦", Thailand: "🇹🇭", Singapore: "🇸🇬" };
+                        const flag = flags[car.importCountry] || "";
+                        return `IMPORTED${flag ? ` ${flag}` : ""}`;
+                      })()
+                  }
                 </span>
               </div>
             </div>
 
-            {/* Quick spec chips */}
-            <div className="flex flex-wrap gap-2 mt-4">
+            {/* Quick specs — inline, no chips */}
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 mt-4 text-[13px] font-semibold text-zinc-500 leading-tight">
               {(() => {
                 const chips = [];
-                if (car.year) chips.push({ label: "Year", value: String(car.year) });
-                if (positiveNum(car.mileage)) chips.push({ label: "Mileage", value: formatMileage(car.mileage) });
-                if (car.fuelType) chips.push({ label: "Fuel", value: FUEL_LABELS[car.fuelType] || car.fuelType });
-                if (car.transmission) chips.push({ label: "Gearbox", value: car.transmission === "AUTOMATIC" ? "Automatic" : "Manual" });
-                if (car.bodyType) chips.push({ label: "Body", value: BODY_TYPE_LABELS[car.bodyType] || car.bodyType });
-                if (locationLabel) chips.push({ label: "Location", value: locationLabel });
+                if (car.year) chips.push(String(car.year));
+                if (positiveNum(car.mileage)) chips.push(formatMileage(car.mileage));
+                if (car.fuelType) chips.push(FUEL_LABELS[car.fuelType] || car.fuelType);
+                if (car.transmission) chips.push(car.transmission === "AUTOMATIC" ? "Automatic" : "Manual");
+                if (car.bodyType) chips.push(BODY_TYPE_LABELS[car.bodyType] || car.bodyType);
                 return chips;
-              })().map((chip) => (
-                <span
-                  key={chip.label}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[11px] font-semibold text-zinc-600 dark:text-zinc-300"
-                >
-                  {chip.value}
+              })().map((val, i) => (
+                <span key={i} className="flex items-center gap-2.5">
+                  {i > 0 && <span className="text-zinc-300 select-none">·</span>}
+                  <span>{val}</span>
                 </span>
               ))}
+            </div>
+
+            {/* Action buttons */}
+            <div className="mt-6">
+              <CarActionButtons carId={car.id} dealerId={car.dealerId} carTitle={carName} price={formatCarPrice(car)} />
             </div>
 
             {/* Specifications */}
@@ -536,6 +538,7 @@ export default async function CarDetailPage({ params }) {
                 location={car.location || dealer.location || "Kenya"}
                 mileageLabel={positiveNum(car.mileage) ? formatMileage(car.mileage) : null}
                 previewImageUrl={`/api/cars/${car.id}/og-image`}
+                sold={soldGrace}
               />
             </div>
 

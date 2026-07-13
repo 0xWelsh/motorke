@@ -12,14 +12,16 @@ export default function ShareButtons({
   location,
   mileageLabel,
   previewImageUrl,
+  sold = false,
 }) {
   const [copied, setCopied] = useState(false);
   const [fbHint, setFbHint] = useState(null);
 
   const listUrl = (listingUrl || "").trim();
   const metaLine = [mileageLabel, location].filter(Boolean).join(", ");
+  const soldTag = sold ? "SOLD " : "";
 
-  const shortText = `${title} — ${price}${metaLine ? ` (${metaLine})` : ""}${dealerName ? ` via ${dealerName}` : ""}`;
+  const shortText = `${soldTag}${title} — ${price}${metaLine ? ` (${metaLine})` : ""}${dealerName ? ` via ${dealerName}` : ""}`;
   const waText = encodeURIComponent(`${shortText}\n\n${listUrl}`);
   const tgText = encodeURIComponent(`${shortText}\n${listUrl}`);
 

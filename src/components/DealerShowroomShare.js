@@ -22,12 +22,12 @@ export default function DealerShowroomShare({
 
   const url = (showroomUrl || "").trim();
   const meta = [stockCount ? `${stockCount} cars in stock` : null, location].filter(Boolean).join(", ");
-  const shareTitle = `${dealerName} | WELSH showroom`;
+  const shareTitle = `${dealerName} | BIDGARI showroom`;
 
-  const shortText = `${dealerName} — verified showroom${meta ? ` (${meta})` : ""} on WELSH.`;
+  const shortText = `${dealerName} — verified showroom${meta ? ` (${meta})` : ""} on BIDGARI.`;
 
   const fbCaption = [
-    `${dealerName}, verified showroom on WELSH.`,
+    `${dealerName}, verified showroom on BIDGARI.`,
     meta || null,
     "",
     "Tap to browse the live inventory and contact the dealer directly.",

@@ -22,7 +22,7 @@ function isSupabaseUrl(url) {
 }
 
 function r2Thumbnail(url, width) {
-  const size = width <= 400 ? "-400w" : "-800w";
+  const size = width <= 200 ? "-200w" : width <= 400 ? "-400w" : "-800w";
   return url.replace(/(\/[^/]+)\.\w+$/, `$1${size}.webp`);
 }
 
@@ -59,10 +59,12 @@ export function getPreloadImageUrl(url, quality = 85) {
   return url;
 }
 
-export function getGalleryImageUrl(url, quality = 85) {
-  return getHeroImageUrl(url, quality, 800);
+export function getGalleryImageUrl(url, quality = 85, width) {
+  return getHeroImageUrl(url, quality, width || 800);
 }
 
 export function saveDataQuality(saveData, defaultQ = 80) {
   return saveData ? Math.min(defaultQ, 50) : defaultQ;
 }
+
+export { saveDataWidth } from "./save-data";

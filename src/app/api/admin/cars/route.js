@@ -12,6 +12,7 @@ import { mapCarImagesWithAlt } from "@/lib/car-listing-seo";
 import { postCarToWhatsAppChannel } from "@/lib/whatsapp-channel";
 import { broadcastCar, isBroadcastConfigured } from "@/lib/waha";
 import { getSiteOrigin } from "@/lib/site-url";
+import { sendSystemAlertEmail } from "@/lib/mail";
 
 export async function POST(request) {
   const started = Date.now();
@@ -49,6 +50,7 @@ export async function POST(request) {
       ok: true,
     });
     const origin = getSiteOrigin();
+    const carUrl = `${origin}/cars/${car.id}`;
     const autoPost = body.postToWhatsApp !== false;
     if (autoPost) {
       queueMicrotask(() => {
@@ -60,6 +62,24 @@ export async function POST(request) {
         });
       }
     }
+    queueMicrotask(() => {
+      sendSystemAlertEmail({
+        subject: `New car listed: ${car.year} ${car.make} ${car.model}`,
+        summary: `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} (${car.year}) listed for ${car.price ? `KSh ${parseInt(car.price).toLocaleString("en-KE")}` : "contact for price"}.`,
+        details: {
+          Make: car.make,
+          Model: car.model,
+          Variant: car.variant || "—",
+          Year: String(car.year),
+          Price: car.price ? `KSh ${parseInt(car.price).toLocaleString("en-KE")}` : "Contact",
+          Mileage: car.mileage ? `${parseInt(car.mileage).toLocaleString("en-KE")} km` : "—",
+          Fuel: car.fuelType || "—",
+          Transmission: car.transmission || "—",
+          Body: car.bodyType || "—",
+          "View listing": carUrl,
+        },
+      }).catch(() => {});
+    });
     return NextResponse.json({ success: true, redirectTo: `/admin/cars`, car }, { status: 201 });
   } catch (err) {
     console.error(err);
