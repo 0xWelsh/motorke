@@ -16,7 +16,7 @@ function loadImage(src) {
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.onload = () => resolve(img);
-    img.onerror = reject;
+    img.onerror = (e) => reject(new Error(`Failed to load image: ${src.slice(0, 120)}`));
     img.src = src;
   });
 }
@@ -249,8 +249,8 @@ export default function TikTokVideoButton({ car, className, compact }) {
     } catch (err) {
       console.error("TikTok video failed:", err);
       setState("error");
-      setProgress(err.message || "Something went wrong");
-      setTimeout(() => { setState("idle"); setProgress(""); }, 5000);
+      setProgress(err.message || "Something went wrong (check console)");
+      setTimeout(() => { setState("idle"); setProgress(""); }, 8000);
     }
   };
 
