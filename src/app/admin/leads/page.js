@@ -256,7 +256,12 @@ function LeadRow({ lead, index }) {
     <tr className={`transition-colors hover:bg-zinc-800/30 ${index % 2 === 0 ? "bg-zinc-900/20" : "bg-transparent"}`}>
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-bold text-white">{lead.name}</p>
+          <Link
+            href={`/admin/leads/${lead.id}`}
+            className="text-sm font-bold text-white hover:text-emerald-400 transition-colors"
+          >
+            {lead.name}
+          </Link>
           {!lead.userId && (
             <span className="rounded-md border border-zinc-800 px-1.5 py-0.5 text-[10px] font-bold text-zinc-500">Guest</span>
           )}

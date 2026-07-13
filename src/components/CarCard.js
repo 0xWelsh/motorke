@@ -2,8 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { MapPin, ImageOff, ArrowUpRight, Share2, Gauge, Settings, Fuel, X } from "lucide-react";
-import SafeImage from "@/components/SafeImage";
-import { getThumbnailUrl, saveDataQuality, saveDataWidth } from "@/lib/image-transform";
+import PictureImage from "@/components/PictureImage";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
 import { useSaveData } from "@/components/SaveDataProvider";
 import { trackUiEvent } from "@/lib/analytics";
@@ -128,12 +127,11 @@ export default function CarCard({
         )}
       >
         {primaryImg ? (
-          <SafeImage
-            src={getThumbnailUrl(primaryImg, saveDataWidth(saveData, 400), saveDataQuality(saveData, 80))}
+          <PictureImage
+            src={primaryImg}
             alt={title}
-            fill
             priority={priority}
-            className="object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
             sizes={
               spacious
                 ? "(max-width: 1024px) 100vw, 33vw"
