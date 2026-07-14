@@ -134,8 +134,8 @@ export default async function CarsPage({ searchParams }) {
     ...(model && { model: { equals: model, mode: "insensitive" } }),
     ...(steering && { steering }),
     ...(minYOM || maxYOM ? { year: { ...(minYOM && { gte: minYOM }), ...(maxYOM && { lte: maxYOM }) } } : {}),
-    ...(bodyType && { bodyType }),
-    ...(fuelType && { fuelType }),
+    ...(bodyType && { bodyType: { in: bodyType.split(",").filter(Boolean) } }),
+    ...(fuelType && { fuelType: { in: fuelType.split(",").filter(Boolean) } }),
     ...(transmission && { transmission }),
     ...(minPrice || maxPrice ? { price: { ...(minPrice && { gte: minPrice }), ...(maxPrice && { lte: maxPrice }) } } : {}),
     ...(vehicleType && { vehicleType }),
@@ -178,8 +178,26 @@ export default async function CarsPage({ searchParams }) {
   const filterChips = [];
   if (make) filterChips.push({ label: make, href: removeFilter(sp, "make") });
   if (model) filterChips.push({ label: `Model: ${model}`, href: removeFilter(sp, "model") });
-  if (bodyType) filterChips.push({ label: BODY_TYPE_LABELS[bodyType] || bodyType, href: removeFilter(sp, "bodyType") });
-  if (fuelType) filterChips.push({ label: FUEL_LABELS[fuelType] || fuelType, href: removeFilter(sp, "fuelType") });
+  if (bodyType) {
+    bodyType.split(",").filter(Boolean).forEach((bt) => {
+      const p = new URLSearchParams(sp.toString());
+      const rest = bodyType.split(",").filter(Boolean).filter((x) => x !== bt).join(",");
+      if (rest) p.set("bodyType", rest);
+      else p.delete("bodyType");
+      p.delete("page");
+      filterChips.push({ label: BODY_TYPE_LABELS[bt] || bt, href: `/cars?${p.toString()}` });
+    });
+  }
+  if (fuelType) {
+    fuelType.split(",").filter(Boolean).forEach((ft) => {
+      const p = new URLSearchParams(sp.toString());
+      const rest = fuelType.split(",").filter(Boolean).filter((x) => x !== ft).join(",");
+      if (rest) p.set("fuelType", rest);
+      else p.delete("fuelType");
+      p.delete("page");
+      filterChips.push({ label: FUEL_LABELS[ft] || ft, href: `/cars?${p.toString()}` });
+    });
+  }
   if (transmission) filterChips.push({ label: transmission === "AUTOMATIC" ? "Automatic" : transmission === "MANUAL" ? "Manual" : transmission, href: removeFilter(sp, "transmission") });
   if (steering) filterChips.push({ label: steering === "RHD" ? "RHD" : "LHD", href: removeFilter(sp, "steering") });
   if (vehicleType) filterChips.push({ label: vehicleType === "MOTORBIKE" ? "Motorbike" : "Car", href: removeFilter(sp, "vehicleType") });
@@ -271,7 +289,7 @@ export default async function CarsPage({ searchParams }) {
         )}
 
         <CarsHorizontalFilters
-          activeFilters={{ make, transmission, minPrice, maxPrice }}
+          activeFilters={{ make, transmission, minPrice, maxPrice, bodyType, fuelType, minYOM: sp.minYOM, maxYOM: sp.maxYOM }}
           allMakes={allMakes}
         />
 
