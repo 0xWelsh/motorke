@@ -8,6 +8,16 @@ const FIELDS = {
   offer: { icon: Gavel, label: "Pit the Price" },
 };
 
+const CONCERNS = [
+  "Is it still available?",
+  "Price negotiable?",
+  "Can you deliver?",
+  "Service history?",
+  "Test drive possible?",
+  "Financing options?",
+  "Trade-in accepted?",
+];
+
 const STEPS = ["Your Details", "Your Request", "Review"];
 
 export default function CarActionButtons({ carId, dealerId, carTitle, price }) {
@@ -32,9 +42,11 @@ export default function CarActionButtons({ carId, dealerId, carTitle, price }) {
     setError("");
     setLoading(true);
     try {
-      const message = active === "offer" ? `Offer: KSh ${form.offer}` :
-        active === "inspection" ? `Preferred date: ${form.date}` :
-        form.note || "";
+      const parts = [];
+      if (active === "offer" && form.offer) parts.push(`Offer: KSh ${form.offer}`);
+      if (active === "inspection" && form.date) parts.push(`Preferred date: ${form.date}`);
+      if (form.note) parts.push(`Note: ${form.note}`);
+      const message = parts.join(" | ");
       const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -112,9 +124,18 @@ export default function CarActionButtons({ carId, dealerId, carTitle, price }) {
     }
 
     if (step === 1) {
-      if (active === "offer") {
-        return (
-          <div className="space-y-4">
+      const toggleConcern = (concern) => {
+        const current = form.note ? form.note.split(", ").filter((c) => c.trim()) : [];
+        const exists = current.includes(concern);
+        const updated = exists
+          ? current.filter((c) => c !== concern)
+          : [...current, concern];
+        setForm({ ...form, note: updated.join(", ") });
+      };
+
+      return (
+        <div className="space-y-5">
+          {active === "offer" && (
             <div>
               <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5 block">Your Offer</label>
               <input
@@ -128,13 +149,9 @@ export default function CarActionButtons({ carId, dealerId, carTitle, price }) {
                 className="w-full border-b-2 border-zinc-200 pb-2.5 text-lg font-black text-zinc-900 outline-none focus:border-zinc-900 transition-colors bg-transparent"
               />
             </div>
-          </div>
-        );
-      }
+          )}
 
-      if (active === "inspection") {
-        return (
-          <div className="space-y-4">
+          {active === "inspection" && (
             <div>
               <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5 block">Preferred Date</label>
               <input
@@ -144,20 +161,35 @@ export default function CarActionButtons({ carId, dealerId, carTitle, price }) {
                 className="w-full border-b-2 border-zinc-200 pb-2.5 text-sm font-medium text-zinc-900 outline-none focus:border-zinc-900 transition-colors bg-transparent"
               />
             </div>
-          </div>
-        );
-      }
+          )}
 
-      return (
-        <div className="space-y-4">
           <div>
-            <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5 block">Note (optional)</label>
+            <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1.5 block">Got questions? Tap to add</label>
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {CONCERNS.map((concern) => {
+                const active = form.note.includes(concern);
+                return (
+                  <button
+                    key={concern}
+                    type="button"
+                    onClick={() => toggleConcern(concern)}
+                    className={`text-[11px] font-bold px-2.5 py-1.5 rounded-full border transition-all ${
+                      active
+                        ? "bg-zinc-900 text-white border-zinc-900"
+                        : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-400"
+                    }`}
+                  >
+                    {concern}
+                  </button>
+                );
+              })}
+            </div>
             <textarea
               value={form.note}
               onChange={(e) => setForm({ ...form, note: e.target.value })}
-              rows={3}
-              placeholder="Anything specific you want to ask?"
-              className="w-full border-b-2 border-zinc-200 pb-2.5 text-sm font-medium text-zinc-900 outline-none focus:border-zinc-900 transition-colors bg-transparent resize-none"
+              rows={2}
+              placeholder="Or type your own message..."
+              className="w-full border-b-2 border-zinc-200 pb-2 text-sm font-medium text-zinc-900 outline-none focus:border-zinc-900 transition-colors bg-transparent resize-none"
             />
           </div>
         </div>
@@ -187,10 +219,10 @@ export default function CarActionButtons({ carId, dealerId, carTitle, price }) {
               <span className="font-bold text-zinc-900">{form.date}</span>
             </div>
           )}
-          {active === "finance" && (
+          {form.note && (
             <div className="flex justify-between text-sm">
-              <span className="text-zinc-400">Enquiry</span>
-              <span className="font-bold text-zinc-900">Finance pre-approval</span>
+              <span className="text-zinc-400">Note</span>
+              <span className="font-bold text-zinc-900 text-right max-w-[60%] truncate">{form.note}</span>
             </div>
           )}
         </div>

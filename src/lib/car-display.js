@@ -114,3 +114,22 @@ export function buildCarDetailSpecRows(car) {
 
   return rows;
 }
+
+export function buildCarDetailSpecGroups(car) {
+  const flat = buildCarDetailSpecRows(car);
+  const groups = [];
+
+  const overviewLabels = new Set(["Year", "Mileage", "Fuel", "Transmission", "Drivetrain", "Steering", "Body type", "Condition", "Color", "Registration"]);
+  const engineLabels = new Set(["Engine size", "Cylinders", "Horsepower", "Torque", "Turbocharged"]);
+  const interiorLabels = new Set(["Seats", "Airbags", "Sunroof"]);
+
+  const overview = flat.filter((r) => overviewLabels.has(r.label));
+  const engine = flat.filter((r) => engineLabels.has(r.label));
+  const interior = flat.filter((r) => interiorLabels.has(r.label));
+
+  if (overview.length) groups.push({ title: "Overview", rows: overview });
+  if (engine.length) groups.push({ title: "Engine & Performance", rows: engine });
+  if (interior.length) groups.push({ title: "Interior & Safety", rows: interior });
+
+  return groups;
+}

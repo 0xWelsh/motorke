@@ -7,7 +7,7 @@ import AdminTrendsChart from "@/components/admin/AdminTrendsChart";
 import AdminActionFeed from "@/components/admin/AdminActionFeed";
 import RunWatchAlertsButton from "@/components/admin/RunWatchAlertsButton";
 import RecacheHomepageButton from "@/components/admin/RecacheHomepageButton";
-import { Car, Users, Bolt, Plus } from "lucide-react";
+import { Car, Users, Bolt, Plus, UserCheck, TrendingUp } from "lucide-react";
 
 export const metadata = { title: "Admin Dashboard | BIDGARI" };
 
@@ -37,7 +37,7 @@ export default async function AdminDashboard({ searchParams }) {
     rawCarsForChart, rawLeadsForChart, rawViewsForChart,
     listingsThisWeek, listingsPrevWeek, leadsThisWeek, leadsPrevWeek,
     staleListings,
-    recentCars, recentLeads,
+    recentCars, recentLeads, salesmenLeads, salesmenConversion,
   ] = await Promise.all([
     db.car.count({ where: { available: true } }),
     db.lead.count(),
@@ -94,6 +94,48 @@ export default async function AdminDashboard({ searchParams }) {
       orderBy: { createdAt: "desc" },
       select: { id: true, name: true, createdAt: true },
     }),
+    db.user.findMany({
+      where: { role: "ADMIN", active: true },
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: {
+            assignedLeads: {
+              where: { status: { not: "DEAD" } },
+            },
+          },
+        },
+      },
+    }),
+    (async () => {
+      const [soldRows, respRows] = await Promise.all([
+        db.lead.groupBy({
+      by: ["assignedToId"],
+        where: { assignedToId: { not: null }, status: "SOLD" },
+        _count: { id: true },
+      }),
+      db.lead.findMany({
+        where: { assignedToId: { not: null } },
+        select: {
+          assignedToId: true,
+          createdAt: true,
+          notes: { take: 1, orderBy: { createdAt: "asc" }, select: { createdAt: true } },
+        },
+      }),
+    ]);
+    const soldMap = {};
+    soldRows.forEach((r) => { soldMap[r.assignedToId] = r._count.id; });
+    const respMap = {};
+    respRows.forEach((l) => {
+      if (l.notes.length > 0) {
+        const hrs = (l.notes[0].createdAt.getTime() - l.createdAt.getTime()) / 3600000;
+        if (!respMap[l.assignedToId]) respMap[l.assignedToId] = [];
+        respMap[l.assignedToId].push(hrs);
+      }
+    });
+    return { soldMap, respMap };
+  })(),
   ]);
 
   const ago = (ts) => {
@@ -116,6 +158,18 @@ export default async function AdminDashboard({ searchParams }) {
   };
 
   const totalValue = inventoryValueAgg?._sum?.price || 0;
+
+  // Salesman performance
+  const salesmanPerformance = salesmenLeads.map((s) => {
+    const total = s._count.assignedLeads;
+    const sold = salesmenConversion.soldMap[s.id] || 0;
+    const rate = total > 0 ? Math.round((sold / total) * 100) : 0;
+    const hrsArr = salesmenConversion.respMap[s.id];
+    const avgResp = hrsArr && hrsArr.length > 0
+      ? Math.round(hrsArr.reduce((a, b) => a + b, 0) / hrsArr.length)
+      : null;
+    return { ...s, total, sold, rate, avgResp };
+  });
 
   // Chart
   const chartMap = {};
@@ -313,6 +367,44 @@ export default async function AdminDashboard({ searchParams }) {
               ))}
             </div>
           </div>
+
+          {/* Salesman Performance */}
+          {salesmanPerformance.length > 0 && (
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <TrendingUp size={14} className="text-zinc-500" />
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Salesman Performance</span>
+              </div>
+              <div className="space-y-3">
+                {salesmanPerformance.map((s) => (
+                  <div key={s.id} className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-zinc-300 font-medium">{s.name}</span>
+                      <span className="text-xs font-bold text-white tabular-nums">{s.total} leads</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-[11px]">
+                      <span className="text-emerald-400 font-bold tabular-nums">{s.sold} sold</span>
+                      <span className={`font-bold tabular-nums ${s.rate >= 30 ? "text-emerald-400" : s.rate >= 10 ? "text-amber-400" : "text-zinc-500"}`}>
+                        {s.rate}% conv.
+                      </span>
+                      {s.avgResp !== null && (
+                        <span className="text-zinc-500 tabular-nums">
+                          {s.avgResp < 1 ? `${Math.round(s.avgResp * 60)}m` : `${s.avgResp}h`} avg resp.
+                        </span>
+                      )}
+                    </div>
+                    {/* mini progress bar */}
+                    <div className="h-1 rounded-full bg-zinc-800 overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-emerald-500 transition-all"
+                        style={{ width: `${Math.min(s.rate, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Actions */}
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 space-y-2">

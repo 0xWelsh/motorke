@@ -32,7 +32,7 @@ function validateRow(row, i) {
   for (const field of REQUIRED) {
     if (!row[field]) errors.push(`Row ${i + 2}: missing "${field}"`);
   }
-  if (row.year && (isNaN(row.year) || row.year < 1990 || row.year > new Date().getFullYear() + 1)) {
+  if (row.year && (isNaN(row.year) || row.year < 1980 || row.year > new Date().getFullYear() + 1)) {
     errors.push(`Row ${i + 2}: invalid year "${row.year}"`);
   }
   if (row.price && isNaN(row.price)) errors.push(`Row ${i + 2}: price must be a number`);

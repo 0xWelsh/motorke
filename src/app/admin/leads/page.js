@@ -9,6 +9,7 @@ import {
   Clock,
   Phone,
   Mail,
+  UserCheck,
 } from "lucide-react";
 import ExportButton from "@/components/admin/ExportButton";
 import DataTableShell from "@/components/ui/DataTableShell";
@@ -22,20 +23,22 @@ export const metadata = { title: "Leads | BIDGARI Admin" };
 
 const VALID_STATUSES = ["", "NEW", "CONTACTED", "INTERESTED", "NEGOTIATING", "SOLD", "DEAD"];
 
-function adminLeadsHref({ page: pageNum = 1, search = "", status = "" } = {}) {
+function adminLeadsHref({ page: pageNum = 1, search = "", status = "", mine = "" } = {}) {
   const p = new URLSearchParams();
   if (pageNum > 1) p.set("page", String(pageNum));
   if (search) p.set("search", search);
   if (status) p.set("status", status);
+  if (mine) p.set("mine", mine);
   const qs = p.toString();
   return qs ? `/admin/leads?${qs}` : "/admin/leads";
 }
 
 export default async function AdminLeadsPage(props) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const sp = await props.searchParams;
   const search = (sp.search || "").trim();
   const statusFilter = sp.status || "";
+  const mineOnly = sp.mine === "1";
   const page = parseInt(sp.page || "1", 10);
   const limit = 25;
 
@@ -45,6 +48,7 @@ export default async function AdminLeadsPage(props) {
 
   const where = {
     ...statusWhere,
+    ...(mineOnly ? { assignedToId: admin.id } : {}),
     ...(search
       ? {
           OR: [
@@ -59,12 +63,13 @@ export default async function AdminLeadsPage(props) {
       : {}),
   };
 
-  const [leads, total, newCount, activeCount, soldCount] = await Promise.all([
+  const [leads, total, newCount, activeCount, soldCount, myNewCount] = await Promise.all([
     db.lead.findMany({
       where,
       include: {
         car: { select: { id: true, publicSlug: true, make: true, model: true, year: true } },
         user: { select: { id: true, name: true, email: true } },
+        assignedTo: { select: { id: true, name: true } },
       },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
@@ -76,6 +81,7 @@ export default async function AdminLeadsPage(props) {
       where: { status: { in: ["CONTACTED", "INTERESTED", "NEGOTIATING"] } },
     }),
     db.lead.count({ where: { status: "SOLD" } }),
+    db.lead.count({ where: { assignedToId: admin.id, status: "NEW" } }),
   ]);
 
   const pages = Math.ceil(total / limit);
@@ -119,20 +125,22 @@ export default async function AdminLeadsPage(props) {
       <div className="flex flex-wrap items-center gap-1.5">
         {[
           { key: "all", label: "All", count: filteredTotals.all, value: "" },
+          { key: "mine", label: "My Leads", count: myNewCount, value: "", mine: "1" },
           { key: "NEW", label: "New", count: filteredTotals.NEW, value: "NEW" },
           { key: "ACTIVE", label: "Active", count: filteredTotals.ACTIVE, value: "ACTIVE" },
           { key: "SOLD", label: "Sold", count: filteredTotals.SOLD, value: "SOLD" },
-        ].map(({ key, label, count, value }) => (
+        ].map(({ key, label, count, value, mine }) => (
           <Link
             key={key}
-            href={value ? `/admin/leads?status=${value}` : "/admin/leads"}
+            href={mine ? `/admin/leads?mine=1` : (value ? `/admin/leads?status=${value}` : "/admin/leads")}
             className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide transition-colors ${
-              (value === "" && !statusFilter) || statusFilter === value
+              (mine && mineOnly) || ((value === "" && !statusFilter && !mineOnly) || (value && statusFilter === value && !mineOnly))
                 ? "border-emerald-700 bg-emerald-950/40 text-emerald-300"
                 : "border-zinc-800 bg-zinc-900/40 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300"
             }`}
           >
             {key === "NEW" && <Clock size={12} />}
+            {key === "mine" && <UserCheck size={12} />}
             {count}
             {" "}{label}
           </Link>
@@ -211,7 +219,7 @@ export default async function AdminLeadsPage(props) {
             <table className="w-full min-w-[800px] text-left">
               <thead>
                 <tr className="border-b border-zinc-800 bg-zinc-900/40">
-                  {["Buyer", "Vehicle", "Channel", "Status", "Date", ""].map((h) => (
+                  {["Buyer", "Vehicle", "Assigned", "Channel", "Status", "Date", ""].map((h) => (
                     <th key={h || "actions"} className="whitespace-nowrap px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-zinc-500">{h}</th>
                   ))}
                 </tr>
@@ -289,6 +297,18 @@ function LeadRow({ lead, index }) {
         >
           {lead.car.year} {lead.car.make} {lead.car.model}
         </Link>
+      </td>
+      <td className="px-4 py-3">
+        <span className="text-xs text-zinc-400">
+          {lead.assignedTo ? (
+            <span className="inline-flex items-center gap-1">
+              <UserCheck size={11} className="text-emerald-500" />
+              {lead.assignedTo.name}
+            </span>
+          ) : (
+            <span className="text-zinc-600">—</span>
+          )}
+        </span>
       </td>
       <td className="px-4 py-3">
         <span className={`inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
@@ -370,6 +390,15 @@ function LeadCard({ lead }) {
           {lead.channel === "whatsapp" ? <Smartphone size={11} /> : <Globe size={11} />}
           <span className="text-[10px] font-bold uppercase">{lead.channel}</span>
         </span>
+        {lead.assignedTo && (
+          <>
+            <span className="text-zinc-700">·</span>
+            <span className="inline-flex items-center gap-1 text-emerald-400">
+              <UserCheck size={11} />
+              <span className="text-[10px] font-bold">{lead.assignedTo.name}</span>
+            </span>
+          </>
+        )}
       </div>
 
       {/* Message */}

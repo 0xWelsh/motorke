@@ -1,9 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronRight, Info, Database, Loader2 } from "lucide-react";
+import { Check, ChevronRight, Info, Loader2, Sparkles } from "lucide-react";
 import MediaUploader from "./admin/MediaUploader";
-import useSpecAutoFill from "@/hooks/useSpecAutoFill";
 import {
   BODY_TYPE_LABELS,
   DRIVETRAIN_LABELS,
@@ -12,6 +11,7 @@ import {
   TRANSMISSION_LABELS,
   VEHICLE_TYPE_LABELS,
 } from "@/lib/utils";
+import { CAR_STATUS_LABELS } from "@/lib/constants";
 
 const MAKES = [
   "Abarth",
@@ -225,6 +225,7 @@ function buildBaseSeed(car, currentYear, initialDealerId, dealers) {
     turbo: car?.turbo ?? false,
     sunroof: car?.sunroof ?? false,
     featured: car?.featured ?? false,
+    carStatus: car?.carStatus || "",
     location: car?.location || "",
     importCountry: car?.importCountry || "",
   };
@@ -257,7 +258,7 @@ function InfieldGroup({ label, required, className = "", children }) {
 
 export default function CarForm({ dealers = [], car = null, action, method = "POST", initialDealerId = null }) {
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 40 }, (_, i) => currentYear - i);
+  const years = Array.from({ length: 47 }, (_, i) => currentYear - i);
 
   const isEdit = method === "PUT" && !!car;
   const isPortal = false;
@@ -339,12 +340,81 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   const formRef = useRef(null);
   const [publishReady, setPublishReady] = useState(false);
-  const { filling: autoFilling, filledFields } = useSpecAutoFill(formRef, {
-    make: selectedMake,
-    model: selectedModel,
-    variant: variantValue,
-    year: selectedYear,
-  });
+
+  const parseTextareaRef = useRef(null);
+  const [parsing, setParsing] = useState(false);
+  const [parseResult, setParseResult] = useState(null);
+  const [smartFillOpen, setSmartFillOpen] = useState(false);
+
+  const handleSmartFill = useCallback(async () => {
+    const text = (parseTextareaRef.current?.value || "").trim();
+    if (!text) return;
+
+    setParsing(true);
+    setParseResult(null);
+    try {
+      const res = await fetch("/api/cars/parse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      if (!res.ok) throw new Error("Parse failed");
+      const result = await res.json();
+      setParseResult(result);
+
+      if (!result.success || !result.data) return;
+
+      const d = result.data;
+      const form = formRef.current;
+      if (!form) return;
+
+      const fields = [
+        "make", "model", "variant",
+        { name: "year", value: d.year ? String(d.year) : null },
+        { name: "price", value: d.price ? String(d.price) : null },
+        { name: "mileage", value: d.mileage ? String(d.mileage) : null },
+        { name: "engineCC", value: d.engineCC ? String(d.engineCC) : null },
+        "bodyType", "fuelType", "transmission", "color",
+        { name: "condition", value: d.condition ? d.condition.toLowerCase() : null },
+        "drivetrain", "steering",
+        { name: "seats", value: d.seats ? String(d.seats) : null },
+      ];
+
+      for (const f of fields) {
+        const name = typeof f === "string" ? f : f.name;
+        const value = typeof f === "string" ? d[f] : f.value;
+        if (!value) continue;
+
+        const confidence = d.confidence?.[name] ?? 0;
+        if (confidence < 0.4) continue;
+
+        const target = form.querySelector(`[name="${name}"]`);
+        if (!target) continue;
+
+        const currentVal = target.value?.trim();
+        if (currentVal && currentVal !== "" && currentVal !== "0") continue;
+
+        target.value = value;
+        target.dispatchEvent(new Event("input", { bubbles: true }));
+        target.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+
+      if (d.make) setSelectedMake(d.make);
+      if (d.model) setSelectedModel(d.model);
+      if (d.variant) setVariantValue(d.variant);
+      if (d.year) {
+        setSelectedYear(String(d.year));
+        setFormSeed((prev) => ({ ...prev, year: String(d.year) }));
+      }
+
+
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setParsing(false);
+    }
+  }, [bumpFeaturesInput]);
+
   const initializedNewFormRef = useRef(false);
 
   useEffect(() => {
@@ -833,6 +903,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
     data.negotiable = isEdit ? !!car?.negotiable : false;
     data.imported = data.imported === "true";
+    data.carStatus = data.carStatus || null;
     data.featured = isEdit ? !!car?.featured : false;
     data.turbo = data.turbo === "on";
     data.sunroof = data.sunroof === "on";
@@ -915,6 +986,52 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     : "";
 
   return (
+    <>
+    {/* Smart Fill — paste dealer text (outside form to avoid interference) */}
+    <div className="mb-4 border border-zinc-700 rounded-lg p-4 sm:p-5 bg-zinc-900">
+      <button type="button" onClick={() => setSmartFillOpen((o) => !o)}
+        className="flex items-center justify-between w-full text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 hover:text-zinc-200 transition-colors"
+      >
+        <span className="inline-flex items-center gap-2">
+          <Sparkles size={14} className="text-purple-400" />
+          Smart Fill — paste dealer text
+        </span>
+        <ChevronRight size={14} className={`transition-transform ${smartFillOpen ? "rotate-90" : ""} text-zinc-500`} />
+      </button>
+      {smartFillOpen && (
+        <div className="mt-3 space-y-3">
+          <textarea
+            ref={parseTextareaRef}
+            defaultValue=""
+            rows={3}
+            placeholder={"Paste the dealer's description here — e.g.\n2019 Toyota Axio NKT 1.5L, KSh 2,800,000, 78,000 km, petrol, automatic, white, Nairobi"}
+            className="w-full border border-zinc-700 rounded-lg px-3 py-2.5 text-sm text-white bg-zinc-950 outline-none focus:border-purple-500/50 transition-all resize-y min-h-[4rem] placeholder:text-zinc-600"
+          />
+          <div className="flex items-center gap-3">
+            <button type="button" onClick={handleSmartFill} disabled={parsing}
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-[10px] font-black uppercase tracking-wider rounded-md bg-purple-600 text-white hover:bg-purple-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            >
+              {parsing ? (
+                <Loader2 size={12} className="animate-spin" />
+              ) : (
+                <Sparkles size={12} />
+              )}
+              {parsing ? "Parsing..." : "Parse & Fill"}
+            </button>
+            {parseResult && parseResult.data && (
+              <span className="text-[10px] font-semibold text-zinc-500">
+                Found: {Object.entries(parseResult.data.confidence)
+                  .filter(([, v]) => v >= 0.4)
+                  .map(([k]) => k)
+                  .join(", ") || "nothing"}
+                {parseResult.aiUsed ? " (AI boosted)" : ""}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+
     <form
       ref={formRef}
       onSubmit={handleSubmit}
@@ -1209,6 +1326,14 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                 <option value="Other">Other</option>
               </select>
             </InfieldGroup>
+            <InfieldGroup label="Car Location">
+              <select name="carStatus" defaultValue={formSeed.carStatus} className={inFieldSelect}>
+                <option value="">Select</option>
+                {Object.entries(CAR_STATUS_LABELS).map(([value, label]) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+              </select>
+            </InfieldGroup>
           </div>
         </div>
 
@@ -1281,5 +1406,6 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
       {mobileDock}
     </form>
+    </>
     );
   }

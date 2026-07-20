@@ -107,10 +107,10 @@ export function buildListingLeadParagraph(car) {
   const year = car.year;
   const fuel = (FUEL_LABELS[car.fuelType] || car.fuelType || "petrol").toLowerCase();
   const body = listingBodyLabel(car);
-  const cc = car.engineCC ? `${car.engineCC}cc` : "this engine size";
+  const cc = car.engineCC ? `${car.engineCC}cc` : "";
   const variant = car.variant ? ` ${car.variant}` : "";
 
-  return `This ${year} ${make} ${model}${variant} is listed as a ${body} with ${fuel} power (${cc}).`;
+  return `This ${year} ${make} ${model}${variant} is a ${body} with a ${fuel} engine${cc ? ` (${cc})` : ""}.`.replace(/\s+/g, " ");
 }
 
 /**
@@ -152,47 +152,40 @@ export function buildListingTailoredWiki(car) {
   // ── Paragraph 2: what to inspect (spec-specific) ──
   let inspect = [];
   if (car.fuelType === "DIESEL") {
-    inspect.push("diesel items: DPF condition, turbo health, and whether the timing belt has been replaced");
+    inspect.push("DPF condition, turbo health, and timing belt service history");
   } else if (car.fuelType === "HYBRID") {
-    inspect.push("hybrid battery health, inverter coolant, and the real-world fuel economy the seller is reporting");
+    inspect.push("hybrid battery health, inverter coolant condition, and real-world fuel economy");
   } else {
-    inspect.push("timing chain or belt service interval, oil leaks, and cooling system condition");
+    inspect.push("timing chain/belt service interval, oil leaks, and cooling system condition");
   }
   if (car.transmission === "CVT") {
     inspect.push("CVT fluid change history — a dry CVT is costly to replace");
   } else if (car.transmission === "AUTOMATIC") {
-    inspect.push("when the transmission fluid was last changed — rough shifts mean missed service");
+    inspect.push("transmission fluid service history — rough shifts mean missed maintenance");
   }
   if (engineCC && engineCC > 2500) inspect.push("cooling system health on this larger engine");
 
-  let specP2 = `For a ${car.year} ${make} ${model}`;
-  if (engineCC) specP2 += ` with a ${engineCC}cc`;
-  specP2 += ` ${fuel} engine`;
-  if (trans) specP2 += ` and ${trans}`;
-  if (mileageStr) specP2 += ` at ${mileageStr}`;
-  specP2 += `: check ${inspect.join("; ")}.`;
+  const mileageNote = mileageStr ? ` at ${mileageStr}` : "";
+  const transNote = trans ? ` ${trans}` : "";
+  const specP2 = `Key checks for this ${fuel}${transNote}${mileageNote}: ${inspect.join("; ")}.`;
 
   // ── Paragraph 3: dealer questions + running costs ──
-  let p3 = "Ask the dealer for the import documents, logbook, and service history. ";
+  let p3 = "Ask the dealer for import documents, logbook, and service history. ";
   if (mileageStr) {
     p3 += `At ${mileageStr}, confirm major services (timing belt, transmission fluid, suspension) are done or due soon. `;
   } else {
-    p3 += "Confirm the mileage and that the logbook year matches the advertised year. ";
+    p3 += "Confirm the odometer reading and that the logbook year matches the advertised year. ";
   }
 
   const fuelEco = estimateFuelEconomy(engineCC, car.fuelType);
   if (fuelEco) {
     p3 += `Expect roughly ${fuelEco} km/L in mixed driving. `;
   }
-  p3 += `Budget for annual insurance (3-5% of car value), NTSA transfer fees, and a pre-purchase inspection. Compare other ${make} ${model} listings on BIDGARI.`;
+  p3 += `Budget for annual insurance, NTSA transfer fees, and a pre-purchase inspection. Compare other ${make} ${model} listings on BIDGARI.`;
 
   // ── Bullets ──
-  let testDriveTip = `Take a test drive on both smooth roads and rough patches to feel the `;
-  if (drive) {
-    testDriveTip += `${drive.toLowerCase()} response`;
-  } else {
-    testDriveTip += "drivetrain and suspension";
-  }
+  let testDriveTip = `Test drive on both smooth roads and rough patches to check `;
+  testDriveTip += drive ? `${drive.toLowerCase()} response` : "drivetrain and suspension";
   if (car.fuelType === "HYBRID") testDriveTip += ", and listen for the engine cutting in and out smoothly";
   testDriveTip += ".";
 
@@ -204,9 +197,9 @@ export function buildListingTailoredWiki(car) {
       p3,
     ],
     bullets: [
-      `Compare prices on BIDGARI — see what similar ${make} ${model} listings are actually selling for near you`,
+      `See what other ${make} ${model} listings go for on BIDGARI before making an offer`,
       testDriveTip,
-      "Get a pre-purchase inspection by an independent mechanic before you pay any deposit",
+      "Get a pre-purchase inspection by an independent mechanic before paying a deposit",
     ],
     source: "listing",
   };
@@ -259,7 +252,7 @@ export async function resolveModelWikiForCar(car) {
       },
     });
     const fromDb = rowToWiki(row);
-    if (fromDb?.paragraphs?.length && guideMatchesListingBody(car, fromDb)) {
+    if (fromDb?.paragraphs?.length && fromDb.source === "curated" && guideMatchesListingBody(car, fromDb)) {
       return {
         ...fromDb,
         headline: `${car.year} ${car.make} ${car.model} (${BODY_TYPE_LABELS[car.bodyType] || car.bodyType})`,

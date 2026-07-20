@@ -25,6 +25,7 @@ import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin, absoluteMediaUrl } from "@/lib/site-url";
 import { carListingPath } from "@/lib/car-listing-url";
 import FadeIn from "@/components/ui/FadeIn";
+import ClientRecentSection from "@/components/ClientRecentSection";
 
 const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
 
@@ -311,6 +312,8 @@ export default async function HomePage() {
       <FadeIn delay={0.2}><HomepageDeals cars={dealsEnhanced} /></FadeIn>
 
       <FadeIn delay={0.25}><HomepageTrending cars={trendingCars} /></FadeIn>
+
+      <ClientRecentSection />
 
       {/* Mobile car finder (visible below lg) */}
       <div className="lg:hidden mt-8 mb-0">

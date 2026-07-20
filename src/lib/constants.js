@@ -56,6 +56,20 @@ export const DRIVETRAIN_LABELS = {
   FOURWD: "4WD (Four Wheel Drive)",
 };
 
+export const CAR_STATUS_LABELS = {
+  IN_YARD: "In Yard",
+  WITH_OWNER: "With Owner",
+  IN_TRANSIT: "In Transit",
+  AT_PORT: "At Port",
+};
+
+export const CAR_STATUS_COLORS = {
+  IN_YARD: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300",
+  WITH_OWNER: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/20 dark:text-purple-300",
+  IN_TRANSIT: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-300",
+  AT_PORT: "bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-900/20 dark:text-cyan-300",
+};
+
 export const BADGE_OPTIONS = {
   "Available":     { color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
   "Sold":          { color: "bg-red-50 text-red-700 border-red-200" },

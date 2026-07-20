@@ -6,7 +6,7 @@ import Link from "next/link";
 import {
   Trash2, ToggleLeft, ToggleRight, X, ExternalLink, Edit3,
   MessageSquare, Car, Phone, Mail, Smartphone, Globe,
-  Search, Clock,
+  Search, Clock, Copy, List, XCircle,
 } from "lucide-react";
 import { LeadStatusBadge, LeadStatusSelect } from "@/components/admin/LeadStatusBadge";
 import DeleteLeadButton from "@/components/admin/DeleteLeadButton";
@@ -163,16 +163,24 @@ export default function BulkActionsWrapper({
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-1.5 border-t border-zinc-800 px-3 py-2">
-                <Link href={`/admin/cars/${car.id}/edit`} className={linkClass}><Edit3 size={14} /></Link>
+              <div className="flex flex-wrap items-center gap-1.5 border-t border-zinc-800 px-3 py-2">
+                <Link href={`/cars/${car.publicSlug || car.id}`} target="_blank" className={linkClass} title="View on site"><ExternalLink size={14} /></Link>
+                <Link href={`/admin/leads?search=${encodeURIComponent(`${car.year} ${car.make} ${car.model}`)}`} className={linkClass} title="View leads"><List size={14} /></Link>
+                <Link href={`/admin/cars/${car.id}/edit`} className={linkClass} title="Edit"><Edit3 size={14} /></Link>
+                <form action={`/api/admin/cars/${car.id}/duplicate`} method="POST" className="inline">
+                  <button type="submit" title="Duplicate listing" className={linkClass}><Copy size={14} /></button>
+                </form>
+                {car.available && (
+                  <form action={`/api/admin/cars/${car.id}/mark-sold`} method="POST" className="inline">
+                    <button type="submit" title="Mark as sold" className={`${linkClass} text-red-400 hover:text-red-300`} onClick={(e) => { if (!confirm('Mark this car as sold?')) e.preventDefault(); }}><XCircle size={14} /></button>
+                  </form>
+                )}
                 <form action="/api/whatsapp-channel/post" method="POST" className="inline">
                   <input type="hidden" name="carId" value={car.id} />
-                  <button type="submit" title="Post to WhatsApp Channel" className={linkClass + " text-emerald-400 hover:text-emerald-300"}>
-                    <MessageSquare size={14} />
-                  </button>
+                  <button type="submit" title="Post to WhatsApp Channel" className={linkClass + " text-emerald-400 hover:text-emerald-300"}><MessageSquare size={14} /></button>
                 </form>
                 <form action={`/api/admin/cars/${car.id}/toggle-visibility`} method="POST" className="inline">
-                  <button type="submit" className={`${linkClass} ${car.available ? "text-emerald-400" : "text-zinc-300"}`}>
+                  <button type="submit" className={`${linkClass} ${car.available ? "text-emerald-400" : "text-zinc-300"}`} title={car.available ? "Hide" : "Show"}>
                     {car.available ? <ToggleRight size={14} /> : <ToggleLeft size={14} />}
                   </button>
                 </form>
@@ -267,12 +275,20 @@ export default function BulkActionsWrapper({
                       </td>
                       <td className="px-4 py-3 text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                          <Link href={`/admin/cars/${car.id}/edit`} className={linkClass}><Edit3 size={14} /></Link>
+                          <Link href={`/cars/${car.publicSlug || car.id}`} target="_blank" className={linkClass} title="View on site"><ExternalLink size={14} /></Link>
+                          <Link href={`/admin/leads?search=${encodeURIComponent(`${car.year} ${car.make} ${car.model}`)}`} className={linkClass} title="View leads"><List size={14} /></Link>
+                          <Link href={`/admin/cars/${car.id}/edit`} className={linkClass} title="Edit"><Edit3 size={14} /></Link>
+                          <form action={`/api/admin/cars/${car.id}/duplicate`} method="POST" className="inline">
+                            <button type="submit" title="Duplicate listing" className={linkClass}><Copy size={14} /></button>
+                          </form>
+                          {car.available && (
+                            <form action={`/api/admin/cars/${car.id}/mark-sold`} method="POST" className="inline">
+                              <button type="submit" title="Mark as sold" className={`${linkClass} text-red-400 hover:text-red-300`} onClick={(e) => { if (!confirm('Mark this car as sold?')) e.preventDefault(); }}><XCircle size={14} /></button>
+                            </form>
+                          )}
                           <form action="/api/whatsapp-channel/post" method="POST" className="inline">
                             <input type="hidden" name="carId" value={car.id} />
-                            <button type="submit" title="Post to WhatsApp Channel" className={linkClass + " text-emerald-400 hover:text-emerald-300"}>
-                              <MessageSquare size={14} />
-                            </button>
+                            <button type="submit" title="Post to WhatsApp Channel" className={linkClass + " text-emerald-400 hover:text-emerald-300"}><MessageSquare size={14} /></button>
                           </form>
                           <form action={`/api/admin/cars/${car.id}/toggle-visibility`} method="POST" className="inline">
                             <button type="submit" className={`${linkClass} ${car.available ? "text-emerald-400" : "text-zinc-300"}`} title={car.available ? "Hide" : "Show"}>

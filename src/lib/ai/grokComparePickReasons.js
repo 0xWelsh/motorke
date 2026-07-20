@@ -4,7 +4,7 @@
  */
 
 const XAI_CHAT_URL = "https://api.x.ai/v1/chat/completions";
-const DEFAULT_MODEL = process.env.XAI_MODEL || "grok-2-latest";
+const DEFAULT_MODEL = process.env.XAI_MODEL || "grok-latest";
 const REQUEST_MS = 14_000;
 
 function parseJsonContent(content) {

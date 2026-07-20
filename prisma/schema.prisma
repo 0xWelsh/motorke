@@ -31,6 +31,7 @@ model User {
   carViews        CarView[]
   marketingEvents MarketingEvent[]
   leads           Lead[]
+  assignedLeads   Lead[]           @relation("leadAssignment")
   buyerRequests   BuyerRequest[]
   dealer          Dealer?          @relation(fields: [dealerId], references: [id], onDelete: Cascade)
 
@@ -223,6 +224,7 @@ model Car {
   printCount          Int                @default(0)
   whatsappClicks      Int                @default(0)
   location            String?
+  carStatus           CarStatus?
   publicSlug          String?            @unique
   images              CarImage[]
   carViews            CarView[]
@@ -231,6 +233,7 @@ model Car {
   dealer              Dealer             @relation(fields: [dealerId], references: [id], onDelete: Cascade)
   leads               Lead[]
   savedBy             SavedCar[]
+  priceChanges        CarPriceChange[]
 
   @@index([make, model])
   @@index([dealerId])
@@ -247,6 +250,18 @@ model Car {
   @@index([featuredWeight])
   @@index([spotlightUntil])
   @@map("cars")
+}
+
+model CarPriceChange {
+  id        String   @id @default(cuid())
+  carId     String
+  oldPrice  Int
+  newPrice  Int
+  createdAt DateTime @default(now())
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+  @@index([carId, createdAt])
+  @@map("car_price_changes")
 }
 
 model CarModelSpec {
@@ -303,24 +318,27 @@ model CarImage {
 }
 
 model Lead {
-  id        String     @id @default(cuid())
-  carId     String
-  dealerId  String
-  userId    String?
-  name      String
-  phone     String
-  email     String?
-  message   String?
-  channel   String     @default("web")
-  createdAt DateTime   @default(now())
-  status    LeadStatus @default(NEW)
-  notes     LeadNote[]
-  car       Car        @relation(fields: [carId], references: [id], onDelete: Cascade)
-  dealer    Dealer     @relation(fields: [dealerId], references: [id], onDelete: Cascade)
-  user      User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id           String     @id @default(cuid())
+  carId        String
+  dealerId     String
+  userId       String?
+  assignedToId String?
+  name         String
+  phone        String
+  email        String?
+  message      String?
+  channel      String     @default("web")
+  createdAt    DateTime   @default(now())
+  status       LeadStatus @default(NEW)
+  notes        LeadNote[]
+  car          Car        @relation(fields: [carId], references: [id], onDelete: Cascade)
+  dealer       Dealer     @relation(fields: [dealerId], references: [id], onDelete: Cascade)
+  user         User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  assignedTo   User?      @relation("leadAssignment", fields: [assignedToId], references: [id], onDelete: SetNull)
 
   @@index([userId, createdAt])
   @@index([dealerId, createdAt])
+  @@index([assignedToId, createdAt])
   @@map("leads")
 }
 
@@ -544,6 +562,13 @@ enum Condition {
   NEW
   USED
   CERTIFIED
+}
+
+enum CarStatus {
+  IN_YARD
+  WITH_OWNER
+  IN_TRANSIT
+  AT_PORT
 }
 
 enum FuelType {

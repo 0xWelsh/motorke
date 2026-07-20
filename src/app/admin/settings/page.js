@@ -94,10 +94,46 @@ export default async function AdminSettingsPage({ searchParams }) {
            </div>
          </details>
 
-         <button type="submit" className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-2xl px-6 py-4 font-bold transition-colors flex items-center justify-center gap-2 mt-8">
-            <Settings size={18} /> Update Configurations
-         </button>
-      </form>
+          <details className="group mt-8">
+            <summary className="cursor-pointer text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors select-none">
+              WhatsApp Lead Routing
+            </summary>
+            <div className="mt-4 space-y-4 border-t border-slate-100 dark:border-zinc-800 pt-4">
+              <p className="text-xs text-slate-500">Phone numbers for the 3 salesmen. The WhatsApp button on car listings routes customers round-robin to these numbers. Include country code (e.g. 2547XXXXXXXX).</p>
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Salesman 1</label>
+                <input
+                  name="salesman_whatsapp_1"
+                  defaultValue={settings.salesman_whatsapp_1 || ""}
+                  className="w-full bg-[#f7f6f3] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-slate-900 font-medium"
+                  placeholder="2547XXXXXXXX"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Salesman 2</label>
+                <input
+                  name="salesman_whatsapp_2"
+                  defaultValue={settings.salesman_whatsapp_2 || ""}
+                  className="w-full bg-[#f7f6f3] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-slate-900 font-medium"
+                  placeholder="2547XXXXXXXX"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Salesman 3</label>
+                <input
+                  name="salesman_whatsapp_3"
+                  defaultValue={settings.salesman_whatsapp_3 || ""}
+                  className="w-full bg-[#f7f6f3] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-slate-900 font-medium"
+                  placeholder="2547XXXXXXXX"
+                />
+              </div>
+            </div>
+          </details>
+
+          <button type="submit" className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-2xl px-6 py-4 font-bold transition-colors flex items-center justify-center gap-2 mt-8">
+             <Settings size={18} /> Update Configurations
+          </button>
+       </form>
     </div>
   );
 }

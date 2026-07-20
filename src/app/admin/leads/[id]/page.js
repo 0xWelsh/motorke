@@ -10,11 +10,13 @@ import {
   Mail,
   MessageSquare,
   Car,
+  UserCheck,
 } from "lucide-react";
 import { LeadStatusBadge } from "@/components/admin/LeadStatusBadge";
 import { carListingPath } from "@/lib/car-listing-url";
 import DeleteLeadButton from "@/components/admin/DeleteLeadButton";
 import LeadNotesClient from "./LeadNotesClient";
+import LeadReassign from "./LeadReassign";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Lead Detail | BIDGARI Admin" };
@@ -55,6 +57,7 @@ export default async function LeadDetailPage({ params }) {
         select: { id: true, publicSlug: true, make: true, model: true, year: true, price: true, variant: true },
       },
       user: { select: { id: true, name: true, email: true } },
+      assignedTo: { select: { id: true, name: true } },
       notes: {
         orderBy: { createdAt: "desc" },
       },
@@ -62,6 +65,12 @@ export default async function LeadDetailPage({ params }) {
   });
 
   if (!lead) notFound();
+
+  const adminTeam = await db.user.findMany({
+    where: { role: "ADMIN", active: true },
+    select: { id: true, name: true },
+    orderBy: { name: "asc" },
+  });
 
   return (
     <div className="space-y-6">
@@ -188,6 +197,11 @@ export default async function LeadDetailPage({ params }) {
           {/* Actions */}
           <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4 space-y-3">
             <p className="text-[11px] font-bold uppercase tracking-wider text-zinc-500">Actions</p>
+            <LeadReassign
+              leadId={lead.id}
+              currentAssignedTo={lead.assignedTo}
+              adminTeam={adminTeam}
+            />
             {lead.phone && lead.phone !== "not-provided" ? (
               <a
                 href={`https://wa.me/${lead.phone.replace(/\D/g, "").replace(/^0/, "254")}?text=${encodeURIComponent(

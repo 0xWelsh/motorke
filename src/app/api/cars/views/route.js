@@ -21,6 +21,45 @@ import { getSession } from "@/lib/auth";
 import { classifyViewSource } from "@/lib/view-source";
 
 const DEDUP_WINDOW_MINUTES = 30;
+
+const WINDOW_DAYS = 7;
+
+export async function GET(req) {
+  try {
+    const url = new URL(req.url);
+    const carId = url.searchParams.get("carId");
+    const isPriceDrop = url.searchParams.get("priceDrop") === "true";
+
+    if (!carId) {
+      return Response.json({ error: "carId required" }, { status: 400 });
+    }
+
+    if (isPriceDrop) {
+      const last = await db.carPriceChange.findFirst({
+        where: { carId },
+        orderBy: { createdAt: "desc" },
+      });
+      if (last) {
+        return Response.json({
+          oldPrice: last.oldPrice,
+          newPrice: last.newPrice,
+          changedAt: last.createdAt,
+        });
+      }
+      return Response.json({ oldPrice: null, newPrice: null });
+    }
+
+    const since = new Date(Date.now() - WINDOW_DAYS * 24 * 60 * 60 * 1000);
+    const count = await db.carView.count({
+      where: { carId, viewedAt: { gte: since } },
+    });
+
+    return Response.json({ count });
+  } catch (error) {
+    console.error("Failed to get view count:", error);
+    return Response.json({ count: 0 });
+  }
+}
 const ROTATION_COOKIE      = "wmh-rot";
 
 export const dynamic = "force-dynamic";

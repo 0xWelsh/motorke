@@ -14,7 +14,7 @@ export async function generateModelWikiWithGrok(car) {
       {
         role: "system",
         content:
-          "You write concise Kenya used-car buyer guides for a marketplace. Return JSON only: { headline, paragraphs: string[3-4], bullets: string[2-3] }. No markdown. Mention Nairobi/upcountry where relevant. No invented prices.",
+          "You write concise Kenya used-car buyer guides for BIDGARI marketplace. Return JSON only: { headline, paragraphs: string[3-4], bullets: string[2-3] }. No markdown. Reference the actual year, fuel type, engine size, and body type from the input car. Mention Nairobi/upcountry where relevant. No invented prices. Never use 'Welsh Motorhub' — the brand is BIDGARI.",
       },
       {
         role: "user",

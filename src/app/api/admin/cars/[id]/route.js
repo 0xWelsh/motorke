@@ -46,6 +46,15 @@ export async function PUT(request, { params }) {
     } = body;
     console.log("🏁 UPDATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
+    // Track price changes
+    const existing = await db.car.findUnique({ where: { id }, select: { price: true } });
+    const newPrice = price != null && String(price).trim() !== "" ? parseInt(price) : 0;
+    if (existing && existing.price !== newPrice && newPrice > 0) {
+      await db.carPriceChange.create({
+        data: { carId: id, oldPrice: existing.price, newPrice },
+      });
+    }
+
     // Update car fields
     await db.car.update({
       where: { id: id },
@@ -56,7 +65,7 @@ export async function PUT(request, { params }) {
         model:        model.trim(),
         variant:      variant?.trim() || null,
         year:         parseInt(year),
-        price: price != null && String(price).trim() !== "" ? parseInt(price) : 0,
+        price: newPrice,
         mileage:      mileage ? parseInt(mileage) : null,
         fuelType,
         transmission,

@@ -36,7 +36,45 @@ const BODY_TYPE_HINTS = [
   { value: "TRUCK", patterns: [/\b(truck|lorry)\b/i] },
 ];
 
-const FIELD_KEYS = ["make", "model", "variant", "year", "price", "mileage", "engineCC", "bodyType"];
+const FUEL_HINTS = [
+  { value: "PETROL", patterns: [/\b(petrol|gasoline|gas|super)\b/i] },
+  { value: "DIESEL", patterns: [/\b(diesel|d4d|tdi|sdi|cdi)\b/i] },
+  { value: "HYBRID", patterns: [/\b(hybrid|e-power|mhev|phev|hev)\b/i] },
+  { value: "ELECTRIC", patterns: [/\b(electric|ev|bev)\b/i] },
+  { value: "LPG", patterns: [/\b(lpg|cng|gas conversion)\b/i] },
+];
+
+const TRANS_HINTS = [
+  { value: "AUTOMATIC", patterns: [/\b(automatic|auto|tiptronic|at)\b/i] },
+  { value: "MANUAL", patterns: [/\b(manual|mt|stick shift|stick)\b/i] },
+  { value: "CVT", patterns: [/\b(cvt|variator|multitronic)\b/i] },
+];
+
+const DRIVE_HINTS = [
+  { value: "AWD", patterns: [/\b(awd|all[\s-]wheel[\s-]drive|all wheel)\b/i] },
+  { value: "FWD", patterns: [/\b(fwd|front[\s-]wheel[\s-]drive|front wheel)\b/i] },
+  { value: "RWD", patterns: [/\b(rwd|rear[\s-]wheel[\s-]drive|rear wheel)\b/i] },
+  { value: "FOURWD", patterns: [/\b(4wd|4x4|four[\s-]wheel[\s-]drive|four wheel)\b/i] },
+];
+
+const STEERING_HINTS = [
+  { value: "RHD", patterns: [/\b(rhd|right[\s-]hand[\s-]drive|right hand)\b/i] },
+  { value: "LHD", patterns: [/\b(lhd|left[\s-]hand[\s-]drive|left hand)\b/i] },
+];
+
+const CONDITION_HINTS = [
+  { value: "NEW", patterns: [/\b(new|brand new|0[\s-]?km|zero[\s-]?km)\b/i] },
+  { value: "CERTIFIED", patterns: [/\b(certified|cpo|certified[\s-]pre[\s-]?owned|manufacturer[\s-]?certified)\b/i] },
+  { value: "USED", patterns: [/\b(used|second[\s-]?hand|pre[\s-]?owned|locally[\s-]?used|foreign[\s-]?used)\b/i] },
+];
+
+const COLORS = [
+  "white", "black", "silver", "grey", "gray", "blue", "red", "green",
+  "brown", "beige", "gold", "maroon", "navy", "purple", "orange",
+  "yellow", "pink", "bronze", "champagne", "charcoal",
+];
+
+const FIELD_KEYS = ["make", "model", "variant", "year", "price", "mileage", "engineCC", "bodyType", "fuelType", "transmission", "color", "condition", "drivetrain", "steering", "seats", "cylinders", "doors"];
 
 function toTitleCase(value = "") {
   return value
@@ -65,6 +103,15 @@ function baseResult() {
     mileage: null,
     engineCC: null,
     bodyType: null,
+    fuelType: null,
+    transmission: null,
+    color: null,
+    condition: null,
+    drivetrain: null,
+    steering: null,
+    seats: null,
+    cylinders: null,
+    doors: null,
     confidence: {
       make: 0,
       model: 0,
@@ -74,6 +121,15 @@ function baseResult() {
       mileage: 0,
       engineCC: 0,
       bodyType: 0,
+      fuelType: 0,
+      transmission: 0,
+      color: 0,
+      condition: 0,
+      drivetrain: 0,
+      steering: 0,
+      seats: 0,
+      cylinders: 0,
+      doors: 0,
     },
     source: "rules",
     warnings: [],
@@ -178,6 +234,80 @@ function parseWithRules(rawText) {
           out.confidence.variant = 0.58;
         }
       }
+    }
+  }
+
+  for (const hint of FUEL_HINTS) {
+    if (hint.patterns.some((pattern) => pattern.test(text))) {
+      out.fuelType = hint.value;
+      out.confidence.fuelType = 0.88;
+      break;
+    }
+  }
+
+  for (const hint of TRANS_HINTS) {
+    if (hint.patterns.some((pattern) => pattern.test(text))) {
+      out.transmission = hint.value;
+      out.confidence.transmission = 0.88;
+      break;
+    }
+  }
+
+  const colorPattern = new RegExp(`\\b(${COLORS.join("|")})\\b`, "i");
+  const colorMatch = text.match(colorPattern);
+  if (colorMatch) {
+    out.color = colorMatch[1].charAt(0).toUpperCase() + colorMatch[1].slice(1).toLowerCase();
+    out.confidence.color = 0.82;
+  }
+
+  for (const hint of CONDITION_HINTS) {
+    if (hint.patterns.some((pattern) => pattern.test(text))) {
+      out.condition = hint.value;
+      out.confidence.condition = 0.82;
+      break;
+    }
+  }
+
+  for (const hint of DRIVE_HINTS) {
+    if (hint.patterns.some((pattern) => pattern.test(text))) {
+      out.drivetrain = hint.value;
+      out.confidence.drivetrain = 0.85;
+      break;
+    }
+  }
+
+  for (const hint of STEERING_HINTS) {
+    if (hint.patterns.some((pattern) => pattern.test(text))) {
+      out.steering = hint.value;
+      out.confidence.steering = 0.88;
+      break;
+    }
+  }
+
+  const seatMatch = text.match(/\b(\d+)\s*-?\s*(?:seater|seats|seat|passenger|pax)\b/i);
+  if (seatMatch) {
+    const n = Number(seatMatch[1]);
+    if (n >= 2 && n <= 15) {
+      out.seats = n;
+      out.confidence.seats = 0.84;
+    }
+  }
+
+  const cylinderMatch = text.match(/\b(\d+)\s*-?\s*cylinder\b/i);
+  if (cylinderMatch) {
+    const n = Number(cylinderMatch[1]);
+    if (n >= 3 && n <= 16) {
+      out.cylinders = n;
+      out.confidence.cylinders = 0.86;
+    }
+  }
+
+  const doorMatch = text.match(/\b(\d+)\s*-?\s*(?:door|doors)\b/i);
+  if (doorMatch) {
+    const n = Number(doorMatch[1]);
+    if (n >= 2 && n <= 6) {
+      out.doors = n;
+      out.confidence.doors = 0.82;
     }
   }
 

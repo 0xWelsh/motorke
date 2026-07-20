@@ -104,31 +104,6 @@ async function main() {
       }
     });
 
-    // Generate fake views for the last 14 days
-    const now = new Date();
-    for (let i = 0; i < 14; i++) {
-        const date = new Date(now);
-        date.setDate(date.getDate() - i);
-        const dailyViews = Math.floor(Math.random() * 15) + 5;
-        for (let j = 0; j < dailyViews; j++) {
-            await prisma.carView.create({ data: { carId: car.id, viewedAt: date, source: Math.random() > 0.5 ? "direct" : "search" } });
-        }
-    }
-
-    // Generate 1-3 leads per car
-    const numLeads = Math.floor(Math.random() * 3) + 1;
-    for (let l = 0; l < numLeads; l++) {
-        await prisma.lead.create({
-            data: {
-                carId: car.id,
-                dealerId: autogrid.id,
-                name: `Buyer ${l + 1}`,
-                phone: `+254 700 000 00${l}`,
-                message: `Hi, I'm interested in the ${t.make} ${t.model}. Is it still available?`,
-                status: l === 0 ? "NEW" : "CONTACTED"
-            }
-        });
-    }
   }
 
   // Create reviewer users and their reviews

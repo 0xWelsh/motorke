@@ -23,9 +23,11 @@ import {
   Database,
   MessageCircle,
   Bookmark,
+  UserCheck,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import NotificationsBell from "@/components/NotificationsBell";
 
 const SUPER_ADMIN_EMAIL = "11241welshmuhuri@gmail.com";
@@ -35,6 +37,7 @@ const allLinks = [
   { href: "/admin/cars", label: "Inventory", Icon: Car },
   { href: "/admin/users", label: "Users", Icon: Users },
   { href: "/admin/leads", label: "Leads", Icon: MessageSquare },
+  { href: "/admin/my-leads", label: "My Leads", Icon: UserCheck },
   { href: "/admin/growth", label: "Growth", Icon: TrendingUp },
   { href: "/admin/buyer-requests", label: "Buyer requests", Icon: ClipboardList },
   { href: "/admin/traffic", label: "Traffic", Icon: BarChart2 },
@@ -51,31 +54,33 @@ const quickActions = [
   { href: "/admin/settings", label: "Settings", Icon: Settings },
 ];
 
-function NavLink({ href, label, Icon, active }) {
+function NavLink({ href, label, Icon, active, isActive }) {
+  const act = isActive !== undefined ? isActive : active;
   return (
     <Link
       href={href}
       className={clsx(
         "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-        active
+        act
           ? "bg-emerald-600/20 text-emerald-100 ring-1 ring-emerald-500/35 shadow-sm"
           : "text-zinc-300 hover:bg-zinc-800/90 hover:text-white"
       )}
     >
       <Icon
         size={18}
-        strokeWidth={active ? 2.25 : 1.75}
+        strokeWidth={act ? 2.25 : 1.75}
         className={clsx(
           "shrink-0",
-          active ? "text-emerald-400" : "text-zinc-500"
+          act ? "text-emerald-400" : "text-zinc-500"
         )}
       />
-      <span className={active ? "text-emerald-50" : undefined}>{label}</span>
+      <span className={act ? "text-emerald-50" : undefined}>{label}</span>
     </Link>
   );
 }
 
-function pageTitle(path) {
+function pageTitle(path, sp) {
+  if (path === "/admin/leads" && sp?.get("mine") === "1") return "My Leads";
   return (
     allLinks.find((l) => (l.href === "/admin" ? path === l.href : path.startsWith(l.href)))
       ?.label || "Overview"
@@ -84,6 +89,7 @@ function pageTitle(path) {
 
 export default function AdminLayout({ children }) {
   const path = usePathname();
+  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userEmail, setUserEmail] = useState(null);
@@ -186,7 +192,13 @@ export default function AdminLayout({ children }) {
                   href={href}
                   label={label}
                   Icon={Icon}
-                  active={href === "/admin" ? path === href : path.startsWith(href)}
+                  isActive={
+                    href === "/admin"
+                      ? path === href
+                      : href === "/admin/my-leads"
+                        ? path === "/admin/leads" && searchParams.get("mine") === "1"
+                        : path.startsWith(href)
+                  }
                 />
               ))}
             </div>
@@ -240,7 +252,7 @@ export default function AdminLayout({ children }) {
               <ChevronRight size={12} className="text-zinc-600" />
             </div>
             <h1 className="truncate text-sm font-semibold text-white sm:text-base">
-              {pageTitle(path)}
+              {pageTitle(path, searchParams)}
             </h1>
           </div>
 

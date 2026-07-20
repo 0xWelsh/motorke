@@ -1,5 +1,5 @@
 const XAI_CHAT_URL = "https://api.x.ai/v1/chat/completions";
-const DEFAULT_MODEL = process.env.XAI_MODEL || "grok-2-latest";
+const DEFAULT_MODEL = process.env.XAI_MODEL || "grok-latest";
 const DEFAULT_TIMEOUT_MS = 2800;
 const CACHE_TTL_MS = 1000 * 60 * 30;
 
@@ -149,7 +149,7 @@ export async function parseVehicleFieldsWithGrok(text) {
   if (cached) return cached;
 
   const schemaHint = `Return strict JSON only:
-{"make":string|null,"model":string|null,"variant":string|null,"year":number|null,"price":number|null,"mileage":number|null,"engineCC":number|null,"bodyType":"SEDAN|SUV|HATCHBACK|PICKUP|VAN|WAGON|COUPE|CONVERTIBLE|CROSSOVER|MPV|MINIVAN|ROADSTER|LIFTBACK|BUS|TRUCK"|null,"confidence":{"make":0..1,"model":0..1,"variant":0..1,"year":0..1,"price":0..1,"mileage":0..1,"engineCC":0..1,"bodyType":0..1}}`;
+{"make":string|null,"model":string|null,"variant":string|null,"year":number|null,"price":number|null,"mileage":number|null,"engineCC":number|null,"bodyType":"SEDAN|SUV|HATCHBACK|PICKUP|VAN|WAGON|COUPE|CONVERTIBLE|CROSSOVER|MPV|MINIVAN|ROADSTER|LIFTBACK|BUS|TRUCK"|null,"fuelType":"PETROL|DIESEL|HYBRID|ELECTRIC|LPG"|null,"transmission":"AUTOMATIC|MANUAL|CVT"|null,"color":string|null,"condition":"NEW|USED|CERTIFIED"|null,"drivetrain":"FWD|RWD|AWD|FOURWD"|null,"steering":"RHD|LHD"|null,"seats":number|null,"doors":number|null,"confidence":{"make":0..1,"model":0..1,"variant":0..1,"year":0..1,"price":0..1,"mileage":0..1,"engineCC":0..1,"bodyType":0..1,"fuelType":0..1,"transmission":0..1,"color":0..1,"condition":0..1,"drivetrain":0..1,"steering":0..1,"seats":0..1,"doors":0..1}}`;
   const parsed = await callGrok([
     { role: "system", content: "Extract structured car listing data from noisy text. Do not explain. " + schemaHint },
     { role: "user", content: input },

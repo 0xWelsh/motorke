@@ -42,8 +42,12 @@ async function dispatchLeadNotifications({ lead, car, dealerId, buyerUserId }) {
     const notificationRows = adminUsers.map((user) => ({
       userId: user.id,
       type: "LEAD_NEW",
-      title: `New lead submitted (${carTitle})`,
-      message: `${buyerName} reached out about ${car?.dealer?.name || "a listed vehicle"}.`,
+      title: user.id === lead.assignedToId
+        ? `New lead assigned to you (${carTitle})`
+        : `New lead submitted (${carTitle})`,
+      message: user.id === lead.assignedToId
+        ? `${buyerName} reached out about ${car?.dealer?.name || "a listed vehicle"}. This lead is yours to follow up.`
+        : `${buyerName} reached out about ${car?.dealer?.name || "a listed vehicle"}.`,
       link: `/admin/leads?lead=${lead.id}`,
     }));
 
@@ -165,11 +169,25 @@ export async function POST(request) {
       return NextResponse.json({ error: "Invalid car or dealer" }, { status: 400 });
     }
 
+    // Round-robin assignment to admin salesmen
+    const admins = await db.user.findMany({
+      where: { role: "ADMIN", active: true },
+      select: { id: true },
+      orderBy: { id: "asc" },
+    });
+    let assignedToId = null;
+    if (admins.length > 0) {
+      const counter = globalThis.__leadRoundRobin || 0;
+      globalThis.__leadRoundRobin = (counter + 1) % admins.length;
+      assignedToId = admins[counter % admins.length].id;
+    }
+
     const lead = await db.lead.create({
       data: {
         carId,
         dealerId,
         userId:  buyerUserId,
+        assignedToId,
         name:    normalizedName || (allowsAnonymousContact ? `${normalizedChannel} tap` : "Anonymous"),
         phone:   normalizedPhone || "not-provided",
         email:   email?.toString().trim() || (isBuyer ? session?.user?.email : null) || null,

@@ -440,13 +440,13 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
           </button>
         )}
 
-        {/* Side arrows on desktop */}
+        {/* Side arrows — visible on all screens */}
         {images.length > 1 && (
           <>
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); justSwipedRef.current = true; setTimeout(() => { justSwipedRef.current = false; }, 400); goPrev(); }}
-              className="hidden lg:flex absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 items-center justify-center bg-white/80 text-slate-700 rounded-full shadow-sm hover:bg-white transition-colors"
+              className="flex absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 items-center justify-center bg-white/80 text-slate-700 rounded-full shadow-sm hover:bg-white transition-colors active:scale-95"
               aria-label="Previous photo"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -456,7 +456,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); justSwipedRef.current = true; setTimeout(() => { justSwipedRef.current = false; }, 400); goNext(); }}
-              className="hidden lg:flex absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 items-center justify-center bg-white/80 text-slate-700 rounded-full shadow-sm hover:bg-white transition-colors"
+              className="flex absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 items-center justify-center bg-white/80 text-slate-700 rounded-full shadow-sm hover:bg-white transition-colors active:scale-95"
               aria-label="Next photo"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

@@ -6,6 +6,7 @@ import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { buildMakeWhere } from "@/lib/make-filter";
 
 const querySchema = z.object({
+  ids: z.string().optional(),
   make: z.string().optional(),
   bodyType: z.string().optional(),
   fuelType: z.string().optional(),
@@ -31,13 +32,18 @@ export async function GET(request) {
   }
 
   const {
-    make, bodyType, fuelType, transmission, dealerId,
+    ids, make, bodyType, fuelType, transmission, dealerId,
     minPrice, maxPrice, minYear, maxYear, search, featured,
-    page, limit
+    page: rawPage, limit: rawLimit,
   } = parsed.data;
 
+  const page = rawPage;
+  const limit = ids ? 50 : rawLimit;
+
+  const idsArr = ids ? ids.split(",").map((s) => s.trim()).filter(Boolean) : null;
+
   const where = {
-    available: true,
+    ...(idsArr ? { id: { in: idsArr } } : { available: true }),
     ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
     ...buildMakeWhere(make),
     ...(bodyType     && { bodyType }),
