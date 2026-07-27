@@ -482,15 +482,15 @@ export default async function CarDetailPage({ params }) {
           />
         </div>
 
-        {/* ── Two-column layout: content + sidebar ── */}
+        {/* ── Two-column layout ── */}
         <div className="lg:grid lg:grid-cols-3 lg:gap-8 mt-5">
 
           {/* ── Main content ── */}
           <div className="min-w-0 lg:col-span-2 space-y-8">
 
-            {/* Vehicle Title */}
+            {/* Title + Price + Location */}
             <div>
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-[1.15]" style={{ fontFamily: 'var(--font-roboto)' }}>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-[1.15]">
                 {carName}
               </h1>
               <p className="mt-1.5 text-lg font-bold text-[var(--accent)]">
@@ -522,8 +522,8 @@ export default async function CarDetailPage({ params }) {
               </div>
             </div>
 
-            {/* Quick specs — inline, no chips */}
-            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[13px] font-semibold text-zinc-500 leading-tight">
+            {/* Quick spec chips */}
+            <div className="flex flex-wrap items-center gap-2">
               {(() => {
                 const chips = [];
                 if (car.year) chips.push(String(car.year));
@@ -533,50 +533,23 @@ export default async function CarDetailPage({ params }) {
                 if (car.bodyType) chips.push(BODY_TYPE_LABELS[car.bodyType] || car.bodyType);
                 return chips;
               })().map((val, i) => (
-                <span key={i} className="flex items-center gap-2.5">
-                  {i > 0 && <span className="text-zinc-300 select-none">·</span>}
-                  <span>{val}</span>
+                <span key={i} className="inline-flex items-center px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.06] text-[12px] font-semibold text-zinc-300">
+                  {val}
                 </span>
               ))}
-              <span className="text-zinc-300 select-none">·</span>
-              <span className="inline-flex items-center gap-1 text-[var(--accent)]">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20 text-[12px] font-bold text-[var(--accent)]">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 {freshLabel}
               </span>
             </div>
 
-            {/* Action buttons */}
+            {/* Action buttons — single placement */}
             <div>
               <CarActionButtons carId={car.id} dealerId={car.dealerId} carTitle={carName} price={formatCarPrice(car)} />
             </div>
 
-            {/* Specifications */}
+            {/* Description — sells the car first */}
             <section>
-              <h2 className="text-[12px] font-serif font-bold uppercase tracking-[0.15em] text-emerald-600 mb-4">Specifications</h2>
-              {(() => {
-                const groups = buildCarDetailSpecGroups(car);
-                return groups.map((group) => (
-                  <details key={group.title} className="group mb-2" open>
-                    <summary className="cursor-pointer text-[11px] font-bold uppercase tracking-wider text-zinc-400 hover:text-zinc-200 transition-colors list-none flex items-center gap-2 py-2">
-                      <svg className="w-3 h-3 text-zinc-400 group-open:rotate-90 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                      {group.title}
-                    </summary>
-                    <div className="grid grid-cols-2 gap-px rounded-xl border border-white/[0.06] overflow-hidden bg-white/[0.06] mt-1">
-                      {group.rows.map((item) => (
-                        <div key={item.label} className="flex flex-col gap-0.5 bg-[#1c1c1c] px-4 py-3">
-                          <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-300">{item.label}</span>
-                          <span className="text-[13px] font-bold text-amber-500">{item.value}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </details>
-                ));
-              })()}
-            </section>
-
-            {/* Description */}
-            <section>
-              <h2 className="text-[12px] font-serif font-bold uppercase tracking-[0.15em] text-emerald-600 mb-4">Description</h2>
               <div className="text-[14px] sm:text-[15px] text-zinc-400 leading-[1.7] font-medium">
                 {specString ? (
                   <>
@@ -589,30 +562,51 @@ export default async function CarDetailPage({ params }) {
               </div>
             </section>
 
-            {/* Features */}
+            {/* Specifications — always open, categorized */}
+            <section>
+              <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 mb-3">Specifications</h2>
+              {(() => {
+                const groups = buildCarDetailSpecGroups(car);
+                return groups.map((group) => (
+                  <div key={group.title} className="mb-4">
+                    <h3 className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-2">{group.title}</h3>
+                    <div className="grid grid-cols-2 gap-px rounded-xl border border-white/[0.06] overflow-hidden bg-white/[0.06]">
+                      {group.rows.map((item) => (
+                        <div key={item.label} className="flex flex-col gap-0.5 bg-[#1c1c1c] px-4 py-3">
+                          <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">{item.label}</span>
+                          <span className="text-[13px] font-bold text-white">{item.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ));
+              })()}
+            </section>
+
+            {/* Features — proper grid */}
             {featureList.length > 0 && (
               <section>
-                <h2 className="text-[12px] font-serif font-bold uppercase tracking-[0.15em] text-emerald-600 mb-4">Features</h2>
-                <FeatureList features={featureList} />
+                <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 mb-3">Features</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {featureList.map((feature, i) => (
+                    <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.04] text-[12px] text-zinc-300">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] shrink-0" />
+                      {feature}
+                    </div>
+                  ))}
+                </div>
               </section>
             )}
 
             {/* Explore links */}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-white/[0.06] bg-white/[0.03] px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-zinc-400 rounded-xl">
-              <span className="text-zinc-400 font-black tracking-widest">Explore:</span>
-              <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-emerald-600 hover:underline">All {car.make} for sale</Link>
-              <span className="hidden sm:inline text-zinc-300">·</span>
-              <Link href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`} className="text-emerald-600 hover:underline">{car.make} {car.model}</Link>
-              {car.fuelType && (<><span className="hidden sm:inline text-zinc-300">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`} className="text-emerald-600 hover:underline">{car.make} {FUEL_LABELS[car.fuelType] || car.fuelType}</Link></>)}
-              {car.bodyType && (<><span className="hidden sm:inline text-zinc-300">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("body", car.bodyType)}`} className="text-emerald-600 hover:underline">{car.make} {BODY_TYPE_LABELS[car.bodyType] || car.bodyType}</Link></>)}
-              {dealer.county ? (<><span className="hidden sm:inline text-zinc-300">·</span><Link href={`/cars/${slugifyCarSegment(dealer.county)}`} className="text-emerald-600 hover:underline">Cars in {dealer.county}</Link></>) : null}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-zinc-400 rounded-xl">
+              <span className="text-zinc-500 font-black tracking-widest">Explore:</span>
+              <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-[var(--accent)] hover:underline">All {car.make}</Link>
+              <span className="text-zinc-700">·</span>
+              <Link href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`} className="text-[var(--accent)] hover:underline">{car.make} {car.model}</Link>
+              {car.fuelType && (<><span className="text-zinc-700">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`} className="text-[var(--accent)] hover:underline">{FUEL_LABELS[car.fuelType] || car.fuelType}</Link></>)}
+              {dealer.county ? (<><span className="text-zinc-700">·</span><Link href={`/cars/${slugifyCarSegment(dealer.county)}`} className="text-[var(--accent)] hover:underline">Cars in {dealer.county}</Link></>) : null}
             </div>
-
-            {/* Car Model Wiki */}
-            <CarModelWiki car={car} wiki={modelWiki} />
-
-            {/* Related Searches */}
-            <CarListingRelatedSearches car={car} />
 
             {/* Reviews */}
             <CarReviewsSection
@@ -623,9 +617,30 @@ export default async function CarDetailPage({ params }) {
           </div>
 
           {/* ── Sidebar ── */}
-          <aside className="lg:col-span-1 space-y-6 mt-8 lg:mt-0">
-            {/* Action buttons */}
-            <CarActionButtons carId={car.id} dealerId={car.dealerId} carTitle={carName} price={formatCarPrice(car)} />
+          <aside className="lg:col-span-1 space-y-5 mt-8 lg:mt-0">
+            {/* Dealer info */}
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">Dealer</p>
+              <Link href={dealerShowroomPath(dealer.slug)} className="text-sm font-bold text-white hover:text-[var(--accent)] transition-colors">
+                {dealer.name}
+              </Link>
+              {dealer.location && (
+                <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1">
+                  <MapPin className="w-3 h-3" />{dealer.location}
+                </p>
+              )}
+            </div>
+
+            {/* Market range */}
+            {benchmark && (
+              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-1">Market Range</p>
+                <p className="text-sm font-bold text-white">
+                  KES {Number(benchmark.low).toLocaleString("en-KE")} – KES {Number(benchmark.high).toLocaleString("en-KE")}
+                </p>
+                <p className="text-[10px] text-zinc-500 mt-0.5">Based on {benchmark.count} similar {car.model} listings</p>
+              </div>
+            )}
 
             {/* View count */}
             <ViewCountBadge carId={car.id} />
@@ -633,20 +648,9 @@ export default async function CarDetailPage({ params }) {
             {/* Price drop */}
             <PriceDropBadge carId={car.id} currentPrice={car.price} />
 
-            {/* Price benchmark */}
-            {benchmark && (
-              <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-amber-400 mb-1">Market Range</p>
-                <p className="text-sm font-black text-amber-100">
-                  KES {Number(benchmark.low).toLocaleString("en-KE")} – KES {Number(benchmark.high).toLocaleString("en-KE")}
-                </p>
-                <p className="text-[10px] text-amber-500 mt-0.5">Based on {benchmark.count} similar {car.model} listings</p>
-              </div>
-            )}
-
             {/* Share */}
-            <div>
-              <h2 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-3">Share</h2>
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-3">Share</p>
               <ShareButtons
                 listingUrl={listingUrl}
                 browseUrl={absoluteUrl("/cars")}
@@ -663,7 +667,7 @@ export default async function CarDetailPage({ params }) {
           </aside>
         </div>
 
-        {/* Similar cars (full width below grid) */}
+        {/* Similar cars */}
         <div className="mt-8"><SimilarCarsSection cars={similar} make={car.make} /></div>
       </div>
 
