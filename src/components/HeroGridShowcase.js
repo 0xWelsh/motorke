@@ -112,7 +112,7 @@ function HeroGridShowcaseMobile({ cars, carIndex, saveData }) {
 
         <Link
           href={carListingPath(secondaryCar)}
-          className="group relative flex overflow-hidden bg-[#1e1e1e] border border-zinc-900 shadow-lg rounded-xl min-h-[96px] sm:min-h-[112px] transition-all hover:bg-zinc-800"
+          className="group relative flex overflow-hidden bg-[#1e1e1e] border border-white/[0.06] shadow-lg rounded-xl min-h-[96px] sm:min-h-[112px] transition-all hover:bg-zinc-800"
         >
           <div className="relative w-[44%] max-w-[200px] bg-[#1e1e1e]">
             <Image
@@ -243,7 +243,7 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
       <div className={`grid gap-1.5 sm:gap-2 min-h-[200px] sm:min-h-0 ${reviews.length > 0 ? 'grid-rows-2' : 'grid-rows-1'}`}>
         <Link
           href={carListingPath(secondaryCar)}
-          className="relative group overflow-hidden bg-[#1e1e1e] border border-zinc-900 shadow-lg rounded-xl transition-all hover:bg-zinc-800 min-h-[96px] sm:min-h-0"
+          className="relative group overflow-hidden bg-[#1e1e1e] border border-white/[0.06] shadow-lg rounded-xl transition-all hover:bg-zinc-800 min-h-[96px] sm:min-h-0"
         >
           <div className="absolute inset-0 z-0">
             <Image
@@ -287,7 +287,7 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
         </Link>
 
         {reviews.length > 0 ? (
-          <div className="relative bg-[#1e1e1e] border border-zinc-900 shadow-lg rounded-xl overflow-hidden p-2.5 sm:p-4 md:p-5 flex flex-col min-h-[96px] sm:min-h-0">
+          <div className="relative bg-[#1e1e1e] border border-white/[0.06] shadow-lg rounded-xl overflow-hidden p-2.5 sm:p-4 md:p-5 flex flex-col min-h-[96px] sm:min-h-0">
             <Quote className="absolute top-4 right-5 w-12 h-12 text-white/5 pointer-events-none" />
             <div className="relative z-10 flex flex-col h-full">
               <AnimatePresence mode="wait">
@@ -338,7 +338,7 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
             )}
           </div>
         ) : (
-          <div className="bg-[#1e1e1e] border border-zinc-900 shadow-lg rounded-xl p-2.5 sm:p-4 md:p-5 flex flex-col min-h-[96px] sm:min-h-0">
+          <div className="bg-[#1e1e1e] border border-white/[0.06] shadow-lg rounded-xl p-2.5 sm:p-4 md:p-5 flex flex-col min-h-[96px] sm:min-h-0">
             <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.3em] mb-1">
               All verified
             </p>

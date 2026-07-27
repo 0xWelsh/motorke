@@ -38,7 +38,7 @@ export function getListingBoostVisuals(car, opts = {}) {
       spotlight: false,
       hot: false,
       active: false,
-      cardBorderClass: "border-zinc-900",
+      cardBorderClass: "border-white/[0.06]",
       imageFrameClass: "",
       galleryShellClass: "",
       galleryHeroClass: "",

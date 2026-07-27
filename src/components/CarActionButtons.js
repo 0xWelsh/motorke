@@ -237,7 +237,7 @@ export default function CarActionButtons({ carId, dealerId, carTitle, price }) {
           <button
             key={key}
             onClick={() => open(key)}
-            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border-2 border-zinc-900 px-3 py-3 text-[11px] font-black uppercase tracking-wider text-zinc-900 hover:bg-zinc-900 hover:text-white transition-all active:scale-[0.97]"
+            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[var(--accent)] bg-[var(--accent)] px-3 py-3 text-[11px] font-black uppercase tracking-wider text-white transition-all hover:brightness-110 active:scale-[0.97]"
           >
             <f.icon className="w-4 h-4 shrink-0" />
             <span className="leading-tight">{f.label}</span>

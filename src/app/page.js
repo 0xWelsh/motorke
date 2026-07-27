@@ -1,39 +1,23 @@
 // src/app/page.js
 export const revalidate = 60;
 import BrowsePanel from "@/components/BrowsePanel";
-import {
-  ArrowRight,
-  Search,
-} from "lucide-react";
-import Image from "next/image";
+import { Search } from "lucide-react";
 import HeroGridShowcase from "@/components/LazyHeroGridShowcase";
-import CarCard from "@/components/CarCard";
 import TrackedLink from "@/components/TrackedLink";
 import HomepageShopLinks from "@/components/home/HomepageShopLinks";
 import HomepageTrending from "@/components/home/HomepageTrending";
 import HomepageSpotlight from "@/components/home/HomepageSpotlight";
 import HomepageDeals from "@/components/home/HomepageDeals";
 import HomepageNewArrivals from "@/components/home/HomepageNewArrivals";
-import HomepageDutyTeaser from "@/components/home/HomepageDutyTeaser";
 import HomepageHeroCarFinder from "@/components/home/HomepageHeroCarFinder";
 import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
 import HomepagePriceFilter from "@/components/home/HomepagePriceFilter";
 import HeroCarousel from "@/components/home/HeroCarousel";
-import SeasonalPromoModal from "@/components/SeasonalPromoModal";
-import HomepageHowItWorks from "@/components/home/HomepageHowItWorks";
-import HomepageTrustBadges from "@/components/home/HomepageTrustBadges";
-import HomepageFaq from "@/components/home/HomepageFaq";
-import HomepageSellerCta from "@/components/home/HomepageSellerCta";
 import { getHomepageData } from "@/lib/homepage-cache";
 import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin, absoluteMediaUrl } from "@/lib/site-url";
 import { carListingPath } from "@/lib/car-listing-url";
-import FadeIn from "@/components/ui/FadeIn";
-import ClientRecentSection from "@/components/ClientRecentSection";
 
-const DIFFERENCE_BACKGROUND = "/images/backgrounds/pexels-nurcan-aytas-2150089535-32773507.jpg";
-
-/** Deterministic shuffle seeded by time window so ISR caching works. */
 function seededShuffle(arr, seed) {
   const out = [...arr];
   let m = out.length;
@@ -63,8 +47,7 @@ export const metadata = {
 
 function homeStructuredData(origin, spotlightCars = [], newCars = []) {
   const allCars = [...spotlightCars, ...newCars.slice(0, 8)];
-  
-  const productSchemas = allCars.map((car, idx) => ({
+  const productSchemas = allCars.map((car) => ({
     "@type": "Product",
     "name": `${car.year} ${car.make} ${car.model} ${car.variant || ""}`.trim(),
     "image": absoluteMediaUrl(car?.images?.[0]?.url || car?.image),
@@ -91,19 +74,14 @@ function homeStructuredData(origin, spotlightCars = [], newCars = []) {
         name: "BIDGARI",
         url: origin,
         logo: absoluteUrl(BRAND_MARK_SQUARE),
-        description:
-          "Verified vehicle marketplace connecting buyers with trusted car dealers across Kenya.",
-        address: {
-          "@type": "PostalAddress",
-          addressCountry: "KE",
-        },
+        description: "Verified vehicle marketplace connecting buyers with trusted car dealers across Kenya.",
+        address: { "@type": "PostalAddress", addressCountry: "KE" },
       },
       {
         "@type": "WebSite",
         name: "BIDGARI",
         url: origin,
-        description:
-          "Browse used and new listings, compare vehicles, and connect with Kenyan dealerships.",
+        description: "Browse used and new listings, compare vehicles, and connect with Kenyan dealerships.",
         potentialAction: {
           "@type": "SearchAction",
           target: `${origin}/cars?search={search_term_string}`,
@@ -132,11 +110,8 @@ export default async function HomePage() {
 
   const {
     featured,
-    hotThisWeek,
     newArrivals,
     dealers,
-    newsItems,
-    highlightReviews,
     heroFallback,
     homepageSpotlight,
     mostViewedEnhanced,
@@ -165,230 +140,111 @@ export default async function HomePage() {
           __html: JSON.stringify(homeStructuredData(origin, spotlightCards, newEnhanced)),
         }}
       />
-      {/* Dynamic Hero Section */}
-      <section className="relative pt-4 pb-8 sm:pt-6 sm:pb-10 md:pt-8 md:pb-14 lg:pt-10 lg:pb-16 overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
-          <div className="absolute inset-0">
-            <img src="/images/backgrounds/car-dealership.jpg" alt="" className="w-full h-full object-cover opacity-10" loading="lazy" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#141414] via-[#141414]/80 to-[#141414]" />
-          </div>
-        </div>
-        <div className="home-shell relative z-10">
-          
-          {/* Page Header */}
-          <div className="mb-6 sm:mb-8 md:mb-10 lg:mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 text-center">
-            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-bold text-white leading-[0.92] tracking-tight mb-4 sm:mb-5 max-w-4xl mx-auto">
-              Precision pricing<br />
-              <span className="editorial-hero-accent text-[var(--accent)]">For Precision Machines</span>
+
+      {/* Hero */}
+      <section className="relative pt-6 pb-8 sm:pt-10 sm:pb-12 lg:pt-14 lg:pb-16">
+        <div className="home-shell">
+          <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-10 lg:mb-12">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-4">
+              Find your next car
             </h1>
-
-            <p className="text-base md:text-lg lg:text-[1.15rem] text-zinc-400 leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto lg:hidden">
-              Verified Kenyan inventory, transparent ownership costs, and direct dealer access.
-            </p>
-            <p className="hidden lg:block text-base md:text-lg lg:text-[1.15rem] text-zinc-400 leading-relaxed max-w-3xl lg:max-w-4xl font-medium mx-auto">
-              Find verified Kenyan inventory with transparent ownership costs in minutes.
-              Compare up to three cars, inspect real running-cost and road-readiness signals, then contact real dealers directly.
+            <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto">
+              Verified inventory from dealers across Kenya. Compare specs, costs, and contact sellers directly.
             </p>
           </div>
 
-          {/* Mobile hero */}
-          <div className="lg:hidden mx-auto w-full max-w-6xl space-y-4 sm:space-y-5 animate-in fade-in duration-1000 delay-200">
-            <div className="mb-4 max-w-lg mx-auto w-full">
-              <BrowsePanel layout="hero-mobile-slim" inventoryCounts={browseInventoryCounts} />
-            </div>
-
+          {/* Mobile */}
+          <div className="lg:hidden mx-auto max-w-2xl space-y-4">
+            <BrowsePanel layout="hero-mobile-slim" inventoryCounts={browseInventoryCounts} />
             <HeroCarousel cars={heroCars} />
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 w-full max-w-lg mx-auto">
+            <div className="flex gap-3">
               <TrackedLink
                 href="/cars"
                 eventName="homepage_explore_inventory_click"
                 eventPayload={{ area: "hero" }}
-                className="h-12 w-full inline-flex items-center justify-center bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-black px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95 rounded-xl"
+                className="flex-1 h-12 inline-flex items-center justify-center bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-black text-xs font-bold uppercase tracking-widest transition-all rounded-xl"
               >
-                Explore Inventory
+                Browse Cars
               </TrackedLink>
               <TrackedLink
                 href="/request-car"
                 eventName="homepage_request_car_click"
                 eventPayload={{ area: "hero_mobile" }}
-                className="h-12 w-full inline-flex items-center justify-center gap-2 border border-[var(--accent)]/30 bg-[var(--accent)]/5 text-[var(--accent)] px-6 text-xs font-bold uppercase tracking-widest transition-all hover:bg-[var(--accent)]/10 rounded-xl"
-                style={{ borderRadius: "var(--radius)" }}
+                className="flex-1 h-12 inline-flex items-center justify-center gap-2 border border-white/10 text-white text-xs font-bold uppercase tracking-widest transition-all hover:bg-white/5 rounded-xl"
               >
-                <Search className="w-4 h-4" aria-hidden />
+                <Search className="w-4 h-4" />
                 Request a Car
               </TrackedLink>
             </div>
           </div>
 
-          {/* Desktop hero */}
-          <div className="hidden lg:block mx-auto w-full max-w-6xl animate-in fade-in duration-1000 delay-200">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 lg:items-start">
-              <div className="flex flex-col text-center lg:text-left">
-                <div className="w-full min-w-0">
-                  <BrowsePanel layout="desktop-hero" inventoryCounts={browseInventoryCounts} />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 mt-5 sm:mt-8 w-full max-w-lg mx-auto lg:max-w-none lg:mx-0">
+          {/* Desktop */}
+          <div className="hidden lg:block max-w-6xl mx-auto">
+            <div className="grid grid-cols-2 gap-10 items-start">
+              <div className="space-y-6">
+                <BrowsePanel layout="desktop-hero" inventoryCounts={browseInventoryCounts} />
+                <div className="flex gap-3">
                   <TrackedLink
                     href="/cars"
                     eventName="homepage_explore_inventory_click"
                     eventPayload={{ area: "hero" }}
-                    className="h-12 w-full inline-flex items-center justify-center bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-black px-6 text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95 rounded-xl"
+                    className="flex-1 h-12 inline-flex items-center justify-center bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-black text-xs font-bold uppercase tracking-widest transition-all rounded-xl"
                   >
-                    Explore Inventory
+                    Browse Cars
                   </TrackedLink>
                   <TrackedLink
                     href="/compare"
                     eventName="homepage_compare_cars_click"
                     eventPayload={{ area: "hero" }}
-                    className="h-12 w-full inline-flex items-center justify-center bg-white/[0.04] border border-white/[0.08] text-white px-6 text-xs font-bold uppercase tracking-widest transition-all hover:bg-white/[0.08] hover:border-white/[0.15] rounded-xl"
+                    className="flex-1 h-12 inline-flex items-center justify-center border border-white/10 text-white text-xs font-bold uppercase tracking-widest transition-all hover:bg-white/5 rounded-xl"
                   >
-                    Compare Cars
+                    Compare
                   </TrackedLink>
                 </div>
-
                 <TrackedLink
                   href="/request-car"
                   eventName="homepage_request_car_click"
                   eventPayload={{ area: "hero_desktop" }}
-                  className="mt-3 h-12 w-full max-w-lg lg:max-w-none mx-auto lg:mx-0 inline-flex items-center justify-center gap-2 border border-[var(--accent)]/30 bg-[var(--accent)]/5 text-[var(--accent)] px-6 text-xs font-bold uppercase tracking-widest transition-all hover:bg-[var(--accent)]/10 rounded-xl"
+                  className="flex h-12 w-full items-center justify-center gap-2 border border-white/10 text-white text-xs font-bold uppercase tracking-widest transition-all hover:bg-white/5 rounded-xl"
                 >
-                  <Search className="w-4 h-4" aria-hidden />
+                  <Search className="w-4 h-4" />
                   Request a Car
                 </TrackedLink>
-
-                <div
-                  className="mt-6 sm:mt-7 p-4 border border-white/[0.06] bg-white/[0.02] max-w-lg mx-auto lg:max-w-none text-center lg:text-left rounded-xl"
-                >
-                  <p className="meta-label mb-3">
-                    Quick compare
-                  </p>
-                  <p className="text-sm text-zinc-400 leading-relaxed mb-4">
-                    Side-by-side specs, annual TCO, and road readiness in one clean sheet.
-                  </p>
-                  <TrackedLink
-                    href="/compare"
-                    eventName="homepage_quick_compare_click"
-                    eventPayload={{ area: "hero_card" }}
-                    className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-white hover:text-[var(--accent)] transition-colors justify-center lg:justify-start w-full"
-                  >
-                    Start comparing <ArrowRight className="w-4 h-4" />
-                  </TrackedLink>
-                </div>
               </div>
-
-              <div className="flex flex-col gap-4">
-                <div className="shrink-0 w-full max-w-xl mx-auto lg:max-w-none">
-                  <HeroGridShowcase
-                    cars={heroCars.length >= 2 ? heroCars : heroPool.slice(0, 6)}
-                    reviews={highlightReviews}
-                  />
-                </div>
-                <div className="flex-1 min-h-[12rem]">
-                  <HomepageHeroCarFinder embedded className="h-full min-h-[12rem]" />
-                </div>
+              <div className="space-y-4">
+                <HeroGridShowcase
+                  cars={heroCars.length >= 2 ? heroCars : heroPool.slice(0, 6)}
+                  reviews={[]}
+                />
+                <HomepageHeroCarFinder embedded className="min-h-[12rem]" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Quick filter chips */}
-      <FadeIn delay={0.15}>
-      <div className="home-shell relative -mt-3 sm:-mt-4 mb-6 sm:mb-8 z-20">
+      {/* Price filter chips */}
+      <div className="home-shell mb-6 sm:mb-8">
         <HomepagePriceFilter />
       </div>
-      </FadeIn>
 
-      <HomepageTrustBadges />
-
+      {/* Quick links */}
       <HomepageShopLinks />
 
-      <FadeIn delay={0.05}><HomepageHowItWorks /></FadeIn>
+      {/* Listings */}
+      <HomepageSpotlight cars={spotlightCards} />
+      <HomepageNewArrivals cars={newEnhanced} />
+      <HomepageDeals cars={dealsEnhanced} />
+      <HomepageTrending cars={trendingCars} />
 
-      <FadeIn delay={0.1}><HomepageSpotlight cars={spotlightCards} /></FadeIn>
-
-      <FadeIn delay={0.15}><HomepageNewArrivals cars={newEnhanced} /></FadeIn>
-
-      <FadeIn delay={0.2}><HomepageDeals cars={dealsEnhanced} /></FadeIn>
-
-      <FadeIn delay={0.25}><HomepageTrending cars={trendingCars} /></FadeIn>
-
-      <ClientRecentSection />
-
-      {/* Mobile car finder (visible below lg) */}
-      <div className="lg:hidden mt-8 mb-0">
+      {/* Mobile car finder */}
+      <div className="lg:hidden mt-8">
         <div className="home-shell">
           <HomepageHeroCarFinder embedded />
         </div>
       </div>
 
-      <FadeIn delay={0.3}><HomepageDutyTeaser /></FadeIn>
-
-      {/* The Difference */}
-      <FadeIn delay={0.35}>
-      <section className="relative py-10 sm:py-16 lg:py-20 xl:py-24 bg-[#222222] overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={DIFFERENCE_BACKGROUND}
-            fill
-            className="object-cover opacity-10"
-            alt=""
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#141414]/80 to-transparent" />
-        </div>
-        <div className="home-shell relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-12 items-center">
-            <div>
-              <p className="meta-label text-[var(--accent)] mb-3 sm:mb-5">
-                The Difference
-              </p>
-              <h2 className="text-2xl sm:text-5xl font-bold leading-[1.12] mb-4 sm:mb-6 text-white">
-                Cars from dealers and private sellers.<br />
-                <span className="editorial-heading text-zinc-500">All in one place.</span>
-              </h2>
-              <p className="text-sm sm:text-lg text-zinc-400 leading-relaxed max-w-xl font-medium">
-                We work with dealers and individual sellers across Kenya to put their cars online. You browse, compare, and contact the seller directly without spending your weekend walking through yards.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 items-stretch">
-              {[
-                {
-                  title: "Real cars from real sellers",
-                  desc: "Every listing is tied to a dealer with a showroom or a private owner with a car to sell. What you see is what is available.",
-                },
-                {
-                  title: "Compare side by side",
-                  desc: "Pick up to three cars and look at their specs, pricing, and running costs in one view. No hopping between tabs.",
-                },
-                {
-                  title: "Know the full cost upfront",
-                  desc: "Use our duty calculator and landed price tool to see what a car will cost once it hits Kenyan roads. Everything is clear before you commit.",
-                },
-                {
-                  title: "Talk to the seller directly",
-                  desc: "Call or WhatsApp the seller right from the listing. No middlemen and no contact forms that go to a black hole.",
-                },
-              ].map((item, i) => (
-                <div key={i} className="flex h-full flex-col gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 sm:p-5 hover:bg-white/[0.04] hover:border-white/[0.1] transition-all duration-300">
-                  <h3 className="font-bold text-lg text-white">{item.title}</h3>
-                  <p className="text-sm text-zinc-400 leading-relaxed font-medium">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-      </FadeIn>
-
-      <FadeIn delay={0.3}><HomepageFaq /></FadeIn>
-
-      <FadeIn delay={0.35}><HomepageSellerCta /></FadeIn>
-
-      <FadeIn delay={0.4}><HomepageSupportWhatsApp /></FadeIn>
-      <SeasonalPromoModal />
+      <HomepageSupportWhatsApp />
     </div>
   );
 }
