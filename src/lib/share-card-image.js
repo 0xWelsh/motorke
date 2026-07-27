@@ -40,7 +40,7 @@ function buildBottomSvg(car) {
   const specLine = specParts.length ? specParts.join("  ·  ") : "";
 
   return Buffer.from(`<svg width="${CARD_W}" height="${BOTTOM_H}" xmlns="http://www.w3.org/2000/svg">
-  <rect width="${CARD_W}" height="${BOTTOM_H}" fill="#0a0a0a"/>
+  <rect width="${CARD_W}" height="${BOTTOM_H}" fill="#222222"/>
   <line x1="45" y1="0" x2="${CARD_W - 45}" y2="0" stroke="#1a1a1a" stroke-width="1"/>
   <text x="45" y="52" font-family="system-ui, sans-serif" font-size="28" font-weight="800" fill="#22c55e">${price}</text>
   <text x="45" y="108" font-family="system-ui, sans-serif" font-size="24" font-weight="700" fill="#fff">${title}</text>

@@ -12,7 +12,7 @@ export default function HomepageCompareDiscovery({ comparisons = [] }) {
   const displayItems = comparisons.length > 0 ? comparisons.slice(0, 4) : FALLBACK_COMPARISONS;
 
   return (
-    <section className="py-12 sm:py-16 bg-[#080808] border-t border-white/[0.06]">
+    <section className="py-12 sm:py-16 bg-[#141414] border-t border-white/[0.06]">
       <div className="home-shell">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 sm:mb-10">
           <div className="max-w-2xl">
@@ -36,7 +36,7 @@ export default function HomepageCompareDiscovery({ comparisons = [] }) {
             <Link
               key={cmp.slug}
               href={`/compare/${cmp.slug}`}
-              className="group p-5 bg-[#0f0f0f] border border-white/[0.06] hover:border-[var(--accent)]/40 hover:bg-[#111111] transition-all rounded-xl"
+              className="group p-5 bg-[#1c1c1c] border border-white/[0.06] hover:border-[var(--accent)]/40 hover:bg-[#1e1e1e] transition-all rounded-xl"
             >
               <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-[var(--accent)] mb-2 transition-colors">Head to Head</p>
               <h3 className="text-sm sm:text-base font-bold text-white leading-tight">

@@ -137,7 +137,7 @@ export default function AdminLayout({ children }) {
   };
 
   return (
-    <div className="dark flex min-h-screen bg-[#09090b] text-slate-100 selection:bg-emerald-500/20">
+    <div className="dark flex min-h-screen bg-[#141414] text-slate-100 selection:bg-emerald-500/20">
       {sidebarOpen ? (
         <button
           type="button"

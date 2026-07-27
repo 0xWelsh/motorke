@@ -11,9 +11,9 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="bg-[#0f0f0f] min-h-screen transition-colors duration-300">
+    <div className="bg-[#1c1c1c] min-h-screen transition-colors duration-300">
       {/* Header — split layout with photo */}
-      <section className="bg-[#0f0f0f] pt-32 sm:pt-40 pb-24 sm:pb-32 px-6 border-b border-white/[0.06] relative overflow-hidden">
+      <section className="bg-[#1c1c1c] pt-32 sm:pt-40 pb-24 sm:pb-32 px-6 border-b border-white/[0.06] relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div>
@@ -92,8 +92,8 @@ export default function AboutPage() {
               { icon: <MapPin className="w-5 h-5" />, label: "Counties", value: "8+" },
               { icon: <TrendingUp className="w-5 h-5" />, label: "Buyers Reached", value: "10,000+" },
             ].map((stat, i) => (
-              <div key={i} className="bg-[#0f0f0f] border border-white/[0.06] p-6 text-center" style={{ borderRadius: "var(--radius)" }}>
-                <div className="w-10 h-10 bg-[#0f0f0f] border border-white/[0.06] flex items-center justify-center text-[var(--accent)] mx-auto mb-4" style={{ borderRadius: "var(--radius)" }}>
+              <div key={i} className="bg-[#1c1c1c] border border-white/[0.06] p-6 text-center" style={{ borderRadius: "var(--radius)" }}>
+                <div className="w-10 h-10 bg-[#1c1c1c] border border-white/[0.06] flex items-center justify-center text-[var(--accent)] mx-auto mb-4" style={{ borderRadius: "var(--radius)" }}>
                   {stat.icon}
                 </div>
                 <p className="text-3xl font-bold text-white mb-1">{stat.value}</p>
@@ -116,7 +116,7 @@ export default function AboutPage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 sm:py-24 px-4 sm:px-6 bg-[#0f0f0f] border-t border-b border-white/[0.06]">
+      <section className="py-20 sm:py-24 px-4 sm:px-6 bg-[#1c1c1c] border-t border-b border-white/[0.06]">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-4">How It Works</h2>
           <p className="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-12">The platform in plain language.</p>
@@ -148,7 +148,7 @@ export default function AboutPage() {
               { icon: <Users className="w-6 h-6" />, title: "Direct Connection", detail: "You contact the dealer directly. We do not take a cut, we do not handle payments, we do not insert ourselves into the deal. It is between you and them." },
             ].map((value, i) => (
               <div key={i} className="space-y-5">
-                <div className="w-12 h-12 bg-[#0f0f0f] border border-white/[0.06] flex items-center justify-center text-[var(--accent)]" style={{ borderRadius: "var(--radius)" }}>
+                <div className="w-12 h-12 bg-[#1c1c1c] border border-white/[0.06] flex items-center justify-center text-[var(--accent)]" style={{ borderRadius: "var(--radius)" }}>
                   {value.icon}
                 </div>
                 <h3 className="text-xl font-bold text-white">{value.title}</h3>
@@ -168,7 +168,7 @@ export default function AboutPage() {
             <Link href="/contact" className="inline-flex items-center justify-center h-12 px-8 bg-white text-black text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: "var(--radius)" }}>
               Get in Touch
             </Link>
-            <Link href="/mission" className="inline-flex items-center justify-center h-12 px-8 bg-[#0f0f0f] border border-white/[0.06] text-white text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: "var(--radius)" }}>
+            <Link href="/mission" className="inline-flex items-center justify-center h-12 px-8 bg-[#1c1c1c] border border-white/[0.06] text-white text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: "var(--radius)" }}>
               Read Our Mission
             </Link>
           </div>

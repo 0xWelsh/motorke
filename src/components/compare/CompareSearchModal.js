@@ -28,7 +28,7 @@ export default function CompareSearchModal({
         setSearchQuery("");
       }}
     >
-      <div className="absolute inset-x-0 bottom-0 max-h-[82vh] bg-[#0f0f0f] border-t border-white/[0.06] p-4" style={{ borderTopLeftRadius: "16px", borderTopRightRadius: "16px" }}>
+      <div className="absolute inset-x-0 bottom-0 max-h-[82vh] bg-[#1c1c1c] border-t border-white/[0.06] p-4" style={{ borderTopLeftRadius: "16px", borderTopRightRadius: "16px" }}>
         <div className="flex items-center justify-between mb-3">
           <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Add a car to compare</p>
           <button

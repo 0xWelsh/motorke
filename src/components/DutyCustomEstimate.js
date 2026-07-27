@@ -96,7 +96,7 @@ export default function DutyCustomEstimate({ open: controlledOpen, onOpenChange,
                 value={make}
                 onChange={(e) => setMake(e.target.value)}
                 placeholder="Toyota"
-                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#0f0f0f] text-white rounded-xl"
+                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#1c1c1c] text-white rounded-xl"
               />
             </label>
             <label className="flex flex-col gap-1">
@@ -105,7 +105,7 @@ export default function DutyCustomEstimate({ open: controlledOpen, onOpenChange,
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
                 placeholder="Wish"
-                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#0f0f0f] text-white rounded-xl"
+                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#1c1c1c] text-white rounded-xl"
               />
             </label>
             <label className="flex flex-col gap-1 sm:col-span-2">
@@ -114,7 +114,7 @@ export default function DutyCustomEstimate({ open: controlledOpen, onOpenChange,
                 value={trim}
                 onChange={(e) => setTrim(e.target.value)}
                 placeholder="e.g. TX, Premium"
-                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#0f0f0f] text-white rounded-xl"
+                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#1c1c1c] text-white rounded-xl"
               />
             </label>
             <label className="flex flex-col gap-1">
@@ -125,7 +125,7 @@ export default function DutyCustomEstimate({ open: controlledOpen, onOpenChange,
                 onChange={(e) => setYear(e.target.value)}
                 min={1980}
                 max={currentYear + 1}
-                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#0f0f0f] text-white rounded-xl"
+                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#1c1c1c] text-white rounded-xl"
               />
             </label>
             <label className="flex flex-col gap-1">
@@ -136,7 +136,7 @@ export default function DutyCustomEstimate({ open: controlledOpen, onOpenChange,
                 onChange={(e) => setEngineCC(e.target.value)}
                 min={600}
                 max={8000}
-                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#0f0f0f] text-white rounded-xl"
+                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#1c1c1c] text-white rounded-xl"
               />
             </label>
             <label className="flex flex-col gap-1">
@@ -144,7 +144,7 @@ export default function DutyCustomEstimate({ open: controlledOpen, onOpenChange,
               <select
                 value={fuelType}
                 onChange={(e) => setFuelType(e.target.value)}
-                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#111111] text-white rounded-xl"
+                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#1e1e1e] text-white rounded-xl"
               >
                 {FUEL_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>
@@ -160,7 +160,7 @@ export default function DutyCustomEstimate({ open: controlledOpen, onOpenChange,
                 onChange={(e) => setCrspKes(e.target.value)}
                 inputMode="numeric"
                 placeholder="e.g. 2,400,000"
-                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#0f0f0f] text-white rounded-xl"
+                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#1c1c1c] text-white rounded-xl"
               />
             </label>
           </div>

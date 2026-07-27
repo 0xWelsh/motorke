@@ -35,7 +35,7 @@ export default function PartnerDealershipsSection({ dealers }) {
   const borderRadius = "var(--radius)";
 
   return (
-    <section className="relative overflow-hidden py-10 sm:py-16 lg:py-20 bg-[#111111]">
+    <section className="relative overflow-hidden py-10 sm:py-16 lg:py-20 bg-[#1e1e1e]">
       <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[min(480px,44vw)] lg:block">
         <Image
           src={PARTNER_BG}
@@ -44,7 +44,7 @@ export default function PartnerDealershipsSection({ dealers }) {
           className="object-cover opacity-[0.14]"
           sizes="(min-width: 1024px) 44vw, 0"
         />
-        <div className="absolute inset-0 bg-gradient-to-l from-[#111111] via-[#111111]/92 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-l from-[#1e1e1e] via-[#1e1e1e]/92 to-transparent" />
       </div>
 
       <div className="home-shell relative z-10">

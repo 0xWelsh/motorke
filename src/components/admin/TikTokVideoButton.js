@@ -82,9 +82,9 @@ function drawSlide(ctx, img, car, index, total) {
 function drawFinalSlide(ctx, car) {
   const W = 1080, H = 1920;
   const bg = ctx.createLinearGradient(0, 0, 0, H);
-  bg.addColorStop(0, "#0a0a0a");
+  bg.addColorStop(0, "#222222");
   bg.addColorStop(0.5, "#141414");
-  bg.addColorStop(1, "#0a0a0a");
+  bg.addColorStop(1, "#222222");
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, W, H);
 

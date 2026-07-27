@@ -4,7 +4,7 @@ export default function RootLoading() {
       role="status"
       aria-live="polite"
       aria-label="Loading Motorke"
-      className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#0f0f0f]"
+      className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#1c1c1c]"
     >
       <div className="flex items-center gap-2">
         <span className="w-2.5 h-2.5 rounded-full bg-brand-accent animate-bounce [animation-delay:0ms]" />

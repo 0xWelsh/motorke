@@ -51,7 +51,7 @@ export default function CarReviewForm({ carId, onReviewSubmitted }) {
   };
 
   return (
-    <div className="border border-zinc-800 bg-[#0a0a0a] p-5 sm:p-6 rounded-xl">
+    <div className="border border-zinc-800 bg-[#222222] p-5 sm:p-6 rounded-xl">
       <p className="font-serif text-[12px] font-bold uppercase tracking-[0.15em] text-[var(--accent)] mb-4">Share your experience</p>
 
       <form onSubmit={handleSubmit} className="space-y-4">

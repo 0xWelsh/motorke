@@ -67,7 +67,7 @@ export default function BuyerLocationSettings({ initialLat, initialLng }) {
   }
 
   return (
-    <div className="space-y-5 bg-[#111111] border border-white/[0.08] p-4 sm:p-6 rounded-xl">
+    <div className="space-y-5 bg-[#1e1e1e] border border-white/[0.08] p-4 sm:p-6 rounded-xl">
       <div>
         <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-2">
           <MapPin className="w-4 h-4 text-[#ff5a2f]" />

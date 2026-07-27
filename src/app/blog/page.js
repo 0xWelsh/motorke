@@ -16,7 +16,7 @@ export default async function BlogIndexPage() {
   const posts = await listPublishedSeoPages({ type: "BLOG", take: 40 });
 
   return (
-    <div className="min-h-screen bg-white bg-[#0a0a0a] pt-20 pb-24">
+    <div className="min-h-screen bg-white bg-[#222222] pt-20 pb-24">
       <div className="home-shell max-w-4xl mx-auto">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-2">Guides</p>
         <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 text-white mb-3">Blog</h1>

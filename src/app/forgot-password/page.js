@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] px-4 py-8 sm:px-6 sm:py-12">
+    <div className="min-h-screen bg-[#1c1c1c] px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto w-full max-w-md">
         <Link
           href="/login"
@@ -54,7 +54,7 @@ export default function ForgotPasswordPage() {
           <ArrowLeft size={14} /> Back to Sign In
         </Link>
 
-        <div className="mt-6 rounded-[1.75rem] border border-white/[0.06] bg-[#0f0f0f] p-6 sm:p-8">
+        <div className="mt-6 rounded-[1.75rem] border border-white/[0.06] bg-[#1c1c1c] p-6 sm:p-8">
           <div className="mb-6">
             <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
               <ShieldCheck size={20} />

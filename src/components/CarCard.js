@@ -94,7 +94,7 @@ export default function CarCard({
   return (
     <article
       className={clsx(
-        "group flex flex-col bg-[#0f0f0f] border border-white/[0.06] overflow-hidden transition-all duration-300 ease-out rounded-xl",
+        "group flex flex-col bg-[#1c1c1c] border border-white/[0.06] overflow-hidden transition-all duration-300 ease-out rounded-xl",
         "hover:border-white/[0.12] hover:shadow-glass hover:-translate-y-1",
         boost.cardBorderClass && `!${boost.cardBorderClass}`
       )}
@@ -109,7 +109,7 @@ export default function CarCard({
         href={carListingPath(car)}
         onClick={() => onCarClick("image")}
         className={clsx(
-          "relative bg-[#111111] overflow-hidden block",
+          "relative bg-[#1e1e1e] overflow-hidden block",
           compact
             ? "aspect-[16/10] lg:aspect-[16/11]"
             : spacious

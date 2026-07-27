@@ -16,7 +16,7 @@ export default function MaintenancePage() {
     <main
       role="main"
       aria-labelledby="maintenance-heading"
-      className="min-h-[100dvh] bg-[#0f0f0f] flex items-center justify-center px-6 py-12"
+      className="min-h-[100dvh] bg-[#1c1c1c] flex items-center justify-center px-6 py-12"
     >
       <div className="w-full max-w-md text-center">
         <div className="mx-auto mb-8 flex h-16 w-16 items-center justify-center rounded-full bg-white/[0.03] ring-1 ring-white/[0.06]">

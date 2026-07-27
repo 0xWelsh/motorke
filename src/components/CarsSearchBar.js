@@ -30,7 +30,7 @@ export default function CarsSearchBar() {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Search makes, models, keywords..."
-          className="w-full px-3 py-2 text-[11px] sm:text-[12px] bg-[#111] border border-zinc-700 text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
+          className="w-full px-3 py-2 text-[11px] sm:text-[12px] bg-[#1e1e1e] border border-zinc-700 text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
           style={{ borderRadius: "6px" }}
         />
       </div>

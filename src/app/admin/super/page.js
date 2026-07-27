@@ -29,7 +29,7 @@ export default async function SuperAdminPage() {
 
       <div className="grid gap-8">
         {/* ── Create Admin ─────────────────────────────────────────── */}
-        <section className="bg-[#0f0f0f]/60 border border-white/[0.08] rounded-xl p-6">
+        <section className="bg-[#1c1c1c]/60 border border-white/[0.08] rounded-xl p-6">
           <div className="flex items-center gap-2 mb-5">
             <UserPlus className="w-5 h-5 text-zinc-400" />
             <h2 className="text-lg font-bold text-white">Add Admin User</h2>

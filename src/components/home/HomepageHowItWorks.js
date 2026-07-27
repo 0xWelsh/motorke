@@ -44,7 +44,7 @@ export default function HomepageHowItWorks() {
   const steps = tab === "buyer" ? BUYER_STEPS : SELLER_STEPS;
 
   return (
-    <section className="py-14 sm:py-20 bg-[#080808]">
+    <section className="py-14 sm:py-20 bg-[#141414]">
       <div className="home-shell">
         <div className="text-center mb-10 sm:mb-14">
           <p className="meta-label text-[var(--accent)] mb-3">How it works</p>

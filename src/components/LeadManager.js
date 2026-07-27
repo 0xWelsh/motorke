@@ -96,7 +96,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
           { label: "Unanswered", value: metrics.unanswered ?? 0 },
           { label: "Follow-up Due", value: metrics.followUpDue ?? 0 },
         ].map((item) => (
-          <div key={item.label} className="min-w-[132px] sm:min-w-0 bg-[#0f0f0f] border border-white/[0.06] rounded-xl px-3 py-2.5 shadow-sm">
+          <div key={item.label} className="min-w-[132px] sm:min-w-0 bg-[#1c1c1c] border border-white/[0.06] rounded-xl px-3 py-2.5 shadow-sm">
             <p className="text-[11px] font-black uppercase tracking-[0.12em] text-zinc-400">{item.label}</p>
             <p className="mt-1 text-xl sm:text-2xl font-black text-white">{item.value}</p>
           </div>
@@ -105,7 +105,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
 
       {/* Search & Tabs Combined */}
       <div className="flex flex-col gap-4 sm:gap-6 pb-6 sm:pb-8 border-b border-white/[0.06]">
-        <div className="flex bg-[#0f0f0f] border border-white/[0.06] p-1 rounded-xl w-full overflow-x-auto shadow-sm">
+        <div className="flex bg-[#1c1c1c] border border-white/[0.06] p-1 rounded-xl w-full overflow-x-auto shadow-sm">
           {[{ key: "", label: "All", count: totalAll }, ...STATUSES.map(s => ({ key: s, label: STATUS_META[s].label, count: countMap[s] || 0 }))].map(({ key, label, count }) => (
             <Link key={key} href={`/portal/leads?status=${key}&search=${currentSearch}`}
               className={`px-2 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2 whitespace-nowrap flex-shrink-0 ${
@@ -128,7 +128,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
         <form method="GET" className="relative group w-full">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#2F855A] transition-colors" size={16} />
           <input name="search" defaultValue={currentSearch} placeholder="Name, phone, email…" 
-            className="w-full bg-[#0f0f0f] border border-white/[0.06] rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-white placeholder:text-zinc-400 outline-none focus:border-[#2F855A] transition-all shadow-sm" />
+            className="w-full bg-[#1c1c1c] border border-white/[0.06] rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-white placeholder:text-zinc-400 outline-none focus:border-[#2F855A] transition-all shadow-sm" />
           <input type="hidden" name="status" value={currentStatus} />
           {currentSearch && (
             <Link href={`/portal/leads?status=${currentStatus}`} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white text-xs font-semibold">
@@ -140,7 +140,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
 
       {/* Leads list */}
       {leads.length === 0 ? (
-        <div className="bg-[#0f0f0f] border border-white/[0.06] rounded-xl p-8 sm:p-12 md:p-20 text-center shadow-sm">
+        <div className="bg-[#1c1c1c] border border-white/[0.06] rounded-xl p-8 sm:p-12 md:p-20 text-center shadow-sm">
            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/[0.03] rounded-xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
               <MessageSquare size={32} className="text-zinc-400" />
            </div>
@@ -161,7 +161,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
             const emailSubject = encodeURIComponent(`Regarding your enquiry: ${lead.car?.year} ${lead.car?.make} ${lead.car?.model}`);
             const emailBody = encodeURIComponent(leadMessage);
             return (
-              <div key={lead.id} className={`group bg-[#0f0f0f] border transition-all overflow-hidden rounded-xl shadow-sm hover:shadow-md ${
+              <div key={lead.id} className={`group bg-[#1c1c1c] border transition-all overflow-hidden rounded-xl shadow-sm hover:shadow-md ${
                 isOpen ? "border-white/[0.08] shadow-md" : "border-white/[0.06] hover:border-white/[0.08]"
               }`}>
                 {/* Lead row */}
@@ -207,7 +207,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
 
                 {/* Expanded panel */}
                 {isOpen && (
-                  <div className="bg-[#0f0f0f] border-t border-white/[0.06] px-4 sm:px-6 py-6 sm:py-8">
+                  <div className="bg-[#1c1c1c] border-t border-white/[0.06] px-4 sm:px-6 py-6 sm:py-8">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10">
                       {/* Left: Engagement Info */}
                       <div>
@@ -217,20 +217,20 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                         
                         <div className="space-y-4 sm:space-y-5 mb-6 sm:mb-8">
                            <div className="flex items-center gap-3 sm:gap-4">
-                              <div className="w-10 h-10 rounded-xl bg-[#0f0f0f] border border-white/[0.06] flex items-center justify-center text-zinc-400 flex-shrink-0"><Phone size={16} /></div>
+                              <div className="w-10 h-10 rounded-xl bg-[#1c1c1c] border border-white/[0.06] flex items-center justify-center text-zinc-400 flex-shrink-0"><Phone size={16} /></div>
                               <div className="min-w-0">
                                  <p className="text-xs font-bold text-zinc-400 uppercase">Phone</p>
                                  <p className="text-sm font-bold text-white truncate">{lead.phone}</p>
                               </div>
                            </div>
                            <div className="flex items-center gap-3 sm:gap-4">
-                              <div className="w-10 h-10 rounded-xl bg-[#0f0f0f] border border-white/[0.06] flex items-center justify-center text-zinc-400 flex-shrink-0"><Mail size={16} /></div>
+                              <div className="w-10 h-10 rounded-xl bg-[#1c1c1c] border border-white/[0.06] flex items-center justify-center text-zinc-400 flex-shrink-0"><Mail size={16} /></div>
                               <div className="min-w-0">
                                  <p className="text-xs font-bold text-zinc-400 uppercase">Email</p>
                                  <p className="text-sm font-bold text-white truncate">{lead.email || "Not provided"}</p>
                               </div>
                            </div>
-                           <div className="bg-[#0f0f0f] border border-white/[0.06] p-3 sm:p-5 rounded-xl">
+                           <div className="bg-[#1c1c1c] border border-white/[0.06] p-3 sm:p-5 rounded-xl">
                               <p className="text-xs font-bold text-zinc-400 uppercase mb-2 flex items-center gap-2"><MessageSquare size={10} /> Message</p>
                               <p className="text-xs sm:text-sm font-medium text-zinc-300 leading-relaxed">{lead.message || "Enquiry regarding listing."}</p>
                            </div>
@@ -248,7 +248,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                           {lead.email && (
                             <a
                               href={`mailto:${lead.email}?subject=${emailSubject}&body=${emailBody}`}
-                              className="flex items-center justify-center gap-2 bg-[#0f0f0f] border border-white/[0.06] text-zinc-300 text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl hover:bg-white/[0.03] transition-all shadow-sm"
+                              className="flex items-center justify-center gap-2 bg-[#1c1c1c] border border-white/[0.06] text-zinc-300 text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl hover:bg-white/[0.03] transition-all shadow-sm"
                             >
                               <Mail size={14} /> Email
                             </a>
@@ -271,7 +271,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                                 className={`flex items-center justify-center gap-1 px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl border text-xs font-semibold transition-all shadow-sm ${
                                   isCurrent 
                                     ? `${m.bg} ${m.text} ${m.border}`
-                                    : "bg-[#0f0f0f] text-zinc-400 border-white/[0.06] hover:border-white/[0.08] hover:bg-white/[0.03]"
+                                    : "bg-[#1c1c1c] text-zinc-400 border-white/[0.06] hover:border-white/[0.08] hover:bg-white/[0.03]"
                                 }`}>
                                 {m.label}
                               </button>
@@ -282,7 +282,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                         <div className="relative flex items-center mb-6">
                           <input value={noteInputs[lead.id] || ""} onChange={e => setNoteInputs(prev => ({ ...prev, [lead.id]: e.target.value }))}
                             placeholder="Add note…"
-                            className="w-full bg-[#0f0f0f] border border-white/[0.06] rounded-xl pl-4 pr-16 py-2.5 text-sm font-medium text-white placeholder:text-zinc-400 outline-none focus:border-white transition-all shadow-sm"
+                            className="w-full bg-[#1c1c1c] border border-white/[0.06] rounded-xl pl-4 pr-16 py-2.5 text-sm font-medium text-white placeholder:text-zinc-400 outline-none focus:border-white transition-all shadow-sm"
                             onKeyDown={e => e.key === "Enter" && addNote(lead.id)}
                           />
                           <button onClick={() => addNote(lead.id)} disabled={saving[`note_${lead.id}`] || !noteInputs[lead.id]?.trim()}
@@ -294,7 +294,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                         {lead.notes?.length > 0 && (
                           <div className="space-y-2 max-h-40 overflow-y-auto">
                              {lead.notes.map((note, idx) => (
-                               <div key={note.id || idx} className="bg-[#0f0f0f] border border-white/[0.06] p-3 rounded-xl">
+                               <div key={note.id || idx} className="bg-[#1c1c1c] border border-white/[0.06] p-3 rounded-xl">
                                   <div className="flex items-center justify-between mb-1 text-xs font-bold text-zinc-400 uppercase gap-2">
                                      <span>Note</span>
                                      <span className="flex-shrink-0">{fmtDate(note.createdAt)}</span>

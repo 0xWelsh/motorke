@@ -134,7 +134,7 @@ export default function DealerReviews({
         )}
       </div>
 
-      <aside className="h-fit border border-white/[0.08] bg-[#111111] p-5 sm:p-6 shadow-sm rounded-xl">
+      <aside className="h-fit border border-white/[0.08] bg-[#1e1e1e] p-5 sm:p-6 shadow-sm rounded-xl">
         <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-zinc-400 mb-2">Share your experience</p>
         <p className="text-sm font-medium text-zinc-300 mb-4">
           Help other buyers understand response speed, transparency, and after-sales quality.
@@ -159,7 +159,7 @@ export default function DealerReviews({
               <select
                 value={rating}
                 onChange={(event) => setRating(parseInt(event.target.value, 10))}
-                className="mt-1 w-full border border-white/[0.08] bg-[#0f0f0f] px-3 py-2 text-sm font-semibold text-white outline-none focus:border-[var(--accent)] rounded-xl"
+                className="mt-1 w-full border border-white/[0.08] bg-[#1c1c1c] px-3 py-2 text-sm font-semibold text-white outline-none focus:border-[var(--accent)] rounded-xl"
               >
                 <option value={5}>5 - Excellent</option>
                 <option value={4}>4 - Very good</option>
@@ -177,7 +177,7 @@ export default function DealerReviews({
                 maxLength={500}
                 rows={4}
                 placeholder="How was your experience with this dealer?"
-                className="mt-1 w-full border border-white/[0.08] bg-[#0f0f0f] px-3 py-2 text-sm text-zinc-300 outline-none focus:border-[var(--accent)] resize-none rounded-xl"
+                className="mt-1 w-full border border-white/[0.08] bg-[#1c1c1c] px-3 py-2 text-sm text-zinc-300 outline-none focus:border-[var(--accent)] resize-none rounded-xl"
               />
               <p className="mt-1 text-[11px] font-bold text-zinc-400">{comment.trim().length}/500</p>
             </div>

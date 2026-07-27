@@ -126,7 +126,7 @@ export default function TermsPage() {
   const support = getSupportEmail();
   const sections = getTermsSections(support);
   return (
-    <div className="bg-[#080808] min-h-screen">
+    <div className="bg-[#141414] min-h-screen">
       <div className="mx-auto max-w-7xl px-6 py-32 sm:py-40">
         
         {/* Header */}
@@ -147,7 +147,7 @@ export default function TermsPage() {
         </div>
 
         {/* Tactical Nav */}
-        <div className="bg-[#0f0f0f] border border-white/[0.06] p-10 sm:p-12 mb-24 rounded-xl">
+        <div className="bg-[#1c1c1c] border border-white/[0.06] p-10 sm:p-12 mb-24 rounded-xl">
           <h2 className="text-[10px] font-bold text-white uppercase tracking-widest mb-8">Protocol Repository</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-4">
             {sections.map((section, idx) => (
@@ -186,19 +186,19 @@ export default function TermsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
              <div>
                 <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-4">Support Direct</h4>
-                <a href={`mailto:${support}`} className="inline-flex items-center justify-center h-11 px-5 bg-[#0f0f0f] border border-white/[0.06] text-sm font-bold text-zinc-400 hover:text-[var(--accent)]">
+                <a href={`mailto:${support}`} className="inline-flex items-center justify-center h-11 px-5 bg-[#1c1c1c] border border-white/[0.06] text-sm font-bold text-zinc-400 hover:text-[var(--accent)]">
                   {support}
                 </a>
              </div>
              <div>
                 <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-4">Compliance Hub</h4>
-                <a href={`mailto:${support}`} className="inline-flex items-center justify-center h-11 px-5 bg-[#0f0f0f] border border-white/[0.06] text-sm font-bold text-zinc-400 hover:text-[var(--accent)]">
+                <a href={`mailto:${support}`} className="inline-flex items-center justify-center h-11 px-5 bg-[#1c1c1c] border border-white/[0.06] text-sm font-bold text-zinc-400 hover:text-[var(--accent)]">
                   {support}
                 </a>
              </div>
              <div>
                 <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-4">Financial Terminal</h4>
-                <a href={`mailto:${support}`} className="inline-flex items-center justify-center h-11 px-5 bg-[#0f0f0f] border border-white/[0.06] text-sm font-bold text-zinc-400 hover:text-[var(--accent)]">
+                <a href={`mailto:${support}`} className="inline-flex items-center justify-center h-11 px-5 bg-[#1c1c1c] border border-white/[0.06] text-sm font-bold text-zinc-400 hover:text-[var(--accent)]">
                   {support}
                 </a>
              </div>

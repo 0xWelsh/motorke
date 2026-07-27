@@ -50,7 +50,7 @@ export default async function AdminContentPage() {
         ].map((s) => (
           <div
             key={s.label}
-            className="rounded-xl border border-white/[0.06] bg-[#0f0f0f] px-4 py-3"
+            className="rounded-xl border border-white/[0.06] bg-[#1c1c1c] px-4 py-3"
           >
             <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{s.label}</p>
             <p className="text-2xl font-bold text-white tabular-nums">{s.value}</p>

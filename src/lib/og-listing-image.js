@@ -205,7 +205,7 @@ function buildCaptionSvg(carMeta, width) {
   const d = dealer ? `<text x="${width - 16}" y="72" font-family="sans-serif" font-size="15" fill="#9ca3af" text-anchor="end">${dealer}</text>` : "";
   const u = `<text x="16" y="108" font-family="sans-serif" font-size="13" fill="#666">WELSH</text>`;
 
-  return Buffer.from(`<svg width="${width}" height="${CAPTION_H}" xmlns="http://www.w3.org/2000/svg"><rect width="${width}" height="${CAPTION_H}" fill="#0a0a0a"/>${line}${t}${p}${m}${d}${u}</svg>`);
+  return Buffer.from(`<svg width="${width}" height="${CAPTION_H}" xmlns="http://www.w3.org/2000/svg"><rect width="${width}" height="${CAPTION_H}" fill="#222222"/>${line}${t}${p}${m}${d}${u}</svg>`);
 }
 
 /**

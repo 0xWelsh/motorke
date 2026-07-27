@@ -46,7 +46,7 @@ export default function DealersMapView({ dealers }) {
 
   if (loading) {
     return (
-      <div className="w-full h-full flex items-center justify-center bg-[#0f0f0f]">
+      <div className="w-full h-full flex items-center justify-center bg-[#1c1c1c]">
         <div className="flex items-center gap-2">
           <Loader2 className="w-5 h-5 text-[#ff5a2f] animate-spin" />
           <p className="text-sm font-medium text-zinc-400">Loading map...</p>

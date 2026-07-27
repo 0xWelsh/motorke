@@ -277,7 +277,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
 
   if (!images?.length) {
     return (
-      <div className="w-full aspect-video bg-[#111111] flex items-center justify-center text-sm font-bold uppercase tracking-widest text-zinc-600 max-h-[600px]">
+      <div className="w-full aspect-video bg-[#1e1e1e] flex items-center justify-center text-sm font-bold uppercase tracking-widest text-zinc-600 max-h-[600px]">
         No image
       </div>
     );
@@ -295,7 +295,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
       <div
         id="hero-gallery"
         ref={heroRef}
-        className="relative w-full h-[40vh] min-h-[280px] max-h-[400px] lg:h-auto lg:aspect-video lg:max-h-[600px] bg-[#0a0a0a] overflow-hidden select-none lg:rounded-xl"
+        className="relative w-full h-[40vh] min-h-[280px] max-h-[400px] lg:h-auto lg:aspect-video lg:max-h-[600px] bg-[#222222] overflow-hidden select-none lg:rounded-xl"
       >
         <div
           className="absolute inset-0 cursor-pointer"
@@ -332,7 +332,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
         {/* Overlay nav */}
         <div
           className={`absolute inset-x-0 top-0 z-20 flex items-center justify-between px-3 py-2 transition-colors duration-300 ${
-            navOpaque ? "bg-[#111111]/90 backdrop-blur-md" : "bg-transparent"
+            navOpaque ? "bg-[#1e1e1e]/90 backdrop-blur-md" : "bg-transparent"
           }`}
         >
           <button
@@ -382,7 +382,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
               </button>
 
               {menuOpen && (
-                <div className="absolute right-0 top-full mt-1 w-44 bg-[#111111] rounded-xl shadow-xl border border-white/[0.08] py-1.5 z-30 overflow-hidden">
+                <div className="absolute right-0 top-full mt-1 w-44 bg-[#1e1e1e] rounded-xl shadow-xl border border-white/[0.08] py-1.5 z-30 overflow-hidden">
                   <button
                     type="button"
                     onClick={handleShare}

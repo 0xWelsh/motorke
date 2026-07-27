@@ -68,7 +68,7 @@ export default function DealerBoostHub({
         {creditRows.map(({ key, label }) => (
           <div
             key={key}
-            className="border border-white/[0.08] bg-[#111111] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.04)] rounded-xl"
+            className="border border-white/[0.08] bg-[#1e1e1e] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.04)] rounded-xl"
           >
             <p className="text-[10px] font-black uppercase tracking-[0.12em] text-zinc-400">
               {label}
@@ -83,7 +83,7 @@ export default function DealerBoostHub({
         ))}
       </section>
 
-      <section className="border border-white/[0.08] bg-[#111111] p-4 sm:p-6 rounded-xl">
+      <section className="border border-white/[0.08] bg-[#1e1e1e] p-4 sm:p-6 rounded-xl">
         <h2 className="text-sm font-bold text-white">Plan limits</h2>
         <p className="text-sm text-zinc-400 mt-1">
           Suggested tier: <strong>{limits.planName}</strong>. Up to{" "}
@@ -97,7 +97,7 @@ export default function DealerBoostHub({
         ) : null}
       </section>
 
-      <section className="border border-white/[0.08] bg-[#111111] p-4 sm:p-6 space-y-4 rounded-xl">
+      <section className="border border-white/[0.08] bg-[#1e1e1e] p-4 sm:p-6 space-y-4 rounded-xl">
         <h2 className="text-sm font-bold text-white flex items-center gap-2">
           <Zap size={16} className="text-amber-600" /> Dealer lift (whole showroom)
         </h2>
@@ -108,7 +108,7 @@ export default function DealerBoostHub({
           type="button"
           onClick={applyDealerLift}
           disabled={liftLoading}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#111111] text-white text-[11px] font-black uppercase tracking-[0.1em] disabled:opacity-50 rounded-xl"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1e1e1e] text-white text-[11px] font-black uppercase tracking-[0.1em] disabled:opacity-50 rounded-xl"
         >
           {liftLoading ? <Loader2 size={14} className="animate-spin" /> : null}
           Apply dealer lift
@@ -116,7 +116,7 @@ export default function DealerBoostHub({
         {liftError ? <p className="text-[11px] text-rose-600">{liftError}</p> : null}
       </section>
 
-      <section className="border border-white/[0.08] bg-[#111111] p-4 sm:p-6 space-y-4 rounded-xl">
+      <section className="border border-white/[0.08] bg-[#1e1e1e] p-4 sm:p-6 space-y-4 rounded-xl">
         <h2 className="text-sm font-bold text-white">Boost a vehicle</h2>
         {liveCars.length === 0 ? (
           <p className="text-sm text-zinc-400">No live listings. Mark a car available first.</p>
@@ -125,7 +125,7 @@ export default function DealerBoostHub({
             <select
               value={selectedCarId}
               onChange={(e) => setSelectedCarId(e.target.value)}
-              className="w-full max-w-md h-10 px-3 border border-white/[0.08] bg-[#111111] text-sm text-white rounded-xl"
+              className="w-full max-w-md h-10 px-3 border border-white/[0.08] bg-[#1e1e1e] text-sm text-white rounded-xl"
             >
               {liveCars.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -157,7 +157,7 @@ export default function DealerBoostHub({
 
       {addons?.length ? (
         <section className="border border-white/[0.08] overflow-hidden rounded-xl">
-          <div className="px-4 py-3 bg-[#0d0d0d] border-b border-white/[0.08]">
+          <div className="px-4 py-3 bg-[#1a1a1a] border-b border-white/[0.08]">
             <h2 className="text-[11px] font-black uppercase tracking-[0.12em] text-zinc-400">
               Add-on prices (when billing is on)
             </h2>
@@ -166,7 +166,7 @@ export default function DealerBoostHub({
             {addons.map((addon) => (
               <li
                 key={addon.id}
-                className="px-4 py-3 flex flex-wrap justify-between gap-2 text-sm bg-[#111111] rounded-xl"
+                className="px-4 py-3 flex flex-wrap justify-between gap-2 text-sm bg-[#1e1e1e] rounded-xl"
               >
                 <span className="font-medium text-white">
                   {addon.name} · {addon.durationLabel}
@@ -179,7 +179,7 @@ export default function DealerBoostHub({
       ) : null}
 
       {recentEvents?.length ? (
-        <section className="border border-white/[0.08] bg-[#111111] p-4 sm:p-6 rounded-xl">
+        <section className="border border-white/[0.08] bg-[#1e1e1e] p-4 sm:p-6 rounded-xl">
           <h2 className="text-sm font-bold text-white mb-3">Recent boosts</h2>
           <ul className="space-y-2 text-sm">
             {recentEvents.map((e) => (

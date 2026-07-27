@@ -58,7 +58,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
             placeholder="Search showroom..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full bg-[#0f0f0f] border border-white/[0.08] text-sm font-medium text-white placeholder:text-zinc-400 outline-none focus:border-[var(--accent)] transition-all py-3.5 px-11 rounded-xl"
+            className="w-full bg-[#1c1c1c] border border-white/[0.08] text-sm font-medium text-white placeholder:text-zinc-400 outline-none focus:border-[var(--accent)] transition-all py-3.5 px-11 rounded-xl"
           />
           {query && (
             <button onClick={() => setQuery("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white">
@@ -67,7 +67,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
           )}
         </div>
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 sm:pb-0 hide-scrollbar">
-          <div className="flex items-center justify-center w-10 h-10 shrink-0 bg-[#111111] border border-white/[0.08] rounded-2xl text-zinc-400">
+          <div className="flex items-center justify-center w-10 h-10 shrink-0 bg-[#1e1e1e] border border-white/[0.08] rounded-2xl text-zinc-400">
              <SlidersHorizontal className="w-4 h-4" />
           </div>
           {makes.map((make) => (
@@ -77,7 +77,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
                className={`px-4 py-2.5 shrink-0 text-[10px] font-bold uppercase tracking-widest transition-all border rounded-xl ${
                  activeFilter === make
                    ? "bg-white text-black border-white"
-                    : "bg-[#111111] text-zinc-400 border-white/[0.08] hover:border-white"
+                    : "bg-[#1e1e1e] text-zinc-400 border-white/[0.08] hover:border-white"
                }`}
              >
                {make === "ALL" ? "All Units" : make}
@@ -87,7 +87,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
       </div>
 
       {filteredCars.length === 0 ? (
-        <div className="border border-dashed border-white/[0.08] bg-[#111111] p-16 text-center rounded-xl">
+        <div className="border border-dashed border-white/[0.08] bg-[#1e1e1e] p-16 text-center rounded-xl">
            <Search className="w-10 h-10 mx-auto text-zinc-600 mb-6" />
            <h3 className="text-xs font-bold text-white uppercase tracking-widest mb-2">No units found</h3>
            <p className="text-sm font-medium text-zinc-400">Try adjusting your filters or search query.</p>

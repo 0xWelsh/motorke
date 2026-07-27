@@ -457,7 +457,7 @@ export default async function CarHubPage({ params, searchParams }) {
     : null;
 
   return (
-    <div className="min-h-screen bg-white pb-20 bg-[#09090b]">
+    <div className="min-h-screen bg-white pb-20 bg-[#141414]">
       <Script
         id="hub-faq-jsonld"
         type="application/ld+json"
@@ -611,7 +611,7 @@ export default async function CarHubPage({ params, searchParams }) {
 
         {cars.length === 0 ? (
           <div
-            className="py-20 text-center border border-[#EDF2F7] border-zinc-800 bg-[#F7FAFC] bg-[#111111]"
+            className="py-20 text-center border border-[#EDF2F7] border-zinc-800 bg-[#F7FAFC] bg-[#1e1e1e]"
             style={{ borderRadius: "var(--radius)" }}
           >
             <Search className="w-11 h-11 text-slate-300 text-zinc-700 mx-auto mb-4" />

@@ -8,7 +8,7 @@ export default function HomepageSpotlight({ cars = [] }) {
   return (
     <section
       aria-labelledby="homepage-spotlight-heading"
-      className="border-b border-white/[0.06] bg-[#080808] py-8 sm:py-12"
+      className="border-b border-white/[0.06] bg-[#141414] py-8 sm:py-12"
     >
       <div className="home-shell">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 sm:mb-7 gap-3">

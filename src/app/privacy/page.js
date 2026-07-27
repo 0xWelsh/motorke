@@ -151,7 +151,7 @@ export default function PrivacyPage() {
   const support = getSupportEmail();
   const sections = getPrivacySections(support);
   return (
-    <div className="bg-[#080808] min-h-screen">
+    <div className="bg-[#141414] min-h-screen">
       <div className="mx-auto max-w-7xl px-6 py-32 sm:py-40">
         
         {/* Header */}
@@ -172,7 +172,7 @@ export default function PrivacyPage() {
         </div>
 
         {/* Quick Summary Terminal */}
-        <div className="bg-[#0f0f0f] border border-white/[0.06] p-8 sm:p-12 mb-24 rounded-xl">
+        <div className="bg-[#1c1c1c] border border-white/[0.06] p-8 sm:p-12 mb-24 rounded-xl">
           <h2 className="text-[10px] font-bold text-white uppercase tracking-widest mb-8">Executive Summary</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
              {[
@@ -195,7 +195,7 @@ export default function PrivacyPage() {
           <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-400 mb-12">Asset Classification</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {dataCategories.map((cat) => (
-              <div key={cat.label} className="bg-[#0f0f0f] border border-white/[0.06] p-8 space-y-6 shadow-sm rounded-xl">
+              <div key={cat.label} className="bg-[#1c1c1c] border border-white/[0.06] p-8 space-y-6 shadow-sm rounded-xl">
                 <h3 className="text-sm font-bold text-white uppercase tracking-widest">{cat.label}</h3>
                 <ul className="space-y-3">
                   {cat.items.map((item) => (
@@ -215,7 +215,7 @@ export default function PrivacyPage() {
           <div className="border border-white/[0.06] overflow-x-auto rounded-xl">
             <table className="w-full text-left">
               <thead>
-                <tr className="bg-[#0f0f0f] border-b border-white/[0.06]">
+                <tr className="bg-[#1c1c1c] border-b border-white/[0.06]">
                   <th className="py-5 px-8 text-[10px] font-bold text-white uppercase tracking-widest">Entity</th>
                   <th className="py-5 px-8 text-[10px] font-bold text-white uppercase tracking-widest">Protocol Purpose</th>
                   <th className="py-5 px-8 text-[10px] font-bold text-white uppercase tracking-widest">Data Variable</th>
@@ -276,13 +276,13 @@ export default function PrivacyPage() {
         <div className="pt-24 border-t border-white/[0.06] grid grid-cols-1 md:grid-cols-3 gap-16">
           <div>
             <h3 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-4">Privacy Terminal</h3>
-            <a href={`mailto:${support}`} className="inline-flex items-center justify-center h-11 px-5 bg-[#0f0f0f] border border-white/[0.06] text-sm font-bold text-zinc-400 hover:text-[var(--accent)]">
+            <a href={`mailto:${support}`} className="inline-flex items-center justify-center h-11 px-5 bg-[#1c1c1c] border border-white/[0.06] text-sm font-bold text-zinc-400 hover:text-[var(--accent)]">
               {support}
             </a>
           </div>
           <div>
             <h3 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-4">Legal Hub</h3>
-            <a href={`mailto:${support}`} className="inline-flex items-center justify-center h-11 px-5 bg-[#0f0f0f] border border-white/[0.06] text-sm font-bold text-zinc-400 hover:text-[var(--accent)]">
+            <a href={`mailto:${support}`} className="inline-flex items-center justify-center h-11 px-5 bg-[#1c1c1c] border border-white/[0.06] text-sm font-bold text-zinc-400 hover:text-[var(--accent)]">
               {support}
             </a>
           </div>

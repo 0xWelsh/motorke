@@ -10,7 +10,7 @@ export default function DutyPageHero({ compact = false, children = null }) {
   }
 
   return (
-    <section className="relative mb-0 overflow-hidden border-b border-slate-200 border-zinc-900 bg-red-50/70 bg-[#0a0a0a]">
+    <section className="relative mb-0 overflow-hidden border-b border-slate-200 border-zinc-900 bg-red-50/70 bg-[#222222]">
       <div className="home-shell pt-2 pb-4 sm:pb-6 lg:pb-8">
         <div className="max-w-6xl mx-auto">
           <nav className="text-xs text-slate-500 mb-4" aria-label="Breadcrumb">
@@ -37,7 +37,7 @@ export default function DutyPageHero({ compact = false, children = null }) {
               <TrackedLink
                 href="/"
                 eventName="duty_hero_home_click"
-                className="h-11 sm:h-12 inline-flex items-center justify-center bg-white bg-[#111111] border border-slate-200 border-slate-800 text-[#111827] text-white px-4 text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-all hover:border-slate-900 hover:border-white"
+                className="h-11 sm:h-12 inline-flex items-center justify-center bg-white bg-[#1e1e1e] border border-slate-200 border-slate-800 text-[#111827] text-white px-4 text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-all hover:border-slate-900 hover:border-white"
                 style={{ borderRadius: "var(--radius)" }}
               >
                 Home

@@ -71,7 +71,7 @@ export default function AnalyticsBarChart({ data }) {
           <Bar
             dataKey="views"
             name="Views"
-            fill="#111111"
+            fill="#1e1e1e"
             radius={[2, 2, 0, 0]}
             maxBarSize={24}
           />

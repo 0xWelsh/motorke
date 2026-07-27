@@ -42,7 +42,7 @@ export default async function AdminSettingsPage({ searchParams }) {
         </div>
       )}
 
-      <form action="/api/admin/settings" method="POST" className="bg-[#0f0f0f] rounded-xl p-8 border border-white/[0.08]">
+      <form action="/api/admin/settings" method="POST" className="bg-[#1c1c1c] rounded-xl p-8 border border-white/[0.08]">
          <div className="space-y-6 mb-8">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Platform Fee (Monthly)</label>

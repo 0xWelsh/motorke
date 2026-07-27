@@ -10,9 +10,9 @@ export const metadata = {
 
 export default function MissionPage() {
   return (
-    <div className="bg-[#080808] min-h-screen">
+    <div className="bg-[#141414] min-h-screen">
       {/* Header */}
-      <section className="bg-[#080808] pt-32 sm:pt-40 pb-24 px-6 border-b border-white/[0.06]">
+      <section className="bg-[#141414] pt-32 sm:pt-40 pb-24 px-6 border-b border-white/[0.06]">
         <div className="max-w-7xl mx-auto text-center sm:text-left">
           <div className="flex items-center justify-center sm:justify-start gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-8">
             <span>Corporate</span>
@@ -41,7 +41,7 @@ export default function MissionPage() {
                 <h3 className="text-4xl font-bold text-white leading-tight">Solving for trust in a fragmented industry.</h3>
              </div>
              <div className="lg:col-span-7">
-                <div className="bg-[#0f0f0f] p-10 sm:p-12 border border-white/[0.06] shadow-2xl rounded-xl">
+                <div className="bg-[#1c1c1c] p-10 sm:p-12 border border-white/[0.06] shadow-2xl rounded-xl">
                    <p className="text-lg text-white leading-relaxed font-medium">
                       The traditional car buying process was marked by opacity. Outdated listings, verification hurdles, and a lack of direct dealer performance metrics created friction. 
                       <span className="block mt-6 text-[var(--accent)]">BIDGARI was built to decentralize access to verified vehicle data.</span>
@@ -58,7 +58,7 @@ export default function MissionPage() {
                { icon: <Target className="w-5 h-5" />, title: "Direct Logistics", detail: "Connect directly with verified yards. No middleman, no hidden commission structures." }
              ].map((pillar, i) => (
                <div key={i} className="space-y-6 group">
-                  <div className="w-12 h-12 bg-[#0f0f0f] border border-white/[0.06] flex items-center justify-center text-[var(--accent)] transition-transform group-hover:scale-110 rounded-xl">
+                  <div className="w-12 h-12 bg-[#1c1c1c] border border-white/[0.06] flex items-center justify-center text-[var(--accent)] transition-transform group-hover:scale-110 rounded-xl">
                      {pillar.icon}
                   </div>
                   <h4 className="text-xl font-bold text-white uppercase tracking-tight">{pillar.title}</h4>
@@ -125,7 +125,7 @@ export default function MissionPage() {
               <Link href="/cars" className="inline-flex items-center justify-center h-12 px-8 sm:px-10 bg-white text-black border border-white text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98] shadow-sm rounded-xl">
                  Browse Verified Assets
               </Link>
-               <Link href="/contact" className="inline-flex items-center justify-center h-12 px-8 sm:px-10 bg-[#0f0f0f] border border-white/[0.06] text-white text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98] shadow-sm rounded-xl">
+               <Link href="/contact" className="inline-flex items-center justify-center h-12 px-8 sm:px-10 bg-[#1c1c1c] border border-white/[0.06] text-white text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98] shadow-sm rounded-xl">
                   Partner Enquiry
                </Link>
            </div>

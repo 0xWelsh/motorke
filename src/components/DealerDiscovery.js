@@ -18,9 +18,9 @@ export default function DealerDiscovery({ dealers }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {dealers.map((dealer) => (
           <Link key={dealer.id} href={`/dealers/${dealer.slug}`}
-            className="group bg-[#111111] border border-white/[0.06] rounded-[2rem] p-8 transition-all duration-300 hover:shadow-xl hover:border-brand-accent/30 flex flex-col items-center text-center">
+            className="group bg-[#1e1e1e] border border-white/[0.06] rounded-[2rem] p-8 transition-all duration-300 hover:shadow-xl hover:border-brand-accent/30 flex flex-col items-center text-center">
             <div className="relative mb-6">
-              <div className="w-20 h-20 rounded-3xl bg-[#0f0f0f] border border-white/[0.06] flex items-center justify-center text-brand font-black text-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm">
+              <div className="w-20 h-20 rounded-3xl bg-[#1c1c1c] border border-white/[0.06] flex items-center justify-center text-brand font-black text-2xl group-hover:scale-110 transition-transform duration-500 shadow-sm">
                 {dealer.logoUrl ? (
                   <img src={dealer.logoUrl} alt={dealer.name} className="w-full h-full object-contain p-2" />
                 ) : (
@@ -28,7 +28,7 @@ export default function DealerDiscovery({ dealers }) {
                 )}
               </div>
               {dealer.verified && (
-                <div className="absolute -bottom-1 -right-1 bg-[#111111] rounded-2xl p-1 shadow-md">
+                <div className="absolute -bottom-1 -right-1 bg-[#1e1e1e] rounded-2xl p-1 shadow-md">
                   <ShieldCheck className="w-5 h-5 text-[#ff5a2f] fill-[var(--accent)]" />
                 </div>
               )}
@@ -40,7 +40,7 @@ export default function DealerDiscovery({ dealers }) {
             </p>
 
             <div className="mt-auto w-full grid grid-cols-2 gap-2">
-               <div className="bg-[#0f0f0f] rounded-2xl py-3 px-2">
+               <div className="bg-[#1c1c1c] rounded-2xl py-3 px-2">
                   <p className="text-lg font-black text-zinc-300 leading-none mb-1">{dealer._count?.cars || 0}</p>
                   <p className="text-[9px] font-extrabold text-zinc-400 uppercase tracking-widest">Live Units</p>
                </div>

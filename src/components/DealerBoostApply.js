@@ -72,7 +72,7 @@ export default function DealerBoostApply({
       </button>
 
       {open ? (
-        <div className="mt-2 p-2.5 border border-[#ddd4c8] border-slate-800 rounded-xl bg-[#fbfcfe] bg-[#0d0d0d] space-y-2">
+        <div className="mt-2 p-2.5 border border-[#ddd4c8] border-slate-800 rounded-xl bg-[#fbfcfe] bg-[#1a1a1a] space-y-2">
           <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-600 text-slate-400 truncate">
             {carLabel}
           </p>
@@ -82,7 +82,7 @@ export default function DealerBoostApply({
               type="button"
               disabled={Boolean(loading)}
               onClick={() => apply(opt.type)}
-              className="w-full text-left px-2.5 py-2 rounded-lg border border-[#ddd4c8] border-slate-700 bg-white bg-[#111111] hover:border-[#2F855A] disabled:opacity-50"
+              className="w-full text-left px-2.5 py-2 rounded-lg border border-[#ddd4c8] border-slate-700 bg-white bg-[#1e1e1e] hover:border-[#2F855A] disabled:opacity-50"
             >
               <span className="block text-[10px] font-black uppercase tracking-[0.1em] text-slate-900 text-white">
                 {loading === opt.type ? (

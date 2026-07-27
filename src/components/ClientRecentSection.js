@@ -41,7 +41,7 @@ export default function ClientRecentSection() {
   if (loading || recent.length === 0) return null;
 
   return (
-    <section className="bg-[#0f0f0f] border-y border-white/[0.06] py-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+    <section className="bg-[#1c1c1c] border-y border-white/[0.06] py-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="flex items-center justify-between mb-12">
           <div>

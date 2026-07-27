@@ -14,7 +14,7 @@ export default function CompareNarrative({
   return (
     <div
       id="compare-decision"
-      className="order-5 scroll-mt-24 bg-[#0f0f0f] border border-white/[0.06] p-5 sm:p-6 lg:p-8"
+      className="order-5 scroll-mt-24 bg-[#1c1c1c] border border-white/[0.06] p-5 sm:p-6 lg:p-8"
       style={{ borderRadius: "var(--radius)" }}
     >
       <div className="flex items-start gap-4 mb-6">

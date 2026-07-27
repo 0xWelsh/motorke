@@ -428,7 +428,7 @@ export default async function CarDetailPage({ params }) {
       {heroPreloadUrl && (
         <link rel="preload" as="image" href={heroPreloadUrl} fetchPriority="high" />
       )}
-      <div className="bg-[#080808] min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
+      <div className="bg-[#141414] min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
       <TrackEventOnMount
         name="view_car"
         payload={{
@@ -457,7 +457,7 @@ export default async function CarDetailPage({ params }) {
         <div className="flex items-center gap-2 mb-4 sm:mb-5">
           <Link
             href="/cars"
-            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#111111] text-zinc-400 hover:bg-zinc-700 transition-colors"
+            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#1e1e1e] text-zinc-400 hover:bg-zinc-700 transition-colors"
             aria-label="Back to inventory"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
@@ -563,7 +563,7 @@ export default async function CarDetailPage({ params }) {
                     </summary>
                     <div className="grid grid-cols-2 gap-px rounded-xl border border-white/[0.06] overflow-hidden bg-white/[0.06] mt-1">
                       {group.rows.map((item) => (
-                        <div key={item.label} className="flex flex-col gap-0.5 bg-[#0f0f0f] px-4 py-3">
+                        <div key={item.label} className="flex flex-col gap-0.5 bg-[#1c1c1c] px-4 py-3">
                           <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-300">{item.label}</span>
                           <span className="text-[13px] font-bold text-amber-500">{item.value}</span>
                         </div>

@@ -103,7 +103,7 @@ function VerifyForm() {
     );
   }
 
-  const inputCls = "w-full bg-[#0f0f0f] border-b-2 border-white/[0.08] rounded-none px-5 py-4 text-2xl sm:text-3xl tracking-[0.3em] font-black text-center text-white outline-none focus:border-[#ff5a2f] transition-all placeholder:text-zinc-600";
+  const inputCls = "w-full bg-[#1c1c1c] border-b-2 border-white/[0.08] rounded-none px-5 py-4 text-2xl sm:text-3xl tracking-[0.3em] font-black text-center text-white outline-none focus:border-[#ff5a2f] transition-all placeholder:text-zinc-600";
 
   return (
     <>
@@ -128,7 +128,7 @@ function VerifyForm() {
       </div>
 
       {/* Email Display */}
-      <div className="mb-8 p-4 bg-[#111111] shadow-sm rounded-xl">
+      <div className="mb-8 p-4 bg-[#1e1e1e] shadow-sm rounded-xl">
         <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">Verification Email</p>
         <div className="flex items-center justify-between">
           <p className="text-sm font-black tracking-wide text-white break-all">{email}</p>
@@ -190,7 +190,7 @@ function VerifyForm() {
         <button 
           type="submit" 
           disabled={loading || emailOtp.length !== 6}
-          className="w-full bg-[#111111] hover:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl py-4 font-bold text-xs tracking-widest uppercase transition-all shadow-sm flex items-center justify-center gap-2 group border border-white/[0.08]"
+          className="w-full bg-[#1e1e1e] hover:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl py-4 font-bold text-xs tracking-widest uppercase transition-all shadow-sm flex items-center justify-center gap-2 group border border-white/[0.08]"
         >
           {loading ? (
             <>
@@ -246,8 +246,8 @@ function VerifyForm() {
 
 export default function VerifyPage() {
   return (
-    <div className="min-h-screen w-full bg-[#080808] flex items-start sm:items-center justify-center p-0 sm:p-6 relative overflow-hidden">
-      <div className="w-full max-w-md bg-[#111111] sm:border border-white/[0.06] rounded-xl p-6 sm:p-10 shadow-sm relative z-10 animate-in slide-in-from-bottom-8 fade-in duration-500 min-h-screen sm:min-h-0">
+    <div className="min-h-screen w-full bg-[#141414] flex items-start sm:items-center justify-center p-0 sm:p-6 relative overflow-hidden">
+      <div className="w-full max-w-md bg-[#1e1e1e] sm:border border-white/[0.06] rounded-xl p-6 sm:p-10 shadow-sm relative z-10 animate-in slide-in-from-bottom-8 fade-in duration-500 min-h-screen sm:min-h-0">
         <Suspense fallback={
           <div className="flex flex-col items-center justify-center py-12">
             <Loader2 className="animate-spin text-[#ff5a2f] mb-4" size={40} />

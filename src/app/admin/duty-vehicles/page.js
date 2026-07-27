@@ -35,7 +35,7 @@ export default async function AdminDutyVehiclesPage() {
 
       <AdminDutyCrspImport initialCount={catalogCount} />
 
-      <div className="rounded-xl border border-white/[0.06] bg-[#0f0f0f] p-5 text-xs text-zinc-400 leading-relaxed">
+      <div className="rounded-xl border border-white/[0.06] bg-[#1c1c1c] p-5 text-xs text-zinc-400 leading-relaxed">
         <p className="font-bold text-white mb-2">CLI import (production)</p>
         <pre className="bg-white/[0.03] p-3 rounded-lg overflow-x-auto text-[11px]">
           npm run db:import-crsp{"\n"}

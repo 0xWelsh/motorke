@@ -36,7 +36,7 @@ export default function DealerBannerUpload({ currentUrl, dealerName }) {
 
   return (
     <div
-      className="relative group cursor-pointer rounded-2xl overflow-hidden border border-white/[0.06] bg-[#0f0f0f]"
+      className="relative group cursor-pointer rounded-2xl overflow-hidden border border-white/[0.06] bg-[#1c1c1c]"
       onClick={() => fileRef.current?.click()}
     >
       <input

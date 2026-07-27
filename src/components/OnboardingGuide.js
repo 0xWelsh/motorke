@@ -97,7 +97,7 @@ function OnboardingTooltip({ step, onClose, onNext, currentStep, totalSteps }) {
       <div className="fixed inset-0 bg-black/40 z-40" onClick={onClose} />
 
       <div
-        className="fixed z-50 bg-[#0f0f0f] rounded-2xl shadow-2xl p-6 w-80 border border-white/[0.08]"
+        className="fixed z-50 bg-[#1c1c1c] rounded-2xl shadow-2xl p-6 w-80 border border-white/[0.08]"
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
@@ -130,7 +130,7 @@ function OnboardingTooltip({ step, onClose, onNext, currentStep, totalSteps }) {
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-3 sm:py-2 border border-white/[0.08] text-white font-medium rounded-xl bg-[#0f0f0f] transition"
+            className="flex-1 px-4 py-3 sm:py-2 border border-white/[0.08] text-white font-medium rounded-xl bg-[#1c1c1c] transition"
           >
             Skip
           </button>

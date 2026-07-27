@@ -25,7 +25,7 @@ export default async function GuidesIndexPage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] pt-20 pb-24">
+    <div className="min-h-screen bg-[#222222] pt-20 pb-24">
       <div className="home-shell max-w-5xl mx-auto space-y-10">
         <header>
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-2">Content</p>

@@ -59,7 +59,7 @@ export default function DealerProfileHeroPanel({
         style={{ borderRadius: mobile ? "10px" : "12px" }}
       >
         <div
-          className="w-full h-full bg-[#0f0f0f] p-1.5 flex items-center justify-center overflow-hidden"
+          className="w-full h-full bg-[#1c1c1c] p-1.5 flex items-center justify-center overflow-hidden"
           style={{ borderRadius: mobile ? "8px" : "10px" }}
         >
           {dealer.logoUrl ? (

@@ -28,7 +28,7 @@ export default function GoogleAuthButton({
         "group relative inline-flex items-center justify-center gap-3",
         "h-11 px-4",
         fullWidth ? "w-full" : "",
-        "bg-[#111111] text-white",
+        "bg-[#1e1e1e] text-white",
         "border border-white/[0.08]",
         "rounded-lg text-xs font-bold",
         "transition-[border-color,box-shadow,background-color,transform] duration-150",
@@ -54,7 +54,7 @@ export function GoogleAuthDivider({
         <div className="w-full border-t border-white/[0.08]" />
       </div>
       <div className="relative flex justify-center">
-        <span className="bg-[#0a0a0a] px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">
+        <span className="bg-[#222222] px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">
           {label}
         </span>
       </div>

@@ -28,12 +28,12 @@ export default function HomepageNewArrivals({ cars = [] }) {
             alt=""
             className="object-cover opacity-[0.10]"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/96 via-[#0a0a0a]/94 to-[#080808]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#222222]/96 via-[#222222]/94 to-[#141414]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(34,197,94,0.12),transparent_55%)]" />
         </div>
       )}
       {!backdrop && (
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-emerald-950/15 to-[#080808]" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-emerald-950/15 to-[#141414]" />
       )}
       <div className="home-shell">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 sm:mb-7 gap-3">

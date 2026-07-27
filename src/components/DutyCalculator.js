@@ -297,7 +297,7 @@ export default function DutyCalculator({
           setEstimate(null);
         }}
         placeholder='Search e.g. "Mazda CX-5 2018" or "Toyota Prado"'
-        className="w-full h-12 sm:h-14 pl-11 pr-4 text-sm sm:text-base font-medium bg-[#0f0f0f] border border-white/[0.08] text-white focus:border-[var(--accent)] outline-none rounded-xl"
+        className="w-full h-12 sm:h-14 pl-11 pr-4 text-sm sm:text-base font-medium bg-[#1c1c1c] border border-white/[0.08] text-white focus:border-[var(--accent)] outline-none rounded-xl"
         autoComplete="off"
       />
       {selected && (
@@ -311,7 +311,7 @@ export default function DutyCalculator({
       )}
       {suggestions.length > 0 && !selected && (
         <ul
-          className="absolute z-30 left-0 right-0 mt-1 border border-white/[0.08] bg-[#0f0f0f] shadow-xl max-h-64 overflow-y-auto rounded-xl"
+          className="absolute z-30 left-0 right-0 mt-1 border border-white/[0.08] bg-[#1c1c1c] shadow-xl max-h-64 overflow-y-auto rounded-xl"
         >
           {suggestions.map((v) => (
             <li key={v.id}>
@@ -333,7 +333,7 @@ export default function DutyCalculator({
         </ul>
       )}
       {searching && !selected && (
-        <p className="absolute z-30 left-0 right-0 mt-1 px-4 py-2 text-xs text-zinc-400 bg-[#0f0f0f] border border-white/[0.08] rounded-xl">
+        <p className="absolute z-30 left-0 right-0 mt-1 px-4 py-2 text-xs text-zinc-400 bg-[#1c1c1c] border border-white/[0.08] rounded-xl">
           Searching…
         </p>
       )}
@@ -389,7 +389,7 @@ export default function DutyCalculator({
             value={purchasePrice}
             onChange={(e) => setPurchasePrice(e.target.value)}
             placeholder="e.g. 1,500,000, what you pay abroad (CIF/FOB)"
-            className="w-full h-11 px-4 text-sm font-medium bg-[#0f0f0f] border border-white/[0.08] text-white rounded-xl"
+            className="w-full h-11 px-4 text-sm font-medium bg-[#1c1c1c] border border-white/[0.08] text-white rounded-xl"
           />
           <p className="text-[11px] text-zinc-400">
             CRSP is only used by KRA to calculate tax. Enter what you will actually pay for the car to see a realistic
@@ -429,7 +429,7 @@ export default function DutyCalculator({
       <div ref={resultsRef}>
         {estimate && !loading && (
           <div
-            className="mt-6 border-2 border-white p-5 sm:p-7 space-y-6 shadow-lg bg-[#0f0f0f] rounded-xl"
+            className="mt-6 border-2 border-white p-5 sm:p-7 space-y-6 shadow-lg bg-[#1c1c1c] rounded-xl"
           >
             <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
               <div>
@@ -574,7 +574,7 @@ export default function DutyCalculator({
       </div>
 
       {estimate && !loading && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/[0.06] bg-[#0f0f0f]/95 backdrop-blur-md p-3 sm:hidden safe-area-pb space-y-2">
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/[0.06] bg-[#1c1c1c]/95 backdrop-blur-md p-3 sm:hidden safe-area-pb space-y-2">
           <p className="text-center text-[10px] font-bold uppercase tracking-widest text-zinc-400">
             Est. KRA taxes{" "}
             <span className="text-red-400 tabular-nums">

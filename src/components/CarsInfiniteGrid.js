@@ -112,7 +112,7 @@ export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, n
 
       {/* Grid */}
       {cars.length === 0 ? (
-        <div className="py-20 text-center bg-[#0f0f0f] border border-white/[0.06] rounded-sm">
+        <div className="py-20 text-center bg-[#1c1c1c] border border-white/[0.06] rounded-sm">
           <div className="mx-auto mb-4 w-12 h-12 flex items-center justify-center">
             <span className="text-lg font-black tracking-[0.2em] text-zinc-600">B</span>
           </div>

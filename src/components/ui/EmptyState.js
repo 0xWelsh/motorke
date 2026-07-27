@@ -10,7 +10,7 @@ export default function EmptyState({ title, message, actionHref, actionLabel, se
         {secondaryHref && secondaryLabel ? (
           <Link
             href={secondaryHref}
-            className="inline-flex items-center rounded-xl border border-white/[0.06] bg-[#0f0f0f] px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.1em] text-white hover:bg-white/[0.03]"
+            className="inline-flex items-center rounded-xl border border-white/[0.06] bg-[#1c1c1c] px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.1em] text-white hover:bg-white/[0.03]"
           >
             {secondaryLabel}
           </Link>

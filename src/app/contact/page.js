@@ -49,9 +49,9 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="bg-[#080808] min-h-screen transition-colors duration-300 overflow-x-hidden">
+    <div className="bg-[#141414] min-h-screen transition-colors duration-300 overflow-x-hidden">
       {/* Header */}
-      <section className="bg-[#0f0f0f] pt-20 sm:pt-32 lg:pt-40 pb-8 sm:pb-16 lg:pb-20 px-4 sm:px-6 border-b border-white/[0.06]">
+      <section className="bg-[#1c1c1c] pt-20 sm:pt-32 lg:pt-40 pb-8 sm:pb-16 lg:pb-20 px-4 sm:px-6 border-b border-white/[0.06]">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-4 sm:mb-8">
             <span>Home</span>
@@ -152,16 +152,16 @@ export default function ContactPage() {
                 )}
                 <div className="space-y-2 sm:space-y-3 min-w-0">
                    <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">Your name</label>
-                   <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Jane Doe" className="w-full bg-[#0f0f0f] border border-white/[0.08] px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-white outline-none focus:bg-[#0f0f0f] focus:border-[var(--accent)]/50 transition-all rounded-xl" />
+                   <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Jane Doe" className="w-full bg-[#1c1c1c] border border-white/[0.08] px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-white outline-none focus:bg-[#1c1c1c] focus:border-[var(--accent)]/50 transition-all rounded-xl" />
                 </div>
                 <div className="space-y-2 sm:space-y-3 min-w-0">
                    <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">Your email</label>
-                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@email.com" className="w-full bg-[#0f0f0f] border border-white/[0.08] px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-white outline-none focus:bg-[#0f0f0f] focus:border-[var(--accent)]/50 transition-all rounded-xl" />
+                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@email.com" className="w-full bg-[#1c1c1c] border border-white/[0.08] px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-white outline-none focus:bg-[#1c1c1c] focus:border-[var(--accent)]/50 transition-all rounded-xl" />
                 </div>
                 <div className="md:col-span-2 space-y-2 sm:space-y-3 min-w-0">
                    <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">What is this about?</label>
                    <div className="relative group">
-                     <select value={subject} onChange={(e) => setSubject(e.target.value)} required className="w-full bg-[#0f0f0f] border border-white/[0.08] px-4 py-3.5 sm:px-5 sm:py-5 pr-10 text-sm font-bold text-white outline-none appearance-none cursor-pointer focus:bg-[#0f0f0f] focus:border-[var(--accent)]/50 transition-all rounded-xl">
+                     <select value={subject} onChange={(e) => setSubject(e.target.value)} required className="w-full bg-[#1c1c1c] border border-white/[0.08] px-4 py-3.5 sm:px-5 sm:py-5 pr-10 text-sm font-bold text-white outline-none appearance-none cursor-pointer focus:bg-[#1c1c1c] focus:border-[var(--accent)]/50 transition-all rounded-xl">
                         <option value="">Pick a reason...</option>
                         <option value="bug">Something is broken</option>
                         <option value="partnership">Partnership</option>
@@ -175,7 +175,7 @@ export default function ContactPage() {
                 </div>
                 <div className="md:col-span-2 space-y-2 sm:space-y-3 min-w-0">
                    <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">Your message</label>
-                   <textarea value={message} onChange={(e) => setMessage(e.target.value)} required rows={5} placeholder="Tell us what is going on..." className="w-full bg-[#0f0f0f] border border-white/[0.08] px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-white outline-none focus:bg-[#0f0f0f] focus:border-[var(--accent)]/50 transition-all resize-none rounded-xl"></textarea>
+                   <textarea value={message} onChange={(e) => setMessage(e.target.value)} required rows={5} placeholder="Tell us what is going on..." className="w-full bg-[#1c1c1c] border border-white/[0.08] px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-white outline-none focus:bg-[#1c1c1c] focus:border-[var(--accent)]/50 transition-all resize-none rounded-xl"></textarea>
                 </div>
                 <div className="md:col-span-2">
                    <button type="submit" disabled={loading} className="group w-full bg-white text-[#111827] py-4 sm:py-6 text-xs font-bold uppercase tracking-[0.25em] transition-all hover:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-3 shadow-2xl rounded-xl">

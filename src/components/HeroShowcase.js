@@ -38,7 +38,7 @@ export default function HeroShowcase({ items }) {
   return (
     <div className="relative w-full max-w-sm mx-auto lg:ml-auto group">
       <div 
-        className={`bg-[#0f0f0f] border border-white/[0.06] shadow-2xl transition-all duration-500 overflow-hidden ${isAnimating ? 'opacity-0 scale-95 translate-y-4' : 'opacity-100 scale-100 translate-y-0'}`}
+        className={`bg-[#1c1c1c] border border-white/[0.06] shadow-2xl transition-all duration-500 overflow-hidden ${isAnimating ? 'opacity-0 scale-95 translate-y-4' : 'opacity-100 scale-100 translate-y-0'}`}
         style={{ borderRadius: 'var(--radius)' }}
       >
         {current.type === 'car' ? (

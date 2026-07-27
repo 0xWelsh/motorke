@@ -75,7 +75,7 @@ export default function DealerFlagToggles({ dealerId, verified, featured }) {
         className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-black uppercase tracking-wider border transition disabled:opacity-50 ${
           featuredState
             ? "border-emerald-800/50 bg-emerald-950/35 text-emerald-300 hover:border-emerald-400"
-            : "border-white/[0.06] bg-[#0f0f0f] text-zinc-400 hover:border-zinc-500 hover:text-zinc-200"
+            : "border-white/[0.06] bg-[#1c1c1c] text-zinc-400 hover:border-zinc-500 hover:text-zinc-200"
         }`}
       >
         {busyFlag === "featured" ? (

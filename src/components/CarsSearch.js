@@ -224,7 +224,7 @@ export default function CarsSearch({
         <button
           type="button"
           onClick={() => setMobileOpen((prev) => !prev)}
-          className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-2.5 text-[10px] font-black uppercase tracking-widest text-white shadow-sm rounded-xl"
+          className="w-full border border-white/[0.06] bg-[#1c1c1c] px-3 py-2.5 text-[10px] font-black uppercase tracking-widest text-white shadow-sm rounded-xl"
         >
           <span className="inline-flex w-full items-center justify-between gap-2">
             <span className="inline-flex items-center gap-2">
@@ -268,7 +268,7 @@ export default function CarsSearch({
                   className={`border py-2.5 text-[10px] font-bold uppercase tracking-tight transition-all active:scale-[0.98] ${
                     String(minPrice) === String(btn.min) && String(maxPrice) === String(btn.max)
                       ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-md shadow-[var(--accent)]/20"
-                      : "border-white/[0.06] bg-[#0f0f0f] text-zinc-300 hover:border-[var(--accent)] rounded-xl"
+                      : "border-white/[0.06] bg-[#1c1c1c] text-zinc-300 hover:border-[var(--accent)] rounded-xl"
                   }`}
                   style={{ borderRadius: "10px" }}
                 >
@@ -285,7 +285,7 @@ export default function CarsSearch({
                 className={`border py-2.5 text-[10px] font-bold uppercase tracking-tight transition-all ${
                   minPrice === "13000000" && !maxPrice
                     ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-md shadow-[var(--accent)]/20"
-                    : "border-white/[0.06] bg-[#0f0f0f] text-zinc-300 hover:border-[var(--accent)] rounded-xl"
+                    : "border-white/[0.06] bg-[#1c1c1c] text-zinc-300 hover:border-[var(--accent)] rounded-xl"
                 }`}
                 style={{ borderRadius: "10px" }}
               >
@@ -304,7 +304,7 @@ export default function CarsSearch({
                 setSort(next);
                 pushWith({ sort: next });
               }}
-              className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] transition-colors rounded-xl"
+              className="w-full border border-white/[0.06] bg-[#1c1c1c] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] transition-colors rounded-xl"
             >
               {CARS_SORT_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -324,7 +324,7 @@ export default function CarsSearch({
                   setBodyType(e.target.value);
                   pushWith({ bodyType: e.target.value });
                 }}
-                className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
+                className="w-full border border-white/[0.06] bg-[#1c1c1c] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
               >
                 <option value="">Any type</option>
                 {bodyEntries.map(([k, label]) => (
@@ -343,7 +343,7 @@ export default function CarsSearch({
                   setFuelType(e.target.value);
                   pushWith({ fuelType: e.target.value });
                 }}
-                className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
+                className="w-full border border-white/[0.06] bg-[#1c1c1c] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
               >
                 <option value="">Any fuel</option>
                 {Object.entries(FUEL_LABELS).map(([k, label]) => (
@@ -362,7 +362,7 @@ export default function CarsSearch({
                   setTransmission(e.target.value);
                   pushWith({ transmission: e.target.value });
                 }}
-                className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
+                className="w-full border border-white/[0.06] bg-[#1c1c1c] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
               >
                 <option value="">Any transmission</option>
                 {Object.entries(TRANSMISSION_LABELS).map(([k, label]) => (
@@ -384,7 +384,7 @@ export default function CarsSearch({
                   setCounty(e.target.value);
                   pushWith({ county: e.target.value });
                 }}
-                className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
+                className="w-full border border-white/[0.06] bg-[#1c1c1c] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
               >
                 <option value="">All Kenya</option>
                 {counties.map((c) => (
@@ -403,7 +403,7 @@ export default function CarsSearch({
                   setMake(e.target.value);
                   pushWith({ make: e.target.value });
                 }}
-                className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
+                className="w-full border border-white/[0.06] bg-[#1c1c1c] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
               >
                 <option value="">All brands</option>
                 {allMakes.map((m) => (
@@ -431,7 +431,7 @@ export default function CarsSearch({
                     className={`border py-2.5 text-[10px] font-bold uppercase tracking-tight transition-all ${
                       steering === side
                         ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-md shadow-[var(--accent)]/20"
-                        : "border-white/[0.06] bg-[#0f0f0f] text-zinc-300"
+                        : "border-white/[0.06] bg-[#1c1c1c] text-zinc-300"
                     }`}
                     style={{ borderRadius: "10px" }}
                   >
@@ -450,7 +450,7 @@ export default function CarsSearch({
                   value={minYOM}
                   onChange={(e) => setMinYOM(e.target.value)}
                   onBlur={() => pushWith({ minYOM })}
-                  className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)]"
+                  className="w-full border border-white/[0.06] bg-[#1c1c1c] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)]"
                   style={{ borderRadius: "10px" }}
                 />
                 <input
@@ -459,7 +459,7 @@ export default function CarsSearch({
                   value={maxYOM}
                   onChange={(e) => setMaxYOM(e.target.value)}
                   onBlur={() => pushWith({ maxYOM })}
-                  className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)]"
+                  className="w-full border border-white/[0.06] bg-[#1c1c1c] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)]"
                   style={{ borderRadius: "10px" }}
                 />
               </div>

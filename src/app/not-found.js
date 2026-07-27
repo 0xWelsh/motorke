@@ -6,7 +6,7 @@ import { Search, Home, GitCompare } from "lucide-react";
 export default function NotFound() {
   const support = getSupportEmail();
   return (
-    <div className="min-h-[78vh] bg-[#0f0f0f] flex items-center px-4 sm:px-6 transition-colors">
+    <div className="min-h-[78vh] bg-[#1c1c1c] flex items-center px-4 sm:px-6 transition-colors">
       <div className="max-w-4xl w-full mx-auto">
         <div
           className="border border-white/[0.06] bg-white/[0.03] p-8 sm:p-12 text-center sm:text-left rounded-xl"
@@ -25,7 +25,7 @@ export default function NotFound() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
             <Link
               href="/cars"
-              className="h-11 px-4 inline-flex items-center justify-center gap-2 bg-white text-[#0f0f0f] border border-white text-[11px] font-bold uppercase tracking-widest transition-transform hover:scale-[0.99] rounded-xl"
+              className="h-11 px-4 inline-flex items-center justify-center gap-2 bg-white text-[#1c1c1c] border border-white text-[11px] font-bold uppercase tracking-widest transition-transform hover:scale-[0.99] rounded-xl"
             >
               <Search className="w-4 h-4" />
               Browse Cars

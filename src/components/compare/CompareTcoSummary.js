@@ -17,7 +17,7 @@ function TooltipLabel({ label, tip }) {
         </button>
         <span
           role="tooltip"
-          className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-[calc(100%+6px)] z-30 w-48 p-2 text-[10px] font-semibold normal-case tracking-normal leading-relaxed text-zinc-300 bg-[#111111] border border-white/[0.06] shadow-lg opacity-0 group-hover/tt:opacity-100 group-focus-within/tt:opacity-100 transition-opacity"
+          className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-[calc(100%+6px)] z-30 w-48 p-2 text-[10px] font-semibold normal-case tracking-normal leading-relaxed text-zinc-300 bg-[#1e1e1e] border border-white/[0.06] shadow-lg opacity-0 group-hover/tt:opacity-100 group-focus-within/tt:opacity-100 transition-opacity"
           style={{ borderRadius: "8px" }}
         >
           {tip}
@@ -59,13 +59,13 @@ export default function CompareTcoSummary({
     <div
       id="compare-summary"
       data-tour="summary"
-      className={`order-3 lg:order-2 scroll-mt-24 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-3.5 ${currentTutorialKey === "summary" ? "ring-2 ring-[var(--accent)] ring-offset-2 ring-offset-[#0a0a0a] p-1" : ""}`}
+      className={`order-3 lg:order-2 scroll-mt-24 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-3.5 ${currentTutorialKey === "summary" ? "ring-2 ring-[var(--accent)] ring-offset-2 ring-offset-[#222222] p-1" : ""}`}
       style={currentTutorialKey === "summary" ? { borderRadius: "var(--radius)" } : undefined}
     >
       {stats.map((stat, i) => (
         <div
           key={stat.label}
-          className="bg-[#0f0f0f] border border-white/[0.06] p-4 sm:p-5 flex flex-col justify-between"
+          className="bg-[#1c1c1c] border border-white/[0.06] p-4 sm:p-5 flex flex-col justify-between"
           style={{ borderRadius: "var(--radius)" }}
         >
           <div>

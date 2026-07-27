@@ -6,7 +6,7 @@ import { Search } from "lucide-react";
 import { BRANDS, BODY_TYPES, COUNTIES } from "@/lib/browse-catalog";
 
 const selectCls =
-  "w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-2.5 text-[12px] font-semibold text-white outline-none focus:border-[var(--accent)]";
+  "w-full border border-white/[0.06] bg-[#1c1c1c] px-3 py-2.5 text-[12px] font-semibold text-white outline-none focus:border-[var(--accent)]";
 
 const labelCls = "text-[9px] font-black uppercase tracking-[0.16em] text-zinc-400";
 
@@ -102,8 +102,8 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
     <div
       className={
         embedded
-          ? `h-full w-full rounded-xl border border-white/[0.06] bg-[#111111]/92 p-3 sm:p-4 shadow-sm ${className}`.trim()
-          : `mt-8 sm:mt-10 lg:mt-12 w-full max-w-4xl mx-auto rounded-2xl border border-white/[0.06] bg-[#111111]/95 p-4 sm:p-5 md:p-6 shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] ${className}`.trim()
+          ? `h-full w-full rounded-xl border border-white/[0.06] bg-[#1e1e1e]/92 p-3 sm:p-4 shadow-sm ${className}`.trim()
+          : `mt-8 sm:mt-10 lg:mt-12 w-full max-w-4xl mx-auto rounded-2xl border border-white/[0.06] bg-[#1e1e1e]/95 p-4 sm:p-5 md:p-6 shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] ${className}`.trim()
       }
       style={{ borderRadius: "var(--radius)" }}
     >

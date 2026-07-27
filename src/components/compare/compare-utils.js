@@ -89,7 +89,7 @@ export function formatKesCompact(value) {
 
 export function roadTone(score) {
   if (typeof score !== "number") return "border-white/[0.06] bg-white/[0.03] text-zinc-400";
-  if (score >= 80) return "border-white bg-white text-[#0f0f0f]";
+  if (score >= 80) return "border-white bg-white text-[#1c1c1c]";
   if (score >= 65) return "border-white/[0.08] bg-white/[0.06] text-zinc-300";
   if (score >= 50) return "border-white/[0.06] bg-white/[0.03] text-zinc-300";
   return "border-white/[0.06] bg-white/[0.03] text-zinc-400";
@@ -102,7 +102,7 @@ export function carPhotoUrl(car) {
 }
 
 export function importTone(eligible) {
-  if (eligible === true) return "border-white bg-white text-[#0f0f0f]";
+  if (eligible === true) return "border-white bg-white text-[#1c1c1c]";
   if (eligible === false) return "border-white/[0.06] bg-white/[0.03] text-zinc-300";
   return "border-white/[0.06] bg-white/[0.03] text-zinc-400";
 }

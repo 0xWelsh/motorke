@@ -43,7 +43,7 @@ export default function AnalyticsDashboard({ realtimeLeads = 0, recentDays = 30 
   }, [realtimeLeads, recentDays]);
 
   return (
-    <div className="w-full bg-[#0f0f0f] border border-white/[0.06] rounded-[2.5rem] p-8 shadow-sm hover:shadow-2xl transition-all duration-500 hover:border-[var(--accent)]/20">
+    <div className="w-full bg-[#1c1c1c] border border-white/[0.06] rounded-[2.5rem] p-8 shadow-sm hover:shadow-2xl transition-all duration-500 hover:border-[var(--accent)]/20">
       <div className="mb-8">
          <div className="flex items-center gap-3 mb-2">
             <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.15)] animate-pulse" />
@@ -71,7 +71,7 @@ export default function AnalyticsDashboard({ realtimeLeads = 0, recentDays = 30 
             <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#71717a', fontWeight: 700 }} />
             <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#71717a', fontWeight: 700 }} />
             <Tooltip 
-              contentStyle={{ borderRadius: '1.5rem', border: '1px solid #27272a', background: '#18181b', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.4)' }}
+              contentStyle={{ borderRadius: '1.5rem', border: '1px solid #27272a', background: '#262626', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.4)' }}
               itemStyle={{ fontSize: '13px', fontWeight: 800 }}
               labelStyle={{ fontSize: '10px', fontWeight: 900, textTransform: 'uppercase', color: '#a1a1aa', marginBottom: '8px' }}
             />

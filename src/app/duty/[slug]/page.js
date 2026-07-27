@@ -53,7 +53,7 @@ export default async function DutyVehiclePage({ params }) {
   const pathSlug = dutyVehiclePathSlug(vehicle);
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f]">
+    <div className="min-h-screen bg-[#1c1c1c]">
       <DutyJsonLd vehicle={vehicle} pathname={`/duty/${pathSlug}`} />
       <div className="home-shell pt-[4.75rem] md:pt-24 pb-8">
         <div className="max-w-6xl mx-auto">

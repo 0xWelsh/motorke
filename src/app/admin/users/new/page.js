@@ -22,8 +22,8 @@ export default async function AdminNewUserPage(props) {
   const dealers = await db.dealer.findMany({ orderBy: { name: "asc" } });
   const error   = searchParams?.error;
 
-  const inputCls  = "w-full bg-[#111111] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-white placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
-  const selectCls = "w-full bg-[#111111] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-white outline-none focus:border-slate-800 transition-all font-bold appearance-none";
+  const inputCls  = "w-full bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-white placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
+  const selectCls = "w-full bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-white outline-none focus:border-slate-800 transition-all font-bold appearance-none";
   const labelCls  = "block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 mb-2";
 
   return (
@@ -40,7 +40,7 @@ export default async function AdminNewUserPage(props) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          <div className="bg-[#111111] border border-[#ddd4c8] border-slate-800 rounded-[2rem] p-8 shadow-none">
+          <div className="bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-[2rem] p-8 shadow-none">
             <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100">
                <div className="w-10 h-10 rounded-2xl bg-[#f7f6f3] border border-slate-100 flex items-center justify-center text-slate-500">
                   <UserPlus size={18} />

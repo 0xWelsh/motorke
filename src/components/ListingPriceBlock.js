@@ -11,7 +11,7 @@ export default function ListingPriceBlock({ car, className = "", explainerId = "
           type="button"
           aria-label="Pricing information"
           aria-describedby={explainerId}
-          className="relative z-10 inline-flex h-[0.76em] w-[0.76em] min-h-[12px] min-w-[12px] items-center justify-center rounded-full border border-[var(--accent)]/26 bg-[var(--accent)]/[0.06] outline-none ring-offset-2 ring-offset-[#0a0a0a] transition-[background-color,border-color] hover:border-[var(--accent)]/38 hover:bg-[var(--accent)]/12 focus-visible:ring-2 focus-visible:ring-[var(--accent)]/40 focus-visible:ring-offset-2"
+          className="relative z-10 inline-flex h-[0.76em] w-[0.76em] min-h-[12px] min-w-[12px] items-center justify-center rounded-full border border-[var(--accent)]/26 bg-[var(--accent)]/[0.06] outline-none ring-offset-2 ring-offset-[#222222] transition-[background-color,border-color] hover:border-[var(--accent)]/38 hover:bg-[var(--accent)]/12 focus-visible:ring-2 focus-visible:ring-[var(--accent)]/40 focus-visible:ring-offset-2"
           style={{ fontSize: "inherit" }}
         >
           <span

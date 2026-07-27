@@ -53,7 +53,7 @@ export default async function AdminApprovalsPage() {
       </div>
 
       {/* ── DATA REGISTRY ── */}
-      <div className="bg-[#0f0f0f] border border-white/[0.08] rounded-xl overflow-hidden shadow-none">
+      <div className="bg-[#1c1c1c] border border-white/[0.08] rounded-xl overflow-hidden shadow-none">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
@@ -100,7 +100,7 @@ export default async function AdminApprovalsPage() {
                   </td>
                   <td className="px-10 py-7 text-right">
                     <div className="flex items-center justify-end gap-3 sm:opacity-0 lg:group-hover:opacity-100 transition-all duration-300">
-                      <Link href={`/admin/dealers/${dealer.id}/edit`} className="h-11 px-6 bg-[#0f0f0f] border border-white/[0.08] text-zinc-300 hover:text-white hover:border-white/[0.15] font-bold text-[11px] uppercase tracking-widest rounded-xl transition-all flex items-center gap-2 shadow-none" title="Audit Profile">
+                      <Link href={`/admin/dealers/${dealer.id}/edit`} className="h-11 px-6 bg-[#1c1c1c] border border-white/[0.08] text-zinc-300 hover:text-white hover:border-white/[0.15] font-bold text-[11px] uppercase tracking-widest rounded-xl transition-all flex items-center gap-2 shadow-none" title="Audit Profile">
                         <Edit3 size={14} /> Inspect
                       </Link>
                       

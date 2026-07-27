@@ -29,7 +29,7 @@ export default function DealerInventoryFeaturedStrip({ car, freshnessLabel }) {
   const activeSrc = imageUrls[slide] || imageUrls[0];
 
   return (
-    <article className="w-full overflow-hidden border-y border-white/[0.06] bg-[#0a0a0a]">
+    <article className="w-full overflow-hidden border-y border-white/[0.06] bg-[#222222]">
       <div className="flex w-full min-h-[92px]">
         <Link
           href={carListingPath(car)}

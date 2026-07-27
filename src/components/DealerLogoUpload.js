@@ -54,10 +54,10 @@ export default function DealerLogoUpload({ currentUrl, dealerName, size = "xl" }
         <img
           src={logoUrl}
           alt={dealerName}
-          className={`${sizeMap[size]} object-cover border-4 border-[#0f0f0f] shadow-xl shadow-black/20`}
+          className={`${sizeMap[size]} object-cover border-4 border-[#1c1c1c] shadow-xl shadow-black/20`}
         />
       ) : (
-        <div className={`${sizeMap[size]} bg-[#0f0f0f] border-4 border-[#0f0f0f] text-white flex items-center justify-center font-black shadow-xl shadow-black/20`}>
+        <div className={`${sizeMap[size]} bg-[#1c1c1c] border-4 border-[#1c1c1c] text-white flex items-center justify-center font-black shadow-xl shadow-black/20`}>
           {dealerName?.[0]?.toUpperCase() || "D"}
         </div>
       )}

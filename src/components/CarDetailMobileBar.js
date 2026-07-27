@@ -5,7 +5,7 @@ export default function CarDetailMobileBar({ whatsappHref, callHref, priceLabel 
   if (!whatsappHref && !callHref) return null;
 
   return (
-    <div className="fixed bottom-0 inset-x-0 z-50 bg-[#0f0f0f] border-t border-white/[0.06] px-4 py-3 flex items-center gap-3 lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
+    <div className="fixed bottom-0 inset-x-0 z-50 bg-[#1c1c1c] border-t border-white/[0.06] px-4 py-3 flex items-center gap-3 lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
       <div className="min-w-0 flex-1">
         <p className="text-sm font-extrabold text-white tabular-nums truncate">
           {priceLabel}

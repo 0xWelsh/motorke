@@ -163,7 +163,7 @@ function FAQCategory({ category, items }) {
             key={idx}
             className={`border transition-all duration-300 ${
               openId === idx 
-                ? "border-[var(--accent)]/30 bg-[#0f0f0f]/40" 
+                ? "border-[var(--accent)]/30 bg-[#1c1c1c]/40" 
                 : "border-white/[0.06] hover:border-white/[0.12]"
             }`}
             style={{ borderRadius: 'var(--radius)' }}
@@ -198,9 +198,9 @@ function FAQCategory({ category, items }) {
 
 export default function FAQPage() {
   return (
-    <div className="bg-[#080808] min-h-screen">
+    <div className="bg-[#141414] min-h-screen">
       {/* Header */}
-      <section className="bg-[#080808] pt-32 sm:pt-40 pb-20 px-6 border-b border-white/[0.06]">
+      <section className="bg-[#141414] pt-32 sm:pt-40 pb-20 px-6 border-b border-white/[0.06]">
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-8">
             <span>Resources</span>

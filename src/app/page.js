@@ -157,7 +157,7 @@ export default async function HomePage() {
   const origin = getSiteOrigin();
 
   return (
-    <div className="min-h-screen pb-20 bg-[#080808]">
+    <div className="min-h-screen pb-20 bg-[#141414]">
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -170,7 +170,7 @@ export default async function HomePage() {
         <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
           <div className="absolute inset-0">
             <img src="/images/backgrounds/car-dealership.jpg" alt="" className="w-full h-full object-cover opacity-10" loading="lazy" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#080808] via-[#080808]/80 to-[#080808]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#141414] via-[#141414]/80 to-[#141414]" />
           </div>
         </div>
         <div className="home-shell relative z-10">
@@ -328,7 +328,7 @@ export default async function HomePage() {
 
       {/* The Difference */}
       <FadeIn delay={0.35}>
-      <section className="relative py-10 sm:py-16 lg:py-20 xl:py-24 bg-[#0a0a0a] overflow-hidden">
+      <section className="relative py-10 sm:py-16 lg:py-20 xl:py-24 bg-[#222222] overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
             src={DIFFERENCE_BACKGROUND}
@@ -336,7 +336,7 @@ export default async function HomePage() {
             className="object-cover opacity-10"
             alt=""
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#080808] via-[#080808]/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#141414]/80 to-transparent" />
         </div>
         <div className="home-shell relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-12 items-center">

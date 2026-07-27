@@ -6,7 +6,7 @@ import { useState } from "react";
 const DynamicMap = dynamic(() => import("./MapComponent"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full rounded-2xl flex items-center justify-center bg-[#111111] border border-white/[0.08] text-zinc-400 text-sm font-black uppercase tracking-widest animate-pulse">
+    <div className="w-full h-full rounded-2xl flex items-center justify-center bg-[#1e1e1e] border border-white/[0.08] text-zinc-400 text-sm font-black uppercase tracking-widest animate-pulse">
       Loading Map Engine...
     </div>
   ),
@@ -23,7 +23,7 @@ export default function LocationPicker({ defaultLat, defaultLng }) {
           Pin Location (Optional)
         </label>
         {lat && lng && (
-          <span className="text-[11px] text-[#ff5a2f] font-bold uppercase tracking-widest px-2 py-0.5 bg-[#111111] border border-white/[0.08] rounded-2xl">
+          <span className="text-[11px] text-[#ff5a2f] font-bold uppercase tracking-widest px-2 py-0.5 bg-[#1e1e1e] border border-white/[0.08] rounded-2xl">
             ✓ Pinned
           </span>
         )}
@@ -43,7 +43,7 @@ export default function LocationPicker({ defaultLat, defaultLng }) {
           }} 
         />
         {!lat && !lng && (
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[400] pointer-events-none bg-[#111111] border border-white/[0.08] px-4 py-2 shadow-sm rounded-2xl text-center">
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[400] pointer-events-none bg-[#1e1e1e] border border-white/[0.08] px-4 py-2 shadow-sm rounded-2xl text-center">
             <p className="text-[11px] font-black uppercase tracking-[0.15em] text-white">Click map to pin</p>
             <p className="text-[10px] text-zinc-400 mt-0.5 normal-case tracking-normal font-medium">
               Or save with address, we geocode in Kenya if no pin
@@ -53,7 +53,7 @@ export default function LocationPicker({ defaultLat, defaultLng }) {
       </div>
       
       {lat && lng && (
-        <div className="flex gap-4 p-4 bg-[#111111] border border-white/[0.08] rounded-2xl">
+        <div className="flex gap-4 p-4 bg-[#1e1e1e] border border-white/[0.08] rounded-2xl">
           <div className="flex-1">
             <p className="text-[9px] font-black text-zinc-400 uppercase tracking-widest mb-1">Latitude</p>
             <p className="text-xs font-mono text-white font-bold">{parseFloat(lat).toFixed(6)}</p>

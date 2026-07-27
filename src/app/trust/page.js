@@ -76,7 +76,7 @@ const FAQS = [
 
 export default function TrustPage() {
   return (
-    <div className="min-h-screen bg-[#080808] pt-20 pb-24">
+    <div className="min-h-screen bg-[#141414] pt-20 pb-24">
       <div className="home-shell">
         {/* Hero */}
         <section className="text-center mb-16 sm:mb-20">

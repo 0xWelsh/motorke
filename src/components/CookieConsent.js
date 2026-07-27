@@ -35,7 +35,7 @@ export default function CookieConsent() {
 
   return (
     <div 
-      className="fixed bottom-4 left-4 right-4 sm:right-auto sm:max-w-md w-auto sm:w-[400px] z-[9999] bg-white bg-[#111111] border border-slate-200 border-slate-800 p-5 font-sans animate-in slide-in-from-bottom" 
+      className="fixed bottom-4 left-4 right-4 sm:right-auto sm:max-w-md w-auto sm:w-[400px] z-[9999] bg-white bg-[#1e1e1e] border border-slate-200 border-slate-800 p-5 font-sans animate-in slide-in-from-bottom" 
       style={{ borderRadius: 0, boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
     >
        <div className="flex justify-between items-start mb-4">

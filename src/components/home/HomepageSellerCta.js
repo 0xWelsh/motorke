@@ -10,7 +10,7 @@ const PERKS = [
 
 export default function HomepageSellerCta() {
   return (
-    <section className="py-14 sm:py-20 bg-[#0a0a0a]">
+    <section className="py-14 sm:py-20 bg-[#222222]">
       <div className="home-shell">
         <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-6 sm:p-10 lg:p-14 relative overflow-hidden">
           {/* Accent glow */}

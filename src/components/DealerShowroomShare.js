@@ -136,7 +136,7 @@ export default function DealerShowroomShare({
           type="button"
           onClick={() => copyLink()}
           disabled={!url}
-          className="w-full inline-flex items-center justify-center px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.14em] border border-white/[0.06] bg-[#0f0f0f] text-zinc-300 disabled:opacity-50 hover:bg-white/[0.03] transition-colors rounded-xl"
+          className="w-full inline-flex items-center justify-center px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.14em] border border-white/[0.06] bg-[#1c1c1c] text-zinc-300 disabled:opacity-50 hover:bg-white/[0.03] transition-colors rounded-xl"
         >
           {copied ? "Copied!" : "Copy showroom URL"}
         </button>

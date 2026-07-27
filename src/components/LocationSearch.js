@@ -102,7 +102,7 @@ export default function LocationSearch() {
       <form 
         ref={formRef}
         onSubmit={handleSubmit} 
-        className="flex flex-col sm:flex-row sm:items-center bg-[#111111] border border-slate-800 rounded-2xl p-2.5 sm:p-2 focus-within:border-[var(--brand-accent)]/30 transition-all duration-300"
+        className="flex flex-col sm:flex-row sm:items-center bg-[#1e1e1e] border border-slate-800 rounded-2xl p-2.5 sm:p-2 focus-within:border-[var(--brand-accent)]/30 transition-all duration-300"
       >
         <div className="flex-1 flex items-center px-3 sm:px-4 gap-3 min-w-0">
           <Search className="w-5 h-5 text-slate-400 shrink-0" />

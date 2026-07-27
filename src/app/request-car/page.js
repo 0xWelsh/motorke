@@ -16,7 +16,7 @@ export const metadata = {
 
 export default function RequestCarPage() {
   return (
-    <div className="min-h-screen bg-[#0c1524]">
+    <div className="min-h-screen bg-[#141414]">
       <section className="border-b border-sky-900/60 pt-14 sm:pt-16 pb-5 sm:pb-6 px-4 sm:px-6">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-3">

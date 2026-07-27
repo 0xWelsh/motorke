@@ -169,7 +169,7 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
         )}
       </div>
 
-      <div className="border border-slate-800 bg-[#111] divide-y divide-slate-800/50">
+      <div className="border border-slate-800 bg-[#1e1e1e] divide-y divide-slate-800/50">
         <div className="py-2 space-y-2">
           <FilterSection title="Make">
             <div className="max-h-[180px] overflow-y-auto space-y-0.5">
@@ -376,7 +376,7 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
         className={`w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider border transition-all ${
           hasChanges
             ? "border-brand-accent bg-brand-accent text-white hover:opacity-90 cursor-pointer"
-            : "border-zinc-700 bg-[#111]/80 text-zinc-500 cursor-not-allowed"
+            : "border-zinc-700 bg-[#1e1e1e]/80 text-zinc-500 cursor-not-allowed"
         }`}
       >
         <Search className="w-3.5 h-3.5" aria-hidden />
@@ -392,7 +392,7 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
         <button
           type="button"
           onClick={() => { setMobileOpen(true); }}
-          className="inline-flex items-center gap-2 px-3 py-2 text-[10px] font-black uppercase tracking-wider border border-slate-700 bg-[#111] text-white hover:bg-slate-900 transition-all"
+          className="inline-flex items-center gap-2 px-3 py-2 text-[10px] font-black uppercase tracking-wider border border-slate-700 bg-[#1e1e1e] text-white hover:bg-slate-900 transition-all"
         >
           <SlidersHorizontal className="w-3.5 h-3.5" />
           Filters
@@ -409,8 +409,8 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="absolute inset-y-0 left-0 w-[85vw] max-w-sm bg-[#0a0a0a] shadow-2xl overflow-y-auto">
-            <div className="sticky top-0 z-10 bg-[#0a0a0a] border-b border-slate-800 px-4 py-3 flex items-center justify-between">
+          <div className="absolute inset-y-0 left-0 w-[85vw] max-w-sm bg-[#222222] shadow-2xl overflow-y-auto">
+            <div className="sticky top-0 z-10 bg-[#222222] border-b border-slate-800 px-4 py-3 flex items-center justify-between">
               <span className="text-[10px] font-black uppercase tracking-[0.2em]">Filters</span>
               <button
                 type="button"

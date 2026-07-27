@@ -36,7 +36,7 @@ export default function DealerBillingPlans({
       {/* Account status */}
       <section
         aria-labelledby="billing-status-heading"
-        className="rounded-2xl border border-white/[0.06] bg-[#0f0f0f] p-5 sm:p-6"
+        className="rounded-2xl border border-white/[0.06] bg-[#1c1c1c] p-5 sm:p-6"
       >
         <h2
           id="billing-status-heading"
@@ -133,7 +133,7 @@ export default function DealerBillingPlans({
                   isSuggested
                     ? "border-[#2F855A] ring-1 ring-[#2F855A]/30"
                     : "border-white/[0.06]",
-                  "bg-[#0f0f0f]",
+                  "bg-[#1c1c1c]",
                 ].join(" ")}
               >
                 {isPopular && (

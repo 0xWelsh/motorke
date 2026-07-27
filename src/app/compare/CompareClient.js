@@ -346,10 +346,10 @@ export default function CompareClient({ initialCars }) {
   const currentTutorial = TUTORIAL_STEPS[tutorialStep];
   const currentTutorialKey = showTutorial ? currentTutorial.key : null;
 
-  if (!isInitialized) return <div className="min-h-screen bg-[#080808] flex items-center justify-center"><p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 animate-pulse">Initializing engine…</p></div>;
+  if (!isInitialized) return <div className="min-h-screen bg-[#141414] flex items-center justify-center"><p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 animate-pulse">Initializing engine…</p></div>;
 
   return (
-    <div className="min-h-screen bg-[#080808] pb-24 lg:pb-12 selection:bg-[var(--accent)]/30">
+    <div className="min-h-screen bg-[#141414] pb-24 lg:pb-12 selection:bg-[var(--accent)]/30">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-10">
         
         {/* Header */}
@@ -360,7 +360,7 @@ export default function CompareClient({ initialCars }) {
           </div>
           <div className="flex items-center gap-3">
              <button onClick={clearCompare} className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-red-500 transition-colors">Clear Set</button>
-             <button onClick={startTutorial} className="px-4 py-2.5 bg-[#0f0f0f] border border-white/[0.06] text-[10px] font-bold uppercase tracking-widest shadow-sm rounded-lg">Tutorial</button>
+             <button onClick={startTutorial} className="px-4 py-2.5 bg-[#1c1c1c] border border-white/[0.06] text-[10px] font-bold uppercase tracking-widest shadow-sm rounded-lg">Tutorial</button>
           </div>
         </div>
 
@@ -368,7 +368,7 @@ export default function CompareClient({ initialCars }) {
           <div className="xl:col-span-8 2xl:col-span-9 space-y-8 lg:space-y-10">
             
             {/* Filters Row */}
-            <div data-tour="filters" className={`flex flex-wrap items-center justify-between gap-4 p-2 bg-[#0f0f0f] border border-white/[0.06] rounded-xl shadow-sm ${currentTutorialKey === "filters" ? "ring-2 ring-[var(--accent)]" : ""}`}>
+            <div data-tour="filters" className={`flex flex-wrap items-center justify-between gap-4 p-2 bg-[#1c1c1c] border border-white/[0.06] rounded-xl shadow-sm ${currentTutorialKey === "filters" ? "ring-2 ring-[var(--accent)]" : ""}`}>
                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar p-1">
                   {PRESETS.map((p) => (
                     <button key={p.id} onClick={() => setPreset(p.id)} className={`shrink-0 px-4 py-2 text-[10px] font-bold uppercase tracking-widest transition-all rounded-lg ${preset === p.id ? "bg-[var(--accent)] text-black" : "bg-white/[0.04] border border-white/[0.08] text-zinc-400 hover:text-white hover:border-white/[0.15]"}`}>{p.label}</button>
@@ -421,7 +421,7 @@ export default function CompareClient({ initialCars }) {
                     <p className="text-sm text-zinc-500 font-medium">Save this comparison for offline viewing or share with others.</p>
                   </div>
                   <div className="flex items-center gap-4">
-                    <button onClick={handleSaveComparison} className="h-12 px-8 bg-[#0f0f0f] border border-white/[0.06] text-[10px] font-black uppercase tracking-widest shadow-sm hover:border-white/[0.15] transition-all rounded-lg">{saveState === "copied" ? "URL Copied" : "Copy Link"}</button>
+                    <button onClick={handleSaveComparison} className="h-12 px-8 bg-[#1c1c1c] border border-white/[0.06] text-[10px] font-black uppercase tracking-widest shadow-sm hover:border-white/[0.15] transition-all rounded-lg">{saveState === "copied" ? "URL Copied" : "Copy Link"}</button>
                     <button onClick={handleDownloadPdf} disabled={pdfState === "loading"} className="h-12 px-8 bg-[var(--accent)] text-black text-[10px] font-black uppercase tracking-widest shadow-xl hover:scale-[1.02] transition-all rounded-lg">{pdfState === "loading" ? "Preparing..." : "Download PDF"}</button>
                   </div>
                 </div>
@@ -431,7 +431,7 @@ export default function CompareClient({ initialCars }) {
           </div>
           
           <aside className="hidden xl:block xl:col-span-4 2xl:col-span-3 sticky top-24 self-start">
-             <nav className="space-y-1 bg-[#0f0f0f] border border-white/[0.06] p-4 rounded-xl">
+             <nav className="space-y-1 bg-[#1c1c1c] border border-white/[0.06] p-4 rounded-xl">
                 <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-4 px-2">Navigation</p>
                 {[
                   ["Summary", "#compare-summary"],
@@ -455,15 +455,15 @@ export default function CompareClient({ initialCars }) {
       />
 
       {/* Mobile Action Bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 border-t border-white/[0.06] bg-[#0a0a0a]/95 backdrop-blur-md px-4 py-3 flex gap-2">
-        <button onClick={handleSaveComparison} className="flex-1 h-12 bg-[#0f0f0f] border border-white/[0.06] text-[10px] font-bold uppercase tracking-widest rounded-lg">{saveState === "copied" ? "Copied" : "Share"}</button>
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 border-t border-white/[0.06] bg-[#222222]/95 backdrop-blur-md px-4 py-3 flex gap-2">
+        <button onClick={handleSaveComparison} className="flex-1 h-12 bg-[#1c1c1c] border border-white/[0.06] text-[10px] font-bold uppercase tracking-widest rounded-lg">{saveState === "copied" ? "Copied" : "Share"}</button>
         <button onClick={handleDownloadPdf} className="flex-1 h-12 bg-[var(--accent)] text-black text-[10px] font-bold uppercase tracking-widest rounded-lg">PDF</button>
       </div>
 
       {/* Tutorial Overlay */}
       {showTutorial && currentTutorial && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-           <div className="max-w-md w-full bg-[#0f0f0f] border border-white/[0.06] p-6 shadow-2xl space-y-6 rounded-2xl">
+           <div className="max-w-md w-full bg-[#1c1c1c] border border-white/[0.06] p-6 shadow-2xl space-y-6 rounded-2xl">
               <div className="space-y-2">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--accent)]">Step {tutorialStep + 1} of {TUTORIAL_STEPS.length}</p>
                 <h4 className="text-xl font-bold text-white">{currentTutorial.title}</h4>

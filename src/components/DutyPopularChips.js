@@ -30,8 +30,8 @@ export default function DutyPopularChips({ vehicles = [], activeId = null, onSel
               onClick={() => onSelect?.(vehicle)}
               className={`text-left flex items-center gap-3 px-4 py-3 border transition-all disabled:opacity-50 hover:scale-[0.98] active:scale-95 ${
                 isActive
-                  ? "border-white bg-white text-[#0f0f0f]"
-                  : "border-white/[0.06] bg-[#0f0f0f] hover:border-zinc-500"
+                  ? "border-white bg-white text-[#1c1c1c]"
+                  : "border-white/[0.06] bg-[#1c1c1c] hover:border-zinc-500"
               }`}
               style={{ borderRadius: "var(--radius)" }}
             >
@@ -44,7 +44,7 @@ export default function DutyPopularChips({ vehicles = [], activeId = null, onSel
               </div>
               <div className="min-w-0">
                 <p className={`text-xs font-bold truncate ${
-                  isActive ? "text-[#0f0f0f]" : "text-white"
+                  isActive ? "text-[#1c1c1c]" : "text-white"
                 }`}>
                   {vehicle.label}
                 </p>

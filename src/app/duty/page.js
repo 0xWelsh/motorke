@@ -19,7 +19,7 @@ export default async function DutyCalculatorPage() {
     ratesPayload?.meta?.lastUpdated || ratesPayload?.rates?.metadata?.fetchedAt || null;
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f]">
+    <div className="min-h-screen bg-[#1c1c1c]">
       <DutyJsonLd pathname="/duty" />
       <DutyPageClient popularVehicles={popularVehicles} ratesLastUpdated={ratesLastUpdated} />
     </div>

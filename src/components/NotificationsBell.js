@@ -33,7 +33,7 @@ export default function NotificationsBell({ variant = "portal" }) {
     () =>
       clsx(
         "absolute right-0 top-full mt-3 w-[380px] max-w-[calc(100vw-1rem)] max-sm:fixed max-sm:left-2 max-sm:right-2 max-sm:top-[4.25rem] max-sm:w-auto shadow-[0_20px_50px_rgba(0,0,0,0.2)] z-50 overflow-hidden",
-        "bg-[#111111] border border-white/[0.08] text-white",
+        "bg-[#1e1e1e] border border-white/[0.08] text-white",
         "rounded-xl"
       ),
     []
@@ -136,7 +136,7 @@ export default function NotificationsBell({ variant = "portal" }) {
           isAdmin
             ? "text-zinc-400 hover:text-[var(--accent)]"
             : isNavbar
-              ? "w-10 h-10 rounded-full bg-[#0f0f0f] border border-white/[0.08] text-zinc-400 hover:text-[var(--accent)] hover:border-white/[0.12] flex items-center justify-center"
+              ? "w-10 h-10 rounded-full bg-[#1c1c1c] border border-white/[0.08] text-zinc-400 hover:text-[var(--accent)] hover:border-white/[0.12] flex items-center justify-center"
             : "w-10 h-10 rounded-full bg-white/[0.06] border border-white/[0.08] text-zinc-300 hover:text-[var(--accent)] flex items-center justify-center"
         )}
         title="Notifications"
@@ -148,7 +148,7 @@ export default function NotificationsBell({ variant = "portal" }) {
             "absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full text-[11px] font-bold flex items-center justify-center",
             isAdmin || isNavbar
               ? "bg-[#2F855A] text-white border-2 border-white"
-              : "bg-[#2F855A] text-white border-2 border-[#0f0f0f]"
+              : "bg-[#2F855A] text-white border-2 border-[#1c1c1c]"
           )}>
             {Math.min(unreadCount, 99)}
           </span>
@@ -157,7 +157,7 @@ export default function NotificationsBell({ variant = "portal" }) {
 
       {open && (
         <div className={dropdownClassName}>
-          <div className="px-5 py-4 border-b border-white/[0.08] flex items-center justify-between bg-[#111111]">
+          <div className="px-5 py-4 border-b border-white/[0.08] flex items-center justify-between bg-[#1e1e1e]">
             <div>
               <p className="text-sm font-bold uppercase tracking-widest text-white">Notifications</p>
               <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest mt-0.5">
@@ -189,7 +189,7 @@ export default function NotificationsBell({ variant = "portal" }) {
               notifications.map((item) => {
                 const itemClass = clsx(
                   "block px-6 py-5 transition-all duration-300",
-                  item.read ? "opacity-60 grayscale-[0.5]" : "bg-[#0f0f0f] hover:bg-white/[0.06]"
+                  item.read ? "opacity-60 grayscale-[0.5]" : "bg-[#1c1c1c] hover:bg-white/[0.06]"
                 );
 
                 const content = (
@@ -237,7 +237,7 @@ export default function NotificationsBell({ variant = "portal" }) {
               })
             )}
           </div>
-          <div className="p-4 bg-[#111111] border-t border-white/[0.08]">
+          <div className="p-4 bg-[#1e1e1e] border-t border-white/[0.08]">
             <Link href="/notifications" className="block text-center text-[10px] font-bold text-zinc-400 uppercase tracking-widest hover:text-white transition-colors">
               View All Notifications
             </Link>

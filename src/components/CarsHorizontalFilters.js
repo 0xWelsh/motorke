@@ -96,7 +96,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
   const filterCount = [make, transmission, bodyTypes, fuelTypes, minPrice || maxPrice ? "price" : "", minYear || maxYear ? "year" : ""].filter(Boolean).length;
 
   return (
-    <div className="bg-[#0f0f0f] border border-white/[0.08] p-3 sm:p-4 space-y-3">
+    <div className="bg-[#1c1c1c] border border-white/[0.08] p-3 sm:p-4 space-y-3">
       {/* Brands */}
       <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
         <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-zinc-400 shrink-0">Brand</span>
@@ -157,9 +157,9 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
 
         <div className="flex items-center gap-1.5">
           <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-zinc-400 shrink-0">Range</span>
-          <input type="number" value={minPrice} placeholder="Min" onChange={(e) => { setMinPrice(e.target.value); setPricePreset(null); }} className="w-20 sm:w-24 px-2 py-1 text-[10px] sm:text-[11px] bg-[#0f0f0f] border border-white/[0.08] text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors rounded-xl" />
+          <input type="number" value={minPrice} placeholder="Min" onChange={(e) => { setMinPrice(e.target.value); setPricePreset(null); }} className="w-20 sm:w-24 px-2 py-1 text-[10px] sm:text-[11px] bg-[#1c1c1c] border border-white/[0.08] text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors rounded-xl" />
           <span className="text-zinc-400 text-[9px]">\u2014</span>
-          <input type="number" value={maxPrice} placeholder="Max" onChange={(e) => { setMaxPrice(e.target.value); setPricePreset(null); }} className="w-20 sm:w-24 px-2 py-1 text-[10px] sm:text-[11px] bg-[#0f0f0f] border border-white/[0.08] text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors rounded-xl" />
+          <input type="number" value={maxPrice} placeholder="Max" onChange={(e) => { setMaxPrice(e.target.value); setPricePreset(null); }} className="w-20 sm:w-24 px-2 py-1 text-[10px] sm:text-[11px] bg-[#1c1c1c] border border-white/[0.08] text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors rounded-xl" />
         </div>
       </div>
 
@@ -204,9 +204,9 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
 
         <div className="flex items-center gap-1.5">
           <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-zinc-400 shrink-0">Year</span>
-          <input type="number" value={minYear} placeholder="From" onChange={(e) => setMinYear(e.target.value)} className="w-16 sm:w-20 px-2 py-1 text-[10px] sm:text-[11px] bg-[#0f0f0f] border border-white/[0.08] text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors rounded-xl" />
+          <input type="number" value={minYear} placeholder="From" onChange={(e) => setMinYear(e.target.value)} className="w-16 sm:w-20 px-2 py-1 text-[10px] sm:text-[11px] bg-[#1c1c1c] border border-white/[0.08] text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors rounded-xl" />
           <span className="text-zinc-400 text-[9px]">\u2014</span>
-          <input type="number" value={maxYear} placeholder="To" onChange={(e) => setMaxYear(e.target.value)} className="w-16 sm:w-20 px-2 py-1 text-[10px] sm:text-[11px] bg-[#0f0f0f] border border-white/[0.08] text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors rounded-xl" />
+          <input type="number" value={maxYear} placeholder="To" onChange={(e) => setMaxYear(e.target.value)} className="w-16 sm:w-20 px-2 py-1 text-[10px] sm:text-[11px] bg-[#1c1c1c] border border-white/[0.08] text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors rounded-xl" />
         </div>
 
         <div className="flex items-center gap-2 ml-auto">
@@ -221,7 +221,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
             className={`inline-flex items-center gap-1.5 px-4 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border transition-all relative rounded-xl ${
               hasChanges
                 ? "border-brand-accent bg-brand-accent text-white hover:opacity-90 cursor-pointer"
-                : "border-white/[0.06] bg-[#111111]/80 text-zinc-400 cursor-not-allowed"
+                : "border-white/[0.06] bg-[#1e1e1e]/80 text-zinc-400 cursor-not-allowed"
             }`}
           >
             <Search className="w-3 h-3 sm:w-3.5 sm:h-3.5" />

@@ -117,7 +117,7 @@ export default async function ShowroomLocationPage({ params }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] pb-16">
+    <div className="min-h-screen bg-[#1c1c1c] pb-16">
       <Script
         id="showroom-location-breadcrumb"
         type="application/ld+json"

@@ -65,7 +65,7 @@ function BrandLogo({ name, make, img, count, floating = false }) {
 
   const linkClass = floating
     ? `${BRAND_CHIP_CLASS} rounded-xl bg-white/[0.06] backdrop-blur-md ring-1 ring-white/[0.1] hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300`
-    : `${BRAND_CHIP_CLASS} rounded-lg border border-white/[0.06] bg-[#0f0f0f] hover:border-[var(--accent)]/30 hover:bg-[#111111] transition-all duration-300`;
+    : `${BRAND_CHIP_CLASS} rounded-lg border border-white/[0.06] bg-[#1c1c1c] hover:border-[var(--accent)]/30 hover:bg-[#1e1e1e] transition-all duration-300`;
 
   return (
     <ChipWrapper floating={floating}>
@@ -98,7 +98,7 @@ function BodyTypeCard({ label, value, img, count, floating = false }) {
 
   const linkClass = floating
     ? `${BODY_CHIP_CLASS} rounded-xl bg-white/[0.06] backdrop-blur-md ring-1 ring-white/[0.1] hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300`
-    : `${BODY_CHIP_CLASS} rounded-lg border border-white/[0.06] bg-[#0f0f0f] hover:border-[var(--accent)]/30 hover:bg-[#111111] transition-all duration-300`;
+    : `${BODY_CHIP_CLASS} rounded-lg border border-white/[0.06] bg-[#1c1c1c] hover:border-[var(--accent)]/30 hover:bg-[#1e1e1e] transition-all duration-300`;
 
   return (
     <ChipWrapper floating={floating}>
@@ -161,7 +161,7 @@ function ScrollableRow({ children, trackScrollOffset = false }) {
             <button
               type="button"
               onClick={() => scroll("left")}
-              className="w-10 h-10 ml-2 sm:ml-4 flex items-center justify-center bg-[#111111]/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.3)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-zinc-400 hover:text-white hover:bg-[#1a1a1a] hover:scale-110"
+              className="w-10 h-10 ml-2 sm:ml-4 flex items-center justify-center bg-[#1e1e1e]/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.3)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-zinc-400 hover:text-white hover:bg-[#1a1a1a] hover:scale-110"
             >
               <ChevronLeft className="w-5 h-5 ml-[-2px]" />
             </button>
@@ -185,7 +185,7 @@ function ScrollableRow({ children, trackScrollOffset = false }) {
             <button
               type="button"
               onClick={() => scroll("right")}
-              className="w-10 h-10 mr-2 sm:mr-4 flex items-center justify-center bg-[#111111]/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.3)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-zinc-400 hover:text-white hover:bg-[#1a1a1a] hover:scale-110"
+              className="w-10 h-10 mr-2 sm:mr-4 flex items-center justify-center bg-[#1e1e1e]/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.3)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-zinc-400 hover:text-white hover:bg-[#1a1a1a] hover:scale-110"
             >
               <ChevronRight className="w-5 h-5 mr-[-2px]" />
             </button>
@@ -260,7 +260,7 @@ export default function BrowsePanel({ layout = "full", inventoryCounts = null })
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="What car are you looking for?"
-          className="w-full bg-[#0f0f0f] border border-white/[0.08] text-white rounded-xl py-3.5 sm:py-4 pl-14 pr-[120px] font-bold text-base focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 transition-all placeholder:font-normal placeholder:text-zinc-500"
+          className="w-full bg-[#1c1c1c] border border-white/[0.08] text-white rounded-xl py-3.5 sm:py-4 pl-14 pr-[120px] font-bold text-base focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 transition-all placeholder:font-normal placeholder:text-zinc-500"
         />
         <button
           type="submit"

@@ -48,7 +48,7 @@ export default function AdminTrendsChart({ data }) {
             contentStyle={{
               borderRadius: "8px",
               border: "1px solid #27272a",
-              background: "#18181b",
+              background: "#262626",
               padding: "8px 12px",
               fontSize: "12px",
             }}

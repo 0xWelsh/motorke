@@ -81,7 +81,7 @@ export default function SearchAlertButton({ filters = {} }) {
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div 
-            className="w-full max-w-md bg-[#0f0f0f] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300" 
+            className="w-full max-w-md bg-[#1c1c1c] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300" 
             style={{ borderRadius: "24px" }}
           >
             {/* Header */}

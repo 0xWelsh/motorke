@@ -5,10 +5,10 @@ export default function HomepageDutyTeaser() {
   return (
     <section
       aria-labelledby="homepage-duty-heading"
-      className="border-b border-white/[0.06] bg-[#080808] py-10 sm:py-14"
+      className="border-b border-white/[0.06] bg-[#141414] py-10 sm:py-14"
     >
       <div className="home-shell">
-        <div className="flex flex-col gap-6 border border-white/[0.06] bg-[#0f0f0f] p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8 rounded-xl">
+        <div className="flex flex-col gap-6 border border-white/[0.06] bg-[#1c1c1c] p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8 rounded-xl">
           <div className="max-w-xl">
             <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--accent)] mb-2">
               Import duty

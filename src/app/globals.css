@@ -12,15 +12,15 @@
 :root {
   color-scheme: dark;
   /* BIDGARI Dark Theme — Premium Automotive */
-  --bg:              #080808;
-  --bg-elevated:     #0d0d0d;
-  --surface:         #111111;
-  --surface-overlay: #18181b;
-  --surface-glass:   rgba(255, 255, 255, 0.03);
-  --surface-hover:   rgba(255, 255, 255, 0.06);
+  --bg:              #141414;
+  --bg-elevated:     #1a1a1a;
+  --surface:         #1e1e1e;
+  --surface-overlay: #262626;
+  --surface-glass:   rgba(255, 255, 255, 0.04);
+  --surface-hover:   rgba(255, 255, 255, 0.07);
 
-  --card-bg:         #0f0f0f;
-  --card-bg-hover:   #161616;
+  --card-bg:         #1c1c1c;
+  --card-bg-hover:   #242424;
   --card-border:     rgba(255, 255, 255, 0.06);
   --card-border-hover: rgba(255, 255, 255, 0.12);
 

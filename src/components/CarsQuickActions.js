@@ -89,7 +89,7 @@ function CarsQuickActionsInner() {
   };
 
   const pillBaseClass =
-    "inline-flex items-center justify-center gap-1.5 min-h-8 px-3 border border-white/[0.06] bg-[#0f0f0f] text-[10px] font-black uppercase tracking-[0.12em] text-zinc-300 hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors";
+    "inline-flex items-center justify-center gap-1.5 min-h-8 px-3 border border-white/[0.06] bg-[#1c1c1c] text-[10px] font-black uppercase tracking-[0.12em] text-zinc-300 hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors";
 
   const totalPillCount = smartPills.length + recent.length;
 
@@ -104,7 +104,7 @@ function CarsQuickActionsInner() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls="cars-smart-filters-panel"
-        className="sm:hidden inline-flex w-full items-center justify-between gap-2 border border-white/[0.06] bg-[#0f0f0f] px-3 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-zinc-200"
+        className="sm:hidden inline-flex w-full items-center justify-between gap-2 border border-white/[0.06] bg-[#1c1c1c] px-3 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-zinc-200"
         style={{ borderRadius: "999px" }}
       >
         <span className="inline-flex items-center gap-1.5">

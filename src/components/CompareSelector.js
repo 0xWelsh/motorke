@@ -26,12 +26,12 @@ export function CompareBar() {
 
   return (
     <div className="fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1rem)] sm:w-[95%] max-w-2xl animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
-      <div className="bg-[#111111]/90 backdrop-blur-3xl border border-white/[0.08] p-2 shadow-2xl flex items-center justify-between gap-3 sm:gap-4 rounded-xl">
+      <div className="bg-[#1e1e1e]/90 backdrop-blur-3xl border border-white/[0.08] p-2 shadow-2xl flex items-center justify-between gap-3 sm:gap-4 rounded-xl">
         {/* Selected Cars Thumbnails */}
         <div className="hidden sm:flex items-center gap-2 px-2 overflow-x-auto no-scrollbar">
           {compareCars.map((car) => (
             <div key={car.id} className="relative group shrink-0">
-              <div className="w-12 h-12 overflow-hidden bg-[#0f0f0f] border border-white/[0.08] shadow-lg transition-transform hover:scale-110 rounded-lg">
+              <div className="w-12 h-12 overflow-hidden bg-[#1c1c1c] border border-white/[0.08] shadow-lg transition-transform hover:scale-110 rounded-lg">
                 {car.image ? (
                   <Image src={getThumbnailUrl(car.image)} alt={car.model} fill className="object-cover" />
                 ) : (
@@ -162,7 +162,7 @@ export function CompareButton({ car, className = "" }) {
           ? "bg-[var(--accent)] text-black px-6"
           : cantAdd
             ? "bg-white/[0.04] border border-white/[0.06] text-zinc-500 px-4"
-            : "bg-[#0f0f0f] border border-white/[0.08] text-zinc-400 hover:text-white hover:border-white/[0.2] px-6 active:scale-95"
+            : "bg-[#1c1c1c] border border-white/[0.08] text-zinc-400 hover:text-white hover:border-white/[0.2] px-6 active:scale-95"
       }`}
     >
       <span className="relative z-10 flex items-center justify-center gap-2">

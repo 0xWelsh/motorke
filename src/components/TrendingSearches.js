@@ -21,7 +21,7 @@ export default async function TrendingSearches({ limit = 10, className = "" }) {
           <li key={item.query}>
             <Link
               href={item.href}
-              className="inline-block px-2.5 py-1 text-[11px] font-semibold border border-white/[0.06] bg-[#0f0f0f] text-zinc-300 hover:border-white transition-colors rounded-xl"
+              className="inline-block px-2.5 py-1 text-[11px] font-semibold border border-white/[0.06] bg-[#1c1c1c] text-zinc-300 hover:border-white transition-colors rounded-xl"
             >
               {item.query}
             </Link>

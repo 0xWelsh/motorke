@@ -148,7 +148,7 @@ export default function PortalInventoryFilters({
                 </option>
               ))}
             </select>
-            <button type="submit" className="h-10 px-3 bg-[#111111] text-white text-[10px] font-black uppercase tracking-[0.12em]">
+            <button type="submit" className="h-10 px-3 bg-[#1e1e1e] text-white text-[10px] font-black uppercase tracking-[0.12em]">
               Apply filters
             </button>
             <Link

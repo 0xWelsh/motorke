@@ -144,7 +144,7 @@ export default function ModelSpecsAdmin() {
     <div className="space-y-1">
       <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">{label}</label>
       <select value={form[field]} onChange={(e) => update(field, e.target.value)}
-        className="w-full border border-white/[0.08] rounded-lg px-3 py-2 text-sm bg-[#0f0f0f]">
+        className="w-full border border-white/[0.08] rounded-lg px-3 py-2 text-sm bg-[#1c1c1c]">
         <option value="">{empty}</option>
         {Object.entries(options).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
       </select>
@@ -156,7 +156,7 @@ export default function ModelSpecsAdmin() {
       <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">{label}</label>
       <input type={type} value={form[field]} onChange={(e) => update(field, e.target.value)}
         placeholder={placeholder}
-        className="w-full border border-white/[0.08] rounded-lg px-3 py-2 text-sm bg-[#0f0f0f]"
+        className="w-full border border-white/[0.08] rounded-lg px-3 py-2 text-sm bg-[#1c1c1c]"
       />
     </div>
   );
@@ -191,7 +191,7 @@ export default function ModelSpecsAdmin() {
 
       {/* Edit/Create Form */}
       {(editingId || form.make) && (
-        <div className="bg-[#0f0f0f] border border-white/[0.08] rounded-xl p-6 mb-8">
+        <div className="bg-[#1c1c1c] border border-white/[0.08] rounded-xl p-6 mb-8">
           <div className="flex items-center gap-3 mb-6">
             <h2 className="text-lg font-bold text-white">
               {editingId ? "Edit Spec" : "New Spec"}
@@ -255,7 +255,7 @@ export default function ModelSpecsAdmin() {
             <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Standard Features</label>
             <textarea value={form.standardFeatures} onChange={(e) => update("standardFeatures", e.target.value)}
               rows={3} placeholder="Leather seats, Sunroof, Reverse camera… (comma-separated)"
-              className="w-full border border-white/[0.08] rounded-lg px-3 py-2 text-sm bg-[#0f0f0f] resize-y"
+              className="w-full border border-white/[0.08] rounded-lg px-3 py-2 text-sm bg-[#1c1c1c] resize-y"
             />
           </div>
 
@@ -273,7 +273,7 @@ export default function ModelSpecsAdmin() {
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
           <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}
             placeholder="Filter by make…"
-            className="w-full pl-9 pr-3 py-2 border border-white/[0.08] rounded-lg text-sm bg-[#0f0f0f]"
+            className="w-full pl-9 pr-3 py-2 border border-white/[0.08] rounded-lg text-sm bg-[#1c1c1c]"
           />
         </div>
       </div>

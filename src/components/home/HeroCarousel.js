@@ -36,7 +36,7 @@ export default function HeroCarousel({ cars = [] }) {
           <button
             type="button"
             onClick={() => setIndex((safeIndex - 1 + cars.length) % cars.length)}
-            className="absolute -left-3 z-10 w-8 h-8 flex items-center justify-center bg-[#111111]/80 backdrop-blur-md border border-white/[0.08] hover:bg-[#1a1a1a] hover:border-white/[0.15] transition-all rounded-lg"
+            className="absolute -left-3 z-10 w-8 h-8 flex items-center justify-center bg-[#1e1e1e]/80 backdrop-blur-md border border-white/[0.08] hover:bg-[#1a1a1a] hover:border-white/[0.15] transition-all rounded-lg"
             aria-label="Previous car"
           >
             <ChevronLeft className="w-4 h-4 text-zinc-400" />
@@ -45,9 +45,9 @@ export default function HeroCarousel({ cars = [] }) {
 
         <Link
           href={carListingPath(car)}
-          className="flex w-full overflow-hidden bg-[#0f0f0f] border border-white/[0.06] hover:border-white/[0.12] transition-all group rounded-xl"
+          className="flex w-full overflow-hidden bg-[#1c1c1c] border border-white/[0.06] hover:border-white/[0.12] transition-all group rounded-xl"
         >
-          <div className="relative w-[140px] shrink-0 bg-[#111111]">
+          <div className="relative w-[140px] shrink-0 bg-[#1e1e1e]">
             {imgUrl ? (
               <Image
                 src={getThumbnailUrl(imgUrl, 140)}
@@ -95,7 +95,7 @@ export default function HeroCarousel({ cars = [] }) {
           <button
             type="button"
             onClick={() => setIndex((safeIndex + 1) % cars.length)}
-            className="absolute -right-3 z-10 w-8 h-8 flex items-center justify-center bg-[#111111]/80 backdrop-blur-md border border-white/[0.08] hover:bg-[#1a1a1a] hover:border-white/[0.15] transition-all rounded-lg"
+            className="absolute -right-3 z-10 w-8 h-8 flex items-center justify-center bg-[#1e1e1e]/80 backdrop-blur-md border border-white/[0.08] hover:bg-[#1a1a1a] hover:border-white/[0.15] transition-all rounded-lg"
             aria-label="Next car"
           >
             <ChevronRight className="w-4 h-4 text-zinc-400" />

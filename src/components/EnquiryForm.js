@@ -179,11 +179,11 @@ export default function EnquiryForm({
   }
 
   const inputCls =
-    "w-full bg-[#0f0f0f] border border-white/[0.08] px-3.5 py-2.5 sm:px-4 sm:py-3 text-[13px] sm:text-sm text-white placeholder:text-zinc-500 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 transition-all rounded-lg";
+    "w-full bg-[#1c1c1c] border border-white/[0.08] px-3.5 py-2.5 sm:px-4 sm:py-3 text-[13px] sm:text-sm text-white placeholder:text-zinc-500 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 transition-all rounded-lg";
 
   if (state === "sent") {
     return (
-      <div className="text-center py-12 px-6 bg-[#0f0f0f] border border-white/[0.06] rounded-xl">
+      <div className="text-center py-12 px-6 bg-[#1c1c1c] border border-white/[0.06] rounded-xl">
         <p className="font-extrabold text-white mb-2 uppercase tracking-widest text-xs">Enquiry Sent</p>
         <p className="text-xs text-zinc-400 leading-relaxed">
           Thanks! Our team will contact you shortly regarding the <span className="font-bold text-white">{carTitle}</span>.

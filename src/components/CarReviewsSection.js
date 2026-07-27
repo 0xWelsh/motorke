@@ -69,7 +69,7 @@ export default function CarReviewsSection({ carId, initialReviews = [], initialA
         <div className="space-y-3 sm:space-y-4">
           {reviews.length > 0 ? (
             reviews.map((r) => (
-              <div key={r.id} className="border border-white/[0.06] bg-[#0a0a0a] p-4 sm:p-5 rounded-xl">
+              <div key={r.id} className="border border-white/[0.06] bg-[#222222] p-4 sm:p-5 rounded-xl">
                 <div className="flex items-center justify-between gap-4 mb-2.5">
                   <div className="flex min-w-0 items-center gap-3">
                     <div className="relative w-8 h-8 rounded-full bg-white/[0.03] flex items-center justify-center overflow-hidden ring-1 ring-white/[0.06]">

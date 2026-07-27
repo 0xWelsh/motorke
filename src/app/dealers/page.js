@@ -163,7 +163,7 @@ export default async function DealersPage({ searchParams }) {
   );
 
   return (
-    <div className="bg-gradient-to-b from-[#0a0a0a] via-[#0b0b0b] to-[#0a0a0a] min-h-screen pb-20">
+    <div className="bg-gradient-to-b from-[#222222] via-[#0b0b0b] to-[#222222] min-h-screen pb-20">
       {dealersDirectoryLd ? (
         <Script
           id="dealers-directory-jsonld"
@@ -172,7 +172,7 @@ export default async function DealersPage({ searchParams }) {
         />
       ) : null}
       <div className="pt-2 md:pt-3">
-        <div className="relative w-full h-[240px] sm:h-[300px] lg:h-[340px] overflow-hidden bg-[#0a0a0a]">
+        <div className="relative w-full h-[240px] sm:h-[300px] lg:h-[340px] overflow-hidden bg-[#222222]">
           <Image
             src={DEALERS_HERO_IMAGE}
             alt="Car dealership showroom"
@@ -252,7 +252,7 @@ export default async function DealersPage({ searchParams }) {
           
           {/* Sidebar */}
           <aside className="order-2 lg:order-1 lg:col-span-3 lg:sticky lg:top-[6.75rem] space-y-4 lg:space-y-5 text-white">
-            <details className="lg:hidden overflow-hidden bg-[#111111] border border-white/[0.08] shadow-none pt-px pl-5 pr-5 pb-5 rounded-xl">
+            <details className="lg:hidden overflow-hidden bg-[#1e1e1e] border border-white/[0.08] shadow-none pt-px pl-5 pr-5 pb-5 rounded-xl">
               <summary className="cursor-pointer list-none text-xs font-bold uppercase tracking-widest text-white py-5 flex items-center gap-2.5 [&::-webkit-details-marker]:hidden">
                 <span className="h-6 w-[3px] shrink-0 rounded-full bg-[var(--accent)]" aria-hidden />
                 Refine network
@@ -261,13 +261,13 @@ export default async function DealersPage({ searchParams }) {
                 <input type="hidden" name="sort" value={sortMode} />
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Search</label>
-                  <input name="search" defaultValue={search} type="text" placeholder="Dealer name..." className="w-full bg-[#0a0a0a] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all text-white placeholder:text-zinc-400 rounded-xl" />
+                  <input name="search" defaultValue={search} type="text" placeholder="Dealer name..." className="w-full bg-[#222222] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all text-white placeholder:text-zinc-400 rounded-xl" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Region</label>
-                  <select name="county" defaultValue={countyFilter} className="w-full bg-[#0a0a0a] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-white rounded-xl">
-                    <option value="" className="bg-[#0a0a0a]">All Regions</option>
-                    {counties.map(c => <option key={c} value={c} className="bg-[#0a0a0a]">{c}</option>)}
+                  <select name="county" defaultValue={countyFilter} className="w-full bg-[#222222] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-white rounded-xl">
+                    <option value="" className="bg-[#222222]">All Regions</option>
+                    {counties.map(c => <option key={c} value={c} className="bg-[#222222]">{c}</option>)}
                   </select>
                 </div>
                 <label className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-300">
@@ -276,7 +276,7 @@ export default async function DealersPage({ searchParams }) {
                 </label>
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Inventory</label>
-                  <select name="inventory" defaultValue={withActiveInventoryOnly ? "active" : "all"} className="w-full bg-[#0a0a0a] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-white rounded-xl">
+                  <select name="inventory" defaultValue={withActiveInventoryOnly ? "active" : "all"} className="w-full bg-[#222222] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-white rounded-xl">
                     <option value="active">Active inventory only</option>
                     <option value="all">All dealers</option>
                   </select>
@@ -290,7 +290,7 @@ export default async function DealersPage({ searchParams }) {
               </form>
             </details>
 
-            <div className="hidden lg:block overflow-hidden bg-[#111111] border border-white/[0.08] shadow-none p-6 rounded-xl">
+            <div className="hidden lg:block overflow-hidden bg-[#1e1e1e] border border-white/[0.08] shadow-none p-6 rounded-xl">
               <h3 className="text-xs font-black uppercase tracking-widest mb-6 text-white flex items-center gap-2.5">
                 <span className="h-6 w-[3px] shrink-0 rounded-full bg-[var(--accent)]" aria-hidden />
                 Refine network
@@ -299,13 +299,13 @@ export default async function DealersPage({ searchParams }) {
                 <input type="hidden" name="sort" value={sortMode} />
                 <div className="space-y-2">
                    <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Search</label>
-                   <input name="search" defaultValue={search} type="text" placeholder="Dealer name..." className="w-full bg-[#0a0a0a] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all text-white placeholder:text-zinc-400 rounded-xl" />
+                   <input name="search" defaultValue={search} type="text" placeholder="Dealer name..." className="w-full bg-[#222222] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all text-white placeholder:text-zinc-400 rounded-xl" />
                 </div>
                 <div className="space-y-2">
                    <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Region</label>
-                   <select name="county" defaultValue={countyFilter} className="w-full bg-[#0a0a0a] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-white rounded-xl">
-                      <option value="" className="bg-[#0a0a0a]">All Regions</option>
-                      {counties.map(c => <option key={c} value={c} className="bg-[#0a0a0a]">{c}</option>)}
+                   <select name="county" defaultValue={countyFilter} className="w-full bg-[#222222] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-white rounded-xl">
+                      <option value="" className="bg-[#222222]">All Regions</option>
+                      {counties.map(c => <option key={c} value={c} className="bg-[#222222]">{c}</option>)}
                    </select>
                 </div>
                 <label className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-300">
@@ -314,7 +314,7 @@ export default async function DealersPage({ searchParams }) {
                 </label>
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Inventory</label>
-                  <select name="inventory" defaultValue={withActiveInventoryOnly ? "active" : "all"} className="w-full bg-[#0a0a0a] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-white rounded-xl">
+                  <select name="inventory" defaultValue={withActiveInventoryOnly ? "active" : "all"} className="w-full bg-[#222222] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-white rounded-xl">
                     <option value="active">Active inventory only</option>
                     <option value="all">All dealers</option>
                   </select>
@@ -328,7 +328,7 @@ export default async function DealersPage({ searchParams }) {
               </form>
             </div>
 
-            <details className="lg:hidden overflow-hidden bg-[#111111] border border-white/[0.08] shadow-none pt-px pl-5 pr-5 pb-5 rounded-xl">
+            <details className="lg:hidden overflow-hidden bg-[#1e1e1e] border border-white/[0.08] shadow-none pt-px pl-5 pr-5 pb-5 rounded-xl">
               <summary className="cursor-pointer list-none text-xs font-bold uppercase tracking-widest text-white py-5 flex items-center gap-2.5 [&::-webkit-details-marker]:hidden">
                 <span className="h-6 w-[3px] shrink-0 rounded-full bg-[var(--accent)]" aria-hidden />
                 Proximity radar
@@ -338,7 +338,7 @@ export default async function DealersPage({ searchParams }) {
               </div>
             </details>
 
-            <div className="hidden lg:block overflow-hidden bg-[#111111] border border-white/[0.08] shadow-none p-6 rounded-xl">
+            <div className="hidden lg:block overflow-hidden bg-[#1e1e1e] border border-white/[0.08] shadow-none p-6 rounded-xl">
                <h3 className="text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2.5 text-white">
                  <span className="h-6 w-[3px] shrink-0 rounded-full bg-[var(--accent)]" aria-hidden />
                  Proximity radar
@@ -350,7 +350,7 @@ export default async function DealersPage({ searchParams }) {
           {/* Grid */}
           <main className="order-1 lg:order-2 lg:col-span-9">
             {rankedDealers.length === 0 ? (
-              <div className="py-24 text-center bg-[#111111] border border-white/[0.08] rounded-xl">
+              <div className="py-24 text-center bg-[#1e1e1e] border border-white/[0.08] rounded-xl">
                 <Building2 className="w-10 h-10 text-zinc-700 mx-auto mb-4" />
                 <h2 className="text-xl font-bold text-white mb-2">Network offline</h2>
                 <p className="text-zinc-400 font-medium text-sm">We couldn&apos;t find any active dealers matching your criteria.</p>
@@ -379,7 +379,7 @@ function DealerCard({ dealer }) {
     <Link
       href={`/dealers/${dealer.slug}`}
       aria-label={`${dealer.name} cars for sale in ${dealer.location || dealer.county || "Kenya"} | BIDGARI`}
-      className="group flex flex-col h-full bg-[#111111] shadow-sm hover:shadow-lg border border-white/[0.06] transition-all hover:border-[var(--accent)]/40 rounded-xl"
+      className="group flex flex-col h-full bg-[#1e1e1e] shadow-sm hover:shadow-lg border border-white/[0.06] transition-all hover:border-[var(--accent)]/40 rounded-xl"
     >
       <div className="relative aspect-[2.2/1] min-h-[88px] bg-white/[0.03] overflow-hidden rounded-t-xl">
         <img
@@ -414,7 +414,7 @@ function DealerCard({ dealer }) {
                 ) : null}
               </div>
            </div>
-           <div className="w-9 h-9 bg-[#0a0a0a] border border-white/[0.08] flex items-center justify-center shrink-0 overflow-hidden rounded-lg">
+           <div className="w-9 h-9 bg-[#222222] border border-white/[0.08] flex items-center justify-center shrink-0 overflow-hidden rounded-lg">
               {brandImage ? <img src={brandImage} alt="" className="w-full h-full object-cover" /> : <span className="text-xs font-bold text-zinc-500">{dealer.name[0]}</span>}
            </div>
         </div>

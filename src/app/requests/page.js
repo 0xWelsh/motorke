@@ -15,7 +15,7 @@ export const metadata = {
 
 export default function BuyerRequestsBoardPage() {
   return (
-    <div className="min-h-screen bg-[#0c1524]">
+    <div className="min-h-screen bg-[#141414]">
       <section className="border-b border-sky-900/60 pt-14 sm:pt-16 pb-5 sm:pb-6 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>

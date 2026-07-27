@@ -98,7 +98,7 @@ export default function PhoneVerificationControl({ phone, className = "" }) {
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="Enter 6-digit code"
-            className="h-9 w-44 border border-white/[0.06] bg-[#0f0f0f] px-3 text-xs font-semibold"
+            className="h-9 w-44 border border-white/[0.06] bg-[#1c1c1c] px-3 text-xs font-semibold"
           />
           <button
             type="button"

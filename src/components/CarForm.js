@@ -431,10 +431,10 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
   const uploadedLocalMapRef = useRef(new Map());
   const pendingUploadIdsRef = useRef(new Set());
   const latestUploaderSelectionRef = useRef([]);
-  const inputCls = "w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm font-semibold text-white bg-[#0f0f0f] placeholder:text-zinc-500 outline-none focus:border-[var(--accent)] transition-all";
+  const inputCls = "w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm font-semibold text-white bg-[#1c1c1c] placeholder:text-zinc-500 outline-none focus:border-[var(--accent)] transition-all";
   const selectCls = `${inputCls} appearance-none`;
   const inField =
-    "block w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm font-semibold text-white bg-[#0f0f0f] outline-none focus:border-[var(--accent)] transition-all placeholder:text-zinc-500";
+    "block w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm font-semibold text-white bg-[#1c1c1c] outline-none focus:border-[var(--accent)] transition-all placeholder:text-zinc-500";
   const inFieldSelect = `${inField} appearance-none cursor-pointer`;
   const previewTitle = `${liveDraft.year || selectedYear || ""} ${liveDraft.make || selectedMake || ""} ${liveDraft.model || selectedModel || ""}`.trim() || "Your listing preview";
   const previewVariant = liveDraft.variant || "";
@@ -939,7 +939,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   const mobileDock = useMobileDock ? (
     <div
-      className="lg:hidden fixed left-0 right-0 z-[9999] border-t border-white/[0.06] bg-[#0f0f0f] px-3 pt-2.5 pb-[max(0.65rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(0,0,0,0.3)]"
+      className="lg:hidden fixed left-0 right-0 z-[9999] border-t border-white/[0.06] bg-[#1c1c1c] px-3 pt-2.5 pb-[max(0.65rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(0,0,0,0.3)]"
       style={{ bottom: 0 }}
       role="region"
       aria-label="Listing actions"
@@ -967,7 +967,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
   return (
     <>
-    <div className="mb-4 border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#0f0f0f]">
+    <div className="mb-4 border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#1c1c1c]">
       <button type="button" onClick={() => setSmartFillOpen((o) => !o)}
         className="flex items-center justify-between w-full text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 hover:text-zinc-200 transition-colors"
       >
@@ -984,7 +984,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             defaultValue=""
             rows={3}
             placeholder={"Paste the dealer's description here — e.g.\n2019 Toyota Axio NKT 1.5L, KSh 2,800,000, 78,000 km, petrol, automatic, white, Nairobi"}
-            className="w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm text-white bg-[#0a0a0a] outline-none focus:border-purple-500/50 transition-all resize-y min-h-[4rem] placeholder:text-zinc-600"
+            className="w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm text-white bg-[#222222] outline-none focus:border-purple-500/50 transition-all resize-y min-h-[4rem] placeholder:text-zinc-600"
           />
           <div className="flex items-center gap-3">
             <button type="button" onClick={handleSmartFill} disabled={parsing}
@@ -1043,7 +1043,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
       {useMobileDock ? (
           <div
-            className="lg:hidden sticky top-0 z-[15] -mx-3 mb-2 flex gap-1.5 overflow-x-auto border-b border-white/[0.06] bg-[#0f0f0f]/95 px-3 py-2.5 backdrop-blur-sm [scrollbar-width:none]"
+            className="lg:hidden sticky top-0 z-[15] -mx-3 mb-2 flex gap-1.5 overflow-x-auto border-b border-white/[0.06] bg-[#1c1c1c]/95 px-3 py-2.5 backdrop-blur-sm [scrollbar-width:none]"
             aria-label="Jump to section"
           >
             {[
@@ -1069,7 +1069,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
         {/* Photos */}
         <div id="portal-car-photos" className="scroll-mt-28 md:scroll-mt-8">
-          <div className="border border-dashed border-white/[0.06] rounded-xl p-4 sm:p-6 bg-[#0f0f0f]">
+          <div className="border border-dashed border-white/[0.06] rounded-xl p-4 sm:p-6 bg-[#1c1c1c]">
             <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-3">Photos</p>
             {uploading && (
               <div className="mb-6 text-center">
@@ -1086,7 +1086,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
         {/* Identity */}
         <div id="portal-car-listing" className="scroll-mt-28 md:scroll-mt-8">
-          <div className="border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#0f0f0f]">
+          <div className="border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#1c1c1c]">
             <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-3">Listing</p>
             <div className="flex gap-2 mb-4">
               {Object.entries(VEHICLE_TYPE_LABELS).map(([value, label]) => (
@@ -1173,7 +1173,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
 
         {/* Pricing */}
-        <div id="car-pricing" className="border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#0f0f0f]">
+        <div id="car-pricing" className="border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#1c1c1c]">
           <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-3">Pricing</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <InfieldGroup label="Price (KES)">
@@ -1200,7 +1200,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
 
         {/* Engine & Drivetrain */}
-        <div id="car-engine" className="border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#0f0f0f]">
+        <div id="car-engine" className="border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#1c1c1c]">
           <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-3">Engine &amp; Drivetrain</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <InfieldGroup label="Fuel" required>
@@ -1239,7 +1239,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
 
         {/* Body & Dimensions */}
-        <div id="car-body" className="border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#0f0f0f]">
+        <div id="car-body" className="border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#1c1c1c]">
           <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-3">Body &amp; Dimensions</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <InfieldGroup label="Body type" required>
@@ -1274,7 +1274,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
 
         {/* Usage & Registration */}
-        <div id="car-usage" className="border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#0f0f0f]">
+        <div id="car-usage" className="border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#1c1c1c]">
           <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-3">Usage &amp; Registration</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <InfieldGroup label="Kenya reg" required>
@@ -1317,12 +1317,12 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
         </div>
 
         {/* Description */}
-        <div id="car-description" className="border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#0f0f0f] space-y-4">
+        <div id="car-description" className="border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#1c1c1c] space-y-4">
           <div>
             <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-2">Description</p>
             <textarea name="description" rows={4} defaultValue={formSeed.description}
               placeholder="Condition, service history, tyres, known issues…"
-              className="w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm text-white bg-[#0a0a0a] outline-none focus:border-[var(--accent)]/50 transition-all resize-y min-h-[6rem] placeholder:text-zinc-600"
+              className="w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm text-white bg-[#222222] outline-none focus:border-[var(--accent)]/50 transition-all resize-y min-h-[6rem] placeholder:text-zinc-600"
             />
           </div>
           <div>
@@ -1331,13 +1331,13 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               key={`features-${car?.id ?? "new"}-${formInstanceKey}`}
               defaultValue={initialFeaturesDisplay} onInput={bumpFeaturesInput} rows={2}
               placeholder="Leather seats, Sunroof, Reverse camera…"
-              className="w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm text-white bg-[#0a0a0a] outline-none focus:border-[var(--accent)]/50 transition-all resize-y min-h-[3.5rem] placeholder:text-zinc-600"
+              className="w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm text-white bg-[#222222] outline-none focus:border-[var(--accent)]/50 transition-all resize-y min-h-[3.5rem] placeholder:text-zinc-600"
             />
             <p className="mt-1.5 text-[10px] text-zinc-500">{parsedFeatures.length} feature{parsedFeatures.length === 1 ? "" : "s"} — comma-separated</p>
             {parsedFeatures.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mt-2">
                 {parsedFeatures.map((f, i) => (
-                  <span key={i} className="inline-flex items-center gap-1 rounded-md border border-white/[0.06] bg-[#0a0a0a] px-2 py-1 text-[10px] font-semibold text-zinc-300">
+                  <span key={i} className="inline-flex items-center gap-1 rounded-md border border-white/[0.06] bg-[#222222] px-2 py-1 text-[10px] font-semibold text-zinc-300">
                     {f}
                   </span>
                 ))}
@@ -1348,7 +1348,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
 
         {/* Preview */}
         <div id="portal-car-preview" className="scroll-mt-28 md:scroll-mt-8">
-          <div className="border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#0f0f0f]">
+          <div className="border border-white/[0.06] rounded-xl p-4 sm:p-5 bg-[#1c1c1c]">
             <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">Preview</p>
             <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
               <div className="flex h-20 w-full shrink-0 items-center justify-center overflow-hidden rounded-xl bg-zinc-800 sm:h-24 sm:w-36">

@@ -48,7 +48,7 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
       <div className="flex flex-wrap gap-3">
         <a
           href="/api/admin/duty-vehicles/template"
-          className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-[#0f0f0f] px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/[0.03]"
+          className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-[#1c1c1c] px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/[0.03]"
         >
           <Download className="w-4 h-4" aria-hidden />
           Download CSV template
@@ -57,13 +57,13 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
           href="/duty"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-[#0f0f0f] px-4 py-2.5 text-sm font-semibold text-zinc-300 hover:bg-white/[0.03]"
+          className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-[#1c1c1c] px-4 py-2.5 text-sm font-semibold text-zinc-300 hover:bg-white/[0.03]"
         >
           Open duty calculator
         </a>
       </div>
 
-      <div className="rounded-xl border border-white/[0.06] bg-[#0f0f0f] p-6">
+      <div className="rounded-xl border border-white/[0.06] bg-[#1c1c1c] p-6">
         <div className="flex items-start gap-3 mb-5">
           <FileSpreadsheet className="w-5 h-5 text-[var(--accent)] shrink-0 mt-0.5" aria-hidden />
           <div>

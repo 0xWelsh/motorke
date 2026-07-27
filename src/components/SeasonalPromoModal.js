@@ -82,7 +82,7 @@ export default function SeasonalPromoModal() {
         <button
           type="button"
           onClick={minimize}
-          className="absolute top-2 right-2 z-20 flex h-9 w-9 items-center justify-center border border-white/30 bg-[#0f0f0f]/90 text-white shadow-lg transition-colors hover:bg-[#ef3340] hover:border-[#ef3340]"
+          className="absolute top-2 right-2 z-20 flex h-9 w-9 items-center justify-center border border-white/30 bg-[#1c1c1c]/90 text-white shadow-lg transition-colors hover:bg-[#ef3340] hover:border-[#ef3340]"
           aria-label="Close greeting"
         >
           <X className="h-5 w-5" />

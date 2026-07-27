@@ -20,7 +20,7 @@ const BADGES = [
 
 export default function HomepageTrustBadges() {
   return (
-    <section className="py-10 sm:py-14 bg-[#080808] border-y border-white/[0.04]">
+    <section className="py-10 sm:py-14 bg-[#141414] border-y border-white/[0.04]">
       <div className="home-shell">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
           {BADGES.map((badge, i) => (

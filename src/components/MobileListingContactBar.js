@@ -60,7 +60,7 @@ export default function MobileListingContactBar({
   }
 
   return (
-    <div className="pointer-events-auto mx-auto flex max-w-lg items-stretch gap-3 rounded-2xl border border-white/[0.06] bg-[#0f0f0f]/95 p-3 shadow-[0_8px_40px_rgba(15,23,42,0.14)] backdrop-blur-xl ring-1 ring-white/10">
+    <div className="pointer-events-auto mx-auto flex max-w-lg items-stretch gap-3 rounded-2xl border border-white/[0.06] bg-[#1c1c1c]/95 p-3 shadow-[0_8px_40px_rgba(15,23,42,0.14)] backdrop-blur-xl ring-1 ring-white/10">
       <div className="flex min-w-0 flex-1 flex-col justify-center pl-1">
         <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
           List price

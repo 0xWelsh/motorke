@@ -385,7 +385,7 @@ export async function sendLeadAlertEmail({
         <p style="margin: 10px 0 0;"><strong>Message:</strong> ${safeBuyerMessage}</p>
       </div>
 
-      <a href="${getSiteOrigin()}/admin/cars" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;border-radius:0px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Open Admin Panel</a>
+      <a href="${getSiteOrigin()}/admin/cars" style="display:inline-block;background:#1e1e1e;color:#fff;text-decoration:none;padding:12px 18px;border-radius:0px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Open Admin Panel</a>
 
       <p style="margin-top: 20px; color: #94a3b8; font-size: 12px;">Lead Ref: ${safeLeadId}</p>
       ${buildEmailFooter()}
@@ -453,7 +453,7 @@ export async function sendPasswordResetEmail({ email, name, resetToken }) {
         <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1.6;">For your security, this link expires in 30 minutes. If you did not request this reset, you can ignore this email.</p>
       </div>
 
-      <a href="${resetUrl}" style="display:inline-block; background:#111111; color:#ffffff; text-decoration:none; padding:12px 18px; border-radius:0px; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Reset Password</a>
+      <a href="${resetUrl}" style="display:inline-block; background:#1e1e1e; color:#ffffff; text-decoration:none; padding:12px 18px; border-radius:0px; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Reset Password</a>
 
       <p style="margin-top: 20px; font-size: 12px; color: #64748b; word-break: break-all;">${resetUrl}</p>
       ${buildEmailFooter()}
@@ -491,7 +491,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
 
   const htmlContent = `
     <div style="max-width: 600px; margin: 0 auto; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1f2937;">
-      <div style="background: #111111; padding: 32px; border-radius: 0px; color: white; text-align: center;">
+      <div style="background: #1e1e1e; padding: 32px; border-radius: 0px; color: white; text-align: center;">
         <h1 style="margin: 0; font-size: 24px; font-weight: 900;">Better Deal Found! 🎯</h1>
         <p style="margin: 8px 0 0; font-size: 14px; opacity: 0.9;">We found something even better for you</p>
       </div>
@@ -508,7 +508,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
           <div style="display: flex; align-items: center; gap: 16px;">
             ${newCar.primaryImage ? `<img src="${newCar.primaryImage}" alt="${newCar.year} ${newCar.make}" style="width: 100px; height: 75px; object-fit: cover; border-radius: 0px;" />` : ''}
             <div style="flex: 1;">
-              <h3 style="margin: 0 0 4px; font-size: 18px; font-weight: 900; color: #111111;">
+              <h3 style="margin: 0 0 4px; font-size: 18px; font-weight: 900; color: #1e1e1e;">
                 ${newCar.year} ${newCar.make} ${newCar.model}
               </h3>
               <p style="margin: 0 0 8px; font-size: 13px; color: #64748b;">
@@ -530,7 +530,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
           </p>
         </div>
 
-        <a href="${newCarUrl}" style="display: inline-block; width: 100%; text-align: center; background: #111111; color: white; padding: 14px 24px; border-radius: 0px; font-size: 14px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em; margin: 24px 0; transition: background 0.2s;">
+        <a href="${newCarUrl}" style="display: inline-block; width: 100%; text-align: center; background: #1e1e1e; color: white; padding: 14px 24px; border-radius: 0px; font-size: 14px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em; margin: 24px 0; transition: background 0.2s;">
           View This Car
         </a>
 
@@ -575,8 +575,8 @@ export async function sendEngagementFollowUpEmail({ userEmail, userName, carTitl
   const safeDealer = escapeHtml(dealerName);
 
   const htmlContent = `
-    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #111111;">
-      <div style="background: #111111; padding: 40px; border-radius: 0px; text-align: center;">
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1e1e1e;">
+      <div style="background: #1e1e1e; padding: 40px; border-radius: 0px; text-align: center;">
         <span style="font-weight: 900; font-size: 24px; text-transform: uppercase; letter-spacing: -0.05em; color: white;">MOTOR<span style="color: #ff5a2f;">SKE</span></span>
       </div>
       <div style="padding: 40px; border: 1px solid #e2e8f0; border-top: none;">
@@ -630,8 +630,8 @@ export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName
   const safeDealer = escapeHtml(dealerName);
 
   const htmlContent = `
-    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #111111;">
-      <div style="background: #111111; padding: 40px; border-radius: 0px; text-align: center;">
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1e1e1e;">
+      <div style="background: #1e1e1e; padding: 40px; border-radius: 0px; text-align: center;">
         <span style="font-weight: 900; font-size: 24px; text-transform: uppercase; letter-spacing: -0.05em; color: white;">MOTOR<span style="color: #ff5a2f;">SKE</span></span>
       </div>
       <div style="padding: 40px; border: 1px solid #e2e8f0; border-top: none;">
@@ -646,7 +646,7 @@ export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName
         </p>
 
         <div style="text-align: center; margin: 32px 0;">
-          <a href="${getSiteOrigin()}/contact" style="display: inline-block; background: #111111; color: white; padding: 16px 32px; border-radius: 0px; font-size: 13px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;">
+          <a href="${getSiteOrigin()}/contact" style="display: inline-block; background: #1e1e1e; color: white; padding: 16px 32px; border-radius: 0px; font-size: 13px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;">
             Leave Feedback
           </a>
         </div>
@@ -723,7 +723,7 @@ export async function sendWatchAlertEmail({
         <p style="margin: 0 0 12px; font-weight: 700;">${title}</p>
         ${priceBlock}
       </div>
-      <a href="${isSimilarListing && similarCar?.id ? similarListingUrl : carUrl}" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Open Listing</a>
+      <a href="${isSimilarListing && similarCar?.id ? similarListingUrl : carUrl}" style="display:inline-block;background:#1e1e1e;color:#fff;text-decoration:none;padding:12px 18px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Open Listing</a>
       ${buildEmailFooter()}
     </div>
   `;

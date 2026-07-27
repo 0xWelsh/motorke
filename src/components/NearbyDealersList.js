@@ -72,7 +72,7 @@ export default function NearbyDealersList() {
   const btnBase =
     "inline-flex items-center justify-center gap-1.5 rounded-md border text-[10px] font-bold uppercase tracking-[0.1em] transition disabled:opacity-50";
   const btnPrimary = `${btnBase} border-[var(--accent)] bg-[var(--accent)] text-white hover:opacity-90`;
-  const btnSecondary = `${btnBase} border-white/[0.08] bg-[#111111] text-white hover:bg-white/[0.03]`;
+  const btnSecondary = `${btnBase} border-white/[0.08] bg-[#1e1e1e] text-white hover:bg-white/[0.03]`;
 
   return (
     <div className="space-y-4">
@@ -86,7 +86,7 @@ export default function NearbyDealersList() {
             value={radius}
             onChange={(e) => setRadius(Number(e.target.value))}
             disabled={loading}
-            className="w-full px-3 py-2 text-sm font-medium border border-white/[0.08] text-white bg-[#111111] disabled:opacity-50 outline-none rounded-xl"
+            className="w-full px-3 py-2 text-sm font-medium border border-white/[0.08] text-white bg-[#1e1e1e] disabled:opacity-50 outline-none rounded-xl"
           >
             <option value={5}>5 km</option>
             <option value={10}>10 km</option>

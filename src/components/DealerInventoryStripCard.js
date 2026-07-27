@@ -26,7 +26,7 @@ export default function DealerInventoryStripCard({ car, showFreshness = false, f
   ].filter(Boolean);
 
   return (
-    <article className="w-full overflow-hidden border-b border-white/[0.06] bg-[#0a0a0a]">
+    <article className="w-full overflow-hidden border-b border-white/[0.06] bg-[#222222]">
       <div className="flex w-full min-h-[84px]">
         <Link
           href={carListingPath(car)}

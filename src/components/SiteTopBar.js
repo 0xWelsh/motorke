@@ -9,7 +9,7 @@ export default function SiteTopBar() {
   const telHref = PUBLIC_SUPPORT_PHONE ? telHrefFromMsisdn(PUBLIC_SUPPORT_PHONE) : null;
 
   return (
-    <div className="relative border-b border-white/[0.04] bg-[#0a0a0a] text-zinc-400">
+    <div className="relative border-b border-white/[0.04] bg-[#222222] text-zinc-400">
       <div className="home-shell">
         <div className="flex h-9 sm:h-10 items-center justify-between gap-3 text-[10px] sm:text-[11px] font-semibold">
           <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-1">

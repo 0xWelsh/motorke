@@ -81,7 +81,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
     setSaved(prev => prev.filter(c => c.id !== carId));
   }
 
-  const inputCls = "w-full bg-[#111111] border border-slate-800 focus:border-[#ff5a2f] focus:ring-1 focus:ring-blue-100 rounded-2xl py-2.5 px-4 text-sm font-medium text-white outline-none transition-colors placeholder:text-slate-400";
+  const inputCls = "w-full bg-[#1e1e1e] border border-slate-800 focus:border-[#ff5a2f] focus:ring-1 focus:ring-blue-100 rounded-2xl py-2.5 px-4 text-sm font-medium text-white outline-none transition-colors placeholder:text-slate-400";
   const labelCls = "text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5 block";
   const buyerProfileItems = [
     { label: "Profile photo", done: Boolean(user.avatarUrl) },
@@ -155,7 +155,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                 </div>
                 <div>
                   <label className={labelCls}>Primary Email</label>
-                  <input value={email} onChange={e => setEmail(e.target.value)} type="email" required className={clsx(inputCls, "bg-[#111111]/50 text-slate-400 cursor-not-allowed")} disabled />
+                  <input value={email} onChange={e => setEmail(e.target.value)} type="email" required className={clsx(inputCls, "bg-[#1e1e1e]/50 text-slate-400 cursor-not-allowed")} disabled />
                 </div>
                 <div>
                   <label className={labelCls}>Contact phone</label>
@@ -258,7 +258,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
             : (
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {enquiries.map(e => (
-                  <div key={e.id} className="bg-[#111111] border border-slate-800 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 shadow-sm group hover:border-[#ff5a2f]/30 transition-colors">
+                  <div key={e.id} className="bg-[#1e1e1e] border border-slate-800 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 shadow-sm group hover:border-[#ff5a2f]/30 transition-colors">
                     <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center font-black text-xl text-[#ff5a2f] shrink-0">
                       {e.dealer.name[0]}
                     </div>
@@ -277,7 +277,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                         <div className="flex items-center gap-3">
                           <span className={clsx(
                             "px-3 py-1 rounded-2xl text-[11px] font-black uppercase tracking-widest border",
-                            e.channel === "whatsapp" ? "bg-emerald-50 text-[#ff5a2f] border-emerald-100" : "bg-[#111111] text-slate-500 border-slate-800"
+                            e.channel === "whatsapp" ? "bg-emerald-50 text-[#ff5a2f] border-emerald-100" : "bg-[#1e1e1e] text-slate-500 border-slate-800"
                           )}>
                             {e.channel === "whatsapp" ? "WhatsApp Sent" : "Form Sent"}
                           </span>
@@ -286,7 +286,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                       </div>
                       
                       {e.message && (
-                        <div className="bg-[#111111] rounded-2xl p-5 mb-5 border border-slate-800">
+                        <div className="bg-[#1e1e1e] rounded-2xl p-5 mb-5 border border-slate-800">
                           <p className="text-sm font-medium text-slate-600">"{e.message}"</p>
                         </div>
                       )}
@@ -358,7 +358,7 @@ function Alert({ type, children }) {
 
 function Empty({ icon, title, desc, href, cta }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 px-6 text-center max-w-lg mx-auto bg-[#111111] border border-slate-800 rounded-3xl animate-in zoom-in-95 duration-500">
+    <div className="flex flex-col items-center justify-center py-20 px-6 text-center max-w-lg mx-auto bg-[#1e1e1e] border border-slate-800 rounded-3xl animate-in zoom-in-95 duration-500">
       <div className="w-20 h-20 bg-white rounded-2xl border border-slate-800 shadow-sm flex items-center justify-center mb-6">
         {icon}
       </div>

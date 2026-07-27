@@ -159,14 +159,14 @@ export default function HomepageShopLinks({ embedded = false }) {
 
   if (embedded) {
     return (
-      <div className="w-full rounded-xl bg-[#0f0f0f]/70 ring-1 ring-white/[0.06] p-2.5 sm:p-3 shadow-[0_18px_50px_-28px_rgba(0,0,0,0.4)]">
+      <div className="w-full rounded-xl bg-[#1c1c1c]/70 ring-1 ring-white/[0.06] p-2.5 sm:p-3 shadow-[0_18px_50px_-28px_rgba(0,0,0,0.4)]">
         {content}
       </div>
     );
   }
 
   return (
-    <section className="border-b border-white/[0.06] bg-[#080808] py-4 sm:py-5">
+    <section className="border-b border-white/[0.06] bg-[#141414] py-4 sm:py-5">
       <div className="home-shell">
         <details className="group">
           <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">

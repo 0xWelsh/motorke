@@ -54,7 +54,7 @@ export default function HomepageFaq() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section className="py-14 sm:py-20 bg-[#080808]">
+    <section className="py-14 sm:py-20 bg-[#141414]">
       <div className="home-shell max-w-3xl">
         <div className="text-center mb-10 sm:mb-12">
           <p className="meta-label text-[var(--accent)] mb-3">FAQ</p>

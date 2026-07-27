@@ -244,7 +244,7 @@ export default async function DealerPage(props) {
   const dealerInventoryLd = buildDealerInventoryItemList(dealer, dealer.cars);
 
   return (
-    <div className="bg-[#080808] min-h-screen">
+    <div className="bg-[#141414] min-h-screen">
       <TrackEventOnMount
         name="dealer_page_view"
         payload={{
@@ -269,7 +269,7 @@ export default async function DealerPage(props) {
             keep the original "card overlaps bottom of banner" pattern
             because forcing everything inside on small screens would
             cramp the layout. */}
-        <div className="relative h-[min(72vw,300px)] min-h-[248px] sm:min-h-[280px] lg:h-[460px] xl:h-[500px] w-full overflow-hidden bg-[#0b0f17]">
+        <div className="relative h-[min(72vw,300px)] min-h-[248px] sm:min-h-[280px] lg:h-[460px] xl:h-[500px] w-full overflow-hidden bg-[#1a1a1a]">
           {dealer.bannerUrl ? (
             <img src={dealer.bannerUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
           ) : (
@@ -398,12 +398,12 @@ export default async function DealerPage(props) {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-9 space-y-6">
-            <section id="inventory" className="bg-[#0f0f0f] p-4 sm:p-6 shadow-xl rounded-xl">
+            <section id="inventory" className="bg-[#1c1c1c] p-4 sm:p-6 shadow-xl rounded-xl">
               <DealerInventory cars={inventoryWithDistance} dealerSlug={dealer.slug} />
             </section>
 
             <section
-              className="bg-[#0f0f0f] p-5 sm:p-6 shadow-xl rounded-xl"
+              className="bg-[#1c1c1c] p-5 sm:p-6 shadow-xl rounded-xl"
               aria-labelledby="dealer-about-heading"
             >
               <h2
@@ -437,13 +437,13 @@ export default async function DealerPage(props) {
               </div>
             </section>
 
-            <section id="reviews" className="bg-[#0f0f0f] p-5 sm:p-6 shadow-xl rounded-xl">
+            <section id="reviews" className="bg-[#1c1c1c] p-5 sm:p-6 shadow-xl rounded-xl">
               <DealerReviews dealerSlug={dealer.slug} dealerName={dealer.name} averageRating={averageRating} totalReviews={totalReviews} reviews={dealer.reviews} viewer={viewer} viewerReview={viewerReview} />
             </section>
           </div>
 
           <aside className="lg:col-span-3 space-y-6">
-            <section className="bg-[#0f0f0f] p-5 sm:p-6 shadow-xl rounded-xl">
+            <section className="bg-[#1c1c1c] p-5 sm:p-6 shadow-xl rounded-xl">
               <h4 className="text-[11px] font-black uppercase tracking-[0.14em] text-zinc-400 mb-3">Dealer info</h4>
               <div className="space-y-2.5 mb-4 text-[12px] font-semibold text-zinc-300">
                 <div className="flex justify-between gap-3"><span className="text-zinc-400">Business type</span><span>Dealership</span></div>
@@ -462,7 +462,7 @@ export default async function DealerPage(props) {
               <DealerLocationMap dealer={dealer} />
             </section>
 
-              <section className="bg-[#0f0f0f] p-5 sm:p-6 shadow-xl rounded-xl">
+              <section className="bg-[#1c1c1c] p-5 sm:p-6 shadow-xl rounded-xl">
                 <h4 className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-3">Social & Media</h4>
                 {socialLinks.length > 0 ? (
                   <div className="space-y-2">
@@ -496,7 +496,7 @@ export default async function DealerPage(props) {
       </div>
 
       {/* Persistent Mobile Action Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#111111]/90 backdrop-blur-xl border-t border-white/[0.06] px-4 py-4 shadow-2xl">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1e1e1e]/90 backdrop-blur-xl border-t border-white/[0.06] px-4 py-4 shadow-2xl">
          <div className="mb-3">
            <DealerShowroomShare
              layout="mobileBar"

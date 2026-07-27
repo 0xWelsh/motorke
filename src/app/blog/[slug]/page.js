@@ -38,7 +38,7 @@ export default async function BlogArticlePage({ params }) {
   });
 
   return (
-    <article className="min-h-screen bg-white bg-[#0a0a0a] pt-20 pb-24">
+    <article className="min-h-screen bg-white bg-[#222222] pt-20 pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -28,20 +28,20 @@ export default function ProfileCompletenessPanel({
     missingFieldIds.forEach((id) => {
       const el = document.getElementById(id);
       if (!el) return;
-      el.classList.add("ring-2", "ring-amber-400", "ring-offset-2", "ring-offset-[#111111]");
+      el.classList.add("ring-2", "ring-amber-400", "ring-offset-2", "ring-offset-[#1e1e1e]");
       if (!scrolled) {
         el.scrollIntoView({ behavior: "smooth", block: "center" });
         scrolled = true;
       }
       setTimeout(() => {
-        el.classList.remove("ring-2", "ring-amber-400", "ring-offset-2", "ring-offset-[#111111]");
+        el.classList.remove("ring-2", "ring-amber-400", "ring-offset-2", "ring-offset-[#1e1e1e]");
       }, 2800);
     });
     setTimeout(() => setHighlighting(false), 1200);
   }
 
   return (
-    <div className="mb-6 rounded-xl border border-white/[0.06] bg-[#0f0f0f] p-4 sm:p-5">
+    <div className="mb-6 rounded-xl border border-white/[0.06] bg-[#1c1c1c] p-4 sm:p-5">
       <div className="flex items-center justify-between gap-3 mb-3">
         <p className="text-[11px] font-black uppercase tracking-widest text-zinc-400">{title}</p>
         <p className="text-xs font-bold text-zinc-300">

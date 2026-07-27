@@ -40,7 +40,7 @@ export default async function GuideLandingPage({ params }) {
   });
 
   return (
-    <article className="min-h-screen bg-[#0f0f0f] pt-20 pb-24">
+    <article className="min-h-screen bg-[#1c1c1c] pt-20 pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

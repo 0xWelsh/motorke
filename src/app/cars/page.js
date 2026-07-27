@@ -278,7 +278,7 @@ export default async function CarsPage({ searchParams }) {
               <Link
                 key={chip.label}
                 href={chip.href}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-white bg-[#111] text-slate-700 text-white hover:line-through transition-all"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-white bg-[#1e1e1e] text-slate-700 text-white hover:line-through transition-all"
                 style={{ borderRadius: "6px" }}
               >
                 {chip.label}

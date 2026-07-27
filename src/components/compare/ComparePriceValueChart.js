@@ -20,7 +20,7 @@ export default function ComparePriceValueChart({ fullComparedCars, initialCarsBy
   }));
 
   return (
-    <div className="order-6 lg:order-6 scroll-mt-24 bg-[#0f0f0f] border border-white/[0.06] p-5 sm:p-6 lg:p-8"
+    <div className="order-6 lg:order-6 scroll-mt-24 bg-[#1c1c1c] border border-white/[0.06] p-5 sm:p-6 lg:p-8"
       style={{ borderRadius: "var(--radius)" }}>
       <div className="flex items-center gap-3 mb-6">
         <h3 className="text-xl font-bold text-white">Price vs Value</h3>

@@ -13,7 +13,7 @@ export default function HotThisWeek({ trending = [] }) {
   const trendData = trending.length > 0 ? trending : defaultTrending;
 
   return (
-    <div className="relative overflow-hidden border-2 border-yellow-400 bg-gradient-to-br from-yellow-950/30 via-[#0f0f0f] to-yellow-950/30 p-6 sm:p-8 rounded-xl">
+    <div className="relative overflow-hidden border-2 border-yellow-400 bg-gradient-to-br from-yellow-950/30 via-[#1c1c1c] to-yellow-950/30 p-6 sm:p-8 rounded-xl">
       {/* Crown icon */}
       <div className="absolute -right-2 -top-2 text-yellow-300">
         <Crown className="w-12 h-12 fill-yellow-300" />

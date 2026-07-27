@@ -57,7 +57,7 @@ export default async function AccountPage({ searchParams }) {
   ]);
 
   return (
-    <div className="min-h-screen bg-[#080808]">
+    <div className="min-h-screen bg-[#141414]">
       <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-16 max-w-4xl">
         
         {/* Header Section */}
@@ -76,7 +76,7 @@ export default async function AccountPage({ searchParams }) {
           </div>
 
           {/* User Profile Card */}
-          <div className="bg-[#111111] p-4 sm:p-8 shadow-sm rounded-xl">
+          <div className="bg-[#1e1e1e] p-4 sm:p-8 shadow-sm rounded-xl">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
               {/* Avatar */}
               <div className="flex items-center gap-4 w-full sm:w-auto">
@@ -122,7 +122,7 @@ export default async function AccountPage({ searchParams }) {
               </div>
 
               {/* Quick Link */}
-              <a href="/cars" className="inline-flex items-center justify-center gap-2 w-full sm:w-auto mt-2 sm:mt-0 px-6 py-3 sm:py-3 bg-white text-[#080808] rounded-xl font-semibold text-[11px] uppercase font-black tracking-[0.15em] hover:bg-[#ff5a2f] hover:text-white transition-colors">
+              <a href="/cars" className="inline-flex items-center justify-center gap-2 w-full sm:w-auto mt-2 sm:mt-0 px-6 py-3 sm:py-3 bg-white text-[#141414] rounded-xl font-semibold text-[11px] uppercase font-black tracking-[0.15em] hover:bg-[#ff5a2f] hover:text-white transition-colors">
                 Browse <ArrowRight size={16} className="hidden sm:block" />
               </a>
             </div>
@@ -130,7 +130,7 @@ export default async function AccountPage({ searchParams }) {
         </header>
 
         {/* Tabbed Interface */}
-        <div className="bg-[#111111] rounded-xl overflow-hidden min-h-[600px] shadow-sm">
+        <div className="bg-[#1e1e1e] rounded-xl overflow-hidden min-h-[600px] shadow-sm">
           <AccountTabs
             tab={tab}
             user={{

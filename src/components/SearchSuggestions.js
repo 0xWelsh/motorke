@@ -29,7 +29,7 @@ export default function SearchSuggestions({
   const attributeSuggestions = suggestions.filter(s => s.type !== "car");
 
   return (
-    <div className={`absolute left-0 right-0 top-full mt-2 bg-[#0f0f0f] border border-white/[0.08] rounded-xl shadow-2xl z-50 overflow-hidden max-w-[340px] min-w-[220px] ${className}`} style={{fontSize:'13px'}}>
+    <div className={`absolute left-0 right-0 top-full mt-2 bg-[#1c1c1c] border border-white/[0.08] rounded-xl shadow-2xl z-50 overflow-hidden max-w-[340px] min-w-[220px] ${className}`} style={{fontSize:'13px'}}>
       {loading ? (
         <div className="p-6 text-center">
           <div className="animate-pulse flex items-center justify-center gap-2">

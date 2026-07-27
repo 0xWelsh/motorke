@@ -69,11 +69,11 @@ export default async function AdminReviewsPage() {
         </div>
 
         {dealerReviews.length === 0 ? (
-          <div className="bg-[#0f0f0f] border border-white/[0.08] rounded-xl p-8 text-center">
+          <div className="bg-[#1c1c1c] border border-white/[0.08] rounded-xl p-8 text-center">
             <p className="text-sm text-zinc-400 font-semibold">No dealer reviews yet.</p>
           </div>
         ) : (
-          <div className="bg-[#0f0f0f] border border-white/[0.08] rounded-xl overflow-hidden">
+          <div className="bg-[#1c1c1c] border border-white/[0.08] rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[700px]">
                 <thead>
@@ -129,11 +129,11 @@ export default async function AdminReviewsPage() {
         </div>
 
         {carReviews.length === 0 ? (
-          <div className="bg-[#0f0f0f] border border-white/[0.08] rounded-xl p-8 text-center">
+          <div className="bg-[#1c1c1c] border border-white/[0.08] rounded-xl p-8 text-center">
             <p className="text-sm text-zinc-400 font-semibold">No car reviews yet.</p>
           </div>
         ) : (
-          <div className="bg-[#0f0f0f] border border-white/[0.08] rounded-xl overflow-hidden">
+          <div className="bg-[#1c1c1c] border border-white/[0.08] rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[700px]">
                 <thead>

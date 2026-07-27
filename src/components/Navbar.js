@@ -130,8 +130,8 @@ export default function Navbar({ user }) {
    <nav className={clsx(
     "sticky top-0 z-[100] isolate w-full flex items-center h-16 md:h-20 transition-all duration-300",
     scrolled
-     ? "bg-[#080808]/80 backdrop-blur-xl border-b border-white/[0.06] shadow-elevated"
-     : "bg-[#080808]/60 backdrop-blur-md border-b border-white/[0.04]"
+     ? "bg-[#141414]/80 backdrop-blur-xl border-b border-white/[0.06] shadow-elevated"
+     : "bg-[#141414]/60 backdrop-blur-md border-b border-white/[0.04]"
    )}>
  <div className="w-full px-4 md:px-8 lg:px-12">
  <div className="flex items-center justify-between gap-4 lg:gap-6 min-w-0 h-full">
@@ -230,7 +230,7 @@ export default function Navbar({ user }) {
  </button>
 
  {userMenu && (
- <div className="absolute right-0 top-full mt-2 w-64 bg-[#111111] border border-white/[0.08] shadow-glass-lg overflow-hidden animate-slide-down rounded-xl">
+ <div className="absolute right-0 top-full mt-2 w-64 bg-[#1e1e1e] border border-white/[0.08] shadow-glass-lg overflow-hidden animate-slide-down rounded-xl">
  <div className="px-5 py-4 bg-white/[0.02] border-b border-white/[0.06]">
  <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">Signed in as</p>
  <p className="text-sm font-bold text-white truncate">{user.name}</p>
@@ -289,7 +289,7 @@ export default function Navbar({ user }) {
 
  {/* MOBILE SEARCH OVERLAY */}
  {mobileSearch && (
- <div className="fixed inset-0 z-[200] bg-[#080808]/95 backdrop-blur-xl animate-fade-in duration-200">
+ <div className="fixed inset-0 z-[200] bg-[#141414]/95 backdrop-blur-xl animate-fade-in duration-200">
  <div className="container mx-auto px-6 pt-6">
  <div className="flex items-center justify-between mb-12">
  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--accent)]">Search Inventory</span>
@@ -352,7 +352,7 @@ export default function Navbar({ user }) {
   aria-hidden
  />
  <div
-  className="relative z-10 flex max-h-[min(90dvh,38rem)] w-full flex-col overflow-hidden bg-[#0d0d0d] border-t border-white/[0.08] shadow-glass-lg animate-slide-up duration-300"
+  className="relative z-10 flex max-h-[min(90dvh,38rem)] w-full flex-col overflow-hidden bg-[#1a1a1a] border-t border-white/[0.08] shadow-glass-lg animate-slide-up duration-300"
   onClick={(e) => e.stopPropagation()}
   >
   <div className="mx-auto mt-3 h-1 w-10 shrink-0 rounded-full bg-white/10" aria-hidden />
@@ -501,7 +501,7 @@ export default function Navbar({ user }) {
   </div>
 
   <div
-  className="shrink-0 space-y-3 border-t border-white/[0.06] bg-[#0a0a0a] px-4 py-3 sm:px-5"
+  className="shrink-0 space-y-3 border-t border-white/[0.06] bg-[#222222] px-4 py-3 sm:px-5"
   style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
   >
   {!user ? (
