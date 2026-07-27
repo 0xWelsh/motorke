@@ -145,10 +145,18 @@ export async function getSessionFromRequest() {
     const cookieStore = await cookies();
     const token = cookieStore.get(SESSION_COOKIE)?.value;
     if (!token) return null;
-    return await db.session.findUnique({
+    const session = await db.session.findUnique({
       where: { token },
       include: { user: { include: { dealer: true } } },
     });
+    if (!session || session.expiresAt < new Date()) {
+      if (session) {
+        await db.session.delete({ where: { token } }).catch(() => {});
+      }
+      return null;
+    }
+    if (!session.user) return null;
+    return session;
   } catch (error) {
     if (isDynamicServerUsageError(error)) throw error;
     console.error("Failed to read session from request:", error);

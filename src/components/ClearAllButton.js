@@ -42,7 +42,7 @@ export default function ClearAllButton({ dealerId = null }) {
       type="button"
       onClick={handleClick}
       disabled={loading}
-      className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border-2 border-rose-300 bg-rose-600 px-4 py-3 text-[11px] font-black uppercase tracking-[0.1em] text-white shadow-sm transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-60 dark:border-rose-800 dark:bg-rose-700 dark:hover:bg-rose-600"
+      className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border-2 border-rose-800 bg-rose-700 px-4 py-3 text-[11px] font-black uppercase tracking-[0.1em] text-white shadow-sm transition hover:bg-rose-600 disabled:cursor-not-allowed disabled:opacity-60"
     >
       {loading ? "Deleting…" : "Clear all listings"}
     </button>

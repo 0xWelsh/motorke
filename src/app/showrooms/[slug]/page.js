@@ -117,7 +117,7 @@ export default async function ShowroomLocationPage({ params }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0a0a0a] pb-16">
+    <div className="min-h-screen bg-[#0f0f0f] pb-16">
       <Script
         id="showroom-location-breadcrumb"
         type="application/ld+json"
@@ -130,40 +130,40 @@ export default async function ShowroomLocationPage({ params }) {
       />
 
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-10 sm:py-14">
-        <nav className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-6">
-          <Link href="/" className="hover:text-[#38A169]">
+        <nav className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-6">
+          <Link href="/" className="hover:text-[var(--accent)]">
             Home
           </Link>
           <span className="mx-2">/</span>
-          <Link href="/dealers" className="hover:text-[#38A169]">
+          <Link href="/dealers" className="hover:text-[var(--accent)]">
             Dealers
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-slate-800 dark:text-slate-200">{hub.label}</span>
+          <span className="text-zinc-300">{hub.label}</span>
         </nav>
 
-        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-3">
+        <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-3">
           Car dealers on {hub.label}
         </h1>
-        <p className="text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mb-2">{hub.description}</p>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mb-10">
+        <p className="text-zinc-300 leading-relaxed max-w-2xl mb-2">{hub.description}</p>
+        <p className="text-sm text-zinc-400 mb-10">
           {dealers.length} showroom{dealers.length === 1 ? "" : "s"}, {cars.length} live listing
           {cars.length === 1 ? "" : "s"}, {hub.county} County
         </p>
 
         {dealers.length > 0 ? (
           <section className="mb-12">
-            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#38A169] mb-4">Dealers in this area</h2>
+            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--accent)] mb-4">Dealers in this area</h2>
             <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {dealers.map((d) => (
                 <li key={d.id}>
                   <Link
                     href={`/dealers/${d.slug}`}
-                    className="block p-4 bg-white dark:bg-[#111] border border-slate-200 dark:border-zinc-800 rounded-xl hover:border-[#38A169]/40 transition-colors"
+                    className="block p-4 bg-white/[0.03] border border-white/[0.06] rounded-xl hover:border-[var(--accent)]/40 transition-colors"
                   >
-                    <p className="font-bold text-slate-900 dark:text-white">{d.name}</p>
-                    <p className="text-xs text-slate-500 mt-1">{d.location || hub.label}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#38A169] mt-2">
+                    <p className="font-bold text-white">{d.name}</p>
+                    <p className="text-xs text-zinc-400 mt-1">{d.location || hub.label}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)] mt-2">
                       {d._count.cars} in stock
                     </p>
                   </Link>
@@ -175,7 +175,7 @@ export default async function ShowroomLocationPage({ params }) {
 
         {cars.length > 0 ? (
           <section>
-            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#38A169] mb-4">Featured listings</h2>
+            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--accent)] mb-4">Featured listings</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {cars.map((car, index) => (
                 <CarCard key={car.id} car={car} priority={index < 2} />
@@ -184,14 +184,14 @@ export default async function ShowroomLocationPage({ params }) {
             <p className="mt-8">
               <Link
                 href={`/cars/${slugifyCarSegment(hub.county)}`}
-                className="font-bold text-[#38A169] hover:underline"
+                className="font-bold text-[var(--accent)] hover:underline"
               >
                 Browse all cars in {hub.county}
               </Link>
             </p>
           </section>
         ) : (
-          <p className="text-slate-500">No live listings in this corridor yet. Browse all dealers in {hub.county}.</p>
+          <p className="text-zinc-400">No live listings in this corridor yet. Browse all dealers in {hub.county}.</p>
         )}
       </div>
     </div>

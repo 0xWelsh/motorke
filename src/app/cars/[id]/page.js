@@ -428,7 +428,7 @@ export default async function CarDetailPage({ params }) {
       {heroPreloadUrl && (
         <link rel="preload" as="image" href={heroPreloadUrl} fetchPriority="high" />
       )}
-      <div className="bg-white min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
+      <div className="bg-[#080808] min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
       <TrackEventOnMount
         name="view_car"
         payload={{
@@ -457,17 +457,17 @@ export default async function CarDetailPage({ params }) {
         <div className="flex items-center gap-2 mb-4 sm:mb-5">
           <Link
             href="/cars"
-            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#111111] text-zinc-400 hover:bg-zinc-700 transition-colors"
             aria-label="Back to inventory"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
           </Link>
-          <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-500 leading-none">
-            <Link href="/" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">Home</Link>
+          <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 leading-none">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <span className="mx-1.5 opacity-40">/</span>
-            <Link href="/cars" className="hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors">Inventory</Link>
+            <Link href="/cars" className="hover:text-white transition-colors">Inventory</Link>
             <span className="mx-1.5 opacity-40">/</span>
-            <span className="text-zinc-800 dark:text-zinc-200">{car.make} {car.model}</span>
+            <span className="text-zinc-200">{car.make} {car.model}</span>
           </div>
         </div>
 
@@ -490,21 +490,21 @@ export default async function CarDetailPage({ params }) {
 
             {/* Vehicle Title */}
             <div>
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-zinc-900 dark:text-white tracking-tight leading-[1.15]" style={{ fontFamily: 'var(--font-roboto)' }}>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-[1.15]" style={{ fontFamily: 'var(--font-roboto)' }}>
                 {carName}
               </h1>
-              <p className="mt-1.5 text-lg font-bold text-emerald-600 dark:text-emerald-400">
+              <p className="mt-1.5 text-lg font-bold text-[var(--accent)]">
                 {formatCarPrice(car)}
               </p>
-              <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mt-2 flex-wrap">
-                <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <div className="flex items-center gap-2 text-xs text-zinc-400 mt-2 flex-wrap">
+                <MapPin className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />
                 <span>{locationLabel}</span>
-                <span className="text-zinc-300 dark:text-zinc-600">·</span>
+                <span className="text-zinc-600">·</span>
                 <span className={`font-bold uppercase tracking-widest ${soldGrace ? "text-red-600" : "text-emerald-600"}`}>
                   {soldGrace ? "SOLD" : "AVAILABLE"}
                 </span>
-                <span className="text-zinc-300 dark:text-zinc-600">·</span>
-                <span className="font-bold uppercase tracking-widest text-zinc-900 dark:text-zinc-100">
+                <span className="text-zinc-600">·</span>
+                <span className="font-bold uppercase tracking-widest text-zinc-100">
                   {car.imported === false ? "LOCAL" : (() => {
                     const flags = { Japan: "🇯🇵", UK: "🇬🇧", USA: "🇺🇸", UAE: "🇦🇪", Germany: "🇩🇪", "South Africa": "🇿🇦", Thailand: "🇹🇭", Singapore: "🇸🇬" };
                     const flag = flags[car.importCountry] || "";
@@ -513,7 +513,7 @@ export default async function CarDetailPage({ params }) {
                 </span>
                 {car.carStatus && (
                   <>
-                    <span className="text-zinc-300 dark:text-zinc-600">·</span>
+                    <span className="text-zinc-600">·</span>
                     <span className={`font-bold uppercase tracking-widest text-[10px] px-1.5 py-0.5 rounded ${CAR_STATUS_COLORS[car.carStatus]}`}>
                       {CAR_STATUS_LABELS[car.carStatus]}
                     </span>
@@ -539,7 +539,7 @@ export default async function CarDetailPage({ params }) {
                 </span>
               ))}
               <span className="text-zinc-300 select-none">·</span>
-              <span className="inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-300">
+              <span className="inline-flex items-center gap-1 text-[var(--accent)]">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 {freshLabel}
               </span>
@@ -557,14 +557,14 @@ export default async function CarDetailPage({ params }) {
                 const groups = buildCarDetailSpecGroups(car);
                 return groups.map((group) => (
                   <details key={group.title} className="group mb-2" open>
-                    <summary className="cursor-pointer text-[11px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors list-none flex items-center gap-2 py-2">
+                    <summary className="cursor-pointer text-[11px] font-bold uppercase tracking-wider text-zinc-400 hover:text-zinc-200 transition-colors list-none flex items-center gap-2 py-2">
                       <svg className="w-3 h-3 text-zinc-400 group-open:rotate-90 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                       {group.title}
                     </summary>
-                    <div className="grid grid-cols-2 gap-px rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-200 dark:bg-zinc-800 mt-1">
+                    <div className="grid grid-cols-2 gap-px rounded-xl border border-white/[0.06] overflow-hidden bg-white/[0.06] mt-1">
                       {group.rows.map((item) => (
-                        <div key={item.label} className="flex flex-col gap-0.5 bg-white dark:bg-[#0a0a0a] px-4 py-3">
-                          <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-900 dark:text-white/80">{item.label}</span>
+                        <div key={item.label} className="flex flex-col gap-0.5 bg-[#0f0f0f] px-4 py-3">
+                          <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-300">{item.label}</span>
                           <span className="text-[13px] font-bold text-amber-500">{item.value}</span>
                         </div>
                       ))}
@@ -577,10 +577,10 @@ export default async function CarDetailPage({ params }) {
             {/* Description */}
             <section>
               <h2 className="text-[12px] font-serif font-bold uppercase tracking-[0.15em] text-emerald-600 mb-4">Description</h2>
-              <div className="text-[14px] sm:text-[15px] text-zinc-600 dark:text-zinc-400 leading-[1.7] font-medium">
+              <div className="text-[14px] sm:text-[15px] text-zinc-400 leading-[1.7] font-medium">
                 {specString ? (
                   <>
-                    <span className="text-zinc-900 dark:text-white font-bold">{specString}</span>
+                    <span className="text-white font-bold">{specString}</span>
                     {(car.description || "").trim() ? ". " : null}
                   </>
                 ) : null}
@@ -598,7 +598,7 @@ export default async function CarDetailPage({ params }) {
             )}
 
             {/* Explore links */}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/40 px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400 rounded-lg">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-white/[0.06] bg-white/[0.03] px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-zinc-400 rounded-xl">
               <span className="text-zinc-400 font-black tracking-widest">Explore:</span>
               <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-emerald-600 hover:underline">All {car.make} for sale</Link>
               <span className="hidden sm:inline text-zinc-300">·</span>
@@ -635,9 +635,9 @@ export default async function CarDetailPage({ params }) {
 
             {/* Price benchmark */}
             {benchmark && (
-              <div className="rounded-xl border border-amber-200 dark:border-amber-800/50 bg-amber-50 dark:bg-amber-900/20 px-4 py-3">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-1">Market Range</p>
-                <p className="text-sm font-black text-amber-900 dark:text-amber-100">
+              <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-amber-400 mb-1">Market Range</p>
+                <p className="text-sm font-black text-amber-100">
                   KES {Number(benchmark.low).toLocaleString("en-KE")} – KES {Number(benchmark.high).toLocaleString("en-KE")}
                 </p>
                 <p className="text-[10px] text-amber-500 mt-0.5">Based on {benchmark.count} similar {car.model} listings</p>

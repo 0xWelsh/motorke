@@ -286,7 +286,7 @@ export default function DutyCalculator({
       <label htmlFor={searchId} className="sr-only">
         Search vehicle to calculate import duty
       </label>
-      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" aria-hidden />
+      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" aria-hidden />
       <input
         id={searchId}
         type="search"
@@ -297,36 +297,34 @@ export default function DutyCalculator({
           setEstimate(null);
         }}
         placeholder='Search e.g. "Mazda CX-5 2018" or "Toyota Prado"'
-        className="w-full h-12 sm:h-14 pl-11 pr-4 text-sm sm:text-base font-medium border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-slate-900 dark:text-white outline-none focus:border-slate-900 dark:focus:border-white shadow-sm"
-        style={{ borderRadius: "var(--radius)" }}
+        className="w-full h-12 sm:h-14 pl-11 pr-4 text-sm sm:text-base font-medium bg-[#0f0f0f] border border-white/[0.08] text-white focus:border-[var(--accent)] outline-none rounded-xl"
         autoComplete="off"
       />
       {selected && (
         <button
           type="button"
           onClick={clearSelection}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 dark:hover:text-white"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white"
         >
           Clear
         </button>
       )}
       {suggestions.length > 0 && !selected && (
         <ul
-          className="absolute z-30 left-0 right-0 mt-1 border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-xl max-h-64 overflow-y-auto"
-          style={{ borderRadius: "var(--radius)" }}
+          className="absolute z-30 left-0 right-0 mt-1 border border-white/[0.08] bg-[#0f0f0f] shadow-xl max-h-64 overflow-y-auto rounded-xl"
         >
           {suggestions.map((v) => (
             <li key={v.id}>
               <button
                 type="button"
-                className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-zinc-800 border-b border-slate-100 dark:border-zinc-800 last:border-0"
+                className="w-full text-left px-4 py-3 text-sm hover:bg-white/[0.06] border-b border-white/[0.06] last:border-0"
                 onClick={() => applyVehicle(v)}
               >
-                  <span className="font-semibold text-slate-900 dark:text-white">{v.label}</span>
-                  <span className="block text-xs text-slate-500 mt-0.5">
+                  <span className="font-semibold text-white">{v.label}</span>
+                  <span className="block text-xs text-zinc-400 mt-0.5">
                     {v.engineCC}cc, {FUEL_LABELS[v.fuelType] || v.fuelType}, CRSP {formatPrice(v.crspKes)}
                     {v.importEligibility?.status === "ineligible" && (
-                      <span className="ml-2 text-red-600 dark:text-red-400 font-bold">· Over 8yr limit</span>
+                      <span className="ml-2 text-red-400 font-bold">· Over 8yr limit</span>
                     )}
                   </span>
               </button>
@@ -335,7 +333,7 @@ export default function DutyCalculator({
         </ul>
       )}
       {searching && !selected && (
-        <p className="absolute z-30 left-0 right-0 mt-1 px-4 py-2 text-xs text-slate-500 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700">
+        <p className="absolute z-30 left-0 right-0 mt-1 px-4 py-2 text-xs text-zinc-400 bg-[#0f0f0f] border border-white/[0.08] rounded-xl">
           Searching…
         </p>
       )}
@@ -346,10 +344,10 @@ export default function DutyCalculator({
     <div className="space-y-6">
       {searchBlock}
 
-      <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-        Kenya&apos;s <strong className="font-semibold text-slate-700 dark:text-slate-300">8-year import rule</strong>
+      <p className="text-[11px] text-zinc-400 leading-relaxed">
+        Kenya&apos;s <strong className="font-semibold text-zinc-300">8-year import rule</strong>
         : for {importWindow.referenceYear}, model year{" "}
-        <strong className="font-semibold text-slate-700 dark:text-slate-300">
+        <strong className="font-semibold text-zinc-300">
           {importWindow.oldestImportableYear} or newer
         </strong>{" "}
         is typically registrable.
@@ -357,8 +355,7 @@ export default function DutyCalculator({
 
       {!searching && query.trim().length >= 2 && !selected && suggestions.length === 0 && (
         <p
-          className="text-xs text-amber-800 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 px-3 py-2"
-          style={{ borderRadius: "var(--radius)" }}
+          className="text-xs text-amber-200 bg-amber-950/30 border border-amber-900/40 px-3 py-2 rounded-xl"
         >
           No catalog match for &ldquo;{query.trim()}&rdquo;. Enter your vehicle manually below.
         </p>
@@ -382,7 +379,7 @@ export default function DutyCalculator({
 
       {(selected || estimate) && (
         <div className="space-y-2">
-          <label htmlFor="purchase-price" className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+          <label htmlFor="purchase-price" className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
             Your overseas purchase price (optional)
           </label>
           <input
@@ -392,10 +389,9 @@ export default function DutyCalculator({
             value={purchasePrice}
             onChange={(e) => setPurchasePrice(e.target.value)}
             placeholder="e.g. 1,500,000, what you pay abroad (CIF/FOB)"
-            className="w-full h-11 px-4 text-sm font-medium border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-slate-900 dark:text-white"
-            style={{ borderRadius: "var(--radius)" }}
+            className="w-full h-11 px-4 text-sm font-medium bg-[#0f0f0f] border border-white/[0.08] text-white rounded-xl"
           />
-          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+          <p className="text-[11px] text-zinc-400">
             CRSP is only used by KRA to calculate tax. Enter what you will actually pay for the car to see a realistic
             all-in total.
           </p>
@@ -412,20 +408,20 @@ export default function DutyCalculator({
       )}
 
       {error && (
-        <p className="text-sm text-red-600 dark:text-red-400 font-medium mt-4" role="alert">
+        <p className="text-sm text-red-400 font-medium mt-4" role="alert">
           {error}
         </p>
       )}
 
       {loading && (
-        <p className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2 mt-4">
+        <p className="text-sm text-zinc-400 flex items-center gap-2 mt-4">
           <Calculator className="w-4 h-4 animate-pulse" aria-hidden />
           Calculating estimate…
         </p>
       )}
 
       {!estimate && !loading && !selected && (
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-4">
+        <p className="text-sm text-zinc-400 mt-4">
           Search or pick a popular estimate above for an instant breakdown.
         </p>
       )}
@@ -433,33 +429,32 @@ export default function DutyCalculator({
       <div ref={resultsRef}>
         {estimate && !loading && (
           <div
-            className="mt-6 border-2 border-slate-900 dark:border-white bg-white dark:bg-zinc-950 p-5 sm:p-7 space-y-6 shadow-lg"
-            style={{ borderRadius: "var(--radius)" }}
+            className="mt-6 border-2 border-white p-5 sm:p-7 space-y-6 shadow-lg bg-[#0f0f0f] rounded-xl"
           >
             <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600 dark:text-red-500 mb-1">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-500 mb-1">
                   Your estimate
                 </p>
-                <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">{estimate.label}</h2>
-                <p className="text-sm text-slate-500 mt-2 flex flex-wrap gap-2">
-                  <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-slate-200 dark:border-zinc-700">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white">{estimate.label}</h2>
+                <p className="text-sm text-zinc-400 mt-2 flex flex-wrap gap-2">
+                  <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-white/[0.08]">
                     {estimate.engineCC}cc
                   </span>
-                  <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-slate-200 dark:border-zinc-700">
+                  <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-white/[0.08]">
                     {FUEL_LABELS[estimate.fuelType]}
                   </span>
-                  <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-slate-200 dark:border-zinc-700">
+                  <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-white/[0.08]">
                     {estimate.ageYears} yrs
                   </span>
                 </p>
               </div>
               <div className="shrink-0 text-left sm:text-right max-w-[200px]">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1">CRSP (tax benchmark)</p>
-                <p className="text-lg font-bold text-slate-900 dark:text-white tabular-nums">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-1">CRSP (tax benchmark)</p>
+                <p className="text-lg font-bold text-white tabular-nums">
                   {formatPrice(estimate.breakdown.crspReferenceKes)}
                 </p>
-                <p className="text-[10px] text-slate-500 mt-1">Not paid to the seller</p>
+                <p className="text-[10px] text-zinc-400 mt-1">Not paid to the seller</p>
               </div>
             </div>
 
@@ -468,10 +463,9 @@ export default function DutyCalculator({
             <div
               className={`p-5 sm:p-6 ${
                 estimate.importEligibility?.status === "ineligible"
-                  ? "bg-slate-500 dark:bg-zinc-600"
-                  : "bg-[#b91c1c] dark:bg-red-700"
-              } text-white`}
-              style={{ borderRadius: "var(--radius)" }}
+                  ? "bg-zinc-600"
+                  : "bg-[#b91c1c]"
+              } text-white rounded-xl`}
             >
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80 mb-1">
                 {estimate.importEligibility?.status === "ineligible"
@@ -494,16 +488,15 @@ export default function DutyCalculator({
 
             {estimate.breakdown.totalLandedWithPurchase && (
               <div
-                className="p-4 sm:p-5 border-2 border-slate-900 dark:border-white bg-slate-50 dark:bg-zinc-900"
-                style={{ borderRadius: "var(--radius)" }}
+                className="p-4 sm:p-5 border-2 border-white bg-white/[0.03] rounded-xl"
               >
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-1">
                   Your estimated all-in cost
                 </p>
-                <p className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tabular-nums">
+                <p className="text-2xl sm:text-3xl font-bold text-white tabular-nums">
                   {formatPrice(estimate.breakdown.totalLandedWithPurchase)}
                 </p>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                <p className="text-[11px] text-zinc-400 mt-2 leading-relaxed">
                   Purchase price + shipping ({formatPrice(estimate.breakdown.freightProxyKes)}) + taxes (
                   {formatPrice(estimate.breakdown.totalTaxes)}). Excludes clearing-agent fees.
                 </p>
@@ -511,29 +504,28 @@ export default function DutyCalculator({
             )}
 
             <div
-              className="grid gap-2 sm:grid-cols-3 border border-slate-200 dark:border-zinc-800 p-4 bg-slate-50/50 dark:bg-zinc-900/30"
-              style={{ borderRadius: "var(--radius)" }}
+              className="grid gap-2 sm:grid-cols-3 border border-white/[0.06] p-4 bg-white/[0.03] rounded-xl"
             >
               {costLines.map((line) => (
                 <div key={line.label} className="flex flex-col gap-1">
-                  <p className="text-[10px] text-slate-500 uppercase tracking-wide">{line.label}</p>
+                  <p className="text-[10px] text-zinc-400 uppercase tracking-wide">{line.label}</p>
                   <p
                     className={`text-sm font-bold tabular-nums ${
-                      line.highlight ? "text-[#b91c1c] dark:text-red-400" : "text-slate-900 dark:text-white"
+                      line.highlight ? "text-red-400" : "text-white"
                     }`}
                   >
                     {line.value}
                   </p>
                   {line.note && (
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500">{line.note}</p>
+                    <p className="text-[10px] text-zinc-400">{line.note}</p>
                   )}
                 </div>
               ))}
-              <div className="flex flex-col gap-1 sm:col-span-3 pt-2 border-t border-slate-200 dark:border-zinc-800">
-                <p className="text-[10px] text-slate-500 uppercase tracking-wide">
+              <div className="flex flex-col gap-1 sm:col-span-3 pt-2 border-t border-white/[0.06]">
+                <p className="text-[10px] text-zinc-400 uppercase tracking-wide">
                   Taxes + shipping (excl. vehicle purchase)
                 </p>
-                <p className="text-sm font-bold tabular-nums text-slate-900 dark:text-white">
+                <p className="text-sm font-bold tabular-nums text-white">
                   {formatPrice(estimate.breakdown.clearingEstimate)}
                 </p>
               </div>
@@ -545,11 +537,10 @@ export default function DutyCalculator({
               {breakdownCards.map((card) => (
                 <div
                   key={card.label}
-                  className="p-3 border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/60"
-                  style={{ borderRadius: "var(--radius)" }}
+                  className="p-3 border border-white/[0.06] bg-white/[0.03] rounded-xl"
                 >
-                  <p className="text-[10px] text-slate-500 leading-snug mb-2 min-h-[2.5rem]">{card.label}</p>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white tabular-nums">{card.value}</p>
+                  <p className="text-[10px] text-zinc-400 leading-snug mb-2 min-h-[2.5rem]">{card.label}</p>
+                  <p className="text-sm font-bold text-white tabular-nums">{card.value}</p>
                 </div>
               ))}
             </div>
@@ -559,23 +550,21 @@ export default function DutyCalculator({
                 href={marketplaceHref}
                 eventName="duty_view_matching_stock"
                 eventPayload={{ make: stockMake, model: stockModel }}
-                className="flex-1 inline-flex h-12 items-center justify-center gap-2 px-5 bg-[#38A169] hover:bg-[#2F855A] text-white text-[10px] font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
-                style={{ borderRadius: "var(--radius)" }}
+                className="flex-1 inline-flex h-12 items-center justify-center gap-2 px-5 bg-[var(--accent)] hover:opacity-90 text-white text-[10px] font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95 rounded-xl"
               >
                 View matching stock <ArrowUpRight className="w-4 h-4" aria-hidden />
               </TrackedLink>
               <button
                 type="button"
                 onClick={handleShare}
-                className="inline-flex h-12 items-center justify-center gap-2 px-5 border border-slate-900 dark:border-white text-slate-900 dark:text-white text-[10px] font-bold uppercase tracking-widest"
-                style={{ borderRadius: "var(--radius)" }}
+                className="inline-flex h-12 items-center justify-center gap-2 px-5 border border-white text-white text-[10px] font-bold uppercase tracking-widest rounded-xl"
               >
                 <Share2 className="w-4 h-4" aria-hidden />
                 {copied ? "Copied" : "Share"}
               </button>
             </div>
 
-            <p className="text-[11px] leading-relaxed text-slate-500 dark:text-slate-400">
+            <p className="text-[11px] leading-relaxed text-zinc-400">
               Indicative only: customs value = depreciated CRSP × schedule ratio, then import duty 25%, excise on
               (CV + duty), VAT 16%, IDF 3.5%, RDL 2%. CRSP is from our reference table. Confirm with KRA or your
               clearing agent before payment.
@@ -585,10 +574,10 @@ export default function DutyCalculator({
       </div>
 
       {estimate && !loading && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md p-3 sm:hidden safe-area-pb space-y-2">
-          <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/[0.06] bg-[#0f0f0f]/95 backdrop-blur-md p-3 sm:hidden safe-area-pb space-y-2">
+          <p className="text-center text-[10px] font-bold uppercase tracking-widest text-zinc-400">
             Est. KRA taxes{" "}
-            <span className="text-[#b91c1c] dark:text-red-400 tabular-nums">
+            <span className="text-red-400 tabular-nums">
               {formatPrice(estimate.breakdown.totalTaxes)}
             </span>
           </p>
@@ -596,8 +585,7 @@ export default function DutyCalculator({
             href={marketplaceHref}
             eventName="duty_mobile_sticky_stock"
             eventPayload={{ make: stockMake, model: stockModel }}
-            className="flex h-11 w-full items-center justify-center gap-2 bg-[#38A169] hover:bg-[#2F855A] text-white text-[10px] font-bold uppercase tracking-widest"
-            style={{ borderRadius: "var(--radius)" }}
+            className="flex h-11 w-full items-center justify-center gap-2 bg-[var(--accent)] hover:opacity-90 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl"
           >
             View matching stock <ArrowUpRight className="w-4 h-4" />
           </TrackedLink>

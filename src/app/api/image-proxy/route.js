@@ -1,10 +1,34 @@
 import { NextResponse } from "next/server";
 
+const ALLOWED_IMAGE_HOSTS = [
+  "pub-f5e32b326c104e8a876f2f41053736f3.r2.dev",
+  "supabase.co",
+  "supabase.in",
+  "imgbb.com",
+  "images.unsplash.com",
+  "i.ibb.co",
+  "postimg.cc",
+];
+
+function isAllowedImageUrl(urlString) {
+  let host;
+  try {
+    host = new URL(urlString).hostname;
+  } catch {
+    return false;
+  }
+  return ALLOWED_IMAGE_HOSTS.some((allowed) => host === allowed || host.endsWith("." + allowed));
+}
+
 export async function GET(request) {
   try {
     const url = request.nextUrl.searchParams.get("url");
     if (!url) {
       return NextResponse.json({ error: "Missing url" }, { status: 400 });
+    }
+
+    if (!isAllowedImageUrl(url)) {
+      return NextResponse.json({ error: "URL not allowed" }, { status: 403 });
     }
 
     const response = await fetch(url, { signal: AbortSignal.timeout(10000) });

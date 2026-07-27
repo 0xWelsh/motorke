@@ -14,14 +14,14 @@ import {
 } from "lucide-react";
 
 const STATUS_STYLES = {
-  DISCOVERED: "bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300",
-  CONTACT_COLLECTED: "bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300",
-  OUTREACH_PLANNED: "bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-300",
-  CONTACTED: "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300",
-  INTERESTED: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300",
-  ONBOARDED: "bg-emerald-200 text-emerald-900 dark:bg-emerald-900 dark:text-emerald-100",
-  DECLINED: "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300",
-  DORMANT: "bg-zinc-100 text-zinc-600 dark:bg-zinc-900 dark:text-zinc-400",
+  DISCOVERED: "bg-slate-100 text-slate-700 bg-zinc-800 text-zinc-300",
+  CONTACT_COLLECTED: "bg-sky-100 text-sky-800 bg-sky-950 text-sky-300",
+  OUTREACH_PLANNED: "bg-violet-100 text-violet-800 bg-violet-950 text-violet-300",
+  CONTACTED: "bg-amber-100 text-amber-800 bg-amber-950 text-amber-300",
+  INTERESTED: "bg-emerald-100 text-emerald-800 bg-emerald-950 text-emerald-300",
+  ONBOARDED: "bg-emerald-200 text-emerald-900 bg-emerald-900 text-emerald-100",
+  DECLINED: "bg-rose-100 text-rose-800 bg-rose-950 text-rose-300",
+  DORMANT: "bg-zinc-100 text-zinc-600 bg-zinc-900 text-zinc-400",
 };
 
 function statusClass(status) {
@@ -89,9 +89,9 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
 
   if (!configured) {
     return (
-      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 dark:border-amber-900/50 dark:bg-amber-950/30">
-        <h2 className="text-lg font-bold text-amber-900 dark:text-amber-100">Growth Agent not connected</h2>
-        <p className="mt-2 text-sm text-amber-800/90 dark:text-amber-200/80 leading-relaxed max-w-2xl">
+      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 border-amber-900/50 bg-amber-950/30">
+        <h2 className="text-lg font-bold text-amber-900 text-amber-100">Growth Agent not connected</h2>
+        <p className="mt-2 text-sm text-amber-800/90 text-amber-200/80 leading-relaxed max-w-2xl">
           Deploy <code className="text-xs">services/growth-agent</code> and set{" "}
           <code className="text-xs">GROWTH_AGENT_URL</code> +{" "}
           <code className="text-xs">GROWTH_AGENT_SECRET</code> on Vercel. Run{" "}
@@ -116,7 +116,7 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
               return `Imported ${data.platformDealersCreated || 0} platform dealers.`;
             })
           }
-          className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-white hover:bg-slate-800 disabled:opacity-60 dark:bg-emerald-600 dark:hover:bg-emerald-500"
+          className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-white hover:bg-slate-800 disabled:opacity-60 bg-emerald-600 hover:bg-emerald-500"
         >
           {busy === "discover" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Radar className="h-4 w-4" />}
           Discover dealers
@@ -130,14 +130,14 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
               return `Checked ${data.checked || 0} prospects, ${data.changed || 0} inventory changes.`;
             })
           }
-          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-slate-800 hover:bg-slate-50 disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-slate-800 hover:bg-slate-50 disabled:opacity-60 border-zinc-700 bg-zinc-900 text-white"
         >
           {busy === "monitor" ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
           Monitor stock
         </button>
         <a
           href="/api/admin/growth-agent/export/prospects.csv"
-          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-slate-800 hover:bg-slate-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-slate-800 hover:bg-slate-50 border-zinc-700 bg-zinc-900 text-white"
         >
           <Download className="h-4 w-4" />
           Export CSV
@@ -145,7 +145,7 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
         <button
           type="button"
           onClick={() => setAddOpen((v) => !v)}
-          className="inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-emerald-800 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"
+          className="inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-emerald-800 hover:bg-emerald-100 border-emerald-800 bg-emerald-950/40 text-emerald-200"
         >
           <UserPlus className="h-4 w-4" />
           Add prospect
@@ -153,19 +153,19 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
       </div>
 
       {message ? (
-        <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-200">
+        <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 border-emerald-900 bg-emerald-950/40 text-emerald-200">
           {message}
         </p>
       ) : null}
       {error ? (
-        <p className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-200">
+        <p className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800 border-rose-900 bg-rose-950/40 text-rose-200">
           {error}
         </p>
       ) : null}
 
       {addOpen ? (
         <form
-          className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950 space-y-3"
+          className="rounded-2xl border border-slate-200 bg-white p-5 border-zinc-800 bg-zinc-950 space-y-3"
           onSubmit={(e) => {
             e.preventDefault();
             runAction("add", async () => {
@@ -194,37 +194,37 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
               placeholder="Dealership name"
               value={newProspect.name}
               onChange={(e) => setNewProspect((p) => ({ ...p, name: e.target.value }))}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-zinc-700 bg-zinc-900"
             />
             <input
               placeholder="County"
               value={newProspect.county}
               onChange={(e) => setNewProspect((p) => ({ ...p, county: e.target.value }))}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-zinc-700 bg-zinc-900"
             />
             <input
               placeholder="Phone (254…)"
               value={newProspect.phone}
               onChange={(e) => setNewProspect((p) => ({ ...p, phone: e.target.value }))}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-zinc-700 bg-zinc-900"
             />
             <input
               placeholder="WhatsApp"
               value={newProspect.whatsapp}
               onChange={(e) => setNewProspect((p) => ({ ...p, whatsapp: e.target.value }))}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-zinc-700 bg-zinc-900"
             />
             <input
               placeholder="Email"
               value={newProspect.email}
               onChange={(e) => setNewProspect((p) => ({ ...p, email: e.target.value }))}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-zinc-700 bg-zinc-900"
             />
             <input
               placeholder="Source (google_maps, referral…)"
               value={newProspect.source}
               onChange={(e) => setNewProspect((p) => ({ ...p, source: e.target.value }))}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-zinc-700 bg-zinc-900"
             />
           </div>
           <textarea
@@ -232,7 +232,7 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
             rows={2}
             value={newProspect.notes}
             onChange={(e) => setNewProspect((p) => ({ ...p, notes: e.target.value }))}
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm border-zinc-700 bg-zinc-900"
           />
           <button
             type="submit"
@@ -244,10 +244,10 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
         </form>
       ) : null}
 
-      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white border-zinc-800 bg-zinc-950">
         <table className="w-full text-left text-sm min-w-[960px]">
           <thead>
-            <tr className="border-b border-slate-200 dark:border-zinc-800 text-[10px] font-black uppercase tracking-widest text-slate-500">
+            <tr className="border-b border-slate-200 border-zinc-800 text-[10px] font-black uppercase tracking-widest text-slate-500">
               <th className="py-3 px-4">Dealership</th>
               <th className="py-3 px-4">County</th>
               <th className="py-3 px-4">Contact</th>
@@ -273,9 +273,9 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
                     ? row.inventoryCount - row.inventoryCountPrev
                     : null;
                 return (
-                  <tr key={row.id} className="border-b border-slate-100 dark:border-zinc-900 align-top">
+                  <tr key={row.id} className="border-b border-slate-100 border-zinc-900 align-top">
                     <td className="py-3 px-4 min-w-[160px]">
-                      <p className="font-semibold text-slate-900 dark:text-white">{row.name}</p>
+                      <p className="font-semibold text-slate-900 text-white">{row.name}</p>
                       <p className="text-[10px] text-slate-400 mt-0.5">{row.source}</p>
                       {row.matchedDealer ? (
                         <Link
@@ -338,7 +338,7 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
                       ) : null}
                     </td>
                     <td className="py-3 px-4 text-xs text-slate-500">
-                      <p className="font-semibold text-slate-700 dark:text-zinc-300">{row.outreachCount} touches</p>
+                      <p className="font-semibold text-slate-700 text-zinc-300">{row.outreachCount} touches</p>
                       {row.lastOutreachAt ? (
                         <p>{new Date(row.lastOutreachAt).toLocaleDateString("en-KE")}</p>
                       ) : (
@@ -351,7 +351,7 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
                           <select
                             value={outreachChannel}
                             onChange={(e) => setOutreachChannel(e.target.value)}
-                            className="w-full rounded border border-slate-200 text-xs px-2 py-1 dark:border-zinc-700 dark:bg-zinc-900"
+                            className="w-full rounded border border-slate-200 text-xs px-2 py-1 border-zinc-700 bg-zinc-900"
                           >
                             <option value="WHATSAPP">WhatsApp</option>
                             <option value="CALL">Call</option>
@@ -362,7 +362,7 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
                             value={outreachNote}
                             onChange={(e) => setOutreachNote(e.target.value)}
                             placeholder="Note"
-                            className="w-full rounded border border-slate-200 text-xs px-2 py-1 dark:border-zinc-700 dark:bg-zinc-900"
+                            className="w-full rounded border border-slate-200 text-xs px-2 py-1 border-zinc-700 bg-zinc-900"
                           />
                           <div className="flex gap-2">
                             <button
@@ -403,7 +403,7 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
                             setOutreachId(row.id);
                             setOutreachNote("");
                           }}
-                          className="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-emerald-600 dark:text-zinc-400"
+                          className="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-emerald-600 text-zinc-400"
                         >
                           Log outreach
                         </button>

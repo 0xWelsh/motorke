@@ -16,8 +16,8 @@ export default function DutyPopularChips({ vehicles = [], activeId = null, onSel
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Popular estimates</p>
-        <p className="text-[10px] text-slate-400 dark:text-slate-500 hidden sm:block">Tap to calculate instantly</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">Popular estimates</p>
+        <p className="text-[10px] text-zinc-400 hidden sm:block">Tap to calculate instantly</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {vehicles.map((vehicle) => {
@@ -30,27 +30,27 @@ export default function DutyPopularChips({ vehicles = [], activeId = null, onSel
               onClick={() => onSelect?.(vehicle)}
               className={`text-left flex items-center gap-3 px-4 py-3 border transition-all disabled:opacity-50 hover:scale-[0.98] active:scale-95 ${
                 isActive
-                  ? "border-slate-900 dark:border-white bg-slate-900 dark:bg-white"
-                  : "border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900/60 hover:border-slate-400 dark:hover:border-zinc-500"
+                  ? "border-white bg-white text-[#0f0f0f]"
+                  : "border-white/[0.06] bg-[#0f0f0f] hover:border-zinc-500"
               }`}
               style={{ borderRadius: "var(--radius)" }}
             >
               <div className={`w-9 h-9 flex items-center justify-center shrink-0 ${
-                isActive ? "bg-red-600" : "bg-red-100 dark:bg-red-900/30"
+                isActive ? "bg-red-600" : "bg-red-900/30"
               }`} style={{ borderRadius: "var(--radius)" }}>
                 <Calculator className={`w-4 h-4 ${
-                  isActive ? "text-white" : "text-red-600 dark:text-red-400"
+                  isActive ? "text-white" : "text-red-400"
                 }`} aria-hidden />
               </div>
               <div className="min-w-0">
                 <p className={`text-xs font-bold truncate ${
-                  isActive ? "text-white" : "text-slate-900 dark:text-white"
+                  isActive ? "text-[#0f0f0f]" : "text-white"
                 }`}>
                   {vehicle.label}
                 </p>
                 {vehicleDetail(vehicle) && (
                   <p className={`text-[10px] mt-0.5 truncate ${
-                    isActive ? "text-slate-300" : "text-slate-500"
+                    isActive ? "text-zinc-600" : "text-zinc-400"
                   }`}>
                     {vehicleDetail(vehicle)}
                   </p>

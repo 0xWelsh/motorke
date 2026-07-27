@@ -142,9 +142,9 @@ export default function ModelSpecsAdmin() {
 
   const SelectField = ({ field, label, options, empty = "—" }) => (
     <div className="space-y-1">
-      <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{label}</label>
+      <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">{label}</label>
       <select value={form[field]} onChange={(e) => update(field, e.target.value)}
-        className="w-full border border-slate-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-zinc-900">
+        className="w-full border border-white/[0.08] rounded-lg px-3 py-2 text-sm bg-[#0f0f0f]">
         <option value="">{empty}</option>
         {Object.entries(options).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
       </select>
@@ -153,10 +153,10 @@ export default function ModelSpecsAdmin() {
 
   const InputField = ({ field, label, type = "text", placeholder = "" }) => (
     <div className="space-y-1">
-      <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{label}</label>
+      <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">{label}</label>
       <input type={type} value={form[field]} onChange={(e) => update(field, e.target.value)}
         placeholder={placeholder}
-        className="w-full border border-slate-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-zinc-900"
+        className="w-full border border-white/[0.08] rounded-lg px-3 py-2 text-sm bg-[#0f0f0f]"
       />
     </div>
   );
@@ -166,22 +166,22 @@ export default function ModelSpecsAdmin() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <Database size={14} className="text-emerald-500" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Reference Library</span>
+            <Database size={14} className="text-[var(--accent)]" />
+            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Reference Library</span>
           </div>
-          <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Model Specs</h1>
-          <p className="text-sm text-slate-500 mt-1">{specs.length} specs in database</p>
+          <h1 className="text-4xl font-black text-white tracking-tight">Model Specs</h1>
+          <p className="text-sm text-zinc-400 mt-1">{specs.length} specs in database</p>
         </div>
         <button onClick={resetForm}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-emerald-700 transition-all">
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[var(--accent)] text-white text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-[var(--accent)] transition-all">
           <Plus size={14} /> Add Spec
         </button>
       </div>
 
       {message && (
-        <div className={`p-4 rounded-2xl mb-6 font-semibold text-sm flex items-center gap-2 ${
+        <div className={`p-4 rounded-xl mb-6 font-semibold text-sm flex items-center gap-2 ${
           message.type === "success"
-            ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200/80"
+            ? "bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/20"
             : "bg-red-50 text-red-600 border border-red-100"
         }`}>
           {message.type === "success" ? <Check size={16} /> : <X size={16} />}
@@ -191,13 +191,13 @@ export default function ModelSpecsAdmin() {
 
       {/* Edit/Create Form */}
       {(editingId || form.make) && (
-        <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 rounded-2xl p-6 mb-8">
+        <div className="bg-[#0f0f0f] border border-white/[0.08] rounded-xl p-6 mb-8">
           <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+            <h2 className="text-lg font-bold text-white">
               {editingId ? "Edit Spec" : "New Spec"}
             </h2>
             {editingId && (
-              <button onClick={resetForm} className="text-[10px] font-bold uppercase tracking-wider text-slate-400 hover:text-red-500">
+              <button onClick={resetForm} className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 hover:text-red-500">
                 Cancel
               </button>
             )}
@@ -231,36 +231,36 @@ export default function ModelSpecsAdmin() {
           <div className="flex items-center gap-6 mb-6">
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" checked={form.turbo} onChange={(e) => update("turbo", e.target.checked)}
-                className="w-4 h-4 accent-emerald-600" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">Turbo</span>
+                className="w-4 h-4 accent-[var(--accent)]" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Turbo</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" checked={form.sunroof} onChange={(e) => update("sunroof", e.target.checked)}
-                className="w-4 h-4 accent-emerald-600" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">Sunroof</span>
+                className="w-4 h-4 accent-[var(--accent)]" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Sunroof</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" checked={form.verified} onChange={(e) => update("verified", e.target.checked)}
-                className="w-4 h-4 accent-emerald-600" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">Verified</span>
+                className="w-4 h-4 accent-[var(--accent)]" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Verified</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" checked={form.published} onChange={(e) => update("published", e.target.checked)}
-                className="w-4 h-4 accent-emerald-600" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">Published</span>
+                className="w-4 h-4 accent-[var(--accent)]" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Published</span>
             </label>
           </div>
 
           <div className="space-y-1 mb-6">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Standard Features</label>
+            <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Standard Features</label>
             <textarea value={form.standardFeatures} onChange={(e) => update("standardFeatures", e.target.value)}
               rows={3} placeholder="Leather seats, Sunroof, Reverse camera… (comma-separated)"
-              className="w-full border border-slate-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-zinc-900 resize-y"
+              className="w-full border border-white/[0.08] rounded-lg px-3 py-2 text-sm bg-[#0f0f0f] resize-y"
             />
           </div>
 
           <button onClick={handleSave} disabled={!form.make || !form.model || !form.yearStart || saving}
-            className="inline-flex items-center gap-2 px-6 py-2.5 bg-slate-900 text-white text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-slate-800 disabled:opacity-40 transition-all">
+            className="inline-flex items-center gap-2 px-6 py-2.5 bg-white/[0.1] text-white text-[10px] font-black uppercase tracking-wider rounded-lg hover:bg-white/[0.15] disabled:opacity-40 transition-all">
             {saving && <Loader2 size={14} className="animate-spin" />}
             {editingId ? "Update" : "Create"}
           </button>
@@ -270,54 +270,54 @@ export default function ModelSpecsAdmin() {
       {/* Search */}
       <div className="flex items-center gap-3 mb-6">
         <div className="relative flex-1 max-w-xs">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
           <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}
             placeholder="Filter by make…"
-            className="w-full pl-9 pr-3 py-2 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm bg-white dark:bg-zinc-900"
+            className="w-full pl-9 pr-3 py-2 border border-white/[0.08] rounded-lg text-sm bg-[#0f0f0f]"
           />
         </div>
       </div>
 
       {/* Table */}
       {loading ? (
-        <div className="text-center py-12 text-slate-400 text-sm">Loading…</div>
+        <div className="text-center py-12 text-zinc-400 text-sm">Loading…</div>
       ) : specs.length === 0 ? (
-        <div className="text-center py-12 text-slate-400 text-sm">No specs found. Add one above.</div>
+        <div className="text-center py-12 text-zinc-400 text-sm">No specs found. Add one above.</div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-zinc-700">
-                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Make</th>
-                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Model</th>
-                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Variant</th>
-                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Years</th>
-                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Engine</th>
-                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">HP</th>
-                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Body</th>
-                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Fuel</th>
-                <th className="text-center py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Published</th>
-                <th className="text-center py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Verified</th>
-                <th className="text-right py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">Actions</th>
+              <tr className="border-b border-white/[0.08]">
+                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Make</th>
+                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Model</th>
+                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Variant</th>
+                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Years</th>
+                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Engine</th>
+                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">HP</th>
+                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Body</th>
+                <th className="text-left py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Fuel</th>
+                <th className="text-center py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Published</th>
+                <th className="text-center py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Verified</th>
+                <th className="text-right py-3 px-3 text-[10px] font-bold uppercase tracking-wider text-zinc-400">Actions</th>
               </tr>
             </thead>
             <tbody>
               {specs.map((spec) => (
-                <tr key={spec.id} className="border-b border-slate-100 dark:border-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-colors">
-                  <td className="py-3 px-3 font-semibold text-slate-900 dark:text-white">{spec.make}</td>
-                  <td className="py-3 px-3 font-semibold text-slate-700 dark:text-slate-300">{spec.model}</td>
-                  <td className="py-3 px-3 text-slate-500 text-xs">{spec.variant || "—"}</td>
-                  <td className="py-3 px-3 text-xs text-slate-500">{spec.yearStart}{spec.yearEnd ? `–${spec.yearEnd}` : "+"}</td>
-                  <td className="py-3 px-3 text-xs text-slate-600 dark:text-slate-400">{spec.engineCC ? `${(spec.engineCC / 1000).toFixed(1)}L` : "—"}</td>
-                  <td className="py-3 px-3 text-xs text-slate-600">{spec.horsepower || "—"}</td>
-                  <td className="py-3 px-3 text-xs text-slate-500">{spec.bodyType || "—"}</td>
-                  <td className="py-3 px-3 text-xs text-slate-500">{spec.fuelType || "—"}</td>
+                <tr key={spec.id} className="border-b border-white/[0.06] hover:bg-white/[0.03] transition-colors">
+                  <td className="py-3 px-3 font-semibold text-white">{spec.make}</td>
+                  <td className="py-3 px-3 font-semibold text-zinc-300">{spec.model}</td>
+                  <td className="py-3 px-3 text-zinc-400 text-xs">{spec.variant || "—"}</td>
+                  <td className="py-3 px-3 text-xs text-zinc-400">{spec.yearStart}{spec.yearEnd ? `–${spec.yearEnd}` : "+"}</td>
+                  <td className="py-3 px-3 text-xs text-zinc-400">{spec.engineCC ? `${(spec.engineCC / 1000).toFixed(1)}L` : "—"}</td>
+                  <td className="py-3 px-3 text-xs text-zinc-400">{spec.horsepower || "—"}</td>
+                  <td className="py-3 px-3 text-xs text-zinc-400">{spec.bodyType || "—"}</td>
+                  <td className="py-3 px-3 text-xs text-zinc-400">{spec.fuelType || "—"}</td>
                   <td className="py-3 px-3 text-center">
                     <button onClick={() => togglePublished(spec)}
                       className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold transition-all ${
                         spec.published
-                          ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400"
-                          : "bg-slate-100 text-slate-400 hover:bg-slate-200 dark:bg-zinc-800 dark:text-zinc-500"
+                          ? "bg-[var(--accent)]/10 text-[var(--accent)] hover:bg-[var(--accent)]/15"
+                          : "bg-white/[0.06] text-zinc-400 hover:bg-white/[0.08]"
                       }`}
                     >
                       {spec.published ? <Globe size={12} /> : <GlobeOff size={12} />}
@@ -326,17 +326,17 @@ export default function ModelSpecsAdmin() {
                   </td>
                   <td className="py-3 px-3 text-center">
                     {spec.verified
-                      ? <span className="text-emerald-600 font-bold text-xs">Yes</span>
-                      : <span className="text-slate-400 text-xs">No</span>}
+                      ? <span className="text-[var(--accent)] font-bold text-xs">Yes</span>
+                      : <span className="text-zinc-400 text-xs">No</span>}
                   </td>
                   <td className="py-3 px-3 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <button onClick={() => startEdit(spec)}
-                        className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg dark:hover:bg-zinc-700 transition-all">
+                        className="p-1.5 text-zinc-400 hover:text-zinc-300 hover:bg-white/[0.06] rounded-lg transition-all">
                         <Pencil size={14} />
                       </button>
                       <button onClick={() => handleDelete(spec.id)}
-                        className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg dark:hover:bg-red-950/30 transition-all">
+                        className="p-1.5 text-zinc-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all">
                         <Trash2 size={14} />
                       </button>
                     </div>

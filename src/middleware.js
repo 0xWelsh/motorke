@@ -7,6 +7,22 @@ const MAINT_BYPASS_COOKIE = "welsh-maint-bypass";
 const ROTATION_COOKIE = "wmh-rot";
 const ROTATION_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
 
+// Allowed origins for CSRF validation (defense-in-depth).
+// In production, only the canonical site origin is permitted.
+function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  const allowed = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : null,
+    process.env.NODE_ENV !== "production" ? "http://localhost:3000" : null,
+  ].filter(Boolean);
+  // Strip trailing slashes for comparison
+  const normOrigin = origin.replace(/\/+$/, "");
+  return allowed.some((a) => a && normOrigin === a.replace(/\/+$/, ""));
+}
+
+const CSRF_SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
+
 function generateRotationId() {
   const bytes = new Uint8Array(16);
   if (typeof globalThis.crypto?.getRandomValues === "function") {
@@ -46,6 +62,22 @@ function isMaintenanceAllowed(pathname) {
 export function middleware(request) {
   const { pathname } = request.nextUrl;
   const isProd = process.env.NODE_ENV === "production";
+
+  // CSRF defense-in-depth: if a mutating request includes an Origin or Referer
+  // header, validate it matches the site origin. Same-origin requests always
+  // send these headers; cross-origin requests without SameSite=Lax cookie are
+  // blocked by the browser. This catches script-based attacks that forge headers.
+  if (!CSRF_SAFE_METHODS.has(request.method)) {
+    const origin = request.headers.get("origin");
+    const referer = request.headers.get("referer");
+    const candidate = origin || referer || "";
+    if (candidate && !isAllowedOrigin(candidate)) {
+      return new NextResponse(JSON.stringify({ error: "CSRF validation failed" }), {
+        status: 403,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  }
 
   // Canonical public URLs like /cars/toyota internally render /cars/hub/toyota
   // (without changing the browser URL). Listing detail IDs stay on /cars/[id].

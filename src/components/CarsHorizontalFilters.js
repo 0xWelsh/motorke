@@ -96,20 +96,19 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
   const filterCount = [make, transmission, bodyTypes, fuelTypes, minPrice || maxPrice ? "price" : "", minYear || maxYear ? "year" : ""].filter(Boolean).length;
 
   return (
-    <div className="bg-white dark:bg-[#111] border border-slate-200 dark:border-zinc-800 p-3 sm:p-4 space-y-3">
+    <div className="bg-[#0f0f0f] border border-white/[0.08] p-3 sm:p-4 space-y-3">
       {/* Brands */}
       <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
-        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-zinc-500 shrink-0">Brand</span>
+        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-zinc-400 shrink-0">Brand</span>
         {allMakes.map((m) => (
           <button
             key={m.make}
             onClick={() => setMake((prev) => (prev === m.make ? "" : m.make))}
-            className={`shrink-0 px-2.5 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border transition-all ${
+            className={`shrink-0 px-2.5 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
               make === m.make
                 ? "border-brand-accent bg-brand-accent/10 text-brand-accent ring-1 ring-brand-accent/30"
-                : "border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                : "border-white/[0.06] text-zinc-400 hover:bg-white/[0.03]"
             }`}
-            style={{ borderRadius: "6px" }}
           >
             {m.make}
           </button>
@@ -119,66 +118,63 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
       {/* Price + Transmission */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <div className="flex items-center gap-1.5">
-          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-zinc-500 shrink-0">Price</span>
+          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-zinc-400 shrink-0">Price</span>
           {PRICE_PRESETS.map((preset, i) => (
             <button
               key={i}
               onClick={() => { setPricePreset(i); setMinPrice(""); setMaxPrice(""); }}
-              className={`shrink-0 px-2 py-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider border transition-all ${
+              className={`shrink-0 px-2 py-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
                 pricePreset === i
                   ? "border-brand-accent bg-brand-accent/10 text-brand-accent"
-                  : "border-slate-200 dark:border-zinc-700 text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                  : "border-white/[0.06] text-zinc-400 hover:bg-white/[0.03]"
               }`}
-              style={{ borderRadius: "4px" }}
             >
               {preset.label}
             </button>
           ))}
         </div>
 
-        <span className="w-px h-5 bg-slate-200 dark:bg-zinc-700 shrink-0" />
+        <span className="w-px h-5 bg-white/[0.08] shrink-0" />
 
         <div className="flex items-center gap-1.5">
-          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-zinc-500 shrink-0">Trans</span>
+          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-zinc-400 shrink-0">Trans</span>
           {["AUTOMATIC", "MANUAL"].map((t) => (
             <button
               key={t}
               onClick={() => setTransmission((prev) => (prev === t ? "" : t))}
-              className={`shrink-0 px-2 py-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider border transition-all ${
+              className={`shrink-0 px-2 py-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
                 transmission === t
                   ? "border-brand-accent bg-brand-accent/10 text-brand-accent"
-                  : "border-slate-200 dark:border-zinc-700 text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                  : "border-white/[0.06] text-zinc-400 hover:bg-white/[0.03]"
               }`}
-              style={{ borderRadius: "4px" }}
             >
               {t === "AUTOMATIC" ? "Auto" : "Manual"}
             </button>
           ))}
         </div>
 
-        <span className="w-px h-5 bg-slate-200 dark:bg-zinc-700 shrink-0" />
+        <span className="w-px h-5 bg-white/[0.08] shrink-0" />
 
         <div className="flex items-center gap-1.5">
-          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-zinc-500 shrink-0">Range</span>
-          <input type="number" value={minPrice} placeholder="Min" onChange={(e) => { setMinPrice(e.target.value); setPricePreset(null); }} className="w-20 sm:w-24 px-2 py-1 text-[10px] sm:text-[11px] bg-transparent border border-slate-200 dark:border-zinc-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors" style={{ borderRadius: "4px" }} />
-          <span className="text-slate-400 dark:text-zinc-500 text-[9px]">\u2014</span>
-          <input type="number" value={maxPrice} placeholder="Max" onChange={(e) => { setMaxPrice(e.target.value); setPricePreset(null); }} className="w-20 sm:w-24 px-2 py-1 text-[10px] sm:text-[11px] bg-transparent border border-slate-200 dark:border-zinc-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors" style={{ borderRadius: "4px" }} />
+          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-zinc-400 shrink-0">Range</span>
+          <input type="number" value={minPrice} placeholder="Min" onChange={(e) => { setMinPrice(e.target.value); setPricePreset(null); }} className="w-20 sm:w-24 px-2 py-1 text-[10px] sm:text-[11px] bg-[#0f0f0f] border border-white/[0.08] text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors rounded-xl" />
+          <span className="text-zinc-400 text-[9px]">\u2014</span>
+          <input type="number" value={maxPrice} placeholder="Max" onChange={(e) => { setMaxPrice(e.target.value); setPricePreset(null); }} className="w-20 sm:w-24 px-2 py-1 text-[10px] sm:text-[11px] bg-[#0f0f0f] border border-white/[0.08] text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors rounded-xl" />
         </div>
       </div>
 
       {/* Body Type multi-select */}
       <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
-        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-zinc-500 shrink-0">Body</span>
+        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-zinc-400 shrink-0">Body</span>
         {Object.entries(BODY_TYPE_LABELS).map(([key, label]) => (
           <button
             key={key}
             onClick={() => setBodyTypes(toggleArrayValue(bodyTypes, key))}
-            className={`shrink-0 px-2.5 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border transition-all ${
+            className={`shrink-0 px-2.5 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
               bodyArr.includes(key)
                 ? "border-brand-accent bg-brand-accent/10 text-brand-accent ring-1 ring-brand-accent/30"
-                : "border-slate-200 dark:border-zinc-700 text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                : "border-white/[0.06] text-zinc-400 hover:bg-white/[0.03]"
             }`}
-            style={{ borderRadius: "6px" }}
           >
             {label}
           </button>
@@ -188,47 +184,45 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
       {/* Fuel Type multi-select + Year range */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <div className="flex items-center gap-1.5">
-          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-zinc-500 shrink-0">Fuel</span>
+          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-zinc-400 shrink-0">Fuel</span>
           {Object.entries(FUEL_LABELS).map(([key, label]) => (
             <button
               key={key}
               onClick={() => setFuelTypes(toggleArrayValue(fuelTypes, key))}
-              className={`shrink-0 px-2 py-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider border transition-all ${
+              className={`shrink-0 px-2 py-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
                 fuelArr.includes(key)
                   ? "border-brand-accent bg-brand-accent/10 text-brand-accent"
-                  : "border-slate-200 dark:border-zinc-700 text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                  : "border-white/[0.06] text-zinc-400 hover:bg-white/[0.03]"
               }`}
-              style={{ borderRadius: "4px" }}
             >
               {label}
             </button>
           ))}
         </div>
 
-        <span className="w-px h-5 bg-slate-200 dark:bg-zinc-700 shrink-0" />
+        <span className="w-px h-5 bg-white/[0.08] shrink-0" />
 
         <div className="flex items-center gap-1.5">
-          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-zinc-500 shrink-0">Year</span>
-          <input type="number" value={minYear} placeholder="From" onChange={(e) => setMinYear(e.target.value)} className="w-16 sm:w-20 px-2 py-1 text-[10px] sm:text-[11px] bg-transparent border border-slate-200 dark:border-zinc-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors" style={{ borderRadius: "4px" }} />
-          <span className="text-slate-400 dark:text-zinc-500 text-[9px]">\u2014</span>
-          <input type="number" value={maxYear} placeholder="To" onChange={(e) => setMaxYear(e.target.value)} className="w-16 sm:w-20 px-2 py-1 text-[10px] sm:text-[11px] bg-transparent border border-slate-200 dark:border-zinc-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors" style={{ borderRadius: "4px" }} />
+          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-zinc-400 shrink-0">Year</span>
+          <input type="number" value={minYear} placeholder="From" onChange={(e) => setMinYear(e.target.value)} className="w-16 sm:w-20 px-2 py-1 text-[10px] sm:text-[11px] bg-[#0f0f0f] border border-white/[0.08] text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors rounded-xl" />
+          <span className="text-zinc-400 text-[9px]">\u2014</span>
+          <input type="number" value={maxYear} placeholder="To" onChange={(e) => setMaxYear(e.target.value)} className="w-16 sm:w-20 px-2 py-1 text-[10px] sm:text-[11px] bg-[#0f0f0f] border border-white/[0.08] text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors rounded-xl" />
         </div>
 
         <div className="flex items-center gap-2 ml-auto">
           {hasAnySelection && (
-            <button onClick={resetFilters} className="inline-flex items-center gap-1 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider border border-slate-300 dark:border-zinc-600 text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-all" style={{ borderRadius: "4px" }}>
+            <button onClick={resetFilters} className="inline-flex items-center gap-1 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider border border-white/[0.08] text-zinc-400 hover:bg-white/[0.03] transition-all rounded-xl">
               <RotateCcw className="w-2.5 h-2.5" /> Reset
             </button>
           )}
           <button
             onClick={applyFilters}
             disabled={!hasChanges}
-            className={`inline-flex items-center gap-1.5 px-4 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border transition-all relative ${
+            className={`inline-flex items-center gap-1.5 px-4 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border transition-all relative rounded-xl ${
               hasChanges
                 ? "border-brand-accent bg-brand-accent text-white hover:opacity-90 cursor-pointer"
-                : "border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-[#111]/80 text-slate-400 dark:text-zinc-500 cursor-not-allowed"
+                : "border-white/[0.06] bg-[#111111]/80 text-zinc-400 cursor-not-allowed"
             }`}
-            style={{ borderRadius: "4px" }}
           >
             <Search className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             Apply

@@ -101,8 +101,7 @@ export default function DealerShowroomShare({
           type="button"
           onClick={() => shareNative()}
           disabled={!url}
-          className="flex-1 inline-flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-3.5 text-center text-[11px] font-bold uppercase tracking-widest disabled:opacity-50 border border-slate-200 dark:border-slate-700"
-          style={{ borderRadius: "var(--radius)" }}
+          className="flex-1 inline-flex items-center justify-center gap-2 bg-white/[0.03] text-white py-3.5 text-center text-[11px] font-bold uppercase tracking-widest disabled:opacity-50 border border-white/[0.06] rounded-xl"
         >
           <Share2 className="w-4 h-4 shrink-0" aria-hidden />
           {copied ? "Link copied" : "Share"}
@@ -111,9 +110,7 @@ export default function DealerShowroomShare({
           type="button"
           onClick={() => shareFacebook()}
           disabled={!url}
-          className="flex-1 inline-flex items-center justify-center gap-2 bg-[#1877F2]/12 border border-[#1877F2]/30 text-[#1877F2] py-3.5 text-center text-[11px] font-bold uppercase tracking-widest disabled:opacity-50"
-          style={{ borderRadius: "var(--radius)" }}
-          title="Caption copies to clipboard — tap Paste in Facebook"
+          className="flex-1 inline-flex items-center justify-center gap-2 bg-[#1877F2]/12 border border-[#1877F2]/30 text-[#1877F2] py-3.5 text-center text-[11px] font-bold uppercase tracking-widest disabled:opacity-50 rounded-xl"
         >
           <FaFacebookF className="w-4 h-4 shrink-0" aria-hidden />
           {fbHint === "ready" ? "Paste in FB" : fbHint === "manual" ? "Paste caption" : "Facebook"}
@@ -124,14 +121,13 @@ export default function DealerShowroomShare({
 
   return (
     <div className="space-y-2">
-      <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Share showroom</p>
+      <p className="text-[10px] font-black uppercase tracking-[0.14em] text-zinc-400">Share showroom</p>
       <div className="flex flex-col gap-2">
         <button
           type="button"
           onClick={() => shareNative()}
           disabled={!url}
-          className="w-full inline-flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] disabled:opacity-50 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-          style={{ borderRadius: "10px" }}
+          className="w-full inline-flex items-center justify-center gap-2 bg-white/[0.03] text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] disabled:opacity-50 hover:bg-white/[0.06] transition-colors rounded-xl"
         >
           <Share2 className="w-3.5 h-3.5 shrink-0" aria-hidden />
           Share link
@@ -140,8 +136,7 @@ export default function DealerShowroomShare({
           type="button"
           onClick={() => copyLink()}
           disabled={!url}
-          className="w-full inline-flex items-center justify-center px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.14em] border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0a0a0a] text-slate-800 dark:text-slate-200 disabled:opacity-50 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
-          style={{ borderRadius: "10px" }}
+          className="w-full inline-flex items-center justify-center px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.14em] border border-white/[0.06] bg-[#0f0f0f] text-zinc-300 disabled:opacity-50 hover:bg-white/[0.03] transition-colors rounded-xl"
         >
           {copied ? "Copied!" : "Copy showroom URL"}
         </button>
@@ -150,8 +145,7 @@ export default function DealerShowroomShare({
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => emitShare("whatsapp")}
-          className="w-full inline-flex items-center justify-center bg-[#25D366]/12 border border-[#25D366]/30 text-[#128C3C] dark:text-[#25D366] px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] hover:bg-[#25D366]/18 transition-colors"
-          style={{ borderRadius: "10px" }}
+          className="w-full inline-flex items-center justify-center bg-[#25D366]/12 border border-[#25D366]/30 text-[#25D366] px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] hover:bg-[#25D366]/18 transition-colors rounded-xl"
         >
           WhatsApp
         </a>
@@ -160,8 +154,7 @@ export default function DealerShowroomShare({
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => emitShare("telegram")}
-          className="w-full inline-flex items-center justify-center bg-[#0088CC]/12 border border-[#0088CC]/25 text-[#0088CC] px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] hover:bg-[#0088CC]/18 transition-colors"
-          style={{ borderRadius: "10px" }}
+          className="w-full inline-flex items-center justify-center bg-[#0088CC]/12 border border-[#0088CC]/25 text-[#0088CC] px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] hover:bg-[#0088CC]/18 transition-colors rounded-xl"
         >
           Telegram
         </a>
@@ -169,9 +162,7 @@ export default function DealerShowroomShare({
           type="button"
           onClick={() => shareFacebook()}
           disabled={!url}
-          className="w-full inline-flex items-center justify-center gap-2 bg-[#1877F2]/12 border border-[#1877F2]/30 text-[#1877F2] px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] hover:bg-[#1877F2]/18 transition-colors disabled:opacity-50"
-          style={{ borderRadius: "10px" }}
-          title="Caption copies to your clipboard — tap Paste in Facebook"
+          className="w-full inline-flex items-center justify-center gap-2 bg-[#1877F2]/12 border border-[#1877F2]/30 text-[#1877F2] px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] hover:bg-[#1877F2]/18 transition-colors disabled:opacity-50 rounded-xl"
         >
           <FaFacebookF className="w-3.5 h-3.5 shrink-0" aria-hidden />
           {fbButtonLabel}

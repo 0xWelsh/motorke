@@ -76,7 +76,7 @@ export default function SafeImage({
   if (!isUsableSrc(resolvedSrc) || errored) {
     if (fallback) return fallback;
     return (
-      <div className="absolute inset-0 flex items-center justify-center bg-slate-100 dark:bg-zinc-900 text-slate-300 dark:text-slate-600">
+      <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 text-zinc-400">
         <ImageOff className="w-8 h-8" aria-hidden />
         <span className="sr-only">Image unavailable</span>
       </div>

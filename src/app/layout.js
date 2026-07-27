@@ -117,7 +117,7 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#ffffff",
+  themeColor: "#080808",
 };
 
 export default async function RootLayout({ children }) {
@@ -197,9 +197,9 @@ export default async function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }}
         />
       </head>
-      <body className={`${playfair.variable} ${dmSans.variable} ${roboto.variable} bg-background text-slate-900 min-h-screen antialiased flex flex-col font-sans`}>
+      <body className={`${playfair.variable} ${dmSans.variable} ${roboto.variable} dark bg-background text-slate-100 min-h-screen antialiased flex flex-col font-sans`}>
         <PWARegister />
-        <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
           <SaveDataProvider saveData={saveData}>
             <AnalyticsBootstrap />
             <CompareProvider>

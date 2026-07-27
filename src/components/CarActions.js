@@ -10,7 +10,7 @@ import {
   writeJsonCookie,
 } from "@/lib/personalization";
 
-// ── Save Button ───────────────────────────────────────────────
+// Save Button
 export function SaveButton({ carId, initialSaved = false, isLoggedIn }) {
   const [saved,   setSaved]   = useState(initialSaved);
   const [loading, setLoading] = useState(false);
@@ -33,10 +33,10 @@ export function SaveButton({ carId, initialSaved = false, isLoggedIn }) {
       onClick={toggle}
       disabled={loading}
       title={saved ? "Remove from saved" : "Save this car"}
-      className={`flex items-center gap-2 px-5 py-3 sm:py-2.5 rounded-2xl font-black text-[12px] transition-all duration-300 uppercase tracking-widest ${
-        saved 
-          ? "bg-emerald-50 border border-emerald-100 text-emerald-700 shadow-sm" 
-          : "bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-white shadow-sm"
+      className={`flex items-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl font-black text-[12px] transition-all duration-300 uppercase tracking-widest ${
+        saved
+          ? "bg-[var(--accent)]/10 border border-[var(--accent)]/20 text-[var(--accent)] shadow-sm"
+          : "bg-white/[0.03] border border-white/[0.06] text-zinc-400 hover:bg-white/[0.06] hover:text-white shadow-sm"
       } ${loading ? "cursor-wait opacity-50" : "cursor-pointer active:scale-95"}`}
     >
       <span className="text-lg leading-none">{saved ? "❤️" : "🤍"}</span>
@@ -45,23 +45,13 @@ export function SaveButton({ carId, initialSaved = false, isLoggedIn }) {
   );
 }
 
-// ── Recently Viewed Tracker ───────────────────────────────────
-// Call this on every car detail page to:
-//   1. Write the car into the "recently viewed" localStorage/cookie trail
-//      (used for the homepage rail + on-site personalization).
-//   2. Ping the server-side view counter, but only after the user has
-//      stayed on the page for 2s, so accidental scrolls-and-aways don't
-//      inflate dealer stats. We also send the document.referrer so the
-//      server can attribute the view to Facebook / WhatsApp / Google /
-//      etc.
+// Recently Viewed Tracker
 const VIEW_DWELL_MS = 2000;
 
 export function TrackRecentView({ car }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // 1) Local "recently viewed" trail – do this immediately, it's a UX
-    //    thing and dwell time doesn't matter.
     try {
       const MAX   = 12;
       const entry = {
@@ -82,8 +72,6 @@ export function TrackRecentView({ car }) {
       writeJsonCookie(RECENT_COOKIE_KEY, updated.slice(0, 6), 60 * 60 * 24 * 30);
     } catch {}
 
-    // 2) Server-side counter – only after the dwell threshold. Cancel
-    //    if the user navigates away first.
     const timer = window.setTimeout(() => {
       try {
         const referrer = typeof document !== "undefined" ? document.referrer : "";

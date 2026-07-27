@@ -224,29 +224,28 @@ export default function CarsSearch({
         <button
           type="button"
           onClick={() => setMobileOpen((prev) => !prev)}
-          className="w-full border border-slate-200 bg-white px-3 py-2.5 text-[10px] font-black uppercase tracking-widest text-[#111827] shadow-sm dark:border-slate-800 dark:bg-[#111111] dark:text-white"
-          style={{ borderRadius: "var(--radius)" }}
+          className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-2.5 text-[10px] font-black uppercase tracking-widest text-white shadow-sm rounded-xl"
         >
           <span className="inline-flex w-full items-center justify-between gap-2">
             <span className="inline-flex items-center gap-2">
-              <SlidersHorizontal className="h-4 w-4 text-[#38A169]" />
+              <SlidersHorizontal className="h-4 w-4 text-[var(--accent)]" />
               Filters {filterOnlyCount > 0 ? `(${filterOnlyCount})` : ""}
             </span>
-            <span className="text-[10px] font-bold text-slate-400">{mobileOpen ? "Hide" : "Show"}</span>
+            <span className="text-[10px] font-bold text-zinc-400">{mobileOpen ? "Hide" : "Show"}</span>
           </span>
         </button>
       </div>
 
       <aside className={`${mobileOpen ? "block" : "hidden"} lg:block lg:mt-0`}>
-        <div className="mb-3 hidden border-b border-slate-100 pb-3 dark:border-zinc-900 lg:block">
-          <p className="mb-0.5 text-[10px] font-black uppercase tracking-[0.28em] text-[#38A169]">Refine</p>
-          <h2 className="text-base font-black uppercase tracking-tight text-[#111827] dark:text-white">Filters</h2>
+        <div className="mb-3 hidden border-b border-white/[0.06] pb-3 lg:block">
+          <p className="mb-0.5 text-[10px] font-black uppercase tracking-[0.28em] text-[var(--accent)]">Refine</p>
+          <h2 className="text-base font-black uppercase tracking-tight text-white">Filters</h2>
         </div>
 
         <form method="GET" onSubmit={handleSubmit} className="space-y-6">
           {/* Budget */}
           <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Budget Range</label>
+            <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Budget Range</label>
             <div className="grid grid-cols-2 gap-2">
               {[
                 { label: "≤1.3M", min: 0, max: 1300000 },
@@ -268,8 +267,8 @@ export default function CarsSearch({
                   }}
                   className={`border py-2.5 text-[10px] font-bold uppercase tracking-tight transition-all active:scale-[0.98] ${
                     String(minPrice) === String(btn.min) && String(maxPrice) === String(btn.max)
-                      ? "border-[#38A169] bg-[#38A169] text-white shadow-md shadow-[#38A169]/20"
-                      : "border-slate-200 bg-white text-slate-700 hover:border-[#38A169] dark:border-slate-800 dark:bg-[#111111] dark:text-slate-300"
+                      ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-md shadow-[var(--accent)]/20"
+                      : "border-white/[0.06] bg-[#0f0f0f] text-zinc-300 hover:border-[var(--accent)] rounded-xl"
                   }`}
                   style={{ borderRadius: "10px" }}
                 >
@@ -285,8 +284,8 @@ export default function CarsSearch({
                 }}
                 className={`border py-2.5 text-[10px] font-bold uppercase tracking-tight transition-all ${
                   minPrice === "13000000" && !maxPrice
-                    ? "border-[#38A169] bg-[#38A169] text-white shadow-md shadow-[#38A169]/20"
-                    : "border-slate-200 bg-white text-slate-700 hover:border-[#38A169] dark:border-slate-800 dark:bg-[#111111] dark:text-slate-300"
+                    ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-md shadow-[var(--accent)]/20"
+                    : "border-white/[0.06] bg-[#0f0f0f] text-zinc-300 hover:border-[var(--accent)] rounded-xl"
                 }`}
                 style={{ borderRadius: "10px" }}
               >
@@ -297,7 +296,7 @@ export default function CarsSearch({
 
           {/* Sort */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Sort Priority</label>
+            <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Sort Priority</label>
             <select
               value={sort}
               onChange={(e) => {
@@ -305,8 +304,7 @@ export default function CarsSearch({
                 setSort(next);
                 pushWith({ sort: next });
               }}
-              className="w-full border border-slate-200 bg-white px-3 py-3 text-xs font-bold text-[#111827] outline-none focus:border-[#38A169] dark:border-slate-800 dark:bg-[#111111] dark:text-white transition-colors"
-              style={{ borderRadius: "12px" }}
+              className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] transition-colors rounded-xl"
             >
               {CARS_SORT_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -319,15 +317,14 @@ export default function CarsSearch({
           {/* Core Specs */}
           <div className="grid grid-cols-1 gap-3">
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Body Type</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Body Type</label>
               <select
                 value={bodyType}
                 onChange={(e) => {
                   setBodyType(e.target.value);
                   pushWith({ bodyType: e.target.value });
                 }}
-                className="w-full border border-slate-200 bg-white px-3 py-3 text-xs font-bold outline-none focus:border-[#38A169] dark:border-slate-800 dark:bg-[#111111] dark:text-white"
-                style={{ borderRadius: "12px" }}
+                className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
               >
                 <option value="">Any type</option>
                 {bodyEntries.map(([k, label]) => (
@@ -339,15 +336,14 @@ export default function CarsSearch({
             </div>
             
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Fuel Preference</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Fuel Preference</label>
               <select
                 value={fuelType}
                 onChange={(e) => {
                   setFuelType(e.target.value);
                   pushWith({ fuelType: e.target.value });
                 }}
-                className="w-full border border-slate-200 bg-white px-3 py-3 text-xs font-bold outline-none focus:border-[#38A169] dark:border-slate-800 dark:bg-[#111111] dark:text-white"
-                style={{ borderRadius: "12px" }}
+                className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
               >
                 <option value="">Any fuel</option>
                 {Object.entries(FUEL_LABELS).map(([k, label]) => (
@@ -359,15 +355,14 @@ export default function CarsSearch({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Gearbox</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Gearbox</label>
               <select
                 value={transmission}
                 onChange={(e) => {
                   setTransmission(e.target.value);
                   pushWith({ transmission: e.target.value });
                 }}
-                className="w-full border border-slate-200 bg-white px-3 py-3 text-xs font-bold outline-none focus:border-[#38A169] dark:border-slate-800 dark:bg-[#111111] dark:text-white"
-                style={{ borderRadius: "12px" }}
+                className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
               >
                 <option value="">Any transmission</option>
                 {Object.entries(TRANSMISSION_LABELS).map(([k, label]) => (
@@ -380,17 +375,16 @@ export default function CarsSearch({
           </div>
 
           {/* Location & Brand */}
-          <div className="space-y-4 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div className="space-y-4 pt-2 border-t border-white/[0.06]">
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Location (County)</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Location (County)</label>
               <select
                 value={county}
                 onChange={(e) => {
                   setCounty(e.target.value);
                   pushWith({ county: e.target.value });
                 }}
-                className="w-full border border-slate-200 bg-white px-3 py-3 text-xs font-bold outline-none focus:border-[#38A169] dark:border-slate-800 dark:bg-[#111111] dark:text-white"
-                style={{ borderRadius: "12px" }}
+                className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
               >
                 <option value="">All Kenya</option>
                 {counties.map((c) => (
@@ -402,15 +396,14 @@ export default function CarsSearch({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Specific Brand</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Specific Brand</label>
               <select
                 value={make}
                 onChange={(e) => {
                   setMake(e.target.value);
                   pushWith({ make: e.target.value });
                 }}
-                className="w-full border border-slate-200 bg-white px-3 py-3 text-xs font-bold outline-none focus:border-[#38A169] dark:border-zinc-800 dark:bg-[#111111] dark:text-white"
-                style={{ borderRadius: "12px" }}
+                className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)] rounded-xl"
               >
                 <option value="">All brands</option>
                 {allMakes.map((m) => (
@@ -423,9 +416,9 @@ export default function CarsSearch({
           </div>
 
           {/* Drive & year */}
-          <div className="space-y-4 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div className="space-y-4 pt-2 border-t border-white/[0.06]">
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Steering Side</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Steering Side</label>
               <div className="grid grid-cols-2 gap-2">
                 {["LHD", "RHD"].map((side) => (
                   <button
@@ -437,8 +430,8 @@ export default function CarsSearch({
                     }}
                     className={`border py-2.5 text-[10px] font-bold uppercase tracking-tight transition-all ${
                       steering === side
-                        ? "border-[#38A169] bg-[#38A169] text-white shadow-md shadow-[#38A169]/20"
-                        : "border-slate-200 bg-white text-slate-700 dark:border-slate-800 dark:bg-[#111111] dark:text-slate-300"
+                        ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-md shadow-[var(--accent)]/20"
+                        : "border-white/[0.06] bg-[#0f0f0f] text-zinc-300"
                     }`}
                     style={{ borderRadius: "10px" }}
                   >
@@ -449,7 +442,7 @@ export default function CarsSearch({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Year of Manufacture</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Year of Manufacture</label>
               <div className="grid grid-cols-2 gap-2">
                 <input
                   type="number"
@@ -457,7 +450,7 @@ export default function CarsSearch({
                   value={minYOM}
                   onChange={(e) => setMinYOM(e.target.value)}
                   onBlur={() => pushWith({ minYOM })}
-                  className="w-full border border-slate-200 bg-white px-3 py-3 text-xs font-bold outline-none focus:border-[#38A169] dark:border-slate-800 dark:bg-[#111111] dark:text-white"
+                  className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)]"
                   style={{ borderRadius: "10px" }}
                 />
                 <input
@@ -466,18 +459,17 @@ export default function CarsSearch({
                   value={maxYOM}
                   onChange={(e) => setMaxYOM(e.target.value)}
                   onBlur={() => pushWith({ maxYOM })}
-                  className="w-full border border-slate-200 bg-white px-3 py-3 text-xs font-bold outline-none focus:border-[#38A169] dark:border-slate-800 dark:bg-[#111111] dark:text-white"
+                  className="w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-3 text-xs font-bold text-white outline-none focus:border-[var(--accent)]"
                   style={{ borderRadius: "10px" }}
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex flex-col gap-3 pt-6 border-t border-white/[0.06]">
             <button
               type="submit"
-              className="bg-[#111827] py-4 text-[11px] font-black uppercase tracking-[0.2em] text-white transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl dark:bg-[#38A169] dark:text-white"
-              style={{ borderRadius: "14px" }}
+              className="bg-[var(--accent)] py-4 text-[11px] font-black uppercase tracking-[0.2em] text-white transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl rounded-xl"
             >
               Apply Filter
             </button>
@@ -485,8 +477,7 @@ export default function CarsSearch({
               <button
                 type="button"
                 onClick={clearFilters}
-                className="inline-flex items-center justify-center gap-2 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-red-500 dark:text-slate-400 dark:hover:text-red-400 transition-colors bg-slate-50 dark:bg-white/5 border border-transparent hover:border-red-200 dark:hover:border-red-900/30"
-                style={{ borderRadius: "14px" }}
+                className="inline-flex items-center justify-center gap-2 py-3 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-red-400 transition-colors bg-white/[0.03] border border-transparent hover:border-red-900/30 rounded-xl"
               >
                 <X className="h-3.5 w-3.5" /> Clear All Filters
               </button>

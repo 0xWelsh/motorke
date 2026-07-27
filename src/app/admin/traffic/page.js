@@ -112,7 +112,7 @@ export default async function AdminTrafficPage() {
             href="/api/admin/tracking/summary"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 transition hover:border-emerald-500/40 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 transition hover:border-emerald-500/40 border-zinc-800 bg-zinc-900 text-zinc-200"
           >
             <ExternalLink size={14} /> JSON export
           </Link>
@@ -132,20 +132,20 @@ export default async function AdminTrafficPage() {
         ].map((card) => (
           <div
             key={card.label}
-            className="rounded-xl border border-slate-200 bg-white px-4 py-4 dark:border-zinc-800 dark:bg-zinc-950"
+            className="rounded-xl border border-slate-200 bg-white px-4 py-4 border-zinc-800 bg-zinc-950"
           >
             <p className="text-xs font-medium text-slate-500">{card.label}</p>
-            <p className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">{fmt(card.value)}</p>
+            <p className="mt-1 text-2xl font-bold text-slate-900 text-white">{fmt(card.value)}</p>
             <p className="mt-1 text-xs text-slate-500">{card.sub}</p>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <section className="rounded-xl border border-slate-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
+        <section className="rounded-xl border border-slate-200 bg-white p-5 border-zinc-800 bg-zinc-950">
           <div className="mb-4 flex items-center gap-2">
             <Eye size={18} className="text-emerald-600" />
-            <h3 className="font-semibold text-slate-900 dark:text-white">Top pages (7 days)</h3>
+            <h3 className="font-semibold text-slate-900 text-white">Top pages (7 days)</h3>
           </div>
           <ul className="space-y-2">
             {topPages.length === 0 ? (
@@ -156,7 +156,7 @@ export default async function AdminTrafficPage() {
                   key={row.path}
                   className="flex items-center justify-between gap-3 text-sm"
                 >
-                  <span className="truncate font-medium text-slate-700 dark:text-slate-200">
+                  <span className="truncate font-medium text-slate-700 text-slate-200">
                     {row.path || "/"}
                   </span>
                   <span className="shrink-0 tabular-nums text-slate-500">{fmt(row._count._all)}</span>
@@ -166,10 +166,10 @@ export default async function AdminTrafficPage() {
           </ul>
         </section>
 
-        <section className="rounded-xl border border-slate-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
+        <section className="rounded-xl border border-slate-200 bg-white p-5 border-zinc-800 bg-zinc-950">
           <div className="mb-4 flex items-center gap-2">
             <BarChart3 size={18} className="text-emerald-600" />
-            <h3 className="font-semibold text-slate-900 dark:text-white">Listing traffic sources (7d)</h3>
+            <h3 className="font-semibold text-slate-900 text-white">Listing traffic sources (7d)</h3>
           </div>
           <ul className="space-y-2">
             {topSources.length === 0 ? (
@@ -177,7 +177,7 @@ export default async function AdminTrafficPage() {
             ) : (
               topSources.map((row) => (
                 <li key={row.source || "unknown"} className="flex items-center justify-between gap-3 text-sm">
-                  <span className="capitalize font-medium text-slate-700 dark:text-slate-200">
+                  <span className="capitalize font-medium text-slate-700 text-slate-200">
                     {row.source || "direct"}
                   </span>
                   <span className="shrink-0 tabular-nums text-slate-500">{fmt(row._count._all)}</span>
@@ -188,23 +188,23 @@ export default async function AdminTrafficPage() {
         </section>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 overflow-hidden">
-        <div className="border-b border-slate-200 px-5 py-4 dark:border-zinc-800">
+      <section className="rounded-xl border border-slate-200 bg-white border-zinc-800 bg-zinc-950 overflow-hidden">
+        <div className="border-b border-slate-200 px-5 py-4 border-zinc-800">
           <div className="flex items-center gap-2">
             <MousePointerClick size={18} className="text-emerald-600" />
-            <h3 className="font-semibold text-slate-900 dark:text-white">Most viewed listings (7 days)</h3>
+            <h3 className="font-semibold text-slate-900 text-white">Most viewed listings (7 days)</h3>
           </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px] text-left text-sm">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:border-zinc-800 dark:bg-zinc-900/50">
+              <tr className="border-b border-slate-100 bg-slate-50 text-xs uppercase tracking-wide text-slate-500 border-zinc-800 bg-zinc-900/50">
                 <th className="px-5 py-3 font-semibold">Vehicle</th>
                 <th className="px-5 py-3 font-semibold">Dealer</th>
                 <th className="px-5 py-3 font-semibold text-right">Views</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
+            <tbody className="divide-y divide-slate-100 divide-zinc-800">
               {topCars.length === 0 ? (
                 <tr>
                   <td colSpan={3} className="px-5 py-10 text-center text-slate-500">
@@ -218,7 +218,7 @@ export default async function AdminTrafficPage() {
                       {row.car ? (
                         <Link
                           href={carListingPath(row.car || { id: row.carId })}
-                          className="font-medium text-slate-900 hover:text-emerald-700 dark:text-white"
+                          className="font-medium text-slate-900 hover:text-emerald-700 text-white"
                           target="_blank"
                         >
                           {row.car.year} {row.car.make} {row.car.model}
@@ -227,10 +227,10 @@ export default async function AdminTrafficPage() {
                         <span className="text-slate-500">{row.carId}</span>
                       )}
                     </td>
-                    <td className="px-5 py-3 text-slate-600 dark:text-slate-300">
+                    <td className="px-5 py-3 text-slate-600 text-slate-300">
                       {row.car?.dealer?.name || "—"}
                     </td>
-                    <td className="px-5 py-3 text-right tabular-nums font-semibold text-slate-900 dark:text-white">
+                    <td className="px-5 py-3 text-right tabular-nums font-semibold text-slate-900 text-white">
                       {fmt(row.count)}
                     </td>
                   </tr>
@@ -243,4 +243,3 @@ export default async function AdminTrafficPage() {
     </div>
   );
 }
-

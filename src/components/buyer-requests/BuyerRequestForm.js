@@ -11,8 +11,8 @@ import {
 } from "@/lib/buyer-request";
 
 const inputCls =
-  "w-full border border-sky-200/90 dark:border-sky-900/70 bg-white dark:bg-[#111827] px-3 py-2.5 text-sm font-medium text-slate-900 dark:text-white outline-none focus:border-[#2563eb] dark:focus:border-sky-400 transition-colors";
-const labelCls = "text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400 mb-1 block";
+  "w-full border border-sky-900/70 bg-[#111827] px-3 py-2.5 text-sm font-medium text-white outline-none focus:border-sky-400 transition-colors";
+const labelCls = "text-[10px] font-black uppercase tracking-[0.14em] text-zinc-400 mb-1 block";
 
 export default function BuyerRequestForm() {
   const [loading, setLoading] = useState(false);
@@ -87,29 +87,26 @@ export default function BuyerRequestForm() {
   if (success) {
     return (
       <div
-        className="border border-sky-200 dark:border-sky-800 bg-white/90 dark:bg-[#111827] p-6 sm:p-8 text-center"
-        style={{ borderRadius: "var(--radius)" }}
+        className="border border-sky-800 bg-[#111827] p-6 sm:p-8 text-center rounded-xl"
       >
-        <CheckCircle className="w-12 h-12 text-[#2563eb] dark:text-sky-300 mx-auto mb-4" aria-hidden />
-        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">
+        <CheckCircle className="w-12 h-12 text-sky-300 mx-auto mb-4" aria-hidden />
+        <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
           Request received
         </h2>
-        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-md mx-auto mb-4">
-          Your reference is <span className="font-black text-[#38A169]">{success}</span>. Verified sellers
+        <p className="text-sm text-zinc-400 leading-relaxed max-w-md mx-auto mb-4">
+          Your reference is <span className="font-black text-[var(--accent)]">{success}</span>. Verified sellers
           will send offers through BIDGARI on WhatsApp, usually within a few hours.
         </p>
         <div className="flex flex-col sm:flex-row gap-2 justify-center">
           <Link
             href="/requests"
-            className="inline-flex items-center justify-center gap-2 bg-[#38A169] hover:bg-[#2F855A] text-white px-5 py-3 text-xs font-black uppercase tracking-widest"
-            style={{ borderRadius: "var(--radius)" }}
+            className="inline-flex items-center justify-center gap-2 bg-[var(--accent)] hover:opacity-90 text-white px-5 py-3 text-xs font-black uppercase tracking-widest rounded-xl"
           >
             View open requests <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
             href="/cars"
-            className="inline-flex items-center justify-center border border-slate-200 dark:border-zinc-700 px-5 py-3 text-xs font-black uppercase tracking-widest text-slate-800 dark:text-white"
-            style={{ borderRadius: "var(--radius)" }}
+            className="inline-flex items-center justify-center border border-white/[0.08] px-5 py-3 text-xs font-black uppercase tracking-widest text-white rounded-xl"
           >
             Browse inventory
           </Link>
@@ -428,12 +425,11 @@ export default function BuyerRequestForm() {
                 key={feature}
                 type="button"
                 onClick={() => toggleFeature(feature)}
-                className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide border transition-colors ${
+                className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide border transition-colors rounded-xl ${
                   active
                     ? "bg-[#2563eb] border-[#2563eb] text-white"
-                    : "bg-white dark:bg-[#111827] border-sky-200 dark:border-sky-900 text-slate-600 dark:text-slate-300"
+                    : "bg-[#111827] border-sky-900 text-zinc-400"
                 }`}
-                style={{ borderRadius: "999px" }}
               >
                 {feature}
               </button>
@@ -458,7 +454,7 @@ export default function BuyerRequestForm() {
         />
       </div>
 
-      <label className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+      <label className="flex items-start gap-2 text-xs text-zinc-400 leading-relaxed">
         <input
           type="checkbox"
           className="mt-0.5"
@@ -470,7 +466,7 @@ export default function BuyerRequestForm() {
       </label>
 
       {error ? (
-        <p className="text-sm font-semibold text-red-600 dark:text-red-400" role="alert">
+        <p className="text-sm font-semibold text-red-400" role="alert">
           {error}
         </p>
       ) : null}
@@ -478,8 +474,7 @@ export default function BuyerRequestForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#2563eb] hover:bg-[#1d4ed8] disabled:opacity-60 text-white px-8 py-3.5 text-xs font-black uppercase tracking-widest transition-colors"
-        style={{ borderRadius: "var(--radius)" }}
+        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#2563eb] hover:bg-[#1d4ed8] disabled:opacity-60 text-white px-8 py-3.5 text-xs font-black uppercase tracking-widest transition-colors rounded-xl"
       >
         {loading ? (
           <>

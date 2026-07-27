@@ -23,14 +23,12 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  // Drag/translate state
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const heroTouchRef = useRef(null);
   const justSwipedRef = useRef(false);
   const heroRef = useRef(null);
 
-  // Lightbox zoom/pan
   const [scale, setScale] = useState(1);
   const [panPos, setPanPos] = useState({ x: 0, y: 0 });
   const lbTouchRef = useRef(null);
@@ -40,7 +38,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
   const [lbDragging, setLbDragging] = useState(false);
   const menuRef = useRef(null);
 
-  // Check initial saved state on mount
   useEffect(() => {
     if (!isLoggedIn || !carId) return;
     fetch(`/api/saved/${carId}`)
@@ -49,7 +46,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
       .catch(() => {});
   }, [carId, isLoggedIn]);
 
-  // Scroll → nav opacity
   useEffect(() => {
     const el = heroRef.current;
     if (!el) return;
@@ -61,7 +57,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
     return () => observer.disconnect();
   }, []);
 
-  // Close three-dot menu on outside click
   useEffect(() => {
     if (!menuOpen) return;
     const handler = (e) => {
@@ -71,7 +66,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
     return () => document.removeEventListener("mousedown", handler);
   }, [menuOpen]);
 
-  // Lightbox: prevent body scroll + push history state for back-navigation
   useEffect(() => {
     if (!lightbox) {
       document.body.style.overflow = "";
@@ -109,7 +103,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
     setPanPos({ x: 0, y: 0 });
   }, [images]);
 
-  // ── Hero swipe ──
   const onHeroTouchStart = (e) => {
     heroTouchRef.current = {
       startX: e.touches[0].clientX,
@@ -166,7 +159,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
     setLightbox(true);
   };
 
-  // ── Save toggle ──
   const toggleSave = async () => {
     if (!isLoggedIn) { router.push("/login"); return; }
     setSaving(true);
@@ -179,7 +171,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
     setSaving(false);
   };
 
-  // ── Share ──
   const handleShare = async () => {
     setMenuOpen(false);
     const shareTitle = sold ? `SOLD ${title}` : title;
@@ -195,7 +186,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
     navigator.clipboard.writeText(window.location.href);
   };
 
-  // ── Lightbox carousel swipe + zoom/pan ──
   const onLbTouchStart = (e) => {
     const touches = e.touches;
 
@@ -287,7 +277,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
 
   if (!images?.length) {
     return (
-      <div className="w-full aspect-video bg-[#fbfcfe] flex items-center justify-center text-sm font-bold uppercase tracking-widest text-slate-500 max-h-[600px]">
+      <div className="w-full aspect-video bg-[#111111] flex items-center justify-center text-sm font-bold uppercase tracking-widest text-zinc-600 max-h-[600px]">
         No image
       </div>
     );
@@ -301,13 +291,12 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
 
   return (
     <>
-      {/* ── Hero carousel ── */}
+      {/* Hero carousel */}
       <div
         id="hero-gallery"
         ref={heroRef}
-        className="relative w-full h-[40vh] min-h-[280px] max-h-[400px] lg:h-auto lg:aspect-video lg:max-h-[600px] bg-[#fbfcfe] overflow-hidden select-none lg:rounded-lg"
+        className="relative w-full h-[40vh] min-h-[280px] max-h-[400px] lg:h-auto lg:aspect-video lg:max-h-[600px] bg-[#0a0a0a] overflow-hidden select-none lg:rounded-xl"
       >
-        {/* Slide track */}
         <div
           className="absolute inset-0 cursor-pointer"
           style={trackStyle(active)}
@@ -338,22 +327,20 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
           </div>
         </div>
 
-        {/* Gradient overlay for nav readability */}
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/50 to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/60 to-transparent pointer-events-none z-10" />
 
-        {/* ── Overlay nav ── */}
+        {/* Overlay nav */}
         <div
           className={`absolute inset-x-0 top-0 z-20 flex items-center justify-between px-3 py-2 transition-colors duration-300 ${
-            navOpaque ? "bg-white shadow-sm" : "bg-transparent"
+            navOpaque ? "bg-[#111111]/90 backdrop-blur-md" : "bg-transparent"
           }`}
         >
-          {/* Back */}
           <button
             type="button"
             onClick={() => (window.history.length > 1 ? router.back() : router.push("/cars"))}
             className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors ${
               navOpaque
-                ? "text-slate-900 hover:bg-slate-100"
+                ? "text-white hover:bg-white/10"
                 : "text-white/90 hover:bg-white/20"
             }`}
             aria-label="Go back"
@@ -361,16 +348,14 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
             <ArrowLeft className="w-5 h-5" strokeWidth={2} />
           </button>
 
-          {/* Right actions */}
           <div className="flex items-center gap-1">
-            {/* Save */}
             <button
               type="button"
               onClick={toggleSave}
               disabled={saving}
               className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors ${
                 navOpaque
-                  ? saved ? "text-red-500" : "text-slate-500 hover:text-red-400 hover:bg-slate-100"
+                  ? saved ? "text-red-400" : "text-zinc-400 hover:text-red-400 hover:bg-white/10"
                   : saved ? "text-red-400" : "text-white/80 hover:bg-white/20"
               }`}
               aria-label={saved ? "Remove from saved" : "Save this car"}
@@ -382,14 +367,13 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
               />
             </button>
 
-            {/* Three-dots */}
             <div className="relative" ref={menuRef}>
               <button
                 type="button"
                 onClick={() => setMenuOpen((o) => !o)}
                 className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors ${
                   navOpaque
-                    ? "text-slate-500 hover:bg-slate-100"
+                    ? "text-zinc-400 hover:bg-white/10"
                     : "text-white/80 hover:bg-white/20"
                 }`}
                 aria-label="More options"
@@ -398,21 +382,21 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
               </button>
 
               {menuOpen && (
-                <div className="absolute right-0 top-full mt-1 w-44 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-30 overflow-hidden">
+                <div className="absolute right-0 top-full mt-1 w-44 bg-[#111111] rounded-xl shadow-xl border border-white/[0.08] py-1.5 z-30 overflow-hidden">
                   <button
                     type="button"
                     onClick={handleShare}
-                    className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                    className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-semibold text-zinc-300 hover:bg-white/[0.06] transition-colors"
                   >
-                    <Share2 className="w-4 h-4 text-slate-400" />
+                    <Share2 className="w-4 h-4 text-zinc-500" />
                     Share
                   </button>
                   <button
                     type="button"
                     onClick={copyLink}
-                    className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                    className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-semibold text-zinc-300 hover:bg-white/[0.06] transition-colors"
                   >
-                    <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg className="w-4 h-4 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
                       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                     </svg>
@@ -424,7 +408,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
           </div>
         </div>
 
-        {/* ── Photo count badge ── */}
+        {/* Photo count badge */}
         {images.length > 1 && (
           <button
             type="button"
@@ -440,13 +424,12 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
           </button>
         )}
 
-        {/* Side arrows — visible on all screens */}
         {images.length > 1 && (
           <>
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); justSwipedRef.current = true; setTimeout(() => { justSwipedRef.current = false; }, 400); goPrev(); }}
-              className="flex absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 items-center justify-center bg-white/80 text-slate-700 rounded-full shadow-sm hover:bg-white transition-colors active:scale-95"
+              className="flex absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 items-center justify-center bg-black/40 backdrop-blur-md text-white rounded-full hover:bg-black/60 transition-colors active:scale-95"
               aria-label="Previous photo"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -456,7 +439,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); justSwipedRef.current = true; setTimeout(() => { justSwipedRef.current = false; }, 400); goNext(); }}
-              className="flex absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 items-center justify-center bg-white/80 text-slate-700 rounded-full shadow-sm hover:bg-white transition-colors active:scale-95"
+              className="flex absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 items-center justify-center bg-black/40 backdrop-blur-md text-white rounded-full hover:bg-black/60 transition-colors active:scale-95"
               aria-label="Next photo"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -466,7 +449,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
           </>
         )}
 
-        {/* Dot indicators on desktop */}
         {images.length > 1 && (
           <div className="hidden lg:flex absolute bottom-3 left-1/2 -translate-x-1/2 z-20 items-center gap-1.5">
             {images.map((_, i) => (
@@ -477,7 +459,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
                 className={`transition-all rounded-full ${
                   i === active
                     ? "w-5 h-1.5 bg-white shadow-sm"
-                    : "w-1.5 h-1.5 bg-white/50 hover:bg-white/70"
+                    : "w-1.5 h-1.5 bg-white/40 hover:bg-white/60"
                 }`}
                 aria-label={`Go to photo ${i + 1}`}
               />
@@ -486,7 +468,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
         )}
       </div>
 
-      {/* ── Thumbnail strip ── */}
+      {/* Thumbnail strip */}
       {images.length > 1 && (
         <div className="hidden lg:flex gap-1.5 mt-2 overflow-x-auto pb-1 scrollbar-thin">
           {images.slice(0, galleryLimits.maxThumbs).map((img, i) => (
@@ -494,10 +476,10 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
               key={i}
               type="button"
               onClick={() => { setActive(i); setScale(1); setPanPos({ x: 0, y: 0 }); }}
-              className={`relative shrink-0 w-16 h-12 rounded overflow-hidden border-2 transition-all ${
+              className={`relative shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all ${
                 i === active
-                  ? "border-emerald-500 ring-1 ring-emerald-500"
-                  : "border-transparent opacity-70 hover:opacity-100"
+                  ? "border-[var(--accent)] ring-1 ring-[var(--accent)]/50"
+                  : "border-transparent opacity-60 hover:opacity-100"
               }`}
             >
               <Image
@@ -513,7 +495,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
         </div>
       )}
 
-      {/* ── Lightbox ── */}
+      {/* Lightbox */}
       {lightbox && (
         <div
           className="fixed inset-0 z-[100] bg-black touch-none select-none"
@@ -521,7 +503,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
           onTouchMove={onLbTouchMove}
           onTouchEnd={onLbTouchEnd}
         >
-          {/* Close button */}
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); setLightbox(false); }}
@@ -531,15 +512,12 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
             <X className="w-6 h-6" strokeWidth={2} />
           </button>
 
-          {/* Counter */}
           <span className="absolute top-4 left-4 z-[110] text-[12px] font-semibold tracking-wide text-white/50">
             {active + 1} / {images.length}
           </span>
 
-          {/* Top gradient */}
           <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-black/60 to-transparent z-[105] pointer-events-none" />
 
-          {/* Carousel track */}
           <div
             className="absolute inset-0 z-[105] overflow-hidden"
             onClick={() => { if (scale <= 1 && !lbDragging) setLightbox(false); }}
@@ -579,14 +557,12 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
             </div>
           </div>
 
-          {/* Navigation arrows in lightbox */}
           {images.length > 1 && (
             <>
-              {/* Desktop arrows */}
               <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); goPrev(); }}
-                className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-[115] w-10 h-10 items-center justify-center rounded-full bg-white/20 text-white shadow-lg backdrop-blur-sm hover:bg-white/30 transition-all"
+                className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-[115] w-10 h-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 transition-all"
                 aria-label="Previous image"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -596,7 +572,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
               <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); goNext(); }}
-                className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-[115] w-10 h-10 items-center justify-center rounded-full bg-white/20 text-white shadow-lg backdrop-blur-sm hover:bg-white/30 transition-all"
+                className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-[115] w-10 h-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 transition-all"
                 aria-label="Next image"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -604,7 +580,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
                 </svg>
               </button>
 
-              {/* Bottom gradient + thumbnail strip */}
               <div className="absolute bottom-0 left-0 right-0 z-[110] bg-gradient-to-t from-black/80 via-black/40 to-transparent pt-16 pb-4 px-4">
                 <div className="flex gap-2 overflow-x-auto scrollbar-none justify-center">
                   {images.slice(0, galleryLimits.maxThumbs).map((img, i) => (
@@ -615,7 +590,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
                       className={`relative flex-shrink-0 w-14 h-10 overflow-hidden rounded-lg border-2 transition-all ${
                         i === active
                           ? "border-white opacity-100 scale-105 shadow-lg"
-                          : "border-transparent opacity-50 hover:opacity-80"
+                          : "border-transparent opacity-40 hover:opacity-70"
                       }`}
                     >
                       <Image

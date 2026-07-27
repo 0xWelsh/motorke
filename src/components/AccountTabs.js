@@ -81,7 +81,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
     setSaved(prev => prev.filter(c => c.id !== carId));
   }
 
-  const inputCls = "w-full bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 focus:border-[#ff5a2f] focus:ring-1 focus:ring-blue-100 rounded-2xl py-2.5 px-4 text-sm font-medium text-slate-900 dark:text-white outline-none transition-colors placeholder:text-slate-400";
+  const inputCls = "w-full bg-[#111111] border border-slate-800 focus:border-[#ff5a2f] focus:ring-1 focus:ring-blue-100 rounded-2xl py-2.5 px-4 text-sm font-medium text-white outline-none transition-colors placeholder:text-slate-400";
   const labelCls = "text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5 block";
   const buyerProfileItems = [
     { label: "Profile photo", done: Boolean(user.avatarUrl) },
@@ -97,7 +97,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
   return (
     <div className="flex flex-col h-full bg-white">
       {/* Tab bar */}
-      <div className="border-b border-[#ddd4c8] dark:border-slate-800 bg-white px-6 pt-0 overflow-x-auto">
+      <div className="border-b border-slate-800 bg-white px-6 pt-0 overflow-x-auto">
         <div className="flex items-center gap-6 min-w-max">
           {tabs.map(({ id, label, icon }) => (
             <button
@@ -106,7 +106,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
               className={clsx(
                 "flex items-center gap-2 py-4 text-xs font-bold uppercase tracking-widest transition-all border-b-2",
                 tab === id
-                  ? "text-slate-900 dark:text-white border-b-2 border-slate-900"
+                  ? "text-white border-b-2 border-slate-900"
                   : "text-slate-500 hover:text-slate-700 border-b-2 border-transparent"
               )}
             >
@@ -122,7 +122,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                <h2 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-2xl bg-[#ff5a2f]" /> General Details
                 </h2>
                 <p className="text-sm font-medium text-slate-500 mt-1 mb-8">Ensure your contact details are accurate so sellers can reach you.</p>
@@ -155,7 +155,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                 </div>
                 <div>
                   <label className={labelCls}>Primary Email</label>
-                  <input value={email} onChange={e => setEmail(e.target.value)} type="email" required className={clsx(inputCls, "bg-[#fbfcfe] dark:bg-[#111111]/50 text-slate-400 cursor-not-allowed")} disabled />
+                  <input value={email} onChange={e => setEmail(e.target.value)} type="email" required className={clsx(inputCls, "bg-[#111111]/50 text-slate-400 cursor-not-allowed")} disabled />
                 </div>
                 <div>
                   <label className={labelCls}>Contact phone</label>
@@ -183,7 +183,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
 
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                <h2 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-2xl bg-rose-500" /> Security Access
                 </h2>
                 <p className="text-sm font-medium text-slate-500 mt-1 mb-8">Maintain healthy security hygiene by rotating passwords periodically.</p>
@@ -217,14 +217,14 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                     <input name="confirm" type={showNew ? "text" : "password"} required minLength={8} className={inputCls} placeholder="••••••••" />
                   </div>
                 </div>
-                <button type="submit" className="bg-red-600 hover:bg-red-700 text-slate-900 dark:text-white px-6 py-2.5 rounded-2xl text-xs font-bold uppercase tracking-wider transition">
+                <button type="submit" className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-2xl text-xs font-bold uppercase tracking-wider transition">
                   Update Password
                 </button>
               </form>
             </div>
 
             {/* Location Settings */}
-            <div id="buyer-location-settings" className="lg:col-span-2 border-t border-[#ddd4c8] dark:border-slate-800 pt-8">
+            <div id="buyer-location-settings" className="lg:col-span-2 border-t border-slate-800 pt-8">
               <BuyerLocationSettings initialLat={user.lat} initialLng={user.lng} />
             </div>
           </div>
@@ -258,14 +258,14 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
             : (
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {enquiries.map(e => (
-                  <div key={e.id} className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 shadow-sm group hover:border-[#ff5a2f]/30 transition-colors">
+                  <div key={e.id} className="bg-[#111111] border border-slate-800 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 shadow-sm group hover:border-[#ff5a2f]/30 transition-colors">
                     <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center font-black text-xl text-[#ff5a2f] shrink-0">
                       {e.dealer.name[0]}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                         <div>
-                          <h3 className="font-black text-slate-900 dark:text-white text-lg tracking-tight leading-tight">{e.dealer.name}</h3>
+                          <h3 className="font-black text-white text-lg tracking-tight leading-tight">{e.dealer.name}</h3>
                           <Link href={carListingPath(e.car)} className="text-xs font-bold text-[#ff5a2f] hover:text-blue-800 transition-colors line-clamp-1 block mt-1">
                             Regarding:{" "}
                             <span className="font-sans font-semibold text-[#ff5a2f]">
@@ -277,7 +277,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                         <div className="flex items-center gap-3">
                           <span className={clsx(
                             "px-3 py-1 rounded-2xl text-[11px] font-black uppercase tracking-widest border",
-                            e.channel === "whatsapp" ? "bg-emerald-50 text-[#ff5a2f] border-emerald-100" : "bg-[#fbfcfe] dark:bg-[#111111] text-slate-500 border-[#ddd4c8] dark:border-slate-800"
+                            e.channel === "whatsapp" ? "bg-emerald-50 text-[#ff5a2f] border-emerald-100" : "bg-[#111111] text-slate-500 border-slate-800"
                           )}>
                             {e.channel === "whatsapp" ? "WhatsApp Sent" : "Form Sent"}
                           </span>
@@ -286,7 +286,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                       </div>
                       
                       {e.message && (
-                        <div className="bg-[#fbfcfe] dark:bg-[#111111] rounded-2xl p-5 mb-5 border border-[#ddd4c8] dark:border-slate-800">
+                        <div className="bg-[#111111] rounded-2xl p-5 mb-5 border border-slate-800">
                           <p className="text-sm font-medium text-slate-600">"{e.message}"</p>
                         </div>
                       )}
@@ -302,7 +302,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                             href={whatsappLink(PUBLIC_SUPPORT_WHATSAPP, `${e.car.year} ${e.car.make} ${e.car.model}`, "BIDGARI")}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-emerald-700 text-slate-900 dark:text-white px-4 py-2 rounded-2xl text-xs font-semibold transition"
+                            className="inline-flex items-center gap-2 bg-[#ff5a2f] hover:bg-emerald-700 text-white px-4 py-2 rounded-2xl text-xs font-semibold transition"
                           >
                             <MessageSquare size={14} className="fill-white" /> WhatsApp
                           </a>
@@ -358,11 +358,11 @@ function Alert({ type, children }) {
 
 function Empty({ icon, title, desc, href, cta }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 px-6 text-center max-w-lg mx-auto bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-3xl animate-in zoom-in-95 duration-500">
-      <div className="w-20 h-20 bg-white rounded-2xl border border-[#ddd4c8] dark:border-slate-800 shadow-sm flex items-center justify-center mb-6">
+    <div className="flex flex-col items-center justify-center py-20 px-6 text-center max-w-lg mx-auto bg-[#111111] border border-slate-800 rounded-3xl animate-in zoom-in-95 duration-500">
+      <div className="w-20 h-20 bg-white rounded-2xl border border-slate-800 shadow-sm flex items-center justify-center mb-6">
         {icon}
       </div>
-      <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">{title}</h3>
+      <h3 className="text-2xl font-black text-white tracking-tight mb-2">{title}</h3>
       <p className="text-sm font-medium text-slate-500 mb-8">{desc}</p>
       <Link href={href} className="bg-slate-900 hover:bg-black text-white px-8 py-4 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg transition-transform hover:-translate-y-0.5">
         {cta}

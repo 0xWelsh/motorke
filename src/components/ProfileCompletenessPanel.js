@@ -28,38 +28,38 @@ export default function ProfileCompletenessPanel({
     missingFieldIds.forEach((id) => {
       const el = document.getElementById(id);
       if (!el) return;
-      el.classList.add("ring-2", "ring-amber-400", "ring-offset-2", "ring-offset-white", "dark:ring-offset-[#111111]");
+      el.classList.add("ring-2", "ring-amber-400", "ring-offset-2", "ring-offset-[#111111]");
       if (!scrolled) {
         el.scrollIntoView({ behavior: "smooth", block: "center" });
         scrolled = true;
       }
       setTimeout(() => {
-        el.classList.remove("ring-2", "ring-amber-400", "ring-offset-2", "ring-offset-white", "dark:ring-offset-[#111111]");
+        el.classList.remove("ring-2", "ring-amber-400", "ring-offset-2", "ring-offset-[#111111]");
       }, 2800);
     });
     setTimeout(() => setHighlighting(false), 1200);
   }
 
   return (
-    <div className="mb-6 rounded-none border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111111] p-4 sm:p-5">
+    <div className="mb-6 rounded-xl border border-white/[0.06] bg-[#0f0f0f] p-4 sm:p-5">
       <div className="flex items-center justify-between gap-3 mb-3">
-        <p className="text-[11px] font-black uppercase tracking-widest text-slate-500">{title}</p>
-        <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
+        <p className="text-[11px] font-black uppercase tracking-widest text-zinc-400">{title}</p>
+        <p className="text-xs font-bold text-zinc-300">
           {percent}% complete
         </p>
       </div>
-      <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 mb-3">
-        <div className="h-2 bg-[#38A169] transition-all" style={{ width: `${percent}%` }} />
+      <div className="h-2 w-full bg-white/[0.03] mb-3">
+        <div className="h-2 bg-[var(--accent)] transition-all" style={{ width: `${percent}%` }} />
       </div>
-      <p className="text-[11px] font-semibold text-slate-500 mb-3">
+      <p className="text-[11px] font-semibold text-zinc-400 mb-3">
         {completed}/{total} core profile fields completed
       </p>
       {missingLabels.length > 0 ? (
-        <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">
+        <p className="text-xs text-zinc-400 mb-3">
           Missing: {missingLabels.join(", ")}
         </p>
       ) : (
-        <p className="text-xs text-[#38A169] font-semibold mb-3">All core fields are complete.</p>
+        <p className="text-xs text-[var(--accent)] font-semibold mb-3">All core fields are complete.</p>
       )}
       <button
         type="button"

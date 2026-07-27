@@ -68,47 +68,47 @@ export default function DealerBoostHub({
         {creditRows.map(({ key, label }) => (
           <div
             key={key}
-            className="border border-[#ddd4c8] dark:border-slate-800 bg-white dark:bg-[#111111] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.04)]"
+            className="border border-white/[0.08] bg-[#111111] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.04)] rounded-xl"
           >
-            <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">
+            <p className="text-[10px] font-black uppercase tracking-[0.12em] text-zinc-400">
               {label}
             </p>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1 tabular-nums">
+            <p className="text-2xl font-bold text-white mt-1 tabular-nums">
               {balance[key]}
             </p>
             {!billingActive ? (
-              <p className="text-[9px] text-slate-500 mt-1">Free during early access</p>
+              <p className="text-[9px] text-zinc-400 mt-1">Free during early access</p>
             ) : null}
           </div>
         ))}
       </section>
 
-      <section className="border border-[#ddd4c8] dark:border-slate-800 bg-white dark:bg-[#111111] p-4 sm:p-6">
-        <h2 className="text-sm font-bold text-slate-900 dark:text-white">Plan limits</h2>
-        <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+      <section className="border border-white/[0.08] bg-[#111111] p-4 sm:p-6 rounded-xl">
+        <h2 className="text-sm font-bold text-white">Plan limits</h2>
+        <p className="text-sm text-zinc-400 mt-1">
           Suggested tier: <strong>{limits.planName}</strong>. Up to{" "}
           <strong>{limits.maxConcurrentSpotlight}</strong> concurrent Spotlights. Active now:{" "}
           <strong>{activeSpotlights}</strong>.
         </p>
         {dealerLiftUntil ? (
-          <p className="mt-2 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
+          <p className="mt-2 text-[11px] font-semibold text-[var(--accent)]">
             Dealer lift active until {formatEnds(dealerLiftUntil)}
           </p>
         ) : null}
       </section>
 
-      <section className="border border-[#ddd4c8] dark:border-slate-800 bg-white dark:bg-[#111111] p-4 sm:p-6 space-y-4">
-        <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+      <section className="border border-white/[0.08] bg-[#111111] p-4 sm:p-6 space-y-4 rounded-xl">
+        <h2 className="text-sm font-bold text-white flex items-center gap-2">
           <Zap size={16} className="text-amber-600" /> Dealer lift (whole showroom)
         </h2>
-        <p className="text-sm text-slate-600 dark:text-slate-400">
+        <p className="text-sm text-zinc-400">
           Lifts browse ranking for all your live stock for 14 days.
         </p>
         <button
           type="button"
           onClick={applyDealerLift}
           disabled={liftLoading}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#111111] text-white text-[11px] font-black uppercase tracking-[0.1em] disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#111111] text-white text-[11px] font-black uppercase tracking-[0.1em] disabled:opacity-50 rounded-xl"
         >
           {liftLoading ? <Loader2 size={14} className="animate-spin" /> : null}
           Apply dealer lift
@@ -116,16 +116,16 @@ export default function DealerBoostHub({
         {liftError ? <p className="text-[11px] text-rose-600">{liftError}</p> : null}
       </section>
 
-      <section className="border border-[#ddd4c8] dark:border-slate-800 bg-white dark:bg-[#111111] p-4 sm:p-6 space-y-4">
-        <h2 className="text-sm font-bold text-slate-900 dark:text-white">Boost a vehicle</h2>
+      <section className="border border-white/[0.08] bg-[#111111] p-4 sm:p-6 space-y-4 rounded-xl">
+        <h2 className="text-sm font-bold text-white">Boost a vehicle</h2>
         {liveCars.length === 0 ? (
-          <p className="text-sm text-slate-600">No live listings. Mark a car available first.</p>
+          <p className="text-sm text-zinc-400">No live listings. Mark a car available first.</p>
         ) : (
           <>
             <select
               value={selectedCarId}
               onChange={(e) => setSelectedCarId(e.target.value)}
-              className="w-full max-w-md h-10 px-3 border border-[#ddd4c8] dark:border-slate-700 bg-white dark:bg-[#0d0d0d] text-sm"
+              className="w-full max-w-md h-10 px-3 border border-white/[0.08] bg-[#111111] text-sm text-white rounded-xl"
             >
               {liveCars.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -156,22 +156,22 @@ export default function DealerBoostHub({
       </section>
 
       {addons?.length ? (
-        <section className="border border-[#ddd4c8] dark:border-slate-800 overflow-hidden">
-          <div className="px-4 py-3 bg-[#fbfcfe] dark:bg-[#0d0d0d] border-b border-[#ddd4c8] dark:border-slate-800">
-            <h2 className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-700 dark:text-slate-300">
+        <section className="border border-white/[0.08] overflow-hidden rounded-xl">
+          <div className="px-4 py-3 bg-[#0d0d0d] border-b border-white/[0.08]">
+            <h2 className="text-[11px] font-black uppercase tracking-[0.12em] text-zinc-400">
               Add-on prices (when billing is on)
             </h2>
           </div>
-          <ul className="divide-y divide-[#ddd4c8] dark:divide-slate-800">
+          <ul className="divide-y divide-white/[0.08]">
             {addons.map((addon) => (
               <li
                 key={addon.id}
-                className="px-4 py-3 flex flex-wrap justify-between gap-2 text-sm bg-white dark:bg-[#111111]"
+                className="px-4 py-3 flex flex-wrap justify-between gap-2 text-sm bg-[#111111] rounded-xl"
               >
-                <span className="font-medium text-slate-900 dark:text-white">
+                <span className="font-medium text-white">
                   {addon.name} · {addon.durationLabel}
                 </span>
-                <span className="text-slate-600 tabular-nums">{formatKes(addon.price)}</span>
+                <span className="text-zinc-400 tabular-nums">{formatKes(addon.price)}</span>
               </li>
             ))}
           </ul>
@@ -179,11 +179,11 @@ export default function DealerBoostHub({
       ) : null}
 
       {recentEvents?.length ? (
-        <section className="border border-[#ddd4c8] dark:border-slate-800 bg-white dark:bg-[#111111] p-4 sm:p-6">
-          <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-3">Recent boosts</h2>
+        <section className="border border-white/[0.08] bg-[#111111] p-4 sm:p-6 rounded-xl">
+          <h2 className="text-sm font-bold text-white mb-3">Recent boosts</h2>
           <ul className="space-y-2 text-sm">
             {recentEvents.map((e) => (
-              <li key={e.id} className="flex flex-wrap justify-between gap-2 text-slate-600 dark:text-slate-400">
+              <li key={e.id} className="flex flex-wrap justify-between gap-2 text-zinc-400">
                 <span>
                   {e.boostType.replace(/_/g, " ")}
                   {e.car

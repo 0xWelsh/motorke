@@ -144,17 +144,17 @@ function FAQCategory({ category, items }) {
   const [openId, setOpenId] = useState(null);
 
   const icons = {
-    "For Buyers": <Shield className="w-5 h-5 text-[#38A169]" />,
-    "For Dealers": <Zap className="w-5 h-5 text-[#111827] dark:text-white" />,
-    "Technical & Logistics": <MapPin className="w-5 h-5 text-[#718096]" />,
-    "Trust & Security": <CreditCard className="w-5 h-5 text-[#111827] dark:text-white" />,
+    "For Buyers": <Shield className="w-5 h-5 text-[var(--accent)]" />,
+    "For Dealers": <Zap className="w-5 h-5 text-white" />,
+    "Technical & Logistics": <MapPin className="w-5 h-5 text-zinc-400" />,
+    "Trust & Security": <CreditCard className="w-5 h-5 text-white" />,
   };
 
   return (
     <div className="mb-12">
       <div className="flex items-center gap-3 mb-8">
         {icons[category]}
-        <h2 className="text-[10px] font-bold text-[#111827] dark:text-white uppercase tracking-[0.2em]">{category}</h2>
+        <h2 className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">{category}</h2>
       </div>
 
       <div className="space-y-4">
@@ -163,8 +163,8 @@ function FAQCategory({ category, items }) {
             key={idx}
             className={`border transition-all duration-300 ${
               openId === idx 
-                ? "border-[#38A169]/30 bg-slate-50 dark:bg-[#111111]/40" 
-                : "border-slate-100 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-600"
+                ? "border-[var(--accent)]/30 bg-[#0f0f0f]/40" 
+                : "border-white/[0.06] hover:border-white/[0.12]"
             }`}
             style={{ borderRadius: 'var(--radius)' }}
           >
@@ -173,20 +173,20 @@ function FAQCategory({ category, items }) {
               className="w-full px-8 py-6 flex items-start justify-between gap-4 bg-transparent transition"
             >
               <span className={`text-left font-bold uppercase tracking-tight text-[11px] sm:text-xs leading-relaxed ${
-                openId === idx ? "text-[#111827] dark:text-white" : "text-[#718096] dark:text-slate-500"
+                openId === idx ? "text-white" : "text-zinc-400"
               }`}>
                 {item.q}
               </span>
               <ChevronDown
                 className={`w-5 h-5 transition-transform ${
-                  openId === idx ? "rotate-180 text-[#38A169]" : "text-slate-400 dark:text-slate-600"
+                  openId === idx ? "rotate-180 text-[var(--accent)]" : "text-zinc-400"
                 }`}
               />
             </button>
 
             {openId === idx && (
               <div className="px-8 pb-8 animate-in fade-in slide-in-from-top-2 duration-300">
-                <p className="text-sm font-medium text-[#718096] dark:text-slate-400 leading-relaxed max-w-3xl">{item.a}</p>
+                <p className="text-sm font-medium text-zinc-400 leading-relaxed max-w-3xl">{item.a}</p>
               </div>
             )}
           </div>
@@ -198,20 +198,20 @@ function FAQCategory({ category, items }) {
 
 export default function FAQPage() {
   return (
-    <div className="bg-white dark:bg-[#0a0a0a] min-h-screen transition-colors duration-300">
+    <div className="bg-[#080808] min-h-screen">
       {/* Header */}
-      <section className="bg-white dark:bg-[#0a0a0a] pt-32 sm:pt-40 pb-20 px-6 border-b border-slate-100 dark:border-slate-800">
+      <section className="bg-[#080808] pt-32 sm:pt-40 pb-20 px-6 border-b border-white/[0.06]">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-8">
+          <div className="flex items-center justify-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-8">
             <span>Resources</span>
             <span>/</span>
-            <span className="text-[#111827] dark:text-white">Knowledge Base</span>
+            <span className="text-white">Knowledge Base</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold text-[#111827] dark:text-white tracking-tight leading-[1.1] mb-6">
+          <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight leading-[1.1] mb-6">
             Frequently <br />
-            <span className="editorial-heading text-[#718096] dark:text-slate-400">Asked Questions.</span>
+            <span className="editorial-heading text-zinc-400">Asked Questions.</span>
           </h1>
-          <p className="text-[#718096] dark:text-slate-400 text-lg font-medium max-w-2xl mx-auto leading-relaxed">
+          <p className="text-zinc-400 text-lg font-medium max-w-2xl mx-auto leading-relaxed">
             Everything you need to know about buying, selling, and trusting the BIDGARI network. 
             Direct, transparent, and verified.
           </p>
@@ -226,10 +226,10 @@ export default function FAQPage() {
           ))}
 
           {/* Need Support */}
-          <div className="mt-24 sm:mt-32 pt-16 sm:pt-20 border-t border-slate-100 dark:border-slate-800 text-center">
-             <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#718096] dark:text-slate-500 mb-6">Still have questions?</h3>
-             <h4 className="text-2xl sm:text-3xl font-bold text-[#111827] dark:text-white mb-10">Reach our support terminal.</h4>
-             <Link href="/contact" className="inline-flex items-center justify-center h-12 px-8 sm:px-10 bg-[#111827] dark:bg-white text-white dark:!text-black border border-[#111827] dark:border-white text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98] shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
+          <div className="mt-24 sm:mt-32 pt-16 sm:pt-20 border-t border-white/[0.06] text-center">
+             <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-6">Still have questions?</h3>
+             <h4 className="text-2xl sm:text-3xl font-bold text-white mb-10">Reach our support terminal.</h4>
+             <Link href="/contact" className="inline-flex items-center justify-center h-12 px-8 sm:px-10 bg-white text-black border border-white text-xs font-bold uppercase tracking-widest transition-transform hover:scale-[0.98] shadow-sm rounded-xl">
                 Contact Support Hub
              </Link>
           </div>

@@ -179,7 +179,7 @@ export default async function DealerPage(props) {
   const socialLinks = [
     { key: "instagram", label: "Instagram", href: withProtocol(dealer.instagramUrl), icon: <SiInstagram className="w-3.5 h-3.5" style={{ color: "#E4405F" }} /> },
     { key: "facebook", label: "Facebook", href: withProtocol(dealer.facebookUrl), icon: <SiFacebook className="w-3.5 h-3.5" style={{ color: "#1877F2" }} /> },
-    { key: "tiktok", label: "TikTok", href: withProtocol(dealer.tiktokUrl), icon: <SiTiktok className="w-3.5 h-3.5 text-slate-900 dark:text-white" /> },
+    { key: "tiktok", label: "TikTok", href: withProtocol(dealer.tiktokUrl), icon: <SiTiktok className="w-3.5 h-3.5 text-white" /> },
   ].filter((item) => Boolean(item.href));
 
   // Generate the gallery for the hero section
@@ -244,7 +244,7 @@ export default async function DealerPage(props) {
   const dealerInventoryLd = buildDealerInventoryItemList(dealer, dealer.cars);
 
   return (
-    <div className="bg-gradient-to-b from-[#f8fafc] via-white to-white dark:from-[#0a0a0a] dark:via-[#0b0b0b] dark:to-[#0a0a0a] min-h-screen">
+    <div className="bg-[#080808] min-h-screen">
       <TrackEventOnMount
         name="dealer_page_view"
         payload={{
@@ -330,10 +330,7 @@ export default async function DealerPage(props) {
         <div className="relative z-[2] mx-auto w-full max-w-[1380px] px-4 pb-0 sm:px-6 xl:px-8 lg:absolute lg:inset-x-0 lg:bottom-0 lg:pb-6 hidden lg:block">
           <div className="lg:mt-0">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-end">
-              <section
-                className="lg:col-span-8 bg-black/40 dark:bg-black/55 backdrop-blur-md p-4 sm:p-5 shadow-2xl min-w-0 border border-white/10 ring-1 ring-white/5"
-                style={{ borderRadius: "14px" }}
-              >
+              <section className="lg:col-span-8 bg-black/55 backdrop-blur-md p-4 sm:p-5 shadow-2xl min-w-0 border border-white/10 ring-1 ring-white/5 rounded-xl">
                 <DealerProfileHeroPanel
                   variant="desktop"
                   dealer={dealer}
@@ -347,29 +344,25 @@ export default async function DealerPage(props) {
                   yearsActive={yearsActive}
                   stockCount={dealer.cars.length}
                 />
-                <div className="hidden lg:block h-[2px] w-10 bg-gradient-to-r from-[#22c55e] to-transparent mt-2" aria-hidden />
+                <div className="hidden lg:block h-[2px] w-10 bg-gradient-to-r from-[var(--accent)] to-transparent mt-2" aria-hidden />
               </section>
 
               <aside className="lg:col-span-4 hidden lg:block">
-                <div
-                  className="bg-white/95 dark:bg-[#141414]/95 backdrop-blur-md p-4 shadow-2xl border border-white/40 dark:border-white/10 ring-1 ring-black/5"
-                  style={{ borderRadius: "14px" }}
-                >
+                <div className="bg-[#141414]/95 backdrop-blur-md p-4 shadow-2xl border border-white/10 ring-1 ring-white/5 rounded-xl">
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#22c55e]">Contact BIDGARI</p>
-                    <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
+                    <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[var(--accent)]">Contact BIDGARI</p>
+                    <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-zinc-400">
                       Our team
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-600 dark:text-slate-400 mb-3 leading-relaxed">
+                  <p className="text-[11px] text-zinc-400 mb-3 leading-relaxed">
                     Interested in a vehicle? Our team will help you through the process.
                   </p>
                   <div className="grid grid-cols-2 gap-2">
                     {teamTelHref ? (
                       <a
                         href={teamTelHref}
-                        className="inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors"
-                        style={{ borderRadius: "10px" }}
+                        className="inline-flex items-center justify-center gap-1.5 bg-white/[0.06] hover:bg-white/[0.1] text-white px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors rounded-xl"
                       >
                         <Phone className="w-3.5 h-3.5" /> Call
                       </a>
@@ -379,14 +372,13 @@ export default async function DealerPage(props) {
                         href={teamWhatsappHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-1.5 bg-[#38A169] hover:bg-emerald-700 text-white px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors"
-                        style={{ borderRadius: "10px" }}
+                        className="inline-flex items-center justify-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent)]/80 text-white px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors rounded-xl"
                       >
                         <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
                       </a>
                     ) : null}
                   </div>
-                  <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
+                  <div className="mt-3 pt-3 border-t border-white/[0.06]">
                     <DealerShowroomShare
                       showroomUrl={showroomPublicUrl}
                       dealerName={dealer.name}
@@ -406,31 +398,30 @@ export default async function DealerPage(props) {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-9 space-y-6">
-            <section id="inventory" className="bg-white dark:bg-[#111111] p-4 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
+            <section id="inventory" className="bg-[#0f0f0f] p-4 sm:p-6 shadow-xl rounded-xl">
               <DealerInventory cars={inventoryWithDistance} dealerSlug={dealer.slug} />
             </section>
 
             <section
-              className="bg-white dark:bg-[#111111] p-5 sm:p-6 shadow-xl"
-              style={{ borderRadius: "14px" }}
+              className="bg-[#0f0f0f] p-5 sm:p-6 shadow-xl rounded-xl"
               aria-labelledby="dealer-about-heading"
             >
               <h2
                 id="dealer-about-heading"
-                className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-4"
+                className="text-xl sm:text-2xl font-black text-white tracking-tight mb-4"
               >
                 About {dealer.name} in Kenya
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-4">
-                  <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{dealerSeoParagraph}</p>
+                  <p className="text-sm text-zinc-300 leading-relaxed">{dealerSeoParagraph}</p>
                   {dealer.description?.trim() && dealer.description.trim() !== dealerSummary ? (
-                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{dealer.description.trim()}</p>
+                    <p className="text-sm text-zinc-400 leading-relaxed">{dealer.description.trim()}</p>
                   ) : null}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {["Verified inventory", "Inspected vehicles", "Trade-in accepted", "Financing support", "After-sales assistance", "Import options available"].map((item) => (
-                      <div key={item} className="inline-flex items-center gap-2 text-[11px] font-semibold text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 px-3 py-2" style={{ borderRadius: "10px" }}>
-                        <ShieldCheck className="w-3.5 h-3.5 text-[#22c55e]" />
+                      <div key={item} className="inline-flex items-center gap-2 text-[11px] font-semibold text-zinc-300 bg-white/[0.03] px-3 py-2 rounded-xl">
+                        <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
                         {item}
                       </div>
                     ))}
@@ -438,7 +429,7 @@ export default async function DealerPage(props) {
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   {(recentShowcaseCars.length > 0 ? recentShowcaseCars : dealerGallery.map((g, i) => ({ id: `g-${i}`, image: g.image, title: g.title }))).slice(0, 4).map((item) => (
-                    <div key={item.id} className="relative aspect-[4/3] overflow-hidden" style={{ borderRadius: "10px" }}>
+                    <div key={item.id} className="relative aspect-[4/3] overflow-hidden rounded-xl">
                       <Image src={item.image} alt={item.title} fill className="object-cover" />
                     </div>
                   ))}
@@ -446,53 +437,53 @@ export default async function DealerPage(props) {
               </div>
             </section>
 
-            <section id="reviews" className="bg-white dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
+            <section id="reviews" className="bg-[#0f0f0f] p-5 sm:p-6 shadow-xl rounded-xl">
               <DealerReviews dealerSlug={dealer.slug} dealerName={dealer.name} averageRating={averageRating} totalReviews={totalReviews} reviews={dealer.reviews} viewer={viewer} viewerReview={viewerReview} />
             </section>
           </div>
 
           <aside className="lg:col-span-3 space-y-6">
-            <section className="bg-white dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-600 dark:text-slate-400 mb-3">Dealer info</h4>
-              <div className="space-y-2.5 mb-4 text-[12px] font-semibold text-slate-700 dark:text-slate-300">
-                <div className="flex justify-between gap-3"><span className="text-slate-500">Business type</span><span>Dealership</span></div>
-                <div className="flex justify-between gap-3"><span className="text-slate-500">Verified</span><span>{dealer.verified ? "Yes" : "Pending"}</span></div>
+            <section className="bg-[#0f0f0f] p-5 sm:p-6 shadow-xl rounded-xl">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.14em] text-zinc-400 mb-3">Dealer info</h4>
+              <div className="space-y-2.5 mb-4 text-[12px] font-semibold text-zinc-300">
+                <div className="flex justify-between gap-3"><span className="text-zinc-400">Business type</span><span>Dealership</span></div>
+                <div className="flex justify-between gap-3"><span className="text-zinc-400">Verified</span><span>{dealer.verified ? "Yes" : "Pending"}</span></div>
               </div>
-              <div className="border-t border-slate-200 dark:border-slate-700 pt-3 mb-4">
-                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 mb-2">Opening hours</p>
-                <p className="text-[12px] font-semibold text-slate-700 dark:text-slate-300">Mon - Sat: 8:00 AM - 6:00 PM</p>
-                <p className="text-[12px] font-semibold text-slate-700 dark:text-slate-300">Sun: 10:00 AM - 4:00 PM</p>
+              <div className="border-t border-white/[0.06] pt-3 mb-4">
+                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-2">Opening hours</p>
+                <p className="text-[12px] font-semibold text-zinc-300">Mon - Sat: 8:00 AM - 6:00 PM</p>
+                <p className="text-[12px] font-semibold text-zinc-300">Sun: 10:00 AM - 4:00 PM</p>
               </div>
               <div className="flex items-center justify-between gap-3 mb-3">
-                <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Find us</h4>
-                {dealerDistanceLabel && <span className="text-[10px] font-bold text-[#22c55e] uppercase tracking-[0.12em]">{dealerDistanceLabel}</span>}
+                <h4 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Find us</h4>
+                {dealerDistanceLabel && <span className="text-[10px] font-bold text-[var(--accent)] uppercase tracking-[0.12em]">{dealerDistanceLabel}</span>}
               </div>
-              <p className="text-sm font-bold text-slate-900 dark:text-white leading-relaxed mb-3">{dealer.address || dealer.location || "Nairobi, Kenya"}</p>
+              <p className="text-sm font-bold text-white leading-relaxed mb-3">{dealer.address || dealer.location || "Nairobi, Kenya"}</p>
               <DealerLocationMap dealer={dealer} />
             </section>
 
-              <section className="bg-[#F8FAFC] dark:bg-[#111111] p-5 sm:p-6 shadow-xl" style={{ borderRadius: "14px" }}>
-                <h4 className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 mb-3">Social & Media</h4>
+              <section className="bg-[#0f0f0f] p-5 sm:p-6 shadow-xl rounded-xl">
+                <h4 className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-3">Social & Media</h4>
                 {socialLinks.length > 0 ? (
                   <div className="space-y-2">
                     {socialLinks.map((item) => (
-                      <a key={item.key} href={item.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-start gap-2 w-full text-[12px] font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 px-3 py-2.5" style={{ borderRadius: "10px" }}>
+                      <a key={item.key} href={item.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-start gap-2 w-full text-[12px] font-bold text-zinc-300 bg-white/[0.03] px-3 py-2.5 rounded-xl">
                         {item.icon}{item.label}
                       </a>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-slate-500">No social profiles linked yet.</p>
+                  <p className="text-sm text-zinc-400">No social profiles linked yet.</p>
                 )}
               {recentShowcaseCars.length > 0 && (
                 <div className="mt-4">
                   <div className="flex items-center justify-between mb-2">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Photos from dealer</p>
-                    <a href="#inventory" className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#22c55e]">View all</a>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400">Photos from dealer</p>
+                    <a href="#inventory" className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--accent)]">View all</a>
                   </div>
                   <div className="grid grid-cols-4 gap-2">
                     {recentShowcaseCars.map((car) => (
-                      <Link key={`media-${car.id}`} href={carListingPath(car)} className="relative aspect-square overflow-hidden" style={{ borderRadius: "8px" }}>
+                      <Link key={`media-${car.id}`} href={carListingPath(car)} className="relative aspect-square overflow-hidden rounded-xl">
                         <Image src={car.image} alt={car.title} fill className="object-cover" />
                       </Link>
                     ))}
@@ -505,7 +496,7 @@ export default async function DealerPage(props) {
       </div>
 
       {/* Persistent Mobile Action Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-[#111111]/90 backdrop-blur-xl border-t border-slate-100 dark:border-slate-800 px-4 py-4 shadow-2xl">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#111111]/90 backdrop-blur-xl border-t border-white/[0.06] px-4 py-4 shadow-2xl">
          <div className="mb-3">
            <DealerShowroomShare
              layout="mobileBar"
@@ -518,12 +509,12 @@ export default async function DealerPage(props) {
          </div>
          <div className="flex items-center gap-3">
             {teamTelHref ? (
-              <a href={teamTelHref} className="flex-1 bg-[#111827] dark:bg-white text-white dark:!text-black py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
+              <a href={teamTelHref} className="flex-1 bg-white text-black py-3.5 text-center text-[11px] font-bold uppercase tracking-widest rounded-xl">
                  Call BIDGARI
               </a>
             ) : null}
             {teamWhatsappHref ? (
-              <a href={teamWhatsappHref} target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#38A169] text-white py-3.5 text-center text-[11px] font-bold uppercase tracking-widest" style={{ borderRadius: 'var(--radius)' }}>
+              <a href={teamWhatsappHref} target="_blank" rel="noopener noreferrer" className="flex-1 bg-[var(--accent)] text-white py-3.5 text-center text-[11px] font-bold uppercase tracking-widest rounded-xl">
                  WhatsApp
               </a>
             ) : null}
@@ -536,8 +527,7 @@ export default async function DealerPage(props) {
                  href={item.href}
                  target="_blank"
                  rel="noopener noreferrer"
-                 className="bg-slate-100 dark:bg-slate-800 text-[#111827] dark:text-white py-2.5 text-center text-[10px] font-bold uppercase tracking-widest inline-flex items-center justify-center gap-1.5"
-                 style={{ borderRadius: "var(--radius)" }}
+                 className="bg-white/[0.06] text-white py-2.5 text-center text-[10px] font-bold uppercase tracking-widest inline-flex items-center justify-center gap-1.5 rounded-xl"
                >
                  {item.icon}
                  {item.label}

@@ -29,7 +29,7 @@ export const metadata = {
   openGraph: {
     title: "Trusted car dealers in Kenya | BIDGARI",
     description:
-      "Browse BIDGARI’s verified dealer network: counties, cars in stock, and direct links to each showroom.",
+      "Browse BIDGARI's verified dealer network: counties, cars in stock, and direct links to each showroom.",
     type: "website",
     url: "/dealers",
   },
@@ -52,8 +52,8 @@ function formatDistance(km) {
 
 function responseTier(responseRate, totalLeads) {
   if (!totalLeads || totalLeads < 10) return null;
-  if (responseRate >= 0.5) return { label: "Fast replies", tone: "text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300" };
-  if (responseRate >= 0.2) return { label: "Responsive", tone: "text-sky-700 bg-sky-50 dark:bg-sky-950/40 dark:text-sky-300" };
+  if (responseRate >= 0.5) return { label: "Fast replies", tone: "text-[var(--accent)] bg-emerald-500/10" };
+  if (responseRate >= 0.2) return { label: "Responsive", tone: "text-sky-300 bg-sky-500/10" };
   return null;
 }
 
@@ -163,7 +163,7 @@ export default async function DealersPage({ searchParams }) {
   );
 
   return (
-    <div className="bg-gradient-to-b from-[#f8fafc] via-white to-white dark:from-[#0a0a0a] dark:via-[#0b0b0b] dark:to-[#0a0a0a] min-h-screen pb-20">
+    <div className="bg-gradient-to-b from-[#0a0a0a] via-[#0b0b0b] to-[#0a0a0a] min-h-screen pb-20">
       {dealersDirectoryLd ? (
         <Script
           id="dealers-directory-jsonld"
@@ -172,7 +172,7 @@ export default async function DealersPage({ searchParams }) {
         />
       ) : null}
       <div className="pt-2 md:pt-3">
-        <div className="relative w-full h-[240px] sm:h-[300px] lg:h-[340px] overflow-hidden bg-slate-950">
+        <div className="relative w-full h-[240px] sm:h-[300px] lg:h-[340px] overflow-hidden bg-[#0a0a0a]">
           <Image
             src={DEALERS_HERO_IMAGE}
             alt="Car dealership showroom"
@@ -198,18 +198,18 @@ export default async function DealersPage({ searchParams }) {
             <div className="w-full max-w-lg md:max-w-xl text-left rounded-2xl bg-black/40 px-5 py-4 sm:px-6 sm:py-5 backdrop-blur-xl animate-dealers-hero-content supports-[backdrop-filter]:bg-black/28">
               <h1 className="text-2xl sm:text-4xl lg:text-[2.75rem] font-black text-white tracking-tight leading-[1.08] mb-3">
                 <span className="text-white">Trusted</span>{" "}
-                <span className="text-[#4ade80]">dealer network</span>
+                <span className="text-[var(--accent)]">dealer network</span>
               </h1>
               <p className="text-[13px] sm:text-sm text-white font-medium leading-relaxed mb-4 max-w-md">
                 Verified dealer network across Kenya. Compare who is stocking what, then step into a profile that feels alive.
               </p>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-sm">
-                  <Building2 className="w-3.5 h-3.5 text-[#4ade80]" />
+                  <Building2 className="w-3.5 h-3.5 text-[var(--accent)]" />
                   <span className="text-[#ef3340] tabular-nums">{rankedDealers.length}</span> dealers
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-sm">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#4ade80]" />
+                  <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
                   <span className="text-[#ef3340] tabular-nums">{shownVerified}</span> verified
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-sm">
@@ -232,17 +232,17 @@ export default async function DealersPage({ searchParams }) {
       </div>
 
       <div className="relative z-10 w-full mx-auto px-4 sm:px-8 xl:px-10 max-w-[1880px] -mt-7 sm:-mt-9 lg:-mt-11 pt-1 sm:pt-2">
-        <div className="h-px w-full max-w-md bg-gradient-to-r from-slate-400/70 via-slate-300/45 to-transparent dark:from-slate-700 dark:via-slate-800/60 mb-5 sm:mb-6" aria-hidden />
+        <div className="h-px w-full max-w-md bg-gradient-to-r from-white/20 via-white/10 to-transparent mb-5 sm:mb-6" aria-hidden />
 
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5 sm:mb-6 pb-3 border-b border-slate-200/80 dark:border-slate-800">
-          <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-            <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5 sm:mb-6 pb-3 border-b border-white/[0.08]">
+          <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.18em] text-zinc-400">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>
-            <span className="text-slate-900 dark:text-white">Dealers</span>
+            <span className="text-white">Dealers</span>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
             <DealersSortSelect hasLocation={hasLocation} defaultValue={sortMode} />
-            <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+            <div className="text-[10px] font-black uppercase tracking-[0.18em] text-zinc-400">
               Showing <span className="text-[#ef3340] tabular-nums">{rankedDealers.length}</span> dealer{rankedDealers.length === 1 ? "" : "s"}
             </div>
           </div>
@@ -251,32 +251,32 @@ export default async function DealersPage({ searchParams }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-5 gap-y-6 lg:gap-y-8 items-start">
           
           {/* Sidebar */}
-          <aside className="order-2 lg:order-1 lg:col-span-3 lg:sticky lg:top-[6.75rem] space-y-4 lg:space-y-5 text-[#111827] dark:text-white">
-            <details className="lg:hidden overflow-hidden bg-[#F7FAFC] dark:bg-[#111111] border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.06] dark:shadow-none pt-px pl-5 pr-5 pb-5" style={{ borderRadius: "var(--radius)" }}>
-              <summary className="cursor-pointer list-none text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-slate-100 py-5 flex items-center gap-2.5 [&::-webkit-details-marker]:hidden">
-                <span className="h-6 w-[3px] shrink-0 rounded-full bg-[#22c55e]/90" aria-hidden />
+          <aside className="order-2 lg:order-1 lg:col-span-3 lg:sticky lg:top-[6.75rem] space-y-4 lg:space-y-5 text-white">
+            <details className="lg:hidden overflow-hidden bg-[#111111] border border-white/[0.08] shadow-none pt-px pl-5 pr-5 pb-5 rounded-xl">
+              <summary className="cursor-pointer list-none text-xs font-bold uppercase tracking-widest text-white py-5 flex items-center gap-2.5 [&::-webkit-details-marker]:hidden">
+                <span className="h-6 w-[3px] shrink-0 rounded-full bg-[var(--accent)]" aria-hidden />
                 Refine network
               </summary>
               <form method="GET" className="mt-4 space-y-4">
                 <input type="hidden" name="sort" value={sortMode} />
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">Search</label>
-                  <input name="search" defaultValue={search} type="text" placeholder="Dealer name..." className="w-full bg-white dark:bg-[#0a0a0a] border border-[#E2E8F0] dark:border-slate-800 px-4 py-3 text-sm font-medium outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/25 transition-all text-[#111827] dark:text-white placeholder:text-slate-400" style={{ borderRadius: "var(--radius)" }} />
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Search</label>
+                  <input name="search" defaultValue={search} type="text" placeholder="Dealer name..." className="w-full bg-[#0a0a0a] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all text-white placeholder:text-zinc-400 rounded-xl" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">Region</label>
-                  <select name="county" defaultValue={countyFilter} className="w-full bg-white dark:bg-[#0a0a0a] border border-[#E2E8F0] dark:border-slate-800 px-4 py-3 text-sm font-medium outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/25 transition-all appearance-none cursor-pointer text-[#111827] dark:text-white" style={{ borderRadius: "var(--radius)" }}>
-                    <option value="" className="dark:bg-[#0a0a0a]">All Regions</option>
-                    {counties.map(c => <option key={c} value={c} className="dark:bg-[#0a0a0a]">{c}</option>)}
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Region</label>
+                  <select name="county" defaultValue={countyFilter} className="w-full bg-[#0a0a0a] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-white rounded-xl">
+                    <option value="" className="bg-[#0a0a0a]">All Regions</option>
+                    {counties.map(c => <option key={c} value={c} className="bg-[#0a0a0a]">{c}</option>)}
                   </select>
                 </div>
-                <label className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300">
-                  <input type="checkbox" name="verified" value="1" defaultChecked={verifiedOnly} className="accent-[#38A169]" />
+                <label className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-300">
+                  <input type="checkbox" name="verified" value="1" defaultChecked={verifiedOnly} className="accent-[var(--accent)]" />
                   Verified only
                 </label>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">Inventory</label>
-                  <select name="inventory" defaultValue={withActiveInventoryOnly ? "active" : "all"} className="w-full bg-white dark:bg-[#0a0a0a] border border-[#E2E8F0] dark:border-slate-800 px-4 py-3 text-sm font-medium outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/25 transition-all appearance-none cursor-pointer text-[#111827] dark:text-white" style={{ borderRadius: "var(--radius)" }}>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Inventory</label>
+                  <select name="inventory" defaultValue={withActiveInventoryOnly ? "active" : "all"} className="w-full bg-[#0a0a0a] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-white rounded-xl">
                     <option value="active">Active inventory only</option>
                     <option value="all">All dealers</option>
                   </select>
@@ -284,37 +284,37 @@ export default async function DealersPage({ searchParams }) {
                 <DealersLocationButton />
                 {sp.lat ? <input type="hidden" name="lat" value={sp.lat} /> : null}
                 {sp.lng ? <input type="hidden" name="lng" value={sp.lng} /> : null}
-                <button className="w-full bg-[#111827] dark:bg-white text-white dark:!text-black py-3.5 text-[10px] font-black uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: "var(--radius)" }}>
+                <button className="w-full bg-white text-black py-3.5 text-[10px] font-black uppercase tracking-widest transition-transform hover:scale-[0.98] rounded-xl">
                   Apply filters
                 </button>
               </form>
             </details>
 
-            <div className="hidden lg:block overflow-hidden bg-[#F7FAFC] dark:bg-[#111111] border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.07] dark:shadow-none p-6" style={{ borderRadius: 'var(--radius)' }}>
-              <h3 className="text-xs font-black uppercase tracking-widest mb-6 text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
-                <span className="h-6 w-[3px] shrink-0 rounded-full bg-[#22c55e]" aria-hidden />
+            <div className="hidden lg:block overflow-hidden bg-[#111111] border border-white/[0.08] shadow-none p-6 rounded-xl">
+              <h3 className="text-xs font-black uppercase tracking-widest mb-6 text-white flex items-center gap-2.5">
+                <span className="h-6 w-[3px] shrink-0 rounded-full bg-[var(--accent)]" aria-hidden />
                 Refine network
               </h3>
               <form method="GET" className="space-y-6">
                 <input type="hidden" name="sort" value={sortMode} />
                 <div className="space-y-2">
-                   <label className="text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">Search</label>
-                   <input name="search" defaultValue={search} type="text" placeholder="Dealer name..." className="w-full bg-white dark:bg-[#0a0a0a] border border-[#E2E8F0] dark:border-slate-800 px-4 py-3 text-sm font-medium outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/25 transition-all text-[#111827] dark:text-white placeholder:text-slate-400" style={{ borderRadius: 'var(--radius)' }} />
+                   <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Search</label>
+                   <input name="search" defaultValue={search} type="text" placeholder="Dealer name..." className="w-full bg-[#0a0a0a] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all text-white placeholder:text-zinc-400 rounded-xl" />
                 </div>
                 <div className="space-y-2">
-                   <label className="text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">Region</label>
-                   <select name="county" defaultValue={countyFilter} className="w-full bg-white dark:bg-[#0a0a0a] border border-[#E2E8F0] dark:border-slate-800 px-4 py-3 text-sm font-medium outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/25 transition-all appearance-none cursor-pointer text-[#111827] dark:text-white" style={{ borderRadius: 'var(--radius)' }}>
-                      <option value="" className="dark:bg-[#0a0a0a]">All Regions</option>
-                      {counties.map(c => <option key={c} value={c} className="dark:bg-[#0a0a0a]">{c}</option>)}
+                   <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Region</label>
+                   <select name="county" defaultValue={countyFilter} className="w-full bg-[#0a0a0a] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-white rounded-xl">
+                      <option value="" className="bg-[#0a0a0a]">All Regions</option>
+                      {counties.map(c => <option key={c} value={c} className="bg-[#0a0a0a]">{c}</option>)}
                    </select>
                 </div>
-                <label className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-300">
-                  <input type="checkbox" name="verified" value="1" defaultChecked={verifiedOnly} className="accent-[#38A169]" />
+                <label className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-300">
+                  <input type="checkbox" name="verified" value="1" defaultChecked={verifiedOnly} className="accent-[var(--accent)]" />
                   Verified only
                 </label>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">Inventory</label>
-                  <select name="inventory" defaultValue={withActiveInventoryOnly ? "active" : "all"} className="w-full bg-white dark:bg-[#0a0a0a] border border-[#E2E8F0] dark:border-slate-800 px-4 py-3 text-sm font-medium outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/25 transition-all appearance-none cursor-pointer text-[#111827] dark:text-white" style={{ borderRadius: 'var(--radius)' }}>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Inventory</label>
+                  <select name="inventory" defaultValue={withActiveInventoryOnly ? "active" : "all"} className="w-full bg-[#0a0a0a] border border-white/[0.08] px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-white rounded-xl">
                     <option value="active">Active inventory only</option>
                     <option value="all">All dealers</option>
                   </select>
@@ -322,15 +322,15 @@ export default async function DealersPage({ searchParams }) {
                 {sp.lat ? <input type="hidden" name="lat" value={sp.lat} /> : null}
                 {sp.lng ? <input type="hidden" name="lng" value={sp.lng} /> : null}
                 <DealersLocationButton />
-                <button className="w-full bg-[#111827] dark:bg-white text-white dark:!text-black py-3.5 text-[10px] font-black uppercase tracking-widest transition-transform hover:scale-[0.98]" style={{ borderRadius: 'var(--radius)' }}>
+                <button className="w-full bg-white text-black py-3.5 text-[10px] font-black uppercase tracking-widest transition-transform hover:scale-[0.98] rounded-xl">
                    Apply filters
                 </button>
               </form>
             </div>
 
-            <details className="lg:hidden overflow-hidden bg-[#F7FAFC] dark:bg-[#111111] border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.06] dark:shadow-none pt-px pl-5 pr-5 pb-5" style={{ borderRadius: "var(--radius)" }}>
-              <summary className="cursor-pointer list-none text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-slate-100 py-5 flex items-center gap-2.5 [&::-webkit-details-marker]:hidden">
-                <span className="h-6 w-[3px] shrink-0 rounded-full bg-[#22c55e]/80" aria-hidden />
+            <details className="lg:hidden overflow-hidden bg-[#111111] border border-white/[0.08] shadow-none pt-px pl-5 pr-5 pb-5 rounded-xl">
+              <summary className="cursor-pointer list-none text-xs font-bold uppercase tracking-widest text-white py-5 flex items-center gap-2.5 [&::-webkit-details-marker]:hidden">
+                <span className="h-6 w-[3px] shrink-0 rounded-full bg-[var(--accent)]" aria-hidden />
                 Proximity radar
               </summary>
               <div className="mt-4">
@@ -338,9 +338,9 @@ export default async function DealersPage({ searchParams }) {
               </div>
             </details>
 
-            <div className="hidden lg:block overflow-hidden bg-[#F7FAFC] dark:bg-[#111111] border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/[0.06] dark:shadow-none p-6" style={{ borderRadius: 'var(--radius)' }}>
-               <h3 className="text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2.5 text-slate-900 dark:text-slate-100">
-                 <span className="h-6 w-[3px] shrink-0 rounded-full bg-[#22c55e]/80" aria-hidden />
+            <div className="hidden lg:block overflow-hidden bg-[#111111] border border-white/[0.08] shadow-none p-6 rounded-xl">
+               <h3 className="text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2.5 text-white">
+                 <span className="h-6 w-[3px] shrink-0 rounded-full bg-[var(--accent)]" aria-hidden />
                  Proximity radar
                </h3>
                <NearbyDealersList />
@@ -350,10 +350,10 @@ export default async function DealersPage({ searchParams }) {
           {/* Grid */}
           <main className="order-1 lg:order-2 lg:col-span-9">
             {rankedDealers.length === 0 ? (
-              <div className="py-24 text-center bg-[#F7FAFC] dark:bg-[#111111] border border-[#E2E8F0] dark:border-slate-800" style={{ borderRadius: 'var(--radius)' }}>
-                <Building2 className="w-10 h-10 text-[#CBD5E0] dark:text-slate-700 mx-auto mb-4" />
-                <h2 className="text-xl font-bold text-[#111827] dark:text-white mb-2">Network offline</h2>
-                <p className="text-slate-600 dark:text-slate-400 font-medium text-sm">We couldn&apos;t find any active dealers matching your criteria.</p>
+              <div className="py-24 text-center bg-[#111111] border border-white/[0.08] rounded-xl">
+                <Building2 className="w-10 h-10 text-zinc-700 mx-auto mb-4" />
+                <h2 className="text-xl font-bold text-white mb-2">Network offline</h2>
+                <p className="text-zinc-400 font-medium text-sm">We couldn&apos;t find any active dealers matching your criteria.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
@@ -379,10 +379,9 @@ function DealerCard({ dealer }) {
     <Link
       href={`/dealers/${dealer.slug}`}
       aria-label={`${dealer.name} cars for sale in ${dealer.location || dealer.county || "Kenya"} | BIDGARI`}
-      className="group flex flex-col h-full bg-white dark:bg-[#111111] shadow-sm hover:shadow-lg border border-slate-100/90 dark:border-slate-800 transition-all hover:border-[#22c55e]/45 dark:hover:border-[#22c55e]/40"
-      style={{ borderRadius: "12px" }}
+      className="group flex flex-col h-full bg-[#111111] shadow-sm hover:shadow-lg border border-white/[0.06] transition-all hover:border-[var(--accent)]/40 rounded-xl"
     >
-      <div className="relative aspect-[2.2/1] min-h-[88px] bg-slate-100 dark:bg-slate-900 overflow-hidden" style={{ borderTopLeftRadius: "12px", borderTopRightRadius: "12px" }}>
+      <div className="relative aspect-[2.2/1] min-h-[88px] bg-white/[0.03] overflow-hidden rounded-t-xl">
         <img
           src={bannerImage}
           alt={`${dealer.name} showroom in ${dealer.location || dealer.county || "Kenya"}`}
@@ -390,46 +389,46 @@ function DealerCard({ dealer }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
         <div className="absolute top-2 left-2 flex flex-wrap gap-1">
-           {dealer.verified && <span className="bg-yellow-500/15 text-yellow-500 text-[7px] font-black px-1.5 py-0.5 uppercase tracking-widest inline-flex items-center gap-0.5" style={{ borderRadius: "4px" }}><Crown className="w-2 h-2" aria-hidden />Verified</span>}
-           {dealer.featured && <span className="bg-[#111827] text-white text-[7px] font-black px-1.5 py-0.5 uppercase tracking-widest" style={{ borderRadius: "4px" }}>Premium</span>}
+           {dealer.verified && <span className="bg-yellow-500/15 text-yellow-500 text-[7px] font-black px-1.5 py-0.5 uppercase tracking-widest inline-flex items-center gap-0.5 rounded" style={{ borderRadius: "4px" }}><Crown className="w-2 h-2" aria-hidden />Verified</span>}
+           {dealer.featured && <span className="bg-white text-black text-[7px] font-black px-1.5 py-0.5 uppercase tracking-widest rounded" style={{ borderRadius: "4px" }}>Premium</span>}
         </div>
       </div>
 
       <div className="flex-1 flex flex-col p-3 sm:p-3.5">
         <div className="flex items-start justify-between gap-2 mb-2">
            <div className="min-w-0">
-              <h3 className="text-[15px] font-bold text-[#111827] dark:text-white group-hover:text-[#22c55e] dark:group-hover:text-[#4ade80] transition-colors truncate leading-tight">{dealer.name}</h3>
-              <p className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-1 flex items-center gap-1">
-                 <MapPin className="w-3 h-3 text-[#22c55e] shrink-0" /> <span className="truncate">{dealer.location || dealer.county}</span>
+              <h3 className="text-[15px] font-bold text-white group-hover:text-[var(--accent)] transition-colors truncate leading-tight">{dealer.name}</h3>
+              <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mt-1 flex items-center gap-1">
+                 <MapPin className="w-3 h-3 text-[var(--accent)] shrink-0" /> <span className="truncate">{dealer.location || dealer.county}</span>
               </p>
               <div className="mt-1.5 flex flex-wrap items-center gap-1">
                 {distance ? (
-                  <span className="inline-flex items-center gap-0.5 text-[8px] font-black px-1.5 py-0.5 uppercase tracking-widest text-[#15803d] dark:text-emerald-400 bg-emerald-500/10" style={{ borderRadius: "4px" }}>
+                  <span className="inline-flex items-center gap-0.5 text-[8px] font-black px-1.5 py-0.5 uppercase tracking-widest text-[var(--accent)] bg-emerald-500/10 rounded" style={{ borderRadius: "4px" }}>
                     <MapPin className="w-2.5 h-2.5" /> {distance}
                   </span>
                 ) : null}
                 {response ? (
-                  <span className={`inline-flex items-center text-[8px] font-black px-1.5 py-0.5 uppercase tracking-widest ${response.tone}`} style={{ borderRadius: "4px" }}>
+                  <span className={`inline-flex items-center text-[8px] font-black px-1.5 py-0.5 uppercase tracking-widest ${response.tone} rounded`} style={{ borderRadius: "4px" }}>
                     {response.label}
                   </span>
                 ) : null}
               </div>
            </div>
-           <div className="w-9 h-9 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center shrink-0 overflow-hidden" style={{ borderRadius: "8px" }}>
-              {brandImage ? <img src={brandImage} alt="" className="w-full h-full object-cover" /> : <span className="text-xs font-bold text-slate-300 dark:text-slate-500">{dealer.name[0]}</span>}
+           <div className="w-9 h-9 bg-[#0a0a0a] border border-white/[0.08] flex items-center justify-center shrink-0 overflow-hidden rounded-lg">
+              {brandImage ? <img src={brandImage} alt="" className="w-full h-full object-cover" /> : <span className="text-xs font-bold text-zinc-500">{dealer.name[0]}</span>}
            </div>
         </div>
 
-        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium line-clamp-2 leading-snug mb-3 flex-1">
+        <p className="text-[11px] text-zinc-400 font-medium line-clamp-2 leading-snug mb-3 flex-1">
            {dealer.description || "Verified partner with transparent inventory and direct contact."}
         </p>
 
-        <div className="mt-auto pt-2.5 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
+        <div className="mt-auto pt-2.5 flex items-center justify-between border-t border-white/[0.08]">
            <span className="text-[9px] font-black uppercase tracking-widest tabular-nums">
              <span className="text-[#ef3340]">{dealer.activeCars || 0}</span>{" "}
-             <span className="text-slate-500 dark:text-slate-400 font-bold">cars</span>
+             <span className="text-zinc-400 font-bold">cars</span>
            </span>
-           <span className="text-[9px] font-black text-[#22c55e] uppercase tracking-widest flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+           <span className="text-[9px] font-black text-[var(--accent)] uppercase tracking-widest flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
               Showroom <ArrowUpRight className="w-3 h-3" />
            </span>
         </div>

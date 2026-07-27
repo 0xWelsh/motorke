@@ -3,11 +3,11 @@
 import { formatPrice } from "@/lib/utils";
 
 const SEGMENTS = [
-  { key: "importDuty", label: "Import duty", color: "bg-slate-900 dark:bg-slate-100" },
-  { key: "excise", label: "Excise", color: "bg-slate-600 dark:bg-slate-300" },
-  { key: "vat", label: "VAT (16%)", color: "bg-red-600 dark:bg-red-500" },
-  { key: "idf", label: "IDF", color: "bg-emerald-600 dark:bg-emerald-500" },
-  { key: "rdl", label: "RDL", color: "bg-amber-500 dark:bg-amber-400" },
+  { key: "importDuty", label: "Import duty", color: "bg-zinc-300" },
+  { key: "excise", label: "Excise", color: "bg-zinc-500" },
+  { key: "vat", label: "VAT (16%)", color: "bg-red-500" },
+  { key: "idf", label: "IDF", color: "bg-[var(--accent)]" },
+  { key: "rdl", label: "RDL", color: "bg-amber-400" },
 ];
 
 export default function DutyTaxBreakdownChart({ breakdown }) {
@@ -24,9 +24,9 @@ export default function DutyTaxBreakdownChart({ breakdown }) {
 
   return (
     <div className="space-y-3" aria-label="Tax breakdown chart">
-      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Tax mix</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">Tax mix</p>
       <div
-        className="flex h-3 w-full overflow-hidden border border-slate-200 dark:border-zinc-700"
+        className="flex h-3 w-full overflow-hidden border border-white/[0.06]"
         style={{ borderRadius: "var(--radius)" }}
         role="img"
         aria-hidden
@@ -44,8 +44,8 @@ export default function DutyTaxBreakdownChart({ breakdown }) {
         {rows.map((row) => (
           <li key={row.key} className="flex items-center gap-2 text-xs">
             <span className={`h-2.5 w-2.5 shrink-0 ${row.color}`} style={{ borderRadius: 2 }} aria-hidden />
-            <span className="text-slate-600 dark:text-slate-400">{row.label}</span>
-            <span className="ml-auto font-bold tabular-nums text-slate-900 dark:text-white">{formatPrice(row.value)}</span>
+            <span className="text-zinc-400">{row.label}</span>
+            <span className="ml-auto font-bold tabular-nums text-white">{formatPrice(row.value)}</span>
           </li>
         ))}
       </ul>

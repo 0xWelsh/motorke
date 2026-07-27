@@ -28,12 +28,12 @@ export default function GoogleAuthButton({
         "group relative inline-flex items-center justify-center gap-3",
         "h-11 px-4",
         fullWidth ? "w-full" : "",
-        "bg-white dark:bg-[#111] text-slate-900 dark:text-white",
-        "border border-slate-200 dark:border-zinc-800",
+        "bg-[#111111] text-white",
+        "border border-white/[0.08]",
         "rounded-lg text-xs font-bold",
         "transition-[border-color,box-shadow,background-color,transform] duration-150",
-        "hover:border-zinc-300 dark:hover:border-zinc-700",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38A169]/30 focus-visible:border-[#38A169]",
+        "hover:border-white/[0.15] hover:bg-white/[0.06]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/30 focus-visible:border-[var(--accent)]",
         "active:scale-[0.99]",
         className
       )}
@@ -51,10 +51,10 @@ export function GoogleAuthDivider({
   return (
     <div className={clsx("relative my-4", className)} role="separator" aria-label={label}>
       <div className="absolute inset-0 flex items-center" aria-hidden>
-        <div className="w-full border-t border-zinc-800" />
+        <div className="w-full border-t border-white/[0.08]" />
       </div>
       <div className="relative flex justify-center">
-        <span className="bg-[#111] px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">
+        <span className="bg-[#0a0a0a] px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">
           {label}
         </span>
       </div>

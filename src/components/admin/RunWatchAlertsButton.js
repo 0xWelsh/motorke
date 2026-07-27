@@ -67,7 +67,7 @@ export default function RunWatchAlertsButton() {
           type="button"
           onClick={sendTestEmail}
           disabled={state === "running"}
-          className="px-4 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-widest border border-[#2F855A] text-[#2F855A] hover:bg-[#2F855A]/10 dark:border-emerald-400/80 dark:text-emerald-300 dark:hover:bg-emerald-950/50 disabled:opacity-60 transition-colors"
+          className="px-4 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-widest border border-[#2F855A] text-[#2F855A] hover:bg-[#2F855A]/10 border-emerald-400/80 text-emerald-300 hover:bg-emerald-950/50 disabled:opacity-60 transition-colors"
         >
           Send Test Alert Email
         </button>

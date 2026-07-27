@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-const AUTH_TOKEN = "bidgari-clear-2026";
+const AUTH_TOKEN = process.env.CLEAR_CARS_TOKEN || "";
 
 export async function DELETE(request) {
   const { searchParams } = new URL(request.url);

@@ -21,7 +21,7 @@ function ToggleChip({ label, active, onClick }) {
       className={`w-full text-left px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all ${
         active
           ? "bg-brand-accent/10 text-brand-accent border-l-2 border-brand-accent"
-          : "text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
+          : "text-zinc-300 hover:text-white hover:bg-slate-800/50"
       }`}
     >
       {label}
@@ -32,7 +32,7 @@ function ToggleChip({ label, active, onClick }) {
 function FilterSection({ title, children }) {
   return (
     <div className="space-y-1">
-      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-zinc-400 px-2.5">
+      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-400 px-2.5">
         {title}
       </p>
       {children}
@@ -154,14 +154,14 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
   const sidebarContent = (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white">
+        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-white">
           Filters
         </h3>
         {hasAnySelection && (
           <button
             type="button"
             onClick={resetFilters}
-            className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white transition-colors"
+            className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-zinc-300 hover:text-white transition-colors"
           >
             <RotateCcw className="w-3 h-3" />
             Reset
@@ -169,7 +169,7 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
         )}
       </div>
 
-      <div className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111] divide-y divide-slate-100 dark:divide-slate-800/50">
+      <div className="border border-slate-800 bg-[#111] divide-y divide-slate-800/50">
         <div className="py-2 space-y-2">
           <FilterSection title="Make">
             <div className="max-h-[180px] overflow-y-auto space-y-0.5">
@@ -195,7 +195,7 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
               value={model}
               placeholder="e.g. Corolla"
               onChange={(e) => setModel(e.target.value)}
-              className="w-full mx-2.5 px-2 py-1.5 text-[11px] bg-transparent border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
+              className="w-full mx-2.5 px-2 py-1.5 text-[11px] bg-transparent border border-slate-700 text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
               style={{ width: "calc(100% - 20px)" }}
             />
           </FilterSection>
@@ -298,7 +298,7 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
                   className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wider border transition-all ${
                     pricePreset === i
                       ? "border-brand-accent bg-brand-accent/10 text-brand-accent"
-                      : "border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                      : "border-zinc-700 text-zinc-400 hover:bg-zinc-800"
                   }`}
                 >
                   {preset.label}
@@ -311,15 +311,15 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
                 value={minPrice}
                 placeholder="Min"
                 onChange={(e) => { setMinPrice(e.target.value); setPricePreset(null); }}
-                className="w-full px-2 py-1.5 text-[11px] bg-transparent border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
+                className="w-full px-2 py-1.5 text-[11px] bg-transparent border border-slate-700 text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
               />
-              <span className="text-[9px] text-slate-400 dark:text-zinc-400 shrink-0">—</span>
+              <span className="text-[9px] text-zinc-400 shrink-0">—</span>
               <input
                 type="number"
                 value={maxPrice}
                 placeholder="Max"
                 onChange={(e) => { setMaxPrice(e.target.value); setPricePreset(null); }}
-                className="w-full px-2 py-1.5 text-[11px] bg-transparent border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
+                className="w-full px-2 py-1.5 text-[11px] bg-transparent border border-slate-700 text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
               />
             </div>
           </FilterSection>
@@ -333,15 +333,15 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
                 value={minYOM}
                 placeholder="From"
                 onChange={(e) => setMinYOM(e.target.value)}
-                className="w-full px-2 py-1.5 text-[11px] bg-transparent border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
+                className="w-full px-2 py-1.5 text-[11px] bg-transparent border border-slate-700 text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
               />
-              <span className="text-[9px] text-slate-400 dark:text-zinc-400 shrink-0">—</span>
+              <span className="text-[9px] text-zinc-400 shrink-0">—</span>
               <input
                 type="number"
                 value={maxYOM}
                 placeholder="To"
                 onChange={(e) => setMaxYOM(e.target.value)}
-                className="w-full px-2 py-1.5 text-[11px] bg-transparent border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
+                className="w-full px-2 py-1.5 text-[11px] bg-transparent border border-slate-700 text-white placeholder:text-zinc-500 focus:outline-none focus:border-brand-accent transition-colors"
               />
             </div>
           </FilterSection>
@@ -376,7 +376,7 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
         className={`w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider border transition-all ${
           hasChanges
             ? "border-brand-accent bg-brand-accent text-white hover:opacity-90 cursor-pointer"
-            : "border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-[#111]/80 text-slate-400 dark:text-zinc-500 cursor-not-allowed"
+            : "border-zinc-700 bg-[#111]/80 text-zinc-500 cursor-not-allowed"
         }`}
       >
         <Search className="w-3.5 h-3.5" aria-hidden />
@@ -392,7 +392,7 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
         <button
           type="button"
           onClick={() => { setMobileOpen(true); }}
-          className="inline-flex items-center gap-2 px-3 py-2 text-[10px] font-black uppercase tracking-wider border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#111] text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-900 transition-all"
+          className="inline-flex items-center gap-2 px-3 py-2 text-[10px] font-black uppercase tracking-wider border border-slate-700 bg-[#111] text-white hover:bg-slate-900 transition-all"
         >
           <SlidersHorizontal className="w-3.5 h-3.5" />
           Filters
@@ -409,13 +409,13 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="absolute inset-y-0 left-0 w-[85vw] max-w-sm bg-white dark:bg-[#0a0a0a] shadow-2xl overflow-y-auto">
-            <div className="sticky top-0 z-10 bg-white dark:bg-[#0a0a0a] border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between">
+          <div className="absolute inset-y-0 left-0 w-[85vw] max-w-sm bg-[#0a0a0a] shadow-2xl overflow-y-auto">
+            <div className="sticky top-0 z-10 bg-[#0a0a0a] border-b border-slate-800 px-4 py-3 flex items-center justify-between">
               <span className="text-[10px] font-black uppercase tracking-[0.2em]">Filters</span>
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
-                className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="p-1 hover:bg-slate-800 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>

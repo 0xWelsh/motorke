@@ -1,7 +1,5 @@
 "use client";
 // src/components/EnquiryForm.js
-// Replaces the static form in the car detail page.
-// Tracks both web form submissions and WhatsApp taps as leads.
 
 import { useState } from "react";
 import Link from "next/link";
@@ -38,12 +36,12 @@ export default function EnquiryForm({
   showQuickMessages = true,
   showSafetyBadge = true,
 }) {
-  const [state, setState]   = useState("idle"); // idle | sending | sent | error
+  const [state, setState]   = useState("idle");
   const [name, setName]     = useState(userName);
   const [phone, setPhone]   = useState("");
   const [email, setEmail]   = useState(userEmail);
   const [message, setMessage] = useState(`Hi, I'm interested in the ${carTitle}. Please get back to me with more details.`);
-  const [website, setWebsite] = useState(""); // Honeypot field
+  const [website, setWebsite] = useState("");
   const [consent, setConsent] = useState(false);
   const [notifySimilar, setNotifySimilar] = useState(false);
   const [lastSubmitAt, setLastSubmitAt] = useState(0);
@@ -130,11 +128,9 @@ export default function EnquiryForm({
     }
   }
 
-  // Track WhatsApp taps as leads too
   async function handleWhatsApp() {
     const normalizedPhone = normalizeKenyanPhone(phone);
 
-    // Fire-and-forget — don't block the WhatsApp redirect
     fetch("/api/leads", {
       method:  "POST",
       headers: { "Content-Type": "application/json" },
@@ -151,7 +147,6 @@ export default function EnquiryForm({
       console.error("Lead tracking for WhatsApp tap failed:", error);
     });
 
-    // Track WhatsApp action for analytics
     trackUiEvent("open_whatsapp", {
       car_id: carId,
       dealer_id: dealerId,
@@ -184,14 +179,14 @@ export default function EnquiryForm({
   }
 
   const inputCls =
-    "w-full bg-[#fbfcfe] dark:bg-zinc-900 border border-[#e2e8f0] dark:border-zinc-800 px-3.5 py-2.5 sm:px-4 sm:py-3 text-[13px] sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 outline-none focus:border-black dark:focus:border-white transition-all";
+    "w-full bg-[#0f0f0f] border border-white/[0.08] px-3.5 py-2.5 sm:px-4 sm:py-3 text-[13px] sm:text-sm text-white placeholder:text-zinc-500 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 transition-all rounded-lg";
 
   if (state === "sent") {
     return (
-      <div className="text-center py-12 px-6 bg-slate-50 dark:bg-zinc-900 border border-emerald-100 dark:border-emerald-900/30" style={{ borderRadius: '2px' }}>
-        <p className="font-extrabold text-[#111827] dark:text-white mb-2 uppercase tracking-widest text-xs">Enquiry Sent</p>
-        <p className="text-xs text-slate-500 leading-relaxed">
-          Thanks! Our team will contact you shortly regarding the <span className="font-bold text-slate-900 dark:text-white">{carTitle}</span>.
+      <div className="text-center py-12 px-6 bg-[#0f0f0f] border border-white/[0.06] rounded-xl">
+        <p className="font-extrabold text-white mb-2 uppercase tracking-widest text-xs">Enquiry Sent</p>
+        <p className="text-xs text-zinc-400 leading-relaxed">
+          Thanks! Our team will contact you shortly regarding the <span className="font-bold text-white">{carTitle}</span>.
         </p>
       </div>
     );
@@ -200,7 +195,7 @@ export default function EnquiryForm({
   return (
     <div className="space-y-6">
       {state === "error" && (
-        <p className="text-[11px] font-bold text-rose-600 bg-rose-50 dark:bg-rose-900/10 border border-rose-100 dark:border-rose-900/30 px-4 py-3">
+        <p className="text-[11px] font-bold text-red-400 bg-red-500/10 border border-red-500/20 px-4 py-3 rounded-lg">
           {errorText || "Submission failed. Please try our WhatsApp."}
         </p>
       )}
@@ -220,13 +215,11 @@ export default function EnquiryForm({
             value={name} onChange={(e) => setName(e.target.value)}
             required placeholder="Your name *"
             className={inputCls}
-            style={{ borderRadius: '2px' }}
           />
           <input
             value={email} onChange={(e) => setEmail(e.target.value)}
             type="email" required placeholder="Email address *"
             className={inputCls}
-            style={{ borderRadius: '2px' }}
           />
           <div>
             <input
@@ -238,9 +231,8 @@ export default function EnquiryForm({
               required
               placeholder={PHONE_PLACEHOLDER_INTERNATIONAL}
               className={inputCls}
-              style={{ borderRadius: "2px" }}
             />
-            <p className="mt-1.5 text-[10px] font-medium text-slate-500 leading-snug">{PHONE_COUNTRY_CODE_HELPER}</p>
+            <p className="mt-1.5 text-[10px] font-medium text-zinc-500 leading-snug">{PHONE_COUNTRY_CODE_HELPER}</p>
           </div>
           
           <textarea
@@ -248,30 +240,29 @@ export default function EnquiryForm({
             rows={5}
             placeholder="Hi, I'm interested..."
             className={`${inputCls} resize-none`}
-            style={{ borderRadius: '2px' }}
           />
         </div>
 
         <div className="space-y-4 pt-2">
-          <label className="flex items-start gap-3 text-[11px] text-slate-500 cursor-pointer select-none">
+          <label className="flex items-start gap-3 text-[11px] text-zinc-400 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={notifySimilar}
               onChange={(e) => setNotifySimilar(e.target.checked)}
-              className="mt-1 accent-black"
+              className="mt-1 accent-[var(--accent)]"
             />
             Notify me when similar listings appear
           </label>
           
-          <label className="flex items-start gap-3 text-[11px] text-slate-500 cursor-pointer select-none">
+          <label className="flex items-start gap-3 text-[11px] text-zinc-400 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={consent}
               onChange={(e) => setConsent(e.target.checked)}
-              className="mt-1 accent-black"
+              className="mt-1 accent-[var(--accent)]"
               required
             />
-            <span>I agree to the <Link href="/terms" className="underline">Terms of Use</Link> and <Link href="/privacy" className="underline">Privacy Policy</Link></span>
+            <span>I agree to the <Link href="/terms" className="underline hover:text-white transition-colors">Terms of Use</Link> and <Link href="/privacy" className="underline hover:text-white transition-colors">Privacy Policy</Link></span>
           </label>
         </div>
 
@@ -279,7 +270,7 @@ export default function EnquiryForm({
           <button
             type="submit"
             disabled={state === "sending"}
-            className="w-full min-h-12 bg-[#64748b] hover:bg-slate-600 disabled:opacity-50 text-white font-bold py-3.5 sm:py-4 text-[11px] uppercase tracking-[0.15em] transition-all shadow-sm rounded-xl sm:rounded-sm"
+            className="w-full min-h-12 bg-[var(--accent)] hover:bg-[var(--accent-hover)] disabled:opacity-50 text-black font-bold py-3.5 sm:py-4 text-[11px] uppercase tracking-[0.15em] transition-all rounded-xl"
           >
             {state === "sending" ? "Processing..." : "Submit Enquiry"}
           </button>
@@ -291,7 +282,7 @@ export default function EnquiryForm({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleWhatsApp}
-                className="flex min-h-12 items-center justify-center gap-2 bg-[#1cb558] hover:bg-emerald-600 text-white font-bold text-[10px] py-3.5 uppercase tracking-widest transition-all rounded-xl sm:rounded-sm"
+                className="flex min-h-12 items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-[10px] py-3.5 uppercase tracking-widest transition-all rounded-xl"
               >
                 WhatsApp
               </a>
@@ -300,7 +291,7 @@ export default function EnquiryForm({
               <a
                 href={callLink}
                 onClick={handleCall}
-                className="flex min-h-12 items-center justify-center gap-2 bg-[#111827] dark:!bg-white hover:bg-black dark:hover:!bg-slate-200 text-white dark:!text-black font-bold text-[10px] py-3.5 uppercase tracking-widest transition-all rounded-xl sm:rounded-sm"
+                className="flex min-h-12 items-center justify-center gap-2 bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-white font-bold text-[10px] py-3.5 uppercase tracking-widest transition-all rounded-xl"
               >
                 Call Now
               </a>

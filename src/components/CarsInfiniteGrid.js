@@ -7,13 +7,13 @@ import { carListingPath } from "@/lib/car-listing-url";
 function BidgariLoader() {
   return (
     <div className="flex items-center gap-1.5">
-      <span className="text-[11px] font-black tracking-[0.15em] text-zinc-400 dark:text-zinc-500">
+      <span className="text-[11px] font-black tracking-[0.15em] text-zinc-500">
         BIDGARI
       </span>
       <span className="flex gap-0.5">
-        <span className="w-1 h-1 rounded-full bg-zinc-400 dark:bg-zinc-500 animate-pulse" style={{ animationDelay: "0ms" }} />
-        <span className="w-1 h-1 rounded-full bg-zinc-400 dark:bg-zinc-500 animate-pulse" style={{ animationDelay: "150ms" }} />
-        <span className="w-1 h-1 rounded-full bg-zinc-400 dark:bg-zinc-500 animate-pulse" style={{ animationDelay: "300ms" }} />
+        <span className="w-1 h-1 rounded-full bg-zinc-500 animate-pulse" style={{ animationDelay: "0ms" }} />
+        <span className="w-1 h-1 rounded-full bg-zinc-500 animate-pulse" style={{ animationDelay: "150ms" }} />
+        <span className="w-1 h-1 rounded-full bg-zinc-500 animate-pulse" style={{ animationDelay: "300ms" }} />
       </span>
     </div>
   );
@@ -106,18 +106,18 @@ export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, n
   return (
     <div>
       {/* Result count */}
-      <p className="text-[11px] font-bold text-slate-400 dark:text-zinc-500 mb-3">
+      <p className="text-[11px] font-bold text-zinc-400 mb-3">
         {total} {total === 1 ? "vehicle" : "vehicles"} found
       </p>
 
       {/* Grid */}
       {cars.length === 0 ? (
-        <div className="py-20 text-center bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 rounded-sm">
+        <div className="py-20 text-center bg-[#0f0f0f] border border-white/[0.06] rounded-sm">
           <div className="mx-auto mb-4 w-12 h-12 flex items-center justify-center">
-            <span className="text-lg font-black tracking-[0.2em] text-zinc-300 dark:text-zinc-600">B</span>
+            <span className="text-lg font-black tracking-[0.2em] text-zinc-600">B</span>
           </div>
-          <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-2">No matches found</h2>
-          <p className="text-slate-500 dark:text-zinc-400 font-medium mb-6">Try adjusting your filters or resetting your search.</p>
+          <h2 className="text-xl font-black text-white tracking-tight mb-2">No matches found</h2>
+          <p className="text-zinc-400 font-medium mb-6">Try adjusting your filters or resetting your search.</p>
         </div>
       ) : (
         <>
@@ -135,7 +135,7 @@ export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, n
           )}
 
           {!hasMore && cars.length > 0 && (
-            <p className="text-center text-[10px] font-bold text-slate-300 dark:text-zinc-600 mt-6 uppercase tracking-wider">
+            <p className="text-center text-[10px] font-bold text-zinc-600 mt-6 uppercase tracking-wider">
               You've reached the end
             </p>
           )}

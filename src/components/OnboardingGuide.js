@@ -5,7 +5,7 @@ import { X, ChevronRight } from "lucide-react";
 
 const TOOLTIPS = {
   first_time_visitor: {
-    title: "Welcome to BIDGARI! 👋",
+    title: "Welcome to BIDGARI!",
     steps: [
       {
         target: "search-bar",
@@ -34,7 +34,7 @@ const TOOLTIPS = {
     ],
   },
   dealer_first_time: {
-    title: "Welcome to BIDGARI Dealer Portal! 🚗",
+    title: "Welcome to BIDGARI Dealer Portal!",
     steps: [
       {
         target: "add-car-btn",
@@ -94,53 +94,49 @@ function OnboardingTooltip({ step, onClose, onNext, currentStep, totalSteps }) {
 
   return (
     <>
-      {/* Overlay */}
       <div className="fixed inset-0 bg-black/40 z-40" onClick={onClose} />
 
-      {/* Tooltip */}
       <div
-        className="fixed z-50 bg-white rounded-2xl shadow-2xl p-6 w-80 border border-blue-200"
+        className="fixed z-50 bg-[#0f0f0f] rounded-2xl shadow-2xl p-6 w-80 border border-white/[0.08]"
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
         }}
       >
         <div className="flex items-start justify-between mb-3">
-          <h3 className="font-bold text-slate-900 dark:text-white pr-4">{step.title}</h3>
+          <h3 className="font-bold text-white pr-4">{step.title}</h3>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 flex-shrink-0"
+            className="text-zinc-400 hover:text-zinc-200 flex-shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <p className="text-sm text-slate-700 mb-4">{step.content}</p>
+        <p className="text-sm text-zinc-300 mb-4">{step.content}</p>
 
-        {/* Progress */}
         <div className="mb-4">
-          <div className="h-1 bg-slate-200 rounded-2xl overflow-hidden">
+          <div className="h-1 bg-white/[0.06] rounded-2xl overflow-hidden">
             <div
-              className="h-full bg-[#ff5a2f] transition-all"
+              className="h-full bg-[var(--accent)] transition-all"
               style={{ width: `${(currentStep / totalSteps) * 100}%` }}
             />
           </div>
-          <p className="text-xs text-slate-500 mt-2">
+          <p className="text-xs text-zinc-500 mt-2">
             Step {currentStep} of {totalSteps}
           </p>
         </div>
 
-        {/* Actions */}
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-3 sm:py-2 border border-slate-300 text-slate-900 dark:text-white font-medium rounded-2xl hover:bg-[#fbfcfe] dark:bg-[#111111] transition"
+            className="flex-1 px-4 py-3 sm:py-2 border border-white/[0.08] text-white font-medium rounded-xl bg-[#0f0f0f] transition"
           >
             Skip
           </button>
           <button
             onClick={onNext}
-            className="flex-1 px-4 py-3 sm:py-2 bg-[#ff5a2f] text-slate-900 dark:text-white font-medium rounded-2xl hover:bg-blue-700 transition flex items-center justify-center gap-2"
+            className="flex-1 px-4 py-3 sm:py-2 bg-[var(--accent)] text-white font-medium rounded-xl hover:opacity-90 transition flex items-center justify-center gap-2"
           >
             {currentStep === totalSteps ? "Done" : "Next"}
             <ChevronRight className="w-4 h-4" />
@@ -159,12 +155,10 @@ export function OnboardingGuide({ type = "first_time_visitor" }) {
   const steps = TOOLTIPS[type]?.steps || [];
 
   useEffect(() => {
-    // Check if user has already seen this tutorial
     const key = `welsh_motors_tutorial_${type}`;
     const seen = localStorage.getItem(key);
 
     if (!seen) {
-      // Show after 2 seconds
       const timer = setTimeout(() => {
         setIsVisible(true);
       }, 2000);
@@ -203,7 +197,6 @@ export function OnboardingGuide({ type = "first_time_visitor" }) {
   );
 }
 
-// Re-export for use in components
 export function addTooltipTarget(elementId, value) {
   const el = document.getElementById(elementId);
   if (el) {

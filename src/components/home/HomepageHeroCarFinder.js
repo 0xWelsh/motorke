@@ -6,9 +6,9 @@ import { Search } from "lucide-react";
 import { BRANDS, BODY_TYPES, COUNTIES } from "@/lib/browse-catalog";
 
 const selectCls =
-  "w-full border border-slate-200 bg-white px-3 py-2.5 text-[12px] font-semibold text-[#111827] outline-none focus:border-[#38A169] dark:border-zinc-800 dark:bg-zinc-950 dark:text-white";
+  "w-full border border-white/[0.06] bg-[#0f0f0f] px-3 py-2.5 text-[12px] font-semibold text-white outline-none focus:border-[var(--accent)]";
 
-const labelCls = "text-[9px] font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400";
+const labelCls = "text-[9px] font-black uppercase tracking-[0.16em] text-zinc-400";
 
 export default function HomepageHeroCarFinder({ embedded = false, className = "" }) {
   const router = useRouter();
@@ -102,20 +102,20 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
     <div
       className={
         embedded
-          ? `h-full w-full rounded-xl border border-slate-200/90 bg-white/95 p-3 sm:p-4 shadow-sm dark:border-zinc-800 dark:bg-[#111111]/92 ${className}`.trim()
-          : `mt-8 sm:mt-10 lg:mt-12 w-full max-w-4xl mx-auto rounded-2xl border border-slate-200/80 bg-white/95 dark:bg-[#111111]/95 p-4 sm:p-5 md:p-6 shadow-[0_20px_50px_-28px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] dark:border-zinc-800 ${className}`.trim()
+          ? `h-full w-full rounded-xl border border-white/[0.06] bg-[#111111]/92 p-3 sm:p-4 shadow-sm ${className}`.trim()
+          : `mt-8 sm:mt-10 lg:mt-12 w-full max-w-4xl mx-auto rounded-2xl border border-white/[0.06] bg-[#111111]/95 p-4 sm:p-5 md:p-6 shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] ${className}`.trim()
       }
       style={{ borderRadius: "var(--radius)" }}
     >
       <p
-        className={`text-[10px] font-black uppercase tracking-[0.2em] text-[#38A169] mb-1 ${
+        className={`text-[10px] font-black uppercase tracking-[0.2em] text-[var(--accent)] mb-1 ${
           embedded ? "text-left" : "text-center"
         }`}
       >
         Find your car
       </p>
       <h2
-        className={`font-bold text-[#111827] dark:text-white mb-3 sm:mb-4 ${
+        className={`font-bold text-white mb-3 sm:mb-4 ${
           embedded ? "text-base text-left" : "text-lg sm:text-xl text-center mb-4 sm:mb-5"
         }`}
       >
@@ -257,7 +257,7 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
 
         <button
           type="submit"
-          className="w-full h-12 inline-flex items-center justify-center gap-2 bg-[#38A169] hover:bg-[#2F855A] text-white text-xs font-black uppercase tracking-widest transition-colors"
+          className="w-full h-12 inline-flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[#2F855A] text-white text-xs font-black uppercase tracking-widest transition-colors"
           style={{ borderRadius: "var(--radius)" }}
         >
           <Search className="h-4 w-4" aria-hidden />

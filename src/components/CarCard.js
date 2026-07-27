@@ -14,15 +14,7 @@ import { isInSoldGracePeriod } from "@/lib/car-sold-status";
 import { clsx } from "clsx";
 
 /**
- * Universal premium CarCard matching the G99 reference design.
- * @param {Object} car - The car data object.
- * @param {number} distance - Pre-calculated distance in km (optional).
- * @param {function} onRemove - Optional callback for a remove action.
- * @param {boolean} showSpotlight - Show Spotlight badge on the card.
- * @param {boolean} spotlightProminent - Stronger orange/red outline (homepage row).
- * @param {boolean} hideSpotlightBadge - Outline only, no badge (homepage row).
- * @param {boolean} compact - Shorter card below lg (homepage rows); full size on desktop.
- * @param {boolean} spacious - Slightly larger card for brand/hub listing grids.
+ * Premium dark-mode CarCard with glassmorphism.
  */
 export default function CarCard({
   car,
@@ -54,7 +46,7 @@ export default function CarCard({
       : distanceKm < 1
         ? `${Math.round(distanceKm * 1000)} m`
         : `${distanceKm.toFixed(1)} km`;
-  
+
   const eventPayload = {
     car_id: car.id,
     dealer_id: car?.dealer?.id || "",
@@ -102,10 +94,10 @@ export default function CarCard({
   return (
     <article
       className={clsx(
-        "group flex flex-col bg-[var(--surface)] transition-all overflow-hidden border hover:shadow-lg hover:-translate-y-0.5 duration-300 ease-out",
-        boost.cardBorderClass || "border-[var(--brand-faint)]"
+        "group flex flex-col bg-[#0f0f0f] border border-white/[0.06] overflow-hidden transition-all duration-300 ease-out rounded-xl",
+        "hover:border-white/[0.12] hover:shadow-glass hover:-translate-y-1",
+        boost.cardBorderClass && `!${boost.cardBorderClass}`
       )}
-      style={{ borderRadius: "12px" }}
       {...(boost.active
         ? {
             "data-boost": boost.spotlight && boost.hot ? "spotlight-hot" : boost.spotlight ? "spotlight" : "hot",
@@ -117,13 +109,12 @@ export default function CarCard({
         href={carListingPath(car)}
         onClick={() => onCarClick("image")}
         className={clsx(
-          "relative bg-[var(--surface-overlay)] overflow-hidden block",
+          "relative bg-[#111111] overflow-hidden block",
           compact
             ? "aspect-[16/10] lg:aspect-[16/11]"
             : spacious
               ? "aspect-[16/10] sm:aspect-[16/9]"
-              : "aspect-[16/11]",
-          boost.imageFrameClass
+              : "aspect-[16/11]"
         )}
       >
         {primaryImg ? (
@@ -131,28 +122,31 @@ export default function CarCard({
             src={primaryImg}
             alt={title}
             priority={priority}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             sizes={
               spacious
                 ? "(max-width: 1024px) 100vw, 33vw"
                 : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             }
             fallback={
-              <div className="w-full h-full flex items-center justify-center text-slate-300">
+              <div className="w-full h-full flex items-center justify-center text-zinc-700">
                 <ImageOff className="w-8 h-8" aria-hidden />
               </div>
             }
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-300">
+          <div className="w-full h-full flex items-center justify-center text-zinc-700">
              <ImageOff className="w-8 h-8" />
           </div>
         )}
 
-        {/* Top overlays: glassmorphic design */}
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+
+        {/* Top overlays */}
         <div
           className={clsx(
-            "pointer-events-none absolute inset-x-2 top-2 z-10 flex items-start justify-between gap-2",
+            "pointer-events-none absolute inset-x-2.5 top-2.5 z-10 flex items-start justify-between gap-2",
             compact ? "lg:inset-x-4 lg:top-4 lg:gap-2" : "sm:inset-x-4 sm:top-4 sm:gap-2"
           )}
         >
@@ -165,48 +159,43 @@ export default function CarCard({
           >
             {!car.available || isInSoldGracePeriod(car) ? (
               <span
-                className="pointer-events-auto mb-1 inline-flex max-w-full items-center bg-slate-900/90 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-[0.14em] text-white border border-white/25 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.16em]"
-                style={{ borderRadius: "4px" }}
+                className="pointer-events-auto mb-1 inline-flex max-w-full items-center bg-black/70 backdrop-blur-sm px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.14em] text-white border border-white/10 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.16em] rounded-md"
               >
                 Sold
               </span>
             ) : null}
             {showHot ? (
               <span
-                className="pointer-events-auto mb-1 inline-flex max-w-full items-center bg-orange-600 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-[0.14em] text-white border border-white/25 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.16em]"
-                style={{ borderRadius: "4px" }}
+                className="pointer-events-auto mb-1 inline-flex max-w-full items-center bg-[var(--accent-red)]/90 backdrop-blur-sm px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.14em] text-white border border-white/10 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.16em] rounded-md"
               >
                 Hot
               </span>
             ) : null}
             {showSpotlightBadge ? (
               <span
-                className="pointer-events-auto mb-1 inline-flex max-w-full items-center bg-[#b91c1c] px-1.5 py-0.5 text-[7px] font-black uppercase tracking-[0.14em] text-white border border-white/25 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.16em]"
-                style={{ borderRadius: "4px" }}
+                className="pointer-events-auto mb-1 inline-flex max-w-full items-center bg-[var(--accent)]/90 backdrop-blur-sm px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.14em] text-black border border-white/10 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.16em] rounded-md"
               >
                 Spotlight
               </span>
             ) : null}
             {car.vehicleType === "MOTORBIKE" ? (
               <span
-                className="pointer-events-auto mb-1 inline-flex max-w-full items-center bg-sky-700 px-1.5 py-0.5 text-[7px] font-black uppercase tracking-[0.14em] text-white border border-white/25 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.16em]"
-                style={{ borderRadius: "4px" }}
+                className="pointer-events-auto mb-1 inline-flex max-w-full items-center bg-[var(--accent-blue)]/90 backdrop-blur-sm px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.14em] text-white border border-white/10 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.16em] rounded-md"
               >
                 Motorbike
               </span>
             ) : null}
             {distanceLabel ? (
               <span
-                className="pointer-events-auto inline-flex max-w-full items-center gap-1 bg-white/80 backdrop-blur-md px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wide text-slate-900 dark:bg-black/60 dark:text-white sm:gap-1.5 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.12em] border border-white/20 dark:border-white/10 shadow-sm"
-                style={{ borderRadius: "6px" }}
+                className="pointer-events-auto inline-flex max-w-full items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-0.5 text-[8px] font-bold uppercase tracking-wide text-white sm:gap-1.5 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.12em] border border-white/10 rounded-md"
                 title={`${distanceLabel} away`}
               >
-                <MapPin className="h-2.5 w-2.5 shrink-0 text-[#38A169] sm:h-3 sm:w-3" aria-hidden />
+                <MapPin className="h-2.5 w-2.5 shrink-0 text-[var(--accent)] sm:h-3 sm:w-3" aria-hidden />
                 <span className="min-w-0 truncate tabular-nums">{distanceLabel}</span>
               </span>
             ) : null}
           </div>
-          <div className="pointer-events-auto flex shrink-0 items-center gap-1 sm:gap-1.5">
+          <div className="pointer-events-auto flex shrink-0 items-center gap-1.5">
             {onRemove && (
               <button
                 type="button"
@@ -215,11 +204,10 @@ export default function CarCard({
                   event.stopPropagation();
                   onRemove(car.id);
                 }}
-                className="inline-flex h-6 w-6 items-center justify-center bg-white/80 backdrop-blur-md text-slate-700 transition-colors hover:bg-white dark:bg-black/60 dark:text-slate-200 dark:hover:bg-black sm:h-8 sm:w-8 border border-white/20 dark:border-white/10 shadow-sm"
-                style={{ borderRadius: "6px" }}
+                className="inline-flex h-7 w-7 items-center justify-center bg-black/50 backdrop-blur-md text-zinc-400 transition-colors hover:bg-black/70 hover:text-white sm:h-8 sm:w-8 border border-white/10 rounded-lg"
                 aria-label="Remove from watchlist"
               >
-                <X className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                <X className="h-3.5 w-3.5" />
               </button>
             )}
             <button
@@ -229,11 +217,10 @@ export default function CarCard({
                 event.stopPropagation();
                 handleShare();
               }}
-              className="inline-flex h-6 w-6 items-center justify-center bg-white/80 backdrop-blur-md text-slate-700 transition-colors hover:bg-white dark:bg-black/60 dark:text-slate-200 dark:hover:bg-black sm:h-8 sm:w-8 border border-white/20 dark:border-white/10 shadow-sm"
-              style={{ borderRadius: "6px" }}
+              className="inline-flex h-7 w-7 items-center justify-center bg-black/50 backdrop-blur-md text-zinc-400 transition-colors hover:bg-black/70 hover:text-white sm:h-8 sm:w-8 border border-white/10 rounded-lg"
               aria-label="Share car"
             >
-              <Share2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+              <Share2 className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>
@@ -243,24 +230,24 @@ export default function CarCard({
       <div
         className={clsx(
           "flex flex-col flex-1",
-          compact ? "p-2 sm:p-2.5 lg:p-5" : spacious ? "p-3.5 sm:p-6" : "p-2.5 sm:p-5"
+          compact ? "p-2.5 sm:p-3 lg:p-4" : spacious ? "p-3.5 sm:p-5" : "p-3 sm:p-4"
         )}
       >
         {/* Title & Year */}
         <div
           className={clsx(
-            "flex items-start gap-1.5",
+            "flex items-start gap-2",
             compact
-              ? "mb-1.5 lg:gap-3 lg:mb-3"
+              ? "mb-1.5 lg:gap-3 lg:mb-2.5"
               : spacious
-                ? "gap-2.5 sm:gap-3 mb-3 sm:mb-4"
-                : "gap-2 sm:gap-3 mb-2.5 sm:mb-3"
+                ? "gap-2.5 sm:gap-3 mb-2.5 sm:mb-3"
+                : "gap-2 sm:gap-3 mb-2 sm:mb-3"
           )}
         >
           <span
             className={clsx(
               "meta-label shrink-0 mt-0.5",
-              compact ? "text-[8px] lg:text-[11px] lg:mt-1" : "sm:mt-1 text-[9px] sm:text-[11px]"
+              compact ? "text-[8px] lg:text-[10px] lg:mt-1" : "sm:mt-1 text-[9px] sm:text-[10px]"
             )}
           >
             {car.year}
@@ -268,12 +255,12 @@ export default function CarCard({
           <Link href={carListingPath(car)} onClick={() => onCarClick("title")}>
             <h3
               className={clsx(
-                "font-black font-sans text-slate-900 dark:text-white tracking-tight leading-snug hover:text-[#38A169] transition-colors line-clamp-2",
+                "font-bold font-sans text-white tracking-tight leading-snug hover:text-[var(--accent)] transition-colors line-clamp-2",
                 compact
-                  ? "text-[11px] sm:text-[13px] lg:text-[17px] lg:tracking-tighter"
+                  ? "text-[12px] sm:text-[14px] lg:text-[16px] lg:tracking-tighter"
                   : spacious
-                    ? "text-[14px] sm:text-[18px] sm:tracking-tighter"
-                    : "text-[12px] sm:text-[17px] sm:tracking-tighter"
+                    ? "text-[14px] sm:text-[17px] sm:tracking-tighter"
+                    : "text-[13px] sm:text-[16px] sm:tracking-tighter"
               )}
               title={`${car.make} ${car.model} ${car.variant ? `(${car.variant})` : ""}`}
             >
@@ -289,28 +276,28 @@ export default function CarCard({
         {/* Spec Chips */}
         <div className="flex-1">
           <div className={clsx(
-            "flex flex-wrap items-center gap-x-3 gap-y-1 text-red-600 dark:text-red-400",
+            "flex flex-wrap items-center gap-x-3 gap-y-1 text-zinc-500",
             compact
-              ? "text-[9px] lg:text-[11px]"
+              ? "text-[9px] lg:text-[10px]"
               : spacious
-                ? "text-[11px] sm:text-[12px]"
-                : "text-[10px] sm:text-[11px]"
+                ? "text-[10px] sm:text-[11px]"
+                : "text-[10px] sm:text-[10px]"
           )}>
             {car.mileage != null && (
               <span className="inline-flex items-center gap-1">
-                <Gauge size={compact ? 10 : spacious ? 13 : 12} className="shrink-0" />
+                <Gauge size={compact ? 10 : spacious ? 12 : 11} className="shrink-0 text-zinc-600" />
                 {formatMileage(car.mileage)}
               </span>
             )}
             {car.transmission && (
               <span className="inline-flex items-center gap-1">
-                <Settings size={compact ? 10 : spacious ? 13 : 12} className="shrink-0" />
+                <Settings size={compact ? 10 : spacious ? 12 : 11} className="shrink-0 text-zinc-600" />
                 {car.transmission}
               </span>
             )}
             {car.fuelType && (
               <span className="inline-flex items-center gap-1">
-                <Fuel size={compact ? 10 : spacious ? 13 : 12} className="shrink-0" />
+                <Fuel size={compact ? 10 : spacious ? 12 : 11} className="shrink-0 text-zinc-600" />
                 {car.fuelType}
               </span>
             )}
@@ -320,20 +307,20 @@ export default function CarCard({
         {/* Bottom Bar: Price & Action */}
         <div
           className={clsx(
-            "border-t border-[var(--brand-faint)] flex items-center justify-between gap-2",
-            compact ? "mt-2 pt-2 lg:mt-6 lg:pt-4" : spacious ? "mt-4 sm:mt-6 pt-3.5 sm:pt-4" : "mt-3.5 sm:mt-6 pt-3 sm:pt-4"
+            "border-t border-white/[0.06] flex items-center justify-between gap-2",
+            compact ? "mt-2 pt-2 lg:mt-4 lg:pt-3" : spacious ? "mt-3 sm:mt-5 pt-3 sm:pt-3.5" : "mt-3 sm:mt-5 pt-2.5 sm:pt-3"
           )}
         >
           <div className="flex items-center min-w-0">
             <div className="flex flex-col min-w-0">
               <span
                 className={clsx(
-                  "font-black text-slate-900 dark:text-white tracking-tight truncate",
+                  "font-bold text-white tracking-tight truncate",
                   compact
-                    ? "text-[12px] sm:text-[14px] lg:text-lg lg:tracking-tighter"
+                    ? "text-[13px] sm:text-[15px] lg:text-lg lg:tracking-tighter"
                     : spacious
                       ? "text-[15px] sm:text-xl sm:tracking-tighter"
-                      : "text-[13px] sm:text-lg sm:tracking-tighter"
+                      : "text-[14px] sm:text-lg sm:tracking-tighter"
                 )}
               >
                 {formatCarPrice(car)}
@@ -345,18 +332,18 @@ export default function CarCard({
             href={carListingPath(car)}
             onClick={() => onCarClick("cta")}
             className={clsx(
-              "group/btn inline-flex items-center bg-[var(--brand-primary)] dark:bg-zinc-800 border border-white/10 dark:border-zinc-700 text-white dark:text-white font-black uppercase tracking-widest hover:bg-red-600 dark:hover:bg-red-600 active:scale-95 transition-all",
+              "group/btn inline-flex items-center bg-[var(--accent)] text-black font-bold uppercase tracking-widest hover:bg-[var(--accent-hover)] active:scale-95 transition-all duration-200",
               compact
-                ? "gap-1.5 px-2 py-1 text-[8px] sm:text-[9px] lg:gap-2 lg:px-4 lg:py-2 lg:text-[10px]"
-                : "gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 text-[9px] sm:text-[10px]"
+                ? "gap-1.5 px-2 py-1 text-[8px] sm:text-[9px] lg:gap-2 lg:px-3.5 lg:py-1.5 lg:text-[10px]"
+                : "gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-[9px] sm:text-[10px]"
             )}
             style={{ borderRadius: "8px" }}
           >
             View
             <div
               className={clsx(
-                "flex items-center justify-center bg-white/20 dark:bg-white/10",
-                compact ? "w-3.5 h-3.5 lg:w-5 lg:h-5" : "w-4 h-4 sm:w-5 sm:h-5"
+                "flex items-center justify-center bg-black/15 group-hover/btn:bg-black/25 transition-colors",
+                compact ? "w-4 h-4 lg:w-5 lg:h-5" : "w-4 h-4 sm:w-5 sm:h-5"
               )}
               style={{ borderRadius: "4px" }}
             >

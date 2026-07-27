@@ -5,12 +5,12 @@ export default function CarDetailMobileBar({ whatsappHref, callHref, priceLabel 
   if (!whatsappHref && !callHref) return null;
 
   return (
-    <div className="fixed bottom-0 inset-x-0 z-50 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 px-4 py-3 flex items-center gap-3 lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
+    <div className="fixed bottom-0 inset-x-0 z-50 bg-[#0f0f0f] border-t border-white/[0.06] px-4 py-3 flex items-center gap-3 lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-extrabold text-zinc-900 dark:text-white tabular-nums truncate">
+        <p className="text-sm font-extrabold text-white tabular-nums truncate">
           {priceLabel}
         </p>
-        <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">Available</p>
+        <p className="text-[10px] font-bold text-[var(--accent)]">Available</p>
       </div>
       {whatsappHref && (
         <a
@@ -28,7 +28,7 @@ export default function CarDetailMobileBar({ whatsappHref, callHref, priceLabel 
       {callHref && (
         <a
           href={callHref}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-900 dark:bg-zinc-800 text-white px-5 py-3 text-sm font-bold hover:bg-zinc-800 dark:hover:bg-zinc-700 transition-colors shrink-0"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-800 text-white px-5 py-3 text-sm font-bold hover:bg-zinc-700 transition-colors shrink-0"
         >
           <Phone className="w-5 h-5" />
           Call

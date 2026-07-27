@@ -11,7 +11,7 @@ import {
 } from "@/lib/seasonal-promo";
 
 const HOMEPAGE_FAB_CLASS =
-  "fixed z-50 flex h-14 w-14 items-center justify-center rounded-full overflow-hidden ring-2 ring-white/90 shadow-[0_8px_32px_rgba(26,61,46,0.4)] transition-all hover:scale-105 active:scale-95 dark:ring-zinc-900/80 bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-4 sm:bottom-6 sm:left-6";
+  "fixed z-50 flex h-14 w-14 items-center justify-center rounded-full overflow-hidden ring-2 ring-white/90 shadow-[0_8px_32px_rgba(26,61,46,0.4)] transition-all hover:scale-105 active:scale-95 ring-zinc-900/80 bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-4 sm:bottom-6 sm:left-6";
 
 export default function SeasonalPromoModal() {
   const pathname = usePathname() || "";
@@ -82,7 +82,7 @@ export default function SeasonalPromoModal() {
         <button
           type="button"
           onClick={minimize}
-          className="absolute top-2 right-2 z-20 flex h-9 w-9 items-center justify-center border border-white/30 bg-[#111827]/90 text-white shadow-lg transition-colors hover:bg-[#ef3340] hover:border-[#ef3340]"
+          className="absolute top-2 right-2 z-20 flex h-9 w-9 items-center justify-center border border-white/30 bg-[#0f0f0f]/90 text-white shadow-lg transition-colors hover:bg-[#ef3340] hover:border-[#ef3340]"
           aria-label="Close greeting"
         >
           <X className="h-5 w-5" />
@@ -91,7 +91,7 @@ export default function SeasonalPromoModal() {
         <Link
           href={promo.href}
           onClick={() => minimize()}
-          className="block overflow-hidden shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#38A169]"
+          className="block overflow-hidden shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
         >
           <Image
             src={promo.image}

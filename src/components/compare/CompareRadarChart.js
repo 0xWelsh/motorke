@@ -31,11 +31,11 @@ export default function CompareRadarChart({ fullComparedCars, scoreMaps, initial
   });
 
   return (
-    <div className="order-3 lg:order-3 scroll-mt-24 bg-white dark:bg-[#0f0f0f] border border-slate-100 dark:border-slate-800 p-5 sm:p-6 lg:p-8"
+    <div className="order-3 lg:order-3 scroll-mt-24 bg-[#0f0f0f] border border-white/[0.06] p-5 sm:p-6 lg:p-8"
       style={{ borderRadius: "var(--radius)" }}>
       <div className="flex items-center gap-3 mb-6">
-        <h3 className="text-xl font-bold text-[#111827] dark:text-white">Performance Radar</h3>
-        <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-[9px] font-bold text-slate-500 uppercase tracking-widest rounded">
+        <h3 className="text-xl font-bold text-white">Performance Radar</h3>
+        <span className="px-2 py-0.5 bg-white/[0.03] text-[9px] font-bold text-zinc-400 uppercase tracking-widest rounded-xl">
           Realtime
         </span>
       </div>
@@ -61,7 +61,7 @@ export default function CompareRadarChart({ fullComparedCars, scoreMaps, initial
           ))}
           <Legend
             wrapperStyle={{ fontSize: "10px", fontWeight: 700 }}
-            formatter={(value) => <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400">{value}</span>}
+            formatter={(value) => <span className="text-[10px] font-bold text-zinc-400">{value}</span>}
           />
         </RadarChart>
       </ResponsiveContainer>

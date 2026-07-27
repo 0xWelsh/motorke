@@ -26,11 +26,11 @@ const SECTIONS = [
 
 export default function DutySeoContent() {
   return (
-    <section className="mt-16 sm:mt-20 pt-12 border-t border-slate-200 dark:border-zinc-800" aria-labelledby="duty-seo-heading">
-      <h2 id="duty-seo-heading" className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2 editorial-heading">
+    <section className="mt-16 sm:mt-20 pt-12 border-t border-white/[0.06]" aria-labelledby="duty-seo-heading">
+      <h2 id="duty-seo-heading" className="text-xl sm:text-2xl font-bold text-white mb-2 editorial-heading">
         Import duty guides
       </h2>
-      <p className="text-sm text-slate-600 dark:text-slate-300 mb-8 max-w-2xl">
+      <p className="text-sm text-zinc-400 mb-8 max-w-2xl">
         Reference material for buyers researching landed costs in Kenya. For official figures, confirm with KRA or your clearing agent.
       </p>
       <div className="grid gap-6 sm:grid-cols-2">
@@ -39,14 +39,13 @@ export default function DutySeoContent() {
           return (
             <article
               key={section.title}
-              className="p-5 bg-slate-50 dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800"
-              style={{ borderRadius: "var(--radius)" }}
+              className="p-5 bg-white/[0.03] border border-white/[0.06] rounded-xl"
             >
               <div className="flex items-start gap-3 mb-2">
                 <Icon className="w-5 h-5 shrink-0 mt-0.5 text-red-500" aria-hidden />
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">{section.title}</h3>
+                <h3 className="text-sm font-bold text-white">{section.title}</h3>
               </div>
-              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed ml-8">{section.body}</p>
+              <p className="text-sm text-zinc-400 leading-relaxed ml-8">{section.body}</p>
             </article>
           );
         })}
@@ -54,7 +53,7 @@ export default function DutySeoContent() {
       <p className="mt-8 text-sm">
         <Link
           href="/cars"
-          className="font-bold uppercase tracking-widest text-[10px] text-[#b91c1c] dark:text-red-400 hover:opacity-80"
+          className="font-bold uppercase tracking-widest text-[10px] text-[var(--accent)] hover:opacity-80"
         >
           Browse verified cars for sale →
         </Link>

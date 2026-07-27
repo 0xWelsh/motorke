@@ -102,16 +102,16 @@ export default function LocationSearch() {
       <form 
         ref={formRef}
         onSubmit={handleSubmit} 
-        className="flex flex-col sm:flex-row sm:items-center bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-2.5 sm:p-2 focus-within:border-[var(--brand-accent)]/30 transition-all duration-300"
+        className="flex flex-col sm:flex-row sm:items-center bg-[#111111] border border-slate-800 rounded-2xl p-2.5 sm:p-2 focus-within:border-[var(--brand-accent)]/30 transition-all duration-300"
       >
         <div className="flex-1 flex items-center px-3 sm:px-4 gap-3 min-w-0">
-          <Search className="w-5 h-5 dark:text-slate-400 text-slate-600 shrink-0" />
+          <Search className="w-5 h-5 text-slate-400 shrink-0" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
             placeholder="Search by make, model or keyword…"
-            className="w-full bg-transparent border-none outline-none py-3 text-sm sm:text-base text-slate-800 dark:text-slate-200 placeholder:text-slate-300 font-semibold"
+            className="w-full bg-transparent border-none outline-none py-3 text-sm sm:text-base text-slate-200 placeholder:text-slate-300 font-semibold"
           />
         </div>
 
@@ -120,7 +120,7 @@ export default function LocationSearch() {
             type="button"
             onClick={detectLocation}
             className={`h-11 px-3 sm:px-4 rounded-2xl transition-all duration-200 flex items-center justify-center gap-2 group w-full sm:w-auto ${
-              location ? "bg-[var(--brand-light)] text-[var(--brand)]" : "bg-transparent border border-[#ddd4c8] dark:border-slate-800 text-slate-400 hover:text-slate-900 dark:text-white"
+              location ? "bg-[var(--brand-light)] text-[var(--brand)]" : "bg-transparent border border-slate-800 hover:text-slate-900 text-white"
             }`}
             title="Use my location"
           >
@@ -154,9 +154,9 @@ export default function LocationSearch() {
 
       {location && (
         <div className="flex items-center gap-3 mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-2xl border border-[#ddd4c8] dark:border-slate-800">
-            <MapPin className="w-3 h-3 dark:text-slate-500 text-slate-600" />
-            <span className="text-[11px] font-black dark:text-slate-500 text-slate-600 uppercase tracking-widest">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-2xl border border-slate-800">
+            <MapPin className="w-3 h-3 text-slate-500" />
+            <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest">
               Searching near you
             </span>
             <button 

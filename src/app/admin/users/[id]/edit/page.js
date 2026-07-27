@@ -37,29 +37,29 @@ export default async function AdminEditUserPage(props) {
   const saved = searchParams?.saved;
   const error = searchParams?.error;
 
-  const inputCls  = "w-full bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
-  const selectCls = "w-full bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 dark:text-white outline-none focus:border-slate-800 transition-all font-bold appearance-none";
+  const inputCls  = "w-full bg-[#111111] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-white placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
+  const selectCls = "w-full bg-[#111111] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-white outline-none focus:border-slate-800 transition-all font-bold appearance-none";
   const labelCls  = "block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 mb-2";
 
   return (
     <div className="max-w-4xl mx-auto animate-in fade-in duration-500">
       <div className="mb-10">
-        <Link href="/admin/users" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.15em] text-slate-400 hover:text-slate-900 dark:text-white transition-colors mb-8">
+        <Link href="/admin/users" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.15em] text-slate-400 hover:text-slate-900 text-white transition-colors mb-8">
           <ChevronLeft size={14} /> Back to Directory
         </Link>
         
-        <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-white p-8 rounded-[2rem] border border-[#ddd4c8] dark:border-slate-800 shadow-none">
-          <div className="shrink-0 flex items-center justify-center bg-[#f7f6f3] border border-dashed border-[#ddd4c8] dark:border-slate-800 rounded-3xl p-2 h-28 w-28">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-white p-8 rounded-[2rem] border border-[#ddd4c8] border-slate-800 shadow-none">
+          <div className="shrink-0 flex items-center justify-center bg-[#f7f6f3] border border-dashed border-[#ddd4c8] border-slate-800 rounded-3xl p-2 h-28 w-28">
              <AdminAvatarUpload currentUrl={user.avatarUrl} targetId={user.id} targetType="user" name={user.name} size="lg" />
           </div>
           <div>
-            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{user.name}</h1>
+            <h1 className="text-3xl font-black text-slate-900 text-white tracking-tight">{user.name}</h1>
             <p className="text-slate-500 text-[11px] font-bold uppercase tracking-widest mt-1 mb-3">{user.email}</p>
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex px-3 py-1 rounded-2xl bg-slate-100 text-slate-600 text-[11px] font-black uppercase tracking-widest">
                 ID: {user.id.slice(-8)}
               </span>
-              <span className={`inline-flex px-3 py-1 rounded-2xl text-[11px] font-black uppercase tracking-widest ${user.active ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300' : 'bg-red-50 text-red-600'}`}>
+              <span className={`inline-flex px-3 py-1 rounded-2xl text-[11px] font-black uppercase tracking-widest ${user.active ? 'bg-emerald-50 text-emerald-800 bg-emerald-950/40 text-emerald-300' : 'bg-red-50 text-red-600'}`}>
                 {user.active ? 'Active' : 'Locked'}
               </span>
               <span className="inline-flex px-3 py-1 rounded-2xl bg-slate-100 text-slate-700 text-[11px] font-black uppercase tracking-widest">
@@ -73,19 +73,19 @@ export default async function AdminEditUserPage(props) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           {/* PROFILE EDIT FORM */}
-          <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-[2rem] p-8 shadow-none">
+          <div className="bg-[#111111] border border-[#ddd4c8] border-slate-800 rounded-[2rem] p-8 shadow-none">
             <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100">
                <div className="w-10 h-10 rounded-2xl bg-[#f7f6f3] border border-slate-100 flex items-center justify-center text-slate-500">
                   <User size={18} />
                </div>
                <div>
-                  <h2 className="text-lg font-black text-slate-900 dark:text-white">Profile Information</h2>
+                  <h2 className="text-lg font-black text-slate-900 text-white">Profile Information</h2>
                   <p className="text-xs font-medium text-slate-500">Update general account details</p>
                </div>
             </div>
 
             {saved === "profile" && (
-              <div className="bg-emerald-50 border border-emerald-200/80 text-emerald-800 dark:bg-emerald-950/35 dark:border-emerald-800/50 dark:text-emerald-300 text-sm font-bold rounded-2xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
+              <div className="bg-emerald-50 border border-emerald-200/80 text-emerald-800 bg-emerald-950/35 border-emerald-800/50 text-emerald-300 text-sm font-bold rounded-2xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
                 ✓ Profile saved successfully
               </div>
             )}
@@ -149,19 +149,19 @@ export default async function AdminEditUserPage(props) {
           </div>
 
           {/* RESET PASSWORD */}
-          <div id="security" className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-[2rem] p-8 shadow-none">
+          <div id="security" className="bg-[#111111] border border-[#ddd4c8] border-slate-800 rounded-[2rem] p-8 shadow-none">
             <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100">
                <div className="w-10 h-10 rounded-2xl bg-[#f7f6f3] border border-slate-100 flex items-center justify-center text-slate-500">
                   <Lock size={18} />
                </div>
                <div>
-                  <h2 className="text-lg font-black text-slate-900 dark:text-white">Force Password Reset</h2>
+                  <h2 className="text-lg font-black text-slate-900 text-white">Force Password Reset</h2>
                   <p className="text-xs font-medium text-slate-500">Generate a new temporary password</p>
                </div>
             </div>
 
             {saved === "password" && (
-              <div className="bg-emerald-50 border border-emerald-200/80 text-emerald-800 dark:bg-emerald-950/35 dark:border-emerald-800/50 dark:text-emerald-300 text-sm font-bold rounded-2xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
+              <div className="bg-emerald-50 border border-emerald-200/80 text-emerald-800 bg-emerald-950/35 border-emerald-800/50 text-emerald-300 text-sm font-bold rounded-2xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
                 ✓ New password successfully set
               </div>
             )}
@@ -178,7 +178,7 @@ export default async function AdminEditUserPage(props) {
                 </p>
               </div>
               <div className="pt-4 flex justify-end">
-                <button type="submit" className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-700 px-8 h-12 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:border-slate-800 hover:text-slate-900 dark:text-white transition-all shadow-none">
+                <button type="submit" className="bg-[#111111] border border-[#ddd4c8] border-slate-800 text-slate-700 px-8 h-12 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:border-slate-800 hover:text-slate-900 text-white transition-all shadow-none">
                   Update Password
                 </button>
               </div>

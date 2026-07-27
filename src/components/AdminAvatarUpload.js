@@ -80,10 +80,10 @@ export default function AdminAvatarUpload({ currentUrl, targetId, targetType, na
           <img
             src={imageUrl}
             alt={name}
-            className={`${sizeMap[size]} object-cover border-2 border-[#ddd4c8] dark:border-slate-800 group-hover:border-[#ff5a2f]/50 transition-all`}
+            className={`${sizeMap[size]} object-cover border-2 border-white/[0.06] group-hover:border-[#ff5a2f]/50 transition-all`}
           />
         ) : (
-          <div className={`${sizeMap[size]} bg-white border-2 border-[#ddd4c8] dark:border-slate-800 group-hover:border-[#ff5a2f]/50 text-slate-500 group-hover:text-slate-900 dark:text-white flex items-center justify-center font-black transition-all`}>
+          <div className={`${sizeMap[size]} bg-[#0f0f0f] border-2 border-white/[0.06] group-hover:border-[#ff5a2f]/50 text-white flex items-center justify-center font-black transition-all rounded-xl`}>
             {initial}
           </div>
         )}
@@ -101,7 +101,7 @@ export default function AdminAvatarUpload({ currentUrl, targetId, targetType, na
         <button
           type="button"
           onClick={handleRemove}
-          className="text-[10px] font-bold uppercase tracking-wider text-red-500 hover:text-red-700 transition-colors"
+          className="text-[10px] font-bold uppercase tracking-wider text-red-500 hover:text-red-400 transition-colors"
         >
           Remove photo
         </button>

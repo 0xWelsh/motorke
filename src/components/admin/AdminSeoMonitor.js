@@ -15,10 +15,10 @@ function pct(n) {
 }
 
 function jobStatusClass(status) {
-  if (status === "DONE") return "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300";
-  if (status === "FAILED") return "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300";
-  if (status === "RUNNING") return "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300";
-  return "bg-slate-100 text-slate-600 dark:bg-zinc-800 dark:text-slate-300";
+  if (status === "DONE") return "bg-emerald-100 text-emerald-800 bg-emerald-950 text-emerald-300";
+  if (status === "FAILED") return "bg-red-100 text-red-800 bg-red-950 text-red-300";
+  if (status === "RUNNING") return "bg-blue-100 text-blue-800 bg-blue-950 text-blue-300";
+  return "bg-slate-100 text-slate-600 bg-zinc-800 text-slate-300";
 }
 
 export default function AdminSeoMonitor({ monitor }) {
@@ -40,7 +40,7 @@ export default function AdminSeoMonitor({ monitor }) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Phase 3</p>
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white">Search monitoring</h2>
+          <h2 className="text-lg font-bold text-slate-900 text-white">Search monitoring</h2>
         </div>
         <Link
           href="/api/admin/seo/monitor"
@@ -52,39 +52,39 @@ export default function AdminSeoMonitor({ monitor }) {
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-        <div className="rounded-xl border border-slate-200 dark:border-zinc-800 px-4 py-3">
+        <div className="rounded-xl border border-slate-200 border-zinc-800 px-4 py-3">
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Job queue</p>
-          <p className="mt-1 font-semibold text-slate-900 dark:text-white">{config.jobQueue || "postgres"}</p>
+          <p className="mt-1 font-semibold text-slate-900 text-white">{config.jobQueue || "postgres"}</p>
         </div>
-        <div className="rounded-xl border border-slate-200 dark:border-zinc-800 px-4 py-3">
+        <div className="rounded-xl border border-slate-200 border-zinc-800 px-4 py-3">
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">PageSpeed</p>
-          <p className="mt-1 font-semibold text-slate-900 dark:text-white">
+          <p className="mt-1 font-semibold text-slate-900 text-white">
             {config.pageSpeedEnabled ? "API key set" : "No PSI key"}
           </p>
         </div>
-        <div className="rounded-xl border border-slate-200 dark:border-zinc-800 px-4 py-3">
+        <div className="rounded-xl border border-slate-200 border-zinc-800 px-4 py-3">
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Alerts</p>
-          <p className="mt-1 font-semibold text-slate-900 dark:text-white">
+          <p className="mt-1 font-semibold text-slate-900 text-white">
             {config.alertsEnabled ? "Email" : "Off"}
             {config.slackEnabled ? " + Slack" : ""}
           </p>
         </div>
-        <div className="rounded-xl border border-slate-200 dark:border-zinc-800 px-4 py-3">
+        <div className="rounded-xl border border-slate-200 border-zinc-800 px-4 py-3">
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">GSC</p>
-          <p className="mt-1 font-semibold text-slate-900 dark:text-white">{config.gscEnabled ? "On" : "Off"}</p>
+          <p className="mt-1 font-semibold text-slate-900 text-white">{config.gscEnabled ? "On" : "Off"}</p>
         </div>
       </div>
 
-      <section className="rounded-xl border border-slate-200 dark:border-zinc-800 overflow-hidden">
-        <div className="px-4 py-3 border-b border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/50 flex items-center gap-2">
+      <section className="rounded-xl border border-slate-200 border-zinc-800 overflow-hidden">
+        <div className="px-4 py-3 border-b border-slate-100 border-zinc-800 bg-slate-50 bg-zinc-900/50 flex items-center gap-2">
           <Radar className="w-4 h-4 text-slate-500" />
           <h3 className="text-xs font-bold uppercase tracking-widest text-slate-600">Crawl smoke test</h3>
           {crawlRun ? (
             <span
               className={`ml-auto text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${
                 crawlRun.ok
-                  ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
-                  : "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300"
+                  ? "bg-emerald-100 text-emerald-800 bg-emerald-950 text-emerald-300"
+                  : "bg-red-100 text-red-800 bg-red-950 text-red-300"
               }`}
             >
               {crawlRun.ok ? "OK" : "Issues"}
@@ -94,16 +94,16 @@ export default function AdminSeoMonitor({ monitor }) {
         {!crawlRun ? (
           <p className="px-4 py-4 text-sm text-slate-500">
             No crawl runs yet. Hit{" "}
-            <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">/api/cron/seo-crawl?secret=…</code> or{" "}
-            <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">seo-monitor</code>.
+            <code className="text-xs bg-slate-100 bg-zinc-800 px-1">/api/cron/seo-crawl?secret=…</code> or{" "}
+            <code className="text-xs bg-slate-100 bg-zinc-800 px-1">seo-monitor</code>.
           </p>
         ) : (
           <>
-            <p className="px-4 py-2 text-[11px] text-slate-500 border-b border-slate-100 dark:border-zinc-800">
+            <p className="px-4 py-2 text-[11px] text-slate-500 border-b border-slate-100 border-zinc-800">
               {fmtDate(crawlRun.createdAt)} · {crawlRun.entries?.length || 0} URLs
               {crawlRun.meta?.workerSkipped ? " · local fallback" : " · Go worker"}
             </p>
-            <ul className="divide-y divide-slate-100 dark:divide-zinc-800 max-h-64 overflow-y-auto">
+            <ul className="divide-y divide-slate-100 divide-zinc-800 max-h-64 overflow-y-auto">
               {(crawlRun.entries || []).map((e) => (
                 <li key={e.id} className="px-4 py-2 text-xs flex gap-3">
                   <span
@@ -113,13 +113,13 @@ export default function AdminSeoMonitor({ monitor }) {
                   >
                     {e.status || "—"}
                   </span>
-                  <span className="text-slate-700 dark:text-slate-300 truncate">{e.url}</span>
+                  <span className="text-slate-700 text-slate-300 truncate">{e.url}</span>
                   {e.error ? <span className="text-red-500 truncate">{e.error}</span> : null}
                 </li>
               ))}
             </ul>
             {crawlFailures.length > 0 && (
-              <p className="px-4 py-2 text-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/30">
+              <p className="px-4 py-2 text-xs text-amber-700 text-amber-300 bg-amber-50 bg-amber-950/30">
                 {crawlFailures.length} URL(s) need attention.
               </p>
             )}
@@ -127,8 +127,8 @@ export default function AdminSeoMonitor({ monitor }) {
         )}
       </section>
 
-      <section className="rounded-xl border border-slate-200 dark:border-zinc-800 overflow-hidden">
-        <div className="px-4 py-3 border-b border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/50 flex items-center gap-2">
+      <section className="rounded-xl border border-slate-200 border-zinc-800 overflow-hidden">
+        <div className="px-4 py-3 border-b border-slate-100 border-zinc-800 bg-slate-50 bg-zinc-900/50 flex items-center gap-2">
           <BarChart3 className="w-4 h-4 text-slate-500" />
           <h3 className="text-xs font-bold uppercase tracking-widest text-slate-600">Search Console (28d)</h3>
         </div>
@@ -140,16 +140,16 @@ export default function AdminSeoMonitor({ monitor }) {
           </p>
         ) : (
           <>
-            <p className="px-4 py-2 text-[11px] text-slate-500 border-b border-slate-100 dark:border-zinc-800">
+            <p className="px-4 py-2 text-[11px] text-slate-500 border-b border-slate-100 border-zinc-800">
               Synced {fmtDate(gscSync.syncedAt)} · {gscSync.siteUrl}
             </p>
-            <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-zinc-800">
+            <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-100 divide-zinc-800">
               <div>
                 <p className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Top queries</p>
-                <ul className="divide-y divide-slate-100 dark:divide-zinc-800 max-h-72 overflow-y-auto">
+                <ul className="divide-y divide-slate-100 divide-zinc-800 max-h-72 overflow-y-auto">
                   {gscQueries.map((row) => (
                     <li key={row.id} className="px-4 py-2 text-xs flex justify-between gap-2">
-                      <span className="text-slate-800 dark:text-slate-200 truncate">{row.key}</span>
+                      <span className="text-slate-800 text-slate-200 truncate">{row.key}</span>
                       <span className="text-slate-500 shrink-0 tabular-nums">
                         {row.clicks} clk · pos {row.position.toFixed(1)}
                       </span>
@@ -159,10 +159,10 @@ export default function AdminSeoMonitor({ monitor }) {
               </div>
               <div>
                 <p className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Top pages</p>
-                <ul className="divide-y divide-slate-100 dark:divide-zinc-800 max-h-72 overflow-y-auto">
+                <ul className="divide-y divide-slate-100 divide-zinc-800 max-h-72 overflow-y-auto">
                   {gscPages.map((row) => (
                     <li key={row.id} className="px-4 py-2 text-xs">
-                      <p className="text-slate-800 dark:text-slate-200 truncate">{row.key}</p>
+                      <p className="text-slate-800 text-slate-200 truncate">{row.key}</p>
                       <p className="text-slate-500 tabular-nums mt-0.5">
                         {row.impressions} imp · {pct(row.ctr)} CTR · pos {row.position.toFixed(1)}
                       </p>
@@ -175,16 +175,16 @@ export default function AdminSeoMonitor({ monitor }) {
         )}
       </section>
 
-      <section className="rounded-xl border border-slate-200 dark:border-zinc-800 overflow-hidden">
-        <div className="px-4 py-3 border-b border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/50 flex items-center gap-2">
+      <section className="rounded-xl border border-slate-200 border-zinc-800 overflow-hidden">
+        <div className="px-4 py-3 border-b border-slate-100 border-zinc-800 bg-slate-50 bg-zinc-900/50 flex items-center gap-2">
           <BarChart3 className="w-4 h-4 text-slate-500" />
           <h3 className="text-xs font-bold uppercase tracking-widest text-slate-600">Search trend (daily)</h3>
         </div>
         <AdminGscTrendChart series={gscDaily} />
       </section>
 
-      <section className="rounded-xl border border-slate-200 dark:border-zinc-800 overflow-hidden">
-        <div className="px-4 py-3 border-b border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/50 flex items-center gap-2">
+      <section className="rounded-xl border border-slate-200 border-zinc-800 overflow-hidden">
+        <div className="px-4 py-3 border-b border-slate-100 border-zinc-800 bg-slate-50 bg-zinc-900/50 flex items-center gap-2">
           <Gauge className="w-4 h-4 text-slate-500" />
           <h3 className="text-xs font-bold uppercase tracking-widest text-slate-600">PageSpeed Insights</h3>
         </div>
@@ -195,10 +195,10 @@ export default function AdminSeoMonitor({ monitor }) {
               : "Set GOOGLE_PAGESPEED_API_KEY (Google Cloud Console)."}
           </p>
         ) : (
-          <ul className="divide-y divide-slate-100 dark:divide-zinc-800">
+          <ul className="divide-y divide-slate-100 divide-zinc-800">
             {pageSpeedRuns.map((r) => (
               <li key={r.id} className="px-4 py-2 text-xs flex flex-wrap justify-between gap-2">
-                <span className="text-slate-800 dark:text-slate-200 truncate max-w-[60%]">{r.url}</span>
+                <span className="text-slate-800 text-slate-200 truncate max-w-[60%]">{r.url}</span>
                 <span className="text-slate-500 tabular-nums shrink-0">
                   {r.strategy} · perf {r.performance ?? "—"}
                   {r.lcpMs != null ? ` · LCP ${Math.round(r.lcpMs)}ms` : ""}
@@ -209,18 +209,18 @@ export default function AdminSeoMonitor({ monitor }) {
         )}
       </section>
 
-      <section className="rounded-xl border border-slate-200 dark:border-zinc-800 overflow-hidden">
-        <div className="px-4 py-3 border-b border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/50 flex items-center gap-2">
+      <section className="rounded-xl border border-slate-200 border-zinc-800 overflow-hidden">
+        <div className="px-4 py-3 border-b border-slate-100 border-zinc-800 bg-slate-50 bg-zinc-900/50 flex items-center gap-2">
           <ListTodo className="w-4 h-4 text-slate-500" />
           <h3 className="text-xs font-bold uppercase tracking-widest text-slate-600">Job queue</h3>
         </div>
         {!recentJobs?.length ? (
           <p className="px-4 py-4 text-sm text-slate-500">No jobs yet.</p>
         ) : (
-          <ul className="divide-y divide-slate-100 dark:divide-zinc-800 max-h-48 overflow-y-auto">
+          <ul className="divide-y divide-slate-100 divide-zinc-800 max-h-48 overflow-y-auto">
             {recentJobs.map((j) => (
               <li key={j.id} className="px-4 py-2 text-xs flex items-center justify-between gap-2">
-                <span className="font-mono text-slate-700 dark:text-slate-300">{j.type}</span>
+                <span className="font-mono text-slate-700 text-slate-300">{j.type}</span>
                 <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${jobStatusClass(j.status)}`}>
                   {j.status}
                 </span>
@@ -234,7 +234,7 @@ export default function AdminSeoMonitor({ monitor }) {
       <p className="text-xs text-slate-500 flex items-center gap-2">
         <Globe className="w-3.5 h-3.5" />
         Cron enqueues + processes jobs:{" "}
-        <code className="bg-slate-100 dark:bg-zinc-800 px-1">/api/cron/seo-monitor?secret=CRON_SECRET</code>
+        <code className="bg-slate-100 bg-zinc-800 px-1">/api/cron/seo-monitor?secret=CRON_SECRET</code>
       </p>
     </div>
   );

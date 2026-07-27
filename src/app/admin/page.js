@@ -51,14 +51,17 @@ export default async function AdminDashboard({ searchParams }) {
     db.car.findMany({
       where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } },
       select: { createdAt: true },
+      take: 1000,
     }),
     db.lead.findMany({
       where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } },
       select: { createdAt: true },
+      take: 1000,
     }),
     db.marketingEvent.findMany({
       where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } },
       select: { createdAt: true },
+      take: 1000,
     }),
     db.car.count({ where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) } } }),
     db.car.count({

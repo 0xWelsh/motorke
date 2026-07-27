@@ -51,7 +51,7 @@ function HeroGridShowcaseMobile({ cars, carIndex, saveData }) {
       <div className="flex flex-col gap-1.5 sm:gap-2 w-full">
         <Link
           href={carListingPath(mainCar)}
-          className="group relative flex overflow-hidden bg-black shadow-xl rounded-none min-h-[96px] sm:min-h-[112px] transition-all hover:ring-1 hover:ring-[#38A169]/50"
+          className="group relative flex overflow-hidden bg-black shadow-xl rounded-xl min-h-[96px] sm:min-h-[112px] transition-all hover:ring-1 hover:ring-[#38A169]/50"
         >
           <div className="relative w-[44%] max-w-[200px] bg-black/30">
             <Image
@@ -67,7 +67,7 @@ function HeroGridShowcaseMobile({ cars, carIndex, saveData }) {
           <div className="flex flex-col justify-between flex-1 p-2.5 sm:p-3">
             <div className="flex items-start justify-between gap-3">
               <CarBadge car={mainCar} />
-              <span className="hidden sm:inline-flex w-8 h-8 rounded-full border border-white/20 items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[#38A169] group-hover:border-[#38A169] transition-all duration-300">
+              <span className="hidden sm:inline-flex w-8 h-8 rounded-full border border-white/20 items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[var(--accent)] group-hover:border-[var(--accent)] transition-all duration-300">
                 <ArrowRight className="w-4 h-4 text-white" />
               </span>
             </div>
@@ -76,7 +76,7 @@ function HeroGridShowcaseMobile({ cars, carIndex, saveData }) {
               <p className="text-[9px] sm:text-[10px] font-semibold tracking-[0.25em] text-white/60 mb-1">
                 {mainCar.year}
               </p>
-              <h4 className="text-[14px] sm:text-[16px] font-black text-white tracking-tight uppercase leading-[1.05] line-clamp-1 group-hover:text-[#38A169] transition-colors">
+              <h4 className="text-[14px] sm:text-[16px] font-black text-white tracking-tight uppercase leading-[1.05] line-clamp-1 group-hover:text-[var(--accent)] transition-colors">
                 {mainCar.make}
               </h4>
               <p className="text-[10px] sm:text-[11px] font-semibold text-white/75 tracking-[0.08em] uppercase leading-tight line-clamp-1">
@@ -99,11 +99,11 @@ function HeroGridShowcaseMobile({ cars, carIndex, saveData }) {
                     </span>
                   )}
                 </div>
-                <span className="text-[12px] sm:text-[13px] font-black text-[#38A169] leading-tight">
+                <span className="text-[12px] sm:text-[13px] font-black text-[var(--accent)] leading-tight">
                   KSh {(mainCar.price / 1000000).toFixed(2)}M
                 </span>
               </div>
-              <span className="sm:hidden w-8 h-8 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[#38A169] group-hover:border-[#38A169] transition-all duration-300">
+              <span className="sm:hidden w-8 h-8 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[var(--accent)] group-hover:border-[var(--accent)] transition-all duration-300">
                 <ArrowRight className="w-4 h-4 text-white" />
               </span>
             </div>
@@ -112,7 +112,7 @@ function HeroGridShowcaseMobile({ cars, carIndex, saveData }) {
 
         <Link
           href={carListingPath(secondaryCar)}
-          className="group relative flex overflow-hidden bg-[#111111] border border-zinc-900 shadow-lg rounded-none min-h-[96px] sm:min-h-[112px] transition-all hover:bg-zinc-800"
+          className="group relative flex overflow-hidden bg-[#111111] border border-zinc-900 shadow-lg rounded-xl min-h-[96px] sm:min-h-[112px] transition-all hover:bg-zinc-800"
         >
           <div className="relative w-[44%] max-w-[200px] bg-[#111111]">
             <Image
@@ -128,7 +128,7 @@ function HeroGridShowcaseMobile({ cars, carIndex, saveData }) {
           <div className="flex flex-col justify-between flex-1 p-2.5 sm:p-3">
             <div className="flex items-start justify-between gap-3">
               <CarBadge car={secondaryCar} />
-              <span className="hidden sm:inline-flex w-8 h-8 rounded-full border border-white/20 items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[#38A169] group-hover:border-[#38A169] transition-all duration-300">
+              <span className="hidden sm:inline-flex w-8 h-8 rounded-full border border-white/20 items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[var(--accent)] group-hover:border-[var(--accent)] transition-all duration-300">
                 <ArrowRight className="w-4 h-4 text-white" />
               </span>
             </div>
@@ -147,7 +147,7 @@ function HeroGridShowcaseMobile({ cars, carIndex, saveData }) {
 
             <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/10">
               <div className="flex items-center gap-2 min-w-0">
-                <p className="text-[12px] sm:text-[13px] font-black text-[#38A169] leading-tight shrink-0">
+                <p className="text-[12px] sm:text-[13px] font-black text-[var(--accent)] leading-tight shrink-0">
                   KSh {(secondaryCar.price / 1000000).toFixed(2)}M
                 </p>
                 {secondaryCar.dealer?.name && (
@@ -159,7 +159,7 @@ function HeroGridShowcaseMobile({ cars, carIndex, saveData }) {
                   </span>
                 )}
               </div>
-              <span className="sm:hidden w-8 h-8 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[#38A169] group-hover:border-[#38A169] transition-all duration-300">
+              <span className="sm:hidden w-8 h-8 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[var(--accent)] group-hover:border-[var(--accent)] transition-all duration-300">
                 <ArrowRight className="w-4 h-4 text-white" />
               </span>
             </div>
@@ -181,7 +181,7 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
     <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 gap-1.5 sm:gap-2 w-full min-h-[220px] max-h-[280px] sm:min-h-[300px] sm:max-h-[380px] md:min-h-[380px] md:max-h-[520px] animate-in fade-in slide-in-from-right-8 duration-1000">
       <Link
         href={carListingPath(mainCar)}
-        className="relative group overflow-hidden bg-black shadow-xl rounded-none flex flex-col min-h-[200px] sm:min-h-[280px] md:min-h-0 transition-all hover:ring-1 hover:ring-[#38A169]/50"
+        className="relative group overflow-hidden bg-black shadow-xl rounded-xl flex flex-col min-h-[200px] sm:min-h-[280px] md:min-h-0 transition-all hover:ring-1 hover:ring-[var(--accent)]/50"
       >
         <div className="absolute inset-0 z-0 transition-transform duration-1000 group-hover:scale-110">
           <Image
@@ -204,7 +204,7 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
             <p className="text-[9px] sm:text-[10px] font-sans font-semibold text-white/60 tracking-[0.25em] sm:tracking-[0.3em] mb-1">
               {mainCar.year}
             </p>
-            <h4 className="text-[1.45rem] sm:text-[1.75rem] md:text-[2.35rem] font-sans font-black text-white tracking-tight leading-[0.88] uppercase group-hover:text-[#38A169] transition-colors line-clamp-1">
+            <h4 className="text-[1.45rem] sm:text-[1.75rem] md:text-[2.35rem] font-sans font-black text-white tracking-tight leading-[0.88] uppercase group-hover:text-[var(--accent)] transition-colors line-clamp-1">
               {mainCar.make}
             </h4>
             <p className="mt-0.5 sm:mt-1 mb-2 sm:mb-4 text-[10px] sm:text-[11px] md:text-[12px] font-semibold tracking-[0.08em] uppercase text-white/75 line-clamp-1">
@@ -228,11 +228,11 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
                 <span className="text-[7px] sm:text-[8px] text-white/40 font-black uppercase tracking-[0.2em] mb-0.5">
                   Asking Price
                 </span>
-                <span className="text-base sm:text-lg md:text-xl font-black text-[#38A169]">
+                <span className="text-base sm:text-lg md:text-xl font-black text-[var(--accent)]">
                   KSh {(mainCar.price / 1000000).toFixed(2)}M
                 </span>
               </div>
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[#38A169] group-hover:border-[#38A169] transition-all duration-300">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[var(--accent)] group-hover:border-[var(--accent)] transition-all duration-300">
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
             </div>
@@ -243,7 +243,7 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
       <div className={`grid gap-1.5 sm:gap-2 min-h-[200px] sm:min-h-0 ${reviews.length > 0 ? 'grid-rows-2' : 'grid-rows-1'}`}>
         <Link
           href={carListingPath(secondaryCar)}
-          className="relative group overflow-hidden bg-[#111111] border border-zinc-900 shadow-lg rounded-none transition-all hover:bg-zinc-800 min-h-[96px] sm:min-h-0"
+          className="relative group overflow-hidden bg-[#111111] border border-zinc-900 shadow-lg rounded-xl transition-all hover:bg-zinc-800 min-h-[96px] sm:min-h-0"
         >
           <div className="absolute inset-0 z-0">
             <Image
@@ -267,7 +267,7 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
             <p className="text-[9px] sm:text-[10px] font-semibold text-white/75 tracking-[0.08em] uppercase mb-1 sm:mb-1.5 line-clamp-1">
               {secondaryVariant}
             </p>
-            <p className="text-sm sm:text-base font-black text-[#38A169]">
+            <p className="text-sm sm:text-base font-black text-[var(--accent)]">
               KSh {(secondaryCar.price / 1000000).toFixed(2)}M
             </p>
             {secondaryCar.dealer?.name && (
@@ -279,15 +279,15 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
               </span>
             )}
 
-            <div className="mt-auto pt-1 flex items-center gap-2 text-slate-400 group-hover:text-white transition-colors duration-300">
+            <div className="mt-auto pt-1 flex items-center gap-2 text-zinc-400 group-hover:text-white transition-colors duration-300">
               <span className="text-[9px] font-black uppercase tracking-[0.25em]">View Unit</span>
-              <ArrowRight className="w-3 h-3 text-[#38A169]" />
+              <ArrowRight className="w-3 h-3 text-[var(--accent)]" />
             </div>
           </div>
         </Link>
 
         {reviews.length > 0 ? (
-          <div className="relative bg-[#111111] border border-zinc-900 shadow-lg rounded-none overflow-hidden p-2.5 sm:p-4 md:p-5 flex flex-col min-h-[96px] sm:min-h-0">
+          <div className="relative bg-[#111111] border border-zinc-900 shadow-lg rounded-xl overflow-hidden p-2.5 sm:p-4 md:p-5 flex flex-col min-h-[96px] sm:min-h-0">
             <Quote className="absolute top-4 right-5 w-12 h-12 text-white/5 pointer-events-none" />
             <div className="relative z-10 flex flex-col h-full">
               <AnimatePresence mode="wait">
@@ -307,14 +307,14 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
                       />
                     ))}
                   </div>
-                  <p className="text-xs font-bold text-slate-200 line-clamp-2 mb-3 leading-relaxed">
+                  <p className="text-xs font-bold text-zinc-300 line-clamp-2 mb-3 leading-relaxed">
                     &ldquo;{currentReview?.comment || "Expert consultation and a very transparent buying process."}&rdquo;
                   </p>
                   <div className="mt-auto">
                     <p className="text-[9px] font-black text-white uppercase tracking-[0.3em] mb-0.5">
                       {currentReview?.user?.name || "Verified Client"}
                     </p>
-                    <p className="text-[8px] font-black text-[#38A169] uppercase tracking-[0.15em]">
+                    <p className="text-[8px] font-black text-[var(--accent)] uppercase tracking-[0.15em]">
                       Purchased from {currentReview?.dealer?.name || "Premium Dealer"}
                     </p>
                   </div>
@@ -322,13 +322,13 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
               </AnimatePresence>
             </div>
 
-            <div className="absolute bottom-0 left-0 h-1.5 bg-[#38A169]/10 w-full">
+            <div className="absolute bottom-0 left-0 h-1.5 bg-[var(--accent)]/10 w-full">
               <motion.div
                 key={reviewIndex}
                 initial={{ x: "-100%" }}
                 animate={{ x: "0%" }}
                 transition={{ duration: 5, ease: "linear" }}
-                className="h-full bg-[#38A169] w-full shadow-[0_0_15px_#38A169]"
+                className="h-full bg-[var(--accent)] w-full shadow-[0_0_15px_var(--accent)]"
               />
             </div>
             {cars.length > 2 && (
@@ -338,16 +338,16 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
             )}
           </div>
         ) : (
-          <div className="bg-[#111111] border border-zinc-900 shadow-lg rounded-none p-2.5 sm:p-4 md:p-5 flex flex-col min-h-[96px] sm:min-h-0">
+          <div className="bg-[#111111] border border-zinc-900 shadow-lg rounded-xl p-2.5 sm:p-4 md:p-5 flex flex-col min-h-[96px] sm:min-h-0">
             <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.3em] mb-1">
               All verified
             </p>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-zinc-400 leading-relaxed">
               Every car shown comes from a vetted Kenyan dealership with real inventory.
             </p>
-            <div className="mt-auto pt-2 flex items-center gap-2 text-slate-400">
+            <div className="mt-auto pt-2 flex items-center gap-2 text-zinc-400">
               <span className="text-[9px] font-black uppercase tracking-[0.25em]">Trusted dealers</span>
-              <ArrowRight className="w-3 h-3 text-[#38A169]" />
+              <ArrowRight className="w-3 h-3 text-[var(--accent)]" />
             </div>
           </div>
         )}
@@ -393,7 +393,7 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.35 }}
-            className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500"
+            className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400"
           >
             <span className="text-brand-accent/70">Featured</span> {currentCar.year} {currentCar.make} {currentCar.model}
           </motion.p>

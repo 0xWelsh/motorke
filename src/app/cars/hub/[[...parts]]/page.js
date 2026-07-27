@@ -457,7 +457,7 @@ export default async function CarHubPage({ params, searchParams }) {
     : null;
 
   return (
-    <div className="min-h-screen bg-white pb-20 dark:bg-[#09090b]">
+    <div className="min-h-screen bg-white pb-20 bg-[#09090b]">
       <Script
         id="hub-faq-jsonld"
         type="application/ld+json"
@@ -477,7 +477,7 @@ export default async function CarHubPage({ params, searchParams }) {
       ) : null}
 
       <div className="w-full px-2.5 sm:px-8 pt-4 sm:pt-6 overflow-x-hidden">
-        <nav className="mb-4 flex flex-wrap items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">
+        <nav className="mb-4 flex flex-wrap items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500">
           {crumbs.map((c, i) => (
             <span key={c.href + i} className="flex items-center gap-1.5">
               {i > 0 ? <ChevronRight className="size-3" /> : null}
@@ -486,34 +486,34 @@ export default async function CarHubPage({ params, searchParams }) {
                   {c.name}
                 </Link>
               ) : (
-                <span className="text-slate-900 dark:text-white">{c.name}</span>
+                <span className="text-slate-900 text-white">{c.name}</span>
               )}
             </span>
           ))}
         </nav>
 
-        <header className="mb-6 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white px-4 py-5 dark:border-zinc-800 dark:from-zinc-950 dark:to-zinc-900 sm:px-6">
+        <header className="mb-6 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white px-4 py-5 border-zinc-800 from-zinc-950 to-zinc-900 sm:px-6">
           <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#38A169]">
             Verified dealer inventory, Kenya
           </p>
-          <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-3xl">{h1}</h1>
-          <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-zinc-400">
+          <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-900 text-white sm:text-3xl">{h1}</h1>
+          <p className="mt-2 max-w-2xl text-sm text-slate-600 text-zinc-400">
             {introCopy || hubTitleAndDescription(resolved, total).description}{" "}
             <Link href={qsAllFilters()} className="font-semibold text-[#38A169] underline-offset-4 hover:underline">
               Open advanced filters
             </Link>
           </p>
-          <p className="mt-3 text-xs font-semibold text-slate-500 dark:text-zinc-500">
+          <p className="mt-3 text-xs font-semibold text-slate-500 text-zinc-500">
             {total.toLocaleString("en-KE")} listings match this hub
           </p>
         </header>
 
         {modelAggs ? (
-          <div className="mb-8 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white px-4 py-5 dark:border-zinc-800 dark:from-zinc-950 dark:to-zinc-900 sm:px-6">
+          <div className="mb-8 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white px-4 py-5 border-zinc-800 from-zinc-950 to-zinc-900 sm:px-6">
             <div className="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">Price range</p>
-                <p className="mt-0.5 text-lg font-black text-slate-900 dark:text-white">
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500">Price range</p>
+                <p className="mt-0.5 text-lg font-black text-slate-900 text-white">
                   {modelAggs.priceMin != null
                     ? `KSh ${Number(modelAggs.priceMin).toLocaleString("en-KE")}`
                     : "—"}
@@ -524,14 +524,14 @@ export default async function CarHubPage({ params, searchParams }) {
                 </p>
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">Year range</p>
-                <p className="mt-0.5 text-lg font-black text-slate-900 dark:text-white">
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500">Year range</p>
+                <p className="mt-0.5 text-lg font-black text-slate-900 text-white">
                   {modelAggs.yearMin || "—"} – {modelAggs.yearMax || "—"}
                 </p>
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">Engine</p>
-                <p className="mt-0.5 text-lg font-black text-slate-900 dark:text-white">
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500">Engine</p>
+                <p className="mt-0.5 text-lg font-black text-slate-900 text-white">
                   {modelAggs.engineMin ? `${modelAggs.engineMin} cc` : "—"}
                   {modelAggs.engineMax && modelAggs.engineMax !== modelAggs.engineMin
                     ? ` – ${modelAggs.engineMax} cc`
@@ -539,8 +539,8 @@ export default async function CarHubPage({ params, searchParams }) {
                 </p>
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">Dealers</p>
-                <p className="mt-0.5 text-lg font-black text-slate-900 dark:text-white">
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500">Dealers</p>
+                <p className="mt-0.5 text-lg font-black text-slate-900 text-white">
                   {modelAggs.dealers.length}
                 </p>
               </div>
@@ -548,21 +548,21 @@ export default async function CarHubPage({ params, searchParams }) {
 
             {(modelAggs.topFuel || modelAggs.topTrans || modelAggs.topBody) && (
               <div className="mb-4 flex flex-wrap items-center gap-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500">
+                <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500">
                   Most common:
                 </span>
                 {modelAggs.topFuel ? (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700 border-zinc-700 bg-zinc-950 text-zinc-200">
                     Fuel: {modelAggs.topFuel.label} ({modelAggs.topFuel.count})
                   </span>
                 ) : null}
                 {modelAggs.topTrans ? (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700 border-zinc-700 bg-zinc-950 text-zinc-200">
                     {modelAggs.topTrans.label}: {modelAggs.topTrans.count}
                   </span>
                 ) : null}
                 {modelAggs.topBody ? (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700 border-zinc-700 bg-zinc-950 text-zinc-200">
                     {modelAggs.topBody.label}: {modelAggs.topBody.count}
                   </span>
                 ) : null}
@@ -571,7 +571,7 @@ export default async function CarHubPage({ params, searchParams }) {
 
             {modelAggs.dealers.length > 0 && (
               <div className="mb-4">
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500 mb-1.5">
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500 mb-1.5">
                   Sold by
                 </p>
                 <div className="flex flex-wrap gap-1.5">
@@ -579,7 +579,7 @@ export default async function CarHubPage({ params, searchParams }) {
                     <Link
                       key={d.id}
                       href={`/dealers/${d.slug}`}
-                      className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:border-[#38A169] dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200"
+                      className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:border-[#38A169] border-zinc-700 bg-zinc-950 text-zinc-200"
                     >
                       {d.name} ({d.count})
                     </Link>
@@ -590,7 +590,7 @@ export default async function CarHubPage({ params, searchParams }) {
 
             {modelAggs.siblingLinks.length > 0 && modelAggs.firstCarId && (
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-zinc-500 mb-1.5">
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500 mb-1.5">
                   Compare
                 </p>
                 <div className="flex flex-wrap gap-1.5">
@@ -598,7 +598,7 @@ export default async function CarHubPage({ params, searchParams }) {
                     <Link
                       key={s.model}
                       href={`/compare?a=${modelAggs.firstCarId}&b=${s.carId}`}
-                      className="rounded-lg border border-[#38A169]/20 bg-[#38A169]/5 px-2.5 py-1 text-xs font-semibold text-[#38A169] hover:bg-[#38A169]/10 dark:border-[#38A169]/30 dark:bg-[#38A169]/10"
+                      className="rounded-lg border border-[#38A169]/20 bg-[#38A169]/5 px-2.5 py-1 text-xs font-semibold text-[#38A169] hover:bg-[#38A169]/10 border-[#38A169]/30 bg-[#38A169]/10"
                     >
                       {resolved.model} vs {s.model}
                     </Link>
@@ -611,15 +611,15 @@ export default async function CarHubPage({ params, searchParams }) {
 
         {cars.length === 0 ? (
           <div
-            className="py-20 text-center border border-[#EDF2F7] dark:border-zinc-800 bg-[#F7FAFC] dark:bg-[#111111]"
+            className="py-20 text-center border border-[#EDF2F7] border-zinc-800 bg-[#F7FAFC] bg-[#111111]"
             style={{ borderRadius: "var(--radius)" }}
           >
-            <Search className="w-11 h-11 text-slate-300 dark:text-zinc-700 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No listings here right now</h2>
+            <Search className="w-11 h-11 text-slate-300 text-zinc-700 mx-auto mb-4" />
+            <h2 className="text-xl font-bold text-slate-900 text-white mb-2">No listings here right now</h2>
             <p className="text-slate-500 mb-6">Try the main inventory search. Stock changes daily.</p>
             <Link
               href="/cars"
-              className="inline-flex bg-[#111827] dark:bg-[#38A169] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest"
+              className="inline-flex bg-[#111827] bg-[#38A169] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest"
               style={{ borderRadius: "var(--radius)" }}
             >
               Browse all cars
@@ -638,18 +638,18 @@ export default async function CarHubPage({ params, searchParams }) {
             {page > 1 ? (
               <Link
                 href={`${path}?page=${page - 1}`}
-                className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold dark:border-zinc-700"
+                className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold border-zinc-700"
               >
                 Previous
               </Link>
             ) : null}
-            <span className="flex items-center px-3 text-sm text-slate-600 dark:text-zinc-400">
+            <span className="flex items-center px-3 text-sm text-slate-600 text-zinc-400">
               Page {page} / {totalPages}
             </span>
             {page < totalPages ? (
               <Link
                 href={`${path}?page=${page + 1}`}
-                className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold dark:border-zinc-700"
+                className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold border-zinc-700"
               >
                 Next
               </Link>
@@ -658,7 +658,7 @@ export default async function CarHubPage({ params, searchParams }) {
         )}
 
         {(siblingMakes.length > 0 || countyLinks.length > 0) && (
-          <section className="mt-14 border-t border-slate-200 pt-10 dark:border-zinc-800">
+          <section className="mt-14 border-t border-slate-200 pt-10 border-zinc-800">
             {countyLinks.length > 0 && (
               <div className="mb-8">
                 <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-3">{resolved.make} by county</h2>
@@ -667,7 +667,7 @@ export default async function CarHubPage({ params, searchParams }) {
                     <Link
                       key={l.href}
                       href={`/cars/${slugifyCarSegment(resolved.make)}/${slugifyCarSegment(l.label)}`}
-                      className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169] dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200"
+                      className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169] border-zinc-700 bg-zinc-950 text-zinc-200"
                     >
                       {l.label}
                     </Link>
@@ -683,7 +683,7 @@ export default async function CarHubPage({ params, searchParams }) {
                     <Link
                       key={m.href}
                       href={m.href}
-                      className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169] dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200"
+                      className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169] border-zinc-700 bg-zinc-950 text-zinc-200"
                     >
                       {m.label}
                     </Link>
@@ -695,20 +695,20 @@ export default async function CarHubPage({ params, searchParams }) {
         )}
 
         {resolved.kind === "county" && popularMakes.length > 0 && (
-          <section className="mt-10 border-t border-slate-200 pt-10 dark:border-zinc-800">
+          <section className="mt-10 border-t border-slate-200 pt-10 border-zinc-800">
             <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-3">Browse by brand</h2>
             <div className="flex flex-wrap gap-2">
               {popularMakes.map((m) => (
                 <Link
                   key={m.href}
                   href={m.href}
-                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169] dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200"
+                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169] border-zinc-700 bg-zinc-950 text-zinc-200"
                 >
                   {m.label}
                 </Link>
               ))}
             </div>
-            <p className="mt-4 text-sm text-slate-600 dark:text-zinc-400">
+            <p className="mt-4 text-sm text-slate-600 text-zinc-400">
               Or open{" "}
               <Link href="/cars" className="font-semibold text-[#38A169] underline-offset-4 hover:underline">
                 advanced search

@@ -4,7 +4,7 @@ export default function RootLoading() {
       role="status"
       aria-live="polite"
       aria-label="Loading Motorke"
-      className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-white dark:bg-[#0a0a0a]"
+      className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#0f0f0f]"
     >
       <div className="flex items-center gap-2">
         <span className="w-2.5 h-2.5 rounded-full bg-brand-accent animate-bounce [animation-delay:0ms]" />
@@ -12,7 +12,7 @@ export default function RootLoading() {
         <span className="w-2.5 h-2.5 rounded-full bg-brand-accent animate-bounce [animation-delay:300ms]" />
       </div>
 
-      <p className="mt-8 text-[10px] font-bold uppercase tracking-[0.25em] text-zinc-300 dark:text-zinc-600">
+      <p className="mt-8 text-[10px] font-bold uppercase tracking-[0.25em] text-zinc-600">
         Loading
       </p>
 

@@ -13,7 +13,7 @@ function StarDisplay({ rating }) {
         <Star
           key={i}
           size={13}
-          className={i <= rating ? "fill-emerald-500 text-emerald-500" : "text-slate-200 dark:text-slate-600"}
+          className={i <= rating ? "fill-[var(--accent)] text-[var(--accent)]" : "text-zinc-600"}
         />
       ))}
     </div>
@@ -48,13 +48,13 @@ export default async function AdminReviewsPage() {
       {/* Header */}
       <div className="mb-12">
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-2 h-2 rounded-full bg-[#2F855A] shadow-[0_0_8px_rgba(47,133,90,0.45)]" />
-          <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Moderation</span>
+          <div className="w-2 h-2 rounded-full bg-[var(--accent)] shadow-[0_0_8px_rgba(47,133,90,0.45)]" />
+          <span className="text-xs font-black uppercase tracking-[0.3em] text-zinc-400">Moderation</span>
         </div>
-        <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+        <h1 className="text-4xl font-black text-white tracking-tight">
           Review Moderation
         </h1>
-        <p className="text-sm text-slate-500 mt-2 font-medium">
+        <p className="text-sm text-zinc-400 mt-2 font-medium">
           {dealerReviews.length + carReviews.length} total reviews &mdash; remove any that violate community guidelines.
         </p>
       </div>
@@ -62,45 +62,45 @@ export default async function AdminReviewsPage() {
       {/* Dealer Reviews */}
       <section className="mb-16">
         <div className="flex items-center gap-3 mb-6">
-          <Building2 size={16} className="text-[#2F855A]" />
-          <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-700">
-            Dealer Reviews <span className="text-slate-400 font-semibold">({dealerReviews.length})</span>
+          <Building2 size={16} className="text-[var(--accent)]" />
+          <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-300">
+            Dealer Reviews <span className="text-zinc-400 font-semibold">({dealerReviews.length})</span>
           </h2>
         </div>
 
         {dealerReviews.length === 0 ? (
-          <div className="bg-white border border-[#ddd4c8] rounded-2xl p-8 text-center">
-            <p className="text-sm text-slate-500 font-semibold">No dealer reviews yet.</p>
+          <div className="bg-[#0f0f0f] border border-white/[0.08] rounded-xl p-8 text-center">
+            <p className="text-sm text-zinc-400 font-semibold">No dealer reviews yet.</p>
           </div>
         ) : (
-          <div className="bg-white border border-[#ddd4c8] rounded-2xl overflow-hidden">
+          <div className="bg-[#0f0f0f] border border-white/[0.08] rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[700px]">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/60">
+                  <tr className="border-b border-white/[0.06] bg-white/[0.03]">
                     {["Reviewer", "Dealer", "Rating", "Comment", "Date", ""].map((h) => (
-                      <th key={h} className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">{h}</th>
+                      <th key={h} className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">{h}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-white/[0.06]">
                   {dealerReviews.map((r) => (
-                    <tr key={r.id} className="group hover:bg-slate-50/50 transition-colors">
+                    <tr key={r.id} className="group hover:bg-white/[0.03] transition-colors">
                       <td className="px-6 py-4">
-                        <p className="text-sm font-bold text-slate-900 dark:text-white">{r.user.name}</p>
-                        <p className="text-[11px] text-slate-500">{r.user.email}</p>
+                        <p className="text-sm font-bold text-white">{r.user.name}</p>
+                        <p className="text-[11px] text-zinc-400">{r.user.email}</p>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-sm font-semibold text-slate-700 capitalize">{r.dealer.name}</p>
+                        <p className="text-sm font-semibold text-zinc-300 capitalize">{r.dealer.name}</p>
                       </td>
                       <td className="px-6 py-4">
                         <StarDisplay rating={r.rating} />
-                        <p className="text-[10px] font-bold text-slate-400 mt-0.5">{r.rating}/5</p>
+                        <p className="text-[10px] font-bold text-zinc-400 mt-0.5">{r.rating}/5</p>
                       </td>
                       <td className="px-6 py-4 max-w-[280px]">
-                        <p className="text-sm text-slate-600 line-clamp-2">{r.comment || <span className="text-slate-300">No comment</span>}</p>
+                        <p className="text-sm text-zinc-400 line-clamp-2">{r.comment || <span className="text-zinc-300">No comment</span>}</p>
                       </td>
-                      <td className="px-6 py-4 text-[11px] text-slate-500 font-semibold whitespace-nowrap">
+                      <td className="px-6 py-4 text-[11px] text-zinc-400 font-semibold whitespace-nowrap">
                         {formatDate(r.createdAt)}
                       </td>
                       <td className="px-6 py-4">
@@ -122,45 +122,45 @@ export default async function AdminReviewsPage() {
       {/* Car Reviews */}
       <section>
         <div className="flex items-center gap-3 mb-6">
-          <Car size={16} className="text-[#2F855A]" />
-          <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-700">
-            Car Reviews <span className="text-slate-400 font-semibold">({carReviews.length})</span>
+          <Car size={16} className="text-[var(--accent)]" />
+          <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-300">
+            Car Reviews <span className="text-zinc-400 font-semibold">({carReviews.length})</span>
           </h2>
         </div>
 
         {carReviews.length === 0 ? (
-          <div className="bg-white border border-[#ddd4c8] rounded p-8 text-center">
-            <p className="text-sm text-slate-500 font-semibold">No car reviews yet.</p>
+          <div className="bg-[#0f0f0f] border border-white/[0.08] rounded-xl p-8 text-center">
+            <p className="text-sm text-zinc-400 font-semibold">No car reviews yet.</p>
           </div>
         ) : (
-          <div className="bg-white border border-[#ddd4c8] rounded overflow-hidden">
+          <div className="bg-[#0f0f0f] border border-white/[0.08] rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[700px]">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/60">
+                  <tr className="border-b border-white/[0.06] bg-white/[0.03]">
                     {["Reviewer", "Vehicle", "Rating", "Comment", "Date", ""].map((h) => (
-                      <th key={h} className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">{h}</th>
+                      <th key={h} className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">{h}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-white/[0.06]">
                   {carReviews.map((r) => (
-                    <tr key={r.id} className="group hover:bg-slate-50/50 transition-colors">
+                    <tr key={r.id} className="group hover:bg-white/[0.03] transition-colors">
                       <td className="px-6 py-4">
-                        <p className="text-sm font-bold text-slate-900 dark:text-white">{r.user.name}</p>
-                        <p className="text-[11px] text-slate-500">{r.user.email}</p>
+                        <p className="text-sm font-bold text-white">{r.user.name}</p>
+                        <p className="text-[11px] text-zinc-400">{r.user.email}</p>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-sm font-semibold font-sans text-slate-700">{r.car.year} {r.car.make} {r.car.model}</p>
+                        <p className="text-sm font-semibold font-sans text-zinc-300">{r.car.year} {r.car.make} {r.car.model}</p>
                       </td>
                       <td className="px-6 py-4">
                         <StarDisplay rating={r.rating} />
-                        <p className="text-[10px] font-bold text-slate-400 mt-0.5">{r.rating}/5</p>
+                        <p className="text-[10px] font-bold text-zinc-400 mt-0.5">{r.rating}/5</p>
                       </td>
                       <td className="px-6 py-4 max-w-[280px]">
-                        <p className="text-sm text-slate-600 line-clamp-2">{r.comment || <span className="text-slate-300">No comment</span>}</p>
+                        <p className="text-sm text-zinc-400 line-clamp-2">{r.comment || <span className="text-zinc-300">No comment</span>}</p>
                       </td>
-                      <td className="px-6 py-4 text-[11px] text-slate-500 font-semibold whitespace-nowrap">
+                      <td className="px-6 py-4 text-[11px] text-zinc-400 font-semibold whitespace-nowrap">
                         {formatDate(r.createdAt)}
                       </td>
                       <td className="px-6 py-4">

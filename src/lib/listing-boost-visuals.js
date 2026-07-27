@@ -23,13 +23,13 @@ export function getListingBoostVisuals(car, opts = {}) {
       hot,
       active: true,
       cardBorderClass:
-        "border border-orange-300/50 dark:border-orange-500/35",
+        "border border-orange-500/35",
       imageFrameClass:
-        "ring-1 ring-inset ring-orange-400/30 dark:ring-orange-500/25",
+        "ring-1 ring-inset ring-orange-500/25",
       galleryShellClass:
-        "border border-orange-300/50 dark:border-orange-500/35",
+        "border border-orange-500/35",
       galleryHeroClass:
-        "ring-1 ring-inset ring-orange-400/30 dark:ring-orange-500/25",
+        "ring-1 ring-inset ring-orange-500/25",
     };
   }
 
@@ -38,7 +38,7 @@ export function getListingBoostVisuals(car, opts = {}) {
       spotlight: false,
       hot: false,
       active: false,
-      cardBorderClass: "border-slate-100 dark:border-zinc-900",
+      cardBorderClass: "border-zinc-900",
       imageFrameClass: "",
       galleryShellClass: "",
       galleryHeroClass: "",
@@ -51,11 +51,11 @@ export function getListingBoostVisuals(car, opts = {}) {
       hot: true,
       active: true,
       cardBorderClass:
-        "border-red-600 dark:border-red-500 shadow-[0_0_0_1px_rgba(220,38,38,0.35)]",
+        "border-red-500 shadow-[0_0_0_1px_rgba(220,38,38,0.35)]",
       imageFrameClass:
         "ring-2 ring-inset ring-red-500/90 shadow-[inset_0_0_0_3px_rgba(249,115,22,0.45)]",
       galleryShellClass:
-        "border-2 border-red-600 dark:border-red-500 shadow-[0_0_0_1px_rgba(220,38,38,0.25)]",
+        "border-2 border-red-500 shadow-[0_0_0_1px_rgba(220,38,38,0.25)]",
       galleryHeroClass:
         "ring-2 ring-inset ring-red-500/90 shadow-[inset_0_0_0_3px_rgba(249,115,22,0.45)]",
     };
@@ -67,9 +67,9 @@ export function getListingBoostVisuals(car, opts = {}) {
       hot: false,
       active: true,
       cardBorderClass:
-        "border-red-600 dark:border-red-500 shadow-[0_0_0_1px_rgba(220,38,38,0.3)]",
+        "border-red-500 shadow-[0_0_0_1px_rgba(220,38,38,0.3)]",
       imageFrameClass: "ring-2 ring-inset ring-red-500/90",
-      galleryShellClass: "border-2 border-red-600 dark:border-red-500",
+      galleryShellClass: "border-2 border-red-500",
       galleryHeroClass: "ring-2 ring-inset ring-red-500/90",
     };
   }
@@ -79,9 +79,9 @@ export function getListingBoostVisuals(car, opts = {}) {
     hot: true,
     active: true,
     cardBorderClass:
-      "border-orange-500 dark:border-orange-400 shadow-[0_0_0_1px_rgba(249,115,22,0.28)]",
+      "border-orange-400 shadow-[0_0_0_1px_rgba(249,115,22,0.28)]",
     imageFrameClass: "ring-2 ring-inset ring-orange-500/90",
-    galleryShellClass: "border-2 border-orange-500 dark:border-orange-400",
+    galleryShellClass: "border-2 border-orange-400",
     galleryHeroClass: "ring-2 ring-inset ring-orange-500/90",
   };
 }

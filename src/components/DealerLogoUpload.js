@@ -54,10 +54,10 @@ export default function DealerLogoUpload({ currentUrl, dealerName, size = "xl" }
         <img
           src={logoUrl}
           alt={dealerName}
-          className={`${sizeMap[size]} object-cover border-4 border-white shadow-xl shadow-slate-900/5`}
+          className={`${sizeMap[size]} object-cover border-4 border-[#0f0f0f] shadow-xl shadow-black/20`}
         />
       ) : (
-        <div className={`${sizeMap[size]} bg-[#faf7f2] border-4 border-white text-slate-900 dark:text-white flex items-center justify-center font-black shadow-xl shadow-slate-900/5`}>
+        <div className={`${sizeMap[size]} bg-[#0f0f0f] border-4 border-[#0f0f0f] text-white flex items-center justify-center font-black shadow-xl shadow-black/20`}>
           {dealerName?.[0]?.toUpperCase() || "D"}
         </div>
       )}
@@ -67,9 +67,9 @@ export default function DealerLogoUpload({ currentUrl, dealerName, size = "xl" }
         style={{ borderRadius: "inherit" }}
       >
         {uploading ? (
-          <Loader2 size={18} className="animate-spin text-slate-900 dark:text-white" />
+          <Loader2 size={18} className="animate-spin text-white" />
         ) : (
-          <Camera size={18} className="text-slate-900 dark:text-white" />
+          <Camera size={18} className="text-white" />
         )}
       </div>
     </div>

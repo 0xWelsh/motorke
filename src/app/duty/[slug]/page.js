@@ -53,20 +53,20 @@ export default async function DutyVehiclePage({ params }) {
   const pathSlug = dutyVehiclePathSlug(vehicle);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0a0a0a]">
+    <div className="min-h-screen bg-[#0f0f0f]">
       <DutyJsonLd vehicle={vehicle} pathname={`/duty/${pathSlug}`} />
       <div className="home-shell pt-[4.75rem] md:pt-24 pb-8">
         <div className="max-w-6xl mx-auto">
-          <nav className="text-xs text-slate-500 mb-4" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-slate-900 dark:hover:text-white font-medium">
+          <nav className="text-xs text-zinc-400 mb-4" aria-label="Breadcrumb">
+            <Link href="/" className="hover:text-white font-medium">
               Home
             </Link>
             <span className="mx-2">/</span>
-            <Link href="/duty" className="hover:text-slate-900 dark:hover:text-white">
+            <Link href="/duty" className="hover:text-white">
               Duty calculator
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-slate-800 dark:text-slate-200">{dutyVehicleLabel(vehicle)}</span>
+            <span className="text-zinc-300">{dutyVehicleLabel(vehicle)}</span>
           </nav>
         </div>
       </div>

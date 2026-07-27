@@ -23,7 +23,7 @@ export default async function AdminSeoPage() {
           <Link
             href="/api/admin/seo/audit"
             target="_blank"
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest border border-slate-900 dark:border-white text-slate-900 dark:text-white hover:opacity-80"
+            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest border border-white text-white hover:opacity-80"
             style={{ borderRadius: "var(--radius)" }}
           >
             JSON <ExternalLink className="w-3.5 h-3.5" />
@@ -41,10 +41,10 @@ export default async function AdminSeoPage() {
         ].map((s) => (
           <div
             key={s.label}
-            className="rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 py-3"
+            className="rounded-xl border border-white/[0.06] bg-[#0f0f0f] px-4 py-3"
           >
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{s.label}</p>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">{s.value}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{s.label}</p>
+            <p className="text-2xl font-bold text-white tabular-nums">{s.value}</p>
           </div>
         ))}
       </div>
@@ -52,20 +52,20 @@ export default async function AdminSeoPage() {
       <div
         className={`flex items-start gap-3 rounded-xl border px-4 py-3 mb-8 ${
           report.ok
-            ? "border-emerald-200 bg-emerald-50 dark:border-emerald-900 dark:bg-emerald-950/30"
-            : "border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/30"
+            ? "border-[var(--accent)]/20 bg-[var(--accent)]/10"
+            : "border-amber-900 bg-amber-950/30"
         }`}
       >
         {report.ok ? (
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+          <CheckCircle2 className="w-5 h-5 text-[var(--accent)] shrink-0 mt-0.5" />
         ) : (
           <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
         )}
         <div>
-          <p className="text-sm font-bold text-slate-900 dark:text-white">
+          <p className="text-sm font-bold text-white">
             {report.ok ? "No critical SEO blockers detected" : "Action recommended"}
           </p>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+          <p className="text-xs text-zinc-400 mt-1">
             Sitemap:{" "}
             <a href={report.sitemapUrl} className="underline" target="_blank" rel="noreferrer">
               {report.sitemapUrl}
@@ -75,26 +75,26 @@ export default async function AdminSeoPage() {
       </div>
 
       {report.issues.length > 0 && (
-        <section className="rounded-xl border border-slate-200 dark:border-zinc-800 overflow-hidden">
-          <div className="px-4 py-3 border-b border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/50 flex items-center gap-2">
-            <Search className="w-4 h-4 text-slate-500" />
-            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-600">Issues</h2>
+        <section className="rounded-xl border border-white/[0.06] overflow-hidden">
+          <div className="px-4 py-3 border-b border-white/[0.06] bg-white/[0.03] flex items-center gap-2">
+            <Search className="w-4 h-4 text-zinc-400" />
+            <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400">Issues</h2>
           </div>
-          <ul className="divide-y divide-slate-100 dark:divide-zinc-800">
+          <ul className="divide-y divide-white/[0.06]">
             {report.issues.map((issue, i) => (
               <li key={`${issue.code}-${i}`} className="px-4 py-3 text-sm">
                 <span
                   className={`inline-block text-[9px] font-black uppercase tracking-widest mr-2 px-1.5 py-0.5 rounded ${
                     issue.severity === "error"
-                      ? "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300"
+                      ? "bg-red-950 text-red-300"
                       : issue.severity === "warn"
-                        ? "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200"
-                        : "bg-slate-100 text-slate-600 dark:bg-zinc-800 dark:text-slate-300"
+                        ? "bg-amber-950 text-amber-200"
+                        : "bg-white/[0.06] text-zinc-300"
                   }`}
                 >
                   {issue.severity}
                 </span>
-                <span className="text-slate-800 dark:text-slate-200">{issue.message}</span>
+                <span className="text-zinc-300">{issue.message}</span>
               </li>
             ))}
           </ul>
@@ -103,27 +103,27 @@ export default async function AdminSeoPage() {
 
       <AdminSeoMonitor monitor={monitor} />
 
-      <section className="mt-10 rounded-xl border border-slate-200 dark:border-zinc-800 p-5 text-sm text-slate-600 dark:text-slate-400">
-        <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">Setup</h2>
+      <section className="mt-10 rounded-xl border border-white/[0.06] p-5 text-sm text-zinc-400">
+        <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-3">Setup</h2>
         <ul className="list-disc pl-5 space-y-2">
-          <li>Run <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">npm run db:backfill-slugs</code> if slugs are missing.</li>
+          <li>Run <code className="text-xs bg-white/[0.06] px-1">npm run db:backfill-slugs</code> if slugs are missing.</li>
           <li>
-            Cron: <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">/api/cron/seo-monitor?secret=CRON_SECRET</code> — Postgres job queue (crawl, GSC, daily trend, PageSpeed, audit).
+            Cron: <code className="text-xs bg-white/[0.06] px-1">/api/cron/seo-monitor?secret=CRON_SECRET</code> — Postgres job queue (crawl, GSC, daily trend, PageSpeed, audit).
           </li>
           <li>
-            PageSpeed: <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">GOOGLE_PAGESPEED_API_KEY</code> · Alerts: support email + optional{" "}
-            <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">SLACK_WEBHOOK_URL</code>
+            PageSpeed: <code className="text-xs bg-white/[0.06] px-1">GOOGLE_PAGESPEED_API_KEY</code> · Alerts: support email + optional{" "}
+            <code className="text-xs bg-white/[0.06] px-1">SLACK_WEBHOOK_URL</code>
           </li>
           <li>
-            GSC: <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">GSC_SYNC_ENABLED=true</code>,{" "}
-            <code className="text-xs bg-slate-100 dark:bg-zinc-800 px-1">GSC_SITE_URL</code>, service account with Search Console access.
+            GSC: <code className="text-xs bg-white/[0.06] px-1">GSC_SYNC_ENABLED=true</code>,{" "}
+            <code className="text-xs bg-white/[0.06] px-1">GSC_SITE_URL</code>, service account with Search Console access.
           </li>
           <li>
             Optional Go worker: <code className="text-xs">SEO_WORKER_URL</code> + deploy{" "}
             <code className="text-xs">services/seo-worker</code>.
           </li>
           <li>
-            <Link href="/admin/content" className="text-[#2F855A] font-semibold hover:opacity-80">
+            <Link href="/admin/content" className="text-[var(--accent)] font-semibold hover:opacity-80">
               Content engine
             </Link>
             {" "}

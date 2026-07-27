@@ -31,10 +31,10 @@ export default async function AdminApprovalsPage() {
   });
 
   const gradients = [
-    "from-slate-100 to-slate-200",
-    "from-emerald-50 to-emerald-100",
-    "from-blue-50 to-blue-100",
-    "from-slate-50 to-slate-100",
+    "from-white/[0.06] to-white/[0.08]",
+    "from-[var(--accent)]/10 to-[var(--accent)]/15",
+    "from-blue-500/10 to-blue-500/15",
+    "from-white/[0.03] to-white/[0.06]",
   ];
 
   return (
@@ -43,70 +43,70 @@ export default async function AdminApprovalsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-8">
         <div>
           <div className="flex items-center gap-3 mb-3">
-             <div className="w-2 h-2 rounded-2xl bg-[#2F855A] shadow-[0_0_8px_rgba(47,133,90,0.45)] animate-pulse" />
-             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-800 dark:text-slate-200">Dealer Approval</span>
+             <div className="w-2 h-2 rounded-xl bg-[var(--accent)] shadow-[0_0_8px_rgba(47,133,90,0.45)] animate-pulse" />
+             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-zinc-300">Dealer Approval</span>
           </div>
-          <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">
-            Pending Approvals <span className="text-slate-500 font-medium ml-3">/ {dealers.length} Dealers</span>
+          <h1 className="text-4xl font-black text-white tracking-tight">
+            Pending Approvals <span className="text-zinc-400 font-medium ml-3">/ {dealers.length} Dealers</span>
           </h1>
         </div>
       </div>
 
       {/* ── DATA REGISTRY ── */}
-      <div className="bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 rounded-[2.5rem] overflow-hidden shadow-none">
+      <div className="bg-[#0f0f0f] border border-white/[0.08] rounded-xl overflow-hidden shadow-none">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50/50">
+              <tr className="border-b border-white/[0.06] bg-white/[0.03]">
                 {["Dealer", "Details", "Status", ""].map((h) => (
-                  <th key={h} className="px-10 py-6 text-[11px] font-black uppercase tracking-[0.25em] text-slate-700">{h}</th>
+                  <th key={h} className="px-10 py-6 text-[11px] font-black uppercase tracking-[0.25em] text-zinc-300">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-white/[0.06]">
               {dealers.map((dealer) => {
                 const gradient = gradients[dealer.id.charCodeAt(0) % gradients.length];
                 return (
-                <tr key={dealer.id} className="group hover:bg-slate-50/50 transition-colors">
+                <tr key={dealer.id} className="group hover:bg-white/[0.03] transition-colors">
                   <td className="px-10 py-7">
                     <div className="flex items-center gap-5">
-                      <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${gradient} text-slate-900 dark:text-white flex items-center justify-center font-black text-xl border border-white group-hover:scale-105 transition-transform duration-500`}>
+                      <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${gradient} text-white flex items-center justify-center font-black text-xl border border-white group-hover:scale-105 transition-transform duration-500`}>
                         {dealer.name[0]?.toUpperCase()}
                       </div>
                       <div>
-                        <p className="text-lg font-black text-slate-900 dark:text-white tracking-tight leading-none mb-1.5 uppercase group-hover:text-[#2F855A] dark:group-hover:text-emerald-400 transition-colors">{dealer.name}</p>
+                        <p className="text-lg font-black text-white tracking-tight leading-none mb-1.5 uppercase group-hover:text-[var(--accent)] transition-colors">{dealer.name}</p>
                         <div className="flex items-center gap-3">
-                           <span className="text-[11px] font-bold text-slate-600 uppercase tracking-widest">{dealer.phone}</span>
-                           <div className="w-1 h-1 rounded-2xl bg-slate-200" />
-                           <span className="text-[11px] font-bold text-[#2F855A] dark:text-emerald-400 uppercase tracking-widest">Entry: {new Date(dealer.createdAt).toLocaleDateString()}</span>
+                           <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">{dealer.phone}</span>
+                           <div className="w-1 h-1 rounded-xl bg-white/[0.06]" />
+                           <span className="text-[11px] font-bold text-[var(--accent)] uppercase tracking-widest">Entry: {new Date(dealer.createdAt).toLocaleDateString()}</span>
                         </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-10 py-7">
-                     <div className="flex items-center gap-2.5 text-slate-700 mb-1">
-                        <MapPin size={14} className="text-[#2F855A]/45 dark:text-emerald-500/50" />
+                     <div className="flex items-center gap-2.5 text-zinc-300 mb-1">
+                        <MapPin size={14} className="text-[var(--accent)]" />
                         <p className="text-xs font-bold uppercase tracking-widest">{dealer.county || "Unknown Territory"}</p>
                      </div>
-                     <p className="text-[11px] font-medium text-slate-600 uppercase tracking-tighter">{dealer.location}</p>
+                     <p className="text-[11px] font-medium text-zinc-400 uppercase tracking-tighter">{dealer.location}</p>
                   </td>
                   <td className="px-10 py-7">
-                     <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-800/45 rounded-2xl w-fit shadow-none">
-                        <Clock size={12} className="text-emerald-700 dark:text-emerald-400" />
-                        <span className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-widest">
+                     <div className="flex items-center gap-2 px-4 py-2 bg-[var(--accent)]/10 border border-[var(--accent)]/20 rounded-xl w-fit shadow-none">
+                        <Clock size={12} className="text-[var(--accent)]" />
+                        <span className="text-[11px] font-bold text-[var(--accent)] uppercase tracking-widest">
                           Awaiting Validation
                         </span>
                      </div>
                   </td>
                   <td className="px-10 py-7 text-right">
                     <div className="flex items-center justify-end gap-3 sm:opacity-0 lg:group-hover:opacity-100 transition-all duration-300">
-                      <Link href={`/admin/dealers/${dealer.id}/edit`} className="h-11 px-6 bg-white dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 text-slate-700 hover:text-slate-900 dark:text-white hover:border-slate-300 font-bold text-[11px] uppercase tracking-widest rounded-2xl transition-all flex items-center gap-2 shadow-none" title="Audit Profile">
+                      <Link href={`/admin/dealers/${dealer.id}/edit`} className="h-11 px-6 bg-[#0f0f0f] border border-white/[0.08] text-zinc-300 hover:text-white hover:border-white/[0.15] font-bold text-[11px] uppercase tracking-widest rounded-xl transition-all flex items-center gap-2 shadow-none" title="Audit Profile">
                         <Edit3 size={14} /> Inspect
                       </Link>
                       
                       <form action={`/api/admin/dealers/${dealer.id}/toggle-verified`} method="POST">
                         <button type="submit" 
-                          className="h-11 px-6 bg-[#2F855A] hover:bg-[#38A169] text-white font-bold text-[11px] uppercase tracking-widest border border-transparent rounded-2xl transition-all flex items-center gap-2"
+                          className="h-11 px-6 bg-[var(--accent)] hover:bg-[var(--accent)] text-white font-bold text-[11px] uppercase tracking-widest border border-transparent rounded-xl transition-all flex items-center gap-2"
                         >
                           <CheckCircle2 size={14} /> Authorize
                         </button>
@@ -124,11 +124,11 @@ export default async function AdminApprovalsPage() {
         
         {dealers.length === 0 && (
           <div className="py-32 text-center">
-            <div className="w-20 h-20 bg-[#f7f6f3] rounded-2xl border border-slate-100 flex items-center justify-center mx-auto mb-8">
-               <ShieldCheck size={32} className="text-slate-400" />
+            <div className="w-20 h-20 bg-white/[0.03] rounded-xl border border-white/[0.06] flex items-center justify-center mx-auto mb-8">
+               <ShieldCheck size={32} className="text-zinc-400" />
             </div>
-            <p className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">Queue Purged</p>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-slate-600 mt-2 tracking-wide">All partner nodes have been successfully validated.</p>
+            <p className="text-xl font-black text-white uppercase tracking-tighter">Queue Purged</p>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 mt-2 tracking-wide">All partner nodes have been successfully validated.</p>
           </div>
         )}
       </div>

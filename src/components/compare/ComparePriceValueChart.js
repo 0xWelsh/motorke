@@ -13,18 +13,18 @@ export default function ComparePriceValueChart({ fullComparedCars, initialCarsBy
 
   const scatterData = fullComparedCars.map((car, idx) => ({
     name: `${car.year} ${car.make} ${car.model}`,
-    price: Math.round((car.price || 0) / 1000000), // in millions
+    price: Math.round((car.price || 0) / 1000000),
     score: Math.round((scoreMaps.overallMap.get(car.id) || 0) * 100),
     color: CAR_COLORS[idx] || "#718096",
     priceRaw: car.price || 0,
   }));
 
   return (
-    <div className="order-6 lg:order-6 scroll-mt-24 bg-white dark:bg-[#0f0f0f] border border-slate-100 dark:border-slate-800 p-5 sm:p-6 lg:p-8"
+    <div className="order-6 lg:order-6 scroll-mt-24 bg-[#0f0f0f] border border-white/[0.06] p-5 sm:p-6 lg:p-8"
       style={{ borderRadius: "var(--radius)" }}>
       <div className="flex items-center gap-3 mb-6">
-        <h3 className="text-xl font-bold text-[#111827] dark:text-white">Price vs Value</h3>
-        <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-[9px] font-bold text-slate-500 uppercase tracking-widest rounded">
+        <h3 className="text-xl font-bold text-white">Price vs Value</h3>
+        <span className="px-2 py-0.5 bg-white/[0.03] text-[9px] font-bold text-zinc-400 uppercase tracking-widest rounded-xl">
           Score / M KES
         </span>
       </div>
@@ -70,10 +70,10 @@ export default function ComparePriceValueChart({ fullComparedCars, initialCarsBy
       )}
       <div className="mt-4 grid grid-cols-{fullComparedCars.length} gap-3">
         {scatterData.map((d, idx) => (
-          <div key={d.name} className="text-center p-2 bg-slate-50 dark:bg-slate-900 rounded-lg">
-            <p className="text-[9px] font-bold uppercase tracking-wider text-slate-500 truncate">{d.name}</p>
-            <p className="text-sm font-black text-[#111827] dark:text-white">{d.score}/100</p>
-            <p className="text-[8px] text-slate-400">at {formatPrice(d.priceRaw)}</p>
+          <div key={d.name} className="text-center p-2 bg-white/[0.03] rounded-xl">
+            <p className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 truncate">{d.name}</p>
+            <p className="text-sm font-black text-white">{d.score}/100</p>
+            <p className="text-[8px] text-zinc-400">at {formatPrice(d.priceRaw)}</p>
           </div>
         ))}
       </div>

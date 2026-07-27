@@ -81,10 +81,10 @@ export default function HomepagePriceFilter() {
           <button
             key={make}
             onClick={() => toggleMake(make)}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all rounded-lg ${
               selectedMake === make
-                ? "border-brand-accent bg-brand-accent/10 text-brand-accent dark:text-emerald-400 dark:border-emerald-500"
-                : "border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-[#111]/80 text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 hover:text-slate-900 dark:hover:text-white"
+                ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
+                : "border-white/[0.08] bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08] hover:border-white/[0.15] hover:text-white"
             }`}
           >
             {make}
@@ -94,10 +94,10 @@ export default function HomepagePriceFilter() {
           <button
             key={chip.label}
             onClick={() => toggleExtra(chip.param, chip.value)}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all rounded-lg ${
               selectedExtra[chip.param] === chip.value
-                ? "border-brand-accent bg-brand-accent/10 text-brand-accent dark:text-emerald-400 dark:border-emerald-500"
-                : "border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-[#111]/80 text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 hover:text-slate-900 dark:hover:text-white"
+                ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
+                : "border-white/[0.08] bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08] hover:border-white/[0.15] hover:text-white"
             }`}
           >
             {chip.label}
@@ -111,10 +111,10 @@ export default function HomepagePriceFilter() {
           <button
             key={i}
             onClick={() => selectPreset(i)}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all rounded-lg ${
               activePreset === i
-                ? "border-brand-accent bg-brand-accent/10 text-brand-accent dark:text-emerald-400 dark:border-emerald-500"
-                : "border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-[#111]/80 text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 hover:text-slate-900 dark:hover:text-white"
+                ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
+                : "border-white/[0.08] bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08] hover:border-white/[0.15] hover:text-white"
             }`}
           >
             {preset.label}
@@ -133,9 +133,9 @@ export default function HomepagePriceFilter() {
               setCustomMin(e.target.value);
               setActivePreset(null);
             }}
-            className="w-24 sm:w-28 px-2.5 py-1.5 text-xs border border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-[#111]/80 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-brand-accent"
+            className="w-24 sm:w-28 px-2.5 py-1.5 text-xs border border-white/[0.08] bg-white/[0.04] text-white placeholder:text-zinc-500 focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 rounded-lg transition-all"
           />
-          <span className="text-slate-400 dark:text-zinc-500 text-xs font-medium">&ndash;</span>
+          <span className="text-zinc-500 text-xs font-medium">&ndash;</span>
           <input
             type="number"
             placeholder="Max KSh"
@@ -144,17 +144,17 @@ export default function HomepagePriceFilter() {
               setCustomMax(e.target.value);
               setActivePreset(null);
             }}
-            className="w-24 sm:w-28 px-2.5 py-1.5 text-xs border border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-[#111]/80 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-brand-accent"
+            className="w-24 sm:w-28 px-2.5 py-1.5 text-xs border border-white/[0.08] bg-white/[0.04] text-white placeholder:text-zinc-500 focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 rounded-lg transition-all"
           />
         </div>
 
         <button
           onClick={applyFilters}
           disabled={!hasSelection}
-          className={`inline-flex items-center gap-1.5 px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all ${
+          className={`inline-flex items-center gap-1.5 px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all rounded-lg ${
             hasSelection
-              ? "border-brand-accent bg-brand-accent text-white hover:opacity-90 cursor-pointer"
-              : "border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-[#111]/80 text-slate-400 dark:text-zinc-500 cursor-not-allowed"
+              ? "border-[var(--accent)] bg-[var(--accent)] text-black hover:bg-[var(--accent-hover)] cursor-pointer"
+              : "border-white/[0.08] bg-white/[0.04] text-zinc-500 cursor-not-allowed"
           }`}
         >
           <Search className="w-3 h-3" aria-hidden />
@@ -164,7 +164,7 @@ export default function HomepagePriceFilter() {
         {hasSelection && (
           <button
             onClick={resetFilters}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border border-slate-300 dark:border-zinc-600 bg-white/80 dark:bg-[#111]/80 text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-all"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border border-white/[0.08] bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08] hover:border-white/[0.15] transition-all rounded-lg"
           >
             <RotateCcw className="w-3 h-3" aria-hidden />
             Reset

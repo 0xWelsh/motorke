@@ -16,20 +16,20 @@ export const metadata = {
 
 export default function RequestCarPage() {
   return (
-    <div className="min-h-screen bg-[#e8f1fa] dark:bg-[#0c1524]">
-      <section className="border-b border-sky-200/80 dark:border-sky-900/60 pt-14 sm:pt-16 pb-5 sm:pb-6 px-4 sm:px-6">
+    <div className="min-h-screen bg-[#0c1524]">
+      <section className="border-b border-sky-900/60 pt-14 sm:pt-16 pb-5 sm:pb-6 px-4 sm:px-6">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white tracking-tight mb-3">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-3">
             Request a car
           </h1>
-          <p className="text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
+          <p className="text-zinc-300 text-sm sm:text-base leading-relaxed">
             Give us the details of the car you want. Verified sellers see your request without your phone
             number and send offers through BIDGARI, usually within a few hours.
           </p>
-          <p className="mt-3 text-xs text-slate-600 dark:text-slate-400">
-            Requests stay live for <strong className="text-slate-800 dark:text-slate-200">7 days</strong>.
+          <p className="mt-3 text-xs text-zinc-400">
+            Requests stay live for <strong className="text-zinc-300">7 days</strong>.
             Are you a seller?{" "}
-            <Link href="/requests" className="font-bold text-[#2563eb] dark:text-sky-300 hover:underline">
+            <Link href="/requests" className="font-bold text-sky-300 hover:underline">
               Browse open requests
             </Link>
           </p>

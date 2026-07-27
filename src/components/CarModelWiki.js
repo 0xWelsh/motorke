@@ -10,35 +10,35 @@ export default function CarModelWiki({ car, wiki }) {
 
   return (
     <section aria-labelledby="model-wiki-heading">
-      <h2 id="model-wiki-heading" className="text-[12px] font-serif font-bold uppercase tracking-[0.15em] text-emerald-600 mb-4">
+      <h2 id="model-wiki-heading" className="text-[12px] font-serif font-bold uppercase tracking-[0.15em] text-[var(--accent)] mb-4">
         {wiki.source === "curated" ? "Buyer Notes" : wiki.source === "listing" ? "About This Listing" : "Buyer Notes"}
       </h2>
 
-      <div className="space-y-3 text-[14px] sm:text-[15px] text-zinc-600 dark:text-zinc-400 leading-[1.7]">
+      <div className="space-y-3 text-[14px] sm:text-[15px] text-zinc-400 leading-[1.7]">
         {wiki.paragraphs.map((para) => (
           <p key={para.slice(0, 40)}>{para}</p>
         ))}
       </div>
 
       {wiki.bullets?.length > 0 && (
-        <ul className="mt-4 space-y-1.5 text-[14px] sm:text-[15px] text-zinc-600 dark:text-zinc-400 leading-[1.7]">
+        <ul className="mt-4 space-y-1.5 text-[14px] sm:text-[15px] text-zinc-400 leading-[1.7]">
           {wiki.bullets.map((item) => (
             <li key={item} className="flex items-start gap-2">
-              <span className="mt-[7px] w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" aria-hidden />
+              <span className="mt-[7px] w-1.5 h-1.5 rounded-full bg-[var(--accent)] shrink-0" aria-hidden />
               <span>{item}</span>
             </li>
           ))}
         </ul>
       )}
 
-      <p className="mt-4 text-[13px] text-zinc-500 dark:text-zinc-500">
-        <Link href={hubHref} className="font-semibold text-emerald-600 hover:underline">
+      <p className="mt-4 text-[13px] text-zinc-400">
+        <Link href={hubHref} className="font-semibold text-[var(--accent)] hover:underline">
           Browse all {car.make} {car.model} for sale
         </Link>
         {dutyPath && (
           <>
             <span className="mx-2 opacity-40">·</span>
-            <Link href={dutyPath} className="font-semibold text-emerald-600 hover:underline">
+            <Link href={dutyPath} className="font-semibold text-[var(--accent)] hover:underline">
               Import duty calculator
             </Link>
           </>

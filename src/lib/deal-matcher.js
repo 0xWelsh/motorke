@@ -29,8 +29,7 @@ export async function findBetterDeal(carId, options = {}) {
           // Price must be at least 5% cheaper (or maxPriceDrop, whichever is less)
           lt: viewedCar.price * 0.95,
         },
-        active: true, // Only active listings
-        status: "available", // Not sold
+        available: true,
       },
       orderBy: [
         { price: "asc" }, // Cheapest first
@@ -131,22 +130,24 @@ export async function getUsersWithRecentViews(daysBack = 7) {
 
     if (viewsByUser.length === 0) return [];
 
-    // Get full user details
-    const usersWithCounts = await Promise.all(
-      viewsByUser.map(async (group) => {
-        const user = await db.user.findUnique({
-          where: { id: group.userId },
-          select: { id: true, email: true, name: true },
-        });
+    // Get full user details (batched, no N+1)
+    const userIds = viewsByUser.map((g) => g.userId);
+    const users = await db.user.findMany({
+      where: { id: { in: userIds } },
+      select: { id: true, email: true, name: true },
+    });
+    const userMap = {};
+    users.forEach((u) => { userMap[u.id] = u; });
 
-        return {
-          userId: group.userId,
-          email: user?.email,
-          name: user?.name || "Valued Customer",
-          viewCount: group._count.id,
-        };
-      })
-    );
+    const usersWithCounts = viewsByUser.map((group) => {
+      const user = userMap[group.userId];
+      return {
+        userId: group.userId,
+        email: user?.email,
+        name: user?.name || "Valued Customer",
+        viewCount: group._count.id,
+      };
+    });
 
     // Filter out users without email
     return usersWithCounts.filter((u) => u.email);

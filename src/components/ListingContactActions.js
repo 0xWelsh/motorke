@@ -77,7 +77,7 @@ export default function ListingContactActions({
         <Link
           href={callHref}
           onClick={onCall}
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-[12px] font-bold text-slate-900 shadow-sm transition hover:bg-slate-50 active:scale-[0.98] dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800"
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/[0.06] bg-[#0f0f0f] px-4 py-3 text-[12px] font-bold text-white shadow-sm transition hover:bg-white/[0.06] active:scale-[0.98]"
         >
           <Phone className="h-4 w-4 shrink-0" aria-hidden />
           Call Us

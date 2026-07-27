@@ -32,7 +32,7 @@ export default function DeleteButton({
         onClick={handleClick}
         title={label}
         aria-label={label}
-        className="rounded-xl border border-rose-200 bg-rose-50 p-2.5 text-rose-600 transition hover:border-rose-400 hover:bg-rose-100 dark:border-rose-900/70 dark:bg-rose-950/50 dark:text-rose-400 dark:hover:bg-rose-950"
+        className="rounded-xl border border-rose-900/70 bg-rose-950/50 p-2.5 text-rose-400 transition hover:border-rose-400 hover:bg-rose-950"
       >
         <Trash2 size={16} strokeWidth={2.25} aria-hidden />
       </button>

@@ -27,7 +27,7 @@ export default function DealerLocationMap({ dealer }) {
   const googleHref = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
 
   return (
-    <div className="border border-[#ddd4c8] dark:border-slate-800 bg-white overflow-hidden">
+    <div className="border border-[#ddd4c8] border-slate-800 bg-white overflow-hidden">
       <div className="px-5 pt-5 pb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-[#ff5a2f]" />

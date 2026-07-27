@@ -22,12 +22,12 @@ export default async function AdminDutyVehiclesPage() {
       <div>
         <Link
           href="/admin"
-          className="text-xs font-medium text-slate-500 hover:text-slate-800 dark:hover:text-slate-300"
+          className="text-xs font-medium text-zinc-400 hover:text-zinc-300"
         >
           ← Dashboard
         </Link>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-2">Duty CRSP catalog</h1>
-        <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+        <h1 className="text-2xl font-bold text-white mt-2">Duty CRSP catalog</h1>
+        <p className="text-sm text-zinc-400 mt-2 leading-relaxed">
           Grow the import duty calculator search catalog. Use the starter CSV in the repo or build your own in Google
           Sheets. When you get official KRA CRSP figures from a clearing agent, paste them here and re-import.
         </p>
@@ -35,9 +35,9 @@ export default async function AdminDutyVehiclesPage() {
 
       <AdminDutyCrspImport initialCount={catalogCount} />
 
-      <div className="rounded-xl border border-slate-200 bg-white p-5 text-xs text-slate-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-slate-400 leading-relaxed">
-        <p className="font-bold text-slate-900 dark:text-white mb-2">CLI import (production)</p>
-        <pre className="bg-slate-50 dark:bg-zinc-900 p-3 rounded-lg overflow-x-auto text-[11px]">
+      <div className="rounded-xl border border-white/[0.06] bg-[#0f0f0f] p-5 text-xs text-zinc-400 leading-relaxed">
+        <p className="font-bold text-white mb-2">CLI import (production)</p>
+        <pre className="bg-white/[0.03] p-3 rounded-lg overflow-x-auto text-[11px]">
           npm run db:import-crsp{"\n"}
           npm run db:import-crsp -- data/duty-crsp/starter-catalog.csv
         </pre>

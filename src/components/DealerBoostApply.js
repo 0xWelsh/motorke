@@ -60,7 +60,7 @@ export default function DealerBoostApply({
         className={clsx(
           "flex items-center justify-center gap-1.5 w-full font-black uppercase tracking-[0.1em] transition-colors",
           compact
-            ? "text-[10px] py-2 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 hover:bg-amber-100 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100"
+            ? "text-[10px] py-2 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 hover:bg-amber-100 border-amber-900/50 bg-amber-950/40 text-amber-100"
             : "text-[11px] py-2.5 rounded-2xl border border-amber-200 bg-amber-50 text-amber-900 hover:bg-amber-100"
         )}
       >
@@ -72,8 +72,8 @@ export default function DealerBoostApply({
       </button>
 
       {open ? (
-        <div className="mt-2 p-2.5 border border-[#ddd4c8] dark:border-slate-800 rounded-xl bg-[#fbfcfe] dark:bg-[#0d0d0d] space-y-2">
-          <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-600 dark:text-slate-400 truncate">
+        <div className="mt-2 p-2.5 border border-[#ddd4c8] border-slate-800 rounded-xl bg-[#fbfcfe] bg-[#0d0d0d] space-y-2">
+          <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-600 text-slate-400 truncate">
             {carLabel}
           </p>
           {BOOST_OPTIONS.map((opt) => (
@@ -82,9 +82,9 @@ export default function DealerBoostApply({
               type="button"
               disabled={Boolean(loading)}
               onClick={() => apply(opt.type)}
-              className="w-full text-left px-2.5 py-2 rounded-lg border border-[#ddd4c8] dark:border-slate-700 bg-white dark:bg-[#111111] hover:border-[#2F855A] disabled:opacity-50"
+              className="w-full text-left px-2.5 py-2 rounded-lg border border-[#ddd4c8] border-slate-700 bg-white bg-[#111111] hover:border-[#2F855A] disabled:opacity-50"
             >
-              <span className="block text-[10px] font-black uppercase tracking-[0.1em] text-slate-900 dark:text-white">
+              <span className="block text-[10px] font-black uppercase tracking-[0.1em] text-slate-900 text-white">
                 {loading === opt.type ? (
                   <span className="inline-flex items-center gap-1">
                     <Loader2 size={12} className="animate-spin" /> Applying…
@@ -103,7 +103,7 @@ export default function DealerBoostApply({
       ) : null}
 
       {message ? (
-        <p className="mt-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400">{message}</p>
+        <p className="mt-1 text-[10px] font-semibold text-emerald-700 text-emerald-400">{message}</p>
       ) : null}
       {error ? (
         <p className="mt-1 text-[10px] font-semibold text-rose-600">{error}</p>

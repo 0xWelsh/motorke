@@ -16,7 +16,7 @@ function useScrollShadowStyle() {
   const shadowY = 14;
   const blur = 22;
   return {
-    boxShadow: `${shadowX}px ${shadowY}px ${blur}px rgba(15, 23, 42, 0.16), ${Math.round(shadowX * 0.35)}px ${shadowY + 6}px ${blur + 8}px rgba(15, 23, 42, 0.08)`,
+    boxShadow: `${shadowX}px ${shadowY}px ${blur}px rgba(0, 0, 0, 0.3), ${Math.round(shadowX * 0.35)}px ${shadowY + 6}px ${blur + 8}px rgba(0, 0, 0, 0.15)`,
   };
 }
 
@@ -51,7 +51,7 @@ const BODY_CHIP_CLASS =
 function ChipCount({ count, className = "text-[9px]" }) {
   return (
     <span
-      className={`${className} font-bold tabular-nums leading-none min-h-[12px] flex items-center justify-center text-[#38A169]/85 dark:text-[#68d391]/90`}
+      className={`${className} font-bold tabular-nums leading-none min-h-[12px] flex items-center justify-center text-[var(--accent)]`}
     >
       {formatChipCount(count)}
     </span>
@@ -64,15 +64,15 @@ function BrandLogo({ name, make, img, count, floating = false }) {
   const makeQuery = make || name;
 
   const linkClass = floating
-    ? `${BRAND_CHIP_CLASS} rounded-xl bg-white/80 dark:bg-white/[0.06] backdrop-blur-md ring-1 ring-white/60 dark:ring-white/10 hover:bg-white dark:hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300`
-    : `${BRAND_CHIP_CLASS} rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300`;
+    ? `${BRAND_CHIP_CLASS} rounded-xl bg-white/[0.06] backdrop-blur-md ring-1 ring-white/[0.1] hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300`
+    : `${BRAND_CHIP_CLASS} rounded-lg border border-white/[0.06] bg-[#0f0f0f] hover:border-[var(--accent)]/30 hover:bg-[#111111] transition-all duration-300`;
 
   return (
     <ChipWrapper floating={floating}>
       <Link href={`/cars/${slugifyCarSegment(makeQuery)}`} className={linkClass}>
         <div className="w-8 h-8 sm:w-9 sm:h-9 flex shrink-0 items-center justify-center">
           {failed ? (
-            <span className="text-lg font-black text-slate-700 dark:text-slate-300">{name[0]}</span>
+            <span className="text-lg font-black text-zinc-400">{name[0]}</span>
           ) : (
             <Image
               src={src}
@@ -84,7 +84,7 @@ function BrandLogo({ name, make, img, count, floating = false }) {
             />
           )}
         </div>
-        <span className="text-[10px] sm:text-[11px] font-sans font-semibold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight line-clamp-2 min-h-[2.5em] flex items-center justify-center w-full px-0.5">
+        <span className="text-[10px] sm:text-[11px] font-sans font-semibold text-zinc-400 group-hover:text-white transition-colors text-center leading-tight line-clamp-2 min-h-[2.5em] flex items-center justify-center w-full px-0.5">
           {name}
         </span>
         <ChipCount count={count} />
@@ -97,8 +97,8 @@ function BodyTypeCard({ label, value, img, count, floating = false }) {
   const [failed, setFailed] = useState(false);
 
   const linkClass = floating
-    ? `${BODY_CHIP_CLASS} rounded-xl bg-white/80 dark:bg-white/[0.06] backdrop-blur-md ring-1 ring-white/60 dark:ring-white/10 hover:bg-white dark:hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300`
-    : `${BODY_CHIP_CLASS} rounded-lg border border-[#ebe5dc] dark:border-zinc-800 bg-white/90 dark:bg-[#111111]/80 hover:border-[#38A169]/35 dark:hover:border-[#38A169]/40 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300`;
+    ? `${BODY_CHIP_CLASS} rounded-xl bg-white/[0.06] backdrop-blur-md ring-1 ring-white/[0.1] hover:bg-white/[0.1] hover:-translate-y-0.5 transition-all duration-300`
+    : `${BODY_CHIP_CLASS} rounded-lg border border-white/[0.06] bg-[#0f0f0f] hover:border-[var(--accent)]/30 hover:bg-[#111111] transition-all duration-300`;
 
   return (
     <ChipWrapper floating={floating}>
@@ -110,14 +110,14 @@ function BodyTypeCard({ label, value, img, count, floating = false }) {
               alt={label}
               width={96}
               height={44}
-              className="max-h-full max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-md dark:invert"
+              className="max-h-full max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity drop-md invert"
               onError={() => setFailed(true)}
             />
           ) : (
             <span className="text-2xl">🚗</span>
           )}
         </div>
-        <span className="text-[9px] sm:text-[10px] font-black text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors text-center leading-tight line-clamp-2 min-h-[2.5em] flex items-center justify-center w-full px-0.5">
+        <span className="text-[9px] sm:text-[10px] font-black text-zinc-400 group-hover:text-white transition-colors text-center leading-tight line-clamp-2 min-h-[2.5em] flex items-center justify-center w-full px-0.5">
           {label}
         </span>
         <ChipCount count={count} className="text-[8px]" />
@@ -161,7 +161,7 @@ function ScrollableRow({ children, trackScrollOffset = false }) {
             <button
               type="button"
               onClick={() => scroll("left")}
-              className="w-10 h-10 ml-2 sm:ml-4 flex items-center justify-center bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-slate-900 dark:text-white hover:bg-white dark:hover:bg-zinc-800 hover:scale-110"
+              className="w-10 h-10 ml-2 sm:ml-4 flex items-center justify-center bg-[#111111]/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.3)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-zinc-400 hover:text-white hover:bg-[#1a1a1a] hover:scale-110"
             >
               <ChevronLeft className="w-5 h-5 ml-[-2px]" />
             </button>
@@ -185,7 +185,7 @@ function ScrollableRow({ children, trackScrollOffset = false }) {
             <button
               type="button"
               onClick={() => scroll("right")}
-              className="w-10 h-10 mr-2 sm:mr-4 flex items-center justify-center bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-slate-900 dark:text-white hover:bg-white dark:hover:bg-zinc-800 hover:scale-110"
+              className="w-10 h-10 mr-2 sm:mr-4 flex items-center justify-center bg-[#111111]/90 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.3)] rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-zinc-400 hover:text-white hover:bg-[#1a1a1a] hover:scale-110"
             >
               <ChevronRight className="w-5 h-5 mr-[-2px]" />
             </button>
@@ -202,7 +202,7 @@ function ShopRowSection({ title, action }) {
   return (
     <section className="w-full">
       <div className="flex items-center justify-between px-0.5 sm:px-1 mb-2 sm:mb-2.5">
-        <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
+        <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500">
           {title}
         </p>
         {action}
@@ -213,9 +213,6 @@ function ShopRowSection({ title, action }) {
 
 /**
  * @param {{ layout?: "full" | "hero-mobile" | "hero-mobile-slim" | "desktop-hero", inventoryCounts?: { brands?: Record<string, number>, bodyTypes?: Record<string, number> } }} props
- *   hero-mobile — search + shop by brand + shop by shape (homepage mobile hero)
- *   hero-mobile-slim — search + shop by brand only (compact mobile hero)
- *   desktop-hero — full-width search in homepage left column
  */
 export default function BrowsePanel({ layout = "full", inventoryCounts = null }) {
   const brandCounts = inventoryCounts?.brands || {};
@@ -258,17 +255,21 @@ export default function BrowsePanel({ layout = "full", inventoryCounts = null })
         onSubmit={handleSearch}
         className={`relative w-full max-w-none group ${heroMobile ? "mb-3" : desktopHero ? "mb-5" : "mb-6 sm:mb-8"}`}
       >
-        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[#38A169] transition-colors" />
+        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-[var(--accent)] transition-colors" />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="What car are you looking for?"
-          className="w-full bg-white dark:bg-[#0a0a0a] border border-[#e8e2d9] dark:border-zinc-800 text-slate-900 dark:text-white rounded-none py-3.5 sm:py-4 pl-14 pr-[120px] font-bold text-base shadow-sm focus:outline-none focus:border-slate-900 dark:focus:border-white transition-all placeholder:font-normal placeholder:text-slate-400"
+          className="w-full bg-[#0f0f0f] border border-white/[0.08] text-white rounded-xl py-3.5 sm:py-4 pl-14 pr-[120px] font-bold text-base focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 transition-all placeholder:font-normal placeholder:text-zinc-500"
         />
         <button
           type="submit"
           disabled={loadingLoc}
-          className="absolute right-2 top-2 bottom-2 bg-[#38A169] hover:bg-[#2F855A] text-white px-6 rounded-none font-black text-xs uppercase tracking-widest transition-all disabled:opacity-70 flex items-center justify-center min-w-[100px]"
+          className={`absolute right-2 top-2 bottom-2 px-6 rounded-lg font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center min-w-[100px] ${
+            loadingLoc
+              ? "bg-white/[0.08] text-zinc-500 cursor-wait"
+              : "bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-black"
+          }`}
         >
           {loadingLoc ? "Locating..." : "Explore"}
         </button>
@@ -281,7 +282,7 @@ export default function BrowsePanel({ layout = "full", inventoryCounts = null })
             action={
               <Link
                 href="/cars"
-                className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.12em] text-[#38A169] hover:underline whitespace-nowrap"
+                className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.12em] text-[var(--accent)] hover:underline whitespace-nowrap"
               >
                 All Makes →
               </Link>

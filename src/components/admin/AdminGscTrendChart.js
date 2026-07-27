@@ -11,7 +11,7 @@ export default function AdminGscTrendChart({ series = [] }) {
       <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">
         Clicks per day (28d)
       </p>
-      <div className="flex items-end gap-1 h-28 border-b border-slate-200 dark:border-zinc-800 pb-1">
+      <div className="flex items-end gap-1 h-28 border-b border-zinc-800 pb-1">
         {series.map((d) => {
           const h = Math.max(4, Math.round((d.clicks / maxClicks) * 100));
           const label = new Date(d.date).toISOString().slice(5, 10);
@@ -22,7 +22,7 @@ export default function AdminGscTrendChart({ series = [] }) {
               title={`${label}: ${d.clicks} clicks, ${d.impressions} imp, pos ${Number(d.position).toFixed(1)}`}
             >
               <div
-                className="w-full max-w-[14px] bg-[#2F855A] dark:bg-[#38A169] rounded-t transition-opacity group-hover:opacity-80"
+                className="w-full max-w-[14px] bg-[#38A169] rounded-t transition-opacity group-hover:opacity-80"
                 style={{ height: `${h}%` }}
               />
               <span className="text-[8px] text-slate-400 tabular-nums truncate w-full text-center">

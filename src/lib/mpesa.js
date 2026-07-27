@@ -9,7 +9,7 @@ const ENV_BASE_URL = process.env.MPESA_ENV === "production"
   : "https://sandbox.safaricom.co.ke";
 
 function getTimestamp() {
-  const date = new Date();
+  const date = new Date(new Date().toLocaleString("en-US", { timeZone: "Africa/Nairobi" }));
   const yyyy = date.getFullYear().toString();
   const mm = (date.getMonth() + 1).toString().padStart(2, "0");
   const dd = date.getDate().toString().padStart(2, "0");

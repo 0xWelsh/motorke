@@ -43,14 +43,14 @@ export default function AnalyticsDashboard({ realtimeLeads = 0, recentDays = 30 
   }, [realtimeLeads, recentDays]);
 
   return (
-    <div className="w-full bg-white dark:bg-[#111111] border border-slate-200 dark:border-slate-800 rounded-[2.5rem] p-8 shadow-sm hover:shadow-2xl transition-all duration-500 hover:border-emerald-200">
+    <div className="w-full bg-[#0f0f0f] border border-white/[0.06] rounded-[2.5rem] p-8 shadow-sm hover:shadow-2xl transition-all duration-500 hover:border-[var(--accent)]/20">
       <div className="mb-8">
          <div className="flex items-center gap-3 mb-2">
-            <div className="w-2 h-2 rounded-full bg-slate-900 shadow-[0_0_8px_rgba(15,23,42,0.3)] animate-pulse" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-800 dark:text-slate-200">Return On Investment (ROI)</span>
+            <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.15)] animate-pulse" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-zinc-400">Return On Investment (ROI)</span>
          </div>
-         <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">Yield & Impressions Trend</h2>
-         <p className="text-sm font-medium text-slate-600 mt-1 tracking-wide">30-day trailing tracking of platform engagement.</p>
+         <h2 className="text-3xl font-black text-white tracking-tighter">Yield & Impressions Trend</h2>
+         <p className="text-sm font-medium text-zinc-400 mt-1 tracking-wide">30-day trailing tracking of platform engagement.</p>
       </div>
       
       <div className="h-[340px] w-full">
@@ -58,26 +58,26 @@ export default function AnalyticsDashboard({ realtimeLeads = 0, recentDays = 30 
           <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#0f172a" stopOpacity={0.15}/>
-                <stop offset="95%" stopColor="#0f172a" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#e4e4e7" stopOpacity={0.15}/>
+                <stop offset="95%" stopColor="#e4e4e7" stopOpacity={0}/>
               </linearGradient>
               <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#059669" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#059669" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#4ade80" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#4ade80" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 700 }} dy={15} />
-            <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 700 }} />
-            <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 700 }} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#27272a" />
+            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#71717a', fontWeight: 700 }} dy={15} />
+            <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#71717a', fontWeight: 700 }} />
+            <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#71717a', fontWeight: 700 }} />
             <Tooltip 
-              contentStyle={{ borderRadius: '1.5rem', border: '1px solid #e2e8f0', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+              contentStyle={{ borderRadius: '1.5rem', border: '1px solid #27272a', background: '#18181b', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.4)' }}
               itemStyle={{ fontSize: '13px', fontWeight: 800 }}
-              labelStyle={{ fontSize: '10px', fontWeight: 900, textTransform: 'uppercase', color: '#64748b', marginBottom: '8px' }}
+              labelStyle={{ fontSize: '10px', fontWeight: 900, textTransform: 'uppercase', color: '#a1a1aa', marginBottom: '8px' }}
             />
             <Legend iconType="circle" wrapperStyle={{ fontSize: '11px', fontWeight: 800, paddingTop: '20px', textTransform: 'uppercase', tracking: '0.1em' }} />
-            <Area yAxisId="left" type="monotone" name="Global Impressions" dataKey="Impressions" stroke="#0f172a" strokeWidth={3} fillOpacity={1} fill="url(#colorViews)" />
-            <Area yAxisId="right" type="monotone" name="Captured Signals" dataKey="Signals" stroke="#059669" strokeWidth={4} fillOpacity={1} fill="url(#colorLeads)" />
+            <Area yAxisId="left" type="monotone" name="Global Impressions" dataKey="Impressions" stroke="#e4e4e7" strokeWidth={3} fillOpacity={1} fill="url(#colorViews)" />
+            <Area yAxisId="right" type="monotone" name="Captured Signals" dataKey="Signals" stroke="#4ade80" strokeWidth={4} fillOpacity={1} fill="url(#colorLeads)" />
           </AreaChart>
         </ResponsiveContainer>
       </div>

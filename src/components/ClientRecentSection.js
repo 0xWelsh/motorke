@@ -41,18 +41,18 @@ export default function ClientRecentSection() {
   if (loading || recent.length === 0) return null;
 
   return (
-    <section className="bg-white border-y border-[#ddd4c8] dark:border-slate-800 py-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+    <section className="bg-[#0f0f0f] border-y border-white/[0.06] py-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="flex items-center justify-between mb-12">
           <div>
-            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-3xl font-black text-white tracking-tight">
               Recently Viewed
             </h2>
-            <p className="text-slate-500 text-sm font-medium mt-1">Pick up where you left off</p>
+            <p className="text-zinc-400 text-sm font-medium mt-1">Pick up where you left off</p>
           </div>
           <Link
             href="/account?tab=saved"
-            className="hidden sm:inline-flex items-center gap-2 bg-[#fbfcfe] dark:bg-[#111111] border border-[#ddd4c8] dark:border-slate-800 px-6 py-3 rounded-2xl text-sm font-bold text-slate-900 dark:text-white hover:border-[var(--brand-accent)]/30 hover:text-[var(--brand)] transition-all shadow-sm"
+            className="hidden sm:inline-flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] px-6 py-3 rounded-2xl text-sm font-bold text-white hover:border-[var(--accent)]/30 hover:text-[var(--brand)] transition-all shadow-sm"
           >
             Saved cars <ChevronRight className="w-4 h-4" />
           </Link>

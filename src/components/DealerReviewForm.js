@@ -48,8 +48,8 @@ export default function DealerReviewForm({ dealerSlug, onReviewSubmitted }) {
   };
 
   return (
-    <div className="border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-6 bg-white">
-      <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Rate This Dealer</h3>
+    <div className="border border-[#ddd4c8] border-slate-800 rounded-2xl p-6 bg-white">
+      <h3 className="text-lg font-bold text-slate-900 text-white mb-4">Rate This Dealer</h3>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Rating */}
@@ -81,7 +81,7 @@ export default function DealerReviewForm({ dealerSlug, onReviewSubmitted }) {
             onChange={(e) => setComment(e.target.value)}
             placeholder="Share your experience with this dealer..."
             maxLength={500}
-            className="w-full border border-[#ddd4c8] dark:border-slate-800 rounded-2xl p-3 text-sm font-semibold placeholder:text-slate-400 focus:border-[#ff5a2f] focus:ring-2 focus:ring-blue-100 outline-none"
+            className="w-full border border-[#ddd4c8] border-slate-800 rounded-2xl p-3 text-sm font-semibold placeholder:text-slate-400 focus:border-[#ff5a2f] focus:ring-2 focus:ring-blue-100 outline-none"
             rows={4}
           />
           <p className="text-xs text-slate-400 mt-1">{comment.length}/500</p>

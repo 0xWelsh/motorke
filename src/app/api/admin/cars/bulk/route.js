@@ -10,6 +10,9 @@ export async function POST(request) {
   if (!session) {
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
+  if (session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   const { ids, action } = await request.json();
 

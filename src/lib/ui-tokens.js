@@ -8,9 +8,9 @@ export const UI_TOKENS = {
     focusRing: "focus-visible:ring-[#2F855A]",
   },
   surfaces: {
-    card: "rounded-2xl border border-[#ede7dd] bg-white shadow-sm dark:border-zinc-800 dark:bg-[#111111]",
+    card: "rounded-2xl border border-zinc-800 bg-[#111111] shadow-sm",
     cardMuted:
-      "rounded-xl border border-[#ede7dd] bg-[#f6f7f9] dark:border-zinc-800 dark:bg-zinc-900/60",
+      "rounded-xl border border-zinc-800 bg-zinc-900/60",
   },
   layout: {
     pageContainer: "mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-8",

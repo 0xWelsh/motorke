@@ -77,7 +77,7 @@ function extractPrice(text) {
 }
 
 function extractYear(text) {
-  const years = text.match(/\b(19[5-9]\d|20[0-3]\d)\b/g);
+  const years = text.match(/\b(19[5-9]\d|20[0-4]\d|2050)\b/g);
   if (!years) return {};
   const nums = years.map(Number).sort((a, b) => a - b);
   if (nums.length >= 2) return { minYOM: nums[0], maxYOM: nums[nums.length - 1] };
@@ -273,6 +273,10 @@ export class BotSession {
 const sessions = new Map();
 
 export function getSession(phone) {
+  for (const [p, s] of sessions) {
+    if (s.isExpired()) sessions.delete(p);
+  }
+
   let session = sessions.get(phone);
   if (!session) {
     session = new BotSession(phone);
@@ -287,8 +291,6 @@ export function cleanupSessions() {
     if (session.isExpired()) sessions.delete(phone);
   }
 }
-
-setInterval(cleanupSessions, SESSION_TTL);
 
 export async function handleMessage(from, body) {
   const phone = String(from).replace(/\D/g, "");

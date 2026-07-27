@@ -49,7 +49,7 @@ export default function DutyPageClient({
               <div
                 className={
                   showHero
-                    ? "rounded-[var(--radius)] border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-950 shadow-lg p-4 sm:p-5"
+                    ? "rounded-[var(--radius)] border border-slate-200 border-zinc-700 bg-white bg-zinc-950 shadow-lg p-4 sm:p-5"
                     : ""
                 }
               >

@@ -88,11 +88,11 @@ export function formatKesCompact(value) {
 }
 
 export function roadTone(score) {
-  if (typeof score !== "number") return "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-500";
-  if (score >= 80) return "border-[#111827] dark:border-white bg-[#111827] dark:bg-white text-white dark:text-black";
-  if (score >= 65) return "border-slate-700 bg-slate-800 text-slate-100";
-  if (score >= 50) return "border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200";
-  return "border-slate-300 dark:border-slate-700 bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white";
+  if (typeof score !== "number") return "border-white/[0.06] bg-white/[0.03] text-zinc-400";
+  if (score >= 80) return "border-white bg-white text-[#0f0f0f]";
+  if (score >= 65) return "border-white/[0.08] bg-white/[0.06] text-zinc-300";
+  if (score >= 50) return "border-white/[0.06] bg-white/[0.03] text-zinc-300";
+  return "border-white/[0.06] bg-white/[0.03] text-zinc-400";
 }
 
 export function carPhotoUrl(car) {
@@ -102,7 +102,7 @@ export function carPhotoUrl(car) {
 }
 
 export function importTone(eligible) {
-  if (eligible === true) return "border-[#111827] dark:border-white bg-[#111827] dark:bg-white text-white dark:text-black";
-  if (eligible === false) return "border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200";
-  return "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-500";
+  if (eligible === true) return "border-white bg-white text-[#0f0f0f]";
+  if (eligible === false) return "border-white/[0.06] bg-white/[0.03] text-zinc-300";
+  return "border-white/[0.06] bg-white/[0.03] text-zinc-400";
 }

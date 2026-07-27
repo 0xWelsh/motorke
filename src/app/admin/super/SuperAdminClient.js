@@ -42,34 +42,34 @@ export function CreateAdminForm() {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-1.5">Name</label>
+          <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">Name</label>
           <input
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-sm px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-slate-900 dark:focus:ring-emerald-500"
+            className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-[var(--accent)]"
             placeholder="Jane Doe"
           />
         </div>
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-1.5">Email</label>
+          <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">Email</label>
           <input
             required
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-sm px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-slate-900 dark:focus:ring-emerald-500"
+            className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-[var(--accent)]"
             placeholder="admin@example.com"
           />
         </div>
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-1.5">Password</label>
+          <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">Password</label>
           <input
             required
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-sm px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-slate-900 dark:focus:ring-emerald-500"
+            className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-[var(--accent)]"
             placeholder="Min 6 chars"
           />
         </div>
@@ -79,14 +79,14 @@ export function CreateAdminForm() {
         <button
           type="submit"
           disabled={status === "loading"}
-          className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-400 text-white rounded-sm px-5 py-2.5 text-sm font-bold transition-colors"
+          className="inline-flex items-center gap-2 bg-white/[0.1] hover:bg-white/[0.15] disabled:bg-white/[0.05] text-white rounded-xl px-5 py-2.5 text-sm font-bold transition-colors"
         >
           {status === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
           {status === "loading" ? "Creating..." : "Create Admin"}
         </button>
 
         {status === "success" && (
-          <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-sm font-semibold">
+          <span className="inline-flex items-center gap-1.5 text-[var(--accent)] text-sm font-semibold">
             <Check className="w-4 h-4" /> {message}
           </span>
         )}
@@ -99,5 +99,3 @@ export function CreateAdminForm() {
     </form>
   );
 }
-
-

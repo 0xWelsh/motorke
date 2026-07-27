@@ -54,8 +54,8 @@ export default function DealerFlagToggles({ dealerId, verified, featured }) {
         title={verifiedState ? "Click to remove verified status" : "Click to mark as verified"}
         className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold border transition disabled:opacity-50 ${
           verifiedState
-            ? "border-emerald-200/80 bg-emerald-50 text-emerald-800 hover:border-emerald-400 dark:border-emerald-900/60 dark:bg-emerald-950/50 dark:text-emerald-300"
-            : "border-sky-200/80 bg-sky-50 text-sky-800 hover:border-sky-400 dark:border-sky-900/50 dark:bg-sky-950/40 dark:text-sky-200"
+            ? "border-emerald-900/60 bg-emerald-950/50 text-emerald-300 hover:border-emerald-400"
+            : "border-sky-900/50 bg-sky-950/40 text-sky-200 hover:border-sky-400"
         }`}
       >
         {busyFlag === "verified" ? (
@@ -74,14 +74,14 @@ export default function DealerFlagToggles({ dealerId, verified, featured }) {
         title={featuredState ? "Click to remove from homepage" : "Click to feature on homepage"}
         className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-black uppercase tracking-wider border transition disabled:opacity-50 ${
           featuredState
-            ? "border-emerald-200/70 bg-emerald-50 text-emerald-800 hover:border-emerald-400 dark:border-emerald-800/50 dark:bg-emerald-950/35 dark:text-emerald-300"
-            : "border-slate-200 bg-white text-slate-500 hover:border-slate-400 hover:text-slate-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+            ? "border-emerald-800/50 bg-emerald-950/35 text-emerald-300 hover:border-emerald-400"
+            : "border-white/[0.06] bg-[#0f0f0f] text-zinc-400 hover:border-zinc-500 hover:text-zinc-200"
         }`}
       >
         {busyFlag === "featured" ? (
           <Loader2 size={12} className="animate-spin" />
         ) : (
-          <Star size={12} className={featuredState ? "text-[#38A169]" : ""} fill={featuredState ? "currentColor" : "none"} />
+          <Star size={12} className={featuredState ? "text-[var(--accent)]" : ""} fill={featuredState ? "currentColor" : "none"} />
         )}
         {featuredState ? "Featured" : "Feature on homepage"}
       </button>

@@ -64,23 +64,23 @@ export const CAR_STATUS_LABELS = {
 };
 
 export const CAR_STATUS_COLORS = {
-  IN_YARD: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300",
-  WITH_OWNER: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/20 dark:text-purple-300",
-  IN_TRANSIT: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-300",
-  AT_PORT: "bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-900/20 dark:text-cyan-300",
+  IN_YARD: "bg-blue-900/20 text-blue-300 border-blue-200",
+  WITH_OWNER: "bg-purple-900/20 text-purple-300 border-purple-200",
+  IN_TRANSIT: "bg-amber-900/20 text-amber-300 border-amber-200",
+  AT_PORT: "bg-cyan-900/20 text-cyan-300 border-cyan-200",
 };
 
 export const BADGE_OPTIONS = {
-  "Available":     { color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  "Sold":          { color: "bg-red-50 text-red-700 border-red-200" },
-  "Reserved":      { color: "bg-yellow-50 text-yellow-700 border-yellow-200" },
-  "Fresh Import":  { color: "bg-blue-50 text-blue-700 border-blue-200" },
-  "Duty Free":     { color: "bg-purple-50 text-purple-700 border-purple-200" },
-  "Duty Paid":     { color: "bg-teal-50 text-teal-700 border-teal-200" },
-  "Low Mileage":   { color: "bg-cyan-50 text-cyan-700 border-cyan-200" },
-  "Price Drop":    { color: "bg-orange-50 text-orange-700 border-orange-200" },
-  "Hot Deal":      { color: "bg-rose-50 text-rose-700 border-rose-200" },
-  "Clearance":     { color: "bg-amber-50 text-amber-700 border-amber-200" },
-  "One Owner":     { color: "bg-indigo-50 text-indigo-700 border-indigo-200" },
-  "Financing OK":  { color: "bg-lime-50 text-lime-700 border-lime-200" },
+  "Available":     { color: "bg-emerald-900/20 text-emerald-300 border-emerald-800" },
+  "Sold":          { color: "bg-red-900/20 text-red-300 border-red-800" },
+  "Reserved":      { color: "bg-yellow-900/20 text-yellow-300 border-yellow-800" },
+  "Fresh Import":  { color: "bg-blue-900/20 text-blue-300 border-blue-800" },
+  "Duty Free":     { color: "bg-purple-900/20 text-purple-300 border-purple-800" },
+  "Duty Paid":     { color: "bg-teal-900/20 text-teal-300 border-teal-800" },
+  "Low Mileage":   { color: "bg-cyan-900/20 text-cyan-300 border-cyan-800" },
+  "Price Drop":    { color: "bg-orange-900/20 text-orange-300 border-orange-800" },
+  "Hot Deal":      { color: "bg-rose-900/20 text-rose-300 border-rose-800" },
+  "Clearance":     { color: "bg-amber-900/20 text-amber-300 border-amber-800" },
+  "One Owner":     { color: "bg-indigo-900/20 text-indigo-300 border-indigo-800" },
+  "Financing OK":  { color: "bg-lime-900/20 text-lime-300 border-lime-800" },
 };

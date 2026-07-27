@@ -54,7 +54,7 @@ function r2Url(key) {
   return `${R2_PUBLIC_URL}/${key}`;
 }
 
-const AUTH_TOKEN = "bidgari-migrate-2026";
+const AUTH_TOKEN = process.env.MIGRATE_R2_TOKEN || "";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);

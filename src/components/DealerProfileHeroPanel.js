@@ -54,18 +54,18 @@ export default function DealerProfileHeroPanel({
         } ${
           dealer.verified
             ? "p-[2px] bg-gradient-to-br from-[#22c55e] via-[#16a34a] to-emerald-700 shadow-[0_0_20px_-6px_rgba(34,197,94,0.5)]"
-            : "p-[2px] bg-white/10 dark:bg-slate-900/20"
+            : "p-[2px] bg-white/10"
         }`}
         style={{ borderRadius: mobile ? "10px" : "12px" }}
       >
         <div
-          className="w-full h-full bg-white p-1.5 flex items-center justify-center overflow-hidden"
+          className="w-full h-full bg-[#0f0f0f] p-1.5 flex items-center justify-center overflow-hidden"
           style={{ borderRadius: mobile ? "8px" : "10px" }}
         >
           {dealer.logoUrl ? (
             <img src={dealer.logoUrl} alt="" className="w-full h-full object-cover" />
           ) : (
-            <span className={`font-black text-slate-400 ${mobile ? "text-lg" : "text-2xl"}`}>
+            <span className={`font-black text-zinc-400 ${mobile ? "text-lg" : "text-2xl"}`}>
               {dealer.name[0]}
             </span>
           )}

@@ -13,10 +13,21 @@ export function isCronAuthorised(request) {
   } catch {
     /* ignore */
   }
-  if (querySecret && querySecret === secret) return true;
+  if (querySecret && secret.length === querySecret.length) {
+    const buf1 = Buffer.from(secret);
+    const buf2 = Buffer.from(querySecret);
+    if (buf1.length === buf2.length && crypto.timingSafeEqual(buf1, buf2)) return true;
+  }
 
   const auth = request.headers.get("authorization") || "";
-  if (auth === `Bearer ${secret}`) return true;
+  if (auth.startsWith("Bearer ") && auth.length === secret.length + 7) {
+    const token = auth.slice(7);
+    if (token.length === secret.length) {
+      const buf1 = Buffer.from(secret);
+      const buf2 = Buffer.from(token);
+      if (buf1.length === buf2.length && crypto.timingSafeEqual(buf1, buf2)) return true;
+    }
+  }
 
   return false;
 }

@@ -76,7 +76,7 @@ export default function PhoneVerificationControl({ phone, className = "" }) {
       <div className="flex items-center gap-2 flex-wrap">
         <span
           className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 ${
-            isVerified ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
+            isVerified ? "bg-white/[0.03] text-[var(--accent)]" : "bg-amber-100 text-amber-700"
           }`}
         >
           {isVerified ? "Phone verified" : "Phone not verified"}
@@ -98,19 +98,19 @@ export default function PhoneVerificationControl({ phone, className = "" }) {
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="Enter 6-digit code"
-            className="h-9 w-44 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#111111] px-3 text-xs font-semibold"
+            className="h-9 w-44 border border-white/[0.06] bg-[#0f0f0f] px-3 text-xs font-semibold"
           />
           <button
             type="button"
             onClick={verifyCode}
             disabled={status === "verifying" || code.trim().length < 6}
-            className="h-9 px-3 text-[10px] font-bold uppercase tracking-widest bg-[#38A169] text-white disabled:opacity-50"
+            className="h-9 px-3 text-[10px] font-bold uppercase tracking-widest bg-[var(--accent)] text-white disabled:opacity-50"
           >
             {status === "verifying" ? "Verifying..." : "Verify"}
           </button>
         </div>
       )}
-      {message ? <p className="text-[11px] font-semibold text-slate-500">{message}</p> : null}
+      {message ? <p className="text-[11px] font-semibold text-zinc-400">{message}</p> : null}
     </div>
   );
 }

@@ -22,9 +22,11 @@ export async function POST(request, { params }) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  // Dealers can only delete their own cars
-  if (session.user.role === "DEALER" && car.dealerId !== session.user.dealerId) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  // Only admins can delete any car; dealers can only delete their own
+  if (session.user.role !== "ADMIN") {
+    if (session.user.role !== "DEALER" || car.dealerId !== session.user.dealerId) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
   }
 
   // Delete images from Supabase Storage

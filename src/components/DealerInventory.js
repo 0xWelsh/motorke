@@ -52,35 +52,33 @@ export default function DealerInventory({ cars, dealerSlug }) {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 lg:mb-10">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
           <input
             type="text"
             placeholder="Search showroom..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full bg-[#F7FAFC] dark:bg-[#0a0a0a] border border-slate-100 dark:border-slate-800 text-sm font-medium placeholder:text-slate-400 outline-none focus:border-[#38A169] transition-all py-3.5 px-11"
-            style={{ borderRadius: 'var(--radius)' }}
+            className="w-full bg-[#0f0f0f] border border-white/[0.08] text-sm font-medium text-white placeholder:text-zinc-400 outline-none focus:border-[var(--accent)] transition-all py-3.5 px-11 rounded-xl"
           />
           {query && (
-            <button onClick={() => setQuery("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#111827] dark:hover:text-white">
+            <button onClick={() => setQuery("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white">
                <X className="w-4 h-4" />
             </button>
           )}
         </div>
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 sm:pb-0 hide-scrollbar">
-          <div className="flex items-center justify-center w-10 h-10 shrink-0 bg-[#fbfcfe] dark:bg-[#111111] border border-[#ece6dd] rounded-2xl text-slate-500">
+          <div className="flex items-center justify-center w-10 h-10 shrink-0 bg-[#111111] border border-white/[0.08] rounded-2xl text-zinc-400">
              <SlidersHorizontal className="w-4 h-4" />
           </div>
           {makes.map((make) => (
              <button
                key={make}
                onClick={() => setActiveFilter(make)}
-               className={`px-4 py-2.5 shrink-0 text-[10px] font-bold uppercase tracking-widest transition-all border ${
+               className={`px-4 py-2.5 shrink-0 text-[10px] font-bold uppercase tracking-widest transition-all border rounded-xl ${
                  activeFilter === make
-                   ? "bg-[#111827] text-white border-[#111827] dark:bg-white dark:!text-black dark:border-white"
-                    : "bg-white dark:bg-[#111111] text-[#718096] dark:text-slate-400 border-slate-100 dark:border-slate-800 hover:border-[#111827] dark:hover:border-white"
+                   ? "bg-white text-black border-white"
+                    : "bg-[#111111] text-zinc-400 border-white/[0.08] hover:border-white"
                }`}
-               style={{ borderRadius: 'var(--radius)' }}
              >
                {make === "ALL" ? "All Units" : make}
              </button>
@@ -89,10 +87,10 @@ export default function DealerInventory({ cars, dealerSlug }) {
       </div>
 
       {filteredCars.length === 0 ? (
-        <div className="border border-dashed border-slate-200 dark:border-slate-800 bg-[#F7FAFC] dark:bg-[#111111] p-16 text-center" style={{ borderRadius: 'var(--radius)' }}>
-           <Search className="w-10 h-10 mx-auto text-slate-300 dark:text-slate-700 mb-6" />
-           <h3 className="text-xs font-bold text-[#111827] dark:text-white uppercase tracking-widest mb-2">No units found</h3>
-           <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Try adjusting your filters or search query.</p>
+        <div className="border border-dashed border-white/[0.08] bg-[#111111] p-16 text-center rounded-xl">
+           <Search className="w-10 h-10 mx-auto text-zinc-600 mb-6" />
+           <h3 className="text-xs font-bold text-white uppercase tracking-widest mb-2">No units found</h3>
+           <p className="text-sm font-medium text-zinc-400">Try adjusting your filters or search query.</p>
         </div>
       ) : (
         <div className="space-y-6">
@@ -119,7 +117,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
             <div className="hidden lg:grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
               {topCars.map((car) => (
                 <div key={`top-${car.id}`} className="space-y-2">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400">
                     {getFreshnessLabel(car.updatedAt) || "Recently listed"}
                   </p>
                   <CarCard car={car} />
@@ -131,7 +129,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
             <div className="hidden lg:grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
               {lowerCars.map((car) => (
                 <div key={`lower-${car.id}`} className="space-y-2">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400">
                     {getFreshnessLabel(car.updatedAt) || "Recently listed"}
                   </p>
                   <CarCard car={car} />
@@ -146,8 +144,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
                 type="button"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="px-4 py-2 text-[11px] font-black uppercase tracking-[0.12em] bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 disabled:opacity-40"
-                style={{ borderRadius: "10px" }}
+                className="px-4 py-2 text-[11px] font-black uppercase tracking-[0.12em] bg-white/[0.06] text-zinc-300 disabled:opacity-40 rounded-xl"
               >
                 Prev
               </button>
@@ -157,17 +154,16 @@ export default function DealerInventory({ cars, dealerSlug }) {
                   .map((p, idx, arr) => (
                     <div key={p} className="flex items-center">
                       {idx > 0 && arr[idx - 1] !== p - 1 && (
-                        <span className="px-1 text-slate-400">…</span>
+                        <span className="px-1 text-zinc-400">…</span>
                       )}
                       <button
                         type="button"
                         onClick={() => setPage(p)}
-                        className={`w-9 h-9 text-[11px] font-black ${
+                        className={`w-9 h-9 text-[11px] font-black rounded-xl ${
                           p === page
                             ? "bg-[#ef3340] text-white"
-                            : "bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300"
+                            : "bg-white/[0.06] text-zinc-300"
                         }`}
-                        style={{ borderRadius: "10px" }}
                       >
                         {p}
                       </button>
@@ -178,8 +174,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
                 type="button"
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
-                className="px-4 py-2 text-[11px] font-black uppercase tracking-[0.12em] bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 disabled:opacity-40"
-                style={{ borderRadius: "10px" }}
+                className="px-4 py-2 text-[11px] font-black uppercase tracking-[0.12em] bg-white/[0.06] text-zinc-300 disabled:opacity-40 rounded-xl"
               >
                 Next
               </button>

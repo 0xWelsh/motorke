@@ -17,11 +17,11 @@ export default async function SuperAdminPage() {
       <div className="flex flex-col md:flex-row justify-between mb-12 gap-8">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 rounded-2xl bg-yellow-500" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-yellow-600 dark:text-yellow-400">Super Admin</span>
+            <div className="w-2 h-2 rounded-xl bg-yellow-500" />
+            <span className="text-xs font-semibold uppercase tracking-wider text-yellow-400">Super Admin</span>
           </div>
-          <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Admin Controls</h1>
-          <p className="text-slate-500 dark:text-zinc-400 mt-2 text-sm">
+          <h1 className="text-4xl font-black text-white tracking-tight">Admin Controls</h1>
+          <p className="text-zinc-400 mt-2 text-sm">
             {totalCars} cars · {totalViews._sum.views?.toLocaleString() || 0} total views
           </p>
         </div>
@@ -29,12 +29,12 @@ export default async function SuperAdminPage() {
 
       <div className="grid gap-8">
         {/* ── Create Admin ─────────────────────────────────────────── */}
-        <section className="bg-white dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 rounded-sm p-6">
+        <section className="bg-[#0f0f0f]/60 border border-white/[0.08] rounded-xl p-6">
           <div className="flex items-center gap-2 mb-5">
-            <UserPlus className="w-5 h-5 text-slate-500" />
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">Add Admin User</h2>
+            <UserPlus className="w-5 h-5 text-zinc-400" />
+            <h2 className="text-lg font-bold text-white">Add Admin User</h2>
           </div>
-          <p className="text-sm text-slate-500 dark:text-zinc-400 mb-5">
+          <p className="text-sm text-zinc-400 mb-5">
             Create a new admin or promote an existing user by email.
           </p>
 

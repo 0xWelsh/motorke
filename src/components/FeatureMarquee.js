@@ -4,9 +4,9 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { meaningfulFeatureList } from "@/lib/car-display";
 
 const CHIP_CARD =
-  "shrink-0 max-w-[200px] truncate inline-flex items-center bg-[#f0fdf4] dark:bg-emerald-950/40 text-[#166534] dark:text-emerald-200/90 text-[10px] font-bold px-2.5 py-1.5 border border-[#bbf7d0] dark:border-emerald-900/60 whitespace-nowrap";
+  "shrink-0 max-w-[200px] truncate inline-flex items-center bg-[var(--accent)]/10 text-[var(--accent)] text-[10px] font-bold px-2.5 py-1.5 border border-[var(--accent)]/20 whitespace-nowrap";
 const CHIP_DETAIL =
-  "shrink-0 max-w-[min(280px,70vw)] truncate inline-flex items-center bg-[#f0fdf4] dark:bg-emerald-950/40 text-[#166534] dark:text-emerald-200/90 text-[11px] font-bold px-3 py-2 border border-[#bbf7d0] dark:border-emerald-900/60 whitespace-nowrap";
+  "shrink-0 max-w-[min(280px,70vw)] truncate inline-flex items-center bg-[var(--accent)]/10 text-[var(--accent)] text-[11px] font-bold px-3 py-2 border border-[var(--accent)]/20 whitespace-nowrap";
 
 function Chips({ features, chipClass, keyPrefix }) {
   return features.map((f, i) => (
@@ -21,10 +21,6 @@ function Chips({ features, chipClass, keyPrefix }) {
   ));
 }
 
-/**
- * Feature tags: static row when they fit; endless horizontal marquee when they overflow
- * (news-bar style). Pauses on hover. Respects prefers-reduced-motion (horizontal scroll instead).
- */
 export default function FeatureMarquee({ features, variant = "card" }) {
   const viewportRef = useRef(null);
   const rowRef = useRef(null);

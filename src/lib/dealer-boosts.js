@@ -343,23 +343,25 @@ export async function applyDealerBoost({ dealerId, carId, type }) {
 
   const charged = DEALER_BILLING_ACTIVE;
 
-  if (charged) {
-    await db.dealerBoostBalance.update({
-      where: { dealerId },
-      data: { [field]: { decrement: 1 } },
-    });
-  }
+  await db.$transaction(async (tx) => {
+    if (charged) {
+      await tx.dealerBoostBalance.update({
+        where: { dealerId },
+        data: { [field]: { decrement: 1 } },
+      });
+    }
 
-  await db.listingBoostEvent.create({
-    data: {
-      dealerId,
-      carId: car?.id ?? null,
-      boostType: type,
-      days: boostType.durationDays,
-      endsAt,
-      source: "portal",
-      charged,
-    },
+    await tx.listingBoostEvent.create({
+      data: {
+        dealerId,
+        carId: car?.id ?? null,
+        boostType: type,
+        days: boostType.durationDays,
+        endsAt,
+        source: "portal",
+        charged,
+      },
+    });
   });
 
   const newBalance = await getOrCreateBoostBalance(dealerId);

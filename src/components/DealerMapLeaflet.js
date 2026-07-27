@@ -41,7 +41,7 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
       })
         .bindPopup(
           L.popup({ autoClose: false }).setContent(
-            '<div class="text-center"><p class="font-bold text-slate-900 dark:text-white">📍 Your Location</p></div>'
+            '<div class="text-center"><p class="font-bold text-white">📍 Your Location</p></div>'
           )
         )
         .addTo(leafletMap);
@@ -63,22 +63,22 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
 
       const popupContent = `
         <div class="space-y-2 min-w-[220px]">
-          <h3 class="font-bold text-slate-900 dark:text-white text-sm">${escapeMapHtml(dealer.name)}</h3>
-          <p class="text-xs text-slate-600">${escapeMapHtml(dealer.location || "")}</p>
+          <h3 class="font-bold text-white text-sm">${escapeMapHtml(dealer.name)}</h3>
+          <p class="text-xs text-zinc-400">${escapeMapHtml(dealer.location || "")}</p>
           ${
             dealer.distance
-              ? `<div class="flex items-center gap-1.5 text-xs font-semibold text-[#ff5a2f] bg-blue-50 px-2 py-1 rounded">
+              ? `<div class="flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] bg-[var(--accent)]/10 px-2 py-1 rounded">
                    <span>📍</span> ${formatDistance(dealer.distance)}
                  </div>`
               : ''
           }
           ${
             dealer._count?.cars > 0
-              ? `<p class="text-xs text-slate-600"><strong>${dealer._count.cars}</strong> car${dealer._count.cars !== 1 ? 's' : ''} available</p>`
+              ? `<p class="text-xs text-zinc-400"><strong>${dealer._count.cars}</strong> car${dealer._count.cars !== 1 ? 's' : ''} available</p>`
               : ''
           }
-          ${dealer.verified ? '<p class="text-xs text-[#ff5a2f] font-semibold">✓ Verified Dealer</p>' : ''}
-          <a href="/dealers/${dealer.slug}" class="inline-block mt-2 text-xs font-bold text-slate-900 dark:text-white bg-[#ff5a2f] hover:bg-blue-700 px-3 py-1.5 rounded transition">
+          ${dealer.verified ? '<p class="text-xs text-[var(--accent)] font-semibold">✓ Verified Dealer</p>' : ''}
+          <a href="/dealers/${dealer.slug}" class="inline-block mt-2 text-xs font-bold text-white bg-[var(--accent)] hover:brightness-110 px-3 py-1.5 rounded transition">
             View Profile
           </a>
         </div>
