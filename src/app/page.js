@@ -20,6 +20,10 @@ import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
 import HomepagePriceFilter from "@/components/home/HomepagePriceFilter";
 import HeroCarousel from "@/components/home/HeroCarousel";
 import SeasonalPromoModal from "@/components/SeasonalPromoModal";
+import HomepageHowItWorks from "@/components/home/HomepageHowItWorks";
+import HomepageTrustBadges from "@/components/home/HomepageTrustBadges";
+import HomepageFaq from "@/components/home/HomepageFaq";
+import HomepageSellerCta from "@/components/home/HomepageSellerCta";
 import { getHomepageData } from "@/lib/homepage-cache";
 import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin, absoluteMediaUrl } from "@/lib/site-url";
@@ -297,7 +301,11 @@ export default async function HomePage() {
       </div>
       </FadeIn>
 
+      <HomepageTrustBadges />
+
       <HomepageShopLinks />
+
+      <FadeIn delay={0.05}><HomepageHowItWorks /></FadeIn>
 
       <FadeIn delay={0.1}><HomepageSpotlight cars={spotlightCards} /></FadeIn>
 
@@ -374,6 +382,10 @@ export default async function HomePage() {
         </div>
       </section>
       </FadeIn>
+
+      <FadeIn delay={0.3}><HomepageFaq /></FadeIn>
+
+      <FadeIn delay={0.35}><HomepageSellerCta /></FadeIn>
 
       <FadeIn delay={0.4}><HomepageSupportWhatsApp /></FadeIn>
       <SeasonalPromoModal />
