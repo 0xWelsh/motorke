@@ -1,13 +1,9 @@
 // src/app/maintenance/page.js
-// Public-facing maintenance screen shown when MAINTENANCE_MODE is on.
-// Intentionally minimal: no nav, no footer, no DB calls, no client JS.
-
 export const dynamic = "force-static";
 
 export const metadata = {
   title: "We'll be right back | BIDGARI",
-  description:
-    "BIDGARI is undergoing brief maintenance. We'll be back online shortly.",
+  description: "BIDGARI is undergoing brief maintenance. We'll be back online shortly.",
   robots: { index: false, follow: false },
 };
 
@@ -16,18 +12,21 @@ export default function MaintenancePage() {
     <main
       role="main"
       aria-labelledby="maintenance-heading"
-      className="min-h-[100dvh] bg-[#1c1c1c] flex items-center justify-center px-6 py-12"
+      className="min-h-[100dvh] bg-[#141414] flex items-center justify-center px-6 py-12"
     >
       <div className="w-full max-w-md text-center">
-        <div className="mx-auto mb-8 flex h-16 w-16 items-center justify-center rounded-full bg-white/[0.03] ring-1 ring-white/[0.06]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/favicon.png"
-            alt="BIDGARI"
-            width={40}
-            height={40}
-            className="h-10 w-10 object-contain"
-          />
+        {/* Building animation */}
+        <div className="mx-auto mb-8 flex items-end justify-center gap-1.5 h-20">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div
+              key={i}
+              className="w-3 rounded-t-sm bg-[var(--accent)] opacity-80"
+              style={{
+                height: `${12 + i * 8}px`,
+                animation: `buildUp 1.4s ease-in-out ${i * 0.15}s infinite alternate`,
+              }}
+            />
+          ))}
         </div>
 
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/[0.06] bg-white/[0.03] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-400">
@@ -35,18 +34,18 @@ export default function MaintenancePage() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--accent)] opacity-70" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
           </span>
-          Maintenance in progress
+          Building something new
         </div>
 
         <h1
           id="maintenance-heading"
-          className="font-serif text-3xl font-black tracking-tight text-white sm:text-4xl"
+          className="text-3xl font-black tracking-tight text-white sm:text-4xl"
         >
           We&rsquo;ll be right back.
         </h1>
 
         <p className="mt-4 text-sm leading-relaxed text-zinc-400 sm:text-base">
-          BIDGARI is offline for a short window while we tidy a few things up.
+          BIDGARI is offline for a short window while we rebuild a few things.
           Your account, saved cars, and dealer inventory are safe.
         </p>
 
@@ -73,6 +72,13 @@ export default function MaintenancePage() {
           BIDGARI &middot; Kenya
         </p>
       </div>
+
+      <style>{`
+        @keyframes buildUp {
+          0% { transform: scaleY(0.4); opacity: 0.3; }
+          100% { transform: scaleY(1); opacity: 0.9; }
+        }
+      `}</style>
     </main>
   );
 }
