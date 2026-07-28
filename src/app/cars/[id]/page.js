@@ -43,8 +43,6 @@ import CarListingRelatedSearches from "@/components/CarListingRelatedSearches";
 import SimilarCarsSection from "@/components/SimilarCarsSection";
 import CarDetailMobileBar from "@/components/CarDetailMobileBar";
 import CarActionButtons from "@/components/CarActionButtons";
-import { ViewCountBadge, PriceDropBadge } from "@/components/CarDetailSidebar";
-import { buildListingHighlightChips } from "@/lib/car-listing-highlights";
 import {
   daysRemainingOnSite,
   isInSoldGracePeriod,
@@ -265,7 +263,6 @@ export default async function CarDetailPage({ params }) {
   const [similar, reviewsData, modelWiki, benchmark] = await Promise.all([similarPromise, reviewsPromise, modelWikiPromise, benchmarkPromise]);
   const freshDays = daysSince(car.createdAt);
   const freshLabel = freshnessLabel(freshDays);
-  const highlightChips = buildListingHighlightChips(car, dealer);
   const salesmanNumbers = await getSalesmanWhatsappNumbers();
   const waDigits = pickSalesmanWhatsapp(salesmanNumbers, car.id);
   const whatsappHref = whatsappLink(waDigits, title, "Admin");
@@ -471,8 +468,8 @@ export default async function CarDetailPage({ params }) {
           </div>
         </div>
 
-        {/* Gallery — edge-to-edge mobile, contained desktop */}
-        <div className="-mx-4 sm:-mx-6 lg:mx-0">
+        {/* Gallery — full width */}
+        <div className="-mx-4 sm:-mx-6 lg:mx-0 mb-6">
           <ImageGallery
             images={car.images}
             title={title}
@@ -482,193 +479,195 @@ export default async function CarDetailPage({ params }) {
           />
         </div>
 
-        {/* ── Two-column layout ── */}
-        <div className="lg:grid lg:grid-cols-3 lg:gap-8 mt-5">
+        {/* ── Single column content ── */}
+        <div className="max-w-4xl mx-auto space-y-8">
 
-          {/* ── Main content ── */}
-          <div className="min-w-0 lg:col-span-2 space-y-8">
+          {/* Title + Price + Location */}
+          <div>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-[1.1]">
+              {carName}
+            </h1>
+            <p className="mt-2 text-xl sm:text-2xl font-bold text-[var(--accent)]">
+              {formatCarPrice(car)}
+            </p>
+            <div className="flex items-center gap-2 text-xs text-zinc-400 mt-2 flex-wrap">
+              <MapPin className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />
+              <span>{locationLabel}</span>
+              <span className="text-zinc-600">·</span>
+              <span className={`font-bold uppercase tracking-widest ${soldGrace ? "text-red-600" : "text-emerald-600"}`}>
+                {soldGrace ? "SOLD" : "AVAILABLE"}
+              </span>
+              <span className="text-zinc-600">·</span>
+              <span className="font-bold uppercase tracking-widest text-zinc-100">
+                {car.imported === false ? "LOCAL" : (() => {
+                  const flags = { Japan: "🇯🇵", UK: "🇬🇧", USA: "🇺🇸", UAE: "🇦🇪", Germany: "🇩🇪", "South Africa": "🇿🇦", Thailand: "🇹🇭", Singapore: "🇸🇬" };
+                  const flag = flags[car.importCountry] || "";
+                  return `IMPORTED${flag ? ` ${flag}` : ""}`;
+                })()}
+              </span>
+              {car.carStatus && (
+                <>
+                  <span className="text-zinc-600">·</span>
+                  <span className={`font-bold uppercase tracking-widest text-[10px] px-1.5 py-0.5 rounded ${CAR_STATUS_COLORS[car.carStatus]}`}>
+                    {CAR_STATUS_LABELS[car.carStatus]}
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
 
-            {/* Title + Price + Location */}
-            <div>
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-[1.15]">
-                {carName}
-              </h1>
-              <p className="mt-1.5 text-lg font-bold text-[var(--accent)]">
-                {formatCarPrice(car)}
-              </p>
-              <div className="flex items-center gap-2 text-xs text-zinc-400 mt-2 flex-wrap">
-                <MapPin className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />
-                <span>{locationLabel}</span>
-                <span className="text-zinc-600">·</span>
-                <span className={`font-bold uppercase tracking-widest ${soldGrace ? "text-red-600" : "text-emerald-600"}`}>
-                  {soldGrace ? "SOLD" : "AVAILABLE"}
-                </span>
-                <span className="text-zinc-600">·</span>
-                <span className="font-bold uppercase tracking-widest text-zinc-100">
-                  {car.imported === false ? "LOCAL" : (() => {
-                    const flags = { Japan: "🇯🇵", UK: "🇬🇧", USA: "🇺🇸", UAE: "🇦🇪", Germany: "🇩🇪", "South Africa": "🇿🇦", Thailand: "🇹🇭", Singapore: "🇸🇬" };
-                    const flag = flags[car.importCountry] || "";
-                    return `IMPORTED${flag ? ` ${flag}` : ""}`;
-                  })()}
-                </span>
-                {car.carStatus && (
-                  <>
-                    <span className="text-zinc-600">·</span>
-                    <span className={`font-bold uppercase tracking-widest text-[10px] px-1.5 py-0.5 rounded ${CAR_STATUS_COLORS[car.carStatus]}`}>
-                      {CAR_STATUS_LABELS[car.carStatus]}
-                    </span>
-                  </>
+          {/* Quick spec chips */}
+          <div className="flex flex-wrap items-center gap-2">
+            {(() => {
+              const chips = [];
+              if (car.year) chips.push(String(car.year));
+              if (positiveNum(car.mileage)) chips.push(formatMileage(car.mileage));
+              if (car.fuelType) chips.push(FUEL_LABELS[car.fuelType] || car.fuelType);
+              if (car.transmission) chips.push(car.transmission === "AUTOMATIC" ? "Automatic" : "Manual");
+              if (car.bodyType) chips.push(BODY_TYPE_LABELS[car.bodyType] || car.bodyType);
+              return chips;
+            })().map((val, i) => (
+              <span key={i} className="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06] text-[12px] font-semibold text-zinc-300">
+                {val}
+              </span>
+            ))}
+            <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20 text-[12px] font-bold text-[var(--accent)]">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              {freshLabel}
+            </span>
+          </div>
+
+          {/* Action buttons */}
+          <CarActionButtons carId={car.id} dealerId={car.dealerId} carTitle={carName} price={formatCarPrice(car)} />
+
+          {/* Description */}
+          <section>
+            <div className="text-[14px] sm:text-[15px] text-zinc-400 leading-[1.8] font-medium">
+              {specString ? (
+                <>
+                  <span className="text-white font-bold">{specString}</span>
+                  {(car.description || "").trim() ? ". " : null}
+                </>
+              ) : null}
+              {car.description?.trim() ||
+                "No description from the dealer yet. Message them for condition, service history, and viewing times."}
+            </div>
+          </section>
+
+          {/* Specifications */}
+          <section>
+            <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 mb-4">Specifications</h2>
+            {(() => {
+              const groups = buildCarDetailSpecGroups(car);
+              return groups.map((group) => (
+                <div key={group.title} className="mb-5">
+                  <h3 className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-2">{group.title}</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-px rounded-xl border border-white/[0.06] overflow-hidden bg-white/[0.06]">
+                    {group.rows.map((item) => (
+                      <div key={item.label} className="flex flex-col gap-0.5 bg-[#1c1c1c] px-4 py-3">
+                        <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">{item.label}</span>
+                        <span className="text-[13px] font-bold text-white">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ));
+            })()}
+          </section>
+
+          {/* Features */}
+          {featureList.length > 0 && (
+            <section>
+              <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 mb-3">Features</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {featureList.map((feature, i) => (
+                  <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.04] text-[12px] text-zinc-300">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] shrink-0" />
+                    {feature}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Dealer / Sales Person */}
+          <section className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center shrink-0">
+                <span className="text-lg font-black text-[var(--accent)]">{dealer.name?.charAt(0) || "D"}</span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-1">Listed by</p>
+                <Link href={dealerShowroomPath(dealer.slug)} className="text-sm font-bold text-white hover:text-[var(--accent)] transition-colors">
+                  {dealer.name}
+                </Link>
+                {dealer.location && (
+                  <p className="text-xs text-zinc-400 mt-0.5 flex items-center gap-1">
+                    <MapPin className="w-3 h-3 shrink-0" />{dealer.location}
+                  </p>
+                )}
+                {dealer.responseTime && (
+                  <p className="text-[10px] text-zinc-500 mt-1">Usually responds {dealer.responseTime}</p>
                 )}
               </div>
+              <Link href={dealerShowroomPath(dealer.slug)} className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)] hover:underline shrink-0 mt-1">
+                View dealer
+              </Link>
             </div>
+          </section>
 
-            {/* Quick spec chips */}
-            <div className="flex flex-wrap items-center gap-2">
-              {(() => {
-                const chips = [];
-                if (car.year) chips.push(String(car.year));
-                if (positiveNum(car.mileage)) chips.push(formatMileage(car.mileage));
-                if (car.fuelType) chips.push(FUEL_LABELS[car.fuelType] || car.fuelType);
-                if (car.transmission) chips.push(car.transmission === "AUTOMATIC" ? "Automatic" : "Manual");
-                if (car.bodyType) chips.push(BODY_TYPE_LABELS[car.bodyType] || car.bodyType);
-                return chips;
-              })().map((val, i) => (
-                <span key={i} className="inline-flex items-center px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.06] text-[12px] font-semibold text-zinc-300">
-                  {val}
-                </span>
-              ))}
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20 text-[12px] font-bold text-[var(--accent)]">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                {freshLabel}
-              </span>
+          {/* Market range */}
+          {benchmark && (
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-1">Market Range</p>
+              <p className="text-sm font-bold text-white">
+                KES {Number(benchmark.low).toLocaleString("en-KE")} – KES {Number(benchmark.high).toLocaleString("en-KE")}
+              </p>
+              <p className="text-[10px] text-zinc-500 mt-0.5">Based on {benchmark.count} similar {car.model} listings</p>
             </div>
+          )}
 
-            {/* Action buttons — single placement */}
-            <div>
-              <CarActionButtons carId={car.id} dealerId={car.dealerId} carTitle={carName} price={formatCarPrice(car)} />
-            </div>
-
-            {/* Description — sells the car first */}
-            <section>
-              <div className="text-[14px] sm:text-[15px] text-zinc-400 leading-[1.7] font-medium">
-                {specString ? (
-                  <>
-                    <span className="text-white font-bold">{specString}</span>
-                    {(car.description || "").trim() ? ". " : null}
-                  </>
-                ) : null}
-                {car.description?.trim() ||
-                  "No description from the dealer yet. Message them for condition, service history, and viewing times."}
-              </div>
-            </section>
-
-            {/* Specifications — always open, categorized */}
-            <section>
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 mb-3">Specifications</h2>
-              {(() => {
-                const groups = buildCarDetailSpecGroups(car);
-                return groups.map((group) => (
-                  <div key={group.title} className="mb-4">
-                    <h3 className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-2">{group.title}</h3>
-                    <div className="grid grid-cols-2 gap-px rounded-xl border border-white/[0.06] overflow-hidden bg-white/[0.06]">
-                      {group.rows.map((item) => (
-                        <div key={item.label} className="flex flex-col gap-0.5 bg-[#1c1c1c] px-4 py-3">
-                          <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">{item.label}</span>
-                          <span className="text-[13px] font-bold text-white">{item.value}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ));
-              })()}
-            </section>
-
-            {/* Features — proper grid */}
-            {featureList.length > 0 && (
-              <section>
-                <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 mb-3">Features</h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {featureList.map((feature, i) => (
-                    <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.04] text-[12px] text-zinc-300">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] shrink-0" />
-                      {feature}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Explore links */}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-zinc-400 rounded-xl">
-              <span className="text-zinc-500 font-black tracking-widest">Explore:</span>
-              <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-[var(--accent)] hover:underline">All {car.make}</Link>
-              <span className="text-zinc-700">·</span>
-              <Link href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`} className="text-[var(--accent)] hover:underline">{car.make} {car.model}</Link>
-              {car.fuelType && (<><span className="text-zinc-700">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`} className="text-[var(--accent)] hover:underline">{FUEL_LABELS[car.fuelType] || car.fuelType}</Link></>)}
-              {dealer.county ? (<><span className="text-zinc-700">·</span><Link href={`/cars/${slugifyCarSegment(dealer.county)}`} className="text-[var(--accent)] hover:underline">Cars in {dealer.county}</Link></>) : null}
-            </div>
-
-            {/* Reviews */}
-            <CarReviewsSection
+          {/* Share */}
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-3">Share this listing</p>
+            <ShareButtons
+              listingUrl={listingUrl}
+              browseUrl={absoluteUrl("/cars")}
+              title={title}
+              price={formatCarPrice(car)}
+              dealerName={dealer.name}
+              location={car.location || dealer.location || "Kenya"}
+              mileageLabel={positiveNum(car.mileage) ? formatMileage(car.mileage) : null}
+              previewImageUrl={`/api/cars/${car.id}/og-image`}
               carId={car.id}
-              initialReviews={reviewsData.reviews}
-              initialAvgRating={reviewsData.avgRating}
+              sold={soldGrace}
             />
           </div>
 
-          {/* ── Sidebar ── */}
-          <aside className="lg:col-span-1 space-y-5 mt-8 lg:mt-0">
-            {/* Dealer info */}
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2">Dealer</p>
-              <Link href={dealerShowroomPath(dealer.slug)} className="text-sm font-bold text-white hover:text-[var(--accent)] transition-colors">
-                {dealer.name}
-              </Link>
-              {dealer.location && (
-                <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1">
-                  <MapPin className="w-3 h-3" />{dealer.location}
-                </p>
-              )}
-            </div>
+          {/* Explore links */}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-zinc-400 rounded-xl">
+            <span className="text-zinc-500 font-black tracking-widest">Explore:</span>
+            <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-[var(--accent)] hover:underline">All {car.make}</Link>
+            <span className="text-zinc-700">·</span>
+            <Link href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`} className="text-[var(--accent)] hover:underline">{car.make} {car.model}</Link>
+            {car.fuelType && (<><span className="text-zinc-700">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`} className="text-[var(--accent)] hover:underline">{FUEL_LABELS[car.fuelType] || car.fuelType}</Link></>)}
+            {dealer.county ? (<><span className="text-zinc-700">·</span><Link href={`/cars/${slugifyCarSegment(dealer.county)}`} className="text-[var(--accent)] hover:underline">Cars in {dealer.county}</Link></>) : null}
+          </div>
 
-            {/* Market range */}
-            {benchmark && (
-              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-1">Market Range</p>
-                <p className="text-sm font-bold text-white">
-                  KES {Number(benchmark.low).toLocaleString("en-KE")} – KES {Number(benchmark.high).toLocaleString("en-KE")}
-                </p>
-                <p className="text-[10px] text-zinc-500 mt-0.5">Based on {benchmark.count} similar {car.model} listings</p>
-              </div>
-            )}
+          {/* Reviews */}
+          <CarReviewsSection
+            carId={car.id}
+            initialReviews={reviewsData.reviews}
+            initialAvgRating={reviewsData.avgRating}
+          />
 
-            {/* View count */}
-            <ViewCountBadge carId={car.id} />
-
-            {/* Price drop */}
-            <PriceDropBadge carId={car.id} currentPrice={car.price} />
-
-            {/* Share */}
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-3">Share</p>
-              <ShareButtons
-                listingUrl={listingUrl}
-                browseUrl={absoluteUrl("/cars")}
-                title={title}
-                price={formatCarPrice(car)}
-                dealerName={dealer.name}
-                location={car.location || dealer.location || "Kenya"}
-                mileageLabel={positiveNum(car.mileage) ? formatMileage(car.mileage) : null}
-                previewImageUrl={`/api/cars/${car.id}/og-image`}
-                carId={car.id}
-                sold={soldGrace}
-              />
-            </div>
-          </aside>
+          {/* SEO */}
+          <CarModelWiki car={car} wiki={modelWiki} />
+          <CarListingRelatedSearches car={car} />
         </div>
 
-        {/* Similar cars */}
-        <div className="mt-8"><SimilarCarsSection cars={similar} make={car.make} /></div>
+        {/* Similar cars — full width */}
+        <div className="mt-8 max-w-7xl mx-auto"><SimilarCarsSection cars={similar} make={car.make} /></div>
       </div>
 
       {/* Mobile bottom bar */}
