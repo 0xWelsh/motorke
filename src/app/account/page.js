@@ -57,26 +57,25 @@ export default async function AccountPage({ searchParams }) {
   ]);
 
   return (
-    <div className="min-h-screen bg-[#141414]">
+    <div className="min-h-screen bg-[var(--bg)]">
       <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-16 max-w-4xl">
         
-        {/* Header Section */}
         {/* Header Section */}
         <header className="mb-6 sm:mb-12">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 sm:gap-6 mb-4 sm:mb-8">
             <div>
-              <p className="hidden sm:block text-[11px] uppercase font-black tracking-[0.15em] font-bold text-zinc-400 uppercase tracking-widest mb-1 sm:mb-2">Personal Workspace</p>
-              <h1 className="text-3xl sm:text-5xl font-bold text-white mb-0.5 sm:mb-1">Your Account</h1>
-              <p className="text-[10px] sm:text-[11px] uppercase font-black tracking-[0.10em] text-zinc-400 font-medium">Manage your profile, saved cars, and inquiries</p>
+              <p className="hidden sm:block text-[11px] uppercase font-black tracking-[0.15em] text-slate-400 uppercase tracking-widest mb-1 sm:mb-2">Personal Workspace</p>
+              <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 mb-0.5 sm:mb-1">Your Account</h1>
+              <p className="text-[10px] sm:text-[11px] uppercase font-black tracking-[0.10em] text-slate-500 font-medium">Manage your profile, saved cars, and inquiries</p>
             </div>
-            <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] uppercase font-black tracking-[0.10em] sm:tracking-[0.15em] font-bold text-zinc-400">
-              <Calendar size={14} className="text-zinc-400" />
+            <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] uppercase font-black tracking-[0.10em] sm:tracking-[0.15em] text-slate-500">
+              <Calendar size={14} className="text-slate-400" />
               Member since {new Date(user.createdAt || Date.now()).getFullYear()}
             </div>
           </div>
 
           {/* User Profile Card */}
-          <div className="bg-[#1e1e1e] p-4 sm:p-8 shadow-sm rounded-xl">
+          <div className="bg-white p-4 sm:p-8 shadow-sm rounded-xl border border-slate-200">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
               {/* Avatar */}
               <div className="flex items-center gap-4 w-full sm:w-auto">
@@ -86,35 +85,35 @@ export default async function AccountPage({ searchParams }) {
                     userName={user.name}
                     size="md"
                   />
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-400">
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">
                     Tap photo to update
                   </span>
                 </div>
                 
                 <div className="sm:hidden flex flex-col">
                   <div className="flex items-center gap-2">
-                    <h2 className="text-xl font-bold text-white">{user.name}</h2>
+                    <h2 className="text-xl font-bold text-slate-900">{user.name}</h2>
                   </div>
-                  <p className="text-[10px] uppercase font-black tracking-[0.10em] text-zinc-400">{user.email}</p>
+                  <p className="text-[10px] uppercase font-black tracking-[0.10em] text-slate-500">{user.email}</p>
                 </div>
               </div>
 
               {/* User Info */}
               <div className="flex-1 w-full min-w-0">
                 <div className="hidden sm:flex flex-row items-center gap-3 mb-2">
-                  <h2 className="text-2xl font-bold text-white">{user.name}</h2>
-                  <span className="inline-flex items-center gap-1 bg-blue-500/10 text-blue-400 px-2.5 py-1 rounded-none text-[11px] font-bold uppercase tracking-wider">
+                  <h2 className="text-2xl font-bold text-slate-900">{user.name}</h2>
+                  <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-2.5 py-1 rounded-none text-[11px] font-bold uppercase tracking-wider border border-blue-100">
                     <ShieldCheck size={12} /> Verified
                   </span>
                 </div>
-                <p className="hidden sm:block text-[11px] uppercase font-black tracking-[0.10em] text-zinc-400 mb-3">{user.email}</p>
+                <p className="hidden sm:block text-[11px] uppercase font-black tracking-[0.10em] text-slate-500 mb-3">{user.email}</p>
                 
                 <div className="flex flex-wrap items-center gap-3 mt-2 sm:mt-0">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 bg-white/[0.03] rounded-none text-[10px] sm:text-[11px] uppercase font-black tracking-[0.10em] sm:tracking-[0.15em] font-semibold text-zinc-400">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 bg-slate-50 rounded-none text-[10px] sm:text-[11px] uppercase font-black tracking-[0.10em] sm:tracking-[0.15em] text-slate-600 border border-slate-200">
                     <Heart size={14} className="text-red-500" />
                     {savedCars.length} Saved
                   </div>
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 bg-white/[0.03] rounded-none text-[10px] sm:text-[11px] uppercase font-black tracking-[0.10em] sm:tracking-[0.15em] font-semibold text-zinc-400">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 bg-slate-50 rounded-none text-[10px] sm:text-[11px] uppercase font-black tracking-[0.10em] sm:tracking-[0.15em] text-slate-600 border border-slate-200">
                     <MessageSquare size={14} className="text-[#ff5a2f]" />
                     {enquiries.length} Enquiries
                   </div>
@@ -122,7 +121,7 @@ export default async function AccountPage({ searchParams }) {
               </div>
 
               {/* Quick Link */}
-              <a href="/cars" className="inline-flex items-center justify-center gap-2 w-full sm:w-auto mt-2 sm:mt-0 px-6 py-3 sm:py-3 bg-white text-[#141414] rounded-xl font-semibold text-[11px] uppercase font-black tracking-[0.15em] hover:bg-[#ff5a2f] hover:text-white transition-colors">
+              <a href="/cars" className="btn btn-dark w-full sm:w-auto">
                 Browse <ArrowRight size={16} className="hidden sm:block" />
               </a>
             </div>
@@ -130,7 +129,7 @@ export default async function AccountPage({ searchParams }) {
         </header>
 
         {/* Tabbed Interface */}
-        <div className="bg-[#1e1e1e] rounded-xl overflow-hidden min-h-[600px] shadow-sm">
+        <div className="bg-white rounded-xl overflow-hidden min-h-[600px] shadow-sm border border-slate-200">
           <AccountTabs
             tab={tab}
             user={{

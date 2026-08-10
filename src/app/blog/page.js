@@ -16,11 +16,11 @@ export default async function BlogIndexPage() {
   const posts = await listPublishedSeoPages({ type: "BLOG", take: 40 });
 
   return (
-    <div className="min-h-screen bg-white bg-[#222222] pt-20 pb-24">
+    <div className="min-h-screen bg-white pt-20 pb-24">
       <div className="home-shell max-w-4xl mx-auto">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-2">Guides</p>
-        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 text-white mb-3">Blog</h1>
-        <p className="text-slate-600 text-slate-400 mb-10 max-w-2xl">
+        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3">Blog</h1>
+        <p className="text-slate-600 mb-10 max-w-2xl">
           Editorial tips for buying and importing vehicles in Kenya. Pair these with live inventory search and our duty calculator.
         </p>
 
@@ -32,7 +32,7 @@ export default async function BlogIndexPage() {
               <Link
                 key={post.id}
                 href={blogPagePath(post.slug)}
-                className="group flex flex-col bg-white bg-zinc-900/60 border border-slate-200/80 border-zinc-800 rounded-sm hover:shadow-md hover:border-slate-300 hover:border-zinc-700 transition-all"
+                className="group flex flex-col bg-white border border-slate-200 rounded-sm hover:shadow-md hover:border-slate-300 transition-all"
               >
                 <div className="flex-1 flex flex-col p-5 sm:p-6">
                   <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#38A169] mb-2.5">
@@ -41,11 +41,11 @@ export default async function BlogIndexPage() {
                       ? new Date(post.publishedAt).toLocaleDateString("en-KE", { year: "numeric", month: "short", day: "numeric" })
                       : null}
                   </div>
-                  <h2 className="text-base sm:text-lg font-bold text-slate-900 text-white group-hover:text-[#38A169] transition-colors leading-snug">
+                  <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#38A169] transition-colors leading-snug">
                     {post.title}
                   </h2>
                   {post.description ? (
-                    <p className="text-sm text-slate-600 text-slate-400 mt-2 leading-relaxed line-clamp-3">
+                    <p className="text-sm text-slate-600 mt-2 leading-relaxed line-clamp-3">
                       {post.description}
                     </p>
                   ) : null}

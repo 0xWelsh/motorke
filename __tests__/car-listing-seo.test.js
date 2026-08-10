@@ -33,7 +33,7 @@ describe("car-listing-seo", () => {
     const title = buildCarListingTitle(sampleCar);
     expect(title).toMatch(/2019 Mazda CX-8/);
     expect(title).toMatch(/for Sale Kenya/);
-    expect(title).toMatch(/KSh/);
+    expect(title).toMatch(/KES/);
     expect(title.length).toBeLessThanOrEqual(65);
   });
 

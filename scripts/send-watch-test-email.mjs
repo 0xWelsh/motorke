@@ -58,12 +58,12 @@ async function main() {
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto; color: #0f172a;">
       <h1 style="font-size: 24px; margin-bottom: 8px;">Price drop on your watchlist car</h1>
-      <p style="font-size: 14px; color: #475569; margin-top: 0;">Hi ${firstName}, The ${title} dropped by KSh ${dropAmount.toLocaleString("en-KE")}.</p>
+      <p style="font-size: 14px; color: #475569; margin-top: 0;">Hi ${firstName}, The ${title} dropped by KES ${dropAmount.toLocaleString("en-KE")}.</p>
       <div style="border: 1px solid #e2e8f0; padding: 16px; margin: 18px 0;">
         <p style="margin: 0 0 8px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #64748b; font-weight: 700;">Vehicle</p>
         <p style="margin: 0 0 12px; font-weight: 700;">${title}</p>
-        <p style="margin: 0 0 8px;"><strong>Previous:</strong> KSh ${previousPrice.toLocaleString("en-KE")}</p>
-        <p style="margin: 0;"><strong>Current:</strong> KSh ${currentPrice.toLocaleString("en-KE")}</p>
+        <p style="margin: 0 0 8px;"><strong>Previous:</strong> KES ${previousPrice.toLocaleString("en-KE")}</p>
+        <p style="margin: 0;"><strong>Current:</strong> KES ${currentPrice.toLocaleString("en-KE")}</p>
       </div>
       <a href="${carUrl}" style="display:inline-block;background:#111111;color:#fff;text-decoration:none;padding:12px 18px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Open Listing</a>
       ${buildEmailFooter()}

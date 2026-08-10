@@ -11,7 +11,6 @@ import { SEO_PRICE_BANDS, facetPathSegment } from "@/lib/seo-car-facets";
 import { carListingPath } from "@/lib/car-listing-url";
 import { listSeoPagesForSitemap, contentPublicPath } from "@/lib/seo-content";
 import { listGlobalHubSitemapEntries } from "@/lib/seo-global-hubs";
-import { listLocationHubSlugs } from "@/lib/seo-location-hubs";
 
 const BASE = getSiteOrigin();
 
@@ -43,7 +42,6 @@ export default async function sitemap() {
 
   const [
     cars,
-    dealers,
     makeRows,
     comboRows,
     countiesWithStock,
@@ -65,16 +63,6 @@ export default async function sitemap() {
         },
       },
       orderBy: { updatedAt: "desc" },
-    }),
-    db.dealer.findMany({
-      where: dealerWhere,
-      select: {
-        slug: true,
-        updatedAt: true,
-        logoUrl: true,
-        bannerUrl: true,
-        _count: { select: { cars: { where: { available: true } } } },
-      },
     }),
     db.car.findMany({
       where: carWhere,
@@ -143,17 +131,9 @@ export default async function sitemap() {
     priority: hub.priority,
   }));
 
-  const showroomPages = listLocationHubSlugs().map((slug) => ({
-    url: `${BASE}/showrooms/${slug}`,
-    lastModified: now,
-    changeFrequency: "weekly",
-    priority: 0.84,
-  }));
-
   const staticPages = [
     { url: BASE, lastModified: now, changeFrequency: "daily", priority: 1.0 },
     { url: `${BASE}/cars`, lastModified: now, changeFrequency: "daily", priority: 0.95 },
-    { url: `${BASE}/dealers`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE}/compare`, lastModified: now, changeFrequency: "weekly", priority: 0.65 },
     { url: `${BASE}/request-car`, lastModified: now, changeFrequency: "weekly", priority: 0.82 },
     { url: `${BASE}/requests`, lastModified: now, changeFrequency: "hourly", priority: 0.78 },
@@ -175,18 +155,6 @@ export default async function sitemap() {
       lastModified: car.updatedAt,
       changeFrequency: "weekly",
       priority: 0.85,
-      ...(images.length ? { images } : {}),
-    };
-  });
-
-  const dealerPages = dealers.map((dealer) => {
-    const images = [toAbsImage(dealer.bannerUrl), toAbsImage(dealer.logoUrl)].filter(Boolean);
-    const activeCars = dealer._count?.cars ?? 0;
-    return {
-      url: `${BASE}/dealers/${dealer.slug}`,
-      lastModified: dealer.updatedAt,
-      priority: activeCars > 0 ? 0.88 : 0.72,
-      changeFrequency: "weekly",
       ...(images.length ? { images } : {}),
     };
   });
@@ -273,9 +241,7 @@ export default async function sitemap() {
   return dedupeByUrl([
     ...staticPages,
     ...globalHubPages,
-    ...showroomPages,
     ...carPages,
-    ...dealerPages,
     ...makeHubPages,
     ...countyHubPages,
     ...modelHubPages,

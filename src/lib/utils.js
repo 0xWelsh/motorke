@@ -1,5 +1,5 @@
 // src/lib/utils.js
-/** Format KES price → "KSh 4,200,000" */
+/** Format KES price → "KES 4,200,000" */
 export function formatPrice(amount) {
   let numAmount = Number(amount);
   if (isNaN(numAmount)) return "N/A";
@@ -12,7 +12,7 @@ export function formatPrice(amount) {
     numAmount = Math.round(numAmount / 100) * 100;
   }
   
-  return `KSh ${numAmount.toLocaleString("en-KE")}`;
+  return `KES ${numAmount.toLocaleString("en-KE")}`;
 }
 
 export function formatCarPrice(car) {

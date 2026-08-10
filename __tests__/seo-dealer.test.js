@@ -34,11 +34,12 @@ describe("seo-dealer", () => {
     expect(text).toMatch(/Search "AutoMax Motors"/);
   });
 
-  test("buildListingSellerSchema links to showroom URL", () => {
-    const seller = buildListingSellerSchema(dealer);
-    expect(seller.name).toBe("AutoMax Motors");
-    expect(seller["@id"]).toContain("/dealers/automax-motors");
-    expect(seller.url).toContain("/dealers/automax-motors");
+  test("buildListingSellerSchema sells under BIDGARI", () => {
+    const seller = buildListingSellerSchema();
+    expect(seller.name).toBe("BIDGARI");
+    expect(seller["@id"]).toContain("/");
+    expect(seller["@id"]).not.toContain("/dealers");
+    expect(seller.url).not.toContain("/dealers");
   });
 
   test("buildCarListingDealerMetadata is price-forward with sale intent", () => {
@@ -56,9 +57,9 @@ describe("seo-dealer", () => {
     const meta = buildCarListingDealerMetadata(car, dealer);
     expect(meta.title).toContain("2019 Mazda CX-8");
     expect(meta.title).toMatch(/for Sale Kenya/);
-    expect(meta.title).toMatch(/KSh/);
+    expect(meta.title).toMatch(/KES/);
     expect(meta.description).toMatch(/^Buy a /);
-    expect(meta.description).toContain("AutoMax Motors");
+    expect(meta.description).toContain("BIDGARI");
     expect(meta.h1).toBe("2019 Mazda CX-8 XDL");
     expect(meta.h1).not.toMatch(/for Sale/i);
   });

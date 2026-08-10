@@ -6,7 +6,6 @@ export default function DutyJsonLd({ vehicle = null, pathname = "/duty" }) {
     <>
       {blocks.map((block, i) => (
         <script
-          // eslint-disable-next-line react/no-array-index-key
           key={`duty-ld-${i}`}
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(block) }}

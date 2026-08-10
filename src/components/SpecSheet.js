@@ -2,7 +2,7 @@ import { formatCarPrice } from "@/lib/utils";
 import { buildCarDetailSpecRows, meaningfulFeatureList } from "@/lib/car-display";
 import { getThumbnailUrl } from "@/lib/image-transform";
 
-export default function SpecSheet({ car, dealer }) {
+export default function SpecSheet({ car }) {
   const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const primaryImg = car.images.find((i) => i.isPrimary) || car.images[0];
   const specs = buildCarDetailSpecRows(car);
@@ -35,9 +35,9 @@ export default function SpecSheet({ car, dealer }) {
              </div>
            )}
            <div className="mt-8">
-             <h3 className="text-xs font-bold uppercase tracking-widest text-orange-600 mb-2">Dealer Information</h3>
-             <p className="text-xl font-black text-black">{dealer.name}</p>
-             <p className="text-sm text-gray-600">{dealer.location}</p>
+             <h3 className="text-xs font-bold uppercase tracking-widest text-orange-600 mb-2">Sold by</h3>
+             <p className="text-xl font-black text-black">BIDGARI</p>
+              <p className="text-sm text-gray-600">Vehicle Sales &amp; Buyer Support, Kenya</p>
               <p className="mt-4 text-sm font-bold text-gray-600">Contact BIDGARI for more details.</p>
            </div>
         </div>

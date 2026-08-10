@@ -191,7 +191,7 @@ function escapeXml(s) {
 
 function buildCaptionSvg(carMeta, width) {
   const title = escapeXml(carMeta?.title || "Car");
-  const price = carMeta?.price != null ? `KSh ${Number(carMeta.price).toLocaleString("en-KE")}` : "";
+  const price = carMeta?.price != null ? `KES ${Number(carMeta.price).toLocaleString("en-KE")}` : "";
   const metaParts = [];
   if (carMeta.mileage) metaParts.push(`${Number(carMeta.mileage).toLocaleString("en-KE")} km`);
   if (carMeta.location) metaParts.push(carMeta.location);

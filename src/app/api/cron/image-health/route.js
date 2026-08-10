@@ -1,7 +1,7 @@
 // src/app/api/cron/image-health/route.js
 // Daily Vercel cron. Samples up to N car_images.url rows, pings each one,
 // and sends a system alert if the broken ratio exceeds a threshold OR if
-// the Supabase bucket itself is unreachable / no longer public.
+// the R2 bucket itself is unreachable / credentials are missing.
 //
 // Triggered by Vercel at the schedule defined in vercel.json. Vercel adds
 // the `x-vercel-cron` header on real cron requests; outside callers must
@@ -14,30 +14,15 @@ export const maxDuration = 60;
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { sendSystemAlertEmail } from "@/lib/mail";
+import { probeR2Bucket } from "@/lib/storage";
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SERVICE_KEY =
-  process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const BUCKET = "car-images";
 const SAMPLE_SIZE = 100;
 const BROKEN_RATIO_THRESHOLD = 0.1; // alert when 10%+ of sampled images fail
 const CONCURRENCY = 8;
 
 async function probeBucket() {
-  if (!SUPABASE_URL || !SERVICE_KEY) {
-    return { ok: false, error: "env_missing" };
-  }
-  try {
-    const res = await fetch(`${SUPABASE_URL}/storage/v1/bucket/${BUCKET}`, {
-      headers: { Authorization: `Bearer ${SERVICE_KEY}` },
-    });
-    if (!res.ok) return { ok: false, status: res.status };
-    const body = await res.json().catch(() => ({}));
-    return { ok: Boolean(body?.public), public: Boolean(body?.public), status: res.status };
-  } catch (err) {
-    return { ok: false, error: err?.message || "fetch_error" };
-  }
+  const probe = await probeR2Bucket();
+  return { ok: probe.configured && probe.reachable, ...probe };
 }
 
 async function head(url) {
@@ -111,7 +96,7 @@ export async function GET(request) {
 
   let alertReason = null;
   if (!bucket.ok) {
-    alertReason = bucket.public === false ? "bucket_private" : "bucket_unreachable";
+    alertReason = "bucket_unreachable";
   } else if (brokenRatio >= BROKEN_RATIO_THRESHOLD && sample.length >= 10) {
     alertReason = "broken_image_ratio";
   }
@@ -120,20 +105,20 @@ export async function GET(request) {
     await sendSystemAlertEmail({
       subject:
         alertReason === "bucket_unreachable"
-          ? "Supabase storage bucket is unreachable"
-          : alertReason === "bucket_private"
-            ? "Supabase storage bucket is not public"
-            : `Car images broken (${Math.round(brokenRatio * 100)}%)`,
+          ? "R2 image bucket is unreachable"
+          : `Car images broken (${Math.round(brokenRatio * 100)}%)`,
       summary:
         alertReason === "broken_image_ratio"
           ? `${broken.length} of ${sample.length} recently-uploaded car images are not serving as images. Visit /api/admin/diagnostics/images to inspect.`
-          : `The Supabase ${BUCKET} bucket health check failed. Visit Supabase Storage to verify the bucket is public and the project is not paused.`,
+          : bucket.configured === false
+            ? "R2 credentials are missing (R2_ENDPOINT / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY / R2_PUBLIC_URL). Configure them in Vercel."
+            : "The R2 image bucket health check failed (credentials invalid, bucket missing, or endpoint unreachable). Verify the R2_* environment variables in Vercel.",
       details: {
         sampled: sample.length,
         broken: broken.length,
         broken_ratio: `${(brokenRatio * 100).toFixed(1)}%`,
-        bucket_reachable: bucket.ok,
-        bucket_public: bucket.public ?? null,
+        bucket_reachable: bucket.reachable,
+        bucket_configured: bucket.configured,
         bucket_status: bucket.status ?? null,
         broken_status_counts: statusBuckets,
         commit: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || "local",

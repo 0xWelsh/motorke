@@ -28,9 +28,9 @@ export default function CompareSearchModal({
         setSearchQuery("");
       }}
     >
-      <div className="absolute inset-x-0 bottom-0 max-h-[82vh] bg-[#1c1c1c] border-t border-white/[0.06] p-4" style={{ borderTopLeftRadius: "16px", borderTopRightRadius: "16px" }}>
+      <div className="absolute inset-x-0 bottom-0 max-h-[82vh] bg-white border-t border-slate-200 p-4" style={{ borderTopLeftRadius: "16px", borderTopRightRadius: "16px" }}>
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Add a car to compare</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Add a car to compare</p>
           <button
             type="button"
             onClick={() => {
@@ -38,7 +38,7 @@ export default function CompareSearchModal({
               setSearchSlotError("");
               setSearchQuery("");
             }}
-            className="h-8 w-8 border border-white/[0.06] flex items-center justify-center text-zinc-300"
+            className="h-8 w-8 border border-slate-200 flex items-center justify-center text-slate-500"
             style={{ borderRadius: "var(--radius)" }}
           >
             <X className="w-4 h-4" />
@@ -53,7 +53,7 @@ export default function CompareSearchModal({
             setSearchSlotError("");
             setSearchQuery(e.target.value);
           }}
-          className="w-full bg-white/[0.03] border border-white/[0.06] px-4 py-3 text-sm font-semibold text-white outline-none focus:border-[var(--accent)]"
+          className="w-full bg-slate-50 border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:border-[var(--accent)]"
           style={{ borderRadius: "var(--radius)" }}
         />
         {searchSlotError && (
@@ -65,23 +65,23 @@ export default function CompareSearchModal({
               key={res.id}
               type="button"
               onClick={() => onAddCarSearch(res)}
-              className="w-full flex items-center gap-3 p-3 border border-white/[0.06] hover:border-[var(--accent)]/40 text-left"
+              className="w-full flex items-center gap-3 p-3 border border-slate-200 hover:border-[var(--accent)]/40 text-left"
               style={{ borderRadius: "var(--radius)" }}
             >
-              <div className="relative w-12 h-12 bg-white/[0.03] overflow-hidden border border-white/[0.06] shrink-0" style={{ borderRadius: "var(--radius)" }}>
+              <div className="relative w-12 h-12 bg-slate-50 overflow-hidden border border-slate-200 shrink-0" style={{ borderRadius: "var(--radius)" }}>
                 {res.image ? <Image src={getThumbnailUrl(res.image)} alt={res.model} fill className="object-cover" /> : null}
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-bold text-white truncate">{res.year} {res.make} {res.model}</p>
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">{formatCarPrice(res)}</p>
+                <p className="text-xs font-bold text-slate-900 truncate">{res.year} {res.make} {res.model}</p>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{formatCarPrice(res)}</p>
               </div>
             </button>
           ))}
           {loadingSearch && (
-            <div className="p-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-center">Loading results...</div>
+            <div className="p-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-center">Loading results...</div>
           )}
           {!loadingSearch && searchQuery.length >= 2 && searchResults.length === 0 && (
-            <div className="p-4 text-[11px] font-semibold text-zinc-400 text-center">No matches yet. Try another make or model.</div>
+            <div className="p-4 text-[11px] font-semibold text-slate-500 text-center">No matches yet. Try another make or model.</div>
           )}
         </div>
       </div>

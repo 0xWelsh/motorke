@@ -28,7 +28,7 @@ const STATUS_META = {
 
 const STATUSES = Object.keys(STATUS_META);
 
-const fmt    = (n)   => "KSh " + Number(n).toLocaleString("en-KE");
+const fmt    = (n)   => "KES " + Number(n).toLocaleString("en-KE");
 const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-KE", { day:"numeric", month:"short", year:"numeric" });
 const cleanPhone = (value) => String(value || "").replace(/\D/g, "");
 

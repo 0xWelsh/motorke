@@ -23,11 +23,11 @@ export default function CompareCostOverTimeChart({ fullComparedCars, initialCars
   });
 
   return (
-    <div className="order-5 lg:order-5 scroll-mt-24 bg-[#1c1c1c] border border-white/[0.06] p-5 sm:p-6 lg:p-8"
+    <div className="order-5 lg:order-5 scroll-mt-24 bg-white border border-slate-200 p-5 sm:p-6 lg:p-8"
       style={{ borderRadius: "var(--radius)" }}>
       <div className="flex items-center gap-3 mb-6">
-        <h3 className="text-xl font-bold text-white">5-Year Cost Projection</h3>
-        <span className="px-2 py-0.5 bg-white/[0.03] text-[9px] font-bold text-zinc-400 uppercase tracking-widest rounded-xl">
+        <h3 className="text-xl font-bold text-slate-900">5-Year Cost Projection</h3>
+        <span className="px-2 py-0.5 bg-slate-50 text-[9px] font-bold text-slate-500 uppercase tracking-widest rounded-xl">
           Purchase + TCO
         </span>
       </div>
@@ -35,7 +35,7 @@ export default function CompareCostOverTimeChart({ fullComparedCars, initialCars
         <LineChart data={lineData} margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
           <XAxis dataKey="year" tick={{ fontSize: 10, fontWeight: 600, fill: "#718096" }} />
-          <YAxis tick={{ fontSize: 10, fill: "#a0aec0" }}
+          <YAxis tick={{ fontSize: 10, fill: "#718096" }}
             tickFormatter={(v) => `${formatKesCompact(v * 1000)}`}
           />
           <Tooltip

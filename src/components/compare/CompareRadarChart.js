@@ -31,11 +31,11 @@ export default function CompareRadarChart({ fullComparedCars, scoreMaps, initial
   });
 
   return (
-    <div className="order-3 lg:order-3 scroll-mt-24 bg-[#1c1c1c] border border-white/[0.06] p-5 sm:p-6 lg:p-8"
+    <div className="order-3 lg:order-3 scroll-mt-24 bg-white border border-slate-200 p-5 sm:p-6 lg:p-8"
       style={{ borderRadius: "var(--radius)" }}>
       <div className="flex items-center gap-3 mb-6">
-        <h3 className="text-xl font-bold text-white">Performance Radar</h3>
-        <span className="px-2 py-0.5 bg-white/[0.03] text-[9px] font-bold text-zinc-400 uppercase tracking-widest rounded-xl">
+        <h3 className="text-xl font-bold text-slate-900">Performance Radar</h3>
+        <span className="px-2 py-0.5 bg-slate-50 text-[9px] font-bold text-slate-500 uppercase tracking-widest rounded-xl">
           Realtime
         </span>
       </div>
@@ -43,7 +43,7 @@ export default function CompareRadarChart({ fullComparedCars, scoreMaps, initial
         <RadarChart data={radarData}>
           <PolarGrid stroke="#e2e8f0" />
           <PolarAngleAxis dataKey="dimension" tick={{ fontSize: 10, fontWeight: 700, fill: "#718096" }} />
-          <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fontSize: 9, fill: "#a0aec0" }} />
+          <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fontSize: 9, fill: "#718096" }} />
           <Tooltip
             contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0", fontSize: "12px" }}
             formatter={(value) => [`${value}/100`, ""]}
@@ -61,7 +61,7 @@ export default function CompareRadarChart({ fullComparedCars, scoreMaps, initial
           ))}
           <Legend
             wrapperStyle={{ fontSize: "10px", fontWeight: 700 }}
-            formatter={(value) => <span className="text-[10px] font-bold text-zinc-400">{value}</span>}
+            formatter={(value) => <span className="text-[10px] font-bold text-slate-500">{value}</span>}
           />
         </RadarChart>
       </ResponsiveContainer>

@@ -12,6 +12,8 @@ import CarsHorizontalFilters from "@/components/CarsHorizontalFilters";
 import CarsSearchBar from "@/components/CarsSearchBar";
 import { buildMakeWhere } from "@/lib/make-filter";
 import { publicDetailVisibilityClause } from "@/lib/car-sold-status";
+import NikkyoSidebar from "@/components/NikkyoSidebar";
+import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 
 const PER_PAGE = 24;
 
@@ -25,10 +27,10 @@ export async function generateMetadata({ searchParams }) {
   const parts = ["Cars for sale in kenya"];
   if (make) parts.unshift(`${make}${model ? ` ${model}` : ""}`);
   if (county) parts.push(`in ${county}`);
-  const title = `${parts.join(" — ")} | Trusted Dealers on BIDGARI`;
+  const title = `${parts.join(" — ")} | Cars for Sale in Kenya | BIDGARI`;
   const desc = make
-    ? `Browse verified ${make}${model ? ` ${model}` : ""} cars for sale${county ? ` in ${county}` : " across Kenya"}. Transparent pricing, trusted dealers, direct contact.`
-    : "Find verified cars from trusted Kenyan dealers. Transparent pricing, no middleman. Filter by make, price, body type, and county.";
+    ? `Browse verified ${make}${model ? ` ${model}` : ""} cars for sale${county ? ` in ${county}` : " across Kenya"}. Transparent pricing, handled by BIDGARI.`
+    : "Find verified cars for sale in Kenya. Transparent pricing, handled end-to-end by BIDGARI. Filter by make, price, body type, and county.";
 
   return {
     title,
@@ -155,7 +157,7 @@ export default async function CarsPage({ searchParams }) {
 
   const orderBy = buildCarsOrderBy(sort);
 
-  const [initialCars, total, allMakes, allCounties] = await Promise.all([
+  const [initialCars, total, allMakes, allCounties, browseInventoryCounts] = await Promise.all([
     db.car.findMany({
       where,
       select: carSelect,
@@ -165,6 +167,7 @@ export default async function CarsPage({ searchParams }) {
     db.car.count({ where }),
     getAllMakes(),
     getAllCounties(),
+    getBrowseInventoryCounts(),
   ]);
 
   function removeFilter(params, key) {
@@ -204,7 +207,7 @@ export default async function CarsPage({ searchParams }) {
   if (condition) filterChips.push({ label: condition === "NEW" ? "New" : "Used", href: removeFilter(sp, "condition") });
   if (county) filterChips.push({ label: county, href: removeFilter(sp, "county") });
   if (minPrice || maxPrice) {
-    const label = `${minPrice ? `KSh ${(minPrice / 1000000).toFixed(1)}M` : ""}${minPrice && maxPrice ? " – " : ""}${maxPrice ? `KSh ${(maxPrice / 1000000).toFixed(1)}M` : ""}`;
+    const label = `${minPrice ? `KES ${(minPrice / 1000000).toFixed(1)}M` : ""}${minPrice && maxPrice ? " – " : ""}${maxPrice ? `KES ${(maxPrice / 1000000).toFixed(1)}M` : ""}`;
     filterChips.push({ label, href: (() => { const p = new URLSearchParams(sp.toString()); p.delete("minPrice"); p.delete("maxPrice"); p.delete("page"); return `/cars?${p.toString()}`; })() });
   }
   if (minYOM || maxYOM) {
@@ -233,7 +236,7 @@ export default async function CarsPage({ searchParams }) {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--surface)] pb-12">
+    <div className="min-h-screen bg-[var(--surface)] pb-8">
       <TrackEventOnMount
         name="cars_listing_view"
         payload={{
@@ -250,7 +253,7 @@ export default async function CarsPage({ searchParams }) {
       <div className="w-full px-2.5 sm:px-8 pt-2 sm:pt-3">
 
         {/* Breadcrumb strip */}
-        <div className="mb-3 sm:mb-4 flex items-center gap-3 sm:gap-4 pb-2 sm:pb-2.5 min-w-0">
+        <div className="mb-2 sm:mb-3 flex items-center gap-3 sm:gap-4 pb-2 sm:pb-2.5 min-w-0">
           <div className="meta-label flex min-w-0 items-center gap-2 sm:gap-3 truncate">
             <Link href="/" className="hidden sm:inline hover:text-[var(--brand-primary)] transition-colors">Home</Link>
             <ChevronRight className="hidden sm:block w-3 h-3 shrink-0" />
@@ -260,7 +263,7 @@ export default async function CarsPage({ searchParams }) {
           </div>
         </div>
 
-        <h1 className="text-xl sm:text-2xl font-black text-[var(--text-main)] tracking-tight mb-4">
+        <h1 className="text-xl sm:text-2xl font-black text-[var(--text-main)] tracking-tight mb-3">
           {make && model
             ? `${make} ${model} for Sale${county ? ` in ${county}` : " in Kenya"}`
             : make
@@ -272,42 +275,50 @@ export default async function CarsPage({ searchParams }) {
             : "Cars for sale in kenya"}
         </h1>
 
-        {!noFiltersActive && (
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            {filterChips.map((chip) => (
-              <Link
-                key={chip.label}
-                href={chip.href}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-white bg-[#1e1e1e] text-slate-700 text-white hover:line-through transition-all"
-                style={{ borderRadius: "6px" }}
-              >
-                {chip.label}
-                <span className="text-slate-400 text-zinc-300">&times;</span>
-              </Link>
-            ))}
+        <div className="lg:grid lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-8 lg:items-start">
+          <aside className="hidden lg:block lg:sticky lg:top-24 lg:self-start">
+            <NikkyoSidebar inventoryCounts={browseInventoryCounts} />
+          </aside>
+
+          <div className="min-w-0">
+            <div className="mb-3">
+              <CarsSearchBar />
+            </div>
+
+            {!noFiltersActive && (
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                {filterChips.map((chip) => (
+                  <Link
+                    key={chip.label}
+                    href={chip.href}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-700 hover:line-through transition-all"
+                    style={{ borderRadius: "6px" }}
+                  >
+                    {chip.label}
+                    <span className="text-slate-400">&times;</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            <CarsHorizontalFilters
+              activeFilters={{ make, transmission, minPrice, maxPrice, bodyType, fuelType, minYOM: sp.minYOM, maxYOM: sp.maxYOM }}
+              allMakes={allMakes}
+            />
+
+            <div className="flex flex-wrap items-center justify-between gap-3 mt-3 mb-3">
+              <CarsInventorySort />
+            </div>
+
+            <div className="min-w-0">
+              <CarsInfiniteGrid
+                initialCars={initialCars}
+                initialTotal={total}
+                filters={stringFilters}
+                noFiltersActive={noFiltersActive}
+              />
+            </div>
           </div>
-        )}
-
-        <CarsHorizontalFilters
-          activeFilters={{ make, transmission, minPrice, maxPrice, bodyType, fuelType, minYOM: sp.minYOM, maxYOM: sp.maxYOM }}
-          allMakes={allMakes}
-        />
-
-        <div className="flex flex-wrap items-center justify-between gap-3 mt-4 mb-4">
-          <CarsInventorySort />
-        </div>
-
-        <div className="mb-4">
-          <CarsSearchBar />
-        </div>
-
-        <div className="min-w-0">
-          <CarsInfiniteGrid
-            initialCars={initialCars}
-            initialTotal={total}
-            filters={stringFilters}
-            noFiltersActive={noFiltersActive}
-          />
         </div>
       </div>
     </div>

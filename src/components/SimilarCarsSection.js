@@ -14,9 +14,9 @@ export default function SimilarCarsSection({ cars, make }) {
   if (!cars.length) return null;
 
   return (
-    <div className="border-t border-zinc-800 pt-8">
+    <div className="border-t border-slate-200 pt-8">
       <div className="flex items-end justify-between gap-4 mb-6">
-        <h2 className="text-[12px] font-serif font-bold uppercase tracking-[0.15em] text-[var(--accent)]">
+        <h2 className="text-[12px] font-bold uppercase tracking-[0.15em] text-[var(--accent)]">
           More {make} Cars
         </h2>
         <Link
@@ -26,9 +26,9 @@ export default function SimilarCarsSection({ cars, make }) {
           All {make} &rarr;
         </Link>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-7 xl:grid-cols-8">
         {displayed.map((sc) => (
-          <CarCard key={sc.id} car={sc} compact />
+          <CarCard key={sc.id} car={sc} />
         ))}
       </div>
       {hasMore && (
@@ -36,7 +36,7 @@ export default function SimilarCarsSection({ cars, make }) {
           <button
             type="button"
             onClick={() => setShowAll(!showAll)}
-            className="inline-flex items-center gap-2 rounded-xl border border-zinc-700 bg-zinc-900 px-5 py-2.5 text-[11px] font-bold tracking-wide text-zinc-300 hover:bg-zinc-800 transition-colors"
+            className="btn btn-neutral btn-sm"
           >
             {showAll ? "Show less" : `Show ${cars.length - INITIAL_COUNT} more`}
           </button>

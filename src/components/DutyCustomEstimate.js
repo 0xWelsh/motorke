@@ -65,86 +65,86 @@ export default function DutyCustomEstimate({ open: controlledOpen, onOpenChange,
 
   return (
     <div
-      className="border border-dashed border-white/[0.06] bg-white/[0.03] rounded-xl"
+      className="border border-dashed border-slate-200 bg-slate-50 rounded-xl"
     >
       <button
         type="button"
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left"
       >
-        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
           Can&apos;t find your car? Enter details manually
         </span>
         {open ? (
-          <ChevronUp className="w-4 h-4 text-zinc-400 shrink-0" aria-hidden />
+          <ChevronUp className="w-4 h-4 text-slate-500 shrink-0" aria-hidden />
         ) : (
-          <ChevronDown className="w-4 h-4 text-zinc-400 shrink-0" aria-hidden />
+          <ChevronDown className="w-4 h-4 text-slate-500 shrink-0" aria-hidden />
         )}
       </button>
 
       {open && (
-        <form onSubmit={handleSubmit} className="px-4 pb-4 space-y-3 border-t border-white/[0.06] rounded-xl">
-          <p className="text-[11px] text-zinc-400 pt-3 leading-relaxed">
+        <form onSubmit={handleSubmit} className="px-4 pb-4 space-y-3 border-t border-slate-200 rounded-xl">
+          <p className="text-[11px] text-slate-500 pt-3 leading-relaxed">
             Use the CRSP from KRA or your clearing agent. We&apos;ll calculate taxes even if this exact variant is not
             in our catalog yet.
           </p>
 
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Make</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Make</span>
               <input
                 value={make}
                 onChange={(e) => setMake(e.target.value)}
                 placeholder="Toyota"
-                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#1c1c1c] text-white rounded-xl"
+                className="h-10 px-3 text-sm border border-slate-300 bg-slate-50 text-slate-900 rounded-xl"
               />
             </label>
             <label className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Model</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Model</span>
               <input
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
                 placeholder="Wish"
-                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#1c1c1c] text-white rounded-xl"
+                className="h-10 px-3 text-sm border border-slate-300 bg-slate-50 text-slate-900 rounded-xl"
               />
             </label>
             <label className="flex flex-col gap-1 sm:col-span-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Trim (optional)</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Trim (optional)</span>
               <input
                 value={trim}
                 onChange={(e) => setTrim(e.target.value)}
                 placeholder="e.g. TX, Premium"
-                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#1c1c1c] text-white rounded-xl"
+                className="h-10 px-3 text-sm border border-slate-300 bg-slate-50 text-slate-900 rounded-xl"
               />
             </label>
             <label className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Year</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Year</span>
               <input
                 type="number"
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
                 min={1980}
                 max={currentYear + 1}
-                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#1c1c1c] text-white rounded-xl"
+                className="h-10 px-3 text-sm border border-slate-300 bg-slate-50 text-slate-900 rounded-xl"
               />
             </label>
             <label className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Engine CC</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Engine CC</span>
               <input
                 type="number"
                 value={engineCC}
                 onChange={(e) => setEngineCC(e.target.value)}
                 min={600}
                 max={8000}
-                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#1c1c1c] text-white rounded-xl"
+                className="h-10 px-3 text-sm border border-slate-300 bg-slate-50 text-slate-900 rounded-xl"
               />
             </label>
             <label className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Fuel</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Fuel</span>
               <select
                 value={fuelType}
                 onChange={(e) => setFuelType(e.target.value)}
-                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#1e1e1e] text-white rounded-xl"
+                className="h-10 px-3 text-sm border border-slate-300 bg-white text-slate-900 rounded-xl"
               >
                 {FUEL_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>
@@ -154,19 +154,19 @@ export default function DutyCustomEstimate({ open: controlledOpen, onOpenChange,
               </select>
             </label>
             <label className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">KRA CRSP (KES)</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">KRA CRSP (KES)</span>
               <input
                 value={crspKes}
                 onChange={(e) => setCrspKes(e.target.value)}
                 inputMode="numeric"
                 placeholder="e.g. 2,400,000"
-                className="h-10 px-3 text-sm border border-white/[0.08] bg-[#1c1c1c] text-white rounded-xl"
+                className="h-10 px-3 text-sm border border-slate-300 bg-slate-50 text-slate-900 rounded-xl"
               />
             </label>
           </div>
 
           {formError && (
-            <p className="text-xs text-red-400" role="alert">
+            <p className="text-xs text-red-500" role="alert">
               {formError}
             </p>
           )}
@@ -174,7 +174,7 @@ export default function DutyCustomEstimate({ open: controlledOpen, onOpenChange,
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex h-11 items-center justify-center gap-2 px-5 bg-white text-black text-[10px] font-bold uppercase tracking-widest disabled:opacity-50 rounded-xl"
+            className="inline-flex h-11 items-center justify-center gap-2 px-5 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest disabled:opacity-50 rounded-xl"
           >
             <Calculator className="w-4 h-4" aria-hidden />
             {loading ? "Calculating…" : "Calculate from CRSP"}

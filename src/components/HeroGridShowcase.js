@@ -100,7 +100,7 @@ function HeroGridShowcaseMobile({ cars, carIndex, saveData }) {
                   )}
                 </div>
                 <span className="text-[12px] sm:text-[13px] font-black text-[var(--accent)] leading-tight">
-                  KSh {(mainCar.price / 1000000).toFixed(2)}M
+                  KES {(mainCar.price / 1000000).toFixed(2)}M
                 </span>
               </div>
               <span className="sm:hidden w-8 h-8 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[var(--accent)] group-hover:border-[var(--accent)] transition-all duration-300">
@@ -148,7 +148,7 @@ function HeroGridShowcaseMobile({ cars, carIndex, saveData }) {
             <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/10">
               <div className="flex items-center gap-2 min-w-0">
                 <p className="text-[12px] sm:text-[13px] font-black text-[var(--accent)] leading-tight shrink-0">
-                  KSh {(secondaryCar.price / 1000000).toFixed(2)}M
+                  KES {(secondaryCar.price / 1000000).toFixed(2)}M
                 </p>
                 {secondaryCar.dealer?.name && (
                   <span className="flex items-center gap-1 text-[7px] sm:text-[8px] text-white/40 font-semibold truncate max-w-[80px]">
@@ -229,7 +229,7 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
                   Asking Price
                 </span>
                 <span className="text-base sm:text-lg md:text-xl font-black text-[var(--accent)]">
-                  KSh {(mainCar.price / 1000000).toFixed(2)}M
+                  KES {(mainCar.price / 1000000).toFixed(2)}M
                 </span>
               </div>
               <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[var(--accent)] group-hover:border-[var(--accent)] transition-all duration-300">
@@ -268,7 +268,7 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
               {secondaryVariant}
             </p>
             <p className="text-sm sm:text-base font-black text-[var(--accent)]">
-              KSh {(secondaryCar.price / 1000000).toFixed(2)}M
+              KES {(secondaryCar.price / 1000000).toFixed(2)}M
             </p>
             {secondaryCar.dealer?.name && (
               <span className="flex items-center gap-1 text-[7px] sm:text-[8px] text-white/40 font-semibold mt-0.5">
@@ -287,7 +287,7 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
         </Link>
 
         {reviews.length > 0 ? (
-          <div className="relative bg-[#1e1e1e] border border-white/[0.06] shadow-lg rounded-xl overflow-hidden p-2.5 sm:p-4 md:p-5 flex flex-col min-h-[96px] sm:min-h-0">
+          <div className="relative bg-white border border-slate-200 shadow-lg rounded-xl overflow-hidden p-2.5 sm:p-4 md:p-5 flex flex-col min-h-[96px] sm:min-h-0">
             <Quote className="absolute top-4 right-5 w-12 h-12 text-white/5 pointer-events-none" />
             <div className="relative z-10 flex flex-col h-full">
               <AnimatePresence mode="wait">
@@ -303,15 +303,15 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star
                         key={i}
-                        className={`w-3.5 h-3.5 ${i < (currentReview?.rating || 5) ? "fill-yellow-500 text-yellow-500" : "text-zinc-800"}`}
+                        className={`w-3.5 h-3.5 ${i < (currentReview?.rating || 5) ? "fill-yellow-500 text-yellow-500" : "text-slate-200"}`}
                       />
                     ))}
                   </div>
-                  <p className="text-xs font-bold text-zinc-300 line-clamp-2 mb-3 leading-relaxed">
+                  <p className="text-xs font-bold text-slate-500 line-clamp-2 mb-3 leading-relaxed">
                     &ldquo;{currentReview?.comment || "Expert consultation and a very transparent buying process."}&rdquo;
                   </p>
                   <div className="mt-auto">
-                    <p className="text-[9px] font-black text-white uppercase tracking-[0.3em] mb-0.5">
+                    <p className="text-[9px] font-black text-slate-900 uppercase tracking-[0.3em] mb-0.5">
                       {currentReview?.user?.name || "Verified Client"}
                     </p>
                     <p className="text-[8px] font-black text-[var(--accent)] uppercase tracking-[0.15em]">
@@ -338,14 +338,14 @@ function HeroGridShowcaseDesktop({ cars, reviews, carIndex, reviewIndex, saveDat
             )}
           </div>
         ) : (
-          <div className="bg-[#1e1e1e] border border-white/[0.06] shadow-lg rounded-xl p-2.5 sm:p-4 md:p-5 flex flex-col min-h-[96px] sm:min-h-0">
-            <p className="text-[9px] font-black text-white/40 uppercase tracking-[0.3em] mb-1">
+          <div className="bg-white border border-slate-200 shadow-lg rounded-xl p-2.5 sm:p-4 md:p-5 flex flex-col min-h-[96px] sm:min-h-0">
+            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">
               All verified
             </p>
-            <p className="text-xs text-zinc-400 leading-relaxed">
+            <p className="text-xs text-slate-500 leading-relaxed">
               Every car shown comes from a vetted Kenyan dealership with real inventory.
             </p>
-            <div className="mt-auto pt-2 flex items-center gap-2 text-zinc-400">
+            <div className="mt-auto pt-2 flex items-center gap-2 text-slate-500">
               <span className="text-[9px] font-black uppercase tracking-[0.25em]">Trusted dealers</span>
               <ArrowRight className="w-3 h-3 text-[var(--accent)]" />
             </div>
@@ -393,7 +393,7 @@ export default function HeroGridShowcase({ cars = [], reviews = [] }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.35 }}
-            className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400"
+            className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500"
           >
             <span className="text-brand-accent/70">Featured</span> {currentCar.year} {currentCar.make} {currentCar.model}
           </motion.p>

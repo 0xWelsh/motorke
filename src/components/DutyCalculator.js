@@ -1,16 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
-import { Search, Share2, ArrowUpRight, Calculator } from "lucide-react";
+import { Search, Share2, ArrowUpRight, Calculator, Printer } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import { FUEL_LABELS } from "@/lib/constants";
 import { carsHubPathForDutyVehicle } from "@/lib/duty-vehicle-slug";
+import { getSupportWhatsAppHref } from "@/lib/site-contact";
 import TrackedLink from "@/components/TrackedLink";
 import DutyPopularChips from "@/components/DutyPopularChips";
 import DutyTaxBreakdownChart from "@/components/DutyTaxBreakdownChart";
 import DutyImportEligibilityBanner from "@/components/DutyImportEligibilityBanner";
 import DutyCustomEstimate from "@/components/DutyCustomEstimate";
 import { getImportYearWindow } from "@/lib/duty-import-eligibility";
+
+const WHATSAPP_ICON_PATH =
+  "M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z";
 
 function sessionKey() {
   if (typeof window === "undefined") return null;
@@ -34,6 +38,7 @@ function useDebounced(value, ms = 280) {
 
 export default function DutyCalculator({
   initialVehicle = null,
+  initialEstimate = null,
   pageSlug = null,
   onVehicleChange = null,
   popularVehicles = [],
@@ -43,7 +48,7 @@ export default function DutyCalculator({
   const resultsRef = useRef(null);
   const manualEstimateRef = useRef(null);
   const onVehicleChangeRef = useRef(onVehicleChange);
-  const purchaseDebounceSkipRef = useRef(true);
+  const lastEstimateRef = useRef(null);
   const calculateAbortRef = useRef(null);
   onVehicleChangeRef.current = onVehicleChange;
   const [query, setQuery] = useState(initialVehicle?.label || "");
@@ -56,9 +61,11 @@ export default function DutyCalculator({
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
   const [purchasePrice, setPurchasePrice] = useState("");
+  const [freightPrice, setFreightPrice] = useState("");
 
   const debouncedQuery = useDebounced(query);
   const debouncedPurchase = useDebounced(purchasePrice, 400);
+  const debouncedFreight = useDebounced(freightPrice, 400);
 
   const runEstimate = useCallback(
     async ({ vehicle, manual, purchaseOverride }) => {
@@ -76,12 +83,18 @@ export default function DutyCalculator({
         const purchaseField =
           Number.isFinite(purchaseParsed) && purchaseParsed > 0 ? { purchasePriceKes: purchaseParsed } : {};
 
+        const freightRaw = debouncedFreight;
+        const freightParsed = freightRaw ? parseInt(String(freightRaw).replace(/\D/g, ""), 10) : NaN;
+        const freightField =
+          Number.isFinite(freightParsed) && freightParsed > 0 ? { freightKes: freightParsed } : {};
+
         const body = vehicle?.id
           ? {
               vehicleId: vehicle.id,
               searchQuery: vehicle.label || query,
               sessionKey: sessionKey(),
               ...purchaseField,
+              ...freightField,
             }
           : {
               make: manual.make,
@@ -94,6 +107,7 @@ export default function DutyCalculator({
               searchQuery: `${manual.year} ${manual.make} ${manual.model}`.trim(),
               sessionKey: sessionKey(),
               ...purchaseField,
+              ...freightField,
             };
 
         const res = await fetch("/api/duty/calculate", {
@@ -106,6 +120,7 @@ export default function DutyCalculator({
         if (!res.ok) throw new Error(data.error || "Calculation failed");
         if (controller.signal.aborted) return;
         setEstimate(data.estimate);
+        lastEstimateRef.current = data.estimate;
         if (manual) {
           manualEstimateRef.current = manual;
           setSelected(null);
@@ -116,11 +131,12 @@ export default function DutyCalculator({
         if (e?.name === "AbortError") return;
         setError(e.message || "Could not calculate duty");
         setEstimate(null);
+        lastEstimateRef.current = null;
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
     },
-    [query, debouncedPurchase],
+    [query, debouncedPurchase, debouncedFreight],
   );
 
   const applyVehicle = useCallback(
@@ -141,21 +157,49 @@ export default function DutyCalculator({
 
   useEffect(() => {
     if (initialVehicle?.id) {
-      applyVehicle(initialVehicle);
+      if (initialEstimate) {
+        setSelected(initialVehicle);
+        setQuery(initialVehicle.label);
+        setSuggestions([]);
+        setCustomPanelOpen(false);
+        manualEstimateRef.current = null;
+        setEstimate(initialEstimate);
+        lastEstimateRef.current = initialEstimate;
+      } else {
+        applyVehicle(initialVehicle);
+      }
     }
   }, [initialVehicle?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (purchaseDebounceSkipRef.current) {
-      purchaseDebounceSkipRef.current = false;
-      return;
-    }
-    if (selected?.id) {
-      runEstimate({ vehicle: selected, purchaseOverride: debouncedPurchase });
-    } else if (manualEstimateRef.current) {
-      runEstimate({ manual: manualEstimateRef.current, purchaseOverride: debouncedPurchase });
-    }
-  }, [debouncedPurchase, selected?.id, runEstimate]);
+    const base = lastEstimateRef.current;
+    if (!base) return;
+    const raw = debouncedPurchase;
+    const parsed = raw ? parseInt(String(raw).replace(/\D/g, ""), 10) : NaN;
+    const purchase = Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+
+    const freightRaw = debouncedFreight;
+    const freightParsed = freightRaw ? parseInt(String(freightRaw).replace(/\D/g, ""), 10) : NaN;
+    const freightKes =
+      Number.isFinite(freightParsed) && freightParsed > 0
+        ? freightParsed
+        : base.breakdown.freightProxyKes;
+    const clearingEstimate = base.breakdown.totalTaxes + freightKes;
+
+    setEstimate((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        purchasePriceKes: purchase,
+        breakdown: {
+          ...prev.breakdown,
+          freightProxyKes: freightKes,
+          clearingEstimate,
+          totalLandedWithPurchase: purchase ? purchase + clearingEstimate : null,
+        },
+      };
+    });
+  }, [debouncedPurchase, debouncedFreight]);
 
   useEffect(() => {
     if (selected) {
@@ -201,8 +245,10 @@ export default function DutyCalculator({
   const clearSelection = () => {
     setSelected(null);
     setEstimate(null);
+    lastEstimateRef.current = null;
     setQuery("");
     setPurchasePrice("");
+    setFreightPrice("");
     setError("");
     manualEstimateRef.current = null;
     setCustomPanelOpen(false);
@@ -234,6 +280,18 @@ export default function DutyCalculator({
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const whatsappHref = useMemo(() => {
+    if (!estimate) return null;
+    const text =
+      `Hi BIDGARI, I'd like an official quote to import a ${estimate.label}. ` +
+      `My duty estimate is ${formatPrice(estimate.breakdown.totalTaxes)}` +
+      (estimate.breakdown.totalLandedWithPurchase
+        ? ` (all-in ~${formatPrice(estimate.breakdown.totalLandedWithPurchase)})`
+        : "") +
+      `. ${shareUrl}`;
+    return getSupportWhatsAppHref(text);
+  }, [estimate, shareUrl]);
 
   const stockMake = selected?.make ?? estimate?.make;
   const stockModel = selected?.model ?? estimate?.model;
@@ -282,11 +340,11 @@ export default function DutyCalculator({
     : [];
 
   const searchBlock = (
-    <div className="relative">
+    <div className="relative duty-print-hide">
       <label htmlFor={searchId} className="sr-only">
         Search vehicle to calculate import duty
       </label>
-      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" aria-hidden />
+      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" aria-hidden />
       <input
         id={searchId}
         type="search"
@@ -297,34 +355,34 @@ export default function DutyCalculator({
           setEstimate(null);
         }}
         placeholder='Search e.g. "Mazda CX-5 2018" or "Toyota Prado"'
-        className="w-full h-12 sm:h-14 pl-11 pr-4 text-sm sm:text-base font-medium bg-[#1c1c1c] border border-white/[0.08] text-white focus:border-[var(--accent)] outline-none rounded-xl"
+        className="w-full h-12 sm:h-14 pl-11 pr-4 text-sm sm:text-base font-medium bg-slate-50 border border-slate-300 text-slate-900 focus:border-[var(--accent)] outline-none rounded-xl"
         autoComplete="off"
       />
       {selected && (
         <button
           type="button"
           onClick={clearSelection}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900"
         >
           Clear
         </button>
       )}
       {suggestions.length > 0 && !selected && (
         <ul
-          className="absolute z-30 left-0 right-0 mt-1 border border-white/[0.08] bg-[#1c1c1c] shadow-xl max-h-64 overflow-y-auto rounded-xl"
+          className="absolute z-30 left-0 right-0 mt-1 border border-slate-200 bg-white shadow-xl max-h-64 overflow-y-auto rounded-xl"
         >
           {suggestions.map((v) => (
             <li key={v.id}>
               <button
                 type="button"
-                className="w-full text-left px-4 py-3 text-sm hover:bg-white/[0.06] border-b border-white/[0.06] last:border-0"
+                className="w-full text-left px-4 py-3 text-sm hover:bg-slate-100 border-b border-slate-100 last:border-0"
                 onClick={() => applyVehicle(v)}
               >
-                  <span className="font-semibold text-white">{v.label}</span>
-                  <span className="block text-xs text-zinc-400 mt-0.5">
+                  <span className="font-semibold text-slate-900">{v.label}</span>
+                  <span className="block text-xs text-slate-500 mt-0.5">
                     {v.engineCC}cc, {FUEL_LABELS[v.fuelType] || v.fuelType}, CRSP {formatPrice(v.crspKes)}
                     {v.importEligibility?.status === "ineligible" && (
-                      <span className="ml-2 text-red-400 font-bold">· Over 8yr limit</span>
+                      <span className="ml-2 text-red-500 font-bold">· Over 8yr limit</span>
                     )}
                   </span>
               </button>
@@ -333,7 +391,7 @@ export default function DutyCalculator({
         </ul>
       )}
       {searching && !selected && (
-        <p className="absolute z-30 left-0 right-0 mt-1 px-4 py-2 text-xs text-zinc-400 bg-[#1c1c1c] border border-white/[0.08] rounded-xl">
+        <p className="absolute z-30 left-0 right-0 mt-1 px-4 py-2 text-xs text-slate-500 bg-white border border-slate-200 rounded-xl">
           Searching…
         </p>
       )}
@@ -344,10 +402,10 @@ export default function DutyCalculator({
     <div className="space-y-6">
       {searchBlock}
 
-      <p className="text-[11px] text-zinc-400 leading-relaxed">
-        Kenya&apos;s <strong className="font-semibold text-zinc-300">8-year import rule</strong>
+      <p className="text-[11px] text-slate-500 leading-relaxed duty-print-hide">
+        Kenya&apos;s <strong className="font-semibold text-slate-700">8-year import rule</strong>
         : for {importWindow.referenceYear}, model year{" "}
-        <strong className="font-semibold text-zinc-300">
+        <strong className="font-semibold text-slate-700">
           {importWindow.oldestImportableYear} or newer
         </strong>{" "}
         is typically registrable.
@@ -355,73 +413,96 @@ export default function DutyCalculator({
 
       {!searching && query.trim().length >= 2 && !selected && suggestions.length === 0 && (
         <p
-          className="text-xs text-amber-200 bg-amber-950/30 border border-amber-900/40 px-3 py-2 rounded-xl"
+          className="text-xs text-amber-900 bg-amber-50 border border-amber-200 px-3 py-2 rounded-xl duty-print-hide"
         >
           No catalog match for &ldquo;{query.trim()}&rdquo;. Enter your vehicle manually below.
         </p>
       )}
 
-      <DutyCustomEstimate
-        open={customPanelOpen}
-        onOpenChange={setCustomPanelOpen}
-        loading={loading}
-        onSubmit={(manual) => {
-          const label = `${manual.year} ${manual.make} ${manual.model}${manual.trim ? ` ${manual.trim}` : ""}`;
-          setQuery(label);
-          setSuggestions([]);
-          setCustomPanelOpen(false);
-          runEstimate({ manual });
-          requestAnimationFrame(() => {
-            resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-          });
-        }}
-      />
+      <div className="duty-print-hide">
+        <DutyCustomEstimate
+          open={customPanelOpen}
+          onOpenChange={setCustomPanelOpen}
+          loading={loading}
+          onSubmit={(manual) => {
+            const label = `${manual.year} ${manual.make} ${manual.model}${manual.trim ? ` ${manual.trim}` : ""}`;
+            setQuery(label);
+            setSuggestions([]);
+            setCustomPanelOpen(false);
+            runEstimate({ manual });
+            requestAnimationFrame(() => {
+              resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            });
+          }}
+        />
+      </div>
 
       {(selected || estimate) && (
-        <div className="space-y-2">
-          <label htmlFor="purchase-price" className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
-            Your overseas purchase price (optional)
-          </label>
-          <input
-            id="purchase-price"
-            type="text"
-            inputMode="numeric"
-            value={purchasePrice}
-            onChange={(e) => setPurchasePrice(e.target.value)}
-            placeholder="e.g. 1,500,000, what you pay abroad (CIF/FOB)"
-            className="w-full h-11 px-4 text-sm font-medium bg-[#1c1c1c] border border-white/[0.08] text-white rounded-xl"
-          />
-          <p className="text-[11px] text-zinc-400">
-            CRSP is only used by KRA to calculate tax. Enter what you will actually pay for the car to see a realistic
-            all-in total.
-          </p>
+        <div className="space-y-3 duty-print-hide">
+          <div className="space-y-2">
+            <label htmlFor="purchase-price" className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+              Your overseas purchase price (optional)
+            </label>
+            <input
+              id="purchase-price"
+              type="text"
+              inputMode="numeric"
+              value={purchasePrice}
+              onChange={(e) => setPurchasePrice(e.target.value)}
+              placeholder="e.g. 1,500,000, what you pay abroad (CIF/FOB)"
+              className="w-full h-11 px-4 text-sm font-medium bg-slate-50 border border-slate-300 text-slate-900 rounded-xl"
+            />
+            <p className="text-[11px] text-slate-500">
+              CRSP is only used by KRA to calculate tax. Enter what you will actually pay for the car to see a realistic
+              all-in total.
+            </p>
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="freight-price" className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+              Shipping &amp; export to Mombasa (KES, optional)
+            </label>
+            <input
+              id="freight-price"
+              type="text"
+              inputMode="numeric"
+              value={freightPrice}
+              onChange={(e) => setFreightPrice(e.target.value)}
+              placeholder="e.g. 371,250, leave blank for our estimate"
+              className="w-full h-11 px-4 text-sm font-medium bg-slate-50 border border-slate-300 text-slate-900 rounded-xl"
+            />
+            <p className="text-[11px] text-slate-500">
+              Freight, insurance and port charges vary. Leave blank to use our average proxy.
+            </p>
+          </div>
         </div>
       )}
 
       {popularVehicles.length > 0 && (
-        <DutyPopularChips
-          vehicles={popularVehicles}
-          activeId={selected?.id}
-          disabled={loading}
-          onSelect={applyVehicle}
-        />
+        <div className="duty-print-hide">
+          <DutyPopularChips
+            vehicles={popularVehicles}
+            activeId={selected?.id}
+            disabled={loading}
+            onSelect={applyVehicle}
+          />
+        </div>
       )}
 
       {error && (
-        <p className="text-sm text-red-400 font-medium mt-4" role="alert">
+        <p className="text-sm text-red-400 font-medium mt-4 duty-print-hide" role="alert">
           {error}
         </p>
       )}
 
       {loading && (
-        <p className="text-sm text-zinc-400 flex items-center gap-2 mt-4">
+        <p className="text-sm text-slate-500 flex items-center gap-2 mt-4 duty-print-hide">
           <Calculator className="w-4 h-4 animate-pulse" aria-hidden />
           Calculating estimate…
         </p>
       )}
 
       {!estimate && !loading && !selected && (
-        <p className="text-sm text-zinc-400 mt-4">
+        <p className="text-sm text-slate-500 mt-4 duty-print-hide">
           Search or pick a popular estimate above for an instant breakdown.
         </p>
       )}
@@ -429,32 +510,32 @@ export default function DutyCalculator({
       <div ref={resultsRef}>
         {estimate && !loading && (
           <div
-            className="mt-6 border-2 border-white p-5 sm:p-7 space-y-6 shadow-lg bg-[#1c1c1c] rounded-xl"
+            className="mt-6 border-2 border-slate-200 p-5 sm:p-7 space-y-6 shadow-lg bg-white rounded-xl"
           >
             <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-500 mb-1">
                   Your estimate
                 </p>
-                <h2 className="text-2xl sm:text-3xl font-bold text-white">{estimate.label}</h2>
-                <p className="text-sm text-zinc-400 mt-2 flex flex-wrap gap-2">
-                  <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-white/[0.08]">
+                <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">{estimate.label}</h2>
+                <p className="text-sm text-slate-500 mt-2 flex flex-wrap gap-2">
+                  <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-slate-200">
                     {estimate.engineCC}cc
                   </span>
-                  <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-white/[0.08]">
+                  <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-slate-200">
                     {FUEL_LABELS[estimate.fuelType]}
                   </span>
-                  <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-white/[0.08]">
+                  <span className="inline-flex px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider border border-slate-200">
                     {estimate.ageYears} yrs
                   </span>
                 </p>
               </div>
               <div className="shrink-0 text-left sm:text-right max-w-[200px]">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-1">CRSP (tax benchmark)</p>
-                <p className="text-lg font-bold text-white tabular-nums">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1">CRSP (tax benchmark)</p>
+                <p className="text-lg font-bold text-slate-900 tabular-nums">
                   {formatPrice(estimate.breakdown.crspReferenceKes)}
                 </p>
-                <p className="text-[10px] text-zinc-400 mt-1">Not paid to the seller</p>
+                <p className="text-[10px] text-slate-500 mt-1">Not paid to the seller</p>
               </div>
             </div>
 
@@ -488,15 +569,15 @@ export default function DutyCalculator({
 
             {estimate.breakdown.totalLandedWithPurchase && (
               <div
-                className="p-4 sm:p-5 border-2 border-white bg-white/[0.03] rounded-xl"
+                className="p-4 sm:p-5 border-2 border-slate-200 bg-slate-50 rounded-xl"
               >
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-1">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1">
                   Your estimated all-in cost
                 </p>
-                <p className="text-2xl sm:text-3xl font-bold text-white tabular-nums">
+                <p className="text-2xl sm:text-3xl font-bold text-slate-900 tabular-nums">
                   {formatPrice(estimate.breakdown.totalLandedWithPurchase)}
                 </p>
-                <p className="text-[11px] text-zinc-400 mt-2 leading-relaxed">
+                <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">
                   Purchase price + shipping ({formatPrice(estimate.breakdown.freightProxyKes)}) + taxes (
                   {formatPrice(estimate.breakdown.totalTaxes)}). Excludes clearing-agent fees.
                 </p>
@@ -504,28 +585,28 @@ export default function DutyCalculator({
             )}
 
             <div
-              className="grid gap-2 sm:grid-cols-3 border border-white/[0.06] p-4 bg-white/[0.03] rounded-xl"
+              className="grid gap-2 sm:grid-cols-3 border border-slate-200 p-4 bg-slate-50 rounded-xl"
             >
               {costLines.map((line) => (
                 <div key={line.label} className="flex flex-col gap-1">
-                  <p className="text-[10px] text-zinc-400 uppercase tracking-wide">{line.label}</p>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-wide">{line.label}</p>
                   <p
                     className={`text-sm font-bold tabular-nums ${
-                      line.highlight ? "text-red-400" : "text-white"
+                      line.highlight ? "text-red-500" : "text-slate-900"
                     }`}
                   >
                     {line.value}
                   </p>
                   {line.note && (
-                    <p className="text-[10px] text-zinc-400">{line.note}</p>
+                    <p className="text-[10px] text-slate-500">{line.note}</p>
                   )}
                 </div>
               ))}
-              <div className="flex flex-col gap-1 sm:col-span-3 pt-2 border-t border-white/[0.06]">
-                <p className="text-[10px] text-zinc-400 uppercase tracking-wide">
+              <div className="flex flex-col gap-1 sm:col-span-3 pt-2 border-t border-slate-200">
+                <p className="text-[10px] text-slate-500 uppercase tracking-wide">
                   Taxes + shipping (excl. vehicle purchase)
                 </p>
-                <p className="text-sm font-bold tabular-nums text-white">
+                <p className="text-sm font-bold tabular-nums text-slate-900">
                   {formatPrice(estimate.breakdown.clearingEstimate)}
                 </p>
               </div>
@@ -537,58 +618,94 @@ export default function DutyCalculator({
               {breakdownCards.map((card) => (
                 <div
                   key={card.label}
-                  className="p-3 border border-white/[0.06] bg-white/[0.03] rounded-xl"
+                  className="p-3 border border-slate-200 bg-slate-50 rounded-xl"
                 >
-                  <p className="text-[10px] text-zinc-400 leading-snug mb-2 min-h-[2.5rem]">{card.label}</p>
-                  <p className="text-sm font-bold text-white tabular-nums">{card.value}</p>
+                  <p className="text-[10px] text-slate-500 leading-snug mb-2 min-h-[2.5rem]">{card.label}</p>
+                  <p className="text-sm font-bold text-slate-900 tabular-nums">{card.value}</p>
                 </div>
               ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-3 no-print">
+              {whatsappHref && (
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 btn btn-success btn-lg"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d={WHATSAPP_ICON_PATH} />
+                  </svg>
+                  Get official quote
+                </a>
+              )}
               <TrackedLink
                 href={marketplaceHref}
                 eventName="duty_view_matching_stock"
                 eventPayload={{ make: stockMake, model: stockModel }}
-                className="flex-1 inline-flex h-12 items-center justify-center gap-2 px-5 bg-[var(--accent)] hover:opacity-90 text-white text-[10px] font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95 rounded-xl"
+                className="flex-1 btn btn-primary btn-lg"
               >
                 View matching stock <ArrowUpRight className="w-4 h-4" aria-hidden />
               </TrackedLink>
               <button
                 type="button"
+                onClick={() => window.print()}
+                className="flex-1 btn btn-neutral btn-lg"
+              >
+                <Printer className="w-4 h-4" aria-hidden />
+                Print / Save
+              </button>
+              <button
+                type="button"
                 onClick={handleShare}
-                className="inline-flex h-12 items-center justify-center gap-2 px-5 border border-white text-white text-[10px] font-bold uppercase tracking-widest rounded-xl"
+                className="flex-1 btn btn-neutral btn-lg"
               >
                 <Share2 className="w-4 h-4" aria-hidden />
                 {copied ? "Copied" : "Share"}
               </button>
             </div>
 
-            <p className="text-[11px] leading-relaxed text-zinc-400">
-              Indicative only: customs value = depreciated CRSP × schedule ratio, then import duty 25%, excise on
-              (CV + duty), VAT 16%, IDF 3.5%, RDL 2%. CRSP is from our reference table. Confirm with KRA or your
-              clearing agent before payment.
+            <p className="text-[11px] leading-relaxed text-slate-500">
+              Indicative only: customs value = depreciated CRSP × schedule ratio, then import duty (25%, 35% for
+              large-engined vehicles), excise on (CV + duty), VAT 16%, IDF 3.5%, RDL 2%. CRSP is from our reference
+              table. Confirm with KRA or your clearing agent before payment.
             </p>
           </div>
         )}
       </div>
 
       {estimate && !loading && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/[0.06] bg-[#1c1c1c]/95 backdrop-blur-md p-3 sm:hidden safe-area-pb space-y-2">
-          <p className="text-center text-[10px] font-bold uppercase tracking-widest text-zinc-400">
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-md p-3 sm:hidden safe-area-pb space-y-2 duty-print-hide">
+          <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">
             Est. KRA taxes{" "}
-            <span className="text-red-400 tabular-nums">
+            <span className="text-red-500 tabular-nums">
               {formatPrice(estimate.breakdown.totalTaxes)}
             </span>
           </p>
-          <TrackedLink
-            href={marketplaceHref}
-            eventName="duty_mobile_sticky_stock"
-            eventPayload={{ make: stockMake, model: stockModel }}
-            className="flex h-11 w-full items-center justify-center gap-2 bg-[var(--accent)] hover:opacity-90 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl"
-          >
-            View matching stock <ArrowUpRight className="w-4 h-4" />
-          </TrackedLink>
+          <div className="grid grid-cols-2 gap-2">
+            <TrackedLink
+              href={marketplaceHref}
+              eventName="duty_mobile_sticky_stock"
+              eventPayload={{ make: stockMake, model: stockModel }}
+              className="w-full btn btn-primary btn-lg"
+            >
+              View stock <ArrowUpRight className="w-4 h-4" />
+            </TrackedLink>
+            {whatsappHref && (
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full btn btn-success btn-lg"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d={WHATSAPP_ICON_PATH} />
+                </svg>
+                Quote
+              </a>
+            )}
+          </div>
         </div>
       )}
     </div>

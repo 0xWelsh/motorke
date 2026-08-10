@@ -24,10 +24,10 @@ function PasswordMeter({ password }) {
   }
 
   const segments = [
-    score >= 1 ? (score < 3 ? "bg-rose-500" : (score === 3 ? "bg-amber-400" : "bg-[#38A169]")) : "bg-zinc-800",
-    score >= 2 ? (score < 3 ? "bg-rose-500" : (score === 3 ? "bg-amber-400" : "bg-[#38A169]")) : "bg-zinc-800",
-    score >= 3 ? (score === 3 ? "bg-amber-400" : "bg-[#38A169]") : "bg-zinc-800",
-    score >= 4 ? "bg-[#38A169]" : "bg-zinc-800"
+    score >= 1 ? (score < 3 ? "bg-rose-500" : (score === 3 ? "bg-amber-400" : "bg-[#38A169]")) : "bg-slate-200",
+    score >= 2 ? (score < 3 ? "bg-rose-500" : (score === 3 ? "bg-amber-400" : "bg-[#38A169]")) : "bg-slate-200",
+    score >= 3 ? (score === 3 ? "bg-amber-400" : "bg-[#38A169]") : "bg-slate-200",
+    score >= 4 ? "bg-[#38A169]" : "bg-slate-200"
   ];
 
   let label = "";
@@ -46,7 +46,7 @@ function PasswordMeter({ password }) {
         ))}
       </div>
       {label && (
-        <p className="text-[9px] font-medium text-zinc-500 text-right">{label}</p>
+        <p className="text-[9px] font-medium text-slate-500 text-right">{label}</p>
       )}
     </div>
   );
@@ -118,19 +118,19 @@ export default function SignupForm({ error: initialError, initialRole }) {
   return (
     <AuthLayout>
       <div className="w-full">
-        <h2 className="text-xl font-black text-white tracking-tight mb-4">
+        <h2 className="text-xl font-black text-slate-900 tracking-tight mb-4">
           Join the network
         </h2>
 
-        <div className="flex gap-1.5 mb-4 bg-zinc-900 p-0.5 rounded-lg border border-zinc-800">
+        <div className="flex gap-1.5 mb-4 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
           <button
             type="button"
             onClick={() => setRole("BUYER")}
             className={clsx(
               "flex-1 py-1.5 px-3 font-bold text-[11px] transition-all rounded-md",
               role === "BUYER"
-                ? "bg-zinc-800 text-white shadow-sm"
-                : "text-zinc-500 hover:text-zinc-300"
+                ? "bg-white text-slate-900 shadow-sm"
+                : "text-slate-500 hover:text-slate-500"
             )}
           >
             Personal
@@ -142,7 +142,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
               "flex-1 py-1.5 px-3 font-bold text-[11px] transition-all rounded-md",
               role === "DEALER"
                 ? "bg-[#38A169] text-white shadow-sm"
-                : "text-zinc-500 hover:text-zinc-300"
+                : "text-slate-500 hover:text-slate-500"
             )}
           >
             Dealership
@@ -163,7 +163,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
             <GoogleAuthDivider />
           </>
         ) : (
-          <p className="mb-3 text-[11px] font-medium text-zinc-500 leading-relaxed">
+          <p className="mb-3 text-[11px] font-medium text-slate-500 leading-relaxed">
             Dealerships sign up with email so we can verify your business.
             Switch to <button type="button" onClick={() => setRole("BUYER")} className="underline underline-offset-2 text-[#38A169] hover:no-underline">Personal</button> for Google one-tap.
           </p>
@@ -175,7 +175,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
           <input type="hidden" name="role" value={role} />
 
           <div className={role === "DEALER" ? "md:col-span-1" : "md:col-span-2"}>
-            <label htmlFor="signup-email" className="block text-xs font-semibold text-zinc-400 mb-1">Email</label>
+            <label htmlFor="signup-email" className="block text-xs font-semibold text-slate-500 mb-1">Email</label>
             <input
               id="signup-email"
               name="email"
@@ -184,24 +184,24 @@ export default function SignupForm({ error: initialError, initialRole }) {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="you@email.com"
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
+              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
             />
           </div>
 
           <div className={role === "DEALER" ? "md:col-span-1" : "md:col-span-2"}>
-            <label htmlFor="name" className="block text-xs font-semibold text-zinc-400 mb-1">Full Name</label>
+            <label htmlFor="name" className="block text-xs font-semibold text-slate-500 mb-1">Full Name</label>
             <input
               id="name"
               name="name"
               type="text"
               required
               placeholder="John Doe"
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
+              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
             />
           </div>
 
           <div className="md:col-span-1">
-            <label htmlFor="signup-password" className="block text-xs font-semibold text-zinc-400 mb-1">Password</label>
+            <label htmlFor="signup-password" className="block text-xs font-semibold text-slate-500 mb-1">Password</label>
             <div className="relative">
               <input
                 id="signup-password"
@@ -211,12 +211,12 @@ export default function SignupForm({ error: initialError, initialRole }) {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 pr-9 text-sm text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
+                className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 pr-9 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-2.5 bottom-2 text-zinc-500 hover:text-zinc-300 transition-colors"
+                className="absolute right-2.5 bottom-2 text-slate-500 hover:text-slate-500 transition-colors"
               >
                 {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
               </button>
@@ -225,38 +225,38 @@ export default function SignupForm({ error: initialError, initialRole }) {
           </div>
 
           <div className="md:col-span-1">
-            <label htmlFor="confirm" className="block text-xs font-semibold text-zinc-400 mb-1">Confirm Password</label>
+            <label htmlFor="confirm" className="block text-xs font-semibold text-slate-500 mb-1">Confirm Password</label>
             <input
               id="confirm"
               name="confirm"
               type={showPassword ? "text" : "password"}
               required
               placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
+              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
             />
           </div>
 
           {role === "DEALER" && (
             <>
               <div className="md:col-span-2 pt-1">
-                <div className="h-px bg-zinc-800 w-full mb-3" />
-                <h4 className="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-500 mb-3">Business</h4>
+                <div className="h-px bg-slate-200 w-full mb-3" />
+                <h4 className="text-[9px] font-bold uppercase tracking-[0.15em] text-slate-500 mb-3">Business</h4>
               </div>
 
               <div className="md:col-span-1">
-                <label htmlFor="dealerName" className="block text-xs font-semibold text-zinc-400 mb-1">Dealership Title</label>
+                <label htmlFor="dealerName" className="block text-xs font-semibold text-slate-500 mb-1">Dealership Title</label>
                 <input
                   id="dealerName"
                   name="dealerName"
                   type="text"
                   required
                   placeholder="Japanese Car Exports"
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
+                  className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
                 />
               </div>
 
               <div className="md:col-span-1">
-                <label htmlFor="phone" className="block text-xs font-semibold text-zinc-400 mb-1">Phone</label>
+                <label htmlFor="phone" className="block text-xs font-semibold text-slate-500 mb-1">Phone</label>
                 <input
                   id="phone"
                   name="phone"
@@ -265,22 +265,22 @@ export default function SignupForm({ error: initialError, initialRole }) {
                   autoComplete="tel"
                   required
                   placeholder={PHONE_PLACEHOLDER_INTERNATIONAL}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
+                  className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
                 />
-                <p className="mt-1 text-[9px] font-medium text-zinc-600">{PHONE_COUNTRY_CODE_HELPER}</p>
+                <p className="mt-1 text-[9px] font-medium text-slate-400">{PHONE_COUNTRY_CODE_HELPER}</p>
               </div>
 
               <div className="md:col-span-2">
-                <label htmlFor="county" className="block text-xs font-semibold text-zinc-400 mb-1">Base County</label>
+                <label htmlFor="county" className="block text-xs font-semibold text-slate-500 mb-1">Base County</label>
                 <select
                   id="county"
                   name="county"
                   required
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all appearance-none cursor-pointer"
+                  className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all appearance-none cursor-pointer"
                 >
-                  <option value="" className="bg-zinc-900 text-zinc-400">Select a county</option>
+                  <option value="" className="bg-slate-100 text-slate-500">Select a county</option>
                   {COUNTIES.map((c) => (
-                    <option key={c} value={c} className="bg-zinc-900 text-white">{c}</option>
+                    <option key={c} value={c} className="bg-slate-100 text-slate-900">{c}</option>
                   ))}
                 </select>
               </div>
@@ -294,7 +294,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
             <button
               type="submit"
               disabled={loading || !canSubmit}
-              className="w-full bg-[#38A169] hover:bg-[#2F855A] disabled:bg-zinc-800 disabled:text-zinc-600 text-white font-bold rounded-lg py-2.5 px-4 text-sm transition-all hover:scale-[0.98] active:scale-95 flex items-center justify-center gap-2 group"
+              className="w-full btn btn-success btn-lg"
             >
               {loading ? <Loader2 size={14} className="animate-spin" /> : "Sign Up"}
               {!loading && <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />}
@@ -302,17 +302,17 @@ export default function SignupForm({ error: initialError, initialRole }) {
           </div>
         </form>
 
-        <p className="mt-4 text-center text-xs font-medium text-zinc-500">
+        <p className="mt-4 text-center text-xs font-medium text-slate-500">
           Already have an account?{" "}
           <Link href="/login" className="text-[#38A169] hover:underline underline-offset-2 font-semibold">
             Sign In
           </Link>
         </p>
-        <p className="text-[10px] text-zinc-600 mt-2 text-center">
+        <p className="text-[10px] text-slate-400 mt-2 text-center">
           By joining, you agree to our{" "}
-          <Link href="/terms" className="underline underline-offset-2 hover:text-zinc-400">Terms</Link>
+          <Link href="/terms" className="underline underline-offset-2 hover:text-slate-500">Terms</Link>
           {" "}and{" "}
-          <Link href="/privacy" className="underline underline-offset-2 hover:text-zinc-400">Privacy Policy</Link>.
+          <Link href="/privacy" className="underline underline-offset-2 hover:text-slate-500">Privacy Policy</Link>.
         </p>
       </div>
     </AuthLayout>

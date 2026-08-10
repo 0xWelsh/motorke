@@ -43,7 +43,7 @@ export default function AnalyticsDashboard({ realtimeLeads = 0, recentDays = 30 
   }, [realtimeLeads, recentDays]);
 
   return (
-    <div className="w-full bg-[#1c1c1c] border border-white/[0.06] rounded-[2.5rem] p-8 shadow-sm hover:shadow-2xl transition-all duration-500 hover:border-[var(--accent)]/20">
+    <div className="w-full bg-[#1c1c1c] border border-white/[0.06] rounded-xl p-8 shadow-sm hover:shadow-2xl transition-all duration-500 hover:border-[var(--accent)]/20">
       <div className="mb-8">
          <div className="flex items-center gap-3 mb-2">
             <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.15)] animate-pulse" />

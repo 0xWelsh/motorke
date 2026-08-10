@@ -116,19 +116,19 @@ function faqSchema(resolved, total) {
     q = [
       {
         question: `How many ${resolved.make} cars are listed on BIDGARI?`,
-        answer: `There are currently ${n} verified ${resolved.make} listings from Kenyan dealerships. Inventory updates as dealers publish new vehicles.`,
+        answer: `There are currently ${n} verified ${resolved.make} listings for sale in Kenya. Inventory updates regularly as new stock is published.`,
       },
       {
-        question: "Are these vehicles from verified dealers?",
+        question: "Are these listings verified?",
         answer:
-          "BIDGARI focuses on dealer inventory so buyers can compare stock and contact sellers directly.",
+          "Every listing is verified by BIDGARI. Our team handles your enquiry, inspection, and paperwork end to end.",
       },
     ];
   } else if (resolved.kind === "county") {
     q = [
       {
         question: `Where can I buy a car in ${resolved.county}?`,
-        answer: `Browse ${n}+ listings from dealers serving ${resolved.county}. Compare prices and contact dealerships through BIDGARI.`,
+        answer: `Browse ${n}+ verified listings in ${resolved.county}. Compare prices and buy handled end-to-end by BIDGARI.`,
       },
     ];
   } else if (resolved.kind === "make_fuel" || resolved.kind === "make_body" || resolved.kind === "make_price_band") {
@@ -139,17 +139,17 @@ function faqSchema(resolved, total) {
           `Yes. Open Advanced filters from this page or browse all verified cars across Kenya.`,
       },
       {
-        question: "Are listings from verified dealerships?",
+        question: "Are these listings verified?",
         answer:
-          "BIDGARI lists dealer-published vehicles. Contact dealers directly via WhatsApp or phone from each listing.",
+          "Every listing on BIDGARI is verified and sold under the BIDGARI brand — one team handles your enquiry from first message to paperwork.",
       },
     ];
   } else {
     q = [
       {
-        question: "How do I contact a dealer about a listing?",
+        question: "How do I enquire about a listing?",
         answer:
-          "Each vehicle page shows WhatsApp and phone options where the dealer supplied them. Message or call from the listing detail view.",
+          "Each vehicle page has a WhatsApp button and a call option straight to the BIDGARI team. Message or call from the listing detail view.",
       },
     ];
   }
@@ -457,7 +457,7 @@ export default async function CarHubPage({ params, searchParams }) {
     : null;
 
   return (
-    <div className="min-h-screen bg-white pb-20 bg-[#141414]">
+    <div className="min-h-screen bg-white pb-20">
       <Script
         id="hub-faq-jsonld"
         type="application/ld+json"
@@ -477,7 +477,7 @@ export default async function CarHubPage({ params, searchParams }) {
       ) : null}
 
       <div className="w-full px-2.5 sm:px-8 pt-4 sm:pt-6 overflow-x-hidden">
-        <nav className="mb-4 flex flex-wrap items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500">
+        <nav className="mb-4 flex flex-wrap items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
           {crumbs.map((c, i) => (
             <span key={c.href + i} className="flex items-center gap-1.5">
               {i > 0 ? <ChevronRight className="size-3" /> : null}
@@ -486,111 +486,86 @@ export default async function CarHubPage({ params, searchParams }) {
                   {c.name}
                 </Link>
               ) : (
-                <span className="text-slate-900 text-white">{c.name}</span>
+                <span className="text-slate-900">{c.name}</span>
               )}
             </span>
           ))}
         </nav>
 
-        <header className="mb-6 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white px-4 py-5 border-zinc-800 from-zinc-950 to-zinc-900 sm:px-6">
-          <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#38A169]">
-            Verified dealer inventory, Kenya
-          </p>
-          <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-900 text-white sm:text-3xl">{h1}</h1>
-          <p className="mt-2 max-w-2xl text-sm text-slate-600 text-zinc-400">
+        <header className="mb-6 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white px-4 py-5 sm:px-6">
+            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#38A169]">
+            Verified inventory, Kenya
+            </p>
+          <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">{h1}</h1>
+          <p className="mt-2 max-w-2xl text-sm text-slate-600">
             {introCopy || hubTitleAndDescription(resolved, total).description}{" "}
             <Link href={qsAllFilters()} className="font-semibold text-[#38A169] underline-offset-4 hover:underline">
               Open advanced filters
             </Link>
           </p>
-          <p className="mt-3 text-xs font-semibold text-slate-500 text-zinc-500">
+          <p className="mt-3 text-xs font-semibold text-slate-500">
             {total.toLocaleString("en-KE")} listings match this hub
           </p>
         </header>
 
         {modelAggs ? (
-          <div className="mb-8 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white px-4 py-5 border-zinc-800 from-zinc-950 to-zinc-900 sm:px-6">
-            <div className="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="mb-8 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white px-4 py-5 sm:px-6">
+            <div className="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500">Price range</p>
-                <p className="mt-0.5 text-lg font-black text-slate-900 text-white">
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">Price range</p>
+                <p className="mt-0.5 text-lg font-black text-slate-900">
                   {modelAggs.priceMin != null
-                    ? `KSh ${Number(modelAggs.priceMin).toLocaleString("en-KE")}`
+                    ? `KES ${Number(modelAggs.priceMin).toLocaleString("en-KE")}`
                     : "—"}
                   {" "}–{" "}
                   {modelAggs.priceMax != null
-                    ? `KSh ${Number(modelAggs.priceMax).toLocaleString("en-KE")}`
+                    ? `KES ${Number(modelAggs.priceMax).toLocaleString("en-KE")}`
                     : "—"}
                 </p>
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500">Year range</p>
-                <p className="mt-0.5 text-lg font-black text-slate-900 text-white">
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">Year range</p>
+                <p className="mt-0.5 text-lg font-black text-slate-900">
                   {modelAggs.yearMin || "—"} – {modelAggs.yearMax || "—"}
                 </p>
               </div>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500">Engine</p>
-                <p className="mt-0.5 text-lg font-black text-slate-900 text-white">
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">Engine</p>
+                <p className="mt-0.5 text-lg font-black text-slate-900">
                   {modelAggs.engineMin ? `${modelAggs.engineMin} cc` : "—"}
                   {modelAggs.engineMax && modelAggs.engineMax !== modelAggs.engineMin
                     ? ` – ${modelAggs.engineMax} cc`
                     : ""}
                 </p>
               </div>
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500">Dealers</p>
-                <p className="mt-0.5 text-lg font-black text-slate-900 text-white">
-                  {modelAggs.dealers.length}
-                </p>
-              </div>
             </div>
 
             {(modelAggs.topFuel || modelAggs.topTrans || modelAggs.topBody) && (
               <div className="mb-4 flex flex-wrap items-center gap-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500">
+                <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
                   Most common:
                 </span>
                 {modelAggs.topFuel ? (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700 border-zinc-700 bg-zinc-950 text-zinc-200">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700">
                     Fuel: {modelAggs.topFuel.label} ({modelAggs.topFuel.count})
                   </span>
                 ) : null}
                 {modelAggs.topTrans ? (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700 border-zinc-700 bg-zinc-950 text-zinc-200">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700">
                     {modelAggs.topTrans.label}: {modelAggs.topTrans.count}
                   </span>
                 ) : null}
                 {modelAggs.topBody ? (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700 border-zinc-700 bg-zinc-950 text-zinc-200">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700">
                     {modelAggs.topBody.label}: {modelAggs.topBody.count}
                   </span>
                 ) : null}
               </div>
             )}
 
-            {modelAggs.dealers.length > 0 && (
-              <div className="mb-4">
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500 mb-1.5">
-                  Sold by
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {modelAggs.dealers.slice(0, 8).map((d) => (
-                    <Link
-                      key={d.id}
-                      href={`/dealers/${d.slug}`}
-                      className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:border-[#38A169] border-zinc-700 bg-zinc-950 text-zinc-200"
-                    >
-                      {d.name} ({d.count})
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {modelAggs.siblingLinks.length > 0 && modelAggs.firstCarId && (
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 text-zinc-500 mb-1.5">
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 mb-1.5">
                   Compare
                 </p>
                 <div className="flex flex-wrap gap-1.5">
@@ -598,7 +573,7 @@ export default async function CarHubPage({ params, searchParams }) {
                     <Link
                       key={s.model}
                       href={`/compare?a=${modelAggs.firstCarId}&b=${s.carId}`}
-                      className="rounded-lg border border-[#38A169]/20 bg-[#38A169]/5 px-2.5 py-1 text-xs font-semibold text-[#38A169] hover:bg-[#38A169]/10 border-[#38A169]/30 bg-[#38A169]/10"
+                      className="rounded-lg border border-[#38A169]/20 bg-[#38A169]/5 px-2.5 py-1 text-xs font-semibold text-[#38A169] hover:bg-[#38A169]/10"
                     >
                       {resolved.model} vs {s.model}
                     </Link>
@@ -611,15 +586,15 @@ export default async function CarHubPage({ params, searchParams }) {
 
         {cars.length === 0 ? (
           <div
-            className="py-20 text-center border border-[#EDF2F7] border-zinc-800 bg-[#F7FAFC] bg-[#1e1e1e]"
+            className="py-20 text-center border border-[#EDF2F7] bg-[#F7FAFC]"
             style={{ borderRadius: "var(--radius)" }}
           >
-            <Search className="w-11 h-11 text-slate-300 text-zinc-700 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-slate-900 text-white mb-2">No listings here right now</h2>
+            <Search className="w-11 h-11 text-slate-300 mx-auto mb-4" />
+            <h2 className="text-xl font-bold text-slate-900 mb-2">No listings here right now</h2>
             <p className="text-slate-500 mb-6">Try the main inventory search. Stock changes daily.</p>
             <Link
               href="/cars"
-              className="inline-flex bg-[#111827] bg-[#38A169] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest"
+              className="inline-flex bg-[#38A169] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest"
               style={{ borderRadius: "var(--radius)" }}
             >
               Browse all cars
@@ -638,18 +613,18 @@ export default async function CarHubPage({ params, searchParams }) {
             {page > 1 ? (
               <Link
                 href={`${path}?page=${page - 1}`}
-                className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold border-zinc-700"
+                className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold"
               >
                 Previous
               </Link>
             ) : null}
-            <span className="flex items-center px-3 text-sm text-slate-600 text-zinc-400">
+            <span className="flex items-center px-3 text-sm text-slate-600">
               Page {page} / {totalPages}
             </span>
             {page < totalPages ? (
               <Link
                 href={`${path}?page=${page + 1}`}
-                className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold border-zinc-700"
+                className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold"
               >
                 Next
               </Link>
@@ -658,7 +633,7 @@ export default async function CarHubPage({ params, searchParams }) {
         )}
 
         {(siblingMakes.length > 0 || countyLinks.length > 0) && (
-          <section className="mt-14 border-t border-slate-200 pt-10 border-zinc-800">
+          <section className="mt-14 border-t border-slate-200 pt-10">
             {countyLinks.length > 0 && (
               <div className="mb-8">
                 <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-3">{resolved.make} by county</h2>
@@ -667,7 +642,7 @@ export default async function CarHubPage({ params, searchParams }) {
                     <Link
                       key={l.href}
                       href={`/cars/${slugifyCarSegment(resolved.make)}/${slugifyCarSegment(l.label)}`}
-                      className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169] border-zinc-700 bg-zinc-950 text-zinc-200"
+                      className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169]"
                     >
                       {l.label}
                     </Link>
@@ -683,7 +658,7 @@ export default async function CarHubPage({ params, searchParams }) {
                     <Link
                       key={m.href}
                       href={m.href}
-                      className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169] border-zinc-700 bg-zinc-950 text-zinc-200"
+                      className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169]"
                     >
                       {m.label}
                     </Link>
@@ -695,20 +670,20 @@ export default async function CarHubPage({ params, searchParams }) {
         )}
 
         {resolved.kind === "county" && popularMakes.length > 0 && (
-          <section className="mt-10 border-t border-slate-200 pt-10 border-zinc-800">
+          <section className="mt-10 border-t border-slate-200 pt-10">
             <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-3">Browse by brand</h2>
             <div className="flex flex-wrap gap-2">
               {popularMakes.map((m) => (
                 <Link
                   key={m.href}
                   href={m.href}
-                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169] border-zinc-700 bg-zinc-950 text-zinc-200"
+                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169]"
                 >
                   {m.label}
                 </Link>
               ))}
             </div>
-            <p className="mt-4 text-sm text-slate-600 text-zinc-400">
+            <p className="mt-4 text-sm text-slate-600">
               Or open{" "}
               <Link href="/cars" className="font-semibold text-[#38A169] underline-offset-4 hover:underline">
                 advanced search

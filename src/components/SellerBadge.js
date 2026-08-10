@@ -24,11 +24,11 @@ export default function SellerBadge({ dealer, className = "", tooltip = true }) 
   };
 
   const colorClasses = {
-    green: "bg-emerald-900/20 text-emerald-300 border-emerald-800",
-    blue: "bg-blue-900/20 text-blue-300 border-blue-800",
-    yellow: "bg-yellow-900/20 text-yellow-300 border-yellow-800",
-    red: "bg-red-900/20 text-red-300 border-red-800",
-    gray: "bg-white/[0.03] text-zinc-400 border-white/[0.06]",
+    green: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    blue: "bg-blue-50 text-blue-700 border-blue-200",
+    yellow: "bg-yellow-50 text-yellow-700 border-yellow-200",
+    red: "bg-red-50 text-red-700 border-red-200",
+    gray: "bg-white text-slate-500 border-slate-200",
   };
 
   const tooltipText = {

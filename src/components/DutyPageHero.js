@@ -1,35 +1,57 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { CheckCircle2, ArrowRight, AlertTriangle, XCircle } from "lucide-react";
 import TrackedLink from "@/components/TrackedLink";
+import { assessImportEligibility, getImportYearWindow } from "@/lib/duty-import-eligibility";
+
+const currentYear = new Date().getFullYear();
 
 export default function DutyPageHero({ compact = false, children = null }) {
+  const [checkYear, setCheckYear] = useState("");
+  const [verdict, setVerdict] = useState(null);
+
+  const handleYearChange = (e) => {
+    const value = e.target.value.replace(/\D/g, "").slice(0, 4);
+    setCheckYear(value);
+    if (value.length === 4) {
+      const y = parseInt(value, 10);
+      if (y >= 1980 && y <= currentYear + 1) {
+        setVerdict(assessImportEligibility(y));
+        return;
+      }
+    }
+    setVerdict(null);
+  };
+
   if (compact) {
     return null;
   }
 
+  const { oldestImportableYear } = getImportYearWindow();
+
   return (
-    <section className="relative mb-0 overflow-hidden border-b border-slate-200 border-zinc-900 bg-red-50/70 bg-[#222222]">
+    <section className="relative mb-0 overflow-hidden border-b border-slate-200 bg-red-50/70">
       <div className="home-shell pt-2 pb-4 sm:pb-6 lg:pb-8">
         <div className="max-w-6xl mx-auto">
           <nav className="text-xs text-slate-500 mb-4" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-slate-900 hover:text-white font-medium">
+            <Link href="/" className="hover:text-slate-900 font-medium">
               Home
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-slate-800 text-slate-200">Duty calculator</span>
+            <span className="text-slate-800">Duty calculator</span>
           </nav>
 
           <div className="max-w-2xl lg:max-w-[55%]">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600 text-red-500 mb-2">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600 mb-2">
               Kenya import decision engine
             </p>
-            <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-bold text-slate-900 text-white mb-3 editorial-heading leading-[1.05]">
+            <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-black text-slate-900 mb-3 leading-[1.05] tracking-tight">
               Vehicle{" "}
-              <span className="text-red-600 text-red-500">duty calculator</span>
+              <span className="text-red-600">duty calculator</span>
             </h1>
-            <p className="text-sm sm:text-base text-slate-600 text-slate-300 leading-relaxed mb-4">
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed mb-4">
               Instant KRA-style tax breakdown for popular imports, then browse matching verified dealer stock.
             </p>
 
@@ -37,7 +59,7 @@ export default function DutyPageHero({ compact = false, children = null }) {
               <TrackedLink
                 href="/"
                 eventName="duty_hero_home_click"
-                className="h-11 sm:h-12 inline-flex items-center justify-center bg-white bg-[#1e1e1e] border border-slate-200 border-slate-800 text-[#111827] text-white px-4 text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-all hover:border-slate-900 hover:border-white"
+                className="btn btn-neutral"
                 style={{ borderRadius: "var(--radius)" }}
               >
                 Home
@@ -45,7 +67,7 @@ export default function DutyPageHero({ compact = false, children = null }) {
               <TrackedLink
                 href="/cars"
                 eventName="duty_hero_inventory_click"
-                className="h-11 sm:h-12 inline-flex items-center justify-center bg-[#38A169] hover:bg-[#2F855A] text-white px-4 text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
+                className="btn btn-primary"
                 style={{ borderRadius: "var(--radius)" }}
               >
                 Browse cars
@@ -59,7 +81,7 @@ export default function DutyPageHero({ compact = false, children = null }) {
               </Link>
             </div>
 
-            <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-slate-600 text-slate-400 mb-2">
+            <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-slate-600 mb-5">
               <li className="inline-flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden />
                 Instant estimate
@@ -77,6 +99,56 @@ export default function DutyPageHero({ compact = false, children = null }) {
                 Verified dealer stock
               </li>
             </ul>
+
+            <div className="max-w-xl">
+              <div className="flex flex-col sm:flex-row sm:items-end gap-3 p-4 border border-slate-200 bg-white/80 rounded-xl">
+                <div className="flex-1">
+                  <label
+                    htmlFor="eligibility-year"
+                    className="block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1.5"
+                  >
+                    Is your model importable? Enter model year
+                  </label>
+                  <input
+                    id="eligibility-year"
+                    type="text"
+                    inputMode="numeric"
+                    value={checkYear}
+                    onChange={handleYearChange}
+                    placeholder={`e.g. ${currentYear - 4} (need ${oldestImportableYear} or newer)`}
+                    className="w-full h-11 px-4 text-sm font-medium bg-slate-50 border border-slate-300 text-slate-900 focus:border-[var(--accent)] outline-none rounded-xl"
+                  />
+                </div>
+                <Link
+                  href="#duty-calculator"
+                  className="h-11 inline-flex items-center justify-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white px-4 text-[10px] font-bold uppercase tracking-widest transition-colors rounded-xl"
+                >
+                  Calculate taxes <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden />
+                </Link>
+              </div>
+
+              {verdict && (
+                <div
+                  className={`mt-2 flex gap-2 items-start p-3 border text-xs rounded-xl ${
+                    verdict.status === "ineligible"
+                      ? "bg-red-50 border-red-200 text-red-800"
+                      : verdict.status === "borderline"
+                        ? "bg-amber-50 border-amber-200 text-amber-800"
+                        : "bg-emerald-50 border-emerald-200 text-emerald-800"
+                  }`}
+                  role={verdict.status === "ineligible" ? "alert" : "status"}
+                >
+                  {verdict.status === "ineligible" ? (
+                    <XCircle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden />
+                  ) : verdict.status === "borderline" ? (
+                    <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden />
+                  ) : (
+                    <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" aria-hidden />
+                  )}
+                  <p>{verdict.message}</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {children ? <div className="max-w-3xl mt-4 relative z-10">{children}</div> : null}

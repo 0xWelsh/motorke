@@ -93,8 +93,8 @@ export default function BuyerRequestBoard() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
         <div className="max-w-xl space-y-2">
-          <p className="text-sm text-zinc-400">
-            Live buyer demand. <strong className="text-white">Dealer sign-in required.</strong>{" "}
+          <p className="text-sm text-slate-500">
+            Live buyer demand. <strong className="text-slate-900">Dealer sign-in required.</strong>{" "}
             Tap Send offer to message BIDGARI with the request ID — we route offers to the buyer.
           </p>
           {quota?.loggedIn && quota.isDealer ? (
@@ -103,7 +103,7 @@ export default function BuyerRequestBoard() {
                 Unlimited buyer request offers on your plan.
               </p>
             ) : quota.freeRemaining != null && quota.freeRemaining > 0 ? (
-              <p className="text-xs font-semibold text-zinc-300">
+              <p className="text-xs font-semibold text-slate-500">
                 {quota.freeRemaining} free offer{quota.freeRemaining === 1 ? "" : "s"} left today (Nairobi time).
               </p>
             ) : (
@@ -115,7 +115,7 @@ export default function BuyerRequestBoard() {
               </p>
             )
           ) : !quota?.loggedIn ? (
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-slate-500">
               <Link href="/login?callbackUrl=/requests" className="font-bold text-sky-300 hover:underline">
                 Sign in as a dealer
               </Link>{" "}
@@ -127,7 +127,7 @@ export default function BuyerRequestBoard() {
           <select
             value={county}
             onChange={(e) => setCounty(e.target.value)}
-            className="border border-white/[0.08] bg-[#1c1c1c] px-3 py-2 text-xs font-bold uppercase tracking-wide text-white rounded-xl outline-none"
+            className="border border-slate-300 bg-slate-50 px-3 py-2 text-xs font-bold uppercase tracking-wide text-slate-900 rounded-xl outline-none"
           >
             <option value="">All counties</option>
             {[
@@ -148,7 +148,7 @@ export default function BuyerRequestBoard() {
           <button
             type="button"
             onClick={load}
-            className="inline-flex items-center justify-center w-10 h-10 border border-white/[0.08] bg-[#1c1c1c] text-zinc-300 rounded-xl"
+            className="inline-flex items-center justify-center w-10 h-10 border border-slate-200 bg-white text-slate-500 rounded-xl"
             aria-label="Refresh requests"
           >
             <RefreshCw className="w-4 h-4" />
@@ -157,14 +157,14 @@ export default function BuyerRequestBoard() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-16 text-zinc-400">
+        <div className="flex items-center justify-center py-16 text-slate-500">
           <Loader2 className="w-6 h-6 animate-spin mr-2" /> Loading requests…
         </div>
       ) : error ? (
         <p className="text-sm font-semibold text-red-400">{error}</p>
       ) : requests.length === 0 ? (
         <div
-          className="border border-dashed border-white/[0.08] bg-white/[0.03] p-10 text-center text-sm text-zinc-400 rounded-xl"
+          className="border border-dashed border-slate-200 bg-slate-50 p-10 text-center text-sm text-slate-500 rounded-xl"
         >
           No open requests right now. Check back soon or{" "}
           <a href="/request-car" className="text-sky-300 font-bold hover:underline">
@@ -177,44 +177,44 @@ export default function BuyerRequestBoard() {
           {requests.map((req) => (
             <li
               key={req.id}
-              className="border border-white/[0.08] bg-[#1e1e1e] p-4 sm:p-5 flex flex-col rounded-xl"
+              className="border border-slate-200 bg-white p-4 sm:p-5 flex flex-col rounded-xl"
             >
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-[0.14em] text-sky-300">
                     {req.publicCode}
                   </p>
-                  <h3 className="text-lg font-black text-white leading-tight">
+                  <h3 className="text-lg font-black text-slate-900 leading-tight">
                     {req.title}
                   </h3>
                   {req.variant ? (
-                    <p className="text-xs text-zinc-400">{req.variant}</p>
+                    <p className="text-xs text-slate-500">{req.variant}</p>
                   ) : null}
                 </div>
-                <span className="text-[9px] font-black uppercase tracking-wide text-zinc-400 shrink-0">
+                <span className="text-[9px] font-black uppercase tracking-wide text-slate-500 shrink-0">
                   {req.timelineLabel}
                 </span>
               </div>
 
-              <p className="text-sm font-bold text-zinc-300 mb-2">{req.budgetLabel}</p>
+              <p className="text-sm font-bold text-slate-500 mb-2">{req.budgetLabel}</p>
 
-              <div className="flex flex-wrap gap-1.5 mb-3 text-[10px] font-bold uppercase tracking-wide text-zinc-400">
-                <span className="px-2 py-0.5 bg-white/[0.06] rounded-lg">{req.county}</span>
+              <div className="flex flex-wrap gap-1.5 mb-3 text-[10px] font-bold uppercase tracking-wide text-slate-500">
+                <span className="px-2 py-0.5 bg-slate-100 rounded-lg">{req.county}</span>
                 {req.bodyType ? (
-                  <span className="px-2 py-0.5 bg-white/[0.06] rounded-lg">{bodyLabel(req.bodyType)}</span>
+                  <span className="px-2 py-0.5 bg-slate-100 rounded-lg">{bodyLabel(req.bodyType)}</span>
                 ) : null}
                 {req.fuelType ? (
-                  <span className="px-2 py-0.5 bg-white/[0.06] rounded-lg">
+                  <span className="px-2 py-0.5 bg-slate-100 rounded-lg">
                     {FUEL_LABELS[req.fuelType] || req.fuelType}
                   </span>
                 ) : null}
                 {req.transmission ? (
-                  <span className="px-2 py-0.5 bg-white/[0.06] rounded-lg">{bodyLabel(req.transmission)}</span>
+                  <span className="px-2 py-0.5 bg-slate-100 rounded-lg">{bodyLabel(req.transmission)}</span>
                 ) : null}
               </div>
 
               {req.notesPreview ? (
-                <p className="text-xs text-zinc-400 leading-relaxed mb-3 line-clamp-2">
+                <p className="text-xs text-slate-500 leading-relaxed mb-3 line-clamp-2">
                   {req.notesPreview}
                 </p>
               ) : null}
@@ -223,7 +223,7 @@ export default function BuyerRequestBoard() {
                 type="button"
                 disabled={offerLoadingId === req.id}
                 onClick={() => sendOffer(req.id)}
-                className="mt-auto inline-flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-[#20bd5a] disabled:opacity-60 text-white py-2.5 text-[10px] font-black uppercase tracking-[0.12em] transition-colors rounded-xl"
+                className="mt-auto w-full btn btn-success btn-sm"
               >
                 {offerLoadingId === req.id ? (
                   <Loader2 className="w-4 h-4 animate-spin" />

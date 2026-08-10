@@ -180,7 +180,7 @@ export default async function LeadDetailPage({ params }) {
             </div>
             {lead.car.price > 0 && (
               <p className="text-sm font-bold text-emerald-400 tabular-nums">
-                KSh {Number(lead.car.price).toLocaleString("en-KE")}
+                KES {Number(lead.car.price).toLocaleString("en-KE")}
               </p>
             )}
             <Link

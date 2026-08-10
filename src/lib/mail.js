@@ -480,7 +480,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
     console.log(`✉️ BETTER DEAL EMAIL TO: ${userEmail}`);
     console.log(`✉️ Previous: ${previousCar.year} ${previousCar.make} ${previousCar.model}`);
     console.log(`✉️ New: ${newCar.year} ${newCar.make} ${newCar.model}`);
-    console.log(`✉️ Savings: KSh ${savings.toLocaleString("en-KE")}`);
+    console.log(`✉️ Savings: KES ${savings.toLocaleString("en-KE")}`);
     console.log("✉️ ======================================");
     return { success: true };
   }
@@ -515,7 +515,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
                 ${newCar.mileage ? `${parseInt(newCar.mileage).toLocaleString()} km, ` : ''}${newCar.location}
               </p>
               <p style="margin: 0; font-size: 20px; font-weight: 900; color: #ff5a2f;">
-                KSh ${parseInt(newCar.price).toLocaleString("en-KE")}
+                KES ${parseInt(newCar.price).toLocaleString("en-KE")}
               </p>
             </div>
           </div>
@@ -523,7 +523,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
 
         <div style="background: #ecfdf5; border-left: 4px solid #10b981; padding: 16px; border-radius: 0px; margin: 24px 0;">
           <p style="margin: 0; font-size: 14px; font-weight: 600; color: #047857;">
-            💰 Save KSh ${parseInt(savings).toLocaleString("en-KE")} (${savingsPercent}%)
+            💰 Save KES ${parseInt(savings).toLocaleString("en-KE")} (${savingsPercent}%)
           </p>
           <p style="margin: 4px 0 0; font-size: 12px; color: #059669;">
             compared to the ${previousCar.year} ${previousCar.make}
@@ -547,7 +547,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
     await transporter.sendMail({
       from: getMailFromMarketing(),
       to: userEmail,
-      subject: `Better deal: ${newCar.year} ${newCar.make} - Save KSh ${parseInt(savings).toLocaleString("en-KE")}`,
+      subject: `Better deal: ${newCar.year} ${newCar.make} - Save KES ${parseInt(savings).toLocaleString("en-KE")}`,
       html: htmlContent,
     });
     return { success: true };
@@ -701,18 +701,18 @@ export async function sendWatchAlertEmail({
       ? "A similar listing was just posted"
       : "Back in stock";
   const summary = isPriceDrop
-    ? `The ${title} dropped by KSh ${dropAmount.toLocaleString("en-KE")}.`
+    ? `The ${title} dropped by KES ${dropAmount.toLocaleString("en-KE")}.`
     : isSimilarListing
       ? `We found a similar listing: ${similarTitle}.`
       : `The ${title} is now available again.`;
   const priceBlock = isPriceDrop
-    ? `<p style="margin: 0 0 8px;"><strong>Previous:</strong> KSh ${previousPrice.toLocaleString("en-KE")}</p>
-       <p style="margin: 0;"><strong>Current:</strong> KSh ${car.price.toLocaleString("en-KE")}</p>`
+    ? `<p style="margin: 0 0 8px;"><strong>Previous:</strong> KES ${previousPrice.toLocaleString("en-KE")}</p>
+       <p style="margin: 0;"><strong>Current:</strong> KES ${car.price.toLocaleString("en-KE")}</p>`
     : isSimilarListing
       ? `<p style="margin: 0 0 8px;"><strong>Watchlist car:</strong> ${title}</p>
          <p style="margin: 0 0 8px;"><strong>New similar:</strong> ${similarTitle}</p>
-         <p style="margin: 0;"><strong>New listing price:</strong> KSh ${(similarCar?.price ?? 0).toLocaleString("en-KE")}</p>`
-      : `<p style="margin: 0;"><strong>Current price:</strong> KSh ${car.price.toLocaleString("en-KE")}</p>`;
+         <p style="margin: 0;"><strong>New listing price:</strong> KES ${(similarCar?.price ?? 0).toLocaleString("en-KE")}</p>`
+      : `<p style="margin: 0;"><strong>Current price:</strong> KES ${car.price.toLocaleString("en-KE")}</p>`;
 
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto; color: #0f172a;">

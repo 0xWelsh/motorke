@@ -126,37 +126,37 @@ export default function TermsPage() {
   const support = getSupportEmail();
   const sections = getTermsSections(support);
   return (
-    <div className="bg-[#141414] min-h-screen">
+    <div className="bg-[var(--bg)] min-h-screen">
       <div className="mx-auto max-w-7xl px-6 py-32 sm:py-40">
         
         {/* Header */}
         <div className="mb-24">
-          <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-zinc-400 mb-8">
+          <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-8">
             <span>Corporate</span>
             <span>/</span>
-            <span className="text-white">Operational Terms</span>
+            <span className="text-slate-900">Operational Terms</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight mb-8">
+          <h1 className="text-4xl sm:text-6xl font-bold text-slate-900 tracking-tight mb-8">
             Service <br />
-            <span className="editorial-heading text-zinc-400">Framework.</span>
+            <span className="font-black tracking-tight text-slate-500">Framework.</span>
           </h1>
-          <p className="text-lg text-zinc-400 font-medium max-w-2xl leading-relaxed">
+          <p className="text-lg text-slate-500 font-medium max-w-2xl leading-relaxed">
             BIDGARI is a trading name of BIDGARI Ltd. Last updated April 7, 2026. By using the platform, you agree to
             these Terms of Service and the policies they refer to.
           </p>
         </div>
 
         {/* Tactical Nav */}
-        <div className="bg-[#1c1c1c] border border-white/[0.06] p-10 sm:p-12 mb-24 rounded-xl">
-          <h2 className="text-[10px] font-bold text-white uppercase tracking-widest mb-8">Protocol Repository</h2>
+        <div className="bg-white border border-slate-200 p-10 sm:p-12 mb-24 rounded-xl">
+          <h2 className="text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-8">Protocol Repository</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-4">
             {sections.map((section, idx) => (
               <a 
                 key={idx} 
                 href={`#${section.title.replace(/\s+/g, '-').toLowerCase()}`}
-                className="text-sm font-bold text-zinc-400 hover:text-[var(--accent)] flex items-center gap-4 transition-colors group"
+                className="text-sm font-bold text-slate-500 hover:text-[var(--accent)] flex items-center gap-4 transition-colors group"
               >
-                <span className="text-[10px] text-zinc-300 group-hover:text-[var(--accent)] transition-colors">{idx + 1}.</span>
+                <span className="text-[10px] text-slate-500 group-hover:text-[var(--accent)] transition-colors">{idx + 1}.</span>
                 {section.title}
               </a>
             ))}
@@ -167,13 +167,13 @@ export default function TermsPage() {
         <div className="max-w-4xl space-y-32 mb-40">
           {sections.map((section) => (
             <section key={section.title} id={section.title.replace(/\s+/g, '-').toLowerCase()} className="scroll-mt-40">
-              <h2 className="text-3xl font-bold text-white mb-12 tracking-tight">{section.title}</h2>
+              <h2 className="text-3xl font-bold text-slate-900 mb-12 tracking-tight">{section.title}</h2>
               
               <div className="space-y-16">
                 {section.subsections && section.subsections.map((subsection, idx) => (
-                  <div key={idx} className="group border-l border-white/[0.06] pl-8 hover:border-[var(--accent)] transition-colors">
-                    <h3 className="text-xs font-bold text-white uppercase tracking-widest mb-4">{subsection.heading}</h3>
-                    <p className="text-lg text-zinc-400 leading-relaxed font-medium">{subsection.content}</p>
+                  <div key={idx} className="group border-l border-slate-200 pl-8 hover:border-[var(--accent)] transition-colors">
+                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest mb-4">{subsection.heading}</h3>
+                    <p className="text-lg text-slate-500 leading-relaxed font-medium">{subsection.content}</p>
                   </div>
                 ))}
               </div>
@@ -182,28 +182,28 @@ export default function TermsPage() {
         </div>
 
         {/* Legal Footer Station */}
-        <div className="pt-24 border-t border-white/[0.06]">
+        <div className="pt-24 border-t border-slate-200">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
-             <div>
-                <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-4">Support Direct</h4>
-                <a href={`mailto:${support}`} className="inline-flex items-center justify-center h-11 px-5 bg-[#1c1c1c] border border-white/[0.06] text-sm font-bold text-zinc-400 hover:text-[var(--accent)]">
+              <div>
+                <h4 className="text-[10px] font-bold text-slate-900 uppercase tracking-[0.2em] mb-4">Support Direct</h4>
+                <a href={`mailto:${support}`} className="btn btn-neutral">
                   {support}
                 </a>
-             </div>
-             <div>
-                <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-4">Compliance Hub</h4>
-                <a href={`mailto:${support}`} className="inline-flex items-center justify-center h-11 px-5 bg-[#1c1c1c] border border-white/[0.06] text-sm font-bold text-zinc-400 hover:text-[var(--accent)]">
+              </div>
+              <div>
+                <h4 className="text-[10px] font-bold text-slate-900 uppercase tracking-[0.2em] mb-4">Compliance Hub</h4>
+                <a href={`mailto:${support}`} className="btn btn-neutral">
                   {support}
                 </a>
-             </div>
-             <div>
-                <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-4">Financial Terminal</h4>
-                <a href={`mailto:${support}`} className="inline-flex items-center justify-center h-11 px-5 bg-[#1c1c1c] border border-white/[0.06] text-sm font-bold text-zinc-400 hover:text-[var(--accent)]">
+              </div>
+              <div>
+                <h4 className="text-[10px] font-bold text-slate-900 uppercase tracking-[0.2em] mb-4">Financial Terminal</h4>
+                <a href={`mailto:${support}`} className="btn btn-neutral">
                   {support}
                 </a>
-             </div>
+              </div>
           </div>
-          <p className="text-xs font-medium text-zinc-500 max-w-2xl">
+          <p className="text-xs font-medium text-slate-500 max-w-2xl">
             These terms are governed by the laws of the Republic of Kenya. Any unauthorized use of the BIDGARI 
             infrastructure may result in protocol suspension and legal action.
           </p>

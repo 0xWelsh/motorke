@@ -4,6 +4,11 @@ export const FREIGHT_PROXY_KES = 2750 * 135;
 export const DEFAULT_DUTY_RATES = {
   /** EAC CET — 25% for most passenger vehicles (HS 8703). */
   importDutyRate: 0.25,
+  /** 2025 KRA schedule — large-engined assembled vehicles attract 35%. */
+  importDutyRateBands: [
+    { minCC: 3001, fuelTypes: ["PETROL"], rate: 0.35, label: "petrol >3000cc" },
+    { minCC: 2501, fuelTypes: ["DIESEL"], rate: 0.35, label: "diesel >2500cc" },
+  ],
   /** Import Declaration Fee — 3.5% of customs value (KRA standard). */
   idfRate: 0.035,
   vatRate: 0.16,
@@ -115,6 +120,26 @@ function getExciseBand(engineCC, fuelType, bands) {
   return matches[0];
 }
 
+/**
+ * Import duty rate (KRA 2025+): 25% EAC CET default, 35% for large-engined
+ * assembled vehicles (petrol >3000cc, diesel >2500cc). Fuel-specific bands win.
+ */
+export function resolveImportDutyRate(engineCC, fuelType, rates = getDefaultDutyRates()) {
+  const fuel = normalizeFuelType(fuelType);
+  const bands = rates.importDutyRateBands || DEFAULT_DUTY_RATES.importDutyRateBands;
+
+  const matches = bands.filter((band) => bandMatchesCC(band, engineCC) && bandMatchesFuel(band, fuel));
+  if (!matches.length) return asNumber(rates.importDutyRate, 0.25);
+
+  matches.sort((a, b) => {
+    const fuelScore = (band) => (band.fuelTypes?.length ? 1 : 0);
+    if (fuelScore(b) !== fuelScore(a)) return fuelScore(b) - fuelScore(a);
+    return asNumber(b.minCC, 0) - asNumber(a.minCC, 0);
+  });
+
+  return asNumber(matches[0].rate, asNumber(rates.importDutyRate, 0.25));
+}
+
 function resolveRdl(customsValue, rates) {
   const cv = Math.max(0, asNumber(customsValue));
   const rdlRate = rates.rdlRate;
@@ -182,7 +207,7 @@ export function calculateDutyBreakdown({
     customsValue = Math.round(depreciate(cifKes, ageYears, rates));
   }
 
-  const importDutyRate = asNumber(rates.importDutyRate, 0.35);
+  const importDutyRate = resolveImportDutyRate(engineCC, fuelType, rates);
   const importDuty = Math.round(customsValue * importDutyRate);
 
   const matchedBand = getExciseBand(engineCC, fuelType, rates.excise?.bands || []);

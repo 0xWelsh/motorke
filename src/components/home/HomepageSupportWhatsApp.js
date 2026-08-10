@@ -22,7 +22,7 @@ export default function HomepageSupportWhatsApp() {
       rel="noopener noreferrer"
       onClick={onClick}
       aria-label="Chat with BIDGARI support on WhatsApp"
-      className="fixed z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_8px_32px_rgba(37,211,102,0.4)] ring-2 ring-black/20 transition-all hover:bg-[#20bd5a] hover:scale-105 active:scale-95 bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-4 sm:bottom-6 sm:right-6"
+      className="fixed z-50 flex h-14 w-14 items-center justify-center rounded-md bg-[#25D366] text-white shadow-[0_8px_32px_rgba(37,211,102,0.4)] ring-2 ring-black/20 transition-all hover:bg-[#20bd5a] hover:scale-105 active:scale-95 bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-4 sm:bottom-6 sm:right-6"
     >
       <MessageCircle className="h-7 w-7" aria-hidden />
       <span className="sr-only">WhatsApp support</span>

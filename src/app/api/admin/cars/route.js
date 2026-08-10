@@ -65,13 +65,13 @@ export async function POST(request) {
     queueMicrotask(() => {
       sendSystemAlertEmail({
         subject: `New car listed: ${car.year} ${car.make} ${car.model}`,
-        summary: `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} (${car.year}) listed for ${car.price ? `KSh ${parseInt(car.price).toLocaleString("en-KE")}` : "contact for price"}.`,
+        summary: `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} (${car.year}) listed for ${car.price ? `KES ${parseInt(car.price).toLocaleString("en-KE")}` : "contact for price"}.`,
         details: {
           Make: car.make,
           Model: car.model,
           Variant: car.variant || "—",
           Year: String(car.year),
-          Price: car.price ? `KSh ${parseInt(car.price).toLocaleString("en-KE")}` : "Contact",
+          Price: car.price ? `KES ${parseInt(car.price).toLocaleString("en-KE")}` : "Contact",
           Mileage: car.mileage ? `${parseInt(car.mileage).toLocaleString("en-KE")} km` : "—",
           Fuel: car.fuelType || "—",
           Transmission: car.transmission || "—",

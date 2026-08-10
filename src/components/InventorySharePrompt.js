@@ -91,7 +91,7 @@ export default function InventorySharePrompt({ car, whatsappHrefByTemplate }) {
           href={whatsappHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-3.5 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-white hover:bg-[#20bd5a]"
+          className="btn btn-success btn-sm"
         >
           <MessageCircle size={14} />
           Share on WhatsApp

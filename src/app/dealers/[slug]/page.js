@@ -179,7 +179,7 @@ export default async function DealerPage(props) {
   const socialLinks = [
     { key: "instagram", label: "Instagram", href: withProtocol(dealer.instagramUrl), icon: <SiInstagram className="w-3.5 h-3.5" style={{ color: "#E4405F" }} /> },
     { key: "facebook", label: "Facebook", href: withProtocol(dealer.facebookUrl), icon: <SiFacebook className="w-3.5 h-3.5" style={{ color: "#1877F2" }} /> },
-    { key: "tiktok", label: "TikTok", href: withProtocol(dealer.tiktokUrl), icon: <SiTiktok className="w-3.5 h-3.5 text-white" /> },
+    { key: "tiktok", label: "TikTok", href: withProtocol(dealer.tiktokUrl), icon: <SiTiktok className="w-3.5 h-3.5 text-black" /> },
   ].filter((item) => Boolean(item.href));
 
   // Generate the gallery for the hero section
@@ -244,7 +244,7 @@ export default async function DealerPage(props) {
   const dealerInventoryLd = buildDealerInventoryItemList(dealer, dealer.cars);
 
   return (
-    <div className="bg-[#141414] min-h-screen">
+    <div className="bg-[var(--bg)] min-h-screen">
       <TrackEventOnMount
         name="dealer_page_view"
         payload={{
@@ -398,29 +398,29 @@ export default async function DealerPage(props) {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-9 space-y-6">
-            <section id="inventory" className="bg-[#1c1c1c] p-4 sm:p-6 shadow-xl rounded-xl">
+            <section id="inventory" className="bg-white p-4 sm:p-6 shadow-xl rounded-xl">
               <DealerInventory cars={inventoryWithDistance} dealerSlug={dealer.slug} />
             </section>
 
             <section
-              className="bg-[#1c1c1c] p-5 sm:p-6 shadow-xl rounded-xl"
+              className="bg-white p-5 sm:p-6 shadow-xl rounded-xl"
               aria-labelledby="dealer-about-heading"
             >
               <h2
                 id="dealer-about-heading"
-                className="text-xl sm:text-2xl font-black text-white tracking-tight mb-4"
+                className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-4"
               >
                 About {dealer.name} in Kenya
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-4">
-                  <p className="text-sm text-zinc-300 leading-relaxed">{dealerSeoParagraph}</p>
+                  <p className="text-sm text-slate-500 leading-relaxed">{dealerSeoParagraph}</p>
                   {dealer.description?.trim() && dealer.description.trim() !== dealerSummary ? (
-                    <p className="text-sm text-zinc-400 leading-relaxed">{dealer.description.trim()}</p>
+                    <p className="text-sm text-slate-500 leading-relaxed">{dealer.description.trim()}</p>
                   ) : null}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {["Verified inventory", "Inspected vehicles", "Trade-in accepted", "Financing support", "After-sales assistance", "Import options available"].map((item) => (
-                      <div key={item} className="inline-flex items-center gap-2 text-[11px] font-semibold text-zinc-300 bg-white/[0.03] px-3 py-2 rounded-xl">
+                      <div key={item} className="inline-flex items-center gap-2 text-[11px] font-semibold text-slate-500 bg-slate-50 px-3 py-2 rounded-xl">
                         <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
                         {item}
                       </div>
@@ -437,48 +437,48 @@ export default async function DealerPage(props) {
               </div>
             </section>
 
-            <section id="reviews" className="bg-[#1c1c1c] p-5 sm:p-6 shadow-xl rounded-xl">
+            <section id="reviews" className="bg-white p-5 sm:p-6 shadow-xl rounded-xl">
               <DealerReviews dealerSlug={dealer.slug} dealerName={dealer.name} averageRating={averageRating} totalReviews={totalReviews} reviews={dealer.reviews} viewer={viewer} viewerReview={viewerReview} />
             </section>
           </div>
 
           <aside className="lg:col-span-3 space-y-6">
-            <section className="bg-[#1c1c1c] p-5 sm:p-6 shadow-xl rounded-xl">
-              <h4 className="text-[11px] font-black uppercase tracking-[0.14em] text-zinc-400 mb-3">Dealer info</h4>
-              <div className="space-y-2.5 mb-4 text-[12px] font-semibold text-zinc-300">
-                <div className="flex justify-between gap-3"><span className="text-zinc-400">Business type</span><span>Dealership</span></div>
-                <div className="flex justify-between gap-3"><span className="text-zinc-400">Verified</span><span>{dealer.verified ? "Yes" : "Pending"}</span></div>
+            <section className="bg-white p-5 sm:p-6 shadow-xl rounded-xl">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.14em] text-slate-500 mb-3">Dealer info</h4>
+              <div className="space-y-2.5 mb-4 text-[12px] font-semibold text-slate-500">
+                <div className="flex justify-between gap-3"><span className="text-slate-500">Business type</span><span>Dealership</span></div>
+                <div className="flex justify-between gap-3"><span className="text-slate-500">Verified</span><span>{dealer.verified ? "Yes" : "Pending"}</span></div>
               </div>
-              <div className="border-t border-white/[0.06] pt-3 mb-4">
-                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-2">Opening hours</p>
-                <p className="text-[12px] font-semibold text-zinc-300">Mon - Sat: 8:00 AM - 6:00 PM</p>
-                <p className="text-[12px] font-semibold text-zinc-300">Sun: 10:00 AM - 4:00 PM</p>
+              <div className="border-t border-slate-200 pt-3 mb-4">
+                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 mb-2">Opening hours</p>
+                <p className="text-[12px] font-semibold text-slate-500">Mon - Sat: 8:00 AM - 6:00 PM</p>
+                <p className="text-[12px] font-semibold text-slate-500">Sun: 10:00 AM - 4:00 PM</p>
               </div>
               <div className="flex items-center justify-between gap-3 mb-3">
-                <h4 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Find us</h4>
+                <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Find us</h4>
                 {dealerDistanceLabel && <span className="text-[10px] font-bold text-[var(--accent)] uppercase tracking-[0.12em]">{dealerDistanceLabel}</span>}
               </div>
-              <p className="text-sm font-bold text-white leading-relaxed mb-3">{dealer.address || dealer.location || "Nairobi, Kenya"}</p>
+              <p className="text-sm font-bold text-slate-900 leading-relaxed mb-3">{dealer.address || dealer.location || "Nairobi, Kenya"}</p>
               <DealerLocationMap dealer={dealer} />
             </section>
 
-              <section className="bg-[#1c1c1c] p-5 sm:p-6 shadow-xl rounded-xl">
-                <h4 className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-3">Social & Media</h4>
+              <section className="bg-white p-5 sm:p-6 shadow-xl rounded-xl">
+                <h4 className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500 mb-3">Social & Media</h4>
                 {socialLinks.length > 0 ? (
                   <div className="space-y-2">
                     {socialLinks.map((item) => (
-                      <a key={item.key} href={item.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-start gap-2 w-full text-[12px] font-bold text-zinc-300 bg-white/[0.03] px-3 py-2.5 rounded-xl">
+                      <a key={item.key} href={item.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-start gap-2 w-full text-[12px] font-bold text-slate-500 bg-slate-50 px-3 py-2.5 rounded-xl">
                         {item.icon}{item.label}
                       </a>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-zinc-400">No social profiles linked yet.</p>
+                  <p className="text-sm text-slate-500">No social profiles linked yet.</p>
                 )}
               {recentShowcaseCars.length > 0 && (
                 <div className="mt-4">
                   <div className="flex items-center justify-between mb-2">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400">Photos from dealer</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Photos from dealer</p>
                     <a href="#inventory" className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--accent)]">View all</a>
                   </div>
                   <div className="grid grid-cols-4 gap-2">
@@ -496,7 +496,7 @@ export default async function DealerPage(props) {
       </div>
 
       {/* Persistent Mobile Action Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1e1e1e]/90 backdrop-blur-xl border-t border-white/[0.06] px-4 py-4 shadow-2xl">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-slate-200 px-4 py-4 shadow-2xl">
          <div className="mb-3">
            <DealerShowroomShare
              layout="mobileBar"
@@ -509,7 +509,7 @@ export default async function DealerPage(props) {
          </div>
          <div className="flex items-center gap-3">
             {teamTelHref ? (
-              <a href={teamTelHref} className="flex-1 bg-white text-black py-3.5 text-center text-[11px] font-bold uppercase tracking-widest rounded-xl">
+              <a href={teamTelHref} className="flex-1 bg-white text-slate-700 border border-slate-300 py-3.5 text-center text-[11px] font-bold uppercase tracking-widest rounded-xl">
                  Call BIDGARI
               </a>
             ) : null}
@@ -527,7 +527,7 @@ export default async function DealerPage(props) {
                  href={item.href}
                  target="_blank"
                  rel="noopener noreferrer"
-                 className="bg-white/[0.06] text-white py-2.5 text-center text-[10px] font-bold uppercase tracking-widest inline-flex items-center justify-center gap-1.5 rounded-xl"
+                 className="bg-slate-100 text-slate-700 py-2.5 text-center text-[10px] font-bold uppercase tracking-widest inline-flex items-center justify-center gap-1.5 rounded-xl"
                >
                  {item.icon}
                  {item.label}

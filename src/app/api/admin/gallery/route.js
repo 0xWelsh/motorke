@@ -34,7 +34,6 @@ export async function POST(request) {
     const date = formData.get("date")?.toString();
     const location = formData.get("location")?.toString().trim() || null;
     const description = formData.get("description")?.toString().trim() || null;
-    const magazineLink = formData.get("magazineLink")?.toString().trim() || null;
 
     if (!title) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
@@ -80,7 +79,6 @@ export async function POST(request) {
         description,
         coverImage,
         images: images.length ? images : undefined,
-        magazineLink,
       },
     });
 

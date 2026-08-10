@@ -7,9 +7,9 @@ import { createDealerDivIcon, escapeMapHtml } from "@/lib/map-pin";
 
 function formatPrice(p) {
   if (!p) return null;
-  if (p >= 1_000_000) return `KSh ${(p / 1_000_000).toFixed(1)}M`;
-  if (p >= 1_000) return `KSh ${(p / 1_000).toFixed(0)}K`;
-  return `KSh ${p}`;
+  if (p >= 1_000_000) return `KES ${(p / 1_000_000).toFixed(1)}M`;
+  if (p >= 1_000) return `KES ${(p / 1_000).toFixed(0)}K`;
+  return `KES ${p}`;
 }
 
 export default function SearchMapLeaflet({ dealers }) {

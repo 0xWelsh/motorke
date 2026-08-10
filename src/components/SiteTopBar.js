@@ -9,7 +9,7 @@ export default function SiteTopBar() {
   const telHref = PUBLIC_SUPPORT_PHONE ? telHrefFromMsisdn(PUBLIC_SUPPORT_PHONE) : null;
 
   return (
-    <div className="relative border-b border-white/[0.04] bg-[#222222] text-zinc-400">
+    <div className="relative border-b border-slate-200 bg-white text-slate-500">
       <div className="home-shell">
         <div className="flex h-9 sm:h-10 items-center justify-between gap-3 text-[10px] sm:text-[11px] font-semibold">
           <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-1">
@@ -17,7 +17,7 @@ export default function SiteTopBar() {
               href={`mailto:${PUBLIC_SUPPORT_EMAIL}`}
               className="inline-flex items-center gap-1.5 hover:text-[var(--accent)] transition-colors min-w-0"
             >
-              <Mail className="h-3.5 w-3.5 shrink-0 text-zinc-500" aria-hidden />
+              <Mail className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden />
               <span className="truncate max-w-[11rem] sm:max-w-none">{PUBLIC_SUPPORT_EMAIL}</span>
             </a>
             {telHref ? (
@@ -25,7 +25,7 @@ export default function SiteTopBar() {
                 href={telHref}
                 className="inline-flex items-center gap-1.5 hover:text-[var(--accent)] transition-colors"
               >
-                <Phone className="h-3.5 w-3.5 shrink-0 text-zinc-500" aria-hidden />
+                <Phone className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden />
                 <span>{PUBLIC_SUPPORT_PHONE}</span>
               </a>
             ) : null}

@@ -76,7 +76,7 @@ export default function PhoneVerificationControl({ phone, className = "" }) {
       <div className="flex items-center gap-2 flex-wrap">
         <span
           className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 ${
-            isVerified ? "bg-white/[0.03] text-[var(--accent)]" : "bg-amber-100 text-amber-700"
+            isVerified ? "bg-slate-50 text-[var(--accent)]" : "bg-amber-100 text-amber-700"
           }`}
         >
           {isVerified ? "Phone verified" : "Phone not verified"}
@@ -86,7 +86,7 @@ export default function PhoneVerificationControl({ phone, className = "" }) {
             type="button"
             onClick={sendCode}
             disabled={status === "sending" || !normalizedPhone}
-            className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest bg-slate-900 text-white disabled:opacity-50"
+            className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 disabled:opacity-50"
           >
             {status === "sending" ? "Sending..." : "Send OTP"}
           </button>
@@ -98,19 +98,19 @@ export default function PhoneVerificationControl({ phone, className = "" }) {
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="Enter 6-digit code"
-            className="h-9 w-44 border border-white/[0.06] bg-[#1c1c1c] px-3 text-xs font-semibold"
+            className="h-9 w-44 border border-slate-300 bg-slate-50 px-3 text-xs font-semibold"
           />
           <button
             type="button"
             onClick={verifyCode}
             disabled={status === "verifying" || code.trim().length < 6}
-            className="h-9 px-3 text-[10px] font-bold uppercase tracking-widest bg-[var(--accent)] text-white disabled:opacity-50"
+            className="btn btn-primary btn-sm"
           >
             {status === "verifying" ? "Verifying..." : "Verify"}
           </button>
         </div>
       )}
-      {message ? <p className="text-[11px] font-semibold text-zinc-400">{message}</p> : null}
+      {message ? <p className="text-[11px] font-semibold text-slate-500">{message}</p> : null}
     </div>
   );
 }

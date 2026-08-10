@@ -24,11 +24,11 @@ export default function CompareTcoBarChart({ fullComparedCars, initialCarsById, 
   const maxVal = Math.max(...barData.map((d) => d.total), 1);
 
   return (
-    <div className="order-4 lg:order-4 scroll-mt-24 bg-[#1c1c1c] border border-white/[0.06] p-5 sm:p-6 lg:p-8"
+    <div className="order-4 lg:order-4 scroll-mt-24 bg-white border border-slate-200 p-5 sm:p-6 lg:p-8"
       style={{ borderRadius: "var(--radius)" }}>
       <div className="flex items-center gap-3 mb-6">
-        <h3 className="text-xl font-bold text-white">Annual Cost Breakdown</h3>
-        <span className="px-2 py-0.5 bg-white/[0.03] text-[9px] font-bold text-zinc-400 uppercase tracking-widest rounded-xl">
+        <h3 className="text-xl font-bold text-slate-900">Annual Cost Breakdown</h3>
+        <span className="px-2 py-0.5 bg-slate-50 text-[9px] font-bold text-slate-500 uppercase tracking-widest rounded-xl">
           KES '000
         </span>
       </div>
@@ -36,7 +36,7 @@ export default function CompareTcoBarChart({ fullComparedCars, initialCarsById, 
         <BarChart data={barData} barSize={48} barGap={8}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
           <XAxis dataKey="name" tick={{ fontSize: 10, fontWeight: 600, fill: "#718096" }} />
-          <YAxis tick={{ fontSize: 10, fill: "#a0aec0" }}
+          <YAxis tick={{ fontSize: 10, fill: "#718096" }}
             tickFormatter={(v) => `${v}K`}
             domain={[0, Math.ceil(maxVal * 1.15 / 100) * 100]}
           />
@@ -52,10 +52,10 @@ export default function CompareTcoBarChart({ fullComparedCars, initialCarsById, 
       </ResponsiveContainer>
       <div className="mt-4 grid grid-cols-3 gap-3">
         {barData.map((d) => (
-          <div key={d.name} className="text-center p-2 bg-white/[0.03] rounded-xl">
-            <p className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 truncate">{d.name}</p>
-            <p className="text-sm font-black text-white">KES {formatKesCompact(d.total * 1000)}</p>
-            <p className="text-[8px] text-zinc-400">total/yr</p>
+          <div key={d.name} className="text-center p-2 bg-slate-50 rounded-xl">
+            <p className="text-[9px] font-bold uppercase tracking-wider text-slate-500 truncate">{d.name}</p>
+            <p className="text-sm font-black text-slate-900">KES {formatKesCompact(d.total * 1000)}</p>
+            <p className="text-[8px] text-slate-500">total/yr</p>
           </div>
         ))}
       </div>

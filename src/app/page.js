@@ -1,14 +1,11 @@
 // src/app/page.js
 export const revalidate = 60;
-import BrowsePanel from "@/components/BrowsePanel";
-import { Search } from "lucide-react";
-import HeroGridShowcase from "@/components/LazyHeroGridShowcase";
+import CarsSearchBar from "@/components/CarsSearchBar";
 import TrackedLink from "@/components/TrackedLink";
+import NikkyoSidebar from "@/components/NikkyoSidebar";
 import HomepageShopLinks from "@/components/home/HomepageShopLinks";
 import HomepageTrending from "@/components/home/HomepageTrending";
-import HomepageSpotlight from "@/components/home/HomepageSpotlight";
-import HomepageDeals from "@/components/home/HomepageDeals";
-import HomepageNewArrivals from "@/components/home/HomepageNewArrivals";
+import HomepageNikkyoGrids from "@/components/home/HomepageNikkyoGrids";
 import HomepageHeroCarFinder from "@/components/home/HomepageHeroCarFinder";
 import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
 import HomepagePriceFilter from "@/components/home/HomepagePriceFilter";
@@ -31,16 +28,45 @@ function seededShuffle(arr, seed) {
   return out;
 }
 
+function uniqueCars(list) {
+  const seen = new Set();
+  const out = [];
+  for (const car of list || []) {
+    if (!car || !car.id || seen.has(car.id)) continue;
+    seen.add(car.id);
+    out.push(car);
+  }
+  return out;
+}
+
+/**
+ * Fill a homepage grid section to `target` cards, pulling replacements
+ * from a shared pool so every row is complete (no blank space).
+ * Tracks `usedIds` so no car repeats across sections.
+ */
+function fillGrid(section, usedIds, pool, target) {
+  const sectionIds = new Set((section || []).map((c) => c?.id).filter(Boolean));
+  const out = uniqueCars(section).filter((c) => !usedIds.has(c.id));
+  for (const car of pool || []) {
+    if (out.length >= target) break;
+    if (!car || !car.id || sectionIds.has(car.id) || usedIds.has(car.id)) continue;
+    out.push(car);
+  }
+  const filled = out.slice(0, target);
+  filled.forEach((c) => usedIds.add(c.id));
+  return filled;
+}
+
 export const metadata = {
-  title: "Buy Used and New Cars in Kenya | Verified Nairobi & Mombasa Dealers",
+  title: "Buy Used and New Cars in Kenya | BIDGARI",
   description:
-    "Find verified used cars for sale in Nairobi, Mombasa, and across Kenya. Compare total ownership costs, inspect specs, and contact trusted car dealers directly on BIDGARI.",
+    "Find verified used cars for sale in Nairobi, Mombasa, and across Kenya. Compare total ownership costs, inspect specs, and buy handled end-to-end by BIDGARI.",
   alternates: { canonical: "/" },
   openGraph: {
     url: absoluteUrl("/"),
     title: "Buy Used and New Cars for sale in Kenya | BIDGARI",
     description:
-      "Verified vehicle inventory from trusted Kenyan dealers in Nairobi and Mombasa. Compare costs, specs, and contact sellers directly.",
+      "Verified vehicle inventory for sale in Nairobi and Mombasa. Compare costs, specs, and buy handled end-to-end by BIDGARI.",
     type: "website",
   },
 };
@@ -51,7 +77,7 @@ function homeStructuredData(origin, spotlightCars = [], newCars = []) {
     "@type": "Product",
     "name": `${car.year} ${car.make} ${car.model} ${car.variant || ""}`.trim(),
     "image": absoluteMediaUrl(car?.images?.[0]?.url || car?.image),
-    "description": `Verified ${car.condition} ${car.make} ${car.model} for sale by ${car.dealer?.name || "verified dealer"} in ${car.dealer?.location || "Kenya"}.`,
+    "description": `Verified ${car.condition} ${car.make} ${car.model} for sale in ${car.dealer?.location || "Kenya"} by BIDGARI.`,
     ...(car.price
       ? {
           "offers": {
@@ -74,14 +100,14 @@ function homeStructuredData(origin, spotlightCars = [], newCars = []) {
         name: "BIDGARI",
         url: origin,
         logo: absoluteUrl(BRAND_MARK_SQUARE),
-        description: "Verified vehicle marketplace connecting buyers with trusted car dealers across Kenya.",
+        description: "Verified vehicle marketplace, with one trusted team handling every sale for Kenyan buyers.",
         address: { "@type": "PostalAddress", addressCountry: "KE" },
       },
       {
         "@type": "WebSite",
         name: "BIDGARI",
         url: origin,
-        description: "Browse used and new listings, compare vehicles, and connect with Kenyan dealerships.",
+        description: "Browse used and new listings, compare vehicles, and buy handled end-to-end by BIDGARI.",
         potentialAction: {
           "@type": "SearchAction",
           target: `${origin}/cars?search={search_term_string}`,
@@ -117,6 +143,7 @@ export default async function HomePage() {
     mostViewedEnhanced,
     newEnhanced,
     dealsEnhanced,
+    hotThisWeek,
   } = homepageBundle;
 
   const heroPool = seededShuffle(
@@ -125,14 +152,21 @@ export default async function HomePage() {
   );
   const heroCars = heroPool.slice(0, 8);
 
-  const spotlightCards = (homepageSpotlight || []).slice(0, 8);
+  const spotlightCards = (homepageSpotlight || []).slice(0, 16);
   const spotlightIds = new Set(spotlightCards.map((c) => c.id));
   const trendingCars = (mostViewedEnhanced || []).filter((c) => !spotlightIds.has(c.id));
+
+  const fillPool = uniqueCars(hotThisWeek || []);
+  const usedIds = new Set();
+  const recommendedCars = fillGrid(spotlightCards, usedIds, fillPool, 16);
+  const newArrivalCars = fillGrid(newEnhanced || [], usedIds, fillPool, 16);
+  const dealCars = fillGrid(dealsEnhanced || [], usedIds, fillPool, 16);
+  const frequentCars = fillGrid(trendingCars, usedIds, fillPool, 16);
 
   const origin = getSiteOrigin();
 
   return (
-    <div className="min-h-screen pb-20 bg-[#141414]">
+    <div className="min-h-screen pb-10 bg-[var(--bg)]">
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -141,101 +175,57 @@ export default async function HomePage() {
         }}
       />
 
-      {/* Hero */}
-      <section className="relative pt-6 pb-8 sm:pt-10 sm:pb-12 lg:pt-14 lg:pb-16">
+      {/* Nikkyo-style two-column from the top: sidebar + main content */}
+      <section className="border-b border-slate-200 bg-[var(--bg)]">
         <div className="home-shell">
-          <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-10 lg:mb-12">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-4">
-              Find your next car
-            </h1>
-            <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto">
-              Verified inventory from dealers across Kenya. Compare specs, costs, and contact sellers directly.
-            </p>
-          </div>
+          <div className="lg:grid lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-8 lg:items-start lg:py-6">
+            <aside className="hidden lg:block lg:sticky lg:top-24 lg:self-start">
+              <NikkyoSidebar inventoryCounts={browseInventoryCounts} />
+            </aside>
 
-          {/* Mobile */}
-          <div className="lg:hidden mx-auto max-w-2xl space-y-4">
-            <BrowsePanel layout="hero-mobile-slim" inventoryCounts={browseInventoryCounts} />
-            <HeroCarousel cars={heroCars} />
-            <div className="flex gap-3">
-              <TrackedLink
-                href="/cars"
-                eventName="homepage_explore_inventory_click"
-                eventPayload={{ area: "hero" }}
-                className="flex-1 h-12 inline-flex items-center justify-center bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-black text-xs font-bold uppercase tracking-widest transition-all rounded-xl"
-              >
-                Browse Cars
-              </TrackedLink>
-              <TrackedLink
-                href="/request-car"
-                eventName="homepage_request_car_click"
-                eventPayload={{ area: "hero_mobile" }}
-                className="flex-1 h-12 inline-flex items-center justify-center gap-2 border border-white/10 text-white text-xs font-bold uppercase tracking-widest transition-all hover:bg-white/5 rounded-xl"
-              >
-                <Search className="w-4 h-4" />
-                Request a Car
-              </TrackedLink>
-            </div>
-          </div>
-
-          {/* Desktop */}
-          <div className="hidden lg:block max-w-6xl mx-auto">
-            <div className="grid grid-cols-2 gap-10 items-start">
-              <div className="space-y-6">
-                <BrowsePanel layout="desktop-hero" inventoryCounts={browseInventoryCounts} />
-                <div className="flex gap-3">
-                  <TrackedLink
-                    href="/cars"
-                    eventName="homepage_explore_inventory_click"
-                    eventPayload={{ area: "hero" }}
-                    className="flex-1 h-12 inline-flex items-center justify-center bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-black text-xs font-bold uppercase tracking-widest transition-all rounded-xl"
-                  >
-                    Browse Cars
-                  </TrackedLink>
-                  <TrackedLink
-                    href="/compare"
-                    eventName="homepage_compare_cars_click"
-                    eventPayload={{ area: "hero" }}
-                    className="flex-1 h-12 inline-flex items-center justify-center border border-white/10 text-white text-xs font-bold uppercase tracking-widest transition-all hover:bg-white/5 rounded-xl"
-                  >
-                    Compare
-                  </TrackedLink>
-                </div>
+            <main className="min-w-0 py-5 lg:py-0">
+              {/* Announcement */}
+              <p className="mb-4 text-center text-[11px] sm:text-xs font-bold text-[var(--accent)]">
                 <TrackedLink
-                  href="/request-car"
-                  eventName="homepage_request_car_click"
-                  eventPayload={{ area: "hero_desktop" }}
-                  className="flex h-12 w-full items-center justify-center gap-2 border border-white/10 text-white text-xs font-bold uppercase tracking-widest transition-all hover:bg-white/5 rounded-xl"
+                  href="/how-to-buy"
+                  eventName="homepage_announcement_click"
+                  eventPayload={{ area: "announcement" }}
+                  className="underline underline-offset-2 hover:text-[var(--accent-hover)]"
                 >
-                  <Search className="w-4 h-4" />
-                  Request a Car
+                  Every listing is verified and sold through BIDGARI
                 </TrackedLink>
+              </p>
+
+              {/* Keyword search */}
+              <CarsSearchBar />
+
+              {/* Hero banner carousel */}
+              <div className="mt-5">
+                <HeroCarousel cars={heroCars} />
               </div>
-              <div className="space-y-4">
-                <HeroGridShowcase
-                  cars={heroCars.length >= 2 ? heroCars : heroPool.slice(0, 6)}
-                  reviews={[]}
+
+              {/* Inventory sections */}
+              <div className="mt-7 sm:mt-8">
+                <HomepageNikkyoGrids
+                  recommended={recommendedCars}
+                  newArrivals={newArrivalCars}
+                  deals={dealCars}
                 />
-                <HomepageHeroCarFinder embedded className="min-h-[12rem]" />
               </div>
-            </div>
+            </main>
           </div>
         </div>
       </section>
 
       {/* Price filter chips */}
-      <div className="home-shell mb-6 sm:mb-8">
+      <div className="home-shell py-6 sm:py-8">
         <HomepagePriceFilter />
       </div>
 
       {/* Quick links */}
       <HomepageShopLinks />
 
-      {/* Listings */}
-      <HomepageSpotlight cars={spotlightCards} />
-      <HomepageNewArrivals cars={newEnhanced} />
-      <HomepageDeals cars={dealsEnhanced} />
-      <HomepageTrending cars={trendingCars} />
+      <HomepageTrending cars={frequentCars} />
 
       {/* Mobile car finder */}
       <div className="lg:hidden mt-8">

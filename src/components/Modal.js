@@ -27,7 +27,7 @@ function ModalDialog({ modal, onClose }) {
         @keyframes mkSlideUp { from { transform:translateY(16px);opacity:0 } to { transform:translateY(0);opacity:1 } }
       `}</style>
       <div
-        style={{ background:"#111", border:"1px solid rgba(255,255,255,0.05)", borderRadius:24, overflow:"hidden", width:"100%", maxWidth:420, boxShadow:"0 24px 60px rgba(0,0,0,0.8)", animation:"mkSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)" }}
+        style={{ background:"#111", border:"1px solid rgba(255,255,255,0.05)", borderRadius:4, overflow:"hidden", width:"100%", maxWidth:420, boxShadow:"0 24px 60px rgba(0,0,0,0.8)", animation:"mkSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)" }}
         onClick={e => e.stopPropagation()}
       >
         {/* Colored header */}
@@ -41,11 +41,11 @@ function ModalDialog({ modal, onClose }) {
           <p style={{ fontSize:14, color:"rgba(255,255,255,0.6)", lineHeight:1.6, marginBottom:28 }}>{modal.message}</p>
           <div style={{ display:"flex", gap:12, justifyContent:"flex-end" }}>
             {isConfirm && (
-              <button onClick={() => onClose(false)} style={{ padding:"10px 24px", borderRadius:12, border:"1px solid rgba(255,255,255,0.1)", background:"transparent", color:"rgba(255,255,255,0.7)", fontWeight:700, fontSize:13, cursor:"pointer", fontFamily:"inherit", transition:"all 0.2s" }}>
+              <button onClick={() => onClose(false)} style={{ padding:"10px 24px", borderRadius:4, border:"1px solid rgba(255,255,255,0.1)", background:"transparent", color:"rgba(255,255,255,0.7)", fontWeight:700, fontSize:13, cursor:"pointer", fontFamily:"inherit", transition:"all 0.2s" }}>
                 {modal.cancelLabel || "Cancel"}
               </button>
             )}
-            <button onClick={() => onClose(true)} style={{ padding:"10px 24px", borderRadius:12, border:"none", background:v.confirmBg, color:v.confirmColor, fontWeight:900, fontSize:13, cursor:"pointer", fontFamily:"inherit", minWidth:100, transition:"all 0.2s", boxShadow:`0 0 15px ${v.confirmBg}40` }}>
+            <button onClick={() => onClose(true)} style={{ padding:"10px 24px", borderRadius:4, border:"none", background:v.confirmBg, color:v.confirmColor, fontWeight:900, fontSize:13, cursor:"pointer", fontFamily:"inherit", minWidth:100, transition:"all 0.2s", boxShadow:`0 0 15px ${v.confirmBg}40` }}>
               {isConfirm ? (modal.confirmLabel || "Confirm") : "OK"}
             </button>
           </div>

@@ -164,7 +164,7 @@ export const DEALER_HOMEPAGE_FEATURED_PRICE = 29999;
  * @returns {string}
  */
 export function formatKes(amount) {
-  return `KSh ${Number(amount).toLocaleString("en-KE")}`;
+  return `KES ${Number(amount).toLocaleString("en-KE")}`;
 }
 
 /**
@@ -202,7 +202,7 @@ export function getDealerListingPlan(planId) {
 
 /**
  * @param {DealerListingPlan} plan
- * @returns {number} Whole KSh saved vs 3× monthly.
+ * @returns {number} Whole KES saved vs 3× monthly.
  */
 export function getPrepaid3MonthSavings(plan) {
   return Math.max(0, plan.pricing.monthly * 3 - plan.pricing.months3);
@@ -210,7 +210,7 @@ export function getPrepaid3MonthSavings(plan) {
 
 /**
  * @param {DealerListingPlan} plan
- * @returns {number} Whole KSh saved vs 6× monthly.
+ * @returns {number} Whole KES saved vs 6× monthly.
  */
 export function getPrepaid6MonthSavings(plan) {
   return Math.max(0, plan.pricing.monthly * 6 - plan.pricing.months6);
@@ -218,7 +218,7 @@ export function getPrepaid6MonthSavings(plan) {
 
 /**
  * @param {DealerListingPlan} plan
- * @returns {number} Rounded KSh per live slot at monthly rate.
+ * @returns {number} Rounded KES per live slot at monthly rate.
  */
 export function getCostPerLiveSlot(plan) {
   return Math.round(plan.pricing.monthly / plan.liveListingCap);

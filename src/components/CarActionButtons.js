@@ -43,7 +43,7 @@ export default function CarActionButtons({ carId, dealerId, carTitle, price }) {
     setLoading(true);
     try {
       const parts = [];
-      if (active === "offer" && form.offer) parts.push(`Offer: KSh ${form.offer}`);
+      if (active === "offer" && form.offer) parts.push(`Offer: KES ${form.offer}`);
       if (active === "inspection" && form.date) parts.push(`Preferred date: ${form.date}`);
       if (form.note) parts.push(`Note: ${form.note}`);
       const message = parts.join(" | ");
@@ -84,7 +84,7 @@ export default function CarActionButtons({ carId, dealerId, carTitle, price }) {
   const formatPrice = (v) => {
     if (!v) return "";
     const n = parseInt(String(v).replace(/[^0-9]/g, ""), 10);
-    return n ? `KSh ${n.toLocaleString("en-KE")}` : "";
+    return n ? `KES ${n.toLocaleString("en-KE")}` : "";
   };
 
   const canAdvance = () => {
@@ -145,7 +145,7 @@ export default function CarActionButtons({ carId, dealerId, carTitle, price }) {
                   const raw = e.target.value.replace(/[^0-9]/g, "");
                   setForm({ ...form, offer: raw });
                 }}
-                placeholder="KSh 1,500,000"
+                placeholder="KES 1,500,000"
                 className="w-full border-b-2 border-zinc-200 pb-2.5 text-lg font-black text-zinc-900 outline-none focus:border-zinc-900 transition-colors bg-transparent"
               />
             </div>
@@ -237,7 +237,7 @@ export default function CarActionButtons({ carId, dealerId, carTitle, price }) {
           <button
             key={key}
             onClick={() => open(key)}
-            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[var(--accent)] bg-[var(--accent)] px-3 py-3 text-[11px] font-black uppercase tracking-wider text-white transition-all hover:brightness-110 active:scale-[0.97]"
+            className="flex-1 btn btn-primary px-1.5 sm:px-3 whitespace-normal"
           >
             <f.icon className="w-4 h-4 shrink-0" />
             <span className="leading-tight">{f.label}</span>
@@ -275,7 +275,7 @@ export default function CarActionButtons({ carId, dealerId, carTitle, price }) {
                   <div className="mb-5 text-center">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1">Est. Monthly</p>
                     <p className="text-3xl font-black text-zinc-900">
-                      KSh {monthly.toLocaleString("en-KE")}
+                      KES {monthly.toLocaleString("en-KE")}
                       <span className="text-sm font-bold text-zinc-400">/mo</span>
                     </p>
                     <p className="text-[10px] text-zinc-400 mt-1">

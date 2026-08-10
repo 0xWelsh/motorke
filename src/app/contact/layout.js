@@ -1,7 +1,7 @@
 export const metadata = {
   title: "Contact BIDGARI",
   description:
-    "Reach the BIDGARI team for support, partnerships, or press. We respond to buyer and dealer enquiries as quickly as possible.",
+    "Reach the BIDGARI team for support, partnerships, or press. We respond to every enquiry as quickly as possible.",
   alternates: { canonical: "/contact" },
 };
 

@@ -299,36 +299,17 @@ export function buildDealersDirectoryItemList(dealers) {
   };
 }
 
-/** Seller node on Vehicle JSON-LD — links listing to indexed showroom URL. */
-export function buildListingSellerSchema(dealer) {
-  if (!dealer?.name) {
-    return { "@type": "AutoDealer", name: "BIDGARI dealer", url: absoluteUrl("/dealers") };
-  }
-
-  const showroomUrl = dealer.slug ? dealerShowroomUrl(dealer.slug) : absoluteUrl("/dealers");
-
+/** Seller node on Vehicle JSON-LD — all listings are sold by BIDGARI. */
+export function buildListingSellerSchema() {
   return {
     "@type": "AutoDealer",
-    "@id": showroomUrl,
-    name: dealer.name,
-    url: showroomUrl,
-    ...(dealer.logoUrl
-      ? {
-          logo: dealer.logoUrl.startsWith("http")
-            ? dealer.logoUrl
-            : absoluteUrl(dealer.logoUrl.startsWith("/") ? dealer.logoUrl : `/${dealer.logoUrl}`),
-        }
-      : {}),
-    ...(dealer.location || dealer.county
-      ? {
-          address: {
-            "@type": "PostalAddress",
-            addressLocality: dealer.location || dealer.county,
-            addressRegion: dealer.county || undefined,
-            addressCountry: "KE",
-          },
-        }
-      : {}),
+    "@id": absoluteUrl("/"),
+    name: "BIDGARI",
+    url: absoluteUrl("/"),
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "KE",
+    },
   };
 }
 

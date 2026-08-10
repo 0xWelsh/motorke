@@ -5,6 +5,7 @@ import {
   computeCustomsValueFromCrsp,
   getAgeYearsFromYear,
   resolveCrspRatio,
+  resolveImportDutyRate,
 } from "@/lib/duty";
 
 describe("duty calculator engine", () => {
@@ -39,7 +40,9 @@ describe("duty calculator engine", () => {
 
     const cv = result.customsValue;
 
-    expect(result.importDuty).toBe(Math.round(cv * 0.35));
+    expect(resolveImportDutyRate(2000, "PETROL")).toBe(0.25);
+    expect(result.importDutyRate).toBe(0.25);
+    expect(result.importDuty).toBe(Math.round(cv * 0.25));
     expect(result.idf).toBe(Math.round(cv * 0.035));
     expect(result.rdl).toBe(Math.round(cv * 0.02));
     expect(result.excise).toBe(Math.round((cv + result.importDuty) * 0.25));
@@ -51,10 +54,11 @@ describe("duty calculator engine", () => {
     expect(result.totalTaxes).toBeLessThan(crsp);
   });
 
-  test("2018 Land Cruiser V8 diesel — CRSP ratio and 35% excise", () => {
+  test("2018 Land Cruiser V8 diesel — CRSP ratio and 35% import duty + excise", () => {
     const crsp = 8_500_000;
     const ageYears = getAgeYearsFromYear(2018);
     expect(resolveCrspRatio(4500, "DIESEL")).toBe(0.378);
+    expect(resolveImportDutyRate(4500, "DIESEL")).toBe(0.35);
 
     const { customsValue, depreciatedCrsp, crspRatio } = computeCustomsValueFromCrsp({
       crspKes: crsp,
@@ -83,5 +87,15 @@ describe("duty calculator engine", () => {
     expect(result.rdl).toBe(22_491);
     expect(result.totalTaxes).toBe(1_314_712);
     expect(result.exciseRate).toBe(0.35);
+    expect(result.importDutyRate).toBe(0.35);
+  });
+
+  test("import duty band resolution: 35% only for large engines", () => {
+    expect(resolveImportDutyRate(1500, "PETROL")).toBe(0.25);
+    expect(resolveImportDutyRate(3000, "PETROL")).toBe(0.25);
+    expect(resolveImportDutyRate(3001, "PETROL")).toBe(0.35);
+    expect(resolveImportDutyRate(2500, "DIESEL")).toBe(0.25);
+    expect(resolveImportDutyRate(2501, "DIESEL")).toBe(0.35);
+    expect(resolveImportDutyRate(4500, "DIESEL")).toBe(0.35);
   });
 });

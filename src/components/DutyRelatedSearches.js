@@ -7,10 +7,10 @@ export default function DutyRelatedSearches({ vehicle = null }) {
 
   return (
     <nav
-      className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] font-semibold uppercase tracking-wide text-zinc-400"
+      className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] font-semibold uppercase tracking-wide text-slate-500"
       aria-label="Related searches"
     >
-      <span className="text-zinc-400 font-black tracking-widest w-full sm:w-auto">
+      <span className="text-slate-500 font-black tracking-widest w-full sm:w-auto">
         Related:
       </span>
       {links.map((item) => (

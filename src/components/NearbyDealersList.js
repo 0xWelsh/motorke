@@ -72,21 +72,21 @@ export default function NearbyDealersList() {
   const btnBase =
     "inline-flex items-center justify-center gap-1.5 rounded-md border text-[10px] font-bold uppercase tracking-[0.1em] transition disabled:opacity-50";
   const btnPrimary = `${btnBase} border-[var(--accent)] bg-[var(--accent)] text-white hover:opacity-90`;
-  const btnSecondary = `${btnBase} border-white/[0.08] bg-[#1e1e1e] text-white hover:bg-white/[0.03]`;
+  const btnSecondary = `${btnBase} border-slate-300 bg-white text-slate-700 hover:bg-slate-100`;
 
   return (
     <div className="space-y-4">
       {/* Controls */}
       <div className="flex flex-col gap-3">
         <div className="w-full">
-          <label className="block text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1.5">
+          <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1.5">
             Search radius
           </label>
           <select
             value={radius}
             onChange={(e) => setRadius(Number(e.target.value))}
             disabled={loading}
-            className="w-full px-3 py-2 text-sm font-medium border border-white/[0.08] text-white bg-[#1e1e1e] disabled:opacity-50 outline-none rounded-xl"
+            className="w-full px-3 py-2 text-sm font-medium border border-slate-300 text-slate-900 bg-slate-50 disabled:opacity-50 outline-none rounded-xl"
           >
             <option value={5}>5 km</option>
             <option value={10}>10 km</option>
@@ -160,16 +160,16 @@ export default function NearbyDealersList() {
 
       {/* Error State */}
       {error && (
-        <div className="flex items-start gap-2.5 p-3 bg-red-950/30 border border-red-900 rounded-md">
+        <div className="flex items-start gap-2.5 p-3 bg-red-50 border border-red-200 rounded-md">
           <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
-          <p className="text-xs font-medium text-red-200 leading-relaxed">{error}</p>
+          <p className="text-xs font-medium text-red-700 leading-relaxed">{error}</p>
         </div>
       )}
 
       {/* Results */}
       {dealers !== null && (
         <div className="space-y-2">
-          <p className="text-[11px] font-semibold text-zinc-400">
+          <p className="text-[11px] font-semibold text-slate-500">
             {dealers.length} dealer{dealers.length !== 1 ? "s" : ""} found
             {locationSource && ` · ${locationSource === "saved" ? "Saved" : "Current"} location`}
           </p>
@@ -180,13 +180,13 @@ export default function NearbyDealersList() {
                 <Link
                   key={dealer.id}
                   href={`/dealers/${dealer.slug}`}
-                  className="flex items-center justify-between gap-3 p-3 border border-white/[0.08] hover:border-[var(--accent)]/40 hover:bg-white/[0.03] transition rounded-xl"
+                  className="flex items-center justify-between gap-3 p-3 border border-slate-200 hover:border-[var(--accent)]/40 hover:bg-slate-100 transition rounded-xl"
                 >
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-bold text-white truncate">{dealer.name}</h3>
-                    <p className="text-xs text-zinc-400 truncate">{dealer.location}</p>
+                    <h3 className="text-sm font-bold text-slate-900 truncate">{dealer.name}</h3>
+                    <p className="text-xs text-slate-500 truncate">{dealer.location}</p>
                     {dealer._count?.cars > 0 && (
-                      <p className="text-[10px] font-semibold text-zinc-400 mt-0.5">
+                      <p className="text-[10px] font-semibold text-slate-500 mt-0.5">
                         {dealer._count.cars} car{dealer._count.cars !== 1 ? "s" : ""}
                       </p>
                     )}
@@ -197,7 +197,7 @@ export default function NearbyDealersList() {
                       <MapPin className="w-3 h-3" />
                       {formatDistance(dealer.distance)}
                     </span>
-                    <ChevronRight className="w-4 h-4 text-zinc-400" />
+                    <ChevronRight className="w-4 h-4 text-slate-500" />
                   </div>
                 </Link>
               ))}

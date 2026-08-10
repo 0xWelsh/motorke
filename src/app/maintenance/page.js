@@ -12,7 +12,7 @@ export default function MaintenancePage() {
     <main
       role="main"
       aria-labelledby="maintenance-heading"
-      className="min-h-[100dvh] bg-[#141414] flex items-center justify-center px-6 py-12"
+      className="min-h-[100dvh] bg-[var(--bg)] flex items-center justify-center px-6 py-12"
     >
       <div className="w-full max-w-md text-center">
         {/* Building animation */}
@@ -29,7 +29,7 @@ export default function MaintenancePage() {
           ))}
         </div>
 
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/[0.06] bg-white/[0.03] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-zinc-400">
+        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">
           <span className="relative flex h-1.5 w-1.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--accent)] opacity-70" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--accent)]" />
@@ -39,36 +39,36 @@ export default function MaintenancePage() {
 
         <h1
           id="maintenance-heading"
-          className="text-3xl font-black tracking-tight text-white sm:text-4xl"
+          className="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl"
         >
           We&rsquo;ll be right back.
         </h1>
 
-        <p className="mt-4 text-sm leading-relaxed text-zinc-400 sm:text-base">
+        <p className="mt-4 text-sm leading-relaxed text-slate-500 sm:text-base">
           BIDGARI is offline for a short window while we rebuild a few things.
           Your account, saved cars, and dealer inventory are safe.
         </p>
 
-        <p className="mt-2 text-sm leading-relaxed text-zinc-400 sm:text-base">
+        <p className="mt-2 text-sm leading-relaxed text-slate-500 sm:text-base">
           Try again in a few minutes &mdash; or reach us in the meantime.
         </p>
 
         <div className="mt-8 flex flex-col items-center gap-2 text-sm">
           <a
             href="mailto:hello@welshmotorhub.co.ke"
-            className="font-bold text-white underline-offset-4 hover:underline"
+            className="font-bold text-slate-900 underline-offset-4 hover:underline"
           >
             hello@welshmotorhub.co.ke
           </a>
           <a
             href="https://wa.me/254700000000"
-            className="text-zinc-400 hover:text-[var(--accent)]"
+            className="text-slate-500 hover:text-[var(--accent)]"
           >
             WhatsApp support
           </a>
         </div>
 
-        <p className="mt-10 text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-600">
+        <p className="mt-10 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
           BIDGARI &middot; Kenya
         </p>
       </div>

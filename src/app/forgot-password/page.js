@@ -45,22 +45,22 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#1c1c1c] px-4 py-8 sm:px-6 sm:py-12">
+    <div className="min-h-screen bg-[var(--bg)] px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto w-full max-w-md">
         <Link
           href="/login"
-          className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-white hover:text-white"
+          className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-900 hover:text-slate-900"
         >
           <ArrowLeft size={14} /> Back to Sign In
         </Link>
 
-        <div className="mt-6 rounded-[1.75rem] border border-white/[0.06] bg-[#1c1c1c] p-6 sm:p-8">
+        <div className="mt-6 rounded-xl border border-slate-200 bg-white p-6 sm:p-8">
           <div className="mb-6">
             <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
               <ShieldCheck size={20} />
             </div>
-            <h1 className="mt-4 text-2xl font-black tracking-tight text-white">Forgot your password?</h1>
-            <p className="mt-2 text-sm font-medium text-zinc-400">
+            <h1 className="mt-4 text-2xl font-black tracking-tight text-slate-900">Forgot your password?</h1>
+            <p className="mt-2 text-sm font-medium text-slate-500">
               Enter your account email and we will send a secure reset link.
             </p>
           </div>
@@ -80,11 +80,11 @@ export default function ForgotPasswordPage() {
               name="website"
             />
 
-            <label className="block text-[11px] font-black uppercase tracking-[0.22em] text-zinc-400" htmlFor="email">
+            <label className="block text-[11px] font-black uppercase tracking-[0.22em] text-slate-500" htmlFor="email">
               Email Address
             </label>
             <div className="relative">
-              <Mail className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
+              <Mail className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
               <input
                 id="email"
                 type="email"
@@ -93,7 +93,7 @@ export default function ForgotPasswordPage() {
                 required
                 autoComplete="email"
                 placeholder="you@example.com"
-                className="w-full rounded-2xl border border-white/[0.06] bg-white/[0.03] py-3 pl-11 pr-4 text-sm font-semibold text-white outline-none transition focus:border-[var(--accent)]"
+                className="w-full rounded-2xl border border-slate-300 bg-slate-50 py-3 pl-11 pr-4 text-sm font-semibold text-slate-900 outline-none transition focus:border-[var(--accent)]"
               />
             </div>
 
@@ -102,15 +102,15 @@ export default function ForgotPasswordPage() {
             <button
               type="submit"
               disabled={loading || !email || !captchaToken}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-4 py-3 text-[11px] font-black uppercase tracking-[0.2em] text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+              className="w-full btn btn-primary btn-lg"
             >
               {loading ? <Loader2 className="animate-spin" size={15} /> : null}
               Send Reset Link
             </button>
           </form>
 
-          <p className="mt-5 text-xs font-semibold text-zinc-400">
-            Need help now? Contact <a href={`mailto:${PUBLIC_SUPPORT_EMAIL}`} className="text-white underline underline-offset-2">{PUBLIC_SUPPORT_EMAIL}</a>
+          <p className="mt-5 text-xs font-semibold text-slate-500">
+            Need help now? Contact <a href={`mailto:${PUBLIC_SUPPORT_EMAIL}`} className="text-slate-900 underline underline-offset-2">{PUBLIC_SUPPORT_EMAIL}</a>
           </p>
         </div>
       </div>

@@ -170,7 +170,7 @@ export function buildListingTailoredWiki(car) {
   const specP2 = `Key checks for this ${fuel}${transNote}${mileageNote}: ${inspect.join("; ")}.`;
 
   // ── Paragraph 3: dealer questions + running costs ──
-  let p3 = "Ask the dealer for import documents, logbook, and service history. ";
+  let p3 = "Ask the BIDGARI team for import documents, logbook, and service history. ";
   if (mileageStr) {
     p3 += `At ${mileageStr}, confirm major services (timing belt, transmission fluid, suspension) are done or due soon. `;
   } else {

@@ -6,9 +6,9 @@ import { Search } from "lucide-react";
 import { BRANDS, BODY_TYPES, COUNTIES } from "@/lib/browse-catalog";
 
 const selectCls =
-  "w-full border border-white/[0.06] bg-[#1c1c1c] px-3 py-2.5 text-[12px] font-semibold text-white outline-none focus:border-[var(--accent)]";
+  "w-full border border-slate-200 bg-white px-3 py-2.5 text-[12px] font-semibold text-slate-900 outline-none focus:border-[var(--accent)] rounded-lg";
 
-const labelCls = "text-[9px] font-black uppercase tracking-[0.16em] text-zinc-400";
+const labelCls = "text-[9px] font-black uppercase tracking-[0.16em] text-slate-400";
 
 export default function HomepageHeroCarFinder({ embedded = false, className = "" }) {
   const router = useRouter();
@@ -102,8 +102,8 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
     <div
       className={
         embedded
-          ? `h-full w-full rounded-xl border border-white/[0.06] bg-[#1e1e1e]/92 p-3 sm:p-4 shadow-sm ${className}`.trim()
-          : `mt-8 sm:mt-10 lg:mt-12 w-full max-w-4xl mx-auto rounded-2xl border border-white/[0.06] bg-[#1e1e1e]/95 p-4 sm:p-5 md:p-6 shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] ${className}`.trim()
+          ? `h-full w-full rounded-xl border border-slate-200 bg-white p-3 sm:p-4 shadow-sm ${className}`.trim()
+          : `mt-8 sm:mt-10 lg:mt-12 w-full max-w-4xl mx-auto rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 md:p-6 shadow-sm ${className}`.trim()
       }
       style={{ borderRadius: "var(--radius)" }}
     >
@@ -115,7 +115,7 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
         Find your car
       </p>
       <h2
-        className={`font-bold text-white mb-3 sm:mb-4 ${
+        className={`font-bold text-slate-900 mb-3 sm:mb-4 ${
           embedded ? "text-base text-left" : "text-lg sm:text-xl text-center mb-4 sm:mb-5"
         }`}
       >
@@ -257,8 +257,7 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
 
         <button
           type="submit"
-          className="w-full h-12 inline-flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[#2F855A] text-white text-xs font-black uppercase tracking-widest transition-colors"
-          style={{ borderRadius: "var(--radius)" }}
+          className="btn btn-primary btn-lg w-full"
         >
           <Search className="h-4 w-4" aria-hidden />
           Search listings

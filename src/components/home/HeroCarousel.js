@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import { carListingPath } from "@/lib/car-listing-url";
 import { getThumbnailUrl } from "@/lib/image-transform";
 
@@ -13,7 +13,7 @@ export default function HeroCarousel({ cars = [] }) {
     if (cars.length < 2) return;
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % cars.length);
-    }, 4000);
+    }, 4500);
     return () => clearInterval(timer);
   }, [cars.length]);
 
@@ -29,89 +29,93 @@ export default function HeroCarousel({ cars = [] }) {
     car.transmission || null,
   ].filter(Boolean);
 
+  const go = (dir) => setIndex((safeIndex + dir + cars.length) % cars.length);
+
   return (
-    <div className="relative w-full max-w-lg mx-auto">
-      <div className="relative flex items-center">
-        {cars.length > 1 && (
-          <button
-            type="button"
-            onClick={() => setIndex((safeIndex - 1 + cars.length) % cars.length)}
-            className="absolute -left-3 z-10 w-8 h-8 flex items-center justify-center bg-[#1e1e1e]/80 backdrop-blur-md border border-white/[0.08] hover:bg-[#1a1a1a] hover:border-white/[0.15] transition-all rounded-lg"
-            aria-label="Previous car"
-          >
-            <ChevronLeft className="w-4 h-4 text-zinc-400" />
-          </button>
-        )}
+    <div className="relative">
+      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-sm sm:aspect-[16/7]">
+        <div className="absolute inset-0">
+          {imgUrl ? (
+            <Image
+              src={getThumbnailUrl(imgUrl, 1280)}
+              alt={`${car.year} ${car.make} ${car.model}`}
+              fill
+              priority
+              className="object-cover"
+              sizes="(min-width:1024px) 900px, 100vw"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center">
+              <span className="text-6xl font-black text-slate-300">{car.make?.[0]}</span>
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" aria-hidden />
+        </div>
 
         <Link
           href={carListingPath(car)}
-          className="flex w-full overflow-hidden bg-[#1c1c1c] border border-white/[0.06] hover:border-white/[0.12] transition-all group rounded-xl"
+          className="absolute inset-0 z-10 flex flex-col justify-end p-4 sm:p-6"
         >
-          <div className="relative w-[140px] shrink-0 bg-[#1e1e1e]">
-            {imgUrl ? (
-              <Image
-                src={getThumbnailUrl(imgUrl, 140)}
-                alt={`${car.year} ${car.make} ${car.model}`}
-                fill
-                className="object-cover"
-                sizes="140px"
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-2xl font-black text-zinc-700">{car.make?.[0]}</span>
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col justify-between min-w-0 flex-1 px-3 py-2.5 gap-1">
-            <div className="min-w-0">
-              <p className="text-[10px] font-semibold tracking-wider uppercase text-zinc-500">
-                {car.year}  ·  {car.make}
-              </p>
-              <h3 className="text-sm font-bold text-white leading-tight truncate group-hover:text-[var(--accent)] transition-colors">
-                {car.model}{car.variant ? ` ${car.variant}` : ""}
-              </h3>
+          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/80">
+            {car.year} · {car.make}
+          </p>
+          <h2 className="mt-0.5 text-lg font-black leading-tight text-white sm:text-2xl lg:text-3xl">
+            {car.model}
+            {car.variant ? ` ${car.variant}` : ""}
+          </h2>
+          {details.length > 0 && (
+            <div className="mt-1.5 flex flex-wrap gap-1.5">
+              {details.map((d) => (
+                <span
+                  key={d}
+                  className="rounded bg-white/15 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white backdrop-blur-sm sm:text-[10px]"
+                >
+                  {d}
+                </span>
+              ))}
             </div>
-            <div className="min-w-0">
-              <span className="text-xs font-bold text-[var(--accent)]">
-                KSh {Number(car.price).toLocaleString("en-KE")}
-              </span>
-            </div>
-            {details.length > 0 && (
-              <div className="flex flex-wrap gap-1">
-                {details.map((d) => (
-                  <span
-                    key={d}
-                    className="text-[9px] font-semibold uppercase tracking-wider text-zinc-500 bg-white/[0.04] px-1.5 py-0.5 rounded-md"
-                  >
-                    {d}
-                  </span>
-                ))}
-              </div>
-            )}
+          )}
+          <div className="mt-3 flex items-baseline gap-4">
+            <span className="text-base font-black text-white sm:text-xl">
+              KES {Number(car.price).toLocaleString("en-KE")}
+            </span>
+            <span className="hidden items-center gap-1 text-[10px] font-black uppercase tracking-widest text-white/85 sm:inline-flex">
+              View details <ArrowUpRight className="h-3.5 w-3.5" />
+            </span>
           </div>
         </Link>
 
         {cars.length > 1 && (
-          <button
-            type="button"
-            onClick={() => setIndex((safeIndex + 1) % cars.length)}
-            className="absolute -right-3 z-10 w-8 h-8 flex items-center justify-center bg-[#1e1e1e]/80 backdrop-blur-md border border-white/[0.08] hover:bg-[#1a1a1a] hover:border-white/[0.15] transition-all rounded-lg"
-            aria-label="Next car"
-          >
-            <ChevronRight className="w-4 h-4 text-zinc-400" />
-          </button>
+          <>
+            <button
+              type="button"
+              onClick={() => go(-1)}
+              className="absolute left-2 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-90 shadow-sm transition-all hover:bg-white hover:opacity-100 sm:left-3 sm:h-10 sm:w-10"
+              aria-label="Previous car"
+            >
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => go(1)}
+              className="absolute right-2 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-90 shadow-sm transition-all hover:bg-white hover:opacity-100 sm:right-3 sm:h-10 sm:w-10"
+              aria-label="Next car"
+            >
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+          </>
         )}
       </div>
 
       {cars.length > 1 && (
-        <div className="flex justify-center gap-1.5 mt-2">
+        <div className="mt-2.5 flex justify-center gap-1.5">
           {cars.slice(0, Math.min(cars.length, 8)).map((_, i) => (
             <button
               key={i}
               type="button"
               onClick={() => setIndex(i)}
               className={`rounded-full transition-all duration-300 ${
-                i === safeIndex ? "w-5 h-1.5 bg-[var(--accent)]" : "w-1.5 h-1.5 bg-zinc-700 hover:bg-zinc-500"
+                i === safeIndex ? "h-2 w-6 bg-[var(--accent)]" : "h-2 w-2 bg-slate-300 hover:bg-slate-400"
               }`}
               aria-label={`View car ${i + 1}`}
             />

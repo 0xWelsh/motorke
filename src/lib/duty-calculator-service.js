@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { calculateDutyBreakdown, FREIGHT_PROXY_KES, getAgeYearsFromYear } from "@/lib/duty";
 import { getDutyRates } from "@/lib/duty-rates";
+import { unstable_cache } from "next/cache";
 import {
   assessImportEligibility,
   getImportYearWindow,
@@ -121,7 +122,7 @@ export function serializeDutyVehicleForClient(vehicle) {
   };
 }
 
-export async function getPopularDutyVehicles({ take = 8 } = {}) {
+async function fetchPopularDutyVehicles({ take = 8 } = {}) {
   try {
     const grouped = await db.dutyCalculation.groupBy({
       by: ["dutyVehicleId"],
@@ -171,6 +172,16 @@ export async function getPopularDutyVehicles({ take = 8 } = {}) {
   }
 }
 
+/**
+ * Trending-then-curated “popular” vehicles, cached to avoid DB hits on every
+ * /duty view. Revalidates every 10 minutes or via the tag.
+ */
+export const getPopularDutyVehicles = unstable_cache(
+  async (options = {}) => fetchPopularDutyVehicles(options),
+  ["duty-popular-vehicles"],
+  { revalidate: 600, tags: ["duty-popular-vehicles"] },
+);
+
 export async function computeDutyEstimate(input) {
   const { rates } = await getDutyRates();
   const year = Number(input.year);
@@ -195,7 +206,10 @@ export async function computeDutyEstimate(input) {
 
   const importEligibility = assessImportEligibility(year);
   const totalTaxes = Math.round(breakdown.totalTaxes);
-  const freightProxyKes = FREIGHT_PROXY_KES;
+  const freightProxyKes =
+    input.freightKes != null && Number(input.freightKes) > 0
+      ? Math.round(Number(input.freightKes))
+      : FREIGHT_PROXY_KES;
   const clearingEstimate = totalTaxes + freightProxyKes;
   const totalLandedWithPurchase = purchasePriceKes
     ? purchasePriceKes + clearingEstimate
@@ -211,7 +225,7 @@ export async function computeDutyEstimate(input) {
     crspKes,
     ageYears,
     importEligibility,
-    freightProxyKes: FREIGHT_PROXY_KES,
+    freightProxyKes,
     purchasePriceKes,
     breakdown: {
       customsValue: breakdown.customsValue,

@@ -1,6 +1,6 @@
 // src/app/api/admin/diagnostics/images/route.js
 // Admin-only image health check. Pings every car_images.url with HEAD and
-// reports which ones are dead. Also probes the Supabase bucket directly to
+// reports which ones are dead. Also probes the R2 bucket directly to
 // distinguish "the whole project is down" from "a few orphan URLs".
 
 export const dynamic = "force-dynamic";
@@ -9,12 +9,7 @@ export const maxDuration = 60;
 import { NextResponse } from "next/server";
 import { getSessionFromRequest } from "@/lib/auth";
 import { db } from "@/lib/db";
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SERVICE_KEY =
-  process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const BUCKET = "car-images";
+import { probeR2Bucket } from "@/lib/storage";
 
 async function headOnce(url, timeoutMs = 4000) {
   if (!url || typeof url !== "string") return { ok: false, status: 0, reason: "empty" };
@@ -45,32 +40,14 @@ async function headOnce(url, timeoutMs = 4000) {
 }
 
 async function probeBucket() {
-  if (!SUPABASE_URL || !SERVICE_KEY) {
-    return { configured: false, reachable: false, public: null, reason: "env_missing" };
-  }
-  try {
-    const res = await fetch(`${SUPABASE_URL}/storage/v1/bucket/${BUCKET}`, {
-      headers: { Authorization: `Bearer ${SERVICE_KEY}` },
-    });
-    if (!res.ok) {
-      return {
-        configured: true,
-        reachable: false,
-        public: null,
-        status: res.status,
-        reason: "bucket_unreachable",
-      };
-    }
-    const body = await res.json().catch(() => ({}));
-    return {
-      configured: true,
-      reachable: true,
-      public: Boolean(body?.public),
-      name: body?.name || BUCKET,
-    };
-  } catch (err) {
-    return { configured: true, reachable: false, public: null, reason: "network_error" };
-  }
+  const probe = await probeR2Bucket();
+  return {
+    configured: probe.configured,
+    reachable: probe.reachable,
+    name: probe.name,
+    error: probe.error ?? null,
+    status: probe.status ?? null,
+  };
 }
 
 export async function GET(request) {
@@ -146,12 +123,12 @@ export async function GET(request) {
         statuses: Array.from(c.statuses),
       })),
       hint: bucket.reachable === false
-        ? "Bucket is not reachable. Likely a paused Supabase project, rotated SUPABASE_URL, or invalid service key."
-        : bucket.public === false
-          ? "Bucket exists but is no longer marked public. Public URLs will 404 until you re-enable public access in Supabase Storage."
-          : broken.length > 0
-            ? "Bucket is healthy but some object paths are missing or returned non-image responses. Likely cleaned up or never finished uploading."
-            : "All sampled images responded with image content. No action needed.",
+        ? bucket.configured === false
+          ? "R2 credentials are missing (R2_ENDPOINT / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY / R2_PUBLIC_URL). Configure them in Vercel."
+          : "R2 bucket is not reachable. Likely rotated R2 credentials, missing bucket, or invalid endpoint."
+        : broken.length > 0
+          ? "Bucket is reachable but some object paths are missing or returned non-image responses. Likely cleaned up or never finished uploading."
+          : "All sampled images responded with image content. No action needed.",
     },
     { headers: { "Cache-Control": "no-store" } }
   );

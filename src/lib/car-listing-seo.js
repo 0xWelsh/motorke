@@ -8,9 +8,9 @@ export function formatPriceForTitle(amount) {
   if (n >= 1_000_000) {
     const m = n / 1_000_000;
     const rounded = m >= 10 ? Math.round(m) : Math.round(m * 10) / 10;
-    return `KSh ${String(rounded).replace(/\.0$/, "")}M`;
+    return `KES ${String(rounded).replace(/\.0$/, "")}M`;
   }
-  if (n >= 1_000) return `KSh ${Math.round(n / 1_000)}K`;
+  if (n >= 1_000) return `KES ${Math.round(n / 1_000)}K`;
   return formatPrice(n);
 }
 
@@ -72,9 +72,8 @@ export function buildCarListingDescription(car, dealer) {
   const variant = car.variant ? ` ${car.variant}` : "";
   const vehicle = `${car.year} ${car.make} ${car.model}${variant}`;
   const place = car.location || dealer?.location || dealer?.county || "Kenya";
-  const dealerName = dealer?.name || "the dealer";
   const priceStr = formatCarPrice(car);
-  const desc = `Buy a ${vehicle} in ${place} for ${priceStr}. Compare specs, running costs, and contact ${dealerName} on BIDGARI.`;
+  const desc = `Buy a ${vehicle} in ${place} for ${priceStr}. Compare specs, running costs, and contact the BIDGARI team to handle the sale for you.`;
   return desc.length > 160 ? desc.slice(0, 157) + "…" : desc;
 }
 
@@ -101,7 +100,7 @@ export function mapCarImagesWithAlt(car, images) {
 }
 
 export function buildCarListingDealerMetadata(car, dealer) {
-  const dealerName = dealer?.name || "Verified dealer";
+  const dealerName = "BIDGARI";
   const place = car.location || dealer?.location || dealer?.county || "Kenya";
   return {
     title: buildCarListingTitle(car),

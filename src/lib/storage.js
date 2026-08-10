@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, DeleteObjectCommand, HeadBucketCommand } from "@aws-sdk/client-s3";
 import sharp from "sharp";
 
 const R2_ENDPOINT = process.env.R2_ENDPOINT;
@@ -31,6 +31,35 @@ async function s3Upload(key, buffer, mimeType) {
       ContentType: mimeType,
     })
   );
+}
+
+/**
+ * Lightweight bucket reachability check used by /api/health and monitoring.
+ * Verifies R2 endpoint + credentials + bucket in one S3 HeadBucket call.
+ * Does NOT check public accessibility (R2 doesn't expose that via S3); the
+ * per-object HEAD probes in the diagnostics/cron routes cover that instead.
+ * @returns {{ configured: boolean, reachable: boolean, name: string, error?: string, status?: number }}
+ */
+export async function probeR2Bucket() {
+  if (!R2_ENDPOINT || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY || !R2_PUBLIC_URL) {
+    return { configured: false, reachable: false, name: R2_BUCKET_NAME, error: "env_missing" };
+  }
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), 5000);
+  try {
+    await s3.send(new HeadBucketCommand({ Bucket: R2_BUCKET_NAME }), { abortSignal: controller.signal });
+    return { configured: true, reachable: true, name: R2_BUCKET_NAME };
+  } catch (err) {
+    return {
+      configured: true,
+      reachable: false,
+      name: R2_BUCKET_NAME,
+      status: err?.$metadata?.httpStatusCode ?? err?.name ?? "network_error",
+      error: err?.name === "AbortError" ? "timeout" : "bucket_unreachable",
+    };
+  } finally {
+    clearTimeout(t);
+  }
 }
 
 export async function uploadImage(buffer, filename, mimeType, _bucketNameIgnored) {

@@ -101,7 +101,7 @@ export default function DealerShowroomShare({
           type="button"
           onClick={() => shareNative()}
           disabled={!url}
-          className="flex-1 inline-flex items-center justify-center gap-2 bg-white/[0.03] text-white py-3.5 text-center text-[11px] font-bold uppercase tracking-widest disabled:opacity-50 border border-white/[0.06] rounded-xl"
+          className="flex-1 inline-flex items-center justify-center gap-2 bg-white text-slate-700 py-3.5 text-center text-[11px] font-bold uppercase tracking-widest disabled:opacity-50 border border-slate-300 rounded-xl"
         >
           <Share2 className="w-4 h-4 shrink-0" aria-hidden />
           {copied ? "Link copied" : "Share"}

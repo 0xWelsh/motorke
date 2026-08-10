@@ -7,7 +7,7 @@ export default function FeatureList({ features, className = "" }) {
 
   return (
     <div className="relative">
-      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-zinc-800 hidden sm:block" aria-hidden />
+      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-slate-200 hidden sm:block" aria-hidden />
       <ul
         className={`grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 ${className}`}
         aria-label="Vehicle features"
@@ -15,7 +15,7 @@ export default function FeatureList({ features, className = "" }) {
         {list.map((feature, index) => (
           <li
             key={`${index}-${feature}`}
-            className="flex items-center gap-2 text-[13px] sm:text-[14px] leading-snug text-zinc-200"
+            className="flex items-center gap-2 text-[13px] sm:text-[14px] leading-snug text-slate-700"
           >
             <Check className="w-4 h-4 shrink-0 text-[var(--accent)]" aria-hidden />
             <span>{feature}</span>

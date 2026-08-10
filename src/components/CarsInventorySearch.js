@@ -212,7 +212,7 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
         <button
           type="button"
           onClick={requestLocation}
-          className="meta-label text-zinc-400 hover:text-[var(--brand-primary)] transition-colors flex items-center gap-1.5"
+          className="meta-label text-slate-500 hover:text-[var(--brand-primary)] transition-colors flex items-center gap-1.5"
         >
           <MapPin size={12} aria-hidden />
           {mergeFromUrl.lat && mergeFromUrl.lng ? "Location Active" : "Find Nearest"}
@@ -220,7 +220,7 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
       </div>
       <form onSubmit={handleSubmit} className="relative flex flex-col gap-3 sm:flex-row sm:items-stretch">
         <div className="relative min-w-0 flex-1">
-          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" aria-hidden />
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" aria-hidden />
           <input
             name="search"
             value={search}
@@ -249,7 +249,7 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
                 setSearch("");
                 pushQuery({ search: "" });
               }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-zinc-400 hover:bg-white/[0.03] transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-slate-500 hover:bg-slate-100 transition-colors"
               aria-label="Clear search"
             >
               <X className="h-4 w-4" />
@@ -261,7 +261,7 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
               suggestions={suggestions}
               loading={loadingSuggestions}
               inputValue={debouncedTerm || search}
-              className="left-0 right-0 top-[calc(100%+8px)] z-50 max-w-none min-w-0 sm:max-w-[min(100%,40rem)] shadow-[0_20px_50px_rgba(0,0,0,0.2)]"
+              className="left-0 right-0 top-[calc(100%+8px)] z-50 max-w-none min-w-0 sm:max-w-[min(100%,40rem)] shadow-sm"
               onClose={() => setShowSuggestions(false)}
               onSelect={(value) => {
                 setSearch(value);

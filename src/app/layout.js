@@ -13,20 +13,13 @@ import { headers, cookies } from "next/headers";
 import { SaveDataProvider } from "@/components/SaveDataProvider";
 import { isSaveDataRequest, SAVE_DATA_COOKIE } from "@/lib/save-data";
 
-import { Playfair_Display, DM_Sans, Roboto } from "next/font/google";
+import { DM_Sans, Roboto, Inter } from "next/font/google";
 import { BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  weight: ["400", "600", "700"],
-  display: "swap",
-});
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["400", "500", "700"],
+  weight: ["400", "500", "700", "800"],
   display: "swap",
 });
 
@@ -37,6 +30,13 @@ const roboto = Roboto({
   display: "swap",
 });
 
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
 export const metadata = {
   metadataBase: new URL(getSiteOrigin()),
     title: {
@@ -44,15 +44,15 @@ export const metadata = {
       template: "%s | BIDGARI",
     },
     description:
-      "BIDGARI is Kenya's verified car marketplace. Browse dealer inventory across Nairobi, Mombasa, Kisumu and beyond. Compare specs, duties, and running costs, then contact dealers directly.",
+      "BIDGARI is Kenya's verified car marketplace. Browse verified inventory across Nairobi, Mombasa, Kisumu and beyond. Compare specs, duties, and running costs, then buy handled end-to-end by BIDGARI.",
     applicationName: "BIDGARI",
     category: "automotive",
     keywords: [
       "used cars Kenya",
       "cars for sale Kenya",
-      "car dealers Nairobi",
-      "car dealers Mombasa",
-      "verified car dealers Kenya",
+      "used cars Nairobi",
+      "used cars Mombasa",
+      "buy cars online Kenya",
       "compare cars Kenya",
       "vehicle marketplace Kenya",
     ],
@@ -89,14 +89,14 @@ export const metadata = {
       url: getSiteOrigin(),
       title: "BIDGARI | Find Your Car in Kenya",
       description:
-        "Browse verified vehicles from trusted dealers across Kenya. Compare specs, costs, and contact dealers directly.",
+        "Browse verified vehicles for sale across Kenya. Compare specs and costs, and buy handled end-to-end by BIDGARI.",
       images: [{ url: BRAND_OG_IMAGE, width: 1200, height: 630, alt: "BIDGARI" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "BIDGARI | Find Your Car in Kenya",
       description:
-        "Browse verified vehicles from trusted dealers across Kenya. Compare specs, costs, and contact dealers directly.",
+        "Browse verified vehicles for sale across Kenya. Compare specs and costs, and buy handled end-to-end by BIDGARI.",
       images: [BRAND_OG_IMAGE],
   },
   icons: {
@@ -117,7 +117,7 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#141414",
+  themeColor: "#f6f6f4",
 };
 
 export default async function RootLayout({ children }) {
@@ -155,7 +155,7 @@ export default async function RootLayout({ children }) {
     logo: `${origin}/headerlogo.png`,
     image: `${origin}${BRAND_OG_IMAGE}`,
     description:
-      "BIDGARI is Kenya's verified car marketplace connecting buyers with trusted dealers across the country.",
+      "BIDGARI is Kenya's verified car marketplace, with one trusted team handling every sale for buyers across the country.",
     areaServed: { "@type": "Country", name: "Kenya" },
     address: { "@type": "PostalAddress", addressCountry: "KE", addressLocality: "Nairobi" },
     ...(sameAs.length ? { sameAs } : {}),
@@ -197,9 +197,9 @@ export default async function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }}
         />
       </head>
-      <body className={`${playfair.variable} ${dmSans.variable} ${roboto.variable} dark bg-background text-slate-100 min-h-screen antialiased flex flex-col font-sans`}>
+      <body className={`${dmSans.variable} ${roboto.variable} ${inter.variable} bg-background text-slate-800 min-h-screen antialiased flex flex-col font-sans`}>
         <PWARegister />
-        <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
           <SaveDataProvider saveData={saveData}>
             <AnalyticsBootstrap />
             <CompareProvider>

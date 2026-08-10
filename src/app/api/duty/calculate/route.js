@@ -22,6 +22,8 @@ const bodySchema = z.object({
   sessionKey: z.string().max(64).optional(),
   /** Overseas purchase / CIF in KES — for all-in landed estimate (not CRSP). */
   purchasePriceKes: z.coerce.number().int().positive().optional(),
+  /** Freight + export/clearing-to-port in KES. Defaults to a proxy when omitted. */
+  freightKes: z.coerce.number().int().positive().optional(),
 });
 
 export async function POST(request) {
@@ -69,6 +71,7 @@ export async function POST(request) {
     fuelType,
     crspKes,
     purchasePriceKes: data.purchasePriceKes,
+    freightKes: data.freightKes,
     slug: vehicle?.slug,
     label: vehicle ? dutyVehicleLabel(vehicle) : undefined,
   });

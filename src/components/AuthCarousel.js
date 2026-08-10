@@ -14,7 +14,7 @@ const SLIDES = [
   },
   {
     title: "Direct Chat",
-    desc: "Speak with verified dealers in real-time to close deals faster."
+    desc: "Chat with our BIDGARI team in real-time to close your deal faster."
   }
 ];
 

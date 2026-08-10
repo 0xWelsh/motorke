@@ -61,7 +61,15 @@ function buildBrowseCountPayload(makeRows, bodyRows) {
     bodyTypes[bt.value] = bodyCountsMap[bt.value.toLowerCase()] || 0;
   }
 
-  return { brands, bodyTypes };
+  /** @type {Record<string, number>} Canonical DB make → live count. */
+  const makes = {};
+  for (const row of makeRows || []) {
+    const make = String(row.make || "").trim();
+    if (!make) continue;
+    makes[make] = (makes[make] || 0) + (row._count?._all ?? 0);
+  }
+
+  return { brands, bodyTypes, makes };
 }
 
 async function loadBrowseInventoryCounts() {
@@ -88,7 +96,7 @@ const getCachedBrowseInventoryCounts = unstable_cache(
       return await loadBrowseInventoryCounts();
     } catch (err) {
       console.error("[browse-inventory-counts] load failed:", err?.message || err);
-      return { brands: {}, bodyTypes: {} };
+      return { brands: {}, bodyTypes: {}, makes: {} };
     }
   },
   ["browse-inventory-counts-v1"],

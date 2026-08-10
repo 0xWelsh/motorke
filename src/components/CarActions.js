@@ -11,7 +11,7 @@ import {
 } from "@/lib/personalization";
 
 // Save Button
-export function SaveButton({ carId, initialSaved = false, isLoggedIn }) {
+export function SaveButton({ carId, initialSaved = false, isLoggedIn, className = "" }) {
   const [saved,   setSaved]   = useState(initialSaved);
   const [loading, setLoading] = useState(false);
 
@@ -33,13 +33,11 @@ export function SaveButton({ carId, initialSaved = false, isLoggedIn }) {
       onClick={toggle}
       disabled={loading}
       title={saved ? "Remove from saved" : "Save this car"}
-      className={`flex items-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl font-black text-[12px] transition-all duration-300 uppercase tracking-widest ${
-        saved
-          ? "bg-[var(--accent)]/10 border border-[var(--accent)]/20 text-[var(--accent)] shadow-sm"
-          : "bg-white/[0.03] border border-white/[0.06] text-zinc-400 hover:bg-white/[0.06] hover:text-white shadow-sm"
-      } ${loading ? "cursor-wait opacity-50" : "cursor-pointer active:scale-95"}`}
+      className={`btn ${
+        saved ? "btn-primary" : "btn-neutral"
+      } ${loading ? "cursor-wait opacity-50" : "cursor-pointer"} ${className}`}
     >
-      <span className="text-lg leading-none">{saved ? "❤️" : "🤍"}</span>
+      <span className="text-base leading-none">{saved ? "❤️" : "🤍"}</span>
       {saved ? "Saved" : "Save car"}
     </button>
   );

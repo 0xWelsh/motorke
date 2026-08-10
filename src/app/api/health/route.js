@@ -14,12 +14,7 @@ export const maxDuration = 15;
 
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SERVICE_KEY =
-  process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const BUCKET = "car-images";
+import { probeR2Bucket } from "@/lib/storage";
 
 async function checkDatabase() {
   try {
@@ -31,30 +26,14 @@ async function checkDatabase() {
 }
 
 async function checkBucket() {
-  if (!SUPABASE_URL || !SERVICE_KEY) {
-    return { ok: false, error: "env_missing" };
-  }
-  const controller = new AbortController();
-  const t = setTimeout(() => controller.abort(), 4000);
-  try {
-    const res = await fetch(`${SUPABASE_URL}/storage/v1/bucket/${BUCKET}`, {
-      headers: { Authorization: `Bearer ${SERVICE_KEY}` },
-      signal: controller.signal,
-    });
-    if (!res.ok) {
-      return { ok: false, status: res.status, error: "bucket_unreachable" };
-    }
-    const body = await res.json().catch(() => ({}));
-    return {
-      ok: Boolean(body?.public),
-      public: Boolean(body?.public),
-      error: body?.public ? undefined : "bucket_private",
-    };
-  } catch (err) {
-    return { ok: false, error: err?.name === "AbortError" ? "timeout" : "fetch_error" };
-  } finally {
-    clearTimeout(t);
-  }
+  const probe = await probeR2Bucket();
+  return {
+    ok: probe.configured && probe.reachable,
+    reachable: probe.reachable,
+    configured: probe.configured,
+    bucket: probe.name,
+    error: probe.configured && !probe.reachable ? "bucket_unreachable" : undefined,
+  };
 }
 
 async function checkSampleImage() {

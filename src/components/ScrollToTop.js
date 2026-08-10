@@ -39,7 +39,7 @@ export default function ScrollToTop() {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className={`fixed z-40 w-12 h-12 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center animate-in fade-in ${
+          className={`fixed z-40 w-12 h-12 bg-white hover:bg-slate-100 text-slate-900 rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center animate-in fade-in ${
             stackedAboveWhatsApp
               ? "bottom-[5.75rem] right-4 sm:bottom-[6.25rem] sm:right-6"
               : "bottom-8 right-8"

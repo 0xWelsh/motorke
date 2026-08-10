@@ -49,25 +49,25 @@ export default async function CompareSeoPage({ params }) {
   ]);
 
   return (
-    <article className="min-h-screen bg-white bg-[#222222] pt-20 pb-24">
+    <article className="min-h-screen bg-white pt-20 pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
       />
       <div className="home-shell max-w-5xl mx-auto space-y-8">
         <div>
-          <Link href="/guides" className="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-slate-800 hover:text-white">
+          <Link href="/guides" className="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-slate-800">
             ← Guides
           </Link>
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 text-white mt-4 mb-3">
+          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mt-4 mb-3">
             {page.title}
           </h1>
           {page.description ? (
-            <p className="text-lg text-slate-600 text-slate-400 max-w-3xl">{page.description}</p>
+            <p className="text-lg text-slate-600 max-w-3xl">{page.description}</p>
           ) : null}
           <Link
             href={compareHref}
-            className="inline-flex mt-6 px-4 py-2 text-xs font-bold uppercase tracking-widest border border-slate-900 border-white text-slate-900 text-white hover:opacity-80"
+            className="btn btn-neutral mt-6"
             style={{ borderRadius: "var(--radius)" }}
           >
             Open side-by-side compare

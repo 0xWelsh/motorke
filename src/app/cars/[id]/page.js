@@ -8,7 +8,7 @@ import { formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
 import { getSalesmanWhatsappNumbers, pickSalesmanWhatsapp } from "@/lib/salesman-whatsapp";
 import { telHrefFromMsisdn } from "@/lib/phone-hints";
 import { getPreloadImageUrl } from "@/lib/image-transform";
-import { MapPin } from "lucide-react";
+import { MapPin, BadgeCheck, Check } from "lucide-react";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
 import { TrackRecentView } from "@/components/CarActions";
@@ -16,14 +16,13 @@ import SpecSheet from "@/components/SpecSheet";
 import CarReviewsSection from "@/components/CarReviewsSection";
 import FeatureList from "@/components/FeatureList";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
+import CarContactActions from "@/components/CarContactActions";
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
 import { absoluteUrl, absoluteMediaUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import {
-  buildCarDetailSpecRows,
-  buildCarDetailSpecGroups,
   buildCarSpecSummaryItems,
   meaningfulFeatureList,
   positiveNum,
@@ -31,11 +30,11 @@ import {
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
 import { facetPathSegment } from "@/lib/seo-car-facets";
 import { carListingPath } from "@/lib/car-listing-url";
-import { BODY_TYPE_LABELS, FUEL_LABELS, CAR_STATUS_LABELS, CAR_STATUS_COLORS } from "@/lib/constants";
+import { stockCode } from "@/lib/stock-code";
+import { FUEL_LABELS, CAR_STATUS_LABELS, CAR_STATUS_COLORS } from "@/lib/constants";
 import {
   buildCarListingDealerMetadata,
   buildListingSellerSchema,
-  dealerShowroomPath,
 } from "@/lib/seo-dealer";
 import { resolveModelWikiForCar } from "@/lib/seo-model-wiki";
 import CarModelWiki from "@/components/CarModelWiki";
@@ -43,6 +42,7 @@ import CarListingRelatedSearches from "@/components/CarListingRelatedSearches";
 import SimilarCarsSection from "@/components/SimilarCarsSection";
 import CarDetailMobileBar from "@/components/CarDetailMobileBar";
 import CarActionButtons from "@/components/CarActionButtons";
+import NikkyoSpecTable from "@/components/NikkyoSpecTable";
 import {
   daysRemainingOnSite,
   isInSoldGracePeriod,
@@ -107,12 +107,13 @@ function getCarData(ref) {
           dealer: {
             include: {
               users: { select: { avatarUrl: true }, take: 1 },
+              _count: { select: { cars: true } },
             },
           },
         },
       });
     },
-    ["car-detail-v3", ref],
+    ["car-detail-v4", ref],
     { revalidate: 120, tags: ["cars", `car-detail:${ref}`] }
   );
   return cached();
@@ -257,7 +258,6 @@ export default async function CarDetailPage({ params }) {
   const primaryImg = car.images.find((i) => i.isPrimary) || car.images[0];
   const specItems = buildCarSpecSummaryItems(car);
   const specString = specItems.join(", ");
-  const detailSpecs = buildCarDetailSpecRows(car);
   const featureList = meaningfulFeatureList(car.features);
 
   const [similar, reviewsData, modelWiki, benchmark] = await Promise.all([similarPromise, reviewsPromise, modelWikiPromise, benchmarkPromise]);
@@ -265,10 +265,36 @@ export default async function CarDetailPage({ params }) {
   const freshLabel = freshnessLabel(freshDays);
   const salesmanNumbers = await getSalesmanWhatsappNumbers();
   const waDigits = pickSalesmanWhatsapp(salesmanNumbers, car.id);
-  const whatsappHref = whatsappLink(waDigits, title, "Admin");
+  const whatsappHref = whatsappLink(waDigits, title, "BIDGARI");
   const callHref = telHrefFromMsisdn(waDigits);
   const locationLabel = car.location || dealer.location || dealer.county || "Kenya";
-  const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Contact ${car.dealer?.name || "the dealer"} on BIDGARI.`;
+  const code = stockCode(car);
+  const carPrice = Number(car.price) || 0;
+  const marketLabel = benchmark
+    ? carPrice < benchmark.low
+      ? { text: "Below market range", cls: "text-emerald-600" }
+      : carPrice > benchmark.high
+        ? { text: "Above market range", cls: "text-amber-600" }
+        : { text: "Within market range", cls: "text-slate-500" }
+    : null;
+  const quickFacts = [
+    car.year ? { icon: "📅", value: String(car.year) } : null,
+    car.transmission
+      ? {
+          icon: "⚙️",
+          value:
+            car.transmission === "AUTOMATIC"
+              ? "Automatic"
+              : car.transmission === "MANUAL"
+                ? "Manual"
+                : car.transmission,
+        }
+      : null,
+    car.fuelType ? { icon: "⛽", value: FUEL_LABELS[car.fuelType] || car.fuelType } : null,
+    locationLabel ? { icon: "📍", value: locationLabel } : null,
+    positiveNum(car.mileage) ? { icon: "🛣️", value: formatMileage(car.mileage) } : null,
+  ].filter(Boolean);
+  const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Sold by BIDGARI with full buyer support.`;
 
   const listingUrl = absoluteUrl(carListingPath(car));
   const absImages = (car.images?.length ? car.images : [{ url: BRAND_MARK_SQUARE }]).map((i) =>
@@ -377,7 +403,7 @@ export default async function CarDetailPage({ params }) {
             itemCondition: conditionLd,
             availability: car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
             url: listingUrl,
-            seller: buildListingSellerSchema(car.dealer),
+            seller: buildListingSellerSchema(),
           },
         }
       : {}),
@@ -398,14 +424,6 @@ export default async function CarDetailPage({ params }) {
     { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
     { "@type": "ListItem", position: 2, name: "Cars", item: absoluteUrl("/cars") },
   ];
-  if (dealer?.slug && dealer?.name) {
-    breadcrumbItems.push({
-      "@type": "ListItem",
-      position: 3,
-      name: dealer.name,
-      item: absoluteUrl(dealerShowroomPath(dealer.slug)),
-    });
-  }
   breadcrumbItems.push({
     "@type": "ListItem",
     position: breadcrumbItems.length + 1,
@@ -425,7 +443,7 @@ export default async function CarDetailPage({ params }) {
       {heroPreloadUrl && (
         <link rel="preload" as="image" href={heroPreloadUrl} fetchPriority="high" />
       )}
-      <div className="bg-[#141414] min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
+      <div className="bg-[var(--bg)] min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
       <TrackEventOnMount
         name="view_car"
         payload={{
@@ -450,224 +468,205 @@ export default async function CarDetailPage({ params }) {
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-3 sm:pt-4 pb-24 lg:pb-16">
         <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
 
-        {/* Top nav */}
+        {/* Top nav / breadcrumb */}
         <div className="flex items-center gap-2 mb-4 sm:mb-5">
           <Link
             href="/cars"
-            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#1e1e1e] text-zinc-400 hover:bg-zinc-700 transition-colors"
+            className="btn btn-neutral btn-icon w-8 h-8"
             aria-label="Back to inventory"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
           </Link>
-          <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 leading-none">
-            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+          <nav aria-label="Breadcrumb" className="text-[11px] font-bold uppercase tracking-wider text-slate-500 leading-none">
+            <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
             <span className="mx-1.5 opacity-40">/</span>
-            <Link href="/cars" className="hover:text-white transition-colors">Inventory</Link>
+            <Link href="/cars" className="hover:text-slate-900 transition-colors">Cars</Link>
             <span className="mx-1.5 opacity-40">/</span>
-            <span className="text-zinc-200">{car.make} {car.model}</span>
-          </div>
+            <span className="text-slate-700">{car.make} {car.model}</span>
+            {code ? (
+              <>
+                <span className="mx-1.5 opacity-40">/</span>
+                <span className="text-slate-700">{code}</span>
+              </>
+            ) : null}
+          </nav>
         </div>
 
-        {/* Gallery — full width */}
-        <div className="-mx-4 sm:-mx-6 lg:mx-0 mb-6">
-          <ImageGallery
-            images={car.images}
-            title={title}
-            carId={car.id}
-            isLoggedIn={!!session?.user}
-            sold={soldGrace}
-          />
+        {/* Vehicle title + metadata */}
+        <h1 className="text-[26px] sm:text-[30px] lg:text-[34px] font-bold tracking-tight text-slate-900 leading-[1.15]">
+          {carName}
+        </h1>
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-slate-500">
+          {code ? <span className="font-bold text-slate-700">Stock {code}</span> : null}
+          <span className="text-slate-400">·</span>
+          <span>{freshLabel}</span>
+          <span className="text-slate-400">·</span>
+          <span className="inline-flex items-center gap-1">
+            <MapPin className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />{locationLabel}
+          </span>
+          <span className="text-slate-400">·</span>
+          <span className={`font-bold uppercase tracking-widest ${soldGrace ? "text-red-600" : "text-emerald-600"}`}>
+            {soldGrace ? "SOLD" : "AVAILABLE"}
+          </span>
+          <span className="text-slate-400">·</span>
+          <span className="font-bold uppercase tracking-widest text-slate-900">
+            {car.imported === false ? "LOCAL" : (() => {
+              const flags = { Japan: "🇯🇵", UK: "🇬🇧", USA: "🇺🇸", UAE: "🇦🇪", Germany: "🇩🇪", "South Africa": "🇿🇦", Thailand: "🇹🇭", Singapore: "🇸🇬" };
+              const flag = flags[car.importCountry] || "";
+              return `IMPORTED${flag ? ` ${flag}` : ""}`;
+            })()}
+          </span>
+          {car.carStatus && (
+            <>
+              <span className="text-slate-400">·</span>
+              <span className={`font-bold uppercase tracking-widest text-[10px] px-1.5 py-0.5 rounded ${CAR_STATUS_COLORS[car.carStatus]}`}>
+                {CAR_STATUS_LABELS[car.carStatus]}
+              </span>
+            </>
+          )}
         </div>
 
-        {/* ── Single column content ── */}
-        <div className="max-w-4xl mx-auto space-y-8">
+        {/* ── Collage layout: gallery left, info begins on its right ── */}
+        <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-12">
 
-          {/* Title + Price + Location */}
-          <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-[1.1]">
-              {carName}
-            </h1>
-            <p className="mt-2 text-xl sm:text-2xl font-bold text-[var(--accent)]">
-              {formatCarPrice(car)}
-            </p>
-            <div className="flex items-center gap-2 text-xs text-zinc-400 mt-2 flex-wrap">
-              <MapPin className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />
-              <span>{locationLabel}</span>
-              <span className="text-zinc-600">·</span>
-              <span className={`font-bold uppercase tracking-widest ${soldGrace ? "text-red-600" : "text-emerald-600"}`}>
-                {soldGrace ? "SOLD" : "AVAILABLE"}
-              </span>
-              <span className="text-zinc-600">·</span>
-              <span className="font-bold uppercase tracking-widest text-zinc-100">
-                {car.imported === false ? "LOCAL" : (() => {
-                  const flags = { Japan: "🇯🇵", UK: "🇬🇧", USA: "🇺🇸", UAE: "🇦🇪", Germany: "🇩🇪", "South Africa": "🇿🇦", Thailand: "🇹🇭", Singapore: "🇸🇬" };
-                  const flag = flags[car.importCountry] || "";
-                  return `IMPORTED${flag ? ` ${flag}` : ""}`;
-                })()}
-              </span>
-              {car.carStatus && (
-                <>
-                  <span className="text-zinc-600">·</span>
-                  <span className={`font-bold uppercase tracking-widest text-[10px] px-1.5 py-0.5 rounded ${CAR_STATUS_COLORS[car.carStatus]}`}>
-                    {CAR_STATUS_LABELS[car.carStatus]}
-                  </span>
-                </>
-              )}
+          {/* Left column — gallery on top, long-form panels fill below */}
+          <div className="lg:col-span-7 min-w-0 space-y-5">
+            <div className="-mx-4 sm:-mx-6 lg:mx-0">
+              <ImageGallery
+                images={car.images}
+                title={title}
+                carId={car.id}
+                isLoggedIn={!!session?.user}
+                sold={soldGrace}
+                quickFacts={quickFacts}
+              />
             </div>
-          </div>
 
-          {/* Quick spec chips */}
-          <div className="flex flex-wrap items-center gap-2">
-            {(() => {
-              const chips = [];
-              if (car.year) chips.push(String(car.year));
-              if (positiveNum(car.mileage)) chips.push(formatMileage(car.mileage));
-              if (car.fuelType) chips.push(FUEL_LABELS[car.fuelType] || car.fuelType);
-              if (car.transmission) chips.push(car.transmission === "AUTOMATIC" ? "Automatic" : "Manual");
-              if (car.bodyType) chips.push(BODY_TYPE_LABELS[car.bodyType] || car.bodyType);
-              return chips;
-            })().map((val, i) => (
-              <span key={i} className="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06] text-[12px] font-semibold text-zinc-300">
-                {val}
-              </span>
-            ))}
-            <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20 text-[12px] font-bold text-[var(--accent)]">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              {freshLabel}
-            </span>
-          </div>
+            {/* Request & actions */}
+            <section>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Request &amp; actions</p>
+              <CarActionButtons carId={car.id} dealerId={car.dealerId} carTitle={carName} price={formatCarPrice(car)} />
+            </section>
 
-          {/* Action buttons */}
-          <CarActionButtons carId={car.id} dealerId={car.dealerId} carTitle={carName} price={formatCarPrice(car)} />
+            {/* Specifications */}
+            <section>
+              <NikkyoSpecTable car={car} title="Specifications" />
+            </section>
 
-          {/* Description */}
-          <section>
-            <div className="text-[14px] sm:text-[15px] text-zinc-400 leading-[1.8] font-medium">
-              {specString ? (
-                <>
-                  <span className="text-white font-bold">{specString}</span>
-                  {(car.description || "").trim() ? ". " : null}
-                </>
-              ) : null}
-              {car.description?.trim() ||
-                "No description from the dealer yet. Message them for condition, service history, and viewing times."}
-            </div>
-          </section>
-
-          {/* Specifications */}
-          <section>
-            <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 mb-4">Specifications</h2>
-            {(() => {
-              const groups = buildCarDetailSpecGroups(car);
-              return groups.map((group) => (
-                <div key={group.title} className="mb-5">
-                  <h3 className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-2">{group.title}</h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-px rounded-xl border border-white/[0.06] overflow-hidden bg-white/[0.06]">
-                    {group.rows.map((item) => (
-                      <div key={item.label} className="flex flex-col gap-0.5 bg-[#1c1c1c] px-4 py-3">
-                        <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">{item.label}</span>
-                        <span className="text-[13px] font-bold text-white">{item.value}</span>
+            {/* Features */}
+            {featureList.length > 0 && (
+              <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+                <div className="bg-[var(--sidebar-bar)] px-4 py-2.5">
+                  <h2 className="text-[12px] font-black uppercase tracking-widest text-white">Features</h2>
+                </div>
+                <div className="p-4">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                    {featureList.map((feature, i) => (
+                      <div key={i} className="flex items-start gap-2 text-[13px] font-medium text-slate-600">
+                        <Check className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" strokeWidth={3} />
+                        <span className="leading-snug">{feature}</span>
                       </div>
                     ))}
                   </div>
                 </div>
-              ));
-            })()}
-          </section>
+              </section>
+            )}
 
-          {/* Features */}
-          {featureList.length > 0 && (
-            <section>
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-500 mb-3">Features</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {featureList.map((feature, i) => (
-                  <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.04] text-[12px] text-zinc-300">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] shrink-0" />
-                    {feature}
-                  </div>
-                ))}
+            {/* Description */}
+            <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+              <div className="bg-[var(--sidebar-bar)] px-4 py-2.5">
+                <h2 className="text-[12px] font-black uppercase tracking-widest text-white">Description</h2>
+              </div>
+              <div className="p-5 text-[14px] text-slate-600 leading-[1.8]">
+                <p>
+                  {specString ? <span className="font-bold text-slate-900">{specString}.</span> : null}{" "}
+                  {car.description?.trim() ||
+                    "No description yet. Message the BIDGARI team for condition, service history, and viewing times."}
+                </p>
               </div>
             </section>
-          )}
+          </div>
 
-          {/* Dealer / Sales Person */}
-          <section className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center shrink-0">
-                <span className="text-lg font-black text-[var(--accent)]">{dealer.name?.charAt(0) || "D"}</span>
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-1">Listed by</p>
-                <Link href={dealerShowroomPath(dealer.slug)} className="text-sm font-bold text-white hover:text-[var(--accent)] transition-colors">
-                  {dealer.name}
-                </Link>
-                {dealer.location && (
-                  <p className="text-xs text-zinc-400 mt-0.5 flex items-center gap-1">
-                    <MapPin className="w-3 h-3 shrink-0" />{dealer.location}
-                  </p>
-                )}
-                {dealer.responseTime && (
-                  <p className="text-[10px] text-zinc-500 mt-1">Usually responds {dealer.responseTime}</p>
-                )}
-              </div>
-              <Link href={dealerShowroomPath(dealer.slug)} className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)] hover:underline shrink-0 mt-1">
-                View dealer
-              </Link>
-            </div>
-          </section>
-
-          {/* Market range */}
-          {benchmark && (
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-1">Market Range</p>
-              <p className="text-sm font-bold text-white">
-                KES {Number(benchmark.low).toLocaleString("en-KE")} – KES {Number(benchmark.high).toLocaleString("en-KE")}
+          {/* Right column — quick info begins at the top-right of the gallery */}
+          <div className="lg:col-span-5 min-w-0 space-y-5">
+            {/* Price card */}
+            <section className="rounded-xl border border-slate-200 bg-white p-5">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Price</p>
+              <p className="mt-1 text-[30px] xl:text-[36px] leading-none font-black tracking-tighter text-slate-900 tabular-nums">
+                {formatCarPrice(car)}
               </p>
-              <p className="text-[10px] text-zinc-500 mt-0.5">Based on {benchmark.count} similar {car.model} listings</p>
-            </div>
-          )}
+              {benchmark && marketLabel && (
+                <div className="mt-4 border-t border-slate-100 pt-3">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Market Range</p>
+                  <p className="mt-1 text-[15px] xl:text-[17px] font-black tracking-tight text-slate-900 tabular-nums">
+                    KES {Number(benchmark.low).toLocaleString("en-KE")} – KES {Number(benchmark.high).toLocaleString("en-KE")}
+                  </p>
+                  <p className={`mt-0.5 text-[11px] font-bold ${marketLabel.cls}`}>{marketLabel.text}</p>
+                  <p className="text-[10px] text-slate-500 mt-0.5">Based on {benchmark.count} similar {car.model} listings</p>
+                </div>
+              )}
+            </section>
 
-          {/* Share */}
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-3">Share this listing</p>
-            <ShareButtons
-              listingUrl={listingUrl}
-              browseUrl={absoluteUrl("/cars")}
-              title={title}
-              price={formatCarPrice(car)}
-              dealerName={dealer.name}
-              location={car.location || dealer.location || "Kenya"}
-              mileageLabel={positiveNum(car.mileage) ? formatMileage(car.mileage) : null}
-              previewImageUrl={`/api/cars/${car.id}/og-image`}
+            {/* Contact actions */}
+            <CarContactActions
+              whatsappHref={whatsappHref}
+              callHref={callHref}
               carId={car.id}
-              sold={soldGrace}
+              isLoggedIn={!!session?.user}
             />
+
+            {/* BIDGARI trust */}
+            <section className="rounded-xl border border-slate-200 bg-white p-4">
+              <div className="flex items-center gap-2">
+                <BadgeCheck className="w-5 h-5 text-emerald-500 shrink-0" />
+                <span className="text-[13px] font-black text-slate-900">BIDGARI Verified Listing</span>
+              </div>
+              <p className="mt-2 text-[12px] text-slate-500 leading-relaxed">
+                Sold by BIDGARI. We handle this sale for you and guide you through inspection and paperwork.
+              </p>
+            </section>
+
+            {/* Share */}
+            <section>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">Share this listing</p>
+              <ShareButtons
+                listingUrl={listingUrl}
+                browseUrl={absoluteUrl("/cars")}
+                title={title}
+                price={formatCarPrice(car)}
+                dealerName="BIDGARI"
+                location={car.location || dealer.location || "Kenya"}
+                mileageLabel={positiveNum(car.mileage) ? formatMileage(car.mileage) : null}
+                previewImageUrl={`/api/cars/${car.id}/og-image`}
+                carId={car.id}
+                sold={soldGrace}
+              />
+            </section>
+
+            {/* Explore links */}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-slate-200 bg-white px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-slate-500 rounded-xl">
+              <span className="text-slate-500 font-black tracking-widest">Explore:</span>
+              <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-[var(--accent)] hover:underline">All {car.make}</Link>
+              <span className="text-slate-400">·</span>
+              <Link href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`} className="text-[var(--accent)] hover:underline">{car.make} {car.model}</Link>
+              {car.fuelType && (<><span className="text-slate-400">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`} className="text-[var(--accent)] hover:underline">{FUEL_LABELS[car.fuelType] || car.fuelType}</Link></>)}
+            </div>
+
+            {/* Reviews */}
+            <CarReviewsSection
+              carId={car.id}
+              initialReviews={reviewsData.reviews}
+              initialAvgRating={reviewsData.avgRating}
+            />
+
+            {/* SEO */}
+            <CarModelWiki car={car} wiki={modelWiki} />
+            <CarListingRelatedSearches car={car} />
           </div>
-
-          {/* Explore links */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-zinc-400 rounded-xl">
-            <span className="text-zinc-500 font-black tracking-widest">Explore:</span>
-            <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-[var(--accent)] hover:underline">All {car.make}</Link>
-            <span className="text-zinc-700">·</span>
-            <Link href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`} className="text-[var(--accent)] hover:underline">{car.make} {car.model}</Link>
-            {car.fuelType && (<><span className="text-zinc-700">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`} className="text-[var(--accent)] hover:underline">{FUEL_LABELS[car.fuelType] || car.fuelType}</Link></>)}
-            {dealer.county ? (<><span className="text-zinc-700">·</span><Link href={`/cars/${slugifyCarSegment(dealer.county)}`} className="text-[var(--accent)] hover:underline">Cars in {dealer.county}</Link></>) : null}
-          </div>
-
-          {/* Reviews */}
-          <CarReviewsSection
-            carId={car.id}
-            initialReviews={reviewsData.reviews}
-            initialAvgRating={reviewsData.avgRating}
-          />
-
-          {/* SEO */}
-          <CarModelWiki car={car} wiki={modelWiki} />
-          <CarListingRelatedSearches car={car} />
         </div>
 
         {/* Similar cars — full width */}
-        <div className="mt-8 max-w-7xl mx-auto"><SimilarCarsSection cars={similar} make={car.make} /></div>
+        <div className="mt-10"><SimilarCarsSection cars={similar} make={car.make} /></div>
       </div>
 
       {/* Mobile bottom bar */}
@@ -677,7 +676,7 @@ export default async function CarDetailPage({ params }) {
         priceLabel={formatCarPrice(car)}
       />
 
-      <SpecSheet car={car} dealer={dealer} />
+      <SpecSheet car={car} />
     </div>
     </>
   );

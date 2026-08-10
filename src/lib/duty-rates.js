@@ -13,6 +13,17 @@ const dutyRatesSchema = z.object({
   effectiveFrom: z.string().optional(),
   fetchedAt: z.string().optional(),
   importDutyRate: z.coerce.number().min(0).max(1).optional(),
+  importDutyRateBands: z
+    .array(
+      z.object({
+        minCC: z.coerce.number().int().min(0),
+        maxCC: z.coerce.number().int().positive().nullable().optional(),
+        fuelTypes: z.array(z.string()).optional(),
+        rate: z.coerce.number().gt(0).lte(1),
+        label: z.string().optional(),
+      })
+    )
+    .optional(),
   idfRate: z.coerce.number().min(0).max(1),
   vatRate: z.coerce.number().min(0).max(1),
   rdlRate: z.coerce.number().min(0).max(1).optional(),
@@ -69,6 +80,7 @@ function normalizeRates(rawRates) {
 
   return {
     importDutyRate: parsed.importDutyRate ?? DEFAULT_DUTY_RATES.importDutyRate,
+    importDutyRateBands: parsed.importDutyRateBands || DEFAULT_DUTY_RATES.importDutyRateBands,
     idfRate: parsed.idfRate,
     vatRate: parsed.vatRate,
     rdlRate: parsed.rdlRate ?? DEFAULT_DUTY_RATES.rdlRate,

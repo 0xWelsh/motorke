@@ -117,7 +117,7 @@ export default async function ShowroomLocationPage({ params }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#1c1c1c] pb-16">
+    <div className="min-h-screen bg-[var(--bg)] pb-16">
       <Script
         id="showroom-location-breadcrumb"
         type="application/ld+json"
@@ -130,7 +130,7 @@ export default async function ShowroomLocationPage({ params }) {
       />
 
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-10 sm:py-14">
-        <nav className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-6">
+        <nav className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-6">
           <Link href="/" className="hover:text-[var(--accent)]">
             Home
           </Link>
@@ -139,14 +139,14 @@ export default async function ShowroomLocationPage({ params }) {
             Dealers
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-zinc-300">{hub.label}</span>
+          <span className="text-slate-500">{hub.label}</span>
         </nav>
 
-        <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-3">
+        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-3">
           Car dealers on {hub.label}
         </h1>
-        <p className="text-zinc-300 leading-relaxed max-w-2xl mb-2">{hub.description}</p>
-        <p className="text-sm text-zinc-400 mb-10">
+        <p className="text-slate-500 leading-relaxed max-w-2xl mb-2">{hub.description}</p>
+        <p className="text-sm text-slate-500 mb-10">
           {dealers.length} showroom{dealers.length === 1 ? "" : "s"}, {cars.length} live listing
           {cars.length === 1 ? "" : "s"}, {hub.county} County
         </p>
@@ -159,10 +159,10 @@ export default async function ShowroomLocationPage({ params }) {
                 <li key={d.id}>
                   <Link
                     href={`/dealers/${d.slug}`}
-                    className="block p-4 bg-white/[0.03] border border-white/[0.06] rounded-xl hover:border-[var(--accent)]/40 transition-colors"
+                    className="block p-4 bg-white border border-slate-200 rounded-xl hover:border-[var(--accent)]/40 transition-colors"
                   >
-                    <p className="font-bold text-white">{d.name}</p>
-                    <p className="text-xs text-zinc-400 mt-1">{d.location || hub.label}</p>
+                    <p className="font-bold text-slate-900">{d.name}</p>
+                    <p className="text-xs text-slate-500 mt-1">{d.location || hub.label}</p>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)] mt-2">
                       {d._count.cars} in stock
                     </p>
@@ -191,7 +191,7 @@ export default async function ShowroomLocationPage({ params }) {
             </p>
           </section>
         ) : (
-          <p className="text-zinc-400">No live listings in this corridor yet. Browse all dealers in {hub.county}.</p>
+          <p className="text-slate-500">No live listings in this corridor yet. Browse all dealers in {hub.county}.</p>
         )}
       </div>
     </div>

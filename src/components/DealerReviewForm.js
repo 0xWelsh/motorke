@@ -48,8 +48,8 @@ export default function DealerReviewForm({ dealerSlug, onReviewSubmitted }) {
   };
 
   return (
-    <div className="border border-[#ddd4c8] border-slate-800 rounded-2xl p-6 bg-white">
-      <h3 className="text-lg font-bold text-slate-900 text-white mb-4">Rate This Dealer</h3>
+    <div className="border border-[#ddd4c8] rounded-2xl p-6 bg-white">
+      <h3 className="text-lg font-bold text-slate-900 mb-4">Rate This Dealer</h3>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Rating */}
@@ -81,7 +81,7 @@ export default function DealerReviewForm({ dealerSlug, onReviewSubmitted }) {
             onChange={(e) => setComment(e.target.value)}
             placeholder="Share your experience with this dealer..."
             maxLength={500}
-            className="w-full border border-[#ddd4c8] border-slate-800 rounded-2xl p-3 text-sm font-semibold placeholder:text-slate-400 focus:border-[#ff5a2f] focus:ring-2 focus:ring-blue-100 outline-none"
+            className="w-full border border-[#ddd4c8] rounded-2xl p-3 text-sm font-semibold placeholder:text-slate-400 focus:border-[#ff5a2f] focus:ring-2 focus:ring-blue-100 outline-none"
             rows={4}
           />
           <p className="text-xs text-slate-400 mt-1">{comment.length}/500</p>
@@ -95,7 +95,7 @@ export default function DealerReviewForm({ dealerSlug, onReviewSubmitted }) {
         <button
           type="submit"
           disabled={loading || !rating}
-          className="w-full bg-slate-900 text-white font-bold py-3 rounded-2xl hover:bg-slate-800 disabled:bg-slate-400 transition-colors"
+          className="w-full bg-[var(--accent)] text-white font-bold py-3 rounded-2xl hover:bg-[var(--accent-hover)] disabled:bg-slate-300 transition-colors"
         >
           {loading ? "Submitting..." : "Submit Review"}
         </button>

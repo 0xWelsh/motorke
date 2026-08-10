@@ -199,10 +199,10 @@ async function runWatchAlerts() {
               : `New similar listing: ${similarTitle}`;
         const message =
           type === "PRICE_DROP"
-            ? `Now KSh ${watch.car.price.toLocaleString("en-KE")} (was KSh ${previousPrice.toLocaleString("en-KE")}).`
+            ? `Now KES ${watch.car.price.toLocaleString("en-KE")} (was KES ${previousPrice.toLocaleString("en-KE")}).`
             : type === "BACK_IN_STOCK"
-              ? `Your watched car is now available again at KSh ${watch.car.price.toLocaleString("en-KE")}.`
-              : `A similar car was just posted at KSh ${(similarCar?.price ?? 0).toLocaleString("en-KE")}.`;
+              ? `Your watched car is now available again at KES ${watch.car.price.toLocaleString("en-KE")}.`
+              : `A similar car was just posted at KES ${(similarCar?.price ?? 0).toLocaleString("en-KE")}.`;
 
         const listingForLink =
           type === "SIMILAR_LISTING" ? similarCar : watch.car;

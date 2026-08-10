@@ -67,47 +67,47 @@ export default function BuyerLocationSettings({ initialLat, initialLng }) {
   }
 
   return (
-    <div className="space-y-5 bg-[#1e1e1e] border border-white/[0.08] p-4 sm:p-6 rounded-xl">
+    <div className="space-y-5 bg-white border border-slate-200 p-4 sm:p-6 rounded-xl">
       <div>
-        <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-2">
+        <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 mb-2">
           <MapPin className="w-4 h-4 text-[#ff5a2f]" />
           Your Location
         </h3>
-        <p className="text-xs text-zinc-400 mb-4 leading-relaxed">
+        <p className="text-xs text-slate-500 mb-4 leading-relaxed">
           Share your location to help us show you nearby dealerships. This is optional and you can update or remove it anytime.
         </p>
       </div>
 
       {error && (
-        <div className="p-3 bg-red-900/10 border border-red-900/40">
-          <p className="text-xs text-red-300">{error}</p>
+        <div className="p-3 bg-red-50 border border-red-200">
+          <p className="text-xs text-red-600">{error}</p>
         </div>
       )}
 
       {saved && (
-        <div className="flex items-center gap-2 p-3 bg-emerald-900/10 border border-emerald-900/40">
+        <div className="flex items-center gap-2 p-3 bg-emerald-50 border border-emerald-200">
           <CheckCircle className="w-4 h-4 text-green-600" />
-          <p className="text-xs font-medium text-emerald-300">Location saved successfully</p>
+          <p className="text-xs font-medium text-emerald-700">Location saved successfully</p>
         </div>
       )}
 
       {lat && lng ? (
-        <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-xl">
+        <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
           <div className="flex items-start justify-between mb-3">
             <div>
-              <p className="text-xs font-bold text-zinc-400 uppercase mb-2">Current Location</p>
+              <p className="text-xs font-bold text-slate-500 uppercase mb-2">Current Location</p>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <p className="text-[11px] text-zinc-400 uppercase font-semibold">Latitude</p>
-                  <p className="text-sm font-mono text-white">{lat.toFixed(6)}</p>
+                  <p className="text-[11px] text-slate-500 uppercase font-semibold">Latitude</p>
+                  <p className="text-sm font-mono text-slate-900">{lat.toFixed(6)}</p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-zinc-400 uppercase font-semibold">Longitude</p>
-                  <p className="text-sm font-mono text-white">{lng.toFixed(6)}</p>
+                  <p className="text-[11px] text-slate-500 uppercase font-semibold">Longitude</p>
+                  <p className="text-sm font-mono text-slate-900">{lng.toFixed(6)}</p>
                 </div>
               </div>
             </div>
-            <span className="inline-flex items-center gap-1.5 bg-emerald-900/30 text-emerald-300 px-2.5 py-1 text-[11px] font-bold uppercase rounded-xl">
+            <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-700 px-2.5 py-1 text-[11px] font-bold uppercase rounded-xl">
               <MapPin className="w-3 h-3" />
               Set
             </span>
@@ -116,7 +116,7 @@ export default function BuyerLocationSettings({ initialLat, initialLng }) {
           <button
             onClick={handleClearLocation}
             disabled={loading}
-            className="w-full px-3 py-3 sm:py-2 text-xs font-bold text-red-300 bg-red-900/10 hover:bg-red-900/20 border border-red-900/40 transition disabled:opacity-50 rounded-xl"
+            className="w-full px-3 py-3 sm:py-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition disabled:opacity-50 rounded-xl"
           >
             Remove Location
           </button>

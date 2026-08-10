@@ -82,17 +82,17 @@ export function getGaugePercent(spec, cars, raw) {
 
 export function formatKesCompact(value) {
   if (typeof value !== "number" || Number.isNaN(value)) return "N/A";
-  if (value >= 1000000) return `KSh ${(value / 1000000).toFixed(2)}M`;
-  if (value >= 1000) return `KSh ${(value / 1000).toFixed(0)}K`;
-  return `KSh ${Math.round(value)}`;
+  if (value >= 1000000) return `KES ${(value / 1000000).toFixed(2)}M`;
+  if (value >= 1000) return `KES ${(value / 1000).toFixed(0)}K`;
+  return `KES ${Math.round(value)}`;
 }
 
 export function roadTone(score) {
-  if (typeof score !== "number") return "border-white/[0.06] bg-white/[0.03] text-zinc-400";
-  if (score >= 80) return "border-white bg-white text-[#1c1c1c]";
-  if (score >= 65) return "border-white/[0.08] bg-white/[0.06] text-zinc-300";
-  if (score >= 50) return "border-white/[0.06] bg-white/[0.03] text-zinc-300";
-  return "border-white/[0.06] bg-white/[0.03] text-zinc-400";
+  if (typeof score !== "number") return "border-slate-200 bg-slate-50 text-slate-500";
+  if (score >= 80) return "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]";
+  if (score >= 65) return "border-slate-200 bg-slate-50 text-slate-700";
+  if (score >= 50) return "border-slate-200 bg-slate-50 text-slate-500";
+  return "border-slate-200 bg-slate-50 text-slate-500";
 }
 
 export function carPhotoUrl(car) {
@@ -102,7 +102,7 @@ export function carPhotoUrl(car) {
 }
 
 export function importTone(eligible) {
-  if (eligible === true) return "border-white bg-white text-[#1c1c1c]";
-  if (eligible === false) return "border-white/[0.06] bg-white/[0.03] text-zinc-300";
-  return "border-white/[0.06] bg-white/[0.03] text-zinc-400";
+  if (eligible === true) return "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]";
+  if (eligible === false) return "border-slate-200 bg-slate-50 text-slate-500";
+  return "border-slate-200 bg-slate-50 text-slate-500";
 }

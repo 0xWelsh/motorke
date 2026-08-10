@@ -67,7 +67,7 @@ export default function ListingContactActions({
           target="_blank"
           rel="noopener noreferrer"
           onClick={onWhatsApp}
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-[12px] font-bold text-white shadow-sm transition hover:bg-[#20bd5a] active:scale-[0.98]"
+          className="btn btn-success"
         >
           <MessageCircle className="h-4 w-4 shrink-0" aria-hidden />
           WhatsApp
@@ -77,7 +77,7 @@ export default function ListingContactActions({
         <Link
           href={callHref}
           onClick={onCall}
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/[0.06] bg-[#1c1c1c] px-4 py-3 text-[12px] font-bold text-white shadow-sm transition hover:bg-white/[0.06] active:scale-[0.98]"
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-[12px] font-bold text-slate-700 shadow-sm transition hover:bg-slate-100 active:scale-[0.98]"
         >
           <Phone className="h-4 w-4 shrink-0" aria-hidden />
           Call Us

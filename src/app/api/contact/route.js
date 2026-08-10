@@ -4,7 +4,7 @@ import { sendContactFormEmail } from "@/lib/mail";
 export const dynamic = "force-dynamic";
 export const maxDuration = 15;
 
-const ALLOWED_SUBJECTS = new Set(["bug", "partnership", "dealer", "general"]);
+const ALLOWED_SUBJECTS = new Set(["bug", "partnership", "buying", "general"]);
 
 function isEmail(s) {
   return typeof s === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.trim());

@@ -69,35 +69,8 @@ export default async function AdminSettingsPage({ searchParams }) {
 
          <details className="group mt-8">
            <summary className="cursor-pointer text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-300 transition-colors select-none">
-             Circus Car Magazine Feature
+             WhatsApp Lead Routing
            </summary>
-           <div className="mt-4 space-y-4 border-t border-white/[0.06] pt-4">
-             <p className="text-xs text-zinc-400">These control the magazine feature section on the public gallery page.</p>
-             <div>
-               <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Cover Image URL</label>
-               <input
-                 name="magazine_cover_url"
-                 defaultValue={settings.magazine_cover_url || ""}
-                 className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-5 py-4 focus:ring-2 focus:ring-white/[0.2] font-medium"
-                 placeholder="https://..."
-               />
-             </div>
-             <div>
-               <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Purchase Link (Selar)</label>
-               <input
-                 name="magazine_link"
-                 defaultValue={settings.magazine_link || "https://selar.com/m/CircusCarMagazine"}
-                 className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-5 py-4 focus:ring-2 focus:ring-white/[0.2] font-medium"
-                 placeholder="https://selar.com/..."
-               />
-             </div>
-           </div>
-         </details>
-
-          <details className="group mt-8">
-            <summary className="cursor-pointer text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-300 transition-colors select-none">
-              WhatsApp Lead Routing
-            </summary>
             <div className="mt-4 space-y-4 border-t border-white/[0.06] pt-4">
               <p className="text-xs text-zinc-400">Phone numbers for the 3 salesmen. The WhatsApp button on car listings routes customers round-robin to these numbers. Include country code (e.g. 2547XXXXXXXX).</p>
               <div>

@@ -24,9 +24,9 @@ export default function DutyTaxBreakdownChart({ breakdown }) {
 
   return (
     <div className="space-y-3" aria-label="Tax breakdown chart">
-      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">Tax mix</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Tax mix</p>
       <div
-        className="flex h-3 w-full overflow-hidden border border-white/[0.06]"
+        className="flex h-3 w-full overflow-hidden border border-slate-200"
         style={{ borderRadius: "var(--radius)" }}
         role="img"
         aria-hidden
@@ -44,8 +44,8 @@ export default function DutyTaxBreakdownChart({ breakdown }) {
         {rows.map((row) => (
           <li key={row.key} className="flex items-center gap-2 text-xs">
             <span className={`h-2.5 w-2.5 shrink-0 ${row.color}`} style={{ borderRadius: 2 }} aria-hidden />
-            <span className="text-zinc-400">{row.label}</span>
-            <span className="ml-auto font-bold tabular-nums text-white">{formatPrice(row.value)}</span>
+            <span className="text-slate-500">{row.label}</span>
+            <span className="ml-auto font-bold tabular-nums text-slate-900">{formatPrice(row.value)}</span>
           </li>
         ))}
       </ul>

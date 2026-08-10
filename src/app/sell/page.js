@@ -1,34 +1,35 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Car, BadgeCheck, PhoneCall, BarChart3, Clock, Users } from "lucide-react";
 import { buildPageTitle, buildCanonicalMetadata } from "@/lib/seo-metadata";
+import { getSupportWhatsAppHref } from "@/lib/site-contact";
 
 export const metadata = {
-  title: buildPageTitle("Sell your car — free dealer listings"),
+  title: buildPageTitle("Sell your car in Kenya"),
   description:
-    "List your car on BIDGARI for free. No commission, no middleman. Verified dealers get direct buyer enquiries via phone and WhatsApp.",
+    "Sell your car with BIDGARI — free listing, fair market valuation, and a sale handled end to end. Our team verifies, lists, and handles the paperwork for you.",
   ...buildCanonicalMetadata("/sell"),
 };
 
 const STEPS = [
   {
     num: "1",
-    title: "Create your dealer account",
-    desc: "Sign up with your business details. We verify your dealership — usually within 24 hours.",
+    title: "Tell us about your car",
+    desc: "Send photos and details online. Our team reviews your car and confirms ownership.",
   },
   {
     num: "2",
-    title: "List your cars",
-    desc: "Add photos, specs, pricing, and description. Our listing tool guides you through every field.",
+    title: "Get a fair valuation",
+    desc: "We price your car against real market data so you sell fast, at the right price.",
   },
   {
     num: "3",
-    title: "Get verified",
-    desc: "Verified dealers get a trust badge. Buyers see it on every listing — it means a real business stands behind the car.",
+    title: "We list it for you",
+    desc: "Your car goes live with verified specs, real photos, and Kenya-wide buyer reach.",
   },
   {
     num: "4",
-    title: "Receive enquiries",
-    desc: "Buyers call or WhatsApp you directly from the listing. You negotiate, you close, you get paid.",
+    title: "We handle the sale",
+    desc: "Our team handles enquiries, viewings, and paperwork. You get paid when it sells.",
   },
 ];
 
@@ -36,81 +37,78 @@ const PERKS = [
   {
     icon: Car,
     title: "Free listing",
-    desc: "No subscription required to start. List as many cars as you want, zero commission on sales.",
+    desc: "Listing your car costs nothing. No commission on the sale either.",
   },
   {
     icon: BadgeCheck,
-    title: "Verified badge",
-    desc: "Earn buyer trust with a verified badge on all your listings. Stand out from unverified sellers.",
+    title: "Verified listing",
+    desc: "Our team verifies specs, photos, and ownership so buyers trust your car instantly.",
   },
   {
     icon: PhoneCall,
-    title: "Direct contact",
-    desc: "Buyers contact you via phone or WhatsApp. No forms, no lead fees, no middlemen.",
+    title: "We take the calls",
+    desc: "Buyers contact the BIDGARI team, not you. We qualify enquiries so you don't waste time.",
   },
   {
     icon: BarChart3,
-    title: "Market intelligence",
-    desc: "See how your listings perform — views, enquiries, and market positioning data.",
+    title: "Fair market value",
+    desc: "Pricing backed by real transaction data for your make, model, year, and condition.",
   },
   {
     icon: Clock,
-    title: "Go live in 24 hours",
-    desc: "Once verified, your listings go live within hours. Start receiving enquiries the same day.",
+    title: "Live in 48 hours",
+    desc: "Most cars are valued and listed within two working days of submission.",
   },
   {
     icon: Users,
     title: "Kenya-wide reach",
-    desc: "Your cars are visible to buyers across Nairobi, Mombasa, Kisumu, and all 47 counties.",
+    desc: "Your car is seen by buyers across Nairobi, Mombasa, Kisumu, and all 47 counties.",
   },
 ];
 
 const FAQS = [
   {
     q: "Is listing really free?",
-    a: "Yes. Creating an account and listing cars is completely free. We charge nothing on sales. Our revenue comes from optional premium plans that give you spotlight placement and boost features.",
+    a: "Yes. Listing and selling through BIDGARI costs you nothing — no listing fees, no commission on the sale.",
   },
   {
-    q: "How long does verification take?",
-    a: "Most dealerships are verified within 24 hours. We check your business registration, physical showroom, and track record. You can start listing immediately and go fully live after verification.",
+    q: "How is my car valued?",
+    a: "We price against real transaction data for your make, model, year, mileage, and condition, then agree the asking price with you before your car goes live.",
   },
   {
-    q: "Can private sellers list?",
-    a: "Yes. If you have a car to sell, you can create an individual seller account. Buyers will see you as a private seller with contact details. Verification is lighter for private sellers.",
+    q: "Do I have to handle buyer calls?",
+    a: "No. The BIDGARI team answers enquiries, arranges viewings, and negotiates on your behalf. You approve the buyer before anything moves.",
   },
   {
-    q: "How do buyers find my listings?",
-    a: "Your listings appear in BIDGARI search results, browse pages, and comparison tools. Buyers filter by make, price, location, and body type — your cars show up when they match. Verified dealers get priority placement.",
+    q: "When do I get paid?",
+    a: "Once the buyer completes the sale and the paperwork is signed, payment is released to you. We handle the process end to end.",
   },
 ];
 
 export default function SellPage() {
+  const whatsappHref = getSupportWhatsAppHref("Hi BIDGARI team, I'd like to sell my car.");
+  const sellHref = whatsappHref || "/contact";
+
   return (
-    <div className="min-h-screen bg-[#141414] pt-20 pb-24">
+    <div className="min-h-screen bg-[var(--bg)] pt-20 pb-24">
       <div className="home-shell">
         {/* Hero */}
         <section className="text-center mb-16 sm:mb-20">
-          <p className="meta-label text-[var(--accent)] mb-4">For dealers</p>
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-6 max-w-3xl mx-auto leading-[1.1]">
-            List your inventory.{" "}
-            <span className="text-[var(--accent)]">Get direct buyer enquiries.</span>
+          <p className="meta-label text-[var(--accent)] mb-4">For sellers</p>
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight mb-6 max-w-3xl mx-auto leading-[1.1]">
+            Sell your car.{" "}
+            <span className="text-[var(--accent)]">We handle the rest.</span>
           </h1>
-          <p className="text-base sm:text-lg text-zinc-400 leading-relaxed max-w-2xl mx-auto font-medium mb-8">
-            Free to list, zero commission, no middleman. Join verified Kenyan dealers already selling on BIDGARI.
+          <p className="text-base sm:text-lg text-slate-500 leading-relaxed max-w-2xl mx-auto font-medium mb-8">
+            Free to list, fairly valued, and handled by the BIDGARI team. Tell us about your car and we&apos;ll do the rest.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link
-              href="/dealers/signup"
-              className="inline-flex items-center justify-center h-12 px-8 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-black text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95 rounded-xl"
-            >
-              Start listing free
-              <ArrowRight className="w-4 h-4 ml-2" />
+            <Link href={sellHref} className="btn btn-primary btn-lg">
+              Sell your car
+              <ArrowRight />
             </Link>
-            <Link
-              href="/dealers"
-              className="inline-flex items-center justify-center h-12 px-8 border border-white/[0.08] bg-white/[0.03] text-white text-xs font-bold uppercase tracking-widest transition-all hover:bg-white/[0.06] hover:border-white/[0.15] rounded-xl"
-            >
-              Browse existing dealers
+            <Link href="/cars" className="btn btn-neutral btn-lg">
+              Browse inventory
             </Link>
           </div>
         </section>
@@ -119,8 +117,8 @@ export default function SellPage() {
         <section className="mb-16 sm:mb-20">
           <div className="text-center mb-10 sm:mb-14">
             <p className="meta-label text-[var(--accent)] mb-3">Getting started</p>
-            <h2 className="text-2xl sm:text-4xl font-bold text-white tracking-tight">
-              4 steps to start selling
+            <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+              4 steps to selling your car
             </h2>
           </div>
 
@@ -128,13 +126,13 @@ export default function SellPage() {
             {STEPS.map((step, i) => (
               <div key={i} className="relative">
                 {i < STEPS.length - 1 && (
-                  <div className="hidden lg:block absolute top-8 left-[60%] w-[calc(100%-20%)] h-px bg-gradient-to-r from-white/[0.08] to-transparent" aria-hidden />
+                  <div className="hidden lg:block absolute top-8 left-[60%] w-[calc(100%-20%)] h-px bg-gradient-to-r from-slate-200 to-transparent" aria-hidden />
                 )}
-                <div className="relative mx-auto w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mb-5">
+                <div className="relative mx-auto w-16 h-16 rounded-2xl bg-white border border-slate-200 flex items-center justify-center mb-5">
                   <span className="text-xl font-black text-[var(--accent)]">{step.num}</span>
                 </div>
-                <h3 className="text-base font-bold text-white mb-2 text-center">{step.title}</h3>
-                <p className="text-sm text-zinc-400 leading-relaxed text-center font-medium">
+                <h3 className="text-base font-bold text-slate-900 mb-2 text-center">{step.title}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed text-center font-medium">
                   {step.desc}
                 </p>
               </div>
@@ -146,7 +144,7 @@ export default function SellPage() {
         <section className="mb-16 sm:mb-20">
           <div className="text-center mb-10 sm:mb-14">
             <p className="meta-label text-[var(--accent)] mb-3">Why BIDGARI</p>
-            <h2 className="text-2xl sm:text-4xl font-bold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
               Everything you get for free
             </h2>
           </div>
@@ -155,13 +153,13 @@ export default function SellPage() {
             {PERKS.map((perk, i) => (
               <div
                 key={i}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-6 hover:bg-white/[0.04] hover:border-white/[0.08] transition-all duration-300"
+                className="rounded-xl border border-slate-200 bg-white p-6 hover:bg-slate-50 hover:border-slate-300 transition-all duration-300"
               >
                 <div className="w-10 h-10 rounded-xl bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center mb-4">
                   <perk.icon className="w-5 h-5 text-[var(--accent)]" strokeWidth={1.5} />
                 </div>
-                <h3 className="text-base font-bold text-white mb-2">{perk.title}</h3>
-                <p className="text-sm text-zinc-400 leading-relaxed font-medium">{perk.desc}</p>
+                <h3 className="text-base font-bold text-slate-900 mb-2">{perk.title}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed font-medium">{perk.desc}</p>
               </div>
             ))}
           </div>
@@ -169,23 +167,23 @@ export default function SellPage() {
 
         {/* Comparison table */}
         <section className="mb-16 sm:mb-20">
-          <div className="rounded-xl border border-white/[0.06] overflow-hidden">
-            <div className="bg-white/[0.03] border-b border-white/[0.06] px-6 py-4">
-              <h2 className="text-lg font-bold text-white">BIDGARI vs traditional channels</h2>
+          <div className="rounded-xl border border-slate-200 overflow-hidden">
+            <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
+              <h2 className="text-lg font-bold text-slate-900">BIDGARI vs selling the hard way</h2>
             </div>
-            <div className="divide-y divide-white/[0.06]">
+            <div className="divide-y divide-slate-100">
               {[
                 { feature: "Listing cost", bidgari: "Free", other: "Varies" },
                 { feature: "Commission on sale", bidgari: "Zero", other: "5–15%" },
-                { feature: "Buyer contact method", bidgari: "Direct phone & WhatsApp", other: "Through agent" },
-                { feature: "Verification", bidgari: "Trust badge on listings", other: "No verification" },
+                { feature: "Buyer enquiries", bidgari: "BIDGARI team handles", other: "You chase leads" },
+                { feature: "Valuation", bidgari: "Real market data", other: "Lowball offers" },
+                { feature: "Paperwork", bidgari: "Handled by BIDGARI", other: "You handle it" },
                 { feature: "Market reach", bidgari: "Nationwide online", other: "Local walk-ins" },
-                { feature: "Listing tools", bidgari: "Built-in, guided", other: "Manual / WhatsApp" },
               ].map((row, i) => (
                 <div key={i} className="grid grid-cols-3 px-6 py-4 text-sm">
-                  <span className="text-zinc-500 font-medium">{row.feature}</span>
+                  <span className="text-slate-500 font-medium">{row.feature}</span>
                   <span className="text-[var(--accent)] font-bold text-center">{row.bidgari}</span>
-                  <span className="text-zinc-600 text-center">{row.other}</span>
+                  <span className="text-slate-400 text-center">{row.other}</span>
                 </div>
               ))}
             </div>
@@ -195,13 +193,13 @@ export default function SellPage() {
         {/* FAQ */}
         <section className="mb-16 sm:mb-20">
           <div className="text-center mb-10">
-            <h2 className="text-xl sm:text-2xl font-bold text-white">Frequently asked questions</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Frequently asked questions</h2>
           </div>
-          <div className="max-w-2xl mx-auto space-y-0 divide-y divide-white/[0.06] border-t border-white/[0.06]">
+          <div className="max-w-2xl mx-auto space-y-0 divide-y divide-slate-100 border-t border-slate-200">
             {FAQS.map((faq, i) => (
               <div key={i} className="py-5">
-                <h3 className="text-sm font-bold text-white mb-2">{faq.q}</h3>
-                <p className="text-sm text-zinc-400 leading-relaxed font-medium">{faq.a}</p>
+                <h3 className="text-sm font-bold text-slate-900 mb-2">{faq.q}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed font-medium">{faq.a}</p>
               </div>
             ))}
           </div>
@@ -210,18 +208,15 @@ export default function SellPage() {
         {/* Final CTA */}
         <section className="text-center">
           <div className="rounded-xl border border-[var(--accent)]/20 bg-[var(--accent)]/5 p-8 sm:p-12">
-            <h2 className="text-xl sm:text-3xl font-bold text-white mb-4">
-              Ready to start selling?
+            <h2 className="text-xl sm:text-3xl font-bold text-slate-900 mb-4">
+              Ready to sell your car?
             </h2>
-            <p className="text-sm text-zinc-400 mb-8 max-w-lg mx-auto font-medium">
-              Create your free dealer account and list your first car in under 3 minutes.
+            <p className="text-sm text-slate-500 mb-8 max-w-lg mx-auto font-medium">
+              Tell us about it and we&apos;ll come back with a valuation within 48 hours.
             </p>
-            <Link
-              href="/dealers/signup"
-              className="inline-flex items-center justify-center h-12 px-8 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-black text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95 rounded-xl"
-            >
-              Create dealer account
-              <ArrowRight className="w-4 h-4 ml-2" />
+            <Link href={sellHref} className="btn btn-primary btn-lg">
+              Sell your car
+              <ArrowRight />
             </Link>
           </div>
         </section>

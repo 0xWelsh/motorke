@@ -11,7 +11,7 @@ import {
 
 describe("dealer-pricing", () => {
   it("formats KES with en-KE grouping", () => {
-    expect(formatKes(3999)).toBe("KSh 3,999");
+    expect(formatKes(3999)).toBe("KES 3,999");
   });
 
   it("formats boosts included per plan", () => {

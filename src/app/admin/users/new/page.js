@@ -40,7 +40,7 @@ export default async function AdminNewUserPage(props) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          <div className="bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-[2rem] p-8 shadow-none">
+          <div className="bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-xl p-8 shadow-none">
             <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100">
                <div className="w-10 h-10 rounded-2xl bg-[#f7f6f3] border border-slate-100 flex items-center justify-center text-slate-500">
                   <UserPlus size={18} />
@@ -132,7 +132,7 @@ export default async function AdminNewUserPage(props) {
 
         {/* SIDEBAR ONBOARDING TIP */}
         <div className="space-y-8">
-           <div className="bg-[#f7f6f3] border border-[#ddd4c8] border-slate-800 rounded-[2rem] p-8 shadow-none">
+           <div className="bg-[#f7f6f3] border border-[#ddd4c8] border-slate-800 rounded-xl p-8 shadow-none">
               <div className="flex items-center gap-3 mb-6 pb-6 border-b border-[#ddd4c8] border-slate-800/60">
                  <div className="w-10 h-10 rounded-2xl bg-[#f7f6f3] border border-slate-100 flex items-center justify-center text-slate-500 shadow-none">
                     <Lightbulb size={18} />

@@ -60,12 +60,12 @@ export default function MobileListingContactBar({
   }
 
   return (
-    <div className="pointer-events-auto mx-auto flex max-w-lg items-stretch gap-3 rounded-2xl border border-white/[0.06] bg-[#1c1c1c]/95 p-3 shadow-[0_8px_40px_rgba(15,23,42,0.14)] backdrop-blur-xl ring-1 ring-white/10">
+    <div className="pointer-events-auto mx-auto flex max-w-lg items-stretch gap-3 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-sm backdrop-blur-xl ring-1 ring-slate-200">
       <div className="flex min-w-0 flex-1 flex-col justify-center pl-1">
         <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
           List price
         </p>
-        <p className="truncate text-lg font-black tracking-tight text-white">
+        <p className="truncate text-lg font-black tracking-tight text-slate-900">
           {priceLabel}
         </p>
       </div>
@@ -75,9 +75,9 @@ export default function MobileListingContactBar({
           target="_blank"
           rel="noopener noreferrer"
           onClick={onWhatsApp}
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-5 py-3.5 text-[13px] font-bold text-white shadow-sm transition hover:bg-[#20bd5a] active:scale-[0.98]"
+          className="btn btn-success btn-sm shrink-0"
         >
-          <MessageCircle className="h-6 w-6 shrink-0" aria-hidden />
+          <MessageCircle aria-hidden />
           <span className="pr-0.5">WhatsApp</span>
         </a>
       ) : null}
@@ -85,9 +85,9 @@ export default function MobileListingContactBar({
         <Link
           href={callHref}
           onClick={onCall}
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3.5 text-[13px] font-bold text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.98]"
+          className="btn btn-neutral btn-sm shrink-0"
         >
-          <Phone className="h-5 w-5 shrink-0" aria-hidden />
+          <Phone aria-hidden />
           Call
         </Link>
       ) : null}

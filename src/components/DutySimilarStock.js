@@ -19,10 +19,10 @@ function CompactListing({ car }) {
       href={href}
       eventName="duty_similar_stock_click"
       eventPayload={{ car_id: car.id, make: car.make, model: car.model }}
-      className="flex gap-3 p-3 border border-slate-200 border-zinc-800 bg-white bg-zinc-900/80 hover:border-slate-400 hover:border-zinc-600 transition-colors group"
+      className="flex gap-3 p-3 border border-slate-200 bg-white hover:border-slate-400 transition-colors group"
       style={{ borderRadius: "var(--radius)" }}
     >
-      <div className="relative w-20 h-16 shrink-0 bg-slate-100 bg-zinc-800 overflow-hidden" style={{ borderRadius: "var(--radius)" }}>
+      <div className="relative w-20 h-16 shrink-0 bg-slate-100 overflow-hidden" style={{ borderRadius: "var(--radius)" }}>
         {car.image ? (
           <Image src={getThumbnailUrl(car.image, 160)} alt="" fill className="object-cover" sizes="80px" />
         ) : (
@@ -32,14 +32,14 @@ function CompactListing({ car }) {
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-bold text-slate-900 text-white truncate group-hover:text-[#b91c1c] group-hover:text-red-400 transition-colors">
+        <p className="text-sm font-bold text-slate-900 truncate group-hover:text-[#b91c1c] transition-colors">
           {title}
         </p>
         <p className="text-[11px] text-slate-500 mt-0.5">
           {car.engineCC ? `${car.engineCC}cc` : "n/a"}, {FUEL_LABELS[car.fuelType] || car.fuelType}
           {car.mileage ? `, ${formatMileage(car.mileage)}` : ""}
         </p>
-        <p className="text-sm font-bold text-[#b91c1c] text-red-400 mt-1 tabular-nums">
+        <p className="text-sm font-bold text-[#b91c1c] mt-1 tabular-nums">
           {formatCarPrice(car)}
         </p>
       </div>
@@ -83,7 +83,7 @@ export default function DutySimilarStock({ make, model }) {
   return (
     <aside className="space-y-6">
       <div
-        className="border border-slate-200 border-zinc-800 bg-slate-50/50 bg-zinc-900/40 p-5"
+        className="border border-slate-200 bg-slate-50 p-5"
         style={{ borderRadius: "var(--radius)" }}
       >
         <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-4">
@@ -91,7 +91,7 @@ export default function DutySimilarStock({ make, model }) {
         </h2>
 
         {!make && (
-          <p className="text-sm text-slate-500 text-slate-400">
+          <p className="text-sm text-slate-500">
             Run an estimate to see matching listings from verified dealers.
           </p>
         )}
@@ -101,7 +101,7 @@ export default function DutySimilarStock({ make, model }) {
         )}
 
         {make && !loading && cars.length === 0 && (
-          <p className="text-sm text-slate-500 text-slate-400 mb-4">
+          <p className="text-sm text-slate-500 mb-4">
             No {make} {model || ""} listings right now. Browse all stock.
           </p>
         )}
@@ -121,7 +121,7 @@ export default function DutySimilarStock({ make, model }) {
             href={hubPath}
             eventName="duty_similar_stock_view_all"
             eventPayload={{ make, model: model || "" }}
-            className="mt-4 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-[#b91c1c] text-red-400 hover:opacity-80"
+            className="mt-4 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-[#b91c1c] hover:opacity-80"
           >
             View all {make} {model || "cars"} <ArrowUpRight className="w-3.5 h-3.5" />
           </TrackedLink>
@@ -129,7 +129,7 @@ export default function DutySimilarStock({ make, model }) {
       </div>
 
       <div
-        className="border border-slate-200 border-zinc-800 p-5 text-sm text-slate-600 text-slate-400"
+        className="border border-slate-200 p-5 text-sm text-slate-600"
         style={{ borderRadius: "var(--radius)" }}
       >
         <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-3">Why use this tool?</h3>

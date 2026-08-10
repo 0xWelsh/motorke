@@ -15,7 +15,7 @@ export default function ListingPriceBlock({ car, className = "", explainerId = "
           style={{ fontSize: "inherit" }}
         >
           <span
-            className="font-serif italic font-semibold leading-none text-[0.52em] text-[var(--accent)] select-none"
+            className="italic font-semibold leading-none text-[0.52em] text-[var(--accent)] select-none"
             aria-hidden
           >
             i

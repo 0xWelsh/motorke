@@ -4,7 +4,7 @@ import { useState } from "react";
 
 function fmtPrice(price) {
   if (!price || price === 0) return "Contact for price";
-  return `KSh ${Number(price).toLocaleString("en-KE")}`;
+  return `KES ${Number(price).toLocaleString("en-KE")}`;
 }
 
 function proxyUrl(url) {

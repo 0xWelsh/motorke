@@ -97,7 +97,7 @@ export function buildDutyCalculatorJsonLd({ vehicle = null, pathname = DUTY_HUB 
       name: "How is import duty calculated in Kenya?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "KRA uses a depreciated CRSP multiplied by a schedule ratio to derive customs value, then import duty (typically 35%), excise on customs value plus duty, VAT at 16%, IDF at 3.5%, and railway levy at 2%.",
+        text: "KRA uses a depreciated CRSP multiplied by a schedule ratio to derive customs value, then import duty (25%, or 35% for large-engined vehicles above 3000cc petrol or 2500cc diesel), excise on customs value plus duty, VAT at 16%, IDF at 3.5%, and railway levy at 2%.",
       },
     },
     {

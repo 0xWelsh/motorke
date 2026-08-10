@@ -33,18 +33,18 @@ export default function ModelSearch({ makes, makeModelPairs, counts }) {
       {/* Search Input Container */}
       <div className="relative mx-auto max-w-2xl">
         <div className="relative flex items-center">
-          <Search className="absolute left-4 h-5 w-5 text-zinc-400" />
+          <Search className="absolute left-4 h-5 w-5 text-slate-500" />
           <input
             type="text"
             placeholder="Search make or model (e.g. Toyota Harrier, Subaru...)"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full rounded-2xl border border-white/[0.08] bg-[#1c1c1c] py-3.5 pl-12 pr-10 text-sm font-medium text-white shadow-sm transition-all placeholder:text-zinc-400 hover:border-white/[0.12] focus:border-[var(--accent)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/10"
+            className="w-full rounded-2xl border border-slate-300 bg-slate-50 py-3.5 pl-12 pr-10 text-sm font-medium text-slate-900 shadow-sm transition-all placeholder:text-zinc-400 hover:border-slate-300 focus:border-[var(--accent)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/10"
           />
           {query && (
             <button
               onClick={() => setQuery("")}
-              className="absolute right-4 rounded-full p-1 text-zinc-400 hover:bg-white/[0.06] hover:text-white"
+              className="absolute right-4 rounded-full p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
             >
               <X className="h-4 w-4" />
             </button>
@@ -54,12 +54,12 @@ export default function ModelSearch({ makes, makeModelPairs, counts }) {
         {/* Popular searches suggestions */}
         {!query && (
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-            <span className="font-semibold text-zinc-400">Popular:</span>
+            <span className="font-semibold text-slate-500">Popular:</span>
             {popularSearches.map((term) => (
               <button
                 key={term}
                 onClick={() => setQuery(term)}
-                className="rounded-full bg-white/[0.03] px-2.5 py-1 font-semibold text-zinc-400 border border-white/[0.06] transition-all hover:bg-[var(--accent)]/10 hover:text-[var(--accent)] hover:border-[var(--accent)]/20"
+                className="rounded-full bg-slate-50 px-2.5 py-1 font-semibold text-slate-500 border border-slate-200 transition-all hover:bg-[var(--accent)]/10 hover:text-[var(--accent)] hover:border-[var(--accent)]/20"
               >
                 {term}
               </button>
@@ -70,8 +70,8 @@ export default function ModelSearch({ makes, makeModelPairs, counts }) {
 
       {/* Results Section */}
       {query.trim().length >= 2 && filteredModels.length > 0 && (
-        <div className="animate-fade-in rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6">
-          <h2 className="mb-4 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.16em] text-zinc-400">
+        <div className="animate-fade-in rounded-2xl border border-slate-200 bg-slate-50 p-6">
+          <h2 className="mb-4 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
             <Car className="h-4 w-4 text-[var(--accent)]" />
             Matching Models ({filteredModels.length})
           </h2>
@@ -80,15 +80,15 @@ export default function ModelSearch({ makes, makeModelPairs, counts }) {
               <Link
                 key={`${item.make}-${item.model}`}
                 href={`/cars?make=${encodeURIComponent(item.make)}&model=${encodeURIComponent(item.model)}`}
-                className="group flex items-center justify-between rounded-xl border border-white/[0.08] bg-[#1c1c1c] p-3 shadow-sm transition-all hover:border-[var(--accent)]/40 hover:shadow-md hover:-translate-y-0.5"
+                className="group flex items-center justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition-all hover:border-[var(--accent)]/40 hover:shadow-md hover:-translate-y-0.5"
               >
                 <div className="min-w-0">
-                  <p className="truncate text-xs font-bold text-zinc-400 uppercase tracking-wider">{item.make}</p>
-                  <p className="truncate text-sm font-extrabold text-white group-hover:text-[var(--accent)]">
+                  <p className="truncate text-xs font-bold text-slate-500 uppercase tracking-wider">{item.make}</p>
+                  <p className="truncate text-sm font-extrabold text-slate-900 group-hover:text-[var(--accent)]">
                     {item.model}
                   </p>
                 </div>
-                <ChevronRight className="h-4 w-4 text-zinc-400 group-hover:text-[var(--accent)] transition-colors" />
+                <ChevronRight className="h-4 w-4 text-slate-500 group-hover:text-[var(--accent)] transition-colors" />
               </Link>
             ))}
           </div>
@@ -106,30 +106,30 @@ export default function ModelSearch({ makes, makeModelPairs, counts }) {
               <Link
                 key={make}
                 href={`/cars?make=${encodeURIComponent(make)}`}
-                className="group rounded-xl border border-white/[0.08] bg-[#1c1c1c] p-4 text-center transition-all hover:border-[var(--accent)]/40 hover:shadow-md hover:-translate-y-0.5"
+                className="group rounded-xl border border-slate-200 bg-white p-4 text-center transition-all hover:border-[var(--accent)]/40 hover:shadow-md hover:-translate-y-0.5"
               >
                 <div className="mx-auto mb-2.5 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--accent)]/10 text-base font-black text-[var(--accent)] group-hover:bg-[var(--accent)]/20 transition-all">
                   {make[0]}
                 </div>
-                <p className="font-serif text-sm font-bold text-white group-hover:text-[var(--accent)]">
+                <p className="text-sm font-bold text-slate-900 group-hover:text-[var(--accent)]">
                   {make}
                 </p>
-                <p className="text-[10px] font-semibold text-zinc-400">
+                <p className="text-[10px] font-semibold text-slate-500">
                   {counts[make] || 0} {counts[make] === 1 ? "model" : "models"}
                 </p>
               </Link>
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/[0.08] py-12 text-center">
-            <AlertCircle className="h-10 w-10 text-zinc-400 mb-3" />
-            <h3 className="font-serif text-base font-bold text-white">No brands match your search</h3>
-            <p className="mt-1 text-xs text-zinc-400 max-w-xs">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 py-12 text-center">
+            <AlertCircle className="h-10 w-10 text-slate-500 mb-3" />
+            <h3 className="text-base font-bold text-slate-900">No brands match your search</h3>
+            <p className="mt-1 text-xs text-slate-500 max-w-xs">
               We couldn't find any brands or models matching "{query}". Try clearing the search or typing a different keyword.
             </p>
             <button
               onClick={() => setQuery("")}
-              className="mt-4 rounded-xl border border-white/[0.08] bg-[#1c1c1c] px-4 py-2 text-xs font-bold text-zinc-400 transition-all hover:bg-white/[0.03]"
+              className="mt-4 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-500 transition-all hover:bg-slate-100"
             >
               Reset Search
             </button>

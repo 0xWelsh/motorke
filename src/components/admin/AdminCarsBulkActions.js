@@ -21,7 +21,7 @@ const STATUS_OPTS = [
 
 function fmtPrice(price) {
   if (price == null || price === 0) return "Contact for price";
-  return `KSh ${Number(price).toLocaleString("en-KE")}`;
+  return `KES ${Number(price).toLocaleString("en-KE")}`;
 }
 
 export default function BulkActionsWrapper({

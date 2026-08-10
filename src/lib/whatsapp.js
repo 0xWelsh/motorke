@@ -71,7 +71,7 @@ export async function notifyBuyerWatchlist(buyerPhone, updateData) {
   let text = `✨ *Update for your Saved Car!*\n\n`;
   
   if (updateType === "PRICE_DROP") {
-    text += `💰 *Price Drop:* ${carTitle} is now KSh ${newPrice} (was ${oldPrice})!\n\n`;
+    text += `💰 *Price Drop:* ${carTitle} is now KES ${newPrice} (was ${oldPrice})!\n\n`;
   } else {
     text += `🔥 *New Match:* A vehicle matching your saved search for "${carTitle}" is now live!\n\n`;
   }

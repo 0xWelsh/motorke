@@ -970,7 +970,7 @@ model BuyerRequestOffer {
   @@map("buyer_request_offers")
 }
 
-/// Gallery posts — event photography or magazine features.
+/// Gallery posts — event photography.
 model GalleryPost {
   id            String   @id @default(cuid())
   slug          String   @unique
@@ -981,7 +981,6 @@ model GalleryPost {
   description   String?
   coverImage    String?
   images        Json?
-  magazineLink  String?
   published     Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

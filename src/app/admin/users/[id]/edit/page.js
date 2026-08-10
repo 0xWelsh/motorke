@@ -48,7 +48,7 @@ export default async function AdminEditUserPage(props) {
           <ChevronLeft size={14} /> Back to Directory
         </Link>
         
-        <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-white p-8 rounded-[2rem] border border-[#ddd4c8] border-slate-800 shadow-none">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-white p-8 rounded-xl border border-[#ddd4c8] border-slate-800 shadow-none">
           <div className="shrink-0 flex items-center justify-center bg-[#f7f6f3] border border-dashed border-[#ddd4c8] border-slate-800 rounded-3xl p-2 h-28 w-28">
              <AdminAvatarUpload currentUrl={user.avatarUrl} targetId={user.id} targetType="user" name={user.name} size="lg" />
           </div>
@@ -73,7 +73,7 @@ export default async function AdminEditUserPage(props) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           {/* PROFILE EDIT FORM */}
-          <div className="bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-[2rem] p-8 shadow-none">
+          <div className="bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-xl p-8 shadow-none">
             <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100">
                <div className="w-10 h-10 rounded-2xl bg-[#f7f6f3] border border-slate-100 flex items-center justify-center text-slate-500">
                   <User size={18} />
@@ -149,7 +149,7 @@ export default async function AdminEditUserPage(props) {
           </div>
 
           {/* RESET PASSWORD */}
-          <div id="security" className="bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-[2rem] p-8 shadow-none">
+          <div id="security" className="bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-xl p-8 shadow-none">
             <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100">
                <div className="w-10 h-10 rounded-2xl bg-[#f7f6f3] border border-slate-100 flex items-center justify-center text-slate-500">
                   <Lock size={18} />
@@ -188,7 +188,7 @@ export default async function AdminEditUserPage(props) {
 
         {/* SIDEBAR */}
         <div className="space-y-8">
-           <div className="bg-red-50 border border-red-100 rounded-[2rem] p-8">
+           <div className="bg-red-50 border border-red-100 rounded-xl p-8">
               <div className="flex items-center gap-3 mb-6 pb-6 border-b border-red-200/50">
                  <div className="w-10 h-10 rounded-2xl bg-red-100 border border-red-200 flex items-center justify-center text-red-600">
                     <AlertTriangle size={18} />

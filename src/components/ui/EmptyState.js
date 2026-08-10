@@ -18,7 +18,7 @@ export default function EmptyState({ title, message, actionHref, actionLabel, se
         {actionHref && actionLabel ? (
           <Link
             href={actionHref}
-            className="inline-flex items-center gap-2 rounded-xl bg-[var(--accent)] px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.1em] text-white hover:bg-[var(--accent)]"
+            className="btn btn-primary btn-sm"
           >
             {actionLabel}
           </Link>

@@ -84,7 +84,7 @@ export default function HomepagePriceFilter() {
             className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all rounded-lg ${
               selectedMake === make
                 ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
-                : "border-white/[0.08] bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08] hover:border-white/[0.15] hover:text-white"
+                : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900"
             }`}
           >
             {make}
@@ -97,7 +97,7 @@ export default function HomepagePriceFilter() {
             className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all rounded-lg ${
               selectedExtra[chip.param] === chip.value
                 ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
-                : "border-white/[0.08] bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08] hover:border-white/[0.15] hover:text-white"
+                : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900"
             }`}
           >
             {chip.label}
@@ -114,7 +114,7 @@ export default function HomepagePriceFilter() {
             className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all rounded-lg ${
               activePreset === i
                 ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
-                : "border-white/[0.08] bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08] hover:border-white/[0.15] hover:text-white"
+                : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900"
             }`}
           >
             {preset.label}
@@ -127,34 +127,32 @@ export default function HomepagePriceFilter() {
         <div className="flex items-center gap-1.5">
           <input
             type="number"
-            placeholder="Min KSh"
+            placeholder="Min KES"
             value={customMin}
             onChange={(e) => {
               setCustomMin(e.target.value);
               setActivePreset(null);
             }}
-            className="w-24 sm:w-28 px-2.5 py-1.5 text-xs border border-white/[0.08] bg-white/[0.04] text-white placeholder:text-zinc-500 focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 rounded-lg transition-all"
+            className="w-24 sm:w-28 px-2.5 py-1.5 text-xs border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 rounded-lg transition-all"
           />
-          <span className="text-zinc-500 text-xs font-medium">&ndash;</span>
+          <span className="text-slate-400 text-xs font-medium">&ndash;</span>
           <input
             type="number"
-            placeholder="Max KSh"
+            placeholder="Max KES"
             value={customMax}
             onChange={(e) => {
               setCustomMax(e.target.value);
               setActivePreset(null);
             }}
-            className="w-24 sm:w-28 px-2.5 py-1.5 text-xs border border-white/[0.08] bg-white/[0.04] text-white placeholder:text-zinc-500 focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 rounded-lg transition-all"
+            className="w-24 sm:w-28 px-2.5 py-1.5 text-xs border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 rounded-lg transition-all"
           />
         </div>
 
         <button
           onClick={applyFilters}
           disabled={!hasSelection}
-          className={`inline-flex items-center gap-1.5 px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all rounded-lg ${
-            hasSelection
-              ? "border-[var(--accent)] bg-[var(--accent)] text-black hover:bg-[var(--accent-hover)] cursor-pointer"
-              : "border-white/[0.08] bg-white/[0.04] text-zinc-500 cursor-not-allowed"
+          className={`btn btn-sm ${
+            hasSelection ? "btn-primary cursor-pointer" : "btn-neutral cursor-not-allowed"
           }`}
         >
           <Search className="w-3 h-3" aria-hidden />
@@ -164,7 +162,7 @@ export default function HomepagePriceFilter() {
         {hasSelection && (
           <button
             onClick={resetFilters}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border border-white/[0.08] bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08] hover:border-white/[0.15] transition-all rounded-lg"
+            className="btn btn-neutral btn-sm"
           >
             <RotateCcw className="w-3 h-3" aria-hidden />
             Reset

@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 const FALLBACK_NEWS = [
-  { id: "f-1", title: "Fresh inventory added daily from verified dealers", url: "/cars", sourceName: "BIDGARI" },
+  { id: "f-1", title: "Fresh verified inventory added daily by BIDGARI", url: "/cars", sourceName: "BIDGARI" },
   { id: "f-2", title: "Compare vehicle options before contacting a seller", url: "/compare", sourceName: "BIDGARI" },
-  { id: "f-3", title: "Browse trusted dealership profiles across Kenya", url: "/dealers", sourceName: "BIDGARI" },
+  { id: "f-3", title: "Every sale handled by BIDGARI, end to end", url: "/how-to-buy", sourceName: "BIDGARI" },
 
 ];
 

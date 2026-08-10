@@ -105,7 +105,7 @@ export function buildVehicleListingSchema(car, { reviews } = {}) {
             priceValidUntil,
             availability: car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
             url: listingUrl,
-            seller: buildListingSellerSchema(car.dealer),
+            seller: buildListingSellerSchema(),
           },
         }
       : {}),

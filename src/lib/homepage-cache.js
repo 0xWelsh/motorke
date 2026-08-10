@@ -94,7 +94,7 @@ async function loadHomepageBase() {
           images: { where: { isPrimary: true }, take: 1 },
           dealer: { select: { id: true, name: true, location: true, slug: true } },
         },
-        take: 8,
+        take: 16,
         orderBy: { createdAt: "desc" },
       }),
     dealers: () =>
@@ -226,7 +226,7 @@ async function enrichHomepage(base) {
   const hotCandidates = (hotThisWeek || [])
     .filter((car) => car && car._count?.carViews > 0)
     .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
-    .slice(0, 12);
+    .slice(0, 16);
 
   // ENRICHMENT: Use batch processing to avoid P2024 pool exhaustion with controlled concurrency
   const hotWithAnalysis = await analyzePriceBatch(hotCandidates);
@@ -267,7 +267,7 @@ async function enrichHomepage(base) {
 
   const mostViewed = [...hotCandidates]
     .sort((a, b) => (b._count?.carViews || 0) - (a._count?.carViews || 0))
-    .slice(0, 12);
+    .slice(0, 16);
 
   // Batch process all spotlight cars at once to avoid connection pool exhaustion
   const allSpotlightCars = [...paidSpotlightRaw, ...rotatingSpotlightRaw];
@@ -313,7 +313,7 @@ async function enrichHomepage(base) {
     marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`)
   }));
 
-  const newEnhanced = (newArrivals || []).slice(0, 8).map(car => ({
+  const newEnhanced = (newArrivals || []).slice(0, 16).map(car => ({
     ...car,
     marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`)
   }));
@@ -329,7 +329,7 @@ async function enrichHomepage(base) {
       if (compDiff !== 0) return compDiff;
       return (b.price || 0) - (a.price || 0);
     })
-    .slice(0, 8);
+    .slice(0, 16);
 
   const heroFallbackEnhanced = (heroFallback || []).map(car => ({
     ...car,
