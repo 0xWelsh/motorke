@@ -13,7 +13,7 @@ import GlobalFooter from "@/components/GlobalFooter";
  *
  * `shellPath` comes from middleware (`x-pathname`) so the server HTML matches the client (usePathname can be empty on SSR).
  */
-export default function SiteChrome({ user, children, shellPath = "/" }) {
+export default function SiteChrome({ user, children, shellPath = "/", navCounts }) {
   const clientPath = usePathname();
   const pathname = clientPath || shellPath || "/";
   const appShell =
@@ -33,7 +33,7 @@ export default function SiteChrome({ user, children, shellPath = "/" }) {
   return (
     <>
       <SiteTopBar />
-      <Navbar user={user} />
+      <Navbar user={user} navCounts={navCounts} />
       <ModalProvider>
         <main className="flex-1">{children}</main>
         <CompareBar />

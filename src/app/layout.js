@@ -8,6 +8,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { PWARegister } from "@/components/PWARegister";
 import AnalyticsBootstrap from "@/components/AnalyticsBootstrap";
 import { getSession } from "@/lib/auth";
+import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 import CookieConsent from "@/components/CookieConsent";
 import { headers, cookies } from "next/headers";
 import { SaveDataProvider } from "@/components/SaveDataProvider";
@@ -127,7 +128,10 @@ export default async function RootLayout({ children }) {
   const saveData =
     isSaveDataRequest(headerList) || cookieStore.get(SAVE_DATA_COOKIE)?.value === "1";
 
-  const session = await getSession();
+  const [session, navCounts] = await Promise.all([
+    getSession(),
+    getBrowseInventoryCounts(),
+  ]);
   const user    = session?.user ? {
     id:      session.user.id,
     name:    session.user.name,
@@ -203,7 +207,7 @@ export default async function RootLayout({ children }) {
           <SaveDataProvider saveData={saveData}>
             <AnalyticsBootstrap />
             <CompareProvider>
-              <SiteChrome user={user} shellPath={shellPath}>
+              <SiteChrome user={user} shellPath={shellPath} navCounts={navCounts}>
                 {children}
               </SiteChrome>
             </CompareProvider>

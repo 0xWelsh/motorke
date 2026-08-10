@@ -127,12 +127,14 @@ export default async function CarsPage({ searchParams }) {
   const maxPrice = sp.maxPrice ? parseInt(sp.maxPrice, 10) : undefined;
   const vehicleType = sp.vehicleType || "";
   const condition = sp.condition || "";
+  const featured = sp.featured === "1";
   const sort = normalizeCarsSort(sp.sort);
 
   const where = {
     ...publicDetailVisibilityClause(),
     ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
     ...buildMakeWhere(make),
+    ...(featured && { featured: true }),
     ...(model && { model: { equals: model, mode: "insensitive" } }),
     ...(steering && { steering }),
     ...(minYOM || maxYOM ? { year: { ...(minYOM && { gte: minYOM }), ...(maxYOM && { lte: maxYOM }) } } : {}),
