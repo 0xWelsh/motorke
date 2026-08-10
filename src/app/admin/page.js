@@ -7,9 +7,33 @@ import AdminTrendsChart from "@/components/admin/AdminTrendsChart";
 import AdminActionFeed from "@/components/admin/AdminActionFeed";
 import RunWatchAlertsButton from "@/components/admin/RunWatchAlertsButton";
 import RecacheHomepageButton from "@/components/admin/RecacheHomepageButton";
-import { Car, Users, Bolt, Plus, UserCheck, TrendingUp } from "lucide-react";
+import {
+  Car,
+  Users,
+  Plus,
+  UserCheck,
+  TrendingUp,
+  Eye,
+  MessageSquare,
+  Clock,
+  ArrowUpRight,
+  ArrowDownRight,
+  FileText,
+  SearchCheck,
+  Settings,
+  Activity,
+} from "lucide-react";
 
 export const metadata = { title: "Admin Dashboard | BIDGARI" };
+
+const STAT_CONFIG = {
+  listings: { Icon: Car, tile: "bg-blue-500/15 text-blue-400" },
+  views: { Icon: Eye, tile: "bg-amber-500/15 text-amber-400" },
+  leads: { Icon: MessageSquare, tile: "bg-emerald-500/15 text-emerald-400" },
+  leadsToday: { Icon: UserCheck, tile: "bg-violet-500/15 text-violet-400" },
+  addedToday: { Icon: Plus, tile: "bg-sky-500/15 text-sky-400" },
+  stale: { Icon: Clock, tile: "bg-rose-500/15 text-rose-400" },
+};
 
 export default async function AdminDashboard({ searchParams }) {
   await requireAdmin();
@@ -239,27 +263,38 @@ export default async function AdminDashboard({ searchParams }) {
     ? Math.round(((leadsThisWeek - leadsPrevWeek) / leadsPrevWeek) * 100)
     : leadsThisWeek > 0 ? 100 : 0;
 
-  const stat = (label, value, opts = {}) => (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3">
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">{label}</p>
-      <div className="mt-1 flex items-baseline gap-2">
-        <span className="text-xl font-bold text-white tabular-nums">{typeof value === "number" ? value.toLocaleString() : value}</span>
-        {opts.trend != null && (
-          <span className={`text-xs font-bold tabular-nums ${opts.trend >= 0 ? "text-emerald-500" : "text-rose-500"}`}>
-            {opts.trend >= 0 ? "+" : ""}{opts.trend}%
-          </span>
-        )}
-      </div>
-    </div>
-  );
+  const stats = [
+    { key: "listings", label: "Live Listings", value: totalCars },
+    { key: "views", label: "Views Today", value: viewsToday },
+    { key: "leads", label: "Total Leads", value: totalLeads },
+    { key: "leadsToday", label: "Leads Today", value: leadsToday, trend: lG },
+    { key: "addedToday", label: "Added Today", value: carsToday, trend: cG },
+    { key: "stale", label: "Stale", value: staleListings },
+  ];
+
+  const legend = [
+    { key: "cars", label: "Listings", dot: "bg-blue-400" },
+    { key: "leads", label: "Leads", dot: "bg-emerald-400" },
+    { key: "views", label: "Views", dot: "bg-amber-400" },
+  ];
+
+  const managementLinks = [
+    { label: "Reports", href: "/api/admin/reports/network-weekly-pdf", Icon: FileText },
+    { label: "SEO Audit", href: "/admin/seo", Icon: SearchCheck },
+    { label: "Users", href: "/admin/users", Icon: Users },
+    { label: "Settings", href: "/admin/settings", Icon: Settings },
+  ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
 
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-lg font-bold text-white tracking-tight">Dashboard</h1>
-        <div className="flex items-center gap-1 rounded-lg bg-zinc-900/60 p-0.5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight text-white">Dashboard</h1>
+          <p className="mt-0.5 text-xs text-zinc-500">Business overview at a glance.</p>
+        </div>
+        <div className="flex items-center gap-1 rounded-xl border border-zinc-800 bg-zinc-900/70 p-1">
           {[
             { v: "7", l: "7d" },
             { v: "30", l: "30d" },
@@ -268,9 +303,9 @@ export default async function AdminDashboard({ searchParams }) {
             <Link
               key={o.v}
               href={`?range=${o.v}`}
-              className={`rounded-md px-3 py-1 text-[11px] font-bold transition ${
+              className={`rounded-lg px-3.5 py-1.5 text-xs font-bold transition ${
                 range === o.v
-                  ? "bg-emerald-600 text-white"
+                  ? "bg-emerald-600 text-white shadow-[0_2px_10px_rgba(16,185,129,0.35)]"
                   : "text-zinc-500 hover:text-zinc-200"
               }`}
             >
@@ -281,58 +316,100 @@ export default async function AdminDashboard({ searchParams }) {
       </div>
 
       {/* Stats grid */}
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
-        {stat("Live Listings", totalCars)}
-        {stat("Views Today", viewsToday)}
-        {stat("Total Leads", totalLeads)}
-        {stat("Leads Today", leadsToday, { trend: lG })}
-        {stat("Added Today", carsToday, { trend: cG })}
-        {stat("Stale", staleListings)}
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+        {stats.map((s) => {
+          const cfg = STAT_CONFIG[s.key];
+          const Icon = cfg.Icon;
+          return (
+            <div
+              key={s.key}
+              className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 transition-colors hover:border-zinc-700"
+            >
+              <div className="flex items-start justify-between">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-500">
+                  {s.label}
+                </p>
+                <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${cfg.tile}`}>
+                  <Icon size={15} />
+                </span>
+              </div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-2xl font-bold tracking-tight text-white tabular-nums">
+                  {typeof s.value === "number" ? s.value.toLocaleString() : s.value}
+                </span>
+                {s.trend != null && (
+                  <span className={`inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[11px] font-bold tabular-nums ${
+                    s.trend >= 0 ? "bg-emerald-500/10 text-emerald-400" : "bg-rose-500/10 text-rose-400"
+                  }`}>
+                    {s.trend >= 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+                    {Math.abs(s.trend)}%
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Two column */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
 
         {/* Left - 3/4 */}
-        <div className="lg:col-span-3 space-y-4">
+        <div className="space-y-4 lg:col-span-3">
 
           {/* Chart */}
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
-                All Metrics &middot; 30d
-              </span>
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400">
+                  <Activity size={14} />
+                </span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-500">
+                  All Metrics &middot; 30d
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                {legend.map((l) => (
+                  <span key={l.key} className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-zinc-400">
+                    <span className={`h-2 w-2 rounded-full ${l.dot}`} />
+                    {l.label}
+                  </span>
+                ))}
+              </div>
             </div>
             <AdminTrendsChart data={chartData} />
           </div>
 
           {/* Activity */}
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900/60">
-            <div className="px-4 py-3 border-b border-zinc-800">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50">
+            <div className="flex items-center justify-between border-b border-zinc-800 px-5 py-3.5">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-500">
                 Recent Activity
               </span>
+              <Link href="/admin/cars" className="text-[11px] font-bold text-emerald-400 hover:text-emerald-300 transition-colors">
+                View inventory
+              </Link>
             </div>
             {activity.length > 0 ? (
-              <div className="divide-y divide-zinc-800">
+              <div className="divide-y divide-zinc-800/70">
                 {activity.map((e) => (
                   <Link
                     key={e.id}
                     href={e.href}
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-zinc-800/40 transition-colors"
+                    className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-zinc-800/40"
                   >
-                    <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${
-                      e.type === "car" ? "bg-blue-950/40 text-blue-400" : "bg-emerald-950/40 text-emerald-400"
+                    <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+                      e.type === "car" ? "bg-blue-500/10 text-blue-400" : "bg-emerald-500/10 text-emerald-400"
                     }`}>
-                      {e.type === "car" ? <Car size={12} /> : <Users size={12} />}
+                      {e.type === "car" ? <Car size={14} /> : <MessageSquare size={14} />}
                     </div>
-                    <span className="flex-1 text-sm font-medium text-white truncate">{e.label}</span>
-                    <span className="text-[11px] font-medium text-zinc-500 tabular-nums">{ago(e.time)}</span>
+                    <span className="flex-1 truncate text-sm font-medium text-white">{e.label}</span>
+                    <span className="text-[11px] font-semibold text-zinc-500 tabular-nums">{ago(e.time)}</span>
                   </Link>
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-zinc-500 text-center py-8">No recent activity</p>
+              <p className="py-10 text-center text-sm text-zinc-500">No recent activity</p>
             )}
           </div>
         </div>
@@ -341,30 +418,35 @@ export default async function AdminDashboard({ searchParams }) {
         <div className="space-y-4">
 
           {/* Attention Queue */}
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900/60">
-            <div className="px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50">
+            <div className="flex items-center justify-between border-b border-zinc-800 px-5 py-3.5">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-500">
                 Queue
               </span>
-              <span className="text-[10px] font-bold text-zinc-500">{actions.length}</span>
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-500/15 px-1.5 text-[10px] font-bold text-emerald-400">
+                {actions.length}
+              </span>
             </div>
             <AdminActionFeed actions={actions} />
           </div>
 
-          {/* Stats */}
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 space-y-4">
-            <div>
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Inventory Value</p>
-              <p className="text-lg font-bold text-white mt-0.5 tabular-nums">{fmt(totalValue)}</p>
-            </div>
-            <div className="pt-3 border-t border-zinc-800 space-y-2">
+          {/* Inventory value */}
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-500">Inventory Value</p>
+            <p className="mt-1 text-2xl font-bold tracking-tight text-white tabular-nums">{fmt(totalValue)}</p>
+            <div className="mt-4 space-y-2.5 border-t border-zinc-800 pt-4">
               {[
-                { l: "Live Listings", v: totalCars },
-                { l: "Users", v: totalUsers },
-                { l: "Leads", v: totalLeads },
+                { l: "Live Listings", v: totalCars, Icon: Car, cls: "bg-blue-500/10 text-blue-400" },
+                { l: "Users", v: totalUsers, Icon: Users, cls: "bg-violet-500/10 text-violet-400" },
+                { l: "Leads", v: totalLeads, Icon: MessageSquare, cls: "bg-emerald-500/10 text-emerald-400" },
               ].map((s) => (
                 <div key={s.l} className="flex items-center justify-between">
-                  <span className="text-xs text-zinc-500">{s.l}</span>
+                  <span className="flex items-center gap-2 text-xs text-zinc-500">
+                    <span className={`flex h-6 w-6 items-center justify-center rounded-md ${s.cls}`}>
+                      <s.Icon size={12} />
+                    </span>
+                    {s.l}
+                  </span>
                   <span className="text-xs font-bold text-white tabular-nums">{s.v.toLocaleString()}</span>
                 </div>
               ))}
@@ -373,21 +455,25 @@ export default async function AdminDashboard({ searchParams }) {
 
           {/* Salesman Performance */}
           {salesmanPerformance.length > 0 && (
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 space-y-3">
-              <div className="flex items-center gap-2">
-                <TrendingUp size={14} className="text-zinc-500" />
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Salesman Performance</span>
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
+              <div className="mb-4 flex items-center gap-2">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400">
+                  <TrendingUp size={14} />
+                </span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-500">
+                  Salesman Performance
+                </span>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {salesmanPerformance.map((s) => (
-                  <div key={s.id} className="space-y-1">
+                  <div key={s.id} className="space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-zinc-300 font-medium">{s.name}</span>
+                      <span className="text-xs font-semibold text-zinc-200">{s.name}</span>
                       <span className="text-xs font-bold text-white tabular-nums">{s.total} leads</span>
                     </div>
-                    <div className="flex items-center gap-3 text-[11px]">
-                      <span className="text-emerald-400 font-bold tabular-nums">{s.sold} sold</span>
-                      <span className={`font-bold tabular-nums ${s.rate >= 30 ? "text-emerald-400" : s.rate >= 10 ? "text-amber-400" : "text-zinc-500"}`}>
+                    <div className="flex items-center gap-2 text-[11px] font-semibold">
+                      <span className="text-emerald-400 tabular-nums">{s.sold} sold</span>
+                      <span className={`tabular-nums ${s.rate >= 30 ? "text-emerald-400" : s.rate >= 10 ? "text-amber-400" : "text-zinc-500"}`}>
                         {s.rate}% conv.
                       </span>
                       {s.avgResp !== null && (
@@ -396,10 +482,9 @@ export default async function AdminDashboard({ searchParams }) {
                         </span>
                       )}
                     </div>
-                    {/* mini progress bar */}
-                    <div className="h-1 rounded-full bg-zinc-800 overflow-hidden">
+                    <div className="h-1.5 overflow-hidden rounded-full bg-zinc-800">
                       <div
-                        className="h-full rounded-full bg-emerald-500 transition-all"
+                        className="h-full rounded-full bg-gradient-to-r from-emerald-600 to-emerald-400 transition-all"
                         style={{ width: `${Math.min(s.rate, 100)}%` }}
                       />
                     </div>
@@ -409,43 +494,43 @@ export default async function AdminDashboard({ searchParams }) {
             </div>
           )}
 
-          {/* Actions */}
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 space-y-2">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Quick</span>
-            <div className="grid grid-cols-2 gap-1.5">
+          {/* Quick */}
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-500">Quick</span>
+            <div className="mt-3 grid grid-cols-2 gap-2">
               <Link
                 href="/admin/cars/new"
-                className="flex items-center justify-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-[11px] font-bold text-zinc-300 hover:border-emerald-500/40 hover:text-emerald-400 transition-colors"
+                className="flex items-center justify-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-950/60 px-3 py-2.5 text-xs font-bold text-zinc-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-400"
               >
                 <Plus size={14} /> Car
               </Link>
               <Link
                 href="/admin/users"
-                className="flex items-center justify-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-[11px] font-bold text-zinc-300 hover:border-emerald-500/40 hover:text-emerald-400 transition-colors"
+                className="flex items-center justify-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-950/60 px-3 py-2.5 text-xs font-bold text-zinc-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-400"
               >
                 <Users size={14} /> Users
               </Link>
             </div>
-            <RunWatchAlertsButton />
-            <RecacheHomepageButton />
+            <div className="mt-2 space-y-2">
+              <RunWatchAlertsButton />
+              <RecacheHomepageButton />
+            </div>
           </div>
         </div>
       </div>
 
       {/* Management links */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-        {[
-          { l: "Reports", h: "/api/admin/reports/network-weekly-pdf" },
-          { l: "SEO Audit", h: "/admin/seo" },
-          { l: "Users", h: "/admin/users" },
-          { l: "Settings", h: "/admin/settings" },
-        ].map((link) => (
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+        {managementLinks.map((link) => (
           <Link
-            key={link.h}
-            href={link.h}
-            className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-2.5 text-xs font-medium text-zinc-400 hover:text-white hover:border-zinc-700 transition-colors"
+            key={link.href}
+            href={link.href}
+            className="flex items-center gap-2.5 rounded-2xl border border-zinc-800 bg-zinc-900/50 px-4 py-3 text-xs font-semibold text-zinc-400 transition-colors hover:border-zinc-700 hover:text-white"
           >
-            {link.l}
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-800/80 text-zinc-400">
+              <link.Icon size={14} />
+            </span>
+            {link.label}
           </Link>
         ))}
       </div>

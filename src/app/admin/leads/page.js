@@ -5,11 +5,14 @@ import {
   MessageSquare,
   Smartphone,
   Globe,
+  Phone,
   Search,
   Clock,
-  Phone,
   Mail,
   UserCheck,
+  Inbox,
+  Flame,
+  BadgeCheck,
 } from "lucide-react";
 import ExportButton from "@/components/admin/ExportButton";
 import DataTableShell from "@/components/ui/DataTableShell";
@@ -23,6 +26,15 @@ export const metadata = { title: "Leads | BIDGARI Admin" };
 
 const VALID_STATUSES = ["", "NEW", "CONTACTED", "INTERESTED", "NEGOTIATING", "SOLD", "DEAD"];
 
+function initials(name) {
+  return String(name || "?")
+    .split(" ")
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
 function adminLeadsHref({ page: pageNum = 1, search = "", status = "", mine = "" } = {}) {
   const p = new URLSearchParams();
   if (pageNum > 1) p.set("page", String(pageNum));
@@ -31,6 +43,23 @@ function adminLeadsHref({ page: pageNum = 1, search = "", status = "", mine = ""
   if (mine) p.set("mine", mine);
   const qs = p.toString();
   return qs ? `/admin/leads?${qs}` : "/admin/leads";
+}
+
+function ChannelBadge({ channel }) {
+  const isWhatsApp = channel === "whatsapp";
+  const isCall = channel === "call";
+  const Icon = isWhatsApp ? Smartphone : isCall ? Phone : Globe;
+  const cls = isWhatsApp
+    ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300"
+    : isCall
+      ? "border-sky-500/25 bg-sky-500/10 text-sky-300"
+      : "border-blue-500/25 bg-blue-500/10 text-blue-300";
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${cls}`}>
+      <Icon size={11} />
+      {channel}
+    </span>
+  );
 }
 
 export default async function AdminLeadsPage(props) {
@@ -88,21 +117,28 @@ export default async function AdminLeadsPage(props) {
   const from = total === 0 ? 0 : (page - 1) * limit + 1;
   const to = Math.min(page * limit, total);
 
-  const filteredTotals = {
-    all: total,
-    NEW: newCount,
-    ACTIVE: activeCount,
-    SOLD: soldCount,
+  const pills = [
+    { key: "all", label: "All", count: total, value: "", href: "/admin/leads", Icon: Inbox },
+    { key: "mine", label: "My Leads", count: myNewCount, value: "", href: "/admin/leads?mine=1", Icon: UserCheck, mine: true },
+    { key: "NEW", label: "New", count: newCount, value: "NEW", href: "/admin/leads?status=NEW", Icon: Clock },
+    { key: "ACTIVE", label: "Active", count: activeCount, value: "ACTIVE", href: "/admin/leads?status=ACTIVE", Icon: Flame },
+    { key: "SOLD", label: "Sold", count: soldCount, value: "SOLD", href: "/admin/leads?status=SOLD", Icon: BadgeCheck },
+  ];
+
+  const isPillActive = (pill) => {
+    if (pill.mine) return mineOnly;
+    if (pill.value === "") return !statusFilter && !mineOnly;
+    return statusFilter === pill.value;
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
 
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-lg font-bold text-white tracking-tight">Leads</h1>
-          <p className="mt-1 text-[11px] text-zinc-500">Customer enquiries from forms, WhatsApp, and call intents.</p>
+          <h1 className="text-xl font-bold tracking-tight text-white">Leads</h1>
+          <p className="mt-0.5 text-xs text-zinc-500">Customer enquiries from forms, WhatsApp, and call intents.</p>
         </div>
         <ExportButton
           label="Export CSV"
@@ -122,48 +158,49 @@ export default async function AdminLeadsPage(props) {
       </div>
 
       {/* Status filter pills */}
-      <div className="flex flex-wrap items-center gap-1.5">
-        {[
-          { key: "all", label: "All", count: filteredTotals.all, value: "" },
-          { key: "mine", label: "My Leads", count: myNewCount, value: "", mine: "1" },
-          { key: "NEW", label: "New", count: filteredTotals.NEW, value: "NEW" },
-          { key: "ACTIVE", label: "Active", count: filteredTotals.ACTIVE, value: "ACTIVE" },
-          { key: "SOLD", label: "Sold", count: filteredTotals.SOLD, value: "SOLD" },
-        ].map(({ key, label, count, value, mine }) => (
-          <Link
-            key={key}
-            href={mine ? `/admin/leads?mine=1` : (value ? `/admin/leads?status=${value}` : "/admin/leads")}
-            className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide transition-colors ${
-              (mine && mineOnly) || ((value === "" && !statusFilter && !mineOnly) || (value && statusFilter === value && !mineOnly))
-                ? "border-emerald-700 bg-emerald-950/40 text-emerald-300"
-                : "border-zinc-800 bg-zinc-900/40 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300"
-            }`}
-          >
-            {key === "NEW" && <Clock size={12} />}
-            {key === "mine" && <UserCheck size={12} />}
-            {count}
-            {" "}{label}
-          </Link>
-        ))}
+      <div className="flex flex-wrap items-center gap-2">
+        {pills.map((pill) => {
+          const active = isPillActive(pill);
+          const Icon = pill.Icon;
+          return (
+            <Link
+              key={pill.key}
+              href={pill.href}
+              className={`inline-flex items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-bold transition-colors ${
+                active
+                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+                  : "border-zinc-800 bg-zinc-900/40 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300"
+              }`}
+            >
+              <Icon size={13} className={active ? "text-emerald-400" : "text-zinc-500"} />
+              {pill.label}
+              <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold tabular-nums ${
+                active ? "bg-emerald-500/20 text-emerald-300" : "bg-zinc-800 text-zinc-400"
+              }`}>
+                {pill.count}
+              </span>
+            </Link>
+          );
+        })}
       </div>
 
       {/* Search + filter */}
-      <form method="GET" className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-2">
+      <form method="GET" className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-2.5">
         <div className="flex flex-wrap items-center gap-2">
-          <div className="relative flex-1 min-w-[200px]">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-zinc-500" />
+          <div className="relative min-w-[200px] flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-500" />
             <input
               name="search"
               defaultValue={search}
               placeholder="Buyer, phone, email, or vehicle…"
               autoComplete="off"
-              className="w-full rounded-md border border-zinc-800 bg-zinc-950/60 py-2 pl-9 pr-3 text-sm text-white placeholder:text-zinc-600 outline-none transition focus:border-emerald-500/50 focus:bg-zinc-950"
+              className="w-full rounded-xl border border-zinc-800 bg-zinc-950/60 py-2.5 pl-10 pr-3 text-sm text-white placeholder:text-zinc-600 outline-none transition focus:border-emerald-500/50 focus:bg-zinc-950 focus:ring-2 focus:ring-emerald-500/15"
             />
           </div>
           <select
             name="status"
             defaultValue={statusFilter}
-            className="cursor-pointer rounded-md border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-xs font-semibold text-zinc-300 outline-none transition focus:border-emerald-500/50"
+            className="cursor-pointer rounded-xl border border-zinc-800 bg-zinc-950/60 px-3 py-2.5 text-xs font-semibold text-zinc-300 outline-none transition focus:border-emerald-500/50"
           >
             <option value="">All statuses</option>
             {VALID_STATUSES.filter(Boolean).map((s) => (
@@ -172,14 +209,14 @@ export default async function AdminLeadsPage(props) {
           </select>
           <button
             type="submit"
-            className="rounded-md bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-500 transition-colors"
+            className="rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white transition-colors hover:bg-emerald-500"
           >
             Apply
           </button>
           {(search || statusFilter) && (
             <Link
               href="/admin/leads"
-              className="rounded-md border border-zinc-800 px-3 py-2 text-xs font-bold text-zinc-400 hover:text-white transition-colors"
+              className="rounded-xl border border-zinc-800 px-4 py-2.5 text-xs font-bold text-zinc-400 transition-colors hover:text-white"
             >
               Clear
             </Link>
@@ -190,41 +227,41 @@ export default async function AdminLeadsPage(props) {
       {/* Desktop table */}
       <div className="hidden lg:block">
         <DataTableShell>
-          <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+          <div className="flex items-center justify-between border-b border-zinc-800 px-5 py-3.5">
+            <p className="text-xs font-medium text-zinc-500">
               {total === 0 ? "No leads" : (
-                <>Showing <span className="text-white">{from}–{to}</span> of <span className="text-white">{total}</span></>
+                <>Showing <span className="font-bold text-white">{from}–{to}</span> of <span className="font-bold text-white">{total}</span></>
               )}
             </p>
             {pages > 1 && (
               <div className="flex items-center gap-1">
                 {page <= 1 ? (
-                  <span className="rounded-md px-2.5 py-1 text-[11px] font-bold uppercase text-zinc-600">Prev</span>
+                  <span className="rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase text-zinc-600">Prev</span>
                 ) : (
                   <Link href={adminLeadsHref({ page: page - 1, search, status: statusFilter })}
-                    className="rounded-md border border-zinc-800 bg-zinc-950/60 px-2.5 py-1 text-[11px] font-bold uppercase text-zinc-400 hover:text-white transition-colors">Prev</Link>
+                    className="rounded-lg border border-zinc-800 bg-zinc-950/60 px-2.5 py-1 text-[11px] font-bold uppercase text-zinc-400 transition-colors hover:text-white">Prev</Link>
                 )}
-                <span className="px-2 text-[11px] font-medium tabular-nums text-zinc-500">{page} / {pages}</span>
+                <span className="px-2 text-xs font-medium tabular-nums text-zinc-500">{page} / {pages}</span>
                 {page >= pages ? (
-                  <span className="rounded-md px-2.5 py-1 text-[11px] font-bold uppercase text-zinc-600">Next</span>
+                  <span className="rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase text-zinc-600">Next</span>
                 ) : (
                   <Link href={adminLeadsHref({ page: page + 1, search, status: statusFilter })}
-                    className="rounded-md border border-zinc-800 bg-zinc-950/60 px-2.5 py-1 text-[11px] font-bold uppercase text-zinc-400 hover:text-white transition-colors">Next</Link>
+                    className="rounded-lg border border-zinc-800 bg-zinc-950/60 px-2.5 py-1 text-[11px] font-bold uppercase text-zinc-400 transition-colors hover:text-white">Next</Link>
                 )}
               </div>
             )}
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[800px] text-left">
+            <table className="w-full min-w-[900px] text-left">
               <thead>
-                <tr className="border-b border-zinc-800 bg-zinc-900/40">
+                <tr className="border-b border-zinc-800 bg-zinc-900/60">
                   {["Buyer", "Vehicle", "Assigned", "Channel", "Status", "Date", ""].map((h) => (
-                    <th key={h || "actions"} className="whitespace-nowrap px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-zinc-500">{h}</th>
+                    <th key={h || "actions"} className="whitespace-nowrap px-5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800/60">
+              <tbody className="divide-y divide-zinc-800/70">
                 {leads.map((lead, i) => (
                   <LeadRow key={lead.id} lead={lead} index={i} />
                 ))}
@@ -243,7 +280,7 @@ export default async function AdminLeadsPage(props) {
       </div>
 
       {/* Mobile cards */}
-      <div className="space-y-2 lg:hidden">
+      <div className="space-y-2.5 lg:hidden">
         {leads.length === 0 && (
           <EmptyState
             title="No leads found"
@@ -262,47 +299,54 @@ export default async function AdminLeadsPage(props) {
 function LeadRow({ lead, index }) {
   return (
     <tr className={`transition-colors hover:bg-zinc-800/30 ${index % 2 === 0 ? "bg-zinc-900/20" : "bg-transparent"}`}>
-      <td className="px-4 py-3">
-        <div className="flex items-center gap-2">
-          <Link
-            href={`/admin/leads/${lead.id}`}
-            className="text-sm font-bold text-white hover:text-emerald-400 transition-colors"
-          >
-            {lead.name}
-          </Link>
-          {!lead.userId && (
-            <span className="rounded-md border border-zinc-800 px-1.5 py-0.5 text-[10px] font-bold text-zinc-500">Guest</span>
-          )}
+      <td className="px-5 py-3.5">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500/25 to-emerald-700/25 text-[11px] font-bold text-emerald-300 ring-1 ring-inset ring-emerald-500/20">
+            {initials(lead.name)}
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <Link
+                href={`/admin/leads/${lead.id}`}
+                className="truncate text-sm font-bold text-white transition-colors hover:text-emerald-400"
+              >
+                {lead.name}
+              </Link>
+              {!lead.userId && (
+                <span className="rounded-md border border-zinc-800 px-1.5 py-0.5 text-[10px] font-bold text-zinc-500">Guest</span>
+              )}
+            </div>
+            <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-zinc-500">
+              {lead.phone !== "not-provided" ? (
+                <span className="inline-flex items-center gap-1"><Phone size={11} /> {lead.phone}</span>
+              ) : <span className="text-[10px] font-semibold text-amber-500">No phone</span>}
+              {lead.email && (
+                <span className="inline-flex items-center gap-1 truncate"><Mail size={11} /> {lead.email}</span>
+              )}
+            </div>
+            {lead.message && (
+              <p className="mt-1 max-w-[280px] truncate text-[11px] italic text-zinc-600" title={lead.message}>
+                &ldquo;{lead.message.slice(0, 60)}&rdquo;
+              </p>
+            )}
+          </div>
         </div>
-        <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-zinc-500">
-          {lead.phone !== "not-provided" ? (
-            <span className="inline-flex items-center gap-1"><Phone size={11} /> {lead.phone}</span>
-          ) : <span className="text-amber-600 text-[10px] font-semibold">No phone</span>}
-          {lead.email && (
-            <span className="inline-flex items-center gap-1"><Mail size={11} /> {lead.email}</span>
-          )}
-        </div>
-        {lead.message && (
-          <p className="mt-1 text-[11px] text-zinc-600 italic truncate max-w-[250px]" title={lead.message}>
-            &ldquo;{lead.message.slice(0, 60)}&rdquo;
-          </p>
-        )}
       </td>
-      <td className="px-4 py-3">
+      <td className="px-5 py-3.5">
         <Link
           href={carListingPath(lead.car)}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm font-semibold text-white hover:text-emerald-400 transition-colors"
+          className="text-sm font-semibold text-white transition-colors hover:text-emerald-400"
         >
           {lead.car.year} {lead.car.make} {lead.car.model}
         </Link>
       </td>
-      <td className="px-4 py-3">
+      <td className="px-5 py-3.5">
         <span className="text-xs text-zinc-400">
           {lead.assignedTo ? (
-            <span className="inline-flex items-center gap-1">
-              <UserCheck size={11} className="text-emerald-500" />
+            <span className="inline-flex items-center gap-1.5">
+              <UserCheck size={12} className="text-emerald-500" />
               {lead.assignedTo.name}
             </span>
           ) : (
@@ -310,25 +354,18 @@ function LeadRow({ lead, index }) {
           )}
         </span>
       </td>
-      <td className="px-4 py-3">
-        <span className={`inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-          lead.channel === "whatsapp"
-            ? "bg-emerald-950/40 text-emerald-300"
-            : "bg-blue-950/40 text-blue-300"
-        }`}>
-          {lead.channel === "whatsapp" ? <Smartphone size={11} /> : <Globe size={11} />}
-          {lead.channel}
-        </span>
+      <td className="px-5 py-3.5">
+        <ChannelBadge channel={lead.channel} />
       </td>
-      <td className="px-4 py-3">
+      <td className="px-5 py-3.5">
         <LeadStatusSelect leadId={lead.id} currentStatus={lead.status} />
       </td>
-      <td className="px-4 py-3 text-xs text-zinc-500 whitespace-nowrap">
+      <td className="whitespace-nowrap px-5 py-3.5 text-xs text-zinc-500">
         <span>{new Date(lead.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short" })}</span>
         <br />
         <span className="text-[10px]">{new Date(lead.createdAt).toLocaleTimeString("en-KE", { hour: "2-digit", minute: "2-digit" })}</span>
       </td>
-      <td className="px-4 py-3 text-right">
+      <td className="px-5 py-3.5 text-right">
         <div className="flex items-center justify-end gap-1.5">
           {lead.phone && lead.phone !== "not-provided" ? (
             <a
@@ -337,7 +374,7 @@ function LeadRow({ lead, index }) {
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-950/60 px-2.5 py-1.5 text-[11px] font-bold text-emerald-400 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-1.5 text-[11px] font-bold text-emerald-400 transition-colors hover:bg-emerald-600 hover:text-white"
             >
               <Smartphone size={12} /> WhatsApp
             </a>
@@ -351,65 +388,57 @@ function LeadRow({ lead, index }) {
 
 function LeadCard({ lead }) {
   return (
-    <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-3 space-y-2">
-      {/* Buyer + status */}
+    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4">
       <div className="flex items-start justify-between gap-2">
-        <div>
-          <div className="flex items-center gap-2">
-            <p className="text-sm font-bold text-white">{lead.name}</p>
-            {!lead.userId && (
-              <span className="rounded-md border border-zinc-800 px-1.5 py-0.5 text-[10px] font-bold text-zinc-500">Guest</span>
-            )}
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500/25 to-emerald-700/25 text-xs font-bold text-emerald-300 ring-1 ring-inset ring-emerald-500/20">
+            {initials(lead.name)}
           </div>
-          <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-zinc-500">
-            {lead.phone !== "not-provided" ? (
-              <span className="inline-flex items-center gap-1"><Phone size={11} /> {lead.phone}</span>
-            ) : <span className="text-amber-600 text-[10px] font-semibold">No phone</span>}
-            {lead.email && (
-              <span className="inline-flex items-center gap-1"><Mail size={11} /> {lead.email}</span>
-            )}
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <p className="truncate text-sm font-bold text-white">{lead.name}</p>
+              {!lead.userId && (
+                <span className="rounded-md border border-zinc-800 px-1.5 py-0.5 text-[10px] font-bold text-zinc-500">Guest</span>
+              )}
+            </div>
+            <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-zinc-500">
+              {lead.phone !== "not-provided" ? (
+                <span className="inline-flex items-center gap-1"><Phone size={11} /> {lead.phone}</span>
+              ) : <span className="text-[10px] font-semibold text-amber-500">No phone</span>}
+              {lead.email && (
+                <span className="inline-flex items-center gap-1 truncate"><Mail size={11} /> {lead.email}</span>
+              )}
+            </div>
           </div>
         </div>
         <LeadStatusBadge status={lead.status} />
       </div>
 
-      {/* Vehicle + channel */}
-      <div className="flex items-center gap-2 text-xs">
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs">
         <Link
           href={carListingPath(lead.car)}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-semibold text-white hover:text-emerald-400 transition-colors"
+          className="font-semibold text-white transition-colors hover:text-emerald-400"
         >
           {lead.car.year} {lead.car.make} {lead.car.model}
         </Link>
-        <span className="text-zinc-700">·</span>
-        <span className={`inline-flex items-center gap-1 ${
-          lead.channel === "whatsapp" ? "text-emerald-400" : "text-blue-400"
-        }`}>
-          {lead.channel === "whatsapp" ? <Smartphone size={11} /> : <Globe size={11} />}
-          <span className="text-[10px] font-bold uppercase">{lead.channel}</span>
-        </span>
+        <ChannelBadge channel={lead.channel} />
         {lead.assignedTo && (
-          <>
-            <span className="text-zinc-700">·</span>
-            <span className="inline-flex items-center gap-1 text-emerald-400">
-              <UserCheck size={11} />
-              <span className="text-[10px] font-bold">{lead.assignedTo.name}</span>
-            </span>
-          </>
+          <span className="inline-flex items-center gap-1 text-emerald-400">
+            <UserCheck size={11} />
+            <span className="text-[10px] font-bold">{lead.assignedTo.name}</span>
+          </span>
         )}
       </div>
 
-      {/* Message */}
       {lead.message && (
-        <p className="text-[11px] text-zinc-600 italic truncate" title={lead.message}>
+        <p className="mt-2 truncate text-[11px] italic text-zinc-600" title={lead.message}>
           &ldquo;{lead.message.slice(0, 80)}&rdquo;
         </p>
       )}
 
-      {/* Date + actions */}
-      <div className="flex items-center justify-between gap-2 pt-2 border-t border-zinc-800">
+      <div className="mt-3 flex items-center justify-between gap-2 border-t border-zinc-800 pt-3">
         <span className="text-[11px] text-zinc-500">
           {new Date(lead.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" })}
           {" · "}
@@ -425,7 +454,7 @@ function LeadCard({ lead }) {
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-md border border-zinc-800 bg-zinc-950/60 p-1.5 text-emerald-400 hover:bg-emerald-600 hover:text-white transition-colors inline-flex"
+              className="inline-flex items-center justify-center rounded-lg border border-emerald-500/25 bg-emerald-500/10 p-1.5 text-emerald-400 transition-colors hover:bg-emerald-600 hover:text-white"
               title="WhatsApp"
             >
               <Smartphone size={14} />

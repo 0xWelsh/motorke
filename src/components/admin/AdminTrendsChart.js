@@ -46,11 +46,12 @@ export default function AdminTrendsChart({ data }) {
           />
           <Tooltip
             contentStyle={{
-              borderRadius: "8px",
-              border: "1px solid #27272a",
-              background: "#262626",
-              padding: "8px 12px",
+              borderRadius: "12px",
+              border: "1px solid #3f3f46",
+              background: "#18181b",
+              padding: "10px 14px",
               fontSize: "12px",
+              boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
             }}
             itemStyle={{ fontWeight: 700, padding: "2px 0" }}
             labelStyle={{ fontWeight: 600, color: "#a1a1aa", marginBottom: "4px", fontSize: "11px" }}

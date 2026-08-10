@@ -2,20 +2,21 @@
 import { useState } from "react";
 
 const STATUS_STYLES = {
-  NEW: "bg-emerald-950/40 text-emerald-300",
-  CONTACTED: "bg-blue-950/40 text-blue-300",
-  INTERESTED: "bg-violet-950/40 text-violet-300",
-  NEGOTIATING: "bg-amber-950/40 text-amber-300",
-  SOLD: "bg-green-950/40 text-green-300",
-  DEAD: "bg-zinc-800 text-zinc-400",
+  NEW: { badge: "border-emerald-500/25 bg-emerald-500/10 text-emerald-300", dot: "bg-emerald-400" },
+  CONTACTED: { badge: "border-blue-500/25 bg-blue-500/10 text-blue-300", dot: "bg-blue-400" },
+  INTERESTED: { badge: "border-violet-500/25 bg-violet-500/10 text-violet-300", dot: "bg-violet-400" },
+  NEGOTIATING: { badge: "border-amber-500/25 bg-amber-500/10 text-amber-300", dot: "bg-amber-400" },
+  SOLD: { badge: "border-green-500/25 bg-green-500/10 text-green-300", dot: "bg-green-400" },
+  DEAD: { badge: "border-zinc-700 bg-zinc-800/60 text-zinc-400", dot: "bg-zinc-500" },
 };
 
 const STATUS_OPTIONS = ["NEW", "CONTACTED", "INTERESTED", "NEGOTIATING", "SOLD", "DEAD"];
 
 export function LeadStatusBadge({ status }) {
+  const s = STATUS_STYLES[status] || STATUS_STYLES.NEW;
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider ${STATUS_STYLES[status] || STATUS_STYLES.NEW}`}>
-      {status === "NEW" && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
+    <span className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider ${s.badge}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${status === "NEW" ? "animate-pulse " : ""}${s.dot}`} />
       {status}
     </span>
   );
@@ -45,12 +46,14 @@ export function LeadStatusSelect({ leadId, currentStatus, onUpdate }) {
     }
   }
 
+  const s = STATUS_STYLES[status] || STATUS_STYLES.NEW;
+
   return (
     <select
       value={status}
       onChange={handleChange}
       disabled={saving}
-      className={`cursor-pointer rounded-lg border-0 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider outline-none ring-1 ring-inset transition ${STATUS_STYLES[status] || STATUS_STYLES.NEW} ${saving ? "opacity-60" : "hover:ring-2"}`}
+      className={`cursor-pointer rounded-lg border-0 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider outline-none ring-1 ring-inset transition ${s.badge} ${saving ? "opacity-60" : "hover:ring-2"}`}
     >
       {STATUS_OPTIONS.map((opt) => (
         <option key={opt} value={opt} className="normal-case tracking-normal">
