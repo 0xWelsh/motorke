@@ -186,25 +186,26 @@ export default function Navbar({ user, navCounts }) {
   return (
     <>
       {/* ─── DESKTOP: utility row (logo · search · Kenya time · auth) ─── */}
-      <div className="hidden md:block border-b border-slate-200 bg-white">
-        <div className="home-shell">
-          <div className="flex h-[78px] items-center justify-between gap-6">
-            <Link
-              href="/"
-              onClick={(e) => navigateTo("/", e)}
-              className="flex shrink-0 items-center transition-transform active:scale-95"
-            >
-              <div className="relative h-14 w-[300px] shrink-0 md:h-16 md:w-[340px] lg:h-[68px] lg:w-[376px] xl:h-[72px] xl:w-[398px]">
-                <Image
-                  src={BRAND_HEADER_LOGO}
-                  alt="BIDGARI"
-                  fill
-                  priority
-                  className="object-contain object-left"
-                  sizes="(min-width: 1280px) 400px, (min-width: 1024px) 380px, 340px"
-                />
-              </div>
-            </Link>
+      <header className="hidden md:block sticky top-0 z-[100] bg-white shadow-[0_1px_0_rgba(0,0,0,0.06)]">
+        <div className="border-b border-slate-200 bg-white">
+          <div className="home-shell">
+            <div className="flex h-[78px] items-center justify-between gap-6">
+              <Link
+                href="/"
+                onClick={(e) => navigateTo("/", e)}
+                className="flex shrink-0 items-center transition-transform active:scale-95"
+              >
+                <div className="relative h-10 w-[296px] shrink-0 lg:h-12 lg:w-[355px] xl:h-16 xl:w-[474px]">
+                  <Image
+                    src={BRAND_HEADER_LOGO}
+                    alt="BIDGARI"
+                    fill
+                    priority
+                    className="object-contain object-left"
+                    sizes="(min-width: 1280px) 474px, (min-width: 1024px) 355px, 296px"
+                  />
+                </div>
+              </Link>
 
             <div ref={searchRef} className="hidden md:flex min-w-0 flex-1 max-w-[360px]">
               <form onSubmit={handleSearch} className="relative w-full">
@@ -330,9 +331,10 @@ export default function Navbar({ user, navCounts }) {
           </div>
         </div>
       </div>
+      </header>
 
       {/* ─── MOBILE header ─── */}
-      <nav className="md:hidden flex h-16 w-full items-center border-b border-slate-200 bg-white">
+      <nav className="md:hidden sticky top-0 z-[100] flex h-16 w-full items-center border-b border-slate-200 bg-white shadow-[0_1px_0_rgba(0,0,0,0.06)]">
         <div className="w-full px-4">
           <div className="flex items-center justify-between gap-4 min-w-0 h-full">
             <Link
@@ -340,14 +342,14 @@ export default function Navbar({ user, navCounts }) {
               onClick={(e) => navigateTo("/", e)}
               className="relative z-20 flex shrink-0 items-center transition-transform active:scale-95"
             >
-              <div className="relative h-8 w-40 shrink-0">
+              <div className="relative h-8 w-52 shrink-0">
                 <Image
                   src={BRAND_HEADER_LOGO}
                   alt="BIDGARI"
                   fill
                   priority
                   className="object-contain object-left"
-                  sizes="160px"
+                  sizes="208px"
                 />
               </div>
             </Link>
@@ -455,13 +457,13 @@ export default function Navbar({ user, navCounts }) {
                   onClick={(e) => navigateTo("/", e)}
                   className="flex min-w-0 shrink-0 items-center"
                 >
-                  <div className="relative h-8 w-40 shrink-0">
+                  <div className="relative h-8 w-52 shrink-0">
                     <Image
                       src={BRAND_HEADER_LOGO}
                       alt="BIDGARI"
                       fill
                       className="object-contain object-left"
-                      sizes="160px"
+                      sizes="208px"
                     />
                   </div>
                 </Link>
@@ -697,7 +699,7 @@ function KenyaTime() {
 
   if (!time) return null;
   return (
-    <span className="hidden md:inline-flex items-center gap-1.5 text-[12px] font-semibold text-slate-500">
+    <span className="hidden lg:inline-flex items-center gap-1.5 text-[12px] font-semibold text-slate-500">
       <span className="relative flex h-2 w-2">
         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
         <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
