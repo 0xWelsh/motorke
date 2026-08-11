@@ -43,6 +43,7 @@ import SimilarCarsSection from "@/components/SimilarCarsSection";
 import CarDetailMobileBar from "@/components/CarDetailMobileBar";
 import CarActionButtons from "@/components/CarActionButtons";
 import NikkyoSpecTable from "@/components/NikkyoSpecTable";
+import NikkyoStockCard from "@/components/NikkyoStockCard";
 import {
   daysRemainingOnSite,
   isInSoldGracePeriod,
@@ -595,9 +596,29 @@ export default async function CarDetailPage({ params }) {
                 </div>
               </section>
             )}
-          </div>
 
-          {/* Specifications + long-form content column */}
+            {/* More {make} cars — fills the gallery column */}
+            {similar.length > 0 && (
+              <section>
+                <div className="flex items-center justify-between gap-4 mb-3">
+                  <h2 className="text-[12px] font-bold uppercase tracking-[0.15em] text-[var(--accent)]">
+                    More {car.make} Cars
+                  </h2>
+                  <Link
+                    href={`/cars/${slugifyCarSegment(car.make)}`}
+                    className="shrink-0 text-[10px] font-bold uppercase tracking-widest text-[var(--accent)] hover:opacity-80 transition-colors"
+                  >
+                    All {car.make} &rarr;
+                  </Link>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {similar.slice(0, 4).map((sc) => (
+                    <NikkyoStockCard key={sc.id} car={sc} />
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
           <div className="order-2 lg:order-2 xl:order-2 lg:col-span-6 xl:col-span-4 min-w-0 space-y-5">
             <NikkyoSpecTable car={car} title="Specifications" />
 
