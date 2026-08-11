@@ -194,14 +194,14 @@ export default function Navbar({ user, navCounts }) {
               onClick={(e) => navigateTo("/", e)}
               className="flex shrink-0 items-center transition-transform active:scale-95"
             >
-              <div className="relative h-10 w-52 shrink-0">
+              <div className="relative h-12 w-72 shrink-0 md:h-14 md:w-[340px] xl:h-16 xl:w-[380px]">
                 <Image
                   src={BRAND_HEADER_LOGO}
                   alt="BIDGARI"
                   fill
                   priority
                   className="object-contain object-left"
-                  sizes="208px"
+                  sizes="(min-width: 1280px) 380px, (min-width: 1024px) 340px, 288px"
                 />
               </div>
             </Link>
@@ -304,7 +304,7 @@ export default function Navbar({ user, navCounts }) {
       {/* ─── DESKTOP: red nav bar with hover menus ─── */}
       <div className="hidden md:block bg-[linear-gradient(to_bottom,#c62a36,#b51422)] shadow-[0_2px_6px_rgba(0,0,0,0.25)]">
         <div className="home-shell">
-          <div className="flex h-[40px] items-stretch text-white">
+          <div className="flex h-[30px] items-stretch text-white">
             {NAV_TABS.map((tab) => (
               <DesktopTab
                 key={tab.label}
@@ -654,7 +654,7 @@ function DesktopTab({ label, href, triangle, active, onHover, onLeave, onClick, 
         href={href}
         onClick={onClick}
         className={clsx(
-          "relative flex w-full items-center justify-center gap-1.5 px-3 text-[15px] font-medium uppercase tracking-[0.04em] transition-all",
+          "relative flex w-full items-center justify-center gap-1.5 px-3 text-[14px] font-medium uppercase tracking-[0.04em] transition-all",
           active
             ? "bg-[linear-gradient(to_bottom,#d83b47,#c51f2d)] text-[#fff4a0]"
             : "hover:bg-[linear-gradient(to_bottom,#d83b47,#c51f2d)] hover:text-[#fff4a0]"
