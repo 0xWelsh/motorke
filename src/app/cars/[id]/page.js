@@ -718,7 +718,7 @@ export default async function CarDetailPage({ params }) {
                 location={car.location || dealer.location || "Kenya"}
                 mileageLabel={positiveNum(car.mileage) ? formatMileage(car.mileage) : null}
                 previewImageUrl={`/api/cars/${car.id}/og-image`}
-                carId={car.id}
+                photoUrl={primaryImg?.url ? absoluteMediaUrl(primaryImg.url) : null}
                 sold={soldGrace}
               />
             </section>
