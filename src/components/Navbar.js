@@ -194,14 +194,14 @@ export default function Navbar({ user, navCounts }) {
               onClick={(e) => navigateTo("/", e)}
               className="flex shrink-0 items-center transition-transform active:scale-95"
             >
-              <div className="relative h-12 w-72 shrink-0 md:h-14 md:w-[340px] xl:h-16 xl:w-[380px]">
+              <div className="relative h-14 w-[300px] shrink-0 md:h-16 md:w-[340px] lg:h-[68px] lg:w-[376px] xl:h-[72px] xl:w-[398px]">
                 <Image
                   src={BRAND_HEADER_LOGO}
                   alt="BIDGARI"
                   fill
                   priority
                   className="object-contain object-left"
-                  sizes="(min-width: 1280px) 380px, (min-width: 1024px) 340px, 288px"
+                  sizes="(min-width: 1280px) 400px, (min-width: 1024px) 380px, 340px"
                 />
               </div>
             </Link>
