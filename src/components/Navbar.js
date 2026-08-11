@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   Search, User, X, Menu, ChevronDown, LogOut, Heart,
-  LayoutDashboard, Compass, GitCompare, Calculator, Mail, ChevronRight, Home, Bell,
+  LayoutDashboard, Compass, GitCompare, Calculator, Mail, ChevronRight, Home, Bell, Phone,
 } from "lucide-react";
 import { clsx } from "clsx";
 import useDebouncedSearch from "@/hooks/useDebouncedSearch";
@@ -15,6 +15,8 @@ import NotificationsBell from "@/components/NotificationsBell";
 import { trackUiEvent } from "@/lib/analytics";
 import { BRAND_HEADER_LOGO } from "@/lib/site-url";
 import { BODY_TYPE_LABELS } from "@/lib/constants";
+import { PUBLIC_SUPPORT_EMAIL, PUBLIC_SUPPORT_PHONE } from "@/lib/site-contact";
+import { telHrefFromMsisdn } from "@/lib/phone-hints";
 
 const NAV_TABS = [
   { key: "search", label: "Search Cars", href: "/cars" },
@@ -229,7 +231,34 @@ export default function Navbar({ user, navCounts }) {
               )}
             </div>
 
-            <div className="flex shrink-0 items-center gap-4">
+            <div className="flex shrink-0 items-center gap-3 lg:gap-4">
+              <span className="hidden xl:flex items-center gap-3">
+                {PUBLIC_SUPPORT_EMAIL && (
+                  <a
+                    href={`mailto:${PUBLIC_SUPPORT_EMAIL}`}
+                    className="inline-flex max-w-[170px] items-center gap-1.5 text-[12px] font-semibold text-slate-500 transition-colors hover:text-[var(--accent)]"
+                  >
+                    <Mail className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden />
+                    <span className="truncate">{PUBLIC_SUPPORT_EMAIL}</span>
+                  </a>
+                )}
+                {PUBLIC_SUPPORT_PHONE && (
+                  <a
+                    href={telHrefFromMsisdn(PUBLIC_SUPPORT_PHONE) || "#"}
+                    className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-slate-500 transition-colors hover:text-[var(--accent)]"
+                  >
+                    <Phone className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden />
+                    <span>{PUBLIC_SUPPORT_PHONE}</span>
+                  </a>
+                )}
+              </span>
+              <Link
+                href="/contact"
+                onClick={(e) => navigateTo("/contact", e)}
+                className="hidden lg:inline text-[12px] font-semibold text-slate-500 transition-colors hover:text-[var(--accent)]"
+              >
+                Contact
+              </Link>
               <KenyaTime />
               {user ? (
                 <div className="flex items-center gap-3">
@@ -700,10 +729,6 @@ function KenyaTime() {
   if (!time) return null;
   return (
     <span className="hidden lg:inline-flex items-center gap-1.5 text-[12px] font-semibold text-slate-500">
-      <span className="relative flex h-2 w-2">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-        <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-      </span>
       Kenya Time: <span className="font-bold text-slate-800 tabular-nums">{time}</span>
     </span>
   );

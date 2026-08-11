@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import SiteTopBar from "@/components/SiteTopBar";
 import { CompareBar } from "@/components/CompareSelector";
 import { ModalProvider } from "@/components/Modal";
 import GlobalFooter from "@/components/GlobalFooter";
@@ -32,7 +31,6 @@ export default function SiteChrome({ user, children, shellPath = "/", navCounts 
 
   return (
     <>
-      <SiteTopBar />
       <Navbar user={user} navCounts={navCounts} />
       <ModalProvider>
         <main className="flex-1">{children}</main>
