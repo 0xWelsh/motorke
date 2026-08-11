@@ -576,11 +576,6 @@ export default async function CarDetailPage({ params }) {
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Request &amp; actions</p>
               <CarActionButtons carId={car.id} dealerId={car.dealerId} carTitle={carName} price={formatCarPrice(car)} />
             </section>
-          </div>
-
-          {/* Specifications column */}
-          <div className="order-3 lg:order-2 xl:order-2 lg:col-span-6 xl:col-span-4 min-w-0 space-y-5">
-            <NikkyoSpecTable car={car} title="Specifications" />
 
             {/* Seller notes — real data-backed claims only */}
             {sellerNotes.length > 0 && (
@@ -600,25 +595,11 @@ export default async function CarDetailPage({ params }) {
                 </div>
               </section>
             )}
+          </div>
 
-            {/* Features */}
-            {featureList.length > 0 && (
-              <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-                <div className="bg-[var(--sidebar-bar)] px-4 py-2.5">
-                  <h2 className="text-[12px] font-black uppercase tracking-widest text-white">Features</h2>
-                </div>
-                <div className="p-4">
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                    {featureList.map((feature, i) => (
-                      <div key={i} className="flex items-start gap-2 text-[13px] font-medium text-slate-600">
-                        <Check className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" strokeWidth={3} />
-                        <span className="leading-snug">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </section>
-            )}
+          {/* Specifications + long-form content column */}
+          <div className="order-2 lg:order-2 xl:order-2 lg:col-span-6 xl:col-span-4 min-w-0 space-y-5">
+            <NikkyoSpecTable car={car} title="Specifications" />
 
             {/* Description */}
             <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
@@ -640,14 +621,10 @@ export default async function CarDetailPage({ params }) {
               initialReviews={reviewsData.reviews}
               initialAvgRating={reviewsData.avgRating}
             />
-
-            {/* SEO */}
-            <CarModelWiki car={car} wiki={modelWiki} />
-            <CarListingRelatedSearches car={car} />
           </div>
 
           {/* Price sidebar */}
-          <div className="order-2 lg:order-3 xl:order-3 lg:col-span-12 xl:col-span-3 min-w-0 space-y-5">
+          <div className="order-3 lg:order-3 xl:order-3 lg:col-span-12 xl:col-span-3 min-w-0 space-y-5">
             {/* Price card */}
             <section className="rounded-xl border border-slate-200 bg-white p-5">
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Price</p>
@@ -684,6 +661,29 @@ export default async function CarDetailPage({ params }) {
                 Sold by BIDGARI. We handle this sale for you and guide you through inspection and paperwork.
               </p>
             </section>
+
+            {/* Features */}
+            {featureList.length > 0 && (
+              <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+                <div className="bg-[var(--sidebar-bar)] px-4 py-2.5">
+                  <h2 className="text-[12px] font-black uppercase tracking-widest text-white">Features</h2>
+                </div>
+                <div className="p-4">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                    {featureList.map((feature, i) => (
+                      <div key={i} className="flex items-start gap-2 text-[13px] font-medium text-slate-600">
+                        <Check className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" strokeWidth={3} />
+                        <span className="leading-snug">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* SEO */}
+            <CarModelWiki car={car} wiki={modelWiki} />
+            <CarListingRelatedSearches car={car} />
 
             {/* Share */}
             <section>

@@ -498,16 +498,16 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
         )}
       </div>
 
-      {/* Thumbnail strip */}
+      {/* All thumbnails grid — every photo visible at once */}
       {images.length > 1 && (
-        <div className="hidden lg:flex gap-1.5 mt-2 overflow-x-auto pb-1 scrollbar-thin">
+        <div className="hidden lg:grid gap-1.5 mt-2 grid-cols-[repeat(auto-fill,minmax(72px,1fr))] pb-1">
           {images.slice(0, galleryLimits.maxThumbs).map((img, i) => (
             <button
               key={i}
               type="button"
               onClick={() => { setActive(i); setScale(1); setPanPos({ x: 0, y: 0 }); }}
               onMouseEnter={() => { setActive(i); setScale(1); setPanPos({ x: 0, y: 0 }); }}
-              className={`relative shrink-0 w-[88px] h-16 rounded-md overflow-hidden border-2 transition-all ${
+              className={`relative aspect-video rounded-md overflow-hidden border-2 transition-all ${
                 i === active
                   ? "border-[var(--sidebar-bar)] ring-1 ring-[var(--sidebar-bar)]/50"
                   : "border-transparent opacity-60 hover:opacity-100 hover:brightness-110"
@@ -519,7 +519,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
                 fill
                 className="object-cover"
                 loading="lazy"
-                sizes="88px"
+                sizes="96px"
               />
             </button>
           ))}
