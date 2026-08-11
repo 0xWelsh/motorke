@@ -597,9 +597,9 @@ export default async function CarDetailPage({ params }) {
               </section>
             )}
 
-            {/* More {make} cars — fills the gallery column */}
+            {/* More {make} cars — fills the gallery column (desktop only) */}
             {similar.length > 0 && (
-              <section>
+              <section className="hidden lg:block">
                 <div className="flex items-center justify-between gap-4 mb-3">
                   <h2 className="text-[12px] font-bold uppercase tracking-[0.15em] text-[var(--accent)]">
                     More {car.make} Cars
