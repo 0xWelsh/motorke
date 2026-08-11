@@ -16,6 +16,7 @@ const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL;
 const SUPABASE_PUBLIC = "/storage/v1/object/public/car-images/";
 
 const THUMB_SIZES = [
+  { suffix: "-200w", width: 200 },
   { suffix: "-400w", width: 400 },
   { suffix: "-800w", width: 800 },
 ];
