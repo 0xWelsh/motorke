@@ -412,15 +412,12 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
           </div>
         </div>
 
-        {/* Quick facts overlay — desktop */}
+        {/* Vehicle metadata strip — desktop (Nikkyo-style) */}
         {quickFacts?.length > 0 && (
-          <div className="pointer-events-none hidden lg:flex absolute inset-x-0 bottom-0 z-20 items-center gap-2 bg-gradient-to-t from-black/85 via-black/50 to-transparent px-4 pt-12 pb-3">
+          <div className="pointer-events-none hidden lg:flex absolute inset-x-0 bottom-0 z-20 flex-wrap items-center gap-x-2 bg-gradient-to-t from-black/85 via-black/55 to-transparent px-4 pt-10 pb-3">
             {quickFacts.map((f, i) => (
-              <span
-                key={i}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-white/15 backdrop-blur-sm border border-white/20 px-2.5 py-1 text-[11px] font-bold text-white"
-              >
-                <span className="opacity-80 text-[10px] leading-none" aria-hidden>{f.icon}</span>
+              <span key={i} className="inline-flex items-center gap-x-2 text-[11px] font-bold tracking-wide text-white">
+                {i > 0 && <span className="text-white/40" aria-hidden>·</span>}
                 <span className="truncate">{f.value}</span>
               </span>
             ))}

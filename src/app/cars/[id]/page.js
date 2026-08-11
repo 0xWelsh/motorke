@@ -8,7 +8,7 @@ import { formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
 import { getSalesmanWhatsappNumbers, pickSalesmanWhatsapp } from "@/lib/salesman-whatsapp";
 import { telHrefFromMsisdn } from "@/lib/phone-hints";
 import { getPreloadImageUrl } from "@/lib/image-transform";
-import { MapPin, BadgeCheck, Check } from "lucide-react";
+import { MapPin, BadgeCheck, Check, Eye, MessageCircle } from "lucide-react";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
 import { TrackRecentView } from "@/components/CarActions";
@@ -231,6 +231,19 @@ async function getCarReviews(carId) {
   return cached();
 }
 
+function getCarEngagement(carId) {
+  return unstable_cache(
+    async () => {
+      const inquiries = await db.lead.count({ where: { carId } });
+      return { inquiries };
+    },
+    ["car-engagement-v1", carId],
+    { revalidate: 300, tags: ["cars", `car-detail:${carId}`] }
+  )();
+}
+
+const SYSTEM_BADGES = new Set(["HOT", "NEW", "FEATURED", "SPOTLIGHT", "SOLD"]);
+
 export default async function CarDetailPage({ params }) {
   const { id: ref } = await params;
   const carData = await getCarData(ref);
@@ -251,6 +264,7 @@ export default async function CarDetailPage({ params }) {
   const reviewsPromise = getCarReviews(car.id);
   const modelWikiPromise = resolveModelWikiForCar(car);
   const benchmarkPromise = getPriceBenchmark(car.make, car.model, car.year, car.id);
+  const engagementPromise = getCarEngagement(car.id);
 
   const { title } = buildCarListingDealerMetadata(car, dealer);
   const carName = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} ${car.year}${car.color ? ` ${car.color}` : ""}`;
@@ -260,9 +274,13 @@ export default async function CarDetailPage({ params }) {
   const specString = specItems.join(", ");
   const featureList = meaningfulFeatureList(car.features);
 
-  const [similar, reviewsData, modelWiki, benchmark] = await Promise.all([similarPromise, reviewsPromise, modelWikiPromise, benchmarkPromise]);
+  const [similar, reviewsData, modelWiki, benchmark, engagement] = await Promise.all([similarPromise, reviewsPromise, modelWikiPromise, benchmarkPromise, engagementPromise]);
   const freshDays = daysSince(car.createdAt);
   const freshLabel = freshnessLabel(freshDays);
+  const sellerNotes = [
+    car.negotiable ? "Price negotiable" : null,
+    ...(Array.isArray(car.badges) ? car.badges.map((b) => String(b).trim()).filter((b) => b && !SYSTEM_BADGES.has(b.toUpperCase())) : []),
+  ].filter(Boolean);
   const salesmanNumbers = await getSalesmanWhatsappNumbers();
   const waDigits = pickSalesmanWhatsapp(salesmanNumbers, car.id);
   const whatsappHref = whatsappLink(waDigits, title, "BIDGARI");
@@ -465,7 +483,7 @@ export default async function CarDetailPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       
-      <div className="container mx-auto px-4 sm:px-6 max-w-7xl pt-3 sm:pt-4 pb-24 lg:pb-16">
+      <div className="container mx-auto px-4 sm:px-6 max-w-[1475px] pt-3 sm:pt-4 pb-24 lg:pb-16">
         <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
 
         {/* Top nav / breadcrumb */}
@@ -526,11 +544,11 @@ export default async function CarDetailPage({ params }) {
           )}
         </div>
 
-        {/* ── Collage layout: gallery left, info begins on its right ── */}
+        {/* ── Nikkyo-style columns: gallery | specifications | price ── */}
         <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-12">
 
-          {/* Left column — gallery on top, long-form panels fill below */}
-          <div className="lg:col-span-7 min-w-0 space-y-5">
+          {/* Gallery column */}
+          <div className="order-1 lg:order-1 xl:order-1 lg:col-span-6 xl:col-span-5 min-w-0 space-y-4">
             <div className="-mx-4 sm:-mx-6 lg:mx-0">
               <ImageGallery
                 images={car.images}
@@ -542,16 +560,46 @@ export default async function CarDetailPage({ params }) {
               />
             </div>
 
+            {/* Views / inquiries — real engagement data */}
+            <div className="flex items-center gap-2.5 px-1 text-[11px] font-bold uppercase tracking-widest text-slate-500">
+              <span className="inline-flex items-center gap-1.5">
+                <Eye className="w-3.5 h-3.5 text-slate-400" />{(car.views || 0).toLocaleString("en-KE")} views
+              </span>
+              <span className="text-slate-300">·</span>
+              <span className="inline-flex items-center gap-1.5">
+                <MessageCircle className="w-3.5 h-3.5 text-slate-400" />{engagement?.inquiries ?? 0} inquiries
+              </span>
+            </div>
+
             {/* Request & actions */}
             <section>
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Request &amp; actions</p>
               <CarActionButtons carId={car.id} dealerId={car.dealerId} carTitle={carName} price={formatCarPrice(car)} />
             </section>
+          </div>
 
-            {/* Specifications */}
-            <section>
-              <NikkyoSpecTable car={car} title="Specifications" />
-            </section>
+          {/* Specifications column */}
+          <div className="order-3 lg:order-2 xl:order-2 lg:col-span-6 xl:col-span-4 min-w-0 space-y-5">
+            <NikkyoSpecTable car={car} title="Specifications" />
+
+            {/* Seller notes — real data-backed claims only */}
+            {sellerNotes.length > 0 && (
+              <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+                <div className="bg-[var(--sidebar-bar)] px-4 py-2.5">
+                  <h2 className="text-[12px] font-black uppercase tracking-widest text-white">Seller notes</h2>
+                </div>
+                <div className="p-4">
+                  <ul className="space-y-2">
+                    {sellerNotes.map((note, i) => (
+                      <li key={i} className="flex items-start gap-2 text-[13px] font-medium text-slate-600">
+                        <Check className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" strokeWidth={3} />
+                        <span className="leading-snug">{note}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </section>
+            )}
 
             {/* Features */}
             {featureList.length > 0 && (
@@ -585,20 +633,31 @@ export default async function CarDetailPage({ params }) {
                 </p>
               </div>
             </section>
+
+            {/* Reviews */}
+            <CarReviewsSection
+              carId={car.id}
+              initialReviews={reviewsData.reviews}
+              initialAvgRating={reviewsData.avgRating}
+            />
+
+            {/* SEO */}
+            <CarModelWiki car={car} wiki={modelWiki} />
+            <CarListingRelatedSearches car={car} />
           </div>
 
-          {/* Right column — quick info begins at the top-right of the gallery */}
-          <div className="lg:col-span-5 min-w-0 space-y-5">
+          {/* Price sidebar */}
+          <div className="order-2 lg:order-3 xl:order-3 lg:col-span-12 xl:col-span-3 min-w-0 space-y-5">
             {/* Price card */}
             <section className="rounded-xl border border-slate-200 bg-white p-5">
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Price</p>
-              <p className="mt-1 text-[30px] xl:text-[36px] leading-none font-black tracking-tighter text-slate-900 tabular-nums">
+              <p className="mt-1 text-[30px] xl:text-[30px] leading-none font-black tracking-tighter text-slate-900 tabular-nums">
                 {formatCarPrice(car)}
               </p>
               {benchmark && marketLabel && (
                 <div className="mt-4 border-t border-slate-100 pt-3">
                   <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Market Range</p>
-                  <p className="mt-1 text-[15px] xl:text-[17px] font-black tracking-tight text-slate-900 tabular-nums">
+                  <p className="mt-1 text-[15px] xl:text-[16px] font-black tracking-tight text-slate-900 tabular-nums">
                     KES {Number(benchmark.low).toLocaleString("en-KE")} – KES {Number(benchmark.high).toLocaleString("en-KE")}
                   </p>
                   <p className={`mt-0.5 text-[11px] font-bold ${marketLabel.cls}`}>{marketLabel.text}</p>
@@ -651,17 +710,6 @@ export default async function CarDetailPage({ params }) {
               <Link href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`} className="text-[var(--accent)] hover:underline">{car.make} {car.model}</Link>
               {car.fuelType && (<><span className="text-slate-400">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`} className="text-[var(--accent)] hover:underline">{FUEL_LABELS[car.fuelType] || car.fuelType}</Link></>)}
             </div>
-
-            {/* Reviews */}
-            <CarReviewsSection
-              carId={car.id}
-              initialReviews={reviewsData.reviews}
-              initialAvgRating={reviewsData.avgRating}
-            />
-
-            {/* SEO */}
-            <CarModelWiki car={car} wiki={modelWiki} />
-            <CarListingRelatedSearches car={car} />
           </div>
         </div>
 

@@ -1,11 +1,24 @@
+"use client";
+import { useState } from "react";
 import { BODY_TYPE_LABELS, FUEL_LABELS } from "@/lib/constants";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
 import { stockCode } from "@/lib/stock-code";
+import { positiveNum } from "@/lib/car-display";
+
+const HYBRID_BATTERY_LABELS = {
+  NIMH: "NiMH",
+  LI_ION: "Li-ion",
+  OTHER: "Other",
+  NA: "N/A",
+};
 
 /**
  * Dense Nikkyo-style specification table for a car listing detail page.
+ * Core rows always render; additional rows reveal under "+ MORE".
  */
 export default function NikkyoSpecTable({ car, title = null }) {
+  const [showMore, setShowMore] = useState(false);
+
   const rows = [
     { label: "Stock No.", value: stockCode(car) || "—" },
     { label: "Maker", value: car.make || "—" },
@@ -51,13 +64,61 @@ export default function NikkyoSpecTable({ car, title = null }) {
       label: "Imported From",
       value: car.importCountry || (car.imported === false ? "Local" : "—"),
     },
-    { label: "Duty Status", value: car.dutyPaid ? "Duty paid" : car.dutyPaid === false ? "Duty not paid" : "—" },
+    {
+      label: "Duty Status",
+      value: car.dutyPaid ? "Duty paid" : car.dutyPaid === false ? "Duty not paid" : "—",
+    },
     {
       label: "Condition",
       value: car.condition === "NEW" ? "New" : car.condition === "CERTIFIED" ? "Certified used" : "Used",
     },
     { label: "Price", value: formatCarPrice(car) },
   ];
+
+  const extraRows = [];
+  if (positiveNum(car.cylinders)) {
+    extraRows.push({ label: "Cylinders", value: String(Number(car.cylinders)) });
+  }
+  if (positiveNum(car.horsepower)) {
+    extraRows.push({ label: "Horsepower", value: `${Math.round(Number(car.horsepower))} hp` });
+  }
+  if (positiveNum(car.torque)) {
+    extraRows.push({ label: "Torque", value: `${Math.round(Number(car.torque))} Nm` });
+  }
+  if (car.turbo === true) extraRows.push({ label: "Turbo", value: "Turbocharged" });
+  if (positiveNum(car.airbags)) extraRows.push({ label: "Airbags", value: String(Number(car.airbags)) });
+  if (car.sunroof === true) extraRows.push({ label: "Sunroof", value: "Yes" });
+  if (positiveNum(car.groundClearanceMm)) {
+    extraRows.push({ label: "Ground clearance", value: `${Number(car.groundClearanceMm)} mm` });
+  }
+  if (car.color?.trim()) extraRows.push({ label: "Color", value: car.color.trim() });
+  if (car.hybridBatteryTech && HYBRID_BATTERY_LABELS[car.hybridBatteryTech]) {
+    extraRows.push({ label: "Hybrid battery", value: HYBRID_BATTERY_LABELS[car.hybridBatteryTech] });
+  }
+  if (car.importEligibility === true) {
+    extraRows.push({ label: "Import eligibility", value: "Eligible" });
+  } else if (car.importEligibility === false) {
+    extraRows.push({ label: "Import eligibility", value: "Not eligible" });
+  }
+  if (car.registered === false) extraRows.push({ label: "Registration", value: "Not registered" });
+  if (positiveNum(car.spareAvailability)) {
+    extraRows.push({ label: "Spare availability", value: `${Number(car.spareAvailability)}/10` });
+  }
+
+  const visibleRows = showMore ? rows.concat(extraRows) : rows;
+
+  const Row = ({ row, last }) => (
+    <div
+      className={`grid grid-cols-[130px_minmax(0,1fr)] text-[13px] transition-colors hover:bg-slate-100 ${
+        last ? "" : "border-b border-slate-200"
+      }`}
+    >
+      <span className="bg-sky-50 border-r border-slate-200 px-4 py-2.5 font-bold uppercase tracking-wide text-slate-500">
+        {row.label}
+      </span>
+      <span className="px-4 py-2.5 text-right font-bold text-slate-900">{row.value}</span>
+    </div>
+  );
 
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
@@ -66,19 +127,25 @@ export default function NikkyoSpecTable({ car, title = null }) {
           <h2 className="text-[12px] font-black uppercase tracking-widest text-white">{title}</h2>
         </div>
       )}
-      {rows.map((row, i) => (
-        <div
-          key={row.label}
-          className={`grid grid-cols-[130px_minmax(0,1fr)] text-[13px] transition-colors hover:bg-slate-100 ${
-            i < rows.length - 1 ? "border-b border-slate-200" : ""
-          }`}
-        >
-          <span className="bg-sky-50 border-r border-slate-200 px-4 py-2.5 font-bold uppercase tracking-wide text-slate-500">
-            {row.label}
-          </span>
-          <span className="px-4 py-2.5 text-right font-bold text-slate-900">{row.value}</span>
-        </div>
+      {visibleRows.map((row, i) => (
+        <Row key={row.label} row={row} last={i === visibleRows.length - 1} />
       ))}
+      {extraRows.length > 0 && (
+        <button
+          type="button"
+          onClick={() => setShowMore((s) => !s)}
+          className="flex w-full items-center justify-between bg-slate-50 px-4 py-3 text-[11px] font-black uppercase tracking-widest text-[var(--accent)] transition-colors hover:bg-slate-100"
+          aria-expanded={showMore}
+        >
+          <span>{showMore ? "− Show less" : "+ MORE SPECIFICATIONS"}</span>
+          <svg
+            className={`w-4 h-4 transition-transform ${showMore ? "rotate-180" : ""}`}
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 }
