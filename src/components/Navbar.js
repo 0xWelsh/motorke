@@ -195,14 +195,14 @@ export default function Navbar({ user, navCounts }) {
                 onClick={(e) => navigateTo("/", e)}
                 className="flex shrink-0 items-center transition-transform active:scale-95"
               >
-                <div className="relative h-9 w-[266px] shrink-0 lg:h-11 lg:w-[325px] xl:h-[46px] xl:w-[340px]">
+                <div className="relative h-12 w-[72px] shrink-0 lg:h-14 lg:w-[84px]">
                   <Image
                     src={BRAND_HEADER_LOGO}
                     alt="BIDGARI"
                     fill
                     priority
                     className="object-contain object-left"
-                    sizes="(min-width: 1280px) 340px, (min-width: 1024px) 325px, 266px"
+                    sizes="84px"
                   />
                 </div>
               </Link>
@@ -342,14 +342,14 @@ export default function Navbar({ user, navCounts }) {
               onClick={(e) => navigateTo("/", e)}
               className="relative z-20 flex shrink-0 items-center transition-transform active:scale-95"
             >
-              <div className="relative h-8 w-52 shrink-0">
+              <div className="relative h-9 w-[54px] shrink-0">
                 <Image
                   src={BRAND_HEADER_LOGO}
                   alt="BIDGARI"
                   fill
                   priority
                   className="object-contain object-left"
-                  sizes="208px"
+                  sizes="54px"
                 />
               </div>
             </Link>
@@ -457,13 +457,13 @@ export default function Navbar({ user, navCounts }) {
                   onClick={(e) => navigateTo("/", e)}
                   className="flex min-w-0 shrink-0 items-center"
                 >
-                  <div className="relative h-8 w-52 shrink-0">
+                  <div className="relative h-9 w-[54px] shrink-0">
                     <Image
                       src={BRAND_HEADER_LOGO}
                       alt="BIDGARI"
                       fill
                       className="object-contain object-left"
-                      sizes="208px"
+                      sizes="54px"
                     />
                   </div>
                 </Link>
