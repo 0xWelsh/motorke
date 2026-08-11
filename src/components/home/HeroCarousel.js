@@ -33,7 +33,7 @@ export default function HeroCarousel({ cars = [] }) {
 
   return (
     <div className="relative">
-      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-sm sm:aspect-[16/7]">
+      <div className="relative h-[220px] w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-sm sm:h-[275px]">
         <div className="absolute inset-0">
           {imgUrl ? (
             <Image

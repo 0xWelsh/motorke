@@ -516,11 +516,20 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─── Layout ─── */
 .mk-page-shell {
-  @apply mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-8;
+  @apply mx-auto w-full px-4 sm:px-6 lg:px-8;
+  max-width: 1475px;
 }
 
 .home-shell {
-  @apply mx-auto w-full max-w-[1280px] px-3 sm:px-5 md:px-6 lg:px-8;
+  @apply mx-auto w-full px-3 sm:px-5 md:px-6 lg:px-8;
+  max-width: 1475px;
+}
+
+@media (min-width: 1024px) {
+  .mk-page-shell,
+  .home-shell {
+    width: calc(100% - 64px);
+  }
 }
 
 .mk-section-gap {

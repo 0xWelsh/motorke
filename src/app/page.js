@@ -3,6 +3,7 @@ export const revalidate = 60;
 import CarsSearchBar from "@/components/CarsSearchBar";
 import TrackedLink from "@/components/TrackedLink";
 import NikkyoSidebar from "@/components/NikkyoSidebar";
+import HomepageSidebarRight from "@/components/home/HomepageSidebarRight";
 import HomepageShopLinks from "@/components/home/HomepageShopLinks";
 import HomepageTrending from "@/components/home/HomepageTrending";
 import HomepageNikkyoGrids from "@/components/home/HomepageNikkyoGrids";
@@ -178,8 +179,8 @@ export default async function HomePage() {
       {/* Nikkyo-style two-column from the top: sidebar + main content */}
       <section className="border-b border-slate-200 bg-[var(--bg)]">
         <div className="home-shell">
-          <div className="lg:grid lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-8 lg:items-start lg:py-6">
-            <aside className="hidden lg:block lg:sticky lg:top-24 lg:self-start">
+          <div className="lg:grid lg:grid-cols-[190px_minmax(0,1fr)] xl:grid-cols-[190px_minmax(0,1fr)_240px] lg:gap-3 xl:gap-3 lg:items-start lg:py-6">
+            <aside className="hidden lg:block lg:sticky lg:top-28 lg:self-start">
               <NikkyoSidebar inventoryCounts={browseInventoryCounts} />
             </aside>
 
@@ -213,6 +214,10 @@ export default async function HomePage() {
                 />
               </div>
             </main>
+
+            <aside className="hidden xl:block xl:sticky xl:top-28 xl:self-start">
+              <HomepageSidebarRight />
+            </aside>
           </div>
         </div>
       </section>
