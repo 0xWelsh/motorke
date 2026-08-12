@@ -22,7 +22,7 @@ export default function NikkyoStockCard({ car, priority = false, fill = false })
     <article className={`group relative flex flex-col overflow-hidden border border-[#D8D8D8] bg-white ${fill ? "h-full" : ""}`}>
       <Link
         href={carListingPath(car)}
-        className={`relative overflow-hidden bg-slate-100 ${fill ? "absolute inset-0" : "block aspect-[16/10]"}`}
+        className={`overflow-hidden bg-slate-100 ${fill ? "absolute inset-0" : "relative block aspect-[16/10]"}`}
       >
         {img ? (
           <PictureImage
