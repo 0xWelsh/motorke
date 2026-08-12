@@ -51,61 +51,59 @@ function HeroGridShowcaseMobile({ cars, carIndex, saveData }) {
       <div className="flex flex-col gap-1.5 sm:gap-2 w-full">
         <Link
           href={carListingPath(mainCar)}
-          className="group relative flex overflow-hidden bg-black shadow-xl rounded-xl min-h-[96px] sm:min-h-[112px] transition-all hover:ring-1 hover:ring-[#38A169]/50"
+          className="group relative flex flex-col overflow-hidden bg-black shadow-xl rounded-xl aspect-[4/3] transition-all hover:ring-1 hover:ring-[#38A169]/50"
         >
-          <div className="relative w-[44%] max-w-[200px] bg-black/30">
+          <div className="absolute inset-0">
             <Image
-              src={getThumbnailUrl(mainCar.images?.[0]?.url, saveDataWidth(saveData, 400), saveDataQuality(saveData, 80)) || "/images/placeholder.jpg"}
+              src={getGalleryImageUrl(mainCar.images?.[0]?.url, saveDataQuality(saveData, 85), saveDataWidth(saveData, 800)) || "/images/placeholder.jpg"}
               alt={mainCar.model}
               fill
-              className="object-cover opacity-85 transition-opacity duration-500 group-hover:opacity-100"
-              sizes="(max-width: 768px) 44vw, 200px"
+              priority={!saveData}
+              className="object-cover opacity-90 transition-transform duration-700 group-hover:scale-105"
+              sizes="(max-width: 1024px) 100vw, 50vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/10 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
           </div>
 
-          <div className="flex flex-col justify-between flex-1 p-2.5 sm:p-3">
-            <div className="flex items-start justify-between gap-3">
+          <div className="relative z-10 flex flex-col h-full p-2.5 sm:p-3">
+            <div className="self-start">
               <CarBadge car={mainCar} />
-              <span className="hidden sm:inline-flex w-8 h-8 rounded-full border border-white/20 items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[var(--accent)] group-hover:border-[var(--accent)] transition-all duration-300">
-                <ArrowRight className="w-4 h-4 text-white" />
-              </span>
             </div>
 
-            <div className="min-w-0">
+            <div className="mt-auto">
               <p className="text-[9px] sm:text-[10px] font-semibold tracking-[0.25em] text-white/60 mb-1">
                 {mainCar.year}
               </p>
-              <h4 className="text-[14px] sm:text-[16px] font-black text-white tracking-tight uppercase leading-[1.05] line-clamp-1 group-hover:text-[var(--accent)] transition-colors">
+              <h4 className="text-[1.35rem] sm:text-[1.6rem] font-sans font-black text-white tracking-tight leading-[0.9] uppercase line-clamp-1 group-hover:text-[var(--accent)] transition-colors">
                 {mainCar.make}
               </h4>
-              <p className="text-[10px] sm:text-[11px] font-semibold text-white/75 tracking-[0.08em] uppercase leading-tight line-clamp-1">
+              <p className="mt-0.5 text-[10px] sm:text-[11px] font-semibold text-white/75 tracking-[0.08em] uppercase line-clamp-1">
                 {mainVariant}
               </p>
-            </div>
 
-            <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/10">
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <span className="text-[7px] sm:text-[8px] text-white/40 font-black uppercase tracking-[0.2em]">
-                    Asking Price
-                  </span>
+              <div className="mt-1.5 sm:mt-2 h-px bg-white/10 w-full" />
+
+              <div className="flex items-center justify-between mt-2 sm:mt-3">
+                <div className="flex flex-col min-w-0">
                   {mainCar.dealer?.name && (
-                    <span className="flex items-center gap-1 text-[7px] sm:text-[8px] text-white/40 font-semibold truncate max-w-[90px]">
+                    <span className="flex items-center gap-1 text-[7px] sm:text-[8px] text-white/40 font-semibold mb-0.5 truncate max-w-[170px]">
                       {mainCar.dealer?.verificationStatus === "VERIFIED" && (
                         <Crown className="w-2.5 h-2.5 text-yellow-500/60 shrink-0" />
                       )}
                       {mainCar.dealer.name}
                     </span>
                   )}
+                  <span className="text-[7px] sm:text-[8px] text-white/40 font-black uppercase tracking-[0.2em] mb-0.5">
+                    Asking Price
+                  </span>
+                  <span className="text-base sm:text-lg font-black text-[var(--accent)] leading-tight">
+                    KES {(mainCar.price / 1000000).toFixed(2)}M
+                  </span>
                 </div>
-                <span className="text-[12px] sm:text-[13px] font-black text-[var(--accent)] leading-tight">
-                  KES {(mainCar.price / 1000000).toFixed(2)}M
-                </span>
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[var(--accent)] group-hover:border-[var(--accent)] transition-all duration-300 shrink-0">
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                </div>
               </div>
-              <span className="sm:hidden w-8 h-8 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:bg-[var(--accent)] group-hover:border-[var(--accent)] transition-all duration-300">
-                <ArrowRight className="w-4 h-4 text-white" />
-              </span>
             </div>
           </div>
         </Link>
