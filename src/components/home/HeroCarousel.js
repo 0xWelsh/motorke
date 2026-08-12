@@ -36,7 +36,7 @@ export default function HeroCarousel({ cars = [] }) {
 
   return (
     <div className="relative">
-      <div className="lg:flex lg:items-center lg:gap-2">
+      <div className="lg:flex lg:items-center lg:justify-center lg:gap-2">
         <div className="relative mx-auto aspect-[4/3] w-full max-w-[200px] overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-sm sm:max-w-[267px] lg:mx-0 lg:w-[390px] lg:max-w-none lg:shrink-0">
         <div className="absolute inset-0">
           {imgUrl ? (
@@ -111,9 +111,9 @@ export default function HeroCarousel({ cars = [] }) {
         )}
       </div>
 
-      <div className="mt-2 hidden lg:mt-0 lg:grid lg:flex-1 grid-cols-2 gap-1.5 sm:gap-2">
+      <div className="mt-2 hidden lg:mt-0 lg:grid lg:h-[292px] lg:w-[390px] lg:shrink-0 grid-cols-2 grid-rows-2 gap-1.5 sm:gap-2">
         {gridCars.map((c, i) => (
-          <NikkyoStockCard key={c.id} car={c} priority={i === 0} />
+          <NikkyoStockCard key={c.id} car={c} priority={i === 0} fill />
         ))}
       </div>
       </div>

@@ -11,7 +11,7 @@ import { isInSoldGracePeriod } from "@/lib/car-sold-status";
  * Dense Nikkyo-style stock card: 16/10 photo, hairline border,
  * uppercase make/model, price + year/stock line. No shadows or badges.
  */
-export default function NikkyoStockCard({ car, priority = false }) {
+export default function NikkyoStockCard({ car, priority = false, fill = false }) {
   const img = car.images?.[0]?.url;
   const code = stockCode(car);
   const sold = !car.available || isInSoldGracePeriod(car);
@@ -19,10 +19,10 @@ export default function NikkyoStockCard({ car, priority = false }) {
   const model = `${car.model || ""}${car.variant ? ` ${car.variant}` : ""}`.toUpperCase();
 
   return (
-    <article className="group flex flex-col overflow-hidden border border-[#D8D8D8] bg-white">
+    <article className={`group flex flex-col overflow-hidden border border-[#D8D8D8] bg-white ${fill ? "h-full" : ""}`}>
       <Link
         href={carListingPath(car)}
-        className="relative block aspect-[16/10] overflow-hidden bg-slate-100"
+        className={`relative overflow-hidden bg-slate-100 ${fill ? "min-h-0 flex-1" : "block aspect-[16/10]"}`}
       >
         {img ? (
           <PictureImage
