@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import { carListingPath } from "@/lib/car-listing-url";
 import { getThumbnailUrl } from "@/lib/image-transform";
+import NikkyoStockCard from "@/components/NikkyoStockCard";
 
 export default function HeroCarousel({ cars = [] }) {
   const [index, setIndex] = useState(0);
@@ -31,9 +32,12 @@ export default function HeroCarousel({ cars = [] }) {
 
   const go = (dir) => setIndex((safeIndex + dir + cars.length) % cars.length);
 
+  const gridCars = cars.slice(1, 5);
+
   return (
     <div className="relative">
-      <div className="relative mx-auto aspect-[4/3] w-full max-w-[200px] overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-sm sm:max-w-[267px] lg:max-w-[387px]">
+      <div className="lg:flex lg:items-center lg:gap-2">
+        <div className="relative mx-auto aspect-[4/3] w-full max-w-[200px] overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-sm sm:max-w-[267px] lg:mx-0 lg:w-[390px] lg:max-w-none lg:shrink-0">
         <div className="absolute inset-0">
           {imgUrl ? (
             <Image
@@ -42,7 +46,7 @@ export default function HeroCarousel({ cars = [] }) {
               fill
               priority
               className="object-cover"
-              sizes="(min-width:1024px) 387px, (min-width:640px) 267px, 200px"
+              sizes="(min-width:1024px) 390px, (min-width:640px) 267px, 200px"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
@@ -105,6 +109,13 @@ export default function HeroCarousel({ cars = [] }) {
             </button>
           </>
         )}
+      </div>
+
+      <div className="mt-2 hidden lg:mt-0 lg:grid lg:flex-1 grid-cols-2 gap-1.5 sm:gap-2">
+        {gridCars.map((c, i) => (
+          <NikkyoStockCard key={c.id} car={c} priority={i === 0} />
+        ))}
+      </div>
       </div>
 
       {cars.length > 1 && (
