@@ -37,7 +37,7 @@ export default function HeroCarousel({ cars = [] }) {
   return (
     <div className="relative">
       <div className="lg:flex lg:items-center lg:justify-center lg:gap-2">
-        <div className="relative mx-auto aspect-[4/3] w-full max-w-[200px] overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-sm sm:max-w-[267px] lg:mx-0 lg:w-[390px] lg:max-w-none lg:shrink-0">
+        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-none border-0 border-slate-200 bg-slate-100 sm:mx-auto sm:max-w-[267px] sm:rounded-xl sm:border sm:shadow-sm lg:mx-0 lg:w-[390px] lg:max-w-none lg:shrink-0">
         <div className="absolute inset-0">
           {imgUrl ? (
             <Image
@@ -46,7 +46,7 @@ export default function HeroCarousel({ cars = [] }) {
               fill
               priority
               className="object-cover"
-              sizes="(min-width:1024px) 390px, (min-width:640px) 267px, 200px"
+              sizes="(min-width:1024px) 390px, (min-width:640px) 267px, 100vw"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
@@ -63,7 +63,7 @@ export default function HeroCarousel({ cars = [] }) {
           <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/80">
             {car.year} · {car.make}
           </p>
-          <h2 className="mt-0.5 text-lg font-black leading-tight text-white sm:text-2xl lg:text-3xl">
+          <h2 className="mt-0.5 text-xl font-black leading-tight text-white sm:text-2xl lg:text-3xl">
             {car.model}
             {car.variant ? ` ${car.variant}` : ""}
           </h2>
