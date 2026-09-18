@@ -72,9 +72,15 @@ export default function CarContactActions({ whatsappHref, callHref, carId, deale
     } catch {}
   }
 
+  const numberDigits = whatsappHref?.match(/wa\.me\/(\d+)/)?.[1] || "";
+  const prettyPhone = numberDigits
+    ? `+${numberDigits.slice(0, 3)} ${numberDigits.slice(3, 6)} ${numberDigits.slice(6, 9)} ${numberDigits.slice(9)}`.trim()
+    : "";
+
   return (
     <div className="space-y-2.5">
       {whatsappHref && (
+        <div className="space-y-1.5">
         <a
           href={whatsappHref}
           target="_blank"
@@ -85,8 +91,14 @@ export default function CarContactActions({ whatsappHref, callHref, carId, deale
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d={WHATSAPP_ICON_PATH} />
           </svg>
-          WhatsApp
+          Chat on WhatsApp
         </a>
+        {prettyPhone && (
+          <p className="text-center text-[11px] font-medium text-slate-400">
+            Instant reply on {prettyPhone}
+          </p>
+        )}
+        </div>
       )}
       {callHref && (
         <a

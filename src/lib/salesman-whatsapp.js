@@ -1,8 +1,8 @@
 import { db } from "@/lib/db";
 import { unstable_cache } from "next/cache";
 
-const SALESMAN_KEYS = ["salesman_whatsapp_1", "salesman_whatsapp_2", "salesman_whatsapp_3"];
-const FALLBACK_NUMBER = "254717303587";
+export const SALESMAN_KEYS = ["salesman_whatsapp_1", "salesman_whatsapp_2", "salesman_whatsapp_3"];
+export const FALLBACK_NUMBER = "254717303587";
 
 async function fetchSalesmanNumbers() {
   const settings = await db.setting.findMany({

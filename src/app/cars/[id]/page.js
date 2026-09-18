@@ -428,8 +428,8 @@ export default async function CarDetailPage({ params }) {
 
             {/* Request & actions */}
             <section>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Request &amp; actions</p>
-              <CarActionButtons carId={car.id} dealerId={car.dealerId} carTitle={carName} price={formatCarPrice(car)} />
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Get this car</p>
+              <CarActionButtons carId={car.id} dealerId={car.dealerId} carTitle={carName} price={formatCarPrice(car)} whatsappHref={whatsappHref} whatsappNumber={waDigits} />
             </section>
 
             {/* Seller notes — real data-backed claims only */}

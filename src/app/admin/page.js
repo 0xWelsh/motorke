@@ -7,6 +7,7 @@ import AdminTrendsChart from "@/components/admin/AdminTrendsChart";
 import AdminActionFeed from "@/components/admin/AdminActionFeed";
 import RunWatchAlertsButton from "@/components/admin/RunWatchAlertsButton";
 import RecacheHomepageButton from "@/components/admin/RecacheHomepageButton";
+import { SALESMAN_KEYS, FALLBACK_NUMBER } from "@/lib/salesman-whatsapp";
 import {
   Car,
   Users,
@@ -62,6 +63,7 @@ export default async function AdminDashboard({ searchParams }) {
     listingsThisWeek, listingsPrevWeek, leadsThisWeek, leadsPrevWeek,
     staleListings,
     recentCars, recentLeads, salesmenLeads, salesmenConversion,
+    salesmanSettings,
   ] = await Promise.all([
     db.car.count({ where: { available: true } }),
     db.lead.count(),
@@ -71,7 +73,7 @@ export default async function AdminDashboard({ searchParams }) {
     db.car.aggregate({ _sum: { price: true }, where: { available: true } }),
     db.car.count({ where: { createdAt: { gte: todayStart } } }),
     db.lead.count({ where: { createdAt: { gte: todayStart } } }),
-    db.carView.count({ where: { viewedAt: { gte: todayStart } } }),
+    db.marketingEvent.count({ where: { name: "view_car", createdAt: { gte: todayStart } } }),
     db.car.findMany({
       where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } },
       select: { createdAt: true },
@@ -82,9 +84,10 @@ export default async function AdminDashboard({ searchParams }) {
       select: { createdAt: true },
       take: 1000,
     }),
-    db.carView.findMany({
-      where: { viewedAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } },
-      select: { viewedAt: true },
+    db.marketingEvent.findMany({
+      where: { name: "view_car", createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } },
+      select: { createdAt: true },
+      take: 20000,
     }),
     db.car.count({ where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) } } }),
     db.car.count({
@@ -162,6 +165,10 @@ export default async function AdminDashboard({ searchParams }) {
     });
     return { soldMap, respMap };
   })(),
+    db.setting.findMany({
+      where: { key: { in: SALESMAN_KEYS } },
+      select: { key: true, value: true },
+    }),
   ]);
 
   const ago = (ts) => {
@@ -224,12 +231,37 @@ export default async function AdminDashboard({ searchParams }) {
     if (chartMap[k]) chartMap[k].leads += 1;
   });
   rawViewsForChart.forEach((v) => {
-    const k = toDayKey(v.viewedAt);
+    const k = toDayKey(v.createdAt);
     if (chartMap[k]) chartMap[k].views += 1;
   });
   const chartData = Object.values(chartMap).map(({ _key, ...rest }) => rest);
 
+  const configuredSalesmanNumbers = salesmanSettings.filter((s) => s.value?.trim()).length;
+  const activeWhatsappNumber =
+    salesmanSettings.find((s) => s.value?.trim())?.value || FALLBACK_NUMBER;
+
   const actions = [
+    ...(configuredSalesmanNumbers === 0
+      ? [{
+          id: "salesman-routing",
+          type: "whatsapp",
+          title: "All WhatsApp CTAs route to one number",
+          subtitle: `No salesman numbers set — every tap deep-links to +${activeWhatsappNumber}. Add team numbers in Settings.`,
+          href: "/admin/settings",
+          timeAgo: "now",
+          priority: "high",
+        }]
+      : configuredSalesmanNumbers < SALESMAN_KEYS.length
+        ? [{
+            id: "salesman-routing-partial",
+            type: "whatsapp",
+            title: "Some salesman numbers missing",
+            subtitle: `${SALESMAN_KEYS.length - configuredSalesmanNumbers} of ${SALESMAN_KEYS.length} unset — CTA load isn't spread across the team.`,
+            href: "/admin/settings",
+            timeAgo: "now",
+            priority: "low",
+          }]
+        : []),
     ...(staleListings > 0
       ? [{
           id: "stale",
