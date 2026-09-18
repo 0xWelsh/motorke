@@ -5,9 +5,9 @@
   Strategy: Cache-first for static assets, network-first for API calls
 */
 
-const CACHE_NAME = "welsh-motorhub-v5";
-const RUNTIME_CACHE = "welsh-motorhub-runtime-v5";
-const R2_IMAGE_CACHE = "welsh-motorhub-r2images-v5";
+const CACHE_NAME = "welsh-motorhub-v6";
+const RUNTIME_CACHE = "welsh-motorhub-runtime-v6";
+const R2_IMAGE_CACHE = "welsh-motorhub-r2images-v6";
 const MAX_R2_CACHE = 100;
 const OFFLINE_FALLBACK = new Response("Offline", {
   status: 503,
@@ -191,31 +191,42 @@ self.addEventListener("sync", (event) => {
   }
 });
 
-// Push notifications (if implemented later)
+// Push notifications
 self.addEventListener("push", (event) => {
   const data = event.data ? event.data.json() : {};
   const options = {
-    body: data.body || "You have a new notification from Welsh Motorhub",
-    icon: "/headerlogo.png",
+    body: data.body || "You have a new notification from BIDGARI",
+    icon: "/icon-512.png",
     badge: "/favicon.png",
-    tag: "welsh-motorhub-notification",
+    tag: data.tag || "bidgari-notification",
+    data: { url: data.url || "/" },
+    actions: data.actions || [],
+    vibrate: [100, 50, 100],
+    requireInteraction: false,
+    silent: false,
   };
 
-  event.waitUntil(self.registration.showNotification(data.title || "Welsh Motorhub", options));
+  event.waitUntil(
+    self.registration.showNotification(data.title || "BIDGARI", options)
+  );
 });
 
-// Notification click handler
+// Notification click handler — route to the right page
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
+  const targetUrl = event.notification.data?.url || "/";
+
   event.waitUntil(
-    clients.matchAll({ type: "window" }).then((clientList) => {
-      for (let i = 0; i < clientList.length; i++) {
-        if (clientList[i].url === "/" && "focus" in clientList[i]) {
-          return clientList[i].focus();
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
+      // If already open on the target URL, focus it
+      for (const client of clientList) {
+        if (client.url.includes(new URL(targetUrl, self.location.origin).pathname) && "focus" in client) {
+          return client.focus();
         }
       }
+      // Otherwise open a new window
       if (clients.openWindow) {
-        return clients.openWindow("/");
+        return clients.openWindow(targetUrl);
       }
     })
   );

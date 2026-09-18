@@ -60,11 +60,18 @@ export function buildListingMetadata({
   };
 }
 
-export function buildHubMetadata({ title, description, pathname }) {
+export function buildHubMetadata({ title, description, pathname, images = [] }) {
+  const ogImages = images.length ? images : [BRAND_OG_IMAGE];
   return {
     title: buildPageTitle(title),
     description,
     ...buildCanonicalMetadata(pathname),
-    openGraph: buildOpenGraph({ title, description, pathname }),
+    openGraph: buildOpenGraph({ title, description, pathname, images: ogImages }),
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ogImages.map((u) => (typeof u === "string" ? u : u.url)),
+    },
   };
 }

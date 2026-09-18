@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
@@ -7,16 +7,22 @@ import { carListingPath } from "@/lib/car-listing-url";
 import { getThumbnailUrl } from "@/lib/image-transform";
 import NikkyoStockCard from "@/components/NikkyoStockCard";
 
+const SWIPE_THRESHOLD = 50;
+
 export default function HeroCarousel({ cars = [] }) {
   const [index, setIndex] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const [dragX, setDragX] = useState(0);
+  const dragStartRef = useRef(null);
+  const draggedRef = useRef(false);
 
   useEffect(() => {
-    if (cars.length < 2) return;
+    if (dragging || cars.length < 2) return;
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % cars.length);
     }, 4500);
     return () => clearInterval(timer);
-  }, [cars.length]);
+  }, [cars.length, dragging]);
 
   if (!cars.length) return null;
 
@@ -32,12 +38,74 @@ export default function HeroCarousel({ cars = [] }) {
 
   const go = (dir) => setIndex((safeIndex + dir + cars.length) % cars.length);
 
+  function onPointerDown(e) {
+    dragStartRef.current = e.clientX;
+    draggedRef.current = false;
+    setDragging(true);
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      // pointer capture is best-effort
+    }
+  }
+
+  function onPointerMove(e) {
+    if (dragStartRef.current == null) return;
+    const delta = e.clientX - dragStartRef.current;
+    if (Math.abs(delta) > 8) draggedRef.current = true;
+    setDragX(delta);
+  }
+
+  function endSwipe(e) {
+    window.removeEventListener("pointermove", onPointerMove);
+    window.removeEventListener("pointerup", endSwipe);
+    window.removeEventListener("pointercancel", cancelSwipe);
+    const start = dragStartRef.current;
+    dragStartRef.current = null;
+    setDragging(false);
+    if (start == null) return;
+    const delta = e.clientX - start;
+    if (delta <= -SWIPE_THRESHOLD) go(1);
+    else if (delta >= SWIPE_THRESHOLD) go(-1);
+    if (Math.abs(delta) >= SWIPE_THRESHOLD) {
+      // The browser fires a click right after this drag; keep `draggedRef`
+      // truthy so that click is swallowed, then reset it for the next tap.
+      setTimeout(() => {
+        draggedRef.current = false;
+      }, 50);
+    }
+    setDragX(0);
+  }
+
+  function cancelSwipe() {
+    window.removeEventListener("pointermove", onPointerMove);
+    window.removeEventListener("pointerup", endSwipe);
+    window.removeEventListener("pointercancel", cancelSwipe);
+    dragStartRef.current = null;
+    setDragging(false);
+    setDragX(0);
+  }
+
+  function onPointerDown(e) {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    dragStartRef.current = e.clientX;
+    draggedRef.current = false;
+    setDragging(true);
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerup", endSwipe);
+    window.addEventListener("pointercancel", cancelSwipe);
+  }
+
   const gridCars = cars.slice(1, 5);
 
   return (
     <div className="relative">
       <div className="lg:flex lg:items-center lg:justify-center lg:gap-2">
-        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-none border-0 border-slate-200 bg-slate-100 sm:mx-auto sm:max-w-[267px] sm:rounded-xl sm:border sm:shadow-sm lg:mx-0 lg:w-[390px] lg:max-w-none lg:shrink-0">
+        <div
+          className="relative aspect-[4/3] w-full touch-pan-y select-none overflow-hidden rounded-none border-0 border-slate-200 bg-slate-100 sm:mx-auto sm:max-w-[267px] sm:rounded-xl sm:border sm:shadow-sm lg:mx-0 lg:w-[390px] lg:max-w-none lg:shrink-0"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+        >
         <div className="absolute inset-0">
           {imgUrl ? (
             <Image
@@ -45,7 +113,12 @@ export default function HeroCarousel({ cars = [] }) {
               alt={`${car.year} ${car.make} ${car.model}`}
               fill
               priority
-              className="object-cover"
+              draggable={false}
+              className="object-cover will-change-transform"
+              style={{
+                transform: `translateX(${dragX}px)`,
+                transition: dragging ? "none" : "transform 250ms ease",
+              }}
               sizes="(min-width:1024px) 390px, (min-width:640px) 267px, 100vw"
             />
           ) : (
@@ -58,6 +131,13 @@ export default function HeroCarousel({ cars = [] }) {
 
         <Link
           href={carListingPath(car)}
+          onClick={(e) => {
+            if (draggedRef.current) {
+              e.preventDefault();
+              e.stopPropagation();
+              draggedRef.current = false;
+            }
+          }}
           className="absolute inset-0 z-10 flex flex-col justify-end p-4 sm:p-6"
         >
           <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/80">

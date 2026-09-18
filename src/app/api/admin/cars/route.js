@@ -103,6 +103,7 @@ export async function createCar(body) {
     cylinders, horsepower, torque, turbo, sunroof, airbags,
     color, seats, description, features, badges, images, videoUrl,
     negotiable, imported, featured, registered, location, importCountry, dutyPaid,
+    isLuxury,
   } = body;
   console.log("🏁 CREATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
@@ -147,6 +148,7 @@ export async function createCar(body) {
       imported:     Boolean(imported),
       importCountry: importCountry?.trim() || null,
       featured:     Boolean(featured),
+      isLuxury:     Boolean(isLuxury),
       available:    true,
       location:     location?.trim() || null,
       images: images?.length

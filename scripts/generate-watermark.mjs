@@ -7,7 +7,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
-const LOGO_PATH = join(ROOT, "public", "images", "bidgari-logo.png");
+const LOGO_PATH = join(ROOT, "public", "icon-512.png");
 const OUT_DIR = join(ROOT, "public", "watermark");
 const OUT_FILE = join(OUT_DIR, "brand-watermark.png");
 

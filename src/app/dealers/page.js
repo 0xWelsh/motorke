@@ -10,6 +10,7 @@ import NearbyDealersList from "@/components/NearbyDealersList";
 import DealersLocationButton from "@/components/DealersLocationButton";
 import DealersSortSelect from "@/components/DealersSortSelect";
 import { unstable_cache } from "next/cache";
+import { absoluteUrl } from "@/lib/site-url";
 
 /** Self-hosted hero (user asset in public/) — anchored right; gradient mutes toward text on the left. */
 const DEALERS_HERO_IMAGE = "/images/backgrounds/car-dealership.jpg";
@@ -31,7 +32,7 @@ export const metadata = {
     description:
       "Browse BIDGARI's verified dealer network: counties, cars in stock, and direct links to each showroom.",
     type: "website",
-    url: "/dealers",
+    url: absoluteUrl("/dealers"),
   },
 };
 

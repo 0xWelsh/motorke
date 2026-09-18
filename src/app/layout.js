@@ -14,7 +14,7 @@ import { headers, cookies } from "next/headers";
 import { SaveDataProvider } from "@/components/SaveDataProvider";
 import { isSaveDataRequest, SAVE_DATA_COOKIE } from "@/lib/save-data";
 
-import { DM_Sans, Roboto, Inter } from "next/font/google";
+import { DM_Sans, Roboto } from "next/font/google";
 import { BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
 
 const dmSans = DM_Sans({
@@ -28,13 +28,6 @@ const roboto = Roboto({
   subsets: ["latin"],
   variable: "--font-roboto",
   weight: ["400", "500", "700", "900"],
-  display: "swap",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -180,6 +173,29 @@ export default async function RootLayout({ children }) {
     },
   };
 
+  const localBusinessLd = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "BIDGARI",
+    description: "Kenya's verified car marketplace — every car verified, every sale handled.",
+    url: origin,
+    logo: `${origin}/headerlogo.png`,
+    image: `${origin}${BRAND_OG_IMAGE}`,
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "KE",
+      addressLocality: "Nairobi",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: -1.2921,
+      longitude: 36.8219,
+    },
+    areaServed: { "@type": "Country", name: "Kenya" },
+    priceRange: "$$",
+    ...(sameAs.length ? { sameAs } : {}),
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -200,8 +216,12 @@ export default async function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessLd) }}
+        />
       </head>
-      <body className={`${dmSans.variable} ${roboto.variable} ${inter.variable} bg-background text-slate-800 min-h-screen antialiased flex flex-col font-sans`}>
+      <body className={`${dmSans.variable} ${roboto.variable} bg-background text-slate-800 min-h-screen antialiased flex flex-col font-sans`}>
         <PWARegister />
         <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
           <SaveDataProvider saveData={saveData}>

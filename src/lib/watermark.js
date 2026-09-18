@@ -23,13 +23,6 @@ import sharp from "sharp";
 
 const WATERMARK_ENABLED = process.env.LISTING_WATERMARK_ENABLED !== "false";
 
-// Watermark width as a fraction of the source image width. Centre
-// watermarks should be larger than corner logos to remain visible
-// across the full image area.
-const WATERMARK_WIDTH_RATIO = 0.55;
-const MIN_WATERMARK_WIDTH = 200;
-const MAX_WATERMARK_WIDTH = 800;
-
 /** Cache the watermark PNG buffer once per server lifecycle. */
 let cachedBrandWatermark = undefined;
 
@@ -48,11 +41,6 @@ function loadBrandWatermark() {
     cachedBrandWatermark = null;
   }
   return cachedBrandWatermark;
-}
-
-function clamp(value, min, max) {
-  if (Number.isNaN(value)) return min;
-  return Math.max(min, Math.min(max, value));
 }
 
 /**
@@ -74,23 +62,19 @@ export async function applyListingWatermark(buffer, mimeType /* customText ignor
   const height = meta.height || 0;
   if (!width || !height) return buffer;
 
-  // Compute watermark dimensions relative to the source photo.
-  const targetWidth = Math.round(
-    clamp(width * WATERMARK_WIDTH_RATIO, MIN_WATERMARK_WIDTH, MAX_WATERMARK_WIDTH)
-  );
-
   // Resize the watermark PNG (opacity is already baked into the asset).
   let overlay;
   let overlayWidth = 0;
   let overlayHeight = 0;
   try {
+    const targetWidth = Math.max(40, Math.round(width * 0.11));
     overlay = await sharp(brand)
-      .resize({ width: targetWidth, withoutEnlargement: true })
+      .resize({ width: targetWidth })
       .png()
       .toBuffer();
     const overlayMeta = await sharp(overlay).metadata();
     overlayWidth = overlayMeta.width || targetWidth;
-    overlayHeight = overlayMeta.height || 0;
+    overlayHeight = overlayMeta.height || targetWidth;
   } catch (err) {
     console.warn("[watermark] Could not prepare overlay, returning original:", err?.message || err);
     return buffer;

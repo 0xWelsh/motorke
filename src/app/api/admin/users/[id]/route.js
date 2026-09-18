@@ -2,6 +2,7 @@
 export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
+import { SUPER_ADMIN_EMAIL } from "@/lib/super-admin";
 import { NextResponse } from "next/server";
 
 export async function POST(request, { params }) {
@@ -22,6 +23,27 @@ export async function POST(request, { params }) {
     return NextResponse.redirect(
       new URL(`/admin/users/${id}/edit?error=notallowed`, request.url)
     );
+  }
+
+  const target = await db.user.findUnique({ where: { id } });
+  if (!target) {
+    return NextResponse.redirect(new URL("/admin/users", request.url));
+  }
+
+  // Revoking admin privileges (ADMIN → anything else) is super-admin only,
+  // and the super-admin account itself can never be demoted.
+  const removingAdmin = target.role === "ADMIN" && role !== "ADMIN";
+  if (removingAdmin) {
+    if (session.user.email !== SUPER_ADMIN_EMAIL) {
+      return NextResponse.redirect(
+        new URL(`/admin/users/${id}/edit?error=revoke`, request.url)
+      );
+    }
+    if (target.email === SUPER_ADMIN_EMAIL) {
+      return NextResponse.redirect(
+        new URL(`/admin/users/${id}/edit?error=superadmin`, request.url)
+      );
+    }
   }
 
   try {

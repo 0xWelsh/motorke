@@ -1,14 +1,16 @@
 "use client";
 import { ArrowUp } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { getSupportWhatsAppHref } from "@/lib/site-contact";
+import { onGlobalPop } from "@/lib/back-nav";
 
 export default function ScrollToTop() {
   const pathname = usePathname() || "";
   const stackedAboveWhatsApp =
     pathname === "/" && Boolean(getSupportWhatsAppHref());
   const [isVisible, setIsVisible] = useState(false);
+  const lastPopPathRef = useRef(null);
 
   const toggleVisibility = () => {
     if (typeof window !== "undefined") {
@@ -25,7 +27,27 @@ export default function ScrollToTop() {
     }
   };
 
+  // `popstate` fires before the target route renders, so record the URL it
+  // points to. The pathname effect below skips the forced scroll-to-top when
+  // it matches (the router restores the previous scroll position instead).
+  // Also feeds the module-level tracker used by CarsInfiniteGrid.
   useEffect(() => {
+    const onPop = () => {
+      lastPopPathRef.current = window.location.pathname + window.location.search;
+    };
+    window.addEventListener("popstate", onPop);
+    window.addEventListener("popstate", onGlobalPop);
+    return () => {
+      window.removeEventListener("popstate", onPop);
+      window.removeEventListener("popstate", onGlobalPop);
+    };
+  }, []);
+
+  useEffect(() => {
+    const here = `${window.location.pathname}${window.location.search}`;
+    const wasBackForward = lastPopPathRef.current === here;
+    lastPopPathRef.current = null;
+    if (wasBackForward) return; // back/forward – let the router restore scroll
     window.scrollTo(0, 0);
   }, [pathname]);
 

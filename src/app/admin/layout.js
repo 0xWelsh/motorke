@@ -24,13 +24,13 @@ import {
   MessageCircle,
   Bookmark,
   UserCheck,
+  Film,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import NotificationsBell from "@/components/NotificationsBell";
-
-const SUPER_ADMIN_EMAIL = "11241welshmuhuri@gmail.com";
+import { SUPER_ADMIN_EMAIL } from "@/lib/super-admin";
 
 const allLinks = [
   { href: "/admin", label: "Overview", Icon: LayoutDashboard },
@@ -47,6 +47,7 @@ const allLinks = [
   { href: "/admin/super", label: "Super Admin", Icon: Shield },
   { href: "/admin/watchlist", label: "Watchlist", Icon: Bookmark },
   { href: "/admin/whatsapp-bot", label: "WhatsApp Bot", Icon: MessageCircle },
+  { href: "/admin/content-creator", label: "Content Creator", Icon: Film },
 ];
 
 const quickActions = [

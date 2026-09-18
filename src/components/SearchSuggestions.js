@@ -13,7 +13,8 @@ export default function SearchSuggestions({
   onSelect,
   onClose,
   inputValue = "",
-  className = ""
+  className = "",
+  header = null
 }) {
   if (!suggestions.length && !loading) return null;
 
@@ -39,6 +40,13 @@ export default function SearchSuggestions({
         </div>
       ) : (
         <div className="max-h-[70vh] sm:max-h-96 overflow-y-auto">
+          {header && (
+            <div className="px-3 py-2 bg-slate-50 border-b border-slate-200">
+              <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-slate-500">
+                {header}
+              </p>
+            </div>
+          )}
           {/* Cars Section */}
           {carSuggestions.length > 0 && (
             <>

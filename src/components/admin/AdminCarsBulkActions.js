@@ -151,6 +151,9 @@ export default function BulkActionsWrapper({
                     >
                       {car.year} {car.make} {car.model}
                     </Link>
+                    {car.isLuxury && (
+                      <span className="shrink-0 rounded bg-amber-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-400">Luxury</span>
+                    )}
                     <StatusDot car={car} />
                   </div>
                   <p className="mt-0.5 text-xs text-zinc-500 truncate">{car.variant || "\u2014"}</p>
@@ -251,12 +254,17 @@ export default function BulkActionsWrapper({
                             )}
                           </div>
                           <div className="min-w-0">
-                            <Link
-                              href={`/admin/cars/${car.id}/edit`}
-                              className="text-sm font-bold text-white hover:text-emerald-400 transition-colors truncate block"
-                            >
-                              {car.year} {car.make} {car.model}
-                            </Link>
+                            <div className="flex items-center gap-2">
+                              <Link
+                                href={`/admin/cars/${car.id}/edit`}
+                                className="text-sm font-bold text-white hover:text-emerald-400 transition-colors truncate"
+                              >
+                                {car.year} {car.make} {car.model}
+                              </Link>
+                              {car.isLuxury && (
+                                <span className="shrink-0 rounded bg-amber-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-400">Luxury</span>
+                              )}
+                            </div>
                             <p className="text-[11px] text-zinc-500 truncate">{car.variant?.trim() || "\u2014"}</p>
                           </div>
                         </div>

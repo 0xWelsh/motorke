@@ -41,10 +41,12 @@ export default function PictureImage({
   ...rest
 }) {
   const [errored, setErrored] = useState(false);
+  const [plain, setPlain] = useState(false);
   const reportedRef = useRef(false);
 
   useEffect(() => {
     setErrored(false);
+    setPlain(false);
     reportedRef.current = false;
   }, [src]);
 
@@ -58,20 +60,31 @@ export default function PictureImage({
     );
   }
 
-  const useResponsive = isR2Url(src);
+  function handleError() {
+    // Failed to load a width variant (e.g. image not migrated to webp yet):
+    // fall back to the original URL instead of a broken box.
+    if (plain) {
+      setErrored(true);
+      if (!reportedRef.current) {
+        reportedRef.current = true;
+        if (onError) onError();
+      }
+      return;
+    }
+    setPlain(true);
+  }
+
+  const useResponsive = isR2Url(src) && !plain;
 
   if (useResponsive) {
     const srcSetWebP = SIZES.map(
       (s) => `${webpSrc(src, s.suffix)} ${s.width}w`
     ).join(", ");
-    const srcSetJpeg = SIZES.map(
-      (s) => `${src} ${s.width}w`
-    ).join(", ");
 
     return (
       <picture>
         <source type="image/webp" srcSet={srcSetWebP} sizes={rest.sizes || "100vw"} />
-        <source type="image/jpeg" srcSet={srcSetJpeg} sizes={rest.sizes || "100vw"} />
+        <source type="image/jpeg" src={src} />
         <img
           src={src}
           alt={alt}
@@ -79,11 +92,7 @@ export default function PictureImage({
           fetchPriority={fetchPriority}
           className={className}
           style={style}
-          onError={() => {
-            setErrored(true);
-            reportedRef.current = true;
-            if (onError) onError();
-          }}
+          onError={handleError}
         />
       </picture>
     );
@@ -97,11 +106,7 @@ export default function PictureImage({
       fetchPriority={fetchPriority}
       className={className}
       style={style}
-      onError={() => {
-        setErrored(true);
-        reportedRef.current = true;
-        if (onError) onError();
-      }}
+      onError={handleError}
     />
   );
 }

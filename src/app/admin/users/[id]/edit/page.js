@@ -6,21 +6,23 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import DeleteButton from "@/components/DeleteButton";
 import AdminAvatarUpload from "@/components/AdminAvatarUpload";
-import { 
-  ChevronLeft, 
-  User, 
-  Lock, 
+import {
+  ChevronLeft,
+  User,
+  Lock,
   AlertTriangle,
   Mail,
   Shield,
   Building2,
-  Key
+  Key,
+  ShieldOff,
 } from "lucide-react";
+import { SUPER_ADMIN_EMAIL } from "@/lib/super-admin";
 
 export const metadata = { title: "Edit User | Admin" };
 
 export default async function AdminEditUserPage(props) {
-  await requireAdmin();
+  const me = await requireAdmin();
   const params = await props.params;
   const searchParams = await props.searchParams;
 
@@ -33,6 +35,10 @@ export default async function AdminEditUserPage(props) {
   ]);
 
   if (!user) notFound();
+
+  const isSuperAdmin = me.email === SUPER_ADMIN_EMAIL;
+  const isSelf = me.id === user.id;
+  const canChangeRole = !(user.role === "ADMIN" && (!isSuperAdmin || isSelf));
 
   const saved = searchParams?.saved;
   const error = searchParams?.error;
@@ -94,6 +100,8 @@ export default async function AdminEditUserPage(props) {
                 <AlertTriangle size={16} /> 
                 {error === "exists" ? "That email is already in use." : 
                  error === "notallowed" ? "You cannot grant Admin rights." : 
+                 error === "revoke" ? "Only the Super Admin can revoke admin privileges." : 
+                 error === "superadmin" ? "The Super Admin's privileges cannot be revoked." : 
                  error === "self_delete" ? "You cannot delete your own account." : 
                  error === "delete_failed" ? "Failed to delete user." : 
                  error === "short" ? "Password must be at least 8 characters long." : 
@@ -121,10 +129,15 @@ export default async function AdminEditUserPage(props) {
                   <label className={labelCls}>System Role</label>
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Shield size={16} /></span>
-                    <select name="role" defaultValue={user.role} className={`${selectCls} pl-11`}>
+                    <select name="role" defaultValue={user.role} disabled={!canChangeRole} className={`${selectCls} pl-11 disabled:cursor-not-allowed disabled:opacity-60`}>
                       <option value="DEALER">Dealer</option>
                       <option value="ADMIN">Admin</option>
                     </select>
+                    {!canChangeRole && (
+                      <p className="text-xs font-medium text-slate-500 mt-2">
+                        {isSelf ? "Your own admin privileges cannot be revoked." : "Only the Super Admin can change an admin's role."}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div>
@@ -210,6 +223,19 @@ export default async function AdminEditUserPage(props) {
                 label="Delete Profile" 
                 className="w-full bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-[11px] h-12 rounded-2xl transition-colors shadow-red-600/20"
               />
+
+              {isSuperAdmin && user.role === "ADMIN" && !isSelf && (
+                <form action={`/api/admin/users/${params.id}/revoke-admin`} method="POST" className="mt-4">
+                  <button
+                    type="submit"
+                    className="w-full border border-red-700/60 bg-red-950/30 text-red-300 hover:bg-red-950/60 hover:text-red-200 font-black uppercase tracking-widest text-[11px] h-12 rounded-2xl transition-colors"
+                  >
+                    <span className="inline-flex items-center justify-center gap-2">
+                      <ShieldOff size={15} /> Revoke Admin
+                    </span>
+                  </button>
+                </form>
+              )}
            </div>
         </div>
       </div>

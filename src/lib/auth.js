@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import crypto from "crypto";
+import { SUPER_ADMIN_EMAIL } from "@/lib/super-admin";
 
 const SESSION_COOKIE = "welsh-motors_session";
 const SESSION_DAYS   = 30;
@@ -119,14 +120,12 @@ export async function requireAdmin() {
 }
 
 /**
- * Like requireAdmin but additionally restricts to a single super-admin email.
- * Set SUPER_ADMIN_EMAIL in .env.local to lock down sensitive pages.
- * Falls back to requireAdmin() if the env var is not set.
+ * Super-admin only. Override the owner account with SUPER_ADMIN_EMAIL in
+ * .env.local; falls back to the built-in SUPER_ADMIN_EMAIL constant.
  */
 export async function requireSuperAdmin() {
   const user = await requireAdmin();
-  const superEmail = process.env.SUPER_ADMIN_EMAIL;
-  if (superEmail && user.email !== superEmail) {
+  if (user.email !== SUPER_ADMIN_EMAIL) {
     redirect("/admin");
   }
   return user;

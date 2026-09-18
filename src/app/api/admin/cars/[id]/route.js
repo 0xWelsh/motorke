@@ -43,6 +43,7 @@ export async function PUT(request, { params }) {
       cylinders, horsepower, torque, turbo, sunroof, airbags,
       color, seats, description, features, badges, images,
       negotiable, imported, featured, registered, dealerId, videoUrl, location, importCountry, dutyPaid,
+      isLuxury,
     } = body;
     console.log("🏁 UPDATE CAR IMAGES:", images?.map(img => ({ primary: img.isPrimary, url: img.url.split("/").pop() })));
 
@@ -92,6 +93,7 @@ export async function PUT(request, { params }) {
         importCountry: importCountry?.trim() || null,
         location:     location?.trim() || null,
         featured:     Boolean(featured),
+        isLuxury:     Boolean(isLuxury),
       },
     });
 

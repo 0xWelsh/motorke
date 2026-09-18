@@ -5,6 +5,7 @@ import { analyzePrice, analyzePriceBatch } from "@/lib/market";
 import { activeListingBoostWhere } from "@/lib/listing-boost";
 import { loadRotatingSpotlightPool, mergeHomepageSpotlight } from "@/lib/homepage-spotlight";
 import { activeSpotlightWhere, spotlightCarInclude } from "@/lib/spotlight";
+import { publicDetailVisibilityClause } from "@/lib/car-sold-status";
 
 export const EMPTY_HOMEPAGE_DATA = {
   featured: [],
@@ -22,6 +23,8 @@ export const EMPTY_HOMEPAGE_DATA = {
   mostViewedEnhanced: [],
   newEnhanced: [],
   dealsEnhanced: [],
+  luxuryCars: [],
+  luxuryEnhanced: [],
 };
 
 function scoreMarketValue(marketAnalysis) {
@@ -72,7 +75,7 @@ async function loadHomepageBase() {
       }),
     hotThisWeek: () =>
       db.car.findMany({
-        where: { available: true },
+        where: { ...publicDetailVisibilityClause() },
         include: {
           images: { where: { isPrimary: true }, take: 1 },
           dealer: { select: { id: true, name: true, location: true, type: true, verificationStatus: true, slug: true } },
@@ -111,6 +114,16 @@ async function loadHomepageBase() {
           { boostScore: "desc" },
           { createdAt: "desc" },
         ],
+      }),
+    luxuryCars: () =>
+      db.car.findMany({
+        where: { available: true, isLuxury: true },
+        include: {
+          images: { where: { isPrimary: true }, take: 1 },
+          dealer: { select: { id: true, name: true, location: true, type: true, verificationStatus: true, slug: true } },
+        },
+        orderBy: [{ views: "desc" }, { createdAt: "desc" }],
+        take: 24,
       }),
     newsItems: () =>
       db.article.findMany({
@@ -178,6 +191,7 @@ async function loadHomepageBase() {
     dealerReviews,
     carReviews,
     heroFallback,
+    luxuryCars,
   } = data;
 
   const combinedReviews = [
@@ -200,13 +214,15 @@ async function loadHomepageBase() {
     newsItems,
     highlightReviews: combinedReviews,
     heroFallback,
+    luxuryCars,
   };
 
   const hasContent =
     payload.featured?.length ||
     payload.hotThisWeek?.length ||
     payload.newArrivals?.length ||
-    payload.dealers?.length;
+    payload.dealers?.length ||
+    payload.luxuryCars?.length;
 
   if (
     !hasContent &&
@@ -220,7 +236,7 @@ async function loadHomepageBase() {
 }
 
 async function enrichHomepage(base) {
-  const { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews, heroFallback } =
+  const { featured, hotThisWeek, newArrivals, dealers, newsItems, highlightReviews, heroFallback, luxuryCars } =
     base;
 
   const hotCandidates = (hotThisWeek || [])
@@ -287,6 +303,7 @@ async function enrichHomepage(base) {
     ...(newArrivals || []).slice(0, 8),
     ...(heroFallback || []),
     ...(hotThisWeek || []),
+    ...(luxuryCars || []),
   ];
 
   const remainingWithAnalysis = await analyzePriceBatch(remainingCars);
@@ -323,15 +340,16 @@ async function enrichHomepage(base) {
       ...car,
       marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`)
     }))
-    .filter(car => car.marketAnalysis?.comparison !== undefined && car.marketAnalysis.comparison <= 0)
-    .sort((a, b) => {
-      const compDiff = (a.marketAnalysis?.comparison ?? 0) - (b.marketAnalysis?.comparison ?? 0);
-      if (compDiff !== 0) return compDiff;
-      return (b.price || 0) - (a.price || 0);
-    })
+    .filter(car => (car.price || 0) <= 2_000_000)
+    .sort((a, b) => (a.price || 0) - (b.price || 0))
     .slice(0, 16);
 
   const heroFallbackEnhanced = (heroFallback || []).map(car => ({
+    ...car,
+    marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`)
+  }));
+
+  const luxuryEnhanced = (luxuryCars || []).slice(0, 16).map(car => ({
     ...car,
     marketAnalysis: analysisMap.get(`${car.make}|${car.model}|${car.year}`)
   }));
@@ -352,6 +370,8 @@ async function enrichHomepage(base) {
     mostViewedEnhanced,
     newEnhanced,
     dealsEnhanced,
+    luxuryCars,
+    luxuryEnhanced,
   };
 }
 
@@ -368,6 +388,7 @@ const getCachedData = unstable_cache(
         dealers: [],
         newsItems: [],
         highlightReviews: [],
+        luxuryCars: [],
       };
     }
   },

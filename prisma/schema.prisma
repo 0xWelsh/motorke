@@ -33,6 +33,7 @@ model User {
   leads           Lead[]
   assignedLeads   Lead[]           @relation("leadAssignment")
   buyerRequests   BuyerRequest[]
+  pushSubscriptions PushSubscription[]
   dealer          Dealer?          @relation(fields: [dealerId], references: [id], onDelete: Cascade)
 
   @@map("users")
@@ -200,6 +201,7 @@ model Car {
   available           Boolean            @default(true)
   soldAt              DateTime?
   featured            Boolean            @default(false)
+  isLuxury            Boolean            @default(false)
   featuredWeight      Int                @default(0)
   spotlightUntil      DateTime?
   hotBadgeUntil       DateTime?
@@ -223,6 +225,7 @@ model Car {
   turbo               Boolean            @default(false)
   printCount          Int                @default(0)
   whatsappClicks      Int                @default(0)
+  callClicks          Int                @default(0)
   location            String?
   carStatus           CarStatus?
   publicSlug          String?            @unique
@@ -1092,4 +1095,19 @@ model GrowthInventorySnapshot {
 
   @@index([prospectId, capturedAt])
   @@map("growth_inventory_snapshots")
+}
+
+model PushSubscription {
+  id           String   @id @default(cuid())
+  userId       String?
+  endpoint     String   @unique
+  p256dh       String
+  auth         String
+  userAgent    String?
+  createdAt    DateTime @default(now())
+  lastUsedAt   DateTime @default(now())
+  user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("push_subscriptions")
 }

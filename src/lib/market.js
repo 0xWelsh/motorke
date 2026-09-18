@@ -13,9 +13,9 @@ export async function analyzePrice(car) {
   try {
     const similar = await withDbRetry(() => getSimilarPriceSample(car.make, car.model, car.year));
 
-    if (similar.length < 3) {
+    if (similar.length < 2) {
       const broader = await withDbRetry(() => getBroaderPriceSample(car.make, car.model));
-      if (broader.length < 3) return null;
+      if (broader.length < 2) return null;
       return calculateMetric(car.price, broader.map(s => s.price));
     }
 

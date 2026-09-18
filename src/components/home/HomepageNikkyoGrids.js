@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import NikkyoStockCard from "@/components/NikkyoStockCard";
 
-function GridSection({ heading, href, cars }) {
+function GridSection({ heading, href, cars, eagerCount = 0 }) {
   if (!cars?.length) return null;
   return (
     <section aria-labelledby={`nikkyo-grid-${heading}`} className="min-w-0">
@@ -15,15 +15,15 @@ function GridSection({ heading, href, cars }) {
         </h2>
         <Link
           href={href}
-          className="inline-flex shrink-0 items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-[var(--accent)] transition-colors hover:underline"
+          className="inline-flex shrink-0 items-center gap-1 rounded bg-[#d9534f] px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-white transition-colors hover:bg-[#c9302c]"
         >
-          (All)
+          More
           <ArrowUpRight className="h-3 w-3" />
         </Link>
       </div>
-      <div className="grid grid-cols-2 gap-1.5 md:grid-cols-4 lg:grid-cols-8 xl:gap-2">
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 xl:gap-2.5">
         {cars.slice(0, 16).map((car, i) => (
-          <NikkyoStockCard key={car.id} car={car} priority={i < 8} />
+          <NikkyoStockCard key={car.id} car={car} priority={i < eagerCount} />
         ))}
       </div>
     </section>
@@ -32,15 +32,18 @@ function GridSection({ heading, href, cars }) {
 
 /**
  * Nikkyo-style compact inventory grids shown in the homepage main column.
+ * Only the first two recommended cards load eagerly — everything else is
+ * lazy so mobile doesn't race 32 images against the hero.
  */
-export default function HomepageNikkyoGrids({ recommended = [], newArrivals = [], deals = [] }) {
-  if (!recommended.length && !newArrivals.length && !deals.length) return null;
+export default function HomepageNikkyoGrids({ recommended = [], newArrivals = [], deals = [], luxury = [] }) {
+  if (!recommended.length && !newArrivals.length && !deals.length && !luxury.length) return null;
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      <GridSection heading="Recommended Cars" href="/cars" cars={recommended} />
+      <GridSection heading="Recommended Cars" href="/cars" cars={recommended} eagerCount={2} />
       <GridSection heading="New Arrivals" href="/cars?sort=newest" cars={newArrivals} />
-      <GridSection heading="Best Deals" href="/cars?sort=price_asc" cars={deals} />
+      <GridSection heading="Good Deals" href="/cars?sort=price_asc" cars={deals} />
+      <GridSection heading="Luxury Collection" href="/luxury" cars={luxury} />
     </div>
   );
 }

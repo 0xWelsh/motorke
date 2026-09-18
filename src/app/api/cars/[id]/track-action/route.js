@@ -5,7 +5,7 @@ const trackRateMap = new Map();
 
 export async function POST(req, { params }) {
   const { id }     = await params;
-  const { action } = await req.json(); // "whatsapp" or "print"
+  const { action } = await req.json(); // "whatsapp", "call" or "print"
 
   // Per-car rate limit: max 1 request per 10 seconds per action
   const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
@@ -28,6 +28,11 @@ export async function POST(req, { params }) {
       await db.car.update({
         where: { id },
         data: { whatsappClicks: { increment: 1 } },
+      });
+    } else if (action === "call") {
+      await db.car.update({
+        where: { id },
+        data: { callClicks: { increment: 1 } },
       });
     } else if (action === "print") {
       await db.car.update({

@@ -92,11 +92,35 @@ export function captureAttributionFromLocation() {
   return next;
 }
 
+function detectDeviceType() {
+  const win = getWindow();
+  if (!win?.navigator) return undefined;
+  const nav = win.navigator;
+  // Modern Chromium exposes structured high-entropy hints.
+  try {
+    if (nav.userAgentData) {
+      if (nav.userAgentData.mobile === true) return "mobile";
+      const brand = nav.userAgentData.brands || [];
+      if (brand.some((b) => /ipad|tablet/i.test(b.brand || ""))) return "tablet";
+    }
+  } catch {
+    // fall through to UA sniffing
+  }
+  const ua = nav.userAgent || "";
+  const isMobile =
+    /Mobi|Android|iPhone|iPod|Opera Mini|IEMobile|BlackBerry|Windows Phone/i.test(ua) &&
+    !/iPad/i.test(ua);
+  if (isMobile) return "mobile";
+  if (/iPad|Tablet|PlayBook|Silk/i.test(ua)) return "tablet";
+  return "desktop";
+}
+
 function getTrackingContext() {
   const win = getWindow();
   if (!win) return {};
   const attribution = captureAttributionFromLocation() || readAttribution();
   const sessionId = getOrCreateSessionId();
+  const deviceType = detectDeviceType();
   return {
     session_id: sessionId || undefined,
     utm_source: attribution?.utm_source || undefined,
@@ -105,6 +129,9 @@ function getTrackingContext() {
     utm_content: attribution?.utm_content || undefined,
     utm_term: attribution?.utm_term || undefined,
     landing_path: attribution?.landing_path || undefined,
+    device_type: deviceType,
+    screen: win.screen ? `${win.screen.width}x${win.screen.height}` : undefined,
+    ua: (win.navigator?.userAgent || "").slice(0, 180),
   };
 }
 

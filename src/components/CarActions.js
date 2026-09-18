@@ -82,6 +82,10 @@ export function TrackRecentView({ car }) {
             carId:    car.id,
             referrer: referrer || null,
           }),
+        }).then((r) => r.json()).then((d) => {
+          if (d?.recorded) {
+            window.dispatchEvent(new CustomEvent("car-view-recorded"));
+          }
         }).catch(() => {});
       } catch {}
     }, VIEW_DWELL_MS);

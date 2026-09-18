@@ -1,8 +1,54 @@
 "use client";
 import { Phone } from "lucide-react";
+import { recordLeadIntent } from "@/lib/record-lead";
+import { trackUiEvent } from "@/lib/analytics";
 
-export default function CarDetailMobileBar({ whatsappHref, callHref, priceLabel }) {
+export default function CarDetailMobileBar({ whatsappHref, callHref, priceLabel, carId, dealerId, carTitle }) {
   if (!whatsappHref && !callHref) return null;
+
+  function onWhatsApp() {
+    recordLeadIntent({
+      carId,
+      dealerId,
+      name: "WhatsApp tap",
+      message: `Buyer tapped mobile WhatsApp bar for: ${carTitle}`,
+      channel: "whatsapp",
+    });
+    trackUiEvent("open_whatsapp", {
+      car_id: carId,
+      dealer_id: dealerId,
+      channel: "whatsapp",
+      context: "mobile_sticky_bar",
+    });
+    fetch(`/api/cars/${carId}/track-action`, {
+      method: "POST",
+      body: JSON.stringify({ action: "whatsapp" }),
+      headers: { "Content-Type": "application/json" },
+      keepalive: true,
+    }).catch(() => {});
+  }
+
+  function onCall() {
+    recordLeadIntent({
+      carId,
+      dealerId,
+      name: "Call tap",
+      message: `Buyer tapped mobile call bar for: ${carTitle}`,
+      channel: "call",
+    });
+    trackUiEvent("open_call", {
+      car_id: carId,
+      dealer_id: dealerId,
+      channel: "call",
+      context: "mobile_sticky_bar",
+    });
+    fetch(`/api/cars/${carId}/track-action`, {
+      method: "POST",
+      body: JSON.stringify({ action: "call" }),
+      headers: { "Content-Type": "application/json" },
+      keepalive: true,
+    }).catch(() => {});
+  }
 
   return (
     <div className="fixed bottom-0 inset-x-0 z-50 bg-white border-t border-slate-200 px-4 pt-2.5 pb-2.5 flex items-center gap-3 lg:hidden shadow-sm" style={{ paddingBottom: "max(0.625rem, env(safe-area-inset-bottom))" }}>
@@ -17,6 +63,7 @@ export default function CarDetailMobileBar({ whatsappHref, callHref, priceLabel 
           href={whatsappHref}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={onWhatsApp}
           className="btn btn-success btn-sm shrink-0"
         >
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -28,6 +75,7 @@ export default function CarDetailMobileBar({ whatsappHref, callHref, priceLabel 
       {callHref && (
         <a
           href={callHref}
+          onClick={onCall}
           className="btn btn-neutral btn-sm shrink-0"
         >
           <Phone />

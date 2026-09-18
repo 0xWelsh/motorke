@@ -206,7 +206,7 @@ async function seedCuratedComparisons() {
       title,
       description,
       body: `## ${row.makeA} ${row.modelA} vs ${row.makeB} ${row.modelB}\n\n${row.body}\n\nBrowse live inventory on Welsh Motorhub for both models before you decide.`,
-      meta: { makeA: row.makeA, modelA: row.modelA, makeB: row.makeB, modelB: row.modelB },
+      meta: { makeA: row.makeA, modelA: row.modelA, makeB: row.makeB, modelB: row.modelB, curated: true },
     });
   }
   return CURATED_COMPARISONS.length;

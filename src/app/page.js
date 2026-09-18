@@ -9,8 +9,13 @@ import HomepageTrending from "@/components/home/HomepageTrending";
 import HomepageNikkyoGrids from "@/components/home/HomepageNikkyoGrids";
 import HomepageHeroCarFinder from "@/components/home/HomepageHeroCarFinder";
 import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
+import HomepageSafetyStrip from "@/components/home/HomepageSafetyStrip";
 import HomepagePriceFilter from "@/components/home/HomepagePriceFilter";
+import HomepageCtaStrip from "@/components/home/HomepageCtaStrip";
+import HomepageShapeGrid from "@/components/home/HomepageShapeGrid";
+import HomepageMakeGrid from "@/components/home/HomepageMakeGrid";
 import HeroCarousel from "@/components/home/HeroCarousel";
+import PushOptIn from "@/components/PushOptIn";
 import { getHomepageData } from "@/lib/homepage-cache";
 import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin, absoluteMediaUrl } from "@/lib/site-url";
@@ -59,15 +64,15 @@ function fillGrid(section, usedIds, pool, target) {
 }
 
 export const metadata = {
-  title: "Buy Used and New Cars in Kenya | BIDGARI",
+  title: "Cars for Sale in Kenya | Buy Used & New Cars | BIDGARI",
   description:
-    "Find verified used cars for sale in Nairobi, Mombasa, and across Kenya. Compare total ownership costs, inspect specs, and buy handled end-to-end by BIDGARI.",
+    "Find verified cars for sale in Kenya — Nairobi, Mombasa, Kisumu, and across the country. Compare prices, inspect specs, and buy handled end-to-end by BIDGARI.",
   alternates: { canonical: "/" },
   openGraph: {
     url: absoluteUrl("/"),
-    title: "Buy Used and New Cars for sale in Kenya | BIDGARI",
+    title: "Cars for Sale in Kenya | BIDGARI",
     description:
-      "Verified vehicle inventory for sale in Nairobi and Mombasa. Compare costs, specs, and buy handled end-to-end by BIDGARI.",
+      "Verified cars for sale in Nairobi and Mombasa. Compare costs, specs, and buy handled end-to-end by BIDGARI.",
     type: "website",
   },
 };
@@ -145,6 +150,7 @@ export default async function HomePage() {
     newEnhanced,
     dealsEnhanced,
     hotThisWeek,
+    luxuryEnhanced,
   } = homepageBundle;
 
   const heroPool = seededShuffle(
@@ -159,10 +165,10 @@ export default async function HomePage() {
 
   const fillPool = uniqueCars(hotThisWeek || []);
   const usedIds = new Set();
-  const recommendedCars = fillGrid(spotlightCards, usedIds, fillPool, 16);
-  const newArrivalCars = fillGrid(newEnhanced || [], usedIds, fillPool, 16);
-  const dealCars = fillGrid(dealsEnhanced || [], usedIds, fillPool, 16);
-  const frequentCars = fillGrid(trendingCars, usedIds, fillPool, 16);
+  const recommendedCars = fillGrid(spotlightCards, usedIds, seededShuffle(fillPool, 42), 16);
+  const newArrivalCars = fillGrid(newEnhanced || [], usedIds, seededShuffle(fillPool, 137), 16);
+  const dealCars = fillGrid(dealsEnhanced || [], usedIds, seededShuffle(fillPool, 256), 16);
+  const frequentCars = fillGrid(trendingCars, usedIds, seededShuffle(fillPool, 999), 16);
 
   const origin = getSiteOrigin();
 
@@ -205,12 +211,26 @@ export default async function HomePage() {
                 <HeroCarousel cars={heroCars} />
               </div>
 
+              {/* CTA strip */}
+              <HomepageCtaStrip />
+
+              {/* Search by Shape icon grid */}
+              <div className="mt-7">
+                <HomepageShapeGrid />
+              </div>
+
+              {/* Search by Make logo grid */}
+              <div className="mt-7">
+                <HomepageMakeGrid />
+              </div>
+
               {/* Inventory sections */}
               <div className="mt-7 sm:mt-8">
                 <HomepageNikkyoGrids
                   recommended={recommendedCars}
                   newArrivals={newArrivalCars}
                   deals={dealCars}
+                  luxury={luxuryEnhanced}
                 />
               </div>
             </main>
@@ -229,6 +249,13 @@ export default async function HomePage() {
 
       {/* Quick links */}
       <HomepageShopLinks />
+
+      <HomepageSafetyStrip />
+
+      {/* Push notification opt-in */}
+      <div className="home-shell mt-6">
+        <PushOptIn variant="banner" />
+      </div>
 
       <HomepageTrending cars={frequentCars} />
 

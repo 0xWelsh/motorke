@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Quote, Star, Users, ShoppingBag, ShieldCheck } from "lucide-react";
 import { buildPageTitle, buildCanonicalMetadata } from "@/lib/seo-metadata";
 import { db } from "@/lib/db";
+import { getSiteOrigin } from "@/lib/site-url";
+import Script from "next/script";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +12,12 @@ export const metadata = {
   description:
     "Read what BIDGARI buyers and dealers say — real reviews from verified customers on their car-buying experience in Kenya.",
   ...buildCanonicalMetadata("/testimonials"),
+  openGraph: {
+    title: "Testimonials | BIDGARI",
+    description:
+      "Real reviews from verified BIDGARI customers and dealers across Kenya.",
+    type: "website",
+  },
 };
 
 function formatDate(value) {
@@ -105,6 +113,38 @@ export default async function TestimonialsPage() {
 
   return (
     <div className="bg-[var(--bg)] min-h-screen">
+      {total > 0 && (
+        <Script
+          id="testimonials-jsonld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "BIDGARI",
+              url: getSiteOrigin(),
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: average,
+                reviewCount: total,
+                bestRating: 5,
+                worstRating: 1,
+              },
+              review: all.slice(0, 20).map((r) => ({
+                "@type": "Review",
+                author: { "@type": "Person", name: r.author },
+                reviewRating: {
+                  "@type": "Rating",
+                  ratingValue: r.rating,
+                  bestRating: 5,
+                },
+                reviewBody: r.comment || "",
+                datePublished: new Date(r.createdAt).toISOString(),
+              })),
+            }),
+          }}
+        />
+      )}
       {/* Header */}
       <section className="border-b border-slate-200 bg-[var(--bg)] px-6 pt-32 pb-20 sm:pt-40">
         <div className="mx-auto max-w-7xl">

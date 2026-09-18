@@ -134,6 +134,18 @@ const faqs = {
       a: "Yes. Every listing is vetted before it goes live. If something seems off, report it and we'll investigate and remove the listing if needed.",
     },
     {
+      q: "How do I know the seller or agent I'm talking to is really BIDGARI?",
+      a: "We only ever contact you through our official channels: the contact forms on this site, our verified support email, and the phone/WhatsApp numbers listed on our Contact and Safety pages. We never ask for payment or deposits on WhatsApp, and never direct you to a personal M-Pesa number. If someone claims to be BIDGARI, check them against the official channels on our Safety page before sending anything.",
+    },
+    {
+      q: "Should I pay a deposit before viewing a car?",
+      a: "No. A request for money upfront — an M-Pesa deposit, 'booking fee', or 'refundable holding fee' — before you've seen the car and met the seller is a classic scam signal. On BIDGARI, money only moves at handover, with the sale agreement and ownership transfer signed.",
+    },
+    {
+      q: "What if I've been scammed or targeted by a scammer?",
+      a: `Stop communicating immediately and report it. Email ${PUBLIC_SUPPORT_EMAIL} with the listing reference (if any), the scammer's number, and screenshots, or use our report-a-scam form. We investigate every report, remove fraudulent listings, and work with law enforcement where possible. Also report the M-Pesa number to your service provider so it can be flagged.`,
+    },
+    {
       q: "What's your data privacy policy?",
       a: "Read full policy on our Privacy page. TL;DR: We encrypt sensitive data, don't sell to third parties, comply with Kenya data law. You control your data.",
     },

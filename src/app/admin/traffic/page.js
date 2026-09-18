@@ -26,6 +26,7 @@ export default async function AdminTrafficPage() {
     listingViews7d,
     listingViews30d,
     carDetailViews7d,
+    carDetailViews30d,
     topPages,
     topSources,
     topCarsRaw,
@@ -35,7 +36,10 @@ export default async function AdminTrafficPage() {
     db.marketingEvent.count({ where: { name: "page_view", createdAt: { gte: start30d } } }),
     db.marketingEvent.count({ where: { name: "cars_listing_view", createdAt: { gte: start7d } } }),
     db.marketingEvent.count({ where: { name: "cars_listing_view", createdAt: { gte: start30d } } }),
-    db.carView.count({ where: { viewedAt: { gte: start7d } } }),
+    // Real detail-page loads only — NOT the car_views table, which the
+    // view-organic cron seeds with 80-150 synthetic rows per car per day.
+    db.marketingEvent.count({ where: { name: "view_car", createdAt: { gte: start7d } } }),
+    db.marketingEvent.count({ where: { name: "view_car", createdAt: { gte: start30d } } }),
     db.marketingEvent.groupBy({
       by: ["path"],
       where: { name: "page_view", createdAt: { gte: start7d }, path: { not: null } },
@@ -43,20 +47,22 @@ export default async function AdminTrafficPage() {
       orderBy: { _count: { id: "desc" } },
       take: 12,
     }),
-    db.carView.groupBy({
-      by: ["source"],
-      where: { viewedAt: { gte: start7d } },
-      _count: { _all: true },
-      orderBy: { _count: { id: "desc" } },
-      take: 8,
-    }),
-    db.carView.groupBy({
-      by: ["carId"],
-      where: { viewedAt: { gte: start7d } },
-      _count: { _all: true },
-      orderBy: { _count: { id: "desc" } },
-      take: 10,
-    }),
+    db.$queryRaw`
+      SELECT COALESCE(payload->>'utm_source', 'direct') AS source, COUNT(*)::int AS count
+      FROM "marketing_events"
+      WHERE name = 'view_car' AND "createdAt" >= ${start7d}
+      GROUP BY COALESCE(payload->>'utm_source', 'direct')
+      ORDER BY count DESC
+      LIMIT 8
+    `,
+    db.$queryRaw`
+      SELECT payload->>'car_id' AS "carId", COUNT(*)::int AS count
+      FROM "marketing_events"
+      WHERE name = 'view_car' AND "createdAt" >= ${start7d}
+      GROUP BY payload->>'car_id'
+      ORDER BY count DESC
+      LIMIT 10
+    `,
     db.marketingEvent.groupBy({
       by: ["name"],
       where: {
@@ -94,8 +100,8 @@ export default async function AdminTrafficPage() {
   const carMap = Object.fromEntries(cars.map((c) => [c.id, c]));
   const topCars = topCarsRaw.map((row) => ({
     ...row,
-    car: carMap[row.carId],
-    count: row._count._all,
+    car: carMap[row.carId] || null,
+    count: row.count,
   }));
 
   const listingViews30dCount = listingViews30d;
@@ -123,7 +129,7 @@ export default async function AdminTrafficPage() {
         {[
           { label: "Site page views (7d)", value: pageViews7d, sub: `${fmt(pageViews30d)} in 30d` },
           { label: "Inventory page views (7d)", value: listingViews7d, sub: `${fmt(listingViews30dCount)} in 30d` },
-          { label: "Car detail views (7d)", value: carDetailViews7d, sub: "Deduplicated per session" },
+          { label: "Car detail views (7d)", value: carDetailViews7d, sub: `${fmt(carDetailViews30d)} in 30d · real events` },
           {
             label: "Leads submitted (7d)",
             value: eventMap.submit_lead || 0,
@@ -180,7 +186,7 @@ export default async function AdminTrafficPage() {
                   <span className="capitalize font-medium text-slate-700 text-slate-200">
                     {row.source || "direct"}
                   </span>
-                  <span className="shrink-0 tabular-nums text-slate-500">{fmt(row._count._all)}</span>
+                  <span className="shrink-0 tabular-nums text-slate-500">{fmt(row.count)}</span>
                 </li>
               ))
             )}

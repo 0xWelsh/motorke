@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useTransition } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -17,6 +17,7 @@ import { BRAND_HEADER_LOGO } from "@/lib/site-url";
 import { BODY_TYPE_LABELS } from "@/lib/constants";
 import { PUBLIC_SUPPORT_EMAIL, PUBLIC_SUPPORT_PHONE } from "@/lib/site-contact";
 import { telHrefFromMsisdn } from "@/lib/phone-hints";
+import { loadRecentSearches, saveRecentSearch, toRecentSuggestionItems } from "@/lib/recent-searches";
 
 const NAV_TABS = [
   { key: "search", label: "Search Cars", href: "/cars" },
@@ -57,6 +58,7 @@ const MEMBER_LINKS = [
 export default function Navbar({ user, navCounts }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [isPending, startTransition] = useTransition();
 
   const [open, setOpen] = useState(false);
   const [mobileSearch, setMobileSearch] = useState(false);
@@ -65,6 +67,7 @@ export default function Navbar({ user, navCounts }) {
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showingRecent, setShowingRecent] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
 
   const menuRef = useRef(null);
@@ -112,13 +115,26 @@ export default function Navbar({ user, navCounts }) {
   }, []);
 
   useEffect(() => {
-    if (!debouncedTerm || debouncedTerm.length < 2) {
-      setSuggestions([]); setShowSuggestions(false); return;
+    const term = (debouncedTerm || "").trim();
+    if (term.length < 2) {
+      // Empty input on mobile → show previous searches from localStorage.
+      if (mobileSearch && !term) {
+        const recent = toRecentSuggestionItems(loadRecentSearches());
+        setSuggestions(recent);
+        setShowingRecent(recent.length > 0);
+        setShowSuggestions(recent.length > 0);
+      } else {
+        setSuggestions([]);
+        setShowingRecent(false);
+        setShowSuggestions(false);
+      }
+      return;
     }
+    setShowingRecent(false);
     const fetchSuggestions = async () => {
       try {
         setLoadingSuggestions(true);
-        const res = await fetch(`/api/search/suggestions?query=${encodeURIComponent(debouncedTerm)}`);
+        const res = await fetch(`/api/search/suggestions?query=${encodeURIComponent(term)}`);
         const data = await res.json();
         setSuggestions(data.suggestions || []);
         setShowSuggestions(data.suggestions?.length > 0);
@@ -126,7 +142,7 @@ export default function Navbar({ user, navCounts }) {
       finally { setLoadingSuggestions(false); }
     };
     fetchSuggestions();
-  }, [debouncedTerm]);
+  }, [debouncedTerm, mobileSearch]);
 
   useEffect(() => {
     const h = (e) => { if (searchRef.current && !searchRef.current.contains(e.target)) setShowSuggestions(false); };
@@ -136,19 +152,36 @@ export default function Navbar({ user, navCounts }) {
 
   function handleSearch(e) {
     e.preventDefault();
-    if (search.trim()) router.push(`/cars?search=${encodeURIComponent(search.trim())}`);
-    else router.push("/cars");
+    const trimmed = search.trim();
+    if (trimmed) {
+      saveRecentSearch(trimmed, `search=${encodeURIComponent(trimmed)}`);
+      startTransition(() => { router.push(`/cars?search=${encodeURIComponent(trimmed)}`); });
+    } else {
+      startTransition(() => { router.push("/cars"); });
+    }
   }
 
   function handleSuggestionSelect(value) {
-    setSearch(value);
+    const v = String(value || "").trim();
+    setSearch(v);
     setShowSuggestions(false);
-    router.push(`/cars?search=${encodeURIComponent(value)}`);
+    if (v) {
+      saveRecentSearch(v, `search=${encodeURIComponent(v)}`);
+      startTransition(() => { router.push(`/cars?search=${encodeURIComponent(v)}`); });
+    }
+  }
+
+  function showRecentSearches() {
+    const recent = toRecentSuggestionItems(loadRecentSearches());
+    setSuggestions(recent);
+    setShowingRecent(recent.length > 0);
+    setShowSuggestions(recent.length > 0);
   }
 
   const links = [
     { href: "/", label: "Home" },
     { href: "/cars", label: "Cars" },
+    { href: "/luxury", label: "Luxury" },
     { href: "/kenya", label: "Kenya" },
     { href: "/compare", label: "Compare" },
     { href: "/duty", label: "Duty" },
@@ -159,6 +192,7 @@ export default function Navbar({ user, navCounts }) {
     setUserMenu(false);
     setMobileSearch(false);
     setShowSuggestions(false);
+    setShowingRecent(false);
     setActiveMenu(null);
   }
 
@@ -170,7 +204,7 @@ export default function Navbar({ user, navCounts }) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    router.push(href);
+    startTransition(() => { router.push(href); });
   }
 
   function openMenu(name) {
@@ -360,12 +394,21 @@ export default function Navbar({ user, navCounts }) {
           </div>
         </div>
       </div>
+
+      {/* ─── Desktop tagline strip ─── */}
+      <div className="hidden md:block border-b border-slate-200 bg-slate-50">
+        <div className="home-shell">
+          <p className="py-1.5 text-center text-[11px] font-semibold tracking-wide text-slate-500">
+            Every car verified. Every sale handled.
+          </p>
+        </div>
+      </div>
       </header>
 
       {/* ─── MOBILE header ─── */}
-      <nav className="md:hidden sticky top-0 z-[100] flex h-16 w-full items-center border-b border-slate-200 bg-white shadow-[0_1px_0_rgba(0,0,0,0.06)]">
+      <nav className="md:hidden sticky top-0 z-[100] flex flex-col w-full border-b border-slate-200 bg-white shadow-[0_1px_0_rgba(0,0,0,0.06)]">
         <div className="w-full px-4">
-          <div className="flex items-center justify-between gap-4 min-w-0 h-full">
+          <div className="flex items-center justify-between gap-4 min-w-0 h-16">
             <Link
               href="/"
               onClick={(e) => navigateTo("/", e)}
@@ -408,6 +451,9 @@ export default function Navbar({ user, navCounts }) {
             </div>
           </div>
         </div>
+        <p className="px-4 pb-1.5 -mt-1 text-center text-[10px] font-semibold tracking-wide text-slate-400">
+          Every car verified. Every sale handled.
+        </p>
       </nav>
 
       {/* MOBILE SEARCH OVERLAY */}
@@ -427,8 +473,12 @@ export default function Navbar({ user, navCounts }) {
                 <input
                   autoFocus
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
+                  onChange={(e) => { setSearch(e.target.value); setShowingRecent(false); }}
+                  onFocus={() => {
+                    const term = (search || "").trim();
+                    if (term.length < 2) showRecentSearches();
+                    else if (suggestions.length > 0) setShowSuggestions(true);
+                  }}
                   placeholder="Type car make or model..."
                   className="w-full h-14 pl-14 pr-6 text-lg font-bold outline-none bg-slate-50 border-b-2 border-slate-200 focus:border-[var(--accent)] text-slate-900 placeholder-slate-400 transition-all rounded-xl"
                 />
@@ -442,6 +492,7 @@ export default function Navbar({ user, navCounts }) {
                     setMobileSearch(false);
                   }}
                   inputValue={search}
+                  header={showingRecent ? "Recent Searches" : null}
                   className="mt-4"
                 />
               )}

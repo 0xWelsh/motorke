@@ -116,6 +116,20 @@ export async function POST(request) {
             link: "/admin/buyer-requests",
           })),
         });
+        // Send push to admins
+        try {
+          const { sendPushToUser } = await import("@/lib/push");
+          for (const admin of adminUsers) {
+            sendPushToUser(db, admin.id, {
+              title: `New car request ${created.publicCode}`,
+              body: `${created.make} ${created.model} · ${created.county} · up to KES ${created.budgetMax.toLocaleString()}`,
+              url: "/admin/buyer-requests",
+              tag: "buyer-request",
+            }).catch(() => {});
+          }
+        } catch (pushErr) {
+          console.error("Buyer request push error:", pushErr);
+        }
       }
     } catch (notifyErr) {
       console.error("Buyer request notification error:", notifyErr);

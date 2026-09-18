@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, RotateCcw, X } from "lucide-react";
 import { BODY_TYPE_LABELS, FUEL_LABELS } from "@/lib/constants";
@@ -39,6 +39,7 @@ function toggleArrayValue(arr, value) {
 export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
   const [make, setMake] = useState(asStr(activeFilters.make));
   const [transmission, setTransmission] = useState(asStr(activeFilters.transmission));
@@ -80,7 +81,8 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
     if (fuelTypes) updates.fuelType = fuelTypes;
     if (minYear) updates.minYOM = minYear;
     if (maxYear) updates.maxYOM = maxYear;
-    router.push(buildUrl(searchParams, updates));
+    const url = buildUrl(searchParams, updates);
+    startTransition(() => { router.push(url); });
   }, [make, transmission, pricePreset, minPrice, maxPrice, bodyTypes, fuelTypes, minYear, maxYear, searchParams, router]);
 
   const resetFilters = useCallback(() => {
@@ -88,7 +90,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
     setPricePreset(null); setMinPrice(""); setMaxPrice("");
     setBodyTypes(""); setFuelTypes("");
     setMinYear(""); setMaxYear("");
-    router.push("/cars");
+    startTransition(() => { router.push("/cars"); });
   }, [router]);
 
   const hasAnySelection = make || transmission || minPrice || maxPrice || pricePreset !== null || bodyTypes || fuelTypes || minYear || maxYear;

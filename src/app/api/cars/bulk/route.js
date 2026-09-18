@@ -97,6 +97,7 @@ export async function POST(request) {
             registered:   parseBool(r.registered, true),
             imported:     parseBool(r.imported, true),
             importCountry: r.importcountry || "Japan",
+            isLuxury:     parseBool(r.isluxury, false),
             available:    true,
             // Create image if URL provided
             images: r.imageurl

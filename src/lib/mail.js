@@ -783,6 +783,7 @@ export async function sendContactFormEmail({
     partnership: "Partnership",
     dealer: "Dealer Listing",
     general: "General Support",
+    scam: "Scam Report",
   })[subject] || "General Support";
 
   const supportInbox = getSupportEmail();

@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { canAcceptListingEnquiry } from "@/lib/car-sold-status";
+import { recordCarView, ROTATION_COOKIE } from "@/lib/record-car-view";
 
 const RATE_LIMIT_MS = 15000;
 const RATE_LIMIT_MAX_WINDOW = 8000;
@@ -64,6 +65,29 @@ async function dispatchLeadNotifications({ lead, car, dealerId, buyerUserId }) {
 
     if (notificationRows.length) {
       await db.notification.createMany({ data: notificationRows });
+    }
+
+    // Send push notifications to admin users
+    try {
+      const { sendPushToUser } = await import("@/lib/push");
+      for (const admin of adminUsers) {
+        sendPushToUser(db, admin.id, {
+          title: `New enquiry: ${carTitle}`,
+          body: `${buyerName} is interested in ${carTitle}. Check your leads.`,
+          url: `/admin/leads?lead=${lead.id}`,
+          tag: "lead-new",
+        }).catch(() => {});
+      }
+      if (buyerUserId) {
+        sendPushToUser(db, buyerUserId, {
+          title: `Enquiry sent: ${carTitle}`,
+          body: "Our team will contact you shortly.",
+          url: "/account?tab=enquiries",
+          tag: "lead-sent",
+        }).catch(() => {});
+      }
+    } catch (pushErr) {
+      console.error("Lead push notification error:", pushErr);
     }
   } catch (notificationError) {
     console.error("Lead notification dispatch error:", notificationError);
@@ -201,6 +225,19 @@ export async function POST(request) {
       car,
       dealerId,
       buyerUserId,
+    });
+
+    // An enquiry is also a genuine view of the car — record it so the
+    // listing's badge and analytics reflect real engagement. Uses the same
+    // dedup/counter/cache logic as the dwell-based tracker.
+    const rotCookie = request.cookies.get(ROTATION_COOKIE)?.value || null;
+    await recordCarView({
+      carId,
+      userId: buyerUserId,
+      sessionKey: rotCookie,
+      source: "enquiry",
+    }).catch((err) => {
+      console.warn("[lead] view record failed", err?.message);
     });
 
     return NextResponse.json({ success: true, leadId: lead.id }, { status: 201 });

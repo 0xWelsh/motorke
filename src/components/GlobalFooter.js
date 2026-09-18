@@ -3,6 +3,7 @@ import { PUBLIC_SUPPORT_EMAIL } from "@/lib/site-contact";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Mail, MapPin } from "lucide-react";
+import PushOptIn from "@/components/PushOptIn";
 
 export default function GlobalFooter() {
   const pathname = usePathname() || "";
@@ -18,6 +19,7 @@ export default function GlobalFooter() {
       links: [
         { label: "Home", href: "/" },
         { label: "Inventory", href: "/cars" },
+        { label: "Luxury", href: "/luxury" },
         { label: "Kenya", href: "/kenya" },
         { label: "How to Buy", href: "/how-to-buy" },
         { label: "Compare", href: "/compare" },
@@ -30,6 +32,7 @@ export default function GlobalFooter() {
       links: [
         { label: "Help Center", href: "/faq" },
         { label: "Contact Us", href: "/contact" },
+        { label: "Don't Get Scammed", href: "/safety" },
         { label: "Privacy Policy", href: "/privacy" },
         { label: "Terms of Service", href: "/terms" },
       ],
@@ -78,6 +81,9 @@ export default function GlobalFooter() {
               >
                 Browse cars →
               </Link>
+            </div>
+            <div className="mt-4">
+              <PushOptIn variant="compact" />
             </div>
           </div>
 

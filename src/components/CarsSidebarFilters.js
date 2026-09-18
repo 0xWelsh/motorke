@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { X, SlidersHorizontal, Search, RotateCcw } from "lucide-react";
 import { FUEL_LABELS, TRANSMISSION_LABELS, STEERING_LABELS, VEHICLE_TYPE_LABELS } from "@/lib/constants";
@@ -60,6 +60,7 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
   const router = useRouter();
   const searchParams = useSearchParams();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const [make, setMake] = useState(asStr(activeFilters.make));
   const [model, setModel] = useState(asStr(activeFilters.model));
@@ -128,7 +129,7 @@ export default function CarsSidebarFilters({ activeFilters, allMakes = [], bodyT
     if (maxYOM) updates.maxYOM = maxYOM;
 
     const url = buildUrl(searchParams, updates);
-    router.push(url);
+    startTransition(() => { router.push(url); });
     setMobileOpen(false);
   }, [make, model, bodyType, fuelType, transmission, steering, vehicleType, condition, county, pricePreset, minPrice, maxPrice, minYOM, maxYOM, searchParams, router]);
 

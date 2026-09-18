@@ -220,6 +220,7 @@ function buildBaseSeed(car, currentYear, initialDealerId, dealers) {
     turbo: car?.turbo ?? false,
     sunroof: car?.sunroof ?? false,
     featured: car?.featured ?? false,
+    isLuxury: car?.isLuxury ?? false,
     carStatus: car?.carStatus || "",
     location: car?.location || "",
     importCountry: car?.importCountry || "",
@@ -887,6 +888,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
     data.featured = isEdit ? !!car?.featured : false;
     data.turbo = data.turbo === "on";
     data.sunroof = data.sunroof === "on";
+    data.isLuxury = data.isLuxury === "on";
     {
       const r = String(data.registered ?? "").toLowerCase();
       data.registered = !(r === "false" || r === "0" || r === "off" || r === "no");
@@ -1264,10 +1266,14 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             <InfieldGroup label="Airbags">
               <input name="airbags" type="number" inputMode="numeric" defaultValue={formSeed.airbags} placeholder="6" className={inField} />
             </InfieldGroup>
-            <div className="flex items-end pb-2">
+            <div className="flex items-end pb-2 gap-4">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" name="sunroof" defaultChecked={!!formSeed.sunroof} className="w-4 h-4 accent-[var(--accent)]" />
                 <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Sunroof</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="isLuxury" defaultChecked={!!formSeed.isLuxury} className="w-4 h-4 accent-[var(--accent)]" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">BIDGARI Luxury</span>
               </label>
             </div>
           </div>

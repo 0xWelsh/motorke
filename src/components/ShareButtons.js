@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { shareToFacebookWithCaption } from "@/lib/share-helpers";
+import { buildFacebookSharerUrl, copyTextToClipboardSync } from "@/lib/share-helpers";
 
 export default function ShareButtons({
   listingUrl,
@@ -11,12 +11,10 @@ export default function ShareButtons({
   dealerName,
   location,
   mileageLabel,
-  previewImageUrl,
   photoUrl,
   sold = false,
 }) {
   const [copied, setCopied] = useState(false);
-  const [fbHint, setFbHint] = useState(null);
 
   const listUrl = (listingUrl || "").trim();
   const metaLine = [mileageLabel, location].filter(Boolean).join(", ");
@@ -87,11 +85,11 @@ export default function ShareButtons({
 
   const fbCaption = [`${title}, ${price}`, metaLine || null, dealerName || null, "", "BIDGARI Verified car for sale."].filter(Boolean).join("\n");
 
-  async function shareFacebook() {
-    if (!listUrl) return;
-    const result = await shareToFacebookWithCaption(listUrl, fbCaption, { imageUrl: previewImageUrl });
-    setFbHint(result.textCopied ? "ready" : "manual");
-    setTimeout(() => setFbHint(null), 5000);
+  function shareFacebook() {
+    // Copy the caption to the clipboard so the user can paste it into the
+    // Facebook post. The sharer itself pulls the car's first image and
+    // description from the page's OG tags (Facebook fetches those itself).
+    copyTextToClipboardSync(fbCaption);
   }
 
   const iconClass = "btn btn-neutral btn-icon w-9 h-9";
@@ -122,12 +120,12 @@ export default function ShareButtons({
         </svg>
       </a>
 
-      <button type="button" onClick={shareFacebook} disabled={!listUrl} aria-label={fbHint === "ready" ? "Paste in Facebook" : "Share on Facebook"}
+      <a href={buildFacebookSharerUrl(listUrl) || "#"} target="_blank" rel="noopener noreferrer" onClick={shareFacebook} aria-label="Share on Facebook"
         className={iconClass}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
           <path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
         </svg>
-      </button>
+      </a>
 
       <button type="button" onClick={copyLink} disabled={!listUrl} aria-label={copied ? "Copied" : "Copy link"}
         className={iconClass}>

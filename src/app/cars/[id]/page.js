@@ -1,14 +1,14 @@
 // src/app/cars/[id]/page.js
-export const revalidate = 120;
+export const revalidate = 60;
 import { db } from "@/lib/db";
 import { notFound, permanentRedirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { Suspense } from "react";
 import { unstable_cache } from "next/cache";
 import { formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
 import { getSalesmanWhatsappNumbers, pickSalesmanWhatsapp } from "@/lib/salesman-whatsapp";
 import { telHrefFromMsisdn } from "@/lib/phone-hints";
 import { getPreloadImageUrl } from "@/lib/image-transform";
-import { MapPin, BadgeCheck, Check, Eye, MessageCircle } from "lucide-react";
+import { MapPin, BadgeCheck, Check, ShieldCheck } from "lucide-react";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
 import { TrackRecentView } from "@/components/CarActions";
@@ -17,6 +17,7 @@ import CarReviewsSection from "@/components/CarReviewsSection";
 import FeatureList from "@/components/FeatureList";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
 import CarContactActions from "@/components/CarContactActions";
+import CarViewCounter from "@/components/CarViewCounter";
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
@@ -36,14 +37,16 @@ import {
   buildCarListingDealerMetadata,
   buildListingSellerSchema,
 } from "@/lib/seo-dealer";
-import { resolveModelWikiForCar } from "@/lib/seo-model-wiki";
-import CarModelWiki from "@/components/CarModelWiki";
 import CarListingRelatedSearches from "@/components/CarListingRelatedSearches";
-import SimilarCarsSection from "@/components/SimilarCarsSection";
+import AlsoViewed from "@/components/AlsoViewed";
 import CarDetailMobileBar from "@/components/CarDetailMobileBar";
 import CarActionButtons from "@/components/CarActionButtons";
 import NikkyoSpecTable from "@/components/NikkyoSpecTable";
-import NikkyoStockCard from "@/components/NikkyoStockCard";
+import CarSimilarStrip from "@/components/detail/CarSimilarStrip";
+import CarSimilarSection from "@/components/detail/CarSimilarSection";
+import CarReviewsBlock from "@/components/detail/CarReviewsBlock";
+import CarWikiBlock from "@/components/detail/CarWikiBlock";
+import CarMarketRange from "@/components/detail/CarMarketRange";
 import {
   daysRemainingOnSite,
   isInSoldGracePeriod,
@@ -120,51 +123,6 @@ function getCarData(ref) {
   return cached();
 }
 
-const getSimilarCars = unstable_cache(
-  async (carId, make, dealerId, bodyType, year, price) => {
-    const candidates = await db.car.findMany({
-      where: {
-        available: true,
-        ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verificationStatus: "VERIFIED" } }),
-        id:  { not: carId },
-        make,
-      },
-      include: {
-        images: { take: 3, orderBy: { isPrimary: "desc" } },
-        dealer: { select: { name: true, location: true, type: true, verificationStatus: true } },
-      },
-      take: 12,
-    });
-
-    return candidates
-      .map((candidate) => {
-        let score = 0;
-
-        if (candidate.dealerId === dealerId) score += 45;
-        if (candidate.bodyType === bodyType) score += 20;
-
-        const yearGap = Math.abs((candidate.year || 0) - (year || 0));
-        score += Math.max(0, 15 - yearGap * 3);
-
-        const priceGap = Math.abs((candidate.price || 0) - (price || 0));
-        const priceGapRatio = price ? priceGap / price : 1;
-        score += Math.max(0, 20 - priceGapRatio * 40);
-
-        if (candidate.dealer?.verified) score += 3;
-
-        return { candidate, score };
-      })
-      .sort((a, b) => {
-        if (b.score !== a.score) return b.score - a.score;
-        return (b.candidate.createdAt?.getTime?.() || 0) - (a.candidate.createdAt?.getTime?.() || 0);
-      })
-      .slice(0, 8)
-      .map((entry) => entry.candidate);
-  },
-  ["similar-cars"],
-  { revalidate: 600, tags: ["cars"] }
-);
-
 function daysSince(date) {
   const diff = Date.now() - new Date(date).getTime();
   return Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -175,72 +133,6 @@ function freshnessLabel(days) {
   if (days <= 3) return "Listed recently";
   if (days <= 7) return "Listed this week";
   return "Listed recently";
-}
-
-async function getPriceBenchmark(make, model, year, excludeId) {
-  const cached = unstable_cache(
-    async () => {
-      const rows = await db.car.findMany({
-        where: {
-          make,
-          model,
-          year: { gte: year - 2, lte: year + 2 },
-          available: true,
-          price: { gt: 0 },
-          id: { not: excludeId },
-        },
-        select: { price: true },
-      });
-
-      if (rows.length < 3) return null;
-
-      const prices = rows.map((r) => r.price).sort((a, b) => a - b);
-      const low = prices[Math.floor(prices.length * 0.15)];
-      const high = prices[Math.floor(prices.length * 0.85)];
-      const avg = Math.round(prices.reduce((s, p) => s + p, 0) / prices.length);
-      const count = prices.length;
-
-      return { low, high, avg, count };
-    },
-    ["price-benchmark", make, model, String(year), excludeId],
-    { revalidate: 600, tags: ["cars"] }
-  );
-  return cached();
-}
-
-async function getCarReviews(carId) {
-  const cached = unstable_cache(
-    async () => {
-      const reviews = await db.carReview.findMany({
-        where: { carId },
-        include: {
-          user: { select: { name: true, avatarUrl: true } },
-        },
-        orderBy: { createdAt: "desc" },
-        take: 10,
-      });
-
-      const avgRating = reviews.length > 0
-        ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
-        : null;
-
-      return { reviews, avgRating, count: reviews.length };
-    },
-    ["car-reviews", carId],
-    { revalidate: 300, tags: [`car-reviews:${carId}`] }
-  );
-  return cached();
-}
-
-function getCarEngagement(carId) {
-  return unstable_cache(
-    async () => {
-      const inquiries = await db.lead.count({ where: { carId } });
-      return { inquiries };
-    },
-    ["car-engagement-v1", carId],
-    { revalidate: 300, tags: ["cars", `car-detail:${carId}`] }
-  )();
 }
 
 const SYSTEM_BADGES = new Set(["HOT", "NEW", "FEATURED", "SPOTLIGHT", "SOLD"]);
@@ -255,17 +147,9 @@ export default async function CarDetailPage({ params }) {
     permanentRedirect(carListingPath(carData));
   }
 
-  const session    = await getSession();
-
   const { car, dealer } = { car: carData, dealer: carData.dealer };
   const soldGrace = isInSoldGracePeriod(car);
   const daysLeftOnSite = daysRemainingOnSite(car);
-
-  const similarPromise = getSimilarCars(car.id, car.make, car.dealerId, car.bodyType, car.year, car.price);
-  const reviewsPromise = getCarReviews(car.id);
-  const modelWikiPromise = resolveModelWikiForCar(car);
-  const benchmarkPromise = getPriceBenchmark(car.make, car.model, car.year, car.id);
-  const engagementPromise = getCarEngagement(car.id);
 
   const { title } = buildCarListingDealerMetadata(car, dealer);
   const carName = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} ${car.year}${car.color ? ` ${car.color}` : ""}`;
@@ -275,7 +159,6 @@ export default async function CarDetailPage({ params }) {
   const specString = specItems.join(", ");
   const featureList = meaningfulFeatureList(car.features);
 
-  const [similar, reviewsData, modelWiki, benchmark, engagement] = await Promise.all([similarPromise, reviewsPromise, modelWikiPromise, benchmarkPromise, engagementPromise]);
   const freshDays = daysSince(car.createdAt);
   const freshLabel = freshnessLabel(freshDays);
   const sellerNotes = [
@@ -288,14 +171,6 @@ export default async function CarDetailPage({ params }) {
   const callHref = telHrefFromMsisdn(waDigits);
   const locationLabel = car.location || dealer.location || dealer.county || "Kenya";
   const code = stockCode(car);
-  const carPrice = Number(car.price) || 0;
-  const marketLabel = benchmark
-    ? carPrice < benchmark.low
-      ? { text: "Below market range", cls: "text-emerald-600" }
-      : carPrice > benchmark.high
-        ? { text: "Above market range", cls: "text-amber-600" }
-        : { text: "Within market range", cls: "text-slate-500" }
-    : null;
   const quickFacts = [
     car.year ? { icon: "📅", value: String(car.year) } : null,
     car.transmission
@@ -349,9 +224,6 @@ export default async function CarDetailPage({ params }) {
   const priceValidUntil = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
     .toISOString()
     .slice(0, 10);
-
-  const ratingAvg = reviewsData?.avgRating ? Number(reviewsData.avgRating) : null;
-  const ratingCount = reviewsData?.count || 0;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -423,17 +295,6 @@ export default async function CarDetailPage({ params }) {
             availability: car.available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
             url: listingUrl,
             seller: buildListingSellerSchema(),
-          },
-        }
-      : {}),
-    ...(ratingAvg && ratingCount > 0
-      ? {
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: ratingAvg,
-            reviewCount: ratingCount,
-            bestRating: 5,
-            worstRating: 1,
           },
         }
       : {}),
@@ -555,21 +416,14 @@ export default async function CarDetailPage({ params }) {
                 images={car.images}
                 title={title}
                 carId={car.id}
-                isLoggedIn={!!session?.user}
                 sold={soldGrace}
                 quickFacts={quickFacts}
               />
             </div>
 
-            {/* Views / inquiries — real engagement data */}
+            {/* Views — real engagement data */}
             <div className="flex items-center gap-2.5 px-1 text-[11px] font-bold uppercase tracking-widest text-slate-500">
-              <span className="inline-flex items-center gap-1.5">
-                <Eye className="w-3.5 h-3.5 text-slate-400" />{(car.views || 0).toLocaleString("en-KE")} views
-              </span>
-              <span className="text-slate-300">·</span>
-              <span className="inline-flex items-center gap-1.5">
-                <MessageCircle className="w-3.5 h-3.5 text-slate-400" />{engagement?.inquiries ?? 0} inquiries
-              </span>
+              <CarViewCounter initialCount={car.views || 0} carId={car.id} />
             </div>
 
             {/* Request & actions */}
@@ -598,26 +452,9 @@ export default async function CarDetailPage({ params }) {
             )}
 
             {/* More {make} cars — fills the gallery column (desktop only) */}
-            {similar.length > 0 && (
-              <section className="hidden lg:block">
-                <div className="flex items-center justify-between gap-4 mb-3">
-                  <h2 className="text-[12px] font-bold uppercase tracking-[0.15em] text-[var(--accent)]">
-                    More {car.make} Cars
-                  </h2>
-                  <Link
-                    href={`/cars/${slugifyCarSegment(car.make)}`}
-                    className="shrink-0 text-[10px] font-bold uppercase tracking-widest text-[var(--accent)] hover:opacity-80 transition-colors"
-                  >
-                    All {car.make} &rarr;
-                  </Link>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  {similar.slice(0, 4).map((sc) => (
-                    <NikkyoStockCard key={sc.id} car={sc} />
-                  ))}
-                </div>
-              </section>
-            )}
+            <Suspense fallback={null}>
+              <CarSimilarStrip car={car} />
+            </Suspense>
           </div>
           <div className="order-2 lg:order-2 xl:order-2 lg:col-span-6 xl:col-span-4 min-w-0 space-y-5">
             <NikkyoSpecTable car={car} title="Specifications" />
@@ -637,11 +474,9 @@ export default async function CarDetailPage({ params }) {
             </section>
 
             {/* Reviews */}
-            <CarReviewsSection
-              carId={car.id}
-              initialReviews={reviewsData.reviews}
-              initialAvgRating={reviewsData.avgRating}
-            />
+            <Suspense fallback={<ReviewsSkeleton />}>
+              <CarReviewsBlock carId={car.id} />
+            </Suspense>
           </div>
 
           {/* Price sidebar */}
@@ -652,16 +487,9 @@ export default async function CarDetailPage({ params }) {
               <p className="mt-1 text-[30px] xl:text-[30px] leading-none font-black tracking-tighter text-slate-900 tabular-nums">
                 {formatCarPrice(car)}
               </p>
-              {benchmark && marketLabel && (
-                <div className="mt-4 border-t border-slate-100 pt-3">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Market Range</p>
-                  <p className="mt-1 text-[15px] xl:text-[16px] font-black tracking-tight text-slate-900 tabular-nums">
-                    KES {Number(benchmark.low).toLocaleString("en-KE")} – KES {Number(benchmark.high).toLocaleString("en-KE")}
-                  </p>
-                  <p className={`mt-0.5 text-[11px] font-bold ${marketLabel.cls}`}>{marketLabel.text}</p>
-                  <p className="text-[10px] text-slate-500 mt-0.5">Based on {benchmark.count} similar {car.model} listings</p>
-                </div>
-              )}
+              <Suspense fallback={null}>
+                <CarMarketRange car={car} />
+              </Suspense>
             </section>
 
             {/* Contact actions */}
@@ -669,7 +497,8 @@ export default async function CarDetailPage({ params }) {
               whatsappHref={whatsappHref}
               callHref={callHref}
               carId={car.id}
-              isLoggedIn={!!session?.user}
+              dealerId={car.dealerId}
+              carTitle={carName}
             />
 
             {/* BIDGARI trust */}
@@ -681,6 +510,32 @@ export default async function CarDetailPage({ params }) {
               <p className="mt-2 text-[12px] text-slate-500 leading-relaxed">
                 Sold by BIDGARI. We handle this sale for you and guide you through inspection and paperwork.
               </p>
+            </section>
+
+            {/* Buy safely */}
+            <section className="rounded-xl border border-rose-100 bg-rose-50/60 p-4">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-rose-500 shrink-0" />
+                <span className="text-[13px] font-black text-slate-900">Don't get scammed</span>
+              </div>
+              <ul className="mt-2 space-y-1.5">
+                <li className="flex items-start gap-1.5 text-[12px] text-slate-500 leading-relaxed">
+                  <Check className="w-3.5 h-3.5 mt-0.5 text-rose-500 shrink-0" strokeWidth={3} />
+                  Never pay a deposit to a private number — pay only at handover through BIDGARI.
+                </li>
+                <li className="flex items-start gap-1.5 text-[12px] text-slate-500 leading-relaxed">
+                  <Check className="w-3.5 h-3.5 mt-0.5 text-rose-500 shrink-0" strokeWidth={3} />
+                  We never ask for money on WhatsApp. If someone does, it isn't us.
+                </li>
+              </ul>
+              <div className="mt-3 flex items-center gap-4">
+                <Link href="/safety" className="text-[11px] font-bold text-rose-600 hover:underline">
+                  Safety guide
+                </Link>
+                <Link href="/report" className="text-[11px] font-bold text-slate-500 hover:text-slate-800 hover:underline">
+                  Report a scam
+                </Link>
+              </div>
             </section>
 
             {/* Features */}
@@ -703,7 +558,9 @@ export default async function CarDetailPage({ params }) {
             )}
 
             {/* SEO */}
-            <CarModelWiki car={car} wiki={modelWiki} />
+            <Suspense fallback={null}>
+              <CarWikiBlock car={car} />
+            </Suspense>
             <CarListingRelatedSearches car={car} />
 
             {/* Share */}
@@ -735,7 +592,14 @@ export default async function CarDetailPage({ params }) {
         </div>
 
         {/* Similar cars — full width */}
-        <div className="mt-10"><SimilarCarsSection cars={similar} make={car.make} /></div>
+        <div className="mt-10">
+          <Suspense fallback={null}>
+            <CarSimilarSection car={car} />
+          </Suspense>
+        </div>
+
+        {/* People who viewed this also looked at */}
+        <div className="px-4 sm:px-6 max-w-6xl mx-auto"><AlsoViewed carId={car.id} /></div>
       </div>
 
       {/* Mobile bottom bar */}
@@ -743,10 +607,28 @@ export default async function CarDetailPage({ params }) {
         whatsappHref={whatsappHref}
         callHref={callHref}
         priceLabel={formatCarPrice(car)}
+        carId={car.id}
+        dealerId={car.dealerId}
+        carTitle={carName}
       />
 
       <SpecSheet car={car} />
     </div>
     </>
+  );
+}
+
+function ReviewsSkeleton() {
+  return (
+    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white animate-pulse">
+      <div className="bg-slate-200 px-4 py-2.5">
+        <div className="h-3 w-24 bg-slate-300 rounded" />
+      </div>
+      <div className="p-4 space-y-3">
+        <div className="h-3 w-2/3 bg-slate-200 rounded" />
+        <div className="h-3 w-1/2 bg-slate-200 rounded" />
+        <div className="h-24 w-full bg-slate-100 rounded" />
+      </div>
+    </section>
   );
 }

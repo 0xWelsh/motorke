@@ -71,7 +71,7 @@ export default async function AdminDashboard({ searchParams }) {
     db.car.aggregate({ _sum: { price: true }, where: { available: true } }),
     db.car.count({ where: { createdAt: { gte: todayStart } } }),
     db.lead.count({ where: { createdAt: { gte: todayStart } } }),
-    db.marketingEvent.count({ where: { createdAt: { gte: todayStart } } }),
+    db.carView.count({ where: { viewedAt: { gte: todayStart } } }),
     db.car.findMany({
       where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } },
       select: { createdAt: true },
@@ -82,10 +82,9 @@ export default async function AdminDashboard({ searchParams }) {
       select: { createdAt: true },
       take: 1000,
     }),
-    db.marketingEvent.findMany({
-      where: { createdAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } },
-      select: { createdAt: true },
-      take: 1000,
+    db.carView.findMany({
+      where: { viewedAt: { gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } },
+      select: { viewedAt: true },
     }),
     db.car.count({ where: { createdAt: { gte: new Date(now - 7 * 24 * 60 * 60 * 1000) } } }),
     db.car.count({
@@ -198,26 +197,37 @@ export default async function AdminDashboard({ searchParams }) {
     return { ...s, total, sold, rate, avgResp };
   });
 
-  // Chart
+  // Chart — timezone-safe bucketing using YYYY-MM-DD keys
+  function toDayKey(date) {
+    const d = new Date(date);
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+  }
+  function toLabel(dayKey) {
+    const [, m, d] = dayKey.split("-");
+    const month = new Date(Date.UTC(2024, Number(m) - 1)).toLocaleString("en-US", { month: "short" });
+    return `${month} ${Number(d)}`;
+  }
+
+  const chartDays = 30;
   const chartMap = {};
-  for (let i = 0; i < 30; i++) {
-    const d = new Date(now.getTime() - (29 - i) * 24 * 60 * 60 * 1000);
-    const k = d.toLocaleDateString("en-US", { day: "numeric", month: "short" });
-    chartMap[k] = { date: k, cars: 0, leads: 0, views: 0 };
+  for (let i = 0; i < chartDays; i++) {
+    const d = new Date(now.getTime() - (chartDays - 1 - i) * 24 * 60 * 60 * 1000);
+    const k = toDayKey(d);
+    chartMap[k] = { date: toLabel(k), cars: 0, leads: 0, views: 0, _key: k };
   }
   rawCarsForChart.forEach((c) => {
-    const k = c.createdAt.toLocaleDateString("en-US", { day: "numeric", month: "short" });
+    const k = toDayKey(c.createdAt);
     if (chartMap[k]) chartMap[k].cars += 1;
   });
   rawLeadsForChart.forEach((l) => {
-    const k = l.createdAt.toLocaleDateString("en-US", { day: "numeric", month: "short" });
+    const k = toDayKey(l.createdAt);
     if (chartMap[k]) chartMap[k].leads += 1;
   });
   rawViewsForChart.forEach((v) => {
-    const k = v.createdAt.toLocaleDateString("en-US", { day: "numeric", month: "short" });
+    const k = toDayKey(v.viewedAt);
     if (chartMap[k]) chartMap[k].views += 1;
   });
-  const chartData = Object.values(chartMap);
+  const chartData = Object.values(chartMap).map(({ _key, ...rest }) => rest);
 
   const actions = [
     ...(staleListings > 0
@@ -275,7 +285,7 @@ export default async function AdminDashboard({ searchParams }) {
   const legend = [
     { key: "cars", label: "Listings", dot: "bg-blue-400" },
     { key: "leads", label: "Leads", dot: "bg-emerald-400" },
-    { key: "views", label: "Views", dot: "bg-amber-400" },
+    { key: "views", label: "Listing Views", dot: "bg-amber-400" },
   ];
 
   const managementLinks = [

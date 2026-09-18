@@ -62,15 +62,23 @@ export default function GrowthCharts({ weeklyChart, userChart, statusPipeline, c
                 interval="preserveStartEnd"
               />
               <YAxis
+                yAxisId="left"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 10, fill: "#71717a", fontWeight: 600 }}
+              />
+              <YAxis
+                yAxisId="right"
+                orientation="right"
                 axisLine={false}
                 tickLine={false}
                 tick={{ fontSize: 10, fill: "#71717a", fontWeight: 600 }}
               />
               <Tooltip {...darkTooltip} />
               <Legend wrapperStyle={LEGEND_STYLE} iconType="circle" iconSize={6} />
-              <Area type="monotone" dataKey="cars" name="Listings" stroke="#3b82f6" strokeWidth={2} fillOpacity={1} fill="url(#gc)" />
-              <Area type="monotone" dataKey="leads" name="Leads" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#gl)" />
-              <Area type="monotone" dataKey="views" name="Views" stroke="#f59e0b" strokeWidth={2} fillOpacity={1} fill="url(#gv)" />
+              <Area yAxisId="left" type="monotone" dataKey="cars" name="Listings" stroke="#3b82f6" strokeWidth={2} fillOpacity={1} fill="url(#gc)" />
+              <Area yAxisId="left" type="monotone" dataKey="leads" name="Leads" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#gl)" />
+              <Area yAxisId="right" type="monotone" dataKey="views" name="Views" stroke="#f59e0b" strokeWidth={2} fillOpacity={1} fill="url(#gv)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>

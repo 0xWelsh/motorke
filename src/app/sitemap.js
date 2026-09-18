@@ -11,6 +11,7 @@ import { SEO_PRICE_BANDS, facetPathSegment } from "@/lib/seo-car-facets";
 import { carListingPath } from "@/lib/car-listing-url";
 import { listSeoPagesForSitemap, contentPublicPath } from "@/lib/seo-content";
 import { listGlobalHubSitemapEntries } from "@/lib/seo-global-hubs";
+import { listLocationHubSlugs } from "@/lib/seo-location-hubs";
 
 const BASE = getSiteOrigin();
 
@@ -134,6 +135,7 @@ export default async function sitemap() {
   const staticPages = [
     { url: BASE, lastModified: now, changeFrequency: "daily", priority: 1.0 },
     { url: `${BASE}/cars`, lastModified: now, changeFrequency: "daily", priority: 0.95 },
+    { url: `${BASE}/luxury`, lastModified: now, changeFrequency: "weekly", priority: 0.86 },
     { url: `${BASE}/compare`, lastModified: now, changeFrequency: "weekly", priority: 0.65 },
     { url: `${BASE}/request-car`, lastModified: now, changeFrequency: "weekly", priority: 0.82 },
     { url: `${BASE}/requests`, lastModified: now, changeFrequency: "hourly", priority: 0.78 },
@@ -141,10 +143,18 @@ export default async function sitemap() {
     { url: `${BASE}/guides`, lastModified: now, changeFrequency: "daily", priority: 0.7 },
     { url: `${BASE}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE}/faq`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${BASE}/safety`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${BASE}/report`, lastModified: now, changeFrequency: "monthly", priority: 0.4 },
     { url: `${BASE}/duty`, lastModified: now, changeFrequency: "weekly", priority: 0.88 },
     { url: `${BASE}/mission`, lastModified: now, changeFrequency: "yearly", priority: 0.35 },
     { url: `${BASE}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.25 },
     { url: `${BASE}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.25 },
+    { url: `${BASE}/kenya`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
+    { url: `${BASE}/dealers`, lastModified: now, changeFrequency: "weekly", priority: 0.75 },
+    { url: `${BASE}/testimonials`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${BASE}/how-to-buy`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE}/trust`, lastModified: now, changeFrequency: "monthly", priority: 0.65 },
+    { url: `${BASE}/sell`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
   ];
 
   const carPages = cars.map((car) => {
@@ -238,6 +248,23 @@ export default async function sitemap() {
     })
     .filter(Boolean);
 
+  const showroomHubPages = listLocationHubSlugs().map((slug) => ({
+    url: `${BASE}/showrooms/${slug}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.75,
+  }));
+
+  const dealerPages = await db.dealer.findMany({
+    where: dealerWhere,
+    select: { slug: true, updatedAt: true },
+  }).then((rows) => rows.map((d) => ({
+    url: `${BASE}/dealers/${d.slug}`,
+    lastModified: d.updatedAt || now,
+    changeFrequency: "weekly",
+    priority: 0.72,
+  })));
+
   return dedupeByUrl([
     ...staticPages,
     ...globalHubPages,
@@ -251,5 +278,7 @@ export default async function sitemap() {
     ...priceFacetPages,
     ...dutyPages,
     ...contentPages,
+    ...showroomHubPages,
+    ...dealerPages,
   ]);
 }

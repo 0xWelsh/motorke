@@ -216,6 +216,19 @@ async function runWatchAlerts() {
           },
         });
 
+        // Send push notification
+        try {
+          const { sendPushToUser } = await import("@/lib/push");
+          sendPushToUser(db, watch.user.id, {
+            title,
+            body: message,
+            url: carListingPath(listingForLink),
+            tag: type.toLowerCase(),
+          }).catch(() => {});
+        } catch (pushErr) {
+          console.error("Watch alert push error:", pushErr);
+        }
+
         await sendWatchAlertEmail({
           userEmail: watch.user.email,
           userName: watch.user.name,

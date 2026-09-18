@@ -1,19 +1,24 @@
 "use client";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useTransition } from "react";
 import Image from "@/components/SafeImage";
 import { getHeroImageUrl, getGalleryImageUrl, getPreloadImageUrl, getThumbnailUrl, saveDataQuality, saveDataWidth } from "@/lib/image-transform";
 import { saveDataGalleryLimits } from "@/lib/save-data";
 import { useSaveData } from "@/components/SaveDataProvider";
+import { useClientSession } from "@/hooks/use-client-session";
 import { ArrowLeft, Heart, MoreHorizontal, X, Share2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { markLightboxOpen, markLightboxClose } from "@/lib/back-nav";
 
 const SWIPE_THRESHOLD = 48;
 const MAX_ZOOM = 4;
 const DOUBLE_TAP_MS = 300;
 const DRAG_LOCK = 10;
 
-export default function ImageGallery({ images, title, carId, isLoggedIn, sold = false, quickFacts = [] }) {
+export default function ImageGallery({ images, title, carId, isLoggedIn = null, sold = false, quickFacts = [] }) {
   const router = useRouter();
+  const { user: clientUser } = useClientSession();
+  const effectiveLoggedIn = isLoggedIn !== null ? isLoggedIn : Boolean(clientUser);
+  const [isPending, startTransition] = useTransition();
   const saveData = useSaveData();
   const galleryLimits = saveDataGalleryLimits(saveData, images?.length || 0);
   const [active, setActive] = useState(0);
@@ -40,12 +45,12 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
   const menuRef = useRef(null);
 
   useEffect(() => {
-    if (!isLoggedIn || !carId) return;
+    if (!effectiveLoggedIn || !carId) return;
     fetch(`/api/saved/${carId}`)
       .then(r => r.json())
       .then(data => setSaved(data.saved))
       .catch(() => {});
-  }, [carId, isLoggedIn]);
+  }, [carId, effectiveLoggedIn]);
 
   useEffect(() => {
     const el = heroRef.current;
@@ -73,6 +78,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
       return;
     }
     document.body.style.overflow = "hidden";
+    markLightboxOpen();
     window.history.pushState({ lightbox: true }, "");
 
     const onPop = () => setLightbox(false);
@@ -86,6 +92,8 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
       window.removeEventListener("keydown", onKey);
       if (window.history.state?.lightbox) {
         window.history.back();
+      } else {
+        markLightboxClose();
       }
     };
   }, [lightbox]);
@@ -161,7 +169,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
   };
 
   const toggleSave = async () => {
-    if (!isLoggedIn) { router.push("/login"); return; }
+    if (!effectiveLoggedIn) { router.push("/login"); return; }
     setSaving(true);
     try {
       const method = saved ? "DELETE" : "POST";
@@ -341,7 +349,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn, sold = 
         >
           <button
             type="button"
-            onClick={() => (window.history.length > 1 ? router.back() : router.push("/cars"))}
+            onClick={() => startTransition(() => { window.history.length > 1 ? router.back() : router.push("/cars"); })}
             className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors ${
               navOpaque
                 ? "text-slate-900 hover:bg-slate-100"

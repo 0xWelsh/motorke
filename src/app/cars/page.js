@@ -24,19 +24,19 @@ export async function generateMetadata({ searchParams }) {
   const search = sp.search || "";
   const county = sp.county || "";
 
-  const parts = ["Cars for sale in kenya"];
+  const parts = ["Cars for Sale in Kenya"];
   if (make) parts.unshift(`${make}${model ? ` ${model}` : ""}`);
   if (county) parts.push(`in ${county}`);
-  const title = `${parts.join(" — ")} | Cars for Sale in Kenya | BIDGARI`;
+  const title = `${parts.join(" — ")}`;
   const desc = make
     ? `Browse verified ${make}${model ? ` ${model}` : ""} cars for sale${county ? ` in ${county}` : " across Kenya"}. Transparent pricing, handled by BIDGARI.`
     : "Find verified cars for sale in Kenya. Transparent pricing, handled end-to-end by BIDGARI. Filter by make, price, body type, and county.";
 
   return {
-    title,
+    title: { absolute: `${title} | BIDGARI` },
     description: desc,
     alternates: { canonical: "/cars" },
-    openGraph: { title, description: desc, type: "website", url: "/cars" },
+    openGraph: { title: `${title} | BIDGARI`, description: desc, type: "website", url: "/cars" },
   };
 }
 
@@ -274,7 +274,7 @@ export default async function CarsPage({ searchParams }) {
             ? `Cars for Sale in ${county}, Kenya`
             : search
             ? `"${search}" — Verified Cars in Kenya`
-            : "Cars for sale in kenya"}
+            : "Cars for Sale in Kenya"}
         </h1>
 
         <div className="lg:grid lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-8 lg:items-start">

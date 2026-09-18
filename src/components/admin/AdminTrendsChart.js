@@ -40,6 +40,14 @@ export default function AdminTrendsChart({ data }) {
             interval="preserveStartEnd"
           />
           <YAxis
+            yAxisId="left"
+            axisLine={false}
+            tickLine={false}
+            tick={{ fontSize: 10, fill: "#71717a", fontWeight: 600 }}
+          />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
             axisLine={false}
             tickLine={false}
             tick={{ fontSize: 10, fill: "#71717a", fontWeight: 600 }}
@@ -62,6 +70,7 @@ export default function AdminTrendsChart({ data }) {
             iconSize={6}
           />
           <Area
+            yAxisId="left"
             type="monotone"
             dataKey="cars"
             name="Listings"
@@ -71,6 +80,7 @@ export default function AdminTrendsChart({ data }) {
             fill="url(#c)"
           />
           <Area
+            yAxisId="left"
             type="monotone"
             dataKey="leads"
             name="Leads"
@@ -80,6 +90,7 @@ export default function AdminTrendsChart({ data }) {
             fill="url(#l)"
           />
           <Area
+            yAxisId="right"
             type="monotone"
             dataKey="views"
             name="Views"

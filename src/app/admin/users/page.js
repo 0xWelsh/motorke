@@ -10,9 +10,11 @@ import {
   CheckCircle2,
   RefreshCw,
   Users,
+  ShieldOff,
 } from "lucide-react";
 import DataTableShell from "@/components/ui/DataTableShell";
 import EmptyState from "@/components/ui/EmptyState";
+import { SUPER_ADMIN_EMAIL } from "@/lib/super-admin";
 
 export const metadata = { title: "Users | BIDGARI Admin" };
 
@@ -25,9 +27,13 @@ function usersHref(opts = {}) {
 
 export default async function AdminUsersPage(props) {
   const searchParams = await props.searchParams;
-  await requireAdmin();
+  const me = await requireAdmin();
   const search = searchParams?.search || "";
   const deleted = searchParams?.deleted;
+  const revoked = searchParams?.revoked;
+  const error = searchParams?.error;
+
+  const isSuperAdmin = me.email === SUPER_ADMIN_EMAIL;
 
   const where = search
     ? {
@@ -115,6 +121,24 @@ export default async function AdminUsersPage(props) {
         </div>
       )}
 
+      {/* Revoked flash */}
+      {revoked && (
+        <div className="rounded-lg border border-emerald-800/45 bg-emerald-950/35 px-4 py-2.5 text-sm text-emerald-300">
+          Admin privileges revoked — user demoted and signed out.
+        </div>
+      )}
+
+      {/* Revoke error flash */}
+      {error && (
+        <div className="rounded-lg border border-red-800/45 bg-red-950/35 px-4 py-2.5 text-sm text-red-300">
+          {error === "superonly" ? "Only the Super Admin can revoke admin privileges." :
+           error === "self" ? "You cannot revoke your own admin privileges." :
+           error === "superadmin" ? "The Super Admin's privileges cannot be revoked." :
+           error === "notadmin" ? "This user is not an admin." :
+           "Something went wrong."}
+        </div>
+      )}
+
       {/* Table */}
       <div className="hidden lg:block">
         <DataTableShell>
@@ -191,6 +215,17 @@ export default async function AdminUsersPage(props) {
                         >
                           <RefreshCw size={14} />
                         </Link>
+                        {isSuperAdmin && user.role === "ADMIN" && user.id !== me.id && (
+                          <form action={`/api/admin/users/${user.id}/revoke-admin`} method="POST" className="inline">
+                            <button
+                              type="submit"
+                              className="rounded-md border border-red-900/40 bg-red-950/20 p-1.5 text-red-400/80 hover:text-red-300 hover:border-red-800/60 transition-colors inline-flex"
+                              title="Revoke admin"
+                            >
+                              <ShieldOff size={14} />
+                            </button>
+                          </form>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -273,6 +308,16 @@ export default async function AdminUsersPage(props) {
                   {user.active ? "Lock" : "Unlock"}
                 </button>
               </form>
+              {isSuperAdmin && user.role === "ADMIN" && user.id !== me.id && (
+                <form action={`/api/admin/users/${user.id}/revoke-admin`} method="POST" className="inline">
+                  <button
+                    type="submit"
+                    className="rounded-md border border-red-900/40 bg-red-950/20 px-3 py-1.5 text-[11px] font-bold text-red-400/80 hover:text-red-300 hover:border-red-800/60 transition-colors"
+                  >
+                    Revoke admin
+                  </button>
+                </form>
+              )}
             </div>
           </div>
         ))}

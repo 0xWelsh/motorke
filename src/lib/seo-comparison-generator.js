@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
-import { buildComparisonSlug } from "@/lib/seo-content";
+import { buildComparisonSlug, comparisonPagePath } from "@/lib/seo-content";
+import { modelHubPath } from "@/lib/seo-model-wiki";
 
 const carWhere = {
   available: true,
@@ -12,31 +13,39 @@ export function buildComparisonTitle(makeA, modelA, makeB, modelB) {
 }
 
 export function buildComparisonDescription(makeA, modelA, makeB, modelB) {
-  return `Compare ${makeA} ${modelA} and ${makeB} ${modelB} for Kenyan buyers, pricing context, use cases, and live listings on BIDGARI.`;
+  return `Compare ${makeA} ${modelA} and ${makeB} ${modelB} for Kenyan buyers — pricing, fuel economy, reliability, spare parts, and live listings on BIDGARI.`;
 }
 
 export function buildComparisonBody(makeA, modelA, makeB, modelB) {
+  const hubA = modelHubPath(makeA, modelA);
+  const hubB = modelHubPath(makeB, modelB);
   return `## ${makeA} ${modelA} vs ${makeB} ${modelB}
 
-Both nameplates are common on Kenyan roads. Use this guide to narrow your shortlist, then open live listings to compare exact prices, mileage, and dealer terms.
+Both nameplates are common on Kenyan roads. Use this guide to narrow your shortlist, then open live listings to compare exact prices, mileage, and dealer terms. Browse all [${makeA} ${modelA} listings](${hubA}) and [${makeB} ${modelB} listings](${hubB}) to see current prices in Nairobi and across Kenya.
 
 ## Price and availability
 
-Inventory changes weekly. Filter by make and model on our marketplace to see what is listed today in Nairobi and other counties.
+Prices shift weekly as new stock lands at the port and dealers refresh inventory. Check the latest [${makeA} ${modelA} for sale](${hubA}) and [${makeB} ${modelB} for sale](${hubB}) pages for live pricing. Both models are popular on BIDGARI, but availability varies by year, trim, and whether the vehicle is locally available or still at the port.
 
 ## Who should choose the ${makeA} ${modelA}?
 
 - Buyers who prioritise ${makeA}'s resale footprint and service network in Kenya
-- Shoppers who want more listings to choose from at a given budget
+- Shoppers who want a broader selection of trims and years at a given budget
+- Drivers whose daily routes suit ${makeA}'s strengths — whether that is fuel economy, ride comfort, or off-road capability
 
 ## Who should choose the ${makeB} ${modelB}?
 
-- Drivers who prefer ${makeB}'s driving feel and equipment for the money
-- Buyers who find a specific trim or year that fits their import or local budget
+- Buyers who prefer ${makeB}'s driving feel, equipment levels, and value proposition
+- Shoppers who find a specific year band or import condition that fits their budget
+- Families or individuals whose lifestyle matches ${makeB}'s body style and cabin layout
 
-## Next step
+## Running costs in Kenya
 
-Use the side-by-side compare tool with real listings you shortlist, specs, duty estimates, and dealer contact in one place.`;
+Factor in insurance (typically 3–5% of vehicle value), annual inspection, and fuel. Fuel prices in Nairobi hover around KES 180–210 per litre depending on station and grade. Use the [BIDGARI duty calculator](/duty) to estimate import duty and other costs if you are importing.
+
+## Verdict
+
+Compare real listings side by side before deciding. Open the [interactive compare tool](/compare) with any two cars you shortlist — you get specs, duty estimates, TCO projections, and dealer contact in one view.`;
 }
 
 /** Discover popular make/model pairs with enough stock for SEO comparison pages. */
@@ -75,6 +84,16 @@ export async function discoverComparisonPairs({ maxPairs = 24, minListings = 2 }
 
 export async function upsertComparisonPage({ makeA, modelA, makeB, modelB, publish = true }) {
   const slug = buildComparisonSlug(makeA, modelA, makeB, modelB);
+  const existing = await db.seoContentPage.findUnique({
+    where: { slug },
+    select: { id: true, meta: true },
+  });
+
+  // Preserve hand-written curated comparisons — do not overwrite with templates.
+  if (existing && existing.meta?.curated === true) {
+    return existing;
+  }
+
   const title = buildComparisonTitle(makeA, modelA, makeB, modelB);
   const description = buildComparisonDescription(makeA, modelA, makeB, modelB);
   const body = buildComparisonBody(makeA, modelA, makeB, modelB);
@@ -124,4 +143,31 @@ export async function fetchComparisonInventory(make, model, take = 4) {
     orderBy: { createdAt: "desc" },
     take,
   });
+}
+
+/** Fetch related comparison pages that share a make with this one. */
+export async function fetchRelatedComparisons(makeA, modelA, makeB, modelB, take = 4) {
+  const currentSlug = buildComparisonSlug(makeA, modelA, makeB, modelB);
+
+  const related = await db.seoContentPage.findMany({
+    where: {
+      type: "COMPARISON",
+      status: "PUBLISHED",
+      slug: { not: currentSlug },
+      OR: [
+        { meta: { path: ["makeA"], equals: makeA } },
+        { meta: { path: ["makeA"], equals: makeB } },
+        { meta: { path: ["makeB"], equals: makeA } },
+        { meta: { path: ["makeB"], equals: makeB } },
+      ],
+    },
+    select: { slug: true, title: true },
+    take,
+  });
+
+  return related.map((r) => ({
+    slug: r.slug,
+    title: r.title,
+    path: comparisonPagePath(r.slug),
+  }));
 }
