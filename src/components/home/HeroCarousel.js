@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import { carListingPath } from "@/lib/car-listing-url";
 import { getThumbnailUrl } from "@/lib/image-transform";
+import { trackUiEvent } from "@/lib/analytics";
 import NikkyoStockCard from "@/components/NikkyoStockCard";
 
 const SWIPE_THRESHOLD = 50;
@@ -137,6 +138,11 @@ export default function HeroCarousel({ cars = [] }) {
               e.stopPropagation();
               draggedRef.current = false;
             }
+            trackUiEvent("hero_car_click", {
+              car_id: car.id,
+              make: car.make,
+              model: car.model,
+            });
           }}
           className="absolute inset-0 z-10 flex flex-col justify-end p-4 sm:p-6"
         >
@@ -174,7 +180,7 @@ export default function HeroCarousel({ cars = [] }) {
             <button
               type="button"
               onClick={() => go(-1)}
-              className="absolute left-2 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-90 shadow-sm transition-all hover:bg-white hover:opacity-100 sm:left-3 sm:h-10 sm:w-10"
+              className="absolute left-2 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-90 shadow-sm transition-all hover:bg-white hover:opacity-100 sm:left-3 sm:h-10 sm:w-10"
               aria-label="Previous car"
             >
               <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -182,7 +188,7 @@ export default function HeroCarousel({ cars = [] }) {
             <button
               type="button"
               onClick={() => go(1)}
-              className="absolute right-2 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-90 shadow-sm transition-all hover:bg-white hover:opacity-100 sm:right-3 sm:h-10 sm:w-10"
+              className="absolute right-2 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-90 shadow-sm transition-all hover:bg-white hover:opacity-100 sm:right-3 sm:h-10 sm:w-10"
               aria-label="Next car"
             >
               <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />

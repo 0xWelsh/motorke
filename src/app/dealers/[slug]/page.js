@@ -10,6 +10,7 @@ import DealerInventory from "@/components/DealerInventory";
 import DealerLocationMap from "@/components/DealerLocationMap";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
 import DealerShowroomShare from "@/components/DealerShowroomShare";
+import MobileBottomBarSignal from "@/components/MobileBottomBarSignal";
 import DealerProfileHeroPanel from "@/components/DealerProfileHeroPanel";
 import { calculateDistance } from "@/lib/geolocation";
 import { absoluteUrl, BRAND_OG_IMAGE } from "@/lib/site-url";
@@ -496,7 +497,8 @@ export default async function DealerPage(props) {
       </div>
 
       {/* Persistent Mobile Action Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-slate-200 px-4 py-4 shadow-2xl">
+      <MobileBottomBarSignal />
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-t border-slate-200 px-4 py-4 shadow-2xl" style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}>
          <div className="mb-3">
            <DealerShowroomShare
              layout="mobileBar"

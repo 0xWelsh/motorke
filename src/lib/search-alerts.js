@@ -29,7 +29,7 @@ export async function matchCarToSearchAlerts(carId) {
     });
 
     const carTitle = `${car.year} ${car.make} ${car.model}`;
-    const carUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke"}${carListingPath(car)}`;
+    const carUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://bidgari.com"}${carListingPath(car)}`;
 
     const notifications = [];
 

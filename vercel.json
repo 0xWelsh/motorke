@@ -1,4 +1,18 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "welshmotorhub.co.ke" }],
+      "destination": "https://bidgari.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.welshmotorhub.co.ke" }],
+      "destination": "https://bidgari.com/:path*",
+      "permanent": true
+    }
+  ],
   "crons": [
     {
       "path": "/api/cron/better-deals",
@@ -11,6 +25,10 @@
     {
       "path": "/api/cron/view-organic",
       "schedule": "0 14 * * *"
+    },
+    {
+      "path": "/api/cron/auto-expire-local",
+      "schedule": "0 12 * * *"
     },
     {
       "path": "/api/cron/watch-alerts",

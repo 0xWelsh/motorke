@@ -8,7 +8,7 @@ import { formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
 import { getSalesmanWhatsappNumbers, pickSalesmanWhatsapp } from "@/lib/salesman-whatsapp";
 import { telHrefFromMsisdn } from "@/lib/phone-hints";
 import { getPreloadImageUrl } from "@/lib/image-transform";
-import { MapPin, BadgeCheck, Check, ShieldCheck } from "lucide-react";
+import { MapPin, BadgeCheck, Check, ShieldCheck, Calendar, Settings, Fuel, Gauge } from "lucide-react";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
 import { TrackRecentView } from "@/components/CarActions";
@@ -17,7 +17,6 @@ import CarReviewsSection from "@/components/CarReviewsSection";
 import FeatureList from "@/components/FeatureList";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
 import CarContactActions from "@/components/CarContactActions";
-import CarViewCounter from "@/components/CarViewCounter";
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
@@ -41,6 +40,8 @@ import CarListingRelatedSearches from "@/components/CarListingRelatedSearches";
 import AlsoViewed from "@/components/AlsoViewed";
 import CarDetailMobileBar from "@/components/CarDetailMobileBar";
 import CarActionButtons from "@/components/CarActionButtons";
+import MobileSection from "@/components/MobileSection";
+import AdminCardControls from "@/components/AdminCardControls";
 import NikkyoSpecTable from "@/components/NikkyoSpecTable";
 import CarSimilarStrip from "@/components/detail/CarSimilarStrip";
 import CarSimilarSection from "@/components/detail/CarSimilarSection";
@@ -172,10 +173,10 @@ export default async function CarDetailPage({ params }) {
   const locationLabel = car.location || dealer.location || dealer.county || "Kenya";
   const code = stockCode(car);
   const quickFacts = [
-    car.year ? { icon: "📅", value: String(car.year) } : null,
+    car.year ? { icon: "calendar", value: String(car.year) } : null,
     car.transmission
       ? {
-          icon: "⚙️",
+          icon: "settings",
           value:
             car.transmission === "AUTOMATIC"
               ? "Automatic"
@@ -184,10 +185,20 @@ export default async function CarDetailPage({ params }) {
                 : car.transmission,
         }
       : null,
-    car.fuelType ? { icon: "⛽", value: FUEL_LABELS[car.fuelType] || car.fuelType } : null,
-    locationLabel ? { icon: "📍", value: locationLabel } : null,
-    positiveNum(car.mileage) ? { icon: "🛣️", value: formatMileage(car.mileage) } : null,
+    car.fuelType ? { icon: "fuel", value: FUEL_LABELS[car.fuelType] || car.fuelType } : null,
+    locationLabel ? { icon: "location", value: locationLabel } : null,
+    positiveNum(car.mileage) ? { icon: "mileage", value: formatMileage(car.mileage) } : null,
   ].filter(Boolean);
+
+  // Quick-fact icon lookup (serializable string keys cross the RSC boundary,
+  // lucide components are resolved only where rendered).
+  const FACT_ICONS = {
+    calendar: Calendar,
+    settings: Settings,
+    fuel: Fuel,
+    location: MapPin,
+    mileage: Gauge,
+  };
   const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Sold by BIDGARI with full buyer support.`;
 
   const listingUrl = absoluteUrl(carListingPath(car));
@@ -352,7 +363,7 @@ export default async function CarDetailPage({ params }) {
         <div className="flex items-center gap-2 mb-4 sm:mb-5">
           <Link
             href="/cars"
-            className="btn btn-neutral btn-icon w-8 h-8"
+            className="btn btn-neutral btn-icon w-11 h-11 sm:w-8 sm:h-8"
             aria-label="Back to inventory"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
@@ -421,16 +432,20 @@ export default async function CarDetailPage({ params }) {
               />
             </div>
 
-            {/* Views — real engagement data */}
-            <div className="flex items-center gap-2.5 px-1 text-[11px] font-bold uppercase tracking-widest text-slate-500">
-              <CarViewCounter initialCount={car.views || 0} carId={car.id} />
-            </div>
-
-            {/* Request & actions */}
-            <section>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Get this car</p>
-              <CarActionButtons carId={car.id} dealerId={car.dealerId} carTitle={carName} price={formatCarPrice(car)} whatsappHref={whatsappHref} whatsappNumber={waDigits} />
-            </section>
+            {/* Key facts — mobile only, right under the photos */}
+            {quickFacts.length > 0 && (
+              <div className="flex flex-wrap items-center gap-1.5 lg:hidden">
+                {quickFacts.map((f, i) => {
+                  const Icon = FACT_ICONS[f.icon];
+                  return (
+                    <span key={i} className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold capitalize text-slate-700">
+                      {Icon && <Icon className="h-3.5 w-3.5 shrink-0 text-slate-500" aria-hidden />}
+                      <span className="truncate capitalize">{f.value}</span>
+                    </span>
+                  );
+                })}
+              </div>
+            )}
 
             {/* Seller notes — real data-backed claims only */}
             {sellerNotes.length > 0 && (
@@ -456,16 +471,18 @@ export default async function CarDetailPage({ params }) {
               <CarSimilarStrip car={car} />
             </Suspense>
           </div>
-          <div className="order-2 lg:order-2 xl:order-2 lg:col-span-6 xl:col-span-4 min-w-0 space-y-5">
-            <NikkyoSpecTable car={car} title="Specifications" />
+          <div className="order-3 lg:order-2 xl:order-2 lg:col-span-6 xl:col-span-4 min-w-0 space-y-5 max-lg:contents">
+            <div className="max-lg:order-6 min-w-0">
+              <NikkyoSpecTable car={car} title="Specifications" />
+            </div>
 
             {/* Description */}
-            <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+            <section className="overflow-hidden rounded-xl border border-slate-200 bg-white max-lg:order-7">
               <div className="bg-[var(--sidebar-bar)] px-4 py-2.5">
                 <h2 className="text-[12px] font-black uppercase tracking-widest text-white">Description</h2>
               </div>
               <div className="p-5 text-[14px] text-slate-600 leading-[1.8]">
-                <p>
+                <p className="whitespace-pre-wrap">
                   {specString ? <span className="font-bold text-slate-900">{specString}.</span> : null}{" "}
                   {car.description?.trim() ||
                     "No description yet. Message the BIDGARI team for condition, service history, and viewing times."}
@@ -474,15 +491,19 @@ export default async function CarDetailPage({ params }) {
             </section>
 
             {/* Reviews */}
-            <Suspense fallback={<ReviewsSkeleton />}>
-              <CarReviewsBlock carId={car.id} />
-            </Suspense>
+            <div className="max-lg:order-8 min-w-0">
+              <Suspense fallback={<ReviewsSkeleton />}>
+                <CarReviewsBlock carId={car.id} />
+              </Suspense>
+            </div>
           </div>
 
-          {/* Price sidebar */}
-          <div className="order-3 lg:order-3 xl:order-3 lg:col-span-12 xl:col-span-3 min-w-0 space-y-5">
+          {/* Price sidebar — mobile order-2 so price+contact+trust sit directly under
+            the gallery; specs/description land after them. Flip on lg+ back to
+            the classic right-rail placement (order-3). */}
+          <div className="order-2 lg:order-3 xl:order-3 lg:col-span-12 xl:col-span-3 min-w-0 space-y-5 max-lg:contents">
             {/* Price card */}
-            <section className="rounded-xl border border-slate-200 bg-white p-5">
+            <section className="rounded-xl border border-slate-200 bg-white p-5 max-lg:order-2">
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Price</p>
               <p className="mt-1 text-[30px] xl:text-[30px] leading-none font-black tracking-tighter text-slate-900 tabular-nums">
                 {formatCarPrice(car)}
@@ -493,16 +514,18 @@ export default async function CarDetailPage({ params }) {
             </section>
 
             {/* Contact actions */}
-            <CarContactActions
-              whatsappHref={whatsappHref}
-              callHref={callHref}
-              carId={car.id}
-              dealerId={car.dealerId}
-              carTitle={carName}
-            />
+            <div className="max-lg:order-3 min-w-0">
+              <CarContactActions
+                whatsappHref={whatsappHref}
+                callHref={callHref}
+                carId={car.id}
+                dealerId={car.dealerId}
+                carTitle={carName}
+              />
+            </div>
 
             {/* BIDGARI trust */}
-            <section className="rounded-xl border border-slate-200 bg-white p-4">
+            <section className="rounded-xl border border-slate-200 bg-white p-4 max-lg:order-4">
               <div className="flex items-center gap-2">
                 <BadgeCheck className="w-5 h-5 text-emerald-500 shrink-0" />
                 <span className="text-[13px] font-black text-slate-900">BIDGARI Verified Listing</span>
@@ -513,7 +536,7 @@ export default async function CarDetailPage({ params }) {
             </section>
 
             {/* Buy safely */}
-            <section className="rounded-xl border border-rose-100 bg-rose-50/60 p-4">
+            <section className="rounded-xl border border-rose-100 bg-rose-50/60 p-4 max-lg:order-5">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-rose-500 shrink-0" />
                 <span className="text-[13px] font-black text-slate-900">Don't get scammed</span>
@@ -540,7 +563,7 @@ export default async function CarDetailPage({ params }) {
 
             {/* Features */}
             {featureList.length > 0 && (
-              <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+              <section className="overflow-hidden rounded-xl border border-slate-200 bg-white max-lg:order-9">
                 <div className="bg-[var(--sidebar-bar)] px-4 py-2.5">
                   <h2 className="text-[12px] font-black uppercase tracking-widest text-white">Features</h2>
                 </div>
@@ -557,14 +580,29 @@ export default async function CarDetailPage({ params }) {
               </section>
             )}
 
-            {/* SEO */}
-            <Suspense fallback={null}>
-              <CarWikiBlock car={car} />
-            </Suspense>
-            <CarListingRelatedSearches car={car} />
+            {/* Request & actions — final WhatsApp CTA, below features/specs/description */}
+            <section className="overflow-hidden rounded-xl border border-slate-200 bg-white p-5 max-lg:order-10">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Get this car</p>
+              <CarActionButtons carId={car.id} dealerId={car.dealerId} carTitle={carName} price={formatCarPrice(car)} whatsappHref={whatsappHref} whatsappNumber={waDigits} />
+            </section>
+
+            {/* Admin quick actions (detail view) */}
+            <div className="flex justify-end max-lg:order-10">
+              <AdminCardControls car={car} inline />
+            </div>
+
+            {/* SEO — folded into an accordion on mobile */}
+            <div className="max-lg:order-11 min-w-0">
+              <MobileSection summary="More about this car">
+                <Suspense fallback={null}>
+                  <CarWikiBlock car={car} />
+                </Suspense>
+                <CarListingRelatedSearches car={car} />
+              </MobileSection>
+            </div>
 
             {/* Share */}
-            <section>
+            <section className="max-lg:order-12">
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">Share this listing</p>
               <ShareButtons
                 listingUrl={listingUrl}
@@ -581,7 +619,7 @@ export default async function CarDetailPage({ params }) {
             </section>
 
             {/* Explore links */}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-slate-200 bg-white px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-slate-500 rounded-xl">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-slate-200 bg-white px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-slate-500 rounded-xl max-lg:order-13">
               <span className="text-slate-500 font-black tracking-widest">Explore:</span>
               <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-[var(--accent)] hover:underline">All {car.make}</Link>
               <span className="text-slate-400">·</span>

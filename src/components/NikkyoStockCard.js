@@ -87,18 +87,18 @@ export default function NikkyoStockCard({ car, priority = false, fill = false })
         </div>
 
         <div className="flex flex-1 flex-col gap-y-1 min-w-0 p-3">
-          <p className="line-clamp-1 text-[14px] font-bold italic leading-tight tracking-tight text-[#13356f]">
+          <p className="line-clamp-1 text-[14px] font-bold italic leading-tight tracking-tight text-[var(--brand-navy)]">
             {make}
           </p>
           <p className="line-clamp-1 text-[14px] font-semibold leading-tight tracking-tight text-[#0066ff] underline-offset-2 group-hover:underline">
             {model}
           </p>
           {car.marketAnalysis && (
-            <span className="mt-0.5 inline-flex w-max items-center rounded bg-[#a94442] px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-white">
+            <span className="mt-0.5 inline-flex w-max items-center rounded bg-[var(--accent)] px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-white">
               {car.marketAnalysis.label}
             </span>
           )}
-          <p className="mt-1 text-[16px] font-bold leading-snug tracking-tight text-[#a94442]">
+          <p className="mt-1 text-[16px] font-bold leading-snug tracking-tight text-[var(--accent)]">
             {formatCarPrice(car)}
           </p>
           <p className="text-[12px] leading-snug text-slate-500">

@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { LayoutGrid, List } from "lucide-react";
+import Link from "next/link";
+import { LayoutGrid, List, Rows3 } from "lucide-react";
 import CarCard from "@/components/CarCard";
 import { carListingPath } from "@/lib/car-listing-url";
 import { takePopTarget, clearPopTarget } from "@/lib/back-nav";
@@ -15,7 +16,7 @@ function readViewPref() {
   if (typeof window === "undefined") return "grid";
   try {
     const saved = window.localStorage.getItem(VIEW_KEY);
-    return saved === "list" ? "list" : "grid";
+    return saved === "list" || saved === "compact" ? saved : "grid";
   } catch {
     return "grid";
   }
@@ -221,6 +222,11 @@ export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, n
     if (filters.vehicleType) params.set("vehicleType", filters.vehicleType);
     if (filters.condition) params.set("condition", filters.condition);
     if (filters.search) params.set("search", filters.search);
+    if (filters.sort) params.set("sort", filters.sort);
+    if (filters.featured === "1") params.set("featured", "1");
+    if (filters.color) params.set("color", filters.color);
+    if (filters.sunroof === "1") params.set("sunroof", "1");
+    if (filters.seats) params.set("seats", filters.seats);
 
     try {
       const res = await fetch(`/api/cars/list?${params.toString()}`);
@@ -278,7 +284,7 @@ export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, n
             aria-pressed={view === "grid"}
             className={
               view === "grid"
-                ? "flex h-7 w-7 items-center justify-center rounded-md bg-[#13356f] text-white transition-colors"
+                ? "flex h-7 w-7 items-center justify-center rounded-md bg-[var(--accent)] text-white transition-colors"
                 : "flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:border-slate-300"
             }
           >
@@ -291,11 +297,24 @@ export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, n
             aria-pressed={view === "list"}
             className={
               view === "list"
-                ? "flex h-7 w-7 items-center justify-center rounded-md bg-[#13356f] text-white transition-colors"
+                ? "flex h-7 w-7 items-center justify-center rounded-md bg-[var(--accent)] text-white transition-colors"
                 : "flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:border-slate-300"
             }
           >
             <List className="h-3.5 w-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => changeView("compact")}
+            aria-label="Compact view"
+            aria-pressed={view === "compact"}
+            className={
+              view === "compact"
+                ? "flex h-7 w-7 items-center justify-center rounded-md bg-[var(--accent)] text-white transition-colors"
+                : "flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:border-slate-300"
+            }
+          >
+            <Rows3 className="h-3.5 w-3.5" />
           </button>
         </div>
       </div>
@@ -308,17 +327,33 @@ export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, n
           </div>
           <h2 className="text-xl font-black text-slate-900 tracking-tight mb-2">No matches found</h2>
           <p className="text-slate-500 font-medium mb-6">Try adjusting your filters or resetting your search.</p>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Link href="/cars" className="btn btn-primary btn-sm">
+              Browse all cars
+            </Link>
+            {!noFiltersActive && (
+              <Link href="/cars" className="btn btn-neutral btn-sm">
+                Clear filters
+              </Link>
+            )}
+          </div>
         </div>
       ) : (
         <>
-          {view === "list" ? (
+          {view === "compact" ? (
+            <div className="flex flex-col gap-1.5">
+              {cars.map((car, index) => (
+                <CarCard key={car.id} car={car} layout="compact" priority={index < 2} />
+              ))}
+            </div>
+          ) : view === "list" ? (
             <div className="flex flex-col gap-2">
               {cars.map((car, index) => (
                 <CarCard key={car.id} car={car} layout="list" priority={index < 2} />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 xl:grid-cols-8">
+            <div className="grid grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8">
               {cars.map((car, index) => (
                 <CarCard key={car.id} car={car} priority={index < 2} />
               ))}

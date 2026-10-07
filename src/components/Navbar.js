@@ -225,20 +225,20 @@ export default function Navbar({ user, navCounts }) {
       <header className="hidden md:block sticky top-0 z-[100] bg-white shadow-[0_1px_0_rgba(0,0,0,0.06)]">
         <div className="border-b border-slate-200 bg-white">
           <div className="home-shell">
-            <div className="flex h-[78px] items-center justify-between gap-6">
+            <div className="flex h-[88px] items-center justify-between gap-6 lg:h-[96px]">
               <Link
                 href="/"
                 onClick={(e) => navigateTo("/", e)}
                 className="flex shrink-0 items-center transition-transform active:scale-95"
               >
-                <div className="relative h-12 w-[72px] shrink-0 lg:h-14 lg:w-[84px]">
+                <div className="flex h-6 min-w-0 shrink-0 items-center lg:h-7">
                   <Image
                     src={BRAND_HEADER_LOGO}
                     alt="BIDGARI"
-                    fill
                     priority
-                    className="object-contain object-left"
-                    sizes="84px"
+                    width={480}
+                    height={70}
+                    className="h-full w-auto object-contain object-left"
                   />
                 </div>
               </Link>
@@ -414,14 +414,14 @@ export default function Navbar({ user, navCounts }) {
               onClick={(e) => navigateTo("/", e)}
               className="relative z-20 flex shrink-0 items-center transition-transform active:scale-95"
             >
-              <div className="relative h-9 w-[54px] shrink-0">
+              <div className="flex h-[18px] shrink-0 items-center">
                 <Image
                   src={BRAND_HEADER_LOGO}
                   alt="BIDGARI"
-                  fill
                   priority
-                  className="object-contain object-left"
-                  sizes="54px"
+                  width={480}
+                  height={70}
+                  className="h-full w-auto object-contain object-left"
                 />
               </div>
             </Link>
@@ -537,13 +537,13 @@ export default function Navbar({ user, navCounts }) {
                   onClick={(e) => navigateTo("/", e)}
                   className="flex min-w-0 shrink-0 items-center"
                 >
-                  <div className="relative h-9 w-[54px] shrink-0">
+                  <div className="flex h-4 shrink-0 items-center">
                     <Image
                       src={BRAND_HEADER_LOGO}
                       alt="BIDGARI"
-                      fill
-                      className="object-contain object-left"
-                      sizes="54px"
+                      width={480}
+                      height={70}
+                      className="h-full w-auto object-contain object-left"
                     />
                   </div>
                 </Link>

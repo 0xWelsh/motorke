@@ -1,10 +1,10 @@
-const DEFAULT_ORIGIN = "https://welshmotorhub.co.ke";
+const DEFAULT_ORIGIN = "https://bidgari.com";
 
 /** Public files in /public — used for OG fallbacks, JSON-LD, navbar */
 export const BRAND_OG_IMAGE = "/opengraph.png";
 export const BRAND_MARK_SQUARE = "/app-icon-source.png";
 /** Horizontal wordmark for site header only (not favicon / app icon). */
-export const BRAND_HEADER_LOGO = "/images/bidgari-logo-header.png?v=4";
+export const BRAND_HEADER_LOGO = "/images/bidgari-logo-header.png?v=6";
 
 /** Strip slashes for consistent URL concatenation */
 function normalizeOrigin(raw) {

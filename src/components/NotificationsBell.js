@@ -32,7 +32,7 @@ export default function NotificationsBell({ variant = "portal" }) {
   const dropdownClassName = useMemo(
     () =>
       clsx(
-        "absolute right-0 top-full mt-3 w-[380px] max-w-[calc(100vw-1rem)] max-sm:fixed max-sm:left-2 max-sm:right-2 max-sm:top-[4.25rem] max-sm:w-auto shadow-[0_20px_50px_rgba(0,0,0,0.2)] z-50 overflow-hidden",
+        "absolute right-0 top-full mt-3 w-[380px] max-w-[calc(100vw-1rem)] max-sm:static max-sm:mt-2 max-sm:w-full shadow-[0_20px_50px_rgba(0,0,0,0.2)] z-50 overflow-hidden",
         "bg-white border border-slate-200 text-slate-900",
         "rounded-xl"
       ),

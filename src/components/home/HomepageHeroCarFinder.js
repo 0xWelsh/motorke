@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
-import { BRANDS, BODY_TYPES, COUNTIES } from "@/lib/browse-catalog";
+import { BRANDS } from "@/lib/browse-catalog";
+import { trackUiEvent } from "@/lib/analytics";
 
 const selectCls =
   "w-full border border-slate-200 bg-white px-3 py-2.5 text-[12px] font-semibold text-slate-900 outline-none focus:border-[var(--accent)] rounded-lg";
@@ -14,21 +15,14 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
   const router = useRouter();
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
-  const [carVariant, setCarVariant] = useState("");
-  const [bodyType, setBodyType] = useState("");
-  const [county, setCounty] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [models, setModels] = useState([]);
-  const [variants, setVariants] = useState([]);
   const [loadingModels, setLoadingModels] = useState(false);
-  const [loadingVariants, setLoadingVariants] = useState(false);
 
   useEffect(() => {
     if (!make) {
       setModels([]);
       setModel("");
-      setVariants([]);
-      setCarVariant("");
       return;
     }
 
@@ -52,45 +46,18 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
     };
   }, [make]);
 
-  useEffect(() => {
-    if (!make || !model) {
-      setVariants([]);
-      setCarVariant("");
-      return;
-    }
-
-    let cancelled = false;
-    setLoadingVariants(true);
-    fetch(
-      `/api/cars/variants?make=${encodeURIComponent(make)}&model=${encodeURIComponent(model)}&limit=120`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (cancelled) return;
-        setVariants(Array.isArray(data?.variants) ? data.variants : []);
-      })
-      .catch(() => {
-        if (!cancelled) setVariants([]);
-      })
-      .finally(() => {
-        if (!cancelled) setLoadingVariants(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [make, model]);
-
   function handleSearch(e) {
     e.preventDefault();
     const params = new URLSearchParams();
     if (make) params.set("make", make);
     if (model) params.set("model", model);
-    if (bodyType) params.set("bodyType", bodyType);
-    if (county) params.set("county", county);
     if (maxPrice) params.set("maxPrice", maxPrice);
-    if (carVariant.trim()) params.set("search", carVariant.trim());
     const q = params.toString();
+    trackUiEvent("homepage_finder_submit", {
+      make: make || "",
+      model: model || "",
+      budget: maxPrice || "",
+    });
     router.push(q ? `/cars?${q}` : "/cars");
   }
 
@@ -134,7 +101,6 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
               onChange={(e) => {
                 setMake(e.target.value);
                 setModel("");
-                setCarVariant("");
               }}
               className={selectCls}
               style={{ borderRadius: "var(--radius)" }}
@@ -156,10 +122,7 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
               id="hero-model"
               value={model}
               disabled={!make || loadingModels}
-              onChange={(e) => {
-                setModel(e.target.value);
-                setCarVariant("");
-              }}
+              onChange={(e) => setModel(e.target.value)}
               className={`${selectCls} disabled:opacity-50`}
               style={{ borderRadius: "var(--radius)" }}
             >
@@ -167,67 +130,6 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
               {models.map((m) => (
                 <option key={m} value={m}>
                   {m}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="hero-variant" className={labelCls}>
-              Variant
-            </label>
-            <select
-              id="hero-variant"
-              value={carVariant}
-              disabled={!model || loadingVariants}
-              onChange={(e) => setCarVariant(e.target.value)}
-              className={`${selectCls} disabled:opacity-50`}
-              style={{ borderRadius: "var(--radius)" }}
-            >
-              <option value="">{model ? "Any variant" : "Select model first"}</option>
-              {variants.map((v) => (
-                <option key={v} value={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="hero-body" className={labelCls}>
-              Body type
-            </label>
-            <select
-              id="hero-body"
-              value={bodyType}
-              onChange={(e) => setBodyType(e.target.value)}
-              className={selectCls}
-              style={{ borderRadius: "var(--radius)" }}
-            >
-              <option value="">Any shape</option>
-              {BODY_TYPES.map((bt) => (
-                <option key={bt.value} value={bt.value}>
-                  {bt.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="hero-county" className={labelCls}>
-              Location
-            </label>
-            <select
-              id="hero-county"
-              value={county}
-              onChange={(e) => setCounty(e.target.value)}
-              className={selectCls}
-              style={{ borderRadius: "var(--radius)" }}
-            >
-              <option value="">Anywhere in Kenya</option>
-              {COUNTIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
                 </option>
               ))}
             </select>

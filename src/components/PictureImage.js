@@ -37,12 +37,21 @@ export default function PictureImage({
   style,
   fetchPriority,
   loading = "lazy",
+  priority,
   onError,
   ...rest
 }) {
   const [errored, setErrored] = useState(false);
   const [plain, setPlain] = useState(false);
   const reportedRef = useRef(false);
+
+  // `priority` from callers previously fell into ...rest and did nothing —
+  // first-viewport card images were loading lazily with no fetchpriority.
+  // Honour it: eager + high (unless the caller set something stronger).
+  const eager = loading === "eager" || priority === true;
+  const imgLoading = eager ? "eager" : loading;
+  const imgFetchPriority = eager ? fetchPriority || "high" : fetchPriority;
+  const imgDecoding = eager ? "async" : undefined;
 
   useEffect(() => {
     setErrored(false);
@@ -88,8 +97,9 @@ export default function PictureImage({
         <img
           src={src}
           alt={alt}
-          loading={loading}
-          fetchPriority={fetchPriority}
+          loading={imgLoading}
+          fetchPriority={imgFetchPriority}
+          decoding={imgDecoding}
           className={className}
           style={style}
           onError={handleError}
@@ -102,8 +112,9 @@ export default function PictureImage({
     <img
       src={src}
       alt={alt}
-      loading={loading}
-      fetchPriority={fetchPriority}
+      loading={imgLoading}
+      fetchPriority={imgFetchPriority}
+      decoding={imgDecoding}
       className={className}
       style={style}
       onError={handleError}

@@ -132,6 +132,7 @@ function getTrackingContext() {
     device_type: deviceType,
     screen: win.screen ? `${win.screen.width}x${win.screen.height}` : undefined,
     ua: (win.navigator?.userAgent || "").slice(0, 180),
+    referrer: (win.document?.referrer || "").slice(0, 180) || undefined,
   };
 }
 

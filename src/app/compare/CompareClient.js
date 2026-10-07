@@ -19,6 +19,7 @@ import CompareCostOverTimeChart from "@/components/compare/CompareCostOverTimeCh
 import ComparePriceValueChart from "@/components/compare/ComparePriceValueChart";
 import CompareNarrative from "@/components/compare/CompareNarrative";
 import CompareSearchModal from "@/components/compare/CompareSearchModal";
+import MobileBottomBarSignal from "@/components/MobileBottomBarSignal";
 
 const TUTORIAL_STEPS = [
   {
@@ -455,7 +456,8 @@ export default function CompareClient({ initialCars }) {
       />
 
       {/* Mobile Action Bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 border-t border-slate-200 bg-white/95 backdrop-blur-md px-4 py-3 flex gap-2">
+      <MobileBottomBarSignal />
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 border-t border-slate-200 bg-white/95 backdrop-blur-md px-4 py-3 flex gap-2" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}>
         <button onClick={handleSaveComparison} className="flex-1 btn btn-neutral">{saveState === "copied" ? "Copied" : "Share"}</button>
         <button onClick={handleDownloadPdf} className="flex-1 btn btn-primary">PDF</button>
       </div>

@@ -15,13 +15,13 @@ function GridSection({ heading, href, cars, eagerCount = 0 }) {
         </h2>
         <Link
           href={href}
-          className="inline-flex shrink-0 items-center gap-1 rounded bg-[#d9534f] px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-white transition-colors hover:bg-[#c9302c]"
+          className="inline-flex shrink-0 items-center gap-1 rounded bg-[var(--accent)] px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-white transition-colors hover:bg-[var(--accent-hover)]"
         >
           More
           <ArrowUpRight className="h-3 w-3" />
         </Link>
       </div>
-      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 xl:gap-2.5">
+      <div className="grid grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         {cars.slice(0, 16).map((car, i) => (
           <NikkyoStockCard key={car.id} car={car} priority={i < eagerCount} />
         ))}

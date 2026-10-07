@@ -4,11 +4,34 @@ import { useCompare } from "./CompareContext";
 import Link from "next/link";
 import Image from "next/image";
 import { getThumbnailUrl } from "@/lib/image-transform";
+import { BOTTOM_BAR_CLASS } from "@/lib/use-bottom-action-bar";
 
 export function CompareBar() {
   const { compareCars, removeFromCompare, clearCompare } = useCompare();
+  const [collides, setCollides] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return (
+      window.matchMedia("(max-width: 1023px)").matches &&
+      document.body.classList.contains(BOTTOM_BAR_CLASS)
+    );
+  });
 
-  if (compareCars.length === 0) return null;
+  // A page-level fixed bottom action bar (car detail / compare / dealer / duty)
+  // paints over the floating tray on mobile, so back off while one is visible.
+  useEffect(() => {
+    const el = document.body;
+    const update = () =>
+      setCollides(
+        window.matchMedia("(max-width: 1023px)").matches &&
+          el.classList.contains(BOTTOM_BAR_CLASS)
+      );
+    update();
+    const observer = new MutationObserver(update);
+    observer.observe(el, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
+  if (compareCars.length === 0 || collides) return null;
 
   const compareUrl = `/compare?${compareCars.map((c, i) => `${"abc"[i]}=${c.id}`).join("&")}`;
 

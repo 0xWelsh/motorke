@@ -4,14 +4,16 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  Trash2, ToggleLeft, ToggleRight, X, ExternalLink, Edit3,
+  Trash2, ToggleLeft, ToggleRight, X,
   MessageSquare, Car, Phone, Mail, Smartphone, Globe,
-  Search, Clock, Copy, List, XCircle,
+  Search, Clock, XCircle, Star,
 } from "lucide-react";
 import { LeadStatusBadge, LeadStatusSelect } from "@/components/admin/LeadStatusBadge";
 import DeleteLeadButton from "@/components/admin/DeleteLeadButton";
+import AdminCarRowActions from "@/components/admin/AdminCarRowActions";
 import EmptyState from "@/components/ui/EmptyState";
 import DataTableShell from "@/components/ui/DataTableShell";
+import { formatListedAge } from "@/lib/format-age";
 
 const STATUS_OPTS = [
   { v: "", l: "All" },
@@ -25,11 +27,12 @@ function fmtPrice(price) {
 }
 
 export default function BulkActionsWrapper({
-  cars, total, from, to, pages, page, search, statusFilter,
+  cars, total, from, to, pages, page, search, statusFilter, order = "newest",
 }) {
   const router = useRouter();
   const [selected, setSelected] = useState(new Set());
   const [busy, setBusy] = useState(false);
+  const orderQS = order === "oldest" ? "&order=oldest" : "";
 
   const allIds = cars.map((c) => c.id);
   const allSelected = selected.size === cars.length && cars.length > 0;
@@ -47,17 +50,32 @@ export default function BulkActionsWrapper({
     });
   }, []);
 
-  const doAction = useCallback(async (action) => {
+  const doAction = useCallback(async (action, payload) => {
     if (selected.size === 0) return;
-    const label = action === "delete" ? "Delete" : "Toggle visibility";
+    const label = { toggle: "Toggle visibility", delete: "Delete", makeLive: "Make live", hide: "Hide", markSold: "Mark as sold", feature: "Feature", unfeature: "Unfeature" }[action] || action;
     if (!confirm(`${label} ${selected.size} car${selected.size > 1 ? "s" : ""}?`)) return;
     setBusy(true);
     try {
-      const res = await fetch("/api/admin/cars/bulk", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ids: Array.from(selected), action }),
-      });
+      const ids = Array.from(selected);
+      let res;
+      if (action === "toggle" || action === "delete") {
+        res = await fetch("/api/admin/cars/bulk", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ids, action }),
+        });
+      } else {
+        const map = { makeLive: "setLive", hide: "setHidden", markSold: "setSold", feature: "setFeatured", unfeature: "setFeatured" };
+        res = await fetch("/api/admin/cars/actions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ids,
+            action: map[action],
+            payload: action === "feature" ? { featured: true } : action === "unfeature" ? { featured: false } : undefined,
+          }),
+        });
+      }
       if (res.ok) {
         setSelected(new Set());
         router.refresh();
@@ -74,23 +92,52 @@ export default function BulkActionsWrapper({
   };
 
   const rowBg = (i) => i % 2 === 0 ? "bg-zinc-900/20" : "bg-transparent";
-  const linkClass = "rounded-md border border-zinc-800 bg-zinc-950/60 p-1.5 text-zinc-500 hover:text-white hover:border-zinc-700 transition-colors inline-flex";
 
   return (
     <div className="space-y-2">
       {/* Bulk toolbar */}
       {selected.size > 0 && (
-        <div className="flex items-center gap-3 rounded-lg border border-emerald-800/50 bg-emerald-950/30 px-4 py-2.5 text-sm">
-          <span className="font-bold text-emerald-300 tabular-nums">{selected.size}</span>
-          <span className="text-zinc-400">selected</span>
-          <div className="flex items-center gap-1.5 ml-auto">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-emerald-800/50 bg-emerald-950/30 px-4 py-2.5 text-sm">
+          <span className="flex items-center gap-1.5">
+            <span className="font-bold text-emerald-300 tabular-nums">{selected.size}</span>
+            <span className="text-zinc-400">selected</span>
+          </span>
+          <div className="flex flex-wrap items-center gap-1.5 w-full sm:w-auto sm:ml-auto sm:justify-end">
+            <button
+              onClick={() => doAction("makeLive")}
+              disabled={busy}
+              className="inline-flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-950/60 px-3 py-1.5 text-[11px] font-bold text-emerald-400 hover:bg-emerald-600 hover:text-white transition-colors disabled:opacity-50"
+            >
+              <ToggleLeft size={14} /> Live
+            </button>
+            <button
+              onClick={() => doAction("hide")}
+              disabled={busy}
+              className="inline-flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-950/60 px-3 py-1.5 text-[11px] font-bold text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors disabled:opacity-50"
+            >
+              <ToggleRight size={14} /> Hide
+            </button>
             <button
               onClick={() => doAction("toggle")}
               disabled={busy}
               className="inline-flex items-center gap-1.5 rounded-md border border-zinc-800 bg-zinc-950/60 px-3 py-1.5 text-[11px] font-bold text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors disabled:opacity-50"
             >
               <ToggleLeft size={14} />
-              {busy ? "..." : "Toggle visibility"}
+              {busy ? "..." : "Toggle"}
+            </button>
+            <button
+              onClick={() => doAction("feature")}
+              disabled={busy}
+              className="inline-flex items-center gap-1.5 rounded-md border border-amber-800/40 bg-amber-950/20 px-3 py-1.5 text-[11px] font-bold text-amber-400 hover:bg-amber-600 hover:text-white transition-colors disabled:opacity-50"
+            >
+              <Star size={14} /> Feature
+            </button>
+            <button
+              onClick={() => doAction("markSold")}
+              disabled={busy}
+              className="inline-flex items-center gap-1.5 rounded-md border border-red-800/50 bg-red-950/30 px-3 py-1.5 text-[11px] font-bold text-red-400 hover:bg-red-600 hover:text-white transition-colors disabled:opacity-50"
+            >
+              <XCircle size={14} /> Sold
             </button>
             <button
               onClick={() => doAction("delete")}
@@ -163,30 +210,12 @@ export default function BulkActionsWrapper({
                       <MessageSquare size={12} />
                       {car._count.leads}
                     </span>
+                    <span className="ml-auto text-zinc-500">{formatListedAge(car.createdAt)}</span>
                   </div>
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-1.5 border-t border-zinc-800 px-3 py-2">
-                <Link href={`/cars/${car.publicSlug || car.id}`} target="_blank" className={linkClass} title="View on site"><ExternalLink size={14} /></Link>
-                <Link href={`/admin/leads?search=${encodeURIComponent(`${car.year} ${car.make} ${car.model}`)}`} className={linkClass} title="View leads"><List size={14} /></Link>
-                <Link href={`/admin/cars/${car.id}/edit`} className={linkClass} title="Edit"><Edit3 size={14} /></Link>
-                <form action={`/api/admin/cars/${car.id}/duplicate`} method="POST" className="inline">
-                  <button type="submit" title="Duplicate listing" className={linkClass}><Copy size={14} /></button>
-                </form>
-                {car.available && (
-                  <form action={`/api/admin/cars/${car.id}/mark-sold`} method="POST" className="inline">
-                    <button type="submit" title="Mark as sold" className={`${linkClass} text-red-400 hover:text-red-300`} onClick={(e) => { if (!confirm('Mark this car as sold?')) e.preventDefault(); }}><XCircle size={14} /></button>
-                  </form>
-                )}
-                <form action="/api/whatsapp-channel/post" method="POST" className="inline">
-                  <input type="hidden" name="carId" value={car.id} />
-                  <button type="submit" title="Post to WhatsApp Channel" className={linkClass + " text-emerald-400 hover:text-emerald-300"}><MessageSquare size={14} /></button>
-                </form>
-                <form action={`/api/admin/cars/${car.id}/toggle-visibility`} method="POST" className="inline">
-                  <button type="submit" className={`${linkClass} ${car.available ? "text-emerald-400" : "text-zinc-300"}`} title={car.available ? "Hide" : "Show"}>
-                    {car.available ? <ToggleRight size={14} /> : <ToggleLeft size={14} />}
-                  </button>
-                </form>
+                <AdminCarRowActions car={car} />
               </div>
             </div>
           );
@@ -204,9 +233,9 @@ export default function BulkActionsWrapper({
             </p>
             {pages > 1 && (
               <div className="flex items-center gap-1">
-                <PageLink href={page > 1 ? `/admin/cars?page=${page - 1}${search ? `&search=${search}` : ""}${statusFilter ? `&status=${statusFilter}` : ""}` : null} label="Prev" />
+                <PageLink href={page > 1 ? `/admin/cars?page=${page - 1}${search ? `&search=${search}` : ""}${statusFilter ? `&status=${statusFilter}` : ""}${orderQS}` : null} label="Prev" />
                 <span className="px-2 text-[11px] font-medium text-zinc-500 tabular-nums">{page} / {pages}</span>
-                <PageLink href={page < pages ? `/admin/cars?page=${page + 1}${search ? `&search=${search}` : ""}${statusFilter ? `&status=${statusFilter}` : ""}` : null} label="Next" />
+                <PageLink href={page < pages ? `/admin/cars?page=${page + 1}${search ? `&search=${search}` : ""}${statusFilter ? `&status=${statusFilter}` : ""}${orderQS}` : null} label="Next" />
               </div>
             )}
           </div>
@@ -224,7 +253,7 @@ export default function BulkActionsWrapper({
                       title="Select all"
                     />
                   </th>
-                  {["Listing", "Leads", "Price", "Status", ""].map((h) => (
+                  {["Listing", "Listed", "Leads", "Price", "Status", ""].map((h) => (
                     <th key={h} className="whitespace-nowrap px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-zinc-500">{h}</th>
                   ))}
                 </tr>
@@ -270,6 +299,9 @@ export default function BulkActionsWrapper({
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
+                        <span className="text-[11px] font-medium text-zinc-500">{formatListedAge(car.createdAt)}</span>
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3">
                         <span className="inline-flex items-center gap-1.5 text-xs text-zinc-400">
                           <MessageSquare size={13} />
                           <span className="font-bold text-white tabular-nums">{car._count.leads}</span>
@@ -283,26 +315,7 @@ export default function BulkActionsWrapper({
                       </td>
                       <td className="px-4 py-3 text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                          <Link href={`/cars/${car.publicSlug || car.id}`} target="_blank" className={linkClass} title="View on site"><ExternalLink size={14} /></Link>
-                          <Link href={`/admin/leads?search=${encodeURIComponent(`${car.year} ${car.make} ${car.model}`)}`} className={linkClass} title="View leads"><List size={14} /></Link>
-                          <Link href={`/admin/cars/${car.id}/edit`} className={linkClass} title="Edit"><Edit3 size={14} /></Link>
-                          <form action={`/api/admin/cars/${car.id}/duplicate`} method="POST" className="inline">
-                            <button type="submit" title="Duplicate listing" className={linkClass}><Copy size={14} /></button>
-                          </form>
-                          {car.available && (
-                            <form action={`/api/admin/cars/${car.id}/mark-sold`} method="POST" className="inline">
-                              <button type="submit" title="Mark as sold" className={`${linkClass} text-red-400 hover:text-red-300`} onClick={(e) => { if (!confirm('Mark this car as sold?')) e.preventDefault(); }}><XCircle size={14} /></button>
-                            </form>
-                          )}
-                          <form action="/api/whatsapp-channel/post" method="POST" className="inline">
-                            <input type="hidden" name="carId" value={car.id} />
-                            <button type="submit" title="Post to WhatsApp Channel" className={linkClass + " text-emerald-400 hover:text-emerald-300"}><MessageSquare size={14} /></button>
-                          </form>
-                          <form action={`/api/admin/cars/${car.id}/toggle-visibility`} method="POST" className="inline">
-                            <button type="submit" className={`${linkClass} ${car.available ? "text-emerald-400" : "text-zinc-300"}`} title={car.available ? "Hide" : "Show"}>
-                              {car.available ? <ToggleRight size={14} /> : <ToggleLeft size={14} />}
-                            </button>
-                          </form>
+                          <AdminCarRowActions car={car} />
                         </div>
                       </td>
                     </tr>

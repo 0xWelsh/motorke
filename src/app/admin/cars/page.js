@@ -18,6 +18,7 @@ function carsHref(opts = {}) {
   if (opts.page > 1) p.set("page", String(opts.page));
   if (opts.search) p.set("search", opts.search);
   if (opts.status) p.set("status", opts.status);
+  if (opts.order) p.set("order", opts.order);
   const qs = p.toString();
   return qs ? `/admin/cars?${qs}` : "/admin/cars";
 }
@@ -33,6 +34,7 @@ export default async function AdminCarsPage({ searchParams }) {
   const sp = await searchParams;
   const search = sp.search || "";
   const statusFilter = sp.status || "";
+  const order = sp.order === "oldest" ? "oldest" : "newest";
   const successMsg = sp.success || "";
   const errorMsg = sp.error || "";
   const page = parseInt(sp.page || "1", 10);
@@ -57,7 +59,7 @@ export default async function AdminCarsPage({ searchParams }) {
         _count: { select: { leads: true } },
         images: { orderBy: { order: "asc" } },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: order === "oldest" ? "asc" : "desc" },
       skip: (page - 1) * limit,
       take: limit,
     }),
@@ -96,7 +98,7 @@ export default async function AdminCarsPage({ searchParams }) {
       )}
 
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-lg font-bold text-white tracking-tight">Inventory</h1>
           <div className="mt-1 flex items-center gap-3 text-[11px] text-zinc-500">
@@ -105,7 +107,13 @@ export default async function AdminCarsPage({ searchParams }) {
             <span>{totalHidden} hidden</span>
           </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          <Link
+            href="/admin/cars/stale"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-amber-800/40 bg-amber-950/20 px-3.5 py-2 text-[11px] font-bold text-amber-400 hover:bg-amber-900/30 transition-colors"
+          >
+            Stale review
+          </Link>
           <Link
             href="/admin/cars/new"
             className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 py-2 text-[11px] font-bold text-white hover:bg-emerald-500 transition-colors"
@@ -127,15 +135,15 @@ export default async function AdminCarsPage({ searchParams }) {
         method="GET"
         className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-2"
       >
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative w-full min-w-0">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-zinc-500" />
             <input
               name="search"
               defaultValue={search}
               placeholder="Make, model, variant, or description…"
               autoComplete="off"
-              className="w-full rounded-md border border-zinc-800 bg-zinc-950/60 py-2 pl-9 pr-3 text-sm text-white placeholder:text-zinc-600 outline-none transition focus:border-emerald-500/50 focus:bg-zinc-950"
+              className="w-full min-w-0 rounded-md border border-zinc-800 bg-zinc-950/60 py-2 pl-9 pr-3 text-sm text-white placeholder:text-zinc-600 outline-none transition focus:border-emerald-500/50 focus:bg-zinc-950"
             />
           </div>
           <select
@@ -146,6 +154,14 @@ export default async function AdminCarsPage({ searchParams }) {
             {STATUS_OPTS.map((o) => (
               <option key={o.v} value={o.v}>{o.l}</option>
             ))}
+          </select>
+          <select
+            name="order"
+            defaultValue={order}
+            className="rounded-md border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-xs font-medium text-zinc-300 outline-none cursor-pointer focus:border-emerald-500/50"
+          >
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
           </select>
           <button
             type="submit"
@@ -175,6 +191,7 @@ export default async function AdminCarsPage({ searchParams }) {
         page={page}
         search={search}
         statusFilter={statusFilter}
+        order={order}
       />
 
       {/* Page links bottom (mobile) */}

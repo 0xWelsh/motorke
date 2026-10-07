@@ -23,7 +23,7 @@ export default function HomepageShapeGrid({ heading = "Search by Shape" }) {
         </h2>
         <Link
           href="/cars"
-          className="inline-flex shrink-0 items-center gap-1 rounded bg-[#d9534f] px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-white transition-colors hover:bg-[#c9302c]"
+          className="inline-flex shrink-0 items-center gap-1 rounded bg-[var(--accent)] px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-white transition-colors hover:bg-[var(--accent-hover)]"
         >
           More
         </Link>

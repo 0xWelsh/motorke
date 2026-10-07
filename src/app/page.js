@@ -1,6 +1,7 @@
 // src/app/page.js
 export const revalidate = 60;
-import CarsSearchBar from "@/components/CarsSearchBar";
+import { Suspense } from "react";
+import { ArrowRight } from "lucide-react";
 import TrackedLink from "@/components/TrackedLink";
 import NikkyoSidebar from "@/components/NikkyoSidebar";
 import HomepageSidebarRight from "@/components/home/HomepageSidebarRight";
@@ -15,6 +16,12 @@ import HomepageCtaStrip from "@/components/home/HomepageCtaStrip";
 import HomepageShapeGrid from "@/components/home/HomepageShapeGrid";
 import HomepageMakeGrid from "@/components/home/HomepageMakeGrid";
 import HeroCarousel from "@/components/home/HeroCarousel";
+import {
+  HomeHeroSkeleton,
+  HomeGridsSkeleton,
+  HomeTrendingSkeleton,
+  HomeSidebarSkeleton,
+} from "@/components/home/HomeSkeletons";
 import PushOptIn from "@/components/PushOptIn";
 import { getHomepageData } from "@/lib/homepage-cache";
 import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
@@ -78,7 +85,10 @@ export const metadata = {
 };
 
 function homeStructuredData(origin, spotlightCars = [], newCars = []) {
-  const allCars = [...spotlightCars, ...newCars.slice(0, 8)];
+  // Emit Product schemas only for cars that can actually be a Product rich
+  // result — a missing price or image otherwise produces an "invalid" snippet.
+  const allCars = [...spotlightCars, ...newCars.slice(0, 8)]
+    .filter((car) => Boolean(car.price) && Boolean(car?.images?.[0]?.url || car?.image));
   const productSchemas = allCars.map((car) => ({
     "@type": "Product",
     "name": `${car.year} ${car.make} ${car.model} ${car.variant || ""}`.trim(),
@@ -134,16 +144,11 @@ function homeStructuredData(origin, spotlightCars = [], newCars = []) {
   };
 }
 
-export default async function HomePage() {
-  const [homepageBundle, browseInventoryCounts] = await Promise.all([
-    getHomepageData(),
-    getBrowseInventoryCounts(),
-  ]);
-
+// ── Derived sections: pure JS over the cached bundle, re-derivable per slot ──
+function deriveHomeSections(bundle) {
   const {
     featured,
     newArrivals,
-    dealers,
     heroFallback,
     homepageSpotlight,
     mostViewedEnhanced,
@@ -151,7 +156,7 @@ export default async function HomePage() {
     dealsEnhanced,
     hotThisWeek,
     luxuryEnhanced,
-  } = homepageBundle;
+  } = bundle || {};
 
   const heroPool = seededShuffle(
     [...(heroFallback?.length ? heroFallback : [...(featured || []), ...(newArrivals || [])])],
@@ -170,45 +175,109 @@ export default async function HomePage() {
   const dealCars = fillGrid(dealsEnhanced || [], usedIds, seededShuffle(fillPool, 256), 16);
   const frequentCars = fillGrid(trendingCars, usedIds, seededShuffle(fillPool, 999), 16);
 
+  return { heroCars, recommendedCars, newArrivalCars, dealCars, frequentCars, luxury: luxuryEnhanced };
+}
+
+// Streaming slots: each awaits the shared cached promise inside its own
+// Suspense boundary, so message + search paint first and data-backed sections
+// fill in progressively with skeletons instead of a blank wait.
+async function LdSlot({ bundlePromise, origin }) {
+  const bundle = await bundlePromise;
+  const spotlightCards = (bundle?.homepageSpotlight || []).slice(0, 16);
+  return (
+    <script
+      type="application/ld+json"
+      suppressHydrationWarning
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(homeStructuredData(origin, spotlightCards, bundle?.newEnhanced)),
+      }}
+    />
+  );
+}
+
+async function HeroSlot({ bundlePromise }) {
+  const { heroCars } = deriveHomeSections(await bundlePromise);
+  return (
+    <div className="mt-7">
+      <p className="mb-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+        Featured — freshly inspected stock
+      </p>
+      <HeroCarousel cars={heroCars} />
+    </div>
+  );
+}
+
+async function GridsSlot({ bundlePromise }) {
+  const s = deriveHomeSections(await bundlePromise);
+  return (
+    <HomepageNikkyoGrids
+      recommended={s.recommendedCars}
+      newArrivals={s.newArrivalCars}
+      deals={s.dealCars}
+      luxury={s.luxury}
+    />
+  );
+}
+
+async function TrendingSlot({ bundlePromise }) {
+  const { frequentCars } = deriveHomeSections(await bundlePromise);
+  return <HomepageTrending cars={frequentCars} />;
+}
+
+async function SidebarSlot({ countsPromise }) {
+  const inventoryCounts = await countsPromise;
+  return <NikkyoSidebar inventoryCounts={inventoryCounts} />;
+}
+
+export default async function HomePage() {
+  // Kick both cached fetches immediately but do NOT await here — the static
+  // shell (car finder, CTA strip, shape/make grids) renders first, and
+  // data-backed sections stream in under Suspense below.
+  const bundlePromise = getHomepageData();
+  const countsPromise = getBrowseInventoryCounts();
   const origin = getSiteOrigin();
 
   return (
     <div className="min-h-screen pb-10 bg-[var(--bg)]">
-      <script
-        type="application/ld+json"
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(homeStructuredData(origin, spotlightCards, newEnhanced)),
-        }}
-      />
+      <Suspense fallback={null}>
+        <LdSlot bundlePromise={bundlePromise} origin={origin} />
+      </Suspense>
+
 
       {/* Nikkyo-style two-column from the top: sidebar + main content */}
       <section className="border-b border-slate-200 bg-[var(--bg)]">
         <div className="home-shell">
           <div className="lg:grid lg:grid-cols-[190px_minmax(0,1fr)] xl:grid-cols-[190px_minmax(0,1fr)_240px] lg:gap-3 xl:gap-3 lg:items-start lg:py-6">
             <aside className="hidden lg:block lg:sticky lg:top-28 lg:self-start">
-              <NikkyoSidebar inventoryCounts={browseInventoryCounts} />
+              <Suspense fallback={<HomeSidebarSkeleton />}>
+                <SidebarSlot countsPromise={countsPromise} />
+              </Suspense>
             </aside>
 
             <main className="min-w-0 py-5 lg:py-0">
-              {/* Announcement */}
-              <p className="mb-4 text-center text-[11px] sm:text-xs font-bold text-[var(--accent)]">
+              {/* SEO H1 (kept hidden — the page leads with the featured carousel) */}
+              <h1 className="sr-only">Cars for sale in Kenya — buy a verified car through BIDGARI</h1>
+
+              {/* Hero banner carousel — leads the page, above search + filter */}
+              <Suspense fallback={<HomeHeroSkeleton />}>
+                <HeroSlot bundlePromise={bundlePromise} />
+              </Suspense>
+
+              {/* Car finder */}
+              <div className="home-shell mt-7">
+                <HomepageHeroCarFinder embedded />
+              </div>
+
+              {/* Browse inventory */}
+              <div className="mt-4">
                 <TrackedLink
-                  href="/how-to-buy"
-                  eventName="homepage_announcement_click"
-                  eventPayload={{ area: "announcement" }}
-                  className="underline underline-offset-2 hover:text-[var(--accent-hover)]"
+                  href="/cars"
+                  eventName="homepage_browse_click"
+                  eventPayload={{ area: "header" }}
+                  className="btn btn-primary btn-lg w-full sm:w-auto"
                 >
-                  Every listing is verified and sold through BIDGARI
+                  Browse all cars <ArrowRight className="h-4 w-4" aria-hidden />
                 </TrackedLink>
-              </p>
-
-              {/* Keyword search */}
-              <CarsSearchBar />
-
-              {/* Hero banner carousel */}
-              <div className="mt-5">
-                <HeroCarousel cars={heroCars} />
               </div>
 
               {/* CTA strip */}
@@ -225,13 +294,10 @@ export default async function HomePage() {
               </div>
 
               {/* Inventory sections */}
-              <div className="mt-7 sm:mt-8">
-                <HomepageNikkyoGrids
-                  recommended={recommendedCars}
-                  newArrivals={newArrivalCars}
-                  deals={dealCars}
-                  luxury={luxuryEnhanced}
-                />
+              <div className="mt-7 sm:mt-8 cv-auto">
+                <Suspense fallback={<HomeGridsSkeleton />}>
+                  <GridsSlot bundlePromise={bundlePromise} />
+                </Suspense>
               </div>
             </main>
 
@@ -243,27 +309,31 @@ export default async function HomePage() {
       </section>
 
       {/* Price filter chips */}
-      <div className="home-shell py-6 sm:py-8">
+      <div className="home-shell py-6 sm:py-8 cv-auto">
         <HomepagePriceFilter />
       </div>
 
-      {/* Quick links */}
-      <HomepageShopLinks />
-
-      <HomepageSafetyStrip />
-
-      {/* Push notification opt-in */}
-      <div className="home-shell mt-6">
-        <PushOptIn variant="banner" />
+      {/* Quick links + safety + push — below the fold, skip offscreen render */}
+      <div className="cv-auto">
+        <HomepageShopLinks />
+        <HomepageSafetyStrip />
+        <div className="home-shell mt-6">
+          <PushOptIn variant="banner" />
+        </div>
       </div>
 
-      <HomepageTrending cars={frequentCars} />
-
-      {/* Mobile car finder */}
-      <div className="lg:hidden mt-8">
-        <div className="home-shell">
-          <HomepageHeroCarFinder embedded />
-        </div>
+      <div className="cv-auto">
+        <Suspense
+          fallback={
+            <div className="border-b border-slate-200 bg-[var(--bg)] py-6 sm:py-8">
+              <div className="home-shell">
+                <HomeTrendingSkeleton />
+              </div>
+            </div>
+          }
+        >
+          <TrendingSlot bundlePromise={bundlePromise} />
+        </Suspense>
       </div>
 
       <HomepageSupportWhatsApp />

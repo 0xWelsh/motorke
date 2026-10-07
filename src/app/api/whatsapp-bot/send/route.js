@@ -46,7 +46,7 @@ export async function POST(req) {
     const chatId = getChatId(phone);
 
     if (carId) {
-      const origin = process.env.NEXT_PUBLIC_SITE_URL || "https://welshmotorhub.co.ke";
+      const origin = process.env.NEXT_PUBLIC_SITE_URL || "https://bidgari.com";
       const result = await postCar(phone, carId, origin);
       return NextResponse.json({ success: true, result });
     }

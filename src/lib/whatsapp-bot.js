@@ -229,7 +229,7 @@ function formatCarCaption(car, index) {
   if (trans) caption += ` · ${trans}`;
 
   const slug = car.publicSlug || car.id;
-  caption += `\n🔗 ${process.env.NEXT_PUBLIC_SITE_URL || "https://welshmotorhub.co.ke"}/cars/${slug}`;
+  caption += `\n🔗 ${process.env.NEXT_PUBLIC_SITE_URL || "https://bidgari.com"}/cars/${slug}`;
 
   return caption;
 }
@@ -323,7 +323,7 @@ export async function handleMessage(from, body) {
         "Speak with our team:\n" +
         "📞 +254 717 303 587\n" +
         "💬 wa.me/254717303587\n\n" +
-        "Or visit: welshmotorhub.co.ke",
+        "Or visit: bidgari.com",
     }];
   }
 
@@ -387,7 +387,7 @@ async function formatResults(result, session) {
       type: "text",
       content:
         "Sorry, no cars match that right now 🙁\n\n" +
-        "Try a different make, budget, or browse all at welshmotorhub.co.ke",
+        "Try a different make, budget, or browse all at bidgari.com",
     }];
   }
 

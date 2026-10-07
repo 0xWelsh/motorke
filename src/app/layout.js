@@ -7,27 +7,19 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import ScrollToTop from "@/components/ScrollToTop";
 import { PWARegister } from "@/components/PWARegister";
 import AnalyticsBootstrap from "@/components/AnalyticsBootstrap";
-import { getSession } from "@/lib/auth";
 import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 import CookieConsent from "@/components/CookieConsent";
-import { headers, cookies } from "next/headers";
 import { SaveDataProvider } from "@/components/SaveDataProvider";
-import { isSaveDataRequest, SAVE_DATA_COOKIE } from "@/lib/save-data";
+import PageTransition from "@/components/PageTransition";
+import { Suspense } from "react";
 
-import { DM_Sans, Roboto } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import { BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   weight: ["400", "500", "700", "800"],
-  display: "swap",
-});
-
-const roboto = Roboto({
-  subsets: ["latin"],
-  variable: "--font-roboto",
-  weight: ["400", "500", "700", "900"],
   display: "swap",
 });
 
@@ -83,14 +75,14 @@ export const metadata = {
       url: getSiteOrigin(),
       title: "BIDGARI | Find Your Car in Kenya",
       description:
-        "Browse verified vehicles for sale across Kenya. Compare specs and costs, and buy handled end-to-end by BIDGARI.",
+        "Browse verified cars for sale across Kenya — Toyota, Subaru, BMW and more. Transparent prices, mileage and specs on every listing, and every sale handled end-to-end by BIDGARI.",
       images: [{ url: BRAND_OG_IMAGE, width: 1200, height: 630, alt: "BIDGARI" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "BIDGARI | Find Your Car in Kenya",
       description:
-        "Browse verified vehicles for sale across Kenya. Compare specs and costs, and buy handled end-to-end by BIDGARI.",
+        "Browse verified cars for sale across Kenya — Toyota, Subaru, BMW and more. Transparent prices, mileage and specs on every listing, and every sale handled end-to-end by BIDGARI.",
       images: [BRAND_OG_IMAGE],
   },
   icons: {
@@ -115,23 +107,11 @@ export const viewport = {
 };
 
 export default async function RootLayout({ children }) {
-  const headerList = await headers();
-  const shellPath = headerList.get("x-pathname") || "/";
-  const cookieStore = await cookies();
-  const saveData =
-    isSaveDataRequest(headerList) || cookieStore.get(SAVE_DATA_COOKIE)?.value === "1";
-
-  const [session, navCounts] = await Promise.all([
-    getSession(),
-    getBrowseInventoryCounts(),
-  ]);
-  const user    = session?.user ? {
-    id:      session.user.id,
-    name:    session.user.name,
-    email:   session.user.email,
-    role:    session.user.role,
-    avatarUrl: session.user.avatarUrl || null,
-  } : null;
+  // IMPORTANT: no headers()/cookies()/getSession() here. Reading them in the
+  // root layout opts every route into per-request dynamic rendering and
+  // silently disables `revalidate` (ISR + CDN HTML caching) everywhere.
+  // Nav counts are cached, and auth + save-data resolve client-side instead.
+  const navCounts = await getBrowseInventoryCounts();
 
   const origin = getSiteOrigin();
   const sameAs = [
@@ -221,14 +201,18 @@ export default async function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessLd) }}
         />
       </head>
-      <body className={`${dmSans.variable} ${roboto.variable} bg-background text-slate-800 min-h-screen antialiased flex flex-col font-sans`}>
+      <body className={`${dmSans.variable} bg-background text-slate-800 min-h-screen antialiased flex flex-col font-sans`}>
         <PWARegister />
         <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
-          <SaveDataProvider saveData={saveData}>
-            <AnalyticsBootstrap />
+          <SaveDataProvider>
+            {/* useSearchParams inside a statically-prerendered page needs a
+                Suspense boundary, else the whole page bails to CSR at build. */}
+            <Suspense fallback={null}>
+              <AnalyticsBootstrap />
+            </Suspense>
             <CompareProvider>
-              <SiteChrome user={user} shellPath={shellPath} navCounts={navCounts}>
-                {children}
+              <SiteChrome navCounts={navCounts}>
+                <PageTransition>{children}</PageTransition>
               </SiteChrome>
             </CompareProvider>
           </SaveDataProvider>

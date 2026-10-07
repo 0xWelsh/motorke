@@ -3,7 +3,7 @@
  */
 
 const NOMINATIM_BASE = "https://nominatim.openstreetmap.org/search";
-const USER_AGENT = "BIDGARI/1.0 (https://welshmotorhub.co.ke; dealer-locations)";
+const USER_AGENT = "BIDGARI/1.0 (https://bidgari.com; dealer-locations)";
 
 export function toNullableCoordinate(value) {
   if (value == null) return null;

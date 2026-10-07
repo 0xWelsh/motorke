@@ -25,7 +25,7 @@ function getPrivacySections(support) {
   return [
   {
     title: "1. Who We Are",
-    content: "BIDGARI (\"we\", \"us\", \"our\") is a trading name of BIDGARI Ltd, a Kenyan company. This Privacy Policy describes how we collect, use, protect, and share your personal data when you use our platform at welshmotorhub.co.ke (\"Platform\").",
+    content: "BIDGARI (\"we\", \"us\", \"our\") is a trading name of BIDGARI Ltd, a Kenyan company. This Privacy Policy describes how we collect, use, protect, and share your personal data when you use our platform at bidgari.com (\"Platform\").",
   },
   {
     title: "2. What Data We Collect",

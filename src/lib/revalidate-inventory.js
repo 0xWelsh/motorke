@@ -1,8 +1,10 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { db } from "@/lib/db";
+import { absoluteUrl } from "@/lib/site-url";
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
 import { GLOBAL_CAR_HUB_SLUGS } from "@/lib/seo-global-hubs";
 import { SEO_PRICE_BANDS } from "@/lib/seo-car-facets";
+import { submitUrlToIndexNow } from "@/lib/indexnow";
 
 /** Listing/browse caches — safe to bust on every edit */
 const LISTING_CACHE_TAGS = [
@@ -128,6 +130,17 @@ export async function revalidateInventoryForCar(carId, opts = {}) {
       select: { make: true, model: true, bodyType: true, price: true },
     });
     if (full) revalidateHubPathsForCar(full);
+
+    // IndexNow: tell search engines this URL changed, so the recrawl is instant
+    // instead of waiting for a later sweep. Never blocks the request.
+    try {
+      if (car.publicSlug || car.id) {
+        void submitUrlToIndexNow(absoluteUrl(`/cars/${car.publicSlug || car.id}`));
+      }
+      if (refreshHomepage) void submitUrlToIndexNow(absoluteUrl("/"));
+    } catch {
+      // best-effort
+    }
   } catch (err) {
     console.error("[revalidate] car lookup failed, busting listing caches:", err?.message || err);
     revalidateInventory({ carId, refreshHomepage });

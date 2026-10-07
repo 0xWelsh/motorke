@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Eye, MousePointerClick, BarChart3, ExternalLink } from "lucide-react";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import { carListingPath } from "@/lib/car-listing-url";
+import { classifyViewSource, viewSourceLabel } from "@/lib/view-source";
+import { getSiteOrigin } from "@/lib/site-url";
 
 export const metadata = { title: "Traffic | BIDGARI Admin" };
 
@@ -27,6 +29,8 @@ export default async function AdminTrafficPage() {
     listingViews30d,
     carDetailViews7d,
     carDetailViews30d,
+    leads7d,
+    leads30d,
     topPages,
     topSources,
     topCarsRaw,
@@ -40,6 +44,10 @@ export default async function AdminTrafficPage() {
     // view-organic cron seeds with 80-150 synthetic rows per car per day.
     db.marketingEvent.count({ where: { name: "view_car", createdAt: { gte: start7d } } }),
     db.marketingEvent.count({ where: { name: "view_car", createdAt: { gte: start30d } } }),
+    // Real leads (web form + WhatsApp/call taps). Not marketing events, so
+    // it never goes stale when the funnel event names change.
+    db.lead.count({ where: { createdAt: { gte: start7d } } }),
+    db.lead.count({ where: { createdAt: { gte: start30d } } }),
     db.marketingEvent.groupBy({
       by: ["path"],
       where: { name: "page_view", createdAt: { gte: start7d }, path: { not: null } },
@@ -47,13 +55,14 @@ export default async function AdminTrafficPage() {
       orderBy: { _count: { id: "desc" } },
       take: 12,
     }),
+    // Raw HTTP referrers captured on real detail-page loads. Classified into
+    // source buckets in JS below (Direct / On-site / Google / Facebook ...).
     db.$queryRaw`
-      SELECT COALESCE(payload->>'utm_source', 'direct') AS source, COUNT(*)::int AS count
+      SELECT COALESCE(payload->>'referrer', '') AS referrer, COUNT(*)::int AS count
       FROM "marketing_events"
       WHERE name = 'view_car' AND "createdAt" >= ${start7d}
-      GROUP BY COALESCE(payload->>'utm_source', 'direct')
+      GROUP BY payload->>'referrer'
       ORDER BY count DESC
-      LIMIT 8
     `,
     db.$queryRaw`
       SELECT payload->>'car_id' AS "carId", COUNT(*)::int AS count
@@ -104,8 +113,21 @@ export default async function AdminTrafficPage() {
     count: row.count,
   }));
 
+  // Re-aggregate raw referrer strings into the fixed source buckets so the
+  // report stays readable and stable across small referrer variations.
+  const sourceBuckets = new Map();
+  for (const row of topSources) {
+    const bucket = row.referrer ? classifyViewSource(row.referrer, getSiteOrigin()) : "direct";
+    sourceBuckets.set(bucket, (sourceBuckets.get(bucket) || 0) + row.count);
+  }
+  const trafficSources = [...sourceBuckets.entries()]
+    .map(([source, count]) => ({ source: viewSourceLabel(source), count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8);
+
   const listingViews30dCount = listingViews30d;
   const eventMap = Object.fromEntries(coreEvents.map((e) => [e.name, e._count._all]));
+  const contactTaps7d = (eventMap.open_whatsapp || 0) + (eventMap.open_call || 0);
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-700 space-y-8">
@@ -131,9 +153,9 @@ export default async function AdminTrafficPage() {
           { label: "Inventory page views (7d)", value: listingViews7d, sub: `${fmt(listingViews30dCount)} in 30d` },
           { label: "Car detail views (7d)", value: carDetailViews7d, sub: `${fmt(carDetailViews30d)} in 30d · real events` },
           {
-            label: "Leads submitted (7d)",
-            value: eventMap.submit_lead || 0,
-            sub: "Form + tracked intents",
+            label: "Leads (7d)",
+            value: leads7d,
+            sub: `${fmt(leads30d)} in 30d · ${fmt(contactTaps7d)} WhatsApp/call taps`,
           },
         ].map((card) => (
           <div
@@ -178,13 +200,13 @@ export default async function AdminTrafficPage() {
             <h3 className="font-semibold text-slate-900 text-white">Listing traffic sources (7d)</h3>
           </div>
           <ul className="space-y-2">
-            {topSources.length === 0 ? (
+            {trafficSources.length === 0 ? (
               <li className="text-sm text-slate-500">No referrer data yet.</li>
             ) : (
-              topSources.map((row) => (
-                <li key={row.source || "unknown"} className="flex items-center justify-between gap-3 text-sm">
-                  <span className="capitalize font-medium text-slate-700 text-slate-200">
-                    {row.source || "direct"}
+              trafficSources.map((row) => (
+                <li key={row.source} className="flex items-center justify-between gap-3 text-sm">
+                  <span className="font-medium text-slate-700 text-slate-200">
+                    {row.source}
                   </span>
                   <span className="shrink-0 tabular-nums text-slate-500">{fmt(row.count)}</span>
                 </li>

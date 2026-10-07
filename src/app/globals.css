@@ -16,47 +16,40 @@
   --card-border:     rgba(17, 24, 39, 0.09);
   --card-border-hover: rgba(17, 24, 39, 0.16);
 
-  --brand:           #18181b;
+--brand:           #18181b;
   --brand-muted:     #52525b;
   --brand-dim:       #71717a;
 
+  /* Single source of red for CTAs, prices, active/selected states. */
   --accent:          #A01A1A;
   --accent-hover:    #7E1414;
   --accent-dim:      rgba(160, 26, 26, 0.12);
   --accent-glow:     rgba(160, 26, 26, 0.2);
+
+  /* Structural navy (section bars) + brand text navy for make/model. */
+  --sidebar-bar:       #13356f;
+  --sidebar-bar-hover: #1a3f7a;
+  --brand-navy:        #13356f;
 
   --accent-red:      #dc2626;
   --accent-red-dim:  rgba(220, 38, 38, 0.12);
   --accent-orange:   #ea580c;
   --accent-blue:     #2563eb;
 
-  --sidebar-bar:       #13356f;
-  --sidebar-bar-hover: #1a3f7a;
-
-  /* Nikkyo-style palette (used in Nikkyo-mirror components) */
-  --nikkyo-navy:       #13356f;
-  --nikkyo-navy-hover: #1a3f7a;
-  --nikkyo-red:        #d9534f;
-  --nikkyo-red-hover:  #c9302c;
-  --nikkyo-price:      #a94442;
-  --nikkyo-teal:       #21a5b8;
-  --nikkyo-link-blue:  #0066ff;
-  --nikkyo-line:       #cccccc;
-
   --text:            #18181b;
   --text-secondary:  #3f3f46;
   --text-muted:      #71717a;
-  --text-dim:        #9ca3af;
+  --text-dim:        #6b7280;
   --text-ghost:      #d1d5db;
 
   --border:          rgba(17, 24, 39, 0.1);
   --border-strong:   rgba(17, 24, 39, 0.18);
   --border-subtle:   rgba(17, 24, 39, 0.05);
 
-  --radius-sm:  4px;
-  --radius:     4px;
-  --radius-lg:  4px;
-  --radius-xl:  4px;
+  --radius-sm:  8px;
+  --radius:     8px;
+  --radius-lg:  8px;
+  --radius-xl:  8px;
 
   --mk-primary:      #A01A1A;
   --mk-primary-hover:#7E1414;
@@ -187,6 +180,38 @@ h1, h2, h3, h4, h5, h6 {
 }
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 
+/* ─── Perceived speed: page enter, shimmer skeletons, offscreen skipping ─── */
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-page-in { animation: pageIn 0.22s ease-out; animation-fill-mode: backwards; }
+
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--surface-overlay);
+}
+.skeleton-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  animation: shimmerSweep 1.4s ease-in-out infinite;
+}
+@keyframes shimmerSweep {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Below-the-fold sections skip layout/paint until scrolled to — keeps
+   first paint + long-page scrolling fast. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}
+
 .animate-odometer-sweep {
   animation: odometer-sweep 2.4s ease-in-out infinite;
 }
@@ -213,13 +238,21 @@ h1, h2, h3, h4, h5, h6 {
   .animate-odometer-arc,
   .animate-glow-pulse,
   .animate-float,
-  .animate-border-glow {
+  .animate-border-glow,
+  .animate-page-in,
+  .skeleton-shimmer::after {
     animation: none !important;
   }
 }
 
+/* Smooth in-page anchor navigation (compare #specs, about links) only when
+   the user hasn't asked for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
 /* ─── Windows 7 Aero Button System ───────────────────────────────────────
-   Every button: 4px radius, 1px border darker than the surface, subtle
+   Every button: 8px radius, 1px border darker than the surface, subtle
    vertical gradient, faint top gloss, tiny inset shadow, pressed state that
    reverses the gradient and sinks 1px, and a blue keyboard focus glow.   */
 
@@ -525,6 +558,19 @@ h1, h2, h3, h4, h5, h6 {
 .btn-icon > svg {
   margin-left: 0 !important;
   margin-right: 0 !important;
+}
+
+/* Touch targets ≥44px on phones (utility overrides still win where set) */
+@media (max-width: 640px) {
+  .btn {
+    height: 44px;
+  }
+  .btn-sm {
+    height: 40px;
+  }
+  .btn-icon {
+    width: 44px;
+  }
 }
 } /* end @layer components — buttons */
 
@@ -914,7 +960,13 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─── Mobile Adjustments ─── */
 @media (max-width: 640px) {
-  input, select, textarea { font-size: 16px; }
+  /* Keep focused text controls at ≥16px so iOS Safari / Edge don't zoom the
+     page. `!important` beats the sizing utilities on filter chips etc. */
+  input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]):not([type="button"]):not([type="submit"]):not([type="reset"]),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
 }
 
 /* ─── Print ─── */

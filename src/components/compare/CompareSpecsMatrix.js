@@ -55,7 +55,7 @@ export default function CompareSpecsMatrix({
       {/* Mobile View */}
       {fullComparedCars.length > 0 && (
         <div className="lg:hidden no-print p-4 sm:p-5 space-y-4 border-b border-slate-200">
-          <div className="sticky top-[52px] z-30 -mx-4 px-4 py-2 bg-white/95 backdrop-blur border-b border-slate-200 sm:static sm:bg-transparent sm:backdrop-blur-none sm:border-0 sm:p-0 sm:mx-0">
+          <div className="sticky top-[5.25rem] z-30 -mx-4 px-4 py-2 bg-white/95 backdrop-blur border-b border-slate-200 sm:static sm:bg-transparent sm:backdrop-blur-none sm:border-0 sm:p-0 sm:mx-0">
             <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-0.5 px-0.5 no-scrollbar">
               {mobileFilledSlots.map((idx) => {
                 const c = comparedSlots[idx];

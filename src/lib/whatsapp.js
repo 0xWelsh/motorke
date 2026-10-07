@@ -50,7 +50,7 @@ export async function sendWhatsAppMessage({ to, message, mediaUrl = null }) {
  */
 export async function notifyDealerOfLead(dealerPhone, leadData) {
   const { buyerName, carTitle, leadId } = leadData;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://motorke.co.ke";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bidgari.com";
   
   const text = 
     `📢 *New Lead on BIDGARI!*\n\n` +

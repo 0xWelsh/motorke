@@ -51,9 +51,10 @@ export async function GET(request) {
   const started = Date.now();
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q") || "";
+  const take = Math.min(parseInt(searchParams.get("take") || "8", 10) || 8, 8);
 
   if (query.trim().length < 2) {
-    return NextResponse.json([]);
+    return NextResponse.json({ cars: [], count: 0, take });
   }
 
   try {
@@ -94,7 +95,7 @@ export async function GET(request) {
       return { ...item, _score: score };
     })
     .sort((a, b) => b._score - a._score)
-    .slice(0, 8); // Return top 8 best matches
+    .slice(0, take); // Honor caller's take (capped at 8)
 
     // Shadow mode for Go Search optimization
     if (!GO_SEARCH_ACTIVE_ENABLED) {
@@ -102,7 +103,11 @@ export async function GET(request) {
       void runGoSearchShadow({ query: normalized, nodeResults: ranked, requester });
     }
 
-    return NextResponse.json(ranked);
+    return NextResponse.json({
+      cars: ranked.map(({ _score, ...car }) => car),
+      count: ranked.length,
+      take,
+    });
   } catch (error) {
     console.error("Search error:", error);
     trackRequest({

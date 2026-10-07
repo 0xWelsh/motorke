@@ -5,7 +5,7 @@ import { getHeroImageUrl, getGalleryImageUrl, getPreloadImageUrl, getThumbnailUr
 import { saveDataGalleryLimits } from "@/lib/save-data";
 import { useSaveData } from "@/components/SaveDataProvider";
 import { useClientSession } from "@/hooks/use-client-session";
-import { ArrowLeft, Heart, MoreHorizontal, X, Share2 } from "lucide-react";
+import { ArrowLeft, Heart, MoreHorizontal, X, Share2, Plus, Minus, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { markLightboxOpen, markLightboxClose } from "@/lib/back-nav";
 
@@ -43,6 +43,16 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
   const [lbDragging, setLbDragging] = useState(false);
   const [lbTouching, setLbTouching] = useState(false);
   const menuRef = useRef(null);
+  const mobileThumbRef = useRef(null);
+
+  // Keep the active thumbnail centered in the mobile strip as you swipe the
+  // hero — it "moves with the photos" instead of getting left behind.
+  useEffect(() => {
+    const el = mobileThumbRef.current;
+    if (!el) return;
+    const btn = el.querySelector('[aria-current="true"]');
+    btn?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [active]);
 
   useEffect(() => {
     if (!effectiveLoggedIn || !carId) return;
@@ -112,6 +122,20 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
     setPanPos({ x: 0, y: 0 });
   }, [images]);
 
+  const resetView = useCallback(() => {
+    setScale(1);
+    setPanPos({ x: 0, y: 0 });
+  }, []);
+
+  const openLightbox = useCallback(() => {
+    resetView();
+    setLightbox(true);
+  }, [resetView]);
+
+  const zoomBy = useCallback((factor) => {
+    setScale((s) => Math.min(MAX_ZOOM, Math.max(1, +(s * factor).toFixed(2))));
+  }, []);
+
   const onHeroTouchStart = (e) => {
     heroTouchRef.current = {
       startX: e.touches[0].clientX,
@@ -154,7 +178,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
         justSwipedRef.current = true;
         setTimeout(() => { justSwipedRef.current = false; }, 400);
       } else {
-        setLightbox(true);
+        openLightbox();
       }
     }
 
@@ -165,7 +189,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
 
   const handleHeroClick = () => {
     if (justSwipedRef.current) return;
-    setLightbox(true);
+    openLightbox();
   };
 
   const toggleSave = async () => {
@@ -307,7 +331,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
       <div
         id="hero-gallery"
         ref={heroRef}
-        className="relative w-full h-[40vh] min-h-[280px] max-h-[400px] lg:h-auto lg:aspect-[4/3] lg:max-h-[640px] bg-slate-100 overflow-hidden select-none lg:rounded-[6px]"
+        className="relative w-full h-[38vh] min-h-[230px] max-h-[360px] lg:h-auto lg:aspect-[4/3] lg:max-h-[640px] bg-slate-100 overflow-hidden select-none lg:rounded-[6px]"
       >
         <div
           className="absolute inset-0 cursor-pointer"
@@ -436,7 +460,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
         {images.length > 1 && (
           <button
             type="button"
-            onClick={() => setLightbox(true)}
+            onClick={openLightbox}
             className="absolute bottom-3 left-3 lg:bottom-16 lg:left-3 z-20 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm text-white text-[11px] font-bold tracking-wide px-3 py-1.5 rounded-full"
           >
             <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -452,7 +476,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
         {images.length > 1 && (
           <button
             type="button"
-            onClick={() => setLightbox(true)}
+            onClick={openLightbox}
             className="hidden lg:inline-flex absolute bottom-16 right-3 z-20 items-center gap-1.5 bg-black/60 backdrop-blur-sm text-white text-[11px] font-bold tracking-wide px-3 py-1.5 rounded-full hover:bg-black/75 transition-colors"
           >
             <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -467,7 +491,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); justSwipedRef.current = true; setTimeout(() => { justSwipedRef.current = false; }, 400); goPrev(); }}
-              className="flex absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 items-center justify-center bg-black/40 backdrop-blur-md text-white rounded-full hover:bg-black/60 transition-colors active:scale-95"
+              className="flex absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 sm:w-9 sm:h-9 items-center justify-center bg-black/40 backdrop-blur-md text-white rounded-full hover:bg-black/60 transition-colors active:scale-95"
               aria-label="Previous photo"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -477,7 +501,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); justSwipedRef.current = true; setTimeout(() => { justSwipedRef.current = false; }, 400); goNext(); }}
-              className="flex absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 items-center justify-center bg-black/40 backdrop-blur-md text-white rounded-full hover:bg-black/60 transition-colors active:scale-95"
+              className="flex absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 sm:w-9 sm:h-9 items-center justify-center bg-black/40 backdrop-blur-md text-white rounded-full hover:bg-black/60 transition-colors active:scale-95"
               aria-label="Next photo"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -506,7 +530,37 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
         )}
       </div>
 
-      {/* All thumbnails grid — every photo visible at once */}
+      {/* Mobile thumbnails — quick switching without opening the lightbox */}
+      {images.length > 1 && (
+        <div ref={mobileThumbRef} className="flex gap-1.5 mt-2 overflow-x-auto pb-1 lg:hidden">
+          {images.slice(0, galleryLimits.maxThumbs).map((img, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => { setActive(i); setScale(1); setPanPos({ x: 0, y: 0 }); }}
+              className={`relative aspect-video w-16 shrink-0 overflow-hidden rounded-md border-2 transition-all ${
+                i === active
+                  ? "border-[var(--sidebar-bar)] ring-1 ring-[var(--sidebar-bar)]/50"
+                  : "border-transparent opacity-60"
+              }`}
+              aria-label={`Photo ${i + 1}`}
+              aria-current={i === active}
+            >
+              <Image
+                src={getThumbnailUrl(img.url, 200, 70)}
+                alt={img.alt || `${title} photo ${i + 1}`}
+                fill
+                loading="lazy"
+                decoding="async"
+                className="object-cover"
+                sizes="64px"
+              />
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* All thumbnails grid — every photo visible at once (desktop) */}
       {images.length > 1 && (
         <div className="hidden lg:grid gap-1.5 mt-2 grid-cols-[repeat(auto-fill,minmax(72px,1fr))] pb-1">
           {images.slice(0, galleryLimits.maxThumbs).map((img, i) => (
@@ -551,6 +605,35 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
             <X className="w-6 h-6" strokeWidth={2} />
           </button>
 
+          {/* Zoom controls */}
+          <div className="absolute top-16 right-3 z-[115] flex flex-col items-center gap-2">
+            <span className="text-[11px] font-semibold tabular-nums text-white/60">{Math.round(scale * 100)}%</span>
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); zoomBy(1.5); }}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/25 transition-all"
+              aria-label="Zoom in"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); zoomBy(0.67); }}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/25 transition-all"
+              aria-label="Zoom out"
+            >
+              <Minus className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); resetView(); }}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/25 transition-all"
+              aria-label="Reset zoom"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+          </div>
+
           <span className="absolute top-4 left-4 z-[110] text-[12px] font-semibold tracking-wide text-white/50">
             {active + 1} / {images.length}
           </span>
@@ -559,7 +642,15 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
 
           <div
             className="absolute inset-0 z-[105] overflow-hidden"
-            onClick={() => { if (scale <= 1 && !lbDragging) setLightbox(false); }}
+            onClick={(e) => {
+              // Mouse click on the backdrop (or the photo at 1x) closes;
+              // clicks on controls are stopPropagation'd. Touch keeps its own
+              // gestures (swipe / double-tap / pinch).
+              if (e.nativeEvent.pointerType && e.nativeEvent.pointerType !== "mouse") return;
+              if (lbDragging) return;
+              if (scale > 1) resetView();
+              else setLightbox(false);
+            }}
           >
             <div
               className="flex h-full"
@@ -578,7 +669,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
                       transition: lbTouching ? "none" : "transform 0.2s ease-out",
                       willChange: "transform",
                     } : {}}
-                    onClick={(e) => e.stopPropagation()}
                   >
                     <Image
                       src={getHeroImageUrl(img.url)}

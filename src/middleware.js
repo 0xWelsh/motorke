@@ -63,6 +63,16 @@ export function middleware(request) {
   const { pathname } = request.nextUrl;
   const isProd = process.env.NODE_ENV === "production";
 
+  // Retired domains → permanent redirect to bidgari.com. Runs at the edge
+  // BEFORE caching, so this covers every path including stale prerenders.
+  if (isProd) {
+    const host = (request.headers.get("host") || "").toLowerCase();
+    if (host === "welshmotorhub.co.ke" || host === "www.welshmotorhub.co.ke") {
+      const target = new URL(request.nextUrl.pathname + request.nextUrl.search, "https://bidgari.com");
+      return NextResponse.redirect(target, 308);
+    }
+  }
+
   // CSRF defense-in-depth: if a mutating request includes an Origin or Referer
   // header, validate it matches the site origin. Same-origin requests always
   // send these headers; cross-origin requests without SameSite=Lax cookie are

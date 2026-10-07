@@ -106,7 +106,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
           <button
             key={m.make}
             onClick={() => setMake((prev) => (prev === m.make ? "" : m.make))}
-            className={`shrink-0 px-2.5 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
+            className={`shrink-0 px-2.5 py-2 text-[11px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
               make === m.make
                 ? "border-brand-accent bg-brand-accent/10 text-brand-accent ring-1 ring-brand-accent/30"
                 : "border-slate-200 text-slate-500 hover:bg-slate-50"
@@ -125,7 +125,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
             <button
               key={i}
               onClick={() => { setPricePreset(i); setMinPrice(""); setMaxPrice(""); }}
-              className={`shrink-0 px-2 py-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
+              className={`shrink-0 px-2.5 py-2 text-[11px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
                 pricePreset === i
                   ? "border-brand-accent bg-brand-accent/10 text-brand-accent"
                   : "border-slate-200 text-slate-500 hover:bg-slate-50"
@@ -144,7 +144,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
             <button
               key={t}
               onClick={() => setTransmission((prev) => (prev === t ? "" : t))}
-              className={`shrink-0 px-2 py-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
+              className={`shrink-0 px-2.5 py-2 text-[11px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
                 transmission === t
                   ? "border-brand-accent bg-brand-accent/10 text-brand-accent"
                   : "border-slate-200 text-slate-500 hover:bg-slate-50"
@@ -172,7 +172,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
           <button
             key={key}
             onClick={() => setBodyTypes(toggleArrayValue(bodyTypes, key))}
-            className={`shrink-0 px-2.5 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
+            className={`shrink-0 px-2.5 py-2 text-[11px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
               bodyArr.includes(key)
                 ? "border-brand-accent bg-brand-accent/10 text-brand-accent ring-1 ring-brand-accent/30"
                 : "border-slate-200 text-slate-500 hover:bg-slate-50"
@@ -191,7 +191,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
             <button
               key={key}
               onClick={() => setFuelTypes(toggleArrayValue(fuelTypes, key))}
-              className={`shrink-0 px-2 py-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
+              className={`shrink-0 px-2.5 py-2 text-[11px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
                 fuelArr.includes(key)
                   ? "border-brand-accent bg-brand-accent/10 text-brand-accent"
                   : "border-slate-200 text-slate-500 hover:bg-slate-50"
@@ -220,7 +220,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
           <button
             onClick={applyFilters}
             disabled={!hasChanges}
-            className={`inline-flex items-center gap-1.5 px-4 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider border transition-all relative rounded-xl ${
+            className={`inline-flex items-center gap-1.5 px-4 py-2 text-[11px] font-bold uppercase tracking-wider border transition-all relative rounded-xl ${
               hasChanges
                 ? "border-brand-accent bg-brand-accent text-white hover:opacity-90 cursor-pointer"
                 : "border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed"

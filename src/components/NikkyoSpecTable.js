@@ -1,5 +1,11 @@
 "use client";
 import { useState } from "react";
+import {
+  Hash, Factory, Car, Calendar, Gauge, Cog, Fuel, Settings, Layers,
+  MoveRight, CarFront, Users, Globe, BadgeCheck, Sparkles, Tag, Circle,
+  Zap, Wrench, Wind, Shield, Sun, Ruler, Palette, Battery, FileText,
+  Package, CheckCircle2, Info,
+} from "lucide-react";
 import { BODY_TYPE_LABELS, FUEL_LABELS } from "@/lib/constants";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
 import { stockCode } from "@/lib/stock-code";
@@ -10,6 +16,38 @@ const HYBRID_BATTERY_LABELS = {
   LI_ION: "Li-ion",
   OTHER: "Other",
   NA: "N/A",
+};
+
+// Relevant icon for each spec row (falls back to Info for anything unseen).
+const SPEC_ICONS = {
+  "Stock No.": Hash,
+  Maker: Factory,
+  Model: Car,
+  Year: Calendar,
+  Mileage: Gauge,
+  Engine: Cog,
+  Fuel: Fuel,
+  Transmission: Settings,
+  Drive: Layers,
+  Steering: MoveRight,
+  "Body Type": CarFront,
+  "Doors / Seats": Users,
+  "Imported From": Globe,
+  "Duty Status": BadgeCheck,
+  Condition: Sparkles,
+  Price: Tag,
+  Cylinders: Circle,
+  Horsepower: Zap,
+  Torque: Wrench,
+  Turbo: Wind,
+  Airbags: Shield,
+  Sunroof: Sun,
+  "Ground clearance": Ruler,
+  Color: Palette,
+  "Hybrid battery": Battery,
+  "Import eligibility": CheckCircle2,
+  Registration: FileText,
+  "Spare availability": Package,
 };
 
 /**
@@ -107,18 +145,22 @@ export default function NikkyoSpecTable({ car, title = null }) {
 
   const visibleRows = showMore ? rows.concat(extraRows) : rows;
 
-  const Row = ({ row, last }) => (
-    <div
-      className={`grid grid-cols-[130px_minmax(0,1fr)] text-[13px] transition-colors hover:bg-slate-100 ${
-        last ? "" : "border-b border-slate-200"
-      }`}
-    >
-      <span className="bg-sky-50 border-r border-slate-200 px-4 py-2.5 font-bold uppercase tracking-wide text-slate-500">
-        {row.label}
-      </span>
-      <span className="px-4 py-2.5 text-right font-bold text-slate-900">{row.value}</span>
-    </div>
-  );
+  const Row = ({ row, last }) => {
+    const Icon = SPEC_ICONS[row.label] || Info;
+    return (
+      <div
+        className={`grid grid-cols-[150px_minmax(0,1fr)] text-[13px] transition-colors hover:bg-slate-100 ${
+          last ? "" : "border-b border-slate-200"
+        }`}
+      >
+        <span className="flex items-center gap-2 bg-sky-50 border-r border-slate-200 px-3 py-2.5 font-bold uppercase tracking-wide text-slate-500">
+          <Icon className="w-3.5 h-3.5 shrink-0 text-slate-400" aria-hidden />
+          <span className="truncate">{row.label}</span>
+        </span>
+        <span className="px-4 py-2.5 text-right font-bold text-slate-900">{row.value}</span>
+      </div>
+    );
+  };
 
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">

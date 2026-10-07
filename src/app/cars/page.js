@@ -7,15 +7,15 @@ import TrackEventOnMount from "@/components/TrackEventOnMount";
 import { unstable_cache } from "next/cache";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { buildCarsOrderBy, normalizeCarsSort } from "@/lib/cars-inventory-sort";
-import CarsInventorySort from "@/components/CarsInventorySort";
-import CarsHorizontalFilters from "@/components/CarsHorizontalFilters";
+import CarsBudgetFilter from "@/components/CarsBudgetFilter";
+import CarsAdvancedFilters from "@/components/CarsAdvancedFilters";
 import CarsSearchBar from "@/components/CarsSearchBar";
 import { buildMakeWhere } from "@/lib/make-filter";
 import { publicDetailVisibilityClause } from "@/lib/car-sold-status";
 import NikkyoSidebar from "@/components/NikkyoSidebar";
 import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 
-const PER_PAGE = 24;
+const PER_PAGE = 36;
 
 export async function generateMetadata({ searchParams }) {
   const sp = await searchParams;
@@ -29,8 +29,8 @@ export async function generateMetadata({ searchParams }) {
   if (county) parts.push(`in ${county}`);
   const title = `${parts.join(" — ")}`;
   const desc = make
-    ? `Browse verified ${make}${model ? ` ${model}` : ""} cars for sale${county ? ` in ${county}` : " across Kenya"}. Transparent pricing, handled by BIDGARI.`
-    : "Find verified cars for sale in Kenya. Transparent pricing, handled end-to-end by BIDGARI. Filter by make, price, body type, and county.";
+    ? `Browse verified ${make}${model ? ` ${model}` : ""} cars for sale${county ? ` in ${county}` : " across Kenya"}. Compare real prices, mileage and specs on every listing — ownership and paperwork handled for you by BIDGARI.`
+    : "Find verified cars for sale in Kenya. Compare real prices, mileage and specs, filter by budget, and buy with the whole sale handled end-to-end by BIDGARI — inspection, paperwork and fair pricing included.";
 
   return {
     title: { absolute: `${title} | BIDGARI` },
@@ -85,30 +85,26 @@ const carSelect = {
   },
 };
 
-const getAllMakes = unstable_cache(
+const getAllColors = unstable_cache(
   async () => {
-    return db.car.findMany({
+    const rows = await db.car.findMany({
       where: { available: true },
-      distinct: ["make"],
-      select: { make: true },
-      orderBy: { make: "asc" },
+      distinct: ["color"],
+      select: { color: true },
     });
+    const seen = new Map();
+    for (const r of rows) {
+      const raw = (r.color || "").trim();
+      if (!raw) continue;
+      const key = raw.toLowerCase();
+      if (!seen.has(key)) {
+        seen.set(key, raw.replace(/\b\w/g, (c) => c.toUpperCase()));
+      }
+    }
+    return [...seen.values()].sort();
   },
-  ["all-makes"],
-  { revalidate: 3600, tags: ["makes"] },
-);
-
-const getAllCounties = unstable_cache(
-  async () => {
-    const rows = await db.dealer.findMany({
-      distinct: ["county"],
-      select: { county: true },
-      orderBy: { county: "asc" },
-    });
-    return rows.map((r) => r.county).filter(Boolean);
-  },
-  ["all-counties"],
-  { revalidate: 3600, tags: ["counties"] },
+  ["all-colors"],
+  { revalidate: 3600, tags: ["cars"] },
 );
 
 export default async function CarsPage({ searchParams }) {
@@ -129,6 +125,9 @@ export default async function CarsPage({ searchParams }) {
   const condition = sp.condition || "";
   const featured = sp.featured === "1";
   const sort = normalizeCarsSort(sp.sort);
+  const color = sp.color || "";
+  const sunroof = sp.sunroof === "1";
+  const seats = sp.seats ? parseInt(sp.seats, 10) : undefined;
 
   const where = {
     ...publicDetailVisibilityClause(),
@@ -155,11 +154,14 @@ export default async function CarsPage({ searchParams }) {
         [field]: { contains: search, mode: "insensitive" },
       })),
     } : {}),
+    ...(color ? { color: { contains: color, mode: "insensitive" } } : {}),
+    ...(sunroof ? { sunroof: true } : {}),
+    ...(seats ? { seats: { gte: seats } } : {}),
   };
 
   const orderBy = buildCarsOrderBy(sort);
 
-  const [initialCars, total, allMakes, allCounties, browseInventoryCounts] = await Promise.all([
+  const [initialCars, total, browseInventoryCounts, allColors] = await Promise.all([
     db.car.findMany({
       where,
       select: carSelect,
@@ -167,9 +169,8 @@ export default async function CarsPage({ searchParams }) {
       take: PER_PAGE,
     }),
     db.car.count({ where }),
-    getAllMakes(),
-    getAllCounties(),
     getBrowseInventoryCounts(),
+    getAllColors(),
   ]);
 
   function removeFilter(params, key) {
@@ -235,6 +236,10 @@ export default async function CarsPage({ searchParams }) {
     vehicleType: vehicleType || "",
     condition: condition || "",
     sort: sort || "",
+    featured: sp.featured || "",
+    color: color || "",
+    sunroof: sp.sunroof || "",
+    seats: sp.seats || "",
   };
 
   return (
@@ -303,14 +308,9 @@ export default async function CarsPage({ searchParams }) {
               </div>
             )}
 
-            <CarsHorizontalFilters
-              activeFilters={{ make, transmission, minPrice, maxPrice, bodyType, fuelType, minYOM: sp.minYOM, maxYOM: sp.maxYOM }}
-              allMakes={allMakes}
-            />
+            <CarsBudgetFilter />
 
-            <div className="flex flex-wrap items-center justify-between gap-3 mt-3 mb-3">
-              <CarsInventorySort />
-            </div>
+            <CarsAdvancedFilters colors={allColors} />
 
             <div className="min-w-0">
               <CarsInfiniteGrid

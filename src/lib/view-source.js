@@ -4,7 +4,7 @@
 //
 // Returned values stay stable so existing data keeps grouping correctly:
 //   "direct"   – no referrer at all (typed in / bookmark / native app link)
-//   "internal" – came from another page on welshmotorhub.co.ke itself
+//   "internal" – came from another page on bidgari.com itself
 //   "facebook" | "instagram" | "whatsapp" | "tiktok" | "x" | "linkedin"
 //   "google"   – any google search property
 //   "bing" | "yahoo" | "ddg"
@@ -35,7 +35,7 @@ const SEARCH = [
 
 /**
  * @param {string|null|undefined} referrer  – raw URL or empty
- * @param {string|null|undefined} ownOrigin – e.g. "https://welshmotorhub.co.ke"
+ * @param {string|null|undefined} ownOrigin – e.g. "https://bidgari.com"
  *                                            (origin of the request, used to
  *                                            tell "internal" hops apart from
  *                                            real external traffic)

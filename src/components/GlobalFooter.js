@@ -48,7 +48,7 @@ export default function GlobalFooter() {
   ];
 
   return (
-    <footer className="relative mt-auto border-t border-slate-200 bg-white text-slate-800 pt-12 sm:pt-16 pb-8">
+    <footer className="relative mt-auto border-t border-slate-200 bg-white text-slate-800 pt-12 sm:pt-16 pb-8 cv-auto">
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-6 gap-y-10 lg:gap-10 mb-12">
 

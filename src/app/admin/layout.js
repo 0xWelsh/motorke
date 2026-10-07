@@ -25,6 +25,8 @@ import {
   Bookmark,
   UserCheck,
   Film,
+  Globe,
+  CalendarDays,
 } from "lucide-react";
 import { clsx } from "clsx";
 import { useState, useEffect } from "react";
@@ -48,6 +50,7 @@ const allLinks = [
   { href: "/admin/watchlist", label: "Watchlist", Icon: Bookmark },
   { href: "/admin/whatsapp-bot", label: "WhatsApp Bot", Icon: MessageCircle },
   { href: "/admin/content-creator", label: "Content Creator", Icon: Film },
+  { href: "/admin/seo/indexing", label: "SEO · Indexing", Icon: Globe },
 ];
 
 const quickActions = [
@@ -141,6 +144,8 @@ export default function AdminLayout({ children }) {
       window.location.href = `/admin/cars?search=${encodeURIComponent(searchQuery.trim())}`;
     }
   };
+
+  const isMonday = typeof window !== "undefined" ? new Date().getDay() === 1 : false;
 
   return (
     <div className="dark flex min-h-screen bg-[#0e0e0e] text-slate-100 selection:bg-emerald-500/20">
@@ -315,6 +320,15 @@ export default function AdminLayout({ children }) {
         </header>
 
         <div className="admin-scope relative mx-auto w-full max-w-[1400px] flex-1 px-4 py-6 sm:px-6">
+          {isMonday && (
+            <Link
+              href="/admin/seo/indexing"
+              className="mb-4 flex items-center gap-2.5 rounded-xl border border-amber-800/40 bg-amber-950/30 px-4 py-3 text-sm font-bold text-amber-300 transition-colors hover:bg-amber-900/30"
+            >
+              <CalendarDays size={16} className="shrink-0" />
+              SEO ritual — it&rsquo;s Monday. Request indexing on new pages. →
+            </Link>
+          )}
           {children}
         </div>
       </main>

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { MapPin, ImageOff, X } from "lucide-react";
 import PictureImage from "@/components/PictureImage";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
+import { FUEL_LABELS } from "@/lib/constants";
+import { formatListedAge } from "@/lib/format-age";
 import { useSaveData } from "@/components/SaveDataProvider";
 import { trackUiEvent } from "@/lib/analytics";
 import { carListingPath } from "@/lib/car-listing-url";
@@ -11,6 +13,8 @@ import { isActiveSpotlight } from "@/lib/spotlight";
 import { getListingBoostVisuals } from "@/lib/listing-boost-visuals";
 import { isInSoldGracePeriod } from "@/lib/car-sold-status";
 import { clsx } from "clsx";
+import AdminCardControls from "@/components/AdminCardControls";
+import { useCarFlag } from "@/hooks/use-car-flag";
 
 /**
  * Dense Nikkyo-style catalog car card: uniform size, hairline border,
@@ -30,12 +34,16 @@ export default function CarCard({
   const spotlightActive = showSpotlight || isActiveSpotlight(car) || spotlightProminent;
   const isList = layout === "list";
   const saveData = useSaveData();
+  // Instant admin overrides (mark sold / hide) applied before the server refresh
+  // catches up, so the card reacts immediately.
+  const soldFlag = useCarFlag(car.id, "sold");
+  const hiddenFlag = useCarFlag(car.id, "hidden");
   const boost = getListingBoostVisuals(car, {
     spotlight: spotlightActive,
     prominent: spotlightProminent,
   });
   const primaryImg = car.images?.[0]?.url;
-  const sold = !car.available || isInSoldGracePeriod(car);
+  const sold = soldFlag !== undefined ? Boolean(soldFlag) : !car.available || isInSoldGracePeriod(car);
   const titleCase = (s) =>
     String(s || "").replace(/\S+/g, (word) =>
       word === word.toUpperCase() && word.length > 1
@@ -44,6 +52,15 @@ export default function CarCard({
     );
   const make = titleCase(car.make);
   const model = titleCase(`${car.model || ""}${car.variant ? ` ${car.variant}` : ""}`).trim();
+  const fuelLabel = FUEL_LABELS[car.fuelType] || car.fuelType || "";
+  const transLabel =
+    car.transmission === "AUTOMATIC" ? "Auto" : car.transmission === "MANUAL" ? "Manual" : car.transmission || "";
+  const specBits = [
+    car.year,
+    car.mileage != null ? formatMileage(car.mileage) : null,
+    fuelLabel || null,
+    transLabel || null,
+  ].filter(Boolean);
   const distanceKm = Number.isFinite(distance) ? distance : (Number.isFinite(car?.distance) ? car.distance : null);
   const distanceLabel =
     distanceKm == null
@@ -75,6 +92,59 @@ export default function CarCard({
     });
   }
 
+  if (hiddenFlag) return null;
+
+  // Compact row: tiny thumbnail + one-line title + price/specs inline. Fits
+  // ~2-3x more cars per screen than the grid for power browsing.
+  if (layout === "compact") {
+    return (
+      <article
+        className="group flex items-stretch bg-white border overflow-hidden transition-colors duration-300"
+        style={{ borderColor, touchAction: "manipulation" }}
+      >
+        <Link
+          href={carListingPath(car)}
+          onClick={() => onCarClick("card_compact")}
+          className="flex w-full items-center gap-2.5 p-2"
+        >
+          <div className={`relative h-[52px] w-[84px] sm:h-16 sm:w-28 shrink-0 overflow-hidden rounded-md bg-slate-100${sold ? " grayscale" : ""}`}>
+            {primaryImg ? (
+              <PictureImage
+                src={primaryImg}
+                alt={`${car.year} ${car.make} ${car.model}`}
+                priority={priority}
+                className="absolute inset-0 h-full w-full object-cover"
+                sizes="120px"
+                fallback={
+                  <div className="flex h-full w-full items-center justify-center text-slate-300">
+                    <ImageOff className="h-5 w-5" aria-hidden />
+                  </div>
+                }
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-slate-300">
+                <ImageOff className="h-5 w-5" />
+              </div>
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <h3 className="truncate text-[13px] font-bold italic leading-tight text-[var(--brand-navy)]">
+              {make} {model}
+            </h3>
+            <p className="mt-0.5 whitespace-nowrap text-[15px] font-bold leading-snug text-[var(--accent)]">
+              {formatCarPrice(car)}
+            </p>
+            <p className="truncate text-[11px] leading-snug text-slate-500">
+              {[...specBits, car.location ? car.location : null, distanceLabel ? distanceLabel : null]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
+          </div>
+        </Link>
+      </article>
+    );
+  }
+
   return (
     <article
       className="group flex flex-col bg-white border overflow-hidden transition-colors duration-300"
@@ -93,9 +163,9 @@ export default function CarCard({
         {/* Image */}
         <div
           className={
-            isList
+            `${isList
               ? "relative w-[42%] shrink-0 sm:w-64 aspect-[4/3] overflow-hidden bg-slate-100"
-              : "relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-slate-100"
+              : "relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-slate-100"}${sold ? " grayscale" : ""}`
           }
         >
           {primaryImg ? (
@@ -125,18 +195,20 @@ export default function CarCard({
                 event.stopPropagation();
                 onRemove(car.id);
               }}
-              className="absolute right-1.5 top-1.5 inline-flex h-7 w-7 items-center justify-center rounded bg-white/90 text-slate-600 transition-colors hover:bg-white hover:text-red-600"
+              className="absolute right-1.5 top-1.5 inline-flex h-9 w-9 items-center justify-center rounded bg-white/90 text-slate-600 transition-colors hover:bg-white hover:text-red-600 sm:h-7 sm:w-7"
               aria-label="Remove from watchlist"
             >
               <X className="h-3.5 w-3.5" />
             </button>
           )}
+
+          <AdminCardControls car={car} />
         </div>
 
         {/* Details */}
-        <div className="flex flex-1 flex-col gap-y-1 min-w-0 p-3 md:p-3">
+        <div className="flex flex-1 flex-col gap-y-1 min-w-0 p-2.5 md:p-3">
           <h3
-            className="line-clamp-1 text-[14px] font-bold italic leading-tight tracking-tight text-[#13356f]"
+            className="line-clamp-1 text-[14px] font-bold italic leading-tight tracking-tight text-[var(--brand-navy)]"
             title={`${car.make} ${car.model}${car.variant ? ` (${car.variant})` : ""}`}
           >
             {make}
@@ -149,16 +221,20 @@ export default function CarCard({
             )}
           </p>
 
-          <p className="mt-1 text-[16px] font-bold leading-snug tracking-tight text-[#a94442]">
+          <p className="mt-1 text-[16px] font-bold leading-snug tracking-tight text-[var(--accent)]">
             {formatCarPrice(car)}
           </p>
 
           <p className="text-[12px] leading-snug text-slate-500">
-            {car.year}
-            {car.mileage != null ? ` · ${formatMileage(car.mileage)}` : ""}
+            {specBits.join(" · ")}
           </p>
+          {car.createdAt && (
+            <p className="text-[11px] leading-snug text-slate-400">
+              Listed {formatListedAge(car.createdAt)}
+            </p>
+          )}
           {(car.location || distanceLabel) && (
-            <p className="flex min-w-0 items-center gap-1 text-[12px] leading-snug text-slate-500">
+            <p className={clsx("flex min-w-0 items-center gap-1 text-[12px] leading-snug text-slate-500", !isList && "hidden sm:flex")}>
               <MapPin className="h-3 w-3 shrink-0 text-slate-400" aria-hidden />
               <span className="min-w-0 truncate">
                 {car.location}
@@ -176,7 +252,7 @@ export default function CarCard({
           <Link
             href={carListingPath(car)}
             onClick={() => onCarClick("card_detail")}
-            className="flex flex-1 items-center justify-center bg-[#d9534f] px-3 py-2.5 text-[11px] font-black uppercase tracking-widest text-white transition-colors hover:bg-[#c9302c]"
+            className="flex flex-1 items-center justify-center bg-[var(--accent)] px-3 py-2.5 text-[11px] font-black uppercase tracking-widest text-white transition-colors hover:bg-[var(--accent-hover)]"
           >
             View Details
           </Link>
