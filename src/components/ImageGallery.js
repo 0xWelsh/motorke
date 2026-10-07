@@ -27,6 +27,8 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
   const [menuOpen, setMenuOpen] = useState(false);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
+  const [shareDone, setShareDone] = useState(false);
 
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -193,25 +195,45 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
   };
 
   const toggleSave = async () => {
-    if (!effectiveLoggedIn) { router.push("/login"); return; }
+    if (savingRef.current) return;
+
+    const method = saved ? "DELETE" : "POST";
+    const next = !saved;
+
+    // Optimistic flip — the heart responds on this frame rather than after the
+    // POST resolves. Don't gate on the client session: it is null until
+    // /api/auth/me resolves, so an early click bounced signed-in users to
+    // /login. A 401 from the API is the authoritative signal instead.
+    savingRef.current = true;
+    setSaved(next);
     setSaving(true);
+
+    let res = null;
     try {
-      const method = saved ? "DELETE" : "POST";
-      const res = await fetch(`/api/saved/${carId}`, { method });
-      const data = await res.json();
-      setSaved(data.saved);
-    } catch {}
-    setSaving(false);
+      res = await fetch(`/api/saved/${carId}`, { method });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error("save failed");
+      setSaved(typeof data.saved === "boolean" ? data.saved : next);
+    } catch {
+      setSaved(saved);
+      if (res?.status === 401) router.push(`/login?next=${encodeURIComponent(`/cars/${carId}`)}`);
+    } finally {
+      savingRef.current = false;
+      setSaving(false);
+    }
   };
 
   const handleShare = async () => {
     setMenuOpen(false);
+    // Flag the feedback state up front: the native share sheet can stay open
+    // for a long time, and awaiting it first left the item looking dead.
+    setShareDone(true);
     const shareTitle = sold ? `SOLD ${title}` : title;
     if (navigator.share) {
       try { await navigator.share({ title: shareTitle, url: window.location.href }); } catch {}
-    } else {
-      navigator.clipboard.writeText(window.location.href);
+      return;
     }
+    navigator.clipboard.writeText(window.location.href).catch(() => setShareDone(false));
   };
 
   const copyLink = () => {
@@ -388,7 +410,8 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
             <button
               type="button"
               onClick={toggleSave}
-              disabled={saving}
+              aria-busy={saving}
+              aria-pressed={saved}
               className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors ${
                 navOpaque
                   ? saved ? "text-red-500" : "text-slate-500 hover:text-red-500 hover:bg-slate-100"
@@ -424,8 +447,8 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
                     onClick={handleShare}
                     className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-semibold text-slate-500 hover:bg-slate-100 transition-colors"
                   >
-                    <Share2 className="w-4 h-4 text-slate-500" />
-                    Share
+                    <Share2 className={`w-4 h-4 ${shareDone ? "text-emerald-600" : "text-slate-500"}`} />
+                    {shareDone ? "Shared" : "Share"}
                   </button>
                   <button
                     type="button"

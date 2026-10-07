@@ -23,6 +23,40 @@ function isAllowedOrigin(origin) {
 
 const CSRF_SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 
+// Hoisted to module scope: this ~1.2KB string was previously rebuilt by string
+// concatenation on every request, and middleware runs on every RSC payload
+// fetch — i.e. on every client navigation.
+const CSP_PROD =
+  "default-src 'self'; " +
+  "script-src 'self' 'unsafe-inline' *.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com cdn.jsdelivr.net; " +
+  "style-src 'self' 'unsafe-inline' *.googleapis.com *.fontshare.com fonts.googleapis.com; " +
+  "img-src 'self' data: blob: https: *.supabase.co *.r2.dev *.unsplash.com *.openstreetmap.org tile.openstreetmap.org a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org; " +
+  "font-src 'self' *.fontshare.com fonts.gstatic.com; " +
+  "connect-src 'self' *.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com *.supabase.co *.r2.dev *.safaricom.co.ke vercel.com *.openstreetmap.org tile.openstreetmap.org a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org; " +
+  "frame-src 'self' *.google.com *.recaptcha.net *.cloudflare.com; " +
+  "object-src 'none'; " +
+  "base-uri 'self'; " +
+  "form-action 'self';";
+
+// Same policy plus 'unsafe-eval', which Next's dev overlay requires.
+const CSP_DEV = CSP_PROD.replace(
+  "script-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+);
+
+const SECURITY_HEADERS = {
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "X-XSS-Protection": "1; mode=block",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Cross-Origin-Opener-Policy": "same-origin",
+  "Cross-Origin-Resource-Policy": "same-site",
+  "Origin-Agent-Cluster": "?1",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=(self), payment=()",
+};
+
+const HSTS_HEADER = "max-age=31536000; includeSubDomains; preload";
+
 function generateRotationId() {
   const bytes = new Uint8Array(16);
   if (typeof globalThis.crypto?.getRandomValues === "function") {
@@ -184,40 +218,17 @@ export function middleware(request) {
 
   // Security Headers — apply CSP only on page routes (not API, to avoid breaking binary responses)
   if (!pathname.startsWith("/api/")) {
-    response.headers.set(
-      "Content-Security-Policy",
-      "default-src 'self'; " +
-      `script-src 'self' 'unsafe-inline' ${isProd ? "" : "'unsafe-eval' "}*.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com cdn.jsdelivr.net; ` +
-      "style-src 'self' 'unsafe-inline' *.googleapis.com *.fontshare.com fonts.googleapis.com; " +
-      "img-src 'self' data: blob: https: *.supabase.co *.r2.dev *.unsplash.com *.openstreetmap.org tile.openstreetmap.org a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org; " +
-      "font-src 'self' *.fontshare.com fonts.gstatic.com; " +
-      "connect-src 'self' *.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com *.supabase.co *.r2.dev *.safaricom.co.ke vercel.com *.openstreetmap.org tile.openstreetmap.org a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org; " +
-      "frame-src 'self' *.google.com *.recaptcha.net *.cloudflare.com; " +
-      "object-src 'none'; " +
-      "base-uri 'self'; " +
-      "form-action 'self';"
-    );
+    response.headers.set("Content-Security-Policy", isProd ? CSP_PROD : CSP_DEV);
   }
 
   // Generic security headers — apply to all routes
-  response.headers.set("X-Content-Type-Options", "nosniff");
-  response.headers.set("X-Frame-Options", "DENY");
-  response.headers.set("X-XSS-Protection", "1; mode=block");
-  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
-  response.headers.set("Cross-Origin-Resource-Policy", "same-site");
-  response.headers.set("Origin-Agent-Cluster", "?1");
-  response.headers.set(
-    "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=(self), payment=()"
-  );
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
+    response.headers.set(name, value);
+  }
 
   // HSTS (only in production)
   if (isProd) {
-    response.headers.set(
-      "Strict-Transport-Security",
-      "max-age=31536000; includeSubDomains; preload"
-    );
+    response.headers.set("Strict-Transport-Security", HSTS_HEADER);
   }
 
   return response;

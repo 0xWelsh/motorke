@@ -18,16 +18,30 @@ export default function LocationSearch() {
   
   const { debouncedTerm } = useDebouncedSearch(search, 300);
 
+  const locatingRef = useRef(null);
+
   function detectLocation() {
     if (!navigator.geolocation) return;
+    // Reuse an in-flight fix instead of stacking duplicate permission prompts.
+    if (locatingRef.current) return;
     setLocating(true);
+    const request = {};
+    locatingRef.current = request;
     navigator.geolocation.getCurrentPosition(
       (pos) => {
+        if (locatingRef.current !== request) return;
+        locatingRef.current = null;
         setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
         setLocating(false);
       },
-      () => setLocating(false),
-      { timeout: 8000 }
+      () => {
+        if (locatingRef.current !== request) return;
+        locatingRef.current = null;
+        setLocating(false);
+      },
+      // Cached, low-accuracy fix — accurate enough to bias results and it
+      // normally returns in a few ms instead of waiting on a fresh GPS lock.
+      { timeout: 8000, enableHighAccuracy: false, maximumAge: 300000 }
     );
   }
 

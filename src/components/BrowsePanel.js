@@ -177,23 +177,28 @@ export default function BrowsePanel({ layout = "full", inventoryCounts = null })
     e.preventDefault();
     if (!query.trim()) return;
 
+    const trimmed = query.trim();
+    // Navigate immediately — don't block the click on the geolocation prompt
+    // (up to 4s, and indefinitely while the user reads the browser dialog).
+    // Location is a refinement, so add it as a follow-up replace().
+    router.push(`/cars?search=${encodeURIComponent(trimmed)}`);
+
     setLoadingLoc(true);
     if (typeof window !== "undefined" && "geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setLoadingLoc(false);
           const { latitude, longitude } = position.coords;
-          router.push(`/cars?search=${encodeURIComponent(query)}&lat=${latitude}&lng=${longitude}`);
+          router.replace(
+            `/cars?search=${encodeURIComponent(trimmed)}&lat=${latitude}&lng=${longitude}`,
+            { scroll: false }
+          );
         },
-        () => {
-          setLoadingLoc(false);
-          router.push(`/cars?search=${encodeURIComponent(query)}`);
-        },
-        { timeout: 4000 }
+        () => setLoadingLoc(false),
+        { timeout: 4000, maximumAge: 300000 }
       );
     } else {
       setLoadingLoc(false);
-      router.push(`/cars?search=${encodeURIComponent(query)}`);
     }
   };
 
@@ -210,16 +215,14 @@ export default function BrowsePanel({ layout = "full", inventoryCounts = null })
           placeholder="What car are you looking for?"
           className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl py-3.5 sm:py-4 pl-14 pr-[120px] font-bold text-base focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 transition-all placeholder:font-normal placeholder:text-slate-400 shadow-sm"
         />
+        {/* The label no longer changes on submit — the click already navigated,
+            so a "Locating..." label on a still-live button read as frozen. */}
         <button
           type="submit"
-          disabled={loadingLoc}
-          className={`absolute right-2 top-2 bottom-2 px-6 rounded-lg font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center min-w-[100px] ${
-            loadingLoc
-              ? "bg-slate-100 text-slate-500 cursor-wait"
-              : "bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white"
-          }`}
+          aria-busy={loadingLoc}
+          className="absolute right-2 top-2 bottom-2 px-6 rounded-lg font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center min-w-[100px] bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white"
         >
-          {loadingLoc ? "Locating..." : "Search"}
+          Search
         </button>
       </form>
 

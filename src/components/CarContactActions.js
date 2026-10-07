@@ -62,14 +62,21 @@ export default function CarContactActions({ whatsappHref, callHref, carId, deale
     const url = typeof window !== "undefined" ? window.location.href : "";
     const title = typeof document !== "undefined" ? document.title : "BIDGARI";
     if (typeof navigator !== "undefined" && navigator.share) {
+      // Flip the label before awaiting — the native sheet can hang around and
+      // the button previously sat on "Share" the entire time.
+      setCopied(true);
       try { await navigator.share({ title, url }); } catch {}
       return;
     }
+    // Optimistic: assume the copy landed, correct only if it throws.
+    setCopied(true);
     try {
       await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {}
+    } catch {
+      setCopied(false);
+      return;
+    }
+    setTimeout(() => setCopied(false), 2000);
   }
 
   const numberDigits = whatsappHref?.match(/wa\.me\/(\d+)/)?.[1] || "";

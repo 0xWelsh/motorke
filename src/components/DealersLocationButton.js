@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, MapPin, X } from "lucide-react";
 
@@ -26,16 +26,30 @@ export default function DealersLocationButton() {
     router.push(query ? `/dealers?${query}` : "/dealers");
   }
 
+  const locatingRef = useRef(false);
+
   function detectLocation() {
     if (typeof window === "undefined" || !("geolocation" in navigator)) return;
+    // Guard with a ref instead of `disabled` so the button stays visually live
+    // and focusable while a fix is pending — a disabled button for the length
+    // of the browser's permission dialog reads as a dead click.
+    if (locatingRef.current) return;
+    locatingRef.current = true;
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        locatingRef.current = false;
         setLocating(false);
         applyLocation(position.coords.latitude, position.coords.longitude);
       },
-      () => setLocating(false),
-      { timeout: 10000, enableHighAccuracy: true, maximumAge: 0 }
+      () => {
+        locatingRef.current = false;
+        setLocating(false);
+      },
+      // `maximumAge: 0` + `enableHighAccuracy: true` forced a fresh GPS fix,
+      // which can take 10s or hang. A cached city-level fix is accurate enough
+      // to sort dealers by distance and normally returns instantly.
+      { timeout: 8000, enableHighAccuracy: false, maximumAge: 300000 }
     );
   }
 
@@ -44,8 +58,7 @@ export default function DealersLocationButton() {
       <button
         type="button"
         onClick={detectLocation}
-        disabled={locating}
-        className="w-full inline-flex items-center justify-center gap-2 border border-[#38A169]/40 bg-[#38A169]/10 text-[var(--accent)] px-4 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-[#38A169]/15 transition-colors disabled:opacity-60 rounded-xl"
+        className="w-full inline-flex items-center justify-center gap-2 border border-[#38A169]/40 bg-[#38A169]/10 text-[var(--accent)] px-4 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-[#38A169]/15 transition-colors aria-busy:opacity-70 rounded-xl"
       >
         {locating ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
         {locating ? "Finding location..." : hasLocation ? "Refresh distance" : "Use my location"}

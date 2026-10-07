@@ -210,13 +210,17 @@ export default function Navbar({ user, navCounts }) {
   function openMenu(name) {
     clearTimeout(closeTimer.current);
     clearTimeout(openTimer.current);
-    openTimer.current = setTimeout(() => setActiveMenu(name), 120);
+    // 120ms of hover delay made the dropdown feel broken; 60ms is still enough
+    // to survive the pointer crossing the gap without flicker.
+    openTimer.current = setTimeout(() => setActiveMenu(name), 60);
   }
 
   function scheduleClose() {
     clearTimeout(openTimer.current);
     clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setActiveMenu(null), 180);
+    // 180ms out / 60ms in asymmetry: snappy to open, forgiving on exit so the
+    // menu doesn't vanish while the pointer is still travelling to it.
+    closeTimer.current = setTimeout(() => setActiveMenu(null), 220);
   }
 
   return (
@@ -244,7 +248,7 @@ export default function Navbar({ user, navCounts }) {
               </Link>
 
             <div ref={searchRef} className="hidden md:flex min-w-0 flex-1 max-w-[360px]">
-              <form onSubmit={handleSearch} className="relative w-full">
+              <form onSubmit={handleSearch} aria-busy={isPending} className="relative w-full">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <input
                   value={search}
@@ -468,7 +472,7 @@ export default function Navbar({ user, navCounts }) {
             </div>
 
             <div ref={mobileSearchRef} className="relative">
-              <form onSubmit={handleSearch} className="relative">
+              <form onSubmit={handleSearch} aria-busy={isPending} className="relative">
                 <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--accent)]" />
                 <input
                   autoFocus

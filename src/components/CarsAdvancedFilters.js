@@ -54,7 +54,9 @@ function AdvancedInner({ colors = [] }) {
 
   const commitSoon = (fn) => {
     clearTimeout(commitRef.current);
-    commitRef.current = setTimeout(fn, 400);
+    // 400ms of dead time after the last keystroke made the year fields feel
+    // broken. 250ms still collapses a burst of typing into one navigation.
+    commitRef.current = setTimeout(fn, 250);
   };
 
   const selectCls =
