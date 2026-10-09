@@ -36,24 +36,23 @@ export default function ListingTitleBar({
 
   return (
     <div>
-      {/* Title and price share one row at every width — a buyer scanning a
-          phone reads "which car, how much" in one glance, and the price is
-          never repeated by a second mobile-only card below it. */}
-      <div className="flex items-start justify-between gap-x-4 gap-y-1">
-        <h1 className="min-w-0 flex-1 text-[19px] font-bold leading-tight tracking-tight text-slate-900 sm:text-[26px] lg:text-[32px]">
-          {carName}
-        </h1>
+      {/* Name, then price directly beneath it. Stacked rather than opposed on
+          one row so the price never gets squeezed to a truncated column on a
+          narrow phone, and so "which car / how much" still reads top-down in
+          two short lines. */}
+      <h1 className="text-[20px] font-bold leading-tight tracking-tight text-slate-900 sm:text-[26px] lg:text-[32px]">
+        {carName}
+      </h1>
 
-        <div className="shrink-0 text-right">
-          <p className="text-[20px] font-bold leading-none tracking-tight text-[var(--accent)] tabular-nums sm:text-[30px] lg:text-[34px]">
-            {priceLabel}
+      <div className="mt-1.5">
+        <p className="text-[28px] font-bold leading-none tracking-tight text-[var(--accent)] tabular-nums sm:text-[34px] lg:text-[38px]">
+          {priceLabel}
+        </p>
+        {car.negotiable ? (
+          <p className="mt-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            Negotiable
           </p>
-          {car.negotiable ? (
-            <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              Negotiable
-            </p>
-          ) : null}
-        </div>
+        ) : null}
       </div>
 
       {/* Meta strip — single source of truth for year / transmission / fuel /

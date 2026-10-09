@@ -25,7 +25,6 @@ import {
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
 import { facetPathSegment } from "@/lib/seo-car-facets";
 import { carListingPath } from "@/lib/car-listing-url";
-import { stockCode } from "@/lib/stock-code";
 import { FUEL_LABELS } from "@/lib/constants";
 import {
   buildCarListingDealerMetadata,
@@ -188,7 +187,6 @@ const hasFeatures = meaningfulFeatureList(car.features).length > 0;
   const callHref = telHrefFromMsisdn(waDigits);
   const prettyPhone = prettyKenyanPhone(waDigits);
   const locationLabel = car.location || dealer.location || dealer.county || "Kenya";
-  const code = stockCode(car);
   const priceLabel = formatCarPrice(car);
 
   const quickFacts = [
@@ -381,31 +379,10 @@ const hasFeatures = meaningfulFeatureList(car.features).length > 0;
         </div>
 
         <div className="container mx-auto max-w-[1475px] px-4 pb-24 pt-4 sm:px-6 sm:pt-5 lg:pb-16">
-          {/* Breadcrumb */}
-          <div className="mb-3 flex items-center gap-2 sm:mb-4">
-            <Link
-              href="/cars"
-              className="btn btn-neutral btn-icon h-11 w-11 sm:h-8 sm:w-8"
-              aria-label="Back to inventory"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-            </Link>
-            <nav aria-label="Breadcrumb" className="text-[11px] font-bold uppercase leading-none tracking-wider text-slate-500">
-              <Link href="/" className="transition-colors hover:text-slate-900">Home</Link>
-              <span className="mx-1.5 opacity-40">/</span>
-              <Link href="/cars" className="transition-colors hover:text-slate-900">Cars</Link>
-              <span className="mx-1.5 opacity-40">/</span>
-              <span className="text-slate-700">{car.make} {car.model}</span>
-              {code ? (
-                <>
-                  <span className="mx-1.5 opacity-40">/</span>
-                  <span className="text-slate-700">{code}</span>
-                </>
-              ) : null}
-            </nav>
-          </div>
-
-          {/* Title + price */}
+          {/* Name + price + meta. The breadcrumb trail and its back button are
+              gone — the gallery's own overlay arrow handles "back", and the
+              structured data below still ships the BreadcrumbList for search
+              engines. The stock code lives in the Details grid. */}
           <ListingTitleBar
             car={car}
             dealer={dealer}
