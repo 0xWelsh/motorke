@@ -20,13 +20,16 @@ export default async function CarMarketRange({ car }) {
     : 50;
 
   return (
-    <div className="mt-4 border-t border-slate-100 pt-3">
-      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Market Range</p>
-      <p className="mt-1 text-[13px] font-bold text-slate-700 tabular-nums">
-        KES {Number(benchmark.low).toLocaleString("en-KE")} – KES {Number(benchmark.high).toLocaleString("en-KE")}
-      </p>
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <div className="border-b border-slate-100 px-4 py-3">
+          <h2 className="text-[13px] font-bold text-slate-900">Market range</h2>
+        </div>
+        <div className="p-4">
+        <p className="text-[13px] font-bold text-slate-700 tabular-nums">
+          KES {Number(benchmark.low).toLocaleString("en-KE")} – KES {Number(benchmark.high).toLocaleString("en-KE")}
+        </p>
 
-      <div className="mt-2.5 relative">
+        <div className="mt-2.5 relative">
         <div className="h-1.5 w-full rounded-full bg-gradient-to-r from-emerald-300 via-slate-200 to-amber-300" />
         <div
           className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 h-3.5 w-3.5 rounded-full border-2 border-white shadow-md ring-1 ring-black/10"
@@ -50,6 +53,7 @@ export default async function CarMarketRange({ car }) {
         </span>
       </div>
       <p className="text-[10px] text-slate-400 mt-1">Based on {benchmark.count} similar {car.model} listing{benchmark.count !== 1 ? "s" : ""}</p>
-    </div>
+        </div>
+      </div>
   );
 }

@@ -4,6 +4,7 @@
 @tailwind utilities;
 
 :root {
+  --font-heading: 'Montserrat', system-ui, -apple-system, sans-serif;
   color-scheme: light;
   /* BIDGARI Light Theme — Clean Marketplace */
   --bg:              #f6f6f4;
@@ -59,7 +60,7 @@
   --brand-faint:     #e2e8f0;
   --text-main:       #18181b;
 
-  --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Lato', system-ui, -apple-system, sans-serif;
 }
 
 /* Admin/portal keeps the dark theme even though the public site is light. */
@@ -119,7 +120,7 @@ html { overscroll-behavior-y: contain; }
 .no-scrollbar, .no-scrollbar > * { -webkit-overflow-scrolling: touch; }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-heading), system-ui, -apple-system, sans-serif;
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
@@ -130,7 +131,7 @@ body {
 
 /* ─── Typography ─── */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-sans);
+  font-family: var(--font-heading), system-ui, -apple-system, sans-serif;
   letter-spacing: -0.02em;
   color: var(--text);
   font-weight: 800;

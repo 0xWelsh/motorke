@@ -12,14 +12,21 @@ import CookieConsent from "@/components/CookieConsent";
 import { SaveDataProvider } from "@/components/SaveDataProvider";
 import PageTransition from "@/components/PageTransition";
 import { Suspense } from "react";
+import { Lato, Montserrat } from "next/font/google";
 
-import { DM_Sans } from "next/font/google";
 import { BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
 
-const dmSans = DM_Sans({
+const lato = Lato({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["400", "500", "700", "800"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  weight: ["500", "600", "700"],
   display: "swap",
 });
 
@@ -201,7 +208,7 @@ export default async function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessLd) }}
         />
       </head>
-      <body className={`${dmSans.variable} bg-background text-slate-800 min-h-screen antialiased flex flex-col font-sans`}>
+      <body className={`${lato.variable} ${montserrat.variable} bg-background text-slate-800 min-h-screen antialiased flex flex-col font-sans`}>
         <PWARegister />
         <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
           <SaveDataProvider>

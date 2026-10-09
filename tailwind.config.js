@@ -50,9 +50,10 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans:    ["var(--font-sans)"],
+        sans:    ["var(--font-sans)", "system-ui", "-apple-system", "sans-serif"],
+        heading: ["var(--font-heading)", "system-ui", "-apple-system", "sans-serif"],
         serif:   ["var(--font-serif)", "Lora", "ui-serif", "Georgia", "Cambria", "Times New Roman", "serif"],
-        display: ["var(--font-sans)"],
+        display: ["var(--font-heading)", "system-ui", "-apple-system", "sans-serif"],
         mono:    ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "monospace"],
       },
       fontSize: {

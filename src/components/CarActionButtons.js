@@ -25,7 +25,17 @@ const CONCERNS = [
 
 const STEPS = ["Your Details", "Your Request", "Review"];
 
-export default function CarActionButtons({ carId, dealerId, carTitle, price, whatsappHref, whatsappNumber }) {
+export default function CarActionButtons({
+  carId,
+  dealerId,
+  carTitle,
+  price,
+  whatsappHref,
+  whatsappNumber,
+  // The listing rail renders its own WhatsApp CTA above this block, so the
+  // duplicate button (and its "or use a form" divider) can be suppressed.
+  showWhatsapp = true,
+}) {
   const [active, setActive] = useState(null);
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -263,7 +273,7 @@ export default function CarActionButtons({ carId, dealerId, carTitle, price, wha
 
   return (
     <>
-      {whatsappHref && (
+      {showWhatsapp && whatsappHref && (
         <div className="space-y-2">
           <a
             href={whatsappHref}
@@ -291,12 +301,14 @@ export default function CarActionButtons({ carId, dealerId, carTitle, price, wha
           </div>
         </div>
       )}
-      <div className="flex gap-2.5">
+      {/* Labels like "Book Inspection" clip in a narrow column, so the
+          request buttons always stack full-width. */}
+      <div className="flex flex-col gap-2">
         {Object.entries(FIELDS).map(([key, f]) => (
           <button
             key={key}
             onClick={() => open(key)}
-            className="flex-1 btn btn-primary px-1.5 sm:px-3 whitespace-normal"
+            className="btn btn-neutral w-full whitespace-normal"
           >
             <f.icon className="w-4 h-4 shrink-0" />
             <span className="leading-tight">{f.label}</span>

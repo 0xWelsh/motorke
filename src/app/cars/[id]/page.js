@@ -8,17 +8,12 @@ import { formatCarPrice, formatMileage, whatsappLink } from "@/lib/utils";
 import { getSalesmanWhatsappNumbers, pickSalesmanWhatsapp } from "@/lib/salesman-whatsapp";
 import { telHrefFromMsisdn } from "@/lib/phone-hints";
 import { getPreloadImageUrl } from "@/lib/image-transform";
-import { MapPin, BadgeCheck, Check, ShieldCheck, Calendar, Settings, Fuel, Gauge } from "lucide-react";
+import { Check } from "lucide-react";
 import ImageGallery from "@/components/ImageGallery";
 import ShareButtons from "@/components/ShareButtons";
 import { TrackRecentView } from "@/components/CarActions";
-import SpecSheet from "@/components/SpecSheet";
-import CarReviewsSection from "@/components/CarReviewsSection";
-import FeatureList from "@/components/FeatureList";
 import TrackEventOnMount from "@/components/TrackEventOnMount";
-import CarContactActions from "@/components/CarContactActions";
 import Link from "next/link";
-import Image from "next/image";
 import Script from "next/script";
 import { absoluteUrl, absoluteMediaUrl, BRAND_MARK_SQUARE, getSiteOrigin } from "@/lib/site-url";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
@@ -31,7 +26,7 @@ import { slugifyCarSegment } from "@/lib/seo-car-slug";
 import { facetPathSegment } from "@/lib/seo-car-facets";
 import { carListingPath } from "@/lib/car-listing-url";
 import { stockCode } from "@/lib/stock-code";
-import { FUEL_LABELS, CAR_STATUS_LABELS, CAR_STATUS_COLORS } from "@/lib/constants";
+import { FUEL_LABELS } from "@/lib/constants";
 import {
   buildCarListingDealerMetadata,
   buildListingSellerSchema,
@@ -39,11 +34,19 @@ import {
 import CarListingRelatedSearches from "@/components/CarListingRelatedSearches";
 import AlsoViewed from "@/components/AlsoViewed";
 import CarDetailMobileBar from "@/components/CarDetailMobileBar";
-import CarActionButtons from "@/components/CarActionButtons";
 import MobileSection from "@/components/MobileSection";
 import AdminCardControls from "@/components/AdminCardControls";
-import NikkyoSpecTable from "@/components/NikkyoSpecTable";
-import CarSimilarStrip from "@/components/detail/CarSimilarStrip";
+import CarActionButtons from "@/components/CarActionButtons";
+import SpecSheet from "@/components/SpecSheet";
+import ListingTitleBar from "@/components/detail/ListingTitleBar";
+import DetailsGrid from "@/components/detail/DetailsGrid";
+import FeatureChecklist from "@/components/detail/FeatureChecklist";
+import DescriptionCard from "@/components/detail/DescriptionCard";
+import SellerCard from "@/components/detail/SellerCard";
+import CallbackRequestForm from "@/components/detail/CallbackRequestForm";
+import PriceActionsCard from "@/components/detail/PriceActionsCard";
+import SafetyTipsCard from "@/components/detail/SafetyTipsCard";
+import RailCard from "@/components/detail/RailCard";
 import CarSimilarSection from "@/components/detail/CarSimilarSection";
 import CarReviewsBlock from "@/components/detail/CarReviewsBlock";
 import CarWikiBlock from "@/components/detail/CarWikiBlock";
@@ -138,6 +141,16 @@ function freshnessLabel(days) {
 
 const SYSTEM_BADGES = new Set(["HOT", "NEW", "FEATURED", "SPOTLIGHT", "SOLD"]);
 
+function prettyKenyanPhone(digits) {
+  if (!digits) return "";
+  const d = String(digits).replace(/\D/g, "");
+  if (d.startsWith("254") && d.length === 12) {
+    return `+${d.slice(0, 3)} ${d.slice(3, 6)} ${d.slice(6, 9)} ${d.slice(9)}`;
+  }
+  if (d.length >= 9) return `+${d}`;
+  return d;
+}
+
 export default async function CarDetailPage({ params }) {
   const { id: ref } = await params;
   const carData = await getCarData(ref);
@@ -150,28 +163,30 @@ export default async function CarDetailPage({ params }) {
 
   const { car, dealer } = { car: carData, dealer: carData.dealer };
   const soldGrace = isInSoldGracePeriod(car);
-  const daysLeftOnSite = daysRemainingOnSite(car);
+  daysRemainingOnSite(car);
 
   const { title } = buildCarListingDealerMetadata(car, dealer);
   const carName = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} ${car.year}${car.color ? ` ${car.color}` : ""}`;
-  const titleWithoutYear = `${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const primaryImg = car.images.find((i) => i.isPrimary) || car.images[0];
   const specItems = buildCarSpecSummaryItems(car);
   const specString = specItems.join(", ");
   const featureList = meaningfulFeatureList(car.features);
 
-  const freshDays = daysSince(car.createdAt);
-  const freshLabel = freshnessLabel(freshDays);
+  const freshLabel = freshnessLabel(daysSince(car.createdAt));
   const sellerNotes = [
     car.negotiable ? "Price negotiable" : null,
     ...(Array.isArray(car.badges) ? car.badges.map((b) => String(b).trim()).filter((b) => b && !SYSTEM_BADGES.has(b.toUpperCase())) : []),
   ].filter(Boolean);
+
   const salesmanNumbers = await getSalesmanWhatsappNumbers();
   const waDigits = pickSalesmanWhatsapp(salesmanNumbers, car.id);
   const whatsappHref = whatsappLink(waDigits, title, "BIDGARI");
   const callHref = telHrefFromMsisdn(waDigits);
+  const prettyPhone = prettyKenyanPhone(waDigits);
   const locationLabel = car.location || dealer.location || dealer.county || "Kenya";
   const code = stockCode(car);
+  const priceLabel = formatCarPrice(car);
+
   const quickFacts = [
     car.year ? { icon: "calendar", value: String(car.year) } : null,
     car.transmission
@@ -186,19 +201,9 @@ export default async function CarDetailPage({ params }) {
         }
       : null,
     car.fuelType ? { icon: "fuel", value: FUEL_LABELS[car.fuelType] || car.fuelType } : null,
-    locationLabel ? { icon: "location", value: locationLabel } : null,
     positiveNum(car.mileage) ? { icon: "mileage", value: formatMileage(car.mileage) } : null,
   ].filter(Boolean);
 
-  // Quick-fact icon lookup (serializable string keys cross the RSC boundary,
-  // lucide components are resolved only where rendered).
-  const FACT_ICONS = {
-    calendar: Calendar,
-    settings: Settings,
-    fuel: Fuel,
-    location: MapPin,
-    mileage: Gauge,
-  };
   const seoDescription = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} in ${car.location || car.dealer?.location || "Kenya"} at ${formatCarPrice(car)}.${car.mileage ? ` ${formatMileage(car.mileage)}.` : ""} Sold by BIDGARI with full buyer support.`;
 
   const listingUrl = absoluteUrl(carListingPath(car));
@@ -334,338 +339,309 @@ export default async function CarDetailPage({ params }) {
       {heroPreloadUrl && (
         <link rel="preload" as="image" href={heroPreloadUrl} fetchPriority="high" />
       )}
-      <div className="bg-[var(--bg)] min-h-screen pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
-      <TrackEventOnMount
-        name="view_car"
-        payload={{
-          car_id: car.id,
-          dealer_id: dealer.id,
-          make: car.make,
-          model: car.model,
-          price: Number(car.price || 0),
-        }}
-      />
-      <Script
-        id="car-json-ld"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <Script
-        id="car-breadcrumb-json-ld"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
-      />
-      
-      <div className="container mx-auto px-4 sm:px-6 max-w-[1475px] pt-3 sm:pt-4 pb-24 lg:pb-16">
-        <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
+      <div className="min-h-screen bg-[var(--bg)] pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:pb-20">
+        <TrackEventOnMount
+          name="view_car"
+          payload={{
+            car_id: car.id,
+            dealer_id: dealer.id,
+            make: car.make,
+            model: car.model,
+            price: Number(car.price || 0),
+          }}
+        />
+        <Script
+          id="car-json-ld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <Script
+          id="car-breadcrumb-json-ld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        />
 
-        {/* Top nav / breadcrumb */}
-        <div className="flex items-center gap-2 mb-4 sm:mb-5">
-          <Link
-            href="/cars"
-            className="btn btn-neutral btn-icon w-11 h-11 sm:w-8 sm:h-8"
-            aria-label="Back to inventory"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-          </Link>
-          <nav aria-label="Breadcrumb" className="text-[11px] font-bold uppercase tracking-wider text-slate-500 leading-none">
-            <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
-            <span className="mx-1.5 opacity-40">/</span>
-            <Link href="/cars" className="hover:text-slate-900 transition-colors">Cars</Link>
-            <span className="mx-1.5 opacity-40">/</span>
-            <span className="text-slate-700">{car.make} {car.model}</span>
-            {code ? (
-              <>
-                <span className="mx-1.5 opacity-40">/</span>
-                <span className="text-slate-700">{code}</span>
-              </>
-            ) : null}
-          </nav>
-        </div>
+        <div className="container mx-auto max-w-[1475px] px-4 pb-24 pt-3 sm:px-6 sm:pt-4 lg:pb-16">
+          <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
 
-        {/* Vehicle title + metadata */}
-        <h1 className="text-[26px] sm:text-[30px] lg:text-[34px] font-bold tracking-tight text-slate-900 leading-[1.15]">
-          {carName}
-        </h1>
-        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-slate-500">
-          {code ? <span className="font-bold text-slate-700">Stock {code}</span> : null}
-          <span className="text-slate-400">·</span>
-          <span>{freshLabel}</span>
-          <span className="text-slate-400">·</span>
-          <span className="inline-flex items-center gap-1">
-            <MapPin className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />{locationLabel}
-          </span>
-          <span className="text-slate-400">·</span>
-          <span className={`font-bold uppercase tracking-widest ${soldGrace ? "text-red-600" : "text-emerald-600"}`}>
-            {soldGrace ? "SOLD" : "AVAILABLE"}
-          </span>
-          <span className="text-slate-400">·</span>
-          <span className="font-bold uppercase tracking-widest text-slate-900">
-            {car.imported === false ? "LOCAL" : (() => {
-              const flags = { Japan: "🇯🇵", UK: "🇬🇧", USA: "🇺🇸", UAE: "🇦🇪", Germany: "🇩🇪", "South Africa": "🇿🇦", Thailand: "🇹🇭", Singapore: "🇸🇬" };
-              const flag = flags[car.importCountry] || "";
-              return `IMPORTED${flag ? ` ${flag}` : ""}`;
-            })()}
-          </span>
-          {car.carStatus && (
-            <>
-              <span className="text-slate-400">·</span>
-              <span className={`font-bold uppercase tracking-widest text-[10px] px-1.5 py-0.5 rounded ${CAR_STATUS_COLORS[car.carStatus]}`}>
-                {CAR_STATUS_LABELS[car.carStatus]}
-              </span>
-            </>
-          )}
-        </div>
+          {/* Breadcrumb */}
+          <div className="mb-4 flex items-center gap-2 sm:mb-5">
+            <Link
+              href="/cars"
+              className="btn btn-neutral btn-icon h-11 w-11 sm:h-8 sm:w-8"
+              aria-label="Back to inventory"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            </Link>
+            <nav aria-label="Breadcrumb" className="text-[11px] font-bold uppercase leading-none tracking-wider text-slate-500">
+              <Link href="/" className="transition-colors hover:text-slate-900">Home</Link>
+              <span className="mx-1.5 opacity-40">/</span>
+              <Link href="/cars" className="transition-colors hover:text-slate-900">Cars</Link>
+              <span className="mx-1.5 opacity-40">/</span>
+              <span className="text-slate-700">{car.make} {car.model}</span>
+              {code ? (
+                <>
+                  <span className="mx-1.5 opacity-40">/</span>
+                  <span className="text-slate-700">{code}</span>
+                </>
+              ) : null}
+            </nav>
+          </div>
 
-        {/* ── Nikkyo-style columns: gallery | specifications | price ── */}
-        <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-12">
+          {/* Title + price */}
+          <ListingTitleBar
+            car={car}
+            dealer={dealer}
+            carName={carName}
+            priceLabel={priceLabel}
+            locationLabel={locationLabel}
+            freshLabel={freshLabel}
+            soldGrace={soldGrace}
+            quickFacts={quickFacts}
+          />
 
-          {/* Gallery column */}
-          <div className="order-1 lg:order-1 xl:order-1 lg:col-span-6 xl:col-span-5 min-w-0 space-y-4">
-            <div className="-mx-4 sm:-mx-6 lg:mx-0">
-              <ImageGallery
-                images={car.images}
-                title={title}
-                carId={car.id}
-                sold={soldGrace}
-                quickFacts={quickFacts}
-              />
-            </div>
-
-            {/* Key facts — mobile only, right under the photos */}
-            {quickFacts.length > 0 && (
-              <div className="flex flex-wrap items-center gap-1.5 lg:hidden">
-                {quickFacts.map((f, i) => {
-                  const Icon = FACT_ICONS[f.icon];
-                  return (
-                    <span key={i} className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-bold capitalize text-slate-700">
-                      {Icon && <Icon className="h-3.5 w-3.5 shrink-0 text-slate-500" aria-hidden />}
-                      <span className="truncate capitalize">{f.value}</span>
-                    </span>
-                  );
-                })}
+          {/* Mobile price above the fold */}
+          {!soldGrace && priceLabel && (
+            <div className="mt-3 lg:hidden">
+              <div className="rounded-lg border border-slate-200 bg-white px-4 py-3 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  Price
+                </p>
+                <p className="mt-0.5 text-2xl font-bold text-slate-900">
+                  {priceLabel}
+                </p>
+                {car.negotiable && (
+                  <p className="mt-1 text-xs text-slate-500">Negotiable</p>
+                )}
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Seller notes — real data-backed claims only */}
-            {sellerNotes.length > 0 && (
-              <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-                <div className="bg-[var(--sidebar-bar)] px-4 py-2.5">
-                  <h2 className="text-[12px] font-black uppercase tracking-widest text-white">Seller notes</h2>
-                </div>
-                <div className="p-4">
-                  <ul className="space-y-2">
+          {soldGrace ? (
+            <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[12.5px] font-medium text-red-700">
+              This vehicle has been sold. Message the BIDGARI team if you would like
+              something similar — we usually have fresh stock moving weekly.
+            </div>
+          ) : null}
+
+          {/* Gallery — full bleed on mobile, contained from sm up */}
+          <div className="-mx-4 mt-5 sm:-mx-6 sm:mt-6 lg:mx-0">
+            <ImageGallery
+              images={car.images}
+              title={title}
+              carId={car.id}
+              sold={soldGrace}
+              quickFacts={quickFacts}
+            />
+          </div>
+
+          {/* Two-column body: content + sticky rail */}
+          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
+
+            {/* ── Content column ── */}
+            <div className="order-2 min-w-0 space-y-6 lg:order-1 lg:col-span-8 xl:col-span-8">
+
+              {/* Mobile CTAs — the rail is below the fold on phones */}
+              <div className="lg:hidden">
+                <PriceActionsCard
+                  carId={car.id}
+                  dealerId={car.dealerId}
+                  carTitle={carName}
+                  prettyPhone={prettyPhone}
+                  whatsappHref={whatsappHref}
+                  callHref={callHref}
+                />
+              </div>
+
+              {/* Seller notes */}
+              {sellerNotes.length > 0 && (
+                <section className="rounded-xl border border-slate-200 bg-white px-5 py-4">
+                  <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {sellerNotes.map((note, i) => (
                       <li key={i} className="flex items-start gap-2 text-[13px] font-medium text-slate-600">
-                        <Check className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" strokeWidth={3} />
+                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" strokeWidth={3} aria-hidden />
                         <span className="leading-snug">{note}</span>
                       </li>
                     ))}
                   </ul>
-                </div>
-              </section>
-            )}
+                </section>
+              )}
 
-            {/* More {make} cars — fills the gallery column (desktop only) */}
-            <Suspense fallback={null}>
-              <CarSimilarStrip car={car} />
-            </Suspense>
-          </div>
-          <div className="order-3 lg:order-2 xl:order-2 lg:col-span-6 xl:col-span-4 min-w-0 space-y-5 max-lg:contents">
-            <div className="max-lg:order-6 min-w-0">
-              <NikkyoSpecTable car={car} title="Specifications" />
-            </div>
+              {/* Details */}
+              <DetailsGrid car={car} title="Details" />
 
-            {/* Description */}
-            <section className="overflow-hidden rounded-xl border border-slate-200 bg-white max-lg:order-7">
-              <div className="bg-[var(--sidebar-bar)] px-4 py-2.5">
-                <h2 className="text-[12px] font-black uppercase tracking-widest text-white">Description</h2>
-              </div>
-              <div className="p-5 text-[14px] text-slate-600 leading-[1.8]">
-                <p className="whitespace-pre-wrap">
-                  {specString ? <span className="font-bold text-slate-900">{specString}.</span> : null}{" "}
-                  {car.description?.trim() ||
-                    "No description yet. Message the BIDGARI team for condition, service history, and viewing times."}
-                </p>
-              </div>
-            </section>
+              {/* Features */}
+              {featureList.length > 0 && <FeatureChecklist car={car} title="Features" />}
 
-            {/* Reviews */}
-            <div className="max-lg:order-8 min-w-0">
+              {/* Description */}
+              <DescriptionCard car={car} specString={specString} />
+
+              {/* Reviews */}
               <Suspense fallback={<ReviewsSkeleton />}>
                 <CarReviewsBlock carId={car.id} />
               </Suspense>
-            </div>
-          </div>
 
-          {/* Price sidebar — mobile order-2 so price+contact+trust sit directly under
-            the gallery; specs/description land after them. Flip on lg+ back to
-            the classic right-rail placement (order-3). */}
-          <div className="order-2 lg:order-3 xl:order-3 lg:col-span-12 xl:col-span-3 min-w-0 space-y-5 max-lg:contents">
-            {/* Price card */}
-            <section className="rounded-xl border border-slate-200 bg-white p-5 max-lg:order-2">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Price</p>
-              <p className="mt-1 text-[30px] xl:text-[30px] leading-none font-black tracking-tighter text-slate-900 tabular-nums">
-                {formatCarPrice(car)}
-              </p>
-              <Suspense fallback={null}>
-                <CarMarketRange car={car} />
-              </Suspense>
-            </section>
-
-            {/* Contact actions */}
-            <div className="max-lg:order-3 min-w-0">
-              <CarContactActions
-                whatsappHref={whatsappHref}
-                callHref={callHref}
-                carId={car.id}
-                dealerId={car.dealerId}
-                carTitle={carName}
-              />
-            </div>
-
-            {/* BIDGARI trust */}
-            <section className="rounded-xl border border-slate-200 bg-white p-4 max-lg:order-4">
-              <div className="flex items-center gap-2">
-                <BadgeCheck className="w-5 h-5 text-emerald-500 shrink-0" />
-                <span className="text-[13px] font-black text-slate-900">BIDGARI Verified Listing</span>
+              {/* SEO depth — folded on mobile */}
+              <div className="min-w-0">
+                <MobileSection summary="More about this car">
+                  <Suspense fallback={null}>
+                    <CarWikiBlock car={car} />
+                  </Suspense>
+                  <CarListingRelatedSearches car={car} />
+                </MobileSection>
               </div>
-              <p className="mt-2 text-[12px] text-slate-500 leading-relaxed">
-                Sold by BIDGARI. We handle this sale for you and guide you through inspection and paperwork.
-              </p>
-            </section>
 
-            {/* Buy safely */}
-            <section className="rounded-xl border border-rose-100 bg-rose-50/60 p-4 max-lg:order-5">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-rose-500 shrink-0" />
-                <span className="text-[13px] font-black text-slate-900">Don't get scammed</span>
-              </div>
-              <ul className="mt-2 space-y-1.5">
-                <li className="flex items-start gap-1.5 text-[12px] text-slate-500 leading-relaxed">
-                  <Check className="w-3.5 h-3.5 mt-0.5 text-rose-500 shrink-0" strokeWidth={3} />
-                  Never pay a deposit to a private number — pay only at handover through BIDGARI.
-                </li>
-                <li className="flex items-start gap-1.5 text-[12px] text-slate-500 leading-relaxed">
-                  <Check className="w-3.5 h-3.5 mt-0.5 text-rose-500 shrink-0" strokeWidth={3} />
-                  We never ask for money on WhatsApp. If someone does, it isn't us.
-                </li>
-              </ul>
-              <div className="mt-3 flex items-center gap-4">
-                <Link href="/safety" className="text-[11px] font-bold text-rose-600 hover:underline">
-                  Safety guide
-                </Link>
-                <Link href="/report" className="text-[11px] font-bold text-slate-500 hover:text-slate-800 hover:underline">
-                  Report a scam
-                </Link>
-              </div>
-            </section>
-
-            {/* Features */}
-            {featureList.length > 0 && (
-              <section className="overflow-hidden rounded-xl border border-slate-200 bg-white max-lg:order-9">
-                <div className="bg-[var(--sidebar-bar)] px-4 py-2.5">
-                  <h2 className="text-[12px] font-black uppercase tracking-widest text-white">Features</h2>
-                </div>
-                <div className="p-4">
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                    {featureList.map((feature, i) => (
-                      <div key={i} className="flex items-start gap-2 text-[13px] font-medium text-slate-600">
-                        <Check className="w-4 h-4 mt-0.5 text-emerald-500 shrink-0" strokeWidth={3} />
-                        <span className="leading-snug">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
+              {/* Share */}
+              <section className="rounded-xl border border-slate-200 bg-white px-5 py-4">
+                <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                  Share this listing
+                </p>
+                <div className="flex items-center justify-between gap-4">
+                  <ShareButtons
+                    listingUrl={listingUrl}
+                    browseUrl={absoluteUrl("/cars")}
+                    title={title}
+                    price={priceLabel}
+                    dealerName="BIDGARI"
+                    location={locationLabel}
+                    mileageLabel={positiveNum(car.mileage) ? formatMileage(car.mileage) : null}
+                    previewImageUrl={`/api/cars/${car.id}/og-image`}
+                    photoUrl={primaryImg?.url ? absoluteMediaUrl(primaryImg.url) : null}
+                    sold={soldGrace}
+                  />
+                  <Link
+                    href={`/cars/${slugifyCarSegment(car.make)}`}
+                    className="hidden shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-400 transition-colors hover:text-slate-700 sm:block"
+                  >
+                    More {car.make}
+                  </Link>
                 </div>
               </section>
-            )}
 
-            {/* Request & actions — final WhatsApp CTA, below features/specs/description */}
-            <section className="overflow-hidden rounded-xl border border-slate-200 bg-white p-5 max-lg:order-10">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Get this car</p>
-              <CarActionButtons carId={car.id} dealerId={car.dealerId} carTitle={carName} price={formatCarPrice(car)} whatsappHref={whatsappHref} whatsappNumber={waDigits} />
-            </section>
-
-            {/* Admin quick actions (detail view) */}
-            <div className="flex justify-end max-lg:order-10">
-              <AdminCardControls car={car} inline />
+              {/* Explore links */}
+              <nav
+                aria-label="Explore related listings"
+                className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500"
+              >
+                <span className="font-black tracking-widest text-slate-500">Explore:</span>
+                <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-[var(--accent)] hover:underline">
+                  All {car.make}
+                </Link>
+                <span className="text-slate-300">·</span>
+                <Link href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`} className="text-[var(--accent)] hover:underline">
+                  {car.make} {car.model}
+                </Link>
+                {car.fuelType ? (
+                  <>
+                    <span className="text-slate-300">·</span>
+                    <Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`} className="text-[var(--accent)] hover:underline">
+                      {FUEL_LABELS[car.fuelType] || car.fuelType}
+                    </Link>
+                  </>
+                ) : null}
+              </nav>
             </div>
 
-            {/* SEO — folded into an accordion on mobile */}
-            <div className="max-lg:order-11 min-w-0">
-              <MobileSection summary="More about this car">
+            {/* ── Contact rail ── */}
+            <aside className="order-1 min-w-0 space-y-4 lg:order-2 lg:col-span-4 xl:col-span-3">
+              <div className="space-y-4 lg:sticky lg:top-4">
+                {/* Desktop CTAs */}
+                <div className="hidden lg:block">
+                  <PriceActionsCard
+                    carId={car.id}
+                    dealerId={car.dealerId}
+                    carTitle={carName}
+                    prettyPhone={prettyPhone}
+                    whatsappHref={whatsappHref}
+                    callHref={callHref}
+                  />
+                </div>
+
+                <SellerCard
+                  dealer={dealer}
+                  carId={car.id}
+                  carTitle={carName}
+                  locationLabel={locationLabel}
+                  whatsappHref={whatsappHref}
+                  callHref={callHref}
+                  prettyPhone={prettyPhone}
+                  count={dealer._count?.cars}
+                />
+
+                {/* Structured requests — finance, inspection, offer */}
+                <RailCard title="Make a request">
+                  <CarActionButtons
+                    carId={car.id}
+                    dealerId={car.dealerId}
+                    carTitle={carName}
+                    price={priceLabel}
+                    whatsappHref={whatsappHref}
+                    whatsappNumber={waDigits}
+                    showWhatsapp={false}
+                  />
+                </RailCard>
+
+                <RailCard title="Request a callback">
+                  <CallbackRequestForm
+                    carId={car.id}
+                    dealerId={car.dealerId}
+                    carTitle={carName}
+                  />
+                </RailCard>
+
                 <Suspense fallback={null}>
-                  <CarWikiBlock car={car} />
+                  <CarMarketRange car={car} />
                 </Suspense>
-                <CarListingRelatedSearches car={car} />
-              </MobileSection>
-            </div>
 
-            {/* Share */}
-            <section className="max-lg:order-12">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">Share this listing</p>
-              <ShareButtons
-                listingUrl={listingUrl}
-                browseUrl={absoluteUrl("/cars")}
-                title={title}
-                price={formatCarPrice(car)}
-                dealerName="BIDGARI"
-                location={car.location || dealer.location || "Kenya"}
-                mileageLabel={positiveNum(car.mileage) ? formatMileage(car.mileage) : null}
-                previewImageUrl={`/api/cars/${car.id}/og-image`}
-                photoUrl={primaryImg?.url ? absoluteMediaUrl(primaryImg.url) : null}
-                sold={soldGrace}
-              />
-            </section>
+                <SafetyTipsCard />
 
-            {/* Explore links */}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border border-slate-200 bg-white px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-slate-500 rounded-xl max-lg:order-13">
-              <span className="text-slate-500 font-black tracking-widest">Explore:</span>
-              <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-[var(--accent)] hover:underline">All {car.make}</Link>
-              <span className="text-slate-400">·</span>
-              <Link href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`} className="text-[var(--accent)] hover:underline">{car.make} {car.model}</Link>
-              {car.fuelType && (<><span className="text-slate-400">·</span><Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`} className="text-[var(--accent)] hover:underline">{FUEL_LABELS[car.fuelType] || car.fuelType}</Link></>)}
-            </div>
+                {/* Admin quick actions */}
+                <div className="flex justify-end">
+                  <AdminCardControls car={car} inline />
+                </div>
+              </div>
+            </aside>
+          </div>
+
+          {/* Similar cars — full width */}
+          <div className="mt-10">
+            <Suspense fallback={null}>
+              <CarSimilarSection car={car} />
+            </Suspense>
+          </div>
+
+          {/* People who viewed this also looked at */}
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <AlsoViewed carId={car.id} />
           </div>
         </div>
 
-        {/* Similar cars — full width */}
-        <div className="mt-10">
-          <Suspense fallback={null}>
-            <CarSimilarSection car={car} />
-          </Suspense>
-        </div>
+        {/* Mobile bottom bar */}
+        <CarDetailMobileBar
+          whatsappHref={whatsappHref}
+          callHref={callHref}
+          priceLabel={priceLabel}
+          carId={car.id}
+          dealerId={car.dealerId}
+          carTitle={carName}
+        />
 
-        {/* People who viewed this also looked at */}
-        <div className="px-4 sm:px-6 max-w-6xl mx-auto"><AlsoViewed carId={car.id} /></div>
+        <SpecSheet car={car} />
       </div>
-
-      {/* Mobile bottom bar */}
-      <CarDetailMobileBar
-        whatsappHref={whatsappHref}
-        callHref={callHref}
-        priceLabel={formatCarPrice(car)}
-        carId={car.id}
-        dealerId={car.dealerId}
-        carTitle={carName}
-      />
-
-      <SpecSheet car={car} />
-    </div>
     </>
   );
 }
 
 function ReviewsSkeleton() {
   return (
-    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white animate-pulse">
+    <section className="animate-pulse overflow-hidden rounded-xl border border-slate-200 bg-white">
       <div className="bg-slate-200 px-4 py-2.5">
-        <div className="h-3 w-24 bg-slate-300 rounded" />
+        <div className="h-3 w-24 rounded bg-slate-300" />
       </div>
-      <div className="p-4 space-y-3">
-        <div className="h-3 w-2/3 bg-slate-200 rounded" />
-        <div className="h-3 w-1/2 bg-slate-200 rounded" />
-        <div className="h-24 w-full bg-slate-100 rounded" />
+      <div className="space-y-3 p-4">
+        <div className="h-3 w-2/3 rounded bg-slate-200" />
+        <div className="h-3 w-1/2 rounded bg-slate-200" />
+        <div className="h-24 w-full rounded bg-slate-100" />
       </div>
     </section>
   );

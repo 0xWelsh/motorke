@@ -353,7 +353,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
       <div
         id="hero-gallery"
         ref={heroRef}
-        className="relative w-full h-[38vh] min-h-[230px] max-h-[360px] lg:h-auto lg:aspect-[4/3] lg:max-h-[640px] bg-slate-100 overflow-hidden select-none lg:rounded-[6px]"
+        className="relative w-full h-[38vh] min-h-[230px] max-h-[360px] lg:h-auto lg:aspect-[4/3] lg:max-h-[640px] bg-slate-100 overflow-hidden select-none -mx-4 sm:mx-0 rounded-none sm:rounded-lg border-b sm:border-0 border-slate-200 bg-white shadow-none sm:shadow-sm"
       >
         <div
           className="absolute inset-0 cursor-pointer"
