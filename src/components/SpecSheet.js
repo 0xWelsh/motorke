@@ -1,12 +1,15 @@
 import { formatCarPrice } from "@/lib/utils";
-import { buildCarDetailSpecRows, meaningfulFeatureList } from "@/lib/car-display";
-import { getThumbnailUrl } from "@/lib/image-transform";
+import { buildCarDetailSpecRows } from "@/lib/car-display";
+import { buildFeatureItems } from "@/lib/car-detail-fields";
+import { getHeroImageUrl } from "@/lib/image-transform";
 
 export default function SpecSheet({ car }) {
   const title = `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`;
   const primaryImg = car.images.find((i) => i.isPrimary) || car.images[0];
   const specs = buildCarDetailSpecRows(car);
-  const printFeatures = meaningfulFeatureList(car.features).slice(0, 16);
+  // Same de-duplicated builder the on-screen Features section uses, so the
+  // print sheet can never disagree with what the buyer just read.
+  const printFeatures = buildFeatureItems(car, 16);
 
   return (
     <div id="spec-sheet" className="hidden print:block bg-white text-black p-8 font-sans min-h-[297mm] w-[210mm] mx-auto border border-gray-100">
@@ -31,7 +34,7 @@ export default function SpecSheet({ car }) {
         <div>
            {primaryImg && (
              <div className="aspect-[4/3] bg-gray-100 rounded-2xl overflow-hidden border border-gray-200">
-                <img src={getThumbnailUrl(primaryImg.url, 800)} alt={title} className="w-full h-full object-cover" />
+                <img src={getHeroImageUrl(primaryImg.url, 85, 800)} alt={title} className="w-full h-full object-cover" />
              </div>
            )}
            <div className="mt-8">
@@ -72,9 +75,9 @@ export default function SpecSheet({ car }) {
         <div className="mb-10">
           <h3 className="text-xs font-bold uppercase tracking-widest text-orange-600 mb-4">Included Features</h3>
           <div className="grid grid-cols-4 gap-2">
-            {printFeatures.map((f) => (
-              <div key={f} className="text-[11px] font-bold bg-gray-50 border border-gray-100 px-3 py-2 text-gray-700">
-               , {f}
+{printFeatures.map((f, i) => (
+              <div key={`${f}-${i}`} className="text-[11px] font-bold bg-gray-50 border border-gray-100 px-3 py-2 text-gray-700">
+                , {f}
               </div>
             ))}
           </div>

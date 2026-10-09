@@ -170,13 +170,16 @@ export default async function CarDetailPage({ params }) {
   const primaryImg = car.images.find((i) => i.isPrimary) || car.images[0];
   const specItems = buildCarSpecSummaryItems(car);
   const specString = specItems.join(", ");
-  const featureList = meaningfulFeatureList(car.features);
+  // Used only to decide whether the Features section renders at all; the list
+// itself is built inside FeatureChecklist.
+const hasFeatures = meaningfulFeatureList(car.features).length > 0;
 
   const freshLabel = freshnessLabel(daysSince(car.createdAt));
-  const sellerNotes = [
-    car.negotiable ? "Price negotiable" : null,
-    ...(Array.isArray(car.badges) ? car.badges.map((b) => String(b).trim()).filter((b) => b && !SYSTEM_BADGES.has(b.toUpperCase())) : []),
-  ].filter(Boolean);
+  // "Price negotiable" is omitted: the title bar already labels the price as
+  // negotiable, and Negotiable repeats again in the Details grid.
+  const sellerNotes = Array.isArray(car.badges)
+    ? [...new Set(car.badges.map((b) => String(b).trim()).filter((b) => b && !SYSTEM_BADGES.has(b.toUpperCase())))]
+    : [];
 
   const salesmanNumbers = await getSalesmanWhatsappNumbers();
   const waDigits = pickSalesmanWhatsapp(salesmanNumbers, car.id);
@@ -400,23 +403,6 @@ export default async function CarDetailPage({ params }) {
             quickFacts={quickFacts}
           />
 
-          {/* Mobile price above the fold */}
-          {!soldGrace && priceLabel && (
-            <div className="mt-3 lg:hidden">
-              <div className="rounded-lg border border-slate-200 bg-white px-4 py-3 shadow-sm">
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  Price
-                </p>
-                <p className="mt-0.5 text-2xl font-bold text-slate-900">
-                  {priceLabel}
-                </p>
-                {car.negotiable && (
-                  <p className="mt-1 text-xs text-slate-500">Negotiable</p>
-                )}
-              </div>
-            </div>
-          )}
-
           {soldGrace ? (
             <div className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[12.5px] font-medium text-red-700">
               This vehicle has been sold. Message the BIDGARI team if you would like
@@ -431,7 +417,6 @@ export default async function CarDetailPage({ params }) {
               title={title}
               carId={car.id}
               sold={soldGrace}
-              quickFacts={quickFacts}
             />
           </div>
 
@@ -439,9 +424,10 @@ export default async function CarDetailPage({ params }) {
           <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
 
             {/* ── Content column ── */}
-            <div className="order-2 min-w-0 space-y-6 lg:order-1 lg:col-span-8 xl:col-span-8">
+            <div className="order-1 min-w-0 space-y-5 lg:order-1 lg:col-span-8 xl:col-span-8">
 
-              {/* Mobile CTAs — the rail is below the fold on phones */}
+              {/* Mobile CTAs — the rail is below the fold on phones, and the
+                  sticky bottom bar only carries WhatsApp + call. */}
               <div className="lg:hidden">
                 <PriceActionsCard
                   carId={car.id}
@@ -471,7 +457,7 @@ export default async function CarDetailPage({ params }) {
               <DetailsGrid car={car} title="Details" />
 
               {/* Features */}
-              {featureList.length > 0 && <FeatureChecklist car={car} title="Features" />}
+              {hasFeatures && <FeatureChecklist car={car} title="Features" />}
 
               {/* Description */}
               <DescriptionCard car={car} specString={specString} />
@@ -543,7 +529,7 @@ export default async function CarDetailPage({ params }) {
             </div>
 
             {/* ── Contact rail ── */}
-            <aside className="order-1 min-w-0 space-y-4 lg:order-2 lg:col-span-4 xl:col-span-3">
+            <aside className="order-2 min-w-0 space-y-4 lg:order-2 lg:col-span-4 xl:col-span-4">
               <div className="space-y-4 lg:sticky lg:top-4">
                 {/* Desktop CTAs */}
                 <div className="hidden lg:block">

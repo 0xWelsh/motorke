@@ -6,9 +6,9 @@ import { buildDetailFieldRows } from "@/lib/car-detail-fields";
 
 /**
  * Marketplace-style details grid: uppercase micro-labels over bold values,
- * flowing across columns instead of a dense two-column table.
- * Secondary rows stay behind "Show all" so sparse listings don't open as a
- * wall of "—".
+ * flowing across columns instead of a dense two-column table. Two columns on
+ * a phone so the always-open rows stay above the fold. Secondary rows stay
+ * behind "Show all" so sparse listings don't open as a wall of "—".
  */
 export default function DetailsGrid({ car, title = "Details" }) {
   const [showAll, setShowAll] = useState(false);
@@ -20,17 +20,17 @@ export default function DetailsGrid({ car, title = "Details" }) {
 
   return (
     <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-      <div className="flex items-center justify-between gap-3 px-3 pt-4 sm:px-5 sm:pt-5">
+      <div className="flex items-center justify-between gap-3 px-4 pt-4 sm:px-5 sm:pt-5">
         <h2 className="text-[15px] font-bold text-slate-800">{title}</h2>
       </div>
 
-      <div className="grid grid-cols-2 gap-x-4 gap-y-5 px-3 pb-5 pt-4 sm:grid-cols-3 sm:px-5 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-4 px-4 pb-5 pt-4 sm:grid-cols-3 sm:px-5 lg:grid-cols-4 xl:grid-cols-5">
         {visible.map((row, i) => (
           <div key={`${row.label}-${i}`} className="min-w-0">
-            <p className="text-[9px] font-bold uppercase tracking-[0.08em] text-slate-400 leading-tight">
+            <p className="text-[9px] font-bold uppercase leading-tight tracking-[0.08em] text-slate-400">
               {row.label}
             </p>
-            <p className="mt-1 text-[13px] font-bold text-[var(--accent)] leading-snug break-words">
+            <p className="mt-0.5 break-words text-[13px] font-bold leading-snug text-[var(--accent)]">
               {row.value}
             </p>
           </div>

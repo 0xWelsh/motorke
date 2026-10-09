@@ -56,10 +56,10 @@ export default function CarDetailMobileBar({ whatsappHref, callHref, priceLabel,
       <MobileBottomBarSignal />
       <div className="fixed bottom-0 inset-x-0 z-50 bg-white border-t border-slate-200 px-4 pt-2.5 pb-2.5 flex items-center gap-3 lg:hidden shadow-sm" style={{ paddingBottom: "max(0.625rem, env(safe-area-inset-bottom))" }}>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-extrabold text-slate-900 tabular-nums truncate">
+        <p className="truncate text-sm font-extrabold tabular-nums text-slate-900">
           {priceLabel}
         </p>
-        <p className="text-[10px] font-bold text-[var(--accent)]">Available</p>
+        <p className="text-[10px] font-bold text-[var(--accent)]">Contact seller</p>
       </div>
       {whatsappHref && (
         <a

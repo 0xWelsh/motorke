@@ -14,7 +14,7 @@ const MAX_ZOOM = 4;
 const DOUBLE_TAP_MS = 300;
 const DRAG_LOCK = 10;
 
-export default function ImageGallery({ images, title, carId, isLoggedIn = null, sold = false, quickFacts = [] }) {
+export default function ImageGallery({ images, title, carId, isLoggedIn = null, sold = false }) {
   const router = useRouter();
   const { user: clientUser } = useClientSession();
   const effectiveLoggedIn = isLoggedIn !== null ? isLoggedIn : Boolean(clientUser);
@@ -353,7 +353,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
       <div
         id="hero-gallery"
         ref={heroRef}
-        className="relative w-full h-[38vh] min-h-[230px] max-h-[360px] lg:h-auto lg:aspect-[4/3] lg:max-h-[640px] bg-slate-100 overflow-hidden select-none -mx-4 sm:mx-0 rounded-none sm:rounded-lg border-b sm:border-0 border-slate-200 bg-white shadow-none sm:shadow-sm"
+        className="relative w-full aspect-[4/3] max-h-[52vh] sm:max-h-[420px] lg:h-auto lg:aspect-[4/3] lg:max-h-[640px] bg-slate-100 overflow-hidden select-none -mx-4 sm:mx-0 rounded-none sm:rounded-lg border-b sm:border-0 border-slate-200 bg-white shadow-none sm:shadow-sm"
       >
         <div
           className="absolute inset-0 cursor-pointer"
@@ -467,18 +467,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
           </div>
         </div>
 
-        {/* Vehicle metadata strip — desktop (Nikkyo-style) */}
-        {quickFacts?.length > 0 && (
-          <div className="pointer-events-none hidden lg:flex absolute inset-x-0 bottom-0 z-20 flex-wrap items-center gap-x-2 bg-gradient-to-t from-black/85 via-black/55 to-transparent px-4 pt-10 pb-3">
-            {quickFacts.map((f, i) => (
-              <span key={i} className="inline-flex items-center gap-x-2 text-[11px] font-bold tracking-wide text-white">
-                {i > 0 && <span className="text-white/40" aria-hidden>·</span>}
-                <span className="truncate">{f.value}</span>
-              </span>
-            ))}
-          </div>
-        )}
-
         {/* Photo count badge */}
         {images.length > 1 && (
           <button
@@ -514,7 +502,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); justSwipedRef.current = true; setTimeout(() => { justSwipedRef.current = false; }, 400); goPrev(); }}
-              className="flex absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 sm:w-9 sm:h-9 items-center justify-center bg-black/40 backdrop-blur-md text-white rounded-full hover:bg-black/60 transition-colors active:scale-95"
+              className="hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 items-center justify-center bg-black/40 backdrop-blur-md text-white rounded-full hover:bg-black/60 transition-colors active:scale-95"
               aria-label="Previous photo"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -524,7 +512,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); justSwipedRef.current = true; setTimeout(() => { justSwipedRef.current = false; }, 400); goNext(); }}
-              className="flex absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 sm:w-9 sm:h-9 items-center justify-center bg-black/40 backdrop-blur-md text-white rounded-full hover:bg-black/60 transition-colors active:scale-95"
+              className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 items-center justify-center bg-black/40 backdrop-blur-md text-white rounded-full hover:bg-black/60 transition-colors active:scale-95"
               aria-label="Next photo"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -555,7 +543,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
 
       {/* Mobile thumbnails — quick switching without opening the lightbox */}
       {images.length > 1 && (
-        <div ref={mobileThumbRef} className="flex gap-1.5 mt-2 overflow-x-auto pb-1 lg:hidden">
+        <div ref={mobileThumbRef} className="flex gap-1.5 mt-2 overflow-x-auto pb-1 lg:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {images.slice(0, galleryLimits.maxThumbs).map((img, i) => (
             <button
               key={i}

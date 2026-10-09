@@ -14,19 +14,40 @@ export function positiveNum(n) {
 }
 
 /**
- * Listing / chip text from free-text feature arrays — drop empty, "0", "N/A", etc.
+ * Canonical key for collapsing repeated entries in a free-text equipment list.
+ * Dealers type the same feature with different casing, spacing and trailing
+ * punctuation, so "Airbags", "airbags." and " AIRBAGS " must all resolve to
+ * one key while the first-seen casing is what gets rendered.
+ */
+export function featureDedupeKey(label) {
+  return String(label ?? "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/[.,;:!?]+$/g, "")
+    .trim();
+}
+
+/**
+ * Listing / chip text from free-text feature arrays — drop empty, "0", "N/A",
+ * etc., and keep only the first occurrence of each feature.
  */
 export function meaningfulFeatureList(features) {
   if (!Array.isArray(features)) return [];
-  return features
-    .map((s) => String(s ?? "").trim())
-    .filter((s) => {
-      if (!s) return false;
-      const L = s.toLowerCase();
-      if (["n/a", "na", "none", "-", "—", "null", "undefined", "nil"].includes(L)) return false;
-      if (L === "0" || /^0+\.?0*$/.test(L)) return false;
-      return true;
-    });
+  const seen = new Set();
+  const out = [];
+  for (const raw of features) {
+    const s = String(raw ?? "").trim();
+    if (!s) continue;
+    const L = s.toLowerCase();
+    if (["n/a", "na", "none", "-", "—", "null", "undefined", "nil"].includes(L)) continue;
+    if (L === "0" || /^0+\.?0*$/.test(L)) continue;
+    const key = featureDedupeKey(s);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(s);
+  }
+  return out;
 }
 
 /** One-line spec fragments for cards and detail intro (no fake V8 / twin turbo). */
