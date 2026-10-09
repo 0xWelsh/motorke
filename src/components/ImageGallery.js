@@ -5,13 +5,11 @@ import { getHeroImageUrl, getGalleryImageUrl, getPreloadImageUrl, getThumbnailUr
 import { saveDataGalleryLimits } from "@/lib/save-data";
 import { useSaveData } from "@/components/SaveDataProvider";
 import { useClientSession } from "@/hooks/use-client-session";
-import { ArrowLeft, Heart, MoreHorizontal, X, Share2, Plus, Minus, RotateCcw } from "lucide-react";
+import { ArrowLeft, Heart, MoreHorizontal, X, Share2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { markLightboxOpen, markLightboxClose } from "@/lib/back-nav";
 
 const SWIPE_THRESHOLD = 48;
-const MAX_ZOOM = 4;
-const DOUBLE_TAP_MS = 300;
 const DRAG_LOCK = 10;
 
 export default function ImageGallery({ images, title, carId, isLoggedIn = null, sold = false }) {
@@ -36,10 +34,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
   const justSwipedRef = useRef(false);
   const heroRef = useRef(null);
 
-  const [scale, setScale] = useState(1);
-  const [panPos, setPanPos] = useState({ x: 0, y: 0 });
-  const lbTouchRef = useRef(null);
-  const lastTapRef = useRef(0);
   const lbCarouselRef = useRef(null);
   const [lbDragOffset, setLbDragOffset] = useState(0);
   const [lbDragging, setLbDragging] = useState(false);
@@ -113,29 +107,15 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
   const goNext = useCallback(() => {
     if (!images?.length) return;
     setActive((i) => (i + 1) % images.length);
-    setScale(1);
-    setPanPos({ x: 0, y: 0 });
   }, [images]);
 
   const goPrev = useCallback(() => {
     if (!images?.length) return;
     setActive((i) => (i - 1 + images.length) % images.length);
-    setScale(1);
-    setPanPos({ x: 0, y: 0 });
   }, [images]);
 
-  const resetView = useCallback(() => {
-    setScale(1);
-    setPanPos({ x: 0, y: 0 });
-  }, []);
-
   const openLightbox = useCallback(() => {
-    resetView();
     setLightbox(true);
-  }, [resetView]);
-
-  const zoomBy = useCallback((factor) => {
-    setScale((s) => Math.min(MAX_ZOOM, Math.max(1, +(s * factor).toFixed(2))));
   }, []);
 
   const onHeroTouchStart = (e) => {
@@ -245,19 +225,15 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
     const touches = e.touches;
     setLbTouching(true);
 
-    if (touches.length === 1 && scale <= 1) {
+    // Only a single finger starts a swipe. A two-finger pinch is left to the
+    // page so it cannot be mistaken for a photo zoom.
+    if (touches.length === 1) {
       lbCarouselRef.current = {
         startX: touches[0].clientX,
         startY: touches[0].clientY,
       };
       setLbDragging(false);
       setLbDragOffset(0);
-    } else {
-      lbTouchRef.current = {
-        touches: Array.from(touches).map((t) => ({ x: t.clientX, y: t.clientY })),
-        scale,
-        pan: { ...panPos },
-      };
     }
   };
 
@@ -275,30 +251,10 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
       lbCarouselRef.current.moved = true;
       setLbDragging(true);
       setLbDragOffset(dx);
-      return;
     }
-
-    if (!lbTouchRef.current) return;
-
-    if (touches.length === 2) {
-      e.preventDefault();
-      const prev = lbTouchRef.current.touches;
-      const dx = touches[0].clientX - touches[1].clientX;
-      const dy = touches[0].clientY - touches[1].clientY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const pdx = prev[0].x - prev[1].x;
-      const pdy = prev[0].y - prev[1].y;
-      const pDist = Math.sqrt(pdx * pdx + pdy * pdy);
-      const newScale = Math.min(MAX_ZOOM, Math.max(1, lbTouchRef.current.scale * (dist / pDist)));
-      setScale(newScale);
-    } else if (touches.length === 1 && scale > 1) {
-      const dx = touches[0].clientX - lbTouchRef.current.touches[0].x;
-      const dy = touches[0].clientY - lbTouchRef.current.touches[0].y;
-      setPanPos({
-        x: lbTouchRef.current.pan.x + dx,
-        y: lbTouchRef.current.pan.y + dy,
-      });
-    }
+    // Two-finger gestures are deliberately ignored: they are how a phone user
+    // tries to magnify a photo, and letting them through fights the viewport
+    // lock on the page and leaves the reader stuck in a zoomed photo.
   };
 
   const onLbTouchEnd = (e) => {
@@ -316,21 +272,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
       setLbDragging(false);
       setLbDragOffset(0);
       lbCarouselRef.current = null;
-      return;
     }
-
-    if (!lbTouchRef.current) return;
-
-    const now = Date.now();
-    if (now - lastTapRef.current < DOUBLE_TAP_MS) {
-      setScale((s) => (s > 1 ? 1 : 2.5));
-      setPanPos({ x: 0, y: 0 });
-      lastTapRef.current = 0;
-      lbTouchRef.current = null;
-      return;
-    }
-    lastTapRef.current = now;
-    lbTouchRef.current = null;
   };
 
   if (!images?.length) {
@@ -353,7 +295,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
       <div
         id="hero-gallery"
         ref={heroRef}
-        className="relative w-full aspect-[4/3] max-h-[52vh] sm:max-h-[420px] lg:h-auto lg:aspect-[4/3] lg:max-h-[640px] bg-slate-100 overflow-hidden select-none -mx-4 sm:mx-0 rounded-none sm:rounded-lg border-b sm:border-0 border-slate-200 bg-white shadow-none sm:shadow-sm"
+        className="relative w-full aspect-[4/3] max-h-[52vh] sm:max-h-[420px] lg:h-auto lg:aspect-[4/3] lg:max-h-[640px] bg-slate-100 overflow-hidden select-none rounded-none border-0 lg:rounded-lg border-slate-200 bg-white shadow-none sm:shadow-sm"
       >
         <div
           className="absolute inset-0 cursor-pointer"
@@ -548,7 +490,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
             <button
               key={i}
               type="button"
-              onClick={() => { setActive(i); setScale(1); setPanPos({ x: 0, y: 0 }); }}
+              onClick={() => setActive(i)}
               className={`relative aspect-video w-16 shrink-0 overflow-hidden rounded-md border-2 transition-all ${
                 i === active
                   ? "border-[var(--sidebar-bar)] ring-1 ring-[var(--sidebar-bar)]/50"
@@ -578,8 +520,8 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
             <button
               key={i}
               type="button"
-              onClick={() => { setActive(i); setScale(1); setPanPos({ x: 0, y: 0 }); }}
-              onMouseEnter={() => { setActive(i); setScale(1); setPanPos({ x: 0, y: 0 }); }}
+              onClick={() => setActive(i)}
+              onMouseEnter={() => setActive(i)}
               className={`relative aspect-video rounded-md overflow-hidden border-2 transition-all ${
                 i === active
                   ? "border-[var(--sidebar-bar)] ring-1 ring-[var(--sidebar-bar)]/50"
@@ -616,35 +558,6 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
             <X className="w-6 h-6" strokeWidth={2} />
           </button>
 
-          {/* Zoom controls */}
-          <div className="absolute top-16 right-3 z-[115] flex flex-col items-center gap-2">
-            <span className="text-[11px] font-semibold tabular-nums text-white/60">{Math.round(scale * 100)}%</span>
-            <button
-              type="button"
-              onClick={(e) => { e.stopPropagation(); zoomBy(1.5); }}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/25 transition-all"
-              aria-label="Zoom in"
-            >
-              <Plus className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              onClick={(e) => { e.stopPropagation(); zoomBy(0.67); }}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/25 transition-all"
-              aria-label="Zoom out"
-            >
-              <Minus className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              onClick={(e) => { e.stopPropagation(); resetView(); }}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/25 transition-all"
-              aria-label="Reset zoom"
-            >
-              <RotateCcw className="w-4 h-4" />
-            </button>
-          </div>
-
           <span className="absolute top-4 left-4 z-[110] text-[12px] font-semibold tracking-wide text-white/50">
             {active + 1} / {images.length}
           </span>
@@ -654,13 +567,11 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
           <div
             className="absolute inset-0 z-[105] overflow-hidden"
             onClick={(e) => {
-              // Mouse click on the backdrop (or the photo at 1x) closes;
-              // clicks on controls are stopPropagation'd. Touch keeps its own
-              // gestures (swipe / double-tap / pinch).
+              // Mouse click on the backdrop (or the photo) closes; clicks on
+              // controls are stopPropagation'd. Touch keeps its swipe gesture.
               if (e.nativeEvent.pointerType && e.nativeEvent.pointerType !== "mouse") return;
               if (lbDragging) return;
-              if (scale > 1) resetView();
-              else setLightbox(false);
+              setLightbox(false);
             }}
           >
             <div
@@ -673,25 +584,16 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
             >
               {images.map((img, i) => (
                 <div key={i} className="relative w-full h-full flex-shrink-0 flex items-center justify-center">
-                  <div
-                    className="relative w-full h-full flex items-center justify-center"
-                    style={i === active ? {
-                      transform: `translate(${panPos.x}px, ${panPos.y}px) scale(${scale})`,
-                      transition: lbTouching ? "none" : "transform 0.2s ease-out",
-                      willChange: "transform",
-                    } : {}}
-                  >
-                    <Image
-                      src={getHeroImageUrl(img.url)}
-                      alt={img.alt || `${title} photo ${i + 1}`}
-                      fill
-                      quality={saveDataQuality(saveData, 90)}
-                      className="object-contain"
-                      priority={i === active}
-                      fetchPriority={i === active ? "high" : "auto"}
-                      sizes="100vw"
-                    />
-                  </div>
+                  <Image
+                    src={getHeroImageUrl(img.url)}
+                    alt={img.alt || `${title} photo ${i + 1}`}
+                    fill
+                    quality={saveDataQuality(saveData, 90)}
+                    className="object-contain"
+                    priority={i === active}
+                    fetchPriority={i === active ? "high" : "auto"}
+                    sizes="100vw"
+                  />
                 </div>
               ))}
             </div>
@@ -726,7 +628,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
                     <button
                       key={i}
                       type="button"
-                      onClick={(e) => { e.stopPropagation(); setActive(i); setScale(1); setPanPos({ x: 0, y: 0 }); }}
+                      onClick={(e) => { e.stopPropagation(); setActive(i); }}
                       className={`relative flex-shrink-0 w-14 h-10 overflow-hidden rounded-lg border-2 transition-all ${
                         i === active
                           ? "border-white opacity-100 scale-105 shadow-lg"

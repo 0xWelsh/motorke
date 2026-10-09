@@ -48,6 +48,7 @@ import PriceActionsCard from "@/components/detail/PriceActionsCard";
 import SafetyTipsCard from "@/components/detail/SafetyTipsCard";
 import RailCard from "@/components/detail/RailCard";
 import CarSimilarSection from "@/components/detail/CarSimilarSection";
+import CarPeopleAlsoSearch from "@/components/detail/CarPeopleAlsoSearch";
 import CarReviewsBlock from "@/components/detail/CarReviewsBlock";
 import CarWikiBlock from "@/components/detail/CarWikiBlock";
 import CarMarketRange from "@/components/detail/CarMarketRange";
@@ -364,11 +365,24 @@ const hasFeatures = meaningfulFeatureList(car.features).length > 0;
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
         />
 
-        <div className="container mx-auto max-w-[1475px] px-4 pb-24 pt-3 sm:px-6 sm:pt-4 lg:pb-16">
-          <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
+        <TrackRecentView car={{ id: car.id, year: car.year, make: car.make, model: car.model, price: car.price, image: primaryImg?.url }} />
 
+        {/* Gallery first — a buyer decides whether to keep reading from the photo,
+            not the headline. Sits outside the padded container so it is truly
+            edge-to-edge on a phone, then re-enters the container at lg where
+            the two-column layout starts. */}
+        <div className="lg:mx-auto lg:max-w-[1475px] lg:px-6">
+          <ImageGallery
+            images={car.images}
+            title={title}
+            carId={car.id}
+            sold={soldGrace}
+          />
+        </div>
+
+        <div className="container mx-auto max-w-[1475px] px-4 pb-24 pt-4 sm:px-6 sm:pt-5 lg:pb-16">
           {/* Breadcrumb */}
-          <div className="mb-4 flex items-center gap-2 sm:mb-5">
+          <div className="mb-3 flex items-center gap-2 sm:mb-4">
             <Link
               href="/cars"
               className="btn btn-neutral btn-icon h-11 w-11 sm:h-8 sm:w-8"
@@ -410,18 +424,8 @@ const hasFeatures = meaningfulFeatureList(car.features).length > 0;
             </div>
           ) : null}
 
-          {/* Gallery — full bleed on mobile, contained from sm up */}
-          <div className="-mx-4 mt-5 sm:-mx-6 sm:mt-6 lg:mx-0">
-            <ImageGallery
-              images={car.images}
-              title={title}
-              carId={car.id}
-              sold={soldGrace}
-            />
-          </div>
-
           {/* Two-column body: content + sticky rail */}
-          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
+          <div className="mt-5 grid grid-cols-1 gap-6 lg:mt-6 lg:grid-cols-12 lg:gap-8">
 
             {/* ── Content column ── */}
             <div className="order-1 min-w-0 space-y-5 lg:order-1 lg:col-span-8 xl:col-span-8">
@@ -589,7 +593,14 @@ const hasFeatures = meaningfulFeatureList(car.features).length > 0;
             </aside>
           </div>
 
-          {/* Similar cars — full width */}
+          {/* People also search for — cross-inventory shortlist with a reason
+              on every card. Ahead of the same-make strip because it is the
+              better answer to "what else should I look at?". */}
+          <Suspense fallback={null}>
+            <CarPeopleAlsoSearch car={car} />
+          </Suspense>
+
+          {/* Similar cars — same make, full width */}
           <div className="mt-10">
             <Suspense fallback={null}>
               <CarSimilarSection car={car} />

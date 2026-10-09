@@ -109,6 +109,13 @@ export const metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
+  // Pinch-zoom on the page itself is switched off. Browsers keep resizing the
+  // viewport when a pinch gesture starts anywhere outside an element with its
+  // own touch-action, which on a listing page drags the price and the photo
+  // off-screen and leaves the reader zoomed in. In-page content stays
+  // horizontally swipeable because the gallery opts into that gesture.
+  maximumScale: 1,
+  userScalable: false,
   viewportFit: "cover",
   themeColor: "#f6f6f4",
 };
