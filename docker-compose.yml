@@ -1,15 +1,77 @@
-version: "3.8"
+# BIDGARI on a single Oracle Ampere A1 VM (Johannesburg).
+#
+# Everything co-located in one machine: Postgres and Next.js talk over the
+# loopback interface, so a page request never crosses an ocean. That is the
+# whole point — it collapses the four-hop chain Kenya -> Cloudflare -> Vercel
+# edge -> US compute -> EU database into a single local hop.
+
 services:
-  waha:
-    image: devlikeapro/waha:latest
-    container_name: bidgari-waha
+  db:
+    image: postgres:16-alpine
     restart: unless-stopped
-    ports:
-      - "3005:3000"
-    volumes:
-      - ./waha-sessions:/app/sessions
     environment:
-      WHATSAPP_DEFAULT_ENGINE: NOWEB
-      WAHA_WEBHOOK_URLS: http://host.docker.internal:3000/api/whatsapp-bot/webhook
+      POSTGRES_USER: ${POSTGRES_USER:-bidgari}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_DB: ${POSTGRES_DB:-bidgari}
+      # Keep the data directory small and startup fast on the Always Free
+      # 200 GB block volume.
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    command: >
+      postgres
+        -c max_connections=100
+        -c shared_buffers=256MB
+        -c work_mem=8MB
+        -c maintenance_work_mem=64MB
+        -c effective_cache_size=1GB
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-bidgari} -d ${POSTGRES_DB:-bidgari}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks: [app]
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+      DATABASE_URL: postgresql://${POSTGRES_USER:-bidgari}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-bidgari}?schema=public&connection_limit=10&pool_timeout=20
+      # Direct, non-pooled URL — Prisma needs this for migrations.
+      DIRECT_URL: postgresql://${POSTGRES_USER:-bidgari}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-bidgari}?schema=public
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    networks: [app]
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on: [app]
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:-bidgari.com}
+    networks: [app]
+
+networks:
+  app:
+    driver: bridge
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:

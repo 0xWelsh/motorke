@@ -1,3 +1,7 @@
+// Served from the Vercel edge; re-rendered at most every 3600s.
+// No searchParams or cookies on this route, so the output is cacheable.
+export const revalidate = 3600;
+
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Car, BadgeCheck, PhoneCall, BarChart3, Clock, Users } from "lucide-react";
 import { buildPageTitle, buildCanonicalMetadata } from "@/lib/seo-metadata";

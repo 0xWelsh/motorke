@@ -352,12 +352,16 @@ const hasFeatures = meaningfulFeatureList(car.features).length > 0;
             price: Number(car.price || 0),
           }}
         />
-        <Script
+        {/* Plain <script>, not next/script: JSON-LD must be present in the
+            initial server-rendered HTML. next/script injects it client-side,
+            which puts the Vehicle/Offer schema outside what crawlers and
+            link-preview scrapers read without executing JS. */}
+        <script
           id="car-json-ld"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <Script
+        <script
           id="car-breadcrumb-json-ld"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}

@@ -1,3 +1,8 @@
+// No searchParams on this route, so the rendered page can be served from the
+// Vercel edge instead of re-rendering on every request. This was the slowest
+// cache MISS measured from Kenya at ~0.49s.
+export const revalidate = 300;
+
 import Link from "next/link";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";

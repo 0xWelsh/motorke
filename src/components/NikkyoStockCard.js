@@ -5,6 +5,7 @@ import PictureImage from "@/components/PictureImage";
 import { formatCarPrice } from "@/lib/utils";
 import { carListingPath } from "@/lib/car-listing-url";
 import { isInSoldGracePeriod } from "@/lib/car-sold-status";
+import { CarNavPendingSignal } from "@/components/CarNavPending";
 
 const titleCase = (s) =>
   String(s || "").replace(/\S+/g, (word) =>
@@ -13,7 +14,13 @@ const titleCase = (s) =>
       : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
   );
 
-function CardImage({ img, alt, priority, fill, sold }) {
+// Homepage grids are: 2 cols <md, 3 cols <lg, 4 cols <xl, 6 cols above.
+// Declaring the true slot width matters — it is what lets the browser pick the
+// 400w WebP (~25KB) instead of the 800w one (~100KB) on phones.
+const GRID_SIZES =
+  "(max-width: 768px) 48vw, (max-width: 1024px) 32vw, (max-width: 1280px) 24vw, 16vw";
+
+function CardImage({ img, alt, priority, fill, sold, sizes }) {
   return (
     <>
       {img ? (
@@ -22,7 +29,7 @@ function CardImage({ img, alt, priority, fill, sold }) {
           alt={alt}
           priority={priority}
           className="absolute inset-0 h-full w-full object-cover transition-[filter] duration-300 ease-out group-hover:brightness-110"
-          sizes="(max-width: 768px) 96vw, (max-width: 1200px) 25vw, 12vw"
+          sizes={sizes || GRID_SIZES}
           fallback={
             <div className="flex h-full w-full items-center justify-center text-slate-300">
               <ImageOff className="h-7 w-7" aria-hidden />
@@ -51,7 +58,7 @@ function CardImage({ img, alt, priority, fill, sold }) {
  * stacked 4/3 photo + info from md up. Navy italic make, link-blue model,
  * red price. No badges, no stock codes.
  */
-export default function NikkyoStockCard({ car, priority = false, fill = false }) {
+export default function NikkyoStockCard({ car, priority = false, fill = false, sizes }) {
   const img = car.images?.[0]?.url;
   const sold = !car.available || isInSoldGracePeriod(car);
   const make = titleCase(car.make);
@@ -62,7 +69,7 @@ export default function NikkyoStockCard({ car, priority = false, fill = false })
     return (
       <article className="group relative flex flex-col overflow-hidden border border-[#D8D8D8] bg-white h-full" style={{ touchAction: "manipulation" }}>
         <Link href={carListingPath(car)} className="absolute inset-0 overflow-hidden bg-slate-100">
-          <CardImage img={img} alt={alt} priority={priority} fill sold={sold} />
+          <CardImage img={img} alt={alt} priority={priority} fill sold={sold} sizes={sizes} />
         </Link>
         <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-y-0.5 p-2.5">
           <p className="line-clamp-1 text-[11px] font-bold leading-tight tracking-tight text-white">
@@ -83,7 +90,7 @@ export default function NikkyoStockCard({ car, priority = false, fill = false })
     <article className="group flex flex-col overflow-hidden border border-[#D8D8D8] bg-white" style={{ touchAction: "manipulation" }}>
       <Link href={carListingPath(car)} className="flex flex-1 flex-col">
         <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-slate-100">
-          <CardImage img={img} alt={alt} priority={priority} fill={false} sold={sold} />
+          <CardImage img={img} alt={alt} priority={priority} fill={false} sold={sold} sizes={sizes} />
         </div>
 
         <div className="flex flex-1 flex-col gap-y-1 min-w-0 p-3">
@@ -106,6 +113,7 @@ export default function NikkyoStockCard({ car, priority = false, fill = false })
             {car.mileage != null ? ` · ${Math.round(car.mileage).toLocaleString()} km` : ""}
           </p>
         </div>
+        <CarNavPendingSignal />
       </Link>
     </article>
   );

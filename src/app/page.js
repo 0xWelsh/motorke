@@ -1,6 +1,7 @@
 // src/app/page.js
 export const revalidate = 60;
 import { Suspense } from "react";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import TrackedLink from "@/components/TrackedLink";
 import NikkyoSidebar from "@/components/NikkyoSidebar";
@@ -24,9 +25,11 @@ import {
 } from "@/components/home/HomeSkeletons";
 import PushOptIn from "@/components/PushOptIn";
 import { getHomepageData } from "@/lib/homepage-cache";
+import { toCardCars } from "@/lib/car-card-dto";
 import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 import { absoluteUrl, BRAND_MARK_SQUARE, getSiteOrigin, absoluteMediaUrl } from "@/lib/site-url";
 import { carListingPath } from "@/lib/car-listing-url";
+import { SEO_PRICE_BANDS } from "@/lib/seo-car-facets";
 
 function seededShuffle(arr, seed) {
   const out = [...arr];
@@ -175,7 +178,14 @@ function deriveHomeSections(bundle) {
   const dealCars = fillGrid(dealsEnhanced || [], usedIds, seededShuffle(fillPool, 256), 16);
   const frequentCars = fillGrid(trendingCars, usedIds, seededShuffle(fillPool, 999), 16);
 
-  return { heroCars, recommendedCars, newArrivalCars, dealCars, frequentCars, luxury: luxuryEnhanced };
+  return {
+    heroCars: toCardCars(heroCars),
+    recommendedCars: toCardCars(recommendedCars),
+    newArrivalCars: toCardCars(newArrivalCars),
+    dealCars: toCardCars(dealCars),
+    frequentCars: toCardCars(frequentCars),
+    luxury: toCardCars(luxuryEnhanced),
+  };
 }
 
 // Streaming slots: each awaits the shared cached promise inside its own
@@ -229,6 +239,51 @@ async function SidebarSlot({ countsPromise }) {
   return <NikkyoSidebar inventoryCounts={inventoryCounts} />;
 }
 
+/**
+ * Price bands, as buttons with live counts.
+ *
+ * Used-car buyers shop by budget in Kenya, and a visible count doubles as
+ * depth proof ("135 cars under 4M"). Counts come from the same cached
+ * inventory payload the sidebar uses, so this costs no extra query.
+ */
+function PriceBandRow({ priceBands }) {
+  const bands = (SEO_PRICE_BANDS || []).filter((b) => (priceBands?.[b.slug] ?? 0) > 0);
+  if (!bands.length) return null;
+
+  return (
+    <nav aria-label="Browse by price" className="mt-6">
+      <h2 className="mb-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+        Browse by budget
+      </h2>
+      {/* A 3-column grid rather than flex-wrap. With six bands, wrapping
+          produced three ragged rows of different widths; the grid keeps every
+          row flush on both edges and stays even if a band's count changes. */}
+      <div className="grid grid-cols-3 gap-2">
+        {bands.map((band) => {
+          const count = priceBands[band.slug];
+          return (
+            <Link
+              key={band.slug}
+              href={`/cars/${band.slug}`}
+              className="flex min-w-0 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2 py-2.5 text-center text-[12px] font-semibold leading-tight text-slate-700 transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+            >
+              <span className="min-w-0 truncate">{band.label}</span>
+              <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-500">
+                {count}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}
+
+async function PriceBandSlot({ countsPromise }) {
+  const counts = await countsPromise;
+  return <PriceBandRow priceBands={counts?.priceBands} />;
+}
+
 export default async function HomePage() {
   // Kick both cached fetches immediately but do NOT await here — the static
   // shell (car finder, CTA strip, shape/make grids) renders first, and
@@ -255,30 +310,49 @@ export default async function HomePage() {
             </aside>
 
             <main className="min-w-0 py-5 lg:py-0">
-              {/* SEO H1 (kept hidden — the page leads with the featured carousel) */}
+              {/* SEO H1 (kept hidden — the page leads with search, not a carousel) */}
               <h1 className="sr-only">Cars for sale in Kenya — buy a verified car through BIDGARI</h1>
 
-              {/* Hero banner carousel — leads the page, above search + filter */}
-              <Suspense fallback={<HomeHeroSkeleton />}>
-                <HeroSlot bundlePromise={bundlePromise} />
-              </Suspense>
-
-              {/* Car finder */}
-              <div className="home-shell mt-7">
+              {/* Search first. A marketplace's primary job is "find me a car",
+                  so the finder and the browse-all entry sit at the very top
+                  rather than below a hero carousel. */}
+              <div>
                 <HomepageHeroCarFinder embedded />
               </div>
 
-              {/* Browse inventory */}
-              <div className="mt-4">
+              {/* Equal halves rather than content-width buttons. At content width they
+                  left ~73px dead on the right of a 366px row, which read as
+                  a broken edge on a phone. */}
+              <div className="mt-4 grid grid-cols-2 gap-2">
                 <TrackedLink
                   href="/cars"
                   eventName="homepage_browse_click"
-                  eventPayload={{ area: "header" }}
-                  className="btn btn-primary btn-lg w-full sm:w-auto"
+                  eventPayload={{ area: "top" }}
+                  className="btn btn-primary btn-lg w-full"
                 >
                   Browse all cars <ArrowRight className="h-4 w-4" aria-hidden />
                 </TrackedLink>
+
+                {/* The seller doorway. Every other action on this page is a
+                    browsing action, and all 356 listings currently come from a
+                    single seller — supply is the binding constraint, so it gets
+                    a first-class entry point beside the buyer CTA. */}
+                <TrackedLink
+                  href="/sell"
+                  eventName="homepage_sell_click"
+                  eventPayload={{ area: "top" }}
+                  className="btn btn-outline btn-lg w-full"
+                >
+                  Sell your car
+                </TrackedLink>
               </div>
+
+              {/* Budget bands sit directly under the browse CTA as their own
+                  block. Nesting them inside the CTA's flex row made them wrap
+                  onto a line below the button and drift far down the page. */}
+              <Suspense fallback={<div className="mt-6 h-16" />}>
+                <PriceBandSlot countsPromise={countsPromise} />
+              </Suspense>
 
               {/* CTA strip */}
               <HomepageCtaStrip />
@@ -291,6 +365,15 @@ export default async function HomePage() {
               {/* Search by Make logo grid */}
               <div className="mt-7">
                 <HomepageMakeGrid />
+              </div>
+
+              {/* Hero banner carousel — demoted below search, categories and
+                  price bands. It was previously first, which pushed every
+                  browse entry point ~88KB down the page. */}
+              <div className="mt-7">
+                <Suspense fallback={<HomeHeroSkeleton />}>
+                  <HeroSlot bundlePromise={bundlePromise} />
+                </Suspense>
               </div>
 
               {/* Inventory sections */}

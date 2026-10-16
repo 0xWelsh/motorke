@@ -13,6 +13,7 @@ import { isActiveSpotlight } from "@/lib/spotlight";
 import { getListingBoostVisuals } from "@/lib/listing-boost-visuals";
 import { isInSoldGracePeriod } from "@/lib/car-sold-status";
 import { clsx } from "clsx";
+import { CarNavPendingSignal } from "@/components/CarNavPending";
 import AdminCardControls from "@/components/AdminCardControls";
 import { useCarFlag } from "@/hooks/use-car-flag";
 
@@ -21,6 +22,11 @@ import { useCarFlag } from "@/hooks/use-car-flag";
  * no shadows/badges/buttons, uppercase make/model, price + spec lines,
  * stock ID. Whole card is clickable; hover only brightens the image.
  */
+
+// Every grid that renders this card is 2-up on mobile, so ~48vw is the true
+// slot width there. Declaring that honestly is what lets phones select the
+// 400w WebP (~25KB) instead of the 800w one (~100KB).
+const GRID_SIZES = "(max-width: 768px) 48vw, (max-width: 1024px) 24vw, 16vw";
 export default function CarCard({
   car,
   distance = null,
@@ -30,6 +36,7 @@ export default function CarCard({
   priority = false,
   titleHtml = null,
   layout = "grid",
+  sizes,
 }) {
   const spotlightActive = showSpotlight || isActiveSpotlight(car) || spotlightProminent;
   const isList = layout === "list";
@@ -140,6 +147,7 @@ export default function CarCard({
                 .join(" · ")}
             </p>
           </div>
+          <CarNavPendingSignal />
         </Link>
       </article>
     );
@@ -174,7 +182,7 @@ export default function CarCard({
               alt={`${car.year} ${car.make} ${car.model}`}
               priority={priority}
               className="absolute inset-0 h-full w-full object-cover transition-[filter] duration-300 ease-out group-hover:brightness-110"
-              sizes={isList ? "(max-width: 768px) 42vw, 16vw" : "(max-width: 768px) 96vw, (max-width: 1200px) 25vw, 12vw"}
+              sizes={sizes || (isList ? "(max-width: 768px) 42vw, 16vw" : GRID_SIZES)}
               fallback={
                 <div className="flex h-full w-full items-center justify-center text-slate-300">
                   <ImageOff className="h-7 w-7" aria-hidden />
@@ -243,6 +251,7 @@ export default function CarCard({
               </span>
             </p>
           )}
+          <CarNavPendingSignal />
         </div>
       </Link>
 

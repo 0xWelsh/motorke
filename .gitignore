@@ -59,3 +59,7 @@ ios/
 *.apk
 *.aab
 *.keystore
+.neon
+
+# Azure provisioning secrets
+infra/azure-secrets.env

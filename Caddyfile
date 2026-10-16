@@ -1,0 +1,33 @@
+# Caddy terminates TLS for the VM's own hostname. Cloudflare sits in front in
+# proxy mode, so this is the origin certificate only.
+#
+# Cloudflare → (Full, strict) → Caddy :443 → app :3000
+
+{
+	email {$ACME_EMAIL:admin@bidgari.com}
+}
+
+{$SITE_DOMAIN:localhost}, www.{$SITE_DOMAIN:localhost} {
+	encode zstd gzip
+
+	# Next.js sets most of these itself; Cloudflare handles the public edge.
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+
+	reverse_proxy app:3000 {
+		# Image processing and imports can be slow on shared vCPU.
+		transport http {
+			read_timeout 120s
+			write_timeout 120s
+		}
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}

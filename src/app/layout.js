@@ -11,10 +11,20 @@ import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 import CookieConsent from "@/components/CookieConsent";
 import { SaveDataProvider } from "@/components/SaveDataProvider";
 import PageTransition from "@/components/PageTransition";
+import PendingSwap from "@/components/PendingSwap";
+import CarDetailSkeleton from "@/components/CarDetailSkeleton";
+import { CarNavPendingProvider } from "@/components/CarNavPending";
 import { Suspense } from "react";
 import { Lato, Montserrat } from "next/font/google";
 
 import { BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
+import { IMAGE_BASE_URL } from "@/lib/image-host";
+
+// Empty when R2_PUBLIC_URL is unset — the preconnect is simply skipped rather
+// than rendering a broken href.
+const IMAGE_ORIGIN = IMAGE_BASE_URL
+  ? IMAGE_BASE_URL.replace(/\/+$/, "").replace(/^(https?:\/\/[^/]+).*$/, "$1")
+  : "";
 
 const lato = Lato({
   subsets: ["latin"],
@@ -195,7 +205,7 @@ export default async function RootLayout({ children }) {
       <head>
         {/* Preconnect to image CDNs for faster loading */}
         <link rel="preconnect" href="https://bbseolknavwpjzvotdct.supabase.co" />
-        <link rel="preconnect" href="https://pub-8ae6a3f75e3144c6885061d2aa946e1a.r2.dev" />
+        {IMAGE_ORIGIN && <link rel="preconnect" href={IMAGE_ORIGIN} />}
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         {/* Country / region signals for "BIDGARI" vs Wales disambiguation in search */}
@@ -224,10 +234,16 @@ export default async function RootLayout({ children }) {
             <Suspense fallback={null}>
               <AnalyticsBootstrap />
             </Suspense>
-            <CompareProvider>
-              <SiteChrome navCounts={navCounts}>
-                <PageTransition>{children}</PageTransition>
-              </SiteChrome>
+<CompareProvider>
+              <CarNavPendingProvider>
+                <SiteChrome navCounts={navCounts}>
+                  <PageTransition>
+                    <PendingSwap fallback={<CarDetailSkeleton />}>
+                      {children}
+                    </PendingSwap>
+                  </PageTransition>
+                </SiteChrome>
+              </CarNavPendingProvider>
             </CompareProvider>
           </SaveDataProvider>
           <ScrollToTop />

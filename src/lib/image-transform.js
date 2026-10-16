@@ -1,15 +1,11 @@
-const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL || "";
-const R2_HOSTNAME = R2_PUBLIC_URL ? new URL(R2_PUBLIC_URL).hostname : "";
+import { isImageHostUrl } from "./image-host";
 
 const SUPABASE_PATTERN = /\/storage\/v1\/object\/(public|sign)\/[^/]+\//;
 
 function isR2Url(url) {
-  if (!url || typeof url !== "string") return false;
-  try {
-    return new URL(url).hostname === R2_HOSTNAME;
-  } catch {
-    return false;
-  }
+  // Accepts both the custom image domain and legacy *.r2.dev URLs, so old
+  // records keep resolving after R2_PUBLIC_URL is repointed.
+  return isImageHostUrl(url);
 }
 
 function isSupabaseUrl(url) {

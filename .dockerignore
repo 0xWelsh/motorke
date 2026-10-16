@@ -1,0 +1,30 @@
+# Keep the build context small. node_modules is 1.1 GB and .next is 319 MB on
+# this machine; shipping either to the builder makes the ARM64 build crawl and
+# can exhaust the 200 GB Always Free boot volume.
+
+node_modules
+.next
+.git
+.github
+.vercel
+android
+ios
+public/uploads
+public/car_photos
+logs
+data
+waha-sessions
+.wwebjs_cache
+tmp-compare-client
+temp.html
+motorke_logo.png
+
+# Secrets — never bake credentials into an image layer.
+.env
+.env.*
+!.env.example
+infra/azure-secrets.env
+
+*.log
+*.md
+!README.md

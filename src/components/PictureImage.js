@@ -2,8 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { ImageOff } from "lucide-react";
-
-
+import { isImageHostUrl, imageVariantUrl } from "@/lib/image-host";
 
 const SIZES = [
   { width: 200, suffix: "-200w.webp" },
@@ -11,14 +10,10 @@ const SIZES = [
   { width: 800, suffix: "-800w.webp" },
 ];
 
-function isR2Url(url) {
-  if (!url || typeof url !== "string") return false;
-  try { return new URL(url).hostname.endsWith(".r2.dev"); }
-  catch { return false; }
-}
+const isR2Url = isImageHostUrl;
 
 function webpSrc(url, suffix) {
-  return url.replace(/(\/[^/]+)\.\w+$/, `$1${suffix}`);
+  return imageVariantUrl(url, suffix) || url;
 }
 
 function isUsableSrc(src) {

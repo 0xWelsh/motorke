@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
+import { imageHost } from "@/lib/image-host";
 
 const ALLOWED_IMAGE_HOSTS = [
-  "pub-f5e32b326c104e8a876f2f41053736f3.r2.dev",
+  // The live bucket (from R2_PUBLIC_URL), so a custom domain is covered too.
+  imageHost(),
+  "r2.dev",
   "supabase.co",
   "supabase.in",
   "imgbb.com",
   "images.unsplash.com",
   "i.ibb.co",
   "postimg.cc",
-];
+].filter(Boolean);
 
 function isAllowedImageUrl(urlString) {
   let host;

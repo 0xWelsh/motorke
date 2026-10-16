@@ -1,3 +1,7 @@
+// Served from the Vercel edge; re-rendered at most every 3600s.
+// No searchParams or cookies on this route, so the output is cacheable.
+export const revalidate = 3600;
+
 import { ShieldAlert, ShieldCheck, PhoneCall, AlertTriangle, CheckCircle2, MessageCircle, Ban, FileWarning, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { buildPageTitle, buildCanonicalMetadata } from "@/lib/seo-metadata";

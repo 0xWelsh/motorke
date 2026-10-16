@@ -4,6 +4,7 @@ import { BRANDS, BODY_TYPES } from "@/lib/browse-catalog";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
 import { possibleMakesFromFilterSlug } from "@/lib/make-filter";
+import { SEO_PRICE_BANDS } from "@/lib/seo-car-facets";
 
 function publicInventoryWhere() {
   return {
@@ -45,7 +46,7 @@ function rowsToCountMap(rows, field) {
   return map;
 }
 
-function buildBrowseCountPayload(makeRows, bodyRows) {
+function buildBrowseCountPayload(makeRows, bodyRows, priceBandCounts) {
   const makeCountsMap = rowsToCountMap(makeRows, "make");
   const bodyCountsMap = rowsToCountMap(bodyRows, "bodyType");
 
@@ -69,12 +70,21 @@ function buildBrowseCountPayload(makeRows, bodyRows) {
     makes[make] = (makes[make] || 0) + (row._count?._all ?? 0);
   }
 
-  return { brands, bodyTypes, makes };
+  /** @type {Record<string, number>} SEO price band slug → live count. */
+  const priceBands = {};
+  for (const band of SEO_PRICE_BANDS) {
+    priceBands[band.slug] = priceBandCounts?.[band.slug] ?? 0;
+  }
+
+  return { brands, bodyTypes, makes, priceBands };
 }
 
 async function loadBrowseInventoryCounts() {
   const where = publicInventoryWhere();
-  const [makeRows, bodyRows] = await Promise.all([
+
+  // One aggregate over the same row set the other counts use — grouping by a
+  // coarse price bucket costs a single query rather than one per band.
+  const [makeRows, bodyRows, priceRows] = await Promise.all([
     db.car.groupBy({
       by: ["make"],
       where,
@@ -85,9 +95,28 @@ async function loadBrowseInventoryCounts() {
       where,
       _count: { _all: true },
     }),
+    db.car.groupBy({
+      by: ["price"],
+      where,
+      _count: { _all: true },
+    }),
   ]);
 
-  return buildBrowseCountPayload(makeRows, bodyRows);
+  const priceBandCounts = {};
+  for (const row of priceRows || []) {
+    const price = Number(row.price) || 0;
+    for (const band of SEO_PRICE_BANDS) {
+      const p = band.where.price;
+      const aboveMin = p.gte == null || price >= p.gte;
+      const belowMax = p.lt == null || price < p.lt;
+      if (aboveMin && belowMax) {
+        priceBandCounts[band.slug] = (priceBandCounts[band.slug] || 0) + (row._count?._all ?? 0);
+        break;
+      }
+    }
+  }
+
+  return buildBrowseCountPayload(makeRows, bodyRows, priceBandCounts);
 }
 
 const getCachedBrowseInventoryCounts = unstable_cache(
