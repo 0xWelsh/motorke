@@ -61,5 +61,8 @@ ios/
 *.keystore
 .neon
 
+# Large DB dumps — use Supabase backups or external storage instead
+data/supabase-full.sql.gz
+
 # Azure provisioning secrets
 infra/azure-secrets.env
