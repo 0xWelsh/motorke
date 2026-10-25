@@ -66,3 +66,4 @@ data/supabase-full.sql.gz
 
 # Azure provisioning secrets
 infra/azure-secrets.env
+.env*

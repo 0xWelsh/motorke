@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "bash scripts/migrate-deploy.sh && prisma generate && next build",
+    "build": "prisma generate && next build",
     "db:deploy": "bash scripts/migrate-deploy.sh",
     "build:local": "bash ./scripts/build-local.sh",
     "start": "next start",
@@ -27,7 +27,7 @@
     "db:seed-specs": "node prisma/seed-car-model-specs.mjs",
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset --force && npm run db:seed",
-    "postinstall": "prisma generate && cd node_modules/opencode-ai && node postinstall.mjs",
+    "postinstall": "prisma generate",
     "rewatermark": "node --env-file=.env.local scripts/rewatermark-existing-images.js",
     "rewatermark:dry-run": "node --env-file=.env.local scripts/rewatermark-existing-images.js --dry-run",
     "rewatermark:recent-5": "node --env-file=.env.local scripts/rewatermark-existing-images.js --recent-cars=5",

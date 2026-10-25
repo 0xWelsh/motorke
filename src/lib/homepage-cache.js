@@ -67,7 +67,7 @@ async function loadHomepageBase() {
       db.car.findMany({
         where: { available: true, featured: true },
         include: {
-          images: { where: { isPrimary: true }, take: 1 },
+          images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }, { id: "asc" }], take: 10 },
           dealer: { select: { id: true, name: true, location: true, type: true, verificationStatus: true, slug: true } },
         },
         take: 8,
@@ -151,7 +151,7 @@ async function loadHomepageBase() {
       db.car.findMany({
         where: { available: true },
         include: {
-          images: { where: { isPrimary: true }, take: 1 },
+          images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }, { id: "asc" }], take: 10 },
           dealer: { select: { id: true, name: true, location: true, type: true, verificationStatus: true, slug: true } },
         },
         take: 24,

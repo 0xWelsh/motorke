@@ -1,224 +1,149 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { carListingPath } from "@/lib/car-listing-url";
 import { getThumbnailUrl } from "@/lib/image-transform";
 import { trackUiEvent } from "@/lib/analytics";
-import NikkyoStockCard from "@/components/NikkyoStockCard";
-
-const SWIPE_THRESHOLD = 50;
 
 export default function HeroCarousel({ cars = [] }) {
   const [index, setIndex] = useState(0);
-  const [dragging, setDragging] = useState(false);
-  const [dragX, setDragX] = useState(0);
-  const dragStartRef = useRef(null);
-  const draggedRef = useRef(false);
 
   useEffect(() => {
-    if (dragging || cars.length < 2) return;
+    if (cars.length < 2) return;
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % cars.length);
-    }, 4500);
+    }, 6000);
     return () => clearInterval(timer);
-  }, [cars.length, dragging]);
+  }, [cars.length]);
 
   if (!cars.length) return null;
 
   const safeIndex = index % cars.length;
-  const car = cars[safeIndex];
-  const imgUrl = car?.images?.[0]?.url ?? car?.image;
+  const featured = cars[safeIndex];
+
+  const images = Array.isArray(featured?.images) ? featured.images.filter(Boolean) : [];
+  const mainImg = images[0]?.url ?? featured?.images?.[0]?.url ?? featured?.image;
+  const thumbs = images.slice(1, 4);
 
   const details = [
-    car.mileage ? `${Number(car.mileage).toLocaleString("en-KE")} km` : null,
-    car.fuelType || null,
-    car.transmission || null,
+    featured.year ? String(featured.year) : null,
+    featured.mileage ? `${Number(featured.mileage).toLocaleString("en-KE")} km` : null,
+    featured.transmission || null,
+    featured.fuelType || null,
   ].filter(Boolean);
 
-  const go = (dir) => setIndex((safeIndex + dir + cars.length) % cars.length);
-
-  function onPointerDown(e) {
-    dragStartRef.current = e.clientX;
-    draggedRef.current = false;
-    setDragging(true);
-    try {
-      e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {
-      // pointer capture is best-effort
-    }
-  }
-
-  function onPointerMove(e) {
-    if (dragStartRef.current == null) return;
-    const delta = e.clientX - dragStartRef.current;
-    if (Math.abs(delta) > 8) draggedRef.current = true;
-    setDragX(delta);
-  }
-
-  function endSwipe(e) {
-    window.removeEventListener("pointermove", onPointerMove);
-    window.removeEventListener("pointerup", endSwipe);
-    window.removeEventListener("pointercancel", cancelSwipe);
-    const start = dragStartRef.current;
-    dragStartRef.current = null;
-    setDragging(false);
-    if (start == null) return;
-    const delta = e.clientX - start;
-    if (delta <= -SWIPE_THRESHOLD) go(1);
-    else if (delta >= SWIPE_THRESHOLD) go(-1);
-    if (Math.abs(delta) >= SWIPE_THRESHOLD) {
-      // The browser fires a click right after this drag; keep `draggedRef`
-      // truthy so that click is swallowed, then reset it for the next tap.
-      setTimeout(() => {
-        draggedRef.current = false;
-      }, 50);
-    }
-    setDragX(0);
-  }
-
-  function cancelSwipe() {
-    window.removeEventListener("pointermove", onPointerMove);
-    window.removeEventListener("pointerup", endSwipe);
-    window.removeEventListener("pointercancel", cancelSwipe);
-    dragStartRef.current = null;
-    setDragging(false);
-    setDragX(0);
-  }
-
-  function onPointerDown(e) {
-    if (e.pointerType === "mouse" && e.button !== 0) return;
-    dragStartRef.current = e.clientX;
-    draggedRef.current = false;
-    setDragging(true);
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("pointerup", endSwipe);
-    window.addEventListener("pointercancel", cancelSwipe);
-  }
-
-  const gridCars = cars.slice(1, 5);
-
   return (
-    <div className="relative">
-      <div className="lg:flex lg:items-center lg:justify-center lg:gap-2">
-        <div
-          className="relative aspect-[4/3] w-full touch-pan-y select-none overflow-hidden rounded-none border-0 border-slate-200 bg-slate-100 sm:mx-auto sm:max-w-[267px] sm:rounded-xl sm:border sm:shadow-sm lg:mx-0 lg:w-[390px] lg:max-w-none lg:shrink-0"
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-        >
-        <div className="absolute inset-0">
-          {imgUrl ? (
-            <Image
-              src={getThumbnailUrl(imgUrl, 1280)}
-              alt={`${car.year} ${car.make} ${car.model}`}
-              fill
-              priority
-              draggable={false}
-              className="object-cover will-change-transform"
-              style={{
-                transform: `translateX(${dragX}px)`,
-                transition: dragging ? "none" : "transform 250ms ease",
-              }}
-              sizes="(min-width:1024px) 390px, (min-width:640px) 267px, 100vw"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center">
-              <span className="text-6xl font-black text-slate-300">{car.make?.[0]}</span>
-            </div>
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" aria-hidden />
-        </div>
+    <div className="mt-6 sm:mt-8">
+      <div className="mb-3 sm:mb-4">
+        <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.28em] text-[var(--accent)]">
+          Featured
+        </p>
+        <h2 className="mt-1 text-[clamp(1.5rem,4vw,2.4rem)] font-black leading-[1.05] tracking-tight text-slate-900">
+          Spotlight
+        </h2>
+      </div>
 
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <Link
-          href={carListingPath(car)}
-          onClick={(e) => {
-            if (draggedRef.current) {
-              e.preventDefault();
-              e.stopPropagation();
-              draggedRef.current = false;
-            }
-            trackUiEvent("hero_car_click", {
-              car_id: car.id,
-              make: car.make,
-              model: car.model,
-            });
-          }}
-          className="absolute inset-0 z-10 flex flex-col justify-end p-4 sm:p-6"
+          href={carListingPath(featured)}
+          onClick={() =>
+            trackUiEvent("hero_spotlight_click", {
+              car_id: featured.id,
+              make: featured.make,
+              model: featured.model,
+            })
+          }
+          className="group block"
         >
-          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/80">
-            {car.year} · {car.make}
-          </p>
-          <h2 className="mt-0.5 text-xl font-black leading-tight text-white sm:text-2xl lg:text-3xl">
-            {car.model}
-            {car.variant ? ` ${car.variant}` : ""}
-          </h2>
-          {details.length > 0 && (
-            <div className="mt-1.5 flex flex-wrap gap-1.5">
-              {details.map((d) => (
-                <span
-                  key={d}
-                  className="rounded bg-white/15 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white backdrop-blur-sm sm:text-[10px]"
-                >
-                  {d}
-                </span>
-              ))}
-            </div>
-          )}
-          <div className="mt-3 flex items-baseline gap-4">
-            <span className="text-base font-black text-white sm:text-xl">
-              KES {Number(car.price).toLocaleString("en-KE")}
-            </span>
-            <span className="hidden items-center gap-1 text-[10px] font-black uppercase tracking-widest text-white/85 sm:inline-flex">
-              View details <ArrowUpRight className="h-3.5 w-3.5" />
-            </span>
+          <div className="relative aspect-[16/9] sm:aspect-[16/8] lg:aspect-[16/7] w-full overflow-hidden bg-slate-100">
+            {mainImg ? (
+              <Image
+                src={getThumbnailUrl(mainImg, 1920)}
+                alt={`${featured.year} ${featured.make} ${featured.model}`}
+                fill
+                priority={safeIndex === 0}
+                sizes="(min-width:1280px) 1100px, (min-width:1024px) 920px, 100vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-[1.01]"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center">
+                <span className="text-7xl font-black text-slate-200">{featured.make?.[0]}</span>
+              </div>
+            )}
           </div>
         </Link>
 
-        {cars.length > 1 && (
-          <>
-            <button
-              type="button"
-              onClick={() => go(-1)}
-              className="absolute left-2 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-90 shadow-sm transition-all hover:bg-white hover:opacity-100 sm:left-3 sm:h-10 sm:w-10"
-              aria-label="Previous car"
-            >
-              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => go(1)}
-              className="absolute right-2 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-90 shadow-sm transition-all hover:bg-white hover:opacity-100 sm:right-3 sm:h-10 sm:w-10"
-              aria-label="Next car"
-            >
-              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
-            </button>
-          </>
+        {thumbs.length > 0 && (
+          <div className="grid grid-cols-3 gap-px bg-slate-200">
+            {thumbs.map((thumb, i) => {
+              const turl = typeof thumb === "string" ? thumb : thumb?.url;
+              if (!turl) return null;
+              return (
+                <Link
+                  key={`${featured.id}-gallery-${i + 1}`}
+                  href={carListingPath(featured)}
+                  onClick={() =>
+                    trackUiEvent("hero_spotlight_thumb_click", {
+                      car_id: featured.id,
+                      make: featured.make,
+                      model: featured.model,
+                    })
+                  }
+                  className="group relative aspect-[4/3] overflow-hidden bg-slate-100"
+                >
+                  <Image
+                    src={getThumbnailUrl(turl, 800)}
+                    alt={`${featured.year} ${featured.make} ${featured.model} photo ${i + 2}`}
+                    fill
+                    sizes="(min-width:1024px) 300px, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                  />
+                </Link>
+              );
+            })}
+          </div>
         )}
-      </div>
 
-      <div className="mt-2 hidden lg:mt-0 lg:grid lg:h-[292px] lg:w-[390px] lg:shrink-0 grid-cols-2 grid-rows-2 gap-1.5 sm:gap-2">
-        {gridCars.map((c, i) => (
-          <NikkyoStockCard key={c.id} car={c} priority={i === 0} fill />
-        ))}
-      </div>
-      </div>
-
-      {cars.length > 1 && (
-        <div className="mt-2.5 flex justify-center gap-1.5">
-          {cars.slice(0, Math.min(cars.length, 8)).map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setIndex(i)}
-              className={`rounded-full transition-all duration-300 ${
-                i === safeIndex ? "h-2 w-6 bg-[var(--accent)]" : "h-2 w-2 bg-slate-300 hover:bg-slate-400"
-              }`}
-              aria-label={`View car ${i + 1}`}
-            />
-          ))}
+        <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <div className="min-w-0">
+            <Link href={carListingPath(featured)} className="group/link inline-flex items-center gap-2">
+              <h3 className="truncate text-lg font-black text-slate-900 sm:text-xl lg:text-2xl">
+                {featured.year} {featured.make} {featured.model}
+                {featured.variant ? ` ${featured.variant}` : ""}
+              </h3>
+              <ArrowUpRight className="h-4 w-4 text-slate-400 transition group-hover/link:text-[var(--accent)]" />
+            </Link>
+            {details.length > 0 && (
+              <p className="mt-1 flex flex-wrap items-center gap-x-2 text-sm text-slate-500">
+                {details.map((d, i) => (
+                  <span key={d} className="inline-flex items-center gap-x-2">
+                    {d}
+                    {i < details.length - 1 && <span className="text-slate-300">•</span>}
+                  </span>
+                ))}
+              </p>
+            )}
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="text-xl font-black text-[var(--accent)] sm:text-2xl">
+              KES {Number(featured.price || 0).toLocaleString("en-KE")}
+            </span>
+            <Link
+              href={carListingPath(featured)}
+              className="hidden sm:inline-flex items-center gap-2 rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-slate-800"
+            >
+              View listing
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
+
+
+
+

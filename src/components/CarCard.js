@@ -173,7 +173,7 @@ export default function CarCard({
           className={
             `${isList
               ? "relative w-[42%] shrink-0 sm:w-64 aspect-[4/3] overflow-hidden bg-slate-100"
-              : "relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-slate-100"}${sold ? " grayscale" : ""}`
+              : "relative aspect-[16/9] w-full shrink-0 overflow-hidden bg-slate-100"}${sold ? " grayscale" : ""}`
           }
         >
           {primaryImg ? (
@@ -216,26 +216,31 @@ export default function CarCard({
         {/* Details */}
         <div className="flex flex-1 flex-col gap-y-1 min-w-0 p-2.5 md:p-3">
           <h3
-            className="line-clamp-1 text-[14px] font-bold italic leading-tight tracking-tight text-[var(--brand-navy)]"
+            className="line-clamp-1 text-[15px] font-extrabold leading-tight tracking-tight text-slate-900"
             title={`${car.make} ${car.model}${car.variant ? ` (${car.variant})` : ""}`}
           >
-            {make}
+            {[car.year, make, model].filter(Boolean).join(" ")}
           </h3>
-          <p className="line-clamp-1 text-[14px] font-semibold leading-tight tracking-tight text-[#0066ff] underline-offset-2 group-hover:underline">
-            {titleHtml ? (
-              <span dangerouslySetInnerHTML={{ __html: titleHtml }} />
-            ) : (
-              model
-            )}
-          </p>
 
-          <p className="mt-1 text-[16px] font-bold leading-snug tracking-tight text-[var(--accent)]">
+          <p className="mt-1 text-[16px] font-black leading-snug tracking-tight text-[var(--accent)]">
             {formatCarPrice(car)}
           </p>
 
-          <p className="text-[12px] leading-snug text-slate-500">
-            {specBits.join(" · ")}
-          </p>
+          {(() => {
+            const featureParts = [
+              car.mileage != null ? formatMileage(car.mileage) : null,
+              transLabel || null,
+              fuelLabel || null,
+              car.bodyType || null,
+              car.color || null,
+            ].filter(Boolean);
+            if (!featureParts.length) return null;
+            return (
+              <p className="line-clamp-2 text-[13px] font-semibold leading-snug text-slate-900">
+                {featureParts.join(", ")}
+              </p>
+            );
+          })()}
           {car.createdAt && (
             <p className="text-[11px] leading-snug text-slate-400">
               Listed {formatListedAge(car.createdAt)}

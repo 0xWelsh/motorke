@@ -7,15 +7,32 @@ function Block({ className = "" }) {
 
 export function HomeHeroSkeleton() {
   return (
-    <div className="mt-7">
-      <Block className="mb-2 h-3 w-40 max-w-[40%]" />
-      <div className="aspect-[4/3] w-full sm:mx-auto sm:max-w-[267px] lg:mx-0 lg:w-[390px] lg:max-w-none overflow-hidden rounded-none sm:rounded-xl lg:h-[292px]">
-        <Block className="h-full w-full rounded-none sm:rounded-xl" />
+    <div className="mt-6 sm:mt-8">
+      <div className="mb-3 sm:mb-4">
+        <Block className="mb-2 h-2.5 w-16" />
+        <Block className="h-7 w-32 sm:h-9 sm:w-40" />
       </div>
-      <div className="mt-2.5 flex justify-center gap-1.5">
-        <Block className="h-2 w-6 rounded-full" />
-        <Block className="h-2 w-2 rounded-full" />
-        <Block className="h-2 w-2 rounded-full" />
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="aspect-[16/9] sm:aspect-[16/8] lg:aspect-[16/7]">
+          <Block className="h-full w-full rounded-none" />
+        </div>
+        <div className="grid grid-cols-3 gap-px bg-slate-200">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="aspect-[4/3] bg-white">
+              <Block className="h-full w-full rounded-none" />
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <div className="space-y-2">
+            <Block className="h-6 w-64 sm:h-7 sm:w-80" />
+            <Block className="h-4 w-48" />
+          </div>
+          <div className="flex items-center gap-4">
+            <Block className="h-7 w-40 sm:h-8 sm:w-48" />
+            <Block className="hidden h-10 w-32 rounded-lg sm:block" />
+          </div>
+        </div>
       </div>
     </div>
   );

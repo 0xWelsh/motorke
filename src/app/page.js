@@ -208,12 +208,9 @@ async function LdSlot({ bundlePromise, origin }) {
 async function HeroSlot({ bundlePromise }) {
   const { heroCars } = deriveHomeSections(await bundlePromise);
   return (
-    <div className="mt-7">
-      <p className="mb-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
-        Featured — freshly inspected stock
-      </p>
+    <Suspense fallback={<HomeHeroSkeleton />}>
       <HeroCarousel cars={heroCars} />
-    </div>
+    </Suspense>
   );
 }
 
@@ -251,7 +248,7 @@ function PriceBandRow({ priceBands }) {
   if (!bands.length) return null;
 
   return (
-    <nav aria-label="Browse by price" className="mt-6">
+    <nav aria-label="Browse by price" className="mt-6 sm:mt-8">
       <h2 className="mb-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
         Browse by budget
       </h2>
@@ -350,7 +347,7 @@ export default async function HomePage() {
               {/* Budget bands sit directly under the browse CTA as their own
                   block. Nesting them inside the CTA's flex row made them wrap
                   onto a line below the button and drift far down the page. */}
-              <Suspense fallback={<div className="mt-6 h-16" />}>
+              <Suspense fallback={<div className="mt-6 sm:mt-8 h-16" />}>
                 <PriceBandSlot countsPromise={countsPromise} />
               </Suspense>
 
@@ -367,10 +364,8 @@ export default async function HomePage() {
                 <HomepageMakeGrid />
               </div>
 
-              {/* Hero banner carousel — demoted below search, categories and
-                  price bands. It was previously first, which pushed every
-                  browse entry point ~88KB down the page. */}
-              <div className="mt-7">
+              {/* Featured spotlight */}
+              <div className="mt-8 sm:mt-10">
                 <Suspense fallback={<HomeHeroSkeleton />}>
                   <HeroSlot bundlePromise={bundlePromise} />
                 </Suspense>
