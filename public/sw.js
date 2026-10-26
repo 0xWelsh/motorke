@@ -5,9 +5,9 @@
   Strategy: Cache-first for static assets, network-first for API calls
 */
 
-const CACHE_NAME = "welsh-motorhub-v6";
-const RUNTIME_CACHE = "welsh-motorhub-runtime-v6";
-const R2_IMAGE_CACHE = "welsh-motorhub-r2images-v6";
+const CACHE_NAME = "welsh-motorhub-v7";
+const RUNTIME_CACHE = "welsh-motorhub-runtime-v7";
+const R2_IMAGE_CACHE = "welsh-motorhub-r2images-v7";
 const MAX_R2_CACHE = 100;
 const OFFLINE_FALLBACK = new Response("Offline", {
   status: 503,
@@ -68,10 +68,26 @@ async function trimCache(cacheName, maxEntries) {
   }
 }
 
+// Next.js App Router RSC payloads are URL- and navigation-specific. Let the
+// browser/router handle them directly: serving one from a generic runtime
+// cache makes client-side filter/search navigations silently no-op.
+function isNextDataRequest(request, url) {
+  return (
+    url.searchParams.has("_rsc") ||
+    request.headers.get("RSC") != null ||
+    request.headers.get("Next-Router-State-Tree") != null ||
+    request.headers.get("Next-Router-Prefetch") != null ||
+    request.headers.get("Next-Router-Segment-Prefetch") != null ||
+    request.headers.get("Next-Url") != null
+  );
+}
+
 // Fetch: implement caching strategy
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
+
+  if (isNextDataRequest(request, url)) return;
 
   // Cache R2 images with stale-while-revalidate.
   if (url.hostname.includes("r2.dev")) {
