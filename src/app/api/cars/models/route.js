@@ -79,13 +79,16 @@ export async function GET(request) {
     ...(vpicModels.length > 0 ? ["vpic"] : []),
   ];
 
-  return NextResponse.json({
-    make,
-    count: models.length,
-    models,
-    inventoryCount: inventoryModels.length,
-    grokCount: grokModels.length,
-    internetCount: vpicModels.length,
-    sources,
-  });
+  return NextResponse.json(
+    {
+      make,
+      count: models.length,
+      models,
+      inventoryCount: inventoryModels.length,
+      grokCount: grokModels.length,
+      internetCount: vpicModels.length,
+      sources,
+    },
+    { headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" } }
+  );
 }

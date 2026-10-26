@@ -55,5 +55,8 @@ export async function GET(request, { params }) {
     orderBy: { featured: "desc" },
   });
 
-  return NextResponse.json({ car, similar });
+  return NextResponse.json(
+    { car, similar },
+    { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } }
+  );
 }

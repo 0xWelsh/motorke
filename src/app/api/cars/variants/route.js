@@ -206,18 +206,21 @@ export async function GET(request) {
     ...(carQueryVariants.length > 0 ? ["carquery"] : []),
   ];
 
-  return NextResponse.json({
-    make,
-    model,
-    year: year ?? null,
-    count: variants.length,
-    variants,
-    inventoryCount: inventoryVariants.length,
-    internetCount: grokVariants.length + vpicVariants.length + fuelEconomyVariants.length + carQueryVariants.length,
-    grokCount: grokVariants.length,
-    vpicCount: vpicVariants.length,
-    fuelEconomyCount: fuelEconomyVariants.length,
-    carQueryCount: carQueryVariants.length,
-    sources,
-  });
+  return NextResponse.json(
+    {
+      make,
+      model,
+      year: year ?? null,
+      count: variants.length,
+      variants,
+      inventoryCount: inventoryVariants.length,
+      internetCount: grokVariants.length + vpicVariants.length + fuelEconomyVariants.length + carQueryVariants.length,
+      grokCount: grokVariants.length,
+      vpicCount: vpicVariants.length,
+      fuelEconomyCount: fuelEconomyVariants.length,
+      carQueryCount: carQueryVariants.length,
+      sources,
+    },
+    { headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" } }
+  );
 }

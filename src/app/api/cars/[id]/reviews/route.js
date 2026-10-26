@@ -22,11 +22,14 @@ export async function GET(request, props) {
         ? Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length) * 10) / 10
         : 0;
 
-    return NextResponse.json({
-      reviews,
-      avgRating,
-      count: reviews.length,
-    });
+    return NextResponse.json(
+      {
+        reviews,
+        avgRating,
+        count: reviews.length,
+      },
+      { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } }
+    );
   } catch (error) {
     console.error("Failed to fetch car reviews:", error);
     return NextResponse.json({ error: "Failed to fetch reviews" }, { status: 500 });

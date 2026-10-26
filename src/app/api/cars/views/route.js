@@ -12,7 +12,12 @@
 import { db } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { classifyViewSource } from "@/lib/view-source";
-import { recordCarView, ROTATION_COOKIE } from "@/lib/record-car-view";
+import {
+  recordCarView,
+  ROTATION_COOKIE,
+  newRotationId,
+  rotationCookieHeader,
+} from "@/lib/record-car-view";
 
 const WINDOW_DAYS = 7;
 
@@ -79,20 +84,31 @@ export async function POST(req) {
     // value the client echoed in the body so we still dedupe if cookies
     // are blocked for any reason.
     const cookieSessionKey = req.cookies.get(ROTATION_COOKIE)?.value || null;
-    const bodySessionKey   = typeof body.sessionKey === "string" ? body.sessionKey : null;
-    const sessionKey       = cookieSessionKey || bodySessionKey || null;
+    const bodySessionKey   =
+      typeof body.sessionKey === "string" && /^[a-f0-9]{16,64}$/i.test(body.sessionKey)
+        ? body.sessionKey
+        : null;
+    const generatedId      = cookieSessionKey || bodySessionKey ? null : newRotationId();
+    const sessionKey       = cookieSessionKey || bodySessionKey || generatedId || null;
+    // Mirror the value we just used for dedupe so the next request can reuse it.
+    const newCookieValue   = cookieSessionKey ? null : sessionKey;
 
     const ownOrigin = getOwnOrigin(req);
     const source    = classifyViewSource(referrer, ownOrigin);
 
     const result = await recordCarView({ carId, userId, sessionKey, source });
 
-    return Response.json({
-      success: true,
-      source,
-      recorded: result.recorded,
-      deduped:  result.deduped,
-    });
+    return Response.json(
+      {
+        success: true,
+        source,
+        recorded: result.recorded,
+        deduped:  result.deduped,
+      },
+      newCookieValue
+        ? { headers: { "Set-Cookie": rotationCookieHeader(newCookieValue) } }
+        : undefined
+    );
   } catch (error) {
     console.error("Failed to track car view:", error);
     // Soft-fail – tracking should never break the user experience.

@@ -4,7 +4,12 @@ import { db } from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { canAcceptListingEnquiry } from "@/lib/car-sold-status";
-import { recordCarView, ROTATION_COOKIE } from "@/lib/record-car-view";
+import {
+  recordCarView,
+  ROTATION_COOKIE,
+  newRotationId,
+  rotationCookieHeader,
+} from "@/lib/record-car-view";
 
 const RATE_LIMIT_MS = 15000;
 const RATE_LIMIT_MAX_WINDOW = 8000;
@@ -231,16 +236,21 @@ export async function POST(request) {
     // listing's badge and analytics reflect real engagement. Uses the same
     // dedup/counter/cache logic as the dwell-based tracker.
     const rotCookie = request.cookies.get(ROTATION_COOKIE)?.value || null;
+    const rotCookieValue = rotCookie || newRotationId();
     await recordCarView({
       carId,
       userId: buyerUserId,
-      sessionKey: rotCookie,
+      sessionKey: rotCookieValue,
       source: "enquiry",
     }).catch((err) => {
       console.warn("[lead] view record failed", err?.message);
     });
 
-    return NextResponse.json({ success: true, leadId: lead.id }, { status: 201 });
+    const response = NextResponse.json({ success: true, leadId: lead.id }, { status: 201 });
+    if (!rotCookie) {
+      response.headers.set("Set-Cookie", rotationCookieHeader(rotCookieValue));
+    }
+    return response;
   } catch (err) {
     console.error("Lead error:", err);
     return NextResponse.json({ error: "Failed to save enquiry" }, { status: 500 });

@@ -4,18 +4,35 @@
 // creation (/api/leads) so every real engagement counts exactly once.
 
 import { db } from "@/lib/db";
-import { revalidateTag } from "next/cache";
 
 // De-duplicate refresh spam: at most one view per (carId, userId OR
 // sessionKey) inside this window. Short enough to stay responsive for
 // genuine views, long enough to block rapid refresh inflation.
 export const VIEW_DEDUP_WINDOW_MINUTES = 5;
 
-// Stable per-device key set by middleware; used to dedupe anonymous views.
+// Stable per-device key; used to dedupe anonymous views. It is issued by the
+// view/lead APIs rather than middleware so cacheable HTML responses never
+// carry a Set-Cookie header (which would opt them out of CDN caching).
 export const ROTATION_COOKIE = "wmh-rot";
+export const ROTATION_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
+
+export function newRotationId() {
+  const bytes = new Uint8Array(16);
+  if (typeof globalThis.crypto?.getRandomValues === "function") {
+    globalThis.crypto.getRandomValues(bytes);
+  } else {
+    for (let i = 0; i < bytes.length; i += 1) bytes[i] = Math.floor(Math.random() * 256);
+  }
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+export function rotationCookieHeader(value) {
+  const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
+  return `${ROTATION_COOKIE}=${value}; Path=/; Max-Age=${ROTATION_COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
+}
 
 /**
- * Record a car view: dedupe → event row → counter → cache refresh.
+ * Record a car view: dedupe → event row → counter.
  * Tracking must never break the user experience, so failures inside the
  * counter/cache steps are swallowed and logged.
  *
@@ -47,11 +64,9 @@ export async function recordCarView({ carId, userId, sessionKey, source }) {
     return { recorded: false, deduped: true };
   }
 
-  // Existence check doubles as the lookup for the publicSlug we need to
-  // invalidate the correct cached page entry.
   const car = await db.car.findUnique({
     where: { id: carId },
-    select: { id: true, publicSlug: true },
+    select: { id: true },
   });
   if (!car) {
     return { recorded: false, deduped: false };
@@ -68,14 +83,9 @@ export async function recordCarView({ carId, userId, sessionKey, source }) {
     }),
   ]);
 
-  // Refresh the public car page so the new badge count shows immediately
-  // instead of waiting out the 120s data cache.
-  try {
-    revalidateTag(`car-detail:${car.id}`);
-    if (car.publicSlug) revalidateTag(`car-detail:${car.publicSlug}`);
-  } catch (err) {
-    console.warn("[carView] revalidate failed", { carId, err: err?.message });
-  }
-
+  // Deliberately do NOT invalidate the car-detail cache here. A popular
+  // listing gets views every few seconds; busting its ISR entry on each one
+  // turned every render into a cache miss. The 60s route / 120s data TTL
+  // already refreshes the view badge, and a slightly stale count is harmless.
   return { recorded: true, deduped: false };
 }

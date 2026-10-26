@@ -103,11 +103,14 @@ export async function GET(request) {
       void runGoSearchShadow({ query: normalized, nodeResults: ranked, requester });
     }
 
-    return NextResponse.json({
-      cars: ranked.map(({ _score, ...car }) => car),
-      count: ranked.length,
-      take,
-    });
+    return NextResponse.json(
+      {
+        cars: ranked.map(({ _score, ...car }) => car),
+        count: ranked.length,
+        take,
+      },
+      { headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" } }
+    );
   } catch (error) {
     console.error("Search error:", error);
     trackRequest({

@@ -6,6 +6,7 @@ import { LayoutGrid, List, Rows3 } from "lucide-react";
 import CarCard from "@/components/CarCard";
 import { carListingPath } from "@/lib/car-listing-url";
 import { takePopTarget, clearPopTarget } from "@/lib/back-nav";
+import { trackUiEvent } from "@/lib/analytics";
 
 const CACHE_MAX_AGE_MS = 15 * 60 * 1000;
 const CACHE_MAX_CARS = 200;
@@ -70,16 +71,23 @@ function BidgariLoader() {
   );
 }
 
-export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, noFiltersActive }) {
+export default function CarsInfiniteGrid({
+  initialCars,
+  initialTotal,
+  filters,
+  noFiltersActive,
+  initialLoading = false,
+}) {
   const router = useRouter();
   const [cars, setCars] = useState(initialCars);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(initialLoading ? 0 : 1);
   const [total, setTotal] = useState(initialTotal);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(initialCars.length < initialTotal);
+  const [loading, setLoading] = useState(initialLoading);
+  const [hasMore, setHasMore] = useState(initialLoading ? true : initialCars.length < initialTotal);
   const [view, setView] = useState("grid");
   const sentinelRef = useRef(null);
   const lastReqRef = useRef(0);
+  const trackedRef = useRef("");
 
   useEffect(() => {
     setView(readViewPref());
@@ -101,8 +109,61 @@ export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, n
   const stateRef = useRef({ cars: initialCars, total: initialTotal, page: 1, hasMore: initialCars.length < initialTotal });
   stateRef.current = { cars, total, page, hasMore };
 
+  const fetchResults = useCallback(async (pageNum = 1, append = false) => {
+    const reqId = Date.now();
+    lastReqRef.current = reqId;
+
+    setLoading(true);
+    const params = new URLSearchParams({ page: pageNum });
+    if (filters.make) params.set("make", filters.make);
+    if (filters.model) params.set("model", filters.model);
+    if (filters.bodyType) params.set("bodyType", filters.bodyType);
+    if (filters.fuelType) params.set("fuelType", filters.fuelType);
+    if (filters.transmission) params.set("transmission", filters.transmission);
+    if (filters.steering) params.set("steering", filters.steering);
+    if (filters.county) params.set("county", filters.county);
+    if (filters.minPrice) params.set("minPrice", filters.minPrice);
+    if (filters.maxPrice) params.set("maxPrice", filters.maxPrice);
+    if (filters.minYOM) params.set("minYOM", filters.minYOM);
+    if (filters.maxYOM) params.set("maxYOM", filters.maxYOM);
+    if (filters.vehicleType) params.set("vehicleType", filters.vehicleType);
+    if (filters.condition) params.set("condition", filters.condition);
+    if (filters.search) params.set("search", filters.search);
+    if (filters.sort) params.set("sort", filters.sort);
+    if (filters.featured === "1") params.set("featured", "1");
+    if (filters.color) params.set("color", filters.color);
+    if (filters.sunroof === "1") params.set("sunroof", "1");
+    if (filters.seats) params.set("seats", filters.seats);
+
+    try {
+      const res = await fetch(`/api/cars/list?${params.toString()}`);
+      if (lastReqRef.current !== reqId) return;
+      const data = await res.json();
+      if (lastReqRef.current !== reqId) return;
+      if (append) {
+        setCars(prev => [...prev, ...(data.cars || [])]);
+        setPage(pageNum);
+      } else {
+        setCars(data.cars || []);
+        setPage(1);
+      }
+      setTotal(data.total || 0);
+      setHasMore(data.hasMore);
+    } catch {
+      // keep existing results on error
+    } finally {
+      if (lastReqRef.current === reqId) setLoading(false);
+    }
+  }, [filters]);
+
+  const loadMore = useCallback(async () => {
+    if (loading || !hasMore) return;
+    const nextPage = page + 1;
+    await fetchResults(nextPage, true);
+  }, [page, loading, hasMore, fetchResults]);
+
   // Restore the previous browse session for this filter set (back-nav) or
-  // fall back to the server-provided first page.
+  // load the filtered first page from the (CDN-cached) listing API.
   useEffect(() => {
     const restored = readCache(cacheKey);
     if (restored?.cars?.length) {
@@ -121,14 +182,28 @@ export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, n
       setPage(restored.page);
       setTotal(restored.total);
       setHasMore(restored.hasMore);
+      setLoading(false);
       return;
     }
     takePopTarget(); // drop any stale marker so it can't leak into a later mount
+    if (!noFiltersActive) {
+      // Static page markup always carries the unfiltered first page. For a
+      // filtered URL, drop it and fetch the matching page from the cacheable
+      // listing API instead of flashing unrelated cars.
+      setCars([]);
+      setPage(0);
+      setTotal(0);
+      setHasMore(true);
+      setLoading(true);
+      fetchResults(1, false);
+      return;
+    }
     setCars(initialCars);
     setPage(1);
     setTotal(initialTotal);
     setHasMore(initialCars.length < initialTotal);
-  }, [cacheKey, initialCars, initialTotal]);
+    setLoading(false);
+  }, [cacheKey, initialCars, initialTotal, noFiltersActive, fetchResults]);
 
   // If this instance is alive when a pop happens (route restored from the
   // router cache), Next.js handles scroll restoration itself – just record
@@ -196,64 +271,29 @@ export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, n
     requestAnimationFrame(() => window.scrollTo(0, target));
   }, [cars]);
 
-  // Prefetch car detail pages for instant navigation
+  // Prefetch car detail pages for instant navigation. Uses the current list so
+  // filtered results (not just the static unfiltered page) get prefetched.
   useEffect(() => {
-    const urls = initialCars.slice(0, 12).map((c) => carListingPath(c));
+    const urls = cars.slice(0, 12).map((c) => carListingPath(c));
     urls.forEach((url) => router.prefetch(url));
-  }, [initialCars, router]);
+  }, [cars, router]);
 
-  const fetchResults = useCallback(async (pageNum = 1, append = false) => {
-    const reqId = Date.now();
-    lastReqRef.current = reqId;
-
-    setLoading(true);
-    const params = new URLSearchParams({ page: pageNum });
-    if (filters.make) params.set("make", filters.make);
-    if (filters.model) params.set("model", filters.model);
-    if (filters.bodyType) params.set("bodyType", filters.bodyType);
-    if (filters.fuelType) params.set("fuelType", filters.fuelType);
-    if (filters.transmission) params.set("transmission", filters.transmission);
-    if (filters.steering) params.set("steering", filters.steering);
-    if (filters.county) params.set("county", filters.county);
-    if (filters.minPrice) params.set("minPrice", filters.minPrice);
-    if (filters.maxPrice) params.set("maxPrice", filters.maxPrice);
-    if (filters.minYOM) params.set("minYOM", filters.minYOM);
-    if (filters.maxYOM) params.set("maxYOM", filters.maxYOM);
-    if (filters.vehicleType) params.set("vehicleType", filters.vehicleType);
-    if (filters.condition) params.set("condition", filters.condition);
-    if (filters.search) params.set("search", filters.search);
-    if (filters.sort) params.set("sort", filters.sort);
-    if (filters.featured === "1") params.set("featured", "1");
-    if (filters.color) params.set("color", filters.color);
-    if (filters.sunroof === "1") params.set("sunroof", "1");
-    if (filters.seats) params.set("seats", filters.seats);
-
-    try {
-      const res = await fetch(`/api/cars/list?${params.toString()}`);
-      if (lastReqRef.current !== reqId) return;
-      const data = await res.json();
-      if (lastReqRef.current !== reqId) return;
-      if (append) {
-        setCars(prev => [...prev, ...(data.cars || [])]);
-        setPage(pageNum);
-      } else {
-        setCars(data.cars || []);
-        setPage(1);
-      }
-      setTotal(data.total || 0);
-      setHasMore(data.hasMore);
-    } catch {
-      // keep existing results on error
-    } finally {
-      if (lastReqRef.current === reqId) setLoading(false);
-    }
-  }, [filters]);
-
-  const loadMore = useCallback(async () => {
-    if (loading || !hasMore) return;
-    const nextPage = page + 1;
-    await fetchResults(nextPage, true);
-  }, [page, loading, hasMore, fetchResults]);
+  // One analytics event per filter combination, once the result count is known.
+  useEffect(() => {
+    if (loading) return;
+    if (trackedRef.current === cacheKey) return;
+    trackedRef.current = cacheKey;
+    trackUiEvent("cars_listing_view", {
+      search: filters.search || "",
+      make: filters.make || "",
+      body_type: filters.bodyType || "",
+      fuel_type: filters.fuelType || "",
+      transmission: filters.transmission || "",
+      county: filters.county || "",
+      sort: filters.sort || "newest",
+      result_count: total,
+    });
+  }, [cacheKey, loading, total, filters]);
 
   useEffect(() => {
     const el = sentinelRef.current;
@@ -273,7 +313,9 @@ export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, n
       {/* Result count + view toggle */}
       <div className="mb-2.5 flex items-center justify-between gap-3">
         <p className="text-[11px] font-bold text-slate-400">
-          {total} {total === 1 ? "vehicle" : "vehicles"} found
+          {loading && total === 0
+            ? "Loading vehicles…"
+            : `${total} ${total === 1 ? "vehicle" : "vehicles"} found`}
         </p>
 
         <div className="flex items-center gap-1">
@@ -320,7 +362,11 @@ export default function CarsInfiniteGrid({ initialCars, initialTotal, filters, n
       </div>
 
       {/* Grid */}
-      {cars.length === 0 ? (
+      {cars.length === 0 && loading ? (
+        <div className="flex justify-center py-20">
+          <BidgariLoader />
+        </div>
+      ) : cars.length === 0 ? (
         <div className="py-20 text-center bg-white border border-slate-200 rounded-xl">
           <div className="mx-auto mb-4 w-12 h-12 flex items-center justify-center">
             <span className="text-lg font-black tracking-[0.2em] text-slate-300">B</span>

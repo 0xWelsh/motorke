@@ -76,5 +76,8 @@ export async function GET(req, { params }) {
   const { id } = await params;
   if (!id) return NextResponse.json({ cars: [] });
   const cars = await getRelatedViews(id);
-  return NextResponse.json({ cars });
+  return NextResponse.json(
+    { cars },
+    { headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=900" } }
+  );
 }

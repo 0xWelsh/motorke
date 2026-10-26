@@ -1,11 +1,8 @@
 import { NextResponse } from "next/server";
 import { looksLikeCarListingId, looksLikeCarPublicSlug } from "@/lib/seo-car-slug";
-import { SAVE_DATA_COOKIE } from "@/lib/save-data";
 
 const SESSION_COOKIE = "welsh-motors_session";
 const MAINT_BYPASS_COOKIE = "welsh-maint-bypass";
-const ROTATION_COOKIE = "wmh-rot";
-const ROTATION_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
 
 // Allowed origins for CSRF validation (defense-in-depth).
 // In production, only the canonical site origin is permitted.
@@ -56,16 +53,6 @@ const SECURITY_HEADERS = {
 };
 
 const HSTS_HEADER = "max-age=31536000; includeSubDomains; preload";
-
-function generateRotationId() {
-  const bytes = new Uint8Array(16);
-  if (typeof globalThis.crypto?.getRandomValues === "function") {
-    globalThis.crypto.getRandomValues(bytes);
-  } else {
-    for (let i = 0; i < bytes.length; i += 1) bytes[i] = Math.floor(Math.random() * 256);
-  }
-  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
-}
 
 function isMaintenanceOn() {
   const flag = (process.env.MAINTENANCE_MODE || "").toLowerCase().trim();
@@ -189,32 +176,10 @@ export function middleware(request) {
     }
   }
 
+  // No cookies are set here on purpose. A Set-Cookie header makes Vercel's
+  // CDN (and RFC-compliant shared caches) skip caching the whole response, so
+  // per-device state (rotation id, save-data) is issued by API routes instead.
   const response = NextResponse.next({ request: { headers: requestHeaders } });
-
-  if (request.headers.get("save-data") === "on") {
-    response.cookies.set({
-      name: SAVE_DATA_COOKIE,
-      value: "1",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
-      sameSite: "lax",
-    });
-  }
-
-  // Issue a stable per-device rotation id used by the public /cars
-  // listing to give every visitor their own deterministic shuffle.
-  // No PII, just a random hex; rotates daily via the seed combiner.
-  if (!request.cookies.get(ROTATION_COOKIE)?.value) {
-    response.cookies.set({
-      name: ROTATION_COOKIE,
-      value: generateRotationId(),
-      maxAge: ROTATION_COOKIE_MAX_AGE,
-      sameSite: "lax",
-      path: "/",
-      secure: isProd,
-      httpOnly: false,
-    });
-  }
 
   // Security Headers — apply CSP only on page routes (not API, to avoid breaking binary responses)
   if (!pathname.startsWith("/api/")) {
@@ -235,8 +200,10 @@ export function middleware(request) {
 }
 
 export const config = {
+  // Run on pages and APIs, but not on static assets. Those don't need CSP or
+  // session checks, and skipping them avoids a middleware invocation for every
+  // image, font and stylesheet request.
   matcher: [
-    // Apply security headers to all routes (pages + API)
-    "/((?!_next/static|_next/image|favicon.ico|public).*)",
+    "/((?!_next/static|_next/image|favicon.ico|images/|uploads/|logos/|fonts/|.*\\.(?:png|jpe?g|gif|svg|webp|avif|ico|css|js|mjs|map|txt|xml|json|webmanifest|woff2?|ttf|otf)$).*)",
   ],
 };

@@ -9,6 +9,19 @@ import { buildMakeWhere } from "@/lib/make-filter";
 import { buildCarsOrderBy } from "@/lib/cars-inventory-sort";
 
 const PER_PAGE = 36;
+const CACHE_HEADERS = {
+  "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+};
+
+// `publicDetailVisibilityClause()` embeds the current time in its sold-grace
+// cutoff. Left as-is, every request has a different where-clause JSON and the
+// Data Cache below never gets a hit (and grows one useless entry per request).
+// Bucket the cutoff to the hour so identical filter sets share a cache entry.
+const VISIBILITY_BUCKET_MS = 60 * 60 * 1000;
+
+function stableVisibilityNow() {
+  return new Date(Math.floor(Date.now() / VISIBILITY_BUCKET_MS) * VISIBILITY_BUCKET_MS);
+}
 
 // Cached page fetch: the same searchParams combo is hit by many users + every
 // infinite-scroll page, so memoize findMany+count for 60s. `where` is serialized
@@ -96,7 +109,7 @@ export async function GET(req) {
     const seats = parseInt(searchParams.get("seats") || "", 10) || undefined;
 
     const where = {
-      ...publicDetailVisibilityClause(),
+      ...publicDetailVisibilityClause(stableVisibilityNow()),
       ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
       ...buildMakeWhere(make),
       ...(featured && { featured: true }),
@@ -131,12 +144,15 @@ export async function GET(req) {
 
     const data = cars;
 
-    return NextResponse.json({
-      cars: data,
-      total,
-      page,
-      hasMore: skip + cars.length < total,
-    });
+    return NextResponse.json(
+      {
+        cars: data,
+        total,
+        page,
+        hasMore: skip + cars.length < total,
+      },
+      { headers: CACHE_HEADERS }
+    );
   } catch (err) {
     console.error("cars/list error:", err);
     return NextResponse.json({ error: "Failed to fetch cars." }, { status: 500 });

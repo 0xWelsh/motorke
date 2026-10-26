@@ -122,7 +122,9 @@ function getCarData(ref) {
       });
     },
     ["car-detail-v4", ref],
-    { revalidate: 120, tags: ["cars", `car-detail:${ref}`] }
+    // Only the per-listing tag: a generic "cars" tag would wipe every detail
+    // page whenever any single listing is edited.
+    { revalidate: 120, tags: [`car-detail:${ref}`] }
   );
   return cached();
 }
